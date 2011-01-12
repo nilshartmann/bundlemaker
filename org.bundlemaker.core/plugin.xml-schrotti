@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="exporter" name="exporter" schema="schema/exporter.exsd"/>
+   <extension-point id="parserfactory" name="parserfactory" schema="schema/parserfactory.exsd"/>
+
+   <extension
+         id="bundlemakernature"
+         point="org.eclipse.core.resources.natures"
+         name="BundleMaker Nature">
+      <runtime>
+         <run
+               class="org.bundlemaker.core.internal.BundleMakerProjectNature">
+         </run>
+      </runtime>
+   </extension>
+   
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/projectdescription"
+            class="org.bundlemaker.core.model.projectdescription.ProjectdescriptionPackage"
+            genModel="model/bm-model.genmodel"/>
+   </extension>
+   
+
+</plugin>

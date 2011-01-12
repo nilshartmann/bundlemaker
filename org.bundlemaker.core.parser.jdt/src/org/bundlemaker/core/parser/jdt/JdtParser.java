@@ -1,0 +1,359 @@
+package org.bundlemaker.core.parser.jdt;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.parser.IDirectory;
+import org.bundlemaker.core.parser.IDirectoryFragment;
+import org.bundlemaker.core.parser.IParser;
+import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
+import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
+import org.bundlemaker.core.parser.jdt.ecj.IndirectlyReferencesAnalyzer;
+import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.util.ExtensionRegistryTracker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
+public class JdtParser implements IParser {
+
+	/** the AST parser */
+	private ASTParser _parser;
+
+	/** the associated java project */
+	private IJavaProject _javaProject;
+
+	/** the indirectly references analyzer **/
+	private IndirectlyReferencesAnalyzer _indirectlyReferencesAnalyzer;
+
+	/** - */
+	private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
+
+	private List<IJdtSourceParserHook> _currentHooks;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleMakerProject
+	 * @throws CoreException
+	 */
+	public JdtParser(IBundleMakerProject bundleMakerProject,
+			ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
+			throws CoreException {
+
+		// create the AST parser
+		_parser = ASTParser.newParser(AST.JLS3);
+
+		// the associated java project
+		_javaProject = JdtProjectHelper
+				.getAssociatedJavaProject(bundleMakerProject);
+
+		//
+		_indirectlyReferencesAnalyzer = new IndirectlyReferencesAnalyzer(
+				_javaProject);
+
+		//
+		_hookRegistry = hookRegistry;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void parseBundleMakerProjectStart(
+			IBundleMakerProject bundleMakerProject) {
+
+		// initialize current hooks
+		_currentHooks = _hookRegistry.getExtensionObjects();
+
+		// notify 'start'
+		for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
+			sourceParserHook.parseBundleMakerProjectStart(bundleMakerProject);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void parseBundleMakerProjectStop(
+			IBundleMakerProject bundleMakerProject) {
+
+		// notify 'stop'
+		for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
+			sourceParserHook.parseBundleMakerProjectStop(bundleMakerProject);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<IProblem> parse(IFileBasedContent content,
+			List<IDirectory> directoryList, IResourceCache cache)
+			throws CoreException {
+
+		// create the error list
+		List<IProblem> _errors = new LinkedList<IProblem>();
+
+		// parse the compilation units
+		if (content.isResourceContent()
+				&& !content.getResourceContent().getSourceResources().isEmpty()
+				&& content.getResourceContent().isAnalyzeSourceResources()) {
+
+			_errors.addAll(parseCompilationUnits(directoryList, cache, content));
+		}
+
+		// return the errors
+		return _errors;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param compilationUnits
+	 * @throws JavaModelException
+	 */
+	private List<IProblem> parseCompilationUnits(
+			List<IDirectory> directoryList, IResourceCache cache,
+			IFileBasedContent fileBasedContent) throws CoreException {
+
+		List<IProblem> problems = new LinkedList<IProblem>();
+
+		// // log
+		// _progressMonitor.subTask("Parsing source files...");
+
+		Map<ICompilationUnit, IDirectory> units = new HashMap<ICompilationUnit, IDirectory>();
+
+		Map<String, String> rootMap = new HashMap<String, String>();
+
+		/******** START *******/
+		/** extract ICompilationUnits **/
+
+		for (IDirectory directory : directoryList) {
+
+			if (!directory.getDirectoryName().equals(new Path("META-INF"))
+					&& directory.hasSourceContent()) {
+
+				/** do for all directoryFragments **/
+				for (IDirectoryFragment directoryFragment : directory
+						.getSourceDirectoryFragments()) {
+
+					IPath path = JdtProjectHelper.makeCanonical(new Path(
+							directoryFragment.getDirectoryFragmentRoot()
+									.getAbsolutePath()));
+
+					rootMap.put(path.toPortableString(), directoryFragment
+							.getDirectoryFragmentRoot().getAbsolutePath());
+
+					IResource iResource = _javaProject.getProject().findMember(
+							path);
+
+					if (iResource == null) {
+						throw new RuntimeException(path.toOSString());
+					}
+
+					IPackageFragmentRoot root = _javaProject
+							.getPackageFragmentRoot(iResource);
+
+					root.open(null);
+
+					IPackageFragment fragment = root
+							.getPackageFragment(directory.getDirectoryName()
+									.toString().replace('/', '.'));
+
+					if (fragment != null && fragment.exists()) {
+						for (ICompilationUnit iCompilationUnit : fragment
+								.getCompilationUnits()) {
+							units.put(iCompilationUnit, directory);
+						}
+					}
+
+				}
+				/** do for all directoryFragments **/
+			}
+		}
+
+		/******** STOP *******/
+
+		// create sublist
+		ICompilationUnit[] compilationUnitArray = units.keySet().toArray(
+				new ICompilationUnit[0]);
+
+		// parse the CUs
+		JdtAstRequestor requestor = new JdtAstRequestor(null);
+		_parser.setResolveBindings(true);
+		_parser.setProject(_javaProject);
+
+		System.out.println("Creating ASTs for " + compilationUnitArray.length
+				+ " entries");
+
+		// parse the CUs
+		_parser.createASTs(compilationUnitArray, new String[] {}, requestor,
+				null);
+
+		System.out.println("Analyzing source ASTs for "
+				+ compilationUnitArray.length + " entries");
+
+		// analyze all parsed CUs
+		for (Entry<ICompilationUnit, CompilationUnit> entry : requestor
+				.getCompilationUnits().entrySet()) {
+
+			// analyze
+			problems.addAll(analyzeCompilationUnit(entry.getKey(),
+					entry.getValue(), units.get(entry.getKey()), rootMap,
+					cache, fileBasedContent));
+		}
+
+		System.out.println("Analyzing source done...");
+
+		return problems;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param rootMap
+	 * 
+	 * @param entry
+	 * @param content
+	 * @throws JavaModelException
+	 */
+	private List<IProblem> analyzeCompilationUnit(
+			ICompilationUnit iCompilationUnit, CompilationUnit compilationUnit,
+			IDirectory iDirectory, Map<String, String> rootMap,
+			IResourceCache cache, IFileBasedContent fileBasedContent)
+			throws CoreException {
+
+		// step 1: create the result list
+		List<IProblem> problems = new LinkedList<IProblem>();
+
+		// step 2: give feedback
+		// TODO
+		System.out.println("Analyzing source files '"
+				+ iCompilationUnit.getElementName() + "'.");
+
+		// _progressMonitor.subTask("Analyzing source files '"
+		// + iCompilationUnit.getElementName() + "'.");
+
+		// step 3: compute the 'real' root (the one that was specified in the
+		// bundlemaker project description)
+		IPath parent = iCompilationUnit.getParent().getParent().getPath();
+		parent = parent.removeFirstSegments(1);
+		String root = parent.toPortableString();
+		root = rootMap.get(root);
+
+		// step 4: create the JavaElementIdentifier
+		String name = iCompilationUnit.getElementName();
+		name = name.substring(0, name.length() - ".java".length());
+
+		JavaElementIdentifier elementID = new JavaElementIdentifier(iDirectory
+				.getFileBasedContent().getId(), root, iDirectory
+				.getDirectoryName().toString().replace('/', '.')
+				+ "." + name, FileType.JAVA_SOURCE_FILE);
+
+		// step 5: get the resource
+		ResourceKey key = new ResourceKey(elementID.getContentId(),
+				elementID.getRoot(), elementID.getPath());
+
+		Resource resource = (Resource) cache.getOrCreateModifiableResource(key);
+
+		// step 6: set the directly referenced types
+		JdtAstVisitor visitor = new JdtAstVisitor(resource);
+		compilationUnit.accept(visitor);
+
+		// TODO
+		for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
+			sourceParserHook.analyzeCompilationUnit(iCompilationUnit,
+					compilationUnit);
+		}
+
+		// step 7: set all contained types
+		resource.getModifiableContainedTypes().addAll(visitor.getTypeNames());
+
+		// step 8: try to associate source resources and class resources
+		for (String typeName : visitor.getTypeNames()) {
+
+			JavaElementIdentifier classId = new JavaElementIdentifier(
+					iDirectory.getFileBasedContent().getId(), null, typeName,
+					JavaElementIdentifier.FileType.CLASS_FILE);
+
+			JavaElementIdentifier enclosingClassId = classId
+					.getIdForEnclosingNonLocalAndNonAnonymousType();
+
+			//
+			IResourceStandin standin = fileBasedContent.getResourceContent()
+					.getBinaryResource(new Path(enclosingClassId.getPath()));
+			Resource element = cache.getOrCreateModifiableResource(standin);
+
+			if (element == null) {
+				// TODO
+				System.out.println("Source file without class file: "
+						+ enclosingClassId.toString());
+			}
+
+			if (element != null) {
+				resource.addAssociatedResource(element);
+			}
+		}
+
+		// step 9: compute the indirectly referenced types
+		// Set<String> directlyAndIndirectlyReferencedTypes =
+		// _indirectlyReferencesAnalyzer
+		// .getAllReferencedTypes((IFile) iCompilationUnit
+		// .getCorrespondingResource());
+		//
+		// for (String type : directlyAndIndirectlyReferencedTypes) {
+		//
+		// // get the reference
+		// ModifiableReference reference = resource.createOrGetReference(type,
+		// ReferenceType.TYPE_REFERENCE);
+		//
+		// // if the reference is not a direct reference, it is a indirectly
+		// // reference...
+		// if (!reference.isDirectlyReferenced()) {
+		// reference.setSourcecodeDependency(true);
+		// reference.setIndirectlyReferenced(true);
+		// }
+		// }
+
+		// step 10: add the errors to the error list
+		for (IProblem problem : visitor.getProblems()) {
+
+			// add errors
+			if (problem.isError()) {
+				problems.add(problem);
+			}
+		}
+
+		// step 11: finally return
+		return problems;
+	}
+}

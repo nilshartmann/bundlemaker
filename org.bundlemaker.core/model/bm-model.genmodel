@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.bundlemaker.core/src-gen"
+    editDirectory="/org.bundlemaker.core.edit/src" editorDirectory="/org.bundlemaker.core.editor/src"
+    modelPluginID="org.bundlemaker.core" modelName="Dependencies" editPluginClass="org.bundlemaker.core.projectdescription.provider.DependenciesEditPlugin"
+    editorPluginClass="org.bundlemaker.core.projectdescription.presentation.DependenciesEditorPlugin"
+    suppressEMFTypes="true" importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0"
+    copyrightFields="false" editPluginID="org.bundlemaker.core.edit" editorPluginID="org.bundlemaker.core.editor">
+  <foreignModel>bm-model.ecore</foreignModel>
+  <genPackages prefix="Org" disposableProviderFactory="true" ecorePackage="bm-model.ecore#/">
+    <nestedGenPackages prefix="Bundlemaker" basePackage="org" disposableProviderFactory="true"
+        ecorePackage="bm-model.ecore#//bundlemaker">
+      <nestedGenPackages prefix="Core" basePackage="org.bundlemaker" disposableProviderFactory="true"
+          ecorePackage="bm-model.ecore#//bundlemaker/core">
+        <nestedGenPackages prefix="Model" basePackage="org.bundlemaker.core" disposableProviderFactory="true"
+            ecorePackage="bm-model.ecore#//bundlemaker/core/model">
+          <nestedGenPackages prefix="Projectdescription" basePackage="org.bundlemaker.core.model"
+              disposableProviderFactory="true" ecorePackage="bm-model.ecore#//bundlemaker/core/model/projectdescription">
+            <genEnums typeSafeEnumCompatible="false" ecoreEnum="bm-model.ecore#//bundlemaker/core/model/projectdescription/ContentType">
+              <genEnumLiterals ecoreEnumLiteral="bm-model.ecore#//bundlemaker/core/model/projectdescription/ContentType/SOURCE"/>
+              <genEnumLiterals ecoreEnumLiteral="bm-model.ecore#//bundlemaker/core/model/projectdescription/ContentType/BINARY"/>
+            </genEnums>
+            <genDataTypes ecoreDataType="bm-model.ecore#//bundlemaker/core/model/projectdescription/ipath"/>
+            <genDataTypes ecoreDataType="bm-model.ecore#//bundlemaker/core/model/projectdescription/coreexception"/>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/projectdescription/IFileBasedContent">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IFileBasedContent/getId"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IFileBasedContent/getName"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IFileBasedContent/getVersion"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IFileBasedContent/getBinaryPaths"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IFileBasedContent/isResourceContent"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IFileBasedContent/getResourceContent"/>
+            </genClasses>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getSourcePaths"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/isAnalyzeSourceResources"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getResource">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getResource/path"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getResource/type"/>
+              </genOperations>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getResources">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getResources/type"/>
+              </genOperations>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getBinaryResource">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getBinaryResource/path"/>
+              </genOperations>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getBinaryResources"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getSourceResource">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getSourceResource/path"/>
+              </genOperations>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IResourceContent/getSourceResources"/>
+            </genClasses>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/projectdescription/IBundleMakerProjectDescription">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IBundleMakerProjectDescription/getFileBasedContent"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/IBundleMakerProjectDescription/getFileBasedContent.1">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/IBundleMakerProjectDescription/getFileBasedContent.1/id"/>
+              </genOperations>
+            </genClasses>
+            <nestedGenPackages prefix="Modifiableprojectdescription" disposableProviderFactory="true"
+                ecorePackage="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription">
+              <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription">
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/currentId"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/initialized"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/JRE"/>
+                <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/modifiableFileBasedContent"/>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/isValid"/>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/initialize"/>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent/binaryRoot"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.1">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.1/binaryRoot"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.1/sourceRoot"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.2">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.2/name"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.2/version"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.2/binaryRoot"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.3">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.3/name"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.3/version"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.3/binaryRoot"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.3/sourceRoot"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.4">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.4/name"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.4/version"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.4/binaryRoot"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addResourceContent.4/sourceRoot"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent/binaryRoot"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.1">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.1/name"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.1/version"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.1/binaryRoot"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.2">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.2/name"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.2/version"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableBundleMakerProjectDescription/addTypeContent.2/binaryRoot"/>
+                </genOperations>
+              </genClasses>
+              <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent">
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/id"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/name"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/version"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/initialized"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/modifiableBinaryPathNames"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/modifiableBinaryPaths"/>
+                <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/modifiableResourceContent"/>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent/initialize"/>
+              </genClasses>
+              <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableResourceContent">
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableResourceContent/analyzeSourceResources"/>
+                <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableResourceContent/modifiableBinaryResources"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableResourceContent/modifiableSourcePathNames"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableResourceContent/modifiableSourcePaths"/>
+                <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableResourceContent/modifiableSourceResources"/>
+              </genClasses>
+            </nestedGenPackages>
+          </nestedGenPackages>
+          <nestedGenPackages prefix="Resource" disposableProviderFactory="true" ecorePackage="bm-model.ecore#//bundlemaker/core/model/resource">
+            <genEnums typeSafeEnumCompatible="false" ecoreEnum="bm-model.ecore#//bundlemaker/core/model/resource/ReferenceType">
+              <genEnumLiterals ecoreEnumLiteral="bm-model.ecore#//bundlemaker/core/model/resource/ReferenceType/PACKAGE_REFERENCE"/>
+              <genEnumLiterals ecoreEnumLiteral="bm-model.ecore#//bundlemaker/core/model/resource/ReferenceType/TYPE_REFERENCE"/>
+            </genEnums>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/IIdentifiable">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IIdentifiable/getFileBasedContentId"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IIdentifiable/getRoot"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IIdentifiable/getPath"/>
+            </genClasses>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/IResourceStandin">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IResourceStandin/getResource"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IResourceStandin/getContainingModules"/>
+            </genClasses>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/IResource">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IResource/getReferences"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IResource/getAssociatedResources"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IResource/getContainedTypes"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IResource/getResourceStandin"/>
+            </genClasses>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/IReference">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IReference/getFullyQualifiedName"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/IReference/getReferenceType"/>
+            </genClasses>
+            <nestedGenPackages prefix="Modifiableresource" disposableProviderFactory="true"
+                ecorePackage="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource">
+              <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableIdentifiable">
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableIdentifiable/fileBasedContentId"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableIdentifiable/root"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableIdentifiable/path"/>
+              </genClasses>
+              <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResourceStandin">
+                <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                    ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResourceStandin/modifiableResource"/>
+              </genClasses>
+              <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource">
+                <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                    ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/modifiableReferences"/>
+                <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                    ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/modifiableAssociatedResources"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/modifiableContainedTypes"/>
+                <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                    ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/modifiableResourceStandin"/>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/createOrGetReference">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/createOrGetReference/referencedElement"/>
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/createOrGetReference/referenceType"/>
+                </genOperations>
+                <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/addAssociatedResource">
+                  <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableResource/addAssociatedResource/classFileElement"/>
+                </genOperations>
+              </genClasses>
+              <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference">
+                <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                    ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/parent"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/fullyQualifiedName"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/referenceType"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/bytecodeDependency"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/sourcecodeDependency"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/indirectlyReferenced"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/directlyReferenced"/>
+                <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/resource/modifiableresource/ModifiableReference/isUses"/>
+              </genClasses>
+            </nestedGenPackages>
+          </nestedGenPackages>
+          <nestedGenPackages prefix="Module" disposableProviderFactory="true" ecorePackage="bm-model.ecore#//bundlemaker/core/model/module">
+            <genDataTypes ecoreDataType="bm-model.ecore#//bundlemaker/core/model/module/typemodule"/>
+            <genDataTypes ecoreDataType="bm-model.ecore#//bundlemaker/core/model/module/resourcemodule"/>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/module/IModuleIdentifier">
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/module/IModuleIdentifier/getVersion"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/module/IModuleIdentifier/getName"/>
+            </genClasses>
+          </nestedGenPackages>
+          <nestedGenPackages prefix="Transformation" basePackage="org.bundlemaker.core.model"
+              disposableProviderFactory="true" ecorePackage="bm-model.ecore#//bundlemaker/core/model/transformation">
+            <genDataTypes ecoreDataType="bm-model.ecore#//bundlemaker/core/model/transformation/iResourceSetProcessor"/>
+            <genDataTypes ecoreDataType="bm-model.ecore#//bundlemaker/core/model/transformation/stringArray"/>
+            <genClasses image="false" ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/AbstractETransformation"/>
+            <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSet">
+              <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                  ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSet/moduleIdentifier"/>
+              <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSet/includes"/>
+              <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSet/excludes"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSet/getMatchingResources">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSet/getMatchingResources/resource"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSet/getMatchingResources/contentType"/>
+              </genOperations>
+            </genClasses>
+            <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition">
+              <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                  ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/moduleIdentifier"/>
+              <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                  ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/resourceSets"/>
+              <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/userAttributes"/>
+              <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/classification"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet/fromName"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet/fromVersion"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet/includes"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet/excludes"/>
+              </genOperations>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet.1">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet.1/fromModuleIdentifier"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet.1/includes"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition/addResourceSet.1/excludes"/>
+              </genOperations>
+            </genClasses>
+            <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation">
+              <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                  ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/moduleDefinitions"/>
+              <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/resourceSetProcessor"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/addModuleDefinition">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/addModuleDefinition/name"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/addModuleDefinition/version"/>
+              </genOperations>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/addModuleDefinition.1">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/addModuleDefinition.1/name"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/addModuleDefinition.1/version"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/ResourceSetBasedTransformation/addModuleDefinition.1/userAttibutes"/>
+              </genOperations>
+            </genClasses>
+            <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/BasicProjectContentTransformation"/>
+            <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/EmbedModuleTransformation">
+              <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                  ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/EmbedModuleTransformation/hostModuleIdentifier"/>
+              <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                  ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/EmbedModuleTransformation/embeddedModulesIdentifiers"/>
+            </genClasses>
+            <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation">
+              <genFeatures notify="false" createChild="false" propertySortChoices="true"
+                  ecoreFeature="ecore:EReference bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/resourcesToRemove"/>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet/fromName"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet/fromVersion"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet/includes"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet/excludes"/>
+              </genOperations>
+              <genOperations ecoreOperation="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet.1">
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet.1/fromModuleIdentifier"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet.1/includes"/>
+                <genParameters ecoreParameter="bm-model.ecore#//bundlemaker/core/model/transformation/RemoveResourcesTransformation/addResourceSet.1/excludes"/>
+              </genOperations>
+            </genClasses>
+            <genClasses ecoreClass="bm-model.ecore#//bundlemaker/core/model/transformation/StringToObjectMap">
+              <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/transformation/StringToObjectMap/key"/>
+              <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bm-model.ecore#//bundlemaker/core/model/transformation/StringToObjectMap/value"/>
+            </genClasses>
+          </nestedGenPackages>
+        </nestedGenPackages>
+      </nestedGenPackages>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>

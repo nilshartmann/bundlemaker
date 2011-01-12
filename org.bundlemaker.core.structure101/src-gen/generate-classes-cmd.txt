@@ -1,0 +1,1 @@
+R:\software\jdk\jdk16\bin\xjc.exe -p org.bundlemaker.core.structure101.xml structure101.xsd
