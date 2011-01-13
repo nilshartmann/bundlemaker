@@ -1,0 +1,21 @@
+<project default="prepare">
+
+	<!-- ================================= 
+          target: prepare              
+         ================================= -->
+	<target name="prepare">
+		<available file="${basedir}/spring/classes" type="dir" property="already.unpacked" />
+		<antcall target="unpack" />
+	</target>
+
+	<!-- ================================= 
+          target: unpack              
+         ================================= -->
+	<target name="unpack" unless="already.unpacked">
+		<mkdir dir="${basedir}/spring/classes"/>
+		<mkdir dir="${basedir}/spring/source"/>
+		<unzip src="${basedir}/spring/classes.zip" dest="${basedir}/spring/classes" />
+		<unzip src="${basedir}/spring/source.zip" dest="${basedir}/spring/source" />
+	</target>
+
+</project>

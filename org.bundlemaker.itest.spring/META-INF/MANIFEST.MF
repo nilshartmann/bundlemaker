@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.itest.spring
+Bundle-SymbolicName: org.bundlemaker.itest.spring
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.bundlemaker.core;bundle-version="1.0.0",
+ org.eclipse.core.resources;bundle-version="3.6.0",
+ org.eclipse.core.runtime;bundle-version="3.6.0",
+ org.apache.ant;bundle-version="1.7.1",
+ org.junit;bundle-version="4.8.1",
+ org.bundlemaker.core.exporter.pde;bundle-version="1.0.0",
+ org.bundlemaker.core.exporter.structure101;bundle-version="1.0.0"

@@ -1,0 +1,50 @@
+<project basedir="."
+         name="prepare-integrationtest"
+         default="prepare-integrationtest">
+
+	<property name="spring-url"
+	          value="http://s3.amazonaws.com/dist.springframework.org/release/SPR/spring-framework-2.5.6-with-dependencies.zip" />
+
+
+	<!-- ================================= 
+          target: prepare-integrationtest              
+         ================================= -->
+	<target name="prepare-integrationtest">
+
+		<delete dir="${basedir}/spring" />
+		<mkdir dir="${basedir}/spring"/>
+
+		<get dest="${basedir}/spring/spring-framework-2.5.6-with-dependencies.zip"
+		     src="${spring-url}"
+		     verbose="true" />
+		
+		<unzip src="${basedir}/spring/spring-framework-2.5.6-with-dependencies.zip"
+		       dest="${basedir}/spring">
+		    <patternset>
+		        <include name="spring-framework-2.5.6/dist/spring.jar"/>
+		        <include name="spring-framework-2.5.6/dist/spring-sources.jar"/>
+		    </patternset>
+			<flattenmapper/>
+		</unzip>
+		
+		<move file="${basedir}/spring/spring.jar" tofile="${basedir}/spring/classes.zip"/>
+		<move file="${basedir}/spring/spring-sources.jar" tofile="${basedir}/spring/source.zip"/>
+
+		<unzip src="${basedir}/spring/spring-framework-2.5.6-with-dependencies.zip"
+		       dest="${basedir}/spring/libs">
+			<patternset>
+				<include name="spring-framework-2.5.6/lib/**/*.jar" />
+			</patternset>
+			<flattenmapper />
+		</unzip>
+
+		<unzip src="${basedir}/spring/classes.zip"
+		       dest="${basedir}/spring/classes"/>
+		
+		<unzip src="${basedir}/spring/source.zip"
+		       dest="${basedir}/spring/source"/>
+
+
+	</target>
+
+</project>
