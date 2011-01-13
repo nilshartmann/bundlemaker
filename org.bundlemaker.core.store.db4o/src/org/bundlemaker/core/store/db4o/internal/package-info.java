@@ -5,4 +5,4 @@
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-package org.bundlemaker.core.db4o.internal;
+package org.bundlemaker.core.store.db4o.internal;

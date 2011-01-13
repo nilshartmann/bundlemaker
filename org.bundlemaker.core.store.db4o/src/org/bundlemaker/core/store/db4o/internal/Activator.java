@@ -1,4 +1,4 @@
-package org.bundlemaker.core.db4o.internal;
+package org.bundlemaker.core.store.db4o.internal;
 
 import org.bundlemaker.core.parser.store.IPersistentDependencyStoreFactory;
 import org.osgi.framework.BundleActivator;

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bundlemaker.core.db4o
-Bundle-SymbolicName: org.bundlemaker.core.db4o
+Bundle-SymbolicName: org.bundlemaker.core.store.db4o
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.bundlemaker.core.db4o.internal.Activator
+Bundle-Activator: org.bundlemaker.core.store.db4o.internal.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.5.1",
  com.db4o.osgi;bundle-version="7.4.155",
