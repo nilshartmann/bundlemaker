@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Pde
-Bundle-SymbolicName: org.bundlemaker.core.pde
+Bundle-SymbolicName: org.bundlemaker.core.exporter.pde
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.bundlemaker.core.pde.Activator
+Bundle-Activator: org.bundlemaker.core.exporter.pde.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.pde.core;bundle-version="3.6.1",
  org.bundlemaker.core;bundle-version="1.0.0",
@@ -15,5 +15,5 @@ Require-Bundle: org.eclipse.core.runtime,
  com.springsource.util.osgi;bundle-version="2.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bundlemaker.core.pde,
- org.bundlemaker.core.pde.exporter
+Export-Package: org.bundlemaker.core.exporter.pde,
+ org.bundlemaker.core.exporter.pde.exporter

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.pde.exporter;
+package org.bundlemaker.core.exporter.pde.exporter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,12 +12,12 @@ import java.util.Set;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
+import org.bundlemaker.core.exporter.pde.Activator;
 import org.bundlemaker.core.model.projectdescription.ContentType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.pde.Activator;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.util.FileUtils;
 import org.bundlemaker.core.util.ModelUtils;

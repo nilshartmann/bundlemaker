@@ -1,4 +1,4 @@
-package org.bundlemaker.core.pde.exporter;
+package org.bundlemaker.core.exporter.pde.exporter;
 
 public interface PdeExporterAttributes {
 

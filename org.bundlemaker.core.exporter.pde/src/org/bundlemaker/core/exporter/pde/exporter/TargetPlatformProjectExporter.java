@@ -1,12 +1,12 @@
-package org.bundlemaker.core.pde.exporter;
+package org.bundlemaker.core.exporter.pde.exporter;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.StandardModuleExporterContext;
+import org.bundlemaker.core.exporter.pde.Activator;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.pde.Activator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;

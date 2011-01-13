@@ -1,4 +1,4 @@
-package org.bundlemaker.core.pde;
+package org.bundlemaker.core.exporter.pde;
 
 import org.eclipse.pde.core.project.IBundleProjectService;
 
