@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.parser.store.IPersistentDependencyStore;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.StringCache;
+import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.CoreException;
 
 /**

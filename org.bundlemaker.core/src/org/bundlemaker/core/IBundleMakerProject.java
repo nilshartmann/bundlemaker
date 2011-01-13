@@ -5,7 +5,7 @@ import java.util.List;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.parser.store.IDependencyStore;
+import org.bundlemaker.core.store.IDependencyStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

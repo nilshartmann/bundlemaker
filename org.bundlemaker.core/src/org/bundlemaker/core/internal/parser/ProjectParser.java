@@ -13,8 +13,8 @@ import org.bundlemaker.core.model.projectdescription.modifiableprojectdescriptio
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.parser.store.IPersistentDependencyStore;
 import org.bundlemaker.core.resource.StringCache;
+import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
