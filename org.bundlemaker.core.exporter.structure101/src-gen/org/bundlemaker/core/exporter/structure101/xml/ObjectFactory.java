@@ -6,7 +6,7 @@
 //
 
 
-package org.bundlemaker.core.structure101.xml;
+package org.bundlemaker.core.exporter.structure101.xml;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;

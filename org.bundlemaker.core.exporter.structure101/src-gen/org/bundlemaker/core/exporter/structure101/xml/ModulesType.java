@@ -6,7 +6,7 @@
 //
 
 
-package org.bundlemaker.core.structure101.xml;
+package org.bundlemaker.core.exporter.structure101.xml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +17,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for dependenciesType complex type.
+ * <p>Java class for modulesType complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="dependenciesType">
+ * &lt;complexType name="modulesType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="dependency" type="{}dependencyType" maxOccurs="unbounded"/>
+ *         &lt;element name="module" type="{}moduleType" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,41 +36,41 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dependenciesType", propOrder = {
-    "dependency"
+@XmlType(name = "modulesType", propOrder = {
+    "module"
 })
-public class DependenciesType {
+public class ModulesType {
 
     @XmlElement(required = true)
-    protected List<DependencyType> dependency;
+    protected List<ModuleType> module;
 
     /**
-     * Gets the value of the dependency property.
+     * Gets the value of the module property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the dependency property.
+     * This is why there is not a <CODE>set</CODE> method for the module property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getDependency().add(newItem);
+     *    getModule().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link DependencyType }
+     * {@link ModuleType }
      * 
      * 
      */
-    public List<DependencyType> getDependency() {
-        if (dependency == null) {
-            dependency = new ArrayList<DependencyType>();
+    public List<ModuleType> getModule() {
+        if (module == null) {
+            module = new ArrayList<ModuleType>();
         }
-        return this.dependency;
+        return this.module;
     }
 
 }

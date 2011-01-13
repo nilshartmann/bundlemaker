@@ -1,4 +1,4 @@
-package org.bundlemaker.core.structure101;
+package org.bundlemaker.core.exporter.structure101;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +15,12 @@ import javax.xml.bind.Marshaller;
 
 import org.bundlemaker.core.exporter.IModularizedSystemExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.structure101.xml.DataType;
+import org.bundlemaker.core.exporter.structure101.xml.DependenciesType;
+import org.bundlemaker.core.exporter.structure101.xml.DependencyType;
+import org.bundlemaker.core.exporter.structure101.xml.ModuleType;
+import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
+import org.bundlemaker.core.exporter.structure101.xml.ObjectFactory;
 import org.bundlemaker.core.model.projectdescription.ContentType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
@@ -22,12 +28,6 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceStandin;
-import org.bundlemaker.core.structure101.xml.DataType;
-import org.bundlemaker.core.structure101.xml.DependenciesType;
-import org.bundlemaker.core.structure101.xml.DependencyType;
-import org.bundlemaker.core.structure101.xml.ModuleType;
-import org.bundlemaker.core.structure101.xml.ModulesType;
-import org.bundlemaker.core.structure101.xml.ObjectFactory;
 import org.bundlemaker.core.util.ModelUtils;
 import org.bundlemaker.core.util.StopWatch;
 
