@@ -20,6 +20,7 @@ import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.springsource.bundlor.support.asm.AsmTypeArtefactAnalyser;
 
@@ -51,6 +52,14 @@ public class ByteCodeParser implements IParser {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public ParserType getParserType() {
+		return ParserType.BINARY;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void parseBundleMakerProjectStart(
 			IBundleMakerProject bundleMakerProject) {
 
@@ -62,8 +71,8 @@ public class ByteCodeParser implements IParser {
 	 */
 	@Override
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache)
-			throws CoreException {
+			List<IDirectory> directoryList, IResourceCache cache,
+			IProgressMonitor progressMonitor) throws CoreException {
 
 		List<IProblem> _errors = new LinkedList<IProblem>();
 
@@ -73,7 +82,7 @@ public class ByteCodeParser implements IParser {
 			for (IDirectoryFragment directoryFragment : directory
 					.getBinaryDirectoryFragments()) {
 
-				parseDirectoryFragment(directoryFragment, cache);
+				parseDirectoryFragment(directoryFragment, cache, progressMonitor);
 			}
 		}
 
@@ -94,13 +103,14 @@ public class ByteCodeParser implements IParser {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @param directoryFragment
 	 * @param cache
+	 * @param progressMonitor 
 	 * @throws CoreException
 	 */
 	private void parseDirectoryFragment(IDirectoryFragment directoryFragment,
-			IResourceCache cache) throws CoreException {
+			IResourceCache cache, IProgressMonitor progressMonitor) throws CoreException {
 
 		// handle jar file based content
 		if (directoryFragment instanceof IJarFileBasedDirectoryFragment) {
@@ -128,6 +138,9 @@ public class ByteCodeParser implements IParser {
 						e.printStackTrace();
 					}
 				}
+				
+				// 
+				progressMonitor.worked(1);
 			}
 		} else if (directoryFragment instanceof IFolderBasedDirectoryFragment) {
 
@@ -157,6 +170,9 @@ public class ByteCodeParser implements IParser {
 						e.printStackTrace();
 					}
 				}
+				
+				// 
+				progressMonitor.worked(1);
 			}
 		}
 	}
@@ -173,8 +189,8 @@ public class ByteCodeParser implements IParser {
 			JavaElementIdentifier elementID, IResourceCache cache)
 			throws CoreException {
 
-		System.out.println(String.format("Parsing '%s' ...",
-				elementID.getFullQualifiedName()));
+		// System.out.println(String.format("Parsing '%s' ...",
+		// elementID.getFullQualifiedName()));
 
 		JavaElementIdentifier enclosingJavaElementIdentifier = elementID
 				.getIdForEnclosingNonLocalAndNonAnonymousType();
@@ -205,5 +221,5 @@ public class ByteCodeParser implements IParser {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

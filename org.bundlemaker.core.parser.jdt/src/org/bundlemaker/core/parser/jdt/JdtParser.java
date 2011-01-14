@@ -12,6 +12,7 @@ import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.parser.IParser;
+import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
 import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
@@ -20,10 +21,14 @@ import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
+import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -53,7 +58,16 @@ public class JdtParser implements IParser {
 	/** - */
 	private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
 
+	/** - */
 	private List<IJdtSourceParserHook> _currentHooks;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ParserType getParserType() {
+		return ParserType.SOURCE;
+	}
 
 	/**
 	 * <p>
@@ -115,8 +129,8 @@ public class JdtParser implements IParser {
 	 */
 	@Override
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache)
-			throws CoreException {
+			List<IDirectory> directoryList, IResourceCache cache,
+			IProgressMonitor progressMonitor) throws CoreException {
 
 		// create the error list
 		List<IProblem> _errors = new LinkedList<IProblem>();
@@ -126,7 +140,8 @@ public class JdtParser implements IParser {
 				&& !content.getResourceContent().getSourceResources().isEmpty()
 				&& content.getResourceContent().isAnalyzeSourceResources()) {
 
-			_errors.addAll(parseCompilationUnits(directoryList, cache, content));
+			_errors.addAll(parseCompilationUnits(directoryList, cache, content,
+					progressMonitor));
 		}
 
 		// return the errors
@@ -137,12 +152,15 @@ public class JdtParser implements IParser {
 	 * <p>
 	 * </p>
 	 * 
+	 * @param progressMonitor
+	 * 
 	 * @param compilationUnits
 	 * @throws JavaModelException
 	 */
 	private List<IProblem> parseCompilationUnits(
 			List<IDirectory> directoryList, IResourceCache cache,
-			IFileBasedContent fileBasedContent) throws CoreException {
+			IFileBasedContent fileBasedContent, IProgressMonitor progressMonitor)
+			throws CoreException {
 
 		List<IProblem> problems = new LinkedList<IProblem>();
 
@@ -189,8 +207,16 @@ public class JdtParser implements IParser {
 									.toString().replace('/', '.'));
 
 					if (fragment != null && fragment.exists()) {
-						for (ICompilationUnit iCompilationUnit : fragment
-								.getCompilationUnits()) {
+
+						ICompilationUnit[] compilationUnits = fragment
+								.getCompilationUnits();
+
+						// set the diff
+						progressMonitor.worked(directory
+								.getSourceContentCount()
+								- compilationUnits.length);
+
+						for (ICompilationUnit iCompilationUnit : compilationUnits) {
 							units.put(iCompilationUnit, directory);
 						}
 					}
@@ -211,27 +237,33 @@ public class JdtParser implements IParser {
 		_parser.setResolveBindings(true);
 		_parser.setProject(_javaProject);
 
-		System.out.println("Creating ASTs for " + compilationUnitArray.length
-				+ " entries");
+		// System.out.println("Creating ASTs for " + compilationUnitArray.length
+		// + " entries");
 
 		// parse the CUs
+		// Convert the given monitor into a progress instance
 		_parser.createASTs(compilationUnitArray, new String[] {}, requestor,
-				null);
+				new JdtParserProgressMonitor(progressMonitor,
+						compilationUnitArray.length / 2));
 
-		System.out.println("Analyzing source ASTs for "
-				+ compilationUnitArray.length + " entries");
+		// System.out.println("Analyzing source ASTs for "
+		// + compilationUnitArray.length + " entries");
 
 		// analyze all parsed CUs
+		IProgressMonitor monitor = new JdtParserProgressMonitor(
+				progressMonitor, requestor.getCompilationUnits().size() / 2,
+				requestor.getCompilationUnits().size());
+
 		for (Entry<ICompilationUnit, CompilationUnit> entry : requestor
 				.getCompilationUnits().entrySet()) {
 
 			// analyze
 			problems.addAll(analyzeCompilationUnit(entry.getKey(),
 					entry.getValue(), units.get(entry.getKey()), rootMap,
-					cache, fileBasedContent));
+					cache, fileBasedContent, monitor));
 		}
 
-		System.out.println("Analyzing source done...");
+		// System.out.println("Analyzing source done...");
 
 		return problems;
 	}
@@ -241,6 +273,7 @@ public class JdtParser implements IParser {
 	 * </p>
 	 * 
 	 * @param rootMap
+	 * @param progressMonitor
 	 * 
 	 * @param entry
 	 * @param content
@@ -249,16 +282,19 @@ public class JdtParser implements IParser {
 	private List<IProblem> analyzeCompilationUnit(
 			ICompilationUnit iCompilationUnit, CompilationUnit compilationUnit,
 			IDirectory iDirectory, Map<String, String> rootMap,
-			IResourceCache cache, IFileBasedContent fileBasedContent)
-			throws CoreException {
+			IResourceCache cache, IFileBasedContent fileBasedContent,
+			IProgressMonitor progressMonitor) throws CoreException {
 
+		if (progressMonitor != null) {
+			progressMonitor.subTask(iCompilationUnit.getElementName());
+		}
 		// step 1: create the result list
 		List<IProblem> problems = new LinkedList<IProblem>();
 
 		// step 2: give feedback
 		// TODO
-		System.out.println("Analyzing source files '"
-				+ iCompilationUnit.getElementName() + "'.");
+		// System.out.println("Analyzing source files '"
+		// + iCompilationUnit.getElementName() + "'.");
 
 		// _progressMonitor.subTask("Analyzing source files '"
 		// + iCompilationUnit.getElementName() + "'.");
@@ -351,6 +387,11 @@ public class JdtParser implements IParser {
 			if (problem.isError()) {
 				problems.add(problem);
 			}
+		}
+
+		//
+		if (progressMonitor != null) {
+			progressMonitor.worked(1);
 		}
 
 		// step 11: finally return

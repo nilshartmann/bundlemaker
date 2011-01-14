@@ -6,6 +6,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -15,6 +16,14 @@ import org.eclipse.core.runtime.CoreException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IParser {
+
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	public ParserType getParserType();
 
 	/**
 	 * <p>
@@ -32,13 +41,14 @@ public interface IParser {
 	 * @param content
 	 * @param directories
 	 * @param cache
+	 * @param _progressMonitor
 	 * 
 	 * @return
 	 * @throws CoreException
 	 */
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directories, IResourceCache cache)
-			throws CoreException;
+			List<IDirectory> directories, IResourceCache cache,
+			IProgressMonitor _progressMonitor) throws CoreException;
 
 	/**
 	 * <p>
@@ -48,4 +58,14 @@ public interface IParser {
 	 */
 	public void parseBundleMakerProjectStop(
 			IBundleMakerProject bundleMakerProject);
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+	 */
+	public enum ParserType {
+		BINARY, SOURCE, BINARY_AND_SOURCE;
+	}
 }

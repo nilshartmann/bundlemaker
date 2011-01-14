@@ -32,29 +32,8 @@
 
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/resource"
-            class="org.bundlemaker.core.model.resource.ResourcePackage"
-            genModel="model/bm-model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <package
-            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/dependencies/modifiableresource"
-            class="org.bundlemaker.core.model.resource.modifiableresource.ModifiableresourcePackage"
-            genModel="model/bm-model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <package
             uri="http://www.bundlemaker.org/org/bundlemaker/core/model/module"
             class="org.bundlemaker.core.model.module.ModulePackage"
-            genModel="model/bm-model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <package
-            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/module/modifiablemodule"
-            class="org.bundlemaker.core.model.module.modifiablemodule.ModifiablemodulePackage"
             genModel="model/bm-model.genmodel"/>
    </extension>
 

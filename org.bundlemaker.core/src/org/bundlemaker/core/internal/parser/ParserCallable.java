@@ -10,6 +10,7 @@ import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -37,6 +38,9 @@ public class ParserCallable implements Callable<List<IProblem>> {
 	/** - */
 	private IResourceCache _resourceCache;
 
+	/** - */
+	private IProgressMonitor _progressMonitor;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ParserCallable}.
@@ -49,7 +53,7 @@ public class ParserCallable implements Callable<List<IProblem>> {
 	 */
 	public ParserCallable(IFileBasedContent content,
 			List<IDirectory> directories, IParser parser,
-			IResourceCache resourceCache) {
+			IResourceCache resourceCache, IProgressMonitor progressMonitor) {
 
 		//
 		Assert.isNotNull(content);
@@ -68,6 +72,9 @@ public class ParserCallable implements Callable<List<IProblem>> {
 
 		//
 		_resourceCache = resourceCache;
+		
+		//
+		_progressMonitor = progressMonitor;
 	}
 
 	/**
@@ -91,7 +98,7 @@ public class ParserCallable implements Callable<List<IProblem>> {
 
 				// parse
 				_parser.parse(_content, _directories.subList(fromIndex, i + 1),
-						_resourceCache);
+						_resourceCache, _progressMonitor);
 
 				// set index
 				resourceCount = 0;

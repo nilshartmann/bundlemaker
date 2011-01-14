@@ -33,8 +33,6 @@ public class ProgressMonitor extends NullProgressMonitor {
 		Assert.isNotNull(name);
 		Assert.isTrue(totalWork > 0);
 
-		System.err.println("beginTask(" + name + ", " + totalWork + ")");
-
 		_totalWork = totalWork;
 
 		_stopWatch = new StopWatch();
@@ -42,7 +40,7 @@ public class ProgressMonitor extends NullProgressMonitor {
 	}
 
 	public void setTaskName(String name) {
-		System.err.println("setTaskName(" + name + ")");
+		// System.err.println(name);
 	}
 
 	public void worked(int work) {

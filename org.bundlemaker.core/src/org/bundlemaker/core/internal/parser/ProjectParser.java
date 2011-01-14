@@ -12,6 +12,7 @@ import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableFileBasedContent;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
+import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.resource.StringCache;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
@@ -29,16 +30,14 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 public class ProjectParser {
 
 	/** THREAD_COUNT */
-	private static final int THREAD_COUNT = Runtime.getRuntime().availableProcessors();
+	private static final int THREAD_COUNT = Runtime.getRuntime()
+			.availableProcessors();
 
 	/** the list of all errors */
 	public List<IProblem> _errors;
 
 	/** the bundle maker project */
 	private BundleMakerProject _bundleMakerProject;
-
-	/** the progress monitor */
-	private IProgressMonitor _progressMonitor;
 
 	/** the parser array: the first index is the parser, the second the thread */
 	private IParser[][] _parsers;
@@ -77,16 +76,16 @@ public class ProjectParser {
 		_errors = new LinkedList<IProblem>();
 
 		// set the progress monitor
-		_progressMonitor = progressMonitor == null ? new NullProgressMonitor()
+		progressMonitor = progressMonitor == null ? new NullProgressMonitor()
 				: progressMonitor;
-
-		// compute the artifact count
-		// TODO
-		int count = computeArtifactCount();
-		_progressMonitor.beginTask("parsing project: files to analyze ", count);
 
 		// set up the parser
 		setupParsers();
+
+		// compute the artifact count
+		// TODO
+		progressMonitor.beginTask("parsing project: files to analyze ",
+				computeArtifactCount());
 
 		//
 		notifyParseStart();
@@ -98,8 +97,12 @@ public class ProjectParser {
 		for (ModifiableFileBasedContent fileBasedContent : _bundleMakerProject
 				.getProjectDescription().getModifiableFileBasedContent()) {
 
+			// TODO: PARSER-MONITOR
+			progressMonitor.setTaskName(String.format("Parsing '%s'...",
+					fileBasedContent.getName()));
+
 			// parse the content
-			parseContent(fileBasedContent, stringCache);
+			parseContent(fileBasedContent, stringCache, progressMonitor);
 		}
 
 		//
@@ -117,7 +120,8 @@ public class ProjectParser {
 	 * @throws CoreException
 	 */
 	@SuppressWarnings("unchecked")
-	private void parseContent(IFileBasedContent content, StringCache stringCache)
+	private void parseContent(ModifiableFileBasedContent content,
+			StringCache stringCache, IProgressMonitor progressMonitor)
 			throws CoreException {
 
 		// return if content is no resource content
@@ -159,40 +163,67 @@ public class ProjectParser {
 			//
 			IParser[] parser4Thread = _parsers[i];
 
-			// create the parser callables array
-			ParserCallable[] parserCallables = new ParserCallable[THREAD_COUNT];
+			ParserType parserType = parser4Thread[0].getParserType();
 
-			// create the parser callables
-			for (int threadIndex = 0; threadIndex < THREAD_COUNT; threadIndex++) {
-				parserCallables[threadIndex] = new ParserCallable(content,
-						packageFragmentsParts[threadIndex],
-						parser4Thread[threadIndex], cache);
-			}
+			if (matches(parserType, content)) {
 
-			// execute the callables
-			FutureTask<List<IProblem>>[] futureTasks = new FutureTask[THREAD_COUNT];
-			for (int threadIndex = 0; threadIndex < THREAD_COUNT; threadIndex++) {
-				futureTasks[threadIndex] = new FutureTask<List<IProblem>>(
-						parserCallables[threadIndex]);
-				new Thread(futureTasks[threadIndex]).start();
-			}
+				ProgressMonitorWrapper monitorWrapper = new ProgressMonitorWrapper(
+						progressMonitor);
 
-			// collect the result
-			// TODO
-			try {
+				// create the parser callables array
+				ParserCallable[] parserCallables = new ParserCallable[THREAD_COUNT];
+
+				// create the parser callables
 				for (int threadIndex = 0; threadIndex < THREAD_COUNT; threadIndex++) {
-					List<IProblem> errors = futureTasks[threadIndex].get();
-					_errors.addAll(errors);
+					parserCallables[threadIndex] = new ParserCallable(content,
+							packageFragmentsParts[threadIndex],
+							parser4Thread[threadIndex], cache, monitorWrapper);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
+
+				// execute the callables
+				FutureTask<List<IProblem>>[] futureTasks = new FutureTask[THREAD_COUNT];
+				for (int threadIndex = 0; threadIndex < THREAD_COUNT; threadIndex++) {
+					futureTasks[threadIndex] = new FutureTask<List<IProblem>>(
+							parserCallables[threadIndex]);
+					new Thread(futureTasks[threadIndex]).start();
+				}
+				// collect the result
+				// TODO
+				try {
+					for (int threadIndex = 0; threadIndex < THREAD_COUNT; threadIndex++) {
+						List<IProblem> errors = futureTasks[threadIndex].get();
+						_errors.addAll(errors);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+
+				// correct the tick count if necessary
+				int[] count = getResourcesToParseCount(content,
+						parser4Thread[0]);
+				int ticksToAdd = (count[0] + count[1])
+						- monitorWrapper.getWorked();
+				if (ticksToAdd > 0) {
+					progressMonitor.worked(ticksToAdd);
+				}
 			}
 		}
 
 		//
 		cache.commit();
 		cache.clear();
+	}
+
+	private boolean matches(ParserType parserType, IFileBasedContent content) {
+		return ((parserType.equals(ParserType.BINARY) || parserType
+				.equals(ParserType.BINARY_AND_SOURCE)) && !content
+				.getResourceContent().getBinaryResources().isEmpty())
+				|| ((parserType.equals(ParserType.SOURCE) || parserType
+						.equals(ParserType.BINARY_AND_SOURCE))
+						&& !content.getResourceContent().getSourceResources()
+								.isEmpty() && content.getResourceContent()
+						.isAnalyzeSourceResources());
 	}
 
 	/**
@@ -270,21 +301,87 @@ public class ProjectParser {
 	private int computeArtifactCount() {
 
 		//
-		int count = 0;
+		int binaryResourcesToParse = 0;
+		int sourceResourcesToParse = 0;
 
-		for (IFileBasedContent fileBasedContent : _bundleMakerProject
-				.getProjectDescription().getFileBasedContent()) {
+		for (ModifiableFileBasedContent fileBasedContent : _bundleMakerProject
+				.getProjectDescription().getModifiableFileBasedContent()) {
 
-			if (fileBasedContent.isResourceContent()) {
+			int[] resourcesToParse = countResourcesToParse(fileBasedContent);
 
-				count += fileBasedContent.getResourceContent()
-						.getBinaryResources().size()
-						+ fileBasedContent.getResourceContent()
-								.getSourceResources().size();
+			binaryResourcesToParse += resourcesToParse[0];
+			sourceResourcesToParse += resourcesToParse[1];
+		}
+
+		System.out.println(binaryResourcesToParse + " : "
+				+ sourceResourcesToParse);
+
+		//
+		return binaryResourcesToParse + sourceResourcesToParse;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 */
+	private int[] countResourcesToParse(ModifiableFileBasedContent content) {
+
+		//
+		int binaryResourcesToParse = 0;
+		int sourceResourcesToParse = 0;
+
+		if (content.isResourceContent()) {
+
+			//
+			for (IParser[] parsers4Thread : _parsers) {
+
+				int[] count = getResourcesToParseCount(content,
+						parsers4Thread[0]);
+
+				binaryResourcesToParse += count[0];
+				sourceResourcesToParse += count[1];
 			}
 		}
 
+		return new int[] { binaryResourcesToParse, sourceResourcesToParse };
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param content
+	 * @param parser
+	 * 
+	 * @return
+	 */
+	private int[] getResourcesToParseCount(ModifiableFileBasedContent content,
+			IParser parser) {
+
 		//
-		return count;
+		if (parser.getParserType().equals(ParserType.BINARY)) {
+
+			return new int[] {
+					content.getModifiableResourceContent().getBinaryResources()
+							.size(), 0 };
+
+		} else if (parser.getParserType().equals(ParserType.SOURCE)) {
+
+			return new int[] {
+					0,
+					content.getModifiableResourceContent().getSourceResources()
+							.size() };
+
+		} else if (parser.getParserType().equals(ParserType.BINARY_AND_SOURCE)) {
+
+			return new int[] {
+					content.getModifiableResourceContent().getBinaryResources()
+							.size(),
+					content.getModifiableResourceContent().getSourceResources()
+							.size() };
+		}
+
+		return new int[] { 0, 0 };
 	}
 }
