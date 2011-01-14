@@ -20,6 +20,7 @@ import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.springsource.bundlor.support.asm.AsmTypeArtefactAnalyser;
 
@@ -62,7 +63,7 @@ public class ByteCodeParser implements IParser {
 	 */
 	@Override
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache)
+			List<IDirectory> directoryList, IResourceCache cache, IProgressMonitor progressMonitor)
 			throws CoreException {
 
 		List<IProblem> _errors = new LinkedList<IProblem>();
@@ -173,8 +174,8 @@ public class ByteCodeParser implements IParser {
 			JavaElementIdentifier elementID, IResourceCache cache)
 			throws CoreException {
 
-		System.out.println(String.format("Parsing '%s' ...",
-				elementID.getFullQualifiedName()));
+//		System.out.println(String.format("Parsing '%s' ...",
+//				elementID.getFullQualifiedName()));
 
 		JavaElementIdentifier enclosingJavaElementIdentifier = elementID
 				.getIdForEnclosingNonLocalAndNonAnonymousType();

@@ -6,6 +6,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -32,12 +33,13 @@ public interface IParser {
 	 * @param content
 	 * @param directories
 	 * @param cache
+	 * @param _progressMonitor 
 	 * 
 	 * @return
 	 * @throws CoreException
 	 */
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directories, IResourceCache cache)
+			List<IDirectory> directories, IResourceCache cache, IProgressMonitor _progressMonitor)
 			throws CoreException;
 
 	/**

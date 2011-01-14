@@ -29,7 +29,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 public class ProjectParser {
 
 	/** THREAD_COUNT */
-	private static final int THREAD_COUNT = Runtime.getRuntime().availableProcessors();
+	private static final int THREAD_COUNT = Runtime.getRuntime()
+			.availableProcessors();
 
 	/** the list of all errors */
 	public List<IProblem> _errors;
@@ -95,8 +96,19 @@ public class ProjectParser {
 		StringCache stringCache = new StringCache();
 
 		// iterate over the project content
+		int contentCount = 0;
+
 		for (ModifiableFileBasedContent fileBasedContent : _bundleMakerProject
 				.getProjectDescription().getModifiableFileBasedContent()) {
+
+			// TODO: PARSER-MONITOR
+			System.out.println("Content '"
+					+ fileBasedContent.getName()
+					+ "' "
+					+ contentCount++
+					+ "/"
+					+ _bundleMakerProject.getProjectDescription()
+							.getModifiableFileBasedContent().size());
 
 			// parse the content
 			parseContent(fileBasedContent, stringCache);
@@ -156,6 +168,12 @@ public class ProjectParser {
 		// create parser callables
 		for (int i = 0; i < _parsers.length; i++) {
 
+			// TODO: PARSER-MONITOR
+			System.out.println("Executing parser " + i + "/" + _parsers.length);
+
+			// TODO: Optimize: check for binary/source content and binary/source
+			// parsers
+
 			//
 			IParser[] parser4Thread = _parsers[i];
 
@@ -166,7 +184,7 @@ public class ProjectParser {
 			for (int threadIndex = 0; threadIndex < THREAD_COUNT; threadIndex++) {
 				parserCallables[threadIndex] = new ParserCallable(content,
 						packageFragmentsParts[threadIndex],
-						parser4Thread[threadIndex], cache);
+						parser4Thread[threadIndex], cache, null);
 			}
 
 			// execute the callables

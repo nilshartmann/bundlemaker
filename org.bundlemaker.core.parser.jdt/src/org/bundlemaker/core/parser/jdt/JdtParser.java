@@ -23,6 +23,7 @@ import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -115,7 +116,7 @@ public class JdtParser implements IParser {
 	 */
 	@Override
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache)
+			List<IDirectory> directoryList, IResourceCache cache, IProgressMonitor progressMonitor)
 			throws CoreException {
 
 		// create the error list
@@ -211,15 +212,15 @@ public class JdtParser implements IParser {
 		_parser.setResolveBindings(true);
 		_parser.setProject(_javaProject);
 
-		System.out.println("Creating ASTs for " + compilationUnitArray.length
-				+ " entries");
+//		System.out.println("Creating ASTs for " + compilationUnitArray.length
+//				+ " entries");
 
 		// parse the CUs
 		_parser.createASTs(compilationUnitArray, new String[] {}, requestor,
 				null);
 
-		System.out.println("Analyzing source ASTs for "
-				+ compilationUnitArray.length + " entries");
+//		System.out.println("Analyzing source ASTs for "
+//				+ compilationUnitArray.length + " entries");
 
 		// analyze all parsed CUs
 		for (Entry<ICompilationUnit, CompilationUnit> entry : requestor
@@ -231,7 +232,7 @@ public class JdtParser implements IParser {
 					cache, fileBasedContent));
 		}
 
-		System.out.println("Analyzing source done...");
+//		System.out.println("Analyzing source done...");
 
 		return problems;
 	}
@@ -257,8 +258,8 @@ public class JdtParser implements IParser {
 
 		// step 2: give feedback
 		// TODO
-		System.out.println("Analyzing source files '"
-				+ iCompilationUnit.getElementName() + "'.");
+		// System.out.println("Analyzing source files '"
+		// + iCompilationUnit.getElementName() + "'.");
 
 		// _progressMonitor.subTask("Analyzing source files '"
 		// + iCompilationUnit.getElementName() + "'.");
