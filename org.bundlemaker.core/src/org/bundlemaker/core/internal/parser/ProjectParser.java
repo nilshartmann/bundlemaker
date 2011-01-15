@@ -97,7 +97,6 @@ public class ProjectParser {
 		for (ModifiableFileBasedContent fileBasedContent : _bundleMakerProject
 				.getProjectDescription().getModifiableFileBasedContent()) {
 
-			// TODO: PARSER-MONITOR
 			progressMonitor.setTaskName(String.format("Parsing '%s'...",
 					fileBasedContent.getName()));
 

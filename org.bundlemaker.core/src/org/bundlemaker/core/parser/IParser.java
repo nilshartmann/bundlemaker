@@ -41,7 +41,7 @@ public interface IParser {
 	 * @param content
 	 * @param directories
 	 * @param cache
-	 * @param _progressMonitor
+	 * @param _progressMonitor 
 	 * 
 	 * @return
 	 * @throws CoreException

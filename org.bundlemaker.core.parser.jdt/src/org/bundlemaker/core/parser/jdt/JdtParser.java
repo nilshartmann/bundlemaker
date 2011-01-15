@@ -129,8 +129,8 @@ public class JdtParser implements IParser {
 	 */
 	@Override
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache,
-			IProgressMonitor progressMonitor) throws CoreException {
+			List<IDirectory> directoryList, IResourceCache cache, IProgressMonitor progressMonitor)
+			throws CoreException {
 
 		// create the error list
 		List<IProblem> _errors = new LinkedList<IProblem>();
@@ -237,17 +237,11 @@ public class JdtParser implements IParser {
 		_parser.setResolveBindings(true);
 		_parser.setProject(_javaProject);
 
-		// System.out.println("Creating ASTs for " + compilationUnitArray.length
-		// + " entries");
-
 		// parse the CUs
 		// Convert the given monitor into a progress instance
 		_parser.createASTs(compilationUnitArray, new String[] {}, requestor,
 				new JdtParserProgressMonitor(progressMonitor,
 						compilationUnitArray.length / 2));
-
-		// System.out.println("Analyzing source ASTs for "
-		// + compilationUnitArray.length + " entries");
 
 		// analyze all parsed CUs
 		IProgressMonitor monitor = new JdtParserProgressMonitor(
@@ -262,8 +256,6 @@ public class JdtParser implements IParser {
 					entry.getValue(), units.get(entry.getKey()), rootMap,
 					cache, fileBasedContent, monitor));
 		}
-
-		// System.out.println("Analyzing source done...");
 
 		return problems;
 	}

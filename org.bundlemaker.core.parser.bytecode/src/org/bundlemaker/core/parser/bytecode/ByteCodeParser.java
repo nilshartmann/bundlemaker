@@ -82,7 +82,8 @@ public class ByteCodeParser implements IParser {
 			for (IDirectoryFragment directoryFragment : directory
 					.getBinaryDirectoryFragments()) {
 
-				parseDirectoryFragment(directoryFragment, cache, progressMonitor);
+				parseDirectoryFragment(directoryFragment, cache,
+						progressMonitor);
 			}
 		}
 
@@ -106,11 +107,12 @@ public class ByteCodeParser implements IParser {
 	 * 
 	 * @param directoryFragment
 	 * @param cache
-	 * @param progressMonitor 
+	 * @param progressMonitor
 	 * @throws CoreException
 	 */
 	private void parseDirectoryFragment(IDirectoryFragment directoryFragment,
-			IResourceCache cache, IProgressMonitor progressMonitor) throws CoreException {
+			IResourceCache cache, IProgressMonitor progressMonitor)
+			throws CoreException {
 
 		// handle jar file based content
 		if (directoryFragment instanceof IJarFileBasedDirectoryFragment) {
@@ -138,8 +140,8 @@ public class ByteCodeParser implements IParser {
 						e.printStackTrace();
 					}
 				}
-				
-				// 
+
+				//
 				progressMonitor.worked(1);
 			}
 		} else if (directoryFragment instanceof IFolderBasedDirectoryFragment) {
@@ -170,8 +172,8 @@ public class ByteCodeParser implements IParser {
 						e.printStackTrace();
 					}
 				}
-				
-				// 
+
+				//
 				progressMonitor.worked(1);
 			}
 		}
@@ -188,9 +190,6 @@ public class ByteCodeParser implements IParser {
 	private void parseClassFile(InputStream inputStream,
 			JavaElementIdentifier elementID, IResourceCache cache)
 			throws CoreException {
-
-		// System.out.println(String.format("Parsing '%s' ...",
-		// elementID.getFullQualifiedName()));
 
 		JavaElementIdentifier enclosingJavaElementIdentifier = elementID
 				.getIdForEnclosingNonLocalAndNonAnonymousType();
@@ -221,5 +220,4 @@ public class ByteCodeParser implements IParser {
 			e.printStackTrace();
 		}
 	}
-
 }
