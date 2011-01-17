@@ -2,7 +2,6 @@ package org.bundlemaker.core.modules;
 
 import java.util.Map;
 
-import org.bundlemaker.core.model.module.IModuleIdentifier;
 import org.eclipse.core.runtime.IPath;
 
 /**

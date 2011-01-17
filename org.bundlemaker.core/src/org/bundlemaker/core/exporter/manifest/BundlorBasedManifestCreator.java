@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.model.projectdescription.ContentType;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;

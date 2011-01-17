@@ -15,18 +15,16 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.bundlemaker.core.internal.JdkModuleCreator;
-import org.bundlemaker.core.model.module.IModuleIdentifier;
-import org.bundlemaker.core.model.module.ModifiableModuleIdentifier;
-import org.bundlemaker.core.model.projectdescription.ContentType;
-import org.bundlemaker.core.model.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.transformation.ITransformation;
-import org.bundlemaker.core.util.ModelUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 
 public class ModularizedSystem implements IModularizedSystem {
 
@@ -131,14 +129,15 @@ public class ModularizedSystem implements IModularizedSystem {
 
 			if (!fileBasedContent.isResourceContent()) {
 
-				IModuleIdentifier identifier = ModelUtils
-						.createModuleIdentifier(fileBasedContent.getName(),
-								fileBasedContent.getVersion());
+				IModuleIdentifier identifier = new ModuleIdentifier(
+						fileBasedContent.getName(),
+						fileBasedContent.getVersion());
 
 				// TODO!!
-				TypeModule typeModule = createTypeModule(identifier,
-						new File[] { fileBasedContent.getBinaryPaths().get(0)
-								.toFile() });
+				TypeModule typeModule = createTypeModule(
+						identifier,
+						new File[] { fileBasedContent.getBinaryPaths().toArray(
+								new IPath[0])[0].toFile() });
 
 				_typeModules.add(typeModule);
 
@@ -251,7 +250,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		//
 		for (TypeModule module : _typeModules) {
 
-			if (ModelUtils.equals(module.getModuleIdentifier(), identifier)) {
+			if (module.getModuleIdentifier().equals(identifier)) {
 				return module;
 			}
 		}
@@ -292,7 +291,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		//
 		for (ResourceModule module : _resourceModules) {
 
-			if (ModelUtils.equals(module.getModuleIdentifier(), identifier)) {
+			if (module.getModuleIdentifier().equals(identifier)) {
 				return module;
 			}
 		}
@@ -597,7 +596,7 @@ public class ModularizedSystem implements IModularizedSystem {
 	}
 
 	public ResourceModule createResourceModule(
-			ModifiableModuleIdentifier createModuleIdentifier) {
+			IModuleIdentifier createModuleIdentifier) {
 
 		//
 		ResourceModule resourceModule = new ResourceModule(

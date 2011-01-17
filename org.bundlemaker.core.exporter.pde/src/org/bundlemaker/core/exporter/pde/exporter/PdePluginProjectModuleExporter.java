@@ -1,8 +1,6 @@
 package org.bundlemaker.core.exporter.pde.exporter;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,17 +11,18 @@ import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.Activator;
-import org.bundlemaker.core.model.projectdescription.ContentType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.util.FileUtils;
 import org.bundlemaker.core.util.ModelUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -85,7 +84,19 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 				.getName());
 
 		// delete and create project
-		IProject project = deleteAndCreateProject(projectName);
+		IPath location = null;
+
+		if (getConfiguration(context).isUseClassifcationForExportDestination()) {
+
+			Path destinationDirectoryPath = new Path(context
+					.getDestinationDirectory().getAbsolutePath());
+
+			location = destinationDirectoryPath.append(
+					module.getClassification()).append(projectName);
+		}
+
+		//
+		IProject project = deleteAndCreateProject(projectName, location);
 
 		// add java and plug-nature
 		IProjectDescription description = project.getDescription();
@@ -105,8 +116,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 				.getAttribute(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY);
 
 		File template = new File(templateDirectory, String.format(
-				"%s.template",
-				ModelUtils.toString(module.getModuleIdentifier())));
+				"%s.template", module.getModuleIdentifier().toString()));
 
 		if (template.exists()) {
 
@@ -146,17 +156,15 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		bundleProjectDescription.setBundleVersion(new Version(module
 				.getModuleIdentifier().getVersion()));
 
-		String depDesc = (String) context
-				.getAttribute(PdeExporterAttributes.BUNDLE_DEPENDENCY_DESCRIPTION);
-
-		if (depDesc == null
-				|| PdeExporterAttributes.STRICT_IMPORT_PACKAGE.equals(depDesc)) {
+		if (getConfiguration(context).equals(
+				PdeExporterConfiguration.STRICT_IMPORT_PACKAGE)) {
 
 			// import packages
 			addImportPackages(module, modularizedSystem, bundleProjectService,
 					bundleProjectDescription);
 
-		} else if (PdeExporterAttributes.STRICT_REQUIRE_BUNDLE.equals(depDesc)) {
+		} else if (getConfiguration(context).equals(
+				PdeExporterConfiguration.STRICT_REQUIRE_BUNDLE)) {
 
 			// require bundles
 			addRequireBundle(module, modularizedSystem, bundleProjectService,
@@ -286,5 +294,23 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 			}
 		}
 		return match;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param context
+	 * @return
+	 */
+	private PdeExporterConfiguration getConfiguration(
+			IModuleExporterContext context) {
+
+		// get the result
+		PdeExporterConfiguration result = (PdeExporterConfiguration) context
+				.getAttribute(PdeExporterConfiguration.KEY);
+
+		// return the result
+		return result;
 	}
 }

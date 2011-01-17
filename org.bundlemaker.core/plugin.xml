@@ -15,32 +15,11 @@
          </run>
       </runtime>
    </extension>
-
+   
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
-            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/projectdescription"
-            class="org.bundlemaker.core.model.projectdescription.ProjectdescriptionPackage"
-            genModel="model/bm-model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <package
-            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/projectdescription/modifiableprojectdescription"
-            class="org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableprojectdescriptionPackage"
-            genModel="model/bm-model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <package
-            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/module"
-            class="org.bundlemaker.core.model.module.ModulePackage"
-            genModel="model/bm-model.genmodel"/>
-   </extension>
-
-   <extension point="org.eclipse.emf.ecore.generated_package">
-      <package
-            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/transformation"
-            class="org.bundlemaker.core.model.transformation.TransformationPackage"
+            uri="http://www.bundlemaker.org/org/bundlemaker/core/model/internal/projectdescription"
+            class="org.bundlemaker.core.model.internal.projectdescription.ProjectdescriptionPackage"
             genModel="model/bm-model.genmodel"/>
    </extension>
 

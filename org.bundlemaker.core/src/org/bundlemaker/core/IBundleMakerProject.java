@@ -3,8 +3,8 @@ package org.bundlemaker.core;
 import java.util.List;
 
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.store.IDependencyStore;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -44,7 +44,7 @@ public interface IBundleMakerProject {
 
 	/**
 	 * <p>
-	 * Returns the {@link ModifiableBundleMakerProjectDescription}.
+	 * Returns the {@link BundleMakerProjectDescription}.
 	 * </p>
 	 * <p>
 	 * Note that you have to (re-) initialize the {@link IBundleMakerProject} in
@@ -53,7 +53,7 @@ public interface IBundleMakerProject {
 	 * IBundleMakerProject bundleMakerProject = ...
 	 * 
 	 * // get the project description
-	 * ModifiableBundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
+	 * BundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
 	 * 
 	 * // make changes to the project description
 	 * projectDescription.setJRE("jdk16");
@@ -62,15 +62,15 @@ public interface IBundleMakerProject {
 	 * projectDescription.initialize();</pre></code>
 	 * </p>
 	 * 
-	 * @return the {@link ModifiableBundleMakerProjectDescription}.
+	 * @return the {@link BundleMakerProjectDescription}.
 	 * 
 	 * @precondition none
 	 */
-	public ModifiableBundleMakerProjectDescription getProjectDescription();
+	public BundleMakerProjectDescription getProjectDescription();
 
 	/**
 	 * <p>
-	 * Saves the {@link ModifiableBundleMakerProjectDescription}.
+	 * Saves the {@link BundleMakerProjectDescription}.
 	 * </p>
 	 * <p>
 	 * The project description is saved internally in the xml file
@@ -98,7 +98,7 @@ public interface IBundleMakerProject {
 	/**
 	 * <p>
 	 * Initializes the project. You have to recall this method every time you
-	 * changed the {@link ModifiableBundleMakerProjectDescription} of this
+	 * changed the {@link BundleMakerProjectDescription} of this
 	 * {@link IBundleMakerProject}.
 	 * </p>
 	 * 

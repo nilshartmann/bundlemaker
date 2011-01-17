@@ -21,11 +21,11 @@ import org.bundlemaker.core.exporter.structure101.xml.DependencyType;
 import org.bundlemaker.core.exporter.structure101.xml.ModuleType;
 import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
 import org.bundlemaker.core.exporter.structure101.xml.ObjectFactory;
-import org.bundlemaker.core.model.projectdescription.ContentType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.util.ModelUtils;
@@ -142,8 +142,8 @@ public class Structure101Exporter implements IModularizedSystemExporter {
 		module.setName(typeModule.getClassification() != null ? typeModule
 				.getClassification().toString()
 				+ "/"
-				+ ModelUtils.toString(typeModule.getModuleIdentifier())
-				: ModelUtils.toString(typeModule.getModuleIdentifier()));
+				+ typeModule.getModuleIdentifier().toString() : typeModule
+				.getModuleIdentifier().toString());
 		module.setId(getModuleId(typeModule));
 
 		for (Entry<String, List<String>> entry : packageList.entrySet()) {

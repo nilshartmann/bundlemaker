@@ -2,7 +2,7 @@ package org.bundlemaker.core.modules;
 
 import java.util.Set;
 
-import org.bundlemaker.core.model.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResourceStandin;
 
 /**

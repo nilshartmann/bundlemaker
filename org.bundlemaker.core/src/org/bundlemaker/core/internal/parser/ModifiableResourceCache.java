@@ -7,8 +7,8 @@ import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.StringCache;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -20,12 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 public class ModifiableResourceCache implements IResourceCache {
 
 	/** the element map */
-	Map<IResourceKey, Resource> _resourceMap;
+	private Map<IResourceKey, Resource> _resourceMap;
 
 	/** the dependency store */
-	IPersistentDependencyStore _dependencyStore;
-
-	private StringCache _stringCache;
+	private IPersistentDependencyStore _dependencyStore;
 
 	/**
 	 * <p>
@@ -34,14 +32,12 @@ public class ModifiableResourceCache implements IResourceCache {
 	 * 
 	 * @param dependencyStore
 	 */
-	public ModifiableResourceCache(IPersistentDependencyStore dependencyStore,
-			StringCache stringCache) {
+	public ModifiableResourceCache(IPersistentDependencyStore dependencyStore) {
+
+		Assert.isNotNull(dependencyStore);
 
 		// set the dependency store
 		_dependencyStore = dependencyStore;
-
-		//
-		_stringCache = stringCache;
 
 		// set the element map
 		_resourceMap = new HashMap<IResourceKey, Resource>();
@@ -68,12 +64,6 @@ public class ModifiableResourceCache implements IResourceCache {
 		// update all
 		for (Resource modifiableResource : _resourceMap.values()) {
 			_dependencyStore.updateResource(modifiableResource);
-
-			if (modifiableResource.getPath().endsWith(".java")
-					&& modifiableResource.getAssociatedResources().isEmpty()) {
-				System.out
-						.println(" missing - " + modifiableResource.getPath());
-			}
 		}
 
 		// commit the store
@@ -97,7 +87,7 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// create a new one if necessary
 		resource = new Resource(resourceKey.getContentId(),
-				resourceKey.getRoot(), resourceKey.getPath(), _stringCache);
+				resourceKey.getRoot(), resourceKey.getPath());
 
 		// store the Resource
 		_resourceMap.put(new ResourceKey(resourceKey.getContentId(),

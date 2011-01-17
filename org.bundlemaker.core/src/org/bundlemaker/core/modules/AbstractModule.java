@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.model.module.IModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 

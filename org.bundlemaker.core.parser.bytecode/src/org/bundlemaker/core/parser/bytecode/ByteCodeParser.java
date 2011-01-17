@@ -10,13 +10,13 @@ import java.util.jar.JarEntry;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.parser.IFolderBasedDirectoryFragment;
 import org.bundlemaker.core.parser.IJarFileBasedDirectoryFragment;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.CoreException;

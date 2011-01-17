@@ -1,0 +1,47 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Created-By: 14.3-b01-101 (Apple Inc.)
+Export-Package: com.springsource.bundlor;version="1.0.0.RELEASE";uses:
+ ="com.springsource.util.parser.manifest",com.springsource.bundlor.sup
+ port;version="1.0.0.RELEASE";uses:="com.springsource.bundlor,com.spri
+ ngsource.bundlor.support.partialmanifest,com.springsource.bundlor.sup
+ port.properties,com.springsource.util.osgi.manifest,com.springsource.
+ util.parser.manifest",com.springsource.bundlor.support.asm;version="1
+ .0.0.RELEASE";uses:="com.springsource.bundlor.support,com.springsourc
+ e.bundlor.support.partialmanifest,org.objectweb.asm,org.objectweb.asm
+ .commons",com.springsource.bundlor.support.classpath;version="1.0.0.R
+ ELEASE";uses:="com.springsource.bundlor",com.springsource.bundlor.sup
+ port.contributors;version="1.0.0.RELEASE";uses:="com.springsource.bun
+ dlor,com.springsource.bundlor.support,com.springsource.bundlor.suppor
+ t.partialmanifest,com.springsource.util.parser.manifest,javax.xml.nam
+ espace,javax.xml.xpath,org.w3c.dom,org.xml.sax",com.springsource.bund
+ lor.support.manifestwriter;version="1.0.0.RELEASE";uses:="com.springs
+ ource.bundlor,com.springsource.util.parser.manifest",com.springsource
+ .bundlor.support.partialmanifest;version="1.0.0.RELEASE";uses:="com.s
+ pringsource.bundlor.support,com.springsource.util.osgi.manifest,com.s
+ pringsource.util.parser.manifest",com.springsource.bundlor.support.pr
+ operties;version="1.0.0.RELEASE",com.springsource.bundlor.support.pro
+ pertysubstitution;version="1.0.0.RELEASE";uses:="com.springsource.bun
+ dlor.support,com.springsource.util.common,com.springsource.util.parse
+ r.manifest",com.springsource.bundlor.util;version="1.0.0.RELEASE";use
+ s:="com.springsource.util.osgi.manifest,com.springsource.util.osgi.ma
+ nifest.parse,com.springsource.util.parser.manifest"
+Bundle-Vendor: SpringSource Inc.
+Bundle-Version: 1.0.0.RELEASE
+Tool: Bundlor 1.0.0.CI-235
+Bundle-Name: Bundlor Core
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.springsource.bundlor
+Import-Package: com.springsource.util.common;version="[2.0.0,3.0.0)",c
+ om.springsource.util.math;version="[2.0.0,3.0.0)",com.springsource.ut
+ il.osgi.manifest;version="[2.0.0,3.0.0)",com.springsource.util.osgi.m
+ anifest.parse;version="[2.0.0,3.0.0)",com.springsource.util.parser.ma
+ nifest;version="[2.0.0,3.0.0)",javax.xml.namespace;version="0",javax.
+ xml.parsers;version="0",javax.xml.xpath;version="0",org.objectweb.asm
+ ;version="[3.1.0,4.0.0)",org.objectweb.asm.commons;version="[3.1.0,4.
+ 0.0)",org.osgi.framework;version="0",org.w3c.dom;version="0",org.xml.
+ sax;version="0"
+Bundle-Creator: nebhale
+Implementation-Title: com.springsource.bundlor
+Implementation-Version: 1.0.0.RELEASE
+

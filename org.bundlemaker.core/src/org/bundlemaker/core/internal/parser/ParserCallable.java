@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 

@@ -2,7 +2,7 @@ package org.bundlemaker.core.parser;
 
 import java.util.List;
 
-import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.IPath;
 
 /**

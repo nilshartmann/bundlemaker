@@ -41,7 +41,7 @@ public class TargetPlatformProjectExporter extends AbstractExporter {
 				modularizedSystem.getName()));
 
 		// delete and create project
-		IProject project = deleteAndCreateProject(projectName);
+		IProject project = deleteAndCreateProject(projectName, null);
 
 		//
 		IFolder folder = project.getFolder("bundles");

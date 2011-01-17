@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.Assert;
 public class Reference implements IReference {
 
 	/** - */
-	private int _fullyQualifiedNameIndex;
+	private String _fullyQualifiedName;
 
 	/** - */
 	private ReferenceType _referenceType;
@@ -25,24 +25,26 @@ public class Reference implements IReference {
 	/** - */
 	private boolean _isUses;
 
-	/** - */
-	private StringCache _stringCache;
-
-	public Reference(String fullyQualifiedName, ReferenceType referenceType,
-			StringCache cache) {
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link Reference}.
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @param referenceType
+	 * @param cache
+	 */
+	public Reference(String fullyQualifiedName, ReferenceType referenceType) {
 		Assert.isNotNull(fullyQualifiedName);
 		Assert.isNotNull(referenceType);
-		Assert.isNotNull(cache);
 
-		_stringCache = cache;
-
-		_fullyQualifiedNameIndex = cache.storeString(fullyQualifiedName);
 		_referenceType = referenceType;
+		_fullyQualifiedName = fullyQualifiedName;
 	}
 
 	@Override
 	public String getFullyQualifiedName() {
-		return _stringCache.getString(_fullyQualifiedNameIndex);
+		return _fullyQualifiedName;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package org.bundlemaker.core.store.db4o.internal;
 
+import org.bundlemaker.core.resource.AbstractResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
@@ -62,12 +63,17 @@ public abstract class AbstractPersistentDependencyStore implements
 
 		// set cascade on update
 		configuration.objectClass(Resource.class).cascadeOnUpdate(true);
+		configuration.objectClass(AbstractResourceKey.class).cascadeOnUpdate(
+				true);
 
 		// set cascade on activation
 		configuration.objectClass(Resource.class).cascadeOnActivate(true);
+		configuration.objectClass(AbstractResourceKey.class).cascadeOnUpdate(
+				true);
 
+		
 		// set the activation depth
-		configuration.activationDepth(2);
+		configuration.activationDepth(10);
 
 		// open file
 		_database = _db4oService.openFile(configuration, _fileName);

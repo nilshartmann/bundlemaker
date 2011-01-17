@@ -6,30 +6,26 @@ import java.io.FileFilter;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.Mkdir;
-import org.bundlemaker.core.model.module.IModuleIdentifier;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableBundleMakerProjectDescription;
-import org.bundlemaker.core.model.transformation.EmbedModuleTransformation;
-import org.bundlemaker.core.model.transformation.ResourceSetBasedTransformation;
-import org.bundlemaker.core.model.transformation.TransformationFactory;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.util.ModelUtils;
+import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.transformation.EmbedModuleTransformation;
+import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedTransformation;
 import org.eclipse.core.runtime.CoreException;
 
 public class IntegrationTestUtils {
-
-	
 
 	public static void addModularizeSpringTransformation(
 			IModularizedSystem modularizedSystem) {
 		// ****************************************************************************************
 		// TODO: API
-		ResourceSetBasedTransformation transformation = TransformationFactory.eINSTANCE
-				.createResourceSetBasedTransformation();
+		ResourceSetBasedTransformation transformation = new ResourceSetBasedTransformation();
 		modularizedSystem.getTransformations().add(transformation);
 
 		// create from identifier
-		IModuleIdentifier fromIdentifier = ModelUtils.createModuleIdentifier(
-				"Spring", "2.5.6");
+		IModuleIdentifier fromIdentifier = new ModuleIdentifier("Spring",
+				"2.5.6");
 
 		transformation.addModuleDefinition("Spring-Core", "2.5.6")
 				.addResourceSet(
@@ -89,16 +85,15 @@ public class IntegrationTestUtils {
 			IModularizedSystem modularizedSystem) {
 		// ****************************************************************************************
 		// TODO: API
-		EmbedModuleTransformation embedModuleTransformation = TransformationFactory.eINSTANCE
-				.createEmbedModuleTransformation();
-		embedModuleTransformation.setHostModuleIdentifier(ModelUtils
-				.createModuleIdentifier("ant", "0.0.0"));
+		EmbedModuleTransformation embedModuleTransformation = new EmbedModuleTransformation();
+		embedModuleTransformation.setHostModuleIdentifier(new ModuleIdentifier(
+				"ant", "0.0.0"));
 		embedModuleTransformation.getEmbeddedModulesIdentifiers().add(
-				ModelUtils.createModuleIdentifier("ant-trax", "0.0.0"));
+				new ModuleIdentifier("ant-trax", "0.0.0"));
 		embedModuleTransformation.getEmbeddedModulesIdentifiers().add(
-				ModelUtils.createModuleIdentifier("ant-launcher", "0.0.0"));
+				new ModuleIdentifier("ant-launcher", "0.0.0"));
 		embedModuleTransformation.getEmbeddedModulesIdentifiers().add(
-				ModelUtils.createModuleIdentifier("ant-junit", "0.0.0"));
+				new ModuleIdentifier("ant-junit", "0.0.0"));
 
 		modularizedSystem.getTransformations().add(embedModuleTransformation);
 		// ****************************************************************************************
@@ -108,15 +103,15 @@ public class IntegrationTestUtils {
 	 * <p>
 	 * </p>
 	 */
-	public static ModifiableBundleMakerProjectDescription createProjectDescription(
-			ModifiableBundleMakerProjectDescription projectDescription)
+	public static BundleMakerProjectDescription createProjectDescription(
+			BundleMakerProjectDescription projectDescription)
 			throws CoreException {
 
 		// step 1:
 		projectDescription.getModifiableFileBasedContent().clear();
 
 		// step 2: add the JRE
-		projectDescription.setJRE("jdk16");
+		projectDescription.setJre("jdk16");
 
 		// step 3: add the source and classes
 		File classesZip = new File(System.getProperty("user.dir"),

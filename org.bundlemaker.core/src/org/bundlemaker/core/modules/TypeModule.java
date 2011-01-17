@@ -1,6 +1,5 @@
 package org.bundlemaker.core.modules;
 
-import org.bundlemaker.core.model.module.IModuleIdentifier;
 
 /**
  * <p>

@@ -1,8 +1,5 @@
 package org.bundlemaker.core.parser.jdt;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.parser.IParser;
