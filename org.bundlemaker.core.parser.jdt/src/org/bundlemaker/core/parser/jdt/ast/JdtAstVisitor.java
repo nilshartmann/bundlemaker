@@ -204,9 +204,9 @@ public class JdtAstVisitor extends ASTVisitor {
 			if (binding instanceof IPackageBinding) {
 
 				/* Reference packageReference = */
-				_referencingElement.createOrGetReference(
+				_referencingElement.createReference(
 						((IPackageBinding) binding).getName(),
-						ReferenceType.PACKAGE_REFERENCE);
+						ReferenceType.PACKAGE_REFERENCE, true, null);
 
 				// packageReference.addPosition(new ReferencedPackage.Position(
 				// node.getStartPosition(), node.getLength()));
@@ -1024,11 +1024,8 @@ public class JdtAstVisitor extends ASTVisitor {
 
 		if (referencedType != null) {
 
-			Reference reference = _referencingElement.createOrGetReference(
-					referencedType, ReferenceType.TYPE_REFERENCE);
-
-			reference.setSourceCodeDependency(true);
-			reference.setDirectlyReferenced(true);
+			_referencingElement.createReference(referencedType,
+					ReferenceType.TYPE_REFERENCE, true, false);
 		}
 	}
 

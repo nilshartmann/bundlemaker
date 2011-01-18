@@ -1,6 +1,6 @@
 package org.bundlemaker.core.resource;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -16,7 +16,7 @@ public interface IResource extends IResourceKey {
 	 * 
 	 * @return
 	 */
-	List<? extends IReference> getReferences();
+	Set<? extends IReference> getReferences();
 
 	/**
 	 * <p>
@@ -24,7 +24,7 @@ public interface IResource extends IResourceKey {
 	 * 
 	 * @return
 	 */
-	List<? extends IResource> getAssociatedResources();
+	Set<? extends IResource> getAssociatedResources();
 
 	/**
 	 * <p>
@@ -32,7 +32,7 @@ public interface IResource extends IResourceKey {
 	 * 
 	 * @return
 	 */
-	List<String> getContainedTypes();
+	Set<String> getContainedTypes();
 
 	/**
 	 * <p>

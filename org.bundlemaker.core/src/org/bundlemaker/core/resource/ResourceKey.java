@@ -11,10 +11,10 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceKey implements IResourceKey {
 
 	/** - */
-	private String _contentId;
+	private FlyWeightString _contentId;
 
 	/** - */
-	private String _root;
+	private FlyWeightString _root;
 
 	/** - */
 	private String _path;
@@ -33,31 +33,33 @@ public class ResourceKey implements IResourceKey {
 		Assert.isNotNull(root);
 		Assert.isNotNull(path);
 
-		_contentId = contentId;
-		_root = root;
+		_contentId = new FlyWeightString(contentId);
+		_root = new FlyWeightString(root);
 		_path = path;
-
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
+	public ResourceKey(String contentId, String root, String path,
+			FlyWeightCache cache) {
+		Assert.isNotNull(contentId);
+		Assert.isNotNull(root);
+		Assert.isNotNull(path);
+		Assert.isNotNull(cache);
+
+		_contentId = cache.getFlyWeightString(contentId);
+		_root = cache.getFlyWeightString(root);
+		_path = path;
+	}
+
 	@Override
 	public String getContentId() {
-		return _contentId;
+		return _contentId.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getRoot() {
-		return _root;
+		return _root.toString();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public String getPath() {
 		return _path;
@@ -85,14 +87,14 @@ public class ResourceKey implements IResourceKey {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof IResourceKey))
+		if (!(ResourceKey.class.isAssignableFrom(obj.getClass())))
 			return false;
-		IResourceKey other = (IResourceKey) obj;
+		ResourceKey other = (ResourceKey) obj;
 		if (!_contentId.equals(other.getContentId()))
 			return false;
 		if (!_path.equals(other.getPath()))
 			return false;
-		if (!_root.equals(other.getRoot()))
+		if (!getRoot().equals(other.getRoot()))
 			return false;
 		return true;
 	}

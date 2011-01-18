@@ -1,6 +1,5 @@
 package org.bundlemaker.core.parser.bytecode;
 
-import org.bundlemaker.core.resource.Reference;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.Resource;
 import org.eclipse.core.runtime.Assert;
@@ -57,9 +56,8 @@ public class BundlorPartialManifest implements PartialManifest {
 		// && !CoreUtil.isLocalOrAnonymousType((type))
 		) {
 
-			Reference reference = _resource.createOrGetReference(type,
-					ReferenceType.TYPE_REFERENCE);
-			reference.setByteCodeDependency(true);
+			_resource.createReference(type, ReferenceType.TYPE_REFERENCE, null,
+					true);
 		}
 	}
 

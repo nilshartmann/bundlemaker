@@ -9,8 +9,6 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.StandardModuleExporterContext;
 import org.bundlemaker.core.exporter.pde.exporter.PdeExporterConfiguration;
-import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
-import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
@@ -34,7 +32,7 @@ public class IntegrationTest {
 	public static final String PROJECT_NAME = "spring";
 
 	/** - */
-	private static final boolean PARSE = false;
+	private static final boolean PARSE = true;
 
 	/**
 	 * <p>
@@ -224,11 +222,11 @@ public class IntegrationTest {
 						new File(
 								"R:/environments/bundlemaker2-environment/workspace/org.bundlemaker.itest.spring/templates"));
 
-//		new PdePluginProjectModuleExporter().export(modularizedSystem,
-//				exporterContext);
-//
-//		new TargetPlatformProjectExporter().export(modularizedSystem,
-//				exporterContext);
+		// new PdePluginProjectModuleExporter().export(modularizedSystem,
+		// exporterContext);
+		//
+		// new TargetPlatformProjectExporter().export(modularizedSystem,
+		// exporterContext);
 
 		new SimpleReportExporter().export(modularizedSystem, exporterContext);
 

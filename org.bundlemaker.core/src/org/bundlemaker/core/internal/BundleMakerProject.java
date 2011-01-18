@@ -231,14 +231,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 		List<Resource> resources = dependencyStore.getResources();
 
-		//
-		@SuppressWarnings("unused")
-		Resource resource1 = resources.get(0);
-
-		if (resources.get(0).getRoot() == null) {
-			throw new RuntimeException("Bumm");
-		}
-
 		Map<Resource, Resource> map = new HashMap<Resource, Resource>();
 
 		System.out.println("put resources to map");

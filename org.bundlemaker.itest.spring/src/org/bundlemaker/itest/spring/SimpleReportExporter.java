@@ -2,13 +2,19 @@ package org.bundlemaker.itest.spring;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
 
 /**
@@ -40,16 +46,52 @@ public class SimpleReportExporter extends AbstractExporter {
 
 		builder.append("\n");
 		builder.append("Source-Content: \n");
-		for (IResourceStandin resource : module
-				.getResources(ContentType.SOURCE)) {
+
+		for (IResourceStandin resource : asSortedList(module
+				.getResources(ContentType.SOURCE))) {
 			builder.append(resource.getPath() + "\n");
 		}
 
 		builder.append("\n");
 		builder.append("Binary-Content: \n");
-		for (IResourceStandin resource : module
-				.getResources(ContentType.BINARY)) {
+		for (IResourceStandin resource : asSortedList(module
+				.getResources(ContentType.BINARY))) {
 			builder.append(resource.getPath() + "\n");
+		}
+
+		builder.append("\n");
+		builder.append("Referenced Types: \n");
+		Set<String> referencedTypes = module.getReferencedTypes(true, true);
+		for (String referencedType : asSortedList(referencedTypes)) {
+			builder.append(referencedType + "\n");
+		}
+
+		builder.append("\n");
+		builder.append("Referenced Modules: \n");
+		IReferencedModulesQueryResult queryResult = modularizedSystem
+				.getReferencedModules(module);
+
+		for (ITypeModule referencedModule : queryResult.getReferencedModules()) {
+			builder.append(referencedModule.getModuleIdentifier().toString()
+					+ "\n");
+		}
+
+		builder.append("\n");
+		builder.append("Missing Types: \n");
+		for (String missingType : queryResult.getMissingTypes()) {
+			builder.append(missingType + "\n");
+		}
+
+		builder.append("\n");
+		builder.append("Types with ambigious modules: \n");
+		for (Entry<String, List<ITypeModule>> missingType : queryResult
+				.getTypesWithAmbiguousModules().entrySet()) {
+
+			builder.append(missingType.getKey() + ":\n");
+			for (ITypeModule typeModule : missingType.getValue()) {
+				builder.append(" - "
+						+ typeModule.getModuleIdentifier().toString() + "\n");
+			}
 		}
 
 		//
@@ -61,5 +103,25 @@ public class SimpleReportExporter extends AbstractExporter {
 		fileWriter.flush();
 		fileWriter.close();
 
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param <T>
+	 * @param set
+	 * @return
+	 */
+	private static <T extends Comparable<T>> List<T> asSortedList(Set<T> set) {
+
+		//
+		List<T> arrayList = new ArrayList<T>(set);
+
+		//
+		Collections.sort(arrayList);
+
+		//
+		return arrayList;
 	}
 }

@@ -216,9 +216,9 @@ public class DependenciesAstVisitor extends ASTVisitor {
 			if (binding instanceof IPackageBinding) {
 
 				/* Reference packageReference = */
-				_sourceFileResource.createOrGetReference(
+				_sourceFileResource.createReference(
 						((IPackageBinding) binding).getName(),
-						ReferenceType.PACKAGE_REFERENCE);
+						ReferenceType.PACKAGE_REFERENCE, true, false);
 
 				// packageReference.addPosition(new ReferencedPackage.Position(
 				// node.getStartPosition(), node.getLength()));
@@ -1021,10 +1021,8 @@ public class DependenciesAstVisitor extends ASTVisitor {
 
 		if (referencedType != null) {
 
-			Reference reference = _sourceFileResource.createOrGetReference(
-					referencedType, ReferenceType.TYPE_REFERENCE);
-
-			reference.setSourceCodeDependency(true);
+			_sourceFileResource.createReference(referencedType,
+					ReferenceType.TYPE_REFERENCE, true, false);
 
 			// reference.setSourceDependency();
 			//

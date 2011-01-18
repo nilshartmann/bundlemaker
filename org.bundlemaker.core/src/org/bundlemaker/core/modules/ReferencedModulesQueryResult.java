@@ -1,9 +1,11 @@
 package org.bundlemaker.core.modules;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -23,11 +25,29 @@ public class ReferencedModulesQueryResult implements
 	/** - */
 	private List<String> _missingTypes;
 
+	/** - */
+	private IResourceModule _self;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ReferencedModulesQueryResult}.
 	 * </p>
 	 */
+	public ReferencedModulesQueryResult(IResourceModule self) {
+
+		//
+		_referencedModules = new HashMap<String, ITypeModule>();
+
+		//
+		_typesWithAmbiguousModules = new HashMap<String, List<ITypeModule>>();
+
+		//
+		_missingTypes = new LinkedList<String>();
+
+		//
+		_self = self;
+	}
+
 	public ReferencedModulesQueryResult() {
 
 		//
@@ -58,10 +78,18 @@ public class ReferencedModulesQueryResult implements
 	}
 
 	@Override
-	public List<ITypeModule> getReferencedModules() {
+	public Set<ITypeModule> getReferencedModules() {
+
+		Set<ITypeModule> result = new HashSet<ITypeModule>();
+
+		for (ITypeModule iTypeModule : _referencedModules.values()) {
+			if (!iTypeModule.equals(_self)) {
+				result.add(iTypeModule);
+			}
+		}
 
 		//
-		return new LinkedList<ITypeModule>(_referencedModules.values());
+		return result;
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class Activator implements BundleActivator {
 	public static final String PLUGIN_ID = "org.bundlemaker.core.db4o";
 
 	/** the service tracker */
-	private ServiceTracker _serviceTracker;
+	private static ServiceTracker _serviceTracker;
 
 	/**
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
@@ -32,8 +32,8 @@ public class Activator implements BundleActivator {
 	public void start(BundleContext context) throws Exception {
 
 		// create the service tracker
-		_serviceTracker = new ServiceTracker(context, Db4oService.class
-				.getName(), null) {
+		_serviceTracker = new ServiceTracker(context,
+				Db4oService.class.getName(), null) {
 
 			private ServiceRegistration _factoryRegistration;
 
@@ -72,5 +72,16 @@ public class Activator implements BundleActivator {
 
 		// close the tracker
 		_serviceTracker.close();
+	}
+
+	/**
+	 * <p>
+	 * TESTING
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public static Db4oService getDb4oService() {
+		return (Db4oService) _serviceTracker.getService();
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.resource.FlyWeightCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
@@ -25,6 +26,9 @@ public class ModifiableResourceCache implements IResourceCache {
 	/** the dependency store */
 	private IPersistentDependencyStore _dependencyStore;
 
+	/** - */
+	private FlyWeightCache _referenceCache;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ModifiableResourceCache}.
@@ -41,6 +45,9 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// set the element map
 		_resourceMap = new HashMap<IResourceKey, Resource>();
+
+		//
+		_referenceCache = new FlyWeightCache();
 	}
 
 	/**
@@ -63,12 +70,69 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// update all
 		for (Resource modifiableResource : _resourceMap.values()) {
+
 			_dependencyStore.updateResource(modifiableResource);
 		}
 
 		// commit the store
 		_dependencyStore.commit();
 	}
+
+	// /**
+	// * <p>
+	// * </p>
+	// */
+	// private void optimize() {
+	//
+	// System.out.println("Optimize start");
+	//
+	// // create the reference map
+	// Map<Reference, Reference> referenceMap = new HashMap<Reference,
+	// Reference>();
+	//
+	// // iterate over all resources
+	// for (Resource resource : _resourceMap.values()) {
+	//
+	// // the references to replace
+	// Set<Reference> referencesToReplace = new HashSet<Reference>();
+	//
+	// // get all references
+	// for (Iterator<Reference> iterator = referencesToReplace.iterator();
+	// iterator
+	// .hasNext();) {
+	//
+	// // get the reference
+	// Reference reference = (Reference) iterator.next();
+	//
+	// //
+	// if (referenceMap.containsKey(reference)) {
+	//
+	// Reference flyWeightReference = referenceMap.get(reference);
+	//
+	// // TODO
+	// if (flyWeightReference == reference) {
+	// System.out.println("BOOM");
+	// }
+	//
+	// //
+	// iterator.remove();
+	// referencesToReplace.add(referenceMap.get(reference));
+	//
+	// } else {
+	//
+	// //
+	// referenceMap.put(reference, reference);
+	// }
+	//
+	// }
+	//
+	// //
+	// for (Reference reference : referencesToReplace) {
+	//
+	// resource.getModifiableReferences().add(reference);
+	// }
+	// }
+	// }
 
 	/**
 	 * {@inheritDoc}
@@ -87,7 +151,7 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// create a new one if necessary
 		resource = new Resource(resourceKey.getContentId(),
-				resourceKey.getRoot(), resourceKey.getPath());
+				resourceKey.getRoot(), resourceKey.getPath(), _referenceCache);
 
 		// store the Resource
 		_resourceMap.put(new ResourceKey(resourceKey.getContentId(),

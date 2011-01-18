@@ -23,13 +23,16 @@ public class ReferenceTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
+		FlyWeightCache referenceCache = new FlyWeightCache();
+
 		for (int i = 0; i < 50000; i++) {
 
-			Resource resource = new Resource("contentId", "root", "path");
+			Resource resource = new Resource("contentId", "root", "path",
+					referenceCache);
 
 			for (int j = 0; j < 30; j++) {
-				resource.createOrGetReference("name" + j,
-						ReferenceType.PACKAGE_REFERENCE);
+				resource.createReference("name" + j,
+						ReferenceType.PACKAGE_REFERENCE, true, true);
 			}
 
 			Assert.assertEquals(30, resource.getReferences().size());
@@ -37,6 +40,10 @@ public class ReferenceTest {
 
 		stopWatch.stop();
 
-		Assert.assertTrue(stopWatch.getElapsedTime() < 2000);
+		Assert.assertTrue(
+				String.format("Elapsed time '%s'.", stopWatch.getElapsedTime()),
+				stopWatch.getElapsedTime() < 3000);
+		Assert.assertEquals(30, referenceCache._referenceCache.size());
+
 	}
 }
