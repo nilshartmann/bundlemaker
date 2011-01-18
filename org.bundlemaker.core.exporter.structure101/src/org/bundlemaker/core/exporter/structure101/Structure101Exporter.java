@@ -28,7 +28,6 @@ import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceStandin;
-import org.bundlemaker.core.util.ModelUtils;
 import org.bundlemaker.core.util.StopWatch;
 
 /**

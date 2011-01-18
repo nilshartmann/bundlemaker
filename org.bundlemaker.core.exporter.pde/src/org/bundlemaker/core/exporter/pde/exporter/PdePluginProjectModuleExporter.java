@@ -18,7 +18,6 @@ import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.util.FileUtils;
-import org.bundlemaker.core.util.ModelUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
