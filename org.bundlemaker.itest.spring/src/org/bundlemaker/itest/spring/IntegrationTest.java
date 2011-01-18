@@ -224,11 +224,13 @@ public class IntegrationTest {
 						new File(
 								"R:/environments/bundlemaker2-environment/workspace/org.bundlemaker.itest.spring/templates"));
 
-		new PdePluginProjectModuleExporter().export(modularizedSystem,
-				exporterContext);
+//		new PdePluginProjectModuleExporter().export(modularizedSystem,
+//				exporterContext);
+//
+//		new TargetPlatformProjectExporter().export(modularizedSystem,
+//				exporterContext);
 
-		new TargetPlatformProjectExporter().export(modularizedSystem,
-				exporterContext);
+		new SimpleReportExporter().export(modularizedSystem, exporterContext);
 
 		// ModifiableModularizedSystem system = (ModifiableModularizedSystem)
 		// modularizedSystem;

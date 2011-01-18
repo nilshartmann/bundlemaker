@@ -74,5 +74,4 @@ public class StandardBundlorBasedBinaryBundleExporter extends AbstractExporter {
 				module.getResources(ContentType.BINARY),
 				ManifestUtils.toManifest(manifestContents), targetFile);
 	}
-
 }
