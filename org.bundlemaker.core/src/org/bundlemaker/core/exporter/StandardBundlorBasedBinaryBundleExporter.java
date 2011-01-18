@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import org.bundlemaker.core.exporter.manifest.BundlorBasedManifestCreator;
 import org.bundlemaker.core.exporter.manifest.ManifestUtils;
-import org.bundlemaker.core.model.projectdescription.ContentType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 
 import com.springsource.util.parser.manifest.ManifestContents;
 

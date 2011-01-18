@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.model.module.IModuleIdentifier;
-import org.bundlemaker.core.model.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.transformation.ITransformation;

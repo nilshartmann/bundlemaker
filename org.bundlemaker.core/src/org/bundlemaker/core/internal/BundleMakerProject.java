@@ -11,33 +11,35 @@ import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.parser.ProjectParser;
-import org.bundlemaker.core.model.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableBundleMakerProjectDescription;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableFileBasedContent;
-import org.bundlemaker.core.model.transformation.TransformationFactory;
+import org.bundlemaker.core.model.internal.projectdescription.EFileBasedContent;
+import org.bundlemaker.core.model.internal.projectdescription.EProjectDescription;
+import org.bundlemaker.core.model.internal.projectdescription.EResourceContent;
+import org.bundlemaker.core.model.internal.projectdescription.ProjectdescriptionFactory;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
+import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.FileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IResourceContent;
+import org.bundlemaker.core.projectdescription.ResourceContent;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.ResourceStandin;
-import org.bundlemaker.core.resource.StringCache;
 import org.bundlemaker.core.store.IDependencyStore;
+import org.bundlemaker.core.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EAttribute;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.util.EcoreUtil.Copier;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
-
-import com.springsource.util.osgi.manifest.parse.DummyParserLogger;
 
 /**
  * <p>
@@ -48,13 +50,11 @@ import com.springsource.util.osgi.manifest.parse.DummyParserLogger;
  */
 public class BundleMakerProject implements IBundleMakerProject {
 
-	public final StringCache DEFAULT_STRING_CACHE = new StringCache();
-
 	/** the associated eclipse project (the bundle make project) */
 	private IProject _project;
 
 	/** the bundle maker project description */
-	private ModifiableBundleMakerProjectDescription _projectDescription;
+	private BundleMakerProjectDescription _projectDescription;
 
 	/** the associated info store */
 	private IDependencyStore _additionalInfoStore;
@@ -67,8 +67,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 	/** - */
 	private IProgressMonitor _currentProgressMonitor;
-
-	private StringCache _stringCache;
 
 	/**
 	 * <p>
@@ -99,14 +97,55 @@ public class BundleMakerProject implements IBundleMakerProject {
 	@Override
 	public void saveProjectDescription() throws CoreException {
 
+		// step 1: map to emf model
+		EProjectDescription eDescription = ProjectdescriptionFactory.eINSTANCE
+				.createEProjectDescription();
+
+		eDescription.setCurrentId(_projectDescription.getCurrentId());
+		eDescription.setJre(_projectDescription.getJRE());
+
+		for (FileBasedContent content : _projectDescription
+				.getModifiableFileBasedContent()) {
+
+			EFileBasedContent eFileBasedContent = ProjectdescriptionFactory.eINSTANCE
+					.createEFileBasedContent();
+			eDescription.getFileBasedContent().add(eFileBasedContent);
+
+			eFileBasedContent.setId(content.getId());
+			eFileBasedContent.setName(content.getName());
+			eFileBasedContent.setVersion(content.getVersion());
+
+			for (IPath path : content.getBinaryPaths()) {
+				eFileBasedContent.getBinaryPathNames().add(path.toString());
+			}
+
+			if (content.isResourceContent()) {
+
+				IResourceContent resourceContent = content.getResourceContent();
+
+				EResourceContent eResourceContent = ProjectdescriptionFactory.eINSTANCE
+						.createEResourceContent();
+				eFileBasedContent.setResourceContent(eResourceContent);
+
+				eResourceContent.setAnalyzeSourceResources(resourceContent
+						.isAnalyzeSourceResources());
+
+				for (IPath path : resourceContent.getSourcePaths()) {
+					eResourceContent.getSourcePathNames().add(path.toString());
+				}
+			}
+
+		}
+
+		// step 2: save
 		org.eclipse.emf.ecore.resource.Resource resource = getBundleMakerProjectDescriptionURI(PROJECT_DESCRIPTION_NAME);
-		resource.getContents().add(_projectDescription);
+		resource.getContents().add(eDescription);
 		try {
 			resource.save(null);
 		} catch (IOException e) {
 			// TODO: MSG
 			throw new CoreException(new Status(IStatus.ERROR,
-					BundleMakerCore.BUNDLE_ID, ""));
+					BundleMakerCore.BUNDLE_ID, e.getMessage()));
 		}
 
 	}
@@ -192,34 +231,46 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 		List<Resource> resources = dependencyStore.getResources();
 
+		//
+		@SuppressWarnings("unused")
+		Resource resource1 = resources.get(0);
+
+		if (resources.get(0).getRoot() == null) {
+			throw new RuntimeException("Bumm");
+		}
+
 		Map<Resource, Resource> map = new HashMap<Resource, Resource>();
 
 		System.out.println("put resources to map");
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 
 		for (Resource resource : resources) {
 			map.put(resource, resource);
 		}
 
+		stopWatch.stop();
+		System.out.println(stopWatch.getElapsedTime());
+
 		System.out.println("set up resource standin");
 
-		List<ModifiableFileBasedContent> fileBasedContents = _projectDescription
+		List<FileBasedContent> fileBasedContents = _projectDescription
 				.getModifiableFileBasedContent();
 
-		for (ModifiableFileBasedContent fileBasedContent : fileBasedContents) {
+		for (FileBasedContent fileBasedContent : fileBasedContents) {
 
 			if (fileBasedContent.isResourceContent()) {
 
-				for (ResourceStandin resourceStandin : fileBasedContent
-						.getModifiableResourceContent()
-						.getModifiableBinaryResources()) {
+				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
+						.getResourceContent()).getModifiableBinaryResources()) {
 
 					setupResourceStandin(resourceStandin, map);
 					Assert.isNotNull(resourceStandin.getResource());
 				}
 
-				for (ResourceStandin resourceStandin : fileBasedContent
-						.getModifiableResourceContent()
-						.getModifiableSourceResources()) {
+				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
+						.getResourceContent()).getModifiableSourceResources()) {
 
 					setupResourceStandin(resourceStandin, map);
 					Assert.isNotNull(resourceStandin.getResource());
@@ -247,40 +298,44 @@ public class BundleMakerProject implements IBundleMakerProject {
 		// assert
 		assertState(BundleMakerProjectState.OPENED);
 
+		// TODO: WORKING COPY!!!
+
+		// // TODO
+		// Copier copier = new Copier(true, true) {
+		//
+		// @Override
+		// protected void copyReference(EReference eReference,
+		// EObject eObject, EObject copyEObject) {
+		// super.copyReference(eReference, eObject, copyEObject);
+		// }
+		//
+		// @Override
+		// protected void copyContainment(EReference eReference,
+		// EObject eObject, EObject copyEObject) {
+		// super.copyContainment(eReference, eObject, copyEObject);
+		// }
+		//
+		// @Override
+		// protected void copyAttribute(EAttribute eAttribute,
+		// EObject eObject, EObject copyEObject) {
+		// super.copyAttribute(eAttribute, eObject, copyEObject);
+		// }
+		//
+		// };
+		//
+		// EObject projectDescriptionWorkingCopy = copier
+		// .copy(_projectDescription);
+		// copier.copyReferences();
+
+		IBundleMakerProjectDescription projectDescriptionWorkingCopy = _projectDescription;
+
 		// TODO
-		Copier copier = new Copier(true, true) {
-
-			@Override
-			protected void copyReference(EReference eReference,
-					EObject eObject, EObject copyEObject) {
-				super.copyReference(eReference, eObject, copyEObject);
-			}
-
-			@Override
-			protected void copyContainment(EReference eReference,
-					EObject eObject, EObject copyEObject) {
-				super.copyContainment(eReference, eObject, copyEObject);
-			}
-
-			@Override
-			protected void copyAttribute(EAttribute eAttribute,
-					EObject eObject, EObject copyEObject) {
-				super.copyAttribute(eAttribute, eObject, copyEObject);
-			}
-
-		};
-
-		EObject projectDescriptionWorkingCopy = copier
-				.copy(_projectDescription);
-		copier.copyReferences();
-
 		// create the modularized system
 		ModularizedSystem modularizedSystem = new ModularizedSystem(name,
 				(IBundleMakerProjectDescription) projectDescriptionWorkingCopy);
 
 		// create the default transformation
-		ITransformation basicContentTransformation = TransformationFactory.eINSTANCE
-				.createBasicProjectContentTransformation();
+		ITransformation basicContentTransformation = new BasicProjectContentTransformation();
 		modularizedSystem.getTransformations().add(basicContentTransformation);
 
 		// add the result to the hash map
@@ -352,7 +407,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * 
 	 * @return
 	 */
-	public ModifiableBundleMakerProjectDescription getProjectDescription() {
+	public BundleMakerProjectDescription getProjectDescription() {
 		return _projectDescription;
 	}
 
@@ -428,10 +483,10 @@ public class BundleMakerProject implements IBundleMakerProject {
 				.getPath()));
 
 		if (resource == null) {
+
 			// comment: we can use a dummy StringCache here...
 			resource = new Resource(resourceStandin.getContentId(),
-					resourceStandin.getRoot(), resourceStandin.getPath(),
-					DEFAULT_STRING_CACHE);
+					resourceStandin.getRoot(), resourceStandin.getPath());
 		}
 
 		resourceStandin.setResource(resource);
@@ -448,7 +503,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * @return
 	 * @throws CoreException
 	 */
-	private ModifiableBundleMakerProjectDescription loadProjectDescription()
+	private BundleMakerProjectDescription loadProjectDescription()
 			throws CoreException {
 
 		org.eclipse.emf.ecore.resource.Resource resource = getBundleMakerProjectDescriptionURI(PROJECT_DESCRIPTION_NAME);
@@ -461,12 +516,47 @@ public class BundleMakerProject implements IBundleMakerProject {
 					BundleMakerCore.BUNDLE_ID, e.getMessage()));
 		}
 
-		ModifiableBundleMakerProjectDescription projectDescription = (ModifiableBundleMakerProjectDescription) resource
+		EProjectDescription projectDescription = (EProjectDescription) resource
 				.getContents().get(0);
+
+		BundleMakerProjectDescription result = new BundleMakerProjectDescription();
+		result.setCurrentId(projectDescription.getCurrentId());
+		result.setJre(projectDescription.getJre());
+
+		for (EFileBasedContent eFileBasedContent : projectDescription
+				.getFileBasedContent()) {
+
+			FileBasedContent fileBasedContent = new FileBasedContent();
+			result.getModifiableFileBasedContent().add(fileBasedContent);
+
+			fileBasedContent.setId(eFileBasedContent.getId());
+			fileBasedContent.setName(eFileBasedContent.getName());
+			fileBasedContent.setVersion(eFileBasedContent.getVersion());
+
+			for (String path : eFileBasedContent.getBinaryPathNames()) {
+				fileBasedContent.getModifiableBinaryPaths().add(new Path(path));
+			}
+
+			if (eFileBasedContent.getResourceContent() != null) {
+
+				ResourceContent resourceContent = new ResourceContent();
+				fileBasedContent.setResourceContent(resourceContent);
+
+				resourceContent.setAnalyzeSourceResources(eFileBasedContent
+						.getResourceContent().isAnalyzeSourceResources());
+
+				for (String path : eFileBasedContent.getResourceContent()
+						.getSourcePathNames()) {
+
+					resourceContent.getModifiableSourcePaths().add(
+							new Path(path));
+				}
+			}
+		}
 
 		_projectState = BundleMakerProjectState.CREATED;
 
-		return projectDescription;
+		return result;
 	}
 
 	/**

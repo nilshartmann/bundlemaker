@@ -9,258 +9,34 @@
         nsPrefix="core">
       <eSubpackages name="model" nsURI="http://www.bundlemaker.org/org/bundlemaker/core/model"
           nsPrefix="model">
-        <eSubpackages name="projectdescription" nsURI="http://www.bundlemaker.org/org/bundlemaker/core/model/projectdescription"
-            nsPrefix="projectdescription">
-          <eClassifiers xsi:type="ecore:EClass" name="IFileBasedContent" abstract="true"
-              interface="true">
-            <eOperations name="getId" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eOperations name="getName" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eOperations name="getVersion" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eOperations name="getBinaryPaths" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/ipath"/>
-            <eOperations name="isResourceContent" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-            <eOperations name="getResourceContent" eType="#//bundlemaker/core/model/projectdescription/IResourceContent"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EClass" name="IResourceContent" abstract="true"
-              interface="true">
-            <eOperations name="getSourcePaths" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/ipath"/>
-            <eOperations name="isAnalyzeSourceResources" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-            <eOperations name="getResource" eType="#//bundlemaker/core/model/projectdescription/iResourceStandin">
-              <eParameters name="path" eType="#//bundlemaker/core/model/projectdescription/ipath"/>
-              <eParameters name="type" eType="#//bundlemaker/core/model/projectdescription/ContentType"/>
-            </eOperations>
-            <eOperations name="getResources" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/iResourceStandin">
-              <eParameters name="type" eType="#//bundlemaker/core/model/projectdescription/ContentType"/>
-            </eOperations>
-            <eOperations name="getBinaryResource" eType="#//bundlemaker/core/model/projectdescription/iResourceStandin">
-              <eParameters name="path" eType="#//bundlemaker/core/model/projectdescription/ipath"/>
-            </eOperations>
-            <eOperations name="getBinaryResources" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/iResourceStandin"/>
-            <eOperations name="getSourceResource" eType="#//bundlemaker/core/model/projectdescription/iResourceStandin">
-              <eParameters name="path" eType="#//bundlemaker/core/model/projectdescription/ipath"/>
-            </eOperations>
-            <eOperations name="getSourceResources" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/iResourceStandin"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EClass" name="IBundleMakerProjectDescription"
-              abstract="true" interface="true">
-            <eOperations name="getFileBasedContent" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/IFileBasedContent"/>
-            <eOperations name="getFileBasedContent" eType="#//bundlemaker/core/model/projectdescription/IFileBasedContent">
-              <eParameters name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            </eOperations>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EEnum" name="ContentType">
-            <eLiterals name="SOURCE" value="1" literal="SOURCE"/>
-            <eLiterals name="BINARY" value="2"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EDataType" name="ipath" instanceClassName="org.eclipse.core.runtime.IPath"/>
-          <eClassifiers xsi:type="ecore:EDataType" name="coreexception" instanceClassName="org.eclipse.core.runtime.CoreException"/>
-          <eClassifiers xsi:type="ecore:EDataType" name="iResourceStandin" instanceClassName="org.bundlemaker.core.resource.IResourceStandin"/>
-          <eClassifiers xsi:type="ecore:EDataType" name="resourceStandin" instanceClassName="org.bundlemaker.core.resource.ResourceStandin"/>
-          <eClassifiers xsi:type="ecore:EDataType" name="bundlemakerproject" instanceClassName="org.bundlemaker.core.internal.BundleMakerProject"/>
-          <eSubpackages name="modifiableprojectdescription" nsURI="http://www.bundlemaker.org/org/bundlemaker/core/model/projectdescription/modifiableprojectdescription"
-              nsPrefix="modifiableprojectdescription">
-            <eClassifiers xsi:type="ecore:EClass" name="ModifiableBundleMakerProjectDescription"
-                eSuperTypes="#//bundlemaker/core/model/projectdescription/IBundleMakerProjectDescription">
-              <eOperations name="isValid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-              <eOperations name="initialize">
-                <eParameters name="bundlemakerProject" eType="#//bundlemaker/core/model/projectdescription/bundlemakerproject"/>
-              </eOperations>
-              <eOperations name="addResourceContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="binaryRoot" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eOperations name="addResourceContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="binaryRoot" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="sourceRoot" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eOperations name="addResourceContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="binaryRoot" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eOperations name="addResourceContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="binaryRoot" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="sourceRoot" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eOperations name="addResourceContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="binaryRoot" lowerBound="1" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="sourceRoot" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eOperations name="addTypeContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="binaryRoot" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eOperations name="addTypeContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="binaryRoot" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eOperations name="addTypeContent" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
-                  eExceptions="#//bundlemaker/core/model/projectdescription/coreexception">
-                <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-                <eParameters name="binaryRoot" lowerBound="1" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              </eOperations>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentId" lowerBound="1"
-                  eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
-                  defaultValueLiteral="0"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="initialized"
-                  eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-                  transient="true"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="JRE" lowerBound="1"
-                  eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eStructuralFeatures xsi:type="ecore:EReference" name="modifiableFileBasedContent"
-                  upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableFileBasedContent"
+        <eSubpackages name="internal" nsURI="http://www.bundlemaker.org/org/bundlemaker/core/model/internal"
+            nsPrefix="internal">
+          <eSubpackages name="projectdescription" nsURI="http://www.bundlemaker.org/org/bundlemaker/core/model/internal/projectdescription"
+              nsPrefix="projectdescription">
+            <eClassifiers xsi:type="ecore:EClass" name="EProjectDescription">
+              <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+              <eStructuralFeatures xsi:type="ecore:EAttribute" name="jre" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+              <eStructuralFeatures xsi:type="ecore:EReference" name="fileBasedContent"
+                  upperBound="-1" eType="#//bundlemaker/core/model/internal/projectdescription/EFileBasedContent"
                   containment="true"/>
             </eClassifiers>
-            <eClassifiers xsi:type="ecore:EClass" name="ModifiableFileBasedContent"
-                eSuperTypes="#//bundlemaker/core/model/projectdescription/IFileBasedContent">
-              <eOperations name="initialize">
-                <eParameters name="bundleMakerProject" eType="#//bundlemaker/core/model/projectdescription/bundlemakerproject"/>
-              </eOperations>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1"
-                  eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1"
-                  eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" lowerBound="1"
-                  eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="initialized"
-                  eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
-                  transient="true"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifiableBinaryPathNames"
-                  lowerBound="1" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifiableBinaryPaths"
-                  lowerBound="1" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/ipath"
-                  transient="true"/>
-              <eStructuralFeatures xsi:type="ecore:EReference" name="modifiableResourceContent"
-                  eType="#//bundlemaker/core/model/projectdescription/modifiableprojectdescription/ModifiableResourceContent"
+            <eClassifiers xsi:type="ecore:EClass" name="EFileBasedContent">
+              <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+              <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+              <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+              <eStructuralFeatures xsi:type="ecore:EAttribute" name="binaryPathNames"
+                  upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+              <eStructuralFeatures xsi:type="ecore:EReference" name="resourceContent"
+                  eType="#//bundlemaker/core/model/internal/projectdescription/EResourceContent"
                   containment="true"/>
             </eClassifiers>
-            <eClassifiers xsi:type="ecore:EClass" name="ModifiableResourceContent"
-                eSuperTypes="#//bundlemaker/core/model/projectdescription/IResourceContent">
+            <eClassifiers xsi:type="ecore:EClass" name="EResourceContent">
               <eStructuralFeatures xsi:type="ecore:EAttribute" name="analyzeSourceResources"
                   eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifiableSourcePathNames"
+              <eStructuralFeatures xsi:type="ecore:EAttribute" name="sourcePathNames"
                   upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifiableSourcePaths"
-                  upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/ipath"
-                  transient="true"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifiableSourceResources"
-                  upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/resourceStandin"
-                  transient="true"/>
-              <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifiableBinaryResources"
-                  upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/resourceStandin"
-                  transient="true"/>
             </eClassifiers>
           </eSubpackages>
-        </eSubpackages>
-        <eSubpackages name="module" nsURI="http://www.bundlemaker.org/org/bundlemaker/core/model/module"
-            nsPrefix="module">
-          <eClassifiers xsi:type="ecore:EClass" name="IModuleIdentifier" abstract="true"
-              interface="true">
-            <eOperations name="getVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eOperations name="getName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EDataType" name="typemodule" instanceClassName="org.bundlemaker.core.modules.ITypeModule"/>
-          <eClassifiers xsi:type="ecore:EDataType" name="resourcemodule" instanceClassName="org.bundlemaker.core.modules.IResourceModule"/>
-          <eClassifiers xsi:type="ecore:EClass" name="ModifiableModuleIdentifier"
-              eSuperTypes="#//bundlemaker/core/model/module/IModuleIdentifier">
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-          </eClassifiers>
-        </eSubpackages>
-        <eSubpackages name="transformation" nsURI="http://www.bundlemaker.org/org/bundlemaker/core/model/transformation"
-            nsPrefix="transformation">
-          <eClassifiers xsi:type="ecore:EClass" name="AbstractETransformation" instanceClassName="org.bundlemaker.core.transformation.ITransformation"
-              abstract="true" interface="true"/>
-          <eClassifiers xsi:type="ecore:EClass" name="ResourceSet">
-            <eOperations name="getMatchingResources" upperBound="-1" eType="#//bundlemaker/core/model/projectdescription/iResourceStandin">
-              <eParameters name="resource" lowerBound="1" eType="#//bundlemaker/core/model/module/resourcemodule"/>
-              <eParameters name="contentType" eType="#//bundlemaker/core/model/projectdescription/ContentType"/>
-            </eOperations>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="moduleIdentifier"
-                eType="#//bundlemaker/core/model/module/IModuleIdentifier"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="includes" upperBound="-1"
-                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="excludes" upperBound="-1"
-                eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EClass" name="ResourceSetBasedModuleDefinition">
-            <eOperations name="addResourceSet">
-              <eParameters name="fromName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eParameters name="fromVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eParameters name="includes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-              <eParameters name="excludes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-            </eOperations>
-            <eOperations name="addResourceSet">
-              <eParameters name="fromModuleIdentifier" lowerBound="1" eType="#//bundlemaker/core/model/module/IModuleIdentifier"/>
-              <eParameters name="includes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-              <eParameters name="excludes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-            </eOperations>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="moduleIdentifier"
-                eType="#//bundlemaker/core/model/module/IModuleIdentifier"/>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="resourceSets" upperBound="-1"
-                eType="#//bundlemaker/core/model/transformation/ResourceSet"/>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="userAttributes"
-                upperBound="-1" eType="#//bundlemaker/core/model/transformation/StringToObjectMap"
-                containment="true"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="classification"
-                eType="#//bundlemaker/core/model/projectdescription/ipath"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EClass" name="ResourceSetBasedTransformation"
-              eSuperTypes="#//bundlemaker/core/model/transformation/AbstractETransformation">
-            <eOperations name="addModuleDefinition" eType="#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition">
-              <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            </eOperations>
-            <eOperations name="addModuleDefinition" eType="#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition">
-              <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eParameters name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eParameters name="userAttibutes" upperBound="-1" eType="#//bundlemaker/core/model/transformation/StringToObjectMap"/>
-            </eOperations>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="moduleDefinitions"
-                upperBound="-1" eType="#//bundlemaker/core/model/transformation/ResourceSetBasedModuleDefinition"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="resourceSetProcessor"
-                eType="#//bundlemaker/core/model/transformation/iResourceSetProcessor"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EDataType" name="iResourceSetProcessor" instanceClassName="org.bundlemaker.core.transformation.resourceset.IResourceSetProcessor"/>
-          <eClassifiers xsi:type="ecore:EClass" name="BasicProjectContentTransformation"
-              eSuperTypes="#//bundlemaker/core/model/transformation/AbstractETransformation"/>
-          <eClassifiers xsi:type="ecore:EClass" name="EmbedModuleTransformation" eSuperTypes="#//bundlemaker/core/model/transformation/AbstractETransformation">
-            <eStructuralFeatures xsi:type="ecore:EReference" name="hostModuleIdentifier"
-                lowerBound="1" eType="#//bundlemaker/core/model/module/IModuleIdentifier"/>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="embeddedModulesIdentifiers"
-                upperBound="-1" eType="#//bundlemaker/core/model/module/IModuleIdentifier"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EClass" name="RemoveResourcesTransformation"
-              eSuperTypes="#//bundlemaker/core/model/transformation/AbstractETransformation">
-            <eOperations name="addResourceSet">
-              <eParameters name="fromName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eParameters name="fromVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-              <eParameters name="includes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-              <eParameters name="excludes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-            </eOperations>
-            <eOperations name="addResourceSet">
-              <eParameters name="fromModuleIdentifier" lowerBound="1" eType="#//bundlemaker/core/model/module/IModuleIdentifier"/>
-              <eParameters name="includes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-              <eParameters name="excludes" lowerBound="1" eType="#//bundlemaker/core/model/transformation/stringArray"/>
-            </eOperations>
-            <eStructuralFeatures xsi:type="ecore:EReference" name="resourcesToRemove"
-                upperBound="-1" eType="#//bundlemaker/core/model/transformation/ResourceSet"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EClass" name="StringToObjectMap" instanceClassName="java.util.Map$Entry">
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-            <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
-          </eClassifiers>
-          <eClassifiers xsi:type="ecore:EDataType" name="stringArray" instanceClassName="java.lang.String[]"/>
         </eSubpackages>
       </eSubpackages>
     </eSubpackages>

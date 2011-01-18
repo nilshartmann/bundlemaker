@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.bundlemaker.core.model.projectdescription.ContentType;
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;

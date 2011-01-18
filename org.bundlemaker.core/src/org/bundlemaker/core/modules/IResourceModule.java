@@ -3,7 +3,7 @@ package org.bundlemaker.core.modules;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.model.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ContentType;
 
 public interface IResourceModule extends IResourceContainer, ITypeModule {
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableFileBasedContent;
+import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -61,7 +61,7 @@ public class JdtProjectHelper {
 		IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
 		entries.add(classpathEntry);
 
-		for (ModifiableFileBasedContent projectContent : ((BundleMakerProject) project)
+		for (FileBasedContent projectContent : ((BundleMakerProject) project)
 				.getProjectDescription().getModifiableFileBasedContent()) {
 
 			if (projectContent.isResourceContent()) {
@@ -72,18 +72,19 @@ public class JdtProjectHelper {
 							iClasspathEntry.makeAbsolute(), null, null);
 					entries.add(classpathEntry);
 				}
+				
 				// add source pathes
-				if (!projectContent.getModifiableResourceContent()
-						.getSourcePaths().isEmpty()) {
+				if (!projectContent.getResourceContent().getSourcePaths()
+						.isEmpty()) {
 
 					// get the workspace root
 					IWorkspaceRoot root = project.getProject().getWorkspace()
 							.getRoot();
 
 					for (IPath iSourcepathEntry : projectContent
-							.getModifiableResourceContent().getSourcePaths()) {
+							.getResourceContent().getSourcePaths()) {
 
-						if (projectContent.getModifiableResourceContent()
+						if (projectContent.getResourceContent()
 								.isAnalyzeSourceResources()) {
 
 							// Workspace relative...
@@ -111,9 +112,11 @@ public class JdtProjectHelper {
 										.getFolder(iPath);
 								linkFolder
 										.createLink(iSourcepathEntry, 0, null);
+								
 								classpathEntry = JavaCore
 										.newSourceEntry(linkFolder
 												.getFullPath());
+								
 								// projectContent.setSourcePath(linkFolder.getFullPath());
 								entries.add(classpathEntry);
 							}

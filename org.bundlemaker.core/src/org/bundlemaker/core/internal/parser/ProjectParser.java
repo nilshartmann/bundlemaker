@@ -8,13 +8,12 @@ import java.util.concurrent.FutureTask;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableFileBasedContent;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.resource.StringCache;
+import org.bundlemaker.core.projectdescription.FileBasedContent;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -90,18 +89,15 @@ public class ProjectParser {
 		//
 		notifyParseStart();
 
-		// create the string cache
-		StringCache stringCache = new StringCache();
-
 		// iterate over the project content
-		for (ModifiableFileBasedContent fileBasedContent : _bundleMakerProject
+		for (FileBasedContent fileBasedContent : _bundleMakerProject
 				.getProjectDescription().getModifiableFileBasedContent()) {
 
 			progressMonitor.setTaskName(String.format("Parsing '%s'...",
 					fileBasedContent.getName()));
 
 			// parse the content
-			parseContent(fileBasedContent, stringCache, progressMonitor);
+			parseContent(fileBasedContent, progressMonitor);
 		}
 
 		//
@@ -119,9 +115,8 @@ public class ProjectParser {
 	 * @throws CoreException
 	 */
 	@SuppressWarnings("unchecked")
-	private void parseContent(ModifiableFileBasedContent content,
-			StringCache stringCache, IProgressMonitor progressMonitor)
-			throws CoreException {
+	private void parseContent(FileBasedContent content,
+			IProgressMonitor progressMonitor) throws CoreException {
 
 		// return if content is no resource content
 		if (!content.isResourceContent()) {
@@ -153,8 +148,7 @@ public class ProjectParser {
 		// create the resource cache
 		ModifiableResourceCache cache = new ModifiableResourceCache(
 				(IPersistentDependencyStore) _bundleMakerProject
-						.getDependencyStore(null),
-				stringCache);
+						.getDependencyStore(null));
 
 		// create parser callables
 		for (int i = 0; i < _parsers.length; i++) {
@@ -303,7 +297,7 @@ public class ProjectParser {
 		int binaryResourcesToParse = 0;
 		int sourceResourcesToParse = 0;
 
-		for (ModifiableFileBasedContent fileBasedContent : _bundleMakerProject
+		for (FileBasedContent fileBasedContent : _bundleMakerProject
 				.getProjectDescription().getModifiableFileBasedContent()) {
 
 			int[] resourcesToParse = countResourcesToParse(fileBasedContent);
@@ -324,7 +318,7 @@ public class ProjectParser {
 	 * </p>
 	 * 
 	 */
-	private int[] countResourcesToParse(ModifiableFileBasedContent content) {
+	private int[] countResourcesToParse(FileBasedContent content) {
 
 		//
 		int binaryResourcesToParse = 0;
@@ -355,30 +349,25 @@ public class ProjectParser {
 	 * 
 	 * @return
 	 */
-	private int[] getResourcesToParseCount(ModifiableFileBasedContent content,
+	private int[] getResourcesToParseCount(FileBasedContent content,
 			IParser parser) {
 
 		//
 		if (parser.getParserType().equals(ParserType.BINARY)) {
 
 			return new int[] {
-					content.getModifiableResourceContent().getBinaryResources()
-							.size(), 0 };
+					content.getResourceContent().getBinaryResources().size(), 0 };
 
 		} else if (parser.getParserType().equals(ParserType.SOURCE)) {
 
-			return new int[] {
-					0,
-					content.getModifiableResourceContent().getSourceResources()
-							.size() };
+			return new int[] { 0,
+					content.getResourceContent().getSourceResources().size() };
 
 		} else if (parser.getParserType().equals(ParserType.BINARY_AND_SOURCE)) {
 
 			return new int[] {
-					content.getModifiableResourceContent().getBinaryResources()
-							.size(),
-					content.getModifiableResourceContent().getSourceResources()
-							.size() };
+					content.getResourceContent().getBinaryResources().size(),
+					content.getResourceContent().getSourceResources().size() };
 		}
 
 		return new int[] { 0, 0 };

@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 

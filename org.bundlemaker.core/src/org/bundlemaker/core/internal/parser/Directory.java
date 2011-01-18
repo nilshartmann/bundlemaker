@@ -3,9 +3,9 @@ package org.bundlemaker.core.internal.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bundlemaker.core.model.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IDirectoryFragment;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 

@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -29,7 +31,7 @@ import org.eclipse.core.runtime.Status;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class FileUtils {
-	
+
 	public static void copyFile(File in, File out) throws IOException {
 		FileChannel inChannel = new FileInputStream(in).getChannel();
 		FileChannel outChannel = new FileOutputStream(out).getChannel();
@@ -124,7 +126,7 @@ public class FileUtils {
 		//
 		if (file.isDirectory()) {
 
-			List<String> result = new ArrayList<String>();
+			List<String> result = new LinkedList<String>();
 			getAllChildren(file, file, result);
 			return result;
 		}
@@ -139,7 +141,7 @@ public class FileUtils {
 
 				Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
 
-				List<String> result = new ArrayList<String>();
+				List<String> result = new LinkedList<String>();
 
 				while (enumeration.hasMoreElements()) {
 					ZipEntry zipEntry = (ZipEntry) enumeration.nextElement();
@@ -176,15 +178,16 @@ public class FileUtils {
 	private static void getAllChildren(File root, File directory,
 			List<String> content) {
 
+		int length = root.getAbsolutePath().length();
+
 		//
 		for (File child : directory.listFiles()) {
 
 			if (child.isFile()) {
 
-				String entry = child.getAbsolutePath().substring(
-						root.getAbsolutePath().length() + 1);
+				String entry = child.getAbsolutePath().substring(length + 1);
 
-				entry = entry.replace("//", "/");
+				entry = entry.replace("\\", "/");
 
 				content.add(entry);
 

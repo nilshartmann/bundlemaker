@@ -8,7 +8,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.StandardModuleExporterContext;
-import org.bundlemaker.core.exporter.pde.exporter.PdeExporterAttributes;
+import org.bundlemaker.core.exporter.pde.exporter.PdeExporterConfiguration;
 import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
@@ -34,7 +34,7 @@ public class IntegrationTest {
 	public static final String PROJECT_NAME = "spring";
 
 	/** - */
-	private static final boolean PARSE = true;
+	private static final boolean PARSE = false;
 
 	/**
 	 * <p>
@@ -211,9 +211,13 @@ public class IntegrationTest {
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 
-		exporterContext.put(
-				PdeExporterAttributes.BUNDLE_DEPENDENCY_DESCRIPTION,
-				PdeExporterAttributes.STRICT_IMPORT_PACKAGE);
+		//
+		PdeExporterConfiguration pdeExporterConfiguration = new PdeExporterConfiguration();
+		pdeExporterConfiguration.setUseClassifcationForExportDestination(true);
+		pdeExporterConfiguration
+				.setDependencyDescriptionStyle(PdeExporterConfiguration.STRICT_IMPORT_PACKAGE);
+		exporterContext.put(PdeExporterConfiguration.KEY,
+				pdeExporterConfiguration);
 
 		exporterContext
 				.put(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY,

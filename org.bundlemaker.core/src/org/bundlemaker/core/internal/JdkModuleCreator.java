@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.TypeModule;
 import org.bundlemaker.core.util.FileUtils;
-import org.bundlemaker.core.util.ModelUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -54,7 +54,7 @@ public class JdkModuleCreator {
 			throws CoreException, IOException {
 
 		TypeModule virtualModule = new TypeModule(
-				ModelUtils.createModuleIdentifier(vmInstall.getName(),
+				new ModuleIdentifier(vmInstall.getName(),
 						vmInstall.getName()));
 
 		for (LibraryLocation libraryLocation : JavaRuntime

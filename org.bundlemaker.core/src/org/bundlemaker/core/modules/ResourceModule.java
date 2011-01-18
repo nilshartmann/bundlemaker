@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.model.module.IModuleIdentifier;
-import org.bundlemaker.core.model.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResourceStandin;
 
 /**

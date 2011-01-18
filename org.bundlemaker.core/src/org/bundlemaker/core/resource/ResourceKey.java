@@ -14,16 +14,10 @@ public class ResourceKey implements IResourceKey {
 	private String _contentId;
 
 	/** - */
-	private int _rootIndex;
-
-	/** - */
 	private String _root;
 
 	/** - */
 	private String _path;
-
-	/** - */
-	private StringCache _resourceCache;
 
 	/**
 	 * <p>
@@ -34,19 +28,6 @@ public class ResourceKey implements IResourceKey {
 	 * @param root
 	 * @param path
 	 */
-	public ResourceKey(String contentId, String root, String path,
-			StringCache resourceCache) {
-		Assert.isNotNull(contentId);
-		Assert.isNotNull(root);
-		Assert.isNotNull(path);
-
-		_resourceCache = resourceCache;
-
-		_contentId = contentId;
-		_rootIndex = _resourceCache.storeString(root);
-		_path = path;
-	}
-
 	public ResourceKey(String contentId, String root, String path) {
 		Assert.isNotNull(contentId);
 		Assert.isNotNull(root);
@@ -58,16 +39,25 @@ public class ResourceKey implements IResourceKey {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getContentId() {
 		return _contentId;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getRoot() {
-		return _root != null ? _root : _resourceCache.getString(_rootIndex);
+		return _root;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getPath() {
 		return _path;
@@ -102,28 +92,8 @@ public class ResourceKey implements IResourceKey {
 			return false;
 		if (!_path.equals(other.getPath()))
 			return false;
-		if (!getRoot().equals(other.getRoot()))
+		if (!_root.equals(other.getRoot()))
 			return false;
 		return true;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public StringCache getResourceCache() {
-		return _resourceCache;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public boolean hasResourceCache() {
-		return _resourceCache != null;
 	}
 }

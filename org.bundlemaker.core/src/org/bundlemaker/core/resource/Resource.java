@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 
-public class Resource extends IndexedResourceKey implements IResource {
+public class Resource extends AbstractResourceKey implements IResource {
 
 	/** - */
 	private List<Reference> _references;
@@ -29,9 +29,8 @@ public class Resource extends IndexedResourceKey implements IResource {
 	 * @param root
 	 * @param path
 	 */
-	public Resource(String contentId, String root, String path,
-			StringCache cache) {
-		super(contentId, root, path, cache);
+	public Resource(String contentId, String root, String path) {
+		super(contentId, root, path);
 
 		_references = new ArrayList<Reference>();
 		_containedTypes = new ArrayList<String>();
@@ -118,8 +117,7 @@ public class Resource extends IndexedResourceKey implements IResource {
 
 		// return 'null reference' if the package a java.* package
 		if (fullyQualifiedName.startsWith("java.")) {
-			return new Reference(fullyQualifiedName, referenceType,
-					getResourceCache());
+			return new Reference(fullyQualifiedName, referenceType);
 		}
 
 		// search existing references
@@ -131,8 +129,7 @@ public class Resource extends IndexedResourceKey implements IResource {
 		}
 
 		// create and add the new reference
-		Reference reference = new Reference(fullyQualifiedName, referenceType,
-				getResourceCache());
+		Reference reference = new Reference(fullyQualifiedName, referenceType);
 		_references.add(reference);
 
 		// return the new reference

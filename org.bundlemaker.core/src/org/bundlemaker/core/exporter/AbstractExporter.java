@@ -7,7 +7,10 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -93,15 +96,40 @@ public abstract class AbstractExporter implements IModuleExporter,
 	 * @return
 	 * @throws CoreException
 	 */
-	public IProject deleteAndCreateProject(String projectName)
+	public IProject deleteAndCreateProject(String projectName, IPath location)
 			throws CoreException {
 
-		// delete project if exists
-		EclipseProjectUtils.deleteProjectIfExists(projectName);
-
 		// create project
-		IProject project = EclipseProjectUtils
-				.getOrCreateSimpleProject(projectName);
+		IProject project = ResourcesPlugin.getWorkspace().getRoot()
+				.getProject(projectName);
+
+		// delete the project if exists
+		if (project.exists()) {
+			project.delete(true, true, null);
+		}
+
+		// create the project if not exists
+		if (!project.exists()) {
+
+			// create the description
+			IProjectDescription desc = project.getWorkspace()
+					.newProjectDescription(project.getName());
+
+			//
+			if (location != null) {
+				desc.setLocation(location);
+			}
+
+			//
+			project.create(desc, null);
+
+			//
+			if (!project.isOpen()) {
+				project.open(null);
+			}
+		}
+
+		// add the 'bundlemakergenerated' flag
 		IFile file = project.getFile(".bundlemakergenerated");
 		file.create(new ByteArrayInputStream(new byte[0]), true, null);
 

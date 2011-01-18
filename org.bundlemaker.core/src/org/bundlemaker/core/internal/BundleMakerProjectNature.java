@@ -3,8 +3,8 @@ package org.bundlemaker.core.internal;
 import java.io.IOException;
 
 import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableBundleMakerProjectDescription;
-import org.bundlemaker.core.model.projectdescription.modifiableprojectdescription.ModifiableprojectdescriptionFactory;
+import org.bundlemaker.core.model.internal.projectdescription.EProjectDescription;
+import org.bundlemaker.core.model.internal.projectdescription.ProjectdescriptionFactory;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -88,20 +88,24 @@ public class BundleMakerProjectNature implements IProjectNature {
 	 */
 	private void addConfigurationFile() throws CoreException {
 
-		try {
-			ModifiableBundleMakerProjectDescription projectDescription = ModifiableprojectdescriptionFactory.eINSTANCE
-					.createModifiableBundleMakerProjectDescription();
+		// TODO
 
-			URI uri = URI.createPlatformResourceURI(project.getFullPath()
-					.append(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(
-							BundleMakerCore.PROJECT_DESCRIPTION_NAME)
-					.toString(), true);
+		try {
+			EProjectDescription projectDescription = ProjectdescriptionFactory.eINSTANCE
+					.createEProjectDescription();
+
+			URI uri = URI.createPlatformResourceURI(
+					project.getFullPath()
+							.append(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME)
+							.append(BundleMakerCore.PROJECT_DESCRIPTION_NAME)
+							.toString(), true);
 
 			Resource resource = new XMLResourceImpl(uri);
 			resource.getContents().add(projectDescription);
 			resource.save(null);
 
 		} catch (IOException e) {
+
 			// TODO: MSG
 			throw new CoreException(new Status(IStatus.ERROR,
 					BundleMakerCore.BUNDLE_ID, ""));

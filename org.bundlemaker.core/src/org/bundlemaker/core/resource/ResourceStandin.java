@@ -1,6 +1,5 @@
 package org.bundlemaker.core.resource;
 
-
 /**
  * <p>
  * </p>
@@ -21,9 +20,8 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 	 * @param root
 	 * @param path
 	 */
-	public ResourceStandin(String contentId, String root, String path,
-			StringCache cache) {
-		super(contentId, root, path, cache);
+	public ResourceStandin(String contentId, String root, String path) {
+		super(contentId, root, path);
 	}
 
 	/**

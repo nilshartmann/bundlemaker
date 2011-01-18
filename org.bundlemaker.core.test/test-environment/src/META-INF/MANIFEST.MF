@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Eclipse-SourceBundle: com.springsource.bundlor;version="1.0.0.RELEASE"
+ ;roots="."
+Bundle-Version: 1.0.0.RELEASE
+Created-By: 14.3-b01-101 (Apple Inc.)
+Bundle-SymbolicName: com.springsource.bundlor.source
+
