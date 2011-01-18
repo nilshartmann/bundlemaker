@@ -70,69 +70,12 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// update all
 		for (Resource modifiableResource : _resourceMap.values()) {
-
 			_dependencyStore.updateResource(modifiableResource);
 		}
 
 		// commit the store
 		_dependencyStore.commit();
 	}
-
-	// /**
-	// * <p>
-	// * </p>
-	// */
-	// private void optimize() {
-	//
-	// System.out.println("Optimize start");
-	//
-	// // create the reference map
-	// Map<Reference, Reference> referenceMap = new HashMap<Reference,
-	// Reference>();
-	//
-	// // iterate over all resources
-	// for (Resource resource : _resourceMap.values()) {
-	//
-	// // the references to replace
-	// Set<Reference> referencesToReplace = new HashSet<Reference>();
-	//
-	// // get all references
-	// for (Iterator<Reference> iterator = referencesToReplace.iterator();
-	// iterator
-	// .hasNext();) {
-	//
-	// // get the reference
-	// Reference reference = (Reference) iterator.next();
-	//
-	// //
-	// if (referenceMap.containsKey(reference)) {
-	//
-	// Reference flyWeightReference = referenceMap.get(reference);
-	//
-	// // TODO
-	// if (flyWeightReference == reference) {
-	// System.out.println("BOOM");
-	// }
-	//
-	// //
-	// iterator.remove();
-	// referencesToReplace.add(referenceMap.get(reference));
-	//
-	// } else {
-	//
-	// //
-	// referenceMap.put(reference, reference);
-	// }
-	//
-	// }
-	//
-	// //
-	// for (Reference reference : referencesToReplace) {
-	//
-	// resource.getModifiableReferences().add(reference);
-	// }
-	// }
-	// }
 
 	/**
 	 * {@inheritDoc}
