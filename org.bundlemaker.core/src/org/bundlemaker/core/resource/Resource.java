@@ -99,7 +99,8 @@ public class Resource extends ResourceKey implements IResource {
 	 * @param fullyQualifiedName
 	 */
 	public void createReference(String fullyQualifiedName,
-			ReferenceType referenceType, Boolean isSourceCodeDependency,
+			ReferenceType referenceType, Boolean isExtends,
+			Boolean isImplements, Boolean isSourceCodeDependency,
 			Boolean isByteCodeDependency) {
 
 		// simply do nothing if the package a java.* package
@@ -124,6 +125,8 @@ public class Resource extends ResourceKey implements IResource {
 					.getReference(
 							fullyQualifiedName,
 							referenceType,
+							isExtends != null ? isExtends : false,
+							isImplements != null ? isImplements : false,
 							isSourceCodeDependency != null ? isSourceCodeDependency
 									: false,
 							isByteCodeDependency != null ? isByteCodeDependency
@@ -151,6 +154,8 @@ public class Resource extends ResourceKey implements IResource {
 		reference = _referenceCache.getReference(
 				fullyQualifiedName,
 				referenceType,
+				chooseValue(isExtends, reference.isExtends()),
+				chooseValue(isImplements, reference.isImplements()),
 				chooseValue(isSourceCodeDependency,
 						reference.isSourcecodeDependency()),
 				chooseValue(isByteCodeDependency,
@@ -178,7 +183,7 @@ public class Resource extends ResourceKey implements IResource {
 
 				//
 				createReference(reference.getFullyQualifiedName(),
-						reference.getReferenceType(), null, true);
+						reference.getReferenceType(), null, null, null, true);
 			}
 		}
 	}

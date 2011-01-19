@@ -1,7 +1,7 @@
 package org.bundlemaker.core.resource;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -17,6 +17,10 @@ public class FlyWeightCache {
 	/** - */
 	Map<String, FlyWeightString> _flyWeightStrings;
 
+	int flyWeightStringsINITIAL_CAPACITY = 10000;
+
+	int referenceCacheINITIAL_CAPACITY = 10000;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link FlyWeightCache}.
@@ -25,8 +29,11 @@ public class FlyWeightCache {
 	public FlyWeightCache() {
 
 		//
-		_referenceCache = new HashMap<Reference, Reference>();
-		_flyWeightStrings = new HashMap<String, FlyWeightString>();
+		_referenceCache = new ConcurrentHashMap<Reference, Reference>(
+				referenceCacheINITIAL_CAPACITY);
+
+		_flyWeightStrings = new ConcurrentHashMap<String, FlyWeightString>(
+				flyWeightStringsINITIAL_CAPACITY);
 	}
 
 	/**
@@ -40,28 +47,26 @@ public class FlyWeightCache {
 	 * @return
 	 */
 	public Reference getReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isSourceCodeDependency,
+			ReferenceType referenceType, boolean isExtends,
+			boolean isImplements, boolean isSourceCodeDependency,
 			boolean isByteCodeDependency) {
 
 		// create the key
 		Reference key = new Reference(getFlyWeightString(fullyQualifiedName),
-				referenceType, isSourceCodeDependency, isByteCodeDependency);
+				referenceType, isExtends, isImplements, isSourceCodeDependency,
+				isByteCodeDependency);
 
-		//
-		synchronized (this) {
+		// get the reference
+		Reference result = _referenceCache.get(key);
 
-			// get the reference
-			Reference result = _referenceCache.get(key);
-
-			// return result if not null
-			if (result != null) {
-				return result;
-			}
-			// else return the key
-			else {
-				_referenceCache.put(key, key);
-				return key;
-			}
+		// return result if not null
+		if (result != null) {
+			return result;
+		}
+		// else return the key
+		else {
+			_referenceCache.put(key, key);
+			return key;
 		}
 	}
 
@@ -74,21 +79,18 @@ public class FlyWeightCache {
 	 */
 	public FlyWeightString getFlyWeightString(String string) {
 
-		synchronized (this) {
+		FlyWeightString result = _flyWeightStrings.get(string);
 
-			FlyWeightString result = _flyWeightStrings.get(string);
+		//
+		if (result != null) {
+			return result;
+		}
 
-			//
-			if (result != null) {
-				return result;
-			}
-
-			//
-			else {
-				FlyWeightString flyWeightString = new FlyWeightString(string);
-				_flyWeightStrings.put(string, flyWeightString);
-				return flyWeightString;
-			}
+		//
+		else {
+			FlyWeightString flyWeightString = new FlyWeightString(string);
+			_flyWeightStrings.put(string, flyWeightString);
+			return flyWeightString;
 		}
 	}
 }

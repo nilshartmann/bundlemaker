@@ -32,7 +32,7 @@ public class ReferenceTest {
 
 			for (int j = 0; j < 30; j++) {
 				resource.createReference("name" + j,
-						ReferenceType.PACKAGE_REFERENCE, true, true);
+						ReferenceType.PACKAGE_REFERENCE, true, true, true, true);
 			}
 
 			Assert.assertEquals(30, resource.getReferences().size());

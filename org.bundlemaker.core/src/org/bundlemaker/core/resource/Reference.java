@@ -2,6 +2,12 @@ package org.bundlemaker.core.resource;
 
 import org.eclipse.core.runtime.Assert;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class Reference implements IReference {
 
 	/** - */
@@ -22,6 +28,13 @@ public class Reference implements IReference {
 	/** - */
 	private boolean _byteCodeDependency;
 
+	/** - */
+	private boolean _isExtends;
+
+	/** - */
+	private boolean _isImplements;
+
+	//
 	// /** - */
 	// private boolean _isUses;
 
@@ -36,7 +49,8 @@ public class Reference implements IReference {
 	 * @param byteCodeDependency
 	 */
 	public Reference(FlyWeightString fullyQualifiedName,
-			ReferenceType referenceType, boolean sourceCodeDependency,
+			ReferenceType referenceType, boolean isExtends,
+			boolean isImplements, boolean sourceCodeDependency,
 			boolean byteCodeDependency) {
 
 		Assert.isNotNull(fullyQualifiedName);
@@ -46,6 +60,18 @@ public class Reference implements IReference {
 		_referenceType = referenceType;
 		_sourceCodeDependency = sourceCodeDependency;
 		_byteCodeDependency = byteCodeDependency;
+		_isExtends = isExtends;
+		_isImplements = isImplements;
+	}
+
+	@Override
+	public boolean isImplements() {
+		return _isImplements;
+	}
+
+	@Override
+	public boolean isExtends() {
+		return _isExtends;
 	}
 
 	/**
@@ -89,6 +115,8 @@ public class Reference implements IReference {
 				* result
 				+ ((_fullyQualifiedName == null) ? 0 : _fullyQualifiedName
 						.hashCode());
+		result = prime * result + (_isExtends ? 1231 : 1237);
+		result = prime * result + (_isImplements ? 1231 : 1237);
 		result = prime * result
 				+ ((_referenceType == null) ? 0 : _referenceType.hashCode());
 		result = prime * result + (_sourceCodeDependency ? 1231 : 1237);
@@ -110,6 +138,10 @@ public class Reference implements IReference {
 			if (other._fullyQualifiedName != null)
 				return false;
 		} else if (!_fullyQualifiedName.equals(other._fullyQualifiedName))
+			return false;
+		if (_isExtends != other._isExtends)
+			return false;
+		if (_isImplements != other._isImplements)
 			return false;
 		if (_referenceType != other._referenceType)
 			return false;

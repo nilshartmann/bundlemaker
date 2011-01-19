@@ -56,8 +56,9 @@ public class BundlorPartialManifest implements PartialManifest {
 		// && !CoreUtil.isLocalOrAnonymousType((type))
 		) {
 
+			// TODO!!!
 			_resource.createReference(type, ReferenceType.TYPE_REFERENCE, null,
-					true);
+					null, null, true);
 		}
 	}
 

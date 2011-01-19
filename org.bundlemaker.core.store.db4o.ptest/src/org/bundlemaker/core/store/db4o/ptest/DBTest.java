@@ -72,7 +72,7 @@ public class DBTest {
 
 		List<Resource> resources = store.getResources();
 
-		Assert.assertEquals(200000, resources.size());
+		Assert.assertEquals(50000, resources.size());
 		for (Resource resource : resources) {
 			Assert.assertFalse(resource.getReferences().isEmpty());
 			Assert.assertEquals(30, resource.getReferences().size());
@@ -128,7 +128,7 @@ public class DBTest {
 			for (int j = 0; j < referenceCount; j++) {
 
 				resource.createReference("referencedElement" + j,
-						ReferenceType.TYPE_REFERENCE, true, false);
+						ReferenceType.TYPE_REFERENCE, false, false, true, false);
 			}
 
 			// flyweight
