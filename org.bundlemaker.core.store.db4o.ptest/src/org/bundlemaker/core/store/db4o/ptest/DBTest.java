@@ -72,7 +72,7 @@ public class DBTest {
 
 		List<Resource> resources = store.getResources();
 
-		Assert.assertEquals(200000, resources.size());
+		Assert.assertEquals(50000, resources.size());
 		for (Resource resource : resources) {
 			Assert.assertFalse(resource.getReferences().isEmpty());
 			Assert.assertEquals(30, resource.getReferences().size());
