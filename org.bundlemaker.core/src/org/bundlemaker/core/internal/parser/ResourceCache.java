@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModifiableResourceCache implements IResourceCache {
+public class ResourceCache implements IResourceCache {
 
 	/** the element map */
 	private Map<IResourceKey, Resource> _resourceMap;
@@ -31,12 +31,12 @@ public class ModifiableResourceCache implements IResourceCache {
 
 	/**
 	 * <p>
-	 * Creates a new instance of type {@link ModifiableResourceCache}.
+	 * Creates a new instance of type {@link ResourceCache}.
 	 * </p>
 	 * 
 	 * @param dependencyStore
 	 */
-	public ModifiableResourceCache(IPersistentDependencyStore dependencyStore) {
+	public ResourceCache(IPersistentDependencyStore dependencyStore) {
 
 		Assert.isNotNull(dependencyStore);
 
@@ -102,5 +102,13 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// return the result
 		return resource;
+	}
+	
+	public Map<IResourceKey, Resource> getResourceMap() {
+		return _resourceMap;
+	}
+
+	public FlyWeightCache getReferenceCache() {
+		return _referenceCache;
 	}
 }

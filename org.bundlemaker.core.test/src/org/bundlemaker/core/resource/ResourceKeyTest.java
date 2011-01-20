@@ -23,23 +23,83 @@ public class ResourceKeyTest {
 		ResourceKey key_2 = new ResourceKey("1", "path", "root");
 		Resource resource_1 = new Resource("1", "path", "root");
 		Resource resource_2 = new Resource("1", "path", "root");
+		ResourceStandin resourceStandin_1 = new ResourceStandin("1", "path",
+				"root");
+		ResourceStandin resourceStandin_2 = new ResourceStandin("1", "path",
+				"root");
 
 		Assert.assertEquals(key_1, key_2);
-		Assert.assertEquals(key_2, key_1);
-
 		Assert.assertEquals(key_1, resource_1);
-		Assert.assertEquals(resource_1, key_1);
-
 		Assert.assertEquals(key_1, resource_2);
-		Assert.assertEquals(resource_2, key_1);
+		Assert.assertEquals(key_1, resourceStandin_1);
+		Assert.assertEquals(key_1, resourceStandin_2);
 
+		Assert.assertEquals(key_2, key_1);
 		Assert.assertEquals(key_2, resource_1);
-		Assert.assertEquals(resource_1, key_2);
-
 		Assert.assertEquals(key_2, resource_2);
-		Assert.assertEquals(resource_2, key_2);
+		Assert.assertEquals(key_2, resourceStandin_1);
+		Assert.assertEquals(key_2, resourceStandin_2);
 
+		Assert.assertEquals(resource_1, key_1);
+		Assert.assertEquals(resource_1, key_2);
 		Assert.assertEquals(resource_1, resource_2);
-		Assert.assertEquals(resource_2, resource_1);
+		Assert.assertEquals(resource_1, resourceStandin_1);
+		Assert.assertEquals(resource_1, resourceStandin_2);
+
+		Assert.assertEquals(resource_2, key_1);
+		Assert.assertEquals(resource_2, key_2);
+		Assert.assertEquals(resource_2, resource_2);
+		Assert.assertEquals(resource_2, resourceStandin_1);
+		Assert.assertEquals(resource_2, resourceStandin_2);
+
+		Assert.assertEquals(resourceStandin_1, key_1);
+		Assert.assertEquals(resourceStandin_1, key_2);
+		Assert.assertEquals(resourceStandin_1, resource_1);
+		Assert.assertEquals(resourceStandin_1, resource_2);
+		Assert.assertEquals(resourceStandin_1, resourceStandin_2);
+
+		Assert.assertEquals(resourceStandin_2, key_1);
+		Assert.assertEquals(resourceStandin_2, key_2);
+		Assert.assertEquals(resourceStandin_2, resource_1);
+		Assert.assertEquals(resourceStandin_2, resource_2);
+		Assert.assertEquals(resourceStandin_2, resourceStandin_1);
+		
+		/** **/
+		
+		Assert.assertEquals(key_1.hashCode(), key_2.hashCode());
+		Assert.assertEquals(key_1.hashCode(), resource_1.hashCode());
+		Assert.assertEquals(key_1.hashCode(), resource_2.hashCode());
+		Assert.assertEquals(key_1.hashCode(), resourceStandin_1.hashCode());
+		Assert.assertEquals(key_1.hashCode(), resourceStandin_2.hashCode());
+
+		Assert.assertEquals(key_2.hashCode(), key_1.hashCode());
+		Assert.assertEquals(key_2.hashCode(), resource_1.hashCode());
+		Assert.assertEquals(key_2.hashCode(), resource_2.hashCode());
+		Assert.assertEquals(key_2.hashCode(), resourceStandin_1.hashCode());
+		Assert.assertEquals(key_2.hashCode(), resourceStandin_2.hashCode());
+
+		Assert.assertEquals(resource_1.hashCode(), key_1.hashCode());
+		Assert.assertEquals(resource_1.hashCode(), key_2.hashCode());
+		Assert.assertEquals(resource_1.hashCode(), resource_2.hashCode());
+		Assert.assertEquals(resource_1.hashCode(), resourceStandin_1.hashCode());
+		Assert.assertEquals(resource_1.hashCode(), resourceStandin_2.hashCode());
+
+		Assert.assertEquals(resource_2.hashCode(), key_1.hashCode());
+		Assert.assertEquals(resource_2.hashCode(), key_2.hashCode());
+		Assert.assertEquals(resource_2.hashCode(), resource_2.hashCode());
+		Assert.assertEquals(resource_2.hashCode(), resourceStandin_1.hashCode());
+		Assert.assertEquals(resource_2.hashCode(), resourceStandin_2.hashCode());
+
+		Assert.assertEquals(resourceStandin_1.hashCode(), key_1.hashCode());
+		Assert.assertEquals(resourceStandin_1.hashCode(), key_2.hashCode());
+		Assert.assertEquals(resourceStandin_1.hashCode(), resource_1.hashCode());
+		Assert.assertEquals(resourceStandin_1.hashCode(), resource_2.hashCode());
+		Assert.assertEquals(resourceStandin_1.hashCode(), resourceStandin_2.hashCode());
+
+		Assert.assertEquals(resourceStandin_2.hashCode(), key_1.hashCode());
+		Assert.assertEquals(resourceStandin_2.hashCode(), key_2.hashCode());
+		Assert.assertEquals(resourceStandin_2.hashCode(), resource_1.hashCode());
+		Assert.assertEquals(resourceStandin_2.hashCode(), resource_2.hashCode());
+		Assert.assertEquals(resourceStandin_2.hashCode(), resourceStandin_1.hashCode());
 	}
 }

@@ -63,7 +63,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 public class JdtAstVisitor extends ASTVisitor {
 
 	/** - */
-	private Resource _referencingElement;
+	private Resource _javaSourceResource;
 
 	/** - */
 	private Stack<ITypeBinding> _typeBindings;
@@ -82,16 +82,15 @@ public class JdtAstVisitor extends ASTVisitor {
 	 * Creates a new instance of type {@link JdtAstVisitor}.
 	 * </p>
 	 * 
-	 * @param javaSourceFileElement
+	 * @param javaSourceResource
 	 * @param mapTypeInfo
 	 */
-	public JdtAstVisitor(Resource javaSourceFileElement) {
+	public JdtAstVisitor(Resource javaSourceResource) {
+		Assert.isNotNull(javaSourceResource);
 
-		Assert.isNotNull(javaSourceFileElement);
+		_javaSourceResource = javaSourceResource;
 
-		_referencingElement = javaSourceFileElement;
 		_typeBindings = new Stack<ITypeBinding>();
-
 		_typeNames = new HashSet<String>();
 	}
 
@@ -134,9 +133,9 @@ public class JdtAstVisitor extends ASTVisitor {
 
 			// KEY??
 			IResourceKey resourceKey = new ResourceKey(
-					_referencingElement.getContentId(),
-					_referencingElement.getRoot(),
-					_referencingElement.getPath());
+					_javaSourceResource.getContentId(),
+					_javaSourceResource.getRoot(),
+					_javaSourceResource.getPath());
 
 			result.add(new JdtProblemAdapter(resourceKey, iProblem));
 		}
@@ -202,7 +201,7 @@ public class JdtAstVisitor extends ASTVisitor {
 			if (binding instanceof IPackageBinding) {
 
 				/* Reference packageReference = */
-				_referencingElement.createReference(
+				_javaSourceResource.createReference(
 						((IPackageBinding) binding).getName(),
 						ReferenceType.PACKAGE_REFERENCE, false, false, true,
 						null);
@@ -1044,7 +1043,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
 		if (referencedType != null) {
 
-			_referencingElement.createReference(referencedType,
+			_javaSourceResource.createReference(referencedType,
 					ReferenceType.TYPE_REFERENCE, isExtends ? true : null,
 					isImplements ? true : null, true, null);
 		}

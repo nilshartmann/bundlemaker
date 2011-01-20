@@ -5,7 +5,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.internal.parser.ModifiableResourceCache;
+import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
@@ -55,7 +55,7 @@ public class DBTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		ModifiableResourceCache cache = new ModifiableResourceCache(store);
+		ResourceCache cache = new ResourceCache(store);
 		createTestDatabase(50000, 30, cache);
 
 		stopWatch.stop();
@@ -107,7 +107,7 @@ public class DBTest {
 	 * @throws CoreException
 	 */
 	private void createTestDatabase(int resourceCount, int referenceCount,
-			ModifiableResourceCache cache) throws CoreException {
+			ResourceCache cache) throws CoreException {
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();

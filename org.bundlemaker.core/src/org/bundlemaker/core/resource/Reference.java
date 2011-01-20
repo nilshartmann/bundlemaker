@@ -14,29 +14,7 @@ public class Reference implements IReference {
 	private FlyWeightString _fullyQualifiedName;
 
 	/** - */
-	private ReferenceType _referenceType;
-
-	// /** - */
-	// private boolean _indirectlyReferenced;
-	//
-	// /** - */
-	// private boolean _directlyReferenced;
-
-	/** - */
-	private boolean _sourceCodeDependency;
-
-	/** - */
-	private boolean _byteCodeDependency;
-
-	/** - */
-	private boolean _isExtends;
-
-	/** - */
-	private boolean _isImplements;
-
-	//
-	// /** - */
-	// private boolean _isUses;
+	private ReferenceAttributes _referenceAttributes;
 
 	/**
 	 * <p>
@@ -44,34 +22,16 @@ public class Reference implements IReference {
 	 * </p>
 	 * 
 	 * @param fullyQualifiedName
-	 * @param referenceType
-	 * @param sourceCodeDependency
-	 * @param byteCodeDependency
+	 * @param referenceAttributes
 	 */
 	public Reference(FlyWeightString fullyQualifiedName,
-			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean sourceCodeDependency,
-			boolean byteCodeDependency) {
+			ReferenceAttributes referenceAttributes) {
 
 		Assert.isNotNull(fullyQualifiedName);
-		Assert.isNotNull(referenceType);
+		Assert.isNotNull(referenceAttributes);
 
 		_fullyQualifiedName = fullyQualifiedName;
-		_referenceType = referenceType;
-		_sourceCodeDependency = sourceCodeDependency;
-		_byteCodeDependency = byteCodeDependency;
-		_isExtends = isExtends;
-		_isImplements = isImplements;
-	}
-
-	@Override
-	public boolean isImplements() {
-		return _isImplements;
-	}
-
-	@Override
-	public boolean isExtends() {
-		return _isExtends;
+		_referenceAttributes = referenceAttributes;
 	}
 
 	/**
@@ -86,8 +46,24 @@ public class Reference implements IReference {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean isImplements() {
+		return _referenceAttributes.isImplements();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isExtends() {
+		return _referenceAttributes.isExtends();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public ReferenceType getReferenceType() {
-		return _referenceType;
+		return _referenceAttributes.getReferenceType();
 	}
 
 	/**
@@ -95,7 +71,7 @@ public class Reference implements IReference {
 	 */
 	@Override
 	public boolean isBytecodeDependency() {
-		return _byteCodeDependency;
+		return _referenceAttributes.isByteCodeDependency();
 	}
 
 	/**
@@ -103,26 +79,21 @@ public class Reference implements IReference {
 	 */
 	@Override
 	public boolean isSourcecodeDependency() {
-		return _sourceCodeDependency;
+		return _referenceAttributes.isSourceCodeDependency();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (_byteCodeDependency ? 1231 : 1237);
-		result = prime
-				* result
-				+ ((_fullyQualifiedName == null) ? 0 : _fullyQualifiedName
-						.hashCode());
-		result = prime * result + (_isExtends ? 1231 : 1237);
-		result = prime * result + (_isImplements ? 1231 : 1237);
-		result = prime * result
-				+ ((_referenceType == null) ? 0 : _referenceType.hashCode());
-		result = prime * result + (_sourceCodeDependency ? 1231 : 1237);
-		return result;
+		int result = 31 + _fullyQualifiedName.hashCode();
+		return 31 * result + _referenceAttributes.hashCode();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -132,20 +103,15 @@ public class Reference implements IReference {
 		if (getClass() != obj.getClass())
 			return false;
 		Reference other = (Reference) obj;
-		if (_byteCodeDependency != other._byteCodeDependency)
-			return false;
 		if (_fullyQualifiedName == null) {
 			if (other._fullyQualifiedName != null)
 				return false;
 		} else if (!_fullyQualifiedName.equals(other._fullyQualifiedName))
 			return false;
-		if (_isExtends != other._isExtends)
-			return false;
-		if (_isImplements != other._isImplements)
-			return false;
-		if (_referenceType != other._referenceType)
-			return false;
-		if (_sourceCodeDependency != other._sourceCodeDependency)
+		if (_referenceAttributes == null) {
+			if (other._referenceAttributes != null)
+				return false;
+		} else if (!_referenceAttributes.equals(other._referenceAttributes))
 			return false;
 		return true;
 	}

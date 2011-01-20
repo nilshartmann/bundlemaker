@@ -16,6 +16,8 @@ import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.bundlemaker.core.util.ProgressMonitor;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -91,9 +93,14 @@ public class ProjectParser {
 		notifyParseStart();
 
 		// create the resource cache
-		ModifiableResourceCache cache = new ModifiableResourceCache(
+		ResourceCache cache = new ResourceCache(
 				(IPersistentDependencyStore) _bundleMakerProject
 						.getDependencyStore(null));
+
+		if (progressMonitor instanceof ProgressMonitor) {
+			ProgressMonitor monitor = (ProgressMonitor) progressMonitor;
+			monitor.setResourceCache(cache);
+		}
 
 		// iterate over the project content
 		for (FileBasedContent fileBasedContent : _bundleMakerProject
@@ -104,11 +111,18 @@ public class ProjectParser {
 
 			// parse the content
 			parseContent(fileBasedContent, progressMonitor, cache);
-
-			//
-			cache.commit();
-			cache.clear();
 		}
+
+		//
+		System.out.println("Write to disc");
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		cache.commit();
+		cache.clear();
+
+		stopWatch.stop();
+		System.out.println("Done: " + stopWatch.getElapsedTime());
 
 		//
 		notifyParseStop();
