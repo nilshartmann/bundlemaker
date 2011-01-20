@@ -43,8 +43,9 @@ public class DBTest {
 
 		// step 2: delete the existing '.bundlemaker/db4o.store' file
 		File file = new File(FILE_NAME);
-		Assert.assertTrue(file.delete());
-
+		if (file.exists()) {
+			Assert.assertTrue(file.delete());
+		}
 		PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(
 				Activator.getDb4oService(), FILE_NAME);
 
@@ -128,7 +129,7 @@ public class DBTest {
 			for (int j = 0; j < referenceCount; j++) {
 
 				resource.createReference("referencedElement" + j,
-						ReferenceType.TYPE_REFERENCE, false, false, true, false);
+						ReferenceType.TYPE_REFERENCE, true, false);
 			}
 
 			// flyweight

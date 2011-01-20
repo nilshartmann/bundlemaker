@@ -3,6 +3,7 @@ package org.bundlemaker.core.internal;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,12 +24,14 @@ import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.projectdescription.ResourceContent;
+import org.bundlemaker.core.resource.Reference;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.ResourceStandin;
 import org.bundlemaker.core.store.IDependencyStore;
 import org.bundlemaker.core.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -227,45 +230,62 @@ public class BundleMakerProject implements IBundleMakerProject {
 		// get the dependency store
 		IDependencyStore dependencyStore = getDependencyStore(null);
 
-		System.out.println("get resources");
-
 		List<Resource> resources = dependencyStore.getResources();
 
 		Map<Resource, Resource> map = new HashMap<Resource, Resource>();
 
-		System.out.println("put resources to map");
-
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+		ProgressMonitor monitor = new ProgressMonitor();
+		// TODO
+		monitor.beginTask("Opening database ", resources.size());
 
 		for (Resource resource : resources) {
 			map.put(resource, resource);
+			monitor.worked(1);
 		}
 
-		stopWatch.stop();
-		System.out.println(stopWatch.getElapsedTime());
-
-		System.out.println("set up resource standin");
+		monitor.done();
 
 		List<FileBasedContent> fileBasedContents = _projectDescription
 				.getModifiableFileBasedContent();
 
 		for (FileBasedContent fileBasedContent : fileBasedContents) {
 
+			Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
+
 			if (fileBasedContent.isResourceContent()) {
 
 				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
 						.getResourceContent()).getModifiableBinaryResources()) {
 
-					setupResourceStandin(resourceStandin, map);
+					setupResourceStandin(resourceStandin, map, false);
 					Assert.isNotNull(resourceStandin.getResource());
+
+					// hash the contained binary types
+					for (String containedType : resourceStandin.getResource()
+							.getContainedTypes()) {
+
+						typeToResourceStandin.put(containedType,
+								resourceStandin);
+					}
 				}
 
 				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
 						.getResourceContent()).getModifiableSourceResources()) {
 
-					setupResourceStandin(resourceStandin, map);
+					setupResourceStandin(resourceStandin, map, true);
 					Assert.isNotNull(resourceStandin.getResource());
+
+					// set the associated resources
+					for (String containedType : resourceStandin.getResource()
+							.getContainedTypes()) {
+
+						if (typeToResourceStandin.containsKey(containedType)) {
+
+							((Resource) resourceStandin.getResource())
+									.addAssociatedResource((Resource) typeToResourceStandin
+											.get(containedType).getResource());
+						}
+					}
 				}
 			}
 		}
@@ -462,7 +482,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * @param map
 	 */
 	private void setupResourceStandin(ResourceStandin resourceStandin,
-			Map<Resource, Resource> map) {
+			Map<Resource, Resource> map, boolean isSource) {
 
 		// TODO
 		// System.out

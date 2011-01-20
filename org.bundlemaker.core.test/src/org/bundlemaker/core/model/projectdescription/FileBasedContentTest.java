@@ -30,15 +30,13 @@ public class FileBasedContentTest {
 		
 		fileBasedContent
 				.getModifiableBinaryPaths()
-				.add(new Path(
-						"R:/environments/bundlemaker2-environment/workspace/target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-1.0.0.RELEASE.jar"));
+				.add(new Path(System.getProperty("user.dir") + "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-1.0.0.RELEASE.jar"));
 
 		//
 		fileBasedContent
 				.getModifiableResourceContent()
 				.getModifiableSourcePaths()
-				.add(new Path(
-						"R:/environments/bundlemaker2-environment/workspace/target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-sources-1.0.0.RELEASE.jar"));
+				.add(new Path(System.getProperty("user.dir") + "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-sources-1.0.0.RELEASE.jar"));
 
 		//
 		fileBasedContent.initialize(null);

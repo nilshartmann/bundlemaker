@@ -16,6 +16,7 @@ public interface IResource extends IResourceKey {
 	 * 
 	 * @return
 	 */
+	// GET REFERENCES OF ASSOCIATED RESOURCES: getAllReferences() ?
 	Set<? extends IReference> getReferences();
 
 	/**

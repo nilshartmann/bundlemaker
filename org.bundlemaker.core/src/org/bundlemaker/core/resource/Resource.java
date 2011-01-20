@@ -99,9 +99,17 @@ public class Resource extends ResourceKey implements IResource {
 	 * @param fullyQualifiedName
 	 */
 	public void createReference(String fullyQualifiedName,
-			ReferenceType referenceType, Boolean isExtends,
-			Boolean isImplements, Boolean isSourceCodeDependency,
-			Boolean isByteCodeDependency) {
+			ReferenceType referenceType, Boolean isExtends, Boolean isImplements) {
+
+		//
+		Assert.isNotNull(fullyQualifiedName);
+
+		//
+		if (fullyQualifiedName.startsWith("java.")) {
+
+			// do nothing
+			return;
+		}
 
 		// create the key
 		Assert.isNotNull(referenceType);
@@ -116,16 +124,9 @@ public class Resource extends ResourceKey implements IResource {
 		// create completely new one
 		if (reference == null) {
 
-			reference = _flyWeightCache
-					.getReference(
-							fullyQualifiedName,
-							referenceType,
-							isExtends != null ? isExtends : false,
-							isImplements != null ? isImplements : false,
-							isSourceCodeDependency != null ? isSourceCodeDependency
-									: false,
-							isByteCodeDependency != null ? isByteCodeDependency
-									: false);
+			reference = _flyWeightCache.getReference(fullyQualifiedName,
+					referenceType, isExtends != null ? isExtends : false,
+					isImplements != null ? isImplements : false);
 
 			references().add(reference);
 			_referenceMap.put(key, reference);
@@ -134,11 +135,13 @@ public class Resource extends ResourceKey implements IResource {
 		}
 
 		// return if current dependency matches the requested one
+		// TODO !!!!
+		// TODO !!!!
+		// TODO !!!!
 		if (equals(
-				isSourceCodeDependency,
-				reference.isSourcecodeDependency()
-						&& equals(isByteCodeDependency,
-								reference.isBytecodeDependency()))) {
+				isExtends,
+				reference.isExtends()
+						&& equals(isImplements, reference.isImplements()))) {
 			return;
 		}
 
@@ -146,15 +149,9 @@ public class Resource extends ResourceKey implements IResource {
 		// request a new one
 		references().remove(reference);
 
-		reference = _flyWeightCache.getReference(
-				fullyQualifiedName,
-				referenceType,
-				chooseValue(isExtends, reference.isExtends()),
-				chooseValue(isImplements, reference.isImplements()),
-				chooseValue(isSourceCodeDependency,
-						reference.isSourcecodeDependency()),
-				chooseValue(isByteCodeDependency,
-						reference.isBytecodeDependency()));
+		reference = _flyWeightCache.getReference(fullyQualifiedName,
+				referenceType, chooseValue(isExtends, reference.isExtends()),
+				chooseValue(isImplements, reference.isImplements()));
 
 		references().add(reference);
 		_referenceMap.put(key, reference);
@@ -166,21 +163,25 @@ public class Resource extends ResourceKey implements IResource {
 	 * 
 	 * @param associatedResource
 	 */
+	// TODO
+	// TODO
 	public void addAssociatedResource(Resource associatedResource) {
 
 		// add associated resource
 		associatedResources().add(associatedResource);
 
-		if (associatedResource._references != null) {
-
-			// add references
-			for (Reference reference : associatedResource._references) {
-
-				//
-				createReference(reference.getFullyQualifiedName(),
-						reference.getReferenceType(), null, null, null, true);
-			}
-		}
+		// TODO
+		// TODO
+		// if (associatedResource._references != null) {
+		//
+		// // add references
+		// for (Reference reference : associatedResource._references) {
+		//
+		// //
+		// createReference(reference.getFullyQualifiedName(),
+		// reference.getReferenceType(), null, null);
+		// }
+		// }
 	}
 
 	/**

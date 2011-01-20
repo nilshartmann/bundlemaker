@@ -36,7 +36,7 @@ public class ReferenceTest {
 
 			for (int j = 0; j < referencesCount; j++) {
 				resource.createReference("name" + i + "#" + j,
-						ReferenceType.PACKAGE_REFERENCE, true, true, true, true);
+						ReferenceType.PACKAGE_REFERENCE, true, true);
 			}
 
 			Assert.assertEquals(referencesCount, resource.getReferences()
@@ -55,7 +55,7 @@ public class ReferenceTest {
 
 			Reference reference = referenceCache.getReference(
 					"name" + i + "#1", ReferenceType.PACKAGE_REFERENCE, true,
-					true, true, true);
+					true);
 
 			Assert.assertNotNull(reference);
 		}
@@ -68,8 +68,7 @@ public class ReferenceTest {
 		for (int i = 0; i < 10000; i++) {
 
 			Reference reference = referenceCache.getReference("name" + i
-					+ "#40", ReferenceType.PACKAGE_REFERENCE, true, true, true,
-					true);
+					+ "#40", ReferenceType.PACKAGE_REFERENCE, true, true);
 
 			Assert.assertNotNull(reference);
 		}

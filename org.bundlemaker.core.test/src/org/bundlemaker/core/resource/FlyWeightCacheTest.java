@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class FlyWeightCacheTest {
 
-	public static final int TIMEOUT = 500;
+	public static final int TIMEOUT = 750;
 
 	/**
 	 * <p>
@@ -50,14 +50,14 @@ public class FlyWeightCacheTest {
 			ReferenceAttributes attributes = cache.getReferenceAttributes(
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0);
+					i % 3 == 0);
 		}
 
 		//
-		Assert.assertEquals(32, cache._referenceAttributesCache.size());
+		Assert.assertEquals(8, cache._referenceAttributesCache.size());
 	}
 
-	@Test
+	@Test(timeout = 6000)
 	public void testGetReference() {
 
 		//
@@ -70,15 +70,15 @@ public class FlyWeightCacheTest {
 			Reference reference = cache.getReference("fullyQualifiedName" + i,
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0);
+					i % 3 == 0);
 
 			reference = cache.getReference("fullyQualifiedName",
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0);
+					i % 3 == 0);
 		}
 
 		//
-		Assert.assertEquals(1000032, cache._referenceCache.size());
+		Assert.assertEquals(1000008, cache._referenceCache.size());
 	}
 }

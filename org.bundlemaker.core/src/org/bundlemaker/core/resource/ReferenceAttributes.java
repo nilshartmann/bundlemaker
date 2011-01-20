@@ -23,12 +23,6 @@ public class ReferenceAttributes {
 	// private boolean _uses;
 
 	/** - */
-	private boolean _sourceCodeDependency;
-
-	/** - */
-	private boolean _byteCodeDependency;
-
-	/** - */
 	private boolean _extends;
 
 	/** - */
@@ -40,20 +34,15 @@ public class ReferenceAttributes {
 	 * </p>
 	 * 
 	 * @param referenceType
-	 * @param sourceCodeDependency
-	 * @param byteCodeDependency
 	 * @param isExtends
 	 * @param isImplements
 	 */
-	public ReferenceAttributes(ReferenceType referenceType,
-			boolean sourceCodeDependency, boolean byteCodeDependency,
-			boolean isExtends, boolean isImplements) {
+	public ReferenceAttributes(ReferenceType referenceType, boolean isExtends,
+			boolean isImplements) {
 
 		Assert.isNotNull(referenceType);
 
 		_referenceType = referenceType;
-		_sourceCodeDependency = sourceCodeDependency;
-		_byteCodeDependency = byteCodeDependency;
 		_extends = isExtends;
 		_implements = isImplements;
 	}
@@ -66,26 +55,6 @@ public class ReferenceAttributes {
 	 */
 	public ReferenceType getReferenceType() {
 		return _referenceType;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public boolean isSourceCodeDependency() {
-		return _sourceCodeDependency;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public boolean isByteCodeDependency() {
-		return _byteCodeDependency;
 	}
 
 	/**
@@ -115,12 +84,10 @@ public class ReferenceAttributes {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (_byteCodeDependency ? 1231 : 1237);
 		result = prime * result + (_extends ? 1231 : 1237);
 		result = prime * result + (_implements ? 1231 : 1237);
 		result = prime * result
 				+ ((_referenceType == null) ? 0 : _referenceType.hashCode());
-		result = prime * result + (_sourceCodeDependency ? 1231 : 1237);
 		return result;
 	}
 
@@ -136,15 +103,11 @@ public class ReferenceAttributes {
 		if (getClass() != obj.getClass())
 			return false;
 		ReferenceAttributes other = (ReferenceAttributes) obj;
-		if (_byteCodeDependency != other._byteCodeDependency)
-			return false;
 		if (_extends != other._extends)
 			return false;
 		if (_implements != other._implements)
 			return false;
 		if (_referenceType != other._referenceType)
-			return false;
-		if (_sourceCodeDependency != other._sourceCodeDependency)
 			return false;
 		return true;
 	}

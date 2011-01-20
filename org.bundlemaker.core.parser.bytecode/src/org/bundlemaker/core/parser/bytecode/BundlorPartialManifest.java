@@ -58,7 +58,7 @@ public class BundlorPartialManifest implements PartialManifest {
 
 			// TODO!!!
 			_resource.createReference(type, ReferenceType.TYPE_REFERENCE, null,
-					null, null, true);
+					null);
 		}
 	}
 

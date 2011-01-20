@@ -83,7 +83,7 @@ public class ResourceTest {
 				flyWeightCache);
 		for (int j = 0; j < 100; j++) {
 			resource.createReference("start" + j, ReferenceType.TYPE_REFERENCE,
-					true, false, true, true);
+					true, true);
 		}
 
 		stopWatch_1.stop();
@@ -97,7 +97,7 @@ public class ResourceTest {
 			//
 			for (int j = 0; j < referenceCount; j++) {
 				resource.createReference("" + i + j,
-						ReferenceType.TYPE_REFERENCE, true, false, true, true);
+						ReferenceType.TYPE_REFERENCE, true, true);
 			}
 		}
 
@@ -109,7 +109,7 @@ public class ResourceTest {
 		resource = new Resource("stop", "stop", "stop", flyWeightCache);
 		for (int j = 0; j < 100; j++) {
 			resource.createReference("stop" + j, ReferenceType.TYPE_REFERENCE,
-					true, false, true, true);
+					true, true);
 		}
 
 		stopWatch_2.stop();

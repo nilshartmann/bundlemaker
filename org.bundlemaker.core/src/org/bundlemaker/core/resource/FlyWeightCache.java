@@ -57,14 +57,11 @@ public class FlyWeightCache {
 	 * @return
 	 */
 	public Reference getReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isSourceCodeDependency,
-			boolean isByteCodeDependency) {
+			ReferenceType referenceType, boolean isExtends, boolean isImplements) {
 
 		// create the key
 		ReferenceAttributes attributes = getReferenceAttributes(referenceType,
-				isExtends, isImplements, isSourceCodeDependency,
-				isByteCodeDependency);
+				isExtends, isImplements);
 
 		Reference key = new Reference(getFlyWeightString(fullyQualifiedName),
 				attributes);
@@ -117,13 +114,11 @@ public class FlyWeightCache {
 	 * @return
 	 */
 	ReferenceAttributes getReferenceAttributes(ReferenceType referenceType,
-			boolean isExtends, boolean isImplements,
-			boolean isSourceCodeDependency, boolean isByteCodeDependency) {
+			boolean isExtends, boolean isImplements) {
 
 		// create the key
 		ReferenceAttributes attributes = new ReferenceAttributes(referenceType,
-				isExtends, isImplements, isSourceCodeDependency,
-				isByteCodeDependency);
+				isExtends, isImplements);
 
 		// return if already there
 		if (_referenceAttributesCache.containsKey(attributes)) {

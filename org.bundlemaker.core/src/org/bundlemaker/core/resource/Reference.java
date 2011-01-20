@@ -70,22 +70,6 @@ public class Reference implements IReference {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean isBytecodeDependency() {
-		return _referenceAttributes.isByteCodeDependency();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isSourcecodeDependency() {
-		return _referenceAttributes.isSourceCodeDependency();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public int hashCode() {
 		int result = 31 + _fullyQualifiedName.hashCode();
 		return 31 * result + _referenceAttributes.hashCode();
