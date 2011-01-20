@@ -38,7 +38,7 @@ public class ResourceKey implements IResourceKey {
 		_path = path;
 	}
 
-	public ResourceKey(String contentId, String root, String path,
+	protected ResourceKey(String contentId, String root, String path,
 			FlyWeightCache cache) {
 		Assert.isNotNull(contentId);
 		Assert.isNotNull(root);
@@ -74,7 +74,7 @@ public class ResourceKey implements IResourceKey {
 		int result = 1;
 		result = prime * result + _contentId.hashCode();
 		result = prime * result + _path.hashCode();
-		result = prime * result + getRoot().hashCode();
+		result = prime * result + _root.hashCode();
 		return result;
 	}
 
@@ -94,7 +94,7 @@ public class ResourceKey implements IResourceKey {
 			return false;
 		if (!_path.equals(other.getPath()))
 			return false;
-		if (!getRoot().equals(other.getRoot()))
+		if (!_root.equals(other.getRoot()))
 			return false;
 		return true;
 	}

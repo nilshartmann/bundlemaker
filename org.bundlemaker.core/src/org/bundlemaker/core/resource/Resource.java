@@ -16,14 +16,14 @@ public class Resource extends ResourceKey implements IResource {
 	/** - */
 	private Set<String> _containedTypes;
 
-	/** - */
+	/** do not set transient! */
 	private Set<Resource> _associatedResource;
 
 	/** do not set transient! */
 	private IResourceStandin _resourceStandin;
 
 	/** - */
-	private transient FlyWeightCache _referenceCache;
+	private transient FlyWeightCache _flyWeightCache;
 
 	/** - */
 	private transient Map<ReferenceKey, Reference> _referenceMap;
@@ -41,7 +41,7 @@ public class Resource extends ResourceKey implements IResource {
 			FlyWeightCache cache) {
 		super(contentId, root, path, cache);
 
-		_referenceCache = cache;
+		_flyWeightCache = cache;
 		_referenceMap = new HashMap<ReferenceKey, Reference>();
 	}
 
@@ -99,31 +99,29 @@ public class Resource extends ResourceKey implements IResource {
 	 * @param fullyQualifiedName
 	 */
 	public void createReference(String fullyQualifiedName,
-			ReferenceType referenceType, Boolean isSourceCodeDependency,
+			ReferenceType referenceType, Boolean isExtends,
+			Boolean isImplements, Boolean isSourceCodeDependency,
 			Boolean isByteCodeDependency) {
-
-		// simply do nothing if the package a java.* package
-		Assert.isNotNull(fullyQualifiedName);
-		if (fullyQualifiedName.startsWith("java.")) {
-			return;
-		}
 
 		// create the key
 		Assert.isNotNull(referenceType);
 		ReferenceKey key = new ReferenceKey(fullyQualifiedName, referenceType);
 
 		// get the reference
+		Assert.isNotNull(_referenceMap, "Reference Map is null");
 		Reference reference = _referenceMap.get(key);
 
-		Assert.isNotNull(_referenceCache, "Reference cache is not set!");
+		Assert.isNotNull(_flyWeightCache, "_flyWeightCache is not set!");
 
 		// create completely new one
 		if (reference == null) {
 
-			reference = _referenceCache
+			reference = _flyWeightCache
 					.getReference(
 							fullyQualifiedName,
 							referenceType,
+							isExtends != null ? isExtends : false,
+							isImplements != null ? isImplements : false,
 							isSourceCodeDependency != null ? isSourceCodeDependency
 									: false,
 							isByteCodeDependency != null ? isByteCodeDependency
@@ -148,9 +146,11 @@ public class Resource extends ResourceKey implements IResource {
 		// request a new one
 		references().remove(reference);
 
-		reference = _referenceCache.getReference(
+		reference = _flyWeightCache.getReference(
 				fullyQualifiedName,
 				referenceType,
+				chooseValue(isExtends, reference.isExtends()),
+				chooseValue(isImplements, reference.isImplements()),
 				chooseValue(isSourceCodeDependency,
 						reference.isSourcecodeDependency()),
 				chooseValue(isByteCodeDependency,
@@ -178,7 +178,7 @@ public class Resource extends ResourceKey implements IResource {
 
 				//
 				createReference(reference.getFullyQualifiedName(),
-						reference.getReferenceType(), null, true);
+						reference.getReferenceType(), null, null, null, true);
 			}
 		}
 	}

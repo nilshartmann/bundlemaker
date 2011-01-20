@@ -33,11 +33,7 @@ public class FlyWeightString {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((_content == null) ? 0 : _content.hashCode());
-		return result;
+		return  _content.hashCode();
 	}
 
 	@Override

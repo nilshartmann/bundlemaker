@@ -16,6 +16,7 @@ import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
 import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
 import org.bundlemaker.core.parser.jdt.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.FlyWeightCache;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
@@ -125,8 +126,8 @@ public class JdtParser implements IParser {
 	 */
 	@Override
 	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache, IProgressMonitor progressMonitor)
-			throws CoreException {
+			List<IDirectory> directoryList, IResourceCache cache,
+			IProgressMonitor progressMonitor) throws CoreException {
 
 		// create the error list
 		List<IProblem> _errors = new LinkedList<IProblem>();
@@ -224,35 +225,25 @@ public class JdtParser implements IParser {
 
 		/******** STOP *******/
 
-		// create sublist
-		ICompilationUnit[] compilationUnitArray = units.keySet().toArray(
-				new ICompilationUnit[0]);
+		for (ICompilationUnit iCompilationUnit : units.keySet()) {
 
-		// parse the CUs
-		JdtAstRequestor requestor = new JdtAstRequestor(null);
-		_parser.setResolveBindings(true);
-		_parser.setProject(_javaProject);
+			_parser.setSource(iCompilationUnit);
 
-		// parse the CUs
-		// Convert the given monitor into a progress instance
-		_parser.createASTs(compilationUnitArray, new String[] {}, requestor,
-				new JdtParserProgressMonitor(progressMonitor,
-						compilationUnitArray.length / 2));
+			_parser.setResolveBindings(true);
+			_parser.setProject(_javaProject);
 
-		// analyze all parsed CUs
-		IProgressMonitor monitor = new JdtParserProgressMonitor(
-				progressMonitor, requestor.getCompilationUnits().size() / 2,
-				requestor.getCompilationUnits().size());
-
-		for (Entry<ICompilationUnit, CompilationUnit> entry : requestor
-				.getCompilationUnits().entrySet()) {
+			CompilationUnit compilationUnit = (CompilationUnit) _parser
+					.createAST(null);
 
 			// analyze
-			problems.addAll(analyzeCompilationUnit(entry.getKey(),
-					entry.getValue(), units.get(entry.getKey()), rootMap,
-					cache, fileBasedContent, monitor));
+			analyzeCompilationUnit(iCompilationUnit, compilationUnit,
+					units.get(iCompilationUnit), rootMap, cache,
+					fileBasedContent, problems);
+
+			progressMonitor.worked(1);
 		}
 
+		//
 		return problems;
 	}
 
@@ -271,21 +262,7 @@ public class JdtParser implements IParser {
 			ICompilationUnit iCompilationUnit, CompilationUnit compilationUnit,
 			IDirectory iDirectory, Map<String, String> rootMap,
 			IResourceCache cache, IFileBasedContent fileBasedContent,
-			IProgressMonitor progressMonitor) throws CoreException {
-
-		if (progressMonitor != null) {
-			progressMonitor.subTask(iCompilationUnit.getElementName());
-		}
-		// step 1: create the result list
-		List<IProblem> problems = new LinkedList<IProblem>();
-
-		// step 2: give feedback
-		// TODO
-		// System.out.println("Analyzing source files '"
-		// + iCompilationUnit.getElementName() + "'.");
-
-		// _progressMonitor.subTask("Analyzing source files '"
-		// + iCompilationUnit.getElementName() + "'.");
+			List<IProblem> problems) throws CoreException {
 
 		// step 3: compute the 'real' root (the one that was specified in the
 		// bundlemaker project description)
@@ -313,40 +290,45 @@ public class JdtParser implements IParser {
 		JdtAstVisitor visitor = new JdtAstVisitor(resource);
 		compilationUnit.accept(visitor);
 
-		// TODO
+		// step 7:
 		for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
+
+			//
 			sourceParserHook.analyzeCompilationUnit(iCompilationUnit,
 					compilationUnit);
 		}
 
-		// step 7: set all contained types
+		// step 8: set all contained types
 		resource.getModifiableContainedTypes().addAll(visitor.getTypeNames());
 
-		// step 8: try to associate source resources and class resources
-		for (String typeName : visitor.getTypeNames()) {
+		// step 9: try to associate source resources and class resources
 
-			JavaElementIdentifier classId = new JavaElementIdentifier(
-					iDirectory.getFileBasedContent().getId(), null, typeName,
-					JavaElementIdentifier.FileType.CLASS_FILE);
+		// TODO: Das sollten wir ggf. besser in der TRansformation machen???
 
-			JavaElementIdentifier enclosingClassId = classId
-					.getIdForEnclosingNonLocalAndNonAnonymousType();
-
-			//
-			IResourceStandin standin = fileBasedContent.getResourceContent()
-					.getBinaryResource(new Path(enclosingClassId.getPath()));
-			Resource element = cache.getOrCreateModifiableResource(standin);
-
-			if (element == null) {
-				// TODO
-				System.out.println("Source file without class file: "
-						+ enclosingClassId.toString());
-			}
-
-			if (element != null) {
-				resource.addAssociatedResource(element);
-			}
-		}
+		// for (String typeName : visitor.getTypeNames()) {
+		//
+		// JavaElementIdentifier classId = new JavaElementIdentifier(
+		// iDirectory.getFileBasedContent().getId(), null, typeName,
+		// JavaElementIdentifier.FileType.CLASS_FILE);
+		//
+		// JavaElementIdentifier enclosingClassId = classId
+		// .getIdForEnclosingNonLocalAndNonAnonymousType();
+		//
+		// //
+		// IResourceStandin standin = fileBasedContent.getResourceContent()
+		// .getBinaryResource(new Path(enclosingClassId.getPath()));
+		// Resource element = cache.getOrCreateModifiableResource(standin);
+		//
+		// if (element == null) {
+		// // TODO
+		// System.out.println("Source file without class file: "
+		// + enclosingClassId.toString());
+		// }
+		//
+		// if (element != null) {
+		// resource.addAssociatedResource(element);
+		// }
+		// }
 
 		// step 9: compute the indirectly referenced types
 		// Set<String> directlyAndIndirectlyReferencedTypes =
@@ -375,11 +357,6 @@ public class JdtParser implements IParser {
 			if (problem.isError()) {
 				problems.add(problem);
 			}
-		}
-
-		//
-		if (progressMonitor != null) {
-			progressMonitor.worked(1);
 		}
 
 		// step 11: finally return

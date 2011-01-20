@@ -1,7 +1,6 @@
 package org.bundlemaker.core.resource;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -12,10 +11,22 @@ import java.util.Map;
 public class FlyWeightCache {
 
 	/** - */
-	Map<Reference, Reference> _referenceCache;
+	private static final int FLY_WEIGHT_STRINGS_INITIAL_CAPACITY = 10000;
 
 	/** - */
-	Map<String, FlyWeightString> _flyWeightStrings;
+	private static final int REFERENCE_CACHE_INITIAL_CAPACITY = 10000;
+
+	/** - */
+	private static final int REFERENCE_ATTRIBUTES_CACHE_INITIAL_CAPACITY = 10000;
+
+	/** - */
+	ConcurrentHashMap<Reference, Reference> _referenceCache;
+
+	/** - */
+	ConcurrentHashMap<String, FlyWeightString> _flyWeightStrings;
+
+	/** - */
+	ConcurrentHashMap<ReferenceAttributes, ReferenceAttributes> _referenceAttributesCache;
 
 	/**
 	 * <p>
@@ -24,9 +35,15 @@ public class FlyWeightCache {
 	 */
 	public FlyWeightCache() {
 
-		//
-		_referenceCache = new HashMap<Reference, Reference>();
-		_flyWeightStrings = new HashMap<String, FlyWeightString>();
+		// create the concurrent hash maps
+		_referenceCache = new ConcurrentHashMap<Reference, Reference>(
+				REFERENCE_CACHE_INITIAL_CAPACITY);
+
+		_flyWeightStrings = new ConcurrentHashMap<String, FlyWeightString>(
+				FLY_WEIGHT_STRINGS_INITIAL_CAPACITY);
+
+		_referenceAttributesCache = new ConcurrentHashMap<ReferenceAttributes, ReferenceAttributes>(
+				REFERENCE_ATTRIBUTES_CACHE_INITIAL_CAPACITY);
 	}
 
 	/**
@@ -40,29 +57,29 @@ public class FlyWeightCache {
 	 * @return
 	 */
 	public Reference getReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isSourceCodeDependency,
+			ReferenceType referenceType, boolean isExtends,
+			boolean isImplements, boolean isSourceCodeDependency,
 			boolean isByteCodeDependency) {
 
 		// create the key
+		ReferenceAttributes attributes = getReferenceAttributes(referenceType,
+				isExtends, isImplements, isSourceCodeDependency,
+				isByteCodeDependency);
+
 		Reference key = new Reference(getFlyWeightString(fullyQualifiedName),
-				referenceType, isSourceCodeDependency, isByteCodeDependency);
+				attributes);
 
-		//
-		synchronized (this) {
-
-			// get the reference
-			Reference result = _referenceCache.get(key);
-
-			// return result if not null
-			if (result != null) {
-				return result;
-			}
-			// else return the key
-			else {
-				_referenceCache.put(key, key);
-				return key;
-			}
+		// return if already there
+		if (_referenceCache.containsKey(key)) {
+			return _referenceCache.get(key);
 		}
+
+		// map doesn't contain key, create one -- note that first writer wins,
+		// all others just throw away their value
+		_referenceCache.putIfAbsent(key, key);
+
+		// return the value that won
+		return _referenceCache.get(key);
 	}
 
 	/**
@@ -74,21 +91,62 @@ public class FlyWeightCache {
 	 */
 	public FlyWeightString getFlyWeightString(String string) {
 
-		synchronized (this) {
-
-			FlyWeightString result = _flyWeightStrings.get(string);
-
-			//
-			if (result != null) {
-				return result;
-			}
-
-			//
-			else {
-				FlyWeightString flyWeightString = new FlyWeightString(string);
-				_flyWeightStrings.put(string, flyWeightString);
-				return flyWeightString;
-			}
+		// return if already there
+		if (_flyWeightStrings.containsKey(string)) {
+			return _flyWeightStrings.get(string);
 		}
+
+		// map doesn't contain key, create one -- note that first writer wins,
+		// all others just throw away their value
+		FlyWeightString flyWeightString = new FlyWeightString(string);
+		_flyWeightStrings.putIfAbsent(string, flyWeightString);
+
+		// return the value that won
+		return _flyWeightStrings.get(string);
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param referenceType
+	 * @param isExtends
+	 * @param isImplements
+	 * @param isSourceCodeDependency
+	 * @param isByteCodeDependency
+	 * @return
+	 */
+	ReferenceAttributes getReferenceAttributes(ReferenceType referenceType,
+			boolean isExtends, boolean isImplements,
+			boolean isSourceCodeDependency, boolean isByteCodeDependency) {
+
+		// create the key
+		ReferenceAttributes attributes = new ReferenceAttributes(referenceType,
+				isExtends, isImplements, isSourceCodeDependency,
+				isByteCodeDependency);
+
+		// return if already there
+		if (_referenceAttributesCache.containsKey(attributes)) {
+			return _referenceAttributesCache.get(attributes);
+		}
+
+		// map doesn't contain key, create one -- note that first writer wins,
+		// all others just throw away their value
+		_referenceAttributesCache.putIfAbsent(attributes, attributes);
+
+		// return the value that won
+		return _referenceAttributesCache.get(attributes);
+	}
+
+	public ConcurrentHashMap<Reference, Reference> getReferenceCache() {
+		return _referenceCache;
+	}
+
+	public ConcurrentHashMap<String, FlyWeightString> getFlyWeightStrings() {
+		return _flyWeightStrings;
+	}
+
+	public ConcurrentHashMap<ReferenceAttributes, ReferenceAttributes> getReferenceAttributesCache() {
+		return _referenceAttributesCache;
 	}
 }
