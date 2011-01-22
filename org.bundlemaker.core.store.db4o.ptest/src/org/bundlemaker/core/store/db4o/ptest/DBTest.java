@@ -11,6 +11,7 @@ import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.store.db4o.internal.Activator;
 import org.bundlemaker.core.store.db4o.internal.PersistentDependencyStoreImpl;
+import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
@@ -138,7 +139,7 @@ public class DBTest {
 
 		System.out.println("Content done: " + stopWatch.getElapsedTime());
 
-		cache.commit();
+		cache.commit(new ProgressMonitor());
 
 		System.out.println("Cache commit: " + stopWatch.getElapsedTime());
 	}
