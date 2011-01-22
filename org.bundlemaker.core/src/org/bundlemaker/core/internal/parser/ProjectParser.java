@@ -290,15 +290,38 @@ public class ProjectParser {
 		}
 
 		// create one parser for each thread...
+		IParser[][] parsers = new IParser[parserFactories.size()][THREAD_COUNT];
 		_parsers = new IParser[parserFactories.size()][THREAD_COUNT];
 
 		// ... setup
 		for (int i = 0; i < parserFactories.size(); i++) {
 			for (int j = 0; j < THREAD_COUNT; j++) {
-				_parsers[i][j] = parserFactories.get(i).createParser(
+				parsers[i][j] = parserFactories.get(i).createParser(
 						_bundleMakerProject);
 			}
 		}
+
+		// first the source parsers
+		int position = 0;
+		for (int i = 0; i < parserFactories.size(); i++) {
+			if (!parsers[i][0].getParserType().equals(ParserType.BINARY)) {
+				for (int j = 0; j < THREAD_COUNT; j++) {
+					_parsers[position][j] = parsers[i][j];
+				}
+				position++;
+			}
+		}
+
+		// then the binary parsers
+		for (int i = 0; i < parserFactories.size(); i++) {
+			if (parsers[i][0].getParserType().equals(ParserType.BINARY)) {
+				for (int j = 0; j < THREAD_COUNT; j++) {
+					_parsers[position][j] = parsers[i][j];
+				}
+				position++;
+			}
+		}
+
 	}
 
 	/**
