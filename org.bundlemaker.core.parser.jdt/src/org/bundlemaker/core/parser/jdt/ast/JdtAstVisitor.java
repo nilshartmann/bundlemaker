@@ -125,19 +125,15 @@ public class JdtAstVisitor extends ASTVisitor {
 		List<org.bundlemaker.core.IProblem> result = new LinkedList<org.bundlemaker.core.IProblem>();
 
 		for (IProblem iProblem : _problems) {
+
 			if (iProblem.isError()) {
-				System.err.println(iProblem);
-				System.err.println(" - "
-						+ new String(iProblem.getOriginatingFileName()));
+				
+				IResourceKey resourceKey = new ResourceKey(
+						_javaSourceResource.getContentId(),
+						_javaSourceResource.getRoot(),
+						_javaSourceResource.getPath());
+				result.add(new JdtProblemAdapter(resourceKey, iProblem));
 			}
-
-			// KEY??
-			IResourceKey resourceKey = new ResourceKey(
-					_javaSourceResource.getContentId(),
-					_javaSourceResource.getRoot(),
-					_javaSourceResource.getPath());
-
-			result.add(new JdtProblemAdapter(resourceKey, iProblem));
 		}
 
 		return result;
