@@ -1,10 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ui
-Bundle-SymbolicName: org.bundlemaker.ui
+Bundle-Name: BundleMaker UI
+Bundle-SymbolicName: org.bundlemaker.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.bundlemaker.ui.internal.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: BundleMaker Team
