@@ -11,6 +11,7 @@ import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -66,15 +67,32 @@ public class ResourceCache implements IResourceCache {
 	 * 
 	 * @throws CoreException
 	 */
-	public synchronized void commit() throws CoreException {
+	public synchronized void commit(IProgressMonitor progressMonitor)
+			throws CoreException {
+
+		//
+		if (progressMonitor != null) {
+			progressMonitor.beginTask("write to disc", _resourceMap.values()
+					.size());
+		}
 
 		// update all
 		for (Resource modifiableResource : _resourceMap.values()) {
 			_dependencyStore.updateResource(modifiableResource);
+
+			//
+			if (progressMonitor != null) {
+				progressMonitor.worked(1);
+			}
 		}
 
 		// commit the store
 		_dependencyStore.commit();
+
+		//
+		if (progressMonitor != null) {
+			progressMonitor.done();
+		}
 	}
 
 	/**
@@ -103,7 +121,7 @@ public class ResourceCache implements IResourceCache {
 		// return the result
 		return resource;
 	}
-	
+
 	public Map<IResourceKey, Resource> getResourceMap() {
 		return _resourceMap;
 	}

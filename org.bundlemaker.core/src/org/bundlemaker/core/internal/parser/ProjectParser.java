@@ -113,14 +113,15 @@ public class ProjectParser {
 			parseContent(fileBasedContent, progressMonitor, cache);
 		}
 
-		//
+		// TODO
 		System.out.println("Write to disc");
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		cache.commit();
+		cache.commit(new ProgressMonitor());
 		cache.clear();
 
+		// TODO
 		stopWatch.stop();
 		System.out.println("Done: " + stopWatch.getElapsedTime());
 
@@ -345,9 +346,6 @@ public class ProjectParser {
 			binaryResourcesToParse += resourcesToParse[0];
 			sourceResourcesToParse += resourcesToParse[1];
 		}
-
-		System.out.println(binaryResourcesToParse + " : "
-				+ sourceResourcesToParse);
 
 		//
 		return binaryResourcesToParse + sourceResourcesToParse;
