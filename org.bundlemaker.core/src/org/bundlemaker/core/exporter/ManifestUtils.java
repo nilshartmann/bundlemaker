@@ -6,8 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.jar.Attributes;
@@ -18,9 +20,13 @@ import java.util.zip.ZipEntry;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.eclipse.core.runtime.Assert;
 
+import com.springsource.bundlor.util.MatchUtils;
 import com.springsource.bundlor.util.SimpleManifestContents;
+import com.springsource.bundlor.util.SimpleParserLogger;
 import com.springsource.util.osgi.manifest.BundleManifest;
 import com.springsource.util.osgi.manifest.BundleManifestFactory;
+import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
+import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
 import com.springsource.util.parser.manifest.ManifestContents;
 import com.springsource.util.parser.manifest.RecoveringManifestParser;
 
@@ -31,6 +37,50 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ManifestUtils {
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param template
+	 * @return
+	 */
+	public static List<HeaderDeclaration> parseManifestValue(String template) {
+
+		if (template != null && !template.isEmpty()) {
+			return HeaderParserFactory
+					.newHeaderParser(new SimpleParserLogger()).parseHeader(
+							template);
+		} else {
+			return new ArrayList<HeaderDeclaration>(0);
+		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param declarations
+	 * @param packageName
+	 * @return
+	 */
+	public static HeaderDeclaration findMostSpecificDeclaration(
+			List<HeaderDeclaration> declarations, String packageName) {
+
+		HeaderDeclaration match = null;
+		int matchSpecificity = -1;
+
+		for (HeaderDeclaration headerDeclaration : declarations) {
+			for (String stem : headerDeclaration.getNames()) {
+				int m = MatchUtils.rankedMatch(packageName, stem);
+				if (m > matchSpecificity) {
+					match = headerDeclaration;
+					matchSpecificity = m;
+				}
+			}
+		}
+		return match;
+	}
 
 	public static ManifestContents readManifestContents(
 			IResourceStandin manifestResource) throws IOException {

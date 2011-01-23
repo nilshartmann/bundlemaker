@@ -2,13 +2,13 @@ package org.bundlemaker.core.exporter.pde.exporter;
 
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ManifestUtils;
 import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.Activator;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -36,10 +36,7 @@ import org.eclipse.pde.core.project.IRequiredBundleDescription;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
 
-import com.springsource.bundlor.util.MatchUtils;
-import com.springsource.bundlor.util.SimpleParserLogger;
 import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
-import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
 import com.springsource.util.parser.manifest.ManifestContents;
 import com.springsource.util.parser.manifest.RecoveringManifestParser;
 
@@ -130,10 +127,12 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 			String requireBundle = templateManifest.getMainAttributes().get(
 					Constants.REQUIRE_BUNDLE);
 
-			List<HeaderDeclaration> requireBundleDeclarations = parseTemplate(requireBundle);
+			List<HeaderDeclaration> requireBundleDeclarations = ManifestUtils
+					.parseManifestValue(requireBundle);
 
-			HeaderDeclaration declaration = findMostSpecificDeclaration(
-					requireBundleDeclarations, "blub");
+			HeaderDeclaration declaration = ManifestUtils
+					.findMostSpecificDeclaration(requireBundleDeclarations,
+							"blub");
 
 			System.out.println(declaration);
 		}
@@ -264,35 +263,6 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 
 		bundleProjectDescription.setPackageImports(importDescriptions
 				.toArray(new IPackageImportDescription[0]));
-	}
-
-	private List<HeaderDeclaration> parseTemplate(String template) {
-
-		if (template != null && !template.isEmpty()) {
-			return HeaderParserFactory
-					.newHeaderParser(new SimpleParserLogger()).parseHeader(
-							template);
-		} else {
-			return new ArrayList<HeaderDeclaration>(0);
-		}
-	}
-
-	private HeaderDeclaration findMostSpecificDeclaration(
-			List<HeaderDeclaration> declarations, String packageName) {
-
-		HeaderDeclaration match = null;
-		int matchSpecificity = -1;
-
-		for (HeaderDeclaration headerDeclaration : declarations) {
-			for (String stem : headerDeclaration.getNames()) {
-				int m = MatchUtils.rankedMatch(packageName, stem);
-				if (m > matchSpecificity) {
-					match = headerDeclaration;
-					matchSpecificity = m;
-				}
-			}
-		}
-		return match;
 	}
 
 	/**
