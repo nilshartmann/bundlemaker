@@ -1,9 +1,12 @@
 package org.bundlemaker.ui.wizards;
 
+import static java.lang.String.format;
+
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.ui.internal.UIImages;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
@@ -14,18 +17,14 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
-import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
-import org.eclipse.ui.internal.ide.StatusUtil;
-import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
+import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
 
@@ -107,7 +106,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 			public void run(IProgressMonitor monitor)
 					throws InvocationTargetException {
 				CreateProjectOperation op = new CreateProjectOperation(
-						description, ResourceMessages.NewProject_windowTitle);
+						description, "Create new Bundlemaker project");
 				try {
 					// see bug
 					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
@@ -132,30 +131,29 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 			if (t instanceof ExecutionException
 					&& t.getCause() instanceof CoreException) {
 				CoreException cause = (CoreException) t.getCause();
-				StatusAdapter status;
+				IStatus status;
 				if (cause.getStatus().getCode() == IResourceStatus.CASE_VARIANT_EXISTS) {
-					status = new StatusAdapter(
-							StatusUtil.newStatus(
-									IStatus.WARNING,
-									NLS.bind(
-											ResourceMessages.NewProject_caseVariantExistsError,
-											newProjectHandle.getName()), cause));
+					status = BundleMakerUiUtils
+							.newWarning(
+									format("The underlying file system is case insensitive. There is an existing project or directory that conflicts with '%s'",
+											newProjectHandle.getName()), cause);
 				} else {
-					status = new StatusAdapter(StatusUtil.newStatus(cause
-							.getStatus().getSeverity(),
-							ResourceMessages.NewProject_errorMessage, cause));
+					status = BundleMakerUiUtils.newStatus(cause,
+							"Problems while creating the project");
 				}
-				status.setProperty(StatusAdapter.TITLE_PROPERTY,
-						ResourceMessages.NewProject_errorMessage);
+				StatusAdapter statusAdapter = new StatusAdapter(status);
+				statusAdapter.setProperty(
+						IStatusAdapterConstants.TITLE_PROPERTY,
+						"Project creation problems");
 				StatusManager.getManager().handle(status, StatusManager.BLOCK);
 			} else {
-				StatusAdapter status = new StatusAdapter(new Status(
-						IStatus.WARNING, IDEWorkbenchPlugin.IDE_WORKBENCH, 0,
-						NLS.bind(ResourceMessages.NewProject_internalError,
-								t.getMessage()), t));
-				status.setProperty(StatusAdapter.TITLE_PROPERTY,
-						ResourceMessages.NewProject_errorMessage);
-				StatusManager.getManager().handle(status,
+				StatusAdapter statusAdapter = new StatusAdapter(
+						BundleMakerUiUtils.newWarning(
+								format("Internal error: %s", t.getMessage()), t));
+				statusAdapter.setProperty(
+						IStatusAdapterConstants.TITLE_PROPERTY,
+						"Project creation problems");
+				StatusManager.getManager().handle(statusAdapter,
 						StatusManager.LOG | StatusManager.BLOCK);
 			}
 			return null;
