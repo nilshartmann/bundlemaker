@@ -6,6 +6,14 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 
+/**
+ * <p>
+ * A project wizard that creates a new Bundlemaker project
+ * </p>
+ * 
+ * @author Nils Hartmann (nils@nilshartmann.net)
+ * 
+ */
 public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 
 	public NewBundleMakerProjectWizard() {
@@ -24,7 +32,8 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 	public void addPages() {
 		super.addPages();
 
-		BundleMakerProjectSetupWizardPage page = new BundleMakerProjectSetupWizardPage();
+		// add bundlemaker page
+		NewBundleMakerProjectWizardCreationPage page = new NewBundleMakerProjectWizardCreationPage();
 		addPage(page);
 	}
 
