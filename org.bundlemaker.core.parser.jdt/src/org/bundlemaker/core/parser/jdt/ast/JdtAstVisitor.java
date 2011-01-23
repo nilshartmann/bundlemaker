@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.Resource;
-import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IType;
@@ -127,12 +125,8 @@ public class JdtAstVisitor extends ASTVisitor {
 		for (IProblem iProblem : _problems) {
 
 			if (iProblem.isError()) {
-				
-				IResourceKey resourceKey = new ResourceKey(
-						_javaSourceResource.getContentId(),
-						_javaSourceResource.getRoot(),
-						_javaSourceResource.getPath());
-				result.add(new JdtProblemAdapter(resourceKey, iProblem));
+
+				result.add(new JdtProblemAdapter(_javaSourceResource, iProblem));
 			}
 		}
 

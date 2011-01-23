@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.exporter.JarFileCreator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -79,10 +78,8 @@ public class BundleMakerProjectUtils {
 
 		try {
 
-			InputStream inputStream = new JarFileCreator()
-					.getInputStream(problem.getResource());
-
-			return extractProblematicLine(inputStream, sourceStart, sourceEnd);
+			return extractProblematicLine(problem.getResource()
+					.getInputStream(), sourceStart, sourceEnd);
 
 		} catch (Exception e) {// Catch exception if any
 			return new String[] { "", "" };

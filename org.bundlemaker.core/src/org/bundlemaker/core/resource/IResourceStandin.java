@@ -1,5 +1,7 @@
 package org.bundlemaker.core.resource;
 
+import java.io.InputStream;
+
 /**
  * <p>
  * </p>
@@ -16,4 +18,12 @@ public interface IResourceStandin extends IResourceKey,
 	 * @return
 	 */
 	IResource getResource();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	InputStream getInputStream();
 }

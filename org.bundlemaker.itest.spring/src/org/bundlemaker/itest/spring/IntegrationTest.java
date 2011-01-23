@@ -6,16 +6,17 @@ import java.util.List;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
-import org.bundlemaker.core.exporter.StandardModuleExporterContext;
+import org.bundlemaker.core.exporter.ModuleExporterContext;
+import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.PdeExporterConfiguration;
+import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
-import org.bundlemaker.core.util.StopWatchProxy;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Test;
@@ -197,7 +198,7 @@ public class IntegrationTest {
 		// // }
 		//
 		// create the exporter context
-		StandardModuleExporterContext exporterContext = new StandardModuleExporterContext(
+		ModuleExporterContext exporterContext = new ModuleExporterContext(
 				bundleMakerProject, new File("c:/temp"), modularizedSystem);
 
 		StopWatch stopWatch = new StopWatch();
@@ -207,12 +208,11 @@ public class IntegrationTest {
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 
-		//
+		// Create PdeExporterConfiguration
 		PdeExporterConfiguration pdeExporterConfiguration = new PdeExporterConfiguration();
 		pdeExporterConfiguration.setUseClassifcationForExportDestination(true);
 		pdeExporterConfiguration
 				.setDependencyDescriptionStyle(PdeExporterConfiguration.STRICT_IMPORT_PACKAGE);
-
 		exporterContext.put(PdeExporterConfiguration.KEY,
 				pdeExporterConfiguration);
 
@@ -221,11 +221,11 @@ public class IntegrationTest {
 						new File(
 								"R:/environments/bundlemaker2-environment/workspace/org.bundlemaker.itest.spring/templates"));
 
-		// new PdePluginProjectModuleExporter().export(modularizedSystem,
-		// exporterContext);
-		//
-		// new TargetPlatformProjectExporter().export(modularizedSystem,
-		// exporterContext);
+		new PdePluginProjectModuleExporter().export(modularizedSystem,
+				exporterContext);
+
+		new TargetPlatformProjectExporter().export(modularizedSystem,
+				exporterContext);
 
 		new SimpleReportExporter().export(modularizedSystem, exporterContext);
 

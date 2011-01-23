@@ -22,7 +22,7 @@ public class ResourceContentTest {
 		for (int i = 0; i < 100000; i++) {
 
 			content.getModifiableBinaryResources().add(
-					new ResourceStandin("id", "root", "path" + i));
+					new ResourceStandin("id", "root", "path" + i, new ArchiveFileCache()));
 		}
 
 		stopWatch.stop();

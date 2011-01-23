@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class ExporterUtils {
+public class ModuleExporterUtils {
 
 	/**
 	 * <p>
@@ -117,7 +117,7 @@ public class ExporterUtils {
 		Assert.isNotNull(contentType);
 
 		//
-		if (ExporterUtils.requiresRepackaging(resourceModule, contentType)) {
+		if (ModuleExporterUtils.requiresRepackaging(resourceModule, contentType)) {
 			return null;
 		}
 

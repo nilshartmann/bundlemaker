@@ -40,6 +40,16 @@ public abstract class AbstractExporter implements IModuleExporter,
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean canExport(IModularizedSystem modularizedSystem,
+			IResourceModule module, IModuleExporterContext context) {
+
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void export(IModularizedSystem modularizedSystem,
 			IModuleExporterContext context) throws Exception {
 

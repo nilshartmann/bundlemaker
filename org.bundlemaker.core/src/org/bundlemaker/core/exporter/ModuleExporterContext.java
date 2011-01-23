@@ -15,7 +15,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  * 
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class StandardModuleExporterContext implements IModuleExporterContext {
+public class ModuleExporterContext implements IModuleExporterContext {
 
 	/** - */
 	private IBundleMakerProject _bundleMakerProject;
@@ -31,14 +31,14 @@ public class StandardModuleExporterContext implements IModuleExporterContext {
 
 	/**
 	 * <p>
-	 * Creates a new instance of type {@link StandardModuleExporterContext}.
+	 * Creates a new instance of type {@link ModuleExporterContext}.
 	 * </p>
 	 * 
 	 * @param bundleMakerProject
 	 * @param destinationDirectory
 	 * @param modularizedSystem
 	 */
-	public StandardModuleExporterContext(IBundleMakerProject bundleMakerProject,
+	public ModuleExporterContext(IBundleMakerProject bundleMakerProject,
 			File destinationDirectory, IModularizedSystem modularizedSystem) {
 
 		//

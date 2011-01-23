@@ -19,9 +19,11 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 	 * @param contentId
 	 * @param root
 	 * @param path
+	 * @param archiveFileCache
 	 */
-	public ResourceStandin(String contentId, String root, String path) {
-		super(contentId, root, path);
+	public ResourceStandin(String contentId, String root, String path,
+			ArchiveFileCache archiveFileCache) {
+		super(contentId, root, path, archiveFileCache);
 	}
 
 	/**

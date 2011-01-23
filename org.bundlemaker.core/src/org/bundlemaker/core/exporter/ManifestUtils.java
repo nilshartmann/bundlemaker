@@ -1,4 +1,4 @@
-package org.bundlemaker.core.exporter.manifest;
+package org.bundlemaker.core.exporter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,9 +15,6 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
-import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.exporter.JarFileCreator;
-import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.eclipse.core.runtime.Assert;
 
@@ -35,35 +32,6 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  */
 public class ManifestUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public static File getTemplateDirectory(IModuleExporterContext context) {
-
-		//
-		if (!context
-				.containsAttribute(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY)) {
-			return null;
-		}
-
-		//
-		Object attribute = context
-				.getAttribute(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY);
-
-		// type check
-		if (!(attribute instanceof File)) {
-
-			//
-			throw new RuntimeException("Wrong type: " + attribute.getClass());
-		}
-
-		//
-		return (File) attribute;
-	}
-
 	public static ManifestContents readManifestContents(
 			IResourceStandin manifestResource) throws IOException {
 
@@ -71,11 +39,9 @@ public class ManifestUtils {
 
 		if (manifestResource != null) {
 
-			InputStream inputStream = new JarFileCreator()
-					.getInputStream(manifestResource);
 			RecoveringManifestParser parser = new RecoveringManifestParser();
 			originalManifestContents = parser.parse(new InputStreamReader(
-					inputStream));
+					manifestResource.getInputStream()));
 
 		} else {
 			originalManifestContents = new SimpleManifestContents();

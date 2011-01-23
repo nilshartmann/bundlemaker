@@ -24,9 +24,9 @@ public class ResourceKeyTest {
 		Resource resource_1 = new Resource("1", "path", "root");
 		Resource resource_2 = new Resource("1", "path", "root");
 		ResourceStandin resourceStandin_1 = new ResourceStandin("1", "path",
-				"root");
+				"root", new ArchiveFileCache());
 		ResourceStandin resourceStandin_2 = new ResourceStandin("1", "path",
-				"root");
+				"root", new ArchiveFileCache());
 
 		Assert.assertEquals(key_1, key_2);
 		Assert.assertEquals(key_1, resource_1);
@@ -63,9 +63,9 @@ public class ResourceKeyTest {
 		Assert.assertEquals(resourceStandin_2, resource_1);
 		Assert.assertEquals(resourceStandin_2, resource_2);
 		Assert.assertEquals(resourceStandin_2, resourceStandin_1);
-		
+
 		/** **/
-		
+
 		Assert.assertEquals(key_1.hashCode(), key_2.hashCode());
 		Assert.assertEquals(key_1.hashCode(), resource_1.hashCode());
 		Assert.assertEquals(key_1.hashCode(), resource_2.hashCode());
@@ -94,12 +94,14 @@ public class ResourceKeyTest {
 		Assert.assertEquals(resourceStandin_1.hashCode(), key_2.hashCode());
 		Assert.assertEquals(resourceStandin_1.hashCode(), resource_1.hashCode());
 		Assert.assertEquals(resourceStandin_1.hashCode(), resource_2.hashCode());
-		Assert.assertEquals(resourceStandin_1.hashCode(), resourceStandin_2.hashCode());
+		Assert.assertEquals(resourceStandin_1.hashCode(),
+				resourceStandin_2.hashCode());
 
 		Assert.assertEquals(resourceStandin_2.hashCode(), key_1.hashCode());
 		Assert.assertEquals(resourceStandin_2.hashCode(), key_2.hashCode());
 		Assert.assertEquals(resourceStandin_2.hashCode(), resource_1.hashCode());
 		Assert.assertEquals(resourceStandin_2.hashCode(), resource_2.hashCode());
-		Assert.assertEquals(resourceStandin_2.hashCode(), resourceStandin_1.hashCode());
+		Assert.assertEquals(resourceStandin_2.hashCode(),
+				resourceStandin_1.hashCode());
 	}
 }
