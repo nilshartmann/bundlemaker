@@ -2,6 +2,7 @@ package org.bundlemaker.core.modules;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -27,7 +28,7 @@ public interface IReferencedModulesQueryResult {
 	 */
 	Map<String, ITypeModule> getReferencedModulesMap();
 
-	List<ITypeModule> getReferencedModules();
+	Set<ITypeModule> getReferencedModules();
 
 	boolean hasTypesWithAmbiguousModules();
 

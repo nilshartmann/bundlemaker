@@ -1,6 +1,7 @@
 package org.bundlemaker.core.util;
 
 import org.bundlemaker.core.internal.Activator;
+import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
@@ -12,7 +13,9 @@ import org.eclipse.core.runtime.NullProgressMonitor;
  */
 public class ProgressMonitor extends NullProgressMonitor {
 
-	private static final String MSG = "Processed %s/%s types (%s) [ %s sec, %s sec, %s sec] %s";
+	private static final String MSG = "Processed %s/%s steps (%s) [ %s sec, %s sec, %s sec] %s";
+
+	private static final String CACHE_MSG = " - [|Resources|: %s, |FlyWeightStrings|: %s, |References|: %s, |ReferencesAttributes|: %s]";
 
 	/** - */
 	private int _totalWork;
@@ -23,7 +26,11 @@ public class ProgressMonitor extends NullProgressMonitor {
 	/** - */
 	private int _doneInProzent = 0;
 
+	/** - */
 	private StopWatch _stopWatch;
+
+	/** - */
+	private ResourceCache _resourceCache;
 
 	/**
 	 * @see org.eclipse.core.runtime.NullProgressMonitor#beginTask(java.lang.String,
@@ -58,6 +65,15 @@ public class ProgressMonitor extends NullProgressMonitor {
 					_doneInProzent, elapsedTime / 1000,
 					estimatedOverallTime / 1000, estimatedTimeLeft / 1000,
 					Activator.getDefault().getMemoryUsage()));
+
+			if (_resourceCache != null) {
+				System.err.println(String.format(CACHE_MSG, _resourceCache
+						.getResourceMap().size(), _resourceCache
+						.getReferenceCache().getFlyWeightStrings().size(),
+						_resourceCache.getReferenceCache().getReferenceCache()
+								.size(), _resourceCache.getReferenceCache()
+								.getReferenceAttributesCache().size()));
+			}
 		}
 	}
 
@@ -65,4 +81,15 @@ public class ProgressMonitor extends NullProgressMonitor {
 	public void done() {
 		_stopWatch.stop();
 	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param cache
+	 */
+	public void setResourceCache(ResourceCache cache) {
+		_resourceCache = cache;
+	}
+
 }

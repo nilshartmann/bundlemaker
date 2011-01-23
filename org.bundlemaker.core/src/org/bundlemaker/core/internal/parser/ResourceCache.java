@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.resource.FlyWeightCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -17,7 +19,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModifiableResourceCache implements IResourceCache {
+public class ResourceCache implements IResourceCache {
 
 	/** the element map */
 	private Map<IResourceKey, Resource> _resourceMap;
@@ -25,14 +27,17 @@ public class ModifiableResourceCache implements IResourceCache {
 	/** the dependency store */
 	private IPersistentDependencyStore _dependencyStore;
 
+	/** - */
+	private FlyWeightCache _referenceCache;
+
 	/**
 	 * <p>
-	 * Creates a new instance of type {@link ModifiableResourceCache}.
+	 * Creates a new instance of type {@link ResourceCache}.
 	 * </p>
 	 * 
 	 * @param dependencyStore
 	 */
-	public ModifiableResourceCache(IPersistentDependencyStore dependencyStore) {
+	public ResourceCache(IPersistentDependencyStore dependencyStore) {
 
 		Assert.isNotNull(dependencyStore);
 
@@ -41,6 +46,9 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// set the element map
 		_resourceMap = new HashMap<IResourceKey, Resource>();
+
+		//
+		_referenceCache = new FlyWeightCache();
 	}
 
 	/**
@@ -59,15 +67,32 @@ public class ModifiableResourceCache implements IResourceCache {
 	 * 
 	 * @throws CoreException
 	 */
-	public synchronized void commit() throws CoreException {
+	public synchronized void commit(IProgressMonitor progressMonitor)
+			throws CoreException {
+
+		//
+		if (progressMonitor != null) {
+			progressMonitor.beginTask("write to disc", _resourceMap.values()
+					.size());
+		}
 
 		// update all
 		for (Resource modifiableResource : _resourceMap.values()) {
 			_dependencyStore.updateResource(modifiableResource);
+
+			//
+			if (progressMonitor != null) {
+				progressMonitor.worked(1);
+			}
 		}
 
 		// commit the store
 		_dependencyStore.commit();
+
+		//
+		if (progressMonitor != null) {
+			progressMonitor.done();
+		}
 	}
 
 	/**
@@ -87,7 +112,7 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// create a new one if necessary
 		resource = new Resource(resourceKey.getContentId(),
-				resourceKey.getRoot(), resourceKey.getPath());
+				resourceKey.getRoot(), resourceKey.getPath(), _referenceCache);
 
 		// store the Resource
 		_resourceMap.put(new ResourceKey(resourceKey.getContentId(),
@@ -95,5 +120,13 @@ public class ModifiableResourceCache implements IResourceCache {
 
 		// return the result
 		return resource;
+	}
+
+	public Map<IResourceKey, Resource> getResourceMap() {
+		return _resourceMap;
+	}
+
+	public FlyWeightCache getReferenceCache() {
+		return _referenceCache;
 	}
 }

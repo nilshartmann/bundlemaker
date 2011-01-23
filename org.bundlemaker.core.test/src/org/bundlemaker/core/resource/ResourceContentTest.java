@@ -30,6 +30,6 @@ public class ResourceContentTest {
 		Assert.assertEquals(100000, content.getModifiableBinaryResources()
 				.size());
 
-		Assert.assertTrue(stopWatch.getElapsedTime() < 150);
+		Assert.assertTrue(stopWatch.getElapsedTime() < 250);
 	}
 }

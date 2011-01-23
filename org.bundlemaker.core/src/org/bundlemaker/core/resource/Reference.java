@@ -2,28 +2,19 @@ package org.bundlemaker.core.resource;
 
 import org.eclipse.core.runtime.Assert;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class Reference implements IReference {
 
 	/** - */
-	private String _fullyQualifiedName;
+	private FlyWeightString _fullyQualifiedName;
 
 	/** - */
-	private ReferenceType _referenceType;
-
-	/** - */
-	private boolean _indirectlyReferenced;
-
-	/** - */
-	private boolean _directlyReferenced;
-
-	/** - */
-	private boolean _sourceCodeDependency;
-
-	/** - */
-	private boolean _byteCodeDependency;
-
-	/** - */
-	private boolean _isUses;
+	private ReferenceAttributes _referenceAttributes;
 
 	/**
 	 * <p>
@@ -31,69 +22,81 @@ public class Reference implements IReference {
 	 * </p>
 	 * 
 	 * @param fullyQualifiedName
-	 * @param referenceType
-	 * @param cache
+	 * @param referenceAttributes
 	 */
-	public Reference(String fullyQualifiedName, ReferenceType referenceType) {
-		Assert.isNotNull(fullyQualifiedName);
-		Assert.isNotNull(referenceType);
+	public Reference(FlyWeightString fullyQualifiedName,
+			ReferenceAttributes referenceAttributes) {
 
-		_referenceType = referenceType;
+		Assert.isNotNull(fullyQualifiedName);
+		Assert.isNotNull(referenceAttributes);
+
 		_fullyQualifiedName = fullyQualifiedName;
+		_referenceAttributes = referenceAttributes;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getFullyQualifiedName() {
-		return _fullyQualifiedName;
+		return _fullyQualifiedName.toString();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isImplements() {
+		return _referenceAttributes.isImplements();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isExtends() {
+		return _referenceAttributes.isExtends();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public ReferenceType getReferenceType() {
-		return _referenceType;
+		return _referenceAttributes.getReferenceType();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public boolean isBytecodeDependency() {
-		return _byteCodeDependency;
+	public int hashCode() {
+		int result = 31 + _fullyQualifiedName.hashCode();
+		return 31 * result + _referenceAttributes.hashCode();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public boolean isSourcecodeDependency() {
-		return _sourceCodeDependency;
-	}
-
-	@Override
-	public boolean isIndirectlyReferenced() {
-		return _indirectlyReferenced;
-	}
-
-	@Override
-	public boolean isDirectlyReferenced() {
-		return _directlyReferenced;
-	}
-
-	@Override
-	public boolean isUses() {
-		return _isUses;
-	}
-
-	public void setIndirectlyReferenced(boolean indirectlyReferenced) {
-		_indirectlyReferenced = indirectlyReferenced;
-	}
-
-	public void setDirectlyReferenced(boolean directlyReferenced) {
-		_directlyReferenced = directlyReferenced;
-	}
-
-	public void setSourceCodeDependency(boolean sourceCodeDependency) {
-		_sourceCodeDependency = sourceCodeDependency;
-	}
-
-	public void setByteCodeDependency(boolean byteCodeDependency) {
-		_byteCodeDependency = byteCodeDependency;
-	}
-
-	public void setUses(boolean isUses) {
-		_isUses = isUses;
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reference other = (Reference) obj;
+		if (_fullyQualifiedName == null) {
+			if (other._fullyQualifiedName != null)
+				return false;
+		} else if (!_fullyQualifiedName.equals(other._fullyQualifiedName))
+			return false;
+		if (_referenceAttributes == null) {
+			if (other._referenceAttributes != null)
+				return false;
+		} else if (!_referenceAttributes.equals(other._referenceAttributes))
+			return false;
+		return true;
 	}
 }

@@ -30,7 +30,7 @@ public interface IReference {
 	 * 
 	 * @return
 	 */
-	boolean isBytecodeDependency();
+	boolean isExtends();
 
 	/**
 	 * <p>
@@ -38,29 +38,5 @@ public interface IReference {
 	 * 
 	 * @return
 	 */
-	boolean isSourcecodeDependency();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean isIndirectlyReferenced();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean isDirectlyReferenced();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean isUses();
+	boolean isImplements();
 }

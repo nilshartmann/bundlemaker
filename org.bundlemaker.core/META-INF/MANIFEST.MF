@@ -10,6 +10,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.exporter,
  org.bundlemaker.core.internal,
+ org.bundlemaker.core.internal.parser;x-friends:="org.bundlemaker.core.store.db4o.ptest",
  org.bundlemaker.core.modules,
  org.bundlemaker.core.parser,
  org.bundlemaker.core.projectdescription,

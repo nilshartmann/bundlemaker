@@ -1,6 +1,7 @@
 package org.bundlemaker.core.store.db4o.internal;
 
-import org.bundlemaker.core.resource.AbstractResourceKey;
+import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.Reference;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
@@ -56,22 +57,23 @@ public abstract class AbstractPersistentDependencyStore implements
 	 * Initializes the {@link IPersistentDependencyStore}.
 	 * </p>
 	 */
-	final void init() {
+	public final void init() {
 
 		// create a new configuration
 		Configuration configuration = Db4o.newConfiguration();
 
 		// set cascade on update
 		configuration.objectClass(Resource.class).cascadeOnUpdate(true);
-		configuration.objectClass(AbstractResourceKey.class).cascadeOnUpdate(
+		configuration.objectClass(Reference.class).cascadeOnUpdate(true);
+		configuration.objectClass(ResourceKey.class).cascadeOnUpdate(
 				true);
 
 		// set cascade on activation
 		configuration.objectClass(Resource.class).cascadeOnActivate(true);
-		configuration.objectClass(AbstractResourceKey.class).cascadeOnUpdate(
+		configuration.objectClass(Reference.class).cascadeOnActivate(true);
+		configuration.objectClass(ResourceKey.class).cascadeOnActivate(
 				true);
 
-		
 		// set the activation depth
 		configuration.activationDepth(10);
 
@@ -98,7 +100,7 @@ public abstract class AbstractPersistentDependencyStore implements
 	 * Disposes the dependency store.
 	 * </p>
 	 */
-	final void dispose() {
+	public final void dispose() {
 
 		// commit all changes
 		_database.commit();

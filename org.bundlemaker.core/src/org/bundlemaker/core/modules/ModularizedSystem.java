@@ -382,7 +382,7 @@ public class ModularizedSystem implements IModularizedSystem {
 			IResourceModule module) {
 
 		// create the result list
-		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult();
+		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(module);
 
 		// TODO: getReferencedTypes(???, ???)
 		for (String referencedType : module.getReferencedTypes(false, true)) {

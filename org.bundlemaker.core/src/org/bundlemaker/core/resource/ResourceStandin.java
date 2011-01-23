@@ -41,4 +41,20 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 	public void setResource(Resource resource) {
 		_resource = resource;
 	}
+
+	@Override
+	public int compareTo(IResourceStandin other) {
+
+		if (!getContentId().equals(other.getContentId())) {
+			return getContentId().compareTo(other.getContentId());
+		}
+		if (!getRoot().equals(other.getRoot())) {
+			return getRoot().compareTo(other.getRoot());
+		}
+		if (!getPath().equals(other.getPath())) {
+			return getPath().compareTo(other.getPath());
+		}
+
+		return 0;
+	}
 }

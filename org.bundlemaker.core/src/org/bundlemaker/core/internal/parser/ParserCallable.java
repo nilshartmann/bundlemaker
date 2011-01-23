@@ -97,8 +97,8 @@ public class ParserCallable implements Callable<List<IProblem>> {
 			if (resourceCount > BLOCKSIZE || i + 1 == _directories.size()) {
 
 				// parse
-				_parser.parse(_content, _directories.subList(fromIndex, i + 1),
-						_resourceCache, _progressMonitor);
+				_errors.addAll(_parser.parse(_content, _directories.subList(fromIndex, i + 1),
+						_resourceCache, _progressMonitor));
 
 				// set index
 				resourceCount = 0;

@@ -76,6 +76,12 @@ public class BundleMakerProjectDescription implements
 		return null;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundlemakerProject
+	 */
 	public void initialize(IBundleMakerProject bundlemakerProject) {
 
 		// TODO
@@ -84,9 +90,29 @@ public class BundleMakerProjectDescription implements
 		}
 
 		//
+		int sourceResourcesCount = 0;
+		int binaryResourcesCount = 0;
+
+		//
 		for (FileBasedContent fileBasedContent : _fileBasedContent) {
 			fileBasedContent.initialize(bundlemakerProject);
+
+			//
+			if (fileBasedContent.isResourceContent()) {
+
+				sourceResourcesCount += fileBasedContent
+						.getModifiableResourceContent()
+						.getModifiableBinaryResources().size();
+
+				binaryResourcesCount += fileBasedContent
+						.getModifiableResourceContent()
+						.getModifiableSourceResources().size();
+			}
 		}
+
+		// TODO:
+		System.out.println("Source resources to process: " + sourceResourcesCount);
+		System.out.println("Binary resources to process: " + binaryResourcesCount);
 
 		//
 		_initialized = true;

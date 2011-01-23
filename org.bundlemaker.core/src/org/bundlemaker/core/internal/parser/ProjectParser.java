@@ -12,9 +12,12 @@ import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
+import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.bundlemaker.core.util.ProgressMonitor;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -89,6 +92,16 @@ public class ProjectParser {
 		//
 		notifyParseStart();
 
+		// create the resource cache
+		ResourceCache cache = new ResourceCache(
+				(IPersistentDependencyStore) _bundleMakerProject
+						.getDependencyStore(null));
+
+		if (progressMonitor instanceof ProgressMonitor) {
+			ProgressMonitor monitor = (ProgressMonitor) progressMonitor;
+			monitor.setResourceCache(cache);
+		}
+
 		// iterate over the project content
 		for (FileBasedContent fileBasedContent : _bundleMakerProject
 				.getProjectDescription().getModifiableFileBasedContent()) {
@@ -97,8 +110,20 @@ public class ProjectParser {
 					fileBasedContent.getName()));
 
 			// parse the content
-			parseContent(fileBasedContent, progressMonitor);
+			parseContent(fileBasedContent, progressMonitor, cache);
 		}
+
+		// TODO
+		System.out.println("Write to disc");
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+
+		cache.commit(new ProgressMonitor());
+		cache.clear();
+
+		// TODO
+		stopWatch.stop();
+		System.out.println("Done: " + stopWatch.getElapsedTime());
 
 		//
 		notifyParseStop();
@@ -116,7 +141,8 @@ public class ProjectParser {
 	 */
 	@SuppressWarnings("unchecked")
 	private void parseContent(FileBasedContent content,
-			IProgressMonitor progressMonitor) throws CoreException {
+			IProgressMonitor progressMonitor, IResourceCache cache)
+			throws CoreException {
 
 		// return if content is no resource content
 		if (!content.isResourceContent()) {
@@ -144,11 +170,6 @@ public class ProjectParser {
 				packageFragmentsParts[i] = Collections.EMPTY_LIST;
 			}
 		}
-
-		// create the resource cache
-		ModifiableResourceCache cache = new ModifiableResourceCache(
-				(IPersistentDependencyStore) _bundleMakerProject
-						.getDependencyStore(null));
 
 		// create parser callables
 		for (int i = 0; i < _parsers.length; i++) {
@@ -203,9 +224,6 @@ public class ProjectParser {
 			}
 		}
 
-		//
-		cache.commit();
-		cache.clear();
 	}
 
 	private boolean matches(ParserType parserType, IFileBasedContent content) {
@@ -273,15 +291,38 @@ public class ProjectParser {
 		}
 
 		// create one parser for each thread...
+		IParser[][] parsers = new IParser[parserFactories.size()][THREAD_COUNT];
 		_parsers = new IParser[parserFactories.size()][THREAD_COUNT];
 
 		// ... setup
 		for (int i = 0; i < parserFactories.size(); i++) {
 			for (int j = 0; j < THREAD_COUNT; j++) {
-				_parsers[i][j] = parserFactories.get(i).createParser(
+				parsers[i][j] = parserFactories.get(i).createParser(
 						_bundleMakerProject);
 			}
 		}
+
+		// first the source parsers
+		int position = 0;
+		for (int i = 0; i < parserFactories.size(); i++) {
+			if (!parsers[i][0].getParserType().equals(ParserType.BINARY)) {
+				for (int j = 0; j < THREAD_COUNT; j++) {
+					_parsers[position][j] = parsers[i][j];
+				}
+				position++;
+			}
+		}
+
+		// then the binary parsers
+		for (int i = 0; i < parserFactories.size(); i++) {
+			if (parsers[i][0].getParserType().equals(ParserType.BINARY)) {
+				for (int j = 0; j < THREAD_COUNT; j++) {
+					_parsers[position][j] = parsers[i][j];
+				}
+				position++;
+			}
+		}
+
 	}
 
 	/**
@@ -305,9 +346,6 @@ public class ProjectParser {
 			binaryResourcesToParse += resourcesToParse[0];
 			sourceResourcesToParse += resourcesToParse[1];
 		}
-
-		System.out.println(binaryResourcesToParse + " : "
-				+ sourceResourcesToParse);
 
 		//
 		return binaryResourcesToParse + sourceResourcesToParse;
