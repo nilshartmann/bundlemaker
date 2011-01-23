@@ -25,7 +25,6 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 		super.addPages();
 
 		BundleMakerProjectSetupWizardPage page = new BundleMakerProjectSetupWizardPage();
-
 		addPage(page);
 	}
 
