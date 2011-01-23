@@ -94,12 +94,6 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 		final IProjectDescription description = workspace
 				.newProjectDescription(newProjectHandle.getName());
 		description.setLocationURI(location);
-		// set the new nature
-		String[] prevNatures = description.getNatureIds();
-		String[] newNatures = new String[prevNatures.length + 1];
-		System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-		newNatures[prevNatures.length] = BundleMakerCore.NATURE_ID;
-		description.setNatureIds(newNatures);
 
 		// create the new project operation
 		IRunnableWithProgress op = new IRunnableWithProgress() {
@@ -157,6 +151,27 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 						StatusManager.LOG | StatusManager.BLOCK);
 			}
 			return null;
+		}
+
+		try {
+			BundleMakerCore.addBundleMakerNature(newProjectHandle);
+			// IBundleMakerProject bundleMakerProject = BundleMakerCore
+			// .getBundleMakerProject(newProjectHandle,
+			// new NullProgressMonitor());
+			// BundleMakerProjectDescription bundleMakerProjectDescription =
+			// bundleMakerProject
+			// .getProjectDescription();
+			// bundleMakerProjectDescription.setJre(mainPage.get);
+
+		} catch (CoreException ex) {
+			IStatus status = BundleMakerUiUtils.newStatus(ex,
+					"Could not add Bundlemaker nature");
+			StatusAdapter statusAdapter = new StatusAdapter(status);
+			statusAdapter.setProperty(IStatusAdapterConstants.TITLE_PROPERTY,
+					"Project creation problems");
+			StatusManager.getManager().handle(status, StatusManager.BLOCK);
+			return null;
+
 		}
 
 		newProject = newProjectHandle;
