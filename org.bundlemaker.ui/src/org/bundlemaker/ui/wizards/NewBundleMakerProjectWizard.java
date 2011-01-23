@@ -6,6 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
 import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.ui.internal.UIImages;
 import org.eclipse.core.commands.ExecutionException;
@@ -17,6 +19,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -155,13 +158,13 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 
 		try {
 			BundleMakerCore.addBundleMakerNature(newProjectHandle);
-			// IBundleMakerProject bundleMakerProject = BundleMakerCore
-			// .getBundleMakerProject(newProjectHandle,
-			// new NullProgressMonitor());
-			// BundleMakerProjectDescription bundleMakerProjectDescription =
-			// bundleMakerProject
-			// .getProjectDescription();
-			// bundleMakerProjectDescription.setJre(mainPage.get);
+			IBundleMakerProject bundleMakerProject = BundleMakerCore
+					.getBundleMakerProject(newProjectHandle,
+							new NullProgressMonitor());
+			BundleMakerProjectDescription bundleMakerProjectDescription = bundleMakerProject
+					.getProjectDescription();
+			bundleMakerProjectDescription.setJre(mainPage.getSelectedJreId());
+			bundleMakerProject.saveProjectDescription();
 
 		} catch (CoreException ex) {
 			IStatus status = BundleMakerUiUtils.newStatus(ex,

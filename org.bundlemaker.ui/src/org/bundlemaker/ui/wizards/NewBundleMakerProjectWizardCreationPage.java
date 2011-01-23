@@ -212,4 +212,10 @@ public class NewBundleMakerProjectWizardCreationPage extends
 			return _defaultJre;
 		}
 	}
+
+	public String getSelectedJreId() {
+		int selectionIndex = _jreCombo.getSelectionIndex();
+		String item = _jreCombo.getItem(selectionIndex);
+		return item;
+	}
 }
