@@ -16,6 +16,8 @@ public interface IModuleExporter {
 
 	/**
 	 * <p>
+	 * Returns this {@link IModuleExporter} can export the specified
+	 * {@link IResourceModule}.
 	 * </p>
 	 * 
 	 * @param modularizedSystem
