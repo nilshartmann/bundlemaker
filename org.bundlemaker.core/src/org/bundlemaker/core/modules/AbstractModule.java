@@ -195,6 +195,13 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 		}
 	}
 
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " [_moduleIdentifier="
+				+ _moduleIdentifier + ", _classification=" + _classification
+				+ "]";
+	}
+
 	/**
 	 * <p>
 	 * </p>

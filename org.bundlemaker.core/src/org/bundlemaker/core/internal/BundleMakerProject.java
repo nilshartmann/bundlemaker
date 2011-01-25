@@ -3,8 +3,10 @@ package org.bundlemaker.core.internal;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
@@ -23,6 +25,7 @@ import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.projectdescription.ResourceContent;
+import org.bundlemaker.core.resource.Reference;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.ResourceStandin;
@@ -232,11 +235,24 @@ public class BundleMakerProject implements IBundleMakerProject {
 		Map<Resource, Resource> map = new HashMap<Resource, Resource>();
 
 		ProgressMonitor monitor = new ProgressMonitor();
+
 		// TODO
 		monitor.beginTask("Opening database ", resources.size());
 
 		for (Resource resource : resources) {
 			map.put(resource, resource);
+
+			// create copies of references
+			Set<Reference> references = new HashSet<Reference>();
+			for (Reference reference : resource.getModifiableReferences()) {
+				Reference newReference = new Reference(reference);
+				references.add(newReference);
+				newReference.setResource(resource);
+			}
+			resource.getModifiableReferences().clear();
+			resource.getModifiableReferences().addAll(references);
+
+			// set monitor
 			monitor.worked(1);
 		}
 
@@ -299,7 +315,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * 
 	 * @throws CoreException
 	 */
-	@SuppressWarnings("serial")
 	@Override
 	public void createModularizedSystemWorkingCopy(String name)
 			throws CoreException {
@@ -308,33 +323,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 		assertState(BundleMakerProjectState.OPENED);
 
 		// TODO: WORKING COPY!!!
-
-		// // TODO
-		// Copier copier = new Copier(true, true) {
-		//
-		// @Override
-		// protected void copyReference(EReference eReference,
-		// EObject eObject, EObject copyEObject) {
-		// super.copyReference(eReference, eObject, copyEObject);
-		// }
-		//
-		// @Override
-		// protected void copyContainment(EReference eReference,
-		// EObject eObject, EObject copyEObject) {
-		// super.copyContainment(eReference, eObject, copyEObject);
-		// }
-		//
-		// @Override
-		// protected void copyAttribute(EAttribute eAttribute,
-		// EObject eObject, EObject copyEObject) {
-		// super.copyAttribute(eAttribute, eObject, copyEObject);
-		// }
-		//
-		// };
-		//
-		// EObject projectDescriptionWorkingCopy = copier
+		// IBundleMakerProjectDescription projectDescriptionWorkingCopy =
+		// (IBundleMakerProjectDescription) DeepCopy
 		// .copy(_projectDescription);
-		// copier.copyReferences();
 
 		IBundleMakerProjectDescription projectDescriptionWorkingCopy = _projectDescription;
 

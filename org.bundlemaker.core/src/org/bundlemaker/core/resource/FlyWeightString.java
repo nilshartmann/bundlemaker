@@ -33,7 +33,7 @@ public class FlyWeightString {
 
 	@Override
 	public int hashCode() {
-		return  _content.hashCode();
+		return _content.hashCode();
 	}
 
 	@Override

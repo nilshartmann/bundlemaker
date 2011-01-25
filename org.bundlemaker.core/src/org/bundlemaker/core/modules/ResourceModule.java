@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceStandin;
 
 /**
@@ -28,6 +29,8 @@ public class ResourceModule extends
 	 */
 	public ResourceModule(IModuleIdentifier moduleIdentifier) {
 		super(moduleIdentifier, new ResourceContainer());
+		((ResourceContainer) getSelfResourceContainer())
+				.setResourceModule(this);
 	}
 
 	/**
@@ -131,6 +134,27 @@ public class ResourceModule extends
 		return Collections.unmodifiableSet(result);
 	}
 
+	@Override
+	public Set<IReference> getAllReferences(final boolean hideContainedTypes,
+			final boolean includeSourceReferences) {
+
+		// create the result set
+		final Set<IReference> result = new HashSet<IReference>();
+
+		//
+		doWithAllContainers(new ContainerClosure<ResourceContainer>() {
+			@Override
+			public boolean doWithContainer(ResourceContainer resourceContainer) {
+				result.addAll(resourceContainer.getAllReferences(
+						hideContainedTypes, includeSourceReferences));
+				return false;
+			}
+		});
+
+		// return the result
+		return Collections.unmodifiableSet(result);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -157,6 +181,14 @@ public class ResourceModule extends
 	public boolean hasDuplicateResources(ContentType contentType) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IResourceModule getResourceModule() {
+		return this;
 	}
 
 	public void initializeContainedTypes() {

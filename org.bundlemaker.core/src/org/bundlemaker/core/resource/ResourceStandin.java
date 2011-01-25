@@ -1,5 +1,7 @@
 package org.bundlemaker.core.resource;
 
+import org.bundlemaker.core.modules.IResourceModule;
+
 /**
  * <p>
  * </p>
@@ -10,6 +12,17 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 
 	/** - */
 	private Resource _resource;
+
+	/** do not set transient! */
+	private IResourceModule _resourceModule;
+
+	public IResourceModule getResourceModule() {
+		return _resourceModule;
+	}
+
+	public void setResourceModule(IResourceModule resourceModule) {
+		_resourceModule = resourceModule;
+	}
 
 	/**
 	 * <p>

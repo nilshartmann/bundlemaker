@@ -111,4 +111,11 @@ public class ReferenceAttributes {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ReferenceAttributes [_referenceType=" + _referenceType
+				+ ", _extends=" + _extends + ", _implements=" + _implements
+				+ "]";
+	}
 }

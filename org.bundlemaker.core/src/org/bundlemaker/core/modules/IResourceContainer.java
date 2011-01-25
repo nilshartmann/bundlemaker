@@ -3,6 +3,7 @@ package org.bundlemaker.core.modules;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceStandin;
 
 /**
@@ -61,7 +62,28 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param includeSourceReferences
 	 * @return
 	 */
+	Set<IReference> getAllReferences(boolean hideContainedTypes,
+			boolean includeSourceReferences);
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param hideContainedTypes
+	 * @param includeSourceReferences
+	 * @return
+	 */
 	Set<String> getReferencedPackages(boolean hideContainedTypes,
 			boolean includeSourceReferences);
 
+	/**
+	 * <p>
+	 * Returns the containing {@link IResourceModule}. If the
+	 * {@link IResourceContainer} is a {@link IResourceModule}, the
+	 * {@link IResourceModule} itself will be returned.
+	 * </p>
+	 * 
+	 * @return
+	 */
+	IResourceModule getResourceModule();
 }

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
@@ -16,8 +15,6 @@ import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
 import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
 import org.bundlemaker.core.parser.jdt.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.FlyWeightCache;
-import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;

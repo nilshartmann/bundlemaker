@@ -8,6 +8,7 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.ResourceStandin;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -24,6 +25,9 @@ public class ResourceContainer extends TypeContainer implements
 
 	/** the source resources */
 	private Set<IResourceStandin> _sourceResources;
+
+	/** the containing resource module */
+	private IResourceModule _resourceModule;
 
 	/**
 	 * <p>
@@ -86,6 +90,25 @@ public class ResourceContainer extends TypeContainer implements
 		return getReferences(hideContainedTypes, includeSourceReferences, false);
 	}
 
+	@Override
+	public Set<IReference> getAllReferences(boolean hideContainedTypes,
+			boolean includeSourceReferences) {
+
+		// create the result
+		Set<IReference> result = new HashSet<IReference>();
+
+		//
+		getIReferences(_binaryResources, hideContainedTypes, result);
+
+		//
+		if (includeSourceReferences) {
+			getIReferences(_sourceResources, hideContainedTypes, result);
+		}
+
+		// return result
+		return Collections.unmodifiableSet(result);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -95,6 +118,14 @@ public class ResourceContainer extends TypeContainer implements
 
 		// return result
 		return getReferences(hideContainedTypes, includeSourceReferences, true);
+	}
+
+	public IResourceModule getResourceModule() {
+		return _resourceModule;
+	}
+
+	public void setResourceModule(IResourceModule resourceModule) {
+		_resourceModule = resourceModule;
 	}
 
 	/**
@@ -111,6 +142,22 @@ public class ResourceContainer extends TypeContainer implements
 			// add all contained types
 			getModifiableContainedTypes().addAll(
 					resourceStandin.getResource().getContainedTypes());
+
+			//
+			((ResourceStandin) resourceStandin)
+					.setResourceModule(_resourceModule);
+		}
+
+		//
+		for (IResourceStandin resourceStandin : _sourceResources) {
+
+			// add all contained types
+			getModifiableContainedTypes().addAll(
+					resourceStandin.getResource().getContainedTypes());
+
+			//
+			((ResourceStandin) resourceStandin)
+					.setResourceModule(_resourceModule);
 		}
 
 	}
@@ -209,6 +256,36 @@ public class ResourceContainer extends TypeContainer implements
 						result.add(entry);
 					}
 
+				}
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param resources
+	 * @param hideContainedTypes
+	 * @param result
+	 */
+	private void getIReferences(Set<IResourceStandin> resources,
+			boolean hideContainedTypes, Set<IReference> result) {
+
+		// iterate over all resources
+		for (IResourceStandin resourceStandin : resources) {
+
+			// get resource
+			IResource resource = resourceStandin.getResource();
+
+			// iterate over all resources
+			for (IReference reference : resource.getReferences()) {
+
+				if (!hideContainedTypes
+						|| !getContainedTypes().contains(
+								reference.getFullyQualifiedName())) {
+
+					result.add(reference);
 				}
 			}
 		}

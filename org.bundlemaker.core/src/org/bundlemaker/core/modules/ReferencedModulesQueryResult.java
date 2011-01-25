@@ -2,10 +2,12 @@ package org.bundlemaker.core.modules;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+
+import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.ReferenceType;
 
 /**
  * <p>
@@ -17,16 +19,25 @@ public class ReferencedModulesQueryResult implements
 		IReferencedModulesQueryResult {
 
 	/** - */
-	private Map<String, ITypeModule> _referencedModules;
+	private Map<IReference, ITypeModule> _referencesToModulesMap;
 
 	/** - */
-	private Map<String, List<ITypeModule>> _typesWithAmbiguousModules;
+	private Map<IReference, Set<ITypeModule>> _referencesToAmbiguousModulesMap;
 
 	/** - */
-	private List<String> _missingTypes;
+	private Set<IReference> _unsatisfiedReferences;
 
 	/** - */
-	private IResourceModule _self;
+	private IResourceModule _selfModule;
+
+	/** - */
+	private Set<String> _unsatisfiedReferencedTypes;
+
+	/** - */
+	private Map<String, Set<ITypeModule>> _referencedTypesToAmbiguousModulesMap;
+
+	/** - */
+	private Set<ITypeModule> _referencedModules;
 
 	/**
 	 * <p>
@@ -36,28 +47,21 @@ public class ReferencedModulesQueryResult implements
 	public ReferencedModulesQueryResult(IResourceModule self) {
 
 		//
-		_referencedModules = new HashMap<String, ITypeModule>();
+		_referencesToModulesMap = new HashMap<IReference, ITypeModule>();
+		_referencesToAmbiguousModulesMap = new HashMap<IReference, Set<ITypeModule>>();
+		_unsatisfiedReferences = new HashSet<IReference>();
 
 		//
-		_typesWithAmbiguousModules = new HashMap<String, List<ITypeModule>>();
-
-		//
-		_missingTypes = new LinkedList<String>();
-
-		//
-		_self = self;
+		_selfModule = self;
 	}
 
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link ReferencedModulesQueryResult}.
+	 * </p>
+	 */
 	public ReferencedModulesQueryResult() {
-
-		//
-		_referencedModules = new HashMap<String, ITypeModule>();
-
-		//
-		_typesWithAmbiguousModules = new HashMap<String, List<ITypeModule>>();
-
-		//
-		_missingTypes = new LinkedList<String>();
+		this(null);
 	}
 
 	/**
@@ -67,55 +71,158 @@ public class ReferencedModulesQueryResult implements
 	public boolean hasErrors() {
 
 		//
-		return _missingTypes.isEmpty() && _typesWithAmbiguousModules.isEmpty();
+		return _unsatisfiedReferences.isEmpty()
+				&& _referencesToAmbiguousModulesMap.isEmpty();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Map<String, ITypeModule> getReferencedModulesMap() {
+	public Map<IReference, ITypeModule> getReferencedModulesMap() {
 
+		//
+		return _referencesToModulesMap;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasReferencesWithAmbiguousModules() {
+
+		//
+		return !_referencesToAmbiguousModulesMap.isEmpty();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<IReference, Set<ITypeModule>> getReferencesWithAmbiguousModules() {
+
+		//
+		return _referencesToAmbiguousModulesMap;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasUnsatisfiedReferences() {
+		//
+		return !_unsatisfiedReferences.isEmpty();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<IReference> getUnsatisfiedReferences() {
+
+		//
+		return _unsatisfiedReferences;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<ITypeModule> getReferencedModules() {
+
+		if (_referencedModules == null) {
+			
+			_referencedModules = new HashSet<ITypeModule>();
+			
+			// step 2: add the type modules
+			for (ITypeModule iTypeModule : _referencesToModulesMap.values()) {
+				if (!iTypeModule.equals(_selfModule)) {
+					_referencedModules.add(iTypeModule);
+				}
+			}
+		}
+		
 		//
 		return _referencedModules;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public Set<ITypeModule> getReferencedModules() {
+	public Map<String, Set<ITypeModule>> getReferencedTypesWithAmbiguousModules() {
 
-		Set<ITypeModule> result = new HashSet<ITypeModule>();
+		if (_referencedTypesToAmbiguousModulesMap == null) {
+			
+			_referencedTypesToAmbiguousModulesMap = new HashMap<String, Set<ITypeModule>>();
+			
+			// step 2: add the type modules
+			for (Entry<IReference, Set<ITypeModule>> entry : _referencesToAmbiguousModulesMap
+					.entrySet()) {
 
-		for (ITypeModule iTypeModule : _referencedModules.values()) {
-			if (!iTypeModule.equals(_self)) {
-				result.add(iTypeModule);
+				// only process type references
+				if (entry.getKey().getReferenceType()
+						.equals(ReferenceType.TYPE_REFERENCE)) {
+
+					// process
+					for (ITypeModule typeModule : entry.getValue()) {
+
+						// ignore self modules
+						if (!typeModule.equals(_selfModule)) {
+
+							// create the type module set if necessary
+							if (!_referencedTypesToAmbiguousModulesMap
+									.containsKey(entry.getKey()
+											.getFullyQualifiedName())) {
+
+								_referencedTypesToAmbiguousModulesMap.put(entry
+										.getKey().getFullyQualifiedName(),
+										new HashSet<ITypeModule>());
+							}
+
+							// add the type module
+							_referencedTypesToAmbiguousModulesMap.get(
+									entry.getKey().getFullyQualifiedName())
+									.add(typeModule);
+						}
+					}
+				}
 			}
 		}
-
-		//
-		return result;
+		
+		// 
+		return _referencedTypesToAmbiguousModulesMap;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public boolean hasTypesWithAmbiguousModules() {
+	public Set<String> getUnsatisfiedReferencedTypes() {
 
 		//
-		return !_typesWithAmbiguousModules.isEmpty();
-	}
+		if (_unsatisfiedReferencedTypes == null) {
 
-	@Override
-	public Map<String, List<ITypeModule>> getTypesWithAmbiguousModules() {
+			_unsatisfiedReferencedTypes = new HashSet<String>();
 
-		//
-		return _typesWithAmbiguousModules;
-	}
+			// add the type modules
+			for (IReference unsatisfiedReference : _unsatisfiedReferences) {
 
-	@Override
-	public boolean hasMissingTypes() {
-		//
-		return !_missingTypes.isEmpty();
-	}
+				// only process type references
+				if (unsatisfiedReference.getReferenceType().equals(
+						ReferenceType.TYPE_REFERENCE)) {
 
-	@Override
-	public List<String> getMissingTypes() {
+					if (!_unsatisfiedReferencedTypes
+							.contains(unsatisfiedReference
+									.getFullyQualifiedName())) {
+						_unsatisfiedReferencedTypes.add(unsatisfiedReference
+								.getFullyQualifiedName());
+					}
+				}
 
-		//
-		return _missingTypes;
+			}
+		}
+		// return the result
+		return _unsatisfiedReferencedTypes;
 	}
 }

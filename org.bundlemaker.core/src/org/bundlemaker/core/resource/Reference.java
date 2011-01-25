@@ -16,6 +16,25 @@ public class Reference implements IReference {
 	/** - */
 	private ReferenceAttributes _referenceAttributes;
 
+	/** - */
+	private Resource _resource;
+
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link Reference}.
+	 * </p>
+	 * 
+	 * @param reference
+	 */
+	public Reference(Reference reference) {
+
+		Assert.isNotNull(reference);
+
+		//
+		_fullyQualifiedName = reference._fullyQualifiedName;
+		_referenceAttributes = reference._referenceAttributes;
+	}
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link Reference}.
@@ -99,4 +118,31 @@ public class Reference implements IReference {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Reference [_fullyQualifiedName=" + _fullyQualifiedName
+				+ ", _referenceAttributes=" + _referenceAttributes + "]";
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public Resource getResource() {
+		return _resource;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param resource
+	 */
+	public void setResource(Resource resource) {
+		_resource = resource;
+	}
+
 }
