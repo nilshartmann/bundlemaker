@@ -379,14 +379,14 @@ public class ModularizedSystem implements IModularizedSystem {
 
 	@Override
 	public IReferencedModulesQueryResult getReferencedModules(
-			IResourceModule module) {
+			IResourceModule module, boolean includeSourceReferences) {
 
 		// create the result list
 		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(
 				module);
 
 		// TODO: getReferencedTypes(???, ???)
-		for (IReference reference : module.getAllReferences(true, true)) {
+		for (IReference reference : module.getAllReferences(true, includeSourceReferences)) {
 			_resolveReferencedModules(result, reference);
 		}
 

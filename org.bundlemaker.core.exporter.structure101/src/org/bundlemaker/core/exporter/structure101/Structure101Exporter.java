@@ -2,16 +2,13 @@ package org.bundlemaker.core.exporter.structure101;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import java.util.Set;
 
 import org.bundlemaker.core.exporter.IModularizedSystemExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
@@ -20,14 +17,11 @@ import org.bundlemaker.core.exporter.structure101.xml.DependenciesType;
 import org.bundlemaker.core.exporter.structure101.xml.DependencyType;
 import org.bundlemaker.core.exporter.structure101.xml.ModuleType;
 import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
-import org.bundlemaker.core.exporter.structure101.xml.ObjectFactory;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.util.StopWatch;
 
 /**
@@ -36,39 +30,14 @@ import org.bundlemaker.core.util.StopWatch;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Structure101Exporter implements IModularizedSystemExporter {
+public class Structure101Exporter implements IModularizedSystemExporter,
+		Structure101ExporterConstants {
 
 	/** - */
-	private static final String TYPE_REQUIRES = "requires";
+	private DataType _result;
 
 	/** - */
-	private static final String TYPE_CLASS = "class";
-
-	/** - */
-	private static final String TYPE_PACKAGE = "package";
-
-	/** - */
-	private static final String TYPE_OSGIBUNDLE = "osgibundle";
-
-	/** - */
-	private long _uniqueIdCounter = 0;
-
-	/** - */
-	private Map<String, String> _idMap;
-
-	/** - */
-	private DataType _dataType;
-
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link Structure101Exporter}.
-	 * </p>
-	 */
-	public Structure101Exporter() {
-
-		// create lists and maps
-		_idMap = new HashMap<String, String>();
-	}
+	private IdentifierMap _identifierMap;
 
 	/**
 	 * {@inheritDoc}
@@ -78,14 +47,13 @@ public class Structure101Exporter implements IModularizedSystemExporter {
 			IModuleExporterContext context) throws Exception {
 
 		// set up the DataType element
-		_dataType = new DataType();
-		_dataType.setFlavor("com.wuetherich.test");
-		_dataType.setModules(new ModulesType());
-		_dataType.setDependencies(new DependenciesType());
+		_result = new DataType();
+		_result.setFlavor(STRUCTURE_101_FLAVOR);
+		_result.setModules(new ModulesType());
+		_result.setDependencies(new DependenciesType());
 
-		// reset counter and map
-		_uniqueIdCounter = 0;
-		_idMap.clear();
+		//
+		_identifierMap = new IdentifierMap();
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -105,7 +73,7 @@ public class Structure101Exporter implements IModularizedSystemExporter {
 				context.getDestinationDirectory(), "structure101.xml"));
 
 		//
-		marshal(_dataType, outputStream);
+		Structure101ExporterUtils.marshal(_result, outputStream);
 	}
 
 	/**
@@ -118,43 +86,106 @@ public class Structure101Exporter implements IModularizedSystemExporter {
 	private void createEntries(ITypeModule typeModule,
 			IModularizedSystem modularizedSystem) {
 
-		// step 1: extract the package list
-		Map<String, List<String>> packageList = new HashMap<String, List<String>>();
-		for (String fullyQualifiedType : typeModule.getContainedTypes()) {
+		// step 1: create and add the ModuleType
+		createModule(typeModule);
 
-			// get the package
-			String packageName = getPackageName(fullyQualifiedType);
+		// step 3: add the dependencies
+		createDependencies(typeModule, modularizedSystem);
+	}
 
-			// create the package list
-			if (!packageList.containsKey(packageName)) {
-				packageList.put(packageName, new LinkedList<String>());
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param typeModule
+	 * @param modularizedSystem
+	 */
+	private void createDependencies(ITypeModule typeModule,
+			IModularizedSystem modularizedSystem) {
+
+		// only handle resource modules
+		if (typeModule instanceof IResourceModule) {
+
+			//
+			IResourceModule resourceModule = (IResourceModule) typeModule;
+
+			IReferencedModulesQueryResult queryResult = modularizedSystem
+					.getReferencedModules(resourceModule, true);
+
+			Set<TypeToTypeDependency> dependencies = new HashSet<TypeToTypeDependency>();
+
+			for (Entry<IReference, ITypeModule> referencedModules : queryResult
+					.getReferencedModulesMap().entrySet()) {
+
+				for (String containedType : referencedModules.getKey()
+						.getResource().getContainedTypes()) {
+
+					// from
+					String from = _identifierMap.getClassId(resourceModule,
+							containedType);
+
+					// to
+					String to = _identifierMap.getClassId(referencedModules
+							.getValue(), referencedModules.getKey()
+							.getFullyQualifiedName());
+
+					// dependency
+					TypeToTypeDependency dependency = new TypeToTypeDependency(
+							from, to,
+							referencedModules.getKey().isImplements(),
+							referencedModules.getKey().isExtends());
+
+					//
+					dependencies.add(dependency);
+				}
 			}
 
-			// add to package
-			packageList.get(packageName).add(fullyQualifiedType);
+			//
+			for (TypeToTypeDependency typeToTypeDependency : dependencies) {
+
+				DependencyType dependency = new DependencyType();
+				dependency.setType(TYPE_REQUIRES);
+				dependency.setFrom(typeToTypeDependency.getFrom());
+				dependency.setTo(typeToTypeDependency.getTo());
+
+				_result.getDependencies().getDependency().add(dependency);
+			}
 		}
+	}
 
-		// step 2: create the ModuleType
+	/**
+	 * <p>
+	 * Creates a {@link ModuleType} for the given {@link ITypeModule}
+	 * </p>
+	 * 
+	 * @param typeModule
+	 * @param packageList
+	 * @return
+	 */
+	private void createModule(ITypeModule typeModule) {
+
+		// step 1: create the result
 		ModuleType module = new ModuleType();
-
 		module.setType(TYPE_OSGIBUNDLE);
-		module.setName(typeModule.getClassification() != null ? typeModule
-				.getClassification().toString()
-				+ "/"
-				+ typeModule.getModuleIdentifier().toString() : typeModule
-				.getModuleIdentifier().toString());
-		module.setId(getModuleId(typeModule));
+		module.setName(getTypeModuleName(typeModule));
+		module.setId(_identifierMap.getModuleId(typeModule));
+
+		// step 2: get all packages
+		Map<String, List<String>> packageList = extractPackageList(typeModule);
 
 		for (Entry<String, List<String>> entry : packageList.entrySet()) {
 
+			// add an entry for each package
 			ModuleType packageSubmodule = new ModuleType();
 			packageSubmodule.setType(TYPE_PACKAGE);
 			packageSubmodule.setName(entry.getKey());
-			packageSubmodule.setId(getPackageId(typeModule, entry.getKey()));
+			packageSubmodule.setId(_identifierMap.getPackageId(typeModule,
+					entry.getKey()));
 
 			// add all class names to to package
 			for (String fullyQualifiedTypeName : entry.getValue()) {
 
+				// create class sub module
 				ModuleType classSubmodule = new ModuleType();
 
 				// set the type
@@ -167,56 +198,51 @@ public class Structure101Exporter implements IModularizedSystemExporter {
 				classSubmodule.setName(classname);
 
 				// set the id
-				classSubmodule.setId(getClassId(typeModule,
+				classSubmodule.setId(_identifierMap.getClassId(typeModule,
 						fullyQualifiedTypeName));
 
+				// add the submodule
 				packageSubmodule.getSubmodule().add(classSubmodule);
 			}
 
+			// add the package modules
 			module.getSubmodule().add(packageSubmodule);
 		}
 
-		_dataType.getModules().getModule().add(module);
+		// add the module to the modules
+		_result.getModules().getModule().add(module);
+	}
 
-		if (typeModule instanceof IResourceModule) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param typeModule
+	 * @return
+	 */
+	private Map<String, List<String>> extractPackageList(ITypeModule typeModule) {
 
-			//
-			IResourceModule resourceModule = (IResourceModule) typeModule;
+		// create the package list
+		Map<String, List<String>> packageList = new HashMap<String, List<String>>();
 
-			IReferencedModulesQueryResult referencedModules = modularizedSystem
-					.getReferencedModules(resourceModule);
+		// get the contained types
+		for (String fullyQualifiedType : typeModule.getContainedTypes()) {
 
-			//
-			for (IResourceStandin resourceStandin : resourceModule
-					.getResources(ContentType.BINARY)) {
+			// get the package
+			String packageName = Structure101ExporterUtils
+					.getPackageName(fullyQualifiedType);
 
-				//
-				for (String containedType : resourceStandin.getResource()
-						.getContainedTypes()) {
-
-					for (IReference reference : resourceStandin.getResource()
-							.getReferences()) {
-
-						ITypeModule referencedModule = referencedModules
-								.getReferencedModulesMap().get(
-										reference.getFullyQualifiedName());
-
-						if (referencedModule != null) {
-
-							DependencyType dependency = new DependencyType();
-							dependency.setType(TYPE_REQUIRES);
-							dependency.setFrom(getClassId(resourceModule,
-									containedType));
-							dependency.setTo(getClassId(referencedModule,
-									reference.getFullyQualifiedName()));
-
-							_dataType.getDependencies().getDependency()
-									.add(dependency);
-						}
-					}
-				}
+			// create the package list
+			if (!packageList.containsKey(packageName)) {
+				packageList.put(packageName, new LinkedList<String>());
 			}
+
+			// add to package
+			packageList.get(packageName).add(fullyQualifiedType);
 		}
+
+		// return the package list
+		return packageList;
 	}
 
 	/**
@@ -226,109 +252,13 @@ public class Structure101Exporter implements IModularizedSystemExporter {
 	 * @param typeModule
 	 * @return
 	 */
-	private String getModuleId(ITypeModule typeModule) {
-		return getShortenId(getModuleName(typeModule));
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @param packageName
-	 * @return
-	 */
-	private String getPackageId(ITypeModule typeModule, String packageName) {
-		return getShortenId(getModuleName(typeModule) + "_" + packageName);
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @param fullyQualifiedType
-	 * @return
-	 */
-	private String getClassId(ITypeModule typeModule, String fullyQualifiedType) {
-		return getShortenId(getModuleName(typeModule) + "_"
-				+ fullyQualifiedType);
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param longID
-	 * @return
-	 */
-	private String getShortenId(String longID) {
+	protected String getTypeModuleName(ITypeModule typeModule) {
 
 		//
-		if (!_idMap.containsKey(longID)) {
-			_idMap.put(longID, Long.toString(_uniqueIdCounter++));
-		}
-
-		// get the id
-		return _idMap.get(longID);
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedType
-	 * @return
-	 */
-	private static String getPackageName(String fullyQualifiedType) {
-
-		//
-		return fullyQualifiedType.indexOf('.') != -1 ? fullyQualifiedType
-				.substring(0, fullyQualifiedType.lastIndexOf('.')) : "";
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @return
-	 */
-	private static String getModuleName(ITypeModule typeModule) {
-
-		// get the id
-		return typeModule.getModuleIdentifier().getName() + "_"
-				+ typeModule.getModuleIdentifier().getVersion();
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param productsType
-	 * @param outputStream
-	 */
-	private static void marshal(DataType dataType, OutputStream outputStream) {
-
-		try {
-
-			//
-			JAXBContext jc = JAXBContext.newInstance(DataType.class,
-					DependenciesType.class, DependencyType.class,
-					ModulesType.class, ModuleType.class, ObjectFactory.class);
-
-			//
-			Marshaller marshaller = jc.createMarshaller();
-
-			// set formatted output
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-			//
-			marshaller.marshal(new ObjectFactory().createData(dataType),
-					outputStream);
-
-		} catch (JAXBException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
+		return typeModule.getClassification() != null ? typeModule
+				.getClassification().toString()
+				+ "/"
+				+ typeModule.getModuleIdentifier().toString() : typeModule
+				.getModuleIdentifier().toString();
 	}
 }

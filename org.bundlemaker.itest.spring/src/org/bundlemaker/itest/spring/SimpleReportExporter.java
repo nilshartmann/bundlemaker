@@ -69,7 +69,7 @@ public class SimpleReportExporter extends AbstractExporter {
 		builder.append("\n");
 		builder.append("Referenced Modules: \n");
 		IReferencedModulesQueryResult queryResult = modularizedSystem
-				.getReferencedModules(module);
+				.getReferencedModules(module, true);
 
 		for (ITypeModule referencedModule : queryResult.getReferencedModules()) {
 			builder.append(referencedModule.getModuleIdentifier().toString()
