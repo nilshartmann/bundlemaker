@@ -28,23 +28,33 @@ public class ReferenceAttributes {
 	/** - */
 	private boolean _implements;
 
+	/** - */
+	private boolean _isCompileTime;
+
+	/** - */
+	private boolean _isRuntimeTime;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ReferenceAttributes}.
 	 * </p>
 	 * 
 	 * @param referenceType
-	 * @param isExtends
-	 * @param isImplements
+	 * @param extends1
+	 * @param implements1
+	 * @param isCompileTime
+	 * @param isRuntimeTime
 	 */
 	public ReferenceAttributes(ReferenceType referenceType, boolean isExtends,
-			boolean isImplements) {
+			boolean isImplements, boolean isCompileTime, boolean isRuntimeTime) {
 
 		Assert.isNotNull(referenceType);
 
 		_referenceType = referenceType;
 		_extends = isExtends;
 		_implements = isImplements;
+		_isCompileTime = isCompileTime;
+		_isRuntimeTime = isRuntimeTime;
 	}
 
 	/**
@@ -78,22 +88,32 @@ public class ReferenceAttributes {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @return
 	 */
+	public boolean isCompileTime() {
+		return _isCompileTime;
+	}
+
+	/**
+	 * @return
+	 */
+	public boolean isRuntimeTime() {
+		return _isRuntimeTime;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (_extends ? 1231 : 1237);
 		result = prime * result + (_implements ? 1231 : 1237);
+		result = prime * result + (_isCompileTime ? 1231 : 1237);
+		result = prime * result + (_isRuntimeTime ? 1231 : 1237);
 		result = prime * result
 				+ ((_referenceType == null) ? 0 : _referenceType.hashCode());
 		return result;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -107,6 +127,10 @@ public class ReferenceAttributes {
 			return false;
 		if (_implements != other._implements)
 			return false;
+		if (_isCompileTime != other._isCompileTime)
+			return false;
+		if (_isRuntimeTime != other._isRuntimeTime)
+			return false;
 		if (_referenceType != other._referenceType)
 			return false;
 		return true;
@@ -116,6 +140,8 @@ public class ReferenceAttributes {
 	public String toString() {
 		return "ReferenceAttributes [_referenceType=" + _referenceType
 				+ ", _extends=" + _extends + ", _implements=" + _implements
-				+ "]";
+				+ ", _isCompileTime=" + _isCompileTime + ", _isRuntimeTime="
+				+ _isRuntimeTime + "]";
 	}
+
 }

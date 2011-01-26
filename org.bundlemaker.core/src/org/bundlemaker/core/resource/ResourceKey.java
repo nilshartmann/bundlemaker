@@ -9,6 +9,9 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.bundlemaker.core.resource.internal.ArchiveFileCache;
+import org.bundlemaker.core.resource.internal.FlyWeightCache;
+import org.bundlemaker.core.resource.internal.FlyWeightString;
 import org.eclipse.core.runtime.Assert;
 
 /**

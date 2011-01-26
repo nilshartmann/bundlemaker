@@ -1,6 +1,7 @@
 package org.bundlemaker.core.resource;
 
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.internal.ArchiveFileCache;
 
 /**
  * <p>

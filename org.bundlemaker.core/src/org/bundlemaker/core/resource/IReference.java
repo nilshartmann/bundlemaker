@@ -12,7 +12,7 @@ public interface IReference {
 	/**
 	 * <p>
 	 * Returns the fully qualified name of the referenced type, e.g.
-	 * <code>de.example.YXY</code>.
+	 * <code>'de.example.YXY'</code>.
 	 * </p>
 	 * 
 	 * @return the fully qualified name.
@@ -21,12 +21,29 @@ public interface IReference {
 
 	/**
 	 * <p>
-	 * Returns the type of this {@link IReference}.
+	 * Returns the type of this {@link IReference}. A reference can either be a
+	 * <i>package</i> reference or <i>type</i> reference.
 	 * </p>
 	 * 
-	 * @return the type of this {@link IReference}.
+	 * @return the {@link ReferenceType} of this {@link IReference}.
 	 */
 	ReferenceType getReferenceType();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean isCompileTimeReference();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean isRuntimeReference();
 
 	/**
 	 * <p>
@@ -56,10 +73,29 @@ public interface IReference {
 
 	/**
 	 * <p>
-	 * Returns the originating {@link IResource}.
+	 * Returns the originating {@link IResource} or <code>null</code>, if the
+	 * reference does not belong to a resource. In this case, the reference
+	 * belongs to a type that is return by method {@link IReference#getType()}.
+	 * </p>
+	 * <p>
+	 * <b>Note:</b> This back reference is set after the model is loaded from
+	 * the database. It is <b>not</b> part of the stored model.
 	 * </p>
 	 * 
 	 * @return the originating {@link IResource}.
 	 */
 	IResource getResource();
+
+	/**
+	 * <p>
+	 * Returns the originating {@link IType}.
+	 * </p>
+	 * <p>
+	 * <b>Note:</b> This back reference is set after the model is loaded from
+	 * the database. It is <b>not</b> part of the stored model.
+	 * </p>
+	 * 
+	 * @return the originating {@link IType}.
+	 */
+	IType getType();
 }

@@ -200,7 +200,7 @@ public class ByteCodeParser implements IParser {
 				enclosingJavaElementIdentifier.getPath());
 
 		// get the additional type info
-		Resource resource = cache.getOrCreateModifiableResource(key);
+		Resource resource = cache.getOrCreateResource(key);
 
 		// get the fake manifest
 		BundlorPartialManifest fakePartialManifest = new BundlorPartialManifest(

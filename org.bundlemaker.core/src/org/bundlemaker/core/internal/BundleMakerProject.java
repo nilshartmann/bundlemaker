@@ -261,47 +261,49 @@ public class BundleMakerProject implements IBundleMakerProject {
 		List<FileBasedContent> fileBasedContents = _projectDescription
 				.getModifiableFileBasedContent();
 
-		for (FileBasedContent fileBasedContent : fileBasedContents) {
-
-			Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
-
-			if (fileBasedContent.isResourceContent()) {
-
-				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
-						.getResourceContent()).getModifiableBinaryResources()) {
-
-					setupResourceStandin(resourceStandin, map, false);
-					Assert.isNotNull(resourceStandin.getResource());
-
-					// hash the contained binary types
-					for (String containedType : resourceStandin.getResource()
-							.getContainedTypes()) {
-
-						typeToResourceStandin.put(containedType,
-								resourceStandin);
-					}
-				}
-
-				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
-						.getResourceContent()).getModifiableSourceResources()) {
-
-					setupResourceStandin(resourceStandin, map, true);
-					Assert.isNotNull(resourceStandin.getResource());
-
-					// set the associated resources
-					for (String containedType : resourceStandin.getResource()
-							.getContainedTypes()) {
-
-						if (typeToResourceStandin.containsKey(containedType)) {
-
-							((Resource) resourceStandin.getResource())
-									.addAssociatedResource((Resource) typeToResourceStandin
-											.get(containedType).getResource());
-						}
-					}
-				}
-			}
-		}
+		//TODO
+		
+//		for (FileBasedContent fileBasedContent : fileBasedContents) {
+//
+//			Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
+//
+//			if (fileBasedContent.isResourceContent()) {
+//
+//				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
+//						.getResourceContent()).getModifiableBinaryResources()) {
+//
+//					setupResourceStandin(resourceStandin, map, false);
+//					Assert.isNotNull(resourceStandin.getResource());
+//
+//					// hash the contained binary types
+//					for (String containedType : resourceStandin.getResource()
+//							.getContainedTypes()) {
+//
+//						typeToResourceStandin.put(containedType,
+//								resourceStandin);
+//					}
+//				}
+//
+//				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
+//						.getResourceContent()).getModifiableSourceResources()) {
+//
+//					setupResourceStandin(resourceStandin, map, true);
+//					Assert.isNotNull(resourceStandin.getResource());
+//
+//					// set the associated resources
+//					for (String containedType : resourceStandin.getResource()
+//							.getContainedTypes()) {
+//
+//						if (typeToResourceStandin.containsKey(containedType)) {
+//
+//							((Resource) resourceStandin.getResource())
+//									.addAssociatedResource((Resource) typeToResourceStandin
+//											.get(containedType).getResource());
+//						}
+//					}
+//				}
+//			}
+//		}
 
 		// set 'READY' state
 		_projectState = BundleMakerProjectState.OPENED;

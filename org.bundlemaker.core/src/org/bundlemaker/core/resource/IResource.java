@@ -21,23 +21,20 @@ public interface IResource extends IResourceKey {
 
 	/**
 	 * <p>
+	 * Returns all the contained types in this resource. If the resource does
+	 * not contain any type, an empty list will be returned instead.
 	 * </p>
 	 * 
-	 * @return
+	 * @return all the contained types in this resource. If the resource does
+	 *         not contain any type, an empty list will be returned instead.
 	 */
-	Set<? extends IResource> getAssociatedResources();
+	Set<? extends IType> getContainedTypes();
 
 	/**
 	 * <p>
 	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<String> getContainedTypes();
-
-	/**
-	 * <p>
-	 * </p>
+	 * <b>Note:</b> This reference is set after the model is loaded from the
+	 * database. It is <b>not</b> part of the stored model. </p>
 	 * 
 	 * @return
 	 */

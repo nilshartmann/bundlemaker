@@ -1,6 +1,7 @@
 package org.bundlemaker.core.resource;
 
 import org.bundlemaker.core.projectdescription.ResourceContent;
+import org.bundlemaker.core.resource.internal.ArchiveFileCache;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Assert;
 import org.junit.Test;

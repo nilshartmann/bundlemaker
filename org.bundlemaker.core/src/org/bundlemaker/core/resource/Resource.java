@@ -1,11 +1,12 @@
 package org.bundlemaker.core.resource;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.resource.internal.FlyWeightCache;
+import org.bundlemaker.core.resource.internal.ReferenceContainer;
 import org.eclipse.core.runtime.Assert;
 
 public class Resource extends ResourceKey implements IResource {
@@ -14,19 +15,16 @@ public class Resource extends ResourceKey implements IResource {
 	private Set<Reference> _references;
 
 	/** - */
-	private Set<String> _containedTypes;
-
-	/** do not set transient! */
-	private Set<Resource> _associatedResource;
+	private Set<Type> _containedTypes;
 
 	/** do not set transient! */
 	private IResourceStandin _resourceStandin;
 
 	/** - */
-	private transient FlyWeightCache _flyWeightCache;
+	private transient ReferenceContainer _referenceContainer;
 
 	/** - */
-	private transient Map<ReferenceKey, Reference> _referenceMap;
+	private transient ResourceCache _resourceCache;
 
 	/**
 	 * <p>
@@ -38,11 +36,20 @@ public class Resource extends ResourceKey implements IResource {
 	 * @param path
 	 */
 	public Resource(String contentId, String root, String path,
-			FlyWeightCache cache) {
+			FlyWeightCache cache, ResourceCache resourceCache) {
 		super(contentId, root, path, cache);
 
-		_flyWeightCache = cache;
-		_referenceMap = new HashMap<ReferenceKey, Reference>();
+		Assert.isNotNull(resourceCache);
+
+		_resourceCache = resourceCache;
+
+		_referenceContainer = new ReferenceContainer(cache) {
+			@Override
+			protected Set<Reference> createReferencesSet() {
+				return references();
+			}
+		};
+
 	}
 
 	/**
@@ -64,12 +71,7 @@ public class Resource extends ResourceKey implements IResource {
 	}
 
 	@Override
-	public Set<? extends IResource> getAssociatedResources() {
-		return Collections.unmodifiableSet(associatedResources());
-	}
-
-	@Override
-	public Set<String> getContainedTypes() {
+	public Set<? extends IType> getContainedTypes() {
 		return Collections.unmodifiableSet(containedTypes());
 	}
 
@@ -78,6 +80,27 @@ public class Resource extends ResourceKey implements IResource {
 		return _resourceStandin;
 	}
 
+	public void recordReference(String fullyQualifiedName,
+			ReferenceType referenceType, Boolean isExtends,
+			Boolean isImplements, Boolean isCompiletime, Boolean isRuntime) {
+
+		_referenceContainer.recordReference(fullyQualifiedName, referenceType,
+				isExtends, isImplements, isCompiletime, isRuntime);
+	}
+
+	public Type getOrCreateType(String fullyQualifiedName) {
+
+		//
+		Type type = _resourceCache.getOrCreateType(fullyQualifiedName);
+
+		containedTypes().add(type);
+
+		return type;
+	}
+
+	/**
+	 * @param resourceStandin
+	 */
 	public void setResourceStandin(IResourceStandin resourceStandin) {
 		_resourceStandin = resourceStandin;
 	}
@@ -88,100 +111,8 @@ public class Resource extends ResourceKey implements IResource {
 	 * 
 	 * @return
 	 */
-	public Set<String> getModifiableContainedTypes() {
+	public Set<Type> getModifiableContainedTypes() {
 		return containedTypes();
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 */
-	public void createReference(String fullyQualifiedName,
-			ReferenceType referenceType, Boolean isExtends, Boolean isImplements) {
-
-		//
-		Assert.isNotNull(fullyQualifiedName);
-
-		//
-		if (fullyQualifiedName.startsWith("java.")) {
-
-			// do nothing
-			return;
-		}
-
-		// create the key
-		Assert.isNotNull(referenceType);
-		ReferenceKey key = new ReferenceKey(fullyQualifiedName, referenceType);
-
-		// get the reference
-		Assert.isNotNull(_referenceMap, "Reference Map is null");
-		Reference reference = _referenceMap.get(key);
-
-		Assert.isNotNull(_flyWeightCache, "_flyWeightCache is not set!");
-
-		// create completely new one
-		if (reference == null) {
-
-			reference = _flyWeightCache.getReference(fullyQualifiedName,
-					referenceType, isExtends != null ? isExtends : false,
-					isImplements != null ? isImplements : false);
-
-			references().add(reference);
-			_referenceMap.put(key, reference);
-
-			return;
-		}
-
-		// return if current dependency matches the requested one
-		// TODO !!!!
-		// TODO !!!!
-		// TODO !!!!
-		if (equals(
-				isExtends,
-				reference.isExtends()
-						&& equals(isImplements, reference.isImplements()))) {
-			return;
-		}
-
-		// if current dependency does not match the requested one, we have to
-		// request a new one
-		references().remove(reference);
-
-		reference = _flyWeightCache.getReference(fullyQualifiedName,
-				referenceType, chooseValue(isExtends, reference.isExtends()),
-				chooseValue(isImplements, reference.isImplements()));
-
-		references().add(reference);
-		_referenceMap.put(key, reference);
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param associatedResource
-	 */
-	// TODO
-	// TODO
-	public void addAssociatedResource(Resource associatedResource) {
-
-		// add associated resource
-		associatedResources().add(associatedResource);
-
-		// TODO
-		// TODO
-		// if (associatedResource._references != null) {
-		//
-		// // add references
-		// for (Reference reference : associatedResource._references) {
-		//
-		// //
-		// createReference(reference.getFullyQualifiedName(),
-		// reference.getReferenceType(), null, null);
-		// }
-		// }
 	}
 
 	/**
@@ -192,49 +123,6 @@ public class Resource extends ResourceKey implements IResource {
 	 */
 	public Set<Reference> getModifiableReferences() {
 		return references();
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param b1
-	 * @param b2
-	 * @return
-	 */
-	private boolean equals(Boolean b1, boolean b2) {
-
-		//
-		return b1 != null && b1.booleanValue() == b2;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param b1
-	 * @param b2
-	 * @return
-	 */
-	private boolean chooseValue(Boolean b1, boolean b2) {
-
-		//
-		return b2 || b1 != null && b1.booleanValue();
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	private Set<Resource> associatedResources() {
-
-		if (_associatedResource == null) {
-			_associatedResource = new HashSet<Resource>();
-		}
-
-		return _associatedResource;
 	}
 
 	/**
@@ -252,81 +140,15 @@ public class Resource extends ResourceKey implements IResource {
 		return _references;
 	}
 
-	private Set<String> containedTypes() {
+	/**
+	 * @return
+	 */
+	private Set<Type> containedTypes() {
 
 		if (_containedTypes == null) {
-			_containedTypes = new HashSet<String>();
+			_containedTypes = new HashSet<Type>();
 		}
 
 		return _containedTypes;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-	 * 
-	 */
-	public static class ReferenceKey {
-
-		/** - */
-		private String fullyQualifiedName;
-
-		/** - */
-		private ReferenceType referenceType;
-
-		/**
-		 * <p>
-		 * Creates a new instance of type {@link ReferenceKey}.
-		 * </p>
-		 * 
-		 * @param fullyQualifiedName
-		 * @param referenceType
-		 */
-		public ReferenceKey(String fullyQualifiedName,
-				ReferenceType referenceType) {
-			this.fullyQualifiedName = fullyQualifiedName;
-			this.referenceType = referenceType;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime
-					* result
-					+ ((fullyQualifiedName == null) ? 0 : fullyQualifiedName
-							.hashCode());
-			result = prime * result
-					+ ((referenceType == null) ? 0 : referenceType.hashCode());
-			return result;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			ReferenceKey other = (ReferenceKey) obj;
-			if (fullyQualifiedName == null) {
-				if (other.fullyQualifiedName != null)
-					return false;
-			} else if (!fullyQualifiedName.equals(other.fullyQualifiedName))
-				return false;
-			if (referenceType != other.referenceType)
-				return false;
-			return true;
-		}
-
 	}
 }

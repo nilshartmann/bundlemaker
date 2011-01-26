@@ -2,6 +2,7 @@ package org.bundlemaker.core.resource;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.resource.internal.FlyWeightCache;
 import org.junit.Test;
 
 public class FlyWeightCacheTest {

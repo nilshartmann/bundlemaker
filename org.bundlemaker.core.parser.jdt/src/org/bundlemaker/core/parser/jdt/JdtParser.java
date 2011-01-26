@@ -281,7 +281,7 @@ public class JdtParser implements IParser {
 		ResourceKey key = new ResourceKey(elementID.getContentId(),
 				elementID.getRoot(), elementID.getPath());
 
-		Resource resource = (Resource) cache.getOrCreateModifiableResource(key);
+		Resource resource = (Resource) cache.getOrCreateResource(key);
 
 		// step 6: set the directly referenced types
 		JdtAstVisitor visitor = new JdtAstVisitor(resource);

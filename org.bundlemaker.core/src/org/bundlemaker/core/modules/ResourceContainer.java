@@ -136,29 +136,29 @@ public class ResourceContainer extends TypeContainer implements
 	 */
 	public void initializeContainedTypes() {
 
-		//
-		for (IResourceStandin resourceStandin : _binaryResources) {
-
-			// add all contained types
-			getModifiableContainedTypes().addAll(
-					resourceStandin.getResource().getContainedTypes());
-
-			//
-			((ResourceStandin) resourceStandin)
-					.setResourceModule(_resourceModule);
-		}
-
-		//
-		for (IResourceStandin resourceStandin : _sourceResources) {
-
-			// add all contained types
-			getModifiableContainedTypes().addAll(
-					resourceStandin.getResource().getContainedTypes());
-
-			//
-			((ResourceStandin) resourceStandin)
-					.setResourceModule(_resourceModule);
-		}
+//		//
+//		for (IResourceStandin resourceStandin : _binaryResources) {
+//
+//			// add all contained types
+//			getModifiableContainedTypes().addAll(
+//					resourceStandin.getResource().getContainedTypes());
+//
+//			//
+//			((ResourceStandin) resourceStandin)
+//					.setResourceModule(_resourceModule);
+//		}
+//
+//		//
+//		for (IResourceStandin resourceStandin : _sourceResources) {
+//
+//			// add all contained types
+//			getModifiableContainedTypes().addAll(
+//					resourceStandin.getResource().getContainedTypes());
+//
+//			//
+//			((ResourceStandin) resourceStandin)
+//					.setResourceModule(_resourceModule);
+//		}
 
 	}
 

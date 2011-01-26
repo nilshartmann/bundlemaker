@@ -2,6 +2,7 @@ package org.bundlemaker.core.parser.bytecode;
 
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.resource.Type;
 import org.eclipse.core.runtime.Assert;
 
 import com.springsource.bundlor.support.partialmanifest.PartialManifest;
@@ -17,6 +18,8 @@ public class BundlorPartialManifest implements PartialManifest {
 	/** - */
 	private Resource _resource;
 
+	private Type _type;
+
 	/** - */
 	private String _fullQualifiedTypeName;
 
@@ -30,20 +33,20 @@ public class BundlorPartialManifest implements PartialManifest {
 	 * 
 	 * @param fullQualifiedTypeName
 	 * @param fullQualifiedEnclosingTypeName
-	 * @param referencingElement
+	 * @param resource
 	 */
 	public BundlorPartialManifest(String fullQualifiedTypeName,
-			String fullQualifiedEnclosingTypeName, Resource referencingElement) {
+			String fullQualifiedEnclosingTypeName, Resource resource) {
 
 		Assert.isNotNull(fullQualifiedTypeName);
 		Assert.isNotNull(fullQualifiedEnclosingTypeName);
-		Assert.isNotNull(referencingElement);
+		Assert.isNotNull(resource);
 
 		_fullQualifiedTypeName = fullQualifiedTypeName;
 		_fullQualifiedEnclosingTypeName = fullQualifiedEnclosingTypeName;
-		_resource = referencingElement;
+		_resource = resource;
 
-		_resource.getModifiableContainedTypes().add(_fullQualifiedTypeName);
+		_type = _resource.getOrCreateType(_fullQualifiedTypeName);
 	}
 
 	/**
@@ -57,8 +60,8 @@ public class BundlorPartialManifest implements PartialManifest {
 		) {
 
 			// TODO!!!
-			_resource.createReference(type, ReferenceType.TYPE_REFERENCE, null,
-					null);
+			_type.recordReference(type, ReferenceType.TYPE_REFERENCE, null,
+					null, null, true);
 		}
 	}
 

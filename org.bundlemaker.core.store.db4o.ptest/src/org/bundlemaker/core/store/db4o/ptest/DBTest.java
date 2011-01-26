@@ -119,7 +119,7 @@ public class DBTest {
 		for (int i = 0; i < resourceCount; i++) {
 
 			Resource resource = cache
-					.getOrCreateModifiableResource(new ResourceKey(
+					.getOrCreateResource(new ResourceKey(
 							"0000001",
 							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/KJKJKJ",
 							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/"
