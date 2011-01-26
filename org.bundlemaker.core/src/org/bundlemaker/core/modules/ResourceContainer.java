@@ -8,6 +8,7 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceStandin;
 import org.eclipse.core.runtime.Assert;
 
@@ -136,29 +137,31 @@ public class ResourceContainer extends TypeContainer implements
 	 */
 	public void initializeContainedTypes() {
 
-//		//
-//		for (IResourceStandin resourceStandin : _binaryResources) {
-//
-//			// add all contained types
-//			getModifiableContainedTypes().addAll(
-//					resourceStandin.getResource().getContainedTypes());
-//
-//			//
-//			((ResourceStandin) resourceStandin)
-//					.setResourceModule(_resourceModule);
-//		}
-//
-//		//
-//		for (IResourceStandin resourceStandin : _sourceResources) {
-//
-//			// add all contained types
-//			getModifiableContainedTypes().addAll(
-//					resourceStandin.getResource().getContainedTypes());
-//
-//			//
-//			((ResourceStandin) resourceStandin)
-//					.setResourceModule(_resourceModule);
-//		}
+		//
+		for (IResourceStandin resourceStandin : _binaryResources) {
+
+			// step 1: add all contained types
+			for (IType type : resourceStandin.getResource().getContainedTypes()) {
+				getModifiableContainedTypes().add(type.getFullyQualifiedName());
+			}
+
+			//
+			((ResourceStandin) resourceStandin)
+					.setResourceModule(_resourceModule);
+		}
+
+		//
+		for (IResourceStandin resourceStandin : _sourceResources) {
+
+			// step 1: add all contained types
+			for (IType type : resourceStandin.getResource().getContainedTypes()) {
+				getModifiableContainedTypes().add(type.getFullyQualifiedName());
+			}
+
+			//
+			((ResourceStandin) resourceStandin)
+					.setResourceModule(_resourceModule);
+		}
 
 	}
 
@@ -275,7 +278,7 @@ public class ResourceContainer extends TypeContainer implements
 		// iterate over all resources
 		for (IResourceStandin resourceStandin : resources) {
 
-			// get resource
+			// step 1: get resource
 			IResource resource = resourceStandin.getResource();
 
 			// iterate over all resources
@@ -286,6 +289,20 @@ public class ResourceContainer extends TypeContainer implements
 								reference.getFullyQualifiedName())) {
 
 					result.add(reference);
+				}
+			}
+
+			// step 2
+			for (IType type : resource.getContainedTypes()) {
+
+				for (IReference reference : type.getReferences()) {
+
+					if (!hideContainedTypes
+							|| !getContainedTypes().contains(
+									reference.getFullyQualifiedName())) {
+
+						result.add(reference);
+					}
 				}
 			}
 		}

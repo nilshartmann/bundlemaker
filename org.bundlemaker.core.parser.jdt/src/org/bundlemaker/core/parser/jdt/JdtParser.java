@@ -295,9 +295,6 @@ public class JdtParser implements IParser {
 					compilationUnit);
 		}
 
-		// step 8: set all contained types
-		resource.getModifiableContainedTypes().addAll(visitor.getTypeNames());
-
 		// step 9: try to associate source resources and class resources
 
 		// TODO: Das sollten wir ggf. besser in der TRansformation machen???

@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.resource.FlyWeightCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.Type;
-import org.bundlemaker.core.resource.internal.FlyWeightCache;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -32,7 +32,7 @@ public class ResourceCache implements IResourceCache {
 	private IPersistentDependencyStore _dependencyStore;
 
 	/** - */
-	private FlyWeightCache _referenceCache;
+	private FlyWeightCache _flyWeightCache;
 
 	/**
 	 * <p>
@@ -55,7 +55,7 @@ public class ResourceCache implements IResourceCache {
 		_typeMap = new HashMap<String, Type>();
 
 		//
-		_referenceCache = new FlyWeightCache();
+		_flyWeightCache = new FlyWeightCache();
 	}
 
 	/**
@@ -119,8 +119,7 @@ public class ResourceCache implements IResourceCache {
 
 		// create a new one if necessary
 		resource = new Resource(resourceKey.getContentId(),
-				resourceKey.getRoot(), resourceKey.getPath(), _referenceCache,
-				this);
+				resourceKey.getRoot(), resourceKey.getPath(), this);
 
 		// store the Resource
 		_resourceMap.put(new ResourceKey(resourceKey.getContentId(),
@@ -143,7 +142,7 @@ public class ResourceCache implements IResourceCache {
 		}
 
 		// create a new one if necessary
-		type = new Type(fullyQualifiedName, _referenceCache);
+		type = new Type(fullyQualifiedName, _flyWeightCache);
 
 		// store the Resource
 		_typeMap.put(fullyQualifiedName, type);
@@ -156,8 +155,8 @@ public class ResourceCache implements IResourceCache {
 		return _resourceMap;
 	}
 
-	public FlyWeightCache getReferenceCache() {
-		return _referenceCache;
+	public FlyWeightCache getFlyWeightCache() {
+		return _flyWeightCache;
 	}
 
 	public void resetTypeCache() {

@@ -69,9 +69,9 @@ public class ProgressMonitor extends NullProgressMonitor {
 			if (_resourceCache != null) {
 				System.err.println(String.format(CACHE_MSG, _resourceCache
 						.getResourceMap().size(), _resourceCache
-						.getReferenceCache().getFlyWeightStrings().size(),
-						_resourceCache.getReferenceCache().getReferenceCache()
-								.size(), _resourceCache.getReferenceCache()
+						.getFlyWeightCache().getFlyWeightStrings().size(),
+						_resourceCache.getFlyWeightCache().getReferenceCache()
+								.size(), _resourceCache.getFlyWeightCache()
 								.getReferenceAttributesCache().size()));
 			}
 		}

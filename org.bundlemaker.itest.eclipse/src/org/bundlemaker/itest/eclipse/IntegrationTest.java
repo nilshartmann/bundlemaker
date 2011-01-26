@@ -141,7 +141,7 @@ public class IntegrationTest {
 		for (IResourceModule resourceModule : modularizedSystem
 				.getResourceModules()) {
 
-			//
+			// step 1: assert binary content
 			for (IResourceStandin resourceStandin : resourceModule
 					.getResources(ContentType.BINARY)) {
 

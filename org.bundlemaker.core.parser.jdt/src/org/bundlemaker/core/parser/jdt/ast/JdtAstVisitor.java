@@ -1,9 +1,7 @@
 package org.bundlemaker.core.parser.jdt.ast;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.Stack;
 
 import org.bundlemaker.core.resource.ReferenceType;
@@ -64,10 +62,10 @@ public class JdtAstVisitor extends ASTVisitor {
 	private Resource _javaSourceResource;
 
 	/** - */
-	private Stack<ITypeBinding> _typeBindings;
+	private Stack<org.bundlemaker.core.resource.Type> _currentTypes;
 
 	/** - */
-	private Set<String> _typeNames;
+	private Stack<ITypeBinding> _typeBindings;
 
 	/** */
 	private Message[] _messages = new Message[0];
@@ -89,7 +87,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		_javaSourceResource = javaSourceResource;
 
 		_typeBindings = new Stack<ITypeBinding>();
-		_typeNames = new HashSet<String>();
+		_currentTypes = new Stack<org.bundlemaker.core.resource.Type>();
 	}
 
 	/**
@@ -100,16 +98,6 @@ public class JdtAstVisitor extends ASTVisitor {
 	 */
 	public Message[] getMessages() {
 		return _messages;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<String> getTypeNames() {
-		return _typeNames;
 	}
 
 	/**
@@ -191,12 +179,10 @@ public class JdtAstVisitor extends ASTVisitor {
 			if (binding instanceof IPackageBinding) {
 
 				/* Reference packageReference = */
-				_javaSourceResource.createReference(
+				_javaSourceResource.recordReference(
 						((IPackageBinding) binding).getName(),
-						ReferenceType.PACKAGE_REFERENCE, false, false);
-
-				// packageReference.addPosition(new ReferencedPackage.Position(
-				// node.getStartPosition(), node.getLength()));
+						ReferenceType.PACKAGE_REFERENCE, false, false, true,
+						false);
 			}
 
 			// add referenced type
@@ -256,15 +242,17 @@ public class JdtAstVisitor extends ASTVisitor {
 	public boolean visit(TypeDeclaration node) {
 
 		// add the type name
-		_typeNames.add(node.resolveBinding().getBinaryName());
+		org.bundlemaker.core.resource.Type type = _javaSourceResource
+				.getOrCreateType(node.resolveBinding().getBinaryName());
+		_currentTypes.push(type);
 
 		// declared type superclass type
 		resolveType(node.getSuperclassType(), true, false);
 
 		// declared type implemented interfaces types
 		List<Type> interfaces = node.superInterfaceTypes();
-		for (Type type : interfaces) {
-			resolveType(type, false, true);
+		for (Type iface : interfaces) {
+			resolveType(iface, false, true);
 		}
 
 		// visit the child nodes
@@ -272,12 +260,24 @@ public class JdtAstVisitor extends ASTVisitor {
 	}
 
 	@Override
+	public void endVisit(TypeDeclaration node) {
+		_currentTypes.pop();
+	}
+
+	@Override
 	public boolean visit(AnnotationTypeDeclaration node) {
 
-		//
-		_typeNames.add(node.resolveBinding().getBinaryName());
+		// add the type name
+		org.bundlemaker.core.resource.Type type = _javaSourceResource
+				.getOrCreateType(node.resolveBinding().getBinaryName());
+		_currentTypes.push(type);
 
 		return true;
+	}
+
+	@Override
+	public void endVisit(AnnotationTypeDeclaration node) {
+		_currentTypes.pop();
 	}
 
 	/*
@@ -290,17 +290,24 @@ public class JdtAstVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(EnumDeclaration node) {
 
-		//
-		_typeNames.add(node.resolveBinding().getBinaryName());
+		// add the type name
+		org.bundlemaker.core.resource.Type type = _javaSourceResource
+				.getOrCreateType(node.resolveBinding().getBinaryName());
+		_currentTypes.push(type);
 
 		// add super interfaces
 		List<Type> superInterfaces = node.superInterfaceTypes();
-		for (Type type : superInterfaces) {
-			resolveType(type, false, false);
+		for (Type superInterface : superInterfaces) {
+			resolveType(superInterface, false, false);
 		}
 
 		// visit the child nodes
 		return true;
+	}
+
+	@Override
+	public void endVisit(EnumDeclaration node) {
+		_currentTypes.pop();
 	}
 
 	/**
@@ -943,9 +950,17 @@ public class JdtAstVisitor extends ASTVisitor {
 
 		if (referencedType != null) {
 
-			_javaSourceResource.createReference(referencedType,
-					ReferenceType.TYPE_REFERENCE, isExtends ? true : null,
-					isImplements ? true : null);
+			if (!_currentTypes.isEmpty()) {
+
+				_currentTypes.peek().recordReference(referencedType,
+						ReferenceType.TYPE_REFERENCE, isExtends, isImplements,
+						true, false);
+			} else {
+
+				_javaSourceResource.recordReference(referencedType,
+						ReferenceType.TYPE_REFERENCE, isExtends, isImplements,
+						true, false);
+			}
 		}
 	}
 

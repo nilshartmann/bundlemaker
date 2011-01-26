@@ -2,7 +2,7 @@ package org.bundlemaker.core.resource;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.resource.internal.FlyWeightCache;
+import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Test;
 
@@ -27,19 +27,8 @@ public class ResourceTest {
 		Assert.assertEquals("root", resource.getRoot());
 		Assert.assertEquals("path", resource.getPath());
 
-		Assert.assertTrue(resource.getAssociatedResources().isEmpty());
 		Assert.assertTrue(resource.getReferences().isEmpty());
 		Assert.assertTrue(resource.getContainedTypes().isEmpty());
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 */
-	@Test(expected = UnsupportedOperationException.class)
-	public void testUnmodifiableAssociatedResources() {
-		Resource resource = new Resource("contentId", "root", "path");
-		resource.getAssociatedResources().add(null);
 	}
 
 	/**
@@ -73,7 +62,8 @@ public class ResourceTest {
 		int referenceCount = 50;
 
 		//
-		FlyWeightCache flyWeightCache = new FlyWeightCache();
+		ResourceCache resourceCache = new ResourceCache(
+				new DummyDependencyStore());
 
 		//
 		StopWatch stopWatch_1 = new StopWatch();
@@ -81,10 +71,11 @@ public class ResourceTest {
 
 		//
 		Resource resource = new Resource("start", "start", "start",
-				flyWeightCache);
+				resourceCache);
 		for (int j = 0; j < 100; j++) {
-			resource.createReference("start" + j, ReferenceType.TYPE_REFERENCE,
-					true, true);
+
+			resource.recordReference("start" + j, ReferenceType.TYPE_REFERENCE,
+					true, true, false, false);
 		}
 
 		stopWatch_1.stop();
@@ -93,12 +84,12 @@ public class ResourceTest {
 		for (int i = 0; i < resourceCount; i++) {
 
 			//
-			resource = new Resource("00", "aa" + i, "bb", flyWeightCache);
+			resource = new Resource("00", "aa" + i, "bb", resourceCache);
 
 			//
 			for (int j = 0; j < referenceCount; j++) {
-				resource.createReference("" + i + j,
-						ReferenceType.TYPE_REFERENCE, true, true);
+				resource.recordReference("" + i + j,
+						ReferenceType.TYPE_REFERENCE, true, true, false, false);
 			}
 		}
 
@@ -107,17 +98,20 @@ public class ResourceTest {
 		stopWatch_2.start();
 
 		//
-		resource = new Resource("stop", "stop", "stop", flyWeightCache);
+		resource = new Resource("stop", "stop", "stop", resourceCache);
 		for (int j = 0; j < 100; j++) {
-			resource.createReference("stop" + j, ReferenceType.TYPE_REFERENCE,
-					true, true);
+			resource.recordReference("stop" + j, ReferenceType.TYPE_REFERENCE,
+					true, true, false, false);
 		}
 
 		stopWatch_2.stop();
 
-		Assert.assertEquals(2350242, flyWeightCache._flyWeightStrings.size());
-		Assert.assertEquals(1, flyWeightCache._referenceAttributesCache.size());
-		Assert.assertEquals(2300240, flyWeightCache._referenceCache.size());
+		Assert.assertEquals(2350242, resourceCache.getFlyWeightCache()
+				.getFlyWeightStrings().size());
+		Assert.assertEquals(1, resourceCache.getFlyWeightCache()
+				.getReferenceAttributesCache().size());
+		Assert.assertEquals(2300240, resourceCache.getFlyWeightCache()
+				.getReferenceCache().size());
 
 		// assert linear access time
 		Assert.assertTrue(

@@ -2,7 +2,6 @@ package org.bundlemaker.core.resource;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.resource.internal.ArchiveFileCache;
 import org.junit.Test;
 
 /**

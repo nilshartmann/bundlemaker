@@ -3,7 +3,7 @@ package org.bundlemaker.core.exporter.structure101;
 public interface Structure101ExporterConstants {
 
 	/** - */
-	static final String STRUCTURE_101_FLAVOR = "com.wuetherich.test";
+	static final String STRUCTURE_101_FLAVOR = "org.bundlemaker.structure101";
 
 	/** - */
 	static final String TYPE_REQUIRES = "requires";

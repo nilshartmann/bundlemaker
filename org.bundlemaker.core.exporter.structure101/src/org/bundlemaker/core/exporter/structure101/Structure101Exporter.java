@@ -22,6 +22,7 @@ import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.StopWatch;
 
 /**
@@ -117,12 +118,12 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 			for (Entry<IReference, ITypeModule> referencedModules : queryResult
 					.getReferencedModulesMap().entrySet()) {
 
-				for (String containedType : referencedModules.getKey()
-						.getResource().getContainedTypes()) {
+				if (referencedModules.getKey().hasAssociatedType()) {
 
 					// from
 					String from = _identifierMap.getClassId(resourceModule,
-							containedType);
+							referencedModules.getKey().getType()
+									.getFullyQualifiedName());
 
 					// to
 					String to = _identifierMap.getClassId(referencedModules

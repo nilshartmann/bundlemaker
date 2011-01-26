@@ -1,4 +1,4 @@
-package org.bundlemaker.core.resource.internal;
+package org.bundlemaker.core.resource;
 
 import java.io.File;
 import java.io.IOException;

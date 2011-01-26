@@ -46,7 +46,7 @@ public class BundlorPartialManifest implements PartialManifest {
 		_fullQualifiedEnclosingTypeName = fullQualifiedEnclosingTypeName;
 		_resource = resource;
 
-		_type = _resource.getOrCreateType(_fullQualifiedTypeName);
+		_type = _resource.getOrCreateType(fullQualifiedTypeName);
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class BundlorPartialManifest implements PartialManifest {
 		) {
 
 			// TODO!!!
-			_type.recordReference(type, ReferenceType.TYPE_REFERENCE, null,
-					null, null, true);
+			_type.recordReference(type, ReferenceType.TYPE_REFERENCE, false,
+					false, false, true);
 		}
 	}
 

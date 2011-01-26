@@ -4,9 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.resource.internal.FlyWeightCache;
-import org.bundlemaker.core.resource.internal.FlyWeightString;
-import org.bundlemaker.core.resource.internal.ReferenceContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -86,11 +83,41 @@ public class Type implements IType {
 	}
 
 	public void recordReference(String fullyQualifiedName,
-			ReferenceType referenceType, Boolean isExtends,
-			Boolean isImplements, Boolean isCompiletime, Boolean isRuntime) {
+			ReferenceType referenceType, boolean isExtends,
+			boolean isImplements, boolean isCompiletime, boolean isRuntime) {
 
 		_referenceContainer.recordReference(fullyQualifiedName, referenceType,
 				isExtends, isImplements, isCompiletime, isRuntime);
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param sourceResource
+	 */
+	public void setSourceResource(Resource sourceResource) {
+		_sourceResource = sourceResource;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param binaryResource
+	 */
+	public void setBinaryResource(Resource binaryResource) {
+		_binaryResource = binaryResource;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public Set<Reference> getModifiableReferences() {
+		return references();
 	}
 
 	/**

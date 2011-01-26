@@ -2,7 +2,7 @@ package org.bundlemaker.core.resource;
 
 /**
  * <p>
- * Represents a reference from an {@link IResource} to a fully qualified type.
+ * Represents a reference from an {@link IResource} to a type or a package.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -31,17 +31,19 @@ public interface IReference {
 
 	/**
 	 * <p>
+	 * Returns <code>true</code> if this reference is a compile time reference.
 	 * </p>
 	 * 
-	 * @return
+	 * @return <code>true</code> if this reference is a compile time reference.
 	 */
 	boolean isCompileTimeReference();
 
 	/**
 	 * <p>
+	 * Returns <code>true</code> if this reference is a runtime reference.
 	 * </p>
 	 * 
-	 * @return
+	 * @return <code>true</code> if this reference is a runtime reference.
 	 */
 	boolean isRuntimeReference();
 
@@ -88,6 +90,14 @@ public interface IReference {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean hasAssociatedResource();
+
+	/**
+	 * <p>
 	 * Returns the originating {@link IType}.
 	 * </p>
 	 * <p>
@@ -98,4 +108,12 @@ public interface IReference {
 	 * @return the originating {@link IType}.
 	 */
 	IType getType();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean hasAssociatedType();
 }

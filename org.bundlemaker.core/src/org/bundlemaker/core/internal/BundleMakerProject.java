@@ -29,6 +29,7 @@ import org.bundlemaker.core.resource.Reference;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.ResourceStandin;
+import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.store.IDependencyStore;
 import org.bundlemaker.core.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -261,49 +262,28 @@ public class BundleMakerProject implements IBundleMakerProject {
 		List<FileBasedContent> fileBasedContents = _projectDescription
 				.getModifiableFileBasedContent();
 
-		//TODO
-		
-//		for (FileBasedContent fileBasedContent : fileBasedContents) {
-//
-//			Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
-//
-//			if (fileBasedContent.isResourceContent()) {
-//
-//				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
-//						.getResourceContent()).getModifiableBinaryResources()) {
-//
-//					setupResourceStandin(resourceStandin, map, false);
-//					Assert.isNotNull(resourceStandin.getResource());
-//
-//					// hash the contained binary types
-//					for (String containedType : resourceStandin.getResource()
-//							.getContainedTypes()) {
-//
-//						typeToResourceStandin.put(containedType,
-//								resourceStandin);
-//					}
-//				}
-//
-//				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
-//						.getResourceContent()).getModifiableSourceResources()) {
-//
-//					setupResourceStandin(resourceStandin, map, true);
-//					Assert.isNotNull(resourceStandin.getResource());
-//
-//					// set the associated resources
-//					for (String containedType : resourceStandin.getResource()
-//							.getContainedTypes()) {
-//
-//						if (typeToResourceStandin.containsKey(containedType)) {
-//
-//							((Resource) resourceStandin.getResource())
-//									.addAssociatedResource((Resource) typeToResourceStandin
-//											.get(containedType).getResource());
-//						}
-//					}
-//				}
-//			}
-//		}
+		// TODO
+		for (FileBasedContent fileBasedContent : fileBasedContents) {
+
+			Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
+
+			if (fileBasedContent.isResourceContent()) {
+
+				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
+						.getResourceContent()).getModifiableBinaryResources()) {
+
+					setupResourceStandin(resourceStandin, map, false);
+					Assert.isNotNull(resourceStandin.getResource());
+				}
+
+				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
+						.getResourceContent()).getModifiableSourceResources()) {
+
+					setupResourceStandin(resourceStandin, map, true);
+					Assert.isNotNull(resourceStandin.getResource());
+				}
+			}
+		}
 
 		// set 'READY' state
 		_projectState = BundleMakerProjectState.OPENED;
@@ -474,28 +454,52 @@ public class BundleMakerProject implements IBundleMakerProject {
 	private void setupResourceStandin(ResourceStandin resourceStandin,
 			Map<Resource, Resource> map, boolean isSource) {
 
-		// TODO
-		// System.out
-		// .println(resourceStandin.getFileBasedContentId() + " : "
-		// + resourceStandin.getRoot() + " : "
-		// + resourceStandin.getPath());
-
+		// get the associated resource
 		Resource resource = map.get(new ResourceKey(resourceStandin
 				.getContentId(), resourceStandin.getRoot(), resourceStandin
 				.getPath()));
 
+		// create empty resource if no resource was stored in the database
 		if (resource == null) {
-
-			// comment: we can use a dummy StringCache here...
 			resource = new Resource(resourceStandin.getContentId(),
 					resourceStandin.getRoot(), resourceStandin.getPath());
 		}
 
+		// associate resource and resource stand-in...
 		resourceStandin.setResource(resource);
-
-		// set the opposite
-		// TODO: MOVE
+		// ... and set the opposite
 		resource.setResourceStandin(resourceStandin);
+
+		// set the references
+		Set<Reference> resourceReferences = new HashSet<Reference>();
+		for (Reference reference : resource.getModifiableReferences()) {
+			Reference newReference = new Reference(reference);
+			newReference.setResource(resource);
+			resourceReferences.add(newReference);
+		}
+		resource.getModifiableReferences().clear();
+		resource.getModifiableReferences().addAll(resourceReferences);
+
+		// set the type-back-references
+		for (Type type : resource.getModifiableContainedTypes()) {
+
+			if (isSource) {
+				type.setSourceResource(resource);
+			} else {
+				type.setBinaryResource(resource);
+			}
+
+			// set the references
+			Set<Reference> typeReferences = new HashSet<Reference>();
+			for (Reference reference : type.getModifiableReferences()) {
+				Reference newReference = new Reference(reference);
+				newReference.setType(type);
+				typeReferences.add(newReference);
+			}
+			type.getModifiableReferences().clear();
+			type.getModifiableReferences().addAll(typeReferences);
+		}
+
 	}
 
 	/**

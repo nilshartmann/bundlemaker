@@ -1,33 +1,39 @@
-package org.bundlemaker.core.resource.internal;
+package org.bundlemaker.core.resource;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.resource.Reference;
-import org.bundlemaker.core.resource.ReferenceKey;
-import org.bundlemaker.core.resource.ReferenceType;
 import org.eclipse.core.runtime.Assert;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public abstract class ReferenceContainer {
 
-	/** - */
+	/** the fly weight cahce */
 	private FlyWeightCache _flyWeightCache;
 
-	/** - */
+	/** the reference map */
 	private Map<ReferenceKey, Reference> _referenceMap;
 
-	/** - */
+	/** the references */
 	private Set<Reference> _references;
 
 	/**
 	 * <p>
+	 * Creates a new instance of type {@link ReferenceContainer}.
 	 * </p>
 	 * 
 	 * @param cache
 	 */
 	public ReferenceContainer(FlyWeightCache cache) {
+		Assert.isNotNull(cache);
 
+		//
 		_flyWeightCache = cache;
 		_referenceMap = new HashMap<ReferenceKey, Reference>();
 	}
@@ -36,11 +42,19 @@ public abstract class ReferenceContainer {
 	 * <p>
 	 * </p>
 	 * 
+	 * @return
+	 */
+	protected abstract Set<Reference> createReferencesSet();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
 	 * @param fullyQualifiedName
 	 */
 	public void recordReference(String fullyQualifiedName,
-			ReferenceType referenceType, Boolean isExtends,
-			Boolean isImplements, Boolean isCompiletime, Boolean isRuntime) {
+			ReferenceType referenceType, boolean isExtends,
+			boolean isImplements, boolean isCompiletime, boolean isRuntime) {
 
 		//
 		Assert.isNotNull(fullyQualifiedName);
@@ -66,10 +80,8 @@ public abstract class ReferenceContainer {
 		if (reference == null) {
 
 			reference = _flyWeightCache.getReference(fullyQualifiedName,
-					referenceType, isExtends != null ? isExtends : false,
-					isImplements != null ? isImplements : false,
-					isCompiletime != null ? isCompiletime : false,
-					isRuntime != null ? isRuntime : false);
+					referenceType, isExtends, isImplements, isCompiletime,
+					isRuntime);
 
 			references().add(reference);
 			_referenceMap.put(key, reference);
@@ -78,16 +90,10 @@ public abstract class ReferenceContainer {
 		}
 
 		// return if current dependency matches the requested one
-		// TODO !!!!
-		// TODO !!!!
-		// TODO !!!!
-		if (equals(
-				isExtends,
-				reference.isExtends()
-						&& equals(isImplements, reference.isImplements())
-						&& equals(isCompiletime,
-								reference.isCompileTimeReference())
-						&& equals(isRuntime, reference.isRuntimeReference()))) {
+		if (isExtends == reference.isExtends()
+				&& isImplements == reference.isImplements()
+				&& isCompiletime == reference.isCompileTimeReference()
+				&& isRuntime == reference.isRuntimeReference()) {
 			return;
 		}
 
@@ -105,8 +111,6 @@ public abstract class ReferenceContainer {
 		_referenceMap.put(key, reference);
 	}
 
-	protected abstract Set<Reference> createReferencesSet();
-
 	/**
 	 * <p>
 	 * </p>
@@ -115,24 +119,8 @@ public abstract class ReferenceContainer {
 	 * @param b2
 	 * @return
 	 */
-	private boolean equals(Boolean b1, boolean b2) {
-
-		//
-		return b1 != null && b1.booleanValue() == b2;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param b1
-	 * @param b2
-	 * @return
-	 */
-	private boolean chooseValue(Boolean b1, boolean b2) {
-
-		//
-		return b2 || b1 != null && b1.booleanValue();
+	private boolean chooseValue(boolean b1, boolean b2) {
+		return b1 || b2;
 	}
 
 	/**
@@ -143,10 +131,12 @@ public abstract class ReferenceContainer {
 	 */
 	private Set<Reference> references() {
 
+		// create if necessary
 		if (_references == null) {
 			_references = createReferencesSet();
 		}
 
+		// return the references
 		return _references;
 	}
 

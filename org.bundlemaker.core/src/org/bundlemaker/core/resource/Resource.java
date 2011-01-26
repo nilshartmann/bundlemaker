@@ -5,10 +5,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
-import org.bundlemaker.core.resource.internal.FlyWeightCache;
-import org.bundlemaker.core.resource.internal.ReferenceContainer;
 import org.eclipse.core.runtime.Assert;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class Resource extends ResourceKey implements IResource {
 
 	/** - */
@@ -36,14 +40,15 @@ public class Resource extends ResourceKey implements IResource {
 	 * @param path
 	 */
 	public Resource(String contentId, String root, String path,
-			FlyWeightCache cache, ResourceCache resourceCache) {
-		super(contentId, root, path, cache);
+			ResourceCache resourceCache) {
+		super(contentId, root, path, resourceCache.getFlyWeightCache());
 
 		Assert.isNotNull(resourceCache);
 
 		_resourceCache = resourceCache;
 
-		_referenceContainer = new ReferenceContainer(cache) {
+		_referenceContainer = new ReferenceContainer(
+				resourceCache.getFlyWeightCache()) {
 			@Override
 			protected Set<Reference> createReferencesSet() {
 				return references();
@@ -88,13 +93,22 @@ public class Resource extends ResourceKey implements IResource {
 				isExtends, isImplements, isCompiletime, isRuntime);
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @return
+	 */
 	public Type getOrCreateType(String fullyQualifiedName) {
 
 		//
 		Type type = _resourceCache.getOrCreateType(fullyQualifiedName);
 
+		//
 		containedTypes().add(type);
 
+		//
 		return type;
 	}
 
@@ -133,14 +147,19 @@ public class Resource extends ResourceKey implements IResource {
 	 */
 	private Set<Reference> references() {
 
+		//
 		if (_references == null) {
 			_references = new HashSet<Reference>();
 		}
 
+		//
 		return _references;
 	}
 
 	/**
+	 * <p>
+	 * </p>
+	 * 
 	 * @return
 	 */
 	private Set<Type> containedTypes() {

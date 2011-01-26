@@ -1,6 +1,5 @@
 package org.bundlemaker.core.resource;
 
-import org.bundlemaker.core.resource.internal.FlyWeightString;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -17,10 +16,10 @@ public class Reference implements IReference {
 	/** - */
 	private ReferenceAttributes _referenceAttributes;
 
-	/** non-persistent: the containing resource */
+	/** non-persistent back-reference: the containing resource */
 	private Resource _resource;
 
-	/** non-persistent: the containing type */
+	/** non-persistent back-reference: the containing type */
 	private Type _type;
 
 	/**
@@ -114,13 +113,48 @@ public class Reference implements IReference {
 	}
 
 	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
+	 * {@inheritDoc}
 	 */
 	public IResource getResource() {
 		return _resource;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasAssociatedResource() {
+		return _resource != null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasAssociatedType() {
+		return _type != null;
+	}
+
+	/**
+	 * <p>
+	 * Set the back-reference.
+	 * </p>
+	 * 
+	 * @param resource
+	 */
+	public void setResource(Resource resource) {
+		_resource = resource;
+	}
+
+	/**
+	 * <p>
+	 * Set the back-reference.
+	 * </p>
+	 * 
+	 * @param type
+	 */
+	public void setType(Type type) {
+		_type = type;
 	}
 
 	/**
@@ -162,25 +196,4 @@ public class Reference implements IReference {
 		return "Reference [_fullyQualifiedName=" + _fullyQualifiedName
 				+ ", _referenceAttributes=" + _referenceAttributes + "]";
 	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resource
-	 */
-	public void setResource(Resource resource) {
-		_resource = resource;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param type
-	 */
-	public void setType(Type type) {
-		_type = type;
-	}
-
 }

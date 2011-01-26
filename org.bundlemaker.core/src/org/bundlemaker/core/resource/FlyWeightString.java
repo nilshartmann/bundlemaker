@@ -1,4 +1,4 @@
-package org.bundlemaker.core.resource.internal;
+package org.bundlemaker.core.resource;
 
 import org.eclipse.core.runtime.Assert;
 

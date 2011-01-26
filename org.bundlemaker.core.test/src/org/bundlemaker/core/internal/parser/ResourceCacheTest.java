@@ -4,11 +4,11 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.resource.ArchiveFileCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.ResourceStandin;
-import org.bundlemaker.core.resource.internal.ArchiveFileCache;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.CoreException;
