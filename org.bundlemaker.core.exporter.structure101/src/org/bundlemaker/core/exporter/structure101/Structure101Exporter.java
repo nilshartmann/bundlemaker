@@ -22,7 +22,6 @@ import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.StopWatch;
 
 /**
@@ -111,30 +110,29 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 			IResourceModule resourceModule = (IResourceModule) typeModule;
 
 			IReferencedModulesQueryResult queryResult = modularizedSystem
-					.getReferencedModules(resourceModule, true);
+					.getReferencedModules(resourceModule, false, true);
 
 			Set<TypeToTypeDependency> dependencies = new HashSet<TypeToTypeDependency>();
 
-			for (Entry<IReference, ITypeModule> referencedModules : queryResult
+			for (Entry<IReference, ITypeModule> referencedModule : queryResult
 					.getReferencedModulesMap().entrySet()) {
 
-				if (referencedModules.getKey().hasAssociatedType()) {
+				if (referencedModule.getKey().hasAssociatedType()) {
 
 					// from
 					String from = _identifierMap.getClassId(resourceModule,
-							referencedModules.getKey().getType()
+							referencedModule.getKey().getType()
 									.getFullyQualifiedName());
 
 					// to
-					String to = _identifierMap.getClassId(referencedModules
-							.getValue(), referencedModules.getKey()
+					String to = _identifierMap.getClassId(referencedModule
+							.getValue(), referencedModule.getKey()
 							.getFullyQualifiedName());
 
 					// dependency
 					TypeToTypeDependency dependency = new TypeToTypeDependency(
-							from, to,
-							referencedModules.getKey().isImplements(),
-							referencedModules.getKey().isExtends());
+							from, to, referencedModule.getKey().isImplements(),
+							referencedModule.getKey().isExtends());
 
 					//
 					dependencies.add(dependency);

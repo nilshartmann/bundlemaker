@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.FlyWeightCache;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.Type;

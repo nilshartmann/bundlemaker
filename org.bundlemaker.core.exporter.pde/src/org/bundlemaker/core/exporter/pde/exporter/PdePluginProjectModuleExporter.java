@@ -221,7 +221,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 
 		//
 		IReferencedModulesQueryResult referencedModules = modularizedSystem
-				.getReferencedModules(module, true);
+				.getReferencedModules(module, true, true);
 
 		List<IRequiredBundleDescription> requiredBundleDescriptions = new LinkedList<IRequiredBundleDescription>();
 

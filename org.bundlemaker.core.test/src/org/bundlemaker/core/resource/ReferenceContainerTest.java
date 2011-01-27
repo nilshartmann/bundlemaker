@@ -81,7 +81,7 @@ public class ReferenceContainerTest {
 	public void referenceUpdate() {
 
 		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, false, false, false);
+				ReferenceType.TYPE_REFERENCE, true, false, false, true);
 
 		_referenceContainer.recordReference("a.b.c",
 				ReferenceType.TYPE_REFERENCE, true, true, false, false);
@@ -92,7 +92,7 @@ public class ReferenceContainerTest {
 		Assert.assertEquals(1, _references.size());
 
 		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true,
-				false, false);
+				false, true);
 	}
 
 	/**

@@ -1,19 +1,17 @@
 package org.bundlemaker.itest.eclipse;
 
+import java.io.File;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import junit.framework.Assert;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.exporter.ModuleExporterContext;
+import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceStandin;
@@ -103,30 +101,47 @@ public class IntegrationTest {
 		assertModelSetup(modularizedSystem);
 
 		//
-		IReferencedModulesQueryResult queryResult = modularizedSystem
-				.getReferencedModules(modularizedSystem
-						.getResourceModule(new ModuleIdentifier("eclipse",
-								"3.6.1")), true);
+		exportToStructure101(bundleMakerProject, modularizedSystem);
 
-		for (ITypeModule module : queryResult.getReferencedModules()) {
-			System.out.println(module.getModuleIdentifier().toString());
-		}
+		// //
+		// IReferencedModulesQueryResult queryResult = modularizedSystem
+		// .getReferencedModules(modularizedSystem
+		// .getResourceModule(new ModuleIdentifier("eclipse",
+		// "3.6.1")), true);
+		//
+		// for (ITypeModule module : queryResult.getReferencedModules()) {
+		// System.out.println(module.getModuleIdentifier().toString());
+		// }
+		//
+		// for (Entry<IReference, Set<ITypeModule>> entry : queryResult
+		// .getReferencesWithAmbiguousModules().entrySet()) {
+		// System.out.println(" - " + entry.getKey());
+		// System.out.println("   - " + entry.getValue());
+		// }
+		//
+		// System.out
+		// .println("*****************************************************");
+		//
+		// for (Entry<IReference, ITypeModule> entry : queryResult
+		// .getReferencedModulesMap().entrySet()) {
+		//
+		// System.out.println(" - " + entry.getKey());
+		// System.out.println("   - " + entry.getValue());
+		// }
+	}
 
-		for (Entry<IReference, Set<ITypeModule>> entry : queryResult
-				.getReferencesWithAmbiguousModules().entrySet()) {
-			System.out.println(" - " + entry.getKey());
-			System.out.println("   - " + entry.getValue());
-		}
+	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
+			IModularizedSystem modularizedSystem) throws Exception {
+		// create the exporter context
+		ModuleExporterContext exporterContext = new ModuleExporterContext(
+				bundleMakerProject, new File("c:/temp"), modularizedSystem);
 
-		System.out
-				.println("*****************************************************");
-
-		for (Entry<IReference, ITypeModule> entry : queryResult
-				.getReferencedModulesMap().entrySet()) {
-
-			System.out.println(" - " + entry.getKey());
-			System.out.println("   - " + entry.getValue());
-		}
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		Structure101Exporter exporter = new Structure101Exporter();
+		exporter.export(modularizedSystem, exporterContext);
+		stopWatch.stop();
+		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}
 
 	/**

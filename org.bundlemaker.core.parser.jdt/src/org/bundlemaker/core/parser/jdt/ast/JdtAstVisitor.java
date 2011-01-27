@@ -752,7 +752,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		}
 
 		// resolve the type binding
-		resolveTypeBinding(type.resolveBinding(), false, false);
+		resolveTypeBinding(type.resolveBinding(), isExtends, isImplements);
 	}
 
 	/**
@@ -877,7 +877,7 @@ public class JdtAstVisitor extends ASTVisitor {
 				addReferencedType(
 						((IType) typeBinding.getJavaElement())
 								.getFullyQualifiedName('$'),
-						false, false);
+						isExtends, isImplements);
 			}
 		}
 
@@ -955,6 +955,7 @@ public class JdtAstVisitor extends ASTVisitor {
 				_currentTypes.peek().recordReference(referencedType,
 						ReferenceType.TYPE_REFERENCE, isExtends, isImplements,
 						true, false);
+
 			} else {
 
 				_javaSourceResource.recordReference(referencedType,
