@@ -191,11 +191,23 @@ public class ResourceModule extends
 		return this;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 */
 	public void initializeContainedTypes() {
+
+		// iterate over all containers and initialize the contained types
 		doWithAllContainers(new ContainerClosure<ResourceContainer>() {
+
 			@Override
 			public boolean doWithContainer(ResourceContainer resourceContainer) {
-				resourceContainer.initializeContainedTypes();
+
+				// initialize the contained types of the resource container
+				resourceContainer.initialize();
+
+				// return false to indicate that all containers should be
+				// processed
 				return false;
 			}
 		});

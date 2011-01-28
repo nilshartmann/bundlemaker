@@ -100,7 +100,6 @@ public class ModularizedSystem implements IModularizedSystem {
 	public void applyTransformations() {
 
 		// step 1: clear prior results
-		System.out.println("// step 1: clear prior results");
 		_typeModules.clear();
 		_resourceModules.clear();
 		_typeToModuleListMap.clear();
@@ -170,15 +169,13 @@ public class ModularizedSystem implements IModularizedSystem {
 		}
 
 		// step 5: set up the contained lists
-		System.out.println("// step 5: set up ModifiableResourceModules");
-
 		for (ResourceModule module : _resourceModules) {
 
 			// initialize the contained types
 			module.initializeContainedTypes();
 
 			// get
-			for (String containedType : module.getContainedTypes()) {
+			for (String containedType : module.getContainedTypeNames()) {
 
 				//
 				if (!_typeToModuleListMap.containsKey(containedType)) {
@@ -200,7 +197,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		for (TypeModule module : _typeModules) {
 
 			//
-			for (String containedType : module.getContainedTypes()) {
+			for (String containedType : module.getContainedTypeNames()) {
 
 				//
 				if (!_typeToModuleListMap.containsKey(containedType)) {
@@ -512,7 +509,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		for (ITypeModule typeModule : getAllModules()) {
 
 			// iterate over contained packages
-			for (String containedPackage : typeModule.getContainedPackages()) {
+			for (String containedPackage : typeModule.getContainedPackageNames()) {
 
 				// add
 				if (result.containsKey(containedPackage)) {

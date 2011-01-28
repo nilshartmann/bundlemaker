@@ -7,12 +7,12 @@ public class ResourceContainerTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetContainedPackages() {
-		new ResourceContainer().getContainedPackages().add("");
+		new ResourceContainer().getContainedPackageNames().add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetContainedTypes() {
-		new ResourceContainer().getContainedTypes().add("");
+		new ResourceContainer().getContainedTypeNames().add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

@@ -225,7 +225,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 		Map<String, List<String>> packageList = new HashMap<String, List<String>>();
 
 		// get the contained types
-		for (String fullyQualifiedType : typeModule.getContainedTypes()) {
+		for (String fullyQualifiedType : typeModule.getContainedTypeNames()) {
 
 			// get the package
 			String packageName = Structure101ExporterUtils

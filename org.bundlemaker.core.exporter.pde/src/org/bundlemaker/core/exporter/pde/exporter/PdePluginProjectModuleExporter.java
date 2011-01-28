@@ -170,7 +170,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		}
 
 		// export packages
-		Set<String> containedPackages = module.getContainedPackages();
+		Set<String> containedPackages = module.getContainedPackageNames();
 		List<IPackageExportDescription> exportDescriptions = new LinkedList<IPackageExportDescription>();
 		for (String containedPackage : containedPackages) {
 			IPackageExportDescription exportDescription = bundleProjectService

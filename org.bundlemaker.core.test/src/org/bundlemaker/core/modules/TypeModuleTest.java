@@ -25,7 +25,7 @@ public class TypeModuleTest {
 		TypeModule module = new TypeModule(new ModuleIdentifier("name",
 				"version"));
 
-		module.getContainedPackages().add("");
+		module.getContainedPackageNames().add("");
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class TypeModuleTest {
 		TypeModule module = new TypeModule(new ModuleIdentifier("name",
 				"version"));
 
-		module.getContainedTypes().add("");
+		module.getContainedTypeNames().add("");
 	}
 
 	/**
@@ -76,6 +76,6 @@ public class TypeModuleTest {
 		Assert.assertEquals(100000, module.getSelfContainer()
 				.getModifiableContainedTypes().size());
 
-		Assert.assertEquals(100000, module.getContainedTypes().size());
+		Assert.assertEquals(100000, module.getContainedTypeNames().size());
 	}
 }

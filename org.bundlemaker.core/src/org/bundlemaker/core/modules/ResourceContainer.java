@@ -131,38 +131,36 @@ public class ResourceContainer extends TypeContainer implements
 
 	/**
 	 * <p>
+	 * Initializes the contained types of this resource container.
 	 * </p>
-	 * 
-	 * @param resourceContainer
 	 */
-	public void initializeContainedTypes() {
+	public void initialize() {
 
-		//
+		// step 1: iterate over all binary resources...
 		for (IResourceStandin resourceStandin : _binaryResources) {
 
-			// step 1: add all contained types
+			// ... and add all contained types
 			for (IType type : resourceStandin.getResource().getContainedTypes()) {
 				getModifiableContainedTypes().add(type.getFullyQualifiedName());
 			}
 
-			//
+			// set the back-reference
 			((ResourceStandin) resourceStandin)
 					.setResourceModule(_resourceModule);
 		}
 
-		//
+		// step 2: iterate over all source resources...
 		for (IResourceStandin resourceStandin : _sourceResources) {
 
-			// step 1: add all contained types
+			// ... and add all contained types
 			for (IType type : resourceStandin.getResource().getContainedTypes()) {
 				getModifiableContainedTypes().add(type.getFullyQualifiedName());
 			}
 
-			//
+			// set the back-reference
 			((ResourceStandin) resourceStandin)
 					.setResourceModule(_resourceModule);
 		}
-
 	}
 
 	/**
@@ -235,7 +233,7 @@ public class ResourceContainer extends TypeContainer implements
 			for (IReference reference : resource.getReferences()) {
 
 				if (!hideContainedTypes
-						|| !getContainedTypes().contains(
+						|| !getContainedTypeNames().contains(
 								reference.getFullyQualifiedName())) {
 
 					String entry;
@@ -285,7 +283,7 @@ public class ResourceContainer extends TypeContainer implements
 			for (IReference reference : resource.getReferences()) {
 
 				if (!hideContainedTypes
-						|| !getContainedTypes().contains(
+						|| !getContainedTypeNames().contains(
 								reference.getFullyQualifiedName())) {
 
 					result.add(reference);
@@ -298,7 +296,7 @@ public class ResourceContainer extends TypeContainer implements
 				for (IReference reference : type.getReferences()) {
 
 					if (!hideContainedTypes
-							|| !getContainedTypes().contains(
+							|| !getContainedTypeNames().contains(
 									reference.getFullyQualifiedName())) {
 
 						result.add(reference);

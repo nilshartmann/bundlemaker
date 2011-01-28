@@ -1,7 +1,10 @@
 package org.bundlemaker.itest.spring;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -11,11 +14,14 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.ModuleExporterContext;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
@@ -102,28 +108,10 @@ public class IntegrationTest {
 		IntegrationTestUtils
 				.addModularizeSpringTransformation(modularizedSystem);
 
-		// // // add the 'removeResourcesTransformation'
-		// // RemoveResourcesTransformation removeResourcesTransformation =
-		// // TransformationFactory.eINSTANCE
-		// // .createRemoveResourcesTransformation();
-		// // removeResourcesTransformation
-		// // .addResourceSet("testng", "5.8",
-		// // new String[] { "com/thoughtworks/qdox/model/*",
-		// // "com/thoughtworks/qdox/model/util/*",
-		// // "com/thoughtworks/qdox/*",
-		// // "com/thoughtworks/qdox/parser/*",
-		// // "com/thoughtworks/qdox/parser/structs/*",
-		// // "com/thoughtworks/qdox/directorywalker/*",
-		// // "com/thoughtworks/qdox/parser/impl/*",
-		// // "bsh/commands/*", "bsh/*", "bsh/servlet/*",
-		// // "bsh/org/objectweb/asm/*", "bsh/util/*",
-		// // "bsh/classpath/*", "bsh/collection/*",
-		// // "bsh/reflect/*" }, null);
-		// // modularizedSystem.getTransformations().add(
-		// // removeResourcesTransformation);
-
 		// apply the transformation
 		modularizedSystem.applyTransformations();
+
+		checkModularizedSystem(modularizedSystem);
 
 		// export to structure 101
 		exportToStructure101(bundleMakerProject, modularizedSystem);
@@ -289,8 +277,74 @@ public class IntegrationTest {
 		// // context);
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 */
+	private void checkModularizedSystem(IModularizedSystem modularizedSystem) {
+
+		Set<IResourceModule> resourceModules = modularizedSystem
+				.getResourceModules();
+
+		Assert.assertEquals(112, resourceModules.size());
+
+		IResourceModule resourceModule = modularizedSystem
+				.getResourceModule(new ModuleIdentifier("Spring-Core", "2.5.6"));
+
+		Assert.assertNotNull(resourceModule);
+
+		Set<String> typeNames = resourceModule.getContainedTypeNames();
+		Assert.assertEquals(212, typeNames.size());
+
+		int externalBinaryReferencesCount = resourceModule.getAllReferences(
+				true, false).size();
+
+		int externalBinaryAndSourceReferencesCount = resourceModule
+				.getAllReferences(true, true).size();
+
+		int binaryReferencesCount = resourceModule.getAllReferences(false,
+				false).size();
+
+		int binaryAndSourceReferencesCount = resourceModule.getAllReferences(
+				false, true).size();
+
+		System.out.println(externalBinaryReferencesCount);
+		System.out.println(externalBinaryAndSourceReferencesCount);
+		System.out.println(binaryReferencesCount);
+		System.out.println(binaryAndSourceReferencesCount);
+
+		Set<IReference> externalBinaryReferences = resourceModule
+				.getAllReferences(true, false);
+
+		for (IReference reference : resourceModule.getAllReferences(true, true)) {
+
+			if (reference.isCompileTimeReference()
+					&& !reference.isRuntimeReference()) {
+				
+				/** TODO **/
+				
+				if (reference.hasAssociatedType()) {
+					System.out.println(reference);
+					System.out.println(reference.getType().getSourceResource()
+							.getPath());
+					System.out.println(reference.getType().getBinaryResource()
+							.getPath());
+				}
+			}
+
+			// if (!externalBinaryReferences.contains(reference)) {
+			// System.out.println(" - " + reference);
+			// } else {
+			// System.out.println(" + " + reference);
+			// }
+		}
+	}
+
 	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
 			IModularizedSystem modularizedSystem) throws Exception {
+
 		// create the exporter context
 		ModuleExporterContext exporterContext = new ModuleExporterContext(
 				bundleMakerProject, new File("c:/temp"), modularizedSystem);
@@ -303,6 +357,12 @@ public class IntegrationTest {
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleMakerProject
+	 */
 	private void checkResourceModel(IBundleMakerProject bundleMakerProject) {
 
 		// check each file content entry
@@ -311,6 +371,9 @@ public class IntegrationTest {
 
 			//
 			Assert.assertNotNull(fileBasedContent.getResourceContent());
+
+			//
+			Map<String, IType> typeMap = new HashMap<String, IType>();
 
 			// step 1: assert binary content
 			for (IResourceStandin resourceStandin : fileBasedContent
@@ -347,6 +410,11 @@ public class IntegrationTest {
 						Assert.assertEquals(resourceStandin.getResource(),
 								type.getBinaryResource());
 
+						//
+						typeMap.put(type.getFullyQualifiedName(), type);
+
+						Map<String, IReference> referenceMap = new HashMap<String, IReference>();
+
 						for (IReference reference : type.getReferences()) {
 
 							Assert.assertNotNull(reference
@@ -355,6 +423,16 @@ public class IntegrationTest {
 									.hasAssociatedResource());
 							Assert.assertTrue(reference.hasAssociatedType());
 							Assert.assertEquals(type, reference.getType());
+
+							//
+							Assert.assertFalse(String.format(
+									"Duplicate reference '%s' -> '%s'",
+									reference, referenceMap.get(reference)),
+									referenceMap.containsKey(reference
+											.getFullyQualifiedName()));
+
+							referenceMap.put(reference.getFullyQualifiedName(),
+									reference);
 
 						}
 					}
@@ -402,6 +480,21 @@ public class IntegrationTest {
 						Assert.assertEquals(sourceResource,
 								type.getSourceResource());
 
+						Assert.assertTrue(
+								String.format(
+										"Type '%s' is not contained in the binary type map.",
+										type.getFullyQualifiedName()), typeMap
+										.containsKey(type
+												.getFullyQualifiedName()));
+
+						Assert.assertSame(
+								String.format(
+										"Type '%s' is not contained in the binary type map.",
+										type.getFullyQualifiedName()), type,
+								typeMap.get(type.getFullyQualifiedName()));
+
+						Map<String, IReference> referenceMap = new HashMap<String, IReference>();
+
 						for (IReference reference : type.getReferences()) {
 
 							Assert.assertNotNull(reference
@@ -411,6 +504,15 @@ public class IntegrationTest {
 							Assert.assertTrue(reference.hasAssociatedType());
 							Assert.assertEquals(type, reference.getType());
 
+							//
+							Assert.assertFalse(String.format(
+									"Duplicate reference '%s' -> '%s'",
+									reference, referenceMap.get(reference)),
+									referenceMap.containsKey(reference
+											.getFullyQualifiedName()));
+
+							referenceMap.put(reference.getFullyQualifiedName(),
+									reference);
 						}
 					}
 				}

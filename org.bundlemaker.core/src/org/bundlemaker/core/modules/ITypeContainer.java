@@ -2,7 +2,6 @@ package org.bundlemaker.core.modules;
 
 import java.util.Set;
 
-
 /**
  * <p>
  * </p>
@@ -11,11 +10,37 @@ import java.util.Set;
  */
 public interface ITypeContainer {
 
-	Set<String> getContainedTypes();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Set<String> getContainedTypeNames();
 
-	Set<String> getContainedTypes(IQueryFilter filter);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param filter
+	 * @return
+	 */
+	Set<String> getContainedTypeNames(IQueryFilter filter);
 
-	Set<String> getContainedPackages();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Set<String> getContainedPackageNames();
 
-	Set<String> getContainedPackages(IQueryFilter filter);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param filter
+	 * @return
+	 */
+	Set<String> getContainedPackageNames(IQueryFilter filter);
 }

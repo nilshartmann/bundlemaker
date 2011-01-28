@@ -164,7 +164,7 @@ public class BundlorBasedManifestCreator {
 			boolean includeSourceReferences) {
 
 		StandardReadablePartialManifest partialManifest = new StandardReadablePartialManifest();
-		for (String containedPackage : _resourceModule.getContainedPackages()) {
+		for (String containedPackage : _resourceModule.getContainedPackageNames()) {
 			partialManifest.recordExportPackage(containedPackage);
 		}
 		for (String referencedType : _resourceModule.getReferencedTypes(true,
