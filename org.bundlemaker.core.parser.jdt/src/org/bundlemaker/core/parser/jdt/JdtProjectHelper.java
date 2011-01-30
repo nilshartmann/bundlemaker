@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -61,8 +60,8 @@ public class JdtProjectHelper {
 		IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
 		entries.add(classpathEntry);
 
-		for (FileBasedContent projectContent : ((BundleMakerProject) project)
-				.getProjectDescription().getModifiableFileBasedContent()) {
+		for (FileBasedContent projectContent : project.getProjectDescription()
+				.getModifiableFileBasedContent()) {
 
 			if (projectContent.isResourceContent()) {
 
@@ -72,7 +71,7 @@ public class JdtProjectHelper {
 							iClasspathEntry.makeAbsolute(), null, null);
 					entries.add(classpathEntry);
 				}
-				
+
 				// add source pathes
 				if (!projectContent.getResourceContent().getSourcePaths()
 						.isEmpty()) {
@@ -112,11 +111,11 @@ public class JdtProjectHelper {
 										.getFolder(iPath);
 								linkFolder
 										.createLink(iSourcepathEntry, 0, null);
-								
+
 								classpathEntry = JavaCore
 										.newSourceEntry(linkFolder
 												.getFullPath());
-								
+
 								// projectContent.setSourcePath(linkFolder.getFullPath());
 								entries.add(classpathEntry);
 							}

@@ -21,7 +21,7 @@ public class TypeContainerTest {
 	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetContainedPackages() {
-		new TypeContainer().getContainedPackages().add("");
+		new TypeContainer().getContainedPackageNames().add("");
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class TypeContainerTest {
 	 */
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetContainedTypes() {
-		new TypeContainer().getContainedTypes().add("");
+		new TypeContainer().getContainedTypeNames().add("");
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class TypeContainerTest {
 		stopWatch.start();
 
 		Set<String> containedTypes = typeContainer
-				.getContainedTypes(new IQueryFilter() {
+				.getContainedTypeNames(new IQueryFilter() {
 
 					@Override
 					public boolean matches(String content) {

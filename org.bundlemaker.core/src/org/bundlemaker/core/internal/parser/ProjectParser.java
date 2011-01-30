@@ -111,6 +111,9 @@ public class ProjectParser {
 
 			// parse the content
 			parseContent(fileBasedContent, progressMonitor, cache);
+
+			// reset the type cache
+			cache.resetTypeCache();
 		}
 
 		// TODO

@@ -2,6 +2,10 @@ package org.bundlemaker.core.resource;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.resource.FlyWeightCache;
+import org.bundlemaker.core.resource.Reference;
+import org.bundlemaker.core.resource.ReferenceAttributes;
+import org.bundlemaker.core.resource.ReferenceType;
 import org.junit.Test;
 
 public class FlyWeightCacheTest {
@@ -50,14 +54,14 @@ public class FlyWeightCacheTest {
 			ReferenceAttributes attributes = cache.getReferenceAttributes(
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0);
+					i % 3 == 0, i % 5 == 0, i % 7 == 0);
 		}
 
 		//
-		Assert.assertEquals(8, cache._referenceAttributesCache.size());
+		Assert.assertEquals(32, cache._referenceAttributesCache.size());
 	}
 
-	@Test(timeout = 6000)
+	@Test(timeout = 9000)
 	public void testGetReference() {
 
 		//
@@ -70,15 +74,15 @@ public class FlyWeightCacheTest {
 			Reference reference = cache.getReference("fullyQualifiedName" + i,
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0);
+					i % 3 == 0, i % 5 == 0, i % 7 == 0);
 
 			reference = cache.getReference("fullyQualifiedName",
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0);
+					i % 3 == 0, i % 5 == 0, i % 7 == 0);
 		}
 
 		//
-		Assert.assertEquals(1000008, cache._referenceCache.size());
+		Assert.assertEquals(1000032, cache._referenceCache.size());
 	}
 }

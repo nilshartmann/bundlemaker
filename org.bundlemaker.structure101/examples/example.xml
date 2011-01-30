@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data flavor="org.bundlemaker.structure101">
+   <modules>
+   
+     <module type="osgibundle" name="APP/DEV/guiBundle" id="1" >
+         <module type="package" name="de.example.app.gui" id="2" >
+			<module type="class" name="PersonPanel" id="3" />
+			<module type="class" name="CustomerPanel" id="4" />
+		 </module>
+		 <module type="package" name="de.example.app.gui.controller" id="5" >
+			<module type="class" name="PersonController" id="6" />
+			<module type="class" name="CustomerController" id="7" />
+		 </module>
+	 </module> 
+   
+    <module type="osgibundle" name="APP/DEV/TEST/guiBundle_test" id="8"  >
+         <module type="package" name="de.example.app.gui" id="9" >
+			<module type="class" name="PersonPanelTest" id="10" />
+			<module type="class" name="CustomerPanelTest" id="11" />
+		 </module>
+		 <module type="package" name="de.example.app.gui.controller" id="12" >
+			<module type="class" name="PersonControllerTest" id="13" />
+			<module type="class" name="CustomerControllerTest" id="14" />
+		 </module>
+	 </module>  
+	  
+     <module type="osgibundle" name="FRAMEWORK/DEV/coreBundle" id="15"  >
+         <module type="package" name="de.example.core" id="16" >
+			<module type="class" name="Customer" id="17" />
+			<module type="class" name="Person" id="18" />
+		 </module>
+		 <module type="package" name="de.example.core.ext" id="19" >
+			<module type="class" name="ExtCustomer" id="20" />
+			<module type="class" name="ExtPerson" id="21" />
+		 </module>
+	 </module> 
+	  
+     <module type="osgibundle" name="FRAMEWORK/DEV/utilBundle" id="22"  >
+         <module type="package" name="de.example.util" id="23" >
+			<module type="class" name="Sorter" id="24" />
+			<module type="class" name="Comparator" id="25" />
+		 </module>
+		 <module type="package" name="de.example.util.io" id="26" >
+			<module type="class" name="SocketImpl" id="27" />
+			<module type="class" name="SocketReader" id="28" />
+		 </module>
+	 </module>  	
+	  
+   </modules>
+   
+   <dependencies>
+      <dependency from="24" to="8" type="requires"/>
+      <dependency from="9" to="23" type="requires"/>
+      <dependency from="17" to="11" type="requires"/>
+      <dependency from="3" to="24" type="requires"/>
+      <dependency from="2" to="28" type="requires"/>
+	  <dependency from="11" to="3" type="requires"/>
+	  <dependency from="10" to="4" type="requires"/>	
+	  <dependency from="13" to="6" type="requires"/>
+	  <dependency from="14" to="7" type="requires"/>	
+      <dependency from="17" to="24" type="requires"/>
+      <dependency from="17" to="25" type="requires"/>
+      <dependency from="27" to="24" type="requires"/>
+      <dependency from="3" to="6" type="requires"/>	
+      <dependency from="4" to="7" type="requires"/>	
+      <dependency from="3" to="7" type="requires"/>	
+      <dependency from="4" to="3" type="requires"/>			  
+   </dependencies>   
+   
+</data>
+

@@ -21,6 +21,7 @@ public interface IModuleExporterContext {
 
 	/**
 	 * <p>
+	 * Returns the {@link IBundleMakerProject}.
 	 * </p>
 	 * 
 	 * @return

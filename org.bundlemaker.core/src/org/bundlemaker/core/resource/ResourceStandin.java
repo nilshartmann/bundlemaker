@@ -1,5 +1,7 @@
 package org.bundlemaker.core.resource;
 
+import org.bundlemaker.core.modules.IResourceModule;
+
 /**
  * <p>
  * </p>
@@ -11,6 +13,17 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 	/** - */
 	private Resource _resource;
 
+	/** do not set transient! */
+	private IResourceModule _resourceModule;
+
+	public IResourceModule getResourceModule() {
+		return _resourceModule;
+	}
+
+	public void setResourceModule(IResourceModule resourceModule) {
+		_resourceModule = resourceModule;
+	}
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ResourceStandin}.
@@ -19,9 +32,11 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 	 * @param contentId
 	 * @param root
 	 * @param path
+	 * @param archiveFileCache
 	 */
-	public ResourceStandin(String contentId, String root, String path) {
-		super(contentId, root, path);
+	public ResourceStandin(String contentId, String root, String path,
+			ArchiveFileCache archiveFileCache) {
+		super(contentId, root, path, archiveFileCache);
 	}
 
 	/**

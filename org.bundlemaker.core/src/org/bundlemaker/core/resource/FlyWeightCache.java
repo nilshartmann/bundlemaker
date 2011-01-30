@@ -2,6 +2,7 @@ package org.bundlemaker.core.resource;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+
 /**
  * <p>
  * </p>
@@ -57,11 +58,14 @@ public class FlyWeightCache {
 	 * @return
 	 */
 	public Reference getReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isExtends, boolean isImplements) {
+			ReferenceType referenceType, boolean isExtends,
+			boolean isImplements, boolean isCompiletimeReference,
+			boolean isRuntimeReference) {
 
 		// create the key
 		ReferenceAttributes attributes = getReferenceAttributes(referenceType,
-				isExtends, isImplements);
+				isExtends, isImplements, isCompiletimeReference,
+				isRuntimeReference);
 
 		Reference key = new Reference(getFlyWeightString(fullyQualifiedName),
 				attributes);
@@ -114,11 +118,13 @@ public class FlyWeightCache {
 	 * @return
 	 */
 	ReferenceAttributes getReferenceAttributes(ReferenceType referenceType,
-			boolean isExtends, boolean isImplements) {
+			boolean isExtends, boolean isImplements,
+			boolean isCompiletimeReference, boolean isRuntimeReference) {
 
 		// create the key
 		ReferenceAttributes attributes = new ReferenceAttributes(referenceType,
-				isExtends, isImplements);
+				isExtends, isImplements, isCompiletimeReference,
+				isRuntimeReference);
 
 		// return if already there
 		if (_referenceAttributesCache.containsKey(attributes)) {

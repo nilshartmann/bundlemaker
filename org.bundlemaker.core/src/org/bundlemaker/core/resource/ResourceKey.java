@@ -1,5 +1,14 @@
 package org.bundlemaker.core.resource;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -19,6 +28,9 @@ public class ResourceKey implements IResourceKey {
 	/** - */
 	private String _path;
 
+	/** - */
+	private ArchiveFileCache _archiveFileCache;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ResourceKey}.
@@ -29,17 +41,51 @@ public class ResourceKey implements IResourceKey {
 	 * @param path
 	 */
 	public ResourceKey(String contentId, String root, String path) {
+		this(contentId, root, path, new ArchiveFileCache());
+	}
+
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link ResourceKey}.
+	 * </p>
+	 * 
+	 * @param contentId
+	 * @param root
+	 * @param path
+	 * @param archiveFileCache
+	 */
+	public ResourceKey(String contentId, String root, String path,
+			ArchiveFileCache archiveFileCache) {
 		Assert.isNotNull(contentId);
 		Assert.isNotNull(root);
 		Assert.isNotNull(path);
+		Assert.isNotNull(archiveFileCache);
 
 		_contentId = new FlyWeightString(contentId);
 		_root = new FlyWeightString(root);
 		_path = path;
+		_archiveFileCache = archiveFileCache;
+	}
+
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link ResourceKey}.
+	 * </p>
+	 * 
+	 * @param contentId
+	 * @param root
+	 * @param path
+	 * @param cache
+	 */
+	protected ResourceKey(String contentId, String root, String path,
+			FlyWeightCache cache) {
+
+		//
+		this(contentId, root, path, cache, new ArchiveFileCache());
 	}
 
 	protected ResourceKey(String contentId, String root, String path,
-			FlyWeightCache cache) {
+			FlyWeightCache cache, ArchiveFileCache archiveFileCache) {
 		Assert.isNotNull(contentId);
 		Assert.isNotNull(root);
 		Assert.isNotNull(path);
@@ -48,6 +94,8 @@ public class ResourceKey implements IResourceKey {
 		_contentId = cache.getFlyWeightString(contentId);
 		_root = cache.getFlyWeightString(root);
 		_path = path;
+		_archiveFileCache = archiveFileCache;
+
 	}
 
 	@Override
@@ -63,6 +111,48 @@ public class ResourceKey implements IResourceKey {
 	@Override
 	public String getPath() {
 		return _path;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public InputStream getInputStream() {
+
+		// jar file?
+		if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
+
+			ZipFile zipFile = _archiveFileCache.getZipFile(getRoot());
+
+			ZipEntry zipEntry = zipFile.getEntry(getPath());
+
+			try {
+				return new BufferedInputStream(zipFile.getInputStream(zipEntry));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		// get the root file
+		File rootFile = new File(getRoot());
+
+		//
+		if (rootFile.isDirectory()) {
+
+			try {
+
+				// TODO
+				return new BufferedInputStream(new FileInputStream(new File(
+						rootFile, getPath())));
+
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException("FEHLER");
+			}
+
+		} else {
+			throw new RuntimeException("FEHLER");
+		}
 	}
 
 	/**

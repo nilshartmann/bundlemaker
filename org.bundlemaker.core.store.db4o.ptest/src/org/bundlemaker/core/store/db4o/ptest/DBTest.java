@@ -118,19 +118,17 @@ public class DBTest {
 
 		for (int i = 0; i < resourceCount; i++) {
 
-			Resource resource = cache
-					.getOrCreateModifiableResource(new ResourceKey(
-							"0000001",
-							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/KJKJKJ",
-							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/"
-									+ i));
+			Resource resource = cache.getOrCreateResource(new ResourceKey(
+					"0000001",
+					"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/KJKJKJ",
+					"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/" + i));
 
 			// Resource resource = new Resource("", "", "" + i);
 
 			for (int j = 0; j < referenceCount; j++) {
 
-				resource.createReference("referencedElement" + j,
-						ReferenceType.TYPE_REFERENCE, true, false);
+				resource.recordReference("referencedElement" + j,
+						ReferenceType.TYPE_REFERENCE, true, false, false, false);
 			}
 
 			// flyweight

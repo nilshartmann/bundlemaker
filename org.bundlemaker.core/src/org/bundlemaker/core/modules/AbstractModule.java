@@ -86,15 +86,15 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedTypes() {
-		return getContainedTypes(IQueryFilter.TRUE_QUERY_FILTER);
+	public Set<String> getContainedTypeNames() {
+		return getContainedTypeNames(IQueryFilter.TRUE_QUERY_FILTER);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedTypes(final IQueryFilter filter) {
+	public Set<String> getContainedTypeNames(final IQueryFilter filter) {
 
 		// create the result set
 		final Set<String> result = new HashSet<String>();
@@ -103,7 +103,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 		doWithAllContainers(new ContainerClosure<T>() {
 			@Override
 			public boolean doWithContainer(T resourceContainer) {
-				result.addAll(resourceContainer.getContainedTypes(filter));
+				result.addAll(resourceContainer.getContainedTypeNames(filter));
 				return false;
 			}
 		});
@@ -116,15 +116,15 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedPackages() {
-		return getContainedPackages(IQueryFilter.TRUE_QUERY_FILTER);
+	public Set<String> getContainedPackageNames() {
+		return getContainedPackageNames(IQueryFilter.TRUE_QUERY_FILTER);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedPackages(final IQueryFilter filter) {
+	public Set<String> getContainedPackageNames(final IQueryFilter filter) {
 
 		// create the result set
 		final Set<String> result = new HashSet<String>();
@@ -133,7 +133,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 		doWithAllContainers(new ContainerClosure<T>() {
 			@Override
 			public boolean doWithContainer(T resourceContainer) {
-				result.addAll(resourceContainer.getContainedPackages(filter));
+				result.addAll(resourceContainer.getContainedPackageNames(filter));
 				return false;
 			}
 		});
@@ -193,6 +193,13 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 				return;
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " [_moduleIdentifier="
+				+ _moduleIdentifier + ", _classification=" + _classification
+				+ "]";
 	}
 
 	/**

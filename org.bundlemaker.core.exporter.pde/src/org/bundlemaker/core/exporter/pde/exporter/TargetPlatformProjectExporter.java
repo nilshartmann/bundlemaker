@@ -2,8 +2,8 @@ package org.bundlemaker.core.exporter.pde.exporter;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.exporter.StandardBundlorBasedBinaryBundleExporter;
-import org.bundlemaker.core.exporter.StandardModuleExporterContext;
+import org.bundlemaker.core.exporter.ModuleExporterContext;
+import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.Activator;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -67,7 +67,7 @@ public class TargetPlatformProjectExporter extends AbstractExporter {
 
 		targetPlatformService.saveTargetDefinition(targetDefinition);
 
-		StandardModuleExporterContext exporterContext = new StandardModuleExporterContext(
+		ModuleExporterContext exporterContext = new ModuleExporterContext(
 				context.getBundleMakerProject(), folder.getRawLocation()
 						.toFile(), context.getModularizedSystem());
 

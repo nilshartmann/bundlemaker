@@ -16,6 +16,28 @@ public class Reference implements IReference {
 	/** - */
 	private ReferenceAttributes _referenceAttributes;
 
+	/** non-persistent back-reference: the containing resource */
+	private Resource _resource;
+
+	/** non-persistent back-reference: the containing type */
+	private Type _type;
+
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link Reference}.
+	 * </p>
+	 * 
+	 * @param reference
+	 */
+	public Reference(Reference reference) {
+
+		Assert.isNotNull(reference);
+
+		//
+		_fullyQualifiedName = reference._fullyQualifiedName;
+		_referenceAttributes = reference._referenceAttributes;
+	}
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link Reference}.
@@ -70,6 +92,75 @@ public class Reference implements IReference {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean isCompileTimeReference() {
+		return _referenceAttributes.isCompileTime();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isRuntimeReference() {
+		return _referenceAttributes.isRuntimeTime();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IType getType() {
+		return _type;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IResource getResource() {
+		return _resource;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasAssociatedResource() {
+		return _resource != null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasAssociatedType() {
+		return _type != null;
+	}
+
+	/**
+	 * <p>
+	 * Set the back-reference.
+	 * </p>
+	 * 
+	 * @param resource
+	 */
+	public void setResource(Resource resource) {
+		_resource = resource;
+	}
+
+	/**
+	 * <p>
+	 * Set the back-reference.
+	 * </p>
+	 * 
+	 * @param type
+	 */
+	public void setType(Type type) {
+		_type = type;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int hashCode() {
 		int result = 31 + _fullyQualifiedName.hashCode();
 		return 31 * result + _referenceAttributes.hashCode();
@@ -98,5 +189,11 @@ public class Reference implements IReference {
 		} else if (!_referenceAttributes.equals(other._referenceAttributes))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Reference [_fullyQualifiedName=" + _fullyQualifiedName
+				+ ", _referenceAttributes=" + _referenceAttributes + "]";
 	}
 }

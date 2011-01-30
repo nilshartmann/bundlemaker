@@ -2,7 +2,6 @@ package org.bundlemaker.core.utils;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Assert;
 

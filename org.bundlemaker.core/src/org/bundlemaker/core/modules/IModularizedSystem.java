@@ -135,7 +135,8 @@ public interface IModularizedSystem {
 	 * @param module
 	 * @return
 	 */
-	IReferencedModulesQueryResult getReferencedModules(IResourceModule module);
+	IReferencedModulesQueryResult getReferencedModules(IResourceModule module,
+			boolean hideContainedTypes, boolean includeSourceReferences);
 
 	/**
 	 * <p>

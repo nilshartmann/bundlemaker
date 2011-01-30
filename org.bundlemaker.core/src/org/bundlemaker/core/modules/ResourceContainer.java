@@ -8,6 +8,8 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.ResourceStandin;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -24,6 +26,9 @@ public class ResourceContainer extends TypeContainer implements
 
 	/** the source resources */
 	private Set<IResourceStandin> _sourceResources;
+
+	/** the containing resource module */
+	private IResourceModule _resourceModule;
 
 	/**
 	 * <p>
@@ -86,6 +91,25 @@ public class ResourceContainer extends TypeContainer implements
 		return getReferences(hideContainedTypes, includeSourceReferences, false);
 	}
 
+	@Override
+	public Set<IReference> getAllReferences(boolean hideContainedTypes,
+			boolean includeSourceReferences) {
+
+		// create the result
+		Set<IReference> result = new HashSet<IReference>();
+
+		//
+		getIReferences(_binaryResources, hideContainedTypes, result);
+
+		//
+		if (includeSourceReferences) {
+			getIReferences(_sourceResources, hideContainedTypes, result);
+		}
+
+		// return result
+		return Collections.unmodifiableSet(result);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -97,22 +121,46 @@ public class ResourceContainer extends TypeContainer implements
 		return getReferences(hideContainedTypes, includeSourceReferences, true);
 	}
 
+	public IResourceModule getResourceModule() {
+		return _resourceModule;
+	}
+
+	public void setResourceModule(IResourceModule resourceModule) {
+		_resourceModule = resourceModule;
+	}
+
 	/**
 	 * <p>
+	 * Initializes the contained types of this resource container.
 	 * </p>
-	 * 
-	 * @param resourceContainer
 	 */
-	public void initializeContainedTypes() {
+	public void initialize() {
 
-		//
+		// step 1: iterate over all binary resources...
 		for (IResourceStandin resourceStandin : _binaryResources) {
 
-			// add all contained types
-			getModifiableContainedTypes().addAll(
-					resourceStandin.getResource().getContainedTypes());
+			// ... and add all contained types
+			for (IType type : resourceStandin.getResource().getContainedTypes()) {
+				getModifiableContainedTypes().add(type.getFullyQualifiedName());
+			}
+
+			// set the back-reference
+			((ResourceStandin) resourceStandin)
+					.setResourceModule(_resourceModule);
 		}
 
+		// step 2: iterate over all source resources...
+		for (IResourceStandin resourceStandin : _sourceResources) {
+
+			// ... and add all contained types
+			for (IType type : resourceStandin.getResource().getContainedTypes()) {
+				getModifiableContainedTypes().add(type.getFullyQualifiedName());
+			}
+
+			// set the back-reference
+			((ResourceStandin) resourceStandin)
+					.setResourceModule(_resourceModule);
+		}
 	}
 
 	/**
@@ -185,7 +233,7 @@ public class ResourceContainer extends TypeContainer implements
 			for (IReference reference : resource.getReferences()) {
 
 				if (!hideContainedTypes
-						|| !getContainedTypes().contains(
+						|| !getContainedTypeNames().contains(
 								reference.getFullyQualifiedName())) {
 
 					String entry;
@@ -209,6 +257,50 @@ public class ResourceContainer extends TypeContainer implements
 						result.add(entry);
 					}
 
+				}
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param resources
+	 * @param hideContainedTypes
+	 * @param result
+	 */
+	private void getIReferences(Set<IResourceStandin> resources,
+			boolean hideContainedTypes, Set<IReference> result) {
+
+		// iterate over all resources
+		for (IResourceStandin resourceStandin : resources) {
+
+			// step 1: get resource
+			IResource resource = resourceStandin.getResource();
+
+			// iterate over all resources
+			for (IReference reference : resource.getReferences()) {
+
+				if (!hideContainedTypes
+						|| !getContainedTypeNames().contains(
+								reference.getFullyQualifiedName())) {
+
+					result.add(reference);
+				}
+			}
+
+			// step 2
+			for (IType type : resource.getContainedTypes()) {
+
+				for (IReference reference : type.getReferences()) {
+
+					if (!hideContainedTypes
+							|| !getContainedTypeNames().contains(
+									reference.getFullyQualifiedName())) {
+
+						result.add(reference);
+					}
 				}
 			}
 		}

@@ -69,7 +69,7 @@ public class SimpleReportExporter extends AbstractExporter {
 		builder.append("\n");
 		builder.append("Referenced Modules: \n");
 		IReferencedModulesQueryResult queryResult = modularizedSystem
-				.getReferencedModules(module);
+				.getReferencedModules(module, true, true);
 
 		for (ITypeModule referencedModule : queryResult.getReferencedModules()) {
 			builder.append(referencedModule.getModuleIdentifier().toString()
@@ -78,14 +78,14 @@ public class SimpleReportExporter extends AbstractExporter {
 
 		builder.append("\n");
 		builder.append("Missing Types: \n");
-		for (String missingType : queryResult.getMissingTypes()) {
+		for (String missingType : queryResult.getUnsatisfiedReferencedTypes()) {
 			builder.append(missingType + "\n");
 		}
 
 		builder.append("\n");
 		builder.append("Types with ambigious modules: \n");
-		for (Entry<String, List<ITypeModule>> missingType : queryResult
-				.getTypesWithAmbiguousModules().entrySet()) {
+		for (Entry<String, Set<ITypeModule>> missingType : queryResult
+				.getReferencedTypesWithAmbiguousModules().entrySet()) {
 
 			builder.append(missingType.getKey() + ":\n");
 			for (ITypeModule typeModule : missingType.getValue()) {

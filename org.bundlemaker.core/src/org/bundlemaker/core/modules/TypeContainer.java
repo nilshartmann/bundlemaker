@@ -32,7 +32,7 @@ public class TypeContainer implements ITypeContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedTypes() {
+	public Set<String> getContainedTypeNames() {
 
 		// return an unmodifiable copy
 		return Collections.unmodifiableSet(_containedTypes);
@@ -42,7 +42,7 @@ public class TypeContainer implements ITypeContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedTypes(IQueryFilter filter) {
+	public Set<String> getContainedTypeNames(IQueryFilter filter) {
 
 		// assert
 		Assert.isNotNull(filter);
@@ -69,9 +69,9 @@ public class TypeContainer implements ITypeContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedPackages() {
+	public Set<String> getContainedPackageNames() {
 
-		return getContainedPackages(new IQueryFilter() {
+		return getContainedPackageNames(new IQueryFilter() {
 			@Override
 			public boolean matches(String content) {
 				return true;
@@ -83,7 +83,7 @@ public class TypeContainer implements ITypeContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedPackages(IQueryFilter filter) {
+	public Set<String> getContainedPackageNames(IQueryFilter filter) {
 		Assert.isNotNull(filter);
 
 		// create the result

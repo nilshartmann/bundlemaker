@@ -1,11 +1,11 @@
-package org.bundlemaker.core.exporter.manifest;
+package org.bundlemaker.core.exporter.bundlor;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ManifestUtils;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.Assert;
@@ -15,7 +15,6 @@ import org.osgi.framework.Version;
 import com.springsource.bundlor.support.partialmanifest.ReadablePartialManifest;
 import com.springsource.bundlor.support.partialmanifest.StandardPartialManifestResolver;
 import com.springsource.bundlor.support.partialmanifest.StandardReadablePartialManifest;
-import com.springsource.bundlor.util.SimpleManifestContents;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -65,7 +64,10 @@ public class BundlorBasedManifestCreator {
 	 * @throws IOException
 	 */
 	public ManifestContents createManifestContents(
-			boolean includeSourceReferences) throws IOException {
+			boolean includeSourceReferences,
+			ManifestContents templateManifestContents) throws IOException {
+
+		Assert.isNotNull(templateManifestContents);
 
 		//
 		ManifestContents originalManifestContents = ManifestUtils
@@ -77,27 +79,11 @@ public class BundlorBasedManifestCreator {
 
 		ManifestContents result = originalManifestContents;
 
-		// read the template file
-		File templateDirectory = ManifestUtils.getTemplateDirectory(_context);
-		File templateFile = new File(templateDirectory, _resourceModule
-				.getModuleIdentifier().getName() + ".template");
-
-		System.out.println(" Try to read template file '"
-				+ templateFile.getAbsolutePath() + "' (exists: "
-				+ templateFile.exists() + ")");
-
-		ManifestContents templateManifestContents = ManifestUtils
-				.readManifestContents(templateFile);
-
-		if (templateManifestContents == null) {
-			templateManifestContents = new SimpleManifestContents();
-		}
-
 		// set the 'Import-Template' header
 		final Set<String> optionalPackages = _context.getModularizedSystem()
 				.getUnsatisfiedReferencedPackages(_resourceModule, true,
 						includeSourceReferences);
-		
+
 		StringBuilder stringBuilder = new StringBuilder();
 		for (Iterator<String> iterator = optionalPackages.iterator(); iterator
 				.hasNext();) {
@@ -148,7 +134,7 @@ public class BundlorBasedManifestCreator {
 
 		// TODO:
 		try {
-			Version version = new Version(bundleVersion);
+			new Version(bundleVersion);
 		} catch (Exception e) {
 			bundleVersion = "0.0.0";
 		}
@@ -178,7 +164,7 @@ public class BundlorBasedManifestCreator {
 			boolean includeSourceReferences) {
 
 		StandardReadablePartialManifest partialManifest = new StandardReadablePartialManifest();
-		for (String containedPackage : _resourceModule.getContainedPackages()) {
+		for (String containedPackage : _resourceModule.getContainedPackageNames()) {
 			partialManifest.recordExportPackage(containedPackage);
 		}
 		for (String referencedType : _resourceModule.getReferencedTypes(true,

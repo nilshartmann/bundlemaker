@@ -1,15 +1,11 @@
 package org.bundlemaker.core.parser.jdt.ast;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.Stack;
 
-import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.Resource;
-import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IType;
@@ -66,10 +62,10 @@ public class JdtAstVisitor extends ASTVisitor {
 	private Resource _javaSourceResource;
 
 	/** - */
-	private Stack<ITypeBinding> _typeBindings;
+	private Stack<org.bundlemaker.core.resource.Type> _currentTypes;
 
 	/** - */
-	private Set<String> _typeNames;
+	private Stack<ITypeBinding> _typeBindings;
 
 	/** */
 	private Message[] _messages = new Message[0];
@@ -91,7 +87,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		_javaSourceResource = javaSourceResource;
 
 		_typeBindings = new Stack<ITypeBinding>();
-		_typeNames = new HashSet<String>();
+		_currentTypes = new Stack<org.bundlemaker.core.resource.Type>();
 	}
 
 	/**
@@ -110,16 +106,6 @@ public class JdtAstVisitor extends ASTVisitor {
 	 * 
 	 * @return
 	 */
-	public Set<String> getTypeNames() {
-		return _typeNames;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
 	public List<org.bundlemaker.core.IProblem> getProblems() {
 
 		List<org.bundlemaker.core.IProblem> result = new LinkedList<org.bundlemaker.core.IProblem>();
@@ -127,12 +113,8 @@ public class JdtAstVisitor extends ASTVisitor {
 		for (IProblem iProblem : _problems) {
 
 			if (iProblem.isError()) {
-				
-				IResourceKey resourceKey = new ResourceKey(
-						_javaSourceResource.getContentId(),
-						_javaSourceResource.getRoot(),
-						_javaSourceResource.getPath());
-				result.add(new JdtProblemAdapter(resourceKey, iProblem));
+
+				result.add(new JdtProblemAdapter(_javaSourceResource, iProblem));
 			}
 		}
 
@@ -197,19 +179,16 @@ public class JdtAstVisitor extends ASTVisitor {
 			if (binding instanceof IPackageBinding) {
 
 				/* Reference packageReference = */
-				_javaSourceResource.createReference(
+				_javaSourceResource.recordReference(
 						((IPackageBinding) binding).getName(),
-						ReferenceType.PACKAGE_REFERENCE, false, false);
-
-				// packageReference.addPosition(new ReferencedPackage.Position(
-				// node.getStartPosition(), node.getLength()));
+						ReferenceType.PACKAGE_REFERENCE, false, false, true,
+						false);
 			}
 
 			// add referenced type
 			else if (binding instanceof ITypeBinding) {
 
-				resolveTypeBinding((ITypeBinding) binding,
-						node.getStartPosition(), node.getLength(), false, false);
+				resolveTypeBinding((ITypeBinding) binding, false, false);
 			}
 
 			// add referenced type
@@ -218,8 +197,7 @@ public class JdtAstVisitor extends ASTVisitor {
 				IVariableBinding variableBinding = (IVariableBinding) binding;
 				ITypeBinding typeBinding = variableBinding.getDeclaringClass();
 
-				resolveTypeBinding(typeBinding, node.getStartPosition(),
-						node.getLength(), false, false);
+				resolveTypeBinding(typeBinding, false, false);
 			}
 		}
 
@@ -229,12 +207,12 @@ public class JdtAstVisitor extends ASTVisitor {
 			if (!node.isOnDemand() && !node.isStatic()) {
 
 				addReferencedType(node.getName().getFullyQualifiedName(),
-						node.getStartPosition(), node.getLength(), false, false);
+						false, false);
 
 			} else if (node.isOnDemand() && !node.isStatic()) {
 
 				addReferencedType(node.getName().getFullyQualifiedName(),
-						node.getStartPosition(), node.getLength(), false, false);
+						false, false);
 
 			} else if (!node.isOnDemand() && node.isStatic()) {
 
@@ -245,8 +223,7 @@ public class JdtAstVisitor extends ASTVisitor {
 								importElementName.getFullyQualifiedName()
 										.lastIndexOf('.'));
 
-				addReferencedType(fullQualifiedName, node.getStartPosition(),
-						node.getLength(), false, false);
+				addReferencedType(fullQualifiedName, false, false);
 			}
 		}
 
@@ -264,27 +241,18 @@ public class JdtAstVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(TypeDeclaration node) {
 
-		// TODO: auswerten
-		_typeNames.add(node.resolveBinding().getBinaryName());
+		// add the type name
+		org.bundlemaker.core.resource.Type type = _javaSourceResource
+				.getOrCreateType(node.resolveBinding().getBinaryName());
+		_currentTypes.push(type);
 
-		// declared type superclass type (also resolve indirectly referenced
-		// classes)
+		// declared type superclass type
 		resolveType(node.getSuperclassType(), true, false);
-		//
-		// if (node.getSuperclassType() != null) {
-		// IMethodBinding[] methodBinding = node.getSuperclassType()
-		// .resolveBinding().getDeclaredMethods();
-		// for (IMethodBinding iMethodBinding : methodBinding) {
-		// res
-		// iMethodBinding.get
-		// System.err.println(" - " + iMethodBinding.getName());
-		// }
-		// }
 
 		// declared type implemented interfaces types
 		List<Type> interfaces = node.superInterfaceTypes();
-		for (Type type : interfaces) {
-			resolveType(type, false, true);
+		for (Type iface : interfaces) {
+			resolveType(iface, false, true);
 		}
 
 		// visit the child nodes
@@ -292,12 +260,24 @@ public class JdtAstVisitor extends ASTVisitor {
 	}
 
 	@Override
+	public void endVisit(TypeDeclaration node) {
+		_currentTypes.pop();
+	}
+
+	@Override
 	public boolean visit(AnnotationTypeDeclaration node) {
 
-		//
-		_typeNames.add(node.resolveBinding().getBinaryName());
+		// add the type name
+		org.bundlemaker.core.resource.Type type = _javaSourceResource
+				.getOrCreateType(node.resolveBinding().getBinaryName());
+		_currentTypes.push(type);
 
 		return true;
+	}
+
+	@Override
+	public void endVisit(AnnotationTypeDeclaration node) {
+		_currentTypes.pop();
 	}
 
 	/*
@@ -310,17 +290,24 @@ public class JdtAstVisitor extends ASTVisitor {
 	@Override
 	public boolean visit(EnumDeclaration node) {
 
-		//
-		_typeNames.add(node.resolveBinding().getBinaryName());
+		// add the type name
+		org.bundlemaker.core.resource.Type type = _javaSourceResource
+				.getOrCreateType(node.resolveBinding().getBinaryName());
+		_currentTypes.push(type);
 
 		// add super interfaces
 		List<Type> superInterfaces = node.superInterfaceTypes();
-		for (Type type : superInterfaces) {
-			resolveType(type, false, false);
+		for (Type superInterface : superInterfaces) {
+			resolveType(superInterface, false, false);
 		}
 
 		// visit the child nodes
 		return true;
+	}
+
+	@Override
+	public void endVisit(EnumDeclaration node) {
+		_currentTypes.pop();
 	}
 
 	/**
@@ -364,7 +351,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		// declared method exception types
 		List<Name> exceptions = node.thrownExceptions();
 		for (Name name : exceptions) {
-			resolveTypeName(name, name.getStartPosition(), name.getLength());
+			resolveTypeName(name, false, false);
 		}
 
 		// visit the child nodes
@@ -431,8 +418,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	public boolean visit(MarkerAnnotation node) {
 
 		// resolve type name
-		resolveTypeName(node.getTypeName(), node.getStartPosition(),
-				node.getLength());
+		resolveTypeName(node.getTypeName(), false, false);
 
 		// visit the child nodes
 		return true;
@@ -446,8 +432,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	public boolean visit(NormalAnnotation node) {
 
 		// resolve type name
-		resolveTypeName(node.getTypeName(), node.getStartPosition(),
-				node.getLength());
+		resolveTypeName(node.getTypeName(), false, false);
 
 		// visit the child nodes
 		return true;
@@ -461,8 +446,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	public boolean visit(SingleMemberAnnotation node) {
 
 		// resolve type name
-		resolveTypeName(node.getTypeName(), node.getStartPosition(),
-				node.getLength());
+		resolveTypeName(node.getTypeName(), false, false);
 
 		// visit the child nodes
 		return true;
@@ -511,8 +495,7 @@ public class JdtAstVisitor extends ASTVisitor {
 			// resolve type arguments
 			ITypeBinding[] typeArguments = methodBinding.getParameterTypes();
 			for (ITypeBinding typeBinding : typeArguments) {
-				resolveTypeBinding(typeBinding, node.getStartPosition(),
-						node.getLength(), false, false);
+				resolveTypeBinding(typeBinding, false, false);
 			}
 
 			// resolve type
@@ -530,8 +513,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		IVariableBinding variableBinding = node.resolveFieldBinding();
 
 		if (variableBinding != null) {
-			resolveTypeBinding(variableBinding.getType(),
-					node.getStartPosition(), node.getLength(), false, false);
+			resolveTypeBinding(variableBinding.getType(), false, false);
 		}
 		// visit the child nodes
 		return true;
@@ -566,8 +548,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		// access to static methods
 		IMethodBinding methodBinding = node.resolveMethodBinding();
 
-		resolveMethodBinding(methodBinding, node.getStartPosition(),
-				node.getLength());
+		resolveMethodBinding(methodBinding);
 
 		// resolve the associated expression
 		resolveExpressionType(node.getExpression());
@@ -578,52 +559,9 @@ public class JdtAstVisitor extends ASTVisitor {
 			resolveExpressionType(exp);
 		}
 
-		// SICK: resolve parameters for 'ambigious' methods
-		// resolveAmbigousMethods(node.resolveTypeBinding(), methodBinding
-		// .getName());
-		// Expression expression = node.getExpression();
-		// if (expression != null) {
-		// ITypeBinding typeBinding = expression.resolveTypeBinding();
-		// if (typeBinding != null) {
-		// resolveAmbigousMethods(typeBinding, methodBinding.getName());
-		// }
-		// }
-
 		// visit the child nodes
 		return true;
 	}
-
-	// /**
-	// * <p>
-	// * </p>
-	// *
-	// * @param typeBinding
-	// * @param name
-	// */
-	// private void resolveAmbigousMethods(ITypeBinding typeBinding, String
-	// name) {
-	//
-	// if (typeBinding == null
-	// || typeBinding.equals(_ast
-	// .resolveWellKnownType("java.lang.Object"))) {
-	//
-	// return;
-	// }
-	//
-	// // TODO: declared methods liefert hier
-	// for (IMethodBinding methodBinding : typeBinding.getDeclaredMethods()) {
-	// if (name.equals(methodBinding.getName())) {
-	// // TODO: Position
-	// resolveMethodBinding(methodBinding, 0, 0);
-	// }
-	// }
-	//
-	// resolveAmbigousMethods(typeBinding.getSuperclass(), name);
-	//
-	// for (ITypeBinding interfaceBinding : typeBinding.getInterfaces()) {
-	// resolveAmbigousMethods(interfaceBinding.getSuperclass(), name);
-	// }
-	// }
 
 	@Override
 	public boolean visit(ConstructorInvocation node) {
@@ -633,15 +571,8 @@ public class JdtAstVisitor extends ASTVisitor {
 		// resolve type arguments
 		ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
 		for (ITypeBinding typeBinding : parameterTypes) {
-			resolveTypeBinding(typeBinding, node.getStartPosition(),
-					node.getLength(), false, false);
+			resolveTypeBinding(typeBinding, false, false);
 		}
-
-		// List<Expression> typeArguments = node.arguments();
-		// for (Expression expression : typeArguments) {
-		// resolveTypeBinding(expression.resolveTypeBinding(), node
-		// .getStartPosition(), node.getLength());
-		// }
 
 		// visit the child nodes
 		return true;
@@ -657,8 +588,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		// resolve type arguments
 		ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
 		for (ITypeBinding typeBinding : parameterTypes) {
-			resolveTypeBinding(typeBinding, node.getStartPosition(),
-					node.getLength(), false, false);
+			resolveTypeBinding(typeBinding, false, false);
 		}
 
 		// List<Expression> typeArguments = node.arguments();
@@ -689,11 +619,9 @@ public class JdtAstVisitor extends ASTVisitor {
 				if (Flags.isStatic(variableBinding.getModifiers())
 						&& variableBinding.getDeclaringClass() != null) {
 					resolveTypeBinding(variableBinding.getDeclaringClass(),
-							node.getStartPosition(), node.getLength(), false,
-							false);
+							false, false);
 				}
-				resolveTypeBinding(variableBinding.getType(),
-						node.getStartPosition(), node.getLength(), false, false);
+				resolveTypeBinding(variableBinding.getType(), false, false);
 			}
 		}
 
@@ -708,8 +636,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		if (binding != null) {
 			if (binding.getKind() == IBinding.METHOD) {
 
-				resolveMethodBinding((IMethodBinding) binding,
-						node.getStartPosition(), node.getLength());
+				resolveMethodBinding((IMethodBinding) binding);
 			}
 		}
 
@@ -736,8 +663,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	public boolean visit(ThisExpression node) {
 
 		// resolve type name
-		resolveTypeName(node.getQualifier(), node.getStartPosition(),
-				node.getLength());
+		resolveTypeName(node.getQualifier(), false, false);
 
 		// visit the child nodes
 		return true;
@@ -826,15 +752,15 @@ public class JdtAstVisitor extends ASTVisitor {
 		}
 
 		// resolve the type binding
-		resolveTypeBinding(type.resolveBinding(), type.getStartPosition(),
-				type.getLength(), false, false);
+		resolveTypeBinding(type.resolveBinding(), isExtends, isImplements);
 	}
 
 	/**
 	 * @param typeName
 	 * @return
 	 */
-	private void resolveTypeName(Name typeName, int startPosition, int length) {
+	private void resolveTypeName(Name typeName, boolean isExtends,
+			boolean isImplements) {
 
 		// return null if typeName == null
 		if (typeName == null) {
@@ -854,12 +780,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		addReferencedType(
 				((IType) typeBinding.getJavaElement())
 						.getFullyQualifiedName('$'),
-				startPosition, length, false, false);
-
-		// if (resolveSuperTypes) {
-		// resolveTypeBinding(typeBinding.getSuperclass(), startPosition,
-		// length, true, false);
-		// }
+				isExtends, isImplements);
 	}
 
 	/**
@@ -886,8 +807,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	 *            TODO
 	 */
 	private void resolveTypeBinding(ITypeBinding typeBinding,
-			int startPosition, int length, boolean isExtends,
-			boolean isImplements) {
+			boolean isExtends, boolean isImplements) {
 
 		// return null if type == null
 		if (typeBinding == null) {
@@ -903,20 +823,19 @@ public class JdtAstVisitor extends ASTVisitor {
 
 		// handle array types
 		if (typeBinding.isArray()) {
-			resolveTypeBinding(typeBinding.getComponentType(), startPosition,
-					length, isExtends, isImplements);
+			resolveTypeBinding(typeBinding.getComponentType(), isExtends,
+					isImplements);
 		}
 		// handle parameterized types
 		else if (typeBinding.isParameterizedType()) {
 
 			// add the type
-			resolveTypeBinding(typeBinding.getErasure(), startPosition, length,
-					isExtends, isImplements);
+			resolveTypeBinding(typeBinding.getErasure(), isExtends,
+					isImplements);
 
 			// add the type parameters
 			for (ITypeBinding iTypeBinding : typeBinding.getTypeArguments()) {
-				resolveTypeBinding(iTypeBinding, startPosition, length,
-						isExtends, isImplements);
+				resolveTypeBinding(iTypeBinding, isExtends, isImplements);
 			}
 
 		}
@@ -929,8 +848,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		// handle wildcard types
 		else if (typeBinding.isWildcardType()) {
 			// handle bound
-			resolveTypeBinding(typeBinding.getBound(), startPosition, length,
-					isExtends, isImplements);
+			resolveTypeBinding(typeBinding.getBound(), isExtends, isImplements);
 		}
 
 		// handle type variable
@@ -938,8 +856,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
 			ITypeBinding[] bindings = typeBinding.getTypeBounds();
 			for (ITypeBinding iTypeBinding : bindings) {
-				resolveTypeBinding(iTypeBinding, startPosition, length,
-						isExtends, isImplements);
+				resolveTypeBinding(iTypeBinding, isExtends, isImplements);
 			}
 		}
 
@@ -960,7 +877,7 @@ public class JdtAstVisitor extends ASTVisitor {
 				addReferencedType(
 						((IType) typeBinding.getJavaElement())
 								.getFullyQualifiedName('$'),
-						startPosition, length, false, false);
+						isExtends, isImplements);
 			}
 		}
 
@@ -973,47 +890,42 @@ public class JdtAstVisitor extends ASTVisitor {
 	 * 
 	 * @param methodBinding
 	 */
-	private void resolveMethodBinding(IMethodBinding methodBinding,
-			int startPosition, int length) {
+	private void resolveMethodBinding(IMethodBinding methodBinding) {
 
 		// resolve declaring class if method is static
 		if (methodBinding != null) {
 
 			// static?
 			if (Flags.isStatic(methodBinding.getModifiers())) {
-				resolveTypeBinding(methodBinding.getDeclaringClass(),
-						startPosition, length, false, false);
+				resolveTypeBinding(methodBinding.getDeclaringClass(), false,
+						false);
 			}
 
 			// resolve type arguments
 			ITypeBinding[] typeArguments = methodBinding.getParameterTypes();
 			for (ITypeBinding typeBinding : typeArguments) {
-				resolveTypeBinding(typeBinding, startPosition, length, false,
-						false);
+				resolveTypeBinding(typeBinding, false, false);
 			}
 
 			// resolve Exceptions
 			ITypeBinding[] exceptionTypes = methodBinding.getExceptionTypes();
 			for (ITypeBinding exceptionType : exceptionTypes) {
-				resolveTypeBinding(exceptionType, startPosition, length, false,
-						false);
+				resolveTypeBinding(exceptionType, false, false);
 			}
 
 			// resolve return type
 			ITypeBinding returnType = methodBinding.getReturnType();
-			resolveTypeBinding(returnType, startPosition, length, false, false);
+			resolveTypeBinding(returnType, false, false);
 
 			//
 			if (methodBinding.isParameterizedMethod()) {
-				resolveMethodBinding(methodBinding.getMethodDeclaration(),
-						startPosition, length);
+				resolveMethodBinding(methodBinding.getMethodDeclaration());
 			}
 			//
 			else if (methodBinding.isGenericMethod()) {
 				ITypeBinding[] typeBindings = methodBinding.getTypeArguments();
 				for (ITypeBinding typeBinding : typeBindings) {
-					resolveTypeBinding(typeBinding, startPosition, length,
-							false, false);
+					resolveTypeBinding(typeBinding, false, false);
 				}
 			}
 		}
@@ -1033,83 +945,25 @@ public class JdtAstVisitor extends ASTVisitor {
 	 * @param isImplements
 	 *            TODO
 	 */
-	private void addReferencedType(String referencedType, int startPosition,
-			int length, boolean isExtends, boolean isImplements) {
+	private void addReferencedType(String referencedType, boolean isExtends,
+			boolean isImplements) {
 
 		if (referencedType != null) {
 
-			_javaSourceResource.createReference(referencedType,
-					ReferenceType.TYPE_REFERENCE, isExtends ? true : null,
-					isImplements ? true : null);
+			if (!_currentTypes.isEmpty()) {
+
+				_currentTypes.peek().recordReference(referencedType,
+						ReferenceType.TYPE_REFERENCE, isExtends, isImplements,
+						true, false);
+
+			} else {
+
+				_javaSourceResource.recordReference(referencedType,
+						ReferenceType.TYPE_REFERENCE, isExtends, isImplements,
+						true, false);
+			}
 		}
 	}
-
-	// /**
-	// * <p>
-	// * </p>
-	// *
-	// * @param typeBinding
-	// */
-	// private void resolveSuperTypes(ITypeBinding typeBinding, int
-	// startPosition,
-	// int length, boolean isSuperTypeHierarchy) {
-	//
-	// // return if typeBindung == null
-	// if (typeBinding == null) {
-	// return;
-	// }
-	//
-	// ITypeBinding superClassBinding = typeBinding.getSuperclass();
-	//
-	// if (superClassBinding == null
-	// || superClassBinding.equals(_ast
-	// .resolveWellKnownType("java.lang.Object"))) {
-	// // do nothing...
-	// } else {
-	// resolveTypeBinding(superClassBinding, startPosition, length);
-	//
-	// // if (isSuperTypeHierarchy) {
-	// // resolveIndirectlyReferencedMethodParameters(superClassBinding,
-	// // startPosition, length);
-	// // }
-	// }
-	//
-	// for (ITypeBinding interfaceBinding : typeBinding.getInterfaces()) {
-	//
-	// if (interfaceBinding == null) {
-	// // do nothing yet...
-	// } else {
-	//
-	// resolveTypeBinding(interfaceBinding, startPosition, length);
-	//
-	// // if (isSuperTypeHierarchy) {
-	// // resolveIndirectlyReferencedMethodParameters(
-	// // interfaceBinding, startPosition, length);
-	// // }
-	// }
-	// }
-	// }
-
-	// /**
-	// * <p>
-	// * </p>
-	// *
-	// * @param typeBinding
-	// */
-	// private void resolveIndirectlyReferencedMethodParameters(
-	// ITypeBinding typeBinding, int startPosition, int length) {
-	//
-	// for (IMethodBinding methodBinding : typeBinding.getDeclaredMethods()) {
-	//
-	// if (typeBinding.isInterface()
-	// || (typeBinding.getDeclaredModifiers() & Modifier.ABSTRACT) ==
-	// Modifier.ABSTRACT
-	// || (methodBinding.getModifiers() & Modifier.ABSTRACT) ==
-	// Modifier.ABSTRACT) {
-	// resolveMethodBinding(methodBinding, startPosition, length, true);
-	// }
-	// }
-	// }
 
 	/**
 	 * <p>
@@ -1124,8 +978,7 @@ public class JdtAstVisitor extends ASTVisitor {
 			ITypeBinding typeBinding = expression.resolveTypeBinding();
 
 			if (typeBinding != null) {
-				resolveTypeBinding(typeBinding, expression.getStartPosition(),
-						expression.getLength(), false, false);
+				resolveTypeBinding(typeBinding, false, false);
 			}
 		}
 	}

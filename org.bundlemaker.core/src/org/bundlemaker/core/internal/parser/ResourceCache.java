@@ -5,9 +5,12 @@ import java.util.Map;
 
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.FlyWeightCache;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -24,11 +27,14 @@ public class ResourceCache implements IResourceCache {
 	/** the element map */
 	private Map<IResourceKey, Resource> _resourceMap;
 
+	/** the element map */
+	private Map<String, Type> _typeMap;
+
 	/** the dependency store */
 	private IPersistentDependencyStore _dependencyStore;
 
 	/** - */
-	private FlyWeightCache _referenceCache;
+	private FlyWeightCache _flyWeightCache;
 
 	/**
 	 * <p>
@@ -48,7 +54,10 @@ public class ResourceCache implements IResourceCache {
 		_resourceMap = new HashMap<IResourceKey, Resource>();
 
 		//
-		_referenceCache = new FlyWeightCache();
+		_typeMap = new HashMap<String, Type>();
+
+		//
+		_flyWeightCache = new FlyWeightCache();
 	}
 
 	/**
@@ -98,9 +107,9 @@ public class ResourceCache implements IResourceCache {
 	/**
 	 * {@inheritDoc}
 	 */
+	// TODO synchronized
 	@Override
-	public synchronized Resource getOrCreateModifiableResource(
-			IResourceKey resourceKey) {
+	public synchronized Resource getOrCreateResource(IResourceKey resourceKey) {
 
 		//
 		Resource resource = _resourceMap.get(resourceKey);
@@ -112,7 +121,7 @@ public class ResourceCache implements IResourceCache {
 
 		// create a new one if necessary
 		resource = new Resource(resourceKey.getContentId(),
-				resourceKey.getRoot(), resourceKey.getPath(), _referenceCache);
+				resourceKey.getRoot(), resourceKey.getPath(), this);
 
 		// store the Resource
 		_resourceMap.put(new ResourceKey(resourceKey.getContentId(),
@@ -122,11 +131,37 @@ public class ResourceCache implements IResourceCache {
 		return resource;
 	}
 
+	// TODO synchronized
+	@Override
+	public synchronized Type getOrCreateType(String fullyQualifiedName) {
+
+		//
+		Type type = _typeMap.get(fullyQualifiedName);
+
+		// return result if != null
+		if (type != null) {
+			return type;
+		}
+
+		// create a new one if necessary
+		type = new Type(fullyQualifiedName, _flyWeightCache);
+
+		// store the Resource
+		_typeMap.put(fullyQualifiedName, type);
+
+		// return the result
+		return type;
+	}
+
 	public Map<IResourceKey, Resource> getResourceMap() {
 		return _resourceMap;
 	}
 
-	public FlyWeightCache getReferenceCache() {
-		return _referenceCache;
+	public FlyWeightCache getFlyWeightCache() {
+		return _flyWeightCache;
+	}
+
+	public void resetTypeCache() {
+		_typeMap.clear();
 	}
 }

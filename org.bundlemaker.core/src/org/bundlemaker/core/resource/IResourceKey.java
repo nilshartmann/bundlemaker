@@ -1,5 +1,7 @@
 package org.bundlemaker.core.resource;
 
+import java.io.InputStream;
+
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 
 /**
@@ -44,6 +46,15 @@ public interface IResourceKey {
 	 * @return the path of the resource.
 	 */
 	String getPath();
+
+	/**
+	 * <p>
+	 * Returns an input stream to read the content of this resource.
+	 * </p>
+	 * 
+	 * @return
+	 */
+	InputStream getInputStream();
 
 	// /**
 	// * <p>

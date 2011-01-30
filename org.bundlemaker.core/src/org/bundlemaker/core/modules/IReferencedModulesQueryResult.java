@@ -1,8 +1,9 @@
 package org.bundlemaker.core.modules;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.bundlemaker.core.resource.IReference;
 
 /**
  * <p>
@@ -26,15 +27,61 @@ public interface IReferencedModulesQueryResult {
 	 * 
 	 * @return
 	 */
-	Map<String, ITypeModule> getReferencedModulesMap();
+	Map<IReference, ITypeModule> getReferencedModulesMap();
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	Set<ITypeModule> getReferencedModules();
 
-	boolean hasTypesWithAmbiguousModules();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean hasReferencesWithAmbiguousModules();
 
-	Map<String, List<ITypeModule>> getTypesWithAmbiguousModules();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Map<IReference, Set<ITypeModule>> getReferencesWithAmbiguousModules();
 
-	boolean hasMissingTypes();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Map<String, Set<ITypeModule>> getReferencedTypesWithAmbiguousModules();
 
-	List<String> getMissingTypes();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean hasUnsatisfiedReferences();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Set<IReference> getUnsatisfiedReferences();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Set<String> getUnsatisfiedReferencedTypes();
 }

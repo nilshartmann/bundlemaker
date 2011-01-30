@@ -4,6 +4,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.resource.ArchiveFileCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
@@ -47,7 +48,8 @@ public class ResourceCacheTest {
 			@Override
 			public IResourceKey createResourceKey(String contentId,
 					String root, String path) {
-				return new ResourceStandin(contentId, root, path);
+				return new ResourceStandin(contentId, root, path,
+						new ArchiveFileCache());
 			}
 		};
 
@@ -67,12 +69,13 @@ public class ResourceCacheTest {
 			@Override
 			public IResourceKey createResourceKey(String contentId,
 					String root, String path) {
-				return new ResourceStandin(contentId, root, path);
+				return new ResourceStandin(contentId, root, path,
+						new ArchiveFileCache());
 			}
 		};
 
 		long time_1 = create(cache, keyCreator, "a", 500000);
-		
+
 		keyCreator = new KeyCreator() {
 			@Override
 			public IResourceKey createResourceKey(String contentId,
@@ -80,7 +83,7 @@ public class ResourceCacheTest {
 				return new ResourceKey(contentId, root, path);
 			}
 		};
-		
+
 		long time_2 = create(cache, keyCreator, "b", 500000);
 		long time_3 = create(cache, keyCreator, "a", 500000);
 
@@ -106,7 +109,7 @@ public class ResourceCacheTest {
 			IResourceKey key = keyCreator.createResourceKey(prefix + i, prefix
 					+ i, prefix + i);
 
-			cache.getOrCreateModifiableResource(key);
+			cache.getOrCreateResource(key);
 		}
 
 		stopWatch.stop();

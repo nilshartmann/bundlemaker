@@ -28,25 +28,25 @@ import org.eclipse.core.runtime.IPath;
 
 public class ModularizedSystem implements IModularizedSystem {
 
-	/** - */
+	/** the name of working copy */
 	private String _name;
 
-	/** - */
+	/** the project description */
 	private IBundleMakerProjectDescription _projectDescription;
 
-	/** - */
+	/** the list of defined transformations */
 	private List<ITransformation> _transformations;
 
-	/** - */
+	/** the defined resource modules */
 	private Set<ResourceModule> _resourceModules;
 
-	/** - */
+	/** the defined type modules */
 	private Set<TypeModule> _typeModules;
 
-	/** - */
+	/** the execution environment type module */
 	private TypeModule _executionEnvironment;
 
-	/** - */
+	/** type name -> modules */
 	private Map<String, Set<ITypeModule>> _typeToModuleListMap;
 
 	/**
@@ -100,7 +100,6 @@ public class ModularizedSystem implements IModularizedSystem {
 	public void applyTransformations() {
 
 		// step 1: clear prior results
-		System.out.println("// step 1: clear prior results");
 		_typeModules.clear();
 		_resourceModules.clear();
 		_typeToModuleListMap.clear();
@@ -170,15 +169,13 @@ public class ModularizedSystem implements IModularizedSystem {
 		}
 
 		// step 5: set up the contained lists
-		System.out.println("// step 5: set up ModifiableResourceModules");
-
 		for (ResourceModule module : _resourceModules) {
 
 			// initialize the contained types
 			module.initializeContainedTypes();
 
 			// get
-			for (String containedType : module.getContainedTypes()) {
+			for (String containedType : module.getContainedTypeNames()) {
 
 				//
 				if (!_typeToModuleListMap.containsKey(containedType)) {
@@ -200,7 +197,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		for (TypeModule module : _typeModules) {
 
 			//
-			for (String containedType : module.getContainedTypes()) {
+			for (String containedType : module.getContainedTypeNames()) {
 
 				//
 				if (!_typeToModuleListMap.containsKey(containedType)) {
@@ -379,14 +376,17 @@ public class ModularizedSystem implements IModularizedSystem {
 
 	@Override
 	public IReferencedModulesQueryResult getReferencedModules(
-			IResourceModule module) {
+			IResourceModule module, boolean hideContainedTypes,
+			boolean includeSourceReferences) {
 
 		// create the result list
-		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(module);
+		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(
+				module);
 
 		// TODO: getReferencedTypes(???, ???)
-		for (String referencedType : module.getReferencedTypes(false, true)) {
-			_resolveReferencedModules(result, referencedType);
+		for (IReference reference : module.getAllReferences(hideContainedTypes,
+				includeSourceReferences)) {
+			_resolveReferencedModules(result, reference);
 		}
 
 		// return the result
@@ -404,7 +404,7 @@ public class ModularizedSystem implements IModularizedSystem {
 
 		//
 		for (IReference reference : resource.getReferences()) {
-			_resolveReferencedModules(result, reference.getFullyQualifiedName());
+			_resolveReferencedModules(result, reference);
 		}
 
 		// return the result
@@ -509,7 +509,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		for (ITypeModule typeModule : getAllModules()) {
 
 			// iterate over contained packages
-			for (String containedPackage : typeModule.getContainedPackages()) {
+			for (String containedPackage : typeModule.getContainedPackageNames()) {
 
 				// add
 				if (result.containsKey(containedPackage)) {
@@ -651,36 +651,37 @@ public class ModularizedSystem implements IModularizedSystem {
 	 * @param fullyQualifiedType
 	 */
 	private void _resolveReferencedModules(ReferencedModulesQueryResult result,
-			String fullyQualifiedType) {
+			IReference reference) {
 
 		Assert.isNotNull(result);
-		Assert.isNotNull(fullyQualifiedType);
+		Assert.isNotNull(reference);
 
 		// TODO: already set?
 
-		Set<ITypeModule> containingModules = _getContainingModules(fullyQualifiedType);
+		Set<ITypeModule> containingModules = _getContainingModules(reference
+				.getFullyQualifiedName());
 
 		//
 		if (containingModules.isEmpty()) {
 
 			//
-			result.getMissingTypes().add(fullyQualifiedType);
+			result.getUnsatisfiedReferences().add(reference);
 
 		} else if (containingModules.size() > 1) {
 
-			if (!result.getTypesWithAmbiguousModules().containsKey(
-					fullyQualifiedType)) {
+			if (!result.getReferencesWithAmbiguousModules().containsKey(
+					reference)) {
 
-				result.getTypesWithAmbiguousModules().put(fullyQualifiedType,
-						new LinkedList<ITypeModule>());
+				result.getReferencesWithAmbiguousModules().put(reference,
+						new HashSet<ITypeModule>());
 			}
 
-			result.getTypesWithAmbiguousModules().get(fullyQualifiedType)
+			result.getReferencesWithAmbiguousModules().get(reference)
 					.addAll(containingModules);
 
 		} else {
 
-			result.getReferencedModulesMap().put(fullyQualifiedType,
+			result.getReferencedModulesMap().put(reference,
 					containingModules.toArray(new ITypeModule[0])[0]);
 		}
 	}

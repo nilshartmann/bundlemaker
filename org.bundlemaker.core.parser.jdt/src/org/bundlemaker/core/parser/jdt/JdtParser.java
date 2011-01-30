@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
@@ -16,8 +15,6 @@ import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
 import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
 import org.bundlemaker.core.parser.jdt.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.FlyWeightCache;
-import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
@@ -284,7 +281,7 @@ public class JdtParser implements IParser {
 		ResourceKey key = new ResourceKey(elementID.getContentId(),
 				elementID.getRoot(), elementID.getPath());
 
-		Resource resource = (Resource) cache.getOrCreateModifiableResource(key);
+		Resource resource = (Resource) cache.getOrCreateResource(key);
 
 		// step 6: set the directly referenced types
 		JdtAstVisitor visitor = new JdtAstVisitor(resource);
@@ -297,9 +294,6 @@ public class JdtParser implements IParser {
 			sourceParserHook.analyzeCompilationUnit(iCompilationUnit,
 					compilationUnit);
 		}
-
-		// step 8: set all contained types
-		resource.getModifiableContainedTypes().addAll(visitor.getTypeNames());
 
 		// step 9: try to associate source resources and class resources
 
