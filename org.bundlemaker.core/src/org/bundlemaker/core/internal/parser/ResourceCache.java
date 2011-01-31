@@ -5,12 +5,11 @@ import java.util.Map;
 
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.FlyWeightCache;
-import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -133,18 +132,27 @@ public class ResourceCache implements IResourceCache {
 
 	// TODO synchronized
 	@Override
-	public synchronized Type getOrCreateType(String fullyQualifiedName) {
+	public synchronized Type getOrCreateType(String fullyQualifiedName,
+			TypeEnum typeEnum) {
 
 		//
 		Type type = _typeMap.get(fullyQualifiedName);
 
 		// return result if != null
 		if (type != null) {
+
+			if (!type.getType().equals(typeEnum)) {
+
+				// TODO
+				throw new RuntimeException("Wrong type requested"
+						+ fullyQualifiedName + " : " + typeEnum + " : " + type);
+			}
+
 			return type;
 		}
 
 		// create a new one if necessary
-		type = new Type(fullyQualifiedName, _flyWeightCache);
+		type = new Type(fullyQualifiedName, typeEnum, _flyWeightCache);
 
 		// store the Resource
 		_typeMap.put(fullyQualifiedName, type);

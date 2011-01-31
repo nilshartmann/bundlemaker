@@ -16,13 +16,12 @@ import org.bundlemaker.core.parser.IFolderBasedDirectoryFragment;
 import org.bundlemaker.core.parser.IJarFileBasedDirectoryFragment;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.parser.bytecode.asm.AsmTypeArtefactAnalyser;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-
-import com.springsource.bundlor.support.asm.AsmTypeArtefactAnalyser;
 
 /**
  * <p>

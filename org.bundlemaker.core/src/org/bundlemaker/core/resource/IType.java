@@ -10,6 +10,8 @@ import java.util.Set;
  */
 public interface IType {
 
+	TypeEnum getType();
+
 	/**
 	 * <p>
 	 * Returns the fully qualified name of the referenced type, e.g.

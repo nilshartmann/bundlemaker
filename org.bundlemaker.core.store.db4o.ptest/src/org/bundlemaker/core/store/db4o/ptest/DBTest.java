@@ -128,7 +128,8 @@ public class DBTest {
 			for (int j = 0; j < referenceCount; j++) {
 
 				resource.recordReference("referencedElement" + j,
-						ReferenceType.TYPE_REFERENCE, true, false, false, false);
+						ReferenceType.TYPE_REFERENCE, true, true, false, false,
+						false);
 			}
 
 			// flyweight

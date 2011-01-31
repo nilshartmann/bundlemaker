@@ -29,6 +29,9 @@ public class ReferenceAttributes {
 	private boolean _implements;
 
 	/** - */
+	private boolean _classAnnotation;
+
+	/** - */
 	private boolean _isCompileTime;
 
 	/** - */
@@ -40,19 +43,22 @@ public class ReferenceAttributes {
 	 * </p>
 	 * 
 	 * @param referenceType
-	 * @param extends1
-	 * @param implements1
+	 * @param isExtends
+	 * @param isImplements
+	 * @param isClassAnnotation
 	 * @param isCompileTime
 	 * @param isRuntimeTime
 	 */
 	public ReferenceAttributes(ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isCompileTime, boolean isRuntimeTime) {
+			boolean isImplements, boolean isClassAnnotation,
+			boolean isCompileTime, boolean isRuntimeTime) {
 
 		Assert.isNotNull(referenceType);
 
 		_referenceType = referenceType;
 		_extends = isExtends;
 		_implements = isImplements;
+		_classAnnotation = isClassAnnotation;
 		_isCompileTime = isCompileTime;
 		_isRuntimeTime = isRuntimeTime;
 	}
@@ -88,6 +94,19 @@ public class ReferenceAttributes {
 	}
 
 	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public boolean isClassAnnotation() {
+		return _classAnnotation;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
 	 * @return
 	 */
 	public boolean isCompileTime() {
@@ -95,16 +114,26 @@ public class ReferenceAttributes {
 	}
 
 	/**
+	 * <p>
+	 * </p>
+	 * 
 	 * @return
 	 */
 	public boolean isRuntimeTime() {
 		return _isRuntimeTime;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (_classAnnotation ? 1231 : 1237);
 		result = prime * result + (_extends ? 1231 : 1237);
 		result = prime * result + (_implements ? 1231 : 1237);
 		result = prime * result + (_isCompileTime ? 1231 : 1237);
@@ -114,6 +143,12 @@ public class ReferenceAttributes {
 		return result;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -123,6 +158,8 @@ public class ReferenceAttributes {
 		if (getClass() != obj.getClass())
 			return false;
 		ReferenceAttributes other = (ReferenceAttributes) obj;
+		if (_classAnnotation != other._classAnnotation)
+			return false;
 		if (_extends != other._extends)
 			return false;
 		if (_implements != other._implements)
@@ -136,12 +173,18 @@ public class ReferenceAttributes {
 		return true;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	@Override
 	public String toString() {
 		return "ReferenceAttributes [_referenceType=" + _referenceType
 				+ ", _extends=" + _extends + ", _implements=" + _implements
+				+ ", _classAnnotation=" + _classAnnotation
 				+ ", _isCompileTime=" + _isCompileTime + ", _isRuntimeTime="
 				+ _isRuntimeTime + "]";
 	}
-
 }

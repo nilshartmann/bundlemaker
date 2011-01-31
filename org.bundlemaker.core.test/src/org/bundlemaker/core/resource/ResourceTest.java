@@ -75,7 +75,7 @@ public class ResourceTest {
 		for (int j = 0; j < 100; j++) {
 
 			resource.recordReference("start" + j, ReferenceType.TYPE_REFERENCE,
-					true, true, false, false);
+					true, true, true, false, false);
 		}
 
 		stopWatch_1.stop();
@@ -89,7 +89,8 @@ public class ResourceTest {
 			//
 			for (int j = 0; j < referenceCount; j++) {
 				resource.recordReference("" + i + j,
-						ReferenceType.TYPE_REFERENCE, true, true, false, false);
+						ReferenceType.TYPE_REFERENCE, true, true, true, false,
+						false);
 			}
 		}
 
@@ -101,7 +102,7 @@ public class ResourceTest {
 		resource = new Resource("stop", "stop", "stop", resourceCache);
 		for (int j = 0; j < 100; j++) {
 			resource.recordReference("stop" + j, ReferenceType.TYPE_REFERENCE,
-					true, true, false, false);
+					true, true, true, false, false);
 		}
 
 		stopWatch_2.stop();

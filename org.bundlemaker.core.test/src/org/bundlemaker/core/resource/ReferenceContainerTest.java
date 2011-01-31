@@ -41,7 +41,8 @@ public class ReferenceContainerTest {
 		// test: assert same reference
 		for (int i = 0; i < 10; i++) {
 			_referenceContainer.recordReference("a.b.c",
-					ReferenceType.TYPE_REFERENCE, true, false, false, false);
+					ReferenceType.TYPE_REFERENCE, true, true, false, false,
+					false);
 		}
 
 		// assert
@@ -49,27 +50,27 @@ public class ReferenceContainerTest {
 
 		// test: assert same reference with different attributes
 		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, true, false, false);
+				ReferenceType.TYPE_REFERENCE, true, true, true, false, false);
 		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, false, true, true, false);
+				ReferenceType.TYPE_REFERENCE, true, false, true, true, false);
 
 		// assert
 		Assert.assertEquals(1, _references.size());
 
 		// test: assert same reference with different attributes
 		_referenceContainer.recordReference("a.b.c.d",
-				ReferenceType.TYPE_REFERENCE, true, true, false, false);
+				ReferenceType.TYPE_REFERENCE, true, true, true, false, false);
 		_referenceContainer.recordReference("a.b.c.f",
-				ReferenceType.TYPE_REFERENCE, false, true, true, false);
+				ReferenceType.TYPE_REFERENCE, true, false, true, true, false);
 
 		// assert
 		Assert.assertEquals(3, _references.size());
 		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true,
-				true, false);
+				true, true, false);
 		assertReference("a.b.c.d", ReferenceType.TYPE_REFERENCE, true, true,
-				false, false);
-		assertReference("a.b.c.f", ReferenceType.TYPE_REFERENCE, false, true,
-				true, false);
+				true, false, false);
+		assertReference("a.b.c.f", ReferenceType.TYPE_REFERENCE, true, false,
+				true, true, false);
 	}
 
 	/**
@@ -81,17 +82,17 @@ public class ReferenceContainerTest {
 	public void referenceUpdate() {
 
 		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, false, false, true);
+				ReferenceType.TYPE_REFERENCE, true, true, false, false, true);
 
 		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, true, false, false);
+				ReferenceType.TYPE_REFERENCE, true, true, true, false, false);
 
 		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, false, false, false, false);
+				ReferenceType.TYPE_REFERENCE, true, false, false, false, false);
 
 		Assert.assertEquals(1, _references.size());
 
-		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true,
+		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true, true,
 				false, true);
 	}
 
@@ -108,7 +109,8 @@ public class ReferenceContainerTest {
 	 */
 	private void assertReference(String fullyQualifiedName,
 			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isCompiletime, boolean isRuntime) {
+			boolean isImplements, boolean isClassAnnotation,
+			boolean isCompiletime, boolean isRuntime) {
 
 		// assert
 		for (Reference reference : _references) {
@@ -118,6 +120,8 @@ public class ReferenceContainerTest {
 				Assert.assertEquals(referenceType, reference.getReferenceType());
 				Assert.assertEquals(reference.isExtends(), isExtends);
 				Assert.assertEquals(reference.isImplements(), isImplements);
+				Assert.assertEquals(reference.isClassAnnotation(),
+						isClassAnnotation);
 				Assert.assertEquals(reference.isCompileTimeReference(),
 						isCompiletime);
 				Assert.assertEquals(reference.isRuntimeReference(), isRuntime);

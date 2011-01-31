@@ -86,11 +86,13 @@ public class Resource extends ResourceKey implements IResource {
 	}
 
 	public void recordReference(String fullyQualifiedName,
-			ReferenceType referenceType, Boolean isExtends,
-			Boolean isImplements, Boolean isCompiletime, Boolean isRuntime) {
+			ReferenceType referenceType, boolean isExtends,
+			boolean isImplements, boolean isClassAnnotation,
+			boolean isCompiletime, boolean isRuntime) {
 
 		_referenceContainer.recordReference(fullyQualifiedName, referenceType,
-				isExtends, isImplements, isCompiletime, isRuntime);
+				isExtends, isImplements, isClassAnnotation, isCompiletime,
+				isRuntime);
 	}
 
 	/**
@@ -100,10 +102,11 @@ public class Resource extends ResourceKey implements IResource {
 	 * @param fullyQualifiedName
 	 * @return
 	 */
-	public Type getOrCreateType(String fullyQualifiedName) {
+	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum) {
 
 		//
-		Type type = _resourceCache.getOrCreateType(fullyQualifiedName);
+		Type type = _resourceCache
+				.getOrCreateType(fullyQualifiedName, typeEnum);
 
 		//
 		containedTypes().add(type);

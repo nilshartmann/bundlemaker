@@ -75,6 +75,14 @@ public interface IReference {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean isClassAnnotation();
+
+	/**
+	 * <p>
 	 * Returns the originating {@link IResource} or <code>null</code>, if the
 	 * reference does not belong to a resource. In this case, the reference
 	 * belongs to a type that is return by method {@link IReference#getType()}.

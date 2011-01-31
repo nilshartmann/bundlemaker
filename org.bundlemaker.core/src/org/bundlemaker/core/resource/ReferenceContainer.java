@@ -54,7 +54,8 @@ public abstract class ReferenceContainer {
 	 */
 	public void recordReference(String fullyQualifiedName,
 			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isCompiletime, boolean isRuntime) {
+			boolean isImplements, boolean isClassAnnotation,
+			boolean isCompiletime, boolean isRuntime) {
 
 		//
 		Assert.isNotNull(fullyQualifiedName);
@@ -80,8 +81,8 @@ public abstract class ReferenceContainer {
 		if (reference == null) {
 
 			reference = _flyWeightCache.getReference(fullyQualifiedName,
-					referenceType, isExtends, isImplements, isCompiletime,
-					isRuntime);
+					referenceType, isExtends, isImplements, isClassAnnotation,
+					isCompiletime, isRuntime);
 
 			references().add(reference);
 			_referenceMap.put(key, reference);
@@ -104,6 +105,7 @@ public abstract class ReferenceContainer {
 		reference = _flyWeightCache.getReference(fullyQualifiedName,
 				referenceType, chooseValue(isExtends, reference.isExtends()),
 				chooseValue(isImplements, reference.isImplements()),
+				chooseValue(isClassAnnotation, reference.isClassAnnotation()),
 				chooseValue(isCompiletime, reference.isCompileTimeReference()),
 				chooseValue(isRuntime, reference.isRuntimeReference()));
 

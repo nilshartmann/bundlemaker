@@ -80,6 +80,12 @@ public class Reference implements IReference {
 		return _referenceAttributes.isExtends();
 	}
 
+	
+	
+	public boolean isClassAnnotation() {
+		return _referenceAttributes.isClassAnnotation();
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

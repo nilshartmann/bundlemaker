@@ -39,7 +39,7 @@ public class ReferenceTest {
 
 			for (int j = 0; j < referencesCount; j++) {
 				resource.recordReference("name" + i + "#" + j,
-						ReferenceType.PACKAGE_REFERENCE, true, true, false,
+						ReferenceType.PACKAGE_REFERENCE, true, true, true, false,
 						false);
 			}
 
@@ -58,7 +58,7 @@ public class ReferenceTest {
 		for (int i = 0; i < 10000; i++) {
 
 			Reference reference = resourceCache.getFlyWeightCache().getReference(
-					"name" + i + "#1", ReferenceType.PACKAGE_REFERENCE, true,
+					"name" + i + "#1", ReferenceType.PACKAGE_REFERENCE, true, true,
 					true, false, false);
 
 			Assert.assertNotNull(reference);
@@ -72,7 +72,7 @@ public class ReferenceTest {
 		for (int i = 0; i < 10000; i++) {
 
 			Reference reference = resourceCache.getFlyWeightCache().getReference("name" + i
-					+ "#40", ReferenceType.PACKAGE_REFERENCE, true, true, false, false);
+					+ "#40", ReferenceType.PACKAGE_REFERENCE, true, true, true, false, false);
 
 			Assert.assertNotNull(reference);
 		}

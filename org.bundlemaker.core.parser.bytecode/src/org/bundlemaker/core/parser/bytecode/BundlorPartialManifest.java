@@ -3,6 +3,7 @@ package org.bundlemaker.core.parser.bytecode;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 
 import com.springsource.bundlor.support.partialmanifest.PartialManifest;
@@ -45,8 +46,6 @@ public class BundlorPartialManifest implements PartialManifest {
 		_fullQualifiedTypeName = fullQualifiedTypeName;
 		_fullQualifiedEnclosingTypeName = fullQualifiedEnclosingTypeName;
 		_resource = resource;
-
-		_type = _resource.getOrCreateType(fullQualifiedTypeName);
 	}
 
 	/**
@@ -61,7 +60,7 @@ public class BundlorPartialManifest implements PartialManifest {
 
 			// TODO!!!
 			_type.recordReference(type, ReferenceType.TYPE_REFERENCE, false,
-					false, false, true);
+					false, false, false, true);
 		}
 	}
 
@@ -92,5 +91,12 @@ public class BundlorPartialManifest implements PartialManifest {
 	 */
 	public void recordType(String arg0) {
 		//
+	}
+
+	//
+	public void recordType(String arg0, TypeEnum typeEnum) {
+		
+		// TODO
+		_type = _resource.getOrCreateType(_fullQualifiedTypeName, typeEnum);
 	}
 }

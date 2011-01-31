@@ -20,6 +20,9 @@ public class Type implements IType {
 	/** the references set */
 	private Set<Reference> _references;
 
+	/** the type of this type (enum, class, interface, annotation) **/
+	private TypeEnum _typeEnum;
+
 	/** non-persistent: the source resource */
 	private Resource _sourceResource;
 
@@ -35,13 +38,19 @@ public class Type implements IType {
 	 * 
 	 * @param flyWeightCache
 	 */
-	public Type(String fullyQualifiedName, FlyWeightCache flyWeightCache) {
+	public Type(String fullyQualifiedName, TypeEnum typeEnum,
+			FlyWeightCache flyWeightCache) {
 
 		Assert.isNotNull(fullyQualifiedName);
+		Assert.isNotNull(typeEnum);
+		Assert.isNotNull(flyWeightCache);
 
 		//
 		_fullyQualifiedName = flyWeightCache
 				.getFlyWeightString(fullyQualifiedName);
+
+		// the type of the type
+		_typeEnum = typeEnum;
 
 		//
 		_referenceContainer = new ReferenceContainer(flyWeightCache) {
@@ -60,6 +69,11 @@ public class Type implements IType {
 	@Override
 	public Set<? extends IReference> getReferences() {
 		return Collections.unmodifiableSet(references());
+	}
+
+	@Override
+	public TypeEnum getType() {
+		return _typeEnum;
 	}
 
 	@Override
@@ -84,10 +98,12 @@ public class Type implements IType {
 
 	public void recordReference(String fullyQualifiedName,
 			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isCompiletime, boolean isRuntime) {
+			boolean isImplements, boolean isClassAnnotation,
+			boolean isCompiletime, boolean isRuntime) {
 
 		_referenceContainer.recordReference(fullyQualifiedName, referenceType,
-				isExtends, isImplements, isCompiletime, isRuntime);
+				isExtends, isImplements, isClassAnnotation, isCompiletime,
+				isRuntime);
 	}
 
 	/**

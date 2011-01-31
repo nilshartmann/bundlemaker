@@ -54,7 +54,7 @@ public class FlyWeightCacheTest {
 			ReferenceAttributes attributes = cache.getReferenceAttributes(
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0);
+					i % 3 == 0, i % 5 == 0, i % 7 == 0, i % 11 == 0);
 		}
 
 		//
@@ -74,12 +74,12 @@ public class FlyWeightCacheTest {
 			Reference reference = cache.getReference("fullyQualifiedName" + i,
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0);
+					i % 3 == 0, i % 5 == 0, i % 7 == 0, i % 11 == 0);
 
 			reference = cache.getReference("fullyQualifiedName",
 					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
 							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0);
+					i % 3 == 0, i % 5 == 0, i % 7 == 0, i % 11 == 0);
 		}
 
 		//
