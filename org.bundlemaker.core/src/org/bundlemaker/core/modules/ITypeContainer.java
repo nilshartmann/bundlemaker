@@ -14,24 +14,33 @@ import org.bundlemaker.core.resource.IType;
 public interface ITypeContainer {
 
 	/**
+	 * <p>
+	 * Returns the {@link IType} with the specified fully qualified name or
+	 * <code>null</code> if no {@link IType} with the specified name exists.
+	 * </p>
+	 * 
 	 * @param fullyQualifiedName
-	 * @return
+	 * @return the {@link IType} with the specified fully qualified name or
+	 *         <code>null</code> if no {@link IType} with the specified name
+	 *         exists.
 	 */
 	IType getType(String fullyQualifiedName);
 
 	/**
 	 * <p>
+	 * Returns a collection with all contained {@link IType ITypes}.
 	 * </p>
 	 * 
-	 * @return
+	 * @return a collection with all contained {@link IType ITypes}.
 	 */
 	Collection<IType> getAllContainedTypes();
 
 	/**
 	 * <p>
+	 * Returns a {@link Set} with the names of all contained types. 
 	 * </p>
 	 * 
-	 * @return
+	 * @return a {@link Set} with the names of all contained types.
 	 */
 	Set<String> getContainedTypeNames();
 

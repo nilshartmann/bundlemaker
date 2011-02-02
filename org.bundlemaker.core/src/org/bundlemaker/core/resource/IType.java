@@ -50,33 +50,37 @@ public interface IType {
 
 	/**
 	 * <p>
+	 * Returns the associated source resource.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the associated source resource.
 	 */
 	IResource getSourceResource();
-
+	
 	/**
 	 * <p>
+	 * Returns <code>true</code>, if a associated source resource is set.
 	 * </p>
 	 * 
-	 * @return
-	 */
-	IResource getBinaryResource();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
+	 * @return <code>true</code>, if a associated source resource is set.
 	 */
 	boolean hasSourceResource();
 
 	/**
 	 * <p>
+	 * Returns the associated binary resource.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the associated binary resource.
+	 */
+	IResource getBinaryResource();
+
+	/**
+	 * <p>
+	 * Returns <code>true</code>, if a associated binary resource is set.
+	 * </p>
+	 * 
+	 * @return <code>true</code>, if a associated binary resource is set.
 	 */
 	boolean hasBinaryResource();
 }
