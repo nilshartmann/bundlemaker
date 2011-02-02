@@ -345,9 +345,13 @@ public class IntegrationTest {
 	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
 			IModularizedSystem modularizedSystem) throws Exception {
 
+		//
+		File destination = new File(System.getProperty("user.dir"), "destination");
+		destination.mkdirs();
+		
 		// create the exporter context
 		ModuleExporterContext exporterContext = new ModuleExporterContext(
-				bundleMakerProject, new File("c:/temp"), modularizedSystem);
+				bundleMakerProject, destination, modularizedSystem);
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();

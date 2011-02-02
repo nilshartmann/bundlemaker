@@ -21,6 +21,9 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -164,10 +167,22 @@ public class ModularizedSystem implements IModularizedSystem {
 					// remove the module
 					iterator.remove();
 				}
-
 			}
+			
+
+			initializedModules();
 		}
 
+
+		System.out.println("// done");
+
+	}
+
+	private void initializedModules() {
+		
+		//
+		_typeToModuleListMap.clear();
+		
 		// step 5: set up the contained lists
 		for (ResourceModule module : _resourceModules) {
 
@@ -210,9 +225,6 @@ public class ModularizedSystem implements IModularizedSystem {
 				_typeToModuleListMap.get(containedType).add(module);
 			}
 		}
-
-		System.out.println("// done");
-
 	}
 
 	/**
@@ -358,7 +370,7 @@ public class ModularizedSystem implements IModularizedSystem {
 
 	@Override
 	public ITypeModule getContainingModule(String fullyQualifiedName)
-			throws AmbiguousModuleDependencyException {
+			throws AmbiguousDependencyException {
 
 		Set<ITypeModule> result = getContainingModules(fullyQualifiedName);
 
@@ -367,11 +379,40 @@ public class ModularizedSystem implements IModularizedSystem {
 		}
 
 		if (result.size() > 1) {
-			throw new AmbiguousModuleDependencyException(
+			throw new AmbiguousDependencyException(
 					"AmbiguousModuleDependencyException: " + fullyQualifiedName);
 		}
 
 		return result.toArray(new ITypeModule[0])[0];
+	}
+
+	@Override
+	public IType getType(String fullyQualifiedName)
+			throws AmbiguousDependencyException {
+
+		Assert.isNotNull(fullyQualifiedName);
+
+		// get type modules
+		Set<ITypeModule> typeModules = _typeToModuleListMap
+				.get(fullyQualifiedName);
+
+		// return null if type is unknown
+		if (typeModules == null) {
+			return null;
+		}
+
+		// if multiple type modules exist, throw an exception
+		if (typeModules.size() > 1) {
+
+			// TODO
+			new AmbiguousDependencyException(fullyQualifiedName);
+		}
+
+		// get the type module
+		ITypeModule typeModule = typeModules.toArray(new ITypeModule[0])[0];
+
+		// return the type
+		return typeModule.getType(fullyQualifiedName);
 	}
 
 	@Override
@@ -509,7 +550,8 @@ public class ModularizedSystem implements IModularizedSystem {
 		for (ITypeModule typeModule : getAllModules()) {
 
 			// iterate over contained packages
-			for (String containedPackage : typeModule.getContainedPackageNames()) {
+			for (String containedPackage : typeModule
+					.getContainedPackageNames()) {
 
 				// add
 				if (result.containsKey(containedPackage)) {
@@ -580,10 +622,16 @@ public class ModularizedSystem implements IModularizedSystem {
 			try {
 
 				// TODO DIRECTORIES!!
+				// TODO:PARSE!!
 				List<String> types = getContainedTypes(files[i]);
 
-				typeModule.getSelfContainer().getModifiableContainedTypes()
-						.addAll(types);
+				for (String type : types) {
+
+					// TODO: TypeEnum!!
+					typeModule.getSelfContainer()
+							.getModifiableContainedTypesMap()
+							.put(type, new Type(type, TypeEnum.CLASS));
+				}
 
 			} catch (IOException e) {
 

@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.TypeModule;
+import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -53,9 +55,8 @@ public class JdkModuleCreator {
 	private static TypeModule createModuleForVMInstall(IVMInstall vmInstall)
 			throws CoreException, IOException {
 
-		TypeModule virtualModule = new TypeModule(
-				new ModuleIdentifier(vmInstall.getName(),
-						vmInstall.getName()));
+		TypeModule virtualModule = new TypeModule(new ModuleIdentifier(
+				vmInstall.getName(), vmInstall.getName()));
 
 		for (LibraryLocation libraryLocation : JavaRuntime
 				.getLibraryLocations(vmInstall)) {
@@ -65,8 +66,9 @@ public class JdkModuleCreator {
 
 			for (String child : children) {
 
+				// TODO: Parsing!! ITYPE
 				if (child.endsWith(".class")) {
-					String packageName = child.substring(0, child.length()
+					String typeName = child.substring(0, child.length()
 							- ".class".length());
 
 					// if (packageName.indexOf('.') != -1) {
@@ -74,12 +76,13 @@ public class JdkModuleCreator {
 					// packageName = packageName.substring(0,
 					// packageName.lastIndexOf('.'));
 
-					packageName = packageName.replace('/', '.');
-					packageName = packageName.replace('\\', '.');
+					typeName = typeName.replace('/', '.');
+					typeName = typeName.replace('\\', '.');
 
 					// TODO
 					virtualModule.getSelfContainer()
-							.getModifiableContainedTypes().add(packageName);
+							.getModifiableContainedTypesMap()
+							.put(typeName, new Type(typeName, TypeEnum.CLASS));
 					// }
 				}
 			}

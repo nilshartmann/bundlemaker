@@ -253,6 +253,21 @@ public class BundleMakerProject implements IBundleMakerProject {
 			resource.getModifiableReferences().clear();
 			resource.getModifiableReferences().addAll(references);
 
+			//
+			for (Type type : resource.getModifiableContainedTypes()) {
+
+				// create copies of references
+				Set<Reference> typeReferences = new HashSet<Reference>();
+				for (Reference reference : type.getModifiableReferences()) {
+					Reference newReference = new Reference(reference);
+					typeReferences.add(newReference);
+					newReference.setType(type);
+				}
+
+				type.getModifiableReferences().clear();
+				type.getModifiableReferences().addAll(typeReferences);
+			}
+
 			// set monitor
 			monitor.worked(1);
 		}

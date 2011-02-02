@@ -7,6 +7,7 @@ import java.util.Set;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
 
 /**
@@ -123,10 +124,21 @@ public interface IModularizedSystem {
 	 * 
 	 * @param fullyQualifiedName
 	 * @return
-	 * @throws AmbiguousModuleDependencyException
+	 * @throws AmbiguousDependencyException
 	 */
 	ITypeModule getContainingModule(String fullyQualifiedName)
-			throws AmbiguousModuleDependencyException;
+			throws AmbiguousDependencyException;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @return
+	 * @throws AmbiguousDependencyException
+	 */
+	IType getType(String fullyQualifiedName)
+			throws AmbiguousDependencyException;
 
 	/**
 	 * <p>

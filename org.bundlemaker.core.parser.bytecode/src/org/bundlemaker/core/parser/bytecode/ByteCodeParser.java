@@ -20,6 +20,7 @@ import org.bundlemaker.core.parser.bytecode.asm.AsmTypeArtefactAnalyser;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.Type;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 

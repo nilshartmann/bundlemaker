@@ -135,13 +135,17 @@ public class ResourceContainer extends TypeContainer implements
 	 * </p>
 	 */
 	public void initialize() {
+		
+		getModifiableContainedTypesMap().clear();
 
 		// step 1: iterate over all binary resources...
 		for (IResourceStandin resourceStandin : _binaryResources) {
 
 			// ... and add all contained types
 			for (IType type : resourceStandin.getResource().getContainedTypes()) {
-				getModifiableContainedTypes().add(type.getFullyQualifiedName());
+
+				getModifiableContainedTypesMap().put(
+						type.getFullyQualifiedName(), type);
 			}
 
 			// set the back-reference
@@ -154,7 +158,10 @@ public class ResourceContainer extends TypeContainer implements
 
 			// ... and add all contained types
 			for (IType type : resourceStandin.getResource().getContainedTypes()) {
-				getModifiableContainedTypes().add(type.getFullyQualifiedName());
+
+				// TODO
+				getModifiableContainedTypesMap().put(
+						type.getFullyQualifiedName(), type);
 			}
 
 			// set the back-reference

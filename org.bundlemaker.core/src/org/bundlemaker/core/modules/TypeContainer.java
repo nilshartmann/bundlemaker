@@ -1,9 +1,13 @@
 package org.bundlemaker.core.modules;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -14,8 +18,8 @@ import org.eclipse.core.runtime.Assert;
  */
 public class TypeContainer implements ITypeContainer {
 
-	/** the contained types */
-	private Set<String> _containedTypes;
+	/** the contained type names */
+	private Map<String, IType> _containedTypes;
 
 	/**
 	 * <p>
@@ -24,8 +28,28 @@ public class TypeContainer implements ITypeContainer {
 	 */
 	public TypeContainer() {
 
-		// create the contained types list
-		_containedTypes = new HashSet<String>();
+		// create the contained types sets
+		_containedTypes = new HashMap<String, IType>();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IType getType(String fullyQualifiedName) {
+
+		//
+		return _containedTypes.get(fullyQualifiedName);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<IType> getAllContainedTypes() {
+
+		// return an unmodifiable copy
+		return Collections.unmodifiableCollection(_containedTypes.values());
 	}
 
 	/**
@@ -35,7 +59,7 @@ public class TypeContainer implements ITypeContainer {
 	public Set<String> getContainedTypeNames() {
 
 		// return an unmodifiable copy
-		return Collections.unmodifiableSet(_containedTypes);
+		return Collections.unmodifiableSet(_containedTypes.keySet());
 	}
 
 	/**
@@ -51,7 +75,7 @@ public class TypeContainer implements ITypeContainer {
 		Set<String> result = new HashSet<String>();
 
 		//
-		for (String containedType : _containedTypes) {
+		for (String containedType : _containedTypes.keySet()) {
 
 			if (!result.contains(containedType)
 					&& filter.matches(containedType)) {
@@ -90,7 +114,7 @@ public class TypeContainer implements ITypeContainer {
 		Set<String> result = new HashSet<String>();
 
 		//
-		for (String containedType : _containedTypes) {
+		for (String containedType : _containedTypes.keySet()) {
 
 			//
 			String packageName = "";
@@ -120,7 +144,7 @@ public class TypeContainer implements ITypeContainer {
 	 * 
 	 * @return
 	 */
-	public Set<String> getModifiableContainedTypes() {
+	public Map<String, IType> getModifiableContainedTypesMap() {
 		return _containedTypes;
 	}
 }

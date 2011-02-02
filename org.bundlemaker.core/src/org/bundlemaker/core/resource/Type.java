@@ -36,6 +36,25 @@ public class Type implements IType {
 	 * <p>
 	 * </p>
 	 * 
+	 * @param fullyQualifiedName
+	 * @param typeEnum
+	 */
+	public Type(String fullyQualifiedName, TypeEnum typeEnum) {
+
+		Assert.isNotNull(fullyQualifiedName);
+		Assert.isNotNull(typeEnum);
+
+		//
+		_fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
+
+		// the type of the type
+		_typeEnum = typeEnum;
+	}
+	
+	/**
+	 * <p>
+	 * </p>
+	 * 
 	 * @param flyWeightCache
 	 */
 	public Type(String fullyQualifiedName, TypeEnum typeEnum,
@@ -66,36 +85,80 @@ public class Type implements IType {
 		return _fullyQualifiedName.toString();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getName() {
+
+		// get the fully qualified name
+		String fullyQualifiedName = _fullyQualifiedName.toString();
+
+		// get the index
+		int index = fullyQualifiedName.lastIndexOf('.');
+
+		// return the result
+		return index != -1 ? fullyQualifiedName.substring(index)
+				: fullyQualifiedName;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Set<? extends IReference> getReferences() {
 		return Collections.unmodifiableSet(references());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public TypeEnum getType() {
 		return _typeEnum;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public IResource getSourceResource() {
 		return _sourceResource;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public IResource getBinaryResource() {
 		return _binaryResource;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean hasSourceResource() {
 		return _sourceResource != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean hasBinaryResource() {
 		return _binaryResource != null;
 	}
 
+	/**
+	 * @param fullyQualifiedName
+	 * @param referenceType
+	 * @param isExtends
+	 * @param isImplements
+	 * @param isClassAnnotation
+	 * @param isCompiletime
+	 * @param isRuntime
+	 */
 	public void recordReference(String fullyQualifiedName,
 			ReferenceType referenceType, boolean isExtends,
 			boolean isImplements, boolean isClassAnnotation,

@@ -4,6 +4,8 @@ import javax.swing.JFrame;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.junit.Test;
 
 /**
@@ -68,13 +70,13 @@ public class TypeModuleTest {
 
 		//
 		for (int i = 0; i < 100000; i++) {
-			module.getSelfContainer().getModifiableContainedTypes()
-					.add("a.b.c" + i);
+			module.getSelfContainer().getModifiableContainedTypesMap()
+					.put("a.b.c" + i, new Type("a.b.c" + i, TypeEnum.CLASS));
 		}
 
 		//
 		Assert.assertEquals(100000, module.getSelfContainer()
-				.getModifiableContainedTypes().size());
+				.getModifiableContainedTypesMap().size());
 
 		Assert.assertEquals(100000, module.getContainedTypeNames().size());
 	}

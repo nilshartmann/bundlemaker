@@ -10,7 +10,24 @@ import java.util.Set;
  */
 public interface IType {
 
+	/**
+	 * <p>
+	 * Returns the type of the this type.
+	 * </p>
+	 * 
+	 * @return
+	 */
 	TypeEnum getType();
+	
+	/**
+	 * <p>
+	 * Returns the name of the referenced type, e.g.
+	 * <code>'YXY'</code>.
+	 * </p>
+	 * 
+	 * @return the name.
+	 */
+	String getName();
 
 	/**
 	 * <p>

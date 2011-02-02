@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -116,6 +117,52 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 * {@inheritDoc}
 	 */
 	@Override
+	public IType getType(final String fullyQualifiedName) {
+
+		// create the result set
+		final IType[] result = new IType[1];
+
+		//
+		doWithAllContainers(new ContainerClosure<T>() {
+			@Override
+			public boolean doWithContainer(T resourceContainer) {
+
+				result[0] = resourceContainer.getType(fullyQualifiedName);
+
+				return result[0] == null;
+			}
+		});
+
+		// return the result
+		return result[0];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<IType> getAllContainedTypes() {
+
+		// create the result set
+		final Set<IType> result = new HashSet<IType>();
+
+		//
+		doWithAllContainers(new ContainerClosure<T>() {
+			@Override
+			public boolean doWithContainer(T resourceContainer) {
+				result.addAll(resourceContainer.getAllContainedTypes());
+				return false;
+			}
+		});
+
+		// return the result
+		return Collections.unmodifiableSet(result);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Set<String> getContainedPackageNames() {
 		return getContainedPackageNames(IQueryFilter.TRUE_QUERY_FILTER);
 	}
@@ -133,7 +180,8 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 		doWithAllContainers(new ContainerClosure<T>() {
 			@Override
 			public boolean doWithContainer(T resourceContainer) {
-				result.addAll(resourceContainer.getContainedPackageNames(filter));
+				result.addAll(resourceContainer
+						.getContainedPackageNames(filter));
 				return false;
 			}
 		});
