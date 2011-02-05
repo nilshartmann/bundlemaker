@@ -100,11 +100,11 @@ public class BundleMakerProjectDescription implements
 			//
 			if (fileBasedContent.isResourceContent()) {
 
-				sourceResourcesCount += fileBasedContent
+				binaryResourcesCount += fileBasedContent
 						.getModifiableResourceContent()
 						.getModifiableBinaryResources().size();
 
-				binaryResourcesCount += fileBasedContent
+				sourceResourcesCount += fileBasedContent
 						.getModifiableResourceContent()
 						.getModifiableSourceResources().size();
 			}
