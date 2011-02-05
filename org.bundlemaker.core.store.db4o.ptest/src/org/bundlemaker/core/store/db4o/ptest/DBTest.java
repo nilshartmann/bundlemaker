@@ -5,16 +5,20 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.store.db4o.internal.Activator;
-import org.bundlemaker.core.store.db4o.internal.PersistentDependencyStoreImpl;
+import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * <p>
@@ -40,17 +44,16 @@ public class DBTest {
 	@Test
 	public void testDatabase() throws CoreException {
 
-		Assert.assertNotNull(Activator.getDb4oService());
-
+		IProject project = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature("dbtest");
+		IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project, null);
+		IPersistentDependencyStore store = Activator.getDefault().getPersistentDependencyStore(bundleMakerProject);
+		Assert.assertNotNull(store);
+		
 		// step 2: delete the existing '.bundlemaker/db4o.store' file
 		File file = new File(FILE_NAME);
 		if (file.exists()) {
 			Assert.assertTrue(file.delete());
 		}
-		PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(
-				Activator.getDb4oService(), FILE_NAME);
-
-		store.init();
 
 		Assert.assertNotNull(store.getResources());
 

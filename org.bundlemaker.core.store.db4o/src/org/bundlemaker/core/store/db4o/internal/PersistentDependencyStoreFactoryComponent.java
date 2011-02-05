@@ -7,19 +7,17 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.bundlemaker.core.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 import com.db4o.osgi.Db4oService;
 
 /**
  * <p>
- * Implementation of the {@link IPersistentDependencyStoreFactory} interface.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PersistentDependencyStoreFactoryImpl implements
+public class PersistentDependencyStoreFactoryComponent implements
 		IPersistentDependencyStoreFactory {
 
 	/** the cache */
@@ -31,17 +29,10 @@ public class PersistentDependencyStoreFactoryImpl implements
 	/**
 	 * <p>
 	 * Creates a new instance of type
-	 * {@link PersistentDependencyStoreFactoryImpl}.
+	 * {@link PersistentDependencyStoreFactoryComponent}.
 	 * </p>
-	 * 
-	 * @param db4oService
 	 */
-	public PersistentDependencyStoreFactoryImpl(Db4oService db4oService) {
-		Assert.isNotNull(db4oService, "Parameter '" + db4oService
-				+ "' has to be set!");
-
-		// set the db4o service
-		_db4oService = db4oService;
+	public PersistentDependencyStoreFactoryComponent() {
 
 		// create the cache
 		_cache = new HashMap<IBundleMakerProject, PersistentDependencyStoreImpl>();
@@ -104,5 +95,25 @@ public class PersistentDependencyStoreFactoryImpl implements
 
 		// return the store
 		return store;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param db4oService
+	 */
+	public void setDb4oService(Db4oService db4oService) {
+		_db4oService = db4oService;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param db4oService
+	 */
+	public void unsetDb4oService(Db4oService db4oService) {
+		_db4oService = null;
 	}
 }

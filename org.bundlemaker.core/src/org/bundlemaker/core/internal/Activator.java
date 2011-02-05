@@ -156,8 +156,12 @@ public class Activator extends Plugin {
 	 */
 	public IPersistentDependencyStoreFactory getPersistentInfoStoreFactory() {
 
-		// return
-		return (IPersistentDependencyStoreFactory) _factoryTracker.getService();
+		try {
+			// return
+			return (IPersistentDependencyStoreFactory) _factoryTracker.waitForService(5000);
+		} catch (InterruptedException e) {
+			return null;
+		}
 	}
 
 	/**

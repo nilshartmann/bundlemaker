@@ -29,4 +29,4 @@ Require-Bundle: org.eclipse.core.runtime,
  com.springsource.util.osgi;bundle-version="2.0.0",
  org.apache.ant;bundle-version="1.7.1"
 Bundle-Activator: org.bundlemaker.core.internal.Activator
-
+Service-Component: OSGI-INF/dependencyStore.xml
