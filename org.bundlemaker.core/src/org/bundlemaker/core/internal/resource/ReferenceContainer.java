@@ -1,9 +1,10 @@
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core.internal.resource;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.resource.ReferenceType;
 import org.eclipse.core.runtime.Assert;
 
 /**

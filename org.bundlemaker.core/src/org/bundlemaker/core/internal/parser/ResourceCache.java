@@ -3,8 +3,8 @@ package org.bundlemaker.core.internal.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.resource.FlyWeightCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;

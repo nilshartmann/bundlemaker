@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.resource.ArchiveFileCache;
-import org.bundlemaker.core.resource.ResourceStandin;
+import org.bundlemaker.core.internal.resource.ArchiveFileCache;
+import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;

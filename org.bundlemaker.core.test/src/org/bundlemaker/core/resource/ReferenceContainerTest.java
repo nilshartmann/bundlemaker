@@ -5,9 +5,9 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.resource.FlyWeightCache;
-import org.bundlemaker.core.resource.Reference;
-import org.bundlemaker.core.resource.ReferenceContainer;
+import org.bundlemaker.core.internal.resource.FlyWeightCache;
+import org.bundlemaker.core.internal.resource.Reference;
+import org.bundlemaker.core.internal.resource.ReferenceContainer;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.junit.Before;
 import org.junit.Test;

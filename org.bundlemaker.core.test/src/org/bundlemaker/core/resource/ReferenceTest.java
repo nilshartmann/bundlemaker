@@ -3,6 +3,7 @@ package org.bundlemaker.core.resource;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Test;
 

@@ -1,4 +1,6 @@
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core.internal.resource;
+
+import org.bundlemaker.core.resource.ReferenceType;
 
 /**
  * <p>

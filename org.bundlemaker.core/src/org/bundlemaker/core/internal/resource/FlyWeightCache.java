@@ -1,6 +1,8 @@
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core.internal.resource;
 
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.bundlemaker.core.resource.ReferenceType;
 
 /**
  * <p>

@@ -1,5 +1,11 @@
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core.internal.resource;
 
+import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.resource.Type;
 import org.eclipse.core.runtime.Assert;
 
 /**

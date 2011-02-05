@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.internal.resource.Reference;
+import org.bundlemaker.core.internal.resource.ReferenceContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**
