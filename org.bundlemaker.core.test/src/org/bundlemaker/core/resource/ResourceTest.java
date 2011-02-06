@@ -3,6 +3,7 @@ package org.bundlemaker.core.resource;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Test;
 
@@ -70,7 +71,7 @@ public class ResourceTest {
 		stopWatch_1.start();
 
 		//
-		Resource resource = new Resource("start", "start", "start",
+		IModifiableResource resource = new Resource("start", "start", "start",
 				resourceCache);
 		for (int j = 0; j < 100; j++) {
 

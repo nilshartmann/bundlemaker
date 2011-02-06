@@ -18,7 +18,7 @@ import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.AsmTypeArtefactAnalyser;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.Type;
 import org.eclipse.core.runtime.CoreException;
@@ -203,7 +203,7 @@ public class ByteCodeParser implements IParser {
 				elementID.getRoot(), elementID.getPath());
 
 		// get the additional type info
-		Resource resource = cache.getOrCreateResource(key);
+		IModifiableResource resource = cache.getOrCreateResource(key);
 
 		// get the fake manifest
 		BundlorPartialManifest fakePartialManifest = new BundlorPartialManifest(

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.parser.bytecode;
 
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
@@ -17,7 +17,7 @@ import com.springsource.bundlor.support.partialmanifest.PartialManifest;
 public class BundlorPartialManifest implements PartialManifest {
 
 	/** - */
-	private Resource _resource;
+	private IModifiableResource _resource;
 
 	private Type _type;
 
@@ -37,7 +37,7 @@ public class BundlorPartialManifest implements PartialManifest {
 	 * @param resource
 	 */
 	public BundlorPartialManifest(String fullQualifiedTypeName,
-			String fullQualifiedEnclosingTypeName, Resource resource) {
+			String fullQualifiedEnclosingTypeName, IModifiableResource resource) {
 
 		Assert.isNotNull(fullQualifiedTypeName);
 		Assert.isNotNull(fullQualifiedEnclosingTypeName);

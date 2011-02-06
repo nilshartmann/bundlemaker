@@ -15,7 +15,7 @@ import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
 import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
 import org.bundlemaker.core.parser.jdt.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.eclipse.core.resources.IResource;
@@ -281,7 +281,7 @@ public class JdtParser implements IParser {
 		ResourceKey key = new ResourceKey(elementID.getContentId(),
 				elementID.getRoot(), elementID.getPath());
 
-		Resource resource = (Resource) cache.getOrCreateResource(key);
+		IModifiableResource resource = (IModifiableResource) cache.getOrCreateResource(key);
 
 		// step 6: set the directly referenced types
 		JdtAstVisitor visitor = new JdtAstVisitor(resource);

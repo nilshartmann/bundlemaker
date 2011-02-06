@@ -8,6 +8,7 @@ import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.FlyWeightString;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.ReferenceContainer;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.eclipse.core.runtime.Assert;
 
 /**

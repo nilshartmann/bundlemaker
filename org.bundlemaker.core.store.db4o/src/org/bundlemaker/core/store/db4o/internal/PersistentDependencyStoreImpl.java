@@ -2,7 +2,8 @@ package org.bundlemaker.core.store.db4o.internal;
 
 import java.util.List;
 
-import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.resource.IModifiableResource;
 
 import com.db4o.osgi.Db4oService;
 import com.db4o.query.Query;
@@ -43,7 +44,7 @@ public class PersistentDependencyStoreImpl extends
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateResource(Resource bundleElement) {
+	public void updateResource(IModifiableResource bundleElement) {
 		getDatabase().store(bundleElement);
 	}
 }

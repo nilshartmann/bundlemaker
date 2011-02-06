@@ -3,7 +3,7 @@ package org.bundlemaker.core.parser.bytecode;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -44,7 +44,7 @@ public class JavaElementIdentifier {
 	private FileType _fileType;
 
 	/** the associated referencing element */
-	private Resource _referencingElement;
+	private IModifiableResource _referencingElement;
 
 	/**
 	 * <p>
@@ -72,7 +72,7 @@ public class JavaElementIdentifier {
 	/**
 	 * @param element
 	 */
-	public JavaElementIdentifier(Resource element) {
+	public JavaElementIdentifier(IModifiableResource element) {
 		Assert.isNotNull(element);
 
 		_contentId = element.getContentId();

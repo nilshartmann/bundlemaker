@@ -1,12 +1,18 @@
-package org.bundlemaker.core.resource;
+package org.bundlemaker.core.internal.resource;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
-import org.bundlemaker.core.internal.resource.Reference;
-import org.bundlemaker.core.internal.resource.ReferenceContainer;
+import org.bundlemaker.core.resource.IModifiableResource;
+import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -15,7 +21,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Resource extends ResourceKey implements IResource {
+public class Resource extends ResourceKey implements IModifiableResource {
 
 	/** - */
 	private Set<Reference> _references;
@@ -87,6 +93,10 @@ public class Resource extends ResourceKey implements IResource {
 		return _resourceStandin;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.bundlemaker.core.resource.IModifiableResource#recordReference(java.lang.String, org.bundlemaker.core.resource.ReferenceType, boolean, boolean, boolean, boolean, boolean)
+	 */
+	@Override
 	public void recordReference(String fullyQualifiedName,
 			ReferenceType referenceType, boolean isExtends,
 			boolean isImplements, boolean isClassAnnotation,
@@ -97,13 +107,10 @@ public class Resource extends ResourceKey implements IResource {
 				isRuntime);
 	}
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.bundlemaker.core.resource.IModifiableResource#getOrCreateType(java.lang.String, org.bundlemaker.core.resource.TypeEnum)
 	 */
+	@Override
 	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum) {
 
 		//
@@ -124,22 +131,18 @@ public class Resource extends ResourceKey implements IResource {
 		_resourceStandin = resourceStandin;
 	}
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableContainedTypes()
 	 */
+	@Override
 	public Set<Type> getModifiableContainedTypes() {
 		return containedTypes();
 	}
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableReferences()
 	 */
+	@Override
 	public Set<Reference> getModifiableReferences() {
 		return references();
 	}

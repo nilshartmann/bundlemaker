@@ -1,7 +1,8 @@
 package org.bundlemaker.core.store;
 
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.Resource;
 
 /**
  * <p>
@@ -21,7 +22,7 @@ public interface IPersistentDependencyStore extends IDependencyStore {
 	 * @param resource
 	 *            the {@link Resource} to add/update
 	 */
-	void updateResource(Resource resource);
+	void updateResource(IModifiableResource resource);
 
 	/**
 	 * <p>

@@ -57,7 +57,7 @@ public class ResourceKey implements IResourceKey {
 	 * @param path
 	 * @param archiveFileCache
 	 */
-	public ResourceKey(String contentId, String root, String path,
+	protected ResourceKey(String contentId, String root, String path,
 			ArchiveFileCache archiveFileCache) {
 		Assert.isNotNull(contentId);
 		Assert.isNotNull(root);

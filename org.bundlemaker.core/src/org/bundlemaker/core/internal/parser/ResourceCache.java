@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
@@ -85,7 +86,7 @@ public class ResourceCache implements IResourceCache {
 		}
 
 		// update all
-		for (Resource modifiableResource : _resourceMap.values()) {
+		for (IModifiableResource modifiableResource : _resourceMap.values()) {
 			_dependencyStore.updateResource(modifiableResource);
 
 			//
@@ -108,7 +109,7 @@ public class ResourceCache implements IResourceCache {
 	 */
 	// TODO synchronized
 	@Override
-	public synchronized Resource getOrCreateResource(IResourceKey resourceKey) {
+	public synchronized IModifiableResource getOrCreateResource(IResourceKey resourceKey) {
 
 		//
 		Resource resource = _resourceMap.get(resourceKey);

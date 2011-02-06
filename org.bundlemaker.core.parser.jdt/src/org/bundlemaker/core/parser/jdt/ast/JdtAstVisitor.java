@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
@@ -61,7 +61,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 public class JdtAstVisitor extends ASTVisitor {
 
 	/** - */
-	private Resource _javaSourceResource;
+	private IModifiableResource _javaSourceResource;
 
 	/** - */
 	private Stack<org.bundlemaker.core.resource.Type> _currentTypes;
@@ -83,7 +83,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	 * @param javaSourceResource
 	 * @param mapTypeInfo
 	 */
-	public JdtAstVisitor(Resource javaSourceResource) {
+	public JdtAstVisitor(IModifiableResource javaSourceResource) {
 		Assert.isNotNull(javaSourceResource);
 
 		_javaSourceResource = javaSourceResource;

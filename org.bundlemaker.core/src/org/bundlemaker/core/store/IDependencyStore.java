@@ -2,7 +2,7 @@ package org.bundlemaker.core.store;
 
 import java.util.List;
 
-import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.internal.resource.Resource;
 
 /**
  * <p>

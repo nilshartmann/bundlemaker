@@ -5,9 +5,10 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.internal.resource.ArchiveFileCache;
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.bundlemaker.core.util.StopWatch;
@@ -126,7 +127,7 @@ public class ResourceCacheTest {
 		}
 
 		@Override
-		public void updateResource(Resource resource) {
+		public void updateResource(IModifiableResource resource) {
 			ResourceCacheTest.this.count++;
 		}
 
