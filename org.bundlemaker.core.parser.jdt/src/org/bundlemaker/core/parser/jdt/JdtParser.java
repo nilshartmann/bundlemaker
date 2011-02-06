@@ -309,7 +309,7 @@ public class JdtParser implements IParser {
 		// .getIdForEnclosingNonLocalAndNonAnonymousType();
 		//
 		// //
-		// IResourceStandin standin = fileBasedContent.getResourceContent()
+		// IResource standin = fileBasedContent.getResourceContent()
 		// .getBinaryResource(new Path(enclosingClassId.getPath()));
 		// Resource element = cache.getOrCreateModifiableResource(standin);
 		//

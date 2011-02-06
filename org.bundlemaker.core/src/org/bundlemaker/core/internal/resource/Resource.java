@@ -5,9 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.ResourceKey;
@@ -29,7 +30,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	private Set<Type> _containedTypes;
 
 	/** do not set transient! */
-	private IResourceStandin _resourceStandin;
+	private ResourceStandin _resourceStandin;
 
 	/** - */
 	private transient ReferenceContainer _referenceContainer;
@@ -87,11 +88,6 @@ public class Resource extends ResourceKey implements IModifiableResource {
 		return Collections.unmodifiableSet(containedTypes());
 	}
 
-	@Override
-	public IResourceStandin getResourceStandin() {
-		return _resourceStandin;
-	}
-
 	/* (non-Javadoc)
 	 * @see org.bundlemaker.core.resource.IModifiableResource#recordReference(java.lang.String, org.bundlemaker.core.resource.ReferenceType, boolean, boolean, boolean, boolean, boolean)
 	 */
@@ -126,8 +122,12 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	/**
 	 * @param resourceStandin
 	 */
-	public void setResourceStandin(IResourceStandin resourceStandin) {
+	public void setResourceStandin(ResourceStandin resourceStandin) {
 		_resourceStandin = resourceStandin;
+	}
+	
+	public ResourceStandin getResourceStandin() {
+		return _resourceStandin;
 	}
 
 	/* (non-Javadoc)
@@ -144,6 +144,20 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	@Override
 	public Set<Reference> getModifiableReferences() {
 		return references();
+	}
+	
+	
+
+	@Override
+	public IResourceModule getResourceModule() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int compareTo(IResource arg0) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	/**

@@ -6,7 +6,7 @@ import java.util.Set;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.modules.ResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -26,12 +26,12 @@ public class TransformationUtils {
 	 * @param toAdd
 	 */
 	// TODO MOVE
-	public static void addAll(Set<IResourceStandin> target,
-			List<IResourceStandin> toAdd) {
+	public static void addAll(Set<IResource> target,
+			List<IResource> toAdd) {
 
-		for (IResourceStandin iResourceStandin : toAdd) {
-			if (iResourceStandin instanceof ResourceStandin) {
-				target.add((ResourceStandin) iResourceStandin);
+		for (IResource IResource : toAdd) {
+			if (IResource instanceof ResourceStandin) {
+				target.add((ResourceStandin) IResource);
 			}
 		}
 	}
@@ -46,7 +46,7 @@ public class TransformationUtils {
 	 */
 	// TODO MOVE
 	public static void removeAll(ResourceModule resourceModule,
-			List<IResourceStandin> resourceStandins, ContentType binary) {
+			List<IResource> resourceStandins, ContentType binary) {
 
 		removeAll(
 				resourceModule.getSelfContainer().getModifiableResourcesSet(
@@ -82,11 +82,11 @@ public class TransformationUtils {
 	// return null;
 	// }
 
-	private static void removeAll(Set<IResourceStandin> target,
-			List<IResourceStandin> toRemove) {
+	private static void removeAll(Set<IResource> target,
+			List<IResource> toRemove) {
 
-		for (IResourceStandin iResourceStandin : toRemove) {
-			target.remove(iResourceStandin);
+		for (IResource IResource : toRemove) {
+			target.remove(IResource);
 		}
 	}
 }

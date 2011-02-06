@@ -15,7 +15,7 @@ import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -47,14 +47,14 @@ public class SimpleReportExporter extends AbstractExporter {
 		builder.append("\n");
 		builder.append("Source-Content: \n");
 
-		for (IResourceStandin resource : asSortedList(module
+		for (IResource resource : asSortedList(module
 				.getResources(ContentType.SOURCE))) {
 			builder.append(resource.getPath() + "\n");
 		}
 
 		builder.append("\n");
 		builder.append("Binary-Content: \n");
-		for (IResourceStandin resource : asSortedList(module
+		for (IResource resource : asSortedList(module
 				.getResources(ContentType.BINARY))) {
 			builder.append(resource.getPath() + "\n");
 		}

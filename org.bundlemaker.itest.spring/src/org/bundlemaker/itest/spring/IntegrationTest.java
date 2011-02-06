@@ -19,7 +19,6 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
@@ -321,9 +320,9 @@ public class IntegrationTest {
 
 			if (reference.isCompileTimeReference()
 					&& !reference.isRuntimeReference()) {
-				
+
 				/** TODO **/
-				
+
 				if (reference.hasAssociatedType()) {
 					System.out.println(reference);
 					System.out.println(reference.getType().getSourceResource()
@@ -345,9 +344,10 @@ public class IntegrationTest {
 			IModularizedSystem modularizedSystem) throws Exception {
 
 		//
-		File destination = new File(System.getProperty("user.dir"), "destination");
+		File destination = new File(System.getProperty("user.dir"),
+				"destination");
 		destination.mkdirs();
-		
+
 		// create the exporter context
 		ModuleExporterContext exporterContext = new ModuleExporterContext(
 				bundleMakerProject, destination, modularizedSystem);
@@ -379,39 +379,25 @@ public class IntegrationTest {
 			Map<String, IType> typeMap = new HashMap<String, IType>();
 
 			// step 1: assert binary content
-			for (IResourceStandin resourceStandin : fileBasedContent
-					.getResourceContent().getBinaryResources()) {
-
-				// assert the resource is set
-				Assert.assertNotNull(resourceStandin.getRoot() + "/"
-						+ resourceStandin.getPath(),
-						resourceStandin.getResource());
-
-				// get the resource
-				IResource resource = resourceStandin.getResource();
-
-				// assert the back reference
-				Assert.assertEquals(resource.getResourceStandin(),
-						resourceStandin);
+			for (IResource resource : fileBasedContent.getResourceContent()
+					.getBinaryResources()) {
 
 				// assert that the binary resources don't have any references
 				Assert.assertEquals(0, resource.getReferences().size());
 
 				// additional asserts if the resource is a class
-				if (resourceStandin.getPath().endsWith(".class")) {
+				if (resource.getPath().endsWith(".class")) {
 
 					// TODO
 					// Assert.assertEquals(resourceStandin.getPath(), 1,
 					// resourceStandin.getResource().getContainedTypes()
 					// .size());
 
-					for (IType type : resourceStandin.getResource()
-							.getContainedTypes()) {
+					for (IType type : resource.getContainedTypes()) {
 
 						Assert.assertNotNull(type.getBinaryResource());
 						Assert.assertTrue(type.hasBinaryResource());
-						Assert.assertEquals(resourceStandin.getResource(),
-								type.getBinaryResource());
+						Assert.assertEquals(resource, type.getBinaryResource());
 
 						//
 						typeMap.put(type.getFullyQualifiedName(), type);
@@ -443,32 +429,20 @@ public class IntegrationTest {
 			}
 
 			// step 2: assert source content
-			for (IResourceStandin resourceStandin : fileBasedContent
-					.getResourceContent().getSourceResources()) {
-
-				// assert the resource is set
-				Assert.assertNotNull(resourceStandin.getRoot() + "/"
-						+ resourceStandin.getPath(),
-						resourceStandin.getResource());
-
-				// get the resource
-				IResource sourceResource = resourceStandin.getResource();
-
-				// assert the back reference
-				Assert.assertEquals(sourceResource.getResourceStandin(),
-						resourceStandin);
+			for (IResource resource : fileBasedContent.getResourceContent()
+					.getSourceResources()) {
 
 				// assert that the binary resources don't have any references
 				// Assert.assertEquals(0, resource.getReferences().size());
 
 				// additional asserts if the resource is a class
-				if (sourceResource.getPath().endsWith(".java")) {
+				if (resource.getPath().endsWith(".java")) {
 
 					// TODO
 					// Assert.assertTrue(sourceResource.getPath(),
 					// sourceResource.getContainedTypes().size() > 0);
-					if (sourceResource.getContainedTypes().size() == 0) {
-						System.out.println(sourceResource.getPath());
+					if (resource.getContainedTypes().size() == 0) {
+						System.out.println(resource.getPath());
 					}
 
 					// TODO
@@ -476,12 +450,11 @@ public class IntegrationTest {
 					// resourceStandin.getResource().getContainedTypes()
 					// .size());
 
-					for (IType type : sourceResource.getContainedTypes()) {
+					for (IType type : resource.getContainedTypes()) {
 
 						Assert.assertNotNull(type.getSourceResource());
 						Assert.assertTrue(type.hasSourceResource());
-						Assert.assertEquals(sourceResource,
-								type.getSourceResource());
+						Assert.assertEquals(resource, type.getSourceResource());
 
 						Assert.assertTrue(
 								String.format(

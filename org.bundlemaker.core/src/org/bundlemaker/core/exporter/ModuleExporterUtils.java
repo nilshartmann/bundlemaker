@@ -7,7 +7,8 @@ import java.util.List;
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -63,7 +64,7 @@ public class ModuleExporterUtils {
 
 		// step 2: get the root file (or return true)
 		String root = null;
-		for (IResourceStandin resourceStandin : resourceContainer
+		for (IResource resourceStandin : resourceContainer
 				.getResources(contentType)) {
 			if (root == null) {
 				root = resourceStandin.getRoot();
@@ -122,8 +123,8 @@ public class ModuleExporterUtils {
 		}
 
 		// get resource standin
-		IResourceStandin resourceStandin = resourceModule.getResources(
-				contentType).toArray(new IResourceStandin[0])[0];
+		IResource resourceStandin = resourceModule.getResources(
+				contentType).toArray(new IResource[0])[0];
 
 		// return the root
 		return new File(resourceStandin.getRoot());

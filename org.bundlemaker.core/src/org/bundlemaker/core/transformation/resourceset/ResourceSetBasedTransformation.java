@@ -11,7 +11,7 @@ import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.ResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.util.TransformationUtils;
 import org.eclipse.core.runtime.Assert;
@@ -166,7 +166,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 	private void processResources(ResourceModule originResourceModule,
 			ResourceModule targetResourceModule, ResourceSet resourceSet) {
 
-		List<IResourceStandin> resourceStandinsToMove = resourceSet
+		List<IResource> resourceStandinsToMove = resourceSet
 				.getMatchingResources(originResourceModule, ContentType.BINARY);
 
 		TransformationUtils.addAll(targetResourceModule.getSelfContainer()

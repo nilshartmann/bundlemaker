@@ -16,7 +16,7 @@ import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -195,7 +195,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
 		// copy the source
-		for (IResourceStandin resourceStandin : module
+		for (IResource resourceStandin : module
 				.getResources(ContentType.SOURCE)) {
 
 			if (!resourceStandin.getPath().startsWith("META-INF")) {

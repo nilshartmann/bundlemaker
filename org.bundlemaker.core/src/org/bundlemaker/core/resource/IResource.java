@@ -2,13 +2,15 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IResourceModule;
+
 /**
  * <p>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IResource extends IResourceKey {
+public interface IResource extends IResourceKey, Comparable<IResource> {
 
 	/**
 	 * <p>
@@ -33,10 +35,8 @@ public interface IResource extends IResourceKey {
 	/**
 	 * <p>
 	 * </p>
-	 * <b>Note:</b> This reference is set after the model is loaded from the
-	 * database. It is <b>not</b> part of the stored model. </p>
 	 * 
 	 * @return
 	 */
-	IResourceStandin getResourceStandin();
+	IResourceModule getResourceModule();
 }

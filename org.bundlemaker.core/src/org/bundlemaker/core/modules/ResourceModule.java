@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -45,11 +45,11 @@ public class ResourceModule extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IResourceStandin getResource(final String path,
+	public IResource getResource(final String path,
 			final ContentType contentType) {
 
 		// create the result set
-		final IResourceStandin[] result = new IResourceStandin[1];
+		final IResource[] result = new IResource[1];
 
 		//
 		doWithAllContainers(new ContainerClosure<ResourceContainer>() {
@@ -68,10 +68,10 @@ public class ResourceModule extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<IResourceStandin> getResources(final ContentType contentType) {
+	public Set<IResource> getResources(final ContentType contentType) {
 
 		// create the result set
-		final Set<IResourceStandin> result = new HashSet<IResourceStandin>();
+		final Set<IResource> result = new HashSet<IResource>();
 
 		//
 		doWithAllContainers(new ContainerClosure<ResourceContainer>() {

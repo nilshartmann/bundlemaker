@@ -8,7 +8,6 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -22,10 +21,10 @@ public class ResourceContainer extends TypeContainer implements
 		IResourceContainer {
 
 	/** the binary resources */
-	private Set<IResourceStandin> _binaryResources;
+	private Set<IResource> _binaryResources;
 
 	/** the source resources */
-	private Set<IResourceStandin> _sourceResources;
+	private Set<IResource> _sourceResources;
 
 	/** the containing resource module */
 	private IResourceModule _resourceModule;
@@ -38,8 +37,8 @@ public class ResourceContainer extends TypeContainer implements
 	public ResourceContainer() {
 
 		// create the resource sets
-		_binaryResources = new HashSet<IResourceStandin>();
-		_sourceResources = new HashSet<IResourceStandin>();
+		_binaryResources = new HashSet<IResource>();
+		_sourceResources = new HashSet<IResource>();
 	}
 
 	/**
@@ -54,10 +53,10 @@ public class ResourceContainer extends TypeContainer implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IResourceStandin getResource(String path, ContentType contentType) {
+	public IResource getResource(String path, ContentType contentType) {
 
 		//
-		for (IResourceStandin resourceStandin : getModifiableResourcesSet(contentType)) {
+		for (IResource resourceStandin : getModifiableResourcesSet(contentType)) {
 
 			//
 			if (resourceStandin.getPath().equals(path)) {
@@ -73,7 +72,7 @@ public class ResourceContainer extends TypeContainer implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<IResourceStandin> getResources(ContentType contentType) {
+	public Set<IResource> getResources(ContentType contentType) {
 
 		//
 		return Collections
@@ -139,10 +138,10 @@ public class ResourceContainer extends TypeContainer implements
 		getModifiableContainedTypesMap().clear();
 
 		// step 1: iterate over all binary resources...
-		for (IResourceStandin resourceStandin : _binaryResources) {
+		for (IResource resourceStandin : _binaryResources) {
 
 			// ... and add all contained types
-			for (IType type : resourceStandin.getResource().getContainedTypes()) {
+			for (IType type : resourceStandin.getContainedTypes()) {
 
 				getModifiableContainedTypesMap().put(
 						type.getFullyQualifiedName(), type);
@@ -154,10 +153,10 @@ public class ResourceContainer extends TypeContainer implements
 		}
 
 		// step 2: iterate over all source resources...
-		for (IResourceStandin resourceStandin : _sourceResources) {
+		for (IResource resourceStandin : _sourceResources) {
 
 			// ... and add all contained types
-			for (IType type : resourceStandin.getResource().getContainedTypes()) {
+			for (IType type : resourceStandin.getContainedTypes()) {
 
 				// TODO
 				getModifiableContainedTypesMap().put(
@@ -178,7 +177,7 @@ public class ResourceContainer extends TypeContainer implements
 	 * @param contentType
 	 * @return
 	 */
-	public Set<IResourceStandin> getModifiableResourcesSet(
+	public Set<IResource> getModifiableResourcesSet(
 			ContentType contentType) {
 
 		Assert.isNotNull(contentType);
@@ -226,15 +225,12 @@ public class ResourceContainer extends TypeContainer implements
 	 * @param containedTypes
 	 * @param result
 	 */
-	private void getReferences(Set<IResourceStandin> resources,
+	private void getReferences(Set<IResource> resources,
 			boolean hideContainedTypes, Set<String> result,
 			boolean collectPackages) {
 
 		// iterate over all resources
-		for (IResourceStandin resourceStandin : resources) {
-
-			// get resource
-			IResource resource = resourceStandin.getResource();
+		for (IResource resource : resources) {
 
 			// iterate over all resources
 			for (IReference reference : resource.getReferences()) {
@@ -277,14 +273,11 @@ public class ResourceContainer extends TypeContainer implements
 	 * @param hideContainedTypes
 	 * @param result
 	 */
-	private void getIReferences(Set<IResourceStandin> resources,
+	private void getIReferences(Set<IResource> resources,
 			boolean hideContainedTypes, Set<IReference> result) {
 
 		// iterate over all resources
-		for (IResourceStandin resourceStandin : resources) {
-
-			// step 1: get resource
-			IResource resource = resourceStandin.getResource();
+		for (IResource resource : resources) {
 
 			// iterate over all resources
 			for (IReference reference : resource.getReferences()) {

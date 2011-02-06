@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -66,7 +66,7 @@ public class ResourceContent implements IResourceContent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IResourceStandin getResource(IPath path, ContentType type) {
+	public IResource getResource(IPath path, ContentType type) {
 
 		switch (type) {
 		case BINARY: {
@@ -85,7 +85,7 @@ public class ResourceContent implements IResourceContent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<? extends IResourceStandin> getResources(ContentType type) {
+	public Set<? extends IResource> getResources(ContentType type) {
 
 		switch (type) {
 		case BINARY: {
@@ -104,7 +104,7 @@ public class ResourceContent implements IResourceContent {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IResourceStandin getBinaryResource(IPath path) {
+	public IResource getBinaryResource(IPath path) {
 
 		//
 		for (ResourceStandin resourceStandin : _binaryResources) {
@@ -118,14 +118,14 @@ public class ResourceContent implements IResourceContent {
 	}
 
 	@Override
-	public Set<? extends IResourceStandin> getBinaryResources() {
+	public Set<? extends IResource> getBinaryResources() {
 
 		//
 		return Collections.unmodifiableSet(_binaryResources);
 	}
 
 	@Override
-	public IResourceStandin getSourceResource(IPath path) {
+	public IResource getSourceResource(IPath path) {
 
 		//
 		for (ResourceStandin resourceStandin : _sourceResources) {
@@ -140,7 +140,7 @@ public class ResourceContent implements IResourceContent {
 	}
 
 	@Override
-	public Set<? extends IResourceStandin> getSourceResources() {
+	public Set<? extends IResource> getSourceResources() {
 
 		//
 		return Collections.unmodifiableSet(_sourceResources);

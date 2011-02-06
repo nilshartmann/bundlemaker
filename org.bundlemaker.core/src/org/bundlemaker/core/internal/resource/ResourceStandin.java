@@ -1,8 +1,12 @@
 package org.bundlemaker.core.internal.resource;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
 
 /**
@@ -11,7 +15,7 @@ import org.bundlemaker.core.resource.ResourceKey;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceStandin extends ResourceKey implements IResourceStandin {
+public class ResourceStandin extends ResourceKey implements IResource {
 
 	/** - */
 	private Resource _resource;
@@ -42,10 +46,6 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 		super(contentId, root, path, archiveFileCache);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
 	public IResource getResource() {
 		return _resource;
 	}
@@ -61,7 +61,7 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 	}
 
 	@Override
-	public int compareTo(IResourceStandin other) {
+	public int compareTo(IResource other) {
 
 		if (!getContentId().equals(other.getContentId())) {
 			return getContentId().compareTo(other.getContentId());
@@ -74,5 +74,27 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
 		}
 
 		return 0;
+	}
+
+	@Override
+	public Set<? extends IReference> getReferences() {
+		
+		//
+		if (_resource == null) {
+			throw new RuntimeException();
+		}
+		
+		return _resource.getReferences();
+	}
+
+	@Override
+	public Set<? extends IType> getContainedTypes() {
+		
+		//
+		if (_resource == null) {
+			throw new RuntimeException();
+		}
+		
+		return _resource.getContainedTypes();
 	}
 }

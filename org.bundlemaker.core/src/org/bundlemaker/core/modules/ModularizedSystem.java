@@ -21,7 +21,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -316,18 +316,18 @@ public class ModularizedSystem implements IModularizedSystem {
 	}
 
 	@Override
-	public Set<IResourceStandin> getUnassignedResources() {
+	public Set<IResource> getUnassignedResources() {
 
 		// TODO
 
-		// Set<IResourceStandin> result = new HashSet<IResourceStandin>();
+		// Set<IResource> result = new HashSet<IResource>();
 		//
 		// for (IFileBasedContent content : _projectDescription
 		// .getFileBasedContent()) {
 		//
 		// if (content.isResourceContent()) {
 		//
-		// for (IResourceStandin resourceStandin : content
+		// for (IResource resourceStandin : content
 		// .getResourceContent().getBinaryResources()) {
 		//
 		// if (resourceStandin.getContainingModules().isEmpty()) {
@@ -335,7 +335,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		// }
 		// }
 		//
-		// for (IResourceStandin resourceStandin : content
+		// for (IResource resourceStandin : content
 		// .getResourceContent().getSourceResources()) {
 		//
 		// if (resourceStandin.getContainingModules().isEmpty()) {

@@ -9,7 +9,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -24,8 +24,8 @@ public final class JarFileUtils {
 
 	/**
 	 * <p>
-	 * Creates a jar archive for the given list of {@link IResourceStandin
-	 * IResourceStandins}.
+	 * Creates a jar archive for the given list of {@link IResource
+	 * IResources}.
 	 * </p>
 	 * 
 	 * @param resources
@@ -35,7 +35,7 @@ public final class JarFileUtils {
 	 * @param archiveFile
 	 *            the archive file to create
 	 */
-	public static void createJarArchive(Set<IResourceStandin> resources,
+	public static void createJarArchive(Set<IResource> resources,
 			Manifest manifest, OutputStream outputStream) {
 
 		Assert.isNotNull(resources);
@@ -52,7 +52,7 @@ public final class JarFileUtils {
 			jarOutputStream = new JarOutputStream(outputStream, manifest);
 
 			// add all the entries
-			for (IResourceStandin resourceStandin : resources) {
+			for (IResource resourceStandin : resources) {
 
 				// add everything but the manifest
 				if (!"META-INF/MANIFEST.MF".equalsIgnoreCase(resourceStandin

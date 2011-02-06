@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param conentType
 	 * @return
 	 */
-	IResourceStandin getResource(String path, ContentType conentType);
+	IResource getResource(String path, ContentType conentType);
 
 	/**
 	 * <p>
@@ -41,7 +41,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param conentType
 	 * @return
 	 */
-	Set<IResourceStandin> getResources(ContentType conentType);
+	Set<IResource> getResources(ContentType conentType);
 
 	/**
 	 * <p>

@@ -17,7 +17,8 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 import com.springsource.bundlor.util.MatchUtils;
@@ -83,7 +84,7 @@ public class ManifestUtils {
 	}
 
 	public static ManifestContents readManifestContents(
-			IResourceStandin manifestResource) throws IOException {
+			IResource manifestResource) throws IOException {
 
 		ManifestContents originalManifestContents;
 

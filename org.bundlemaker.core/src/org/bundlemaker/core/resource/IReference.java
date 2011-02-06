@@ -1,5 +1,6 @@
 package org.bundlemaker.core.resource;
 
+
 /**
  * <p>
  * Represents a reference from an {@link IResource} to a type or a package.

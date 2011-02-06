@@ -8,7 +8,7 @@ import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.ResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.resourceset.ResourceSet;
 import org.bundlemaker.core.util.TransformationUtils;
 
@@ -42,7 +42,7 @@ public class RemoveResourcesTransformation implements ITransformation {
 					.getModifiableResourceModule(resourceSet
 							.getModuleIdentifier());
 
-			List<IResourceStandin> resourceStandinsToMove = resourceSet
+			List<IResource> resourceStandinsToMove = resourceSet
 					.getMatchingResources(resourceModule, ContentType.BINARY);
 
 			TransformationUtils.removeAll(resourceModule,

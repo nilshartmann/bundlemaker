@@ -14,7 +14,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
@@ -157,38 +157,30 @@ public class IntegrationTest {
 				.getResourceModules()) {
 
 			// step 1: assert binary content
-			for (IResourceStandin resourceStandin : resourceModule
+			for (IResource resource : resourceModule
 					.getResources(ContentType.BINARY)) {
 
 				//
-				Assert.assertSame(resourceModule,
-						resourceStandin.getResourceModule());
+				Assert.assertSame(resourceModule, resource.getResourceModule());
 
 				//
-				for (IReference reference : resourceStandin.getResource()
-						.getReferences()) {
+				for (IReference reference : resource.getReferences()) {
 					//
-					Assert.assertSame(resourceStandin.getResource(),
-							reference.getResource());
+					Assert.assertSame(resource, reference.getResource());
 				}
 			}
 
 			//
-			for (IResourceStandin resourceStandin : resourceModule
+			for (IResource resource : resourceModule
 					.getResources(ContentType.SOURCE)) {
 
 				//
-				Assert.assertSame(resourceModule,
-						resourceStandin.getResourceModule());
-				Assert.assertSame(resourceStandin, resourceStandin
-						.getResource().getResourceStandin());
+				Assert.assertSame(resourceModule, resource.getResourceModule());
 
 				//
-				for (IReference reference : resourceStandin.getResource()
-						.getReferences()) {
+				for (IReference reference : resource.getReferences()) {
 					//
-					Assert.assertSame(resourceStandin.getResource(),
-							reference.getResource());
+					Assert.assertSame(resource, reference.getResource());
 				}
 			}
 		}
