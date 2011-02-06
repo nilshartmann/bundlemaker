@@ -1,8 +1,5 @@
 package org.bundlemaker.core.resource;
 
-import java.util.Set;
-
-import org.bundlemaker.core.spi.resource.Reference;
 import org.bundlemaker.core.spi.resource.Type;
 
 public interface IModifiableResource extends IResource {
@@ -32,21 +29,4 @@ public interface IModifiableResource extends IResource {
 	 * @return
 	 */
 	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<Type> getModifiableContainedTypes();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<Reference> getModifiableReferences();
-
 }

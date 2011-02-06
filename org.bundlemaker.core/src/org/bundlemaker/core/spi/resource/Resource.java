@@ -133,7 +133,6 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	/* (non-Javadoc)
 	 * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableContainedTypes()
 	 */
-	@Override
 	public Set<Type> getModifiableContainedTypes() {
 		return containedTypes();
 	}
@@ -141,7 +140,6 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	/* (non-Javadoc)
 	 * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableReferences()
 	 */
-	@Override
 	public Set<Reference> getModifiableReferences() {
 		return references();
 	}
