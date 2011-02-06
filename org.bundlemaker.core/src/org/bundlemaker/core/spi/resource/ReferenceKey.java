@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core.spi.resource;
 
 import org.bundlemaker.core.resource.ReferenceType;
 

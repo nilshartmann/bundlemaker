@@ -2,7 +2,7 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
-import org.bundlemaker.core.internal.resource.Reference;
+import org.bundlemaker.core.spi.resource.Reference;
 
 public interface IModifiableType extends IType {
 

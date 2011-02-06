@@ -2,8 +2,8 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
-import org.bundlemaker.core.internal.resource.Reference;
-import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.spi.resource.Reference;
+import org.bundlemaker.core.spi.resource.Type;
 
 public interface IModifiableResource extends IResource {
 

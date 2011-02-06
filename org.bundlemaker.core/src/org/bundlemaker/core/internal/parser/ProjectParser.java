@@ -15,7 +15,7 @@ import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;

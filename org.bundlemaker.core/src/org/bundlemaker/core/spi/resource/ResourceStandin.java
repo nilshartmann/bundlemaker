@@ -1,6 +1,5 @@
-package org.bundlemaker.core.internal.resource;
+package org.bundlemaker.core.spi.resource;
 
-import java.util.Collections;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IResourceModule;

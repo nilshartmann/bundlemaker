@@ -4,8 +4,8 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
+import org.bundlemaker.core.spi.resource.Type;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Test;
 

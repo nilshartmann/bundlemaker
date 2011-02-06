@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.spi.resource.ResourceStandin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 

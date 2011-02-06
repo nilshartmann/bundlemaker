@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
-import org.bundlemaker.core.store.IPersistentDependencyStoreFactory;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;

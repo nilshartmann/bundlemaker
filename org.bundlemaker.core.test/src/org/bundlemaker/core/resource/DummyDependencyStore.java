@@ -2,8 +2,8 @@ package org.bundlemaker.core.resource;
 
 import java.util.List;
 
-import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.bundlemaker.core.spi.resource.Resource;
+import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 
 public class DummyDependencyStore implements IPersistentDependencyStore {
 
