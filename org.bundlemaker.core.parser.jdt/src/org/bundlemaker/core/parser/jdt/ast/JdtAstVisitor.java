@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Stack;
 
 import org.bundlemaker.core.resource.IModifiableResource;
+import org.bundlemaker.core.resource.IModifiableType;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
@@ -64,7 +65,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	private IModifiableResource _javaSourceResource;
 
 	/** - */
-	private Stack<org.bundlemaker.core.resource.Type> _currentTypes;
+	private Stack<IModifiableType> _currentTypes;
 
 	/** - */
 	private Stack<ITypeBinding> _typeBindings;
@@ -89,7 +90,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		_javaSourceResource = javaSourceResource;
 
 		_typeBindings = new Stack<ITypeBinding>();
-		_currentTypes = new Stack<org.bundlemaker.core.resource.Type>();
+		_currentTypes = new Stack<IModifiableType>();
 	}
 
 	/**
@@ -256,7 +257,7 @@ public class JdtAstVisitor extends ASTVisitor {
 			throw new RuntimeException("HAE " + node);
 		}
 
-		org.bundlemaker.core.resource.Type type = _javaSourceResource
+		IModifiableType type = _javaSourceResource
 				.getOrCreateType(node.resolveBinding().getBinaryName(),
 						typeEnum);
 
@@ -292,7 +293,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	public boolean visit(AnnotationTypeDeclaration node) {
 
 		// add the type name
-		org.bundlemaker.core.resource.Type type = _javaSourceResource
+		IModifiableType type = _javaSourceResource
 				.getOrCreateType(node.resolveBinding().getBinaryName(),
 						TypeEnum.ANNOTATION);
 		_currentTypes.push(type);
@@ -316,7 +317,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	public boolean visit(EnumDeclaration node) {
 
 		// add the type name
-		org.bundlemaker.core.resource.Type type = _javaSourceResource
+		IModifiableType type = _javaSourceResource
 				.getOrCreateType(node.resolveBinding().getBinaryName(),
 						TypeEnum.ENUM);
 		_currentTypes.push(type);

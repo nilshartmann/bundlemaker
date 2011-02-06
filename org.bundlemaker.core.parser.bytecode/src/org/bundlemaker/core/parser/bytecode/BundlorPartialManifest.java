@@ -1,8 +1,8 @@
 package org.bundlemaker.core.parser.bytecode;
 
 import org.bundlemaker.core.resource.IModifiableResource;
+import org.bundlemaker.core.resource.IModifiableType;
 import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 
@@ -19,7 +19,7 @@ public class BundlorPartialManifest implements PartialManifest {
 	/** - */
 	private IModifiableResource _resource;
 
-	private Type _type;
+	private IModifiableType _type;
 
 	/** - */
 	private String _fullQualifiedTypeName;

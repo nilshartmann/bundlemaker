@@ -5,11 +5,11 @@ import java.util.Map;
 
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;

@@ -11,7 +11,6 @@ import org.bundlemaker.core.resource.IResourceStandin;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.eclipse.core.runtime.Assert;
 

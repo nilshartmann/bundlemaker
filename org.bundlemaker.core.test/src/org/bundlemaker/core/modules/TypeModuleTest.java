@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.junit.Test;
 

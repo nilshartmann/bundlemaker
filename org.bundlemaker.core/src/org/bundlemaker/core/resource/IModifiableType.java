@@ -3,14 +3,10 @@ package org.bundlemaker.core.resource;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.Reference;
-import org.bundlemaker.core.internal.resource.Type;
 
-public interface IModifiableResource extends IResource {
+public interface IModifiableType extends IType {
 
 	/**
-	 * <p>
-	 * </p>
-	 * 
 	 * @param fullyQualifiedName
 	 * @param referenceType
 	 * @param isExtends
@@ -19,7 +15,7 @@ public interface IModifiableResource extends IResource {
 	 * @param isCompiletime
 	 * @param isRuntime
 	 */
-	public void recordReference(String fullyQualifiedName,
+	void recordReference(String fullyQualifiedName,
 			ReferenceType referenceType, boolean isExtends,
 			boolean isImplements, boolean isClassAnnotation,
 			boolean isCompiletime, boolean isRuntime);
@@ -28,25 +24,7 @@ public interface IModifiableResource extends IResource {
 	 * <p>
 	 * </p>
 	 * 
-	 * @param fullyQualifiedName
 	 * @return
 	 */
-	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<Type> getModifiableContainedTypes();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<Reference> getModifiableReferences();
-
+	Set<Reference> getModifiableReferences();
 }
