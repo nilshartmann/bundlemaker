@@ -18,11 +18,10 @@ public interface IType {
 	 * @return
 	 */
 	TypeEnum getType();
-	
+
 	/**
 	 * <p>
-	 * Returns the name of the referenced type, e.g.
-	 * <code>'YXY'</code>.
+	 * Returns the name of the referenced type, e.g. <code>'YXY'</code>.
 	 * </p>
 	 * 
 	 * @return the name.
@@ -41,6 +40,16 @@ public interface IType {
 
 	/**
 	 * <p>
+	 * Returns the fully qualified name of the package that contains this type,
+	 * e.g. <code>'de.example'</code>.
+	 * </p>
+	 * 
+	 * @return the fully qualified package name.
+	 */
+	String getPackageName();
+
+	/**
+	 * <p>
 	 * </p>
 	 * 
 	 * @param type
@@ -56,7 +65,7 @@ public interface IType {
 	 * @return the associated source resource.
 	 */
 	IResource getSourceResource();
-	
+
 	/**
 	 * <p>
 	 * Returns <code>true</code>, if a associated source resource is set.

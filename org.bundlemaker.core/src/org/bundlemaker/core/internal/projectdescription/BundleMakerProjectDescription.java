@@ -1,15 +1,16 @@
-package org.bundlemaker.core.projectdescription;
+package org.bundlemaker.core.internal.projectdescription;
 
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.JarInfo;
-import org.bundlemaker.core.internal.projectdescription.JarInfoService;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -76,6 +77,38 @@ public class BundleMakerProjectDescription implements
 		return null;
 	}
 
+	
+	
+	@Override
+	public void removeContent(String id) {
+		
+		for (Iterator<FileBasedContent> iterator = _fileBasedContent.iterator(); iterator.hasNext();) {
+			
+			FileBasedContent content = (FileBasedContent) iterator.next();
+			
+			if (content.getId().equals(id)) {
+				iterator.remove();
+				return;
+			} 
+		}
+	}
+
+	@Override
+	public void clear() {
+		
+		//
+		_fileBasedContent.clear();
+		
+		//
+		_currentId = 0;
+		
+		//
+		_initialized = false;
+		
+		//
+		_jre = null;
+	}
+
 	/**
 	 * <p>
 	 * </p>
@@ -111,8 +144,10 @@ public class BundleMakerProjectDescription implements
 		}
 
 		// TODO:
-		System.out.println("Source resources to process: " + sourceResourcesCount);
-		System.out.println("Binary resources to process: " + binaryResourcesCount);
+		System.out.println("Source resources to process: "
+				+ sourceResourcesCount);
+		System.out.println("Binary resources to process: "
+				+ binaryResourcesCount);
 
 		//
 		_initialized = true;
@@ -142,64 +177,68 @@ public class BundleMakerProjectDescription implements
 		return _initialized;
 	}
 
-	public FileBasedContent addResourceContent(String binaryRoot) {
+	@Override
+	public void addResourceContent(String binaryRoot) {
 
-		return addResourceContent(binaryRoot, null);
+		addResourceContent(binaryRoot, null);
 	}
 
-	public FileBasedContent addResourceContent(String binaryRoot,
-			String sourceRoot) {
+	@Override
+	public void addResourceContent(String binaryRoot, String sourceRoot) {
 
 		// get the jar info
 		JarInfo jarInfo = JarInfoService.extractJarInfo(new File(binaryRoot));
 
 		//
-		return addResourceContent(jarInfo.getName(), jarInfo.getVersion(),
-				binaryRoot, sourceRoot);
+		addResourceContent(jarInfo.getName(), jarInfo.getVersion(), binaryRoot,
+				sourceRoot);
 	}
 
-	public FileBasedContent addResourceContent(String name, String version,
+	@Override
+	public void addResourceContent(String name, String version,
 			String binaryRoot) {
 
-		return addResourceContent(name, version, binaryRoot, null);
+		addResourceContent(name, version, binaryRoot, null);
 	}
 
-	public FileBasedContent addResourceContent(String name, String version,
+	@Override
+	public void addResourceContent(String name, String version,
 			String binaryRoot, String sourceRoot) {
 
-		return addResourceContent(name, version, new String[] { binaryRoot },
+		addResourceContent(name, version, new String[] { binaryRoot },
 				sourceRoot != null ? new String[] { sourceRoot }
 						: new String[] {});
 	}
 
-	public FileBasedContent addResourceContent(String name, String version,
+	@Override
+	public void addResourceContent(String name, String version,
 			List<String> binaryRoot, List<String> sourceRoot) {
 
-		return addResourceContent(name, version,
-				binaryRoot.toArray(new String[0]),
+		addResourceContent(name, version, binaryRoot.toArray(new String[0]),
 				sourceRoot.toArray(new String[0]));
 	}
 
-	public FileBasedContent addTypeContent(String binaryRoot) {
+	@Override
+	public void addTypeContent(String binaryRoot) {
 
 		// get the jar info
 		JarInfo jarInfo = JarInfoService.extractJarInfo(new File(binaryRoot));
 
-		return addTypeContent(jarInfo.getName(), jarInfo.getVersion(),
+		addTypeContent(jarInfo.getName(), jarInfo.getVersion(),
 				new String[] { binaryRoot });
 	}
 
-	public FileBasedContent addTypeContent(
+	@Override
+	public void addTypeContent(String name, String version, String binaryRoot) {
 
-	String name, String version, String binaryRoot) {
-
-		return addTypeContent(name, version, new String[] { binaryRoot });
+		addTypeContent(name, version, new String[] { binaryRoot });
 	}
 
-	public FileBasedContent addTypeContent(String name, String version,
+	@Override
+	public void addTypeContent(String name, String version,
 			List<String> binaryRoot) {
 
-		return addTypeContent(name, version, binaryRoot.toArray(new String[0]));
+		addTypeContent(name, version, binaryRoot.toArray(new String[0]));
 	}
 
 	// TODO: analyze source!!
@@ -287,6 +326,7 @@ public class BundleMakerProjectDescription implements
 		return _currentId;
 	}
 
+	@Override
 	public void setJre(String jre) {
 		_jre = jre;
 	}

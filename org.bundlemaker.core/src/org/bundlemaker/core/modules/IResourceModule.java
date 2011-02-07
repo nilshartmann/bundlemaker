@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IType;
 
 public interface IResourceModule extends IResourceContainer, ITypeModule {
 

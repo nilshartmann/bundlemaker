@@ -8,12 +8,12 @@ import java.util.concurrent.FutureTask;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
 import org.bundlemaker.core.util.ProgressMonitor;
@@ -103,8 +103,8 @@ public class ProjectParser {
 		}
 
 		// iterate over the project content
-		for (FileBasedContent fileBasedContent : _bundleMakerProject
-				.getProjectDescription().getModifiableFileBasedContent()) {
+		for (IFileBasedContent fileBasedContent : _bundleMakerProject
+				.getProjectDescription().getFileBasedContent()) {
 
 			progressMonitor.setTaskName(String.format("Parsing '%s'...",
 					fileBasedContent.getName()));
@@ -143,7 +143,7 @@ public class ProjectParser {
 	 * @throws CoreException
 	 */
 	@SuppressWarnings("unchecked")
-	private void parseContent(FileBasedContent content,
+	private void parseContent(IFileBasedContent content,
 			IProgressMonitor progressMonitor, IResourceCache cache)
 			throws CoreException {
 
@@ -341,8 +341,8 @@ public class ProjectParser {
 		int binaryResourcesToParse = 0;
 		int sourceResourcesToParse = 0;
 
-		for (FileBasedContent fileBasedContent : _bundleMakerProject
-				.getProjectDescription().getModifiableFileBasedContent()) {
+		for (IFileBasedContent fileBasedContent : _bundleMakerProject
+				.getProjectDescription().getFileBasedContent()) {
 
 			int[] resourcesToParse = countResourcesToParse(fileBasedContent);
 
@@ -359,7 +359,7 @@ public class ProjectParser {
 	 * </p>
 	 * 
 	 */
-	private int[] countResourcesToParse(FileBasedContent content) {
+	private int[] countResourcesToParse(IFileBasedContent content) {
 
 		//
 		int binaryResourcesToParse = 0;
@@ -390,7 +390,7 @@ public class ProjectParser {
 	 * 
 	 * @return
 	 */
-	private int[] getResourcesToParseCount(FileBasedContent content,
+	private int[] getResourcesToParseCount(IFileBasedContent content,
 			IParser parser) {
 
 		//

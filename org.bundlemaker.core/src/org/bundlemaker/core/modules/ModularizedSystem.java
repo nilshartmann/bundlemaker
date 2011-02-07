@@ -146,6 +146,26 @@ public class ModularizedSystem implements IModularizedSystem {
 			}
 		}
 
+		// INITIALIZE TYPE MODULES
+
+		//
+		for (TypeModule module : _typeModules) {
+
+			//
+			for (String containedType : module.getContainedTypeNames()) {
+
+				//
+				if (!_typeToModuleListMap.containsKey(containedType)) {
+
+					Set<ITypeModule> moduleList = new HashSet<ITypeModule>();
+
+					_typeToModuleListMap.put(containedType, moduleList);
+				}
+
+				_typeToModuleListMap.get(containedType).add(module);
+			}
+		}
+
 		// step 4: transform modules
 		System.out.println("// step 4: transform modules");
 		for (ITransformation transformation : _transformations) {
@@ -168,22 +188,21 @@ public class ModularizedSystem implements IModularizedSystem {
 					iterator.remove();
 				}
 			}
-			
 
-			initializedModules();
+			// step 4.3: clean up empty modules
+			initializedResourceModules();
 		}
-
 
 		System.out.println("// done");
 
 	}
 
-	private void initializedModules() {
-		
+	private void initializedResourceModules() {
+
 		//
 		_typeToModuleListMap.clear();
-		
-		// step 5: set up the contained lists
+
+		// step 1: set up the resource modules
 		for (ResourceModule module : _resourceModules) {
 
 			// initialize the contained types
@@ -201,27 +220,6 @@ public class ModularizedSystem implements IModularizedSystem {
 				}
 
 				// add
-				_typeToModuleListMap.get(containedType).add(module);
-			}
-		}
-
-		// step 6: set up the contained lists
-		System.out.println("// step 6: set up ModifiableTypeModules");
-
-		//
-		for (TypeModule module : _typeModules) {
-
-			//
-			for (String containedType : module.getContainedTypeNames()) {
-
-				//
-				if (!_typeToModuleListMap.containsKey(containedType)) {
-
-					Set<ITypeModule> moduleList = new HashSet<ITypeModule>();
-
-					_typeToModuleListMap.put(containedType, moduleList);
-				}
-
 				_typeToModuleListMap.get(containedType).add(module);
 			}
 		}

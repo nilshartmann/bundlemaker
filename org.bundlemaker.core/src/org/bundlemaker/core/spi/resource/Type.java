@@ -56,7 +56,7 @@ public class Type implements IType, IModifiableType {
 		// the type of the type
 		_typeEnum = typeEnum;
 	}
-	
+
 	/**
 	 * <p>
 	 * </p>
@@ -89,6 +89,19 @@ public class Type implements IType, IModifiableType {
 	@Override
 	public String getFullyQualifiedName() {
 		return _fullyQualifiedName.toString();
+	}
+
+	@Override
+	public String getPackageName() {
+
+		//
+		String typeName = _fullyQualifiedName.toString();
+
+		// get index of the last '.'
+		int lastIndex = typeName.lastIndexOf('.');
+
+		//
+		return lastIndex == -1 ? "" : typeName.substring(0, lastIndex);
 	}
 
 	/**
@@ -156,8 +169,13 @@ public class Type implements IType, IModifiableType {
 		return _binaryResource != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bundlemaker.core.resource.IModifiableType#recordReference(java.lang.String, org.bundlemaker.core.resource.ReferenceType, boolean, boolean, boolean, boolean, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.bundlemaker.core.resource.IModifiableType#recordReference(java.lang
+	 * .String, org.bundlemaker.core.resource.ReferenceType, boolean, boolean,
+	 * boolean, boolean, boolean)
 	 */
 	@Override
 	public void recordReference(String fullyQualifiedName,
@@ -190,10 +208,12 @@ public class Type implements IType, IModifiableType {
 		_binaryResource = binaryResource;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bundlemaker.core.resource.IModifiableType#getModifiableReferences()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.bundlemaker.core.resource.IModifiableType#getModifiableReferences()
 	 */
-	@Override
 	public Set<Reference> getModifiableReferences() {
 		return references();
 	}

@@ -1,9 +1,12 @@
 package org.bundlemaker.core.resource;
 
-import java.util.Set;
 
-import org.bundlemaker.core.spi.resource.Reference;
-
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public interface IModifiableType extends IType {
 
 	/**
@@ -19,12 +22,4 @@ public interface IModifiableType extends IType {
 			ReferenceType referenceType, boolean isExtends,
 			boolean isImplements, boolean isClassAnnotation,
 			boolean isCompiletime, boolean isRuntime);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<Reference> getModifiableReferences();
 }
