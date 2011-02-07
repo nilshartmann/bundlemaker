@@ -6,6 +6,14 @@ import org.bundlemaker.core.modules.IResourceModule;
 
 /**
  * <p>
+ * Defines the common interface for resources. A resource is either a file (e.g.
+ * a java source file or a class file) or an entry in an archive file. It
+ * contains 0 to n {@link IType ITypes}. It also contains 0 to n
+ * {@link IReference IReferences}.
+ * </p>
+ * <p>
+ * Note that both the {@link IResource} and the contained {@link IType ITypes}
+ * can contain {@link IReference IReferences}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -14,11 +22,19 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
 	/**
 	 * <p>
+	 * Returns all {@link IReference IReferences} that are originated in this
+	 * resource.
+	 * </p>
+	 * <p>
+	 * <b>Note:</b> The result set does <b>not</b> contain any references of the
+	 * contained types. You explicitly have to request them by iterating over
+	 * the contained types and calling {@link IType#getReferences()} on each
+	 * type.
 	 * </p>
 	 * 
-	 * @return
+	 * @return all {@link IReference IReferences} that are originated in this
+	 *         resource.
 	 */
-	// GET REFERENCES OF ASSOCIATED RESOURCES: getAllReferences() ?
 	Set<? extends IReference> getReferences();
 
 	/**
@@ -34,9 +50,10 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
 	/**
 	 * <p>
+	 * Returns the {@link IResourceModule} that contains this {@link IResource}.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the {@link IResourceModule} that contains this {@link IResource}.
 	 */
 	IResourceModule getResourceModule();
 }

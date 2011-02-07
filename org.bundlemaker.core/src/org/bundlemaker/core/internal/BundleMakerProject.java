@@ -13,6 +13,9 @@ import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.parser.ProjectParser;
+import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
+import org.bundlemaker.core.internal.projectdescription.ResourceContent;
 import org.bundlemaker.core.model.internal.projectdescription.EFileBasedContent;
 import org.bundlemaker.core.model.internal.projectdescription.EProjectDescription;
 import org.bundlemaker.core.model.internal.projectdescription.EResourceContent;
@@ -20,11 +23,8 @@ import org.bundlemaker.core.model.internal.projectdescription.Projectdescription
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceContent;
-import org.bundlemaker.core.projectdescription.ResourceContent;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.spi.resource.Reference;
 import org.bundlemaker.core.spi.resource.Resource;
@@ -404,7 +404,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * 
 	 * @return
 	 */
-	public BundleMakerProjectDescription getProjectDescription() {
+	public IBundleMakerProjectDescription getProjectDescription() {
 		return _projectDescription;
 	}
 

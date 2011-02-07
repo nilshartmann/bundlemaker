@@ -29,6 +29,11 @@ public interface ITypeModule extends ITypeContainer {
 	IPath getClassification();
 
 	/**
+	 * @return
+	 */
+	boolean hasClassification();
+
+	/**
 	 * <p>
 	 * </p>
 	 * 

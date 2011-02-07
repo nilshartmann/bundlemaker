@@ -126,7 +126,7 @@ public class Reference implements IReference {
 	 * {@inheritDoc}
 	 */
 	public IResource getResource() {
-		return _resource;
+		return _resource.getResourceStandin();
 	}
 
 	/**

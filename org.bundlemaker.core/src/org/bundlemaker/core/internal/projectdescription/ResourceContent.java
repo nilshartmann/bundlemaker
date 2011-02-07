@@ -1,10 +1,12 @@
-package org.bundlemaker.core.projectdescription;
+package org.bundlemaker.core.internal.projectdescription;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.spi.resource.ResourceStandin;
 import org.eclipse.core.runtime.IPath;

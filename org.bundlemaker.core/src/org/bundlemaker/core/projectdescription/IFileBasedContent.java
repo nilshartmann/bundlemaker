@@ -14,6 +14,7 @@ public interface IFileBasedContent {
 
 	/**
 	 * <p>
+	 * Returns the internal identifier of this content entry.
 	 * </p>
 	 * 
 	 * @return
@@ -22,6 +23,7 @@ public interface IFileBasedContent {
 
 	/**
 	 * <p>
+	 * Returns the name of this content entry.
 	 * </p>
 	 * 
 	 * @return
@@ -30,6 +32,7 @@ public interface IFileBasedContent {
 
 	/**
 	 * <p>
+	 * Returns the version of this content entry.
 	 * </p>
 	 * 
 	 * @return

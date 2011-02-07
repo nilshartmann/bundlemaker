@@ -2,6 +2,13 @@ package org.bundlemaker.core.resource;
 
 import org.bundlemaker.core.spi.resource.Type;
 
+/**
+ * <p>
+ * 
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public interface IModifiableResource extends IResource {
 
 	/**

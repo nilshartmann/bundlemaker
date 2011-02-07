@@ -1,6 +1,7 @@
 package org.bundlemaker.core.resource;
 
-import org.bundlemaker.core.projectdescription.ResourceContent;
+import org.bundlemaker.core.internal.projectdescription.ResourceContent;
+import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.spi.resource.ArchiveFileCache;
 import org.bundlemaker.core.spi.resource.ResourceStandin;
 import org.junit.Assert;

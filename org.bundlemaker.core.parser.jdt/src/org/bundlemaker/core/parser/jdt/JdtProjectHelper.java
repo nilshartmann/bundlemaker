@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.FileBasedContent;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -60,8 +60,8 @@ public class JdtProjectHelper {
 		IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
 		entries.add(classpathEntry);
 
-		for (FileBasedContent projectContent : project.getProjectDescription()
-				.getModifiableFileBasedContent()) {
+		for (IFileBasedContent projectContent : project.getProjectDescription()
+				.getFileBasedContent()) {
 
 			if (projectContent.isResourceContent()) {
 

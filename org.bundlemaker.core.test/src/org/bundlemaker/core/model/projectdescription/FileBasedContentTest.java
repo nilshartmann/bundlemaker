@@ -1,10 +1,11 @@
 package org.bundlemaker.core.model.projectdescription;
 
-import org.bundlemaker.core.projectdescription.FileBasedContent;
-import org.bundlemaker.core.projectdescription.ResourceContent;
+import static org.junit.Assert.assertEquals;
+
+import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
+import org.bundlemaker.core.internal.projectdescription.ResourceContent;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * <p>

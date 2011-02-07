@@ -88,8 +88,13 @@ public class Resource extends ResourceKey implements IModifiableResource {
 		return Collections.unmodifiableSet(containedTypes());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bundlemaker.core.resource.IModifiableResource#recordReference(java.lang.String, org.bundlemaker.core.resource.ReferenceType, boolean, boolean, boolean, boolean, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.bundlemaker.core.resource.IModifiableResource#recordReference(java
+	 * .lang.String, org.bundlemaker.core.resource.ReferenceType, boolean,
+	 * boolean, boolean, boolean, boolean)
 	 */
 	@Override
 	public void recordReference(String fullyQualifiedName,
@@ -102,8 +107,12 @@ public class Resource extends ResourceKey implements IModifiableResource {
 				isRuntime);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bundlemaker.core.resource.IModifiableResource#getOrCreateType(java.lang.String, org.bundlemaker.core.resource.TypeEnum)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.bundlemaker.core.resource.IModifiableResource#getOrCreateType(java
+	 * .lang.String, org.bundlemaker.core.resource.TypeEnum)
 	 */
 	@Override
 	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum) {
@@ -125,37 +134,53 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	public void setResourceStandin(ResourceStandin resourceStandin) {
 		_resourceStandin = resourceStandin;
 	}
-	
+
 	public ResourceStandin getResourceStandin() {
 		return _resourceStandin;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableContainedTypes()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.bundlemaker.core.resource.IModifiableResource#getModifiableContainedTypes
+	 * ()
 	 */
 	public Set<Type> getModifiableContainedTypes() {
 		return containedTypes();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.bundlemaker.core.resource.IModifiableResource#getModifiableReferences()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.bundlemaker.core.resource.IModifiableResource#getModifiableReferences
+	 * ()
 	 */
 	public Set<Reference> getModifiableReferences() {
 		return references();
 	}
-	
-	
 
 	@Override
 	public IResourceModule getResourceModule() {
-		// TODO Auto-generated method stub
-		return null;
+
+		//
+		if (_resourceStandin == null) {
+			throw new RuntimeException();
+		}
+
+		return _resourceStandin.getResourceModule();
 	}
 
 	@Override
 	public int compareTo(IResource arg0) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		//
+		if (_resourceStandin == null) {
+			throw new RuntimeException();
+		}
+
+		return _resourceStandin.compareTo(arg0);
 	}
 
 	/**
