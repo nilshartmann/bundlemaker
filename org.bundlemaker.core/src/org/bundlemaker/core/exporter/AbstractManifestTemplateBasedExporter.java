@@ -28,7 +28,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	public ManifestContents getManifestTemplate(
+	protected ManifestContents getManifestTemplate(
 			IModularizedSystem modularizedSystem, IResourceModule module,
 			IModuleExporterContext context) {
 

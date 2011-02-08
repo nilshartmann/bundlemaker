@@ -82,7 +82,7 @@ public class JdtProblemAdapter implements IProblem {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Object getMessage() {
+	public String getMessage() {
 		return _compilerProblem.getMessage();
 	}
 

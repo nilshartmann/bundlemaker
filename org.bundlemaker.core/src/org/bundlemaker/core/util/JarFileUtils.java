@@ -1,10 +1,12 @@
 package org.bundlemaker.core.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -24,8 +26,7 @@ public final class JarFileUtils {
 
 	/**
 	 * <p>
-	 * Creates a jar archive for the given list of {@link IResource
-	 * IResources}.
+	 * Creates a jar archive for the given list of {@link IResource IResources}.
 	 * </p>
 	 * 
 	 * @param resources
@@ -40,6 +41,8 @@ public final class JarFileUtils {
 
 		Assert.isNotNull(resources);
 		Assert.isNotNull(manifest);
+		
+		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0"); 
 
 		// create the input and output streams
 
@@ -49,7 +52,7 @@ public final class JarFileUtils {
 		try {
 
 			// open the archive file
-			jarOutputStream = new JarOutputStream(outputStream, manifest);
+			jarOutputStream = new JarOutputStream(outputStream);
 
 			// add all the entries
 			for (IResource resourceStandin : resources) {
@@ -65,9 +68,23 @@ public final class JarFileUtils {
 					// copy
 					inputStream = resourceStandin.getInputStream();
 					copy(inputStream, jarOutputStream);
+
 					inputStream.close();
+
+					jarOutputStream.closeEntry();
 				}
 			}
+
+			//
+			String manifestfilename = "META-INF/MANIFEST.MF";
+			JarEntry manifestfile = new JarEntry(manifestfilename);
+			byte manifestbytes[] = serialiseManifest(manifest);
+			jarOutputStream.putNextEntry(manifestfile);
+			jarOutputStream.write(manifestbytes, 0, manifestbytes.length);
+			jarOutputStream.closeEntry();
+
+			//
+			jarOutputStream.flush();
 
 		} catch (Exception ex) {
 			// TODO
@@ -113,6 +130,16 @@ public final class JarFileUtils {
 				//
 			}
 		}
+	}
+
+	private static byte[] serialiseManifest(Manifest manifest)
+			throws IOException {
+		ByteArrayOutputStream byteout = new ByteArrayOutputStream();
+		manifest.write(byteout);
+		byteout.close();
+		byte[] result = byteout.toByteArray();
+		System.out.println(new String(result));
+		return result;
 	}
 
 }

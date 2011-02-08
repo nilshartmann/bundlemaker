@@ -17,8 +17,6 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- * 
- * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class AbstractJarFileBundleExporter extends
 		AbstractManifestTemplateBasedExporter {
@@ -74,15 +72,33 @@ public abstract class AbstractJarFileBundleExporter extends
 	 * @throws Exception
 	 */
 	protected OutputStream createOutputStream(
-			IModularizedSystem modularizedSystem, final IResourceModule module,
+			IModularizedSystem modularizedSystem, IResourceModule module,
 			IModuleExporterContext context) throws Exception {
 
 		// create the target file
-		File targetFile = new File(context.getDestinationDirectory(), module
-				.getModuleIdentifier().getName()
-				+ "_"
-				+ module.getModuleIdentifier().getVersion() + ".jar");
+		File targetFile = new File(context.getDestinationDirectory(),
+				computeJarFileName(module));
 
+		// create the parent directories
+		if (!targetFile.getParentFile().exists()) {
+			targetFile.getParentFile().mkdirs();
+		}
+
+		// return a new file output stream
 		return new FileOutputStream(targetFile);
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param module
+	 * @return
+	 */
+	protected String computeJarFileName(IResourceModule module) {
+
+		//
+		return module.getModuleIdentifier().getName() + "_"
+				+ module.getModuleIdentifier().getVersion() + ".jar";
 	}
 }

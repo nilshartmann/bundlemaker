@@ -248,7 +248,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 			IBundleProjectService bundleProjectService,
 			IBundleProjectDescription bundleProjectDescription) {
 
-		Set<String> referencedPackages = module.getReferencedPackages(true,
+		Set<String> referencedPackages = module.getReferencedPackageNames(true,
 				true);
 
 		List<IPackageImportDescription> importDescriptions = new LinkedList<IPackageImportDescription>();

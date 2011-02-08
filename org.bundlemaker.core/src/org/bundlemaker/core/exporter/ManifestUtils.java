@@ -18,7 +18,6 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 import com.springsource.bundlor.util.MatchUtils;

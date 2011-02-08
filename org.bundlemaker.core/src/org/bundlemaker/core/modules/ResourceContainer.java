@@ -59,7 +59,7 @@ public class ResourceContainer extends TypeContainer implements
 		for (IResource resourceStandin : getModifiableResourcesSet(contentType)) {
 
 			//
-			if (resourceStandin.getPath().equals(path)) {
+			if (resourceStandin.getPath().equalsIgnoreCase(path)) {
 				return resourceStandin;
 			}
 		}
@@ -113,7 +113,7 @@ public class ResourceContainer extends TypeContainer implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getReferencedPackages(boolean hideContainedTypes,
+	public Set<String> getReferencedPackageNames(boolean hideContainedTypes,
 			boolean includeSourceReferences) {
 
 		// return result
@@ -134,29 +134,29 @@ public class ResourceContainer extends TypeContainer implements
 	 * </p>
 	 */
 	public void initialize() {
-		
+
 		getModifiableContainedTypesMap().clear();
 
 		// step 1: iterate over all binary resources...
-		for (IResource resourceStandin : _binaryResources) {
+		for (IResource resource : _binaryResources) {
 
 			// ... and add all contained types
-			for (IType type : resourceStandin.getContainedTypes()) {
+			for (IType type : resource.getContainedTypes()) {
 
 				getModifiableContainedTypesMap().put(
 						type.getFullyQualifiedName(), type);
 			}
 
 			// set the back-reference
-			((ResourceStandin) resourceStandin)
+			((ResourceStandin) resource)
 					.setResourceModule(_resourceModule);
 		}
 
 		// step 2: iterate over all source resources...
-		for (IResource resourceStandin : _sourceResources) {
+		for (IResource resource : _sourceResources) {
 
 			// ... and add all contained types
-			for (IType type : resourceStandin.getContainedTypes()) {
+			for (IType type : resource.getContainedTypes()) {
 
 				// TODO
 				getModifiableContainedTypesMap().put(
@@ -164,7 +164,7 @@ public class ResourceContainer extends TypeContainer implements
 			}
 
 			// set the back-reference
-			((ResourceStandin) resourceStandin)
+			((ResourceStandin) resource)
 					.setResourceModule(_resourceModule);
 		}
 	}
@@ -177,8 +177,7 @@ public class ResourceContainer extends TypeContainer implements
 	 * @param contentType
 	 * @return
 	 */
-	public Set<IResource> getModifiableResourcesSet(
-			ContentType contentType) {
+	public Set<IResource> getModifiableResourcesSet(ContentType contentType) {
 
 		Assert.isNotNull(contentType);
 
