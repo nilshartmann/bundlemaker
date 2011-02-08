@@ -4,29 +4,28 @@ import java.util.Set;
 
 /**
  * <p>
+ * Defines a (java) type. A type can be a {@link TypeEnum#CLASS}, an
+ * {@link TypeEnum#INTERFACE}, an {@link TypeEnum#ANNOTATION} or an
+ * {@link TypeEnum#ENUM} and has a fully qualified name.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
 public interface IType {
 
 	/**
 	 * <p>
-	 * Returns the type of the this type.
+	 * Returns the type of the this type, e.g. {@link TypeEnum#CLASS},
+	 * {@link TypeEnum#INTERFACE}, {@link TypeEnum#ANNOTATION} or
+	 * {@link TypeEnum#ENUM}.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the type of this type.
 	 */
 	TypeEnum getType();
-
-	/**
-	 * <p>
-	 * Returns the name of the referenced type, e.g. <code>'YXY'</code>.
-	 * </p>
-	 * 
-	 * @return the name.
-	 */
-	String getName();
 
 	/**
 	 * <p>
@@ -34,9 +33,18 @@ public interface IType {
 	 * <code>'de.example.YXY'</code>.
 	 * </p>
 	 * 
-	 * @return the fully qualified name.
+	 * @return the fully qualified name of this type.
 	 */
 	String getFullyQualifiedName();
+
+	/**
+	 * <p>
+	 * Returns the name of the referenced type, e.g. <code>'YXY'</code>.
+	 * </p>
+	 * 
+	 * @return the simple name of this type.
+	 */
+	String getName();
 
 	/**
 	 * <p>
@@ -44,16 +52,16 @@ public interface IType {
 	 * e.g. <code>'de.example'</code>.
 	 * </p>
 	 * 
-	 * @return the fully qualified package name.
+	 * @return the fully qualified package name of this type.
 	 */
 	String getPackageName();
 
 	/**
 	 * <p>
+	 * Returns a set with all {@link IReference IReferences} of this type.
 	 * </p>
 	 * 
-	 * @param type
-	 * @return
+	 * @return a set with all {@link IReference IReferences} of this type.
 	 */
 	Set<? extends IReference> getReferences();
 

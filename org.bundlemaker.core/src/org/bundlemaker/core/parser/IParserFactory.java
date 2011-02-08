@@ -5,8 +5,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * A parser factory is responsible for creating (bundle maker specific) project
- * parser.
+ * A parser factory is responsible for creating project parser.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)

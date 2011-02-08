@@ -17,7 +17,7 @@ public class ResourceContainerTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetReferencedPackages() {
-		new ResourceContainer().getReferencedPackages(false, false).add("");
+		new ResourceContainer().getReferencedPackageNames(false, false).add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

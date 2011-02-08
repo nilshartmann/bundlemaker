@@ -12,6 +12,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.ModuleExporterContext;
+import org.bundlemaker.core.exporter.bundle.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -112,7 +113,10 @@ public class IntegrationTest {
 		checkModularizedSystem(modularizedSystem);
 
 		// export to structure 101
-		exportToStructure101(bundleMakerProject, modularizedSystem);
+		// exportToStructure101(bundleMakerProject, modularizedSystem);
+		
+		// export to binary bundle
+		exportToBinaryBundle(bundleMakerProject, modularizedSystem);
 
 		// //
 		// // //
@@ -355,6 +359,26 @@ public class IntegrationTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		Structure101Exporter exporter = new Structure101Exporter();
+		exporter.export(modularizedSystem, exporterContext);
+		stopWatch.stop();
+		System.out.println("Dauer " + stopWatch.getElapsedTime());
+	}
+	
+	private void exportToBinaryBundle(IBundleMakerProject bundleMakerProject,
+			IModularizedSystem modularizedSystem) throws Exception {
+
+		//
+		File destination = new File(System.getProperty("user.dir"),
+				"destination");
+		destination.mkdirs();
+
+		// create the exporter context
+		ModuleExporterContext exporterContext = new ModuleExporterContext(
+				bundleMakerProject, destination, modularizedSystem);
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		BinaryBundleExporter exporter = new BinaryBundleExporter();
 		exporter.export(modularizedSystem, exporterContext);
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());

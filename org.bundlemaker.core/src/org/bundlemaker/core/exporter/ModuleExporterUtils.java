@@ -8,7 +8,6 @@ import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;

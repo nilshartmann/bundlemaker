@@ -25,6 +25,7 @@ import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceContent;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.spi.resource.Reference;
 import org.bundlemaker.core.spi.resource.Resource;
@@ -280,7 +281,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 		// TODO
 		for (FileBasedContent fileBasedContent : fileBasedContents) {
 
-			Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
+			// Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
 
 			if (fileBasedContent.isResourceContent()) {
 
@@ -289,6 +290,13 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 					setupResourceStandin(resourceStandin, map, false);
 					Assert.isNotNull(resourceStandin.getResource());
+					for (IType type : resourceStandin.getContainedTypes()) {
+
+						if (type.getBinaryResource() == null) {
+							System.out.println("No binary resource for "
+									+ type.getFullyQualifiedName());
+						}
+					}
 				}
 
 				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent

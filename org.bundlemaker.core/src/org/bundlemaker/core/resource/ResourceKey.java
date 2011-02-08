@@ -16,22 +16,25 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
+ * Default implementation of the interface {@link IResourceKey}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noextend This class is not intended to be extended by clients.
  */
 public class ResourceKey implements IResourceKey {
 
-	/** - */
+	/** the content id */
 	private FlyWeightString _contentId;
 
-	/** - */
+	/** the root of the resource */
 	private FlyWeightString _root;
 
-	/** - */
+	/** the path of the resource */
 	private String _path;
 
-	/** - */
+	/** the archive file that is used to cache archive files for faster access */
 	private ArchiveFileCache _archiveFileCache;
 
 	/**
@@ -101,16 +104,25 @@ public class ResourceKey implements IResourceKey {
 
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getContentId() {
 		return _contentId.toString();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getRoot() {
 		return _root.toString();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String getPath() {
 		return _path;
@@ -191,6 +203,4 @@ public class ResourceKey implements IResourceKey {
 			return false;
 		return true;
 	}
-	
-	
 }

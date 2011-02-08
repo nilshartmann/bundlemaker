@@ -114,7 +114,7 @@ public class ResourceModule extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getReferencedPackages(final boolean hideContainedTypes,
+	public Set<String> getReferencedPackageNames(final boolean hideContainedTypes,
 			final boolean includeSourceReferences) {
 
 		// create the result set
@@ -124,7 +124,7 @@ public class ResourceModule extends
 		doWithAllContainers(new ContainerClosure<ResourceContainer>() {
 			@Override
 			public boolean doWithContainer(ResourceContainer resourceContainer) {
-				result.addAll(resourceContainer.getReferencedPackages(
+				result.addAll(resourceContainer.getReferencedPackageNames(
 						hideContainedTypes, includeSourceReferences));
 				return false;
 			}

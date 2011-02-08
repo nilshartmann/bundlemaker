@@ -117,7 +117,7 @@ public class Type implements IType, IModifiableType {
 		int index = fullyQualifiedName.lastIndexOf('.');
 
 		// return the result
-		return index != -1 ? fullyQualifiedName.substring(index)
+		return index != -1 ? fullyQualifiedName.substring(index + 1)
 				: fullyQualifiedName;
 	}
 
@@ -142,7 +142,7 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IResource getSourceResource() {
-		return _sourceResource;
+		return _sourceResource.getResourceStandin();
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IResource getBinaryResource() {
-		return _binaryResource;
+		return _binaryResource.getResourceStandin();
 	}
 
 	/**
