@@ -1,8 +1,8 @@
 package org.bundlemaker.core.resource.modifiable;
 
+import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.spi.resource.Type;
 
 /**
  * <p>

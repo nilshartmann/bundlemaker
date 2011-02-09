@@ -1,7 +1,9 @@
-package org.bundlemaker.core.spi.resource;
+package org.bundlemaker.core.internal.resource;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.internal.resource.FlyWeightCache;
+import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.junit.Test;

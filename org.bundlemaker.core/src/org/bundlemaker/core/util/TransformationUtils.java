@@ -3,10 +3,10 @@ package org.bundlemaker.core.util;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.modules.ResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.spi.resource.ResourceStandin;
 
 /**
  * <p>

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.spi.store.IPersistentDependencyStore;
-import org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 
@@ -39,7 +39,7 @@ public class PersistentDependencyStoreFactoryComponent implements
 	}
 
 	/**
-	 * @see org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.IBundleMakerProject)
+	 * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#resetPersistentDependencyStore(org.bundlemaker.core.IBundleMakerProject)
 	 */
 	public void resetPersistentDependencyStore(IBundleMakerProject project)
 			throws CoreException {
@@ -72,7 +72,7 @@ public class PersistentDependencyStoreFactoryComponent implements
 	}
 
 	/**
-	 * @see org.bundlemaker.core.spi.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.IBundleMakerProject)
+	 * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.IBundleMakerProject)
 	 */
 	public IPersistentDependencyStore getPersistentDependencyStore(
 			IBundleMakerProject project) {

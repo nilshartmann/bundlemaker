@@ -1,8 +1,8 @@
-package org.bundlemaker.core.spi.store;
+package org.bundlemaker.core.internal.store;
 
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.spi.resource.Resource;
 
 /**
  * <p>

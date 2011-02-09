@@ -1,4 +1,4 @@
-package org.bundlemaker.core.spi.store;
+package org.bundlemaker.core.internal.store;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;

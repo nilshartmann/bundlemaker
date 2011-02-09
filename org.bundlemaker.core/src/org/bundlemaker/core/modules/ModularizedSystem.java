@@ -15,6 +15,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.bundlemaker.core.internal.JdkModuleCreator;
+import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -22,7 +23,6 @@ import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.spi.resource.Type;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;

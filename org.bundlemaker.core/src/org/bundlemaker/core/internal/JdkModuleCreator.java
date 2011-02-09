@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.TypeModule;
 import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.spi.resource.Type;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;

@@ -1,8 +1,8 @@
-package org.bundlemaker.core.spi.store;
+package org.bundlemaker.core.internal.store;
 
 import java.util.List;
 
-import org.bundlemaker.core.spi.resource.Resource;
+import org.bundlemaker.core.internal.resource.Resource;
 
 /**
  * <p>
