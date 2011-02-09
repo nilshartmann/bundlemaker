@@ -14,4 +14,7 @@ public interface IResourceModule extends IResourceContainer, ITypeModule {
 	List<String> getDuplicateResources(ContentType contentType);
 
 	boolean hasDuplicateResources(ContentType contentType);
+
+	//
+	// boolean isSourceModule();
 }

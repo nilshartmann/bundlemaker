@@ -78,23 +78,32 @@ public class Resource extends ResourceKey implements IModifiableResource {
 		super(contentId, root, path);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Set<? extends IReference> getReferences() {
 		return Collections.unmodifiableSet(references());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Set<? extends IType> getContainedTypes() {
 		return Collections.unmodifiableSet(containedTypes());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.bundlemaker.core.resource.IModifiableResource#recordReference(java
-	 * .lang.String, org.bundlemaker.core.resource.ReferenceType, boolean,
-	 * boolean, boolean, boolean, boolean)
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean containsTypes() {
+		return _containedTypes != null && !_containedTypes.isEmpty();
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void recordReference(String fullyQualifiedName,

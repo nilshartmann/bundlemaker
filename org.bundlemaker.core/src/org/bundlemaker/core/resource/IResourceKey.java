@@ -52,6 +52,30 @@ public interface IResourceKey {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	String getDirectory();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	String getPackageName();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	String getName();
+
+	/**
+	 * <p>
 	 * Returns an input stream to read the content of this resource.
 	 * </p>
 	 * 

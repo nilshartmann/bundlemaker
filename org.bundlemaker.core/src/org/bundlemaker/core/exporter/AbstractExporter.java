@@ -1,17 +1,7 @@
 package org.bundlemaker.core.exporter;
 
-import java.io.ByteArrayInputStream;
-
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.util.EclipseProjectUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -36,6 +26,45 @@ import org.eclipse.core.runtime.Path;
 public abstract class AbstractExporter implements IModuleExporter,
 		IModularizedSystemExporter {
 
+	/** - */
+	private IModularizedSystem _currentModularizedSystem;
+
+	/** - */
+	private IResourceModule _currentModule;
+
+	/** - */
+	private IModuleExporterContext _currentContext;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public IModularizedSystem getCurrentModularizedSystem() {
+		return _currentModularizedSystem;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public IResourceModule getCurrentModule() {
+		return _currentModule;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public IModuleExporterContext getCurrentContext() {
+		return _currentContext;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -53,125 +82,20 @@ public abstract class AbstractExporter implements IModuleExporter,
 	public void export(IModularizedSystem modularizedSystem,
 			IModuleExporterContext context) throws Exception {
 
+		_currentModularizedSystem = modularizedSystem;
+		_currentContext = context;
+
 		// simply call export() for each contained
 		for (IResourceModule resourceModule : modularizedSystem
 				.getResourceModules()) {
 
 			// export if possible
 			if (canExport(modularizedSystem, resourceModule, context)) {
+
+				_currentModule = resourceModule;
+
 				export(modularizedSystem, resourceModule, context);
 			}
-		}
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param projectName
-	 * @return
-	 */
-	protected String getUniqueProjectName(String projectName) {
-		//
-		String newProjectName = projectName;
-
-		// if the project name exists, add a post-fix
-		if (doesNonGeneratedProjectExist(newProjectName)) {
-
-			//
-			int postfix = 0;
-
-			//
-			while (doesNonGeneratedProjectExist(newProjectName)) {
-
-				//
-				postfix++;
-
-				//
-				newProjectName = String.format("%s (%s)", projectName, postfix);
-			}
-
-			//
-			projectName = newProjectName;
-		}
-
-		return projectName;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param projectName
-	 * @return
-	 * @throws CoreException
-	 */
-	public IProject deleteAndCreateProject(String projectName, IPath location)
-			throws CoreException {
-
-		// create project
-		IProject project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(projectName);
-
-		// delete the project if exists
-		if (project.exists()) {
-			project.delete(true, true, null);
-		}
-
-		// create the project if not exists
-		if (!project.exists()) {
-
-			// create the description
-			IProjectDescription desc = project.getWorkspace()
-					.newProjectDescription(project.getName());
-
-			//
-			if (location != null) {
-				desc.setLocation(location);
-			}
-
-			//
-			project.create(desc, null);
-
-			//
-			if (!project.isOpen()) {
-				project.open(null);
-			}
-		}
-
-		// add the 'bundlemakergenerated' flag
-		IFile file = project.getFile(".bundlemakergenerated");
-		file.create(new ByteArrayInputStream(new byte[0]), true, null);
-
-		// return the result
-		return project;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param projectName
-	 * @return
-	 */
-	private boolean doesNonGeneratedProjectExist(String projectName) {
-
-		try {
-
-			boolean result = EclipseProjectUtils.exists(projectName)
-					&& !EclipseProjectUtils.exists(new Path(projectName
-							+ "/.bundlemakergenerated"));
-
-			//
-			EclipseProjectUtils.getOrCreateSimpleProject(projectName);
-
-			//
-			return result;
-
-		} catch (CoreException e) {
-
-			//
-			return true;
 		}
 	}
 }

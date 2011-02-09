@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.eclipse.core.runtime.Assert;
 
 import com.springsource.bundlor.util.SimpleManifestContents;
 import com.springsource.util.parser.manifest.ManifestContents;
@@ -22,39 +23,94 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	/** the template directory **/
 	public static final Object TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected ManifestContents getManifestTemplate(
-			IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) {
+	/** - */
+	private ManifestContents _manifestContents;
+
+	/** - */
+	private ManifestContents _manifestTemplateContents;
+
+	@Override
+	public final void export(IModularizedSystem modularizedSystem,
+			IResourceModule module, IModuleExporterContext context)
+			throws Exception {
+
+		// get the template manifest
+		_manifestTemplateContents = getManifestTemplate();
 
 		//
-		return getManifestTemplateFromTemplateFile(modularizedSystem, module,
-				context);
+		_manifestContents = createManifest();
+		Assert.isNotNull(_manifestContents, String.format(
+				"The method createManifest(IModularizedSystem, "
+						+ "IResourceModule, IModuleExporterContext) of class "
+						+ "'%s' returned 'null'.", this.getClass().getName()));
+
+		//
+		onExport();
 	}
 
 	/**
 	 * <p>
 	 * </p>
 	 * 
-	 * @param context
 	 * @return
 	 */
-	protected ManifestContents getManifestTemplateFromTemplateFile(
-			IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) {
+	public ManifestContents getCurrentManifest() {
+		Assert.isNotNull(_manifestContents, String.format(
+				"No manifest set. The method createManifest(IModularizedSystem, "
+						+ "IResourceModule, IModuleExporterContext) of class "
+						+ "'%s' has not been called yet.", this.getClass()
+						.getName()));
+
+		return _manifestContents;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public ManifestContents getCurrentManifestTemplate() {
+		return _manifestTemplateContents;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @param module
+	 * @param context
+	 */
+	protected abstract void onExport() throws Exception;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @param module
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	protected abstract ManifestContents createManifest() throws Exception;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	protected ManifestContents getManifestTemplate() {
 
 		//
-		if (!context.containsAttribute(TEMPLATE_DIRECTORY)) {
-			return createDefaultManifestContents();
+		if (!getCurrentContext().containsAttribute(TEMPLATE_DIRECTORY)) {
+			return createDefaultManifestTemplate();
 		}
 
 		//
-		Object attribute = context.getAttribute(TEMPLATE_DIRECTORY);
+		Object attribute = getCurrentContext().getAttribute(TEMPLATE_DIRECTORY);
 
 		// type check
 		if (!(attribute instanceof File)) {
@@ -65,7 +121,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 
 		// try to read the template file
 		File templateDirectory = (File) attribute;
-		File templateFile = new File(templateDirectory, module
+		File templateFile = new File(templateDirectory, getCurrentModule()
 				.getModuleIdentifier().getName() + ".template");
 
 		ManifestContents templateManifestContents = ManifestUtils
@@ -77,7 +133,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 
 		// return the default manifest contents
 		else {
-			return createDefaultManifestContents();
+			return createDefaultManifestTemplate();
 		}
 	}
 
@@ -87,7 +143,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	protected ManifestContents createDefaultManifestContents() {
+	protected ManifestContents createDefaultManifestTemplate() {
 		return new SimpleManifestContents();
 	}
 }

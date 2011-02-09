@@ -38,6 +38,8 @@ public class ResourceContainer extends TypeContainer implements
 
 		// create the resource sets
 		_binaryResources = new HashSet<IResource>();
+		
+		// TODO: LAZY
 		_sourceResources = new HashSet<IResource>();
 	}
 

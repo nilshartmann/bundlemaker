@@ -1,9 +1,6 @@
 package org.bundlemaker.core.exporter.bundlor;
 
 import org.bundlemaker.core.exporter.AbstractJarFileBundleExporter;
-import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
 
 import com.springsource.util.parser.manifest.ManifestContents;
 
@@ -28,15 +25,11 @@ public class StandardBundlorBasedBinaryBundleExporter extends
 	 * @return
 	 * @throws Exception
 	 */
-	protected ManifestContents createManifest(
-			IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) throws Exception {
+	protected ManifestContents createManifest() throws Exception {
 
 		// create the manifest
-		return new BundlorBasedManifestCreator(module, context)
-				.createManifestContents(
-						false,
-						getManifestTemplateFromTemplateFile(modularizedSystem,
-								module, context));
+		return new BundlorBasedManifestCreator(getCurrentModule(),
+				getCurrentContext()).createManifestContents(false,
+				getCurrentManifestTemplate());
 	}
 }

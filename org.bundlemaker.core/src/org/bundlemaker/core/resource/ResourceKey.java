@@ -132,6 +132,32 @@ public class ResourceKey implements IResourceKey {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public String getDirectory() {
+		int lastIndex = _path.lastIndexOf('/');
+		return lastIndex != -1 ? _path.substring(0, lastIndex) : "";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getPackageName() {
+		return getDirectory().replace('/', '.');
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getName() {
+		int lastIndex = _path.lastIndexOf('/');
+		return lastIndex != -1 ? _path.substring(lastIndex + 1) : _path;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public InputStream getInputStream() {
 
 		// jar file?

@@ -1,6 +1,7 @@
 package org.bundlemaker.core.exporter.pde.exporter;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
+import org.bundlemaker.core.exporter.Helper;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ModuleExporterContext;
 import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
@@ -37,11 +38,11 @@ public class TargetPlatformProjectExporter extends AbstractExporter {
 			IModuleExporterContext context) throws Exception {
 
 		// get a non-existing project name
-		String projectName = getUniqueProjectName(String.format("%s.target",
-				modularizedSystem.getName()));
+		String projectName = Helper.getUniqueProjectName(String.format(
+				"%s.target", modularizedSystem.getName()));
 
 		// delete and create project
-		IProject project = deleteAndCreateProject(projectName, null);
+		IProject project = Helper.deleteAndCreateProject(projectName, null);
 
 		//
 		IFolder folder = project.getFolder("bundles");

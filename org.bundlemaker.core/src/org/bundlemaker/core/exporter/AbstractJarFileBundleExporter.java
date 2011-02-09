@@ -10,8 +10,6 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.util.JarFileUtils;
 
-import com.springsource.util.parser.manifest.ManifestContents;
-
 /**
  * <p>
  * </p>
@@ -27,39 +25,21 @@ public abstract class AbstractJarFileBundleExporter extends
 	 * @throws IOException
 	 */
 	@Override
-	public void export(IModularizedSystem modularizedSystem,
-			final IResourceModule module, IModuleExporterContext context)
-			throws Exception {
-
-		// create the manifest
-		ManifestContents manifestContents = createManifest(modularizedSystem,
-				module, context);
+	public void onExport() throws Exception {
 
 		// create the output stream
-		OutputStream outputStream = createOutputStream(modularizedSystem,
-				module, context);
+		OutputStream outputStream = createOutputStream(
+				getCurrentModularizedSystem(), getCurrentModule(),
+				getCurrentContext());
 
 		// export the jar archive
-		JarFileUtils.createJarArchive(module.getResources(ContentType.BINARY),
-				ManifestUtils.toManifest(manifestContents), outputStream);
+		JarFileUtils.createJarArchive(
+				getCurrentModule().getResources(ContentType.BINARY),
+				ManifestUtils.toManifest(getCurrentManifest()), outputStream);
 
 		// close the output stream
 		outputStream.close();
 	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	protected abstract ManifestContents createManifest(
-			IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) throws Exception;
 
 	/**
 	 * <p>

@@ -53,6 +53,17 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
 	/**
 	 * <p>
+	 * Returns <code>true</code>, if the resource contains one or more
+	 * {@link IType ITypes}.
+	 * </p>
+	 * 
+	 * @return <code>true</code>, if the resource contains one or more
+	 *         {@link IType ITypes}.
+	 */
+	boolean containsTypes();
+
+	/**
+	 * <p>
 	 * Returns the {@link IResourceModule} that contains this {@link IResource}.
 	 * </p>
 	 * 

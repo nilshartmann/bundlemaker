@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
+import org.bundlemaker.core.exporter.Helper;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ManifestUtils;
 import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
@@ -76,8 +77,8 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 			throws Exception {
 
 		// get a non-existing project name
-		String projectName = getUniqueProjectName(module.getModuleIdentifier()
-				.getName());
+		String projectName = Helper.getUniqueProjectName(module
+				.getModuleIdentifier().getName());
 
 		// delete and create project
 		IPath location = null;
@@ -92,7 +93,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		}
 
 		//
-		IProject project = deleteAndCreateProject(projectName, location);
+		IProject project = Helper.deleteAndCreateProject(projectName, location);
 
 		// add java and plug-nature
 		IProjectDescription description = project.getDescription();
