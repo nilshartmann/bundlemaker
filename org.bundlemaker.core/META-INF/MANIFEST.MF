@@ -15,6 +15,7 @@ Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.parser,
  org.bundlemaker.core.projectdescription,
  org.bundlemaker.core.resource,
+ org.bundlemaker.core.resource.modifiable,
  org.bundlemaker.core.transformation,
  org.bundlemaker.core.transformation.resourceset,
  org.bundlemaker.core.util

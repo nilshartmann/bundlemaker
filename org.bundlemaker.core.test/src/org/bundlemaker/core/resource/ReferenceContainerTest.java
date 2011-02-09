@@ -6,6 +6,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.spi.resource.FlyWeightCache;
 import org.bundlemaker.core.spi.resource.Reference;
 import org.bundlemaker.core.spi.resource.ReferenceContainer;
@@ -41,27 +42,27 @@ public class ReferenceContainerTest {
 		// test: assert same reference
 		for (int i = 0; i < 10; i++) {
 			_referenceContainer.recordReference("a.b.c",
-					ReferenceType.TYPE_REFERENCE, true, true, false, false,
-					false);
+					new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true,
+							true, false, false, false, false, false));
 		}
 
 		// assert
 		Assert.assertEquals(1, _references.size());
 
 		// test: assert same reference with different attributes
-		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, true, true, false, false);
-		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, false, true, true, false);
+		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
+				ReferenceType.TYPE_REFERENCE, true, true, true, false, false, false, false));
+		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
+				ReferenceType.TYPE_REFERENCE, true, false, true, true, false, false, false));
 
 		// assert
 		Assert.assertEquals(1, _references.size());
 
 		// test: assert same reference with different attributes
-		_referenceContainer.recordReference("a.b.c.d",
-				ReferenceType.TYPE_REFERENCE, true, true, true, false, false);
-		_referenceContainer.recordReference("a.b.c.f",
-				ReferenceType.TYPE_REFERENCE, true, false, true, true, false);
+		_referenceContainer.recordReference("a.b.c.d", new ReferenceAttributes(
+				ReferenceType.TYPE_REFERENCE, true, true, true, false, false, false, false));
+		_referenceContainer.recordReference("a.b.c.f", new ReferenceAttributes(
+				ReferenceType.TYPE_REFERENCE, true, false, true, true, false, false, false));
 
 		// assert
 		Assert.assertEquals(3, _references.size());
@@ -81,19 +82,21 @@ public class ReferenceContainerTest {
 	@Test
 	public void referenceUpdate() {
 
-		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, true, false, false, true);
+		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
+				ReferenceType.TYPE_REFERENCE, true, true, false, false, true, false, false));
 
-		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, true, true, false, false);
+		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
+				ReferenceType.TYPE_REFERENCE, true, true, true, false, false, false, false));
 
-		_referenceContainer.recordReference("a.b.c",
-				ReferenceType.TYPE_REFERENCE, true, false, false, false, false);
+		_referenceContainer
+				.recordReference("a.b.c", new ReferenceAttributes(
+						ReferenceType.TYPE_REFERENCE, true, false, false,
+						false, false, false, false));
 
 		Assert.assertEquals(1, _references.size());
 
-		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true, true,
-				false, true);
+		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true,
+				true, false, true);
 	}
 
 	/**

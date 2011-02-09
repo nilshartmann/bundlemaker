@@ -91,7 +91,8 @@ public class ResourceModule extends
 	 */
 	@Override
 	public Set<String> getReferencedTypes(final boolean hideContainedTypes,
-			final boolean includeSourceReferences) {
+			final boolean includeSourceReferences,
+			final boolean includeIndirectReferences) {
 
 		// create the result set
 		final Set<String> result = new HashSet<String>();
@@ -101,7 +102,8 @@ public class ResourceModule extends
 			@Override
 			public boolean doWithContainer(ResourceContainer resourceContainer) {
 				result.addAll(resourceContainer.getReferencedTypes(
-						hideContainedTypes, includeSourceReferences));
+						hideContainedTypes, includeSourceReferences,
+						includeIndirectReferences));
 				return false;
 			}
 		});
@@ -114,8 +116,10 @@ public class ResourceModule extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getReferencedPackageNames(final boolean hideContainedTypes,
-			final boolean includeSourceReferences) {
+	public Set<String> getReferencedPackageNames(
+			final boolean hideContainedTypes,
+			final boolean includeSourceReferences,
+			final boolean includeIndirectReferences) {
 
 		// create the result set
 		final Set<String> result = new HashSet<String>();
@@ -125,7 +129,8 @@ public class ResourceModule extends
 			@Override
 			public boolean doWithContainer(ResourceContainer resourceContainer) {
 				result.addAll(resourceContainer.getReferencedPackageNames(
-						hideContainedTypes, includeSourceReferences));
+						hideContainedTypes, includeSourceReferences,
+						includeIndirectReferences));
 				return false;
 			}
 		});
@@ -136,7 +141,8 @@ public class ResourceModule extends
 
 	@Override
 	public Set<IReference> getAllReferences(final boolean hideContainedTypes,
-			final boolean includeSourceReferences) {
+			final boolean includeSourceReferences,
+			final boolean includeIndirectReferences) {
 
 		// create the result set
 		final Set<IReference> result = new HashSet<IReference>();
@@ -146,7 +152,8 @@ public class ResourceModule extends
 			@Override
 			public boolean doWithContainer(ResourceContainer resourceContainer) {
 				result.addAll(resourceContainer.getAllReferences(
-						hideContainedTypes, includeSourceReferences));
+						hideContainedTypes, includeSourceReferences,
+						includeIndirectReferences));
 				return false;
 			}
 		});

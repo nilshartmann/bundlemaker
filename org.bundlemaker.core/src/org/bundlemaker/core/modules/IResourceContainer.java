@@ -52,7 +52,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @return
 	 */
 	Set<String> getReferencedTypes(boolean hideContainedTypes,
-			boolean includeSourceReferences);
+			boolean includeSourceReferences, boolean includeIndirectReferences);
 
 	/**
 	 * <p>
@@ -63,7 +63,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @return
 	 */
 	Set<IReference> getAllReferences(boolean hideContainedTypes,
-			boolean includeSourceReferences);
+			boolean includeSourceReferences, boolean includeIndirectReferences);
 
 	/**
 	 * <p>
@@ -74,7 +74,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @return
 	 */
 	Set<String> getReferencedPackageNames(boolean hideContainedTypes,
-			boolean includeSourceReferences);
+			boolean includeSourceReferences, boolean includeIndirectReferences);
 
 	/**
 	 * <p>

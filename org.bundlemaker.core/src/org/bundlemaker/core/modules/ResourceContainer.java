@@ -38,7 +38,7 @@ public class ResourceContainer extends TypeContainer implements
 
 		// create the resource sets
 		_binaryResources = new HashSet<IResource>();
-		
+
 		// TODO: LAZY
 		_sourceResources = new HashSet<IResource>();
 	}
@@ -86,15 +86,16 @@ public class ResourceContainer extends TypeContainer implements
 	 */
 	@Override
 	public Set<String> getReferencedTypes(boolean hideContainedTypes,
-			boolean includeSourceReferences) {
+			boolean includeSourceReferences, boolean includeIndirectReferences) {
 
 		// return result
-		return getReferences(hideContainedTypes, includeSourceReferences, false);
+		return getReferences(hideContainedTypes, includeSourceReferences,
+				includeIndirectReferences, false);
 	}
 
 	@Override
 	public Set<IReference> getAllReferences(boolean hideContainedTypes,
-			boolean includeSourceReferences) {
+			boolean includeSourceReferences, boolean includeIndirectReferences) {
 
 		// create the result
 		Set<IReference> result = new HashSet<IReference>();
@@ -116,10 +117,11 @@ public class ResourceContainer extends TypeContainer implements
 	 */
 	@Override
 	public Set<String> getReferencedPackageNames(boolean hideContainedTypes,
-			boolean includeSourceReferences) {
+			boolean includeSourceReferences, boolean includeIndirectReferences) {
 
 		// return result
-		return getReferences(hideContainedTypes, includeSourceReferences, true);
+		return getReferences(hideContainedTypes, includeSourceReferences,
+				includeIndirectReferences, true);
 	}
 
 	public IResourceModule getResourceModule() {
@@ -150,8 +152,7 @@ public class ResourceContainer extends TypeContainer implements
 			}
 
 			// set the back-reference
-			((ResourceStandin) resource)
-					.setResourceModule(_resourceModule);
+			((ResourceStandin) resource).setResourceModule(_resourceModule);
 		}
 
 		// step 2: iterate over all source resources...
@@ -166,8 +167,7 @@ public class ResourceContainer extends TypeContainer implements
 			}
 
 			// set the back-reference
-			((ResourceStandin) resource)
-					.setResourceModule(_resourceModule);
+			((ResourceStandin) resource).setResourceModule(_resourceModule);
 		}
 	}
 
@@ -194,11 +194,13 @@ public class ResourceContainer extends TypeContainer implements
 	 * 
 	 * @param hideContainedTypes
 	 * @param includeSourceReferences
+	 * @param includeIndirectReferences
 	 * @param collectPackages
 	 * @return
 	 */
 	private Set<String> getReferences(boolean hideContainedTypes,
-			boolean includeSourceReferences, boolean collectPackages) {
+			boolean includeSourceReferences, boolean includeIndirectReferences,
+			boolean collectPackages) {
 
 		// create the result
 		Set<String> result = new HashSet<String>();

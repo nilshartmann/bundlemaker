@@ -1,7 +1,7 @@
 package org.bundlemaker.core.spi.store;
 
-import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.spi.resource.Resource;
 
 /**

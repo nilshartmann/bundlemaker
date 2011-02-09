@@ -2,7 +2,7 @@ package org.bundlemaker.core.spi.resource;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 
 /**
  * <p>
@@ -53,20 +53,14 @@ public class FlyWeightCache {
 	 * </p>
 	 * 
 	 * @param fullyQualifiedName
-	 * @param referenceType
-	 * @param isSourceCodeDependency
-	 * @param isByteCodeDependency
+	 * @param referenceAttributes
 	 * @return
 	 */
 	public Reference getReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isClassAnnotation,
-			boolean isCompiletimeReference, boolean isRuntimeReference) {
+			ReferenceAttributes referenceAttributes) {
 
 		// create the key
-		ReferenceAttributes attributes = getReferenceAttributes(referenceType,
-				isExtends, isImplements, isClassAnnotation,
-				isCompiletimeReference, isRuntimeReference);
+		ReferenceAttributes attributes = getReferenceAttributes(referenceAttributes);
 
 		Reference key = new Reference(getFlyWeightString(fullyQualifiedName),
 				attributes);
@@ -111,21 +105,10 @@ public class FlyWeightCache {
 	 * <p>
 	 * </p>
 	 * 
-	 * @param referenceType
-	 * @param isExtends
-	 * @param isImplements
-	 * @param isSourceCodeDependency
-	 * @param isByteCodeDependency
+	 * @param attributes
 	 * @return
 	 */
-	ReferenceAttributes getReferenceAttributes(ReferenceType referenceType,
-			boolean isExtends, boolean isImplements, boolean isClassAnnotation,
-			boolean isCompiletimeReference, boolean isRuntimeReference) {
-
-		// create the key
-		ReferenceAttributes attributes = new ReferenceAttributes(referenceType,
-				isExtends, isImplements, isClassAnnotation,
-				isCompiletimeReference, isRuntimeReference);
+	ReferenceAttributes getReferenceAttributes(ReferenceAttributes attributes) {
 
 		// return if already there
 		if (_referenceAttributesCache.containsKey(attributes)) {

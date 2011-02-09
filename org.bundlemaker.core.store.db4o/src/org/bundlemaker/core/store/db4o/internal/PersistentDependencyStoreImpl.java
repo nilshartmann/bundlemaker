@@ -2,7 +2,7 @@ package org.bundlemaker.core.store.db4o.internal;
 
 import java.util.List;
 
-import org.bundlemaker.core.resource.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.spi.resource.Resource;
 
 import com.db4o.osgi.Db4oService;

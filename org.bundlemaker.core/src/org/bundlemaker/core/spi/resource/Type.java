@@ -4,12 +4,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.resource.IModifiableType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.TypeEnum;
+import org.bundlemaker.core.resource.modifiable.IModifiableType;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -169,23 +169,14 @@ public class Type implements IType, IModifiableType {
 		return _binaryResource != null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.bundlemaker.core.resource.IModifiableType#recordReference(java.lang
-	 * .String, org.bundlemaker.core.resource.ReferenceType, boolean, boolean,
-	 * boolean, boolean, boolean)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void recordReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isClassAnnotation,
-			boolean isCompiletime, boolean isRuntime) {
+			ReferenceAttributes referenceAttributes) {
 
-		_referenceContainer.recordReference(fullyQualifiedName, referenceType,
-				isExtends, isImplements, isClassAnnotation, isCompiletime,
-				isRuntime);
+		_referenceContainer.recordReference(fullyQualifiedName, referenceAttributes);
 	}
 
 	/**

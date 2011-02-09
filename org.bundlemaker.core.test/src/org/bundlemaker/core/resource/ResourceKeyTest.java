@@ -2,6 +2,7 @@ package org.bundlemaker.core.resource;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.spi.resource.ArchiveFileCache;
 import org.bundlemaker.core.spi.resource.Resource;
 import org.bundlemaker.core.spi.resource.ResourceStandin;

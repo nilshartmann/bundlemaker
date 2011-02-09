@@ -1,4 +1,4 @@
-package org.bundlemaker.core.spi.resource;
+package org.bundlemaker.core.resource.modifiable;
 
 import org.bundlemaker.core.resource.ReferenceType;
 import org.eclipse.core.runtime.Assert;
@@ -14,11 +14,11 @@ public class ReferenceAttributes {
 	/** - */
 	private ReferenceType _referenceType;
 
-	// /** - */
-	// private boolean _directlyReferenced;
-	//
-	// /** - */
-	// private boolean _indirectlyReferenced;
+	/** - */
+	private boolean _directlyReferenced;
+
+	/** - */
+	private boolean _indirectlyReferenced;
 
 	// /** - */
 	// private boolean _uses;
@@ -49,10 +49,13 @@ public class ReferenceAttributes {
 	 * @param isClassAnnotation
 	 * @param isCompileTime
 	 * @param isRuntimeTime
+	 * @param isDirectReference
+	 * @param isIndirectReference
 	 */
 	public ReferenceAttributes(ReferenceType referenceType, boolean isExtends,
 			boolean isImplements, boolean isClassAnnotation,
-			boolean isCompileTime, boolean isRuntimeTime) {
+			boolean isCompileTime, boolean isRuntimeTime,
+			boolean isDirectReference, boolean isIndirectReference) {
 
 		Assert.isNotNull(referenceType);
 
@@ -62,6 +65,8 @@ public class ReferenceAttributes {
 		_classAnnotation = isClassAnnotation;
 		_isCompileTime = isCompileTime;
 		_isRuntimeTime = isRuntimeTime;
+		_directlyReferenced = isDirectReference;
+		_indirectlyReferenced = isIndirectReference;
 	}
 
 	/**
@@ -130,18 +135,8 @@ public class ReferenceAttributes {
 	 * 
 	 * @return
 	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (_classAnnotation ? 1231 : 1237);
-		result = prime * result + (_extends ? 1231 : 1237);
-		result = prime * result + (_implements ? 1231 : 1237);
-		result = prime * result + (_isCompileTime ? 1231 : 1237);
-		result = prime * result + (_isRuntimeTime ? 1231 : 1237);
-		result = prime * result
-				+ ((_referenceType == null) ? 0 : _referenceType.hashCode());
-		return result;
+	public boolean isDirectlyReferenced() {
+		return _directlyReferenced;
 	}
 
 	/**
@@ -150,6 +145,26 @@ public class ReferenceAttributes {
 	 * 
 	 * @return
 	 */
+	public boolean isIndirectlyReferenced() {
+		return _indirectlyReferenced;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (_classAnnotation ? 1231 : 1237);
+		result = prime * result + (_directlyReferenced ? 1231 : 1237);
+		result = prime * result + (_extends ? 1231 : 1237);
+		result = prime * result + (_implements ? 1231 : 1237);
+		result = prime * result + (_indirectlyReferenced ? 1231 : 1237);
+		result = prime * result + (_isCompileTime ? 1231 : 1237);
+		result = prime * result + (_isRuntimeTime ? 1231 : 1237);
+		result = prime * result
+				+ ((_referenceType == null) ? 0 : _referenceType.hashCode());
+		return result;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -161,9 +176,13 @@ public class ReferenceAttributes {
 		ReferenceAttributes other = (ReferenceAttributes) obj;
 		if (_classAnnotation != other._classAnnotation)
 			return false;
+		if (_directlyReferenced != other._directlyReferenced)
+			return false;
 		if (_extends != other._extends)
 			return false;
 		if (_implements != other._implements)
+			return false;
+		if (_indirectlyReferenced != other._indirectlyReferenced)
 			return false;
 		if (_isCompileTime != other._isCompileTime)
 			return false;
@@ -174,18 +193,14 @@ public class ReferenceAttributes {
 		return true;
 	}
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
 	@Override
 	public String toString() {
 		return "ReferenceAttributes [_referenceType=" + _referenceType
 				+ ", _extends=" + _extends + ", _implements=" + _implements
 				+ ", _classAnnotation=" + _classAnnotation
 				+ ", _isCompileTime=" + _isCompileTime + ", _isRuntimeTime="
-				+ _isRuntimeTime + "]";
+				+ _isRuntimeTime + ", _directlyReferenced="
+				+ _directlyReferenced + ", _indirectlyReferenced="
+				+ _indirectlyReferenced + "]";
 	}
 }

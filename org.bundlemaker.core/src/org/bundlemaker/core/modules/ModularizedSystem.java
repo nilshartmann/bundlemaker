@@ -20,7 +20,6 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.spi.resource.Type;
@@ -424,7 +423,7 @@ public class ModularizedSystem implements IModularizedSystem {
 
 		// TODO: getReferencedTypes(???, ???)
 		for (IReference reference : module.getAllReferences(hideContainedTypes,
-				includeSourceReferences)) {
+				includeSourceReferences, includeSourceReferences)) {
 			_resolveReferencedModules(result, reference);
 		}
 
@@ -462,7 +461,7 @@ public class ModularizedSystem implements IModularizedSystem {
 
 		// iterate over the referenced types
 		for (String referencedType : module.getReferencedTypes(
-				hideContainedTypes, includeSourceReferences)) {
+				hideContainedTypes, includeSourceReferences, false)) {
 
 			// get the module list
 			Set<ITypeModule> moduleList = _typeToModuleListMap

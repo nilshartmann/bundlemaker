@@ -4,6 +4,7 @@ import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -84,8 +85,6 @@ public class Reference implements IReference {
 		return _referenceAttributes.isExtends();
 	}
 
-	
-	
 	public boolean isClassAnnotation() {
 		return _referenceAttributes.isClassAnnotation();
 	}
@@ -143,6 +142,16 @@ public class Reference implements IReference {
 	@Override
 	public boolean hasAssociatedType() {
 		return _type != null;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public ReferenceAttributes getReferenceAttributes() {
+		return _referenceAttributes;
 	}
 
 	/**

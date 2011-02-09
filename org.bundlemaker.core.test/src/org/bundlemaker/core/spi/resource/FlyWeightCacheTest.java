@@ -3,9 +3,7 @@ package org.bundlemaker.core.spi.resource;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.spi.resource.FlyWeightCache;
-import org.bundlemaker.core.spi.resource.Reference;
-import org.bundlemaker.core.spi.resource.ReferenceAttributes;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.junit.Test;
 
 public class FlyWeightCacheTest {
@@ -51,10 +49,12 @@ public class FlyWeightCacheTest {
 		for (int i = 0; i < 100000; i++) {
 
 			//
-			ReferenceAttributes attributes = cache.getReferenceAttributes(
-					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
-							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0, i % 11 == 0);
+			ReferenceAttributes attributes = cache
+					.getReferenceAttributes(new ReferenceAttributes(
+							i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
+									: ReferenceType.PACKAGE_REFERENCE,
+							i % 2 == 0, i % 3 == 0, i % 5 == 0, i % 7 == 0,
+							i % 11 == 0, i % 13 == 0, i % 17 == 0));
 		}
 
 		//
@@ -72,14 +72,18 @@ public class FlyWeightCacheTest {
 
 			//
 			Reference reference = cache.getReference("fullyQualifiedName" + i,
-					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
-							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0, i % 11 == 0);
+					new ReferenceAttributes(
+							i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
+									: ReferenceType.PACKAGE_REFERENCE,
+							i % 2 == 0, i % 3 == 0, i % 5 == 0, i % 7 == 0,
+							i % 11 == 0, i % 13 == 0, i % 17 == 0));
 
 			reference = cache.getReference("fullyQualifiedName",
-					i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
-							: ReferenceType.PACKAGE_REFERENCE, i % 2 == 0,
-					i % 3 == 0, i % 5 == 0, i % 7 == 0, i % 11 == 0);
+					new ReferenceAttributes(
+							i % 11 == 0 ? ReferenceType.TYPE_REFERENCE
+									: ReferenceType.PACKAGE_REFERENCE,
+							i % 2 == 0, i % 3 == 0, i % 5 == 0, i % 7 == 0,
+							i % 11 == 0, i % 13 == 0, i % 17 == 0));
 		}
 
 		//

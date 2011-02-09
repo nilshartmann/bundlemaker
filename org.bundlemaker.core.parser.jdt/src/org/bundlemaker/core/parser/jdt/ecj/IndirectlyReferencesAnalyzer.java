@@ -62,8 +62,8 @@ public class IndirectlyReferencesAnalyzer {
 		};
 
 		// the compiler options
-		CompilerOptions compilerOptions = new CompilerOptions(_javaProject
-				.getOptions(true));
+		CompilerOptions compilerOptions = new CompilerOptions(
+				_javaProject.getOptions(true));
 
 		// the compiler requestor
 		ICompilerRequestor compilerRequestor = new ICompilerRequestor() {
@@ -71,7 +71,7 @@ public class IndirectlyReferencesAnalyzer {
 			public void acceptResult(CompilationResult result) {
 				if (result.hasErrors()) {
 					// TODO...
-					System.err.println(result);
+					// System.err.println(result);
 				}
 			}
 		};

@@ -17,12 +17,12 @@ public class ResourceContainerTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetReferencedPackages() {
-		new ResourceContainer().getReferencedPackageNames(false, false).add("");
+		new ResourceContainer().getReferencedPackageNames(false, false, false).add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetReferencedTypes() {
-		new ResourceContainer().getReferencedTypes(false, false).add("");
+		new ResourceContainer().getReferencedTypes(false, false, false).add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

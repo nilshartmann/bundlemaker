@@ -205,8 +205,9 @@ public class BundleManifestCreator {
 				: EMPTY_HEADERDECLARATION_LIST;
 
 		// get all referenced package names
+		// TODO: indirectly
 		Set<String> packageNames = _resourceModule.getReferencedPackageNames(
-				true, false);
+				true, false, false);
 
 		//
 		for (String packageName : packageNames) {

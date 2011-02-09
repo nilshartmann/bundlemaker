@@ -3,6 +3,8 @@ package org.bundlemaker.core.resource;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.spi.resource.Resource;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Test;
@@ -75,8 +77,9 @@ public class ResourceTest {
 				resourceCache);
 		for (int j = 0; j < 100; j++) {
 
-			resource.recordReference("start" + j, ReferenceType.TYPE_REFERENCE,
-					true, true, true, false, false);
+			resource.recordReference("start" + j, new ReferenceAttributes(
+					ReferenceType.TYPE_REFERENCE, true, true, true, false,
+					false, false, false));
 		}
 
 		stopWatch_1.stop();
@@ -89,9 +92,9 @@ public class ResourceTest {
 
 			//
 			for (int j = 0; j < referenceCount; j++) {
-				resource.recordReference("" + i + j,
+				resource.recordReference("" + i + j, new ReferenceAttributes(
 						ReferenceType.TYPE_REFERENCE, true, true, true, false,
-						false);
+						false, false, false));
 			}
 		}
 
@@ -102,8 +105,9 @@ public class ResourceTest {
 		//
 		resource = new Resource("stop", "stop", "stop", resourceCache);
 		for (int j = 0; j < 100; j++) {
-			resource.recordReference("stop" + j, ReferenceType.TYPE_REFERENCE,
-					true, true, true, false, false);
+			resource.recordReference("stop" + j, new ReferenceAttributes(
+					ReferenceType.TYPE_REFERENCE, true, true, true, false,
+					false, false, false));
 		}
 
 		stopWatch_2.stop();

@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core.resource.modifiable.IReferenceRecorder;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -13,7 +14,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class ReferenceContainer {
+public abstract class ReferenceContainer implements IReferenceRecorder {
 
 	/** the fly weight cahce */
 	private FlyWeightCache _flyWeightCache;
@@ -53,10 +54,9 @@ public abstract class ReferenceContainer {
 	 * 
 	 * @param fullyQualifiedName
 	 */
+	@Override
 	public void recordReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isClassAnnotation,
-			boolean isCompiletime, boolean isRuntime) {
+			ReferenceAttributes requestedAttributes) {
 
 		//
 		Assert.isNotNull(fullyQualifiedName);
@@ -69,61 +69,67 @@ public abstract class ReferenceContainer {
 		}
 
 		// create the key
-		Assert.isNotNull(referenceType);
-		ReferenceKey key = new ReferenceKey(fullyQualifiedName, referenceType);
+		Assert.isNotNull(requestedAttributes);
+		ReferenceKey key = new ReferenceKey(fullyQualifiedName,
+				requestedAttributes.getReferenceType());
 
 		// get the reference
 		Assert.isNotNull(_referenceMap, "Reference Map is null");
-		Reference reference = _referenceMap.get(key);
+		Reference existingReference = _referenceMap.get(key);
 
 		Assert.isNotNull(_flyWeightCache, "_flyWeightCache is not set!");
 
 		// create completely new one
-		if (reference == null) {
+		if (existingReference == null) {
 
-			reference = _flyWeightCache.getReference(fullyQualifiedName,
-					referenceType, isExtends, isImplements, isClassAnnotation,
-					isCompiletime, isRuntime);
+			existingReference = _flyWeightCache.getReference(
+					fullyQualifiedName, requestedAttributes);
 
-			references().add(reference);
-			_referenceMap.put(key, reference);
+			references().add(existingReference);
+			_referenceMap.put(key, existingReference);
 
 			return;
 		}
 
 		// return if current dependency matches the requested one
-		if (isExtends == reference.isExtends()
-				&& isImplements == reference.isImplements()
-				&& isCompiletime == reference.isCompileTimeReference()
-				&& isRuntime == reference.isRuntimeReference()) {
+		if (existingReference.getReferenceAttributes().equals(
+				requestedAttributes)) {
 			return;
 		}
 
 		// if current dependency does not match the requested one, we have to
 		// request a new one
-		references().remove(reference);
+		references().remove(existingReference);
 
-		reference = _flyWeightCache.getReference(fullyQualifiedName,
-				referenceType, chooseValue(isExtends, reference.isExtends()),
-				chooseValue(isImplements, reference.isImplements()),
-				chooseValue(isClassAnnotation, reference.isClassAnnotation()),
-				chooseValue(isCompiletime, reference.isCompileTimeReference()),
-				chooseValue(isRuntime, reference.isRuntimeReference()));
+		ReferenceAttributes mergedAttributes = merge(requestedAttributes,
+				existingReference.getReferenceAttributes());
 
-		references().add(reference);
-		_referenceMap.put(key, reference);
+		existingReference = _flyWeightCache.getReference(fullyQualifiedName,
+				mergedAttributes);
+
+		references().add(existingReference);
+		_referenceMap.put(key, existingReference);
 	}
 
 	/**
 	 * <p>
 	 * </p>
 	 * 
-	 * @param b1
-	 * @param b2
+	 * @param a1
+	 * @param a2
 	 * @return
 	 */
-	private boolean chooseValue(boolean b1, boolean b2) {
-		return b1 || b2;
+	private ReferenceAttributes merge(ReferenceAttributes a1,
+			ReferenceAttributes a2) {
+
+		//
+		return new ReferenceAttributes(a1.getReferenceType(), a1.isExtends()
+				|| a2.isExtends(), a1.isImplements() || a2.isImplements(),
+				a1.isClassAnnotation() || a2.isClassAnnotation(),
+				a1.isCompileTime() || a2.isCompileTime(), a1.isRuntimeTime()
+						|| a2.isRuntimeTime(), a1.isDirectlyReferenced()
+						|| a2.isDirectlyReferenced(), a1.isIndirectlyReferenced()
+						|| a2.isIndirectlyReferenced());
 	}
 
 	/**

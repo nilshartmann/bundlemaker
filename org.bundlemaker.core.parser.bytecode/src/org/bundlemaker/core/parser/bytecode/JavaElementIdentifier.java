@@ -3,7 +3,7 @@ package org.bundlemaker.core.parser.bytecode;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bundlemaker.core.resource.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 
 /**

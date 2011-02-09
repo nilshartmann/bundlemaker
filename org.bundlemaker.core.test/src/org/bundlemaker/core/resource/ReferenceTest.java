@@ -3,6 +3,7 @@ package org.bundlemaker.core.resource;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.spi.resource.Reference;
 import org.bundlemaker.core.spi.resource.Resource;
 import org.bundlemaker.core.util.StopWatch;
@@ -41,8 +42,9 @@ public class ReferenceTest {
 
 			for (int j = 0; j < referencesCount; j++) {
 				resource.recordReference("name" + i + "#" + j,
-						ReferenceType.PACKAGE_REFERENCE, true, true, true, false,
-						false);
+						new ReferenceAttributes(
+								ReferenceType.PACKAGE_REFERENCE, true, true,
+								true, false, false, false, false));
 			}
 
 			Assert.assertEquals(referencesCount, resource.getReferences()
@@ -54,27 +56,36 @@ public class ReferenceTest {
 		// Assert.assertTrue(
 		// String.format("Elapsed time '%s'.", stopWatch.getElapsedTime()),
 		// stopWatch.getElapsedTime() < 3000);
-		Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache().getReferenceCache().size());
+		Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache()
+				.getReferenceCache().size());
 		stopWatch = new StopWatch();
 		stopWatch.start();
 		for (int i = 0; i < 10000; i++) {
 
-			Reference reference = resourceCache.getFlyWeightCache().getReference(
-					"name" + i + "#1", ReferenceType.PACKAGE_REFERENCE, true, true,
-					true, false, false);
+			Reference reference = resourceCache.getFlyWeightCache()
+					.getReference(
+							"name" + i + "#1",
+							new ReferenceAttributes(
+									ReferenceType.PACKAGE_REFERENCE, true,
+									true, true, false, false, false, false));
 
 			Assert.assertNotNull(reference);
 		}
 		stopWatch.stop();
 		System.out.println("Existing ones " + stopWatch.getElapsedTime());
 
-		Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache().getReferenceCache().size());
+		Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache()
+				.getReferenceCache().size());
 		stopWatch = new StopWatch();
 		stopWatch.start();
 		for (int i = 0; i < 10000; i++) {
 
-			Reference reference = resourceCache.getFlyWeightCache().getReference("name" + i
-					+ "#40", ReferenceType.PACKAGE_REFERENCE, true, true, true, false, false);
+			Reference reference = resourceCache.getFlyWeightCache()
+					.getReference(
+							"name" + i + "#40",
+							new ReferenceAttributes(
+									ReferenceType.PACKAGE_REFERENCE, true,
+									true, true, false, false, false, false));
 
 			Assert.assertNotNull(reference);
 		}

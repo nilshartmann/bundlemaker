@@ -4,9 +4,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.resource.IModifiableResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.spi.resource.ArchiveFileCache;
 import org.bundlemaker.core.spi.resource.Resource;
 import org.bundlemaker.core.spi.resource.ResourceStandin;

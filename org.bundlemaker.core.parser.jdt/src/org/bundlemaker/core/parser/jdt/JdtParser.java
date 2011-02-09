@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
@@ -15,9 +16,12 @@ import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
 import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
 import org.bundlemaker.core.parser.jdt.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.IModifiableResource;
+import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.ResourceKey;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -281,7 +285,8 @@ public class JdtParser implements IParser {
 		ResourceKey key = new ResourceKey(elementID.getContentId(),
 				elementID.getRoot(), elementID.getPath());
 
-		IModifiableResource resource = (IModifiableResource) cache.getOrCreateResource(key);
+		IModifiableResource resource = (IModifiableResource) cache
+				.getOrCreateResource(key);
 
 		// step 6: set the directly referenced types
 		JdtAstVisitor visitor = new JdtAstVisitor(resource);
@@ -295,56 +300,20 @@ public class JdtParser implements IParser {
 					compilationUnit);
 		}
 
-		// step 9: try to associate source resources and class resources
+		// step 8: compute the indirectly referenced types
+		Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer
+				.getAllReferencedTypes((IFile) iCompilationUnit
+						.getCorrespondingResource());
 
-		// TODO: Das sollten wir ggf. besser in der TRansformation machen???
+		for (String type : directlyAndIndirectlyReferencedTypes) {
 
-		// for (String typeName : visitor.getTypeNames()) {
-		//
-		// JavaElementIdentifier classId = new JavaElementIdentifier(
-		// iDirectory.getFileBasedContent().getId(), null, typeName,
-		// JavaElementIdentifier.FileType.CLASS_FILE);
-		//
-		// JavaElementIdentifier enclosingClassId = classId
-		// .getIdForEnclosingNonLocalAndNonAnonymousType();
-		//
-		// //
-		// IResource standin = fileBasedContent.getResourceContent()
-		// .getBinaryResource(new Path(enclosingClassId.getPath()));
-		// Resource element = cache.getOrCreateModifiableResource(standin);
-		//
-		// if (element == null) {
-		// // TODO
-		// System.out.println("Source file without class file: "
-		// + enclosingClassId.toString());
-		// }
-		//
-		// if (element != null) {
-		// resource.addAssociatedResource(element);
-		// }
-		// }
+			resource.recordReference(type, new ReferenceAttributes(
+					ReferenceType.TYPE_REFERENCE, false, false, false, false,
+					false, false, true));
 
-		// step 9: compute the indirectly referenced types
-		// Set<String> directlyAndIndirectlyReferencedTypes =
-		// _indirectlyReferencesAnalyzer
-		// .getAllReferencedTypes((IFile) iCompilationUnit
-		// .getCorrespondingResource());
-		//
-		// for (String type : directlyAndIndirectlyReferencedTypes) {
-		//
-		// // get the reference
-		// ModifiableReference reference = resource.createOrGetReference(type,
-		// ReferenceType.TYPE_REFERENCE);
-		//
-		// // if the reference is not a direct reference, it is a indirectly
-		// // reference...
-		// if (!reference.isDirectlyReferenced()) {
-		// reference.setSourcecodeDependency(true);
-		// reference.setIndirectlyReferenced(true);
-		// }
-		// }
+		}
 
-		// step 10: add the errors to the error list
+		// step 9: add the errors to the error list
 		for (IProblem problem : visitor.getProblems()) {
 
 			// add errors

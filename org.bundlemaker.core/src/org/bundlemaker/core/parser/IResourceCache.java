@@ -1,9 +1,9 @@
 package org.bundlemaker.core.parser;
 
-import org.bundlemaker.core.resource.IModifiableResource;
-import org.bundlemaker.core.resource.IModifiableType;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.TypeEnum;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.IModifiableType;
 
 /**
  * <p>

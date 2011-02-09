@@ -301,16 +301,16 @@ public class IntegrationTest {
 		Assert.assertEquals(212, typeNames.size());
 
 		int externalBinaryReferencesCount = resourceModule.getAllReferences(
-				true, false).size();
+				true, false, false).size();
 
 		int externalBinaryAndSourceReferencesCount = resourceModule
-				.getAllReferences(true, true).size();
+				.getAllReferences(true, true, false).size();
 
 		int binaryReferencesCount = resourceModule.getAllReferences(false,
-				false).size();
+				false, false).size();
 
 		int binaryAndSourceReferencesCount = resourceModule.getAllReferences(
-				false, true).size();
+				false, true, false).size();
 
 		System.out.println(externalBinaryReferencesCount);
 		System.out.println(externalBinaryAndSourceReferencesCount);
@@ -318,9 +318,9 @@ public class IntegrationTest {
 		System.out.println(binaryAndSourceReferencesCount);
 
 		Set<IReference> externalBinaryReferences = resourceModule
-				.getAllReferences(true, false);
+				.getAllReferences(true, false, false);
 
-		for (IReference reference : resourceModule.getAllReferences(true, true)) {
+		for (IReference reference : resourceModule.getAllReferences(true, true, false)) {
 
 			if (reference.isCompileTimeReference()
 					&& !reference.isRuntimeReference()) {
