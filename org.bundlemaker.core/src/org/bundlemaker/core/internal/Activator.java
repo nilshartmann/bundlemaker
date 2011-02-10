@@ -36,6 +36,9 @@ public class Activator extends Plugin {
 	/** the activator instance */
 	private static Activator _activator;
 
+	/** - */
+	private static BundleContext _context;
+
 	/** the factory tracker */
 	private ServiceTracker _factoryTracker;
 
@@ -77,14 +80,23 @@ public class Activator extends Plugin {
 
 		//
 		_activator = this;
+
+		//
+		_context = context;
 	}
 
 	/**
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+
+		//
 		_activator = null;
 
+		//
+		_context = null;
+
+		//
 		_factoryTracker.close();
 
 		super.stop(context);
@@ -99,6 +111,10 @@ public class Activator extends Plugin {
 	 */
 	public static Activator getDefault() {
 		return _activator;
+	}
+
+	public static BundleContext getContext() {
+		return _context;
 	}
 
 	public ParserFactoryRegistry getParserFactoryRegistry() {
@@ -158,7 +174,8 @@ public class Activator extends Plugin {
 
 		try {
 			// return
-			return (IPersistentDependencyStoreFactory) _factoryTracker.waitForService(5000);
+			return (IPersistentDependencyStoreFactory) _factoryTracker
+					.waitForService(5000);
 		} catch (InterruptedException e) {
 			return null;
 		}

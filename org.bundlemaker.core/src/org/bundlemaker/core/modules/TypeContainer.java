@@ -95,12 +95,7 @@ public class TypeContainer implements ITypeContainer {
 	@Override
 	public Set<String> getContainedPackageNames() {
 
-		return getContainedPackageNames(new IQueryFilter() {
-			@Override
-			public boolean matches(String content) {
-				return true;
-			}
-		});
+		return getContainedPackageNames(NameQueryFilters.TRUE_QUERY_FILTER);
 	}
 
 	/**

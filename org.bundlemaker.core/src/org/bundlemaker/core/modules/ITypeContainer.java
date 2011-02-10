@@ -37,7 +37,7 @@ public interface ITypeContainer {
 
 	/**
 	 * <p>
-	 * Returns a {@link Set} with the names of all contained types. 
+	 * Returns a {@link Set} with the names of all contained types.
 	 * </p>
 	 * 
 	 * @return a {@link Set} with the names of all contained types.
@@ -51,7 +51,7 @@ public interface ITypeContainer {
 	 * @param filter
 	 * @return
 	 */
-	Set<String> getContainedTypeNames(IQueryFilter filter);
+	Set<String> getContainedTypeNames(IQueryFilter<String> filter);
 
 	/**
 	 * <p>
@@ -68,5 +68,5 @@ public interface ITypeContainer {
 	 * @param filter
 	 * @return
 	 */
-	Set<String> getContainedPackageNames(IQueryFilter filter);
+	Set<String> getContainedPackageNames(IQueryFilter<String> filter);
 }

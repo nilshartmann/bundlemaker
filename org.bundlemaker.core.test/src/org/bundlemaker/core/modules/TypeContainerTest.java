@@ -44,7 +44,8 @@ public class TypeContainerTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (int i = 0; i < 100000; i++) {
-			typeContainer.getModifiableContainedTypesMap().put("a.b.c" + i, new Type("a.b.c" + i, TypeEnum.CLASS));
+			typeContainer.getModifiableContainedTypesMap().put("a.b.c" + i,
+					new Type("a.b.c" + i, TypeEnum.CLASS));
 		}
 		stopWatch.stop();
 		Assert.assertTrue(
@@ -52,15 +53,15 @@ public class TypeContainerTest {
 						stopWatch.getElapsedTime()),
 				stopWatch.getElapsedTime() < 500);
 
-		Assert.assertEquals(100000, typeContainer.getModifiableContainedTypesMap()
-				.size());
+		Assert.assertEquals(100000, typeContainer
+				.getModifiableContainedTypesMap().size());
 
 		//
 		stopWatch = new StopWatch();
 		stopWatch.start();
 
 		Set<String> containedTypes = typeContainer
-				.getContainedTypeNames(new IQueryFilter() {
+				.getContainedTypeNames(new IQueryFilter<String>() {
 
 					@Override
 					public boolean matches(String content) {

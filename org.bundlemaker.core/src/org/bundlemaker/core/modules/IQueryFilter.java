@@ -1,15 +1,9 @@
 package org.bundlemaker.core.modules;
 
-public interface IQueryFilter {
-
-	/** QUERY_FILTER_FALSE */
-	public static IQueryFilter TRUE_QUERY_FILTER = new IQueryFilter() {
-
-		@Override
-		public boolean matches(String content) {
-			return true;
-		}
-	};
+/**
+ * @param <T>
+ */
+public interface IQueryFilter<T> {
 
 	/**
 	 * <p>
@@ -18,5 +12,5 @@ public interface IQueryFilter {
 	 * @param content
 	 * @return
 	 */
-	boolean matches(String content);
+	public abstract boolean matches(T content);
 }

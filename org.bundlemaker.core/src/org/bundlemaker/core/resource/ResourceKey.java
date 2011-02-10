@@ -35,7 +35,7 @@ public class ResourceKey implements IResourceKey {
 	private String _path;
 
 	/** the archive file that is used to cache archive files for faster access */
-	private ArchiveFileCache _archiveFileCache;
+	private transient ArchiveFileCache _archiveFileCache;
 
 	/**
 	 * <p>

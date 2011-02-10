@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Inspector
+Bundle-SymbolicName: org.bundlemaker.core.test.inspector
+Bundle-Version: 1.0.0.qualifier
+Fragment-Host: org.bundlemaker.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bundlemaker.core.test.inspector,
+ org.bundlemaker.core.internal.resource
+Require-Bundle: com.db4o.osgi;bundle-version="8.0.184"

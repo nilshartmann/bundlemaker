@@ -96,14 +96,14 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 */
 	@Override
 	public Set<String> getContainedTypeNames() {
-		return getContainedTypeNames(IQueryFilter.TRUE_QUERY_FILTER);
+		return getContainedTypeNames(NameQueryFilters.TRUE_QUERY_FILTER);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedTypeNames(final IQueryFilter filter) {
+	public Set<String> getContainedTypeNames(final IQueryFilter<String> filter) {
 
 		// create the result set
 		final Set<String> result = new HashSet<String>();
@@ -172,14 +172,15 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 */
 	@Override
 	public Set<String> getContainedPackageNames() {
-		return getContainedPackageNames(IQueryFilter.TRUE_QUERY_FILTER);
+		return getContainedPackageNames(NameQueryFilters.TRUE_QUERY_FILTER);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getContainedPackageNames(final IQueryFilter filter) {
+	public Set<String> getContainedPackageNames(
+			final IQueryFilter<String> filter) {
 
 		// create the result set
 		final Set<String> result = new HashSet<String>();
