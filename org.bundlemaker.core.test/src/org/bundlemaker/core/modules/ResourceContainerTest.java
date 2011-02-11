@@ -1,5 +1,6 @@
 package org.bundlemaker.core.modules;
 
+import org.bundlemaker.core.internal.modules.ResourceContainer;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.junit.Test;
 

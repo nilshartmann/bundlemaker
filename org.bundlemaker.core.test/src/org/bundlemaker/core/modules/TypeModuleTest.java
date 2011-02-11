@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class TypeModuleTest {
 	public void testUnmodifiableUserAttributes() {
 
 		//
-		ITypeModule module = new TypeModule(new ModuleIdentifier("name",
+		IModule module = new TypeModule(new ModuleIdentifier("name",
 				"version"));
 
 		module.getUserAttributes().put("test", new JFrame());

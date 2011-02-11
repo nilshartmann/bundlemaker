@@ -15,7 +15,7 @@ import org.bundlemaker.core.exporter.pde.Activator;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
@@ -227,7 +227,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		List<IRequiredBundleDescription> requiredBundleDescriptions = new LinkedList<IRequiredBundleDescription>();
 
 		//
-		for (ITypeModule typeModule : referencedModules.getReferencedModules()) {
+		for (IModule typeModule : referencedModules.getReferencedModules()) {
 
 			if (!typeModule.equals(modularizedSystem
 					.getExecutionEnvironmentTypeModule())) {

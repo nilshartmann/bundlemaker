@@ -21,7 +21,7 @@ import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.StopWatch;
@@ -61,7 +61,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 		stopWatch.start();
 
 		//
-		for (ITypeModule typeModule : modularizedSystem.getAllModules()) {
+		for (IModule typeModule : modularizedSystem.getAllModules()) {
 
 			// create the entries
 			createEntries(typeModule, modularizedSystem);
@@ -85,7 +85,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	 * @param typeModule
 	 * @param packageList
 	 */
-	private void createEntries(ITypeModule typeModule,
+	private void createEntries(IModule typeModule,
 			IModularizedSystem modularizedSystem) {
 
 		// step 1: create and add the ModuleType
@@ -102,7 +102,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	 * @param typeModule
 	 * @param modularizedSystem
 	 */
-	private void createDependencies(ITypeModule typeModule,
+	private void createDependencies(IModule typeModule,
 			IModularizedSystem modularizedSystem) {
 
 		// only handle resource modules
@@ -120,7 +120,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 				for (IReference reference : type.getReferences()) {
 
-					ITypeModule referencedModule = null;
+					IModule referencedModule = null;
 
 					try {
 
@@ -177,14 +177,14 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 	/**
 	 * <p>
-	 * Creates a {@link ModuleType} for the given {@link ITypeModule}
+	 * Creates a {@link ModuleType} for the given {@link IModule}
 	 * </p>
 	 * 
 	 * @param typeModule
 	 * @param packageList
 	 * @return
 	 */
-	private void createModule(ITypeModule typeModule) {
+	private void createModule(IModule typeModule) {
 
 		// step 1: create the result
 		ModuleType module = new ModuleType();
@@ -242,7 +242,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	 * @param typeModule
 	 * @return
 	 */
-	private Map<String, List<String>> extractPackageList(ITypeModule typeModule) {
+	private Map<String, List<String>> extractPackageList(IModule typeModule) {
 
 		// create the package list
 		Map<String, List<String>> packageList = new HashMap<String, List<String>>();
@@ -274,7 +274,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	 * @param typeModule
 	 * @return
 	 */
-	protected String getTypeModuleName(ITypeModule typeModule) {
+	protected String getTypeModuleName(IModule typeModule) {
 
 		//
 		return typeModule.getClassification() != null ? typeModule

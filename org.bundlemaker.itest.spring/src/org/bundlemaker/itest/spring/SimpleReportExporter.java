@@ -13,7 +13,7 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 
@@ -72,7 +72,7 @@ public class SimpleReportExporter extends AbstractExporter {
 		IReferencedModulesQueryResult queryResult = modularizedSystem
 				.getReferencedModules(module, true, true);
 
-		for (ITypeModule referencedModule : queryResult.getReferencedModules()) {
+		for (IModule referencedModule : queryResult.getReferencedModules()) {
 			builder.append(referencedModule.getModuleIdentifier().toString()
 					+ "\n");
 		}
@@ -85,11 +85,11 @@ public class SimpleReportExporter extends AbstractExporter {
 
 		builder.append("\n");
 		builder.append("Types with ambigious modules: \n");
-		for (Entry<String, Set<ITypeModule>> missingType : queryResult
+		for (Entry<String, Set<IModule>> missingType : queryResult
 				.getReferencedTypesWithAmbiguousModules().entrySet()) {
 
 			builder.append(missingType.getKey() + ":\n");
-			for (ITypeModule typeModule : missingType.getValue()) {
+			for (IModule typeModule : missingType.getValue()) {
 				builder.append(" - "
 						+ typeModule.getModuleIdentifier().toString() + "\n");
 			}

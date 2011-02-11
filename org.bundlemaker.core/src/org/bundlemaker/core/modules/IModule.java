@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ITypeModule extends ITypeContainer {
+public interface IModule extends ITypeContainer {
 
 	/**
 	 * <p>
@@ -29,6 +29,9 @@ public interface ITypeModule extends ITypeContainer {
 	IPath getClassification();
 
 	/**
+	 * <p>
+	 * </p>
+	 * 
 	 * @return
 	 */
 	boolean hasClassification();

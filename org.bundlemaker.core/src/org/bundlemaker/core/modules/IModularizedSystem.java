@@ -53,32 +53,32 @@ public interface IModularizedSystem {
 
 	/**
 	 * <p>
-	 * Returns all modules ({@link ITypeModule ITypeModules} and
+	 * Returns all modules ({@link IModule ITypeModules} and
 	 * {@link IResourceModule IResourceModules}).
 	 * </p>
 	 * 
 	 * @return
 	 */
-	Set<ITypeModule> getAllModules();
+	Set<IModule> getAllModules();
 
 	/**
 	 * <p>
-	 * Returns all contained {@link ITypeModule ITypeModules}.
+	 * Returns all contained {@link IModule ITypeModules}.
 	 * </p>
 	 * 
 	 * @return
 	 */
-	Set<ITypeModule> getTypeModules();
+	Set<IModule> getTypeModules();
 
 	/**
 	 * <p>
-	 * Returns the {@link ITypeModule} with the given identifier.
+	 * Returns the {@link IModule} with the given identifier.
 	 * </p>
 	 * 
 	 * @param identifier
 	 * @return
 	 */
-	ITypeModule getTypeModule(IModuleIdentifier identifier);
+	IModule getTypeModule(IModuleIdentifier identifier);
 
 	/**
 	 * <p>
@@ -115,7 +115,7 @@ public interface IModularizedSystem {
 	 * @param fullyQualifiedName
 	 * @return
 	 */
-	Set<ITypeModule> getContainingModules(String fullyQualifiedName);
+	Set<IModule> getContainingModules(String fullyQualifiedName);
 	
 	/**
 	 * <p>
@@ -134,7 +134,7 @@ public interface IModularizedSystem {
 	 * @return
 	 * @throws AmbiguousDependencyException
 	 */
-	ITypeModule getContainingModule(String fullyQualifiedName)
+	IModule getContainingModule(String fullyQualifiedName)
 			throws AmbiguousDependencyException;
 
 	/**
@@ -197,7 +197,7 @@ public interface IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	Map<String, Set<ITypeModule>> getAmbiguousPackages();
+	Map<String, Set<IModule>> getAmbiguousPackages();
 
 	/**
 	 * <p>
@@ -205,5 +205,5 @@ public interface IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	ITypeModule getExecutionEnvironmentTypeModule();
+	IModule getExecutionEnvironmentTypeModule();
 }

@@ -1,0 +1,836 @@
+package org.bundlemaker.core.internal.modules;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+import org.bundlemaker.core.internal.JdkModuleCreator;
+import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.modules.AmbiguousDependencyException;
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.TypeEnum;
+import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.util.GenericCache;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+
+public class ModularizedSystem implements IModularizedSystem {
+
+	/** the name of working copy */
+	private String _name;
+
+	/** the project description */
+	private IBundleMakerProjectDescription _projectDescription;
+
+	/** the list of defined transformations */
+	private List<ITransformation> _transformations;
+
+	/** the defined resource modules */
+	private Set<ResourceModule> _resourceModules;
+
+	/** the defined type modules */
+	private Set<TypeModule> _typeModules;
+
+	/** the execution environment type module */
+	private TypeModule _executionEnvironment;
+
+	/** type name -> type */
+	public GenericCache<String, Set<IType>> _typeNameToTypeCache;
+
+	/** type name -> referring type */
+	public GenericCache<String, Set<IType>> _typeNameToReferringCache;
+
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link ModularizedSystem}.
+	 * </p>
+	 * 
+	 * @param name
+	 */
+	public ModularizedSystem(String name,
+			IBundleMakerProjectDescription projectDescription) {
+
+		_name = name;
+
+		_projectDescription = projectDescription;
+
+		_transformations = new LinkedList<ITransformation>();
+		_resourceModules = new HashSet<ResourceModule>();
+		_typeModules = new HashSet<TypeModule>();
+
+		//
+		_typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
+			@Override
+			protected Set<IType> create(String key) throws Exception {
+				return new HashSet<IType>();
+			}
+		};
+
+		//
+		_typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
+			@Override
+			protected Set<IType> create(String key) throws Exception {
+				return new HashSet<IType>();
+			}
+		};
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getName() {
+		return _name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IBundleMakerProjectDescription getProjectDescription() {
+		return _projectDescription;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<ITransformation> getTransformations() {
+		return _transformations;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void applyTransformations() {
+
+		// step 1: clear prior results
+		_typeModules.clear();
+		_resourceModules.clear();
+		_typeNameToTypeCache.clear();
+
+		// step 2: set up the JRE
+		// TODO!!!!
+		System.out.println("// step 2: set up the JRE");
+		try {
+
+			TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
+			_typeModules.add(jdkModule);
+			_executionEnvironment = jdkModule;
+
+		} catch (CoreException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		// step 3: create the type modules
+		System.out.println("// step 3: create the type modules");
+
+		for (IFileBasedContent fileBasedContent : _projectDescription
+				.getFileBasedContent()) {
+
+			if (!fileBasedContent.isResourceContent()) {
+
+				IModuleIdentifier identifier = new ModuleIdentifier(
+						fileBasedContent.getName(),
+						fileBasedContent.getVersion());
+
+				// TODO!!
+				TypeModule typeModule = createTypeModule(
+						identifier,
+						new File[] { fileBasedContent.getBinaryPaths().toArray(
+								new IPath[0])[0].toFile() });
+
+				_typeModules.add(typeModule);
+
+			}
+		}
+
+		try {
+			initializedModules();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// step 4: transform modules
+		System.out.println("// step 4: transform modules");
+		for (ITransformation transformation : _transformations) {
+
+			// step 4.1: apply transformation
+			transformation.apply(this);
+
+			// step 4.2: clean up empty modules
+			for (Iterator<ResourceModule> iterator = _resourceModules
+					.iterator(); iterator.hasNext();) {
+
+				// get next module
+				ResourceModule module = iterator.next();
+
+				// if the module is empty - remove it
+				if (module.getResources(ContentType.BINARY).isEmpty()
+						&& module.getResources(ContentType.SOURCE).isEmpty()) {
+
+					// remove the module
+					iterator.remove();
+				}
+			}
+
+			// step 4.3: initialize
+			for (ResourceModule module : _resourceModules) {
+				module.initializeContainedTypes();
+			}
+		}
+
+		System.out.println("// done");
+
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	private void initializedModules() throws Exception {
+
+		// step 1: clear the caches
+		_typeNameToTypeCache.clear();
+		_typeNameToReferringCache.clear();
+
+		// step 2: iterate over the file based content
+		for (IFileBasedContent fileBasedContent : getProjectDescription()
+				.getFileBasedContent()) {
+
+			if (fileBasedContent.isResourceContent()) {
+
+				//
+				for (IResource resource : fileBasedContent.getResourceContent()
+						.getBinaryResources()) {
+
+					for (IType containedType : resource.getContainedTypes()) {
+
+						if (_typeNameToTypeCache.getOrCreate(
+								containedType.getFullyQualifiedName()).add(
+								containedType)) {
+
+							for (IReference reference : containedType
+									.getReferences()) {
+
+								_typeNameToReferringCache.getOrCreate(
+										reference.getFullyQualifiedName()).add(
+										containedType);
+							}
+
+						}
+					}
+
+				}
+
+				//
+				for (IResource resource : fileBasedContent.getResourceContent()
+						.getSourceResources()) {
+
+					for (IType containedType : resource.getContainedTypes()) {
+
+						if (_typeNameToTypeCache.getOrCreate(
+								containedType.getFullyQualifiedName()).add(
+								containedType)) {
+
+							for (IReference reference : containedType
+									.getReferences()) {
+
+								_typeNameToReferringCache.getOrCreate(
+										reference.getFullyQualifiedName()).add(
+										containedType);
+							}
+
+						}
+					}
+				}
+
+			}
+		}
+
+		// step 2: initialize the type modules
+		for (TypeModule module : _typeModules) {
+
+			for (IType type : module.getContainedTypes()) {
+				_typeNameToTypeCache.getOrCreate(type.getFullyQualifiedName())
+						.add(type);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<IModule> getAllModules() {
+
+		// create the result list
+		Set<IModule> result = new HashSet<IModule>(_typeModules.size()
+				+ _resourceModules.size());
+
+		// all all modules
+		result.addAll(_typeModules);
+		result.addAll(_resourceModules);
+
+		// return an unmodifiable copy
+		return Collections.unmodifiableSet(result);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<IModule> getTypeModules() {
+		return Collections
+				.unmodifiableSet((Set<? extends IModule>) _typeModules);
+	}
+
+	@Override
+	public IModule getTypeModule(IModuleIdentifier identifier) {
+
+		//
+		for (TypeModule module : _typeModules) {
+
+			if (module.getModuleIdentifier().equals(identifier)) {
+				return module;
+			}
+		}
+
+		//
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<IResourceModule> getResourceModules() {
+		return Collections
+				.unmodifiableSet((Set<? extends IResourceModule>) _resourceModules);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IResourceModule getResourceModule(IModuleIdentifier identifier) {
+
+		//
+		return getModifiableResourceModule(identifier);
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param identifier
+	 * @return
+	 */
+	public ResourceModule getModifiableResourceModule(
+			IModuleIdentifier identifier) {
+
+		//
+		for (ResourceModule module : _resourceModules) {
+
+			if (module.getModuleIdentifier().equals(identifier)) {
+				return module;
+			}
+		}
+
+		//
+		return null;
+	}
+
+	public Set<ResourceModule> getModifiableResourceModules() {
+
+		//
+		return _resourceModules;
+	}
+
+	@Override
+	public Set<IResource> getUnassignedResources() {
+
+		// TODO
+
+		// Set<IResource> result = new HashSet<IResource>();
+		//
+		// for (IFileBasedContent content : _projectDescription
+		// .getFileBasedContent()) {
+		//
+		// if (content.isResourceContent()) {
+		//
+		// for (IResource resourceStandin : content
+		// .getResourceContent().getBinaryResources()) {
+		//
+		// if (resourceStandin.getContainingModules().isEmpty()) {
+		// result.add(resourceStandin);
+		// }
+		// }
+		//
+		// for (IResource resourceStandin : content
+		// .getResourceContent().getSourceResources()) {
+		//
+		// if (resourceStandin.getContainingModules().isEmpty()) {
+		// result.add(resourceStandin);
+		// }
+		// }
+		// }
+		// }
+		//
+		// // return the result
+		// return result;
+
+		return null;
+	}
+
+	@Override
+	public Set<IModule> getContainingModules(String fullyQualifiedName) {
+
+		//
+		if (_typeNameToTypeCache.containsKey(fullyQualifiedName)) {
+
+			Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+
+			Set<IModule> result = new HashSet<IModule>(types.size());
+
+			for (IType type : types) {
+				if (type.hasBinaryResource()) {
+					result.add(type.getBinaryResource().getResourceModule());
+				} else if (type.hasTypeModule()) {
+					result.add(type.getTypeModule());
+				}
+			}
+
+			//
+			return Collections.unmodifiableSet(result);
+
+		} else {
+			return Collections.emptySet();
+		}
+	}
+
+	@Override
+	public Set<IType> getReferencingTypes(String fullyQualifiedName) {
+		return _typeNameToReferringCache.get(fullyQualifiedName);
+	}
+
+	@Override
+	public IModule getContainingModule(String fullyQualifiedName)
+			throws AmbiguousDependencyException {
+
+		Set<IModule> result = getContainingModules(fullyQualifiedName);
+
+		if (result.isEmpty()) {
+			return null;
+		}
+
+		if (result.size() > 1) {
+			throw new AmbiguousDependencyException(
+					"AmbiguousModuleDependencyException: " + fullyQualifiedName);
+		}
+
+		return result.toArray(new IModule[0])[0];
+	}
+
+	@Override
+	public IType getType(String fullyQualifiedName)
+			throws AmbiguousDependencyException {
+
+		Assert.isNotNull(fullyQualifiedName);
+
+		// get type modules
+		Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+
+		// return null if type is unknown
+		if (types == null) {
+			return null;
+		}
+
+		// if multiple type modules exist, throw an exception
+		if (types.size() > 1) {
+
+			// TODO
+			new AmbiguousDependencyException(fullyQualifiedName);
+		}
+
+		// return the type
+		return types.toArray(new IType[0])[0];
+	}
+
+	@Override
+	public IReferencedModulesQueryResult getReferencedModules(
+			IResourceModule module, boolean hideContainedTypes,
+			boolean includeSourceReferences) {
+
+		// create the result list
+		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(
+				module);
+
+		// TODO: getReferencedTypes(???, ???)
+		for (IReference reference : module.getAllReferences(hideContainedTypes,
+				includeSourceReferences, includeSourceReferences)) {
+			_resolveReferencedModules(result, reference);
+		}
+
+		// return the result
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IReferencedModulesQueryResult getReferencedModules(IResource resource) {
+
+		// create the result list
+		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult();
+
+		//
+		for (IReference reference : resource.getReferences()) {
+			_resolveReferencedModules(result, reference);
+		}
+
+		// return the result
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<String> getUnsatisfiedReferencedTypes(IResourceModule module,
+			boolean hideContainedTypes, boolean includeSourceReferences) {
+
+		// create the result
+		Set<String> result = new HashSet<String>();
+
+		// iterate over the referenced types
+		for (String referencedType : module.getReferencedTypes(
+				hideContainedTypes, includeSourceReferences, false)) {
+
+			// get the module list
+			Set<IType> typeList = _typeNameToTypeCache.get(referencedType);
+
+			// unsatisfied?
+			if (typeList == null || typeList.isEmpty()) {
+				result.add(referencedType);
+			}
+		}
+
+		// return the result
+		return result;
+	}
+
+	@Override
+	public Set<String> getUnsatisfiedReferencedPackages(IResourceModule module,
+			boolean hideContainedTypes, boolean includeSourceReferences) {
+
+		// create the result
+		Set<String> result = new HashSet<String>();
+
+		//
+		Set<String> unsatisfiedTypes = getUnsatisfiedReferencedTypes(module,
+				hideContainedTypes, includeSourceReferences);
+
+		for (String unsatisfiedType : unsatisfiedTypes) {
+
+			if (unsatisfiedType.indexOf('.') != -1) {
+
+				//
+				String packageName = unsatisfiedType.substring(0,
+						unsatisfiedType.lastIndexOf('.'));
+
+				//
+				if (!result.contains(packageName)) {
+					result.add(packageName);
+				}
+			}
+		}
+
+		// // iterate over the packages
+		// for (String referencedPackage : module.getReferencedPackages(
+		// hideContainedTypes, includeSourceReferences)) {
+		//
+		// //
+		// boolean contained = false;
+		//
+		// //
+		// for (ITypeModule iTypeModule : modularizedSystem.getAllModules()) {
+		//
+		// System.out.println("bam");
+		// if (iTypeModule.getContainedPackages().contains(
+		// referencedPackage)) {
+		// contained = true;
+		// break;
+		// }
+		// }
+		//
+		// if (!contained) {
+		// result.add(referencedPackage);
+		// }
+		// }
+
+		// return the result
+		return result;
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<String, Set<IModule>> getAmbiguousPackages() {
+
+		// create the result map
+		Map<String, Set<IModule>> result = new HashMap<String, Set<IModule>>();
+
+		// create the temp map
+		Map<String, IModule> tempMap = new HashMap<String, IModule>();
+
+		// iterate over all modules
+		for (IModule typeModule : getAllModules()) {
+
+			// iterate over contained packages
+			for (String containedPackage : typeModule
+					.getContainedPackageNames()) {
+
+				// add
+				if (result.containsKey(containedPackage)) {
+
+					result.get(containedPackage).add(typeModule);
+				}
+
+				//
+				else if (tempMap.containsKey(containedPackage)) {
+
+					//
+					Set<IModule> newSet = new HashSet<IModule>();
+
+					//
+					result.put(containedPackage, newSet);
+
+					// add module to module list
+					newSet.add(typeModule);
+					newSet.add(tempMap.remove(containedPackage));
+				}
+
+				// put in the temp map
+				else {
+					tempMap.put(containedPackage, typeModule);
+				}
+			}
+		}
+
+		// return the result
+		return result;
+	}
+
+	@Override
+	public IModule getExecutionEnvironmentTypeModule() {
+		return _executionEnvironment;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param identifier
+	 * @param file
+	 * @return
+	 */
+	public TypeModule createTypeModule(IModuleIdentifier identifier, File file) {
+		return createTypeModule(identifier, new File[] { file });
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param identifier
+	 * @param files
+	 * @return
+	 */
+	public TypeModule createTypeModule(IModuleIdentifier identifier,
+			File[] files) {
+
+		// create the type module
+		TypeModule typeModule = new TypeModule(identifier);
+
+		//
+		for (int i = 0; i < files.length; i++) {
+
+			// add all the contained types
+			try {
+
+				// TODO DIRECTORIES!!
+				// TODO:PARSE!!
+				List<String> types = getContainedTypes(files[i]);
+
+				for (String type : types) {
+
+					// TODO: TypeEnum!!
+					Type type2 = new Type(type, TypeEnum.CLASS);
+					type2.setTypeModule(typeModule);
+
+					typeModule.getSelfContainer()
+							.getModifiableContainedTypesMap().put(type, type2);
+				}
+
+			} catch (IOException e) {
+
+				//
+				e.printStackTrace();
+			}
+		}
+		// return the module
+		return typeModule;
+	}
+
+	public ResourceModule createResourceModule(
+			IModuleIdentifier createModuleIdentifier) {
+
+		//
+		ResourceModule resourceModule = new ResourceModule(
+				createModuleIdentifier);
+
+		//
+		_resourceModules.add(resourceModule);
+
+		//
+		return resourceModule;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	private static List<String> getContainedTypes(File file) throws IOException {
+
+		// create the result list
+		List<String> result = new LinkedList<String>();
+
+		// create the jar file
+		JarFile jarFile = new JarFile(file);
+
+		// get the entries
+		Enumeration<JarEntry> entries = jarFile.entries();
+		while (entries.hasMoreElements()) {
+			JarEntry jarEntry = (JarEntry) entries.nextElement();
+			if (jarEntry.getName().endsWith(".class")) {
+				result.add(jarEntry
+						.getName()
+						.substring(0,
+								jarEntry.getName().length() - ".class".length())
+						.replace('/', '.'));
+			}
+		}
+
+		// return the result
+		return result;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @param result
+	 * @param fullyQualifiedType
+	 */
+	private void _resolveReferencedModules(ReferencedModulesQueryResult result,
+			IReference reference) {
+
+		Assert.isNotNull(result);
+		Assert.isNotNull(reference);
+
+		//
+		Set<IModule> containingModules = _getContainingModules(reference
+				.getFullyQualifiedName());
+
+		//
+		if (containingModules.isEmpty()) {
+
+			//
+			result.getUnsatisfiedReferences().add(reference);
+
+		} else if (containingModules.size() > 1) {
+
+			if (!result.getReferencesWithAmbiguousModules().containsKey(
+					reference)) {
+
+				result.getReferencesWithAmbiguousModules().put(reference,
+						new HashSet<IModule>());
+			}
+
+			result.getReferencesWithAmbiguousModules().get(reference)
+					.addAll(containingModules);
+
+		} else {
+
+			result.getReferencedModulesMap().put(reference,
+					containingModules.toArray(new IModule[0])[0]);
+		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @param fullyQualifiedName
+	 * @return
+	 */
+	private Set<IModule> _getContainingModules(String fullyQualifiedName) {
+
+		//
+		if (_typeNameToTypeCache.containsKey(fullyQualifiedName)) {
+
+			//
+			Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+			Set<IModule> result = new HashSet<IModule>();
+
+			for (IType type : types) {
+				if (type.hasBinaryResource()) {
+					result.add(type.getBinaryResource().getResourceModule());
+				} else if (type.hasTypeModule()) {
+					result.add(type.getTypeModule());
+				}
+			}
+
+			return result;
+
+		} else {
+			return Collections.emptySet();
+		}
+	}
+}

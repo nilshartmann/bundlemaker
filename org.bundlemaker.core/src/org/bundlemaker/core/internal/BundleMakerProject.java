@@ -12,6 +12,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.internal.modules.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ProjectParser;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
@@ -26,7 +27,6 @@ import org.bundlemaker.core.model.internal.projectdescription.EProjectDescriptio
 import org.bundlemaker.core.model.internal.projectdescription.EResourceContent;
 import org.bundlemaker.core.model.internal.projectdescription.ProjectdescriptionFactory;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceContent;

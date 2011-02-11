@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.modules.ModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.ResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -79,7 +79,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 				// origin resource module does not exist
 				if (originResourceModule == null) {
 
-					for (ITypeModule typeModule : modularizedSystem
+					for (IModule typeModule : modularizedSystem
 							.getAllModules()) {
 
 						System.out.println(" - "

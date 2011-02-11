@@ -1,6 +1,6 @@
 package org.bundlemaker.core.transformation;
 
-import org.bundlemaker.core.modules.ModularizedSystem;
+import org.bundlemaker.core.internal.modules.ModularizedSystem;
 
 /**
  * <p>

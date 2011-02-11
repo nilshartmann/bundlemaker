@@ -3,10 +3,10 @@ package org.bundlemaker.core.transformation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.ResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.resourceset.ResourceSet;

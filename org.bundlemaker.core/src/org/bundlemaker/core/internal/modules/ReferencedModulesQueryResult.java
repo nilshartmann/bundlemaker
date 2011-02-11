@@ -1,4 +1,4 @@
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.internal.modules;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.ReferenceType;
 
@@ -19,10 +22,10 @@ public class ReferencedModulesQueryResult implements
 		IReferencedModulesQueryResult {
 
 	/** - */
-	private Map<IReference, ITypeModule> _referencesToModulesMap;
+	private Map<IReference, IModule> _referencesToModulesMap;
 
 	/** - */
-	private Map<IReference, Set<ITypeModule>> _referencesToAmbiguousModulesMap;
+	private Map<IReference, Set<IModule>> _referencesToAmbiguousModulesMap;
 
 	/** - */
 	private Set<IReference> _unsatisfiedReferences;
@@ -34,10 +37,10 @@ public class ReferencedModulesQueryResult implements
 	private Set<String> _unsatisfiedReferencedTypes;
 
 	/** - */
-	private Map<String, Set<ITypeModule>> _referencedTypesToAmbiguousModulesMap;
+	private Map<String, Set<IModule>> _referencedTypesToAmbiguousModulesMap;
 
 	/** - */
-	private Set<ITypeModule> _referencedModules;
+	private Set<IModule> _referencedModules;
 
 	/**
 	 * <p>
@@ -47,8 +50,8 @@ public class ReferencedModulesQueryResult implements
 	public ReferencedModulesQueryResult(IResourceModule self) {
 
 		//
-		_referencesToModulesMap = new HashMap<IReference, ITypeModule>();
-		_referencesToAmbiguousModulesMap = new HashMap<IReference, Set<ITypeModule>>();
+		_referencesToModulesMap = new HashMap<IReference, IModule>();
+		_referencesToAmbiguousModulesMap = new HashMap<IReference, Set<IModule>>();
 		_unsatisfiedReferences = new HashSet<IReference>();
 
 		//
@@ -79,7 +82,7 @@ public class ReferencedModulesQueryResult implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Map<IReference, ITypeModule> getReferencedModulesMap() {
+	public Map<IReference, IModule> getReferencedModulesMap() {
 
 		//
 		return _referencesToModulesMap;
@@ -99,7 +102,7 @@ public class ReferencedModulesQueryResult implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Map<IReference, Set<ITypeModule>> getReferencesWithAmbiguousModules() {
+	public Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules() {
 
 		//
 		return _referencesToAmbiguousModulesMap;
@@ -128,14 +131,14 @@ public class ReferencedModulesQueryResult implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<ITypeModule> getReferencedModules() {
+	public Set<IModule> getReferencedModules() {
 
 		if (_referencedModules == null) {
 			
-			_referencedModules = new HashSet<ITypeModule>();
+			_referencedModules = new HashSet<IModule>();
 			
 			// step 2: add the type modules
-			for (ITypeModule iTypeModule : _referencesToModulesMap.values()) {
+			for (IModule iTypeModule : _referencesToModulesMap.values()) {
 				if (!iTypeModule.equals(_selfModule)) {
 					_referencedModules.add(iTypeModule);
 				}
@@ -150,14 +153,14 @@ public class ReferencedModulesQueryResult implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Map<String, Set<ITypeModule>> getReferencedTypesWithAmbiguousModules() {
+	public Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules() {
 
 		if (_referencedTypesToAmbiguousModulesMap == null) {
 			
-			_referencedTypesToAmbiguousModulesMap = new HashMap<String, Set<ITypeModule>>();
+			_referencedTypesToAmbiguousModulesMap = new HashMap<String, Set<IModule>>();
 			
 			// step 2: add the type modules
-			for (Entry<IReference, Set<ITypeModule>> entry : _referencesToAmbiguousModulesMap
+			for (Entry<IReference, Set<IModule>> entry : _referencesToAmbiguousModulesMap
 					.entrySet()) {
 
 				// only process type references
@@ -165,7 +168,7 @@ public class ReferencedModulesQueryResult implements
 						.equals(ReferenceType.TYPE_REFERENCE)) {
 
 					// process
-					for (ITypeModule typeModule : entry.getValue()) {
+					for (IModule typeModule : entry.getValue()) {
 
 						// ignore self modules
 						if (!typeModule.equals(_selfModule)) {
@@ -177,7 +180,7 @@ public class ReferencedModulesQueryResult implements
 
 								_referencedTypesToAmbiguousModulesMap.put(entry
 										.getKey().getFullyQualifiedName(),
-										new HashSet<ITypeModule>());
+										new HashSet<IModule>());
 							}
 
 							// add the type module

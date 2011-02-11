@@ -1,11 +1,14 @@
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.internal.modules;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.IResourceContainer;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -18,7 +21,7 @@ import org.bundlemaker.core.resource.IResource;
  */
 public class ResourceModule extends
 		AbstractModule<IResourceContainer, ResourceContainer> implements
-		IResourceModule, ITypeModule {
+		IResourceModule, IModule {
 
 	/**
 	 * <p>
@@ -176,18 +179,6 @@ public class ResourceModule extends
 	@Override
 	public Map<String, ? extends IResourceContainer> getContainedResourceContainers() {
 		return getEmbeddedContainers();
-	}
-
-	@Override
-	public List<String> getDuplicateResources(ContentType contentType) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean hasDuplicateResources(ContentType contentType) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	/**

@@ -14,7 +14,7 @@ public interface IModuleIdentifier {
 	 * 
 	 * @return
 	 */
-	String getVersion();
+	String getName();
 
 	/**
 	 * <p>
@@ -22,5 +22,5 @@ public interface IModuleIdentifier {
 	 * 
 	 * @return
 	 */
-	String getName();
+	String getVersion();
 }

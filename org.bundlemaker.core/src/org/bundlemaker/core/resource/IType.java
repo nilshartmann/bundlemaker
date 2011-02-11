@@ -2,7 +2,7 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
-import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.IModule;
 
 /**
  * <p>
@@ -118,7 +118,7 @@ public interface IType {
 	 * 
 	 * @return
 	 */
-	ITypeModule getTypeModule();
+	IModule getTypeModule();
 
 	/**
 	 * <p>

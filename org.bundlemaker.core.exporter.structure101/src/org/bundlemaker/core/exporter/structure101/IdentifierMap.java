@@ -3,7 +3,7 @@ package org.bundlemaker.core.exporter.structure101;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.IModule;
 
 public class IdentifierMap {
 
@@ -34,7 +34,7 @@ public class IdentifierMap {
 	 * @param typeModule
 	 * @return
 	 */
-	public String getModuleId(ITypeModule typeModule) {
+	public String getModuleId(IModule typeModule) {
 		return getShortenId(getModuleName(typeModule));
 	}
 
@@ -46,7 +46,7 @@ public class IdentifierMap {
 	 * @param packageName
 	 * @return
 	 */
-	public String getPackageId(ITypeModule typeModule, String packageName) {
+	public String getPackageId(IModule typeModule, String packageName) {
 		return getShortenId(getModuleName(typeModule) + "_" + packageName);
 	}
 
@@ -58,7 +58,7 @@ public class IdentifierMap {
 	 * @param fullyQualifiedType
 	 * @return
 	 */
-	public String getClassId(ITypeModule typeModule, String fullyQualifiedType) {
+	public String getClassId(IModule typeModule, String fullyQualifiedType) {
 		return getShortenId(getModuleName(typeModule) + "_"
 				+ fullyQualifiedType);
 	}
@@ -88,7 +88,7 @@ public class IdentifierMap {
 	 * @param typeModule
 	 * @return
 	 */
-	private String getModuleName(ITypeModule typeModule) {
+	private String getModuleName(IModule typeModule) {
 
 		// get the id
 		return typeModule.getModuleIdentifier().getName() + "_"

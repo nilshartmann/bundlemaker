@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.modules.TypeModule;
+import org.bundlemaker.core.internal.modules.TypeModule;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -38,7 +38,7 @@ public class Type implements IType, IModifiableType {
 	private Resource _binaryResource;
 
 	/** non-persistent: the type module */
-	private ITypeModule _typeModule;
+	private IModule _typeModule;
 
 	/** transient: the reference container */
 	private transient ReferenceContainer _referenceContainer;
@@ -200,7 +200,7 @@ public class Type implements IType, IModifiableType {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public ITypeModule getTypeModule() {
+	public IModule getTypeModule() {
 		return _typeModule;
 	}
 

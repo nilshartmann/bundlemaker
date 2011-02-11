@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.IModule;
 
 /**
  * <p>
@@ -19,10 +19,10 @@ public class AmbiguousPackages {
 	private org.bundlemaker.core.modules.IModularizedSystem _modularizedSystem;
 
 	/** - */
-	private Map<String, Set<ITypeModule>> _packageMap;
+	private Map<String, Set<IModule>> _packageMap;
 
 	/** - */
-	private Map<ITypeModule, String[]> _moduleMap;
+	private Map<IModule, String[]> _moduleMap;
 
 	/**
 	 * <p>
@@ -47,7 +47,7 @@ public class AmbiguousPackages {
 	 * 
 	 * @return
 	 */
-	public Map<String, Set<ITypeModule>> getPackageMap() {
+	public Map<String, Set<IModule>> getPackageMap() {
 		return _packageMap;
 	}
 
@@ -57,7 +57,7 @@ public class AmbiguousPackages {
 	 * 
 	 * @return
 	 */
-	public Map<ITypeModule, String[]> getModuleMap() {
+	public Map<IModule, String[]> getModuleMap() {
 		return _moduleMap;
 	}
 
@@ -71,16 +71,16 @@ public class AmbiguousPackages {
 		_packageMap = _modularizedSystem.getAmbiguousPackages();
 
 		//
-		_moduleMap = new HashMap<ITypeModule, String[]>();
+		_moduleMap = new HashMap<IModule, String[]>();
 
 		//
 		for (final String packageName : _packageMap.keySet()) {
 
 			//
-			Set<ITypeModule> moduleList = _packageMap.get(packageName);
+			Set<IModule> moduleList = _packageMap.get(packageName);
 
 			//
-			for (ITypeModule typeModule : moduleList) {
+			for (IModule typeModule : moduleList) {
 
 				//
 				if (_moduleMap.containsKey(typeModule)) {

@@ -1,4 +1,8 @@
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.internal.modules;
+
+import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.ITypeContainer;
+import org.bundlemaker.core.modules.IModule;
 
 
 /**
@@ -8,7 +12,7 @@ package org.bundlemaker.core.modules;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class TypeModule extends AbstractModule<ITypeContainer, TypeContainer>
-		implements ITypeModule {
+		implements IModule {
 
 	/**
 	 * <p>

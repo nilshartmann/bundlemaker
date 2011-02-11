@@ -1,6 +1,6 @@
 package org.bundlemaker.core.transformation.resourceset;
 
-import org.bundlemaker.core.modules.ResourceModule;
+import org.bundlemaker.core.internal.modules.ResourceModule;
 
 /**
  * <p>

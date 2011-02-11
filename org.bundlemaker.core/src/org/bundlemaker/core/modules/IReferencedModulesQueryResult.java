@@ -27,7 +27,7 @@ public interface IReferencedModulesQueryResult {
 	 * 
 	 * @return
 	 */
-	Map<IReference, ITypeModule> getReferencedModulesMap();
+	Map<IReference, IModule> getReferencedModulesMap();
 
 	/**
 	 * <p>
@@ -35,7 +35,7 @@ public interface IReferencedModulesQueryResult {
 	 * 
 	 * @return
 	 */
-	Set<ITypeModule> getReferencedModules();
+	Set<IModule> getReferencedModules();
 
 	/**
 	 * <p>
@@ -51,7 +51,7 @@ public interface IReferencedModulesQueryResult {
 	 * 
 	 * @return
 	 */
-	Map<IReference, Set<ITypeModule>> getReferencesWithAmbiguousModules();
+	Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules();
 
 	/**
 	 * <p>
@@ -59,7 +59,7 @@ public interface IReferencedModulesQueryResult {
 	 * 
 	 * @return
 	 */
-	Map<String, Set<ITypeModule>> getReferencedTypesWithAmbiguousModules();
+	Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules();
 
 	/**
 	 * <p>

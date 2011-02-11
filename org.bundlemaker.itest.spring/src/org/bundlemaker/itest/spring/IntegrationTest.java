@@ -20,8 +20,6 @@ import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
@@ -117,7 +115,7 @@ public class IntegrationTest {
 		modularizedSystem.applyTransformations();
 
 		// check the model
-		checkTypeModel((ModularizedSystem) modularizedSystem);
+		checkTypeModel(modularizedSystem);
 
 		//
 		checkModularizedSystem(modularizedSystem);
@@ -148,7 +146,7 @@ public class IntegrationTest {
 		// exportToPdeProjects(bundleMakerProject, modularizedSystem);
 	}
 
-	private void checkTypeModel(ModularizedSystem modularizedSystem) {
+	private void checkTypeModel(IModularizedSystem modularizedSystem) {
 
 		// //
 		// ITypeModule executionEnvironment = modularizedSystem
