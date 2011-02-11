@@ -149,7 +149,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<IType> getAllContainedTypes() {
+	public Set<IType> getContainedTypes() {
 
 		// create the result set
 		final Set<IType> result = new HashSet<IType>();
@@ -158,7 +158,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 		doWithAllContainers(new ContainerClosure<T>() {
 			@Override
 			public boolean doWithContainer(T resourceContainer) {
-				result.addAll(resourceContainer.getAllContainedTypes());
+				result.addAll(resourceContainer.getContainedTypes());
 				return false;
 			}
 		});

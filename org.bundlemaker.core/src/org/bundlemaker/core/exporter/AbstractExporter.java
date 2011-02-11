@@ -79,12 +79,14 @@ public abstract class AbstractExporter implements IModuleExporter,
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void export(IModularizedSystem modularizedSystem,
+	public final void export(IModularizedSystem modularizedSystem,
 			IModuleExporterContext context) throws Exception {
 
 		_currentModularizedSystem = modularizedSystem;
 		_currentContext = context;
 
+		preExportModules();
+		
 		// simply call export() for each contained
 		for (IResourceModule resourceModule : modularizedSystem
 				.getResourceModules()) {
@@ -97,5 +99,13 @@ public abstract class AbstractExporter implements IModuleExporter,
 				export(modularizedSystem, resourceModule, context);
 			}
 		}
+		
+		postExportModules();
+	}
+
+	protected void postExportModules() throws Exception {
+	}
+
+	protected void preExportModules() throws Exception {
 	}
 }

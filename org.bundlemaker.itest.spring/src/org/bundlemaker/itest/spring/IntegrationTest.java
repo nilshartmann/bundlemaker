@@ -13,15 +13,20 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.ModuleExporterContext;
 import org.bundlemaker.core.exporter.bundle.BinaryBundleExporter;
+import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
+import org.bundlemaker.core.exporter.pde.exporter.PdeExporterConfiguration;
+import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.test.inspector.DbInspector;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
@@ -111,173 +116,51 @@ public class IntegrationTest {
 		// apply the transformation
 		modularizedSystem.applyTransformations();
 
+		// check the model
+		checkTypeModel((ModularizedSystem) modularizedSystem);
+
+		//
 		checkModularizedSystem(modularizedSystem);
 
-		// export to structure 101
-		// exportToStructure101(bundleMakerProject, modularizedSystem);
+		//
+		System.out
+				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+		Set<IType> types = modularizedSystem
+				.getReferencingTypes("org.springframework.context.ApplicationContext");
+
+		for (IType iType : types) {
+			System.out
+					.println(iType.getFullyQualifiedName()
+							+ " : "
+							+ iType.getReference("org.springframework.context.ApplicationContext"));
+		}
+
+		 // export to simple report
+		 exportToSimpleReport(bundleMakerProject, modularizedSystem);
 		
-		// export to binary bundle
-		exportToBinaryBundle(bundleMakerProject, modularizedSystem);
+		 // export to structure 101
+		 exportToStructure101(bundleMakerProject, modularizedSystem);
+
+		// // export to binary bundle
+		// exportToBinaryBundle(bundleMakerProject, modularizedSystem);
+		//
+		// // exportToPdeProjects
+		// exportToPdeProjects(bundleMakerProject, modularizedSystem);
+	}
+
+	private void checkTypeModel(ModularizedSystem modularizedSystem) {
 
 		// //
-		// // //
-		// // assertEquals(112, modularizedSystem.getResourceModules().size());
-		// // assertEquals(1, modularizedSystem.getTypeModules().size());
-		// // assertEquals(113, modularizedSystem.getAllModules().size());
-		// //
-		// // AmbiguousPackages ambiguousPackages = new AmbiguousPackages(
-		// // modularizedSystem);
-		// //
-		// // Map<ITypeModule, String[]> moduleMap =
-		// // ambiguousPackages.getModuleMap();
-		// // for (ITypeModule module : moduleMap.keySet()) {
-		// //
-		// // // dump
-		// // System.out.println(" - "
-		// // + ModelUtils.toString(module.getModuleIdentifier()));
-		// // System.out.println("   " + Arrays.asList(moduleMap.get(module)));
-		// // }
-		// //
-		// // // for (IResourceModule resourceModule : modularizedSystem
-		// // // .getResourceModules()) {
-		// // //
-		// // // if (!resourceModule.getResources(ContentType.SOURCE).isEmpty())
-		// {
-		// // //
-		// // // System.out.println(ModelUtils.toString(resourceModule
-		// // // .getModuleIdentifier()));
-		// // //
-		// // // IReferencedModules referencedModules = modularizedSystem
-		// // // .getReferencedModules(resourceModule);
-		// // //
-		// // // for (ITypeModule typeModule : referencedModules
-		// // // .getReferencedModulesMap().values()) {
-		// // // System.out.println(" - "
-		// // // + ModelUtils.toString(typeModule
-		// // // .getModuleIdentifier()));
-		// // // }
-		// // //
-		// // // for (Entry<String, IModuleList> entry : referencedModules
-		// // // .getTypesWithAmbiguousModules()) {
-		// // // System.out.println(" ~ " + entry.getKey());
-		// // // for (ITypeModule typeModule : entry.getValue().getModules()) {
-		// // // System.out.println("   ~~ "
-		// // // + ModelUtils.toString(typeModule
-		// // // .getModuleIdentifier()));
-		// // // }
-		// // // }
-		// // // }
-		// // // }
-		// //
-		// // // EMap<String, IModuleList> ambiguousPackages = modularizedSystem
-		// // // .getAmbiguousPackages();
-		// // //
-		// // // for (final Entry<String, IModuleList> ambiguousPackage :
-		// // // ambiguousPackages) {
-		// // //
-		// // // System.out.println(" - " + ambiguousPackage.getKey());
-		// // //
-		// // // for (ITypeModule typeModule : ambiguousPackage.getValue()
-		// // // .getModules()) {
-		// // //
-		// // // System.out
-		// // // .println("   - "
-		// // // + ModelUtils.toString(typeModule
-		// // // .getModuleIdentifier()));
-		// // //
-		// // // System.out.println("     "
-		// // // + typeModule.getContainedTypes(new IQueryFilter() {
-		// // // public boolean matches(String content) {
-		// // // Pattern pattern = Pattern
-		// // // .compile(ambiguousPackage.getKey()
-		// // // .replace(".", "\\.")
-		// // // + "\\.\\w*");
-		// // // return pattern.matcher(content).matches();
-		// // // }
-		// // // }));
-		// // // }
-		// // // }
-		// //
-
+		// ITypeModule executionEnvironment = modularizedSystem
+		// .getExecutionEnvironmentTypeModule();
 		//
-		// // Create PdeExporterConfiguration
-		// PdeExporterConfiguration pdeExporterConfiguration = new
-		// PdeExporterConfiguration();
-		// pdeExporterConfiguration.setUseClassifcationForExportDestination(true);
-		// pdeExporterConfiguration
-		// .setDependencyDescriptionStyle(PdeExporterConfiguration.STRICT_IMPORT_PACKAGE);
-		// exporterContext.put(PdeExporterConfiguration.KEY,
-		// pdeExporterConfiguration);
-		//
-		// exporterContext
-		// .put(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY,
-		// new File(
-		// "R:/environments/bundlemaker2-environment/workspace/org.bundlemaker.itest.spring/templates"));
-		//
-		// // new PdePluginProjectModuleExporter().export(modularizedSystem,
-		// // exporterContext);
 		// //
-		// // new TargetPlatformProjectExporter().export(modularizedSystem,
-		// // exporterContext);
-		//
-		// new Structure101Exporter().export(modularizedSystem,
-		// exporterContext);
-		//
-		// new SimpleReportExporter().export(modularizedSystem,
-		// exporterContext);
-		//
-		// // ModifiableModularizedSystem system = (ModifiableModularizedSystem)
-		// // modularizedSystem;
-		// //
-		// // StopWatch stopWatch = new StopWatch();
-		// // stopWatch.start();
-		// //
-		// system.getContainingModules("org.springframework.jca.context.BootstrapContextAwareProcessor");
-		// // stopWatch.stop();
-		// // System.out.println(stopWatch.getElapsedTime());
-		// //
-		// // stopWatch = new StopWatch();
-		// // stopWatch.start();
-		// // IResourceModule resourceModule =
-		// //
-		// system.getResourceModule(ModelUtils.createModuleIdentifier("Spring",
-		// // "2.5.6"));
-		// // system.getUnsatisfiedReferencedTypes(resourceModule, true, true);
-		// // stopWatch.stop();
-		// // System.out.println(stopWatch.getElapsedTime());
-		// //
-		// // stopWatch = new StopWatch();
-		// // stopWatch.start();
-		// // resourceModule =
-		// //
-		// system.getResourceModule(ModelUtils.createModuleIdentifier("Spring",
-		// // "2.5.6"));
-		// // system.getUnsatisfiedReferencedPackages(resourceModule, true,
-		// true);
-		// // stopWatch.stop();
-		// // System.out.println(stopWatch.getElapsedTime());
-		//
-		// // delete the destination directory
-		// // File destinationDirectory = new
-		// // File(System.getProperty("user.dir"),
-		// // "destination");
-		//
-		// // File destinationDirectory = new File("D:/temp/temp");
-		// // IntegrationTestUtils.delete(destinationDirectory);
-		// //
-		// // // create the exporter context
-		// // StandardModuleExporterContext context = new
-		// // StandardModuleExporterContext(
-		// // bundleMakerProject, destinationDirectory, modularizedSystem);
-		// // context.put(IModuleExporterContext.TEMPLATE_DIRECTORY,
-		// // new File(System.getProperty("user.dir"), "templates"));
-		// //
-		// // // export the modules
-		// // new StandardBundlorBasedBinaryBundleExporter().export(
-		// // modularizedSystem, context);
-		// // // new Structure101Exporter().export(modularizedSystem, context);
-		// // new PdePluginProjectModuleExporter().export(modularizedSystem,
-		// // context);
+		// for (IType type : executionEnvironment.getContainedTypes()) {
+		// Assert.assertTrue(
+		// type.getFullyQualifiedName(),
+		// ((ModularizedSystem) modularizedSystem)._typeToModuleListMap
+		// .containsKey(type.getFullyQualifiedName()));
+		// }
 	}
 
 	/**
@@ -321,7 +204,8 @@ public class IntegrationTest {
 		Set<IReference> externalBinaryReferences = resourceModule
 				.getAllReferences(true, false, false);
 
-		for (IReference reference : resourceModule.getAllReferences(true, true, false)) {
+		for (IReference reference : resourceModule.getAllReferences(true, true,
+				false)) {
 
 			if (reference.isCompileTimeReference()
 					&& !reference.isRuntimeReference()) {
@@ -345,6 +229,48 @@ public class IntegrationTest {
 		}
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleMakerProject
+	 * @param modularizedSystem
+	 * @throws Exception
+	 */
+	private void exportToPdeProjects(IBundleMakerProject bundleMakerProject,
+			IModularizedSystem modularizedSystem) throws Exception {
+
+		// Create PdeExporterConfiguration
+		PdeExporterConfiguration pdeExporterConfiguration = new PdeExporterConfiguration();
+		pdeExporterConfiguration.setUseClassifcationForExportDestination(true);
+		pdeExporterConfiguration
+				.setDependencyDescriptionStyle(PdeExporterConfiguration.STRICT_IMPORT_PACKAGE);
+
+		//
+		File destination = new File(System.getProperty("user.dir"),
+				"destination");
+		destination.mkdirs();
+
+		// create the exporter context
+		ModuleExporterContext exporterContext = new ModuleExporterContext(
+				bundleMakerProject, destination, modularizedSystem);
+
+		exporterContext.put(PdeExporterConfiguration.KEY,
+				pdeExporterConfiguration);
+
+		exporterContext
+				.put(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY,
+						new File(
+								"R:/environments/bundlemaker2-environment/workspace/org.bundlemaker.itest.spring/templates"));
+
+		new PdePluginProjectModuleExporter().export(modularizedSystem,
+				exporterContext);
+
+		new TargetPlatformProjectExporter().export(modularizedSystem,
+				exporterContext);
+
+	}
+
 	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
 			IModularizedSystem modularizedSystem) throws Exception {
 
@@ -364,7 +290,7 @@ public class IntegrationTest {
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}
-	
+
 	private void exportToBinaryBundle(IBundleMakerProject bundleMakerProject,
 			IModularizedSystem modularizedSystem) throws Exception {
 
@@ -380,6 +306,34 @@ public class IntegrationTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		BinaryBundleExporter exporter = new BinaryBundleExporter();
+		exporter.export(modularizedSystem, exporterContext);
+		stopWatch.stop();
+		System.out.println("Dauer " + stopWatch.getElapsedTime());
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleMakerProject
+	 * @param modularizedSystem
+	 * @throws Exception
+	 */
+	private void exportToSimpleReport(IBundleMakerProject bundleMakerProject,
+			IModularizedSystem modularizedSystem) throws Exception {
+
+		//
+		File destination = new File(System.getProperty("user.dir"),
+				"destination");
+		destination.mkdirs();
+
+		// create the exporter context
+		ModuleExporterContext exporterContext = new ModuleExporterContext(
+				bundleMakerProject, destination, modularizedSystem);
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		SimpleReportExporter exporter = new SimpleReportExporter();
 		exporter.export(modularizedSystem, exporterContext);
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());

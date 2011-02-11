@@ -2,6 +2,8 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.ITypeModule;
+
 /**
  * <p>
  * Defines a (java) type. A type can be a {@link TypeEnum#CLASS}, an
@@ -67,6 +69,15 @@ public interface IType {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @return
+	 */
+	IReference getReference(String fullyQualifiedName);
+
+	/**
+	 * <p>
 	 * Returns the associated source resource.
 	 * </p>
 	 * 
@@ -100,4 +111,21 @@ public interface IType {
 	 * @return <code>true</code>, if a associated binary resource is set.
 	 */
 	boolean hasBinaryResource();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	ITypeModule getTypeModule();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean hasTypeModule();
+
 }

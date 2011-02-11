@@ -34,12 +34,15 @@ public class TargetPlatformProjectExporter extends AbstractExporter {
 	}
 
 	@Override
-	public void export(IModularizedSystem modularizedSystem,
-			IModuleExporterContext context) throws Exception {
+	protected void postExportModules() {
+	}
+
+	@Override
+	protected void preExportModules() throws Exception {
 
 		// get a non-existing project name
 		String projectName = Helper.getUniqueProjectName(String.format(
-				"%s.target", modularizedSystem.getName()));
+				"%s.target", getCurrentModularizedSystem().getName()));
 
 		// delete and create project
 		IProject project = Helper.deleteAndCreateProject(projectName, null);
@@ -69,11 +72,9 @@ public class TargetPlatformProjectExporter extends AbstractExporter {
 		targetPlatformService.saveTargetDefinition(targetDefinition);
 
 		ModuleExporterContext exporterContext = new ModuleExporterContext(
-				context.getBundleMakerProject(), folder.getRawLocation()
-						.toFile(), context.getModularizedSystem());
-
-		//
-		super.export(modularizedSystem, exporterContext);
+				getCurrentContext().getBundleMakerProject(), folder
+						.getRawLocation().toFile(), getCurrentContext()
+						.getModularizedSystem());
 	}
 
 	@Override

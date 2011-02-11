@@ -17,11 +17,13 @@ import org.bundlemaker.core.exporter.structure101.xml.DependenciesType;
 import org.bundlemaker.core.exporter.structure101.xml.DependencyType;
 import org.bundlemaker.core.exporter.structure101.xml.ModuleType;
 import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
+import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeModule;
 import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.StopWatch;
 
 /**
@@ -109,33 +111,54 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 			//
 			IResourceModule resourceModule = (IResourceModule) typeModule;
 
-			IReferencedModulesQueryResult queryResult = modularizedSystem
-					.getReferencedModules(resourceModule, false, true);
+			// IReferencedModulesQueryResult queryResult = modularizedSystem
+			// .getReferencedModules(resourceModule, false, true);
 
 			Set<TypeToTypeDependency> dependencies = new HashSet<TypeToTypeDependency>();
 
-			for (Entry<IReference, ITypeModule> referencedModule : queryResult
-					.getReferencedModulesMap().entrySet()) {
+			for (IType type : resourceModule.getContainedTypes()) {
 
-				if (referencedModule.getKey().hasAssociatedType()) {
+				for (IReference reference : type.getReferences()) {
 
-					// from
-					String from = _identifierMap.getClassId(resourceModule,
-							referencedModule.getKey().getType()
-									.getFullyQualifiedName());
+					ITypeModule referencedModule = null;
 
-					// to
-					String to = _identifierMap.getClassId(referencedModule
-							.getValue(), referencedModule.getKey()
-							.getFullyQualifiedName());
+					try {
 
-					// dependency
-					TypeToTypeDependency dependency = new TypeToTypeDependency(
-							from, to, referencedModule.getKey().isImplements(),
-							referencedModule.getKey().isExtends());
+						//
+						referencedModule = modularizedSystem
+								.getContainingModule(reference
+										.getFullyQualifiedName());
 
-					//
-					dependencies.add(dependency);
+					} catch (AmbiguousDependencyException e) {
+
+						//
+						System.out.println("AMBIGIOUS "
+								+ reference.getFullyQualifiedName());
+						continue;
+					}
+
+					if (referencedModule == null) {
+
+						//
+						System.out.println("MISSING TYPE "
+								+ reference.getFullyQualifiedName());
+
+					} else {
+
+						// from
+						String from = _identifierMap.getClassId(resourceModule,
+								type.getFullyQualifiedName());
+						// to
+						String to = _identifierMap.getClassId(referencedModule,
+								reference.getFullyQualifiedName());
+
+						// dependency
+						TypeToTypeDependency dependency = new TypeToTypeDependency(
+								from, to, reference.isImplements(),
+								reference.isExtends());
+						//
+						dependencies.add(dependency);
+					}
 				}
 			}
 

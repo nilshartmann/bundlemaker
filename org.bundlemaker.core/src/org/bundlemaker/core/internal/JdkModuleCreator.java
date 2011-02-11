@@ -80,9 +80,12 @@ public class JdkModuleCreator {
 					typeName = typeName.replace('\\', '.');
 
 					// TODO
+					Type type = new Type(typeName, TypeEnum.CLASS);
+					type.setTypeModule(virtualModule);
+
 					virtualModule.getSelfContainer()
 							.getModifiableContainedTypesMap()
-							.put(typeName, new Type(typeName, TypeEnum.CLASS));
+							.put(typeName, type);
 					// }
 				}
 			}

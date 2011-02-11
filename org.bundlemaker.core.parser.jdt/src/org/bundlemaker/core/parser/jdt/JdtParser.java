@@ -301,17 +301,17 @@ public class JdtParser implements IParser {
 		}
 
 		// step 8: compute the indirectly referenced types
-		Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer
-				.getAllReferencedTypes((IFile) iCompilationUnit
-						.getCorrespondingResource());
-
-		for (String type : directlyAndIndirectlyReferencedTypes) {
-
-			resource.recordReference(type, new ReferenceAttributes(
-					ReferenceType.TYPE_REFERENCE, false, false, false, false,
-					false, false, true));
-
-		}
+//		Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer
+//				.getAllReferencedTypes((IFile) iCompilationUnit
+//						.getCorrespondingResource());
+//
+//		for (String type : directlyAndIndirectlyReferencedTypes) {
+//
+//			resource.recordReference(type, new ReferenceAttributes(
+//					ReferenceType.TYPE_REFERENCE, false, false, false, false,
+//					false, false, true));
+//
+//		}
 
 		// step 9: add the errors to the error list
 		for (IProblem problem : visitor.getProblems()) {

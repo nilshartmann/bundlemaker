@@ -215,6 +215,7 @@ public class ReferencedModulesQueryResult implements
 					if (!_unsatisfiedReferencedTypes
 							.contains(unsatisfiedReference
 									.getFullyQualifiedName())) {
+						
 						_unsatisfiedReferencedTypes.add(unsatisfiedReference
 								.getFullyQualifiedName());
 					}

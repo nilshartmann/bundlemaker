@@ -33,7 +33,7 @@ public interface ITypeContainer {
 	 * 
 	 * @return a collection with all contained {@link IType ITypes}.
 	 */
-	Collection<IType> getAllContainedTypes();
+	Collection<IType> getContainedTypes();
 
 	/**
 	 * <p>

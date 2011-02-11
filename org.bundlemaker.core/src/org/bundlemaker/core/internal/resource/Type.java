@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.ITypeModule;
+import org.bundlemaker.core.modules.TypeModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -34,6 +36,9 @@ public class Type implements IType, IModifiableType {
 
 	/** non-persistent: the binary resource */
 	private Resource _binaryResource;
+
+	/** non-persistent: the type module */
+	private ITypeModule _typeModule;
 
 	/** transient: the reference container */
 	private transient ReferenceContainer _referenceContainer;
@@ -133,6 +138,28 @@ public class Type implements IType, IModifiableType {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public IReference getReference(String fullyQualifiedName) {
+
+		//
+		Assert.isNotNull(fullyQualifiedName);
+
+		//
+		for (Reference reference : _references) {
+
+			//
+			if (fullyQualifiedName.equals(reference.getFullyQualifiedName())) {
+				return reference;
+			}
+		}
+
+		//
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public TypeEnum getType() {
 		return _typeEnum;
 	}
@@ -173,10 +200,27 @@ public class Type implements IType, IModifiableType {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public ITypeModule getTypeModule() {
+		return _typeModule;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean hasTypeModule() {
+		return _typeModule != null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public void recordReference(String fullyQualifiedName,
 			ReferenceAttributes referenceAttributes) {
 
-		_referenceContainer.recordReference(fullyQualifiedName, referenceAttributes);
+		_referenceContainer.recordReference(fullyQualifiedName,
+				referenceAttributes);
 	}
 
 	/**
@@ -197,6 +241,16 @@ public class Type implements IType, IModifiableType {
 	 */
 	public void setBinaryResource(Resource binaryResource) {
 		_binaryResource = binaryResource;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param binaryResource
+	 */
+	public void setTypeModule(TypeModule typeModule) {
+		_typeModule = typeModule;
 	}
 
 	/*

@@ -14,6 +14,8 @@ import org.bundlemaker.core.internal.resource.FlyWeightString;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.resource.ReferenceType;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -61,31 +63,37 @@ public class DbInspector {
 				.getRawLocation().toOSString());
 
 		//
-		System.out
-				.println("Resource " + _database.query(Resource.class).size());
-		System.out.println("Reference "
-				+ _database.query(Reference.class).size());
+		System.out.println("ReferenceType " + _database.query(ReferenceType.class).size());
+		
+		//
+		System.out.println("Resource " + _database.query(Resource.class).size());
+		
+		//
+		System.out.println("Type " + _database.query(Type.class).size());
+		
+		//
+		System.out.println("HashSet "
+				+ _database.query(HashSet.class).size());
+		
+		//
 		System.out.println("ReferenceAttributes "
 				+ _database.query(ReferenceAttributes.class).size());
-		System.out.println("Type " + _database.query(Type.class).size());
+		
+		//
+		System.out.println("TypeEnum "
+				+ _database.query(TypeEnum.class).size());
+		
+		//
+		System.out.println("Reference "
+				+ _database.query(Reference.class).size());
+		
+		//
 		System.out.println("FlyWeightString "
 				+ _database.query(FlyWeightString.class).size());
+		
+		//
 		System.out.println("ArchiveFileCache "
 				+ _database.query(ArchiveFileCache.class).size());
 
-		Map<String, Integer> classNames = new HashMap<String, Integer>();
-
-		for (Object object : _database.query().execute()) {
-			if (classNames.containsKey(object.getClass().getName())) {
-				classNames.put(object.getClass().getName(),
-						classNames.get(object.getClass().getName()) + 1);
-			} else {
-				classNames.put(object.getClass().getName(), 0);
-			}
-		}
-
-		for (Entry<String, Integer> entry : classNames.entrySet()) {
-			System.out.println(entry.getKey() + " : " + entry.getValue());
-		}
 	}
 }

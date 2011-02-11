@@ -116,6 +116,15 @@ public interface IModularizedSystem {
 	 * @return
 	 */
 	Set<ITypeModule> getContainingModules(String fullyQualifiedName);
+	
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @return
+	 */
+	Set<IType> getReferencingTypes(String fullyQualifiedName);
 
 	/**
 	 * <p>

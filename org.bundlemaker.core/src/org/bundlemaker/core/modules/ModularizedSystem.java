@@ -24,6 +24,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -48,8 +49,11 @@ public class ModularizedSystem implements IModularizedSystem {
 	/** the execution environment type module */
 	private TypeModule _executionEnvironment;
 
-	/** type name -> modules */
-	private Map<String, Set<ITypeModule>> _typeToModuleListMap;
+	/** type name -> type */
+	public GenericCache<String, Set<IType>> _typeNameToTypeCache;
+
+	/** type name -> referring type */
+	public GenericCache<String, Set<IType>> _typeNameToReferringCache;
 
 	/**
 	 * <p>
@@ -68,7 +72,22 @@ public class ModularizedSystem implements IModularizedSystem {
 		_transformations = new LinkedList<ITransformation>();
 		_resourceModules = new HashSet<ResourceModule>();
 		_typeModules = new HashSet<TypeModule>();
-		_typeToModuleListMap = new HashMap<String, Set<ITypeModule>>();
+
+		//
+		_typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
+			@Override
+			protected Set<IType> create(String key) throws Exception {
+				return new HashSet<IType>();
+			}
+		};
+
+		//
+		_typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
+			@Override
+			protected Set<IType> create(String key) throws Exception {
+				return new HashSet<IType>();
+			}
+		};
 	}
 
 	/**
@@ -104,7 +123,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		// step 1: clear prior results
 		_typeModules.clear();
 		_resourceModules.clear();
-		_typeToModuleListMap.clear();
+		_typeNameToTypeCache.clear();
 
 		// step 2: set up the JRE
 		// TODO!!!!
@@ -112,9 +131,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		try {
 
 			TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
-
 			_typeModules.add(jdkModule);
-
 			_executionEnvironment = jdkModule;
 
 		} catch (CoreException e1) {
@@ -145,24 +162,11 @@ public class ModularizedSystem implements IModularizedSystem {
 			}
 		}
 
-		// INITIALIZE TYPE MODULES
-
-		//
-		for (TypeModule module : _typeModules) {
-
-			//
-			for (String containedType : module.getContainedTypeNames()) {
-
-				//
-				if (!_typeToModuleListMap.containsKey(containedType)) {
-
-					Set<ITypeModule> moduleList = new HashSet<ITypeModule>();
-
-					_typeToModuleListMap.put(containedType, moduleList);
-				}
-
-				_typeToModuleListMap.get(containedType).add(module);
-			}
+		try {
+			initializedModules();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		// step 4: transform modules
@@ -188,38 +192,88 @@ public class ModularizedSystem implements IModularizedSystem {
 				}
 			}
 
-			// step 4.3: clean up empty modules
-			initializedResourceModules();
+			// step 4.3: initialize
+			for (ResourceModule module : _resourceModules) {
+				module.initializeContainedTypes();
+			}
 		}
 
 		System.out.println("// done");
 
 	}
 
-	private void initializedResourceModules() {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
+	private void initializedModules() throws Exception {
 
-		//
-		_typeToModuleListMap.clear();
+		// step 1: clear the caches
+		_typeNameToTypeCache.clear();
+		_typeNameToReferringCache.clear();
 
-		// step 1: set up the resource modules
-		for (ResourceModule module : _resourceModules) {
+		// step 2: iterate over the file based content
+		for (IFileBasedContent fileBasedContent : getProjectDescription()
+				.getFileBasedContent()) {
 
-			// initialize the contained types
-			module.initializeContainedTypes();
-
-			// get
-			for (String containedType : module.getContainedTypeNames()) {
+			if (fileBasedContent.isResourceContent()) {
 
 				//
-				if (!_typeToModuleListMap.containsKey(containedType)) {
+				for (IResource resource : fileBasedContent.getResourceContent()
+						.getBinaryResources()) {
 
-					Set<ITypeModule> moduleList = new HashSet<ITypeModule>();
+					for (IType containedType : resource.getContainedTypes()) {
 
-					_typeToModuleListMap.put(containedType, moduleList);
+						if (_typeNameToTypeCache.getOrCreate(
+								containedType.getFullyQualifiedName()).add(
+								containedType)) {
+
+							for (IReference reference : containedType
+									.getReferences()) {
+
+								_typeNameToReferringCache.getOrCreate(
+										reference.getFullyQualifiedName()).add(
+										containedType);
+							}
+
+						}
+					}
+
 				}
 
-				// add
-				_typeToModuleListMap.get(containedType).add(module);
+				//
+				for (IResource resource : fileBasedContent.getResourceContent()
+						.getSourceResources()) {
+
+					for (IType containedType : resource.getContainedTypes()) {
+
+						if (_typeNameToTypeCache.getOrCreate(
+								containedType.getFullyQualifiedName()).add(
+								containedType)) {
+
+							for (IReference reference : containedType
+									.getReferences()) {
+
+								_typeNameToReferringCache.getOrCreate(
+										reference.getFullyQualifiedName()).add(
+										containedType);
+							}
+
+						}
+					}
+				}
+
+			}
+		}
+
+		// step 2: initialize the type modules
+		for (TypeModule module : _typeModules) {
+
+			for (IType type : module.getContainedTypes()) {
+				_typeNameToTypeCache.getOrCreate(type.getFullyQualifiedName())
+						.add(type);
 			}
 		}
 	}
@@ -352,10 +406,19 @@ public class ModularizedSystem implements IModularizedSystem {
 	public Set<ITypeModule> getContainingModules(String fullyQualifiedName) {
 
 		//
-		if (_typeToModuleListMap.containsKey(fullyQualifiedName)) {
+		if (_typeNameToTypeCache.containsKey(fullyQualifiedName)) {
 
-			Set<ITypeModule> result = _typeToModuleListMap
-					.get(fullyQualifiedName);
+			Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+
+			Set<ITypeModule> result = new HashSet<ITypeModule>(types.size());
+
+			for (IType type : types) {
+				if (type.hasBinaryResource()) {
+					result.add(type.getBinaryResource().getResourceModule());
+				} else if (type.hasTypeModule()) {
+					result.add(type.getTypeModule());
+				}
+			}
 
 			//
 			return Collections.unmodifiableSet(result);
@@ -363,6 +426,11 @@ public class ModularizedSystem implements IModularizedSystem {
 		} else {
 			return Collections.emptySet();
 		}
+	}
+
+	@Override
+	public Set<IType> getReferencingTypes(String fullyQualifiedName) {
+		return _typeNameToReferringCache.get(fullyQualifiedName);
 	}
 
 	@Override
@@ -390,26 +458,22 @@ public class ModularizedSystem implements IModularizedSystem {
 		Assert.isNotNull(fullyQualifiedName);
 
 		// get type modules
-		Set<ITypeModule> typeModules = _typeToModuleListMap
-				.get(fullyQualifiedName);
+		Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
 
 		// return null if type is unknown
-		if (typeModules == null) {
+		if (types == null) {
 			return null;
 		}
 
 		// if multiple type modules exist, throw an exception
-		if (typeModules.size() > 1) {
+		if (types.size() > 1) {
 
 			// TODO
 			new AmbiguousDependencyException(fullyQualifiedName);
 		}
 
-		// get the type module
-		ITypeModule typeModule = typeModules.toArray(new ITypeModule[0])[0];
-
 		// return the type
-		return typeModule.getType(fullyQualifiedName);
+		return types.toArray(new IType[0])[0];
 	}
 
 	@Override
@@ -464,11 +528,10 @@ public class ModularizedSystem implements IModularizedSystem {
 				hideContainedTypes, includeSourceReferences, false)) {
 
 			// get the module list
-			Set<ITypeModule> moduleList = _typeToModuleListMap
-					.get(referencedType);
+			Set<IType> typeList = _typeNameToTypeCache.get(referencedType);
 
 			// unsatisfied?
-			if (moduleList == null || moduleList.isEmpty()) {
+			if (typeList == null || typeList.isEmpty()) {
 				result.add(referencedType);
 			}
 		}
@@ -625,9 +688,11 @@ public class ModularizedSystem implements IModularizedSystem {
 				for (String type : types) {
 
 					// TODO: TypeEnum!!
+					Type type2 = new Type(type, TypeEnum.CLASS);
+					type2.setTypeModule(typeModule);
+
 					typeModule.getSelfContainer()
-							.getModifiableContainedTypesMap()
-							.put(type, new Type(type, TypeEnum.CLASS));
+							.getModifiableContainedTypesMap().put(type, type2);
 				}
 
 			} catch (IOException e) {
@@ -701,8 +766,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		Assert.isNotNull(result);
 		Assert.isNotNull(reference);
 
-		// TODO: already set?
-
+		//
 		Set<ITypeModule> containingModules = _getContainingModules(reference
 				.getFullyQualifiedName());
 
@@ -742,8 +806,22 @@ public class ModularizedSystem implements IModularizedSystem {
 	private Set<ITypeModule> _getContainingModules(String fullyQualifiedName) {
 
 		//
-		if (_typeToModuleListMap.containsKey(fullyQualifiedName)) {
-			return _typeToModuleListMap.get(fullyQualifiedName);
+		if (_typeNameToTypeCache.containsKey(fullyQualifiedName)) {
+
+			//
+			Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+			Set<ITypeModule> result = new HashSet<ITypeModule>();
+
+			for (IType type : types) {
+				if (type.hasBinaryResource()) {
+					result.add(type.getBinaryResource().getResourceModule());
+				} else if (type.hasTypeModule()) {
+					result.add(type.getTypeModule());
+				}
+			}
+
+			return result;
+
 		} else {
 			return Collections.emptySet();
 		}

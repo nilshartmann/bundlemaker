@@ -46,7 +46,7 @@ public class TypeContainer implements ITypeContainer {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<IType> getAllContainedTypes() {
+	public Collection<IType> getContainedTypes() {
 
 		// return an unmodifiable copy
 		return Collections.unmodifiableCollection(_containedTypes.values());

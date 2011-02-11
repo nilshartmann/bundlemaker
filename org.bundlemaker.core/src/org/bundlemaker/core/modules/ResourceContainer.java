@@ -238,33 +238,51 @@ public class ResourceContainer extends TypeContainer implements
 			// iterate over all resources
 			for (IReference reference : resource.getReferences()) {
 
-				if (!hideContainedTypes
-						|| !getContainedTypeNames().contains(
-								reference.getFullyQualifiedName())) {
+				addReference(reference, hideContainedTypes, collectPackages,
+						result);
+			}
+			
+			//
+			for (IType type : resource.getContainedTypes()) {
+				
+				//
+				for (IReference reference :  type.getReferences()) {
 
-					String entry;
-					if (collectPackages) {
-
-						if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-							entry = reference.getFullyQualifiedName()
-									.substring(
-											0,
-											reference.getFullyQualifiedName()
-													.lastIndexOf('.'));
-						} else {
-							entry = "";
-						}
-
-					} else {
-						entry = reference.getFullyQualifiedName();
-					}
-
-					if (!result.contains(entry)) {
-						result.add(entry);
-					}
-
+					addReference(reference, hideContainedTypes, collectPackages,
+							result);
 				}
 			}
+		}
+	}
+
+	private void addReference(IReference reference, boolean hideContainedTypes,
+			boolean collectPackages, Set<String> result) {
+		
+		if (!hideContainedTypes
+				|| !getContainedTypeNames().contains(
+						reference.getFullyQualifiedName())) {
+
+			String entry;
+			if (collectPackages) {
+
+				if (reference.getFullyQualifiedName().indexOf('.') != -1) {
+					entry = reference.getFullyQualifiedName()
+							.substring(
+									0,
+									reference.getFullyQualifiedName()
+											.lastIndexOf('.'));
+				} else {
+					entry = "";
+				}
+
+			} else {
+				entry = reference.getFullyQualifiedName();
+			}
+
+			if (!result.contains(entry)) {
+				result.add(entry);
+			}
+
 		}
 	}
 
