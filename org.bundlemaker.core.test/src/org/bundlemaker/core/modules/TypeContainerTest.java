@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Test;

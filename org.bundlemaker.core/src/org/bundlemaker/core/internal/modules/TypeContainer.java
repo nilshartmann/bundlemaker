@@ -7,9 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IQueryFilter;
 import org.bundlemaker.core.modules.ITypeContainer;
-import org.bundlemaker.core.modules.NameQueryFilters;
+import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.modules.query.NameQueryFilters;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 

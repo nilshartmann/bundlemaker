@@ -3,6 +3,7 @@ package org.bundlemaker.core.modules;
 import java.util.Collection;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.resource.IType;
 
 /**
