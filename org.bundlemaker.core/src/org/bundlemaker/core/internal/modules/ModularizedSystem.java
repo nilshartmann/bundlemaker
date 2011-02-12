@@ -1,66 +1,33 @@
 package org.bundlemaker.core.internal.modules;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
-import org.bundlemaker.core.internal.JdkModuleCreator;
-import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.internal.modules.algorithm.IsUsedByTransitiveClosure;
+import org.bundlemaker.core.internal.modules.algorithm.UsesTransitiveClosure;
 import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.TypeEnum;
-import org.bundlemaker.core.transformation.ITransformation;
-import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 
-public class ModularizedSystem implements IModularizedSystem {
-
-	/** the name of working copy */
-	private String _name;
-
-	/** the project description */
-	private IBundleMakerProjectDescription _projectDescription;
-
-	/** the list of defined transformations */
-	private List<ITransformation> _transformations;
-
-	/** the defined resource modules */
-	private Set<ResourceModule> _resourceModules;
-
-	/** the defined type modules */
-	private Set<TypeModule> _typeModules;
-
-	/** the execution environment type module */
-	private TypeModule _executionEnvironment;
-
-	/** type name -> type */
-	public GenericCache<String, Set<IType>> _typeNameToTypeCache;
-
-	/** type name -> referring type */
-	public GenericCache<String, Set<IType>> _typeNameToReferringCache;
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
+public class ModularizedSystem extends AbstractCachingModularizedSystem
+		implements IModularizedSystem {
 
 	/**
 	 * <p>
@@ -72,305 +39,30 @@ public class ModularizedSystem implements IModularizedSystem {
 	public ModularizedSystem(String name,
 			IBundleMakerProjectDescription projectDescription) {
 
-		_name = name;
-
-		_projectDescription = projectDescription;
-
-		_transformations = new LinkedList<ITransformation>();
-		_resourceModules = new HashSet<ResourceModule>();
-		_typeModules = new HashSet<TypeModule>();
-
 		//
-		_typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
-			@Override
-			protected Set<IType> create(String key) throws Exception {
-				return new HashSet<IType>();
-			}
-		};
-
-		//
-		_typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
-			@Override
-			protected Set<IType> create(String key) throws Exception {
-				return new HashSet<IType>();
-			}
-		};
+		super(name, projectDescription);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getName() {
-		return _name;
+	public Collection<IType> getUses(String typeName) {
+
+		UsesTransitiveClosure closure = new UsesTransitiveClosure(this);
+		closure.resolveType(typeName);
+		return closure.getTypes();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IBundleMakerProjectDescription getProjectDescription() {
-		return _projectDescription;
-	}
+	public Collection<IType> getIsUsedBy(String typeName) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<ITransformation> getTransformations() {
-		return _transformations;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void applyTransformations() {
-
-		// step 1: clear prior results
-		_typeModules.clear();
-		_resourceModules.clear();
-		_typeNameToTypeCache.clear();
-
-		// step 2: set up the JRE
-		// TODO!!!!
-		System.out.println("// step 2: set up the JRE");
-		try {
-
-			TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
-			_typeModules.add(jdkModule);
-			_executionEnvironment = jdkModule;
-
-		} catch (CoreException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		// step 3: create the type modules
-		System.out.println("// step 3: create the type modules");
-
-		for (IFileBasedContent fileBasedContent : _projectDescription
-				.getFileBasedContent()) {
-
-			if (!fileBasedContent.isResourceContent()) {
-
-				IModuleIdentifier identifier = new ModuleIdentifier(
-						fileBasedContent.getName(),
-						fileBasedContent.getVersion());
-
-				// TODO!!
-				TypeModule typeModule = createTypeModule(
-						identifier,
-						new File[] { fileBasedContent.getBinaryPaths().toArray(
-								new IPath[0])[0].toFile() });
-
-				_typeModules.add(typeModule);
-
-			}
-		}
-
-		try {
-			initializedModules();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// step 4: transform modules
-		System.out.println("// step 4: transform modules");
-		for (ITransformation transformation : _transformations) {
-
-			// step 4.1: apply transformation
-			transformation.apply(this);
-
-			// step 4.2: clean up empty modules
-			for (Iterator<ResourceModule> iterator = _resourceModules
-					.iterator(); iterator.hasNext();) {
-
-				// get next module
-				ResourceModule module = iterator.next();
-
-				// if the module is empty - remove it
-				if (module.getResources(ContentType.BINARY).isEmpty()
-						&& module.getResources(ContentType.SOURCE).isEmpty()) {
-
-					// remove the module
-					iterator.remove();
-				}
-			}
-
-			// step 4.3: initialize
-			for (ResourceModule module : _resourceModules) {
-				module.initializeContainedTypes();
-			}
-		}
-
-		System.out.println("// done");
-
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @throws Exception
-	 */
-	private void initializedModules() throws Exception {
-
-		// step 1: clear the caches
-		_typeNameToTypeCache.clear();
-		_typeNameToReferringCache.clear();
-
-		// step 2: iterate over the file based content
-		for (IFileBasedContent fileBasedContent : getProjectDescription()
-				.getFileBasedContent()) {
-
-			if (fileBasedContent.isResourceContent()) {
-
-				//
-				for (IResource resource : fileBasedContent.getResourceContent()
-						.getBinaryResources()) {
-
-					for (IType containedType : resource.getContainedTypes()) {
-
-						if (_typeNameToTypeCache.getOrCreate(
-								containedType.getFullyQualifiedName()).add(
-								containedType)) {
-
-							for (IReference reference : containedType
-									.getReferences()) {
-
-								_typeNameToReferringCache.getOrCreate(
-										reference.getFullyQualifiedName()).add(
-										containedType);
-							}
-
-						}
-					}
-
-				}
-
-				//
-				for (IResource resource : fileBasedContent.getResourceContent()
-						.getSourceResources()) {
-
-					for (IType containedType : resource.getContainedTypes()) {
-
-						if (_typeNameToTypeCache.getOrCreate(
-								containedType.getFullyQualifiedName()).add(
-								containedType)) {
-
-							for (IReference reference : containedType
-									.getReferences()) {
-
-								_typeNameToReferringCache.getOrCreate(
-										reference.getFullyQualifiedName()).add(
-										containedType);
-							}
-
-						}
-					}
-				}
-
-			}
-		}
-
-		// step 2: initialize the type modules
-		for (TypeModule module : _typeModules) {
-
-			for (IType type : module.getContainedTypes()) {
-				_typeNameToTypeCache.getOrCreate(type.getFullyQualifiedName())
-						.add(type);
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Set<IModule> getAllModules() {
-
-		// create the result list
-		Set<IModule> result = new HashSet<IModule>(_typeModules.size()
-				+ _resourceModules.size());
-
-		// all all modules
-		result.addAll(_typeModules);
-		result.addAll(_resourceModules);
-
-		// return an unmodifiable copy
-		return Collections.unmodifiableSet(result);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<IModule> getTypeModules() {
-		return Collections
-				.unmodifiableSet((Set<? extends IModule>) _typeModules);
-	}
-
-	@Override
-	public IModule getTypeModule(IModuleIdentifier identifier) {
-
-		//
-		for (TypeModule module : _typeModules) {
-
-			if (module.getModuleIdentifier().equals(identifier)) {
-				return module;
-			}
-		}
-
-		//
-		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<IResourceModule> getResourceModules() {
-		return Collections
-				.unmodifiableSet((Set<? extends IResourceModule>) _resourceModules);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IResourceModule getResourceModule(IModuleIdentifier identifier) {
-
-		//
-		return getModifiableResourceModule(identifier);
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param identifier
-	 * @return
-	 */
-	public ResourceModule getModifiableResourceModule(
-			IModuleIdentifier identifier) {
-
-		//
-		for (ResourceModule module : _resourceModules) {
-
-			if (module.getModuleIdentifier().equals(identifier)) {
-				return module;
-			}
-		}
-
-		//
-		return null;
-	}
-
-	public Set<ResourceModule> getModifiableResourceModules() {
-
-		//
-		return _resourceModules;
+		IsUsedByTransitiveClosure closure = new IsUsedByTransitiveClosure(this);
+		closure.resolveType(typeName);
+		return closure.getTypes();
 	}
 
 	@Override
@@ -413,18 +105,14 @@ public class ModularizedSystem implements IModularizedSystem {
 	public Set<IModule> getContainingModules(String fullyQualifiedName) {
 
 		//
-		if (_typeNameToTypeCache.containsKey(fullyQualifiedName)) {
+		if (getTypeNameToTypeCache().containsKey(fullyQualifiedName)) {
 
-			Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+			Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
 
 			Set<IModule> result = new HashSet<IModule>(types.size());
 
 			for (IType type : types) {
-				if (type.hasBinaryResource()) {
-					result.add(type.getBinaryResource().getResourceModule());
-				} else if (type.hasTypeModule()) {
-					result.add(type.getTypeModule());
-				}
+				result.add(type.getModule());
 			}
 
 			//
@@ -437,7 +125,7 @@ public class ModularizedSystem implements IModularizedSystem {
 
 	@Override
 	public Set<IType> getReferencingTypes(String fullyQualifiedName) {
-		return _typeNameToReferringCache.get(fullyQualifiedName);
+		return getTypeNameToReferringCache().get(fullyQualifiedName);
 	}
 
 	@Override
@@ -465,7 +153,7 @@ public class ModularizedSystem implements IModularizedSystem {
 		Assert.isNotNull(fullyQualifiedName);
 
 		// get type modules
-		Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+		Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
 
 		// return null if type is unknown
 		if (types == null) {
@@ -535,7 +223,7 @@ public class ModularizedSystem implements IModularizedSystem {
 				hideContainedTypes, includeSourceReferences, false)) {
 
 			// get the module list
-			Set<IType> typeList = _typeNameToTypeCache.get(referencedType);
+			Set<IType> typeList = getTypeNameToTypeCache().get(referencedType);
 
 			// unsatisfied?
 			if (typeList == null || typeList.isEmpty()) {
@@ -651,114 +339,6 @@ public class ModularizedSystem implements IModularizedSystem {
 		return result;
 	}
 
-	@Override
-	public IModule getExecutionEnvironmentTypeModule() {
-		return _executionEnvironment;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param identifier
-	 * @param file
-	 * @return
-	 */
-	public TypeModule createTypeModule(IModuleIdentifier identifier, File file) {
-		return createTypeModule(identifier, new File[] { file });
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param identifier
-	 * @param files
-	 * @return
-	 */
-	public TypeModule createTypeModule(IModuleIdentifier identifier,
-			File[] files) {
-
-		// create the type module
-		TypeModule typeModule = new TypeModule(identifier);
-
-		//
-		for (int i = 0; i < files.length; i++) {
-
-			// add all the contained types
-			try {
-
-				// TODO DIRECTORIES!!
-				// TODO:PARSE!!
-				List<String> types = getContainedTypes(files[i]);
-
-				for (String type : types) {
-
-					// TODO: TypeEnum!!
-					Type type2 = new Type(type, TypeEnum.CLASS);
-					type2.setTypeModule(typeModule);
-
-					typeModule.getSelfContainer()
-							.getModifiableContainedTypesMap().put(type, type2);
-				}
-
-			} catch (IOException e) {
-
-				//
-				e.printStackTrace();
-			}
-		}
-		// return the module
-		return typeModule;
-	}
-
-	public ResourceModule createResourceModule(
-			IModuleIdentifier createModuleIdentifier) {
-
-		//
-		ResourceModule resourceModule = new ResourceModule(
-				createModuleIdentifier);
-
-		//
-		_resourceModules.add(resourceModule);
-
-		//
-		return resourceModule;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
-	private static List<String> getContainedTypes(File file) throws IOException {
-
-		// create the result list
-		List<String> result = new LinkedList<String>();
-
-		// create the jar file
-		JarFile jarFile = new JarFile(file);
-
-		// get the entries
-		Enumeration<JarEntry> entries = jarFile.entries();
-		while (entries.hasMoreElements()) {
-			JarEntry jarEntry = (JarEntry) entries.nextElement();
-			if (jarEntry.getName().endsWith(".class")) {
-				result.add(jarEntry
-						.getName()
-						.substring(0,
-								jarEntry.getName().length() - ".class".length())
-						.replace('/', '.'));
-			}
-		}
-
-		// return the result
-		return result;
-	}
-
 	/**
 	 * <p>
 	 * </p>
@@ -813,18 +393,14 @@ public class ModularizedSystem implements IModularizedSystem {
 	private Set<IModule> _getContainingModules(String fullyQualifiedName) {
 
 		//
-		if (_typeNameToTypeCache.containsKey(fullyQualifiedName)) {
+		if (getTypeNameToTypeCache().containsKey(fullyQualifiedName)) {
 
 			//
-			Set<IType> types = _typeNameToTypeCache.get(fullyQualifiedName);
+			Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
 			Set<IModule> result = new HashSet<IModule>();
 
 			for (IType type : types) {
-				if (type.hasBinaryResource()) {
-					result.add(type.getBinaryResource().getResourceModule());
-				} else if (type.hasTypeModule()) {
-					result.add(type.getTypeModule());
-				}
+				result.add(type.getModule());
 			}
 
 			return result;

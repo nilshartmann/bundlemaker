@@ -200,16 +200,9 @@ public class Type implements IType, IModifiableType {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IModule getTypeModule() {
-		return _typeModule;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasTypeModule() {
-		return _typeModule != null;
+	public IModule getModule() {
+		return _typeModule != null ? _typeModule : _binaryResource
+				.getResourceModule();
 	}
 
 	/**

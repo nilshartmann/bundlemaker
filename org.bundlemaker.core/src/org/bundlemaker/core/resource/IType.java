@@ -118,14 +118,5 @@ public interface IType {
 	 * 
 	 * @return
 	 */
-	IModule getTypeModule();
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean hasTypeModule();
-
+	IModule getModule();
 }

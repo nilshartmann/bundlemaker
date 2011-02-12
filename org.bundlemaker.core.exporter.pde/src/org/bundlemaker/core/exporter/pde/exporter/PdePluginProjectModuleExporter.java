@@ -229,8 +229,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		//
 		for (IModule typeModule : referencedModules.getReferencedModules()) {
 
-			if (!typeModule.equals(modularizedSystem
-					.getExecutionEnvironmentTypeModule())) {
+			if (!typeModule.equals(modularizedSystem.getExecutionEnvironment())) {
 
 				IRequiredBundleDescription requiredBundleDescription = bundleProjectService
 						.newRequiredBundle(typeModule.getModuleIdentifier()

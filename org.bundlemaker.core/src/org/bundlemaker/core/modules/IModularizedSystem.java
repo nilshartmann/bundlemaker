@@ -1,5 +1,6 @@
 package org.bundlemaker.core.modules;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +54,14 @@ public interface IModularizedSystem {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	IModule getExecutionEnvironment();
+
+	/**
+	 * <p>
 	 * Returns all modules ({@link IModule ITypeModules} and
 	 * {@link IResourceModule IResourceModules}).
 	 * </p>
@@ -68,7 +77,7 @@ public interface IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	Set<IModule> getTypeModules();
+	Collection<IModule> getNonResourceModules();
 
 	/**
 	 * <p>
@@ -78,7 +87,7 @@ public interface IModularizedSystem {
 	 * @param identifier
 	 * @return
 	 */
-	IModule getTypeModule(IModuleIdentifier identifier);
+	IModule getNonResourceModule(IModuleIdentifier identifier);
 
 	/**
 	 * <p>
@@ -87,7 +96,7 @@ public interface IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	Set<IResourceModule> getResourceModules();
+	Collection<IResourceModule> getResourceModules();
 
 	/**
 	 * <p>
@@ -116,7 +125,7 @@ public interface IModularizedSystem {
 	 * @return
 	 */
 	Set<IModule> getContainingModules(String fullyQualifiedName);
-	
+
 	/**
 	 * <p>
 	 * </p>
@@ -199,11 +208,7 @@ public interface IModularizedSystem {
 	 */
 	Map<String, Set<IModule>> getAmbiguousPackages();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	IModule getExecutionEnvironmentTypeModule();
+	Collection<IType> getUses(String typeName);
+
+	Collection<IType> getIsUsedBy(String typeName);
 }

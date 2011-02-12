@@ -1,6 +1,7 @@
 package org.bundlemaker.itest.spring;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,21 +124,21 @@ public class IntegrationTest {
 		//
 		System.out
 				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-		Set<IType> types = modularizedSystem
-				.getReferencingTypes("org.springframework.context.ApplicationContext");
+		Collection<IType> types = modularizedSystem
+				.getIsUsedBy("org.springframework.context.ApplicationContext");
 
 		for (IType iType : types) {
-			System.out
-					.println(iType.getFullyQualifiedName()
-							+ " : "
-							+ iType.getReference("org.springframework.context.ApplicationContext"));
+			System.out.println(iType.getFullyQualifiedName() + " : "
+					+ iType.getModule().getModuleIdentifier());
 		}
+		System.out
+				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
 
-		 // export to simple report
-		 exportToSimpleReport(bundleMakerProject, modularizedSystem);
-		
-		 // export to structure 101
-		 exportToStructure101(bundleMakerProject, modularizedSystem);
+		// // export to simple report
+		// exportToSimpleReport(bundleMakerProject, modularizedSystem);
+		//
+		// // export to structure 101
+		// exportToStructure101(bundleMakerProject, modularizedSystem);
 
 		// // export to binary bundle
 		// exportToBinaryBundle(bundleMakerProject, modularizedSystem);
@@ -169,7 +170,7 @@ public class IntegrationTest {
 	 */
 	private void checkModularizedSystem(IModularizedSystem modularizedSystem) {
 
-		Set<IResourceModule> resourceModules = modularizedSystem
+		Collection<IResourceModule> resourceModules = modularizedSystem
 				.getResourceModules();
 
 		Assert.assertEquals(112, resourceModules.size());

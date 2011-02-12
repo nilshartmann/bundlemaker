@@ -47,7 +47,7 @@ public class EmbedModuleTransformation implements ITransformation {
 
 		// step 2: fetch host and embedded modules
 		for (ResourceModule embeddedModule : modularizedSystem
-				.getModifiableResourceModules()) {
+				.getModifiableResourceModules().values()) {
 
 			// try to fetch host module
 			if (embeddedModule.getModuleIdentifier().equals(
@@ -97,7 +97,7 @@ public class EmbedModuleTransformation implements ITransformation {
 
 			// remove as top level module
 			modularizedSystem.getModifiableResourceModules().remove(
-					embeddedModule);
+					embeddedModule.getModuleIdentifier());
 		}
 	}
 }
