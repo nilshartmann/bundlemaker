@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Assert;
  * <p>
  * </p>
  */
-public abstract class AbstractTypeQuery {
+public abstract class AbstractClosureQuery {
 
 	/** - */
 	private Map<String, IType> _typesMap;
@@ -24,7 +24,7 @@ public abstract class AbstractTypeQuery {
 	 * <p>
 	 * </p>
 	 */
-	public AbstractTypeQuery(ModularizedSystem modularizedSystem) {
+	public AbstractClosureQuery(ModularizedSystem modularizedSystem) {
 
 		Assert.isNotNull(modularizedSystem);
 

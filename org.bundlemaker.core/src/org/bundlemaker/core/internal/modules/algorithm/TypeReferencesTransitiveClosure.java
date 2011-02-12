@@ -11,16 +11,16 @@ import org.bundlemaker.core.resource.IType;
  * <p>
  * </p>
  */
-public class UsesTransitiveClosure extends AbstractTypeQuery {
+public class TypeReferencesTransitiveClosure extends AbstractClosureQuery {
 
 	/**
 	 * <p>
-	 * Creates a new instance of type {@link UsesTransitiveClosure}.
+	 * Creates a new instance of type {@link TypeReferencesTransitiveClosure}.
 	 * </p>
 	 * 
 	 * @param modularizedSystem
 	 */
-	public UsesTransitiveClosure(ModularizedSystem modularizedSystem) {
+	public TypeReferencesTransitiveClosure(ModularizedSystem modularizedSystem) {
 		super(modularizedSystem);
 	}
 

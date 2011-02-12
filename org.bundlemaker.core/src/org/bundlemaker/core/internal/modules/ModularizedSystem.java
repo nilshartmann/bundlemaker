@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.algorithm.IsUsedByTransitiveClosure;
-import org.bundlemaker.core.internal.modules.algorithm.UsesTransitiveClosure;
+import org.bundlemaker.core.internal.modules.algorithm.IsReferencedByTypeTransitiveClosure;
+import org.bundlemaker.core.internal.modules.algorithm.TypeReferencesTransitiveClosure;
 import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -50,7 +50,7 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 	@Override
 	public Collection<IType> getUses(String typeName, IQueryFilter<IType> filter) {
 
-		UsesTransitiveClosure closure = new UsesTransitiveClosure(this);
+		TypeReferencesTransitiveClosure closure = new TypeReferencesTransitiveClosure(this);
 		closure.resolveType(typeName, filter);
 		return closure.getTypes();
 	}
@@ -62,7 +62,7 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 	public Collection<IType> getIsUsedBy(String typeName,
 			IQueryFilter<IType> filter) {
 
-		IsUsedByTransitiveClosure closure = new IsUsedByTransitiveClosure(this);
+		IsReferencedByTypeTransitiveClosure closure = new IsReferencedByTypeTransitiveClosure(this);
 		closure.resolveType(typeName, filter);
 		return closure.getTypes();
 	}
