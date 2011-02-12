@@ -3,6 +3,7 @@ package org.bundlemaker.itest.spring;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.query.TypeQueryFilters;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -125,14 +127,20 @@ public class IntegrationTest {
 		//
 		System.out
 				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-		Collection<IType> types = modularizedSystem.getIsUsedBy(
-				"org.springframework.context.ApplicationContext",
-				TypeQueryFilters.TRUE_QUERY_FILTER);
 
-		for (IType iType : types) {
-			System.out.println(iType.getFullyQualifiedName() + " : "
-					+ iType.getModule().getModuleIdentifier());
+		IType type = modularizedSystem
+				.getType("org.springframework.beans.GenericTypeAwarePropertyDescriptor");
+
+		//
+		Collection<IResource> resources = modularizedSystem
+				.getResourceIsReferencedTransitiveClosure(
+						type.getSourceResource(), ContentType.SOURCE,
+						TypeQueryFilters.TRUE_QUERY_FILTER);
+
+		for (IResource iResource : resources) {
+			System.out.println(" * " + iResource.getPath());
 		}
+
 		System.out
 				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
 

@@ -11,16 +11,16 @@ import org.eclipse.core.runtime.Assert;
  * <p>
  * </p>
  */
-public class IsReferencedByTypeTransitiveClosure extends AbstractClosureQuery {
+public class TypeIsReferencedTransitiveClosure extends AbstractTypeClosureQuery {
 
 	/**
 	 * <p>
-	 * Creates a new instance of type {@link IsReferencedByTypeTransitiveClosure}.
+	 * Creates a new instance of type {@link TypeIsReferencedTransitiveClosure}.
 	 * </p>
 	 * 
 	 * @param modularizedSystem
 	 */
-	public IsReferencedByTypeTransitiveClosure(ModularizedSystem modularizedSystem) {
+	public TypeIsReferencedTransitiveClosure(ModularizedSystem modularizedSystem) {
 		super(modularizedSystem);
 	}
 

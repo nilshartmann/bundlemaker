@@ -82,6 +82,29 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Set<? extends IReference> getResourceAndTypeReferences() {
+
+		//
+		Set<IReference> result = new HashSet<IReference>();
+
+		//
+		if (_references != null) {
+			result.addAll(_references);
+		}
+
+		//
+		for (IType type : _containedTypes) {
+			result.addAll(type.getReferences());
+		}
+		
+		//
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Set<? extends IReference> getReferences() {
 		return Collections.unmodifiableSet(references());
 	}

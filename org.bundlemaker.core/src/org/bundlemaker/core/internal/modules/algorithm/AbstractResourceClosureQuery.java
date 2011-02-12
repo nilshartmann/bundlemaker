@@ -1,21 +1,20 @@
 package org.bundlemaker.core.internal.modules.algorithm;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.ModularizedSystem;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
  * </p>
  */
-public abstract class AbstractClosureQuery {
+public abstract class AbstractResourceClosureQuery {
 
 	/** - */
-	private Map<String, IType> _typesMap;
+	private Set<IResource> _resources;
 
 	/** - */
 	private ModularizedSystem _modularizedSystem;
@@ -24,13 +23,13 @@ public abstract class AbstractClosureQuery {
 	 * <p>
 	 * </p>
 	 */
-	public AbstractClosureQuery(ModularizedSystem modularizedSystem) {
+	public AbstractResourceClosureQuery(ModularizedSystem modularizedSystem) {
 
 		Assert.isNotNull(modularizedSystem);
 
 		_modularizedSystem = modularizedSystem;
 
-		_typesMap = new HashMap<String, IType>();
+		_resources = new HashSet<IResource>();
 	}
 
 	/**
@@ -49,17 +48,7 @@ public abstract class AbstractClosureQuery {
 	 * 
 	 * @return
 	 */
-	protected Map<String, IType> getTypesMap() {
-		return _typesMap;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Collection<IType> getTypes() {
-		return _typesMap.values();
+	public Set<IResource> getResources() {
+		return _resources;
 	}
 }

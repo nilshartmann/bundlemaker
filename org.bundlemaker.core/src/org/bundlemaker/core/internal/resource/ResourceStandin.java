@@ -76,6 +76,18 @@ public class ResourceStandin extends ResourceKey implements IResource {
 	}
 
 	@Override
+	public Set<? extends IReference> getResourceAndTypeReferences() {
+
+		//
+		if (_resource == null) {
+			// TODO
+			throw new RuntimeException();
+		}
+
+		return _resource.getResourceAndTypeReferences();
+	}
+
+	@Override
 	public Set<? extends IReference> getReferences() {
 
 		//

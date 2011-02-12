@@ -25,14 +25,20 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
 	/**
 	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	Set<? extends IReference> getResourceAndTypeReferences();
+	
+	/**
+	 * <p>
 	 * Returns all {@link IReference IReferences} that are originated in this
 	 * resource.
 	 * </p>
 	 * <p>
 	 * <b>Note:</b> The result set does <b>not</b> contain any references of the
-	 * contained types. You explicitly have to request them by iterating over
-	 * the contained types and calling {@link IType#getReferences()} on each
-	 * type.
+	 * contained types.
 	 * </p>
 	 * 
 	 * @return all {@link IReference IReferences} that are originated in this

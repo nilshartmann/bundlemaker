@@ -169,7 +169,7 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IResource getSourceResource() {
-		return _sourceResource.getResourceStandin();
+		return _sourceResource != null ? _sourceResource.getResourceStandin() : null;
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IResource getBinaryResource() {
-		return _binaryResource.getResourceStandin();
+		return _binaryResource != null ? _binaryResource.getResourceStandin() : null;
 	}
 
 	/**

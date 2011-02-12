@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.algorithm.IsReferencedByTypeTransitiveClosure;
+import org.bundlemaker.core.internal.modules.algorithm.ResourceIsReferencedTransitiveClosure;
+import org.bundlemaker.core.internal.modules.algorithm.TypeIsReferencedTransitiveClosure;
+import org.bundlemaker.core.internal.modules.algorithm.ResourceReferencesTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.TypeReferencesTransitiveClosure;
 import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -15,6 +17,7 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -48,9 +51,11 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<IType> getUses(String typeName, IQueryFilter<IType> filter) {
+	public Collection<IType> getTypeReferencesTransitiveClosure(
+			String typeName, IQueryFilter<IType> filter) {
 
-		TypeReferencesTransitiveClosure closure = new TypeReferencesTransitiveClosure(this);
+		TypeReferencesTransitiveClosure closure = new TypeReferencesTransitiveClosure(
+				this);
 		closure.resolveType(typeName, filter);
 		return closure.getTypes();
 	}
@@ -59,10 +64,36 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<IType> getIsUsedBy(String typeName,
+	public Collection<IResource> getResourceReferencesTransitiveClosure(
+			IResource resource, ContentType contentType,
+			IQueryFilter<IType> queryFilter) {
+
+		ResourceReferencesTransitiveClosure closure = new ResourceReferencesTransitiveClosure(
+				this);
+		closure.resolveResource(resource, contentType, queryFilter);
+		return closure.getResources();
+	}
+
+	@Override
+	public Collection<IResource> getResourceIsReferencedTransitiveClosure(
+			IResource resource, ContentType contentType,
+			IQueryFilter<IType> queryFilter) {
+
+		ResourceIsReferencedTransitiveClosure closure = new ResourceIsReferencedTransitiveClosure(
+				this);
+		closure.resolveResource(resource, contentType, queryFilter);
+		return closure.getResources();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName,
 			IQueryFilter<IType> filter) {
 
-		IsReferencedByTypeTransitiveClosure closure = new IsReferencedByTypeTransitiveClosure(this);
+		TypeIsReferencedTransitiveClosure closure = new TypeIsReferencedTransitiveClosure(
+				this);
 		closure.resolveType(typeName, filter);
 		return closure.getTypes();
 	}

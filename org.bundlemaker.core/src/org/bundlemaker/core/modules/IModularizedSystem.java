@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -209,7 +210,19 @@ public interface IModularizedSystem {
 	 */
 	Map<String, Set<IModule>> getAmbiguousPackages();
 
-	Collection<IType> getUses(String typeName, IQueryFilter<IType> filter);
+	// TODO
+	Collection<IType> getTypeReferencesTransitiveClosure(String typeName, IQueryFilter<IType> filter);
 
-	Collection<IType> getIsUsedBy(String typeName, IQueryFilter<IType> filter);
+	// TODO
+	Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName, IQueryFilter<IType> filter);
+
+	// TODO
+	Collection<IResource> getResourceReferencesTransitiveClosure(
+			IResource resource, ContentType contentType,
+			IQueryFilter<IType> queryFilter);
+
+	// TODO
+	Collection<IResource> getResourceIsReferencedTransitiveClosure(
+			IResource resource, ContentType contentType,
+			IQueryFilter<IType> queryFilter);
 }

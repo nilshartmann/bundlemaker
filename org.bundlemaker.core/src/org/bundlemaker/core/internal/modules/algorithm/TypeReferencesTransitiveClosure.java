@@ -11,7 +11,7 @@ import org.bundlemaker.core.resource.IType;
  * <p>
  * </p>
  */
-public class TypeReferencesTransitiveClosure extends AbstractClosureQuery {
+public class TypeReferencesTransitiveClosure extends AbstractTypeClosureQuery {
 
 	/**
 	 * <p>
