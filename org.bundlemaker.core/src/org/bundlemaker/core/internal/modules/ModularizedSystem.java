@@ -14,6 +14,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -47,10 +48,10 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<IType> getUses(String typeName) {
+	public Collection<IType> getUses(String typeName, IQueryFilter<IType> filter) {
 
 		UsesTransitiveClosure closure = new UsesTransitiveClosure(this);
-		closure.resolveType(typeName);
+		closure.resolveType(typeName, filter);
 		return closure.getTypes();
 	}
 
@@ -58,10 +59,11 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<IType> getIsUsedBy(String typeName) {
+	public Collection<IType> getIsUsedBy(String typeName,
+			IQueryFilter<IType> filter) {
 
 		IsUsedByTransitiveClosure closure = new IsUsedByTransitiveClosure(this);
-		closure.resolveType(typeName);
+		closure.resolveType(typeName, filter);
 		return closure.getTypes();
 	}
 

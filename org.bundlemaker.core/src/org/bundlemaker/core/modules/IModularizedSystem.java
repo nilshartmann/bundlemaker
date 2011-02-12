@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -208,7 +209,7 @@ public interface IModularizedSystem {
 	 */
 	Map<String, Set<IModule>> getAmbiguousPackages();
 
-	Collection<IType> getUses(String typeName);
+	Collection<IType> getUses(String typeName, IQueryFilter<IType> filter);
 
-	Collection<IType> getIsUsedBy(String typeName);
+	Collection<IType> getIsUsedBy(String typeName, IQueryFilter<IType> filter);
 }

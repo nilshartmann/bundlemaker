@@ -3,19 +3,21 @@ package org.bundlemaker.core.internal.modules.algorithm;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.resource.IType;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
  * </p>
  */
 public class IsUsedByTransitiveClosure extends AbstractTypeQuery {
-	
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link IsUsedByTransitiveClosure}.
 	 * </p>
-	 *
+	 * 
 	 * @param modularizedSystem
 	 */
 	public IsUsedByTransitiveClosure(ModularizedSystem modularizedSystem) {
@@ -28,7 +30,10 @@ public class IsUsedByTransitiveClosure extends AbstractTypeQuery {
 	 * 
 	 * @param typeName
 	 */
-	public void resolveType(String typeName) {
+	public void resolveType(String typeName, IQueryFilter<IType> queryFilter) {
+
+		Assert.isNotNull(typeName);
+		Assert.isNotNull(queryFilter);
 
 		System.out.println(String.format("Resolving type '%s'.", typeName));
 
@@ -42,11 +47,14 @@ public class IsUsedByTransitiveClosure extends AbstractTypeQuery {
 
 		for (IType type : types) {
 
-			if (!getTypesMap().containsKey(type.getFullyQualifiedName())) {
-				getTypesMap().put(type.getFullyQualifiedName(), type);
-				resolveType(type.getFullyQualifiedName());
+			if (queryFilter.matches(type)) {
+
+				if (!getTypesMap().containsKey(type.getFullyQualifiedName())) {
+					getTypesMap().put(type.getFullyQualifiedName(), type);
+					resolveType(type.getFullyQualifiedName(), queryFilter);
+				}
+
 			}
 		}
 	}
-
 }

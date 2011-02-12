@@ -22,6 +22,7 @@ import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.query.TypeQueryFilters;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -124,8 +125,9 @@ public class IntegrationTest {
 		//
 		System.out
 				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-		Collection<IType> types = modularizedSystem
-				.getIsUsedBy("org.springframework.context.ApplicationContext");
+		Collection<IType> types = modularizedSystem.getIsUsedBy(
+				"org.springframework.context.ApplicationContext",
+				TypeQueryFilters.TRUE_QUERY_FILTER);
 
 		for (IType iType : types) {
 			System.out.println(iType.getFullyQualifiedName() + " : "

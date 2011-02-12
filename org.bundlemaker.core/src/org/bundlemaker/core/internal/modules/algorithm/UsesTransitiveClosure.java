@@ -3,6 +3,7 @@ package org.bundlemaker.core.internal.modules.algorithm;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
 
@@ -29,7 +30,7 @@ public class UsesTransitiveClosure extends AbstractTypeQuery {
 	 * 
 	 * @param typeName
 	 */
-	public void resolveType(String typeName) {
+	public void resolveType(String typeName, IQueryFilter<IType> queryFilter) {
 
 		System.out.println(String.format("Resolving type '%s'.", typeName));
 
@@ -50,7 +51,7 @@ public class UsesTransitiveClosure extends AbstractTypeQuery {
 
 		for (IReference reference : type.getReferences()) {
 			if (!getTypesMap().containsKey(reference.getFullyQualifiedName())) {
-				resolveType(reference.getFullyQualifiedName());
+				resolveType(reference.getFullyQualifiedName(), queryFilter);
 			}
 		}
 	}
