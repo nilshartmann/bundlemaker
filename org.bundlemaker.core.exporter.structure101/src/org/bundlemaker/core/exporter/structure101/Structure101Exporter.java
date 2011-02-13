@@ -2,7 +2,6 @@ package org.bundlemaker.core.exporter.structure101;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,11 +18,13 @@ import org.bundlemaker.core.exporter.structure101.xml.ModuleType;
 import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
 import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.GenericCache;
 import org.bundlemaker.core.util.StopWatch;
 
 /**
@@ -89,7 +90,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 			IModularizedSystem modularizedSystem) {
 
 		// step 1: create and add the ModuleType
-		createModule(typeModule);
+		createModuleWithResources(typeModule, ContentType.SOURCE);
 
 		// step 3: add the dependencies
 		createDependencies(typeModule, modularizedSystem);
@@ -166,7 +167,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 			for (TypeToTypeDependency typeToTypeDependency : dependencies) {
 
 				DependencyType dependency = new DependencyType();
-				dependency.setType(TYPE_REQUIRES);
+				dependency.setType(TYPE_REFERENCES);
 				dependency.setFrom(typeToTypeDependency.getFrom());
 				dependency.setTo(typeToTypeDependency.getTo());
 
@@ -180,59 +181,191 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	 * Creates a {@link ModuleType} for the given {@link IModule}
 	 * </p>
 	 * 
-	 * @param typeModule
+	 * @param module
 	 * @param packageList
 	 * @return
 	 */
-	private void createModule(IModule typeModule) {
+	private void createModuleWithTypes(IModule module) {
 
-		// step 1: create the result
-		ModuleType module = new ModuleType();
-		module.setType(TYPE_OSGIBUNDLE);
-		module.setName(getTypeModuleName(typeModule));
-		module.setId(_identifierMap.getModuleId(typeModule));
+		// step 1: get all types ordered by package
+		Map<String, List<IType>> packageList = extractTypePackageList(module);
 
-		// step 2: get all packages
-		Map<String, List<String>> packageList = extractPackageList(typeModule);
+		// step 2: add the module
+		ModuleType moduleSubmodule = addModule(module);
 
-		for (Entry<String, List<String>> entry : packageList.entrySet()) {
+		//
+		for (Entry<String, List<IType>> entry : packageList.entrySet()) {
 
-			// add an entry for each package
-			ModuleType packageSubmodule = new ModuleType();
-			packageSubmodule.setType(TYPE_PACKAGE);
-			packageSubmodule.setName(entry.getKey());
-			packageSubmodule.setId(_identifierMap.getPackageId(typeModule,
-					entry.getKey()));
+			// add the package to the module
+			ModuleType packageSubmodule = addPackage(moduleSubmodule, module,
+					entry.getKey());
 
 			// add all class names to to package
-			for (String fullyQualifiedTypeName : entry.getValue()) {
-
-				// create class sub module
-				ModuleType classSubmodule = new ModuleType();
-
-				// set the type
-				classSubmodule.setType(TYPE_CLASS);
-
-				// set the class name
-				String classname = fullyQualifiedTypeName.indexOf('.') != -1 ? fullyQualifiedTypeName
-						.substring(fullyQualifiedTypeName.lastIndexOf('.') + 1)
-						: fullyQualifiedTypeName;
-				classSubmodule.setName(classname);
-
-				// set the id
-				classSubmodule.setId(_identifierMap.getClassId(typeModule,
-						fullyQualifiedTypeName));
-
-				// add the submodule
-				packageSubmodule.getSubmodule().add(classSubmodule);
+			for (IType type : entry.getValue()) {
+				addType(packageSubmodule, module, type);
 			}
-
-			// add the package modules
-			module.getSubmodule().add(packageSubmodule);
 		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param module
+	 * @param contentType
+	 */
+	private void createModuleWithResources(IModule module,
+			ContentType contentType) {
+
+		//
+		if (!(module instanceof IResourceModule)) {
+
+			//
+			createModuleWithTypes(module);
+			return;
+
+		} else {
+
+			// step 1: get all types ordered by package
+			Map<String, List<IResource>> packageList = extractResourcePackageList(
+					(IResourceModule) module, contentType);
+
+			// step 2: add the module
+			ModuleType moduleSubmodule = addModule(module);
+
+			//
+			for (Entry<String, List<IResource>> entry : packageList.entrySet()) {
+
+				// add the package to the module
+				ModuleType packageSubmodule = addPackage(moduleSubmodule,
+						module, entry.getKey());
+
+				// add all class names to to package
+				for (IResource resource : entry.getValue()) {
+					addResource(packageSubmodule, module, resource);
+				}
+			}
+		}
+	}
+
+	private ModuleType addModule(IModule module) {
+		// step 1: create the result
+		ModuleType moduleType = new ModuleType();
+		moduleType.setType(TYPE_OSGIBUNDLE);
+		moduleType.setName(getTypeModuleName(module));
+		moduleType.setId(_identifierMap.getModuleId(module));
 
 		// add the module to the modules
-		_result.getModules().getModule().add(module);
+		_result.getModules().getModule().add(moduleType);
+		return moduleType;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param parent
+	 * @param typeModule
+	 * @param packageName
+	 * @return
+	 */
+	private ModuleType addPackage(ModuleType parent, IModule typeModule,
+			String packageName) {
+
+		// add an entry for each package
+		ModuleType packageSubmodule = new ModuleType();
+		packageSubmodule.setType(TYPE_PACKAGE);
+		packageSubmodule.setName(packageName);
+		packageSubmodule.setId(_identifierMap.getPackageId(typeModule,
+				packageName));
+
+		// add the package modules
+		parent.getSubmodule().add(packageSubmodule);
+		return packageSubmodule;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageSubmodule
+	 * @param module
+	 * @param resource
+	 */
+	private void addResource(ModuleType parent, IModule module,
+			IResource resource) {
+
+		// create class sub module
+		ModuleType resourceSubmodule = new ModuleType();
+
+		// set the type
+		// TODO
+		resourceSubmodule.setType(TYPE_JAVACLASSFILE);
+
+		// set the class name
+		resourceSubmodule.setName(resource.getName());
+
+		// set the id
+		resourceSubmodule.setId(_identifierMap.getResourceId(module,
+				resource.getPath()));
+
+		// add the submodule
+		parent.getSubmodule().add(resourceSubmodule);
+
+		// add the contained types
+		for (IType type : resource.getContainedTypes()) {
+
+			//
+			addType(resourceSubmodule, module, type);
+		}
+
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param parent
+	 * @param typeModule
+	 * @param type
+	 */
+	private void addType(ModuleType parent, IModule typeModule, IType type) {
+
+		// create class sub module
+		ModuleType classSubmodule = new ModuleType();
+
+		// set the type
+		switch (type.getType()) {
+		case CLASS: {
+			classSubmodule.setType(TYPE_CLASS);
+			break;
+		}
+		case INTERFACE: {
+			classSubmodule.setType(TYPE_INTERFACE);
+			break;
+		}
+		case ANNOTATION: {
+			classSubmodule.setType(TYPE_ANNOTATION);
+			break;
+		}
+		case ENUM: {
+			classSubmodule.setType(TYPE_ENUM);
+			break;
+		}
+		default:
+			classSubmodule.setType(TYPE_CLASS);
+			break;
+		}
+
+		// set the class name
+		classSubmodule.setName(type.getName());
+
+		// set the id
+		classSubmodule.setId(_identifierMap.getClassId(typeModule,
+				type.getFullyQualifiedName()));
+
+		// add the submodule
+		parent.getSubmodule().add(classSubmodule);
 	}
 
 	/**
@@ -242,29 +375,63 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	 * @param typeModule
 	 * @return
 	 */
-	private Map<String, List<String>> extractPackageList(IModule typeModule) {
+	private Map<String, List<IType>> extractTypePackageList(IModule typeModule) {
 
 		// create the package list
-		Map<String, List<String>> packageList = new HashMap<String, List<String>>();
+		GenericCache<String, List<IType>> packageCache = new GenericCache<String, List<IType>>() {
+			@Override
+			protected List<IType> create(String key) {
+				return new LinkedList<IType>();
+			}
+		};
 
 		// get the contained types
-		for (String fullyQualifiedType : typeModule.getContainedTypeNames()) {
+		for (IType type : typeModule.getContainedTypes()) {
 
 			// get the package
-			String packageName = Structure101ExporterUtils
-					.getPackageName(fullyQualifiedType);
-
-			// create the package list
-			if (!packageList.containsKey(packageName)) {
-				packageList.put(packageName, new LinkedList<String>());
-			}
-
-			// add to package
-			packageList.get(packageName).add(fullyQualifiedType);
+			packageCache.getOrCreate(type.getPackageName()).add(type);
 		}
 
 		// return the package list
-		return packageList;
+		return packageCache.getMap();
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param resourceModule
+	 * @param contentType
+	 * @return
+	 */
+	private Map<String, List<IResource>> extractResourcePackageList(
+			IResourceModule resourceModule, ContentType contentType) {
+
+		// create the package list
+		GenericCache<String, List<IResource>> packageCache = new GenericCache<String, List<IResource>>() {
+			@Override
+			protected List<IResource> create(String key) {
+				return new LinkedList<IResource>();
+			}
+		};
+
+		//
+		if (contentType.equals(ContentType.SOURCE)
+				&& resourceModule.getResources(ContentType.SOURCE).isEmpty()) {
+
+			//
+			contentType = ContentType.BINARY;
+		}
+
+		// get the contained types
+		for (IResource resource : resourceModule.getResources(contentType)) {
+
+			// get the package
+			packageCache.getOrCreate(resource.getPackageName()).add(resource);
+		}
+
+		// return the package list
+		return packageCache.getMap();
 	}
 
 	/**

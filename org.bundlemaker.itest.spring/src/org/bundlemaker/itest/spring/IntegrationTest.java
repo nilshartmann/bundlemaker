@@ -3,7 +3,6 @@ package org.bundlemaker.itest.spring;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -146,9 +145,9 @@ public class IntegrationTest {
 
 		// // export to simple report
 		// exportToSimpleReport(bundleMakerProject, modularizedSystem);
-		//
-		// // export to structure 101
-		// exportToStructure101(bundleMakerProject, modularizedSystem);
+
+		// export to structure 101
+		exportToStructure101(bundleMakerProject, modularizedSystem);
 
 		// // export to binary bundle
 		// exportToBinaryBundle(bundleMakerProject, modularizedSystem);

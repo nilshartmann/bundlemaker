@@ -36,7 +36,7 @@ public abstract class GenericCache<K, V> {
 	public void clear() {
 		_cacheMap.clear();
 	}
-	
+
 	public boolean isEmpty() {
 		return _cacheMap.isEmpty();
 	}
@@ -49,10 +49,14 @@ public abstract class GenericCache<K, V> {
 		return _cacheMap.get(key);
 	}
 
+	public Map<K, V> getMap() {
+		return _cacheMap;
+	}
+
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @return
 	 */
 	public Collection<V> values() {
@@ -70,7 +74,7 @@ public abstract class GenericCache<K, V> {
 	 * 
 	 * @throws AmbiguousDependencyException
 	 */
-	public final V getOrCreate(K key) throws Exception {
+	public final V getOrCreate(K key) {
 
 		//
 		Assert.isNotNull(key);
@@ -95,5 +99,5 @@ public abstract class GenericCache<K, V> {
 	 * @param key
 	 * @return
 	 */
-	protected abstract V create(K key) throws Exception;
+	protected abstract V create(K key) ;
 }

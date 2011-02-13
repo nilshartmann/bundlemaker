@@ -43,7 +43,7 @@ public abstract class AbstractCachingModularizedSystem extends
 		// create type name to type cache
 		_typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
 			@Override
-			protected Set<IType> create(String key) throws Exception {
+			protected Set<IType> create(String key) {
 				return new HashSet<IType>();
 			}
 		};
@@ -51,7 +51,7 @@ public abstract class AbstractCachingModularizedSystem extends
 		//
 		_typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
 			@Override
-			protected Set<IType> create(String key) throws Exception {
+			protected Set<IType> create(String key) {
 				return new HashSet<IType>();
 			}
 		};

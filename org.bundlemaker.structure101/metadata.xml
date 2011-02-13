@@ -1,25 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flavor name="org.bundlemaker.structure101" version="0.9" availability="public">
-   <provider name="Gerd Wuetherich" url="http://www.wuetherich.com" email="gerd@wuetherich.com" />
-   <item-types>
+	<provider name="Gerd Wuetherich" url="http://www.wuetherich.com" email="gerd@wuetherich.com"/>
+	<item-types>
 		<module-types sep="/">
-		   <module-type name="osgibundle"/>
-		</module-types>  
+			<module-type name="osgibundle"/>
+		</module-types>
 		<nested-types>
-			<nested-type name="package" />
+			<nested-type name="package"/>
 		</nested-types>
 		<nested-types>
-			<nested-type name="class" />
-		</nested-types> 		
+			<nested-type name="genericfile"/>
+		</nested-types>
+		<nested-types>
+			<nested-type name="javaclassfile"/>
+		</nested-types>
+		<nested-types>
+			<nested-type name="classfile"/>
+		</nested-types>
+		<nested-types>
+			<nested-type name="class"/>
+		</nested-types>
+		<nested-types>
+			<nested-type name="interface"/>
+		</nested-types>
+		<nested-types>
+			<nested-type name="enum"/>
+		</nested-types>
+		<nested-types>
+			<nested-type name="annotation"/>
+		</nested-types>
 		<virtual-types>
-		   <virtual-type nature="root" />   
-		   <virtual-type nature="folder" name="classification" />   
-		   <virtual-type nature="module" name="osgibundle"/>   
-		   <virtual-type nature="bundle" />   
-		</virtual-types> 
-   </item-types>
-   <dependency-types>
-      <dependency-type name="requires" />
-   </dependency-types>
+			<virtual-type nature="root"/>
+			<virtual-type nature="folder" name="classification"/>
+			<virtual-type nature="module" name="osgibundle"/>
+			<virtual-type nature="bundle"/>
+		</virtual-types>
+	</item-types>
+	<dependency-types>
+		<dependency-type name="references"/>
+		<dependency-type name="indirectly ref."/>
+	</dependency-types>
 </flavor>
-

@@ -58,6 +58,19 @@ public class IdentifierMap {
 	 * @param fullyQualifiedType
 	 * @return
 	 */
+	public String getResourceId(IModule typeModule, String resourceName) {
+		return getShortenId(getModuleName(typeModule) + "_"
+				+ resourceName);
+	}
+	
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param typeModule
+	 * @param fullyQualifiedType
+	 * @return
+	 */
 	public String getClassId(IModule typeModule, String fullyQualifiedType) {
 		return getShortenId(getModuleName(typeModule) + "_"
 				+ fullyQualifiedType);
