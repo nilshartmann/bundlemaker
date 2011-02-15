@@ -16,7 +16,6 @@ import org.bundlemaker.core.exporter.structure101.xml.DependenciesType;
 import org.bundlemaker.core.exporter.structure101.xml.DependencyType;
 import org.bundlemaker.core.exporter.structure101.xml.ModuleType;
 import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
-import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -26,6 +25,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.GenericCache;
 import org.bundlemaker.core.util.StopWatch;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -89,6 +89,9 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	private void createEntries(IModule typeModule,
 			IModularizedSystem modularizedSystem) {
 
+		Assert.isNotNull(typeModule);
+		Assert.isNotNull(modularizedSystem);
+
 		// step 1: create and add the ModuleType
 		createModuleWithResources(typeModule, ContentType.SOURCE);
 
@@ -121,45 +124,46 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 				for (IReference reference : type.getReferences()) {
 
-					IModule referencedModule = null;
+					//
+					Set<IModule> referencedModules = modularizedSystem
+							.getContainingModules(reference
+									.getFullyQualifiedName());
 
-					try {
-
-						//
-						referencedModule = modularizedSystem
-								.getContainingModule(reference
-										.getFullyQualifiedName());
-
-					} catch (AmbiguousDependencyException e) {
-
-						//
-						System.out.println("AMBIGIOUS "
-								+ reference.getFullyQualifiedName());
+					if (referencedModules.size() > 1) {
+						System.out.println("~~~~~~~");
+						System.out.println(reference.getFullyQualifiedName());
+						for (IModule iModule : referencedModules) {
+							System.out.println(" - "
+									+ iModule.getModuleIdentifier());
+						}
 						continue;
 					}
 
-					if (referencedModule == null) {
+					if (referencedModules.size() == 0) {
 
 						//
 						System.out.println("MISSING TYPE "
 								+ reference.getFullyQualifiedName());
+						continue;
 
-					} else {
-
-						// from
-						String from = _identifierMap.getClassId(resourceModule,
-								type.getFullyQualifiedName());
-						// to
-						String to = _identifierMap.getClassId(referencedModule,
-								reference.getFullyQualifiedName());
-
-						// dependency
-						TypeToTypeDependency dependency = new TypeToTypeDependency(
-								from, to, reference.isImplements(),
-								reference.isExtends());
-						//
-						dependencies.add(dependency);
 					}
+
+					IModule referencedModule = ((IModule[]) referencedModules
+							.toArray(new IModule[0]))[0];
+
+					// from
+					String from = _identifierMap.getClassId(resourceModule,
+							type.getFullyQualifiedName());
+					// to
+					String to = _identifierMap.getClassId(referencedModule,
+							reference.getFullyQualifiedName());
+
+					// dependency
+					TypeToTypeDependency dependency = new TypeToTypeDependency(
+							from, to, reference.isImplements(),
+							reference.isExtends());
+					//
+					dependencies.add(dependency);
 				}
 			}
 

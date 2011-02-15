@@ -83,7 +83,7 @@ public class JdkModuleCreator {
 					Type type = new Type(typeName, TypeEnum.CLASS);
 					type.setTypeModule(virtualModule);
 
-					virtualModule.getSelfContainer()
+					virtualModule.getModifiableSelfResourceContainer()
 							.getModifiableContainedTypesMap()
 							.put(typeName, type);
 					// }

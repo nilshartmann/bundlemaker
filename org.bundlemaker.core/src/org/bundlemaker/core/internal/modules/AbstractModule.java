@@ -210,7 +210,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 * 
 	 * @return
 	 */
-	public T getSelfContainer() {
+	public T getModifiableSelfResourceContainer() {
 		return _selfContainer;
 	}
 
@@ -243,7 +243,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	protected void doWithAllContainers(ContainerClosure<T> closure) {
 
 		// do with the 'self' container
-		if (closure.doWithContainer(getSelfContainer())) {
+		if (closure.doWithContainer(getModifiableSelfResourceContainer())) {
 			return;
 		}
 

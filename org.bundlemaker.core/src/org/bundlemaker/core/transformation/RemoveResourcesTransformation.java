@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.bundlemaker.core.internal.modules.ModularizedSystem;
 import org.bundlemaker.core.internal.modules.ResourceModule;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.resourceset.ResourceSet;
@@ -32,13 +35,13 @@ public class RemoveResourcesTransformation implements ITransformation {
 	}
 
 	@Override
-	public void apply(ModularizedSystem modularizedSystem) {
+	public void apply(IModifiableModularizedSystem modularizedSystem) {
 
 		//
 		for (ResourceSet resourceSet : _resourcesToRemove) {
 
 			//
-			ResourceModule resourceModule = modularizedSystem
+			IModifiableResourceModule resourceModule = modularizedSystem
 					.getModifiableResourceModule(resourceSet
 							.getModuleIdentifier());
 

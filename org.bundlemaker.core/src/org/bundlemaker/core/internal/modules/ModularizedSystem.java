@@ -8,11 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.algorithm.ResourceIsReferencedTransitiveClosure;
-import org.bundlemaker.core.internal.modules.algorithm.TypeIsReferencedTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.ResourceReferencesTransitiveClosure;
+import org.bundlemaker.core.internal.modules.algorithm.TypeIsReferencedTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.TypeReferencesTransitiveClosure;
 import org.bundlemaker.core.modules.AmbiguousDependencyException;
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -30,8 +29,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModularizedSystem extends AbstractCachingModularizedSystem
-		implements IModularizedSystem {
+public class ModularizedSystem extends AbstractCachingModularizedSystem {
 
 	/**
 	 * <p>
@@ -89,8 +87,8 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName,
-			IQueryFilter<IType> filter) {
+	public Collection<IType> getTypeIsReferencedTransitiveClosure(
+			String typeName, IQueryFilter<IType> filter) {
 
 		TypeIsReferencedTransitiveClosure closure = new TypeIsReferencedTransitiveClosure(
 				this);
@@ -252,7 +250,7 @@ public class ModularizedSystem extends AbstractCachingModularizedSystem
 		Set<String> result = new HashSet<String>();
 
 		// iterate over the referenced types
-		for (String referencedType : module.getReferencedTypes(
+		for (String referencedType : module.getReferencedTypeNames(
 				hideContainedTypes, includeSourceReferences, false)) {
 
 			// get the module list

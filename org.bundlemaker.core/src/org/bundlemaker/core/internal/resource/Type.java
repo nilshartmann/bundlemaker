@@ -169,7 +169,8 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IResource getSourceResource() {
-		return _sourceResource != null ? _sourceResource.getResourceStandin() : null;
+		return _sourceResource != null ? _sourceResource.getResourceStandin()
+				: null;
 	}
 
 	/**
@@ -177,7 +178,8 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IResource getBinaryResource() {
-		return _binaryResource != null ? _binaryResource.getResourceStandin() : null;
+		return _binaryResource != null ? _binaryResource.getResourceStandin()
+				: null;
 	}
 
 	/**
@@ -201,6 +203,10 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IModule getModule() {
+		if (_typeModule == null && _binaryResource == null) {
+			System.out.println("hae");
+		}
+
 		return _typeModule != null ? _typeModule : _binaryResource
 				.getResourceModule();
 	}
@@ -254,6 +260,12 @@ public class Type implements IType, IModifiableType {
 	 */
 	public Set<Reference> getModifiableReferences() {
 		return references();
+	}
+
+	@Override
+	public String toString() {
+		return "Type [_fullyQualifiedName=" + _fullyQualifiedName
+				+ ", _typeEnum=" + _typeEnum + "]";
 	}
 
 	/**

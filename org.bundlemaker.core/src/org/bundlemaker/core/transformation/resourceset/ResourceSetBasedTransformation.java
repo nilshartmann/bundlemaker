@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.internal.modules.ModularizedSystem;
-import org.bundlemaker.core.internal.modules.ResourceModule;
-import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -32,7 +32,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void apply(ModularizedSystem modularizedSystem) {
+	public void apply(IModifiableModularizedSystem modularizedSystem) {
 
 		System.out.println("ResourceSetBasedTransformation start");
 
@@ -47,7 +47,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 			System.out.println("Creating module '"
 					+ targetModuleIdentifier.toString() + "'...");
 
-			ResourceModule targetResourceModule = modularizedSystem
+			IModifiableResourceModule targetResourceModule = modularizedSystem
 					.getModifiableResourceModule(targetModuleIdentifier);
 
 			// create a new one if necessary
@@ -72,15 +72,14 @@ public class ResourceSetBasedTransformation implements ITransformation {
 			//
 			for (ResourceSet resourceSet : moduleDefinition.getResourceSets()) {
 
-				ResourceModule originResourceModule = modularizedSystem
+				IModifiableResourceModule originResourceModule = modularizedSystem
 						.getModifiableResourceModule(resourceSet
 								.getModuleIdentifier());
 
 				// origin resource module does not exist
 				if (originResourceModule == null) {
 
-					for (IModule typeModule : modularizedSystem
-							.getAllModules()) {
+					for (IModule typeModule : modularizedSystem.getAllModules()) {
 
 						System.out.println(" - "
 								+ typeModule.getModuleIdentifier().toString());
@@ -163,13 +162,13 @@ public class ResourceSetBasedTransformation implements ITransformation {
 	 * @param targetResourceModule
 	 * @param resourceSet
 	 */
-	private void processResources(ResourceModule originResourceModule,
-			ResourceModule targetResourceModule, ResourceSet resourceSet) {
+	private void processResources(IModifiableResourceModule originResourceModule,
+			IModifiableResourceModule targetResourceModule, ResourceSet resourceSet) {
 
 		List<IResource> resourceStandinsToMove = resourceSet
 				.getMatchingResources(originResourceModule, ContentType.BINARY);
 
-		TransformationUtils.addAll(targetResourceModule.getSelfContainer()
+		TransformationUtils.addAll(targetResourceModule.getModifiableSelfResourceContainer()
 				.getModifiableResourcesSet(ContentType.BINARY),
 				resourceStandinsToMove);
 
@@ -179,7 +178,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 		resourceStandinsToMove = resourceSet.getMatchingResources(
 				originResourceModule, ContentType.SOURCE);
 
-		TransformationUtils.addAll(targetResourceModule.getSelfContainer()
+		TransformationUtils.addAll(targetResourceModule.getModifiableSelfResourceContainer()
 				.getModifiableResourcesSet(ContentType.SOURCE),
 				resourceStandinsToMove);
 

@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.Assert;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ResourceContainer extends TypeContainer implements
-		IResourceContainer {
+		IModifiableResourceContainer {
 
 	/** the binary resources */
 	private Set<IResource> _binaryResources;
@@ -79,15 +79,15 @@ public class ResourceContainer extends TypeContainer implements
 	public Set<IResource> getResources(ContentType contentType) {
 
 		//
-		return Collections
-				.unmodifiableSet(getModifiableResourcesSet(contentType));
+		Set<? extends IResource> result = getModifiableResourcesSet(contentType);
+		return Collections.unmodifiableSet(result);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getReferencedTypes(boolean hideContainedTypes,
+	public Set<String> getReferencedTypeNames(boolean hideContainedTypes,
 			boolean includeSourceReferences, boolean includeIndirectReferences) {
 
 		// return result
@@ -103,11 +103,11 @@ public class ResourceContainer extends TypeContainer implements
 		Set<IReference> result = new HashSet<IReference>();
 
 		//
-		getIReferences(_binaryResources, hideContainedTypes, result);
+		getReferences(_binaryResources, hideContainedTypes, result);
 
 		//
 		if (includeSourceReferences) {
-			getIReferences(_sourceResources, hideContainedTypes, result);
+			getReferences(_sourceResources, hideContainedTypes, result);
 		}
 
 		// return result
@@ -181,6 +181,7 @@ public class ResourceContainer extends TypeContainer implements
 	 * @param contentType
 	 * @return
 	 */
+	@Override
 	public Set<IResource> getModifiableResourcesSet(ContentType contentType) {
 
 		Assert.isNotNull(contentType);
@@ -230,7 +231,7 @@ public class ResourceContainer extends TypeContainer implements
 	 * @param containedTypes
 	 * @param result
 	 */
-	private void getReferences(Set<IResource> resources,
+	private void getReferences(Set<? extends IResource> resources,
 			boolean hideContainedTypes, Set<String> result,
 			boolean collectPackages) {
 
@@ -243,15 +244,15 @@ public class ResourceContainer extends TypeContainer implements
 				addReference(reference, hideContainedTypes, collectPackages,
 						result);
 			}
-			
+
 			//
 			for (IType type : resource.getContainedTypes()) {
-				
-				//
-				for (IReference reference :  type.getReferences()) {
 
-					addReference(reference, hideContainedTypes, collectPackages,
-							result);
+				//
+				for (IReference reference : type.getReferences()) {
+
+					addReference(reference, hideContainedTypes,
+							collectPackages, result);
 				}
 			}
 		}
@@ -259,7 +260,7 @@ public class ResourceContainer extends TypeContainer implements
 
 	private void addReference(IReference reference, boolean hideContainedTypes,
 			boolean collectPackages, Set<String> result) {
-		
+
 		if (!hideContainedTypes
 				|| !getContainedTypeNames().contains(
 						reference.getFullyQualifiedName())) {
@@ -268,11 +269,8 @@ public class ResourceContainer extends TypeContainer implements
 			if (collectPackages) {
 
 				if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-					entry = reference.getFullyQualifiedName()
-							.substring(
-									0,
-									reference.getFullyQualifiedName()
-											.lastIndexOf('.'));
+					entry = reference.getFullyQualifiedName().substring(0,
+							reference.getFullyQualifiedName().lastIndexOf('.'));
 				} else {
 					entry = "";
 				}
@@ -296,7 +294,7 @@ public class ResourceContainer extends TypeContainer implements
 	 * @param hideContainedTypes
 	 * @param result
 	 */
-	private void getIReferences(Set<IResource> resources,
+	private void getReferences(Set<? extends IResource> resources,
 			boolean hideContainedTypes, Set<IReference> result) {
 
 		// iterate over all resources

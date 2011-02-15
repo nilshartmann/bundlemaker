@@ -2,6 +2,7 @@ package org.bundlemaker.core.exporter.bundle;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -9,10 +10,13 @@ import java.util.jar.Manifest;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ManifestUtils;
+import org.bundlemaker.core.exporter.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
@@ -24,7 +28,6 @@ import com.springsource.util.osgi.manifest.BundleSymbolicName;
 import com.springsource.util.osgi.manifest.ExportPackage;
 import com.springsource.util.osgi.manifest.ExportedPackage;
 import com.springsource.util.osgi.manifest.ImportPackage;
-import com.springsource.util.osgi.manifest.ImportedPackage;
 import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
 import com.springsource.util.parser.manifest.ManifestContents;
@@ -38,14 +41,10 @@ import com.springsource.util.parser.manifest.ManifestContents;
 public class BundleManifestCreator {
 
 	/** - */
-	private List<HeaderDeclaration> EMPTY_HEADERDECLARATION_LIST = Collections
-			.emptyList();
-
-	/** - */
 	private IResourceModule _resourceModule;
 
 	/** - */
-	private BundleManifest _bundleManifest;
+	private BundleManifest _newBundleManifest;
 
 	/** - */
 	private ManifestContents _manifestTemplate;
@@ -92,48 +91,77 @@ public class BundleManifestCreator {
 	 */
 	public ManifestContents createManifest() throws Exception {
 
-		//
-		_bundleManifest = BundleManifestFactory.createBundleManifest();
+		// the existing bundle manifest resource
+		IResource existingManifestResource = _resourceModule.getResource(
+				"META-INF/MANIFEST.MF", ContentType.BINARY);
 
-		//
+		// the existing bundle manifest
+		ManifestContents existingManifest = ManifestUtils
+				.readManifestContents(existingManifestResource);
+
+		// return immediately if manifest already is a bundle manifest
+		if (isBundleManifest(existingManifest)
+				&& !ModuleExporterUtils.requiresRepackaging(_resourceModule,
+						ContentType.BINARY)) {
+
+			// return the existing manifest
+			return existingManifest;
+		}
+
+		// create a new bundle manifest
+		_newBundleManifest = BundleManifestFactory.createBundleManifest();
+
+		// set the header
 		createBundleManifestVersion();
 		createBundleSymbolicName();
 		createBundleVersion();
-		createImportPackage();
+		createImportPackageAndRequiredBundle();
 		createExportPackage();
 
-		// get the result
-		ManifestContents manifestContents = ManifestUtils
-				.toManifestContents(_bundleManifest);
+		// get the new manifest contents
+		ManifestContents newManifestContents = ManifestUtils
+				.toManifestContents(_newBundleManifest);
 
 		// copy the original headers
-		if (_resourceModule.containsResource("META-INF/MANIFEST.MF",
-				ContentType.BINARY)) {
+		List<String> headersToIgnore = Arrays.asList(new String[] {
+				Constants.BUNDLE_MANIFESTVERSION,
+				Constants.BUNDLE_SYMBOLICNAME, Constants.BUNDLE_VERSION,
+				Constants.IMPORT_PACKAGE, Constants.EXPORT_PACKAGE });
 
-			List<String> headersToIgnore = Arrays.asList(new String[] {
-					Constants.BUNDLE_MANIFESTVERSION,
-					Constants.BUNDLE_SYMBOLICNAME, Constants.BUNDLE_VERSION,
-					Constants.IMPORT_PACKAGE, Constants.EXPORT_PACKAGE });
+		// iterate over the exiting main attributes
+		for (Entry<String, String> entry : existingManifest.getMainAttributes()
+				.entrySet()) {
 
-			IResource resource = _resourceModule.getResource(
-					"META-INF/MANIFEST.MF", ContentType.BINARY);
+			// copy if not ignored
+			if (!headersToIgnore.contains(entry.getKey())) {
 
-			Manifest manifest = new Manifest(resource.getInputStream());
-
-			for (Entry<Object, Object> entry : manifest.getMainAttributes()
-					.entrySet()) {
-
-				if (!headersToIgnore.contains(entry.getKey())) {
-					manifestContents.getMainAttributes().put(
-							entry.getKey().toString(),
-							manifest.getMainAttributes().getValue(
-									entry.getKey().toString()));
-				}
+				//
+				newManifestContents.getMainAttributes().put(
+						entry.getKey().toString(),
+						existingManifest.getMainAttributes().get(
+								entry.getKey().toString()));
 			}
 		}
 
+		//
+		System.out.println(newManifestContents.getMainAttributes());
+
 		// return the result
-		return manifestContents;
+		return newManifestContents;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param existingManifest
+	 * @return
+	 */
+	protected boolean isBundleManifest(ManifestContents existingManifest) {
+
+		//
+		return existingManifest.getMainAttributes().containsKey(
+				Constants.BUNDLE_SYMBOLICNAME);
 	}
 
 	/**
@@ -143,7 +171,7 @@ public class BundleManifestCreator {
 	protected void createBundleManifestVersion() {
 
 		// set the bundle manifest version to '2'
-		_bundleManifest.setBundleManifestVersion(2);
+		_newBundleManifest.setBundleManifestVersion(2);
 	}
 
 	/**
@@ -153,7 +181,7 @@ public class BundleManifestCreator {
 	protected void createBundleSymbolicName() {
 
 		// get the BundleSymbolicName 'header'
-		BundleSymbolicName bundleSymbolicName = _bundleManifest
+		BundleSymbolicName bundleSymbolicName = _newBundleManifest
 				.getBundleSymbolicName();
 
 		// set the symbolic name
@@ -182,63 +210,26 @@ public class BundleManifestCreator {
 		}
 
 		// get the BundleSymbolicName 'header'
-		_bundleManifest.setBundleVersion(version);
+		_newBundleManifest.setBundleVersion(version);
 	}
 
 	/**
 	 * <p>
 	 * </p>
 	 */
-	protected void createImportPackage() {
+	protected void createImportPackageAndRequiredBundle() {
 
-		// get the import package 'header'
-		ImportPackage importPackage = _bundleManifest.getImportPackage();
+		ImportResolver importResolver = new ImportResolver(_modularizedSystem,
+				_resourceModule, _newBundleManifest.getImportPackage(),
+				_newBundleManifest.getRequireBundle(), _manifestTemplate);
 
-		// get the import package template
-		String importPackageTemplateHeader = _manifestTemplate
-				.getMainAttributes().get(TemplateConstants.IMPORT_TEMPLATE);
-
-		// parse the declarations
-		List<HeaderDeclaration> importPackageTemplates = importPackageTemplateHeader != null ? HeaderParserFactory
-				.newHeaderParser(new SimpleParserLogger()).parsePackageHeader(
-						importPackageTemplateHeader, Constants.IMPORT_PACKAGE)
-				: EMPTY_HEADERDECLARATION_LIST;
-
-		// get all referenced package names
-		// TODO: indirectly
-		Set<String> packageNames = _resourceModule.getReferencedPackageNames(
-				true, false, false);
-
-		//
-		for (String packageName : packageNames) {
-
-			// create the 'ImportedPackage' instance
-			ImportedPackage importedPackage = importPackage
-					.addImportedPackage(packageName);
-
-			// get the template
-			HeaderDeclaration importPackageTemplate = ManifestUtils
-					.findMostSpecificDeclaration(importPackageTemplates,
-							packageName);
-
-			// assign the template values
-			if (importPackageTemplate != null) {
-
-				// add the attributes
-				importedPackage.getAttributes().putAll(
-						importPackageTemplate.getAttributes());
-
-				// add the directives
-				importedPackage.getDirectives().putAll(
-						importPackageTemplate.getDirectives());
-			}
-		}
+		importResolver.addImportPackageAndRequiredBundle();
 	}
 
 	protected void createExportPackage() {
 
 		// get the export package 'header'
-		ExportPackage exportPackage = _bundleManifest.getExportPackage();
+		ExportPackage exportPackage = _newBundleManifest.getExportPackage();
 
 		// // get the import package template
 		// String importPackageTemplateHeader = _currentManifestTemplate

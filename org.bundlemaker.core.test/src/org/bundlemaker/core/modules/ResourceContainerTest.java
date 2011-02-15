@@ -23,7 +23,7 @@ public class ResourceContainerTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetReferencedTypes() {
-		new ResourceContainer().getReferencedTypes(false, false, false).add("");
+		new ResourceContainer().getReferencedTypeNames(false, false, false).add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

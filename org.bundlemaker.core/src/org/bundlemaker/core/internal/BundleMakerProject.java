@@ -281,7 +281,8 @@ public class BundleMakerProject implements IBundleMakerProject {
 		// TODO
 		for (FileBasedContent fileBasedContent : fileBasedContents) {
 
-			// Map<String, ResourceStandin> typeToResourceStandin = new HashMap<String, ResourceStandin>();
+			// Map<String, ResourceStandin> typeToResourceStandin = new
+			// HashMap<String, ResourceStandin>();
 
 			if (fileBasedContent.isResourceContent()) {
 
@@ -292,10 +293,11 @@ public class BundleMakerProject implements IBundleMakerProject {
 					Assert.isNotNull(resourceStandin.getResource());
 					for (IType type : resourceStandin.getContainedTypes()) {
 
-						if (type.getBinaryResource() == null) {
-							System.out.println("No binary resource for "
-									+ type.getFullyQualifiedName());
-						}
+						// ALWAYS assert a binary resource
+						Assert.isNotNull(
+								type.getBinaryResource(),
+								"No binary resource for type "
+										+ type.getFullyQualifiedName());
 					}
 				}
 
@@ -304,6 +306,14 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 					setupResourceStandin(resourceStandin, map, true);
 					Assert.isNotNull(resourceStandin.getResource());
+					for (IType type : resourceStandin.getContainedTypes()) {
+
+						
+						if (type.getBinaryResource() == null) {
+							System.out.println(	"No binary resource for type "
+										+ type.getFullyQualifiedName());
+						}
+					}
 				}
 			}
 		}

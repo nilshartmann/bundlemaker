@@ -169,7 +169,7 @@ public class BundlorBasedManifestCreator {
 			partialManifest.recordExportPackage(containedPackage);
 		}
 		// TODO: indirectly
-		for (String referencedType : _resourceModule.getReferencedTypes(true,
+		for (String referencedType : _resourceModule.getReferencedTypeNames(true,
 				includeSourceReferences, false)) {
 			partialManifest.recordReferencedType(referencedType);
 		}

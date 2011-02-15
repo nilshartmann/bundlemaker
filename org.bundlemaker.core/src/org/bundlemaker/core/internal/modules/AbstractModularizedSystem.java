@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
@@ -23,7 +24,8 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractModularizedSystem implements IModularizedSystem {
+public abstract class AbstractModularizedSystem implements
+		IModifiableModularizedSystem {
 
 	/** the name of working copy */
 	private String _name;
@@ -35,7 +37,7 @@ public abstract class AbstractModularizedSystem implements IModularizedSystem {
 	private List<ITransformation> _transformations;
 
 	/** the defined resource modules */
-	private Map<IModuleIdentifier, ResourceModule> _resourceModules;
+	private Map<IModuleIdentifier, IModifiableResourceModule> _resourceModules;
 
 	/** the defined type modules */
 	private Map<IModuleIdentifier, TypeModule> _nonResourceModules;
@@ -62,7 +64,7 @@ public abstract class AbstractModularizedSystem implements IModularizedSystem {
 		_projectDescription = projectDescription;
 
 		_transformations = new LinkedList<ITransformation>();
-		_resourceModules = new HashMap<IModuleIdentifier, ResourceModule>();
+		_resourceModules = new HashMap<IModuleIdentifier, IModifiableResourceModule>();
 		_nonResourceModules = new HashMap<IModuleIdentifier, TypeModule>();
 	}
 
@@ -168,7 +170,7 @@ public abstract class AbstractModularizedSystem implements IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	public final Map<IModuleIdentifier, ResourceModule> getModifiableResourceModules() {
+	public final Map<IModuleIdentifier, IModifiableResourceModule> getModifiableResourceModulesMap() {
 		return _resourceModules;
 	}
 
@@ -179,7 +181,7 @@ public abstract class AbstractModularizedSystem implements IModularizedSystem {
 	 * @param identifier
 	 * @return
 	 */
-	public final ResourceModule getModifiableResourceModule(
+	public final IModifiableResourceModule getModifiableResourceModule(
 			IModuleIdentifier identifier) {
 
 		Assert.isNotNull(identifier);
@@ -194,7 +196,7 @@ public abstract class AbstractModularizedSystem implements IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	protected final Map<IModuleIdentifier, TypeModule> getModifiableNonResourceModules() {
+	protected final Map<IModuleIdentifier, TypeModule> getModifiableNonResourceModulesMap() {
 		return _nonResourceModules;
 	}
 

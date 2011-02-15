@@ -51,7 +51,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param includeSourceReferences
 	 * @return
 	 */
-	Set<String> getReferencedTypes(boolean hideContainedTypes,
+	Set<String> getReferencedTypeNames(boolean hideContainedTypes,
 			boolean includeSourceReferences, boolean includeIndirectReferences);
 
 	/**

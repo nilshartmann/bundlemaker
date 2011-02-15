@@ -14,6 +14,8 @@ import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -54,8 +56,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 	public final void applyTransformations() {
 
 		// step 1: clear prior results
-		getModifiableResourceModules().clear();
-		getModifiableNonResourceModules().clear();
+		getModifiableResourceModulesMap().clear();
+		getModifiableNonResourceModulesMap().clear();
 
 		preApplyTransformations();
 
@@ -65,7 +67,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 		try {
 
 			TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
-			getModifiableNonResourceModules().put(
+			getModifiableNonResourceModulesMap().put(
 					jdkModule.getModuleIdentifier(), jdkModule);
 			setExecutionEnvironment(jdkModule);
 
@@ -92,7 +94,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 						new File[] { fileBasedContent.getBinaryPaths().toArray(
 								new IPath[0])[0].toFile() });
 
-				getModifiableNonResourceModules().put(
+				getModifiableNonResourceModulesMap().put(
 						typeModule.getModuleIdentifier(), typeModule);
 
 			}
@@ -110,14 +112,14 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 		for (ITransformation transformation : getTransformations()) {
 
 			// step 4.1: apply transformation
-			transformation.apply((ModularizedSystem) this);
+			transformation.apply((IModifiableModularizedSystem) this);
 
 			// step 4.2: clean up empty modules
-			for (Iterator<Entry<IModuleIdentifier, ResourceModule>> iterator = getModifiableResourceModules()
+			for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()
 					.entrySet().iterator(); iterator.hasNext();) {
 
 				// get next module
-				Entry<IModuleIdentifier, ResourceModule> module = iterator
+				Entry<IModuleIdentifier, IModifiableResourceModule> module = iterator
 						.next();
 
 				// if the module is empty - remove it
@@ -132,14 +134,23 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 			}
 
 			// step 4.3: initialize
-			for (ResourceModule module : getModifiableResourceModules()
+			for (IModifiableResourceModule module : getModifiableResourceModulesMap()
 					.values()) {
-				module.initializeContainedTypes();
+
+				((ResourceModule) module).initializeContainedTypes();
 			}
 		}
 
-		System.out.println("// done");
+		// CHECK: check for duplicate entries
+		for (IModifiableResourceModule module : getModifiableResourceModulesMap()
+				.values()) {
 
+			((ResourceModule) module).check();
+		}
+
+		postApplyTransformations();
+
+		System.out.println("// done");
 	}
 
 	/**
@@ -170,7 +181,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 		//
 	}
 
-	public ResourceModule createResourceModule(
+	@Override
+	public IModifiableResourceModule createResourceModule(
 			IModuleIdentifier createModuleIdentifier) {
 
 		//
@@ -178,7 +190,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 				createModuleIdentifier);
 
 		//
-		getModifiableResourceModules().put(
+		getModifiableResourceModulesMap().put(
 				resourceModule.getModuleIdentifier(), resourceModule);
 
 		//
@@ -228,7 +240,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 					Type type2 = new Type(type, TypeEnum.CLASS);
 					type2.setTypeModule(typeModule);
 
-					typeModule.getSelfContainer()
+					typeModule.getModifiableSelfResourceContainer()
 							.getModifiableContainedTypesMap().put(type, type2);
 				}
 

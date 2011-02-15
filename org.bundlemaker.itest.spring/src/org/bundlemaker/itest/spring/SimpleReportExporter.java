@@ -61,7 +61,7 @@ public class SimpleReportExporter extends AbstractExporter {
 
 		builder.append("\n");
 		builder.append("Referenced Types: \n");
-		Set<String> referencedTypes = module.getReferencedTypes(true, true,
+		Set<String> referencedTypes = module.getReferencedTypeNames(true, true,
 				false);
 		for (String referencedType : asSortedList(referencedTypes)) {
 			builder.append(referencedType + "\n");

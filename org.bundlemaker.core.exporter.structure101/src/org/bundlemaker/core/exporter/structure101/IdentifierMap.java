@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.modules.IModule;
+import org.eclipse.core.runtime.Assert;
 
 public class IdentifierMap {
 
@@ -72,6 +73,10 @@ public class IdentifierMap {
 	 * @return
 	 */
 	public String getClassId(IModule typeModule, String fullyQualifiedType) {
+		
+		Assert.isNotNull(typeModule);
+		Assert.isNotNull(fullyQualifiedType);
+		
 		return getShortenId(getModuleName(typeModule) + "_"
 				+ fullyQualifiedType);
 	}

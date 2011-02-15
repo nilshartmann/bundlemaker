@@ -1,6 +1,7 @@
 package org.bundlemaker.core.internal.modules;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -8,7 +9,7 @@ import java.util.Set;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -21,7 +22,7 @@ import org.bundlemaker.core.resource.IResource;
  */
 public class ResourceModule extends
 		AbstractModule<IResourceContainer, ResourceContainer> implements
-		IResourceModule, IModule {
+		IModifiableResourceModule {
 
 	/**
 	 * <p>
@@ -93,7 +94,7 @@ public class ResourceModule extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Set<String> getReferencedTypes(final boolean hideContainedTypes,
+	public Set<String> getReferencedTypeNames(final boolean hideContainedTypes,
 			final boolean includeSourceReferences,
 			final boolean includeIndirectReferences) {
 
@@ -104,7 +105,7 @@ public class ResourceModule extends
 		doWithAllContainers(new ContainerClosure<ResourceContainer>() {
 			@Override
 			public boolean doWithContainer(ResourceContainer resourceContainer) {
-				result.addAll(resourceContainer.getReferencedTypes(
+				result.addAll(resourceContainer.getReferencedTypeNames(
 						hideContainedTypes, includeSourceReferences,
 						includeIndirectReferences));
 				return false;
@@ -170,7 +171,7 @@ public class ResourceModule extends
 	 */
 	@Override
 	public IResourceContainer getSelfResourceContainer() {
-		return getSelfContainer();
+		return getModifiableSelfResourceContainer();
 	}
 
 	/**
@@ -209,5 +210,56 @@ public class ResourceModule extends
 				return false;
 			}
 		});
+	}
+
+	// TODO
+	public void check() {
+
+		//
+		Map<String, IResource> entries = new HashMap<String, IResource>();
+
+		//
+		for (IResource resource : getResources(ContentType.SOURCE)) {
+
+			if (entries.containsKey(resource.getPath())) {
+
+				//
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ entries.get(resource.getPath()).getRoot() + " : "
+						+ entries.get(resource.getPath()).getPath());
+
+				//
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ resource.getRoot() + " : " + resource.getPath());
+			} else {
+
+				//
+				entries.put(resource.getPath(), resource);
+			}
+		}
+
+		//
+		for (IResource resource : getResources(ContentType.BINARY)) {
+
+			if (entries.containsKey(resource.getPath())) {
+
+				//
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ entries.get(resource.getPath()).getRoot() + " : "
+						+ entries.get(resource.getPath()).getPath());
+
+				//
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ resource.getRoot() + " : " + resource.getPath());
+			} else {
+
+				//
+				entries.put(resource.getPath(), resource);
+			}
+		}
 	}
 }

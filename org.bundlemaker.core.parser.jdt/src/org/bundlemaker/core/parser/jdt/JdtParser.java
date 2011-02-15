@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
@@ -16,12 +15,9 @@ import org.bundlemaker.core.parser.jdt.JavaElementIdentifier.FileType;
 import org.bundlemaker.core.parser.jdt.ast.JdtAstVisitor;
 import org.bundlemaker.core.parser.jdt.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -229,18 +225,14 @@ public class JdtParser implements IParser {
 		for (ICompilationUnit iCompilationUnit : units.keySet()) {
 
 			_parser.setSource(iCompilationUnit);
-
 			_parser.setResolveBindings(true);
 			_parser.setProject(_javaProject);
-
 			CompilationUnit compilationUnit = (CompilationUnit) _parser
 					.createAST(null);
-
 			// analyze
 			analyzeCompilationUnit(iCompilationUnit, compilationUnit,
 					units.get(iCompilationUnit), rootMap, cache,
 					fileBasedContent, problems);
-
 			progressMonitor.worked(1);
 		}
 
@@ -301,17 +293,18 @@ public class JdtParser implements IParser {
 		}
 
 		// step 8: compute the indirectly referenced types
-//		Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer
-//				.getAllReferencedTypes((IFile) iCompilationUnit
-//						.getCorrespondingResource());
-//
-//		for (String type : directlyAndIndirectlyReferencedTypes) {
-//
-//			resource.recordReference(type, new ReferenceAttributes(
-//					ReferenceType.TYPE_REFERENCE, false, false, false, false,
-//					false, false, true));
-//
-//		}
+		// Set<String> directlyAndIndirectlyReferencedTypes =
+		// _indirectlyReferencesAnalyzer
+		// .getAllReferencedTypes((IFile) iCompilationUnit
+		// .getCorrespondingResource());
+		//
+		// for (String type : directlyAndIndirectlyReferencedTypes) {
+		//
+		// resource.recordReference(type, new ReferenceAttributes(
+		// ReferenceType.TYPE_REFERENCE, false, false, false, false,
+		// false, false, true));
+		//
+		// }
 
 		// step 9: add the errors to the error list
 		for (IProblem problem : visitor.getProblems()) {

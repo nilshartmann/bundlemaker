@@ -229,4 +229,10 @@ public class ResourceKey implements IResourceKey {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ResourceKey [_contentId=" + _contentId + ", _root=" + _root
+				+ ", _path=" + _path + "]";
+	}
 }

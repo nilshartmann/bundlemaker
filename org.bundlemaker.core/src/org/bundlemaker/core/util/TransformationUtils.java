@@ -3,8 +3,8 @@ package org.bundlemaker.core.util;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 
@@ -26,8 +26,7 @@ public class TransformationUtils {
 	 * @param toAdd
 	 */
 	// TODO MOVE
-	public static void addAll(Set<IResource> target,
-			List<IResource> toAdd) {
+	public static void addAll(Set<IResource> target, List<IResource> toAdd) {
 
 		for (IResource IResource : toAdd) {
 			if (IResource instanceof ResourceStandin) {
@@ -45,12 +44,13 @@ public class TransformationUtils {
 	 * @param binary
 	 */
 	// TODO MOVE
-	public static void removeAll(ResourceModule resourceModule,
+	public static void removeAll(IModifiableResourceModule resourceModule,
 			List<IResource> resourceStandins, ContentType binary) {
 
-		removeAll(
-				resourceModule.getSelfContainer().getModifiableResourcesSet(
-						binary), resourceStandins);
+		Set<? extends IResource> result = resourceModule.getModifiableSelfResourceContainer()
+				.getModifiableResourcesSet(binary);
+
+		removeAll(result, resourceStandins);
 
 		// TODO!
 		// for (ModifiableResourceContainer resourceContainer : resourceModule
@@ -82,7 +82,7 @@ public class TransformationUtils {
 	// return null;
 	// }
 
-	private static void removeAll(Set<IResource> target,
+	private static void removeAll(Set<? extends IResource> target,
 			List<IResource> toRemove) {
 
 		for (IResource IResource : toRemove) {

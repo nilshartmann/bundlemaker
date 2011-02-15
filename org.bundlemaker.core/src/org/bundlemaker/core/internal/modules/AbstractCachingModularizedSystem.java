@@ -85,7 +85,7 @@ public abstract class AbstractCachingModularizedSystem extends
 	 */
 	@Override
 	protected void initializeModules() throws Exception {
-
+		
 		// step 2: iterate over the file based content
 		for (IFileBasedContent fileBasedContent : getProjectDescription()
 				.getFileBasedContent()) {
@@ -150,4 +150,9 @@ public abstract class AbstractCachingModularizedSystem extends
 		}
 	}
 
+	@Override
+	protected void postApplyTransformations() {
+
+		
+	}
 }
