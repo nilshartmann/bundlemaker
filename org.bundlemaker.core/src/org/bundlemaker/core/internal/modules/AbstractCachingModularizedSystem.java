@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
@@ -19,6 +20,12 @@ import org.bundlemaker.core.util.GenericCache;
  */
 public abstract class AbstractCachingModularizedSystem extends
 		AbstractTransformationAwareModularizedSystem {
+
+	/** - */
+	private Set<IResource> _binaryResources;
+
+	/** - */
+	private Set<IResource> _sourceResources;
 
 	/** type name -> type */
 	private GenericCache<String, Set<IType>> _typeNameToTypeCache;
@@ -55,6 +62,10 @@ public abstract class AbstractCachingModularizedSystem extends
 				return new HashSet<IType>();
 			}
 		};
+
+		//
+		_sourceResources = new HashSet<IResource>();
+		_binaryResources = new HashSet<IResource>();
 	}
 
 	/**
@@ -77,82 +88,59 @@ public abstract class AbstractCachingModularizedSystem extends
 		return _typeNameToReferringCache;
 	}
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @throws Exception
-	 */
 	@Override
-	protected void initializeModules() throws Exception {
-		
-		// step 2: iterate over the file based content
+	protected void preApplyTransformations() {
+		super.preApplyTransformations();
+
+		// cache all IResources
 		for (IFileBasedContent fileBasedContent : getProjectDescription()
 				.getFileBasedContent()) {
 
 			if (fileBasedContent.isResourceContent()) {
 
-				//
-				for (IResource resource : fileBasedContent.getResourceContent()
-						.getBinaryResources()) {
+				_binaryResources.addAll(fileBasedContent.getResourceContent()
+						.getBinaryResources());
 
-					for (IType containedType : resource.getContainedTypes()) {
-
-						if (getTypeNameToTypeCache().getOrCreate(
-								containedType.getFullyQualifiedName()).add(
-								containedType)) {
-
-							for (IReference reference : containedType
-									.getReferences()) {
-
-								getTypeNameToReferringCache().getOrCreate(
-										reference.getFullyQualifiedName()).add(
-										containedType);
-							}
-
-						}
-					}
-
-				}
-
-				//
-				for (IResource resource : fileBasedContent.getResourceContent()
-						.getSourceResources()) {
-
-					for (IType containedType : resource.getContainedTypes()) {
-
-						if (getTypeNameToTypeCache().getOrCreate(
-								containedType.getFullyQualifiedName()).add(
-								containedType)) {
-
-							for (IReference reference : containedType
-									.getReferences()) {
-
-								getTypeNameToReferringCache().getOrCreate(
-										reference.getFullyQualifiedName()).add(
-										containedType);
-							}
-
-						}
-					}
-				}
-
+				_sourceResources.addAll(fileBasedContent.getResourceContent()
+						.getSourceResources());
 			}
 		}
+	}
 
-		// step 2: initialize the type modules
+	/**
+	 * <p>
+	 * </p>
+	 */
+	@Override
+	protected void initializeResourceModules() {
+		super.initializeResourceModules();
+
+		getTypeNameToTypeCache().clear();
+		getTypeNameToReferringCache().clear();
+
+		// step 1: cache the type modules
 		for (IModule module : getNonResourceModules()) {
-
 			for (IType type : module.getContainedTypes()) {
 				getTypeNameToTypeCache().getOrCreate(
 						type.getFullyQualifiedName()).add(type);
 			}
 		}
-	}
 
-	@Override
-	protected void postApplyTransformations() {
+		// step 2: cache the resource modules
+		for (IResourceModule module : getResourceModules()) {
 
-		
+			//
+			for (IType type : module.getContainedTypes()) {
+
+				if (getTypeNameToTypeCache().getOrCreate(
+						type.getFullyQualifiedName()).add(type)) {
+
+					for (IReference reference : type.getReferences()) {
+						getTypeNameToReferringCache().getOrCreate(
+								reference.getFullyQualifiedName()).add(type);
+					}
+				}
+			}
+		}
 	}
 }

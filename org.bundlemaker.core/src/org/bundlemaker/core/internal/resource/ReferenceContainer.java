@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.resource.modifiable.IReferenceRecorder;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -60,12 +61,31 @@ public abstract class ReferenceContainer implements IReferenceRecorder {
 
 		//
 		Assert.isNotNull(fullyQualifiedName);
+		Assert.isNotNull(requestedAttributes);
 
 		//
 		if (fullyQualifiedName.startsWith("java.")) {
 
 			// do nothing
 			return;
+		}
+
+		// if the referenced type is an local or anonymous class,
+		// we redirect the dependency to the outer type
+		if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
+
+			// set the references
+			fullyQualifiedName = JavaTypeUtils
+					.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
+
+			// create new attributes
+			requestedAttributes = new ReferenceAttributes(
+					requestedAttributes.getReferenceType(), false, false,
+					false, requestedAttributes.isCompileTime(),
+					requestedAttributes.isRuntimeTime(),
+					requestedAttributes.isDirectlyReferenced(),
+					requestedAttributes.isIndirectlyReferenced());
+
 		}
 
 		// create the key
@@ -128,8 +148,8 @@ public abstract class ReferenceContainer implements IReferenceRecorder {
 				a1.isClassAnnotation() || a2.isClassAnnotation(),
 				a1.isCompileTime() || a2.isCompileTime(), a1.isRuntimeTime()
 						|| a2.isRuntimeTime(), a1.isDirectlyReferenced()
-						|| a2.isDirectlyReferenced(), a1.isIndirectlyReferenced()
-						|| a2.isIndirectlyReferenced());
+						|| a2.isDirectlyReferenced(),
+				a1.isIndirectlyReferenced() || a2.isIndirectlyReferenced());
 	}
 
 	/**

@@ -18,11 +18,11 @@ public interface IResourceContainer extends ITypeContainer {
 	 * <p>
 	 * </p>
 	 * 
-	 * @param resourceType
-	 * @param conentType
+	 * @param path
+	 * @param contentType
 	 * @return
 	 */
-	boolean containsResource(String resourceType, ContentType conentType);
+	boolean containsResource(String path, ContentType contentType);
 
 	/**
 	 * <p>

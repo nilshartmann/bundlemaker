@@ -19,6 +19,12 @@ public class ReferenceAttributes {
 
 	/** - */
 	private boolean _indirectlyReferenced;
+	
+	/** - */
+	private boolean _isCompileTime;
+
+	/** - */
+	private boolean _isRuntimeTime;
 
 	// /** - */
 	// private boolean _uses;
@@ -32,11 +38,7 @@ public class ReferenceAttributes {
 	/** - */
 	private boolean _classAnnotation;
 
-	/** - */
-	private boolean _isCompileTime;
 
-	/** - */
-	private boolean _isRuntimeTime;
 
 	/**
 	 * <p>

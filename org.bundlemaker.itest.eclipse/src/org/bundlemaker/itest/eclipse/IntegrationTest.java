@@ -9,6 +9,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.ModuleExporterContext;
+import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -102,7 +103,9 @@ public class IntegrationTest {
 
 		//
 		exportToStructure101(bundleMakerProject, modularizedSystem);
-
+		exportToSimpleReport(bundleMakerProject, modularizedSystem);
+		
+		
 		// //
 		// IReferencedModulesQueryResult queryResult = modularizedSystem
 		// .getReferencedModules(modularizedSystem
@@ -144,6 +147,27 @@ public class IntegrationTest {
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}
 
+	
+	private void exportToSimpleReport(IBundleMakerProject bundleMakerProject,
+			IModularizedSystem modularizedSystem) throws Exception {
+
+		//
+		File destination = new File(System.getProperty("user.dir"),
+				"destination");
+		destination.mkdirs();
+
+		// create the exporter context
+		ModuleExporterContext exporterContext = new ModuleExporterContext(
+				bundleMakerProject, destination, modularizedSystem);
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		SimpleReportExporter exporter = new SimpleReportExporter();
+		exporter.export(modularizedSystem, exporterContext);
+		stopWatch.stop();
+		System.out.println("Dauer " + stopWatch.getElapsedTime());
+	}
+	
 	/**
 	 * <p>
 	 * </p>

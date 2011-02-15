@@ -9,6 +9,7 @@ import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.resource.modifiable.IModifiableType;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IType;
@@ -70,6 +71,9 @@ public class JdtAstVisitor extends ASTVisitor {
 	private Stack<IModifiableType> _currentTypes;
 
 	/** - */
+	private Stack<String> _realTypes;
+
+	/** - */
 	private Stack<ITypeBinding> _typeBindings;
 
 	/** */
@@ -93,6 +97,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
 		_typeBindings = new Stack<ITypeBinding>();
 		_currentTypes = new Stack<IModifiableType>();
+		_realTypes = new Stack<String>();
 	}
 
 	/**
@@ -259,10 +264,34 @@ public class JdtAstVisitor extends ASTVisitor {
 			throw new RuntimeException("HAE " + node);
 		}
 
-		IModifiableType type = _javaSourceResource.getOrCreateType(node
-				.resolveBinding().getBinaryName(), typeEnum);
+		//
+		String binaryName = node.resolveBinding().getBinaryName();
 
-		_currentTypes.push(type);
+		// //
+		// IModifiableType realType =
+		// _javaSourceResource.getOrCreateType(binaryName,
+		// typeEnum);
+
+		IModifiableType currentType = null;
+
+		if (JavaTypeUtils.isLocalOrAnonymousTypeName(binaryName)) {
+
+			//
+			String outerType = JavaTypeUtils
+					.getEnclosingNonLocalAndNonAnonymousTypeName(binaryName);
+
+			//
+			currentType = _javaSourceResource.getType(outerType);
+			
+		} else {
+
+			//
+			currentType = _javaSourceResource.getOrCreateType(binaryName,
+					typeEnum);
+		}
+
+		_realTypes.push(binaryName);
+		_currentTypes.push(currentType);
 
 		// declared type superclass type
 		resolveType(node.getSuperclassType(), true, false, false);
@@ -288,6 +317,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	@Override
 	public void endVisit(TypeDeclaration node) {
 		_currentTypes.pop();
+		_realTypes.pop();
 	}
 
 	@Override
@@ -297,6 +327,8 @@ public class JdtAstVisitor extends ASTVisitor {
 		IModifiableType type = _javaSourceResource.getOrCreateType(node
 				.resolveBinding().getBinaryName(), TypeEnum.ANNOTATION);
 		_currentTypes.push(type);
+		_realTypes.push(node
+				.resolveBinding().getBinaryName());
 
 		return true;
 	}
@@ -304,61 +336,67 @@ public class JdtAstVisitor extends ASTVisitor {
 	@Override
 	public void endVisit(AnnotationTypeDeclaration node) {
 		_currentTypes.pop();
+		_realTypes.pop();
 	}
 
-	@Override
-	public boolean visit(AnonymousClassDeclaration node) {
-		
-		// add the type name
-		ITypeBinding typeBinding = node.resolveBinding();
-
-		TypeEnum typeEnum = null;
-		if (typeBinding.isInterface()) {
-			typeEnum = TypeEnum.INTERFACE;
-		} else if (typeBinding.isAnonymous()) {
-			typeEnum = TypeEnum.CLASS;
-		} else {
-			// TODO
-			throw new RuntimeException("HAE " + node);
-		}
-
-		//
-		String fullyQualifiedName = node.resolveBinding().getBinaryName();
-
-		//
-		if (fullyQualifiedName != null) {
-
-
-			IModifiableType type = _javaSourceResource.getOrCreateType(
-					fullyQualifiedName, typeEnum);
-
-			_currentTypes.push(type);
-
-		} else {
-			
-			// if the anonymous class has an empty body, no binary type will
-			// be created and the binary name is null.
-			// In this case we push the current type again to satisfy the 
-			// 'pop' in the end visit.
-			_currentTypes.push(_currentTypes.peek());
-		}
-
-		//
-		IAnnotationBinding[] annotationBindings = node.resolveBinding()
-				.getAnnotations();
-		for (IAnnotationBinding annotationBinding : annotationBindings) {
-			resolveTypeBinding(annotationBinding.getAnnotationType(), false,
-					false, true);
-		}
-
-		// visit the child nodes
-		return true;
-	}
-
-	@Override
-	public void endVisit(AnonymousClassDeclaration node) {
-		_currentTypes.pop();
-	}
+	// @Override
+	// public boolean visit(AnonymousClassDeclaration node) {
+	//
+	// // add the type name
+	// ITypeBinding typeBinding = node.resolveBinding();
+	//
+	// TypeEnum typeEnum = null;
+	// if (typeBinding.isInterface()) {
+	// typeEnum = TypeEnum.INTERFACE;
+	// } else if (typeBinding.isEnum()) {
+	// typeEnum = TypeEnum.ENUM;
+	// } else if (typeBinding.isAnnotation()) {
+	// typeEnum = TypeEnum.ANNOTATION;
+	// } else if (typeBinding.isClass()) {
+	// typeEnum = TypeEnum.CLASS;
+	// } else if (typeBinding.isAnonymous()) {
+	// typeEnum = TypeEnum.CLASS;
+	// } else {
+	// // TODO
+	// throw new RuntimeException("HAE " + node);
+	// }
+	//
+	// //
+	// String fullyQualifiedName = node.resolveBinding().getBinaryName();
+	//
+	// //
+	// if (fullyQualifiedName != null) {
+	//
+	// IModifiableType type = _javaSourceResource.getOrCreateType(
+	// fullyQualifiedName, typeEnum);
+	//
+	// _currentTypes.push(type);
+	//
+	// } else {
+	//
+	// // if the anonymous class has an empty body, no binary type will
+	// // be created and the binary name is null.
+	// // In this case we push the current type again to satisfy the
+	// // 'pop' in the end visit.
+	// _currentTypes.push(_currentTypes.peek());
+	// }
+	//
+	// // //
+	// // IAnnotationBinding[] annotationBindings = node.resolveBinding()
+	// // .getAnnotations();
+	// // for (IAnnotationBinding annotationBinding : annotationBindings) {
+	// // resolveTypeBinding(annotationBinding.getAnnotationType(), false,
+	// // false, true);
+	// // }
+	//
+	// // visit the child nodes
+	// return true;
+	// }
+	//
+	// @Override
+	// public void endVisit(AnonymousClassDeclaration node) {
+	// _currentTypes.pop();
+	// }
 
 	/*
 	 * (non-Javadoc)
@@ -374,6 +412,8 @@ public class JdtAstVisitor extends ASTVisitor {
 		IModifiableType type = _javaSourceResource.getOrCreateType(node
 				.resolveBinding().getBinaryName(), TypeEnum.ENUM);
 		_currentTypes.push(type);
+		_realTypes.push(node
+				.resolveBinding().getBinaryName());
 
 		// add super interfaces
 		List<Type> superInterfaces = node.superInterfaceTypes();
@@ -396,6 +436,7 @@ public class JdtAstVisitor extends ASTVisitor {
 	@Override
 	public void endVisit(EnumDeclaration node) {
 		_currentTypes.pop();
+		_realTypes.pop();
 	}
 
 	/**
@@ -1047,11 +1088,28 @@ public class JdtAstVisitor extends ASTVisitor {
 
 			if (!_currentTypes.isEmpty()) {
 
-				_currentTypes.peek().recordReference(
-						referencedType,
-						new ReferenceAttributes(ReferenceType.TYPE_REFERENCE,
-								isExtends, isImplements, isClassAnnotation,
-								true, false, true, false));
+				ReferenceAttributes referenceAttributes = null;
+
+				String currentTypeName = _currentTypes.peek().getFullyQualifiedName();
+				
+				if (currentTypeName.equals(_realTypes.peek())) {
+
+					//
+					referenceAttributes = new ReferenceAttributes(
+							ReferenceType.TYPE_REFERENCE, isExtends,
+							isImplements, isClassAnnotation, true, false, true,
+							false);
+				} else {
+
+					//
+					referenceAttributes = new ReferenceAttributes(
+							ReferenceType.TYPE_REFERENCE, false, false, false,
+							true, false, true, false);
+				}
+
+				//
+				_currentTypes.peek().recordReference(referencedType,
+						referenceAttributes);
 
 			} else {
 

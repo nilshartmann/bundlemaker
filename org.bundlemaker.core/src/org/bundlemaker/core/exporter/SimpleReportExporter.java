@@ -1,4 +1,4 @@
-package org.bundlemaker.itest.spring;
+package org.bundlemaker.core.exporter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bundlemaker.core.exporter.AbstractExporter;
-import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -50,6 +50,14 @@ public class SimpleReportExporter extends AbstractExporter {
 		for (IResource resource : asSortedList(module
 				.getResources(ContentType.SOURCE))) {
 			builder.append(resource.getPath() + "\n");
+
+			for (IType type : resource.getContainedTypes()) {
+				builder.append(" - " + type.getFullyQualifiedName() + "\n");
+
+				for (IReference reference : type.getReferences()) {
+					builder.append("   - " + reference.toString() + "\n");
+				}
+			}
 		}
 
 		builder.append("\n");
@@ -57,6 +65,14 @@ public class SimpleReportExporter extends AbstractExporter {
 		for (IResource resource : asSortedList(module
 				.getResources(ContentType.BINARY))) {
 			builder.append(resource.getPath() + "\n");
+
+			for (IType type : resource.getContainedTypes()) {
+				builder.append(" - " + type.getFullyQualifiedName() + "\n");
+
+				for (IReference reference : type.getReferences()) {
+					builder.append("   - " + reference.toString() + "\n");
+				}
+			}
 		}
 
 		builder.append("\n");

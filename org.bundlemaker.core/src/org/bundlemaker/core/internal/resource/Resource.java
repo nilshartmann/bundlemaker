@@ -96,7 +96,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
 		for (IType type : _containedTypes) {
 			result.addAll(type.getReferences());
 		}
-		
+
 		//
 		return result;
 	}
@@ -137,12 +137,8 @@ public class Resource extends ResourceKey implements IModifiableResource {
 				referenceAttributes);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.bundlemaker.core.resource.IModifiableResource#getOrCreateType(java
-	 * .lang.String, org.bundlemaker.core.resource.TypeEnum)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum) {
@@ -156,6 +152,22 @@ public class Resource extends ResourceKey implements IModifiableResource {
 
 		//
 		return type;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Type getType(String fullyQualifiedName) {
+
+		for (Type containedType : containedTypes()) {
+			if (containedType.getFullyQualifiedName()
+					.equals(fullyQualifiedName)) {
+				return containedType;
+			}
+		}
+
+		return null;
 	}
 
 	/**

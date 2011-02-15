@@ -13,6 +13,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -213,7 +214,29 @@ public class ResourceModule extends
 	}
 
 	// TODO
-	public void check() {
+	public void validate() {
+
+		//
+		for (IType type : getContainedTypes()) {
+
+			// check that the module is set
+			if (type.getModule() == null) {
+				System.out.println(type.getFullyQualifiedName() + " : " + type);
+				System.out.println(" - source resource: "
+						+ type.getSourceResource());
+				System.out.println(" - binary resource: "
+						+ type.getBinaryResource());
+			}
+
+			if (type.getModule() != this) {
+				System.out.println("HAE?");
+				System.out.println(type.getFullyQualifiedName() + " : " + type);
+				System.out.println(" - source resource: "
+						+ type.getSourceResource());
+				System.out.println(" - binary resource: "
+						+ type.getBinaryResource());
+			}
+		}
 
 		//
 		Map<String, IResource> entries = new HashMap<String, IResource>();
@@ -241,6 +264,7 @@ public class ResourceModule extends
 		}
 
 		//
+		entries.clear();
 		for (IResource resource : getResources(ContentType.BINARY)) {
 
 			if (entries.containsKey(resource.getPath())) {

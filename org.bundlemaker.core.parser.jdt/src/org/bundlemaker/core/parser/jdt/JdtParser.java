@@ -223,6 +223,13 @@ public class JdtParser implements IParser {
 		/******** STOP *******/
 
 		for (ICompilationUnit iCompilationUnit : units.keySet()) {
+			
+//			if (!(iCompilationUnit.getElementName().contains("VAVArrayImpl"))) {
+//				continue;
+//			} else {
+//				//de.tk.sys.viewagent.value.VAVArrayImpl$1
+//				System.out.println(iCompilationUnit.getElementName());
+//			}
 
 			_parser.setSource(iCompilationUnit);
 			_parser.setResolveBindings(true);
@@ -256,7 +263,7 @@ public class JdtParser implements IParser {
 			IDirectory iDirectory, Map<String, String> rootMap,
 			IResourceCache cache, IFileBasedContent fileBasedContent,
 			List<IProblem> problems) throws CoreException {
-
+		
 		// step 3: compute the 'real' root (the one that was specified in the
 		// bundlemaker project description)
 		IPath parent = iCompilationUnit.getParent().getParent().getPath();

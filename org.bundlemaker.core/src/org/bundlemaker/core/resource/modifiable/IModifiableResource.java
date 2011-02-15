@@ -24,4 +24,13 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
 	 * @return
 	 */
 	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum);
+	
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param fullyQualifiedName
+	 * @return
+	 */
+	public Type getType(String fullyQualifiedName);
 }

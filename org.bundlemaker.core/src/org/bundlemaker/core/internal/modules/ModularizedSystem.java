@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModularizedSystem extends AbstractCachingModularizedSystem {
+public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
 	/**
 	 * <p>

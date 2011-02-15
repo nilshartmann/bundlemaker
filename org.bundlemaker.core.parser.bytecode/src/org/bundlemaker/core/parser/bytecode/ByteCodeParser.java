@@ -190,16 +190,16 @@ public class ByteCodeParser implements IParser {
 			JavaElementIdentifier elementID, IResourceCache cache)
 			throws CoreException {
 
-		// JavaElementIdentifier enclosingJavaElementIdentifier = elementID
-		// .getIdForEnclosingNonLocalAndNonAnonymousType();
-		//
-		// ResourceKey key = new ResourceKey(
-		// enclosingJavaElementIdentifier.getContentId(),
-		// enclosingJavaElementIdentifier.getRoot(),
-		// enclosingJavaElementIdentifier.getPath());
+		JavaElementIdentifier enclosingJavaElementIdentifier = elementID
+				.getIdForEnclosingNonLocalAndNonAnonymousType();
 
-		ResourceKey key = new ResourceKey(elementID.getContentId(),
-				elementID.getRoot(), elementID.getPath());
+		ResourceKey key = new ResourceKey(
+				enclosingJavaElementIdentifier.getContentId(),
+				enclosingJavaElementIdentifier.getRoot(),
+				enclosingJavaElementIdentifier.getPath());
+
+//		ResourceKey key = new ResourceKey(elementID.getContentId(),
+//				elementID.getRoot(), elementID.getPath());
 
 		// get the additional type info
 		IModifiableResource resource = cache.getOrCreateResource(key);
@@ -207,7 +207,7 @@ public class ByteCodeParser implements IParser {
 		// get the fake manifest
 		BundlorPartialManifest fakePartialManifest = new BundlorPartialManifest(
 				elementID.getFullQualifiedName(),
-				elementID.getFullQualifiedName(), resource);
+				enclosingJavaElementIdentifier.getFullQualifiedName(), resource);
 
 		try {
 

@@ -203,12 +203,16 @@ public class Type implements IType, IModifiableType {
 	 */
 	@Override
 	public IModule getModule() {
-		if (_typeModule == null && _binaryResource == null) {
-			System.out.println("hae");
+
+		if (_typeModule != null) {
+			return _typeModule;
+		} else if (_binaryResource != null) {
+			return _binaryResource.getResourceModule();
+		} else if (_sourceResource != null) {
+			return _sourceResource.getResourceModule();
 		}
 
-		return _typeModule != null ? _typeModule : _binaryResource
-				.getResourceModule();
+		throw new RuntimeException("Type has no module " + this.toString());
 	}
 
 	/**

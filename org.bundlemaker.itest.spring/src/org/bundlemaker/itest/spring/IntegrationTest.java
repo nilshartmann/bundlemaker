@@ -13,6 +13,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.ModuleExporterContext;
+import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.exporter.bundle.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.PdeExporterConfiguration;
@@ -144,7 +145,7 @@ public class IntegrationTest {
 				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
 
 		// // export to simple report
-		// exportToSimpleReport(bundleMakerProject, modularizedSystem);
+		exportToSimpleReport(bundleMakerProject, modularizedSystem);
 
 		// export to structure 101
 		exportToStructure101(bundleMakerProject, modularizedSystem);

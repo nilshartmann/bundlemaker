@@ -100,12 +100,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 			}
 		}
 
-		try {
-			initializeModules();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//
+		initializeNonResourceModules();
 
 		// step 4: transform modules
 		System.out.println("// step 4: transform modules");
@@ -139,13 +135,9 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 
 				((ResourceModule) module).initializeContainedTypes();
 			}
-		}
-
-		// CHECK: check for duplicate entries
-		for (IModifiableResourceModule module : getModifiableResourceModulesMap()
-				.values()) {
-
-			((ResourceModule) module).check();
+			
+			//
+			initializeResourceModules();
 		}
 
 		postApplyTransformations();
@@ -166,18 +158,22 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 	 * <p>
 	 * </p>
 	 * 
+	 * @throws Exception
 	 */
-	protected void postApplyTransformations() {
-		//
+	protected void initializeNonResourceModules() {
+
+	}
+
+	protected void initializeResourceModules() {
+
 	}
 
 	/**
 	 * <p>
 	 * </p>
 	 * 
-	 * @throws Exception
 	 */
-	protected void initializeModules() throws Exception {
+	protected void postApplyTransformations() {
 		//
 	}
 

@@ -1,35 +1,26 @@
 package org.bundlemaker.core.exporter.bundle;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.jar.Manifest;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ManifestUtils;
 import org.bundlemaker.core.exporter.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
 
-import com.springsource.bundlor.util.SimpleParserLogger;
 import com.springsource.util.osgi.manifest.BundleManifest;
 import com.springsource.util.osgi.manifest.BundleManifestFactory;
 import com.springsource.util.osgi.manifest.BundleSymbolicName;
 import com.springsource.util.osgi.manifest.ExportPackage;
 import com.springsource.util.osgi.manifest.ExportedPackage;
-import com.springsource.util.osgi.manifest.ImportPackage;
-import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
-import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**

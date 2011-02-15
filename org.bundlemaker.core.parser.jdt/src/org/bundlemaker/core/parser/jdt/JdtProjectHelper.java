@@ -274,7 +274,7 @@ public class JdtProjectHelper {
 
 		associatedProject.create(null);
 		associatedProject.open(null);
-		associatedProject.setHidden(true);
+		associatedProject.setHidden(false);
 
 		IProjectDescription description = associatedProject.getDescription();
 		description.setNatureIds(new String[] { JavaCore.NATURE_ID });
