@@ -19,6 +19,7 @@ import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -42,6 +43,19 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	/** - */
 	private IdentifierMap _identifierMap;
 
+	/** - */
+	private IQueryFilter<IModule> _moduleFilter;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param moduleFilter
+	 */
+	public void setModuleFilter(IQueryFilter<IModule> moduleFilter) {
+		_moduleFilter = moduleFilter;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -62,10 +76,14 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 		stopWatch.start();
 
 		//
-		for (IModule typeModule : modularizedSystem.getAllModules()) {
+		for (IModule module : modularizedSystem.getAllModules()) {
 
-			// create the entries
-			createEntries(typeModule, modularizedSystem);
+			//
+			if (_moduleFilter == null || _moduleFilter.matches(module)) {
+				
+				// create the entries
+				createEntries(module, modularizedSystem);
+			}
 		}
 
 		stopWatch.stop();
@@ -150,6 +168,12 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 					IModule referencedModule = ((IModule[]) referencedModules
 							.toArray(new IModule[0]))[0];
+
+					// TODO: CONFIGURATION
+					// exclude self references
+					if (referencedModule.equals(typeModule)) {
+						continue;
+					}
 
 					// from
 					String from = _identifierMap.getClassId(resourceModule,
@@ -303,8 +327,13 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 		ModuleType resourceSubmodule = new ModuleType();
 
 		// set the type
-		// TODO
-		resourceSubmodule.setType(TYPE_JAVACLASSFILE);
+		if (resource.getPath().endsWith(".java")) {
+			resourceSubmodule.setType(TYPE_JAVACLASSFILE);
+		} else if (resource.getPath().endsWith(".class")) {
+			resourceSubmodule.setType(TYPE_CLASSFILE);
+		} else {
+			resourceSubmodule.setType(TYPE_GENERICFILE);
+		}
 
 		// set the class name
 		resourceSubmodule.setName(resource.getName());

@@ -16,12 +16,15 @@ import org.bundlemaker.core.parser.IFolderBasedDirectoryFragment;
 import org.bundlemaker.core.parser.IJarFileBasedDirectoryFragment;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.parser.bytecode.asm.AsmTypeArtefactAnalyser;
+import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
+import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.IModifiableType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.objectweb.asm.ClassReader;
 
 /**
  * <p>
@@ -30,22 +33,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ByteCodeParser implements IParser {
-
-	/** the bundlor class file analyzer */
-	private AsmTypeArtefactAnalyser _analyser;
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 * @throws CoreException
-	 */
-	public ByteCodeParser() {
-
-		// create the class file analyzer
-		_analyser = new AsmTypeArtefactAnalyser();
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -193,27 +180,38 @@ public class ByteCodeParser implements IParser {
 		JavaElementIdentifier enclosingJavaElementIdentifier = elementID
 				.getIdForEnclosingNonLocalAndNonAnonymousType();
 
-		ResourceKey key = new ResourceKey(
+		ResourceKey enclosingKey = new ResourceKey(
 				enclosingJavaElementIdentifier.getContentId(),
 				enclosingJavaElementIdentifier.getRoot(),
 				enclosingJavaElementIdentifier.getPath());
 
-//		ResourceKey key = new ResourceKey(elementID.getContentId(),
-//				elementID.getRoot(), elementID.getPath());
+		ResourceKey key = new ResourceKey(elementID.getContentId(),
+				elementID.getRoot(), elementID.getPath());
 
 		// get the additional type info
 		IModifiableResource resource = cache.getOrCreateResource(key);
+		IModifiableResource enclosingResource = cache
+				.getOrCreateResource(enclosingKey);
 
-		// get the fake manifest
-		BundlorPartialManifest fakePartialManifest = new BundlorPartialManifest(
-				elementID.getFullQualifiedName(),
-				enclosingJavaElementIdentifier.getFullQualifiedName(), resource);
+		//
+		if (!resource.equals(enclosingResource)) {
 
+			//
+			if (enclosingResource.getContainedTypes().isEmpty()) {
+				parseClassFile(enclosingResource.getInputStream(),
+						enclosingJavaElementIdentifier, cache);
+			}
+		}
+
+		//
 		try {
 
-			// analyze the class file
-			_analyser.analyse(inputStream, elementID.getFullQualifiedName(),
-					fakePartialManifest);
+			AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(
+					resource, enclosingResource);
+
+			ClassReader reader = new ClassReader(inputStream);
+			reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder),
+					0);
 
 			// TODO
 			// _progressMonitor.worked(1);

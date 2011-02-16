@@ -1,7 +1,7 @@
 package org.bundlemaker.core.parser.bytecode.asm;
 
-import org.bundlemaker.core.parser.bytecode.BundlorPartialManifest;
 import org.bundlemaker.core.resource.TypeEnum;
+import org.eclipse.core.runtime.Assert;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
@@ -10,33 +10,30 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.EmptyVisitor;
 
-import com.springsource.bundlor.support.partialmanifest.PartialManifest;
-
-final class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
+public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 		ClassVisitor {
 
 	/** - */
 	private static final String CLASS_NAME_PREFIX = "class$";
 
-	/**
-	 * That <code>PartialManifest</code> being updated.
-	 */
-	private final PartialManifest partialManifest;
+	/** the ASM type */
+	private Type _type;
+
+	/** - */
+	private AsmReferenceRecorder _recorder;
 
 	/**
-	 * The type that is being scanned.
-	 */
-	private Type type;
-
-	/**
-	 * Creates a new <code>ArtefactAnalyserClassVisitor</code> to scan the
-	 * supplied {@link PartialManifest}.
+	 * <p>
+	 * Creates a new instance of type {@link ArtefactAnalyserClassVisitor}.
+	 * </p>
 	 * 
-	 * @param partialManifest
-	 *            the <code>PartialManifest</code> to scan.
+	 * @param recorder
 	 */
-	public ArtefactAnalyserClassVisitor(PartialManifest partialManifest) {
-		this.partialManifest = partialManifest;
+	public ArtefactAnalyserClassVisitor(AsmReferenceRecorder recorder) {
+
+		Assert.isNotNull(recorder);
+
+		_recorder = recorder;
 	}
 
 	/**
@@ -45,8 +42,9 @@ final class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 	@Override
 	public void visit(int version, int access, String name, String signature,
 			String superName, String[] interfaces) {
-		Type type = Type.getObjectType(name);
-		this.type = type;
+
+		// get the type
+		_type = Type.getObjectType(name);
 
 		// get the type type
 		TypeEnum typeEnum = null;
@@ -60,20 +58,27 @@ final class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 			typeEnum = TypeEnum.CLASS;
 		}
 
-		//
-		((BundlorPartialManifest) this.partialManifest).recordType(
-				VisitorUtils.getFullyQualifiedTypeName(type), typeEnum);
+		// get the fully qualified name
+		String fullyQualifiedName = VisitorUtils
+				.getFullyQualifiedTypeName(_type);
+
+		// record the contained type
+		_recorder.recordContainedType(fullyQualifiedName, typeEnum);
+
+		// super type
+		// TODO: USES
+		Type superType = Type.getObjectType(superName);
+		VisitorUtils.recordReferencedTypes(_recorder, true, false, false,
+				superType);
 
 		//
-		VisitorUtils.recordReferencedTypes(this.partialManifest,
-				Type.getObjectType(superName));
-		VisitorUtils.recordUses(this.partialManifest, type,
-				Type.getObjectType(superName));
 		for (String interfaceName : interfaces) {
-			VisitorUtils.recordReferencedTypes(this.partialManifest,
-					Type.getObjectType(interfaceName));
-			VisitorUtils.recordUses(this.partialManifest, type,
-					Type.getObjectType(interfaceName));
+
+			// implemented interfaces
+			// TODO: USES
+			Type implementsType = Type.getObjectType(interfaceName);
+			VisitorUtils.recordReferencedTypes(_recorder, false, true, false,
+					implementsType);
 		}
 	}
 
@@ -82,9 +87,12 @@ final class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 	 */
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		Type t = Type.getType(desc);
-		VisitorUtils.recordReferencedTypes(this.partialManifest, t);
-		VisitorUtils.recordUses(this.partialManifest, this.type, t);
+
+		// class annotation
+		// TODO: USES
+		Type type = Type.getType(desc);
+		VisitorUtils.recordReferencedTypes(_recorder, false, false, true, type);
+
 		return null;
 	}
 
@@ -115,13 +123,19 @@ final class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 						}
 					}
 					if (Character.isJavaIdentifierStart(name.charAt(0))) {
-						this.partialManifest.recordReferencedType(name);
+						// no uses
+						VisitorUtils.recordReferencedTypes(_recorder, false,
+								false, true, name);
 					}
 				}
 			}
 		}
-		VisitorUtils.recordReferencedTypes(this.partialManifest, t);
-		return new ArtefactAnalyserFieldVisitor(this.partialManifest, this.type);
+
+		// no uses
+		VisitorUtils.recordReferencedTypes(_recorder, false, false, true, t);
+
+		//
+		return new ArtefactAnalyserFieldVisitor(_recorder, this._type);
 	}
 
 	/**
@@ -130,34 +144,33 @@ final class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc,
 			String signature, String[] exceptions) {
-		VisitorUtils.recordReferencedTypes(this.partialManifest,
+
+		VisitorUtils.recordReferencedTypes(_recorder, false, false, true,
 				Type.getArgumentTypes(desc));
-		VisitorUtils.recordReferencedTypes(this.partialManifest,
+		VisitorUtils.recordReferencedTypes(_recorder, false, false, true,
 				Type.getReturnType(desc));
+
 		if (exceptions != null) {
 			for (String exception : exceptions) {
-				VisitorUtils.recordReferencedTypes(this.partialManifest,
-						Type.getObjectType(exception));
+				VisitorUtils.recordReferencedTypes(_recorder, false, false,
+						true, Type.getObjectType(exception));
 			}
 		}
-		if (access != Opcodes.ACC_PRIVATE) {
-			VisitorUtils.recordUses(this.partialManifest, this.type,
-					Type.getArgumentTypes(desc));
-			VisitorUtils.recordUses(this.partialManifest, this.type,
-					Type.getReturnType(desc));
-			if (exceptions != null) {
-				for (String exception : exceptions) {
-					VisitorUtils.recordUses(this.partialManifest, this.type,
-							Type.getObjectType(exception));
-				}
-			}
-		}
-		return new ArtefactAnalyserMethodVisitor(this.partialManifest,
-				this.type);
-	}
 
-	// public static void main(String[] args) {
-	// System.out.println(((Opcodes.ACC_ENUM + Opcodes.ACC_ANNOTATION)&
-	// Opcodes.ACC_INTERFACE) != 0);
-	// }
+		// TODO uses
+		// if (access != Opcodes.ACC_PRIVATE) {
+		// VisitorUtils.recordUses(this.partialManifest, this._type,
+		// Type.getArgumentTypes(desc));
+		// VisitorUtils.recordUses(this.partialManifest, this._type,
+		// Type.getReturnType(desc));
+		// if (exceptions != null) {
+		// for (String exception : exceptions) {
+		// VisitorUtils.recordUses(this.partialManifest, this._type,
+		// Type.getObjectType(exception));
+		// }
+		// }
+		// }
+
+		return new ArtefactAnalyserMethodVisitor(_recorder, this._type);
+	}
 }

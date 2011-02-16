@@ -156,7 +156,16 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
 	@Override
 	public Set<IType> getReferencingTypes(String fullyQualifiedName) {
-		return getTypeNameToReferringCache().get(fullyQualifiedName);
+
+		Set<IType> result = getTypeNameToReferringCache().get(
+				fullyQualifiedName);
+
+		//
+		if (result == null) {
+			result = Collections.emptySet();
+		}
+
+		return result;
 	}
 
 	@Override

@@ -145,7 +145,7 @@ public class IntegrationTest {
 				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
 
 		// // export to simple report
-		exportToSimpleReport(bundleMakerProject, modularizedSystem);
+		// exportToSimpleReport(bundleMakerProject, modularizedSystem);
 
 		// export to structure 101
 		exportToStructure101(bundleMakerProject, modularizedSystem);

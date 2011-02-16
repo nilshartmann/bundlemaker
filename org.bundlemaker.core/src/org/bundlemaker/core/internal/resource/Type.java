@@ -64,6 +64,21 @@ public class Type implements IType, IModifiableType {
 
 	/**
 	 * <p>
+	 * Creates a new instance of type {@link Type}.
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 */
+	public Type(String fullyQualifiedName) {
+
+		Assert.isNotNull(fullyQualifiedName);
+
+		//
+		_fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
+	}
+
+	/**
+	 * <p>
 	 * </p>
 	 * 
 	 * @param flyWeightCache
@@ -254,6 +269,16 @@ public class Type implements IType, IModifiableType {
 	 */
 	public void setTypeModule(TypeModule typeModule) {
 		_typeModule = typeModule;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param typeEnum
+	 */
+	public void setTypeEnum(TypeEnum typeEnum) {
+		_typeEnum = typeEnum;
 	}
 
 	/*
