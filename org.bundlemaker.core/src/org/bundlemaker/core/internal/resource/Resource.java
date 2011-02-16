@@ -29,6 +29,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	/** - */
 	private Set<Type> _containedTypes;
 
+	/** - */
+	private Set<IModifiableResource> _stickyResources;
+
 	/** do not set transient! */
 	private ResourceStandin _resourceStandin;
 
@@ -170,6 +173,11 @@ public class Resource extends ResourceKey implements IModifiableResource {
 		return null;
 	}
 
+	@Override
+	public void addStickyResource(IModifiableResource stickyResource) {
+		stickyResources().add(stickyResource);
+	}
+
 	/**
 	 * @param resourceStandin
 	 */
@@ -255,5 +263,14 @@ public class Resource extends ResourceKey implements IModifiableResource {
 		}
 
 		return _containedTypes;
+	}
+
+	private Set<IModifiableResource> stickyResources() {
+
+		if (_stickyResources == null) {
+			_stickyResources = new HashSet<IModifiableResource>();
+		}
+
+		return _stickyResources;
 	}
 }

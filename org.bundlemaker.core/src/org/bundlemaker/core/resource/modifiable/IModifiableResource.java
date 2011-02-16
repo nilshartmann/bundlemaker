@@ -33,4 +33,12 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
 	 * @return
 	 */
 	public Type getType(String fullyQualifiedName);
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param stickyResource
+	 */
+	public void addStickyResource(IModifiableResource stickyResource);
 }

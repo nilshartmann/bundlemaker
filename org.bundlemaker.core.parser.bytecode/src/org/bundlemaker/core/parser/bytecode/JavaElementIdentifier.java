@@ -177,7 +177,7 @@ public class JavaElementIdentifier {
 						_path.length() - ".java".length());
 
 			}
-
+			//
 			_fullyQualifiedName = className.replace('/', '.');
 		}
 

@@ -90,22 +90,4 @@ final class VisitorUtils {
 				ReferenceType.TYPE_REFERENCE, isExtends, isImplements,
 				isClassAnnotation, false, true, true, false));
 	}
-
-	// /**
-	// * Records a uses of the packages for the supplied {@link Type Types}
-	// against the supplied
-	// * <code>exportingPackage</code>.
-	// *
-	// * @param partialManifest the <code>PartialManifest</code>.
-	// * @param exportingType the exporting type.
-	// * @param types the <code>Types</code>.
-	// */
-	// public static void recordUses(PartialManifest partialManifest, Type
-	// exportingType, Type... types) {
-	// for (Type t : types) {
-	// String packageName = getPackageName(t);
-	// partialManifest.recordUsesPackage(getPackageName(exportingType),
-	// packageName);
-	// }
-	// }
 }

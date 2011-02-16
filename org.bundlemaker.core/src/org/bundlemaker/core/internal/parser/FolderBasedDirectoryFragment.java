@@ -1,10 +1,13 @@
 package org.bundlemaker.core.internal.parser;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
-import org.bundlemaker.core.parser.IFolderBasedDirectoryFragment;
+import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.resources.IFile;
 
 /**
@@ -13,11 +16,13 @@ import org.eclipse.core.resources.IFile;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FolderBasedDirectoryFragment extends AbstractDirectoryFragment implements
-		IFolderBasedDirectoryFragment {
+public class FolderBasedDirectoryFragment extends AbstractDirectoryFragment {
 
 	/** - */
 	private List<String> _entries = new LinkedList<String>();
+
+	//
+	private Set<IResourceKey> _resourceKeys;
 
 	/**
 	 * <p>
@@ -42,6 +47,31 @@ public class FolderBasedDirectoryFragment extends AbstractDirectoryFragment impl
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<IResourceKey> getResourceKeys() {
+
+		//
+		if (_resourceKeys == null) {
+
+			//
+			_resourceKeys = new HashSet<IResourceKey>();
+
+			// parse each class file
+			for (String content : getContent()) {
+
+				_resourceKeys.add(new ResourceKey(getDirectory()
+						.getFileBasedContent().getId(),
+						getDirectoryFragmentRoot().getAbsolutePath(), content));
+			}
+		}
+
+		//
+		return _resourceKeys;
+	}
+
+	/**
 	 * <p>
 	 * </p>
 	 * 
@@ -58,7 +88,6 @@ public class FolderBasedDirectoryFragment extends AbstractDirectoryFragment impl
 		return _entries;
 	}
 
-	@Override
 	public List<File> getFileEntries() {
 
 		List<File> result = new LinkedList<File>();

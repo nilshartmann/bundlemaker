@@ -1,12 +1,15 @@
 package org.bundlemaker.core.internal.parser;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bundlemaker.core.parser.IJarFileBasedDirectoryFragment;
+import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -15,14 +18,16 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JarFileBasedDirectoryFragment extends AbstractDirectoryFragment
-		implements IJarFileBasedDirectoryFragment {
+public class JarFileBasedDirectoryFragment extends AbstractDirectoryFragment {
 
 	/** the jar file */
 	private JarFile _jarFile;
 
 	/** the jar file entries for this package */
 	private List<JarEntry> _jarEntries;
+
+	//
+	private Set<IResourceKey> _resourceKeys;
 
 	/**
 	 * <p>
@@ -38,6 +43,31 @@ public class JarFileBasedDirectoryFragment extends AbstractDirectoryFragment
 
 		_jarFile = jarFile;
 		_jarEntries = new LinkedList<JarEntry>();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<IResourceKey> getResourceKeys() {
+
+		//
+		if (_resourceKeys == null) {
+
+			//
+			_resourceKeys = new HashSet<IResourceKey>();
+
+			// parse each class file
+			for (String content : getContent()) {
+
+				_resourceKeys.add(new ResourceKey(getDirectory()
+						.getFileBasedContent().getId(),
+						getDirectoryFragmentRoot().getAbsolutePath(), content));
+			}
+		}
+
+		//
+		return _resourceKeys;
 	}
 
 	@Override
@@ -69,7 +99,6 @@ public class JarFileBasedDirectoryFragment extends AbstractDirectoryFragment
 	 * 
 	 * @return
 	 */
-	@Override
 	public JarFile getJarFile() {
 		return _jarFile;
 	}
@@ -80,7 +109,6 @@ public class JarFileBasedDirectoryFragment extends AbstractDirectoryFragment
 	 * 
 	 * @return
 	 */
-	@Override
 	public List<JarEntry> getJarEntries() {
 		return _jarEntries;
 	}
@@ -99,7 +127,8 @@ public class JarFileBasedDirectoryFragment extends AbstractDirectoryFragment
 	public String toString() {
 		return "JarFilePackageContent [_jarEntries=" + _jarEntries
 				+ ", _jarFile=" + _jarFile + ", getDirectoryRoot()="
-				+ getDirectoryFragmentRoot() + ", getWorkspaceRelativeDirectoryRoot()="
+				+ getDirectoryFragmentRoot()
+				+ ", getWorkspaceRelativeDirectoryRoot()="
 				+ getWorkspaceRelativeRoot() + "]";
 	}
 }

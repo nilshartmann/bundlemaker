@@ -65,9 +65,11 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
 		if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
 			_resource.getOrCreateType(fullyQualifiedName, typeEnum);
-
 			_bundleMakerType = ((IModifiableType[]) _enclosingClassFileResource
 					.getContainedTypes().toArray(new IModifiableType[0]))[0];
+
+			// add as sticky
+			_enclosingClassFileResource.addStickyResource(_resource);
 
 		} else {
 
