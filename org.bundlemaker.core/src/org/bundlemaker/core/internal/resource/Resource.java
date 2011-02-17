@@ -124,6 +124,14 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Set<? extends IResource> getStickyResources() {
+		return Collections.unmodifiableSet(stickyResources());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean containsTypes() {
 		return _containedTypes != null && !_containedTypes.isEmpty();
 	}

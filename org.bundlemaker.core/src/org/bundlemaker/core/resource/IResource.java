@@ -26,11 +26,11 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @return
 	 */
 	Set<? extends IReference> getResourceAndTypeReferences();
-	
+
 	/**
 	 * <p>
 	 * Returns all {@link IReference IReferences} that are originated in this
@@ -76,4 +76,12 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 	 * @return the {@link IResourceModule} that contains this {@link IResource}.
 	 */
 	IResourceModule getResourceModule();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Set<? extends IResource> getStickyResources();
 }

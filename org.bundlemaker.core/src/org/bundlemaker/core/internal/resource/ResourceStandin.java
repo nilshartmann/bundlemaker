@@ -123,4 +123,15 @@ public class ResourceStandin extends ResourceKey implements IResource {
 		return _resource.containsTypes();
 	}
 
+	@Override
+	public Set<? extends IResource> getStickyResources() {
+
+		//
+		if (_resource == null) {
+			// TODO
+			throw new RuntimeException();
+		}
+
+		return _resource.getStickyResources();
+	}
 }

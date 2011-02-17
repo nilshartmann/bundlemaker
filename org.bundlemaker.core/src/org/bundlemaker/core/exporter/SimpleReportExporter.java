@@ -66,6 +66,10 @@ public class SimpleReportExporter extends AbstractExporter {
 				.getResources(ContentType.BINARY))) {
 			builder.append(resource.getPath() + "\n");
 
+			for (IResource stickyResources : resource.getStickyResources()) {
+				builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
+			}
+
 			for (IType type : resource.getContainedTypes()) {
 				builder.append(" - " + type.getFullyQualifiedName() + "\n");
 
