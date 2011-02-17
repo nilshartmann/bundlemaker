@@ -117,7 +117,7 @@ public class IntegrationTestUtils {
 		File classesZip = new File(System.getProperty("user.dir"),
 				"spring/classes.zip");
 		File sourceDirectory = new File(System.getProperty("user.dir"),
-				"spring/source");
+				"spring/source.zip");
 		projectDescription
 				.addResourceContent("Spring", "2.5.6",
 						classesZip.getAbsolutePath(),
