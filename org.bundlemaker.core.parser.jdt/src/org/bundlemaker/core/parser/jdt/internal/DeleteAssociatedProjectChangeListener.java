@@ -1,7 +1,8 @@
-package org.bundlemaker.core.parser.jdt;
+package org.bundlemaker.core.parser.jdt.internal;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;

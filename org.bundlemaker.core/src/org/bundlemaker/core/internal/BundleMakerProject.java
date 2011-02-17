@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,14 +21,9 @@ import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IDependencyStore;
-import org.bundlemaker.core.model.internal.projectdescription.EFileBasedContent;
-import org.bundlemaker.core.model.internal.projectdescription.EProjectDescription;
-import org.bundlemaker.core.model.internal.projectdescription.EResourceContent;
-import org.bundlemaker.core.model.internal.projectdescription.ProjectdescriptionFactory;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.transformation.BasicProjectContentTransformation;
@@ -38,13 +32,9 @@ import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 
 /**
  * <p>
@@ -102,57 +92,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 	@Override
 	public void saveProjectDescription() throws CoreException {
 
-		// step 1: map to emf model
-		EProjectDescription eDescription = ProjectdescriptionFactory.eINSTANCE
-				.createEProjectDescription();
-
-		eDescription.setCurrentId(_projectDescription.getCurrentId());
-		eDescription.setJre(_projectDescription.getJRE());
-
-		for (FileBasedContent content : _projectDescription
-				.getModifiableFileBasedContent()) {
-
-			EFileBasedContent eFileBasedContent = ProjectdescriptionFactory.eINSTANCE
-					.createEFileBasedContent();
-			eDescription.getFileBasedContent().add(eFileBasedContent);
-
-			eFileBasedContent.setId(content.getId());
-			eFileBasedContent.setName(content.getName());
-			eFileBasedContent.setVersion(content.getVersion());
-
-			for (IPath path : content.getBinaryPaths()) {
-				eFileBasedContent.getBinaryPathNames().add(path.toString());
-			}
-
-			if (content.isResourceContent()) {
-
-				IResourceContent resourceContent = content.getResourceContent();
-
-				EResourceContent eResourceContent = ProjectdescriptionFactory.eINSTANCE
-						.createEResourceContent();
-				eFileBasedContent.setResourceContent(eResourceContent);
-
-				eResourceContent.setAnalyzeSourceResources(resourceContent
-						.isAnalyzeSourceResources());
-
-				for (IPath path : resourceContent.getSourcePaths()) {
-					eResourceContent.getSourcePathNames().add(path.toString());
-				}
-			}
-
-		}
-
-		// step 2: save
-		org.eclipse.emf.ecore.resource.Resource resource = getBundleMakerProjectDescriptionURI(PROJECT_DESCRIPTION_NAME);
-		resource.getContents().add(eDescription);
-		try {
-			resource.save(null);
-		} catch (IOException e) {
-			// TODO: MSG
-			throw new CoreException(new Status(IStatus.ERROR,
-					BundleMakerCore.BUNDLE_ID, e.getMessage()));
-		}
-
+		//
+		ProjectDescriptionStore.saveProjectDescription(_project,
+				_projectDescription);
 	}
 
 	/**
@@ -308,10 +250,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 					Assert.isNotNull(resourceStandin.getResource());
 					for (IType type : resourceStandin.getContainedTypes()) {
 
-						
 						if (type.getBinaryResource() == null) {
-							System.out.println(	"No binary resource for type "
-										+ type.getFullyQualifiedName());
+							System.out.println("No binary resource for type "
+									+ type.getFullyQualifiedName());
 						}
 					}
 				}
@@ -545,76 +486,8 @@ public class BundleMakerProject implements IBundleMakerProject {
 	private BundleMakerProjectDescription loadProjectDescription()
 			throws CoreException {
 
-		org.eclipse.emf.ecore.resource.Resource resource = getBundleMakerProjectDescriptionURI(PROJECT_DESCRIPTION_NAME);
-
-		try {
-			resource.load(null);
-		} catch (IOException e) {
-			// TODO: MSG
-			throw new CoreException(new Status(IStatus.ERROR,
-					BundleMakerCore.BUNDLE_ID, e.getMessage()));
-		}
-
-		EProjectDescription projectDescription = (EProjectDescription) resource
-				.getContents().get(0);
-
-		BundleMakerProjectDescription result = new BundleMakerProjectDescription();
-		result.setCurrentId(projectDescription.getCurrentId());
-		result.setJre(projectDescription.getJre());
-
-		for (EFileBasedContent eFileBasedContent : projectDescription
-				.getFileBasedContent()) {
-
-			FileBasedContent fileBasedContent = new FileBasedContent();
-			result.getModifiableFileBasedContent().add(fileBasedContent);
-
-			fileBasedContent.setId(eFileBasedContent.getId());
-			fileBasedContent.setName(eFileBasedContent.getName());
-			fileBasedContent.setVersion(eFileBasedContent.getVersion());
-
-			for (String path : eFileBasedContent.getBinaryPathNames()) {
-				fileBasedContent.getModifiableBinaryPaths().add(new Path(path));
-			}
-
-			if (eFileBasedContent.getResourceContent() != null) {
-
-				ResourceContent resourceContent = new ResourceContent();
-				fileBasedContent.setResourceContent(resourceContent);
-
-				resourceContent.setAnalyzeSourceResources(eFileBasedContent
-						.getResourceContent().isAnalyzeSourceResources());
-
-				for (String path : eFileBasedContent.getResourceContent()
-						.getSourcePathNames()) {
-
-					resourceContent.getModifiableSourcePaths().add(
-							new Path(path));
-				}
-			}
-		}
-
-		_projectState = BundleMakerProjectState.CREATED;
-
-		return result;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param project
-	 * @return
-	 */
-	private org.eclipse.emf.ecore.resource.Resource getBundleMakerProjectDescriptionURI(
-			String name) {
-
 		//
-		URI uri = URI.createPlatformResourceURI(getProject().getFullPath()
-				.append(BUNDLEMAKER_DIRECTORY_NAME).append(name).toString(),
-				true);
-
-		// return a new XMLResourceImpl
-		return new XMLResourceImpl(uri);
+		return ProjectDescriptionStore.loadProjectDescription(_project);
 	}
 
 	/**

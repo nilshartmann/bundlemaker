@@ -1,4 +1,4 @@
-package org.bundlemaker.core.parser.jdt.ecj;
+package org.bundlemaker.core.parser.jdt.internal.ecj;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.parser.jdt.ast;
+package org.bundlemaker.core.parser.jdt.internal;
 
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.resource.IResourceKey;

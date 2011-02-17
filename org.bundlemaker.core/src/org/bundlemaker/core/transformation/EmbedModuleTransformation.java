@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 
 public class EmbedModuleTransformation implements ITransformation {
 

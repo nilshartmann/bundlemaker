@@ -1,4 +1,4 @@
-package org.bundlemaker.core.parser.jdt.ast;
+package org.bundlemaker.core.parser.jdt.internal;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -282,7 +282,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
 			//
 			currentType = _javaSourceResource.getType(outerType);
-			
+
 		} else {
 
 			//
@@ -327,8 +327,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		IModifiableType type = _javaSourceResource.getOrCreateType(node
 				.resolveBinding().getBinaryName(), TypeEnum.ANNOTATION);
 		_currentTypes.push(type);
-		_realTypes.push(node
-				.resolveBinding().getBinaryName());
+		_realTypes.push(node.resolveBinding().getBinaryName());
 
 		return true;
 	}
@@ -412,8 +411,7 @@ public class JdtAstVisitor extends ASTVisitor {
 		IModifiableType type = _javaSourceResource.getOrCreateType(node
 				.resolveBinding().getBinaryName(), TypeEnum.ENUM);
 		_currentTypes.push(type);
-		_realTypes.push(node
-				.resolveBinding().getBinaryName());
+		_realTypes.push(node.resolveBinding().getBinaryName());
 
 		// add super interfaces
 		List<Type> superInterfaces = node.superInterfaceTypes();
@@ -910,10 +908,8 @@ public class JdtAstVisitor extends ASTVisitor {
 		}
 
 		// return the qualified name
-		addReferencedType(
-				((IType) typeBinding.getJavaElement())
-						.getFullyQualifiedName('$'),
-				isExtends, isImplements, isClassAnnotation);
+		addReferencedType(typeBinding.getBinaryName(), isExtends, isImplements,
+				isClassAnnotation);
 	}
 
 	/**
@@ -1090,8 +1086,9 @@ public class JdtAstVisitor extends ASTVisitor {
 
 				ReferenceAttributes referenceAttributes = null;
 
-				String currentTypeName = _currentTypes.peek().getFullyQualifiedName();
-				
+				String currentTypeName = _currentTypes.peek()
+						.getFullyQualifiedName();
+
 				if (currentTypeName.equals(_realTypes.peek())) {
 
 					//

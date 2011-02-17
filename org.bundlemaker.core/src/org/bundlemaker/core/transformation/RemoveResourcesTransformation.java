@@ -3,9 +3,6 @@ package org.bundlemaker.core.transformation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bundlemaker.core.internal.modules.ModularizedSystem;
-import org.bundlemaker.core.internal.modules.ResourceModule;
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
