@@ -1,9 +1,7 @@
 package org.bundlemaker.core.parser;
 
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.resource.modifiable.IModifiableType;
 
 /**
  * <p>
@@ -21,9 +19,4 @@ public interface IResourceCache {
 	 * @return
 	 */
 	IModifiableResource getOrCreateResource(IResourceKey resourceKey);
-
-	/**
-	 * @return
-	 */
-	IModifiableType getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum);
 }

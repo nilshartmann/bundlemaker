@@ -132,7 +132,6 @@ public class ResourceCache implements IResourceCache {
 	}
 
 	// TODO synchronized
-	@Override
 	public synchronized Type getOrCreateType(String fullyQualifiedName,
 			TypeEnum typeEnum) {
 
