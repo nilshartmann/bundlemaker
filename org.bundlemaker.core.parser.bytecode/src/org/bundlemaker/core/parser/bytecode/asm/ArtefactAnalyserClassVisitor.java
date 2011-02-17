@@ -10,6 +10,10 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.EmptyVisitor;
 
+/**
+ * <p>
+ * </p>
+ */
 public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 		ClassVisitor {
 
@@ -135,7 +139,7 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 		VisitorUtils.recordReferencedTypes(_recorder, false, false, true, t);
 
 		//
-		return new ArtefactAnalyserFieldVisitor(_recorder, this._type);
+		return new ArtefactAnalyserFieldVisitor(_recorder);
 	}
 
 	/**
@@ -171,6 +175,6 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements
 		// }
 		// }
 
-		return new ArtefactAnalyserMethodVisitor(_recorder, this._type);
+		return new ArtefactAnalyserMethodVisitor(_recorder);
 	}
 }

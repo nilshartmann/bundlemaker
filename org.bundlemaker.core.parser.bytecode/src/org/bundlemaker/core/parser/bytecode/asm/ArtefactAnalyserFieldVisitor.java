@@ -7,8 +7,6 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.EmptyVisitor;
 
-import com.springsource.bundlor.support.partialmanifest.PartialManifest;
-
 public class ArtefactAnalyserFieldVisitor extends EmptyVisitor implements
 		FieldVisitor {
 
@@ -16,30 +14,20 @@ public class ArtefactAnalyserFieldVisitor extends EmptyVisitor implements
 	private final AsmReferenceRecorder _recorder;
 
 	/**
-	 * The type that is being scanned.
+	 * @param recorder
 	 */
-	private final Type type;
-
-	/**
-	 * Creates a new <code>ArtefactAnalyserClassVisitor</code> to scan the
-	 * supplied {@link PartialManifest}.
-	 * 
-	 * @param partialManifest
-	 *            the <code>PartialManifest</code> to scan.
-	 */
-	ArtefactAnalyserFieldVisitor(AsmReferenceRecorder recorder, Type type) {
+	ArtefactAnalyserFieldVisitor(AsmReferenceRecorder recorder) {
 		_recorder = recorder;
-		this.type = type;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		
+
 		//
 		Type t = Type.getType(desc);
-		
+
 		// uses
 		_recorder.recordReference(VisitorUtils.getFullyQualifiedTypeName(t),
 				new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, false,

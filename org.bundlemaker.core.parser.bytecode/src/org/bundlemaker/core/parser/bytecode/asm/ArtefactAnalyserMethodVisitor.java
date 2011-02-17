@@ -13,22 +13,11 @@ public class ArtefactAnalyserMethodVisitor extends EmptyVisitor implements
 	private final AsmReferenceRecorder _recorder;
 
 	/**
-	 * The type that is being scanned.
-	 */
-	private final Type type;
-
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ArtefactAnalyserMethodVisitor}.
-	 * </p>
-	 * 
 	 * @param recorder
 	 * @param type
 	 */
-	public ArtefactAnalyserMethodVisitor(AsmReferenceRecorder recorder,
-			Type type) {
+	public ArtefactAnalyserMethodVisitor(AsmReferenceRecorder recorder) {
 		this._recorder = recorder;
-		this.type = type;
 	}
 
 	/**

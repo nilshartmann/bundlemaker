@@ -27,58 +27,70 @@ public class ByteCodeParser extends AbstractParser {
 		return ParserType.BINARY;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected boolean canParse(IResourceKey resourceKey) {
+		return resourceKey.getPath().endsWith(".class");
+	}
+
 	@Override
 	protected void parseResource(IResourceKey resourceKey, IResourceCache cache) {
 
-		if (resourceKey.getPath().endsWith(".class")) {
+		// get the IModifiableResource
+		IModifiableResource resource = cache.getOrCreateResource(resourceKey);
 
-			IModifiableResource resource = cache
-					.getOrCreateResource(resourceKey);
+		// if the resource already contains a type, it already has been parsed.
+		// In this case we can return immediately
+		if (!resource.getContainedTypes().isEmpty()) {
+			return;
+		}
 
-			if (!resource.getContainedTypes().isEmpty()) {
-				return;
+		// if the resource does not contain a anonymous or local type
+		// the enclosing resource is the resource (the default)
+		IModifiableResource enclosingResource = resource;
+
+		// get fully qualified type name
+		String fullyQualifiedName = JavaTypeUtils
+				.convertToFullyQualifiedName(resource.getPath());
+
+		// if the type is an anonymous or local type,
+		// we have to get the enclosing type name
+		if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
+
+			// get the name of the enclosing type
+			String enclosingName = JavaTypeUtils
+					.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
+
+			// the resource key for the enclosing type
+			ResourceKey enclosingKey = new ResourceKey(
+					resourceKey.getContentId(), resourceKey.getRoot(),
+					JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
+
+			// get the enclosing resource
+			enclosingResource = cache.getOrCreateResource(enclosingKey);
+
+			// if we have to parse the enclosing type
+			if (enclosingResource.getContainedTypes().isEmpty()) {
+				parseResource(enclosingKey, cache);
+				Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
 			}
+		}
 
-			IModifiableResource enclosingResource = resource;
+		try {
 
-			// get fully qualified type name
-			String fullyQualifiedName = JavaTypeUtils
-					.convertToFullyQualifiedName(resource.getPath());
+			// create a new references recorder
+			AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(
+					resource, enclosingResource);
 
-			//
-			if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
+			// parse the class file
+			ClassReader reader = new ClassReader(resource.getInputStream());
+			reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder),
+					0);
 
-				String enclosingName = JavaTypeUtils
-						.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
-
-				ResourceKey enclosingKey = new ResourceKey(
-						resourceKey.getContentId(), resourceKey.getRoot(),
-						JavaTypeUtils
-								.convertFromFullyQualifiedName(enclosingName));
-
-				enclosingResource = cache.getOrCreateResource(enclosingKey);
-
-				if (enclosingResource.getContainedTypes().isEmpty()) {
-					parseResource(enclosingKey, cache);
-					Assert.isTrue(!enclosingResource.getContainedTypes()
-							.isEmpty());
-				}
-			}
-
-			//
-			try {
-
-				AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(
-						resource, enclosingResource);
-
-				ClassReader reader = new ClassReader(resource.getInputStream());
-				reader.accept(new ArtefactAnalyserClassVisitor(
-						referenceRecorder), 0);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

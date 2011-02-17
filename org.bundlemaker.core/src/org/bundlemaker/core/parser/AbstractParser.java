@@ -47,9 +47,11 @@ public abstract class AbstractParser implements IParser {
 				for (IResourceKey resourceKey : directoryFragment
 						.getResourceKeys()) {
 
-					// parse the class file
-					parseResource(resourceKey, cache);
+					if (canParse(resourceKey)) {
 
+						// parse the class file
+						parseResource(resourceKey, cache);
+					}
 					//
 					progressMonitor.worked(1);
 				}
@@ -78,4 +80,13 @@ public abstract class AbstractParser implements IParser {
 	 */
 	protected abstract void parseResource(IResourceKey resourceKey,
 			IResourceCache cache);
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param resourceKey
+	 * @return
+	 */
+	protected abstract boolean canParse(IResourceKey resourceKey);
 }
