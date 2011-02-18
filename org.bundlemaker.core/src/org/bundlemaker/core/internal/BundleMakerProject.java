@@ -184,35 +184,48 @@ public class BundleMakerProject implements IBundleMakerProject {
 		monitor.beginTask("Opening database ", resources.size());
 
 		for (Resource resource : resources) {
-			map.put(resource, resource);
 
-			// create copies of references
-			Set<Reference> references = new HashSet<Reference>();
-			for (Reference reference : resource.getModifiableReferences()) {
-				Reference newReference = new Reference(reference);
-				references.add(newReference);
-				newReference.setResource(resource);
-			}
-			resource.getModifiableReferences().clear();
-			resource.getModifiableReferences().addAll(references);
-
-			//
-			for (Type type : resource.getModifiableContainedTypes()) {
+				map.put(resource, resource);
 
 				// create copies of references
-				Set<Reference> typeReferences = new HashSet<Reference>();
-				for (Reference reference : type.getModifiableReferences()) {
+				Set<Reference> references = new HashSet<Reference>();
+				for (Reference reference : resource.getModifiableReferences()) {
+					
+					// TODO
+					if (reference == null) {
+						continue;
+					}
+					
 					Reference newReference = new Reference(reference);
-					typeReferences.add(newReference);
-					newReference.setType(type);
+					references.add(newReference);
+					newReference.setResource(resource);
+				}
+				resource.getModifiableReferences().clear();
+				resource.getModifiableReferences().addAll(references);
+
+				//
+				for (Type type : resource.getModifiableContainedTypes()) {
+
+					// create copies of references
+					Set<Reference> typeReferences = new HashSet<Reference>();
+					for (Reference reference : type.getModifiableReferences()) {
+						
+						// TODO
+						if (reference == null) {
+							continue;
+						}
+						
+						Reference newReference = new Reference(reference);
+						typeReferences.add(newReference);
+						newReference.setType(type);
+					}
+
+					type.getModifiableReferences().clear();
+					type.getModifiableReferences().addAll(typeReferences);
 				}
 
-				type.getModifiableReferences().clear();
-				type.getModifiableReferences().addAll(typeReferences);
-			}
-
-			// set monitor
-			monitor.worked(1);
+				// set monitor
+				monitor.worked(1);
 		}
 
 		monitor.done();
@@ -466,6 +479,12 @@ public class BundleMakerProject implements IBundleMakerProject {
 			// set the references
 			Set<Reference> typeReferences = new HashSet<Reference>();
 			for (Reference reference : type.getModifiableReferences()) {
+				
+				// TODO
+				if (reference == null) {
+					continue;
+				}
+				
 				Reference newReference = new Reference(reference);
 				newReference.setType(type);
 				typeReferences.add(newReference);

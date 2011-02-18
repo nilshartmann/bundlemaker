@@ -107,10 +107,12 @@ public class IntegrationTest {
 		destination.mkdirs();
 		ModuleExporterContext exporterContext = new ModuleExporterContext(
 				bundleMakerProject, destination, modularizedSystem);
-		
+
 		//
-		exportToStructure101(bundleMakerProject, modularizedSystem, exporterContext);
-		exportToSimpleReport(bundleMakerProject, modularizedSystem, exporterContext);
+		exportToStructure101(bundleMakerProject, modularizedSystem,
+				exporterContext);
+		exportToSimpleReport(bundleMakerProject, modularizedSystem,
+				exporterContext);
 	}
 
 	/**
@@ -122,11 +124,13 @@ public class IntegrationTest {
 	 * @throws Exception
 	 */
 	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
-			IModularizedSystem modularizedSystem, ModuleExporterContext exporterContext) throws Exception {
+			IModularizedSystem modularizedSystem,
+			ModuleExporterContext exporterContext) throws Exception {
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		Structure101Exporter exporter = new Structure101Exporter();
+		exporter.setExcludeModuleSelfReferences(false);
 		exporter.export(modularizedSystem, exporterContext);
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());

@@ -4,11 +4,11 @@ import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.util.JavaTypeUtils;
-import org.eclipse.core.runtime.Assert;
 import org.objectweb.asm.ClassReader;
 
 /**
@@ -32,11 +32,19 @@ public class ByteCodeParser extends AbstractParser {
 	 */
 	@Override
 	protected boolean canParse(IResourceKey resourceKey) {
-		return resourceKey.getPath().endsWith(".class");
+
+		//
+		if (!resourceKey.getPath().endsWith(".class")) {
+			return false;
+		}
+
+		//
+		return resourceKey.isValidJavaPackage();
 	}
 
 	@Override
-	protected void parseResource(IResourceKey resourceKey, IResourceCache cache) {
+	protected void parseResource(IResourceKey resourceKey,
+			IFileBasedContent content, IResourceCache cache) {
 
 		// get the IModifiableResource
 		IModifiableResource resource = cache.getOrCreateResource(resourceKey);
@@ -73,8 +81,13 @@ public class ByteCodeParser extends AbstractParser {
 
 			// if we have to parse the enclosing type
 			if (enclosingResource.getContainedTypes().isEmpty()) {
-				parseResource(enclosingKey, cache);
-				Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
+				parseResource(enclosingKey, content, cache);
+
+				if (enclosingResource.getContainedTypes().isEmpty()) {
+					// TODO
+					// TODO remove null handling in AsmReferenceRecorder
+					// Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
+				}
 			}
 		}
 

@@ -64,6 +64,14 @@ public interface IResourceKey {
 	 * 
 	 * @return
 	 */
+	boolean isValidJavaPackage();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	String getPackageName();
 
 	/**

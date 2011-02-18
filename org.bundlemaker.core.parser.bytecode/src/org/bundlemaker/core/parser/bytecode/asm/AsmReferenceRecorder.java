@@ -58,23 +58,49 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
 	 */
 	public void recordContainedType(String fullyQualifiedName, TypeEnum typeEnum) {
 
-		//
-		Assert.isNotNull(fullyQualifiedName);
+		try {
 
-		//
-		if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
+			//
+			Assert.isNotNull(fullyQualifiedName);
 
-			_resource.getOrCreateType(fullyQualifiedName, typeEnum);
-			_bundleMakerType = ((IModifiableType[]) _enclosingClassFileResource
-					.getContainedTypes().toArray(new IModifiableType[0]))[0];
+			//
+			if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
-			// add as sticky
-			_enclosingClassFileResource.addStickyResource(_resource);
+				_resource.getOrCreateType(fullyQualifiedName, typeEnum);
 
-		} else {
+				// we have to check for the existence of contained types:
+				// in the rare case of an (erroneous) non-set type we fall back
+				// on the resource type
+				if (!(_enclosingClassFileResource.getContainedTypes().isEmpty())) {
 
-			_bundleMakerType = _resource.getOrCreateType(fullyQualifiedName,
-					typeEnum);
+					//
+					_bundleMakerType = ((IModifiableType[]) _enclosingClassFileResource
+							.getContainedTypes()
+							.toArray(new IModifiableType[0]))[0];
+				} else {
+
+					// create the fall-back type
+					_bundleMakerType = _resource.getOrCreateType(
+							fullyQualifiedName, typeEnum);
+				}
+
+				// add as sticky
+				_enclosingClassFileResource.addStickyResource(_resource);
+
+			} else {
+
+				// create the type
+				_bundleMakerType = _resource.getOrCreateType(
+						fullyQualifiedName, typeEnum);
+			}
+
+		} catch (RuntimeException runtimeException) {
+
+			//
+			System.out.println(String.format(
+					"Exception while parsing '%s' [enclosing: '%s']",
+					_resource, _enclosingClassFileResource));
+			runtimeException.printStackTrace();
 		}
 	}
 
@@ -82,24 +108,41 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
 	public void recordReference(String fullyQualifiedName,
 			ReferenceAttributes attributes) {
 
-		if (fullyQualifiedName != null
-				&& !fullyQualifiedName.equals(_fullQualifiedTypeName)
-				&& !fullyQualifiedName.equals(_fullQualifiedEnclosingTypeName)) {
+		try {
 
-			//
-			if (!_resource.equals(_enclosingClassFileResource)) {
+			if (fullyQualifiedName != null
+					&& !fullyQualifiedName.equals(_fullQualifiedTypeName)
+					&& !fullyQualifiedName
+							.equals(_fullQualifiedEnclosingTypeName)) {
 
-				attributes = new ReferenceAttributes(
-						ReferenceType.TYPE_REFERENCE, false, false, false,
-						attributes.isCompileTime(), attributes.isRuntimeTime(),
-						attributes.isDirectlyReferenced(),
-						attributes.isIndirectlyReferenced());
+				//
+				if (!_resource.equals(_enclosingClassFileResource)) {
+
+					attributes = new ReferenceAttributes(
+							ReferenceType.TYPE_REFERENCE, false, false, false,
+							attributes.isCompileTime(),
+							attributes.isRuntimeTime(),
+							attributes.isDirectlyReferenced(),
+							attributes.isIndirectlyReferenced());
+				}
+
+				//
+				org.objectweb.asm.Type objectType = org.objectweb.asm.Type
+						.getObjectType(fullyQualifiedName);
+
+				String name = VisitorUtils
+						.getFullyQualifiedTypeName(objectType);
+
+				_bundleMakerType.recordReference(name, attributes);
 			}
 
+		} catch (RuntimeException runtimeException) {
+
 			//
-			_bundleMakerType.recordReference(VisitorUtils
-					.getFullyQualifiedTypeName(org.objectweb.asm.Type
-							.getObjectType(fullyQualifiedName)), attributes);
+			System.out.println(String.format(
+					"Exception while parsing '%s' [enclosing: '%s']",
+					_resource, _enclosingClassFileResource));
+			runtimeException.printStackTrace();
 		}
 	}
 }

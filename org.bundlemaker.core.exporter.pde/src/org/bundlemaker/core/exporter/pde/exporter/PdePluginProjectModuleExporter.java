@@ -56,6 +56,30 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 	/** - */
 	private static final String BIN_DIRECTORY_NAME = "bin";
 
+	/** - */
+	private PdeManifestStyle _dependencyDescriptionStyle = PdeManifestStyle.STRICT_REQUIRE_BUNDLE;
+
+	/** - */
+	private boolean _useClassifcationForExportDestination;
+
+	public PdeManifestStyle getDependencyDescriptionStyle() {
+		return _dependencyDescriptionStyle;
+	}
+
+	public void setDependencyDescriptionStyle(
+			PdeManifestStyle dependencyDescriptionStyle) {
+		_dependencyDescriptionStyle = dependencyDescriptionStyle;
+	}
+
+	public boolean isUseClassifcationForExportDestination() {
+		return _useClassifcationForExportDestination;
+	}
+
+	public void setUseClassifcationForExportDestination(
+			boolean useClassifcationForExportDestination) {
+		_useClassifcationForExportDestination = useClassifcationForExportDestination;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -83,7 +107,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		// delete and create project
 		IPath location = null;
 
-		if (getConfiguration(context).isUseClassifcationForExportDestination()) {
+		if (isUseClassifcationForExportDestination()) {
 
 			Path destinationDirectoryPath = new Path(context
 					.getDestinationDirectory().getAbsolutePath());
@@ -155,15 +179,15 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		bundleProjectDescription.setBundleVersion(new Version(module
 				.getModuleIdentifier().getVersion()));
 
-		if (getConfiguration(context).equals(
-				PdeExporterConfiguration.STRICT_IMPORT_PACKAGE)) {
+		if (getDependencyDescriptionStyle().equals(
+				PdeManifestStyle.STRICT_IMPORT_PACKAGE)) {
 
 			// import packages
 			addImportPackages(module, modularizedSystem, bundleProjectService,
 					bundleProjectDescription);
 
-		} else if (getConfiguration(context).equals(
-				PdeExporterConfiguration.STRICT_REQUIRE_BUNDLE)) {
+		} else if (getDependencyDescriptionStyle().equals(
+				PdeManifestStyle.STRICT_REQUIRE_BUNDLE)) {
 
 			// require bundles
 			addRequireBundle(module, modularizedSystem, bundleProjectService,
@@ -243,6 +267,15 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 				.toArray(new IRequiredBundleDescription[0]));
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param module
+	 * @param modularizedSystem
+	 * @param bundleProjectService
+	 * @param bundleProjectDescription
+	 */
 	private void addImportPackages(IResourceModule module,
 			IModularizedSystem modularizedSystem,
 			IBundleProjectService bundleProjectService,
@@ -263,23 +296,5 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 
 		bundleProjectDescription.setPackageImports(importDescriptions
 				.toArray(new IPackageImportDescription[0]));
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param context
-	 * @return
-	 */
-	private PdeExporterConfiguration getConfiguration(
-			IModuleExporterContext context) {
-
-		// get the result
-		PdeExporterConfiguration result = (PdeExporterConfiguration) context
-				.getAttribute(PdeExporterConfiguration.KEY);
-
-		// return the result
-		return result;
 	}
 }

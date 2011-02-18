@@ -141,6 +141,29 @@ public class ResourceKey implements IResourceKey {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public boolean isValidJavaPackage() {
+
+		//
+		String[] elements = getPath().split("/");
+
+		//
+		for (int i = 0; i < elements.length - 1; i++) {
+
+			String element = elements[i];
+
+			if (!isValidJavaIdentifier(element)) {
+				return false;
+			}
+		}
+
+		//
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String getPackageName() {
 		return getDirectory().replace('/', '.');
 	}
@@ -194,6 +217,34 @@ public class ResourceKey implements IResourceKey {
 		} else {
 			throw new RuntimeException("FEHLER");
 		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public final static boolean isValidJavaIdentifier(String s) {
+
+		// an empty or null string cannot be a valid identifier
+		if (s == null || s.length() == 0) {
+			return false;
+		}
+
+		char[] c = s.toCharArray();
+		if (!Character.isJavaIdentifierStart(c[0])) {
+			return false;
+		}
+
+		for (int i = 1; i < c.length; i++) {
+			if (!Character.isJavaIdentifierPart(c[i])) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**

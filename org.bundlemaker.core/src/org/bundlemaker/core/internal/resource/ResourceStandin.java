@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.resource;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IResourceModule;
@@ -21,6 +23,8 @@ public class ResourceStandin extends ResourceKey implements IResource {
 
 	/** do not set transient! */
 	private IResourceModule _resourceModule;
+
+	private Set<IResource> _stickyResourceStandins;
 
 	public IResourceModule getResourceModule() {
 		return _resourceModule;
@@ -128,10 +132,27 @@ public class ResourceStandin extends ResourceKey implements IResource {
 
 		//
 		if (_resource == null) {
-			// TODO
 			throw new RuntimeException();
 		}
 
-		return _resource.getStickyResources();
+		//
+		if (_resource.getStickyResources().isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		// lazy init
+		if (_stickyResourceStandins == null) {
+
+			// create new set
+			_stickyResourceStandins = new HashSet<IResource>();
+
+			// add resource standins
+			for (IResource resource : _resource.getStickyResources()) {
+				_stickyResourceStandins.add(((Resource) resource)
+						.getResourceStandin());
+			}
+		}
+
+		return _stickyResourceStandins;
 	}
 }

@@ -40,8 +40,13 @@ public abstract class AbstractParser implements IParser {
 		// iterate over the directories and parse the directory fragments
 		for (IDirectory directory : directoryList) {
 
-			for (IDirectoryFragment directoryFragment : directory
-					.getBinaryDirectoryFragments()) {
+			// TODO Support for ParserType.SOURCE_AND_BINARY
+			List<IDirectoryFragment> directoryFragments = getParserType()
+					.equals(ParserType.BINARY) ? directory
+					.getBinaryDirectoryFragments() : directory
+					.getSourceDirectoryFragments();
+
+			for (IDirectoryFragment directoryFragment : directoryFragments) {
 
 				// finally: parse the class files
 				for (IResourceKey resourceKey : directoryFragment
@@ -50,7 +55,7 @@ public abstract class AbstractParser implements IParser {
 					if (canParse(resourceKey)) {
 
 						// parse the class file
-						parseResource(resourceKey, cache);
+						parseResource(resourceKey, content, cache);
 					}
 					//
 					progressMonitor.worked(1);
@@ -79,7 +84,7 @@ public abstract class AbstractParser implements IParser {
 	 * @param cache
 	 */
 	protected abstract void parseResource(IResourceKey resourceKey,
-			IResourceCache cache);
+			IFileBasedContent content, IResourceCache cache);
 
 	/**
 	 * <p>

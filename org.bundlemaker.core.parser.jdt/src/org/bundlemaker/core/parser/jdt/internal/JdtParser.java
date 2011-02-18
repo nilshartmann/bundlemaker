@@ -173,10 +173,10 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
 			// TODO configurable
 			Map options = new HashMap();
-			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_5);
+			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
 			options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
-					JavaCore.VERSION_1_5);
-			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_5);
+					JavaCore.VERSION_1_6);
+			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
 
 			// _parser.setSource(iCompilationUnit);
 			char[] content = getCharsFromInputStream(modifiableResource

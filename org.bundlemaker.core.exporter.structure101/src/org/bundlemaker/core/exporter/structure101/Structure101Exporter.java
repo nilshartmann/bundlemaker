@@ -46,6 +46,20 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	/** - */
 	private IQueryFilter<IModule> _moduleFilter;
 
+	/** - */
+	private boolean _excludeModuleSelfReferences;
+
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link Structure101Exporter}.
+	 * </p>
+	 */
+	public Structure101Exporter() {
+
+		//
+		_excludeModuleSelfReferences = true;
+	}
+
 	/**
 	 * <p>
 	 * </p>
@@ -54,6 +68,27 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 	 */
 	public void setModuleFilter(IQueryFilter<IModule> moduleFilter) {
 		_moduleFilter = moduleFilter;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public boolean isExcludeModuleSelfReferences() {
+		return _excludeModuleSelfReferences;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param excludeModuleSelfReferences
+	 */
+	public void setExcludeModuleSelfReferences(
+			boolean excludeModuleSelfReferences) {
+		_excludeModuleSelfReferences = excludeModuleSelfReferences;
 	}
 
 	/**
@@ -80,7 +115,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 			//
 			if (_moduleFilter == null || _moduleFilter.matches(module)) {
-				
+
 				// create the entries
 				createEntries(module, modularizedSystem);
 			}
@@ -171,7 +206,8 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 					// TODO: CONFIGURATION
 					// exclude self references
-					if (referencedModule.equals(typeModule)) {
+					if (isExcludeModuleSelfReferences()
+							&& referencedModule.equals(typeModule)) {
 						continue;
 					}
 
