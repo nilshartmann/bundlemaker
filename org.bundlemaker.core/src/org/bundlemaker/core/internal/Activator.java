@@ -110,6 +110,12 @@ public class Activator extends Plugin {
 	 * @return
 	 */
 	public static Activator getDefault() {
+		
+		if (_activator == null) {
+			//
+			throw new RuntimeException();
+		}
+		
 		return _activator;
 	}
 
@@ -177,6 +183,7 @@ public class Activator extends Plugin {
 			return (IPersistentDependencyStoreFactory) _factoryTracker
 					.waitForService(5000);
 		} catch (InterruptedException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
