@@ -1,15 +1,15 @@
-package org.bundlemaker.core.exporter.bundle;
+package org.bundlemaker.core.exporter.manifest.internal.importresolver;
 
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.exporter.util.ManifestUtils;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.exporter.manifest.internal.AbstractResolver;
+import org.bundlemaker.core.exporter.manifest.internal.CurrentModule;
+import org.bundlemaker.core.exporter.manifest.internal.ManifestConstants;
+import org.bundlemaker.core.exporter.manifest.internal.ManifestUtils;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
 
@@ -23,45 +23,19 @@ import com.springsource.util.osgi.manifest.RequiredBundle.Visibility;
 import com.springsource.util.osgi.manifest.Resolution;
 import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
-import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
  */
-public abstract class AbstractImportResolver {
+public abstract class AbstractImportResolver extends AbstractResolver {
 
 	/** - */
-	private static final Object IMPORT_TEMPLATE = "Import-Template";
-
-	/** - */
-	private static final Object REQUIRE_BUNDLE_TEMPLATE = "RequiredBundle-Template";
-
-	/** - */
-	private List<HeaderDeclaration> EMPTY_HEADERDECLARATION_LIST = Collections
-			.emptyList();
-
-	/** - */
-	private IModularizedSystem _modularizedSystem;
-
-	/** - */
-	private IResourceModule _resourceModule;
+	private ReferencesCache _referencesCache;
 
 	/** - */
 	private ImportPackage _importPackage;
 
 	/** - */
 	private RequireBundle _requireBundle;
-
-	/** - */
-	private ManifestContents _manifestTemplate;
-
-	/** - */
-	private GenericCache<String, Set<IModule>> _typeToModuleCache;
-
-	/** - */
-	private GenericCache<String, Set<String>> _packageToTypesCache;
-
-	/** - */
-	private Set<String> _unsatisfiedTypes;
 
 	/** - */
 	private List<HeaderDeclaration> _importPackageTemplates;
@@ -75,48 +49,29 @@ public abstract class AbstractImportResolver {
 	 * 
 	 * @param modularizedSystem
 	 * @param resourceModule
+	 * @param manifestTemplate
 	 * @param importPackage
 	 * @param requireBundle
-	 * @param manifestTemplate
 	 */
-	public AbstractImportResolver(IModularizedSystem modularizedSystem,
-			IResourceModule resourceModule, ImportPackage importPackage,
-			RequireBundle requireBundle, ManifestContents manifestTemplate) {
+	public AbstractImportResolver(CurrentModule currentModule,
+			ImportPackage importPackage, RequireBundle requireBundle) {
 
-		Assert.isNotNull(modularizedSystem);
-		Assert.isNotNull(resourceModule);
+		super(currentModule);
+
 		Assert.isNotNull(importPackage);
 		Assert.isNotNull(requireBundle);
-		Assert.isNotNull(manifestTemplate);
 
 		//
-		_modularizedSystem = modularizedSystem;
-		_resourceModule = resourceModule;
 		_importPackage = importPackage;
 		_requireBundle = requireBundle;
-		_manifestTemplate = manifestTemplate;
 
 		//
-		_typeToModuleCache = new GenericCache<String, Set<IModule>>() {
-			@Override
-			protected Set<IModule> create(String key) {
-				return new HashSet<IModule>();
-			}
-		};
+		// TODO
+		_referencesCache = new ReferencesCache(
+				currentModule.getModularizedSystem(),
+				currentModule.getResourceModule(), true, true);
 
 		//
-		_packageToTypesCache = new GenericCache<String, Set<String>>() {
-			@Override
-			protected Set<String> create(String key) {
-				return new HashSet<String>();
-			}
-		};
-
-		//
-		_unsatisfiedTypes = new HashSet<String>();
-
-		//
-		initializeCaches();
 		initTemplates();
 	}
 
@@ -126,18 +81,8 @@ public abstract class AbstractImportResolver {
 	 * 
 	 * @return
 	 */
-	public IModularizedSystem getModularizedSystem() {
-		return _modularizedSystem;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public IResourceModule getResourceModule() {
-		return _resourceModule;
+	protected final ReferencesCache getReferencesCache() {
+		return _referencesCache;
 	}
 
 	/**
@@ -158,46 +103,6 @@ public abstract class AbstractImportResolver {
 	 */
 	public RequireBundle getRequireBundle() {
 		return _requireBundle;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public ManifestContents getManifestTemplate() {
-		return _manifestTemplate;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public GenericCache<String, Set<IModule>> getTypeToModuleCache() {
-		return _typeToModuleCache;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public GenericCache<String, Set<String>> getPackageToTypesCache() {
-		return _packageToTypesCache;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<String> getUnsatisfiedTypes() {
-		return _unsatisfiedTypes;
 	}
 
 	/**
@@ -371,52 +276,113 @@ public abstract class AbstractImportResolver {
 	/**
 	 * <p>
 	 * </p>
+	 * 
+	 * @param packageName
+	 * @return
 	 */
-	private void initializeCaches() {
+	protected boolean containsUnsatisfiedTypes(String packageName) {
 
 		//
-		for (String typeName : _resourceModule.getReferencedTypeNames(true,
-				false, false)) {
+		Set<String> typeNames = getReferencesCache()
+				.getReferencedPackageToContainingTypesCache().get(packageName);
 
-			// get the package type
-			String packageName = typeName.contains(".") ? typeName.substring(0,
-					typeName.lastIndexOf('.')) : "";
-
-			// add to the package to type cache
-			_packageToTypesCache.getOrCreate(packageName).add(typeName);
-
-			// get the modules
-			Set<IModule> modules = _modularizedSystem
-					.getContainingModules(typeName);
-
-			// add to the type caches
-			if (modules.isEmpty()) {
-				_unsatisfiedTypes.add(typeName);
-			} else {
-				_typeToModuleCache.getOrCreate(typeName).addAll(modules);
+		//
+		for (String typeName : typeNames) {
+			if (getReferencesCache().getUnsatisfiedTypes().contains(typeName)) {
+				return true;
 			}
 		}
+
+		//
+		return false;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param exportingModules
+	 * @param set
+	 * @return
+	 */
+	protected List<IModule> reduce(List<IModule> exportingModules,
+			Set<String> typeNames) {
+
+		Assert.isNotNull(exportingModules);
+		Assert.isNotNull(typeNames);
+
+		//
+		for (IModule module : exportingModules) {
+			if (module.containsAll(typeNames)) {
+				List<IModule> result = new LinkedList<IModule>();
+				result.add(module);
+				return result;
+			}
+		}
+
+		//
+		return exportingModules;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageName
+	 * @return
+	 */
+	protected List<IModule> getExportingModules(String packageName) {
+
+		//
+		List<IModule> result = new ArrayList<IModule>();
+
+		//
+		Set<String> types = getReferencesCache()
+				.getReferencedPackageToContainingTypesCache().get(packageName);
+
+		for (String type : types) {
+
+			Set<IModule> module = getReferencesCache()
+					.getReferenceTypeToExportingModuleCache().get(type);
+
+			if (module != null) {
+				result.addAll(module);
+			} else {
+				System.out.println("No Module for " + type);
+			}
+
+		}
+
+		//
+		return result;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 */
 	private void initTemplates() {
 
 		// get the import package template
-		String importPackageTemplateHeader = _manifestTemplate
-				.getMainAttributes().get(IMPORT_TEMPLATE);
+		String importPackageTemplateHeader = getManifestTemplate()
+				.getMainAttributes().get(
+						ManifestConstants.HEADER_IMPORT_TEMPLATE);
 
 		_importPackageTemplates = importPackageTemplateHeader != null ? HeaderParserFactory
 				.newHeaderParser(new SimpleParserLogger()).parsePackageHeader(
 						importPackageTemplateHeader, Constants.IMPORT_PACKAGE)
-				: EMPTY_HEADERDECLARATION_LIST;
+				: ManifestConstants.EMPTY_HEADERDECLARATION_LIST;
 
 		// get the require bundle template
-		String requiredBundleTemplateHeader = _manifestTemplate
-				.getMainAttributes().get(REQUIRE_BUNDLE_TEMPLATE);
+		String requiredBundleTemplateHeader = getManifestTemplate()
+				.getMainAttributes().get(
+						ManifestConstants.HEADER_REQUIRE_BUNDLE_TEMPLATE);
 
 		_requireBundleTemplates = requiredBundleTemplateHeader != null ? HeaderParserFactory
 				.newHeaderParser(new SimpleParserLogger()).parsePackageHeader(
 						importPackageTemplateHeader, Constants.REQUIRE_BUNDLE)
-				: EMPTY_HEADERDECLARATION_LIST;
+				: ManifestConstants.EMPTY_HEADERDECLARATION_LIST;
 
 	}
 

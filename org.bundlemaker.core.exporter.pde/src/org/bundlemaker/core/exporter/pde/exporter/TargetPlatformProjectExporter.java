@@ -2,8 +2,8 @@ package org.bundlemaker.core.exporter.pde.exporter;
 
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.exporter.bundle.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.Activator;
+import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.exporter.util.ModularizedSystemExporterAdapter;
 import org.eclipse.core.resources.IFile;

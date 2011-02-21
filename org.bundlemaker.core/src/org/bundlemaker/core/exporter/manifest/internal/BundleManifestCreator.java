@@ -1,4 +1,4 @@
-package org.bundlemaker.core.exporter.bundle;
+package org.bundlemaker.core.exporter.manifest.internal;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -6,11 +6,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.exporter.util.ManifestUtils;
+import org.bundlemaker.core.exporter.manifest.internal.importresolver.ImportResolver;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -25,6 +22,7 @@ import com.springsource.util.osgi.manifest.BundleManifestFactory;
 import com.springsource.util.osgi.manifest.BundleSymbolicName;
 import com.springsource.util.osgi.manifest.ExportPackage;
 import com.springsource.util.osgi.manifest.ExportedPackage;
+import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -36,19 +34,10 @@ import com.springsource.util.parser.manifest.ManifestContents;
 public class BundleManifestCreator {
 
 	/** - */
-	private IResourceModule _resourceModule;
-
-	/** - */
 	private BundleManifest _newBundleManifest;
 
 	/** - */
-	private ManifestContents _manifestTemplate;
-
-	/** - */
-	private IModularizedSystem _modularizedSystem;
-
-	/** - */
-	private IModuleExporterContext _context;
+	private CurrentModule _currentModule;
 
 	/**
 	 * <p>
@@ -59,19 +48,13 @@ public class BundleManifestCreator {
 	 * @param modularizedSystem
 	 * @param context
 	 */
-	public BundleManifestCreator(IResourceModule resourceModule,
-			ManifestContents manifestTemplate,
-			IModularizedSystem modularizedSystem, IModuleExporterContext context) {
+	public BundleManifestCreator(CurrentModule currentModule) {
 
-		Assert.isNotNull(resourceModule);
-		Assert.isNotNull(manifestTemplate);
-		Assert.isNotNull(modularizedSystem);
-		Assert.isNotNull(context);
+		//
+		Assert.isNotNull(currentModule);
 
-		_resourceModule = resourceModule;
-		_manifestTemplate = manifestTemplate;
-		_modularizedSystem = modularizedSystem;
-		_context = context;
+		//
+		_currentModule = currentModule;
 	}
 
 	/**
@@ -87,8 +70,8 @@ public class BundleManifestCreator {
 	public ManifestContents createManifest() throws CoreException {
 
 		// the existing bundle manifest resource
-		IResource existingManifestResource = _resourceModule.getResource(
-				"META-INF/MANIFEST.MF", ContentType.BINARY);
+		IResource existingManifestResource = _currentModule.getResourceModule()
+				.getResource("META-INF/MANIFEST.MF", ContentType.BINARY);
 
 		// the existing bundle manifest
 		ManifestContents existingManifest;
@@ -99,7 +82,8 @@ public class BundleManifestCreator {
 			// return immediately if manifest already is a bundle manifest
 			if (isBundleManifest(existingManifest)
 					&& !ModuleExporterUtils.requiresRepackaging(
-							_resourceModule, ContentType.BINARY)) {
+							_currentModule.getResourceModule(),
+							ContentType.BINARY)) {
 
 				// return the existing manifest
 				return existingManifest;
@@ -188,7 +172,7 @@ public class BundleManifestCreator {
 				.getBundleSymbolicName();
 
 		// set the symbolic name
-		bundleSymbolicName.setSymbolicName(_resourceModule
+		bundleSymbolicName.setSymbolicName(_currentModule.getResourceModule()
 				.getModuleIdentifier().getName());
 	}
 
@@ -204,8 +188,8 @@ public class BundleManifestCreator {
 		try {
 
 			//
-			version = new Version(_resourceModule.getModuleIdentifier()
-					.getVersion());
+			version = new Version(_currentModule.getResourceModule()
+					.getModuleIdentifier().getVersion());
 		} catch (Exception e) {
 
 			//
@@ -222,24 +206,35 @@ public class BundleManifestCreator {
 	 */
 	protected void createImportPackageAndRequiredBundle() {
 
-		ImportResolver importResolver = new ImportResolver(_modularizedSystem,
-				_resourceModule, _newBundleManifest.getImportPackage(),
-				_newBundleManifest.getRequireBundle(), _manifestTemplate);
+		//
+		ImportResolver importResolver = new ImportResolver(_currentModule,
+				_newBundleManifest.getImportPackage(),
+				_newBundleManifest.getRequireBundle());
 
+		//
 		importResolver.addImportPackageAndRequiredBundle();
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 */
 	protected void createExportPackage() {
 
 		// get the export package 'header'
 		ExportPackage exportPackage = _newBundleManifest.getExportPackage();
 
-		// // get the import package template
-		// String importPackageTemplateHeader = _currentManifestTemplate
-		// .getMainAttributes().get(TemplateConstants.IMPORT_TEMPLATE);
+		// get the import package template
+		String importPackageTemplateHeader = _currentModule
+				.getManifestTemplate().getMainAttributes()
+				.get(ManifestConstants.HEADER_IMPORT_TEMPLATE);
+
+		List<HeaderDeclaration> exportPackageTemplates = ManifestUtils
+				.parseManifestValue(importPackageTemplateHeader);
 
 		// get all referenced package names
-		Set<String> packageNames = _resourceModule.getContainedPackageNames();
+		Set<String> packageNames = _currentModule.getResourceModule()
+				.getContainedPackageNames();
 
 		//
 		for (String packageName : packageNames) {
@@ -248,22 +243,22 @@ public class BundleManifestCreator {
 			ExportedPackage exportedPackage = exportPackage
 					.addExportedPackage(packageName);
 
-			// // get the template
-			// HeaderDeclaration importPackageTemplate = ManifestUtils
-			// .findMostSpecificDeclaration(importPackageTemplates,
-			// packageName);
+			// get the template
+			HeaderDeclaration exportPackageTemplate = ManifestUtils
+					.findMostSpecificDeclaration(exportPackageTemplates,
+							packageName);
 
-			// // assign the template values
-			// if (importPackageTemplate != null) {
-			//
-			// // add the attributes
-			// importedPackage.getAttributes().putAll(
-			// importPackageTemplate.getAttributes());
-			//
-			// // add the directives
-			// importedPackage.getDirectives().putAll(
-			// importPackageTemplate.getDirectives());
-			// }
+			// assign the template values
+			if (exportPackageTemplate != null) {
+
+				// add the attributes
+				exportedPackage.getAttributes().putAll(
+						exportPackageTemplate.getAttributes());
+
+				// add the directives
+				exportedPackage.getDirectives().putAll(
+						exportPackageTemplate.getDirectives());
+			}
 		}
 	}
 }

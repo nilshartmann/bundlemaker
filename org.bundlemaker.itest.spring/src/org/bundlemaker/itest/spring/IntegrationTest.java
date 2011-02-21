@@ -13,11 +13,11 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.exporter.bundle.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.PdeManifestStyle;
 import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
+import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.util.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -271,8 +271,8 @@ public class IntegrationTest {
 
 		PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
 		pdeExporter.setUseClassifcationForExportDestination(true);
-		pdeExporter
-				.setDependencyDescriptionStyle(PdeManifestStyle.STRICT_IMPORT_PACKAGE);
+		// pdeExporter
+		// .setDependencyDescriptionStyle(PdeManifestStyle.STRICT_IMPORT_PACKAGE);
 		new ModularizedSystemExporterAdapter(pdeExporter).export(
 				modularizedSystem, exporterContext);
 	}

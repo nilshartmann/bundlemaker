@@ -16,6 +16,15 @@ public interface ITypeContainer {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @param typeNames
+	 * @return
+	 */
+	boolean containsAll(Set<String> typeNames);
+
+	/**
+	 * <p>
 	 * Returns the {@link IType} with the specified fully qualified name or
 	 * <code>null</code> if no {@link IType} with the specified name exists.
 	 * </p>

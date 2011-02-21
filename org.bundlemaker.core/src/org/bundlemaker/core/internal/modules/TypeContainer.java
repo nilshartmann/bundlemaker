@@ -46,6 +46,30 @@ public class TypeContainer implements ITypeContainer {
 	}
 
 	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param typeNames
+	 * @return
+	 */
+	public boolean containsAll(Set<String> typeNames) {
+
+		try {
+			for (String typeName : typeNames) {
+				if (getType(typeName) == null) {
+					return false;
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//
+		return true;
+	}
+	
+	/**
 	 * {@inheritDoc}
 	 */
 	@Override

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.exporter.util;
+package org.bundlemaker.core.exporter.manifest.internal;
 
 import java.io.File;
 import java.io.FileNotFoundException;
