@@ -118,7 +118,7 @@ public class ReferencesCache {
 
 		//
 		for (String typeName : _resourceModule.getReferencedTypeNames(true,
-				false, false)) {
+				_includeSourceReferences, _includeIndirectReferences)) {
 
 			// get the package type
 			String packageName = typeName.contains(".") ? typeName.substring(0,

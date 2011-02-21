@@ -1,9 +1,11 @@
 package org.bundlemaker.core.exporter.manifest.internal.importresolver;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.exporter.manifest.internal.CurrentModule;
 import org.bundlemaker.core.modules.IModule;
+import org.osgi.framework.Constants;
 
 import com.springsource.util.osgi.manifest.ImportPackage;
 import com.springsource.util.osgi.manifest.RequireBundle;
@@ -43,6 +45,9 @@ public class ImportResolver extends AbstractImportResolver {
 	public void addImportPackageAndRequiredBundle() {
 
 		//
+		List<IModule> requiredBundle = new LinkedList<IModule>();
+
+		//
 		for (String packageName : getReferencesCache()
 				.getReferencedPackageToContainingTypesCache().getMap().keySet()) {
 
@@ -70,8 +75,10 @@ public class ImportResolver extends AbstractImportResolver {
 					addImportedPackage(packageName);
 				} else {
 					for (IModule iModule : reduced) {
-						addRequireBundle(iModule.getModuleIdentifier()
-								.getName());
+
+						if (!requiredBundle.contains(iModule)) {
+							requiredBundle.add(iModule);
+						}
 					}
 				}
 
@@ -80,9 +87,25 @@ public class ImportResolver extends AbstractImportResolver {
 				if (!useRequireBundle) {
 					addImportedPackage(packageName);
 				} else {
-					addRequireBundle(exportingModules.get(0)
-							.getModuleIdentifier().getName());
+					if (!requiredBundle.contains(exportingModules.get(0))) {
+						requiredBundle.add(exportingModules.get(0));
+					}
 				}
+			}
+		}
+
+		//
+		for (IModule iModule : requiredBundle) {
+			if (iModule
+					.equals(getModularizedSystem().getExecutionEnvironment())) {
+
+				//
+				addRequireBundle(Constants.SYSTEM_BUNDLE_SYMBOLICNAME);
+
+			} else {
+
+				//
+				addRequireBundle(iModule.getModuleIdentifier().getName());
 			}
 		}
 	}
