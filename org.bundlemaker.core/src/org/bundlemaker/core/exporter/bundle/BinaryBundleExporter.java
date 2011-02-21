@@ -1,6 +1,7 @@
 package org.bundlemaker.core.exporter.bundle;
 
 import org.bundlemaker.core.exporter.AbstractJarFileBundleExporter;
+import org.eclipse.core.runtime.CoreException;
 
 import com.springsource.util.parser.manifest.ManifestContents;
 
@@ -24,7 +25,7 @@ public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 	 * @return
 	 * @throws Exception
 	 */
-	protected ManifestContents createManifest() throws Exception {
+	protected ManifestContents createManifest() throws CoreException {
 
 		// create the manifest
 		return new BundleManifestCreator(getCurrentModule(),

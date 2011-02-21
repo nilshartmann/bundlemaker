@@ -84,6 +84,8 @@ public interface IReference {
 	 * @return
 	 */
 	boolean isClassAnnotation();
+	
+	
 
 	/**
 	 * <p>
@@ -128,4 +130,8 @@ public interface IReference {
 	 * @return
 	 */
 	boolean hasAssociatedType();
+
+	boolean isDirectlyReferenced();
+
+	boolean isIndirectlyReferenced();
 }

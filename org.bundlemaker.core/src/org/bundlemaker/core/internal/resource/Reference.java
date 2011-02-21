@@ -84,9 +84,29 @@ public class Reference implements IReference {
 	public boolean isExtends() {
 		return _referenceAttributes.isExtends();
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public boolean isClassAnnotation() {
 		return _referenceAttributes.isClassAnnotation();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isDirectlyReferenced() {
+		return _referenceAttributes.isDirectlyReferenced();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean isIndirectlyReferenced() {
+		return _referenceAttributes.isIndirectlyReferenced();
 	}
 
 	/**

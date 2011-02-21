@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.modules.algorithm;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.ModularizedSystem;
@@ -46,7 +47,7 @@ public class ResourceReferencesTransitiveClosure extends
 		getResources().add(resource);
 
 		//
-		for (IReference reference : resource.getResourceAndTypeReferences()) {
+		for (IReference reference : getReferences(resource)) {
 
 			//
 			String typeName = reference.getFullyQualifiedName();
@@ -74,5 +75,30 @@ public class ResourceReferencesTransitiveClosure extends
 				resolveResource(res, contentType, queryFilter);
 			}
 		}
+	}
+	
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param resource
+	 * @return
+	 */
+	private Set<IReference> getReferences(IResource resource) {
+		//
+		Set<IReference> result = new HashSet<IReference>();
+
+		//
+		if (resource.getReferences() != null) {
+			result.addAll(resource.getReferences());
+		}
+
+		//
+		for (IType type : resource.getContainedTypes()) {
+			result.addAll(type.getReferences());
+		}
+
+		//
+		return result;
 	}
 }

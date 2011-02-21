@@ -2,9 +2,9 @@ package org.bundlemaker.core.exporter;
 
 import java.io.File;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.exporter.util.ManifestUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 
 import com.springsource.bundlor.util.SimpleManifestContents;
 import com.springsource.util.parser.manifest.ManifestContents;
@@ -28,12 +28,13 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 
 	/** - */
 	private ManifestContents _manifestTemplateContents;
+	
+	
+	
 
 	@Override
-	public final void export(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context)
-			throws Exception {
-
+	protected void preExportModule() throws CoreException {
+		
 		// get the template manifest
 		_manifestTemplateContents = getManifestTemplate();
 
@@ -43,9 +44,6 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 				"The method createManifest(IModularizedSystem, "
 						+ "IResourceModule, IModuleExporterContext) of class "
 						+ "'%s' returned 'null'.", this.getClass().getName()));
-
-		//
-		onExport();
 	}
 
 	/**
@@ -81,20 +79,10 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * @param modularizedSystem
 	 * @param module
 	 * @param context
-	 */
-	protected abstract void onExport() throws Exception;
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
 	 * @return
 	 * @throws Exception
 	 */
-	protected abstract ManifestContents createManifest() throws Exception;
+	protected abstract ManifestContents createManifest() throws CoreException;
 
 	/**
 	 * <p>

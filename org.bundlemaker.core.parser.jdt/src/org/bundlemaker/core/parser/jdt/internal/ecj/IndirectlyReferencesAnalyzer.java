@@ -1,8 +1,10 @@
 package org.bundlemaker.core.parser.jdt.internal.ecj;
 
+import java.io.IOException;
 import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
+import org.bundlemaker.core.parser.jdt.internal.JdtParser;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
@@ -14,7 +16,6 @@ import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.core.builder.NameEnvironment;
-import org.eclipse.jdt.internal.core.util.ResourceCompilationUnit;
 
 /**
  * <p>
@@ -86,17 +87,36 @@ public class IndirectlyReferencesAnalyzer {
 
 	/**
 	 * <p>
-	 * Returns all referenced files for the given source file.
 	 * </p>
 	 * 
-	 * @param sourceFile
+	 * @param modifiableResource
 	 * @return
+	 * @throws IOException
 	 */
-	public Set<String> getAllReferencedTypes(IFile sourceFile) {
-		Assert.isNotNull(sourceFile);
+	public Set<String> getAllReferencedTypes(
+			IModifiableResource modifiableResource) throws IOException {
 
-		ICompilationUnit[] units = new ICompilationUnit[] { new ResourceCompilationUnit(
-				sourceFile, null) };
+		//
+		return getAllReferencedTypes(modifiableResource,
+				JdtParser.getCharsFromInputStream(modifiableResource
+						.getInputStream()));
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modifiableResource
+	 * @param content
+	 * @return
+	 * @throws IOException
+	 */
+	public Set<String> getAllReferencedTypes(
+			IModifiableResource modifiableResource, char[] content)
+			throws IOException {
+
+		ICompilationUnit[] units = new ICompilationUnit[] { new ModifiableResourceCompilationUnit(
+				modifiableResource, content) };
 		_environment.resetRequestedTypes();
 		_compiler.compile(units);
 

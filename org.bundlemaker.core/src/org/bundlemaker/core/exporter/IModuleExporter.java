@@ -2,6 +2,7 @@ package org.bundlemaker.core.exporter;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -40,5 +41,5 @@ public interface IModuleExporter {
 	 * @throws Exception
 	 */
 	void export(IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) throws Exception;
+			IModuleExporterContext context) throws CoreException;
 }

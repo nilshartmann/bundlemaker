@@ -1,29 +1,31 @@
 package org.bundlemaker.core.exporter.pde.exporter;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
-import org.bundlemaker.core.exporter.Helper;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.exporter.ManifestUtils;
-import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
 import org.bundlemaker.core.exporter.pde.Activator;
+import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -34,12 +36,7 @@ import org.eclipse.pde.core.project.IBundleProjectService;
 import org.eclipse.pde.core.project.IPackageExportDescription;
 import org.eclipse.pde.core.project.IPackageImportDescription;
 import org.eclipse.pde.core.project.IRequiredBundleDescription;
-import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
-
-import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
-import com.springsource.util.parser.manifest.ManifestContents;
-import com.springsource.util.parser.manifest.RecoveringManifestParser;
 
 /**
  * h
@@ -96,12 +93,10 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void export(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context)
-			throws Exception {
+	public void doExport() throws CoreException {
 
 		// get a non-existing project name
-		String projectName = Helper.getUniqueProjectName(module
+		String projectName = Helper.getUniqueProjectName(getCurrentModule()
 				.getModuleIdentifier().getName());
 
 		// delete and create project
@@ -109,11 +104,11 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 
 		if (isUseClassifcationForExportDestination()) {
 
-			Path destinationDirectoryPath = new Path(context
+			Path destinationDirectoryPath = new Path(getCurrentContext()
 					.getDestinationDirectory().getAbsolutePath());
 
 			location = destinationDirectoryPath.append(
-					module.getClassification()).append(projectName);
+					getCurrentModule().getClassification()).append(projectName);
 		}
 
 		//
@@ -133,34 +128,35 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 
 		// **************************************
 
-		File templateDirectory = (File) context
-				.getAttribute(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY);
-
-		File template = new File(templateDirectory, String.format(
-				"%s.template", module.getModuleIdentifier().toString()));
-
-		if (template.exists()) {
-
-			// MatchUtils
-			RecoveringManifestParser manifestParser = new RecoveringManifestParser();
-
-			//
-			ManifestContents templateManifest = manifestParser
-					.parse(new FileReader(template));
-
-			//
-			String requireBundle = templateManifest.getMainAttributes().get(
-					Constants.REQUIRE_BUNDLE);
-
-			List<HeaderDeclaration> requireBundleDeclarations = ManifestUtils
-					.parseManifestValue(requireBundle);
-
-			HeaderDeclaration declaration = ManifestUtils
-					.findMostSpecificDeclaration(requireBundleDeclarations,
-							"blub");
-
-			System.out.println(declaration);
-		}
+		// File templateDirectory = (File) getCurrentContext()
+		// .getAttribute(Pde.TEMPLATE_DIRECTORY);
+		//
+		// File template = new File(templateDirectory, String.format(
+		// "%s.template", module.getModuleIdentifier().toString()));
+		//
+		// if (template.exists()) {
+		//
+		// // MatchUtils
+		// RecoveringManifestParser manifestParser = new
+		// RecoveringManifestParser();
+		//
+		// //
+		// ManifestContents templateManifest = manifestParser
+		// .parse(new FileReader(template));
+		//
+		// //
+		// String requireBundle = templateManifest.getMainAttributes().get(
+		// Constants.REQUIRE_BUNDLE);
+		//
+		// List<HeaderDeclaration> requireBundleDeclarations = ManifestUtils
+		// .parseManifestValue(requireBundle);
+		//
+		// HeaderDeclaration declaration = ManifestUtils
+		// .findMostSpecificDeclaration(requireBundleDeclarations,
+		// "blub");
+		//
+		// System.out.println(declaration);
+		// }
 
 		// *********************************************************
 
@@ -173,29 +169,31 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 				.getDescription(project);
 
 		//
-		bundleProjectDescription.setSymbolicName(module.getModuleIdentifier()
-				.getName());
+		bundleProjectDescription.setSymbolicName(getCurrentModule()
+				.getModuleIdentifier().getName());
 
-		bundleProjectDescription.setBundleVersion(new Version(module
-				.getModuleIdentifier().getVersion()));
+		bundleProjectDescription.setBundleVersion(new Version(
+				getCurrentModule().getModuleIdentifier().getVersion()));
 
 		if (getDependencyDescriptionStyle().equals(
 				PdeManifestStyle.STRICT_IMPORT_PACKAGE)) {
 
 			// import packages
-			addImportPackages(module, modularizedSystem, bundleProjectService,
+			addImportPackages(getCurrentModule(),
+					getCurrentModularizedSystem(), bundleProjectService,
 					bundleProjectDescription);
 
 		} else if (getDependencyDescriptionStyle().equals(
 				PdeManifestStyle.STRICT_REQUIRE_BUNDLE)) {
 
 			// require bundles
-			addRequireBundle(module, modularizedSystem, bundleProjectService,
-					bundleProjectDescription);
+			addRequireBundle(getCurrentModule(), getCurrentModularizedSystem(),
+					bundleProjectService, bundleProjectDescription);
 		}
 
 		// export packages
-		Set<String> containedPackages = module.getContainedPackageNames();
+		Set<String> containedPackages = getCurrentModule()
+				.getContainedPackageNames();
 		List<IPackageExportDescription> exportDescriptions = new LinkedList<IPackageExportDescription>();
 		for (String containedPackage : containedPackages) {
 			IPackageExportDescription exportDescription = bundleProjectService
@@ -220,8 +218,8 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 		IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
 		// copy the source
-		for (IResource resourceStandin : module
-				.getResources(ContentType.SOURCE)) {
+		for (IResource resourceStandin : getCurrentModule().getResources(
+				ContentType.SOURCE)) {
 
 			if (!resourceStandin.getPath().startsWith("META-INF")) {
 
@@ -233,8 +231,15 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 				File inputFile = new File(resourceStandin.getRoot(),
 						resourceStandin.getPath());
 
-				//
-				FileUtils.copyFile(inputFile, targetFile);
+				try {
+					//
+					FileUtils.copy(resourceStandin.getInputStream(),
+							new FileOutputStream(targetFile), new byte[1024]);
+				} catch (Exception e) {
+					// TODO
+					e.printStackTrace();
+					throw new CoreException(new Status(IStatus.ERROR, "asd", "asd"));
+				}
 			}
 		}
 	}
@@ -270,7 +275,7 @@ public class PdePluginProjectModuleExporter extends AbstractExporter {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @param module
 	 * @param modularizedSystem
 	 * @param bundleProjectService

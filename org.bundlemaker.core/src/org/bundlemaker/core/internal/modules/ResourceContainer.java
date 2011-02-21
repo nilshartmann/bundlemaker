@@ -103,11 +103,11 @@ public class ResourceContainer extends TypeContainer implements
 		Set<IReference> result = new HashSet<IReference>();
 
 		//
-		getReferences(_binaryResources, hideContainedTypes, result);
+		getReferences(_binaryResources, hideContainedTypes, includeIndirectReferences, result);
 
 		//
 		if (includeSourceReferences) {
-			getReferences(_sourceResources, hideContainedTypes, result);
+			getReferences(_sourceResources, hideContainedTypes, includeIndirectReferences, result);
 		}
 
 		// return result
@@ -296,10 +296,11 @@ public class ResourceContainer extends TypeContainer implements
 	 * 
 	 * @param resources
 	 * @param hideContainedTypes
+	 * @param includeIndirectReferences TODO
 	 * @param result
 	 */
 	private void getReferences(Set<? extends IResource> resources,
-			boolean hideContainedTypes, Set<IReference> result) {
+			boolean hideContainedTypes, boolean includeIndirectReferences, Set<IReference> result) {
 
 		// iterate over all resources
 		for (IResource resource : resources) {
@@ -311,7 +312,16 @@ public class ResourceContainer extends TypeContainer implements
 						|| !getContainedTypeNames().contains(
 								reference.getFullyQualifiedName())) {
 
-					result.add(reference);
+					if (!reference.isDirectlyReferenced()) {
+						
+						//
+						if (includeIndirectReferences && reference.isIndirectlyReferenced()) {
+							result.add(reference);
+						}
+						
+					} else {
+						result.add(reference);
+					}
 				}
 			}
 
@@ -324,7 +334,16 @@ public class ResourceContainer extends TypeContainer implements
 							|| !getContainedTypeNames().contains(
 									reference.getFullyQualifiedName())) {
 
-						result.add(reference);
+						if (!reference.isDirectlyReferenced()) {
+							
+							//
+							if (includeIndirectReferences && reference.isIndirectlyReferenced()) {
+								result.add(reference);
+							}
+							
+						} else {
+							result.add(reference);
+						}
 					}
 				}
 			}

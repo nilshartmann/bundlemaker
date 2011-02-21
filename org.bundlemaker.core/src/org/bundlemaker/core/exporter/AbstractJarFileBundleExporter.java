@@ -5,10 +5,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.bundlemaker.core.exporter.util.ManifestUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.util.JarFileUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
  * <p>
@@ -22,23 +26,34 @@ public abstract class AbstractJarFileBundleExporter extends
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws IOException
+	 * @throws CoreException
 	 */
 	@Override
-	public void onExport() throws Exception {
+	public void doExport() throws CoreException {
 
-		// create the output stream
-		OutputStream outputStream = createOutputStream(
-				getCurrentModularizedSystem(), getCurrentModule(),
-				getCurrentContext());
+		try {
+			// create the output stream
+			OutputStream outputStream = createOutputStream(
+					getCurrentModularizedSystem(), getCurrentModule(),
+					getCurrentContext());
 
-		// export the jar archive
-		JarFileUtils.createJarArchive(
-				getCurrentModule().getResources(ContentType.BINARY),
-				ManifestUtils.toManifest(getCurrentManifest()), outputStream);
+			// export the jar archive
+			JarFileUtils.createJarArchive(
+					getCurrentModule().getResources(ContentType.BINARY),
+					ManifestUtils.toManifest(getCurrentManifest()),
+					outputStream);
 
-		// close the output stream
-		outputStream.close();
+			// close the output stream
+			outputStream.close();
+		} catch (IOException e) {
+			//TODO
+			e.printStackTrace();
+			throw new CoreException(new Status(IStatus.ERROR, "", ""));
+		} catch (Exception e) {
+			//TODO
+			e.printStackTrace();
+			throw new CoreException(new Status(IStatus.ERROR, "", ""));
+		}
 	}
 
 	/**

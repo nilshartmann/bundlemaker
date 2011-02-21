@@ -25,14 +25,6 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
 	/**
 	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<? extends IReference> getResourceAndTypeReferences();
-
-	/**
-	 * <p>
 	 * Returns all {@link IReference IReferences} that are originated in this
 	 * resource.
 	 * </p>

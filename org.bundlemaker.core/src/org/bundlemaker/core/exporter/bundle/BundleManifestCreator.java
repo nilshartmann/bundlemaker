@@ -1,18 +1,22 @@
 package org.bundlemaker.core.exporter.bundle;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.exporter.ManifestUtils;
-import org.bundlemaker.core.exporter.ModuleExporterUtils;
+import org.bundlemaker.core.exporter.util.ManifestUtils;
+import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
 
@@ -80,23 +84,31 @@ public class BundleManifestCreator {
 	 * @return
 	 * @throws Exception
 	 */
-	public ManifestContents createManifest() throws Exception {
+	public ManifestContents createManifest() throws CoreException {
 
 		// the existing bundle manifest resource
 		IResource existingManifestResource = _resourceModule.getResource(
 				"META-INF/MANIFEST.MF", ContentType.BINARY);
 
 		// the existing bundle manifest
-		ManifestContents existingManifest = ManifestUtils
-				.readManifestContents(existingManifestResource);
+		ManifestContents existingManifest;
+		try {
+			existingManifest = ManifestUtils
+					.readManifestContents(existingManifestResource);
 
-		// return immediately if manifest already is a bundle manifest
-		if (isBundleManifest(existingManifest)
-				&& !ModuleExporterUtils.requiresRepackaging(_resourceModule,
-						ContentType.BINARY)) {
+			// return immediately if manifest already is a bundle manifest
+			if (isBundleManifest(existingManifest)
+					&& !ModuleExporterUtils.requiresRepackaging(
+							_resourceModule, ContentType.BINARY)) {
 
-			// return the existing manifest
-			return existingManifest;
+				// return the existing manifest
+				return existingManifest;
+			}
+
+		} catch (IOException e) {
+			// TODO
+			e.printStackTrace();
+			throw new CoreException(new Status(IStatus.ERROR, "", ""));
 		}
 
 		// create a new bundle manifest

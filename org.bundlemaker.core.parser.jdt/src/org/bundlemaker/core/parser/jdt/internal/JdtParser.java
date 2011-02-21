@@ -6,9 +6,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
@@ -18,8 +20,12 @@ import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.jdt.internal.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -196,9 +202,55 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 			analyzeCompilationUnit(modifiableResource, compilationUnit,
 					problems);
 
+			// step 3: compute the indirectly referenced types
+			computeIndirectlyReferencedTypes(modifiableResource, content);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modifiableResource
+	 * @param content
+	 * @throws IOException
+	 */
+	private void computeIndirectlyReferencedTypes(
+			IModifiableResource modifiableResource, char[] content)
+			throws IOException {
+
+		// get all the referenced types (directly and indirectly)
+		Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer
+				.getAllReferencedTypes(modifiableResource, content);
+
+		// get all directly referenced types
+		Set<String> directlyReferenced = new HashSet<String>();
+		for (IReference reference : modifiableResource.getReferences()) {
+			if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
+				directlyReferenced.add(reference.getFullyQualifiedName());
+			}
+		}
+		for (IType type : modifiableResource.getContainedTypes()) {
+			for (IReference reference : type.getReferences()) {
+				if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
+					directlyReferenced.add(reference.getFullyQualifiedName());
+				}
+			}
+		}
+
+		// add only the indirectly referenced types
+		for (String type : directlyAndIndirectlyReferencedTypes) {
+
+			if (!directlyReferenced.contains(type)) {
+				modifiableResource
+						.recordReference(type, new ReferenceAttributes(
+								ReferenceType.TYPE_REFERENCE, false, false,
+								false, false, false, false, true));
+			}
 		}
 	}
 
@@ -225,20 +277,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 		// step 2:
 		callSourceParserHooks(modifiableResource, compilationUnit);
 
-		// step 3: compute the indirectly referenced types
-		// Set<String> directlyAndIndirectlyReferencedTypes =
-		// _indirectlyReferencesAnalyzer
-		// .getAllReferencedTypes((IFile) iCompilationUnit
-		// .getCorrespondingResource());
-		//
-		// for (String type : directlyAndIndirectlyReferencedTypes) {
-		//
-		// resource.recordReference(type, new ReferenceAttributes(
-		// ReferenceType.TYPE_REFERENCE, false, false, false, false,
-		// false, false, true));
-		//
-		// }
-
 		// step 4: add the errors to the error list
 		for (IProblem problem : visitor.getProblems()) {
 
@@ -258,7 +296,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 	 * @return
 	 * @throws IOException
 	 */
-	private static char[] getCharsFromInputStream(InputStream is)
+	public static char[] getCharsFromInputStream(InputStream is)
 			throws IOException {
 
 		Reader reader = new InputStreamReader(is);

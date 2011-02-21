@@ -8,9 +8,10 @@ import junit.framework.Assert;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.exporter.ModuleExporterContext;
-import org.bundlemaker.core.exporter.SimpleReportExporter;
+import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
+import org.bundlemaker.core.exporter.util.ModularizedSystemExporterAdapter;
+import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -104,8 +105,7 @@ public class IntegrationTest {
 		//
 		exportToStructure101(bundleMakerProject, modularizedSystem);
 		exportToSimpleReport(bundleMakerProject, modularizedSystem);
-		
-		
+
 		// //
 		// IReferencedModulesQueryResult queryResult = modularizedSystem
 		// .getReferencedModules(modularizedSystem
@@ -136,7 +136,7 @@ public class IntegrationTest {
 	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
 			IModularizedSystem modularizedSystem) throws Exception {
 		// create the exporter context
-		ModuleExporterContext exporterContext = new ModuleExporterContext(
+		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
 				bundleMakerProject, new File("c:/temp"), modularizedSystem);
 
 		StopWatch stopWatch = new StopWatch();
@@ -147,7 +147,6 @@ public class IntegrationTest {
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}
 
-	
 	private void exportToSimpleReport(IBundleMakerProject bundleMakerProject,
 			IModularizedSystem modularizedSystem) throws Exception {
 
@@ -157,17 +156,18 @@ public class IntegrationTest {
 		destination.mkdirs();
 
 		// create the exporter context
-		ModuleExporterContext exporterContext = new ModuleExporterContext(
+		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
 				bundleMakerProject, destination, modularizedSystem);
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		SimpleReportExporter exporter = new SimpleReportExporter();
-		exporter.export(modularizedSystem, exporterContext);
+		new ModularizedSystemExporterAdapter(exporter).export(
+				modularizedSystem, exporterContext);
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}
-	
+
 	/**
 	 * <p>
 	 * </p>
