@@ -20,21 +20,41 @@ import com.springsource.util.parser.manifest.ManifestContents;
 public abstract class AbstractManifestTemplateBasedExporter extends
 		AbstractExporter {
 
-	/** the template directory **/
-	public static final Object TEMPLATE_DIRECTORY = "TEMPLATE_DIRECTORY";
-
 	/** - */
 	private ManifestContents _manifestContents;
 
 	/** - */
 	private ManifestContents _manifestTemplateContents;
-	
-	
-	
+
+	/** - */
+	private File _templateDirectory;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public final File getTemplateDirectory() {
+		return _templateDirectory;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param templateDirectory
+	 */
+	public final void setTemplateDirectory(File templateDirectory) {
+		Assert.isNotNull(templateDirectory);
+		Assert.isTrue(templateDirectory.isDirectory());
+
+		_templateDirectory = templateDirectory;
+	}
 
 	@Override
 	protected void preExportModule() throws CoreException {
-		
+
 		// get the template manifest
 		_manifestTemplateContents = getManifestTemplate();
 
@@ -93,24 +113,17 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	protected ManifestContents getManifestTemplate() {
 
 		//
-		if (!getCurrentContext().containsAttribute(TEMPLATE_DIRECTORY)) {
+		if (_templateDirectory == null) {
 			return createDefaultManifestTemplate();
 		}
 
-		//
-		Object attribute = getCurrentContext().getAttribute(TEMPLATE_DIRECTORY);
+		File templateFile = new File(_templateDirectory, getCurrentModule()
+				.getModuleIdentifier().toString() + ".template");
 
-		// type check
-		if (!(attribute instanceof File)) {
-
-			// TODO
-			throw new RuntimeException("Wrong type: " + attribute.getClass());
+		if (!templateFile.exists()) {
+			templateFile = new File(_templateDirectory, getCurrentModule()
+					.getModuleIdentifier().getName() + ".template");
 		}
-
-		// try to read the template file
-		File templateDirectory = (File) attribute;
-		File templateFile = new File(templateDirectory, getCurrentModule()
-				.getModuleIdentifier().getName() + ".template");
 
 		ManifestContents templateManifestContents = ManifestUtils
 				.readManifestContents(templateFile);

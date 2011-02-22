@@ -1,5 +1,7 @@
 package org.bundlemaker.core.exporter.pde.exporter;
 
+import java.io.File;
+
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.pde.Activator;
@@ -26,6 +28,17 @@ public class TargetPlatformProjectExporter extends
 	 */
 	public TargetPlatformProjectExporter() {
 		super(new BinaryBundleExporter());
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param templateDirectory
+	 */
+	public void setTemplateDirectory(File templateDirectory) {
+		((BinaryBundleExporter) getModuleExporter())
+				.setTemplateDirectory(templateDirectory);
 	}
 
 	@Override

@@ -41,6 +41,10 @@ public class ModularizedSystemExporterAdapter implements
 		_moduleExporter = moduleExporter;
 	}
 
+	public IModuleExporter getModuleExporter() {
+		return _moduleExporter;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

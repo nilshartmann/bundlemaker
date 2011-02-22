@@ -256,21 +256,18 @@ public class IntegrationTest {
 		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
 				bundleMakerProject, destination, modularizedSystem);
 
-		// exporterContext.put(PdeExporterConfiguration.KEY,
-		// pdeExporterConfiguration);
-		//
-		// exporterContext
-		// .put(StandardBundlorBasedBinaryBundleExporter.TEMPLATE_DIRECTORY,
-		// new File(
-		// "R:/environments/bundlemaker2-environment/workspace/org.bundlemaker.itest.spring/templates"));
+		File templateDirectory = new File(System.getProperty("user.dir"),
+				"templates");
 
-		new TargetPlatformProjectExporter().export(modularizedSystem,
-				exporterContext);
+		TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
+		targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
+		targetPlatformProjectExporter
+				.export(modularizedSystem, exporterContext);
 
 		PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
 		pdeExporter.setUseClassifcationForExportDestination(true);
-		// pdeExporter
-		// .setDependencyDescriptionStyle(PdeManifestStyle.STRICT_IMPORT_PACKAGE);
+		pdeExporter.setTemplateDirectory(templateDirectory);
+
 		new ModularizedSystemExporterAdapter(pdeExporter).export(
 				modularizedSystem, exporterContext);
 	}
