@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
+import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class FileBasedContentTest {
 	public void test() {
 
 		//
-		FileBasedContent fileBasedContent = new FileBasedContent();
+		FileBasedContent fileBasedContent = new FileBasedContent(new ArchiveFileCache());
 		fileBasedContent.setResourceContent(new ResourceContent());
 
 		//

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -105,16 +106,17 @@ public class FileContentReaderTest {
 	 * @return
 	 * @throws CoreException
 	 */
-	private IBundleMakerProjectDescription createProjectDescription(String name,
-			String version, String[] binaryPaths, String[] sourcePaths)
-			throws CoreException {
+	private IBundleMakerProjectDescription createProjectDescription(
+			String name, String version, String[] binaryPaths,
+			String[] sourcePaths) throws CoreException {
 
 		// step 1: create project description
 		File testEnvironment = new File(System.getProperty("user.dir"),
 				"test-environment");
 
 		//
-		BundleMakerProjectDescription projectDescription = new BundleMakerProjectDescription();
+		BundleMakerProjectDescription projectDescription = new BundleMakerProjectDescription(
+				null, new ArchiveFileCache());
 
 		//
 		projectDescription.setJre("jre");
