@@ -55,8 +55,8 @@ public class Helper {
 	 * @return
 	 * @throws CoreException
 	 */
-	public static IProject deleteAndCreateProject(String projectName, IPath location)
-			throws CoreException {
+	public static IProject deleteAndCreateProject(String projectName,
+			IPath location) throws CoreException {
 
 		// create project
 		IProject project = ResourcesPlugin.getWorkspace().getRoot()
@@ -86,11 +86,16 @@ public class Helper {
 			if (!project.isOpen()) {
 				project.open(null);
 			}
-		}
 
-		// add the 'bundlemakergenerated' flag
-		IFile file = project.getFile(".bundlemakergenerated");
-		file.create(new ByteArrayInputStream(new byte[0]), true, null);
+			// add the 'bundlemakergenerated' flag
+			IFile file = project.getFile(".bundlemakergenerated");
+			if (!file.exists()) {
+				file.create(new ByteArrayInputStream(new byte[0]), true, null);
+			} else {
+				file.setContents(new ByteArrayInputStream(new byte[0]),
+						IFile.FORCE, null);
+			}
+		}
 
 		// return the result
 		return project;

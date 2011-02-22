@@ -1,11 +1,11 @@
 package org.bundlemaker.core.exporter.manifest.internal;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bundlemaker.core.exporter.ManifestConstants;
 import org.bundlemaker.core.exporter.manifest.internal.importresolver.ImportResolver;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -110,17 +110,47 @@ public class BundleManifestCreator {
 				.toManifestContents(_newBundleManifest);
 
 		// copy the original headers
-		List<String> headersToIgnore = Arrays.asList(new String[] {
-				Constants.BUNDLE_MANIFESTVERSION,
-				Constants.BUNDLE_SYMBOLICNAME, Constants.BUNDLE_VERSION,
-				Constants.IMPORT_PACKAGE, Constants.EXPORT_PACKAGE });
+		copyOriginalHeaders(newManifestContents, existingManifest);
+
+		// copy the template headers
+		copyTemplateHeaders(newManifestContents,
+				_currentModule.getManifestTemplate());
+
+		// return the result
+		return newManifestContents;
+	}
+
+	private void copyTemplateHeaders(ManifestContents newManifestContents,
+			ManifestContents manifestTemplate) {
+
+		// iterate over the exiting main attributes
+		for (Entry<String, String> entry : manifestTemplate.getMainAttributes()
+				.entrySet()) {
+
+			// copy if not ignored
+			if (!ManifestConstants.TEMPLATE_HEADERS_NOT_TO_COPY.contains(entry
+					.getKey())) {
+
+				//
+				newManifestContents.getMainAttributes().put(
+						entry.getKey().toString(),
+						manifestTemplate.getMainAttributes().get(
+								entry.getKey().toString()));
+			}
+		}
+
+	}
+
+	private void copyOriginalHeaders(ManifestContents newManifestContents,
+			ManifestContents existingManifest) {
 
 		// iterate over the exiting main attributes
 		for (Entry<String, String> entry : existingManifest.getMainAttributes()
 				.entrySet()) {
 
 			// copy if not ignored
-			if (!headersToIgnore.contains(entry.getKey())) {
+			if (!ManifestConstants.ORIGINAL_HEADERS_NOT_TO_COPY.contains(entry
+					.getKey())) {
 
 				//
 				newManifestContents.getMainAttributes().put(
@@ -129,12 +159,6 @@ public class BundleManifestCreator {
 								entry.getKey().toString()));
 			}
 		}
-
-		//
-		System.out.println(newManifestContents.getMainAttributes());
-
-		// return the result
-		return newManifestContents;
 	}
 
 	/**

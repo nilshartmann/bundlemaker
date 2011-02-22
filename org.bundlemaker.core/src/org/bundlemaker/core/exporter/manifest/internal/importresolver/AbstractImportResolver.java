@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.exporter.ManifestConstants;
 import org.bundlemaker.core.exporter.manifest.internal.AbstractResolver;
 import org.bundlemaker.core.exporter.manifest.internal.CurrentModule;
-import org.bundlemaker.core.exporter.manifest.internal.ManifestConstants;
 import org.bundlemaker.core.exporter.manifest.internal.ManifestUtils;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.Assert;
@@ -25,6 +25,10 @@ import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
 
 /**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractImportResolver extends AbstractResolver {
 
