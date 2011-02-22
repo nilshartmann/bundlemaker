@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -74,6 +75,14 @@ public abstract class AbstractModularizedSystem implements
 	@Override
 	public final String getName() {
 		return _name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IBundleMakerProject getBundleMakerProject() {
+		return _projectDescription.getBundleMakerProject();
 	}
 
 	/**

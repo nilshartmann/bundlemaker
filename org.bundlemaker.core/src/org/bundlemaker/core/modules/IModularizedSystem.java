@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
@@ -28,6 +29,14 @@ public interface IModularizedSystem {
 	 * @return
 	 */
 	String getName();
+	
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	IBundleMakerProject getBundleMakerProject();
 
 	/**
 	 * <p>

@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -79,7 +80,9 @@ public class BundleMakerProjectNature implements IProjectNature {
 	 * @throws CoreException
 	 */
 	private void addConfigurationFile() throws CoreException {
-		ProjectDescriptionStore.saveProjectDescription(_project,
-				new BundleMakerProjectDescription());
+		ProjectDescriptionStore
+				.saveProjectDescription(_project,
+						new BundleMakerProjectDescription(null,
+								new ArchiveFileCache()));
 	}
 }

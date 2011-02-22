@@ -9,8 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -37,15 +39,39 @@ public class BundleMakerProjectDescription implements
 	/** - */
 	private int _currentId = 0;
 
+	/** - */
+	private ArchiveFileCache _archiveFileCache;
+
+	/** - */
+	private IBundleMakerProject _bundleMakerProject;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link BundleMakerProjectDescription}.
 	 * </p>
+	 * 
+	 * @param bundleMakerProject
+	 * @param archiveFileCache
 	 */
-	public BundleMakerProjectDescription() {
+	public BundleMakerProjectDescription(
+			IBundleMakerProject bundleMakerProject,
+			ArchiveFileCache archiveFileCache) {
+
+		//
+		Assert.isNotNull(archiveFileCache);
 
 		//
 		_fileBasedContent = new ArrayList<FileBasedContent>();
+		_archiveFileCache = archiveFileCache;
+		_bundleMakerProject = bundleMakerProject;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public IBundleMakerProject getBundleMakerProject() {
+		return _bundleMakerProject;
 	}
 
 	/**
@@ -77,34 +103,33 @@ public class BundleMakerProjectDescription implements
 		return null;
 	}
 
-	
-	
 	@Override
 	public void removeContent(String id) {
-		
-		for (Iterator<FileBasedContent> iterator = _fileBasedContent.iterator(); iterator.hasNext();) {
-			
+
+		for (Iterator<FileBasedContent> iterator = _fileBasedContent.iterator(); iterator
+				.hasNext();) {
+
 			FileBasedContent content = (FileBasedContent) iterator.next();
-			
+
 			if (content.getId().equals(id)) {
 				iterator.remove();
 				return;
-			} 
+			}
 		}
 	}
 
 	@Override
 	public void clear() {
-		
+
 		//
 		_fileBasedContent.clear();
-		
+
 		//
 		_currentId = 0;
-		
+
 		//
 		_initialized = false;
-		
+
 		//
 		_jre = null;
 	}
@@ -246,7 +271,8 @@ public class BundleMakerProjectDescription implements
 			String[] binaryRoot, String[] sourceRoot) {
 
 		// create new file based content
-		FileBasedContent fileBasedContent = new FileBasedContent();
+		FileBasedContent fileBasedContent = new FileBasedContent(
+				_archiveFileCache);
 
 		// TODO: THREADING
 		_currentId++;
@@ -294,7 +320,8 @@ public class BundleMakerProjectDescription implements
 			String[] binaryRoot) {
 
 		// create new file based content
-		FileBasedContent fileBasedContent = new FileBasedContent();
+		FileBasedContent fileBasedContent = new FileBasedContent(
+				_archiveFileCache);
 
 		//
 		// TODO: THREADING

@@ -3,9 +3,11 @@ package org.bundlemaker.core.internal;
 import java.io.ByteArrayInputStream;
 
 import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
+import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
@@ -87,27 +89,28 @@ public class ProjectDescriptionStore {
 	}
 
 	public static BundleMakerProjectDescription loadProjectDescription(
-			IProject project) throws CoreException {
+			IBundleMakerProject project, ArchiveFileCache archiveFileCache)
+			throws CoreException {
 
 		//
-		IFile iFile = project.getFile(new Path(
-				BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME)
-				.append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
-
-		System.out.println(iFile);
+		IFile iFile = project.getProject().getFile(
+				new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME)
+						.append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
 
 		//
 		XmlProjectDescriptionType xmlProjectDescription = XmlProjectDescriptionExporterUtils
 				.unmarshal(iFile.getContents());
 
-		BundleMakerProjectDescription result = new BundleMakerProjectDescription();
+		BundleMakerProjectDescription result = new BundleMakerProjectDescription(
+				project, archiveFileCache);
 		result.setCurrentId(xmlProjectDescription.getCurrentId());
 		result.setJre(xmlProjectDescription.getJre());
 
 		for (XmlFileBasedContentType eFileBasedContent : xmlProjectDescription
 				.getFileBasedContent()) {
 
-			FileBasedContent fileBasedContent = new FileBasedContent();
+			FileBasedContent fileBasedContent = new FileBasedContent(
+					archiveFileCache);
 			result.getModifiableFileBasedContent().add(fileBasedContent);
 
 			fileBasedContent.setId(eFileBasedContent.getId());
@@ -127,7 +130,7 @@ public class ProjectDescriptionStore {
 						.isAnalyzeSourceResources() != null
 						&& eFileBasedContent.getResourceContent()
 								.isAnalyzeSourceResources();
-				
+
 				resourceContent.setAnalyzeSourceResources(analyse);
 
 				for (String path : eFileBasedContent.getResourceContent()

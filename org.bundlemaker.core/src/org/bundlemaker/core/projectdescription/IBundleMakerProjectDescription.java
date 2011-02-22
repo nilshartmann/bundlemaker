@@ -2,6 +2,8 @@ package org.bundlemaker.core.projectdescription;
 
 import java.util.List;
 
+import org.bundlemaker.core.IBundleMakerProject;
+
 /**
  * <p>
  * </p>
@@ -12,6 +14,14 @@ import java.util.List;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IBundleMakerProjectDescription {
+
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	IBundleMakerProject getBundleMakerProject();
 
 	/**
 	 * <p>
@@ -54,8 +64,8 @@ public interface IBundleMakerProjectDescription {
 	void addResourceContent(String binaryRoot, String sourceRoot);
 
 	void addResourceContent(String binaryRoot);
-	
+
 	void removeContent(String id);
-	
+
 	void clear();
 }

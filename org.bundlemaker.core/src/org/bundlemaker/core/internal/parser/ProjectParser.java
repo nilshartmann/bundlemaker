@@ -8,7 +8,6 @@ import java.util.concurrent.FutureTask;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
@@ -111,6 +110,9 @@ public class ProjectParser {
 
 			// parse the content
 			parseContent(fileBasedContent, progressMonitor, cache);
+
+			// clear the archive cache
+			_bundleMakerProject.clearArchiveCache();
 
 			// reset the type cache
 			cache.resetTypeCache();

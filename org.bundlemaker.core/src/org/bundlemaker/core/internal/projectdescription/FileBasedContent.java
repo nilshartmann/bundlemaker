@@ -10,6 +10,7 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.util.FileUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
@@ -47,7 +48,10 @@ public class FileBasedContent implements IFileBasedContent {
 	 * Creates a new instance of type {@link FileBasedContent}.
 	 * </p>
 	 */
-	public FileBasedContent() {
+	public FileBasedContent(ArchiveFileCache archiveFileCache) {
+
+		//
+		Assert.isNotNull(archiveFileCache);
 
 		//
 		_isInitialized = false;
@@ -56,7 +60,7 @@ public class FileBasedContent implements IFileBasedContent {
 		_binaryPaths = new HashSet<IPath>();
 
 		//
-		_archiveFileCache = new ArchiveFileCache();
+		_archiveFileCache = archiveFileCache;
 	}
 
 	/**
@@ -110,6 +114,16 @@ public class FileBasedContent implements IFileBasedContent {
 	 */
 	public Set<IPath> getModifiableBinaryPaths() {
 		return _binaryPaths;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public ArchiveFileCache getArchiveFileCache() {
+		return _archiveFileCache;
 	}
 
 	/**

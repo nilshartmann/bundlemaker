@@ -25,7 +25,7 @@ public class ArchiveFileCache {
 	 * @param root
 	 * @return
 	 */
-	public ZipFile getZipFile(String root) {
+	public synchronized ZipFile getZipFile(String root) {
 
 		//
 		if (_cache.containsKey(root)) {
@@ -55,5 +55,20 @@ public class ArchiveFileCache {
 			// TODO
 			throw new RuntimeException("FEHLER");
 		}
+	}
+
+	public synchronized void clear() {
+
+		// close the zip files
+		for (ZipFile zipFile : _cache.values()) {
+			try {
+				zipFile.close();
+			} catch (IOException e) {
+				//
+			}
+		}
+
+		// clear the cache
+		_cache.clear();
 	}
 }

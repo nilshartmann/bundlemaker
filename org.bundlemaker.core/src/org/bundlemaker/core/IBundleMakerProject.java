@@ -195,4 +195,11 @@ public interface IBundleMakerProject {
 	 * @precondition BundleMakerProjectState.OPENED
 	 */
 	void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
+
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 */
+	void clearArchiveCache();
 }

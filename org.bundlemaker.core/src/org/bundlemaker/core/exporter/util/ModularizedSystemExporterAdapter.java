@@ -60,13 +60,17 @@ public class ModularizedSystemExporterAdapter implements
 			_currentModule = resourceModule;
 
 			// export if possible
-			if (_moduleExporter.canExport(_currentModularizedSystem, _currentModule,
-					_currentContext)) {
-				_moduleExporter.export(_currentModularizedSystem, _currentModule,
-						_currentContext);
+			if (_moduleExporter.canExport(_currentModularizedSystem,
+					_currentModule, _currentContext)) {
+				_moduleExporter.export(_currentModularizedSystem,
+						_currentModule, _currentContext);
 			} else {
 				handleNonExportableModule();
 			}
+
+			//
+			_currentModularizedSystem.getBundleMakerProject()
+					.clearArchiveCache();
 		}
 
 		postExportModules();

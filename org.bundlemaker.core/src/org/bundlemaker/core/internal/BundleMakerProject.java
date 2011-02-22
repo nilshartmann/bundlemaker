@@ -16,6 +16,7 @@ import org.bundlemaker.core.internal.parser.ProjectParser;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
+import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
@@ -61,6 +62,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 	private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
 
 	/** - */
+	private ArchiveFileCache _archiveFileCache;
+
+	/** - */
 	private IProgressMonitor _currentProgressMonitor;
 
 	/**
@@ -79,11 +83,15 @@ public class BundleMakerProject implements IBundleMakerProject {
 		// set the project
 		_project = project;
 
+		//
+		_archiveFileCache = new ArchiveFileCache();
+
 		// read the projectDescription
 		_projectDescription = loadProjectDescription();
 
 		// create the working copies map
 		_modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
+
 	}
 
 	/**
@@ -185,47 +193,47 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 		for (Resource resource : resources) {
 
-				map.put(resource, resource);
+			map.put(resource, resource);
+
+			// create copies of references
+			Set<Reference> references = new HashSet<Reference>();
+			for (Reference reference : resource.getModifiableReferences()) {
+
+				// TODO
+				if (reference == null) {
+					continue;
+				}
+
+				Reference newReference = new Reference(reference);
+				references.add(newReference);
+				newReference.setResource(resource);
+			}
+			resource.getModifiableReferences().clear();
+			resource.getModifiableReferences().addAll(references);
+
+			//
+			for (Type type : resource.getModifiableContainedTypes()) {
 
 				// create copies of references
-				Set<Reference> references = new HashSet<Reference>();
-				for (Reference reference : resource.getModifiableReferences()) {
-					
+				Set<Reference> typeReferences = new HashSet<Reference>();
+				for (Reference reference : type.getModifiableReferences()) {
+
 					// TODO
 					if (reference == null) {
 						continue;
 					}
-					
+
 					Reference newReference = new Reference(reference);
-					references.add(newReference);
-					newReference.setResource(resource);
-				}
-				resource.getModifiableReferences().clear();
-				resource.getModifiableReferences().addAll(references);
-
-				//
-				for (Type type : resource.getModifiableContainedTypes()) {
-
-					// create copies of references
-					Set<Reference> typeReferences = new HashSet<Reference>();
-					for (Reference reference : type.getModifiableReferences()) {
-						
-						// TODO
-						if (reference == null) {
-							continue;
-						}
-						
-						Reference newReference = new Reference(reference);
-						typeReferences.add(newReference);
-						newReference.setType(type);
-					}
-
-					type.getModifiableReferences().clear();
-					type.getModifiableReferences().addAll(typeReferences);
+					typeReferences.add(newReference);
+					newReference.setType(type);
 				}
 
-				// set monitor
-				monitor.worked(1);
+				type.getModifiableReferences().clear();
+				type.getModifiableReferences().addAll(typeReferences);
+			}
+
+			// set monitor
+			monitor.worked(1);
 		}
 
 		monitor.done();
@@ -371,6 +379,14 @@ public class BundleMakerProject implements IBundleMakerProject {
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void clearArchiveCache() {
+		_archiveFileCache.clear();
+	}
+
+	/**
 	 * <p>
 	 * </p>
 	 * 
@@ -479,12 +495,12 @@ public class BundleMakerProject implements IBundleMakerProject {
 			// set the references
 			Set<Reference> typeReferences = new HashSet<Reference>();
 			for (Reference reference : type.getModifiableReferences()) {
-				
+
 				// TODO
 				if (reference == null) {
 					continue;
 				}
-				
+
 				Reference newReference = new Reference(reference);
 				newReference.setType(type);
 				typeReferences.add(newReference);
@@ -506,7 +522,8 @@ public class BundleMakerProject implements IBundleMakerProject {
 			throws CoreException {
 
 		//
-		return ProjectDescriptionStore.loadProjectDescription(_project);
+		return ProjectDescriptionStore.loadProjectDescription(this,
+				_archiveFileCache);
 	}
 
 	/**

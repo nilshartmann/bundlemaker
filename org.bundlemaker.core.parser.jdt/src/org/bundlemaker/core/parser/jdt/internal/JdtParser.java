@@ -203,7 +203,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 					problems);
 
 			// step 3: compute the indirectly referenced types
-			computeIndirectlyReferencedTypes(modifiableResource, content);
+			// computeIndirectlyReferencedTypes(modifiableResource, content);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
