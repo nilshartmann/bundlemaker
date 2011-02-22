@@ -85,9 +85,10 @@ public class JdtParserFactory implements IParserFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IParser createParser(IBundleMakerProject bundleMakerProject)
-			throws CoreException {
-		return new JdtParser(bundleMakerProject, _hookRegistry);
+	public IParser createParser(IBundleMakerProject bundleMakerProject,
+			boolean parseIndirectReferences) throws CoreException {
+		return new JdtParser(bundleMakerProject, _hookRegistry,
+				parseIndirectReferences);
 	}
 
 	/**

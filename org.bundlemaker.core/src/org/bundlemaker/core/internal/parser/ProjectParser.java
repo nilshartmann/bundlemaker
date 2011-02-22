@@ -43,6 +43,9 @@ public class ProjectParser {
 	/** the parser array: the first index is the parser, the second the thread */
 	private IParser[][] _parsers;
 
+	/** - */
+	private boolean _parseIndirectReferences;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ProjectParser}.
@@ -51,11 +54,13 @@ public class ProjectParser {
 	 * @param bundleMakerProject
 	 *            the bundle maker project
 	 */
-	public ProjectParser(BundleMakerProject bundleMakerProject) {
+	public ProjectParser(BundleMakerProject bundleMakerProject,
+			boolean parseIndirectReferences) {
 		Assert.isNotNull(bundleMakerProject);
 
 		// set the project
 		_bundleMakerProject = bundleMakerProject;
+		_parseIndirectReferences = parseIndirectReferences;
 	}
 
 	/**
@@ -303,7 +308,7 @@ public class ProjectParser {
 		for (int i = 0; i < parserFactories.size(); i++) {
 			for (int j = 0; j < THREAD_COUNT; j++) {
 				parsers[i][j] = parserFactories.get(i).createParser(
-						_bundleMakerProject);
+						_bundleMakerProject, _parseIndirectReferences);
 			}
 		}
 

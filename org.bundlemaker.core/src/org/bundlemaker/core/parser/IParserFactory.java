@@ -57,11 +57,12 @@ public interface IParserFactory {
 	 * 
 	 * @param bundleMakerProject
 	 *            the {@link IBundleMakerProject}
+	 * @param parseIndirectReferences
 	 * @return the newly created {@link IParser}
 	 * @throws CoreException
 	 */
-	public IParser createParser(IBundleMakerProject bundleMakerProject)
-			throws CoreException;
+	public IParser createParser(IBundleMakerProject bundleMakerProject,
+			boolean parseIndirectReferences) throws CoreException;
 
 	/**
 	 * <p>

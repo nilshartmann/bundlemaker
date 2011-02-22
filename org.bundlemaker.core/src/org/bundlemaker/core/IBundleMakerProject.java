@@ -125,7 +125,7 @@ public interface IBundleMakerProject {
 	 *               BundleMakerProjectState.PARSED |
 	 *               BundleMakerProjectState.OPENED
 	 */
-	List<? extends IProblem> parse(IProgressMonitor progressMonitor)
+	List<? extends IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences)
 			throws CoreException;
 
 	/**

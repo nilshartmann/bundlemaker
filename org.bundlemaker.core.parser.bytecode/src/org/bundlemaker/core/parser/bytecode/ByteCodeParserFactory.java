@@ -17,7 +17,8 @@ public class ByteCodeParserFactory extends AbstractParserFactory {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IParser createParser(IBundleMakerProject bundleMakerProject)
+	public IParser createParser(IBundleMakerProject bundleMakerProject,
+			boolean parseIndirectReferences)
 			throws CoreException {
 
 		// return the new byte code parser

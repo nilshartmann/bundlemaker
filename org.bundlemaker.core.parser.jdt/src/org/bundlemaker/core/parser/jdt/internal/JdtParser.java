@@ -55,6 +55,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 	/** the indirectly references analyzer **/
 	private IndirectlyReferencesAnalyzer _indirectlyReferencesAnalyzer;
 
+	/** - */
+	private boolean _parseIndirectReferences;
+
 	/**
 	 * <p>
 	 * </p>
@@ -63,8 +66,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 	 * @throws CoreException
 	 */
 	public JdtParser(IBundleMakerProject bundleMakerProject,
-			ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
-			throws CoreException {
+			ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry,
+			boolean parseIndirectReferences) throws CoreException {
 
 		super(hookRegistry);
 
@@ -80,6 +83,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 		//
 		_indirectlyReferencesAnalyzer = new IndirectlyReferencesAnalyzer(
 				_javaProject);
+
+		//
+		_parseIndirectReferences = parseIndirectReferences;
 	}
 
 	/**
@@ -203,7 +209,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 					problems);
 
 			// step 3: compute the indirectly referenced types
-			// computeIndirectlyReferencedTypes(modifiableResource, content);
+			if (_parseIndirectReferences) {
+				computeIndirectlyReferencedTypes(modifiableResource, content);
+			}
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -230,13 +238,15 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 		// get all directly referenced types
 		Set<String> directlyReferenced = new HashSet<String>();
 		for (IReference reference : modifiableResource.getReferences()) {
-			if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
+			if (reference.getReferenceType().equals(
+					ReferenceType.TYPE_REFERENCE)) {
 				directlyReferenced.add(reference.getFullyQualifiedName());
 			}
 		}
 		for (IType type : modifiableResource.getContainedTypes()) {
 			for (IReference reference : type.getReferences()) {
-				if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
+				if (reference.getReferenceType().equals(
+						ReferenceType.TYPE_REFERENCE)) {
 					directlyReferenced.add(reference.getFullyQualifiedName());
 				}
 			}

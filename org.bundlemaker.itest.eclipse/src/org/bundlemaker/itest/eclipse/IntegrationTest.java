@@ -81,7 +81,7 @@ public class IntegrationTest {
 			stopWatch.start();
 
 			List<? extends IProblem> problems = bundleMakerProject
-					.parse(progressMonitor);
+					.parse(progressMonitor, true);
 
 			stopWatch.stop();
 			System.out.println(stopWatch.getElapsedTime());

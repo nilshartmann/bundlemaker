@@ -142,7 +142,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<IProblem> parse(IProgressMonitor progressMonitor)
+	public List<IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences)
 			throws CoreException {
 
 		// set the progress monitor
@@ -153,7 +153,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 				BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
 
 		// create the project parser
-		ProjectParser projectParser = new ProjectParser(this);
+		ProjectParser projectParser = new ProjectParser(this, parseIndirectReferences);
 
 		// parse the project
 		List<IProblem> problems = projectParser
