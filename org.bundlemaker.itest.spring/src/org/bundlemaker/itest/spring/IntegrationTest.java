@@ -13,7 +13,6 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.exporter.pde.exporter.PdeManifestStyle;
 import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
@@ -23,8 +22,6 @@ import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.query.TypeQueryFilters;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -77,6 +74,7 @@ public class IntegrationTest {
 		if (PARSE) {
 			IntegrationTestUtils.createProjectDescription(bundleMakerProject
 					.getProjectDescription());
+			bundleMakerProject.saveProjectDescription();
 		}
 
 		// create the progress monitor
@@ -118,43 +116,43 @@ public class IntegrationTest {
 		// apply the transformation
 		modularizedSystem.applyTransformations();
 
-//		// check the model
-//		checkTypeModel(modularizedSystem);
-//
-//		//
-//		checkModularizedSystem(modularizedSystem);
-//
-//		//
-//		System.out
-//				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-//
-//		IType type = modularizedSystem
-//				.getType("org.springframework.beans.GenericTypeAwarePropertyDescriptor");
-//
-//		//
-//		Collection<IResource> resources = modularizedSystem
-//				.getResourceIsReferencedTransitiveClosure(
-//						type.getSourceResource(), ContentType.SOURCE,
-//						TypeQueryFilters.TRUE_QUERY_FILTER);
-//
-//		for (IResource iResource : resources) {
-//			System.out.println(" * " + iResource.getPath());
-//		}
-//
-//		System.out
-//				.println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+		// // check the model
+		// checkTypeModel(modularizedSystem);
+		//
+		// //
+		// checkModularizedSystem(modularizedSystem);
+		//
+		// //
+		// System.out
+		// .println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
+		//
+		// IType type = modularizedSystem
+		// .getType("org.springframework.beans.GenericTypeAwarePropertyDescriptor");
+		//
+		// //
+		// Collection<IResource> resources = modularizedSystem
+		// .getResourceIsReferencedTransitiveClosure(
+		// type.getSourceResource(), ContentType.SOURCE,
+		// TypeQueryFilters.TRUE_QUERY_FILTER);
+		//
+		// for (IResource iResource : resources) {
+		// System.out.println(" * " + iResource.getPath());
+		// }
+		//
+		// System.out
+		// .println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
 
-//		// // export to simple report
-//		exportToSimpleReport(bundleMakerProject, modularizedSystem);
-//
-//		// export to structure 101
-//		exportToStructure101(bundleMakerProject, modularizedSystem);
+		// // // export to simple report
+		// exportToSimpleReport(bundleMakerProject, modularizedSystem);
+		//
+		// // export to structure 101
+		// exportToStructure101(bundleMakerProject, modularizedSystem);
 
 		// // export to binary bundle
 		// exportToBinaryBundle(bundleMakerProject, modularizedSystem);
-		
-		 // exportToPdeProjects
-		 exportToPdeProjects(bundleMakerProject, modularizedSystem);
+
+		// exportToPdeProjects
+		exportToPdeProjects(bundleMakerProject, modularizedSystem);
 	}
 
 	private void checkTypeModel(IModularizedSystem modularizedSystem) {
@@ -312,7 +310,8 @@ public class IntegrationTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		BinaryBundleExporter exporter = new BinaryBundleExporter();
-		new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
+		new ModularizedSystemExporterAdapter(exporter).export(
+				modularizedSystem, exporterContext);
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}

@@ -65,6 +65,7 @@ public class IntegrationTest {
 		if (PARSE) {
 			IntegrationTestUtils.createProjectDescription(bundleMakerProject
 					.getProjectDescription());
+			bundleMakerProject.saveProjectDescription();
 		}
 
 		// create the progress monitor

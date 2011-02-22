@@ -123,8 +123,12 @@ public class ProjectDescriptionStore {
 				ResourceContent resourceContent = new ResourceContent();
 				fileBasedContent.setResourceContent(resourceContent);
 
-				resourceContent.setAnalyzeSourceResources(eFileBasedContent
-						.getResourceContent().isAnalyzeSourceResources());
+				boolean analyse = eFileBasedContent.getResourceContent()
+						.isAnalyzeSourceResources() != null
+						&& eFileBasedContent.getResourceContent()
+								.isAnalyzeSourceResources();
+				
+				resourceContent.setAnalyzeSourceResources(analyse);
 
 				for (String path : eFileBasedContent.getResourceContent()
 						.getSourcePathNames()) {
