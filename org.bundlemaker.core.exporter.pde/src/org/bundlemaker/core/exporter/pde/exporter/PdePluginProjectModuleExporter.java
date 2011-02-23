@@ -1,5 +1,6 @@
 package org.bundlemaker.core.exporter.pde.exporter;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -160,8 +161,10 @@ public class PdePluginProjectModuleExporter extends
 
 				try {
 					//
-					FileUtils.copy(resourceStandin.getInputStream(),
-							new FileOutputStream(targetFile), new byte[1024]);
+					FileUtils.copy(
+							new ByteArrayInputStream(resourceStandin
+									.getContent()), new FileOutputStream(
+									targetFile), new byte[1024]);
 				} catch (Exception e) {
 					// TODO
 					e.printStackTrace();

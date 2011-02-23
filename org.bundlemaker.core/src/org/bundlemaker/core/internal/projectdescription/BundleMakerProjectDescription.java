@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Assert;
@@ -40,9 +39,6 @@ public class BundleMakerProjectDescription implements
 	private int _currentId = 0;
 
 	/** - */
-	private ArchiveFileCache _archiveFileCache;
-
-	/** - */
 	private IBundleMakerProject _bundleMakerProject;
 
 	/**
@@ -51,18 +47,11 @@ public class BundleMakerProjectDescription implements
 	 * </p>
 	 * 
 	 * @param bundleMakerProject
-	 * @param archiveFileCache
 	 */
-	public BundleMakerProjectDescription(
-			IBundleMakerProject bundleMakerProject,
-			ArchiveFileCache archiveFileCache) {
-
-		//
-		Assert.isNotNull(archiveFileCache);
+	public BundleMakerProjectDescription(IBundleMakerProject bundleMakerProject) {
 
 		//
 		_fileBasedContent = new ArrayList<FileBasedContent>();
-		_archiveFileCache = archiveFileCache;
 		_bundleMakerProject = bundleMakerProject;
 	}
 
@@ -271,8 +260,7 @@ public class BundleMakerProjectDescription implements
 			String[] binaryRoot, String[] sourceRoot) {
 
 		// create new file based content
-		FileBasedContent fileBasedContent = new FileBasedContent(
-				_archiveFileCache);
+		FileBasedContent fileBasedContent = new FileBasedContent();
 
 		// TODO: THREADING
 		_currentId++;
@@ -320,8 +308,7 @@ public class BundleMakerProjectDescription implements
 			String[] binaryRoot) {
 
 		// create new file based content
-		FileBasedContent fileBasedContent = new FileBasedContent(
-				_archiveFileCache);
+		FileBasedContent fileBasedContent = new FileBasedContent();
 
 		//
 		// TODO: THREADING

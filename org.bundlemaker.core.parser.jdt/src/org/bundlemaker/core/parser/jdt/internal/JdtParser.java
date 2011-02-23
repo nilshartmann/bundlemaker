@@ -191,8 +191,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
 
 			// _parser.setSource(iCompilationUnit);
-			char[] content = getCharsFromInputStream(modifiableResource
-					.getInputStream());
+			char[] content = new String(modifiableResource.getContent())
+					.toCharArray();
 			_parser.setProject(_javaProject);
 			_parser.setSource(content);
 

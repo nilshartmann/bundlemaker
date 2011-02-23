@@ -44,9 +44,8 @@ public class ResourceStandin extends ResourceKey implements IResource {
 	 * @param path
 	 * @param archiveFileCache
 	 */
-	public ResourceStandin(String contentId, String root, String path,
-			ArchiveFileCache archiveFileCache) {
-		super(contentId, root, path, archiveFileCache);
+	public ResourceStandin(String contentId, String root, String path) {
+		super(contentId, root, path);
 	}
 
 	public IResource getResource() {

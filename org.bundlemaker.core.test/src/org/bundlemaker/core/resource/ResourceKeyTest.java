@@ -2,7 +2,6 @@ package org.bundlemaker.core.resource;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
@@ -28,9 +27,9 @@ public class ResourceKeyTest {
 		IModifiableResource resource_1 = new Resource("1", "path", "root");
 		IModifiableResource resource_2 = new Resource("1", "path", "root");
 		ResourceStandin resourceStandin_1 = new ResourceStandin("1", "path",
-				"root", new ArchiveFileCache());
+				"root");
 		ResourceStandin resourceStandin_2 = new ResourceStandin("1", "path",
-				"root", new ArchiveFileCache());
+				"root");
 
 		Assert.assertEquals(key_1, key_2);
 		Assert.assertEquals(key_1, resource_1);

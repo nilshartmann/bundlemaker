@@ -9,7 +9,6 @@ import java.util.Set;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.Activator;
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.internal.resource.FlyWeightString;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
@@ -63,37 +62,33 @@ public class DbInspector {
 				.getRawLocation().toOSString());
 
 		//
-		System.out.println("ReferenceType " + _database.query(ReferenceType.class).size());
-		
+		System.out.println("ReferenceType "
+				+ _database.query(ReferenceType.class).size());
+
 		//
-		System.out.println("Resource " + _database.query(Resource.class).size());
-		
+		System.out
+				.println("Resource " + _database.query(Resource.class).size());
+
 		//
 		System.out.println("Type " + _database.query(Type.class).size());
-		
+
 		//
-		System.out.println("HashSet "
-				+ _database.query(HashSet.class).size());
-		
+		System.out.println("HashSet " + _database.query(HashSet.class).size());
+
 		//
 		System.out.println("ReferenceAttributes "
 				+ _database.query(ReferenceAttributes.class).size());
-		
+
 		//
-		System.out.println("TypeEnum "
-				+ _database.query(TypeEnum.class).size());
-		
+		System.out
+				.println("TypeEnum " + _database.query(TypeEnum.class).size());
+
 		//
 		System.out.println("Reference "
 				+ _database.query(Reference.class).size());
-		
+
 		//
 		System.out.println("FlyWeightString "
 				+ _database.query(FlyWeightString.class).size());
-		
-		//
-		System.out.println("ArchiveFileCache "
-				+ _database.query(ArchiveFileCache.class).size());
-
 	}
 }

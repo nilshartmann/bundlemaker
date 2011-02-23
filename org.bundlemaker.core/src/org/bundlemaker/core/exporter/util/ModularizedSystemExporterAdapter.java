@@ -71,10 +71,6 @@ public class ModularizedSystemExporterAdapter implements
 			} else {
 				handleNonExportableModule();
 			}
-
-			//
-			_currentModularizedSystem.getBundleMakerProject()
-					.clearArchiveCache();
 		}
 
 		postExportModules();

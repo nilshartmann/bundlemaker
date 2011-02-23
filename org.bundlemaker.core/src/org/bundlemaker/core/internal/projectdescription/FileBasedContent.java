@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IResourceContent;
@@ -40,27 +39,18 @@ public class FileBasedContent implements IFileBasedContent {
 	/** - */
 	private ResourceContent _resourceContent;
 
-	/** - */
-	private ArchiveFileCache _archiveFileCache;
-
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link FileBasedContent}.
 	 * </p>
 	 */
-	public FileBasedContent(ArchiveFileCache archiveFileCache) {
-
-		//
-		Assert.isNotNull(archiveFileCache);
+	public FileBasedContent() {
 
 		//
 		_isInitialized = false;
 
 		//
 		_binaryPaths = new HashSet<IPath>();
-
-		//
-		_archiveFileCache = archiveFileCache;
 	}
 
 	/**
@@ -120,16 +110,6 @@ public class FileBasedContent implements IFileBasedContent {
 	 * <p>
 	 * </p>
 	 * 
-	 * @return
-	 */
-	public ArchiveFileCache getArchiveFileCache() {
-		return _archiveFileCache;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
 	 * @param id
 	 */
 	public void setId(String id) {
@@ -177,7 +157,7 @@ public class FileBasedContent implements IFileBasedContent {
 
 						// create the resource standin
 						ResourceStandin resourceStandin = new ResourceStandin(
-								_id, rootPath, child, _archiveFileCache);
+								_id, rootPath, child);
 
 						// add the resource
 						_resourceContent.getModifiableBinaryResources().add(
@@ -203,7 +183,7 @@ public class FileBasedContent implements IFileBasedContent {
 
 						// create the resource standin
 						ResourceStandin resourceStandin = new ResourceStandin(
-								_id, rootPath, child, _archiveFileCache);
+								_id, rootPath, child);
 
 						// add the resource
 						_resourceContent.getModifiableSourceResources().add(

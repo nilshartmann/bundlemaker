@@ -1,5 +1,6 @@
 package org.bundlemaker.core.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
@@ -41,8 +42,9 @@ public final class JarFileUtils {
 
 		Assert.isNotNull(resources);
 		Assert.isNotNull(manifest);
-		
-		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0"); 
+
+		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION,
+				"1.0");
 
 		// create the input and output streams
 
@@ -66,7 +68,8 @@ public final class JarFileUtils {
 					jarOutputStream.putNextEntry(newEntry);
 
 					// copy
-					inputStream = resourceStandin.getInputStream();
+					inputStream = new ByteArrayInputStream(
+							resourceStandin.getContent());
 					copy(inputStream, jarOutputStream);
 
 					inputStream.close();

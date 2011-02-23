@@ -97,9 +97,8 @@ public class IndirectlyReferencesAnalyzer {
 			IModifiableResource modifiableResource) throws IOException {
 
 		//
-		return getAllReferencedTypes(modifiableResource,
-				JdtParser.getCharsFromInputStream(modifiableResource
-						.getInputStream()));
+		return getAllReferencedTypes(modifiableResource, new String(
+				modifiableResource.getContent()).toCharArray());
 	}
 
 	/**

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
@@ -24,21 +23,25 @@ public class FileBasedContentTest {
 	public void test() {
 
 		//
-		FileBasedContent fileBasedContent = new FileBasedContent(new ArchiveFileCache());
+		FileBasedContent fileBasedContent = new FileBasedContent();
 		fileBasedContent.setResourceContent(new ResourceContent());
 
 		//
 		fileBasedContent.setId("123");
-		
+
 		fileBasedContent
 				.getModifiableBinaryPaths()
-				.add(new Path(System.getProperty("user.dir") + "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-1.0.0.RELEASE.jar"));
+				.add(new Path(
+						System.getProperty("user.dir")
+								+ "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-1.0.0.RELEASE.jar"));
 
 		//
 		fileBasedContent
 				.getModifiableResourceContent()
 				.getModifiableSourcePaths()
-				.add(new Path(System.getProperty("user.dir") + "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-sources-1.0.0.RELEASE.jar"));
+				.add(new Path(
+						System.getProperty("user.dir")
+								+ "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-sources-1.0.0.RELEASE.jar"));
 
 		//
 		fileBasedContent.initialize(null);

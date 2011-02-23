@@ -98,7 +98,7 @@ public class ByteCodeParser extends AbstractParser {
 					resource, enclosingResource);
 
 			// parse the class file
-			ClassReader reader = new ClassReader(resource.getInputStream());
+			ClassReader reader = new ClassReader(resource.getContent());
 			reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder),
 					0);
 

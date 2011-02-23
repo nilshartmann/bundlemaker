@@ -116,9 +116,6 @@ public class ProjectParser {
 			// parse the content
 			parseContent(fileBasedContent, progressMonitor, cache);
 
-			// clear the archive cache
-			_bundleMakerProject.clearArchiveCache();
-
 			// reset the type cache
 			cache.resetTypeCache();
 		}

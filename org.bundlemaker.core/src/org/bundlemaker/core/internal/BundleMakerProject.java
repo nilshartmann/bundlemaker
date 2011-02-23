@@ -16,7 +16,6 @@ import org.bundlemaker.core.internal.parser.ProjectParser;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
@@ -62,9 +61,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 	private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
 
 	/** - */
-	private ArchiveFileCache _archiveFileCache;
-
-	/** - */
 	private IProgressMonitor _currentProgressMonitor;
 
 	/**
@@ -82,9 +78,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 		// set the project
 		_project = project;
-
-		//
-		_archiveFileCache = new ArchiveFileCache();
 
 		// read the projectDescription
 		_projectDescription = loadProjectDescription();
@@ -142,8 +135,8 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences)
-			throws CoreException {
+	public List<IProblem> parse(IProgressMonitor progressMonitor,
+			boolean parseIndirectReferences) throws CoreException {
 
 		// set the progress monitor
 		_currentProgressMonitor = progressMonitor;
@@ -153,7 +146,8 @@ public class BundleMakerProject implements IBundleMakerProject {
 				BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
 
 		// create the project parser
-		ProjectParser projectParser = new ProjectParser(this, parseIndirectReferences);
+		ProjectParser projectParser = new ProjectParser(this,
+				parseIndirectReferences);
 
 		// parse the project
 		List<IProblem> problems = projectParser
@@ -379,14 +373,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void clearArchiveCache() {
-		_archiveFileCache.clear();
-	}
-
-	/**
 	 * <p>
 	 * </p>
 	 * 
@@ -522,8 +508,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 			throws CoreException {
 
 		//
-		return ProjectDescriptionStore.loadProjectDescription(this,
-				_archiveFileCache);
+		return ProjectDescriptionStore.loadProjectDescription(this);
 	}
 
 	/**

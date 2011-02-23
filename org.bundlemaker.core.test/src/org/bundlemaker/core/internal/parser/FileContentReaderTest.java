@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.eclipse.core.runtime.CoreException;
@@ -116,7 +115,7 @@ public class FileContentReaderTest {
 
 		//
 		BundleMakerProjectDescription projectDescription = new BundleMakerProjectDescription(
-				null, new ArchiveFileCache());
+				null);
 
 		//
 		projectDescription.setJre("jre");

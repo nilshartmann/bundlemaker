@@ -84,12 +84,11 @@ public interface IResourceKey {
 
 	/**
 	 * <p>
-	 * Returns an input stream to read the content of this resource.
 	 * </p>
 	 * 
 	 * @return
 	 */
-	InputStream getInputStream();
+	byte[] getContent();
 
 	// /**
 	// * <p>

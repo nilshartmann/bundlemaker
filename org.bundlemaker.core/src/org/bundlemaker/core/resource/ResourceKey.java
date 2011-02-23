@@ -1,6 +1,7 @@
 package org.bundlemaker.core.resource;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,7 +10,6 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.FlyWeightString;
 import org.eclipse.core.runtime.Assert;
@@ -34,9 +34,6 @@ public class ResourceKey implements IResourceKey {
 	/** the path of the resource */
 	private String _path;
 
-	/** the archive file that is used to cache archive files for faster access */
-	private transient ArchiveFileCache _archiveFileCache;
-
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ResourceKey}.
@@ -47,30 +44,13 @@ public class ResourceKey implements IResourceKey {
 	 * @param path
 	 */
 	public ResourceKey(String contentId, String root, String path) {
-		this(contentId, root, path, new ArchiveFileCache());
-	}
-
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ResourceKey}.
-	 * </p>
-	 * 
-	 * @param contentId
-	 * @param root
-	 * @param path
-	 * @param archiveFileCache
-	 */
-	protected ResourceKey(String contentId, String root, String path,
-			ArchiveFileCache archiveFileCache) {
 		Assert.isNotNull(contentId);
 		Assert.isNotNull(root);
 		Assert.isNotNull(path);
-		Assert.isNotNull(archiveFileCache);
 
 		_contentId = new FlyWeightString(contentId);
 		_root = new FlyWeightString(root);
 		_path = path;
-		_archiveFileCache = archiveFileCache;
 	}
 
 	/**
@@ -86,12 +66,6 @@ public class ResourceKey implements IResourceKey {
 	protected ResourceKey(String contentId, String root, String path,
 			FlyWeightCache cache) {
 
-		//
-		this(contentId, root, path, cache, new ArchiveFileCache());
-	}
-
-	protected ResourceKey(String contentId, String root, String path,
-			FlyWeightCache cache, ArchiveFileCache archiveFileCache) {
 		Assert.isNotNull(contentId);
 		Assert.isNotNull(root);
 		Assert.isNotNull(path);
@@ -100,8 +74,6 @@ public class ResourceKey implements IResourceKey {
 		_contentId = cache.getFlyWeightString(contentId);
 		_root = cache.getFlyWeightString(root);
 		_path = path;
-		_archiveFileCache = archiveFileCache;
-
 	}
 
 	/**
@@ -181,20 +153,35 @@ public class ResourceKey implements IResourceKey {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InputStream getInputStream() {
+	public byte[] getContent() {
 
 		// jar file?
 		if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
 
-			ZipFile zipFile = _archiveFileCache.getZipFile(getRoot());
-
-			ZipEntry zipEntry = zipFile.getEntry(getPath());
-
 			try {
-				return new BufferedInputStream(zipFile.getInputStream(zipEntry));
+				ZipFile zipFile = new ZipFile(new File(getRoot()));
+				ZipEntry zipEntry = zipFile.getEntry(getPath());
+
+				InputStream is = zipFile.getInputStream(zipEntry);
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				int nRead;
+				byte[] data = new byte[16384];
+				while ((nRead = is.read(data, 0, data.length)) != -1) {
+					buffer.write(data, 0, nRead);
+				}
+				buffer.flush();
+
+				byte[] result = buffer.toByteArray();
+
+				is.close();
+				zipFile.close();
+
+				return result;
+
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new RuntimeException("");
 			}
 		}
 
@@ -206,11 +193,23 @@ public class ResourceKey implements IResourceKey {
 
 			try {
 
-				// TODO
-				return new BufferedInputStream(new FileInputStream(new File(
-						rootFile, getPath())));
+				InputStream is = new BufferedInputStream(new FileInputStream(
+						new File(rootFile, getPath())));
+				ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+				int nRead;
+				byte[] data = new byte[16384];
+				while ((nRead = is.read(data, 0, data.length)) != -1) {
+					buffer.write(data, 0, nRead);
+				}
+				buffer.flush();
 
-			} catch (FileNotFoundException e) {
+				byte[] result = buffer.toByteArray();
+
+				is.close();
+
+				return result;
+
+			} catch (Exception e) {
 				throw new RuntimeException("FEHLER");
 			}
 

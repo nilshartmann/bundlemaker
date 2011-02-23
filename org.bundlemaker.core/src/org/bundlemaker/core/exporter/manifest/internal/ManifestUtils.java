@@ -38,7 +38,7 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ManifestUtils {
-	
+
 	/**
 	 * <p>
 	 * </p>
@@ -105,8 +105,8 @@ public class ManifestUtils {
 		if (manifestResource != null) {
 
 			RecoveringManifestParser parser = new RecoveringManifestParser();
-			originalManifestContents = parser.parse(new InputStreamReader(
-					manifestResource.getInputStream()));
+			originalManifestContents = parser.parse(new String(manifestResource
+					.getContent()));
 
 		} else {
 			originalManifestContents = new SimpleManifestContents();

@@ -4,7 +4,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
@@ -49,8 +48,7 @@ public class ResourceCacheTest {
 			@Override
 			public IResourceKey createResourceKey(String contentId,
 					String root, String path) {
-				return new ResourceStandin(contentId, root, path,
-						new ArchiveFileCache());
+				return new ResourceStandin(contentId, root, path);
 			}
 		};
 
@@ -70,8 +68,7 @@ public class ResourceCacheTest {
 			@Override
 			public IResourceKey createResourceKey(String contentId,
 					String root, String path) {
-				return new ResourceStandin(contentId, root, path,
-						new ArchiveFileCache());
+				return new ResourceStandin(contentId, root, path);
 			}
 		};
 

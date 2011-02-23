@@ -125,8 +125,8 @@ public interface IBundleMakerProject {
 	 *               BundleMakerProjectState.PARSED |
 	 *               BundleMakerProjectState.OPENED
 	 */
-	List<? extends IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences)
-			throws CoreException;
+	List<? extends IProblem> parse(IProgressMonitor progressMonitor,
+			boolean parseIndirectReferences) throws CoreException;
 
 	/**
 	 * <p>
@@ -195,11 +195,4 @@ public interface IBundleMakerProject {
 	 * @precondition BundleMakerProjectState.OPENED
 	 */
 	void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
-
-	/**
-	 * <p>
-	 * </p>
-	 *
-	 */
-	void clearArchiveCache();
 }

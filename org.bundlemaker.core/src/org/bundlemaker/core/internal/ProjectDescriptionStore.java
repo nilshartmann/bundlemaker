@@ -7,7 +7,6 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
-import org.bundlemaker.core.internal.resource.ArchiveFileCache;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
@@ -89,8 +88,7 @@ public class ProjectDescriptionStore {
 	}
 
 	public static BundleMakerProjectDescription loadProjectDescription(
-			IBundleMakerProject project, ArchiveFileCache archiveFileCache)
-			throws CoreException {
+			IBundleMakerProject project) throws CoreException {
 
 		//
 		IFile iFile = project.getProject().getFile(
@@ -102,15 +100,14 @@ public class ProjectDescriptionStore {
 				.unmarshal(iFile.getContents());
 
 		BundleMakerProjectDescription result = new BundleMakerProjectDescription(
-				project, archiveFileCache);
+				project);
 		result.setCurrentId(xmlProjectDescription.getCurrentId());
 		result.setJre(xmlProjectDescription.getJre());
 
 		for (XmlFileBasedContentType eFileBasedContent : xmlProjectDescription
 				.getFileBasedContent()) {
 
-			FileBasedContent fileBasedContent = new FileBasedContent(
-					archiveFileCache);
+			FileBasedContent fileBasedContent = new FileBasedContent();
 			result.getModifiableFileBasedContent().add(fileBasedContent);
 
 			fileBasedContent.setId(eFileBasedContent.getId());

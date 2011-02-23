@@ -41,8 +41,7 @@ public class ModifiableResourceCompilationUnit implements ICompilationUnit {
 		if (content != null) {
 			_content = content;
 		} else {
-			_content = JdtParser.getCharsFromInputStream(_resource
-					.getInputStream());
+			_content = new String(resource.getContent()).toCharArray();
 		}
 	}
 
