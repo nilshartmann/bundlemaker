@@ -19,11 +19,19 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceSetBasedTransformation implements ITransformation {
 
 	/** - */
+	public static final String USER_ATTRIBUTE_KEY = "ResourceSetBasedTransformation-USER_ATTRIBUTE_KEY";
+
+	/** - */
 	private List<ResourceSetBasedModuleDefinition> _moduleDefinitions;
 
 	/** - */
 	private IResourceSetProcessor _resourceSetProcessor;
 
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link ResourceSetBasedTransformation}.
+	 * </p>
+	 */
 	public ResourceSetBasedTransformation() {
 		_moduleDefinitions = new ArrayList<ResourceSetBasedModuleDefinition>();
 	}
@@ -33,8 +41,6 @@ public class ResourceSetBasedTransformation implements ITransformation {
 	 */
 	@Override
 	public void apply(IModifiableModularizedSystem modularizedSystem) {
-
-		System.out.println("ResourceSetBasedTransformation start");
 
 		//
 		for (ResourceSetBasedModuleDefinition moduleDefinition : _moduleDefinitions) {
@@ -68,6 +74,17 @@ public class ResourceSetBasedTransformation implements ITransformation {
 			// set user attributes
 			targetResourceModule.getUserAttributes().putAll(
 					moduleDefinition.getUserAttributes());
+
+			if (!targetResourceModule.getUserAttributes().containsKey(
+					USER_ATTRIBUTE_KEY)) {
+				targetResourceModule.getUserAttributes().put(
+						USER_ATTRIBUTE_KEY, moduleDefinition.getResourceSets());
+			} else {
+				@SuppressWarnings("unchecked")
+				List<ResourceSet> resourceSets = (List<ResourceSet>) targetResourceModule
+						.getUserAttributes().get(USER_ATTRIBUTE_KEY);
+				resourceSets.addAll(moduleDefinition.getResourceSets());
+			}
 
 			//
 			for (ResourceSet resourceSet : moduleDefinition.getResourceSets()) {
@@ -104,9 +121,6 @@ public class ResourceSetBasedTransformation implements ITransformation {
 				}
 			}
 		}
-
-		System.out.println("ResourceSetBasedTransformation stop");
-
 	}
 
 	/**
@@ -162,13 +176,16 @@ public class ResourceSetBasedTransformation implements ITransformation {
 	 * @param targetResourceModule
 	 * @param resourceSet
 	 */
-	private void processResources(IModifiableResourceModule originResourceModule,
-			IModifiableResourceModule targetResourceModule, ResourceSet resourceSet) {
+	private void processResources(
+			IModifiableResourceModule originResourceModule,
+			IModifiableResourceModule targetResourceModule,
+			ResourceSet resourceSet) {
 
 		List<IResource> resourceStandinsToMove = resourceSet
 				.getMatchingResources(originResourceModule, ContentType.BINARY);
 
-		TransformationUtils.addAll(targetResourceModule.getModifiableSelfResourceContainer()
+		TransformationUtils.addAll(targetResourceModule
+				.getModifiableSelfResourceContainer()
 				.getModifiableResourcesSet(ContentType.BINARY),
 				resourceStandinsToMove);
 
@@ -178,7 +195,8 @@ public class ResourceSetBasedTransformation implements ITransformation {
 		resourceStandinsToMove = resourceSet.getMatchingResources(
 				originResourceModule, ContentType.SOURCE);
 
-		TransformationUtils.addAll(targetResourceModule.getModifiableSelfResourceContainer()
+		TransformationUtils.addAll(targetResourceModule
+				.getModifiableSelfResourceContainer()
 				.getModifiableResourcesSet(ContentType.SOURCE),
 				resourceStandinsToMove);
 

@@ -8,7 +8,6 @@ import java.util.Set;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ManifestConstants;
 import org.bundlemaker.core.exporter.manifest.internal.CurrentModule;
-import org.bundlemaker.core.exporter.manifest.internal.ManifestUtils;
 import org.bundlemaker.core.exporter.manifest.internal.importresolver.ImportResolver;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;

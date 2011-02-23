@@ -2,7 +2,7 @@ package org.bundlemaker.core.exporter;
 
 import java.io.File;
 
-import org.bundlemaker.core.exporter.manifest.internal.ManifestUtils;
+import org.bundlemaker.core.exporter.manifest.ManifestUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

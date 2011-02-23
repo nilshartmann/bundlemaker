@@ -11,5 +11,6 @@ Require-Bundle: org.bundlemaker.core;bundle-version="1.0.0",
  org.junit;bundle-version="4.8.1",
  org.bundlemaker.core.exporter.pde;bundle-version="1.0.0",
  org.bundlemaker.core.exporter.structure101;bundle-version="1.0.0",
- com.db4o.osgi;bundle-version="8.0.184"
+ com.db4o.osgi;bundle-version="8.0.184",
+ org.bundlemaker.tk.exporter.pde;bundle-version="1.0.0"
 Bundle-Activator: org.bundlemaker.itest.spring.inspect.Activator

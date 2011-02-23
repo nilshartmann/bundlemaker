@@ -8,6 +8,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
+import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.util.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -73,8 +74,8 @@ public class IntegrationTest {
 			StopWatch stopWatch = new StopWatch();
 			stopWatch.start();
 
-			List<? extends IProblem> problems = bundleMakerProject
-					.parse(progressMonitor, true);
+			List<? extends IProblem> problems = bundleMakerProject.parse(
+					progressMonitor, true);
 
 			stopWatch.stop();
 			System.out.println(stopWatch.getElapsedTime());
@@ -97,12 +98,44 @@ public class IntegrationTest {
 
 		// export to structure 101
 		exportToStructure101(bundleMakerProject, modularizedSystem);
+
+		//
+		exportToBinaryBundle(bundleMakerProject, modularizedSystem);
 	}
 
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
+	 * @param bundleMakerProject
+	 * @param modularizedSystem
+	 * @throws Exception
+	 */
+	private void exportToBinaryBundle(IBundleMakerProject bundleMakerProject,
+			IModularizedSystem modularizedSystem) throws Exception {
+
+		//
+		File destination = new File(System.getProperty("user.dir"),
+				"destination");
+		destination.mkdirs();
+
+		// create the exporter context
+		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
+				bundleMakerProject, destination, modularizedSystem);
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		BinaryBundleExporter exporter = new BinaryBundleExporter();
+		new ModularizedSystemExporterAdapter(exporter).export(
+				modularizedSystem, exporterContext);
+		stopWatch.stop();
+		System.out.println("Dauer " + stopWatch.getElapsedTime());
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
 	 * @param bundleMakerProject
 	 * @param modularizedSystem
 	 * @throws Exception

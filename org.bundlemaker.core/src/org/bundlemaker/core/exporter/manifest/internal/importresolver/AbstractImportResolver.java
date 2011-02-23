@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.ManifestConstants;
+import org.bundlemaker.core.exporter.manifest.ManifestUtils;
 import org.bundlemaker.core.exporter.manifest.internal.AbstractResolver;
 import org.bundlemaker.core.exporter.manifest.internal.CurrentModule;
-import org.bundlemaker.core.exporter.manifest.internal.ManifestUtils;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
