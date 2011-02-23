@@ -62,15 +62,11 @@ public class JdtProjectHelper {
 		for (IFileBasedContent projectContent : project.getProjectDescription()
 				.getFileBasedContent()) {
 
-			if (projectContent.isResourceContent()) {
-
-				// add binary paths
-				for (IPath iClasspathEntry : projectContent.getBinaryPaths()) {
-					classpathEntry = JavaCore.newLibraryEntry(
-							iClasspathEntry.makeAbsolute(), null, null);
-					entries.add(classpathEntry);
-				}
-
+			// add binary paths
+			for (IPath iClasspathEntry : projectContent.getBinaryPaths()) {
+				classpathEntry = JavaCore.newLibraryEntry(
+						iClasspathEntry.makeAbsolute(), null, null);
+				entries.add(classpathEntry);
 			}
 		}
 
