@@ -76,7 +76,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 	@Override
 	public Collection<IResource> getResourceIsReferencedTransitiveClosure(
 			IResource resource, ContentType contentType,
-			IQueryFilter<IType> queryFilter) {
+			IQueryFilter<IResource> queryFilter) {
 
 		ResourceIsReferencedTransitiveClosure closure = new ResourceIsReferencedTransitiveClosure(
 				this);

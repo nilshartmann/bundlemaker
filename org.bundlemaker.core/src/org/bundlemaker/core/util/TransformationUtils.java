@@ -1,6 +1,6 @@
 package org.bundlemaker.core.util;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
@@ -26,7 +26,7 @@ public class TransformationUtils {
 	 * @param toAdd
 	 */
 	// TODO MOVE
-	public static void addAll(Set<IResource> target, List<IResource> toAdd) {
+	public static void addAll(Set<IResource> target, Collection<IResource> toAdd) {
 
 		for (IResource IResource : toAdd) {
 			if (IResource instanceof ResourceStandin) {
@@ -45,12 +45,13 @@ public class TransformationUtils {
 	 */
 	// TODO MOVE
 	public static void removeAll(IModifiableResourceModule resourceModule,
-			List<IResource> resourceStandins, ContentType binary) {
+			Collection<IResource> resourceStandins, ContentType binary) {
 
-		Set<? extends IResource> result = resourceModule.getModifiableSelfResourceContainer()
+		Collection<IResource> result = resourceModule
+				.getModifiableSelfResourceContainer()
 				.getModifiableResourcesSet(binary);
 
-		removeAll(result, resourceStandins);
+		_removeAll(result, resourceStandins);
 
 		// TODO!
 		// for (ModifiableResourceContainer resourceContainer : resourceModule
@@ -82,8 +83,8 @@ public class TransformationUtils {
 	// return null;
 	// }
 
-	private static void removeAll(Set<? extends IResource> target,
-			List<IResource> toRemove) {
+	private static void _removeAll(Collection<IResource> target,
+			Collection<IResource> toRemove) {
 
 		for (IResource IResource : toRemove) {
 			target.remove(IResource);

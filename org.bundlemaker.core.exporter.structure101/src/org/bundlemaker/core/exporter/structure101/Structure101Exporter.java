@@ -183,20 +183,20 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 									.getFullyQualifiedName());
 
 					if (referencedModules.size() > 1) {
-						System.out.println("~~~~~~~");
-						System.out.println(reference.getFullyQualifiedName());
-						for (IModule iModule : referencedModules) {
-							System.out.println(" - "
-									+ iModule.getModuleIdentifier());
-						}
+						// System.out.println("~~~~~~~");
+						// System.out.println(reference.getFullyQualifiedName());
+						// for (IModule iModule : referencedModules) {
+						// System.out.println(" - "
+						// + iModule.getModuleIdentifier());
+						// }
 						continue;
 					}
 
 					if (referencedModules.size() == 0) {
 
 						//
-						System.out.println("MISSING TYPE "
-								+ reference.getFullyQualifiedName());
+						// System.out.println("MISSING TYPE "
+						// + reference.getFullyQualifiedName());
 						continue;
 
 					}

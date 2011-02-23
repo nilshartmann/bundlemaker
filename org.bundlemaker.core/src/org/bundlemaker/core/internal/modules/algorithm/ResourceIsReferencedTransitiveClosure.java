@@ -35,7 +35,7 @@ public class ResourceIsReferencedTransitiveClosure extends
 	 * @param typeName
 	 */
 	public void resolveResource(IResource resource, ContentType contentType,
-			IQueryFilter<IType> queryFilter) {
+			IQueryFilter<IResource> queryFilter) {
 
 		//
 		if (getResources().contains(resource)) {
@@ -65,7 +65,7 @@ public class ResourceIsReferencedTransitiveClosure extends
 						.getSourceResource() : type.getBinaryResource();
 
 				//
-				if (iResource != null) {
+				if (iResource != null && queryFilter.matches(iResource)) {
 					resolveResource(iResource, contentType, queryFilter);
 				}
 			}

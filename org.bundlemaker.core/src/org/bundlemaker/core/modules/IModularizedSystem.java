@@ -233,5 +233,5 @@ public interface IModularizedSystem {
 	// TODO
 	Collection<IResource> getResourceIsReferencedTransitiveClosure(
 			IResource resource, ContentType contentType,
-			IQueryFilter<IType> queryFilter);
+			IQueryFilter<IResource> queryFilter);
 }
