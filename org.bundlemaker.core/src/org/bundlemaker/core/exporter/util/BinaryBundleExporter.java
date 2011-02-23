@@ -29,8 +29,8 @@ public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 	protected ManifestContents createManifest() throws CoreException {
 
 		// create the manifest
-		return BundleManifestCreator.createManifest(getCurrentModularizedSystem(),
-				getCurrentContext(), getCurrentModule(),
-				getCurrentManifestTemplate());
+		return new BundleManifestCreator(getCurrentModularizedSystem(),
+				getCurrentModule(), getCurrentContext(),
+				getCurrentManifestTemplate()).createManifest();
 	}
 }

@@ -18,16 +18,26 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class AbstractManifestTemplateBasedExporter extends
-		AbstractExporter {
-
-	/** - */
-	private ManifestContents _manifestContents;
+		AbstractManifestAwareExporter {
 
 	/** - */
 	private ManifestContents _manifestTemplateContents;
 
 	/** - */
 	private File _templateDirectory;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param templateDirectory
+	 */
+	public final void setTemplateDirectory(File templateDirectory) {
+		Assert.isNotNull(templateDirectory);
+		Assert.isTrue(templateDirectory.isDirectory());
+
+		_templateDirectory = templateDirectory;
+	}
 
 	/**
 	 * <p>
@@ -43,49 +53,6 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * <p>
 	 * </p>
 	 * 
-	 * @param templateDirectory
-	 */
-	public final void setTemplateDirectory(File templateDirectory) {
-		Assert.isNotNull(templateDirectory);
-		Assert.isTrue(templateDirectory.isDirectory());
-
-		_templateDirectory = templateDirectory;
-	}
-
-	@Override
-	protected void preExportModule() throws CoreException {
-
-		// get the template manifest
-		_manifestTemplateContents = getManifestTemplate();
-
-		//
-		_manifestContents = createManifest();
-		Assert.isNotNull(_manifestContents, String.format(
-				"The method createManifest(IModularizedSystem, "
-						+ "IResourceModule, IModuleExporterContext) of class "
-						+ "'%s' returned 'null'.", this.getClass().getName()));
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public ManifestContents getCurrentManifest() {
-		Assert.isNotNull(_manifestContents, String.format(
-				"No manifest set. The method createManifest(IModularizedSystem, "
-						+ "IResourceModule, IModuleExporterContext) of class "
-						+ "'%s' has not been called yet.", this.getClass()
-						.getName()));
-
-		return _manifestContents;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
 	 * @return
 	 */
 	public ManifestContents getCurrentManifestTemplate() {
@@ -93,16 +60,18 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	}
 
 	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 * @throws Exception
+	 * {@inheritDoc}
 	 */
-	protected abstract ManifestContents createManifest() throws CoreException;
+	@Override
+	protected void preExportModule() throws CoreException {
+
+		// get the template manifest
+		_manifestTemplateContents = createManifestTemplate();
+
+		//
+		super.preExportModule();
+
+	}
 
 	/**
 	 * <p>
@@ -110,7 +79,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	protected ManifestContents getManifestTemplate() {
+	protected ManifestContents createManifestTemplate() {
 
 		//
 		if (_templateDirectory == null) {

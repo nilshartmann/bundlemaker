@@ -19,6 +19,7 @@ import java.util.zip.ZipEntry;
 
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.osgi.framework.Constants;
 
 import com.springsource.bundlor.util.MatchUtils;
 import com.springsource.bundlor.util.SimpleManifestContents;
@@ -37,6 +38,20 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ManifestUtils {
+	
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param existingManifest
+	 * @return
+	 */
+	public static boolean isBundleManifest(ManifestContents existingManifest) {
+
+		//
+		return existingManifest.getMainAttributes().containsKey(
+				Constants.BUNDLE_SYMBOLICNAME);
+	}
 
 	/**
 	 * <p>

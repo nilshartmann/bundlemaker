@@ -84,7 +84,7 @@ public class CurrentModule {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @return
 	 */
 	public final IModuleExporterContext getContext() {
