@@ -173,36 +173,17 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 			Set<TypeToTypeDependency> dependencies = new HashSet<TypeToTypeDependency>();
 
-			for (IType type : resourceModule.getContainedTypes()) {
+			for (IResource resource : resourceModule
+					.getResources(ContentType.SOURCE)) {
 
-				for (IReference reference : type.getReferences()) {
+				for (IReference reference : resource.getReferences()) {
 
-					//
-					Set<IModule> referencedModules = modularizedSystem
-							.getContainingModules(reference
-									.getFullyQualifiedName());
-
-					if (referencedModules.size() > 1) {
-						// System.out.println("~~~~~~~");
-						// System.out.println(reference.getFullyQualifiedName());
-						// for (IModule iModule : referencedModules) {
-						// System.out.println(" - "
-						// + iModule.getModuleIdentifier());
-						// }
+					IModule referencedModule = getReferencedModule(
+							modularizedSystem, reference);
+					
+					if (referencedModule == null) {
 						continue;
 					}
-
-					if (referencedModules.size() == 0) {
-
-						//
-						// System.out.println("MISSING TYPE "
-						// + reference.getFullyQualifiedName());
-						continue;
-
-					}
-
-					IModule referencedModule = ((IModule[]) referencedModules
-							.toArray(new IModule[0]))[0];
 
 					// TODO: CONFIGURATION
 					// exclude self references
@@ -212,8 +193,8 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 					}
 
 					// from
-					String from = _identifierMap.getClassId(resourceModule,
-							type.getFullyQualifiedName());
+					String from = _identifierMap.getResourceId(resourceModule,
+							resource.getPath());
 					// to
 					String to = _identifierMap.getClassId(referencedModule,
 							reference.getFullyQualifiedName());
@@ -224,6 +205,41 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 							reference.isExtends());
 					//
 					dependencies.add(dependency);
+				}
+
+				// process types
+				for (IType type : resource.getContainedTypes()) {
+
+					for (IReference reference : type.getReferences()) {
+
+						IModule referencedModule = getReferencedModule(
+								modularizedSystem, reference);
+						
+						if (referencedModule == null) {
+							continue;
+						}
+
+						// TODO: CONFIGURATION
+						// exclude self references
+						if (isExcludeModuleSelfReferences()
+								&& referencedModule.equals(typeModule)) {
+							continue;
+						}
+
+						// from
+						String from = _identifierMap.getClassId(resourceModule,
+								type.getFullyQualifiedName());
+						// to
+						String to = _identifierMap.getClassId(referencedModule,
+								reference.getFullyQualifiedName());
+
+						// dependency
+						TypeToTypeDependency dependency = new TypeToTypeDependency(
+								from, to, reference.isImplements(),
+								reference.isExtends());
+						//
+						dependencies.add(dependency);
+					}
 				}
 			}
 
@@ -238,6 +254,38 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 				_result.getDependencies().getDependency().add(dependency);
 			}
 		}
+	}
+
+	private IModule getReferencedModule(IModularizedSystem modularizedSystem,
+			IReference reference) {
+
+		//
+		Set<IModule> referencedModules = modularizedSystem
+				.getContainingModules(reference.getFullyQualifiedName());
+
+		if (referencedModules.size() > 1) {
+			 System.out.println("~~~~~~~");
+			 System.out.println(reference.getFullyQualifiedName());
+			 for (IModule iModule : referencedModules) {
+			 System.out.println(" - "
+			 + iModule.getModuleIdentifier());
+			 }
+			return null;
+		}
+
+		if (referencedModules.size() == 0) {
+
+			
+			 System.out.println("MISSING TYPE "
+			 + reference.getFullyQualifiedName());
+			return null;
+
+		}
+
+		IModule referencedModule = ((IModule[]) referencedModules
+				.toArray(new IModule[0]))[0];
+
+		return referencedModule;
 	}
 
 	/**
