@@ -38,7 +38,7 @@ public class TargetPlatformProjectExporter extends
 	 */
 	public void setTemplateDirectory(File templateDirectory) {
 		((BinaryBundleExporter) getModuleExporter())
-				.setTemplateDirectory(templateDirectory);
+				.setTemplateRootDirectory(templateDirectory);
 	}
 
 	@Override

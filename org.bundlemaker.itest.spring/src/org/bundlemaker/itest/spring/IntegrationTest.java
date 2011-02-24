@@ -12,8 +12,8 @@ import junit.framework.Assert;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.batch.tk.exporter.pde.PdePluginProjectExporter;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
+import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
@@ -264,9 +264,9 @@ public class IntegrationTest {
 		targetPlatformProjectExporter
 				.export(modularizedSystem, exporterContext);
 
-		PdePluginProjectExporter pdeExporter = new PdePluginProjectExporter();
+		PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
 		pdeExporter.setUseClassifcationForExportDestination(true);
-		pdeExporter.setTemplateDirectory(templateDirectory);
+		pdeExporter.setTemplateRootDirectory(templateDirectory);
 
 		new ModularizedSystemExporterAdapter(pdeExporter).export(
 				modularizedSystem, exporterContext);

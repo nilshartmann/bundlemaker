@@ -24,19 +24,22 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	private ManifestContents _manifestTemplateContents;
 
 	/** - */
-	private File _templateDirectory;
+	private File _templateRootDirectory;
+
+	/** - */
+	private File _projectTemplateDirectory;
 
 	/**
 	 * <p>
 	 * </p>
 	 * 
-	 * @param templateDirectory
+	 * @param templateRootDirectory
 	 */
-	public final void setTemplateDirectory(File templateDirectory) {
-		Assert.isNotNull(templateDirectory);
-		Assert.isTrue(templateDirectory.isDirectory());
+	public final void setTemplateRootDirectory(File templateRootDirectory) {
+		Assert.isNotNull(templateRootDirectory);
+		Assert.isTrue(templateRootDirectory.isDirectory());
 
-		_templateDirectory = templateDirectory;
+		_templateRootDirectory = templateRootDirectory;
 	}
 
 	/**
@@ -45,8 +48,8 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	public final File getTemplateDirectory() {
-		return _templateDirectory;
+	public final File getCurrentTemplateRootDirectory() {
+		return _templateRootDirectory;
 	}
 
 	/**
@@ -55,7 +58,17 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	public ManifestContents getCurrentManifestTemplate() {
+	public final File getCurrentProjectTemplateDirectory() {
+		return _projectTemplateDirectory;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public final ManifestContents getCurrentManifestTemplate() {
 		return _manifestTemplateContents;
 	}
 
@@ -64,6 +77,9 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 */
 	@Override
 	protected void preExportModule() throws CoreException {
+
+		// 'create' the project template directory
+		_projectTemplateDirectory = createProjectTemplateDirectory();
 
 		// get the template manifest
 		_manifestTemplateContents = createManifestTemplate();
@@ -82,17 +98,11 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	protected ManifestContents createManifestTemplate() {
 
 		//
-		if (_templateDirectory == null) {
+		if (_templateRootDirectory == null) {
 			return createDefaultManifestTemplate();
 		}
 
-		File templateFile = new File(_templateDirectory, getCurrentModule()
-				.getModuleIdentifier().toString() + ".template");
-
-		if (!templateFile.exists()) {
-			templateFile = new File(_templateDirectory, getCurrentModule()
-					.getModuleIdentifier().getName() + ".template");
-		}
+		File templateFile = getManifestTemplateFile();
 
 		ManifestContents templateManifestContents = ManifestUtils
 				.readManifestContents(templateFile);
@@ -113,7 +123,38 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
+	protected File getManifestTemplateFile() {
+
+		// get the template file
+		File templateFile = new File(_templateRootDirectory, getCurrentModule()
+				.getModuleIdentifier().toString() + ".template");
+
+		if (!templateFile.exists()) {
+			templateFile = new File(_templateRootDirectory, getCurrentModule()
+					.getModuleIdentifier().getName() + ".template");
+		}
+
+		//
+		return templateFile;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	protected ManifestContents createDefaultManifestTemplate() {
 		return new SimpleManifestContents();
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	protected File createProjectTemplateDirectory() {
+		return _projectTemplateDirectory;
 	}
 }
