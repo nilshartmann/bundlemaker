@@ -206,6 +206,7 @@ public class ResourceKey implements IResourceKey {
 				byte[] result = buffer.toByteArray();
 
 				is.close();
+				buffer.close();
 
 				return result;
 

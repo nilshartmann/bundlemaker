@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.bundlemaker.core.exporter.manifest.ManifestUtils;
+import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -13,6 +14,9 @@ import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+
+import com.springsource.bundlor.ManifestWriter;
+import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFactory;
 
 /**
  * <p>
@@ -29,9 +33,46 @@ public abstract class AbstractJarFileBundleExporter extends
 	 * @throws CoreException
 	 */
 	@Override
-	public void doExport() throws CoreException {
+	protected void doExport() throws CoreException {
+
+		// create new file if repackaging is required
+		if (ModuleExporterUtils.requiresRepackaging(getCurrentModule(),
+				ContentType.BINARY)) {
+
+			// create new File
+			createNewJarFile();
+		}
+
+		// copy (and patch) the original
+		else {
+
+			// get the root file
+			File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(),
+					ContentType.BINARY);
+
+			//
+			System.out.println("patching " + rootFile.getAbsolutePath());
+
+			// get the manifest writer
+			ManifestWriter manifestWriter = new StandardManifestWriterFactory()
+					.create(rootFile.getAbsolutePath(), getDestinationFile()
+							.getAbsolutePath());
+
+			//
+			manifestWriter.write(getCurrentManifest());
+		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @throws CoreException
+	 */
+	private void createNewJarFile() throws CoreException {
 
 		try {
+
 			// create the output stream
 			OutputStream outputStream = createOutputStream(
 					getCurrentModularizedSystem(), getCurrentModule(),
@@ -45,12 +86,13 @@ public abstract class AbstractJarFileBundleExporter extends
 
 			// close the output stream
 			outputStream.close();
+
 		} catch (IOException e) {
-			//TODO
+			// TODO
 			e.printStackTrace();
 			throw new CoreException(new Status(IStatus.ERROR, "", ""));
 		} catch (Exception e) {
-			//TODO
+			// TODO
 			e.printStackTrace();
 			throw new CoreException(new Status(IStatus.ERROR, "", ""));
 		}
@@ -70,17 +112,33 @@ public abstract class AbstractJarFileBundleExporter extends
 			IModularizedSystem modularizedSystem, IResourceModule module,
 			IModuleExporterContext context) throws Exception {
 
+		File targetFile = getDestinationFile();
+
+		// return a new file output stream
+		return new FileOutputStream(targetFile);
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @param module
+	 * @param context
+	 * @return
+	 */
+	protected File getDestinationFile() {
+
 		// create the target file
-		File targetFile = new File(context.getDestinationDirectory(),
-				computeJarFileName(module));
+		File targetFile = new File(getCurrentContext()
+				.getDestinationDirectory(),
+				computeJarFileName(getCurrentModule()));
 
 		// create the parent directories
 		if (!targetFile.getParentFile().exists()) {
 			targetFile.getParentFile().mkdirs();
 		}
-
-		// return a new file output stream
-		return new FileOutputStream(targetFile);
+		return targetFile;
 	}
 
 	/**

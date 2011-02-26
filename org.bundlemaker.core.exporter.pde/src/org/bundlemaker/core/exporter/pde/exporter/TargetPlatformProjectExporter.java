@@ -4,10 +4,10 @@ import java.io.File;
 
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.pde.Activator;
 import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.util.Helper;
-import org.bundlemaker.core.exporter.util.ModularizedSystemExporterAdapter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;

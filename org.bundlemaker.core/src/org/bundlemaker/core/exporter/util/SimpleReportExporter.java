@@ -93,6 +93,16 @@ public class SimpleReportExporter extends AbstractExporter {
 		for (String referencedType : asSortedList(referencedTypes)) {
 			builder.append(referencedType + "\n");
 		}
+		
+		builder.append("\n");
+		builder.append("Indirectly referenced Types: \n");
+		Set<String> indirectlyReferencedTypes = getCurrentModule()
+				.getReferencedTypeNames(true, true, true);
+		for (String referencedType : asSortedList(indirectlyReferencedTypes)) {
+			if (!referencedTypes.contains(referencedType)) {
+				builder.append(referencedType + "\n");
+			}
+		}
 
 		builder.append("\n");
 		builder.append("Referenced Modules: \n");
@@ -124,15 +134,20 @@ public class SimpleReportExporter extends AbstractExporter {
 
 		try {
 			//
-			File outFile = new File(getCurrentContext().getDestinationDirectory(),
-					getCurrentModule().getModuleIdentifier().toString() + ".txt");
+			File outFile = new File(getCurrentContext()
+					.getDestinationDirectory(), getCurrentModule()
+					.getModuleIdentifier().toString() + ".txt");
+
+			if (!outFile.getParentFile().exists()) {
+				outFile.getParentFile().mkdirs();
+			}
 
 			FileWriter fileWriter = new FileWriter(outFile);
 			fileWriter.write(builder.toString());
 			fileWriter.flush();
 			fileWriter.close();
 		} catch (IOException e) {
-			//TODO
+			// TODO
 			e.printStackTrace();
 			throw new CoreException(new Status(IStatus.ERROR, "", ""));
 		}

@@ -27,7 +27,7 @@ public abstract class AbstractExporter implements IModuleExporter {
 	 * 
 	 * @return
 	 */
-	public IModularizedSystem getCurrentModularizedSystem() {
+	protected IModularizedSystem getCurrentModularizedSystem() {
 		return _currentModularizedSystem;
 	}
 
@@ -37,7 +37,7 @@ public abstract class AbstractExporter implements IModuleExporter {
 	 * 
 	 * @return
 	 */
-	public IResourceModule getCurrentModule() {
+	protected IResourceModule getCurrentModule() {
 		return _currentModule;
 	}
 
@@ -47,7 +47,7 @@ public abstract class AbstractExporter implements IModuleExporter {
 	 * 
 	 * @return
 	 */
-	public IModuleExporterContext getCurrentContext() {
+	protected IModuleExporterContext getCurrentContext() {
 		return _currentContext;
 	}
 

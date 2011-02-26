@@ -17,6 +17,9 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
+	// TODO
+	public static final String OSGI_FRAGMENT_HOST = "OSGI_FRAGMENT_HOST";
+
 	/** - */
 	private GenericCache<IModule, ManifestContents> _manifestCache;
 
@@ -67,20 +70,11 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 	 * <p>
 	 * </p>
 	 * 
-	 * @param hostManifestContents
-	 */
-	public final void setHost(IModule host) {
-		Assert.isNotNull(host);
-		_hostManifestContents = _manifestCache.get(host);
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
 	 * @return
 	 */
-	public final ManifestContents getHostManifestContents() {
+	protected final ManifestContents getHostManifestContents() {
+
+		//
 		return _hostManifestContents;
 	}
 
@@ -90,7 +84,19 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 	 * 
 	 * @return
 	 */
-	public ManifestContents getCurrentManifest() {
+	protected final boolean isFragment() {
+
+		//
+		return _hostManifestContents != null;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	protected ManifestContents getCurrentManifest() {
 		Assert.isNotNull(_manifestContents, String.format(
 				"No manifest set. The method createManifest(IModularizedSystem, "
 						+ "IResourceModule, IModuleExporterContext) of class "
@@ -106,8 +112,21 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 		// call super
 		super.preExportModule();
 
-		//
+		// get the manifest contents
 		_manifestContents = _manifestCache.getOrCreate(getCurrentModule());
+
+		// get the host manifest
+		if (getCurrentModule().getUserAttributes().containsKey(
+				OSGI_FRAGMENT_HOST)) {
+
+			IModule hostModule = (IModule) getCurrentModule()
+					.getUserAttributes().get(OSGI_FRAGMENT_HOST);
+			
+			// if () {
+			// IModule host = getHostModule()
+			// _hostManifestContents = _manifestCache.get(host);
+			// }
+		}
 	}
 
 	/**

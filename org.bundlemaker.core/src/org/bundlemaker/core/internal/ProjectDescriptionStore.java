@@ -95,6 +95,9 @@ public class ProjectDescriptionStore {
 				new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME)
 						.append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
 
+		// refresh
+		iFile.refreshLocal(IFile.DEPTH_INFINITE, null);
+
 		//
 		XmlProjectDescriptionType xmlProjectDescription = XmlProjectDescriptionExporterUtils
 				.unmarshal(iFile.getContents());

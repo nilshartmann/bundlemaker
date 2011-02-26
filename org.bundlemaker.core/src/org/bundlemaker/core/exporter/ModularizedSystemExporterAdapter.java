@@ -1,10 +1,9 @@
-package org.bundlemaker.core.exporter.util;
+package org.bundlemaker.core.exporter;
 
-import org.bundlemaker.core.exporter.IModularizedSystemExporter;
-import org.bundlemaker.core.exporter.IModuleExporter;
-import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -28,6 +27,9 @@ public class ModularizedSystemExporterAdapter implements
 	/** - */
 	private IModuleExporterContext _currentContext;
 
+	/** - */
+	private IQueryFilter<IResourceModule> _moduleFilter;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ModularizedSystemExporterAdapter}.
@@ -41,8 +43,14 @@ public class ModularizedSystemExporterAdapter implements
 		_moduleExporter = moduleExporter;
 	}
 
-	public IModuleExporter getModuleExporter() {
-		return _moduleExporter;
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param moduleFilter
+	 */
+	public void setModuleFilter(IQueryFilter<IResourceModule> moduleFilter) {
+		_moduleFilter = moduleFilter;
 	}
 
 	/**
@@ -60,16 +68,34 @@ public class ModularizedSystemExporterAdapter implements
 		for (IResourceModule resourceModule : _currentModularizedSystem
 				.getResourceModules()) {
 
-			//
-			_currentModule = resourceModule;
+			if (_moduleFilter == null || _moduleFilter.matches(resourceModule)) {
 
-			// export if possible
-			if (_moduleExporter.canExport(_currentModularizedSystem,
-					_currentModule, _currentContext)) {
-				_moduleExporter.export(_currentModularizedSystem,
-						_currentModule, _currentContext);
-			} else {
-				handleNonExportableModule();
+				//
+				_currentModule = resourceModule;
+
+				//
+				preExportModule();
+
+				try {
+
+					// export if possible
+					if (_moduleExporter.canExport(_currentModularizedSystem,
+							_currentModule, _currentContext)) {
+						_moduleExporter.export(_currentModularizedSystem,
+								_currentModule, _currentContext);
+					} else {
+						handleNonExportableModule();
+					}
+
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					new SimpleReportExporter().export(modularizedSystem,
+							_currentModule, context);
+				}
+
+				//
+				postExportModule();
 			}
 		}
 
@@ -82,7 +108,7 @@ public class ModularizedSystemExporterAdapter implements
 	 * 
 	 * @return
 	 */
-	public IModularizedSystem getCurrentModularizedSystem() {
+	public final IModularizedSystem getCurrentModularizedSystem() {
 		return _currentModularizedSystem;
 	}
 
@@ -92,7 +118,7 @@ public class ModularizedSystemExporterAdapter implements
 	 * 
 	 * @return
 	 */
-	public IResourceModule getCurrentModule() {
+	public final IResourceModule getCurrentModule() {
 		return _currentModule;
 	}
 
@@ -102,18 +128,58 @@ public class ModularizedSystemExporterAdapter implements
 	 * 
 	 * @return
 	 */
-	public IModuleExporterContext getCurrentContext() {
+	public final IModuleExporterContext getCurrentContext() {
 		return _currentContext;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public final IModuleExporter getModuleExporter() {
+		return _moduleExporter;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
 	protected IModuleExporterContext preExportModules() throws Exception {
 		return _currentContext;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @throws Exception
+	 */
 	protected void postExportModules() throws Exception {
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 */
 	protected void handleNonExportableModule() {
+	}
 
+	/**
+	 * <p>
+	 * </p>
+	 */
+	protected void preExportModule() {
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 */
+	protected void postExportModule() {
 	}
 }

@@ -13,11 +13,11 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
+import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
-import org.bundlemaker.core.exporter.util.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -148,6 +148,9 @@ public class IntegrationTest {
 		// export to structure 101
 		exportToStructure101(bundleMakerProject, modularizedSystem);
 
+		//
+		exportToSimpleReport(bundleMakerProject, modularizedSystem);
+
 		// // export to binary bundle
 		// exportToBinaryBundle(bundleMakerProject, modularizedSystem);
 
@@ -259,10 +262,11 @@ public class IntegrationTest {
 		File templateDirectory = new File(System.getProperty("user.dir"),
 				"templates");
 
-		TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
-		targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
-		targetPlatformProjectExporter
-				.export(modularizedSystem, exporterContext);
+		// TargetPlatformProjectExporter targetPlatformProjectExporter = new
+		// TargetPlatformProjectExporter();
+		// targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
+		// targetPlatformProjectExporter
+		// .export(modularizedSystem, exporterContext);
 
 		PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
 		pdeExporter.setUseClassifcationForExportDestination(true);

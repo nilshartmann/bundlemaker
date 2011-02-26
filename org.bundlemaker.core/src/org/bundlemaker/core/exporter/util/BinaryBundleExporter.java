@@ -16,6 +16,19 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 
+	/** - */
+	private boolean _useRequireBundle = true;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param useRequireBundle
+	 */
+	public void setUseRequireBundle(boolean useRequireBundle) {
+		_useRequireBundle = useRequireBundle;
+	}
+
 	/**
 	 * <p>
 	 * </p>
@@ -29,8 +42,14 @@ public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 	protected ManifestContents createManifest() throws CoreException {
 
 		// create the manifest
-		return new BundleManifestCreator(getCurrentModularizedSystem(),
-				getCurrentModule(), getCurrentContext(),
-				getCurrentManifestTemplate()).createManifest();
+		BundleManifestCreator creator = new BundleManifestCreator(
+				getCurrentModularizedSystem(), getCurrentModule(),
+				getCurrentContext(), getCurrentManifestTemplate());
+
+		// set useRequireBundle
+		creator.setUseRequireBundle(_useRequireBundle);
+		
+		// create manifest
+		return creator.createManifest();
 	}
 }

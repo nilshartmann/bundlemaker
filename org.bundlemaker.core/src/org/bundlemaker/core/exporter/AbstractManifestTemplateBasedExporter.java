@@ -48,7 +48,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	public final File getCurrentTemplateRootDirectory() {
+	protected final File getCurrentTemplateRootDirectory() {
 		return _templateRootDirectory;
 	}
 
@@ -58,7 +58,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	public final File getCurrentProjectTemplateDirectory() {
+	protected final File getCurrentProjectTemplateDirectory() {
 		return _projectTemplateDirectory;
 	}
 
@@ -68,7 +68,7 @@ public abstract class AbstractManifestTemplateBasedExporter extends
 	 * 
 	 * @return
 	 */
-	public final ManifestContents getCurrentManifestTemplate() {
+	protected final ManifestContents getCurrentManifestTemplate() {
 		return _manifestTemplateContents;
 	}
 

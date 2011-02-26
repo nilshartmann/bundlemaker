@@ -42,6 +42,9 @@ public class BundleManifestCreator {
 	/** - */
 	private CurrentModule _currentModule;
 
+	/** - */
+	private boolean _useRequireBundle = true;
+
 	/**
 	 * <p>
 	 * </p>
@@ -128,6 +131,16 @@ public class BundleManifestCreator {
 
 		// return the result
 		return newManifestContents;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param useRequireBundle
+	 */
+	public void setUseRequireBundle(boolean useRequireBundle) {
+		_useRequireBundle = useRequireBundle;
 	}
 
 	/**
@@ -241,6 +254,9 @@ public class BundleManifestCreator {
 		ImportResolver importResolver = new ImportResolver(_currentModule,
 				_newBundleManifest.getImportPackage(),
 				_newBundleManifest.getRequireBundle());
+
+		//
+		importResolver.setUseRequireBundle(_useRequireBundle);
 
 		//
 		importResolver.addImportPackageAndRequiredBundle();

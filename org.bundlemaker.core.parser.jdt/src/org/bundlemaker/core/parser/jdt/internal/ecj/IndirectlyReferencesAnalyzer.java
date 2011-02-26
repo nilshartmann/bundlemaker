@@ -3,7 +3,6 @@ package org.bundlemaker.core.parser.jdt.internal.ecj;
 import java.io.IOException;
 import java.util.Set;
 
-import org.bundlemaker.core.parser.jdt.internal.JdtParser;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
@@ -65,6 +64,9 @@ public class IndirectlyReferencesAnalyzer {
 		// the compiler options
 		CompilerOptions compilerOptions = new CompilerOptions(
 				_javaProject.getOptions(true));
+
+		// TODO: make configurable...
+		compilerOptions.docCommentSupport = false;
 
 		// the compiler requestor
 		ICompilerRequestor compilerRequestor = new ICompilerRequestor() {

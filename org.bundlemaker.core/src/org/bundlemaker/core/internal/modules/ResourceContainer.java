@@ -103,11 +103,13 @@ public class ResourceContainer extends TypeContainer implements
 		Set<IReference> result = new HashSet<IReference>();
 
 		//
-		getReferences(_binaryResources, hideContainedTypes, includeIndirectReferences, result);
+		getReferences(_binaryResources, hideContainedTypes,
+				includeIndirectReferences, result);
 
 		//
 		if (includeSourceReferences) {
-			getReferences(_sourceResources, hideContainedTypes, includeIndirectReferences, result);
+			getReferences(_sourceResources, hideContainedTypes,
+					includeIndirectReferences, result);
 		}
 
 		// return result
@@ -213,12 +215,12 @@ public class ResourceContainer extends TypeContainer implements
 		Set<String> result = new HashSet<String>();
 
 		//
-		getReferences(_binaryResources, hideContainedTypes, result,
+		getReferences(_binaryResources, hideContainedTypes, includeIndirectReferences, result,
 				collectPackages);
 
 		//
 		if (includeSourceReferences) {
-			getReferences(_sourceResources, hideContainedTypes, result,
+			getReferences(_sourceResources, hideContainedTypes, includeIndirectReferences, result,
 					collectPackages);
 		}
 
@@ -232,12 +234,14 @@ public class ResourceContainer extends TypeContainer implements
 	 * 
 	 * @param resources
 	 * @param hideContainedTypes
-	 * @param containedTypes
+	 * @param includeIndirectReferences
+	 *            TODO
 	 * @param result
+	 * @param containedTypes
 	 */
 	private void getReferences(Set<? extends IResource> resources,
-			boolean hideContainedTypes, Set<String> result,
-			boolean collectPackages) {
+			boolean hideContainedTypes, boolean includeIndirectReferences,
+			Set<String> result, boolean collectPackages) {
 
 		// iterate over all resources
 		for (IResource resource : resources) {
@@ -245,8 +249,8 @@ public class ResourceContainer extends TypeContainer implements
 			// iterate over all resources
 			for (IReference reference : resource.getReferences()) {
 
-				addReference(reference, hideContainedTypes, collectPackages,
-						result);
+					addReference(reference, hideContainedTypes, includeIndirectReferences,
+							collectPackages, result);
 			}
 
 			//
@@ -255,15 +259,20 @@ public class ResourceContainer extends TypeContainer implements
 				//
 				for (IReference reference : type.getReferences()) {
 
-					addReference(reference, hideContainedTypes,
-							collectPackages, result);
+						
+						addReference(reference, hideContainedTypes, includeIndirectReferences,
+								collectPackages, result);
 				}
 			}
 		}
 	}
 
-	private void addReference(IReference reference, boolean hideContainedTypes,
+	private void addReference(IReference reference, boolean hideContainedTypes, boolean includeIndirectReferences,
 			boolean collectPackages, Set<String> result) {
+		
+		if (!reference.isDirectlyReferenced() && !includeIndirectReferences) {
+			return;
+		}
 
 		if (!hideContainedTypes
 				|| !getContainedTypeNames().contains(
@@ -296,11 +305,13 @@ public class ResourceContainer extends TypeContainer implements
 	 * 
 	 * @param resources
 	 * @param hideContainedTypes
-	 * @param includeIndirectReferences TODO
+	 * @param includeIndirectReferences
+	 *            TODO
 	 * @param result
 	 */
 	private void getReferences(Set<? extends IResource> resources,
-			boolean hideContainedTypes, boolean includeIndirectReferences, Set<IReference> result) {
+			boolean hideContainedTypes, boolean includeIndirectReferences,
+			Set<IReference> result) {
 
 		// iterate over all resources
 		for (IResource resource : resources) {
@@ -313,12 +324,13 @@ public class ResourceContainer extends TypeContainer implements
 								reference.getFullyQualifiedName())) {
 
 					if (!reference.isDirectlyReferenced()) {
-						
+
 						//
-						if (includeIndirectReferences && reference.isIndirectlyReferenced()) {
+						if (includeIndirectReferences
+								&& reference.isIndirectlyReferenced()) {
 							result.add(reference);
 						}
-						
+
 					} else {
 						result.add(reference);
 					}
@@ -335,12 +347,13 @@ public class ResourceContainer extends TypeContainer implements
 									reference.getFullyQualifiedName())) {
 
 						if (!reference.isDirectlyReferenced()) {
-							
+
 							//
-							if (includeIndirectReferences && reference.isIndirectlyReferenced()) {
+							if (includeIndirectReferences
+									&& reference.isIndirectlyReferenced()) {
 								result.add(reference);
 							}
-							
+
 						} else {
 							result.add(reference);
 						}

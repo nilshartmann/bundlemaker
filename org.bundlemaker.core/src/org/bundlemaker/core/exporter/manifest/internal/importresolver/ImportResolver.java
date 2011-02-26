@@ -20,7 +20,7 @@ import com.springsource.util.osgi.manifest.Resolution;
 public class ImportResolver extends AbstractImportResolver {
 
 	/** - */
-	private boolean useRequireBundle = true;
+	private boolean _useRequireBundle = true;
 
 	/**
 	 * <p>
@@ -36,6 +36,10 @@ public class ImportResolver extends AbstractImportResolver {
 
 		// call super constructor
 		super(currentModule, importPackage, requireBundle);
+	}
+
+	public void setUseRequireBundle(boolean useRequireBundle) {
+		_useRequireBundle = useRequireBundle;
 	}
 
 	/**
@@ -55,7 +59,7 @@ public class ImportResolver extends AbstractImportResolver {
 			// we will import the package as optional
 			if (containsUnsatisfiedTypes(packageName)) {
 
-				if (!useRequireBundle) {
+				if (!_useRequireBundle) {
 					addImportedPackage(packageName, Resolution.OPTIONAL);
 				}
 			}
@@ -71,7 +75,7 @@ public class ImportResolver extends AbstractImportResolver {
 								.getReferencedPackageToContainingTypesCache()
 								.get(packageName));
 
-				if (!useRequireBundle && reduced.size() == 1) {
+				if (!_useRequireBundle && reduced.size() == 1) {
 					addImportedPackage(packageName);
 				} else {
 					for (IModule iModule : reduced) {
@@ -84,7 +88,7 @@ public class ImportResolver extends AbstractImportResolver {
 
 			} else if (exportingModules.size() == 1) {
 
-				if (!useRequireBundle) {
+				if (!_useRequireBundle) {
 					addImportedPackage(packageName);
 				} else {
 					if (!requiredBundle.contains(exportingModules.get(0))) {
