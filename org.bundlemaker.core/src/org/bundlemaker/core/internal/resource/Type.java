@@ -31,18 +31,18 @@ public class Type implements IType, IModifiableType {
 	/** the type of this type (enum, class, interface, annotation) **/
 	private TypeEnum _typeEnum;
 
-	/** non-persistent: the source resource */
-	private Resource _sourceResource;
+	/** transient: the source resource */
+	private transient Resource _sourceResource;
 
-	/** non-persistent: the binary resource */
-	private Resource _binaryResource;
-
-	/** non-persistent: the type module */
-	private IModule _typeModule;
+	/** transient: the binary resource */
+	private transient Resource _binaryResource;
 
 	/** transient: the reference container */
 	private transient ReferenceContainer _referenceContainer;
 
+	/** non-persistent: the type module */
+	private IModule _typeModule;
+	
 	/**
 	 * <p>
 	 * </p>

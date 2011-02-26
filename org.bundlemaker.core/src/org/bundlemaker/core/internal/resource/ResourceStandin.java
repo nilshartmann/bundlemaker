@@ -21,9 +21,10 @@ public class ResourceStandin extends ResourceKey implements IResource {
 	/** - */
 	private Resource _resource;
 
-	/** do not set transient! */
+	/** - */
 	private IResourceModule _resourceModule;
 
+	/** - */
 	private Set<IResource> _stickyResourceStandins;
 
 	public IResourceModule getResourceModule() {

@@ -32,14 +32,14 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	/** - */
 	private Set<IModifiableResource> _stickyResources;
 
-	/** do not set transient! */
-	private ResourceStandin _resourceStandin;
-
 	/** - */
 	private transient ReferenceContainer _referenceContainer;
 
 	/** - */
 	private transient ResourceCache _resourceCache;
+	
+	/**  */
+	private ResourceStandin _resourceStandin;
 
 	/**
 	 * <p>
