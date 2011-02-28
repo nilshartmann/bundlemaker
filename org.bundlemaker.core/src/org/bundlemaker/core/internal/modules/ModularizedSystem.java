@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.algorithm.ResourceIsReferencedTransitiveClosure;
@@ -21,6 +22,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -43,6 +45,30 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
 		//
 		super(name, projectDescription);
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @return
+	 */
+	public Map<String, Set<IType>> getAmbiguousTypes() {
+
+		// create the result
+		Map<String, Set<IType>> result = new HashMap<String, Set<IType>>();
+
+		//
+		for (Entry<String, Set<IType>> entry : getTypeNameToTypeCache()
+				.getMap().entrySet()) {
+
+			if (entry.getValue().size() > 1) {
+				result.put(entry.getKey(), entry.getValue());
+			}
+		}
+
+		// return the result
+		return result;
 	}
 
 	/**

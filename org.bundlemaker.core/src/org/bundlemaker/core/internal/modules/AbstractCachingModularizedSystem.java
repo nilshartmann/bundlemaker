@@ -25,20 +25,16 @@ import org.eclipse.core.runtime.Assert;
 public abstract class AbstractCachingModularizedSystem extends
 		AbstractTransformationAwareModularizedSystem {
 
-	// /** - */
-	// private Set<IResource> _binaryResources;
-	//
-	// /** - */
-	// private Set<IResource> _sourceResources;
-
 	/** type name -> type */
 	private GenericCache<String, Set<IType>> _typeNameToTypeCache;
 
 	/** type name -> referring type */
 	private GenericCache<String, Set<IType>> _typeNameToReferringCache;
 
+	/** - */
 	private Map<IResource, IResourceModule> _resourceToResourceModuleMap;
 
+	/** - */
 	private Map<IType, IModule> _typeToModuleMap;
 
 	/**
@@ -70,10 +66,6 @@ public abstract class AbstractCachingModularizedSystem extends
 				return new HashSet<IType>();
 			}
 		};
-
-		// //
-		// _sourceResources = new HashSet<IResource>();
-		// _binaryResources = new HashSet<IResource>();
 
 		//
 		_resourceToResourceModuleMap = new HashMap<IResource, IResourceModule>();
@@ -118,25 +110,6 @@ public abstract class AbstractCachingModularizedSystem extends
 		Assert.isNotNull(type);
 		return _typeToModuleMap.get(type);
 	}
-
-	// @Override
-	// protected void preApplyTransformations() {
-	// super.preApplyTransformations();
-	//
-	// // cache all IResources
-	// for (IFileBasedContent fileBasedContent : getProjectDescription()
-	// .getFileBasedContent()) {
-	//
-	// if (fileBasedContent.isResourceContent()) {
-	//
-	// _binaryResources.addAll(fileBasedContent.getResourceContent()
-	// .getBinaryResources());
-	//
-	// _sourceResources.addAll(fileBasedContent.getResourceContent()
-	// .getSourceResources());
-	// }
-	// }
-	// }
 
 	/**
 	 * <p>

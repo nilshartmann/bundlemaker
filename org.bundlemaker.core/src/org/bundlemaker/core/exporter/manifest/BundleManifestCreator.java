@@ -43,7 +43,7 @@ public class BundleManifestCreator {
 	private CurrentModule _currentModule;
 
 	/** - */
-	private boolean _useRequireBundle = true;
+	private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
 	/**
 	 * <p>
@@ -139,8 +139,8 @@ public class BundleManifestCreator {
 	 * 
 	 * @param useRequireBundle
 	 */
-	public void setUseRequireBundle(boolean useRequireBundle) {
-		_useRequireBundle = useRequireBundle;
+	public void setDependencyStyle(DependencyStyle dependencyStyle) {
+		_dependencyStyle = dependencyStyle;
 	}
 
 	/**
@@ -186,11 +186,16 @@ public class BundleManifestCreator {
 			if (!ManifestConstants.ORIGINAL_HEADERS_NOT_TO_COPY.contains(entry
 					.getKey())) {
 
-				//
-				newManifestContents.getMainAttributes().put(
-						entry.getKey().toString(),
-						existingManifest.getMainAttributes().get(
-								entry.getKey().toString()));
+				String key = entry.getKey().toString();
+				String value = existingManifest.getMainAttributes().get(
+						entry.getKey().toString());
+
+				if (value != null && !value.trim().isEmpty()) {
+
+					//
+					newManifestContents.getMainAttributes().put(key.trim(),
+							value.trim());
+				}
 			}
 		}
 	}
@@ -256,7 +261,7 @@ public class BundleManifestCreator {
 				_newBundleManifest.getRequireBundle());
 
 		//
-		importResolver.setUseRequireBundle(_useRequireBundle);
+		importResolver.setDependencyStyle(_dependencyStyle);
 
 		//
 		importResolver.addImportPackageAndRequiredBundle();

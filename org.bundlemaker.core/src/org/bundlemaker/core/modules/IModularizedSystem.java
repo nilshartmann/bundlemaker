@@ -219,6 +219,8 @@ public interface IModularizedSystem {
 	 */
 	Map<String, Set<IModule>> getAmbiguousPackages();
 
+	Map<String, Set<IType>> getAmbiguousTypes();
+
 	// TODO
 	Collection<IType> getTypeReferencesTransitiveClosure(String typeName,
 			IQueryFilter<IType> filter);

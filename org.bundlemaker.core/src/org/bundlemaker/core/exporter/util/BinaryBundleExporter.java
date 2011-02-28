@@ -2,6 +2,7 @@ package org.bundlemaker.core.exporter.util;
 
 import org.bundlemaker.core.exporter.AbstractJarFileBundleExporter;
 import org.bundlemaker.core.exporter.manifest.BundleManifestCreator;
+import org.bundlemaker.core.exporter.manifest.DependencyStyle;
 import org.eclipse.core.runtime.CoreException;
 
 import com.springsource.util.parser.manifest.ManifestContents;
@@ -17,7 +18,7 @@ import com.springsource.util.parser.manifest.ManifestContents;
 public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 
 	/** - */
-	private boolean _useRequireBundle = true;
+	private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
 	/**
 	 * <p>
@@ -25,8 +26,8 @@ public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 	 * 
 	 * @param useRequireBundle
 	 */
-	public void setUseRequireBundle(boolean useRequireBundle) {
-		_useRequireBundle = useRequireBundle;
+	public void setDependencyStyle(DependencyStyle dependencyStyle) {
+		_dependencyStyle = dependencyStyle;
 	}
 
 	/**
@@ -47,8 +48,8 @@ public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 				getCurrentContext(), getCurrentManifestTemplate());
 
 		// set useRequireBundle
-		creator.setUseRequireBundle(_useRequireBundle);
-		
+		creator.setDependencyStyle(_dependencyStyle);
+
 		// create manifest
 		return creator.createManifest();
 	}

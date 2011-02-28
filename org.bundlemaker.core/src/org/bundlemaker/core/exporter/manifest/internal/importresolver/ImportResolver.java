@@ -3,8 +3,10 @@ package org.bundlemaker.core.exporter.manifest.internal.importresolver;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.exporter.manifest.DependencyStyle;
 import org.bundlemaker.core.exporter.manifest.internal.CurrentModule;
 import org.bundlemaker.core.modules.IModule;
+import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
 
 import com.springsource.util.osgi.manifest.ImportPackage;
@@ -20,7 +22,7 @@ import com.springsource.util.osgi.manifest.Resolution;
 public class ImportResolver extends AbstractImportResolver {
 
 	/** - */
-	private boolean _useRequireBundle = true;
+	private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
 	/**
 	 * <p>
@@ -38,8 +40,18 @@ public class ImportResolver extends AbstractImportResolver {
 		super(currentModule, importPackage, requireBundle);
 	}
 
-	public void setUseRequireBundle(boolean useRequireBundle) {
-		_useRequireBundle = useRequireBundle;
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param dependencyStyle
+	 */
+	public void setDependencyStyle(DependencyStyle dependencyStyle) {
+
+		Assert.isNotNull(dependencyStyle);
+
+		//
+		_dependencyStyle = dependencyStyle;
 	}
 
 	/**
@@ -59,7 +71,8 @@ public class ImportResolver extends AbstractImportResolver {
 			// we will import the package as optional
 			if (containsUnsatisfiedTypes(packageName)) {
 
-				if (!_useRequireBundle) {
+				if (!_dependencyStyle
+						.equals(DependencyStyle.STRICT_REQUIRE_BUNDLE)) {
 					addImportedPackage(packageName, Resolution.OPTIONAL);
 				}
 			}
@@ -75,8 +88,13 @@ public class ImportResolver extends AbstractImportResolver {
 								.getReferencedPackageToContainingTypesCache()
 								.get(packageName));
 
-				if (!_useRequireBundle && reduced.size() == 1) {
+				if (!_dependencyStyle
+						.equals(DependencyStyle.STRICT_REQUIRE_BUNDLE)) {
+
+					// TODO
+					// && reduced.size() == 1
 					addImportedPackage(packageName);
+
 				} else {
 					for (IModule iModule : reduced) {
 
@@ -88,7 +106,8 @@ public class ImportResolver extends AbstractImportResolver {
 
 			} else if (exportingModules.size() == 1) {
 
-				if (!_useRequireBundle) {
+				if (!_dependencyStyle
+						.equals(DependencyStyle.STRICT_REQUIRE_BUNDLE)) {
 					addImportedPackage(packageName);
 				} else {
 					if (!requiredBundle.contains(exportingModules.get(0))) {
