@@ -4,7 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.TypeModule;
+import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -40,9 +41,6 @@ public class Type implements IType, IModifiableType {
 	/** transient: the reference container */
 	private transient ReferenceContainer _referenceContainer;
 
-	/** non-persistent: the type module */
-	private IModule _typeModule;
-	
 	/**
 	 * <p>
 	 * </p>
@@ -217,17 +215,27 @@ public class Type implements IType, IModifiableType {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public IModule getModule() {
+	public IModule getModule(IModularizedSystem modularizedSystem) {
+		Assert.isNotNull(modularizedSystem);
 
-		if (_typeModule != null) {
-			return _typeModule;
-		} else if (_binaryResource != null) {
-			return _binaryResource.getResourceModule();
+		IModule result = null;
+
+		if (_binaryResource != null) {
+			result = _binaryResource
+					.getAssociatedResourceModule(modularizedSystem);
 		} else if (_sourceResource != null) {
-			return _sourceResource.getResourceModule();
+			result = _sourceResource
+					.getAssociatedResourceModule(modularizedSystem);
+		} else {
+			result = ((ModularizedSystem) modularizedSystem)
+					.getAssociatedModule(this);
 		}
 
-		throw new RuntimeException("Type has no module " + this.toString());
+		if (result == null) {
+			throw new RuntimeException("Type has no module " + this.toString());
+		} else {
+			return result;
+		}
 	}
 
 	/**
@@ -259,16 +267,6 @@ public class Type implements IType, IModifiableType {
 	 */
 	public void setBinaryResource(Resource binaryResource) {
 		_binaryResource = binaryResource;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param binaryResource
-	 */
-	public void setTypeModule(TypeModule typeModule) {
-		_typeModule = typeModule;
 	}
 
 	/**

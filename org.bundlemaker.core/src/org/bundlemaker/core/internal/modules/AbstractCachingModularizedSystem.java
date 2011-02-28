@@ -1,16 +1,20 @@
 package org.bundlemaker.core.internal.modules;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.GenericCache;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -21,17 +25,21 @@ import org.bundlemaker.core.util.GenericCache;
 public abstract class AbstractCachingModularizedSystem extends
 		AbstractTransformationAwareModularizedSystem {
 
-	/** - */
-	private Set<IResource> _binaryResources;
-
-	/** - */
-	private Set<IResource> _sourceResources;
+	// /** - */
+	// private Set<IResource> _binaryResources;
+	//
+	// /** - */
+	// private Set<IResource> _sourceResources;
 
 	/** type name -> type */
 	private GenericCache<String, Set<IType>> _typeNameToTypeCache;
 
 	/** type name -> referring type */
 	private GenericCache<String, Set<IType>> _typeNameToReferringCache;
+
+	private Map<IResource, IResourceModule> _resourceToResourceModuleMap;
+
+	private Map<IType, IModule> _typeToModuleMap;
 
 	/**
 	 * <p>
@@ -63,9 +71,13 @@ public abstract class AbstractCachingModularizedSystem extends
 			}
 		};
 
+		// //
+		// _sourceResources = new HashSet<IResource>();
+		// _binaryResources = new HashSet<IResource>();
+
 		//
-		_sourceResources = new HashSet<IResource>();
-		_binaryResources = new HashSet<IResource>();
+		_resourceToResourceModuleMap = new HashMap<IResource, IResourceModule>();
+		_typeToModuleMap = new HashMap<IType, IModule>();
 	}
 
 	/**
@@ -88,24 +100,43 @@ public abstract class AbstractCachingModularizedSystem extends
 		return _typeNameToReferringCache;
 	}
 
-	@Override
-	protected void preApplyTransformations() {
-		super.preApplyTransformations();
+	/**
+	 * {@inheritDoc}
+	 */
+	public IResourceModule getAssociatedResourceModule(IResource resource) {
 
-		// cache all IResources
-		for (IFileBasedContent fileBasedContent : getProjectDescription()
-				.getFileBasedContent()) {
+		Assert.isNotNull(resource);
 
-			if (fileBasedContent.isResourceContent()) {
-
-				_binaryResources.addAll(fileBasedContent.getResourceContent()
-						.getBinaryResources());
-
-				_sourceResources.addAll(fileBasedContent.getResourceContent()
-						.getSourceResources());
-			}
+		if (resource instanceof Resource) {
+			resource = ((Resource) resource).getResourceStandin();
 		}
+		return _resourceToResourceModuleMap.get(resource);
 	}
+
+	public IModule getAssociatedModule(IType type) {
+
+		Assert.isNotNull(type);
+		return _typeToModuleMap.get(type);
+	}
+
+	// @Override
+	// protected void preApplyTransformations() {
+	// super.preApplyTransformations();
+	//
+	// // cache all IResources
+	// for (IFileBasedContent fileBasedContent : getProjectDescription()
+	// .getFileBasedContent()) {
+	//
+	// if (fileBasedContent.isResourceContent()) {
+	//
+	// _binaryResources.addAll(fileBasedContent.getResourceContent()
+	// .getBinaryResources());
+	//
+	// _sourceResources.addAll(fileBasedContent.getResourceContent()
+	// .getSourceResources());
+	// }
+	// }
+	// }
 
 	/**
 	 * <p>
@@ -123,6 +154,7 @@ public abstract class AbstractCachingModularizedSystem extends
 			for (IType type : module.getContainedTypes()) {
 				getTypeNameToTypeCache().getOrCreate(
 						type.getFullyQualifiedName()).add(type);
+				_typeToModuleMap.put(type, module);
 			}
 		}
 
@@ -130,7 +162,17 @@ public abstract class AbstractCachingModularizedSystem extends
 		for (IResourceModule module : getResourceModules()) {
 
 			//
+			for (IResource resource : module.getResources(ContentType.SOURCE)) {
+				_resourceToResourceModuleMap.put(resource, module);
+			}
+			for (IResource resource : module.getResources(ContentType.BINARY)) {
+				_resourceToResourceModuleMap.put(resource, module);
+			}
+
+			//
 			for (IType type : module.getContainedTypes()) {
+
+				_typeToModuleMap.put(type, module);
 
 				if (getTypeNameToTypeCache().getOrCreate(
 						type.getFullyQualifiedName()).add(type)) {

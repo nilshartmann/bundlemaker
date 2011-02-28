@@ -192,19 +192,6 @@ public class Activator extends Plugin {
 	 * <p>
 	 * </p>
 	 * 
-	 * @return
-	 */
-	public String getMemoryUsage() {
-		long totalMem = Runtime.getRuntime().totalMemory();
-		long freeMem = Runtime.getRuntime().freeMemory();
-		return "Memory used: " + (totalMem - freeMem) / (1024 * 1024)
-				+ " MB (total: " + totalMem / (1024 * 1024) + " MB )";
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
 	 * @param progressMonitor
 	 * @return
 	 */

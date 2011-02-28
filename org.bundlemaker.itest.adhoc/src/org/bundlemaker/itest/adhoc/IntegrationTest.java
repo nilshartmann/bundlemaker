@@ -88,7 +88,8 @@ public class IntegrationTest {
 
 		// get the default modularized system
 		IModularizedSystem modularizedSystem = bundleMakerProject
-				.getModularizedSystemWorkingCopy(IBundleMakerProject.DEFAULT_MODULARIZED_SYSTEM_WORKING_COPY_ID);
+				.getModularizedSystemWorkingCopy(bundleMakerProject
+						.getProject().getName());
 
 		// apply the transformation
 		modularizedSystem.applyTransformations();

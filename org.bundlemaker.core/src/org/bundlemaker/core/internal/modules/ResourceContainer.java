@@ -155,12 +155,12 @@ public class ResourceContainer extends TypeContainer implements
 						type.getFullyQualifiedName(), type);
 			}
 
-			if (resource instanceof ResourceStandin) {
-				// set the back-reference
-				((ResourceStandin) resource).setResourceModule(_resourceModule);
-			} else {
-				System.out.println(resource);
-			}
+//			if (resource instanceof ResourceStandin) {
+//				// set the back-reference
+//				((ResourceStandin) resource).setResourceModule(_resourceModule);
+//			} else {
+//				System.out.println(resource);
+//			}
 		}
 
 		// step 2: iterate over all source resources...
@@ -174,8 +174,8 @@ public class ResourceContainer extends TypeContainer implements
 						type.getFullyQualifiedName(), type);
 			}
 
-			// set the back-reference
-			((ResourceStandin) resource).setResourceModule(_resourceModule);
+			// // set the back-reference
+			// ((ResourceStandin) resource).setResourceModule(_resourceModule);
 		}
 	}
 

@@ -2,6 +2,7 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 
 /**
@@ -116,7 +117,8 @@ public interface IType {
 	 * <p>
 	 * </p>
 	 * 
+	 * @param modularizedSystem
 	 * @return
 	 */
-	IModule getModule();
+	IModule getModule(IModularizedSystem modularizedSystem);
 }

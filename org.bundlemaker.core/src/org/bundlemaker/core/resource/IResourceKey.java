@@ -1,7 +1,5 @@
 package org.bundlemaker.core.resource;
 
-import java.io.InputStream;
-
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 
 /**

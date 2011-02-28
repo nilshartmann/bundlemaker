@@ -186,7 +186,7 @@ public class IntegrationTest {
 					.getResources(ContentType.BINARY)) {
 
 				//
-				Assert.assertSame(resourceModule, resource.getResourceModule());
+				Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
 
 				//
 				for (IReference reference : resource.getReferences()) {
@@ -200,7 +200,7 @@ public class IntegrationTest {
 					.getResources(ContentType.SOURCE)) {
 
 				//
-				Assert.assertSame(resourceModule, resource.getResourceModule());
+				Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
 
 				//
 				for (IReference reference : resource.getReferences()) {

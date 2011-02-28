@@ -29,11 +29,11 @@ public interface IModularizedSystem {
 	 * @return
 	 */
 	String getName();
-	
+
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @return
 	 */
 	IBundleMakerProject getBundleMakerProject();
@@ -220,10 +220,12 @@ public interface IModularizedSystem {
 	Map<String, Set<IModule>> getAmbiguousPackages();
 
 	// TODO
-	Collection<IType> getTypeReferencesTransitiveClosure(String typeName, IQueryFilter<IType> filter);
+	Collection<IType> getTypeReferencesTransitiveClosure(String typeName,
+			IQueryFilter<IType> filter);
 
 	// TODO
-	Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName, IQueryFilter<IType> filter);
+	Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName,
+			IQueryFilter<IType> filter);
 
 	// TODO
 	Collection<IResource> getResourceReferencesTransitiveClosure(

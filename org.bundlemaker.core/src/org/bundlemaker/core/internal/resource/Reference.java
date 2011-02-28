@@ -22,10 +22,10 @@ public class Reference implements IReference {
 	private ReferenceAttributes _referenceAttributes;
 
 	/** non-persistent back-reference: the containing resource */
-	private Resource _resource;
+	private transient Resource _resource;
 
 	/** non-persistent back-reference: the containing type */
-	private Type _type;
+	private transient Type _type;
 
 	/**
 	 * <p>

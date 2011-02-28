@@ -81,7 +81,8 @@ public class JdkModuleCreator {
 
 					// TODO
 					Type type = new Type(typeName, TypeEnum.CLASS);
-					type.setTypeModule(virtualModule);
+					//
+					// type.setTypeModule(virtualModule);
 
 					virtualModule.getModifiableSelfResourceContainer()
 							.getModifiableContainedTypesMap()

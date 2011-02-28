@@ -234,7 +234,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends
 
 					// TODO: TypeEnum!!
 					Type type2 = new Type(type, TypeEnum.CLASS);
-					type2.setTypeModule(typeModule);
+					
+					// type2.setTypeModule(typeModule);
 
 					typeModule.getModifiableSelfResourceContainer()
 							.getModifiableContainedTypesMap().put(type, type2);

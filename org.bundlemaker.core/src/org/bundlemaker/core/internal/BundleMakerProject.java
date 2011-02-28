@@ -278,7 +278,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 		_projectState = BundleMakerProjectState.OPENED;
 
 		// create default working copy
-		createModularizedSystemWorkingCopy(DEFAULT_MODULARIZED_SYSTEM_WORKING_COPY_ID);
+		createModularizedSystemWorkingCopy(getProject().getName());
 	}
 
 	/**
@@ -287,23 +287,23 @@ public class BundleMakerProject implements IBundleMakerProject {
 	 * @throws CoreException
 	 */
 	@Override
-	public void createModularizedSystemWorkingCopy(String name)
+	public IModularizedSystem createModularizedSystemWorkingCopy(String name)
 			throws CoreException {
 
 		// assert
+		Assert.isNotNull(name);
+		Assert.isTrue(name.trim().length() > 0);
 		assertState(BundleMakerProjectState.OPENED);
 
-		// TODO: WORKING COPY!!!
-		// IBundleMakerProjectDescription projectDescriptionWorkingCopy =
-		// (IBundleMakerProjectDescription) DeepCopy
-		// .copy(_projectDescription);
+		//
+		if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
+			// TODO
+			throw new RuntimeException("");
+		}
 
-		IBundleMakerProjectDescription projectDescriptionWorkingCopy = _projectDescription;
-
-		// TODO
 		// create the modularized system
 		ModularizedSystem modularizedSystem = new ModularizedSystem(name,
-				(IBundleMakerProjectDescription) projectDescriptionWorkingCopy);
+				_projectDescription);
 
 		// create the default transformation
 		ITransformation basicContentTransformation = new BasicProjectContentTransformation();
@@ -311,6 +311,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 		// add the result to the hash map
 		_modifiableModualizedSystemWorkingCopies.put(name, modularizedSystem);
+
+		//
+		return modularizedSystem;
 	}
 
 	/**

@@ -2,6 +2,7 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 
 /**
@@ -65,9 +66,10 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 	 * Returns the {@link IResourceModule} that contains this {@link IResource}.
 	 * </p>
 	 * 
+	 * @param modularizedSystem
 	 * @return the {@link IResourceModule} that contains this {@link IResource}.
 	 */
-	IResourceModule getResourceModule();
+	IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
 
 	/**
 	 * <p>

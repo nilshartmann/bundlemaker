@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -22,18 +24,7 @@ public class ResourceStandin extends ResourceKey implements IResource {
 	private Resource _resource;
 
 	/** - */
-	private IResourceModule _resourceModule;
-
-	/** - */
 	private Set<IResource> _stickyResourceStandins;
-
-	public IResourceModule getResourceModule() {
-		return _resourceModule;
-	}
-
-	public void setResourceModule(IResourceModule resourceModule) {
-		_resourceModule = resourceModule;
-	}
 
 	/**
 	 * <p>
@@ -47,6 +38,14 @@ public class ResourceStandin extends ResourceKey implements IResource {
 	 */
 	public ResourceStandin(String contentId, String root, String path) {
 		super(contentId, root, path);
+	}
+
+	@Override
+	public IResourceModule getAssociatedResourceModule(
+			IModularizedSystem modularizedSystem) {
+		
+		//
+		return ((ModularizedSystem)modularizedSystem).getAssociatedResourceModule(this);
 	}
 
 	public IResource getResource() {

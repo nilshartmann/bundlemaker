@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.modules.algorithm.ResourceIsReferencedTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.ResourceReferencesTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.TypeIsReferencedTransitiveClosure;
@@ -144,7 +143,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 			Set<IModule> result = new HashSet<IModule>(types.size());
 
 			for (IType type : types) {
-				result.add(type.getModule());
+				// TODO: direct call
+				result.add(type.getModule(this));
 			}
 
 			//
@@ -441,7 +441,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 			Set<IModule> result = new HashSet<IModule>();
 
 			for (IType type : types) {
-				result.add(type.getModule());
+				// TODO: direct call
+				result.add(type.getModule(this));
 			}
 
 			return result;

@@ -28,6 +28,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
+import org.bundlemaker.core.util.MemoryUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
@@ -106,7 +107,8 @@ public class IntegrationTest {
 
 		// get the default modularized system
 		IModularizedSystem modularizedSystem = bundleMakerProject
-				.getModularizedSystemWorkingCopy(IBundleMakerProject.DEFAULT_MODULARIZED_SYSTEM_WORKING_COPY_ID);
+				.getModularizedSystemWorkingCopy(bundleMakerProject
+						.getProject().getName());
 
 		// add the transformations
 		IntegrationTestUtils.addEmbedAntTransformation(modularizedSystem);

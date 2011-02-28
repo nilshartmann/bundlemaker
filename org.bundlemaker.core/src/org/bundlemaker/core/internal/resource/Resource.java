@@ -4,7 +4,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -37,9 +39,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
 
 	/** - */
 	private transient ResourceCache _resourceCache;
-	
+
 	/**  */
-	private ResourceStandin _resourceStandin;
+	private transient ResourceStandin _resourceStandin;
 
 	/**
 	 * <p>
@@ -197,14 +199,16 @@ public class Resource extends ResourceKey implements IModifiableResource {
 	}
 
 	@Override
-	public IResourceModule getResourceModule() {
+	public IResourceModule getAssociatedResourceModule(
+			IModularizedSystem modularizedSystem) {
 
 		//
 		if (_resourceStandin == null) {
 			throw new RuntimeException();
 		}
 
-		return _resourceStandin.getResourceModule();
+		//
+		return ((ModularizedSystem)modularizedSystem).getAssociatedResourceModule(this);
 	}
 
 	@Override

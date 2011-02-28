@@ -23,9 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface IBundleMakerProject {
 
-	/** DEFAULT_WORKING_COPY_ID */
-	static final String DEFAULT_MODULARIZED_SYSTEM_WORKING_COPY_ID = "DEFAULT_MODULARIZED_SYSTEM_WORKING_COPY_ID";
-
 	/** the bundle make directory name */
 	public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
 
@@ -150,7 +147,7 @@ public interface IBundleMakerProject {
 	 * 
 	 * @precondition BundleMakerProjectState.OPENED
 	 */
-	void createModularizedSystemWorkingCopy(String name) throws CoreException;
+	IModularizedSystem createModularizedSystemWorkingCopy(String name) throws CoreException;
 
 	/**
 	 * <p>

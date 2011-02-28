@@ -64,7 +64,7 @@ public class ProgressMonitor extends NullProgressMonitor {
 			System.err.println(String.format(MSG, _done, _totalWork,
 					_doneInProzent, elapsedTime / 1000,
 					estimatedOverallTime / 1000, estimatedTimeLeft / 1000,
-					Activator.getDefault().getMemoryUsage()));
+					MemoryUtils.getMemoryUsage()));
 
 			if (_resourceCache != null) {
 				System.err.println(String.format(CACHE_MSG, _resourceCache

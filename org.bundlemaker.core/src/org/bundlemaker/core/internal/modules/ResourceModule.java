@@ -217,26 +217,26 @@ public class ResourceModule extends
 	public void validate() {
 
 		//
-		for (IType type : getContainedTypes()) {
-
-			// check that the module is set
-			if (type.getModule() == null) {
-				System.out.println(type.getFullyQualifiedName() + " : " + type);
-				System.out.println(" - source resource: "
-						+ type.getSourceResource());
-				System.out.println(" - binary resource: "
-						+ type.getBinaryResource());
-			}
-
-			if (type.getModule() != this) {
-				System.out.println("HAE?");
-				System.out.println(type.getFullyQualifiedName() + " : " + type);
-				System.out.println(" - source resource: "
-						+ type.getSourceResource());
-				System.out.println(" - binary resource: "
-						+ type.getBinaryResource());
-			}
-		}
+		// for (IType type : getContainedTypes()) {
+		//
+		// // check that the module is set
+		// if (type.getModule() == null) {
+		// System.out.println(type.getFullyQualifiedName() + " : " + type);
+		// System.out.println(" - source resource: "
+		// + type.getSourceResource());
+		// System.out.println(" - binary resource: "
+		// + type.getBinaryResource());
+		// }
+		//
+		// if (type.getModule() != this) {
+		// System.out.println("HAE?");
+		// System.out.println(type.getFullyQualifiedName() + " : " + type);
+		// System.out.println(" - source resource: "
+		// + type.getSourceResource());
+		// System.out.println(" - binary resource: "
+		// + type.getBinaryResource());
+		// }
+		// }
 
 		//
 		Map<String, IResource> entries = new HashMap<String, IResource>();
