@@ -9,8 +9,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -257,4 +259,17 @@ public class ManifestUtils {
 					add.getAttributesForSection(sectionName));
 		}
 	}
+	
+	@SuppressWarnings("rawtypes")
+	public static Properties convertManifest(Manifest manifest) {
+		Attributes attributes = manifest.getMainAttributes();
+		Iterator iter = attributes.keySet().iterator();
+		Properties result = new Properties();
+		while (iter.hasNext()) {
+			Attributes.Name key = (Attributes.Name) iter.next();
+			result.put(key.toString(), attributes.get(key));
+		}
+		return result;
+	}
+
 }

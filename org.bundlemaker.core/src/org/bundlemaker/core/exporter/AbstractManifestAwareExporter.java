@@ -1,9 +1,15 @@
 package org.bundlemaker.core.exporter;
 
+import org.bundlemaker.core.exporter.manifest.ManifestUtils;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.osgi.service.resolver.BundleDescription;
+import org.eclipse.osgi.service.resolver.StateObjectFactory;
+import org.osgi.framework.BundleException;
 
 import com.springsource.util.parser.manifest.ManifestContents;
 
@@ -115,13 +121,24 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 		// get the manifest contents
 		_manifestContents = _manifestCache.getOrCreate(getCurrentModule());
 
+		// check the manifest
+		try {
+			StateObjectFactory.defaultFactory.createBundleDescription(null,
+					ManifestUtils.convertManifest(ManifestUtils
+							.toManifest(_manifestContents)), "internal", 1);
+		} catch (BundleException e) {
+			// TODO
+			e.printStackTrace();
+			throw new CoreException(new Status(IStatus.ERROR, "", ""));
+		}
+
 		// get the host manifest
 		if (getCurrentModule().getUserAttributes().containsKey(
 				OSGI_FRAGMENT_HOST)) {
 
 			IModule hostModule = (IModule) getCurrentModule()
 					.getUserAttributes().get(OSGI_FRAGMENT_HOST);
-			
+
 			// if () {
 			// IModule host = getHostModule()
 			// _hostManifestContents = _manifestCache.get(host);
