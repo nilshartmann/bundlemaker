@@ -2,15 +2,17 @@ package org.bundlemaker.core.parser;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
+import org.bundlemaker.core.resource.IResourceKey;
 import org.eclipse.core.resources.IResource;
 
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- *
+ * 
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
@@ -19,7 +21,7 @@ public interface IDirectoryFragment {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @return
 	 */
 	public IDirectory getDirectory();
@@ -38,7 +40,7 @@ public interface IDirectoryFragment {
 	 * 
 	 * @return
 	 */
-	public boolean isWorkspaceRelative();
+	public Set<IResourceKey> getResourceKeys();
 
 	/**
 	 * <p>
@@ -46,6 +48,7 @@ public interface IDirectoryFragment {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	public IResource getWorkspaceRelativeRoot();
 
 	/**
@@ -54,6 +57,7 @@ public interface IDirectoryFragment {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	public int getResourceCount();
 
 	/**
@@ -64,5 +68,6 @@ public interface IDirectoryFragment {
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	public List<String> getContent();
 }

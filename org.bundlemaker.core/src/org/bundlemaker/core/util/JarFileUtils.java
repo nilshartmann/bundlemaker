@@ -1,17 +1,18 @@
 package org.bundlemaker.core.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
+import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -26,8 +27,7 @@ public final class JarFileUtils {
 
 	/**
 	 * <p>
-	 * Creates a jar archive for the given list of {@link IResourceStandin
-	 * IResourceStandins}.
+	 * Creates a jar archive for the given list of {@link IResource IResources}.
 	 * </p>
 	 * 
 	 * @param resources
@@ -37,11 +37,14 @@ public final class JarFileUtils {
 	 * @param archiveFile
 	 *            the archive file to create
 	 */
-	public static void createJarArchive(Set<IResourceStandin> resources,
+	public static void createJarArchive(Set<IResource> resources,
 			Manifest manifest, OutputStream outputStream) {
 
 		Assert.isNotNull(resources);
 		Assert.isNotNull(manifest);
+
+		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION,
+				"1.0");
 
 		// create the input and output streams
 
@@ -51,10 +54,10 @@ public final class JarFileUtils {
 		try {
 
 			// open the archive file
-			jarOutputStream = new JarOutputStream(outputStream, manifest);
+			jarOutputStream = new JarOutputStream(outputStream);
 
 			// add all the entries
-			for (IResourceStandin resourceStandin : resources) {
+			for (IResource resourceStandin : resources) {
 
 				// add everything but the manifest
 				if (!"META-INF/MANIFEST.MF".equalsIgnoreCase(resourceStandin
@@ -65,11 +68,26 @@ public final class JarFileUtils {
 					jarOutputStream.putNextEntry(newEntry);
 
 					// copy
-					inputStream = resourceStandin.getInputStream();
+					inputStream = new ByteArrayInputStream(
+							resourceStandin.getContent());
 					copy(inputStream, jarOutputStream);
+
 					inputStream.close();
+
+					jarOutputStream.closeEntry();
 				}
 			}
+
+			//
+			String manifestfilename = "META-INF/MANIFEST.MF";
+			JarEntry manifestfile = new JarEntry(manifestfilename);
+			byte manifestbytes[] = serialiseManifest(manifest);
+			jarOutputStream.putNextEntry(manifestfile);
+			jarOutputStream.write(manifestbytes, 0, manifestbytes.length);
+			jarOutputStream.closeEntry();
+
+			//
+			jarOutputStream.flush();
 
 		} catch (Exception ex) {
 			// TODO
@@ -115,6 +133,15 @@ public final class JarFileUtils {
 				//
 			}
 		}
+	}
+
+	private static byte[] serialiseManifest(Manifest manifest)
+			throws IOException {
+		ByteArrayOutputStream byteout = new ByteArrayOutputStream();
+		manifest.write(byteout);
+		byteout.close();
+		byte[] result = byteout.toByteArray();
+		return result;
 	}
 
 }

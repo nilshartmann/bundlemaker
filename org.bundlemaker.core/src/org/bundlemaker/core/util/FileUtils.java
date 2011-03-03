@@ -9,10 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -32,20 +30,20 @@ import org.eclipse.core.runtime.Status;
  */
 public class FileUtils {
 
-	public static void copyFile(File in, File out) throws IOException {
-		FileChannel inChannel = new FileInputStream(in).getChannel();
-		FileChannel outChannel = new FileOutputStream(out).getChannel();
-		try {
-			inChannel.transferTo(0, inChannel.size(), outChannel);
-		} catch (IOException e) {
-			throw e;
-		} finally {
-			if (inChannel != null)
-				inChannel.close();
-			if (outChannel != null)
-				outChannel.close();
-		}
-	}
+	// public static void copyFile(File in, File out) throws IOException {
+	// FileChannel inChannel = new FileInputStream(in).getChannel();
+	// FileChannel outChannel = new FileOutputStream(out).getChannel();
+	// try {
+	// inChannel.transferTo(0, inChannel.size(), outChannel);
+	// } catch (IOException e) {
+	// throw e;
+	// } finally {
+	// if (inChannel != null)
+	// inChannel.close();
+	// if (outChannel != null)
+	// outChannel.close();
+	// }
+	// }
 
 	/**
 	 * <p>

@@ -1,11 +1,15 @@
 package org.bundlemaker.core.resource;
 
+
 /**
  * <p>
  * Represents a reference from an {@link IResource} to a type or a package.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
 public interface IReference {
 
@@ -75,6 +79,16 @@ public interface IReference {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean isClassAnnotation();
+	
+	
+
+	/**
+	 * <p>
 	 * Returns the originating {@link IResource} or <code>null</code>, if the
 	 * reference does not belong to a resource. In this case, the reference
 	 * belongs to a type that is return by method {@link IReference#getType()}.
@@ -116,4 +130,8 @@ public interface IReference {
 	 * @return
 	 */
 	boolean hasAssociatedType();
+
+	boolean isDirectlyReferenced();
+
+	boolean isIndirectlyReferenced();
 }

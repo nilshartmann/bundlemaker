@@ -2,21 +2,41 @@ package org.bundlemaker.core.resource;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IResourceModule;
+
 /**
  * <p>
+ * Defines the common interface for resources. A resource is either a file (e.g.
+ * a java source file or a class file) or an entry in an archive file. It
+ * contains 0 to n {@link IType ITypes}. It also contains 0 to n
+ * {@link IReference IReferences}.
+ * </p>
+ * <p>
+ * Note that both the {@link IResource} and the contained {@link IType ITypes}
+ * can contain {@link IReference IReferences}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
-public interface IResource extends IResourceKey {
+public interface IResource extends IResourceKey, Comparable<IResource> {
 
 	/**
 	 * <p>
+	 * Returns all {@link IReference IReferences} that are originated in this
+	 * resource.
+	 * </p>
+	 * <p>
+	 * <b>Note:</b> The result set does <b>not</b> contain any references of the
+	 * contained types.
 	 * </p>
 	 * 
-	 * @return
+	 * @return all {@link IReference IReferences} that are originated in this
+	 *         resource.
 	 */
-	// GET REFERENCES OF ASSOCIATED RESOURCES: getAllReferences() ?
 	Set<? extends IReference> getReferences();
 
 	/**
@@ -32,11 +52,30 @@ public interface IResource extends IResourceKey {
 
 	/**
 	 * <p>
+	 * Returns <code>true</code>, if the resource contains one or more
+	 * {@link IType ITypes}.
 	 * </p>
-	 * <b>Note:</b> This reference is set after the model is loaded from the
-	 * database. It is <b>not</b> part of the stored model. </p>
+	 * 
+	 * @return <code>true</code>, if the resource contains one or more
+	 *         {@link IType ITypes}.
+	 */
+	boolean containsTypes();
+
+	/**
+	 * <p>
+	 * Returns the {@link IResourceModule} that contains this {@link IResource}.
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @return the {@link IResourceModule} that contains this {@link IResource}.
+	 */
+	IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
+
+	/**
+	 * <p>
+	 * </p>
 	 * 
 	 * @return
 	 */
-	IResourceStandin getResourceStandin();
+	Set<? extends IResource> getStickyResources();
 }

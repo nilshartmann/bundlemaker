@@ -110,6 +110,7 @@ public class EclipseProjectUtils {
 	
 	/**
 	 * <p>
+	 * Checks if a given path exists.
 	 * </p>
 	 * 
 	 * @param path

@@ -1,0 +1,2 @@
+Require-Bundle: blub;test=1;fritz:=nls
+Export-Package: blub;test=1;fritz:=nls

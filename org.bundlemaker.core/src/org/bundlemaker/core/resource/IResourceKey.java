@@ -1,7 +1,5 @@
 package org.bundlemaker.core.resource;
 
-import java.io.InputStream;
-
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 
 /**
@@ -12,6 +10,9 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
 public interface IResourceKey {
 
@@ -49,12 +50,43 @@ public interface IResourceKey {
 
 	/**
 	 * <p>
-	 * Returns an input stream to read the content of this resource.
 	 * </p>
 	 * 
 	 * @return
 	 */
-	InputStream getInputStream();
+	String getDirectory();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	boolean isValidJavaPackage();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	String getPackageName();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	String getName();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	byte[] getContent();
 
 	// /**
 	// * <p>

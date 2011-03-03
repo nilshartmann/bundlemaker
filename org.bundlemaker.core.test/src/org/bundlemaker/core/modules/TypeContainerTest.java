@@ -4,6 +4,10 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.internal.modules.TypeContainer;
+import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.StopWatch;
 import org.junit.Test;
 
@@ -42,7 +46,8 @@ public class TypeContainerTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (int i = 0; i < 100000; i++) {
-			typeContainer.getModifiableContainedTypes().add("a.b.c" + i);
+			typeContainer.getModifiableContainedTypesMap().put("a.b.c" + i,
+					new Type("a.b.c" + i, TypeEnum.CLASS));
 		}
 		stopWatch.stop();
 		Assert.assertTrue(
@@ -50,15 +55,15 @@ public class TypeContainerTest {
 						stopWatch.getElapsedTime()),
 				stopWatch.getElapsedTime() < 500);
 
-		Assert.assertEquals(100000, typeContainer.getModifiableContainedTypes()
-				.size());
+		Assert.assertEquals(100000, typeContainer
+				.getModifiableContainedTypesMap().size());
 
 		//
 		stopWatch = new StopWatch();
 		stopWatch.start();
 
 		Set<String> containedTypes = typeContainer
-				.getContainedTypeNames(new IQueryFilter() {
+				.getContainedTypeNames(new IQueryFilter<String>() {
 
 					@Override
 					public boolean matches(String content) {

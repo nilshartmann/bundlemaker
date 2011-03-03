@@ -1,9 +1,9 @@
 package org.bundlemaker.core.store.db4o.internal;
 
+import org.bundlemaker.core.internal.resource.Reference;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.Reference;
-import org.bundlemaker.core.resource.Resource;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.eclipse.core.runtime.Assert;
 
 import com.db4o.Db4o;

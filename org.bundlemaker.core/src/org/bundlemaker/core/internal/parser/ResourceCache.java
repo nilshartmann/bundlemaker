@@ -3,15 +3,15 @@ package org.bundlemaker.core.internal.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core.internal.resource.FlyWeightCache;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.resource.FlyWeightCache;
-import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.Type;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.bundlemaker.core.resource.TypeEnum;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -86,7 +86,7 @@ public class ResourceCache implements IResourceCache {
 		}
 
 		// update all
-		for (Resource modifiableResource : _resourceMap.values()) {
+		for (IModifiableResource modifiableResource : _resourceMap.values()) {
 			_dependencyStore.updateResource(modifiableResource);
 
 			//
@@ -109,7 +109,7 @@ public class ResourceCache implements IResourceCache {
 	 */
 	// TODO synchronized
 	@Override
-	public synchronized Resource getOrCreateResource(IResourceKey resourceKey) {
+	public synchronized IModifiableResource getOrCreateResource(IResourceKey resourceKey) {
 
 		//
 		Resource resource = _resourceMap.get(resourceKey);
@@ -132,19 +132,27 @@ public class ResourceCache implements IResourceCache {
 	}
 
 	// TODO synchronized
-	@Override
-	public synchronized Type getOrCreateType(String fullyQualifiedName) {
+	public synchronized Type getOrCreateType(String fullyQualifiedName,
+			TypeEnum typeEnum) {
 
 		//
 		Type type = _typeMap.get(fullyQualifiedName);
 
 		// return result if != null
 		if (type != null) {
+
+			if (!type.getType().equals(typeEnum)) {
+
+				// TODO
+				throw new RuntimeException("Wrong type requested"
+						+ fullyQualifiedName + " : " + typeEnum + " : " + type);
+			}
+
 			return type;
 		}
 
 		// create a new one if necessary
-		type = new Type(fullyQualifiedName, _flyWeightCache);
+		type = new Type(fullyQualifiedName, typeEnum, _flyWeightCache);
 
 		// store the Resource
 		_typeMap.put(fullyQualifiedName, type);

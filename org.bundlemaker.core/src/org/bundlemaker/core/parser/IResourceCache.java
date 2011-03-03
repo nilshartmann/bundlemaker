@@ -1,8 +1,7 @@
 package org.bundlemaker.core.parser;
 
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.Resource;
-import org.bundlemaker.core.resource.Type;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 
 /**
  * <p>
@@ -19,10 +18,5 @@ public interface IResourceCache {
 	 * @param resourceKey
 	 * @return
 	 */
-	Resource getOrCreateResource(IResourceKey resourceKey);
-
-	/**
-	 * @return
-	 */
-	Type getOrCreateType(String fullyQualifiedName);
+	IModifiableResource getOrCreateResource(IResourceKey resourceKey);
 }

@@ -9,7 +9,7 @@ import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 
 /**
@@ -64,7 +64,7 @@ public class ResourceSet {
 	 * @param contentType
 	 * @return
 	 */
-	public List<IResourceStandin> getMatchingResources(
+	public List<IResource> getMatchingResources(
 			IResourceModule resourceModule, ContentType contentType) {
 
 		IModuleIdentifier moduleIdentifier = _moduleIdentifier;
@@ -77,13 +77,13 @@ public class ResourceSet {
 			return Collections.emptyList();
 		}
 
-		List<IResourceStandin> result = new ArrayList<IResourceStandin>();
+		List<IResource> result = new ArrayList<IResource>();
 
 		//
-		Set<IResourceStandin> resourceStandins = resourceModule
+		Set<IResource> resourceStandins = resourceModule
 				.getResources(contentType);
 
-		for (IResourceStandin resourceStandin : resourceStandins) {
+		for (IResource resourceStandin : resourceStandins) {
 
 			if (isIncluded(resourceStandin)) {
 				result.add(resourceStandin);
@@ -95,7 +95,7 @@ public class ResourceSet {
 		return result;
 	}
 
-	private boolean isIncluded(IResourceStandin resourceStandin) {
+	private boolean isIncluded(IResource resourceStandin) {
 
 		boolean included = false;
 

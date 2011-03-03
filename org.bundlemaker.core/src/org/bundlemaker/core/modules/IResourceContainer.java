@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -18,11 +18,11 @@ public interface IResourceContainer extends ITypeContainer {
 	 * <p>
 	 * </p>
 	 * 
-	 * @param resourceType
-	 * @param conentType
+	 * @param path
+	 * @param contentType
 	 * @return
 	 */
-	boolean containsResource(String resourceType, ContentType conentType);
+	boolean containsResource(String path, ContentType contentType);
 
 	/**
 	 * <p>
@@ -32,7 +32,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param conentType
 	 * @return
 	 */
-	IResourceStandin getResource(String path, ContentType conentType);
+	IResource getResource(String path, ContentType conentType);
 
 	/**
 	 * <p>
@@ -41,7 +41,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param conentType
 	 * @return
 	 */
-	Set<IResourceStandin> getResources(ContentType conentType);
+	Set<IResource> getResources(ContentType conentType);
 
 	/**
 	 * <p>
@@ -51,8 +51,8 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param includeSourceReferences
 	 * @return
 	 */
-	Set<String> getReferencedTypes(boolean hideContainedTypes,
-			boolean includeSourceReferences);
+	Set<String> getReferencedTypeNames(boolean hideContainedTypes,
+			boolean includeSourceReferences, boolean includeIndirectReferences);
 
 	/**
 	 * <p>
@@ -63,7 +63,7 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @return
 	 */
 	Set<IReference> getAllReferences(boolean hideContainedTypes,
-			boolean includeSourceReferences);
+			boolean includeSourceReferences, boolean includeIndirectReferences);
 
 	/**
 	 * <p>
@@ -73,8 +73,8 @@ public interface IResourceContainer extends ITypeContainer {
 	 * @param includeSourceReferences
 	 * @return
 	 */
-	Set<String> getReferencedPackages(boolean hideContainedTypes,
-			boolean includeSourceReferences);
+	Set<String> getReferencedPackageNames(boolean hideContainedTypes,
+			boolean includeSourceReferences, boolean includeIndirectReferences);
 
 	/**
 	 * <p>

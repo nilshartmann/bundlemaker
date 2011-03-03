@@ -1,12 +1,16 @@
 package org.bundlemaker.core.modules;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
 
 /**
@@ -25,6 +29,14 @@ public interface IModularizedSystem {
 	 * @return
 	 */
 	String getName();
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	IBundleMakerProject getBundleMakerProject();
 
 	/**
 	 * <p>
@@ -53,32 +65,40 @@ public interface IModularizedSystem {
 
 	/**
 	 * <p>
-	 * Returns all modules ({@link ITypeModule ITypeModules} and
+	 * </p>
+	 * 
+	 * @return
+	 */
+	IModule getExecutionEnvironment();
+
+	/**
+	 * <p>
+	 * Returns all modules ({@link IModule ITypeModules} and
 	 * {@link IResourceModule IResourceModules}).
 	 * </p>
 	 * 
 	 * @return
 	 */
-	Set<ITypeModule> getAllModules();
+	Set<IModule> getAllModules();
 
 	/**
 	 * <p>
-	 * Returns all contained {@link ITypeModule ITypeModules}.
+	 * Returns all contained {@link IModule ITypeModules}.
 	 * </p>
 	 * 
 	 * @return
 	 */
-	Set<ITypeModule> getTypeModules();
+	Collection<IModule> getNonResourceModules();
 
 	/**
 	 * <p>
-	 * Returns the {@link ITypeModule} with the given identifier.
+	 * Returns the {@link IModule} with the given identifier.
 	 * </p>
 	 * 
 	 * @param identifier
 	 * @return
 	 */
-	ITypeModule getTypeModule(IModuleIdentifier identifier);
+	IModule getNonResourceModule(IModuleIdentifier identifier);
 
 	/**
 	 * <p>
@@ -87,7 +107,7 @@ public interface IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	Set<IResourceModule> getResourceModules();
+	Collection<IResourceModule> getResourceModules();
 
 	/**
 	 * <p>
@@ -106,7 +126,7 @@ public interface IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	Set<IResourceStandin> getUnassignedResources();
+	Set<IResource> getUnassignedResources();
 
 	/**
 	 * <p>
@@ -115,7 +135,7 @@ public interface IModularizedSystem {
 	 * @param fullyQualifiedName
 	 * @return
 	 */
-	Set<ITypeModule> getContainingModules(String fullyQualifiedName);
+	Set<IModule> getContainingModules(String fullyQualifiedName);
 
 	/**
 	 * <p>
@@ -123,10 +143,30 @@ public interface IModularizedSystem {
 	 * 
 	 * @param fullyQualifiedName
 	 * @return
-	 * @throws AmbiguousModuleDependencyException
 	 */
-	ITypeModule getContainingModule(String fullyQualifiedName)
-			throws AmbiguousModuleDependencyException;
+	Set<IType> getReferencingTypes(String fullyQualifiedName);
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @return
+	 * @throws AmbiguousDependencyException
+	 */
+	IModule getContainingModule(String fullyQualifiedName)
+			throws AmbiguousDependencyException;
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @return
+	 * @throws AmbiguousDependencyException
+	 */
+	IType getType(String fullyQualifiedName)
+			throws AmbiguousDependencyException;
 
 	/**
 	 * <p>
@@ -177,13 +217,25 @@ public interface IModularizedSystem {
 	 * 
 	 * @return
 	 */
-	Map<String, Set<ITypeModule>> getAmbiguousPackages();
+	Map<String, Set<IModule>> getAmbiguousPackages();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	ITypeModule getExecutionEnvironmentTypeModule();
+	Map<String, Set<IType>> getAmbiguousTypes();
+
+	// TODO
+	Collection<IType> getTypeReferencesTransitiveClosure(String typeName,
+			IQueryFilter<IType> filter);
+
+	// TODO
+	Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName,
+			IQueryFilter<IType> filter);
+
+	// TODO
+	Collection<IResource> getResourceReferencesTransitiveClosure(
+			IResource resource, ContentType contentType,
+			IQueryFilter<IType> queryFilter);
+
+	// TODO
+	Collection<IResource> getResourceIsReferencedTransitiveClosure(
+			IResource resource, ContentType contentType,
+			IQueryFilter<IResource> queryFilter);
 }

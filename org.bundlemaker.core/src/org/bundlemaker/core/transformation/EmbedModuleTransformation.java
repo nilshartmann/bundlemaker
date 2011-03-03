@@ -5,8 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModularizedSystem;
-import org.bundlemaker.core.modules.ResourceModule;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 
 public class EmbedModuleTransformation implements ITransformation {
 
@@ -38,16 +39,16 @@ public class EmbedModuleTransformation implements ITransformation {
 	}
 
 	@Override
-	public void apply(ModularizedSystem modularizedSystem) {
+	public void apply(IModifiableModularizedSystem modularizedSystem) {
 
 		// step 1: define modules variables
-		ResourceModule hostModule = null;
+		IResourceModule hostModule = null;
 
-		List<ResourceModule> embeddedModules = new LinkedList<ResourceModule>();
+		List<IResourceModule> embeddedModules = new LinkedList<IResourceModule>();
 
 		// step 2: fetch host and embedded modules
-		for (ResourceModule embeddedModule : modularizedSystem
-				.getModifiableResourceModules()) {
+		for (IModifiableResourceModule embeddedModule : modularizedSystem
+				.getModifiableResourceModulesMap().values()) {
 
 			// try to fetch host module
 			if (embeddedModule.getModuleIdentifier().equals(
@@ -71,7 +72,7 @@ public class EmbedModuleTransformation implements ITransformation {
 		}
 
 		// step 3: add the embedded modules as container
-		for (ResourceModule embeddedModule : embeddedModules) {
+		for (IResourceModule embeddedModule : embeddedModules) {
 
 			// // get the module name
 			// String embeddedModuleName = ModelUtils.toString(embeddedModule
@@ -96,8 +97,8 @@ public class EmbedModuleTransformation implements ITransformation {
 			// }
 
 			// remove as top level module
-			modularizedSystem.getModifiableResourceModules().remove(
-					embeddedModule);
+			modularizedSystem.getModifiableResourceModulesMap().remove(
+					embeddedModule.getModuleIdentifier());
 		}
 	}
 }

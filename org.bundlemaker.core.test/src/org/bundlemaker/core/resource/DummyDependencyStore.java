@@ -2,7 +2,9 @@ package org.bundlemaker.core.resource;
 
 import java.util.List;
 
-import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 
 public class DummyDependencyStore implements IPersistentDependencyStore {
 
@@ -13,7 +15,7 @@ public class DummyDependencyStore implements IPersistentDependencyStore {
 	}
 
 	@Override
-	public void updateResource(Resource resource) {
+	public void updateResource(IModifiableResource resource) {
 		// TODO Auto-generated method stub
 
 	}

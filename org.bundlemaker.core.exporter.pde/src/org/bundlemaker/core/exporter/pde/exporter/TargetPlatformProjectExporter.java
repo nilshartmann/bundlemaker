@@ -1,12 +1,13 @@
 package org.bundlemaker.core.exporter.pde.exporter;
 
-import org.bundlemaker.core.exporter.AbstractExporter;
+import java.io.File;
+
+import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.exporter.ModuleExporterContext;
-import org.bundlemaker.core.exporter.bundlor.StandardBundlorBasedBinaryBundleExporter;
+import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.pde.Activator;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
+import org.bundlemaker.core.exporter.util.Helper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -15,10 +16,9 @@ import org.eclipse.pde.internal.core.target.provisional.ITargetDefinition;
 import org.eclipse.pde.internal.core.target.provisional.ITargetHandle;
 import org.eclipse.pde.internal.core.target.provisional.ITargetPlatformService;
 
-public class TargetPlatformProjectExporter extends AbstractExporter {
-
-	/** - */
-	private StandardBundlorBasedBinaryBundleExporter _binaryBundleExporter;
+@SuppressWarnings("restriction")
+public class TargetPlatformProjectExporter extends
+		ModularizedSystemExporterAdapter {
 
 	/**
 	 * <p>
@@ -27,21 +27,29 @@ public class TargetPlatformProjectExporter extends AbstractExporter {
 	 * 
 	 */
 	public TargetPlatformProjectExporter() {
+		super(new BinaryBundleExporter());
+	}
 
-		//
-		_binaryBundleExporter = new StandardBundlorBasedBinaryBundleExporter();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param templateDirectory
+	 */
+	public void setTemplateDirectory(File templateDirectory) {
+		((BinaryBundleExporter) getModuleExporter())
+				.setTemplateRootDirectory(templateDirectory);
 	}
 
 	@Override
-	public void export(IModularizedSystem modularizedSystem,
-			IModuleExporterContext context) throws Exception {
+	protected IModuleExporterContext preExportModules() throws Exception {
 
 		// get a non-existing project name
-		String projectName = getUniqueProjectName(String.format("%s.target",
-				modularizedSystem.getName()));
+		String projectName = Helper.getUniqueProjectName(String.format(
+				"%s.target", getCurrentModularizedSystem().getName()));
 
 		// delete and create project
-		IProject project = deleteAndCreateProject(projectName, null);
+		IProject project = Helper.deleteAndCreateProject(projectName, null);
 
 		//
 		IFolder folder = project.getFolder("bundles");
@@ -67,28 +75,8 @@ public class TargetPlatformProjectExporter extends AbstractExporter {
 
 		targetPlatformService.saveTargetDefinition(targetDefinition);
 
-		ModuleExporterContext exporterContext = new ModuleExporterContext(
-				context.getBundleMakerProject(), folder.getRawLocation()
-						.toFile(), context.getModularizedSystem());
-
-		//
-		super.export(modularizedSystem, exporterContext);
+		return new DefaultModuleExporterContext(getCurrentContext()
+				.getBundleMakerProject(), folder.getRawLocation().toFile(),
+				getCurrentContext().getModularizedSystem());
 	}
-
-	@Override
-	public boolean canExport(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context) {
-
-		return _binaryBundleExporter.canExport(modularizedSystem, module,
-				context);
-	}
-
-	@Override
-	public void export(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context)
-			throws Exception {
-
-		_binaryBundleExporter.export(modularizedSystem, module, context);
-	}
-
 }

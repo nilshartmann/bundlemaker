@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ITypeModule;
-import org.bundlemaker.core.modules.ModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.ResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.util.TransformationUtils;
 import org.eclipse.core.runtime.Assert;
@@ -19,11 +19,19 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceSetBasedTransformation implements ITransformation {
 
 	/** - */
+	public static final String USER_ATTRIBUTE_KEY = "ResourceSetBasedTransformation-USER_ATTRIBUTE_KEY";
+
+	/** - */
 	private List<ResourceSetBasedModuleDefinition> _moduleDefinitions;
 
 	/** - */
 	private IResourceSetProcessor _resourceSetProcessor;
 
+	/**
+	 * <p>
+	 * Creates a new instance of type {@link ResourceSetBasedTransformation}.
+	 * </p>
+	 */
 	public ResourceSetBasedTransformation() {
 		_moduleDefinitions = new ArrayList<ResourceSetBasedModuleDefinition>();
 	}
@@ -32,9 +40,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void apply(ModularizedSystem modularizedSystem) {
-
-		System.out.println("ResourceSetBasedTransformation start");
+	public void apply(IModifiableModularizedSystem modularizedSystem) {
 
 		//
 		for (ResourceSetBasedModuleDefinition moduleDefinition : _moduleDefinitions) {
@@ -47,7 +53,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 			System.out.println("Creating module '"
 					+ targetModuleIdentifier.toString() + "'...");
 
-			ResourceModule targetResourceModule = modularizedSystem
+			IModifiableResourceModule targetResourceModule = modularizedSystem
 					.getModifiableResourceModule(targetModuleIdentifier);
 
 			// create a new one if necessary
@@ -69,18 +75,28 @@ public class ResourceSetBasedTransformation implements ITransformation {
 			targetResourceModule.getUserAttributes().putAll(
 					moduleDefinition.getUserAttributes());
 
+			if (!targetResourceModule.getUserAttributes().containsKey(
+					USER_ATTRIBUTE_KEY)) {
+				targetResourceModule.getUserAttributes().put(
+						USER_ATTRIBUTE_KEY, moduleDefinition.getResourceSets());
+			} else {
+				@SuppressWarnings("unchecked")
+				List<ResourceSet> resourceSets = (List<ResourceSet>) targetResourceModule
+						.getUserAttributes().get(USER_ATTRIBUTE_KEY);
+				resourceSets.addAll(moduleDefinition.getResourceSets());
+			}
+
 			//
 			for (ResourceSet resourceSet : moduleDefinition.getResourceSets()) {
 
-				ResourceModule originResourceModule = modularizedSystem
+				IModifiableResourceModule originResourceModule = modularizedSystem
 						.getModifiableResourceModule(resourceSet
 								.getModuleIdentifier());
 
 				// origin resource module does not exist
 				if (originResourceModule == null) {
 
-					for (ITypeModule typeModule : modularizedSystem
-							.getAllModules()) {
+					for (IModule typeModule : modularizedSystem.getAllModules()) {
 
 						System.out.println(" - "
 								+ typeModule.getModuleIdentifier().toString());
@@ -105,9 +121,6 @@ public class ResourceSetBasedTransformation implements ITransformation {
 				}
 			}
 		}
-
-		System.out.println("ResourceSetBasedTransformation stop");
-
 	}
 
 	/**
@@ -163,13 +176,16 @@ public class ResourceSetBasedTransformation implements ITransformation {
 	 * @param targetResourceModule
 	 * @param resourceSet
 	 */
-	private void processResources(ResourceModule originResourceModule,
-			ResourceModule targetResourceModule, ResourceSet resourceSet) {
+	private void processResources(
+			IModifiableResourceModule originResourceModule,
+			IModifiableResourceModule targetResourceModule,
+			ResourceSet resourceSet) {
 
-		List<IResourceStandin> resourceStandinsToMove = resourceSet
+		List<IResource> resourceStandinsToMove = resourceSet
 				.getMatchingResources(originResourceModule, ContentType.BINARY);
 
-		TransformationUtils.addAll(targetResourceModule.getSelfContainer()
+		TransformationUtils.addAll(targetResourceModule
+				.getModifiableSelfResourceContainer()
 				.getModifiableResourcesSet(ContentType.BINARY),
 				resourceStandinsToMove);
 
@@ -179,7 +195,8 @@ public class ResourceSetBasedTransformation implements ITransformation {
 		resourceStandinsToMove = resourceSet.getMatchingResources(
 				originResourceModule, ContentType.SOURCE);
 
-		TransformationUtils.addAll(targetResourceModule.getSelfContainer()
+		TransformationUtils.addAll(targetResourceModule
+				.getModifiableSelfResourceContainer()
 				.getModifiableResourcesSet(ContentType.SOURCE),
 				resourceStandinsToMove);
 

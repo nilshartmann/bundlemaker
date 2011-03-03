@@ -14,7 +14,6 @@ import java.util.jar.JarFile;
 
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IDirectoryFragment;
-import org.bundlemaker.core.parser.IFolderBasedDirectoryFragment;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -258,7 +257,7 @@ public class FileContentReader {
 		packageDirectory = packageDirectory.replace('\\', '/');
 
 		// declare the directory content
-		IFolderBasedDirectoryFragment folderBasedDirectoryContent = null;
+		FolderBasedDirectoryFragment folderBasedDirectoryContent = null;
 
 		// iterate over all file
 		for (File child : directory.listFiles()) {

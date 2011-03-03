@@ -3,9 +3,10 @@ package org.bundlemaker.core;
 import java.util.List;
 
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.store.IDependencyStore;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,9 +22,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IBundleMakerProject {
-
-	/** DEFAULT_WORKING_COPY_ID */
-	static final String DEFAULT_MODULARIZED_SYSTEM_WORKING_COPY_ID = "DEFAULT_MODULARIZED_SYSTEM_WORKING_COPY_ID";
 
 	/** the bundle make directory name */
 	public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
@@ -59,14 +57,14 @@ public interface IBundleMakerProject {
 	 * projectDescription.setJRE("jdk16");
 	 * 		
 	 * // (re-) initialize the project
-	 * projectDescription.initialize();</pre></code>
+	 * bundleMakerProject.initialize();</pre></code>
 	 * </p>
 	 * 
 	 * @return the {@link BundleMakerProjectDescription}.
 	 * 
 	 * @precondition none
 	 */
-	public BundleMakerProjectDescription getProjectDescription();
+	public IBundleMakerProjectDescription getProjectDescription();
 
 	/**
 	 * <p>
@@ -124,8 +122,8 @@ public interface IBundleMakerProject {
 	 *               BundleMakerProjectState.PARSED |
 	 *               BundleMakerProjectState.OPENED
 	 */
-	List<? extends IProblem> parse(IProgressMonitor progressMonitor)
-			throws CoreException;
+	List<? extends IProblem> parse(IProgressMonitor progressMonitor,
+			boolean parseIndirectReferences) throws CoreException;
 
 	/**
 	 * <p>
@@ -149,7 +147,7 @@ public interface IBundleMakerProject {
 	 * 
 	 * @precondition BundleMakerProjectState.OPENED
 	 */
-	void createModularizedSystemWorkingCopy(String name) throws CoreException;
+	IModularizedSystem createModularizedSystemWorkingCopy(String name) throws CoreException;
 
 	/**
 	 * <p>

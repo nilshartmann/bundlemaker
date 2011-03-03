@@ -4,12 +4,12 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.resource.ArchiveFileCache;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.resource.ResourceStandin;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
@@ -48,8 +48,7 @@ public class ResourceCacheTest {
 			@Override
 			public IResourceKey createResourceKey(String contentId,
 					String root, String path) {
-				return new ResourceStandin(contentId, root, path,
-						new ArchiveFileCache());
+				return new ResourceStandin(contentId, root, path);
 			}
 		};
 
@@ -69,8 +68,7 @@ public class ResourceCacheTest {
 			@Override
 			public IResourceKey createResourceKey(String contentId,
 					String root, String path) {
-				return new ResourceStandin(contentId, root, path,
-						new ArchiveFileCache());
+				return new ResourceStandin(contentId, root, path);
 			}
 		};
 
@@ -126,7 +124,7 @@ public class ResourceCacheTest {
 		}
 
 		@Override
-		public void updateResource(Resource resource) {
+		public void updateResource(IModifiableResource resource) {
 			ResourceCacheTest.this.count++;
 		}
 

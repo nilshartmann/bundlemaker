@@ -5,20 +5,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.bundlemaker.core.exporter.manifest.ManifestUtils;
+import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.util.JarFileUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
-import com.springsource.util.parser.manifest.ManifestContents;
+import com.springsource.bundlor.ManifestWriter;
+import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFactory;
 
 /**
  * <p>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- * 
- * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class AbstractJarFileBundleExporter extends
 		AbstractManifestTemplateBasedExporter {
@@ -26,27 +30,72 @@ public abstract class AbstractJarFileBundleExporter extends
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @throws IOException
+	 * @throws CoreException
 	 */
 	@Override
-	public void export(IModularizedSystem modularizedSystem,
-			final IResourceModule module, IModuleExporterContext context)
-			throws Exception {
+	protected void doExport() throws CoreException {
 
-		// create the manifest
-		ManifestContents manifestContents = createManifest(modularizedSystem,
-				module, context);
+		// create new file if repackaging is required
+		if (ModuleExporterUtils.requiresRepackaging(getCurrentModule(),
+				ContentType.BINARY)) {
 
-		// create the output stream
-		OutputStream outputStream = createOutputStream(modularizedSystem,
-				module, context);
+			// create new File
+			createNewJarFile();
+		}
 
-		// export the jar archive
-		JarFileUtils.createJarArchive(module.getResources(ContentType.BINARY),
-				ManifestUtils.toManifest(manifestContents), outputStream);
+		// copy (and patch) the original
+		else {
 
-		// close the output stream
-		outputStream.close();
+			// get the root file
+			File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(),
+					ContentType.BINARY);
+
+			//
+			System.out.println("patching " + rootFile.getAbsolutePath());
+
+			// get the manifest writer
+			ManifestWriter manifestWriter = new StandardManifestWriterFactory()
+					.create(rootFile.getAbsolutePath(), getDestinationFile()
+							.getAbsolutePath());
+
+			//
+			manifestWriter.write(getCurrentManifest());
+		}
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @throws CoreException
+	 */
+	private void createNewJarFile() throws CoreException {
+
+		try {
+
+			// create the output stream
+			OutputStream outputStream = createOutputStream(
+					getCurrentModularizedSystem(), getCurrentModule(),
+					getCurrentContext());
+
+			// export the jar archive
+			JarFileUtils.createJarArchive(
+					getCurrentModule().getResources(ContentType.BINARY),
+					ManifestUtils.toManifest(getCurrentManifest()),
+					outputStream);
+
+			// close the output stream
+			outputStream.close();
+
+		} catch (IOException e) {
+			// TODO
+			e.printStackTrace();
+			throw new CoreException(new Status(IStatus.ERROR, "", ""));
+		} catch (Exception e) {
+			// TODO
+			e.printStackTrace();
+			throw new CoreException(new Status(IStatus.ERROR, "", ""));
+		}
 	}
 
 	/**
@@ -59,9 +108,15 @@ public abstract class AbstractJarFileBundleExporter extends
 	 * @return
 	 * @throws Exception
 	 */
-	protected abstract ManifestContents createManifest(
+	protected OutputStream createOutputStream(
 			IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) throws Exception;
+			IModuleExporterContext context) throws Exception {
+
+		File targetFile = getDestinationFile();
+
+		// return a new file output stream
+		return new FileOutputStream(targetFile);
+	}
 
 	/**
 	 * <p>
@@ -71,18 +126,32 @@ public abstract class AbstractJarFileBundleExporter extends
 	 * @param module
 	 * @param context
 	 * @return
-	 * @throws Exception
 	 */
-	protected OutputStream createOutputStream(
-			IModularizedSystem modularizedSystem, final IResourceModule module,
-			IModuleExporterContext context) throws Exception {
+	protected File getDestinationFile() {
 
 		// create the target file
-		File targetFile = new File(context.getDestinationDirectory(), module
-				.getModuleIdentifier().getName()
-				+ "_"
-				+ module.getModuleIdentifier().getVersion() + ".jar");
+		File targetFile = new File(getCurrentContext()
+				.getDestinationDirectory(),
+				computeJarFileName(getCurrentModule()));
 
-		return new FileOutputStream(targetFile);
+		// create the parent directories
+		if (!targetFile.getParentFile().exists()) {
+			targetFile.getParentFile().mkdirs();
+		}
+		return targetFile;
+	}
+
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param module
+	 * @return
+	 */
+	protected String computeJarFileName(IResourceModule module) {
+
+		//
+		return module.getModuleIdentifier().getName() + "_"
+				+ module.getModuleIdentifier().getVersion() + ".jar";
 	}
 }

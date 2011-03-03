@@ -1,28 +1,15 @@
 package org.bundlemaker.core.parser.bytecode;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.jar.JarEntry;
-
-import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.parser.IDirectory;
-import org.bundlemaker.core.parser.IDirectoryFragment;
-import org.bundlemaker.core.parser.IFolderBasedDirectoryFragment;
-import org.bundlemaker.core.parser.IJarFileBasedDirectoryFragment;
-import org.bundlemaker.core.parser.IParser;
+import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
+import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.Resource;
+import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-
-import com.springsource.bundlor.support.asm.AsmTypeArtefactAnalyser;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.util.JavaTypeUtils;
+import org.objectweb.asm.ClassReader;
 
 /**
  * <p>
@@ -30,23 +17,7 @@ import com.springsource.bundlor.support.asm.AsmTypeArtefactAnalyser;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ByteCodeParser implements IParser {
-
-	/** the bundlor class file analyzer */
-	private AsmTypeArtefactAnalyser _analyser;
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 * @throws CoreException
-	 */
-	public ByteCodeParser() {
-
-		// create the class file analyzer
-		_analyser = new AsmTypeArtefactAnalyser();
-	}
+public class ByteCodeParser extends AbstractParser {
 
 	/**
 	 * {@inheritDoc}
@@ -60,167 +31,80 @@ public class ByteCodeParser implements IParser {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void parseBundleMakerProjectStart(
-			IBundleMakerProject bundleMakerProject) {
+	protected boolean canParse(IResourceKey resourceKey) {
 
-		// ignore
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache,
-			IProgressMonitor progressMonitor) throws CoreException {
-
-		List<IProblem> _errors = new LinkedList<IProblem>();
-
-		// iterate over the directories and parse the directory fragments
-		for (IDirectory directory : directoryList) {
-
-			for (IDirectoryFragment directoryFragment : directory
-					.getBinaryDirectoryFragments()) {
-
-				parseDirectoryFragment(directoryFragment, cache,
-						progressMonitor);
-			}
+		//
+		if (!resourceKey.getPath().endsWith(".class")) {
+			return false;
 		}
 
 		//
-		return _errors;
+		return resourceKey.isValidJavaPackage();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
 	@Override
-	public void parseBundleMakerProjectStop(
-			IBundleMakerProject bundleMakerProject) {
+	protected void parseResource(IResourceKey resourceKey,
+			IFileBasedContent content, IResourceCache cache) {
 
-		// ignore
-	}
+		// get the IModifiableResource
+		IModifiableResource resource = cache.getOrCreateResource(resourceKey);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param directoryFragment
-	 * @param cache
-	 * @param progressMonitor
-	 * @throws CoreException
-	 */
-	private void parseDirectoryFragment(IDirectoryFragment directoryFragment,
-			IResourceCache cache, IProgressMonitor progressMonitor)
-			throws CoreException {
+		// if the resource already contains a type, it already has been parsed.
+		// In this case we can return immediately
+		if (!resource.getContainedTypes().isEmpty()) {
+			return;
+		}
 
-		// handle jar file based content
-		if (directoryFragment instanceof IJarFileBasedDirectoryFragment) {
+		// if the resource does not contain a anonymous or local type
+		// the enclosing resource is the resource (the default)
+		IModifiableResource enclosingResource = resource;
 
-			IJarFileBasedDirectoryFragment jfbdContent = (IJarFileBasedDirectoryFragment) directoryFragment;
+		// get fully qualified type name
+		String fullyQualifiedName = JavaTypeUtils
+				.convertToFullyQualifiedName(resource.getPath());
 
-			// parse each class file
-			for (JarEntry jarEntry : jfbdContent.getJarEntries()) {
+		// if the type is an anonymous or local type,
+		// we have to get the enclosing type name
+		if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
-				if (jarEntry.getName().endsWith(".class")) {
-					try {
-						JavaElementIdentifier elementID = new JavaElementIdentifier(
-								directoryFragment.getDirectory()
-										.getFileBasedContent().getId(),
-								jfbdContent.getJarFile(), jarEntry);
+			// get the name of the enclosing type
+			String enclosingName = JavaTypeUtils
+					.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
-						// parse
-						// TODO
-						parseClassFile(
-								jfbdContent.getJarFile().getInputStream(
-										jarEntry), elementID, cache);
+			// the resource key for the enclosing type
+			ResourceKey enclosingKey = new ResourceKey(
+					resourceKey.getContentId(), resourceKey.getRoot(),
+					JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			// get the enclosing resource
+			enclosingResource = cache.getOrCreateResource(enclosingKey);
+
+			// if we have to parse the enclosing type
+			if (enclosingResource.getContainedTypes().isEmpty()) {
+				parseResource(enclosingKey, content, cache);
+
+				if (enclosingResource.getContainedTypes().isEmpty()) {
+					// TODO
+					// TODO remove null handling in AsmReferenceRecorder
+					// Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
 				}
-
-				//
-				progressMonitor.worked(1);
-			}
-		} else if (directoryFragment instanceof IFolderBasedDirectoryFragment) {
-
-			IFolderBasedDirectoryFragment fdbContent = (IFolderBasedDirectoryFragment) directoryFragment;
-
-			// parse each class file
-			for (String content : fdbContent.getContent()) {
-
-				if (content.endsWith(".class")) {
-
-					try {
-						JavaElementIdentifier elementID = new JavaElementIdentifier(
-								directoryFragment.getDirectory()
-										.getFileBasedContent().getId(),
-								fdbContent.getDirectoryFragmentRoot()
-										.getAbsolutePath(), content);
-
-						// parse
-						// TODO
-						parseClassFile(
-								new FileInputStream(new File(
-										fdbContent.getDirectoryFragmentRoot(),
-										content)), elementID, cache);
-
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				//
-				progressMonitor.worked(1);
 			}
 		}
-	}
-
-	/**
-	 * <p>
-	 * Parses a single class file.
-	 * </p>
-	 * 
-	 * @param classFile
-	 * @throws CoreException
-	 */
-	private void parseClassFile(InputStream inputStream,
-			JavaElementIdentifier elementID, IResourceCache cache)
-			throws CoreException {
-
-		// JavaElementIdentifier enclosingJavaElementIdentifier = elementID
-		// .getIdForEnclosingNonLocalAndNonAnonymousType();
-		//
-		// ResourceKey key = new ResourceKey(
-		// enclosingJavaElementIdentifier.getContentId(),
-		// enclosingJavaElementIdentifier.getRoot(),
-		// enclosingJavaElementIdentifier.getPath());
-
-		ResourceKey key = new ResourceKey(elementID.getContentId(),
-				elementID.getRoot(), elementID.getPath());
-
-		// get the additional type info
-		Resource resource = cache.getOrCreateResource(key);
-
-		// get the fake manifest
-		BundlorPartialManifest fakePartialManifest = new BundlorPartialManifest(
-				elementID.getFullQualifiedName(),
-				elementID.getFullQualifiedName(), resource);
 
 		try {
 
-			// analyze the class file
-			_analyser.analyse(inputStream, elementID.getFullQualifiedName(),
-					fakePartialManifest);
+			// create a new references recorder
+			AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(
+					resource, enclosingResource);
 
-			// TODO
-			// _progressMonitor.worked(1);
+			// parse the class file
+			ClassReader reader = new ClassReader(resource.getContent());
+			reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder),
+					0);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 }

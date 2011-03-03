@@ -3,12 +3,11 @@ package org.bundlemaker.core.internal.parser;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.parser.IDirectory;
-import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
@@ -25,7 +24,7 @@ public class FileContentReaderTest {
 	public void testBinaryDirectoryBasedContent() throws CoreException {
 
 		//
-		BundleMakerProjectDescription projectDescription = createProjectDescription(
+		IBundleMakerProjectDescription projectDescription = createProjectDescription(
 				"bundlor", "1.0.0", new String[] { "classes" }, new String[] {});
 
 		// get the directories
@@ -46,7 +45,7 @@ public class FileContentReaderTest {
 	public void testBinaryJarFileBasedContent() throws CoreException {
 
 		//
-		BundleMakerProjectDescription projectDescription = createProjectDescription(
+		IBundleMakerProjectDescription projectDescription = createProjectDescription(
 				"bundlor", "1.0.0",
 				new String[] { "com.springsource.bundlor-1.0.0.RELEASE.jar" },
 				new String[] {});
@@ -68,7 +67,7 @@ public class FileContentReaderTest {
 	public void testBinaryMixedContent() throws CoreException {
 
 		//
-		BundleMakerProjectDescription projectDescription = createProjectDescription(
+		IBundleMakerProjectDescription projectDescription = createProjectDescription(
 				"bundlor", "1.0.0", new String[] { "classes-partial_1.jar",
 						"classes-partial_2" }, new String[] {});
 
@@ -106,16 +105,17 @@ public class FileContentReaderTest {
 	 * @return
 	 * @throws CoreException
 	 */
-	private BundleMakerProjectDescription createProjectDescription(String name,
-			String version, String[] binaryPaths, String[] sourcePaths)
-			throws CoreException {
+	private IBundleMakerProjectDescription createProjectDescription(
+			String name, String version, String[] binaryPaths,
+			String[] sourcePaths) throws CoreException {
 
 		// step 1: create project description
 		File testEnvironment = new File(System.getProperty("user.dir"),
 				"test-environment");
 
 		//
-		BundleMakerProjectDescription projectDescription = new BundleMakerProjectDescription();
+		BundleMakerProjectDescription projectDescription = new BundleMakerProjectDescription(
+				null);
 
 		//
 		projectDescription.setJre("jre");

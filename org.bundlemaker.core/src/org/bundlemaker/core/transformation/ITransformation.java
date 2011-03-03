@@ -1,6 +1,6 @@
 package org.bundlemaker.core.transformation;
 
-import org.bundlemaker.core.modules.ModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 
 /**
  * <p>
@@ -16,8 +16,8 @@ public interface ITransformation {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @param modularizedSystem
 	 */
-	public void apply(ModularizedSystem modularizedSystem);
+	public void apply(IModifiableModularizedSystem modularizedSystem);
 }

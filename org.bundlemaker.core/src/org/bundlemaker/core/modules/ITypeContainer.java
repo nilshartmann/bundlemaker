@@ -1,6 +1,10 @@
 package org.bundlemaker.core.modules;
 
+import java.util.Collection;
 import java.util.Set;
+
+import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -14,7 +18,39 @@ public interface ITypeContainer {
 	 * <p>
 	 * </p>
 	 * 
+	 * @param typeNames
 	 * @return
+	 */
+	boolean containsAll(Set<String> typeNames);
+
+	/**
+	 * <p>
+	 * Returns the {@link IType} with the specified fully qualified name or
+	 * <code>null</code> if no {@link IType} with the specified name exists.
+	 * </p>
+	 * 
+	 * @param fullyQualifiedName
+	 * @return the {@link IType} with the specified fully qualified name or
+	 *         <code>null</code> if no {@link IType} with the specified name
+	 *         exists.
+	 */
+	IType getType(String fullyQualifiedName);
+
+	/**
+	 * <p>
+	 * Returns a collection with all contained {@link IType ITypes}.
+	 * </p>
+	 * 
+	 * @return a collection with all contained {@link IType ITypes}.
+	 */
+	Collection<IType> getContainedTypes();
+
+	/**
+	 * <p>
+	 * Returns a {@link Set} with the names of all contained types.
+	 * </p>
+	 * 
+	 * @return a {@link Set} with the names of all contained types.
 	 */
 	Set<String> getContainedTypeNames();
 
@@ -25,7 +61,7 @@ public interface ITypeContainer {
 	 * @param filter
 	 * @return
 	 */
-	Set<String> getContainedTypeNames(IQueryFilter filter);
+	Set<String> getContainedTypeNames(IQueryFilter<String> filter);
 
 	/**
 	 * <p>
@@ -42,5 +78,5 @@ public interface ITypeContainer {
 	 * @param filter
 	 * @return
 	 */
-	Set<String> getContainedPackageNames(IQueryFilter filter);
+	Set<String> getContainedPackageNames(IQueryFilter<String> filter);
 }

@@ -2,6 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.bundlemaker.core;singleton:=true
+Eclipse-ExtensibleAPI: true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
@@ -9,24 +10,24 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.exporter,
- org.bundlemaker.core.exporter.bundlor,
- org.bundlemaker.core.internal.parser;x-friends:="org.bundlemaker.core.store.db4o.ptest",
+ org.bundlemaker.core.exporter.manifest,
+ org.bundlemaker.core.exporter.util,
  org.bundlemaker.core.modules,
+ org.bundlemaker.core.modules.modifiable,
+ org.bundlemaker.core.modules.query,
  org.bundlemaker.core.parser,
  org.bundlemaker.core.projectdescription,
  org.bundlemaker.core.resource,
- org.bundlemaker.core.store,
+ org.bundlemaker.core.resource.modifiable,
  org.bundlemaker.core.transformation,
  org.bundlemaker.core.transformation.resourceset,
  org.bundlemaker.core.util
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.core.resources;bundle-version="3.6.0",
- org.eclipse.emf.ecore.xmi;bundle-version="2.5.0",
  org.eclipse.jdt.launching;bundle-version="3.5.100",
  com.springsource.bundlor;bundle-version="1.0.0",
  com.springsource.util.parser.manifest;bundle-version="2.0.0",
  com.springsource.util.osgi;bundle-version="2.0.0",
  org.apache.ant;bundle-version="1.7.1"
 Bundle-Activator: org.bundlemaker.core.internal.Activator
-
+Service-Component: OSGI-INF/dependencyStore.xml

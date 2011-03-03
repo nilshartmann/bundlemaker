@@ -8,14 +8,13 @@ import java.util.concurrent.FutureTask;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.projectdescription.FileBasedContent;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
@@ -44,6 +43,9 @@ public class ProjectParser {
 	/** the parser array: the first index is the parser, the second the thread */
 	private IParser[][] _parsers;
 
+	/** - */
+	private boolean _parseIndirectReferences;
+
 	/**
 	 * <p>
 	 * Creates a new instance of type {@link ProjectParser}.
@@ -52,11 +54,13 @@ public class ProjectParser {
 	 * @param bundleMakerProject
 	 *            the bundle maker project
 	 */
-	public ProjectParser(BundleMakerProject bundleMakerProject) {
+	public ProjectParser(BundleMakerProject bundleMakerProject,
+			boolean parseIndirectReferences) {
 		Assert.isNotNull(bundleMakerProject);
 
 		// set the project
 		_bundleMakerProject = bundleMakerProject;
+		_parseIndirectReferences = parseIndirectReferences;
 	}
 
 	/**
@@ -103,8 +107,8 @@ public class ProjectParser {
 		}
 
 		// iterate over the project content
-		for (FileBasedContent fileBasedContent : _bundleMakerProject
-				.getProjectDescription().getModifiableFileBasedContent()) {
+		for (IFileBasedContent fileBasedContent : _bundleMakerProject
+				.getProjectDescription().getFileBasedContent()) {
 
 			progressMonitor.setTaskName(String.format("Parsing '%s'...",
 					fileBasedContent.getName()));
@@ -143,7 +147,7 @@ public class ProjectParser {
 	 * @throws CoreException
 	 */
 	@SuppressWarnings("unchecked")
-	private void parseContent(FileBasedContent content,
+	private void parseContent(IFileBasedContent content,
 			IProgressMonitor progressMonitor, IResourceCache cache)
 			throws CoreException {
 
@@ -301,7 +305,7 @@ public class ProjectParser {
 		for (int i = 0; i < parserFactories.size(); i++) {
 			for (int j = 0; j < THREAD_COUNT; j++) {
 				parsers[i][j] = parserFactories.get(i).createParser(
-						_bundleMakerProject);
+						_bundleMakerProject, _parseIndirectReferences);
 			}
 		}
 
@@ -341,8 +345,8 @@ public class ProjectParser {
 		int binaryResourcesToParse = 0;
 		int sourceResourcesToParse = 0;
 
-		for (FileBasedContent fileBasedContent : _bundleMakerProject
-				.getProjectDescription().getModifiableFileBasedContent()) {
+		for (IFileBasedContent fileBasedContent : _bundleMakerProject
+				.getProjectDescription().getFileBasedContent()) {
 
 			int[] resourcesToParse = countResourcesToParse(fileBasedContent);
 
@@ -359,7 +363,7 @@ public class ProjectParser {
 	 * </p>
 	 * 
 	 */
-	private int[] countResourcesToParse(FileBasedContent content) {
+	private int[] countResourcesToParse(IFileBasedContent content) {
 
 		//
 		int binaryResourcesToParse = 0;
@@ -390,7 +394,7 @@ public class ProjectParser {
 	 * 
 	 * @return
 	 */
-	private int[] getResourcesToParseCount(FileBasedContent content,
+	private int[] getResourcesToParseCount(IFileBasedContent content,
 			IParser parser) {
 
 		//

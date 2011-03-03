@@ -5,8 +5,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * A parser factory is responsible for creating (bundle maker specific) project
- * parser.
+ * A parser factory is responsible for creating project parser.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -58,11 +57,12 @@ public interface IParserFactory {
 	 * 
 	 * @param bundleMakerProject
 	 *            the {@link IBundleMakerProject}
+	 * @param parseIndirectReferences
 	 * @return the newly created {@link IParser}
 	 * @throws CoreException
 	 */
-	public IParser createParser(IBundleMakerProject bundleMakerProject)
-			throws CoreException;
+	public IParser createParser(IBundleMakerProject bundleMakerProject,
+			boolean parseIndirectReferences) throws CoreException;
 
 	/**
 	 * <p>

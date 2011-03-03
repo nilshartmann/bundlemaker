@@ -1,5 +1,6 @@
 package org.bundlemaker.core.modules;
 
+import org.bundlemaker.core.internal.modules.ResourceContainer;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.junit.Test;
 
@@ -17,12 +18,12 @@ public class ResourceContainerTest {
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetReferencedPackages() {
-		new ResourceContainer().getReferencedPackages(false, false).add("");
+		new ResourceContainer().getReferencedPackageNames(false, false, false).add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
 	public void testUnmodifiableGetReferencedTypes() {
-		new ResourceContainer().getReferencedTypes(false, false).add("");
+		new ResourceContainer().getReferencedTypeNames(false, false, false).add("");
 	}
 
 	@Test(expected = UnsupportedOperationException.class)

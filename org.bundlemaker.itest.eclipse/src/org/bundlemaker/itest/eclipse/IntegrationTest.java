@@ -8,13 +8,15 @@ import junit.framework.Assert;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.exporter.ModuleExporterContext;
+import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
+import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
+import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResourceStandin;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
@@ -63,6 +65,7 @@ public class IntegrationTest {
 		if (PARSE) {
 			IntegrationTestUtils.createProjectDescription(bundleMakerProject
 					.getProjectDescription());
+			bundleMakerProject.saveProjectDescription();
 		}
 
 		// create the progress monitor
@@ -78,7 +81,7 @@ public class IntegrationTest {
 			stopWatch.start();
 
 			List<? extends IProblem> problems = bundleMakerProject
-					.parse(progressMonitor);
+					.parse(progressMonitor, true);
 
 			stopWatch.stop();
 			System.out.println(stopWatch.getElapsedTime());
@@ -102,6 +105,7 @@ public class IntegrationTest {
 
 		//
 		exportToStructure101(bundleMakerProject, modularizedSystem);
+		exportToSimpleReport(bundleMakerProject, modularizedSystem);
 
 		// //
 		// IReferencedModulesQueryResult queryResult = modularizedSystem
@@ -133,13 +137,34 @@ public class IntegrationTest {
 	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
 			IModularizedSystem modularizedSystem) throws Exception {
 		// create the exporter context
-		ModuleExporterContext exporterContext = new ModuleExporterContext(
+		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
 				bundleMakerProject, new File("c:/temp"), modularizedSystem);
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		Structure101Exporter exporter = new Structure101Exporter();
 		exporter.export(modularizedSystem, exporterContext);
+		stopWatch.stop();
+		System.out.println("Dauer " + stopWatch.getElapsedTime());
+	}
+
+	private void exportToSimpleReport(IBundleMakerProject bundleMakerProject,
+			IModularizedSystem modularizedSystem) throws Exception {
+
+		//
+		File destination = new File(System.getProperty("user.dir"),
+				"destination");
+		destination.mkdirs();
+
+		// create the exporter context
+		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
+				bundleMakerProject, destination, modularizedSystem);
+
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		SimpleReportExporter exporter = new SimpleReportExporter();
+		new ModularizedSystemExporterAdapter(exporter).export(
+				modularizedSystem, exporterContext);
 		stopWatch.stop();
 		System.out.println("Dauer " + stopWatch.getElapsedTime());
 	}
@@ -157,38 +182,30 @@ public class IntegrationTest {
 				.getResourceModules()) {
 
 			// step 1: assert binary content
-			for (IResourceStandin resourceStandin : resourceModule
+			for (IResource resource : resourceModule
 					.getResources(ContentType.BINARY)) {
 
 				//
-				Assert.assertSame(resourceModule,
-						resourceStandin.getResourceModule());
+				Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
 
 				//
-				for (IReference reference : resourceStandin.getResource()
-						.getReferences()) {
+				for (IReference reference : resource.getReferences()) {
 					//
-					Assert.assertSame(resourceStandin.getResource(),
-							reference.getResource());
+					Assert.assertSame(resource, reference.getResource());
 				}
 			}
 
 			//
-			for (IResourceStandin resourceStandin : resourceModule
+			for (IResource resource : resourceModule
 					.getResources(ContentType.SOURCE)) {
 
 				//
-				Assert.assertSame(resourceModule,
-						resourceStandin.getResourceModule());
-				Assert.assertSame(resourceStandin, resourceStandin
-						.getResource().getResourceStandin());
+				Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
 
 				//
-				for (IReference reference : resourceStandin.getResource()
-						.getReferences()) {
+				for (IReference reference : resource.getReferences()) {
 					//
-					Assert.assertSame(resourceStandin.getResource(),
-							reference.getResource());
+					Assert.assertSame(resource, reference.getResource());
 				}
 			}
 		}

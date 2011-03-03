@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
-import org.bundlemaker.core.store.IPersistentDependencyStore;
-import org.bundlemaker.core.store.IPersistentDependencyStoreFactory;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
@@ -35,6 +35,9 @@ public class Activator extends Plugin {
 
 	/** the activator instance */
 	private static Activator _activator;
+
+	/** - */
+	private static BundleContext _context;
 
 	/** the factory tracker */
 	private ServiceTracker _factoryTracker;
@@ -77,14 +80,23 @@ public class Activator extends Plugin {
 
 		//
 		_activator = this;
+
+		//
+		_context = context;
 	}
 
 	/**
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+
+		//
 		_activator = null;
 
+		//
+		_context = null;
+
+		//
 		_factoryTracker.close();
 
 		super.stop(context);
@@ -98,7 +110,17 @@ public class Activator extends Plugin {
 	 * @return
 	 */
 	public static Activator getDefault() {
+		
+		if (_activator == null) {
+			//
+			throw new RuntimeException();
+		}
+		
 		return _activator;
+	}
+
+	public static BundleContext getContext() {
+		return _context;
 	}
 
 	public ParserFactoryRegistry getParserFactoryRegistry() {
@@ -156,21 +178,14 @@ public class Activator extends Plugin {
 	 */
 	public IPersistentDependencyStoreFactory getPersistentInfoStoreFactory() {
 
-		// return
-		return (IPersistentDependencyStoreFactory) _factoryTracker.getService();
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public String getMemoryUsage() {
-		long totalMem = Runtime.getRuntime().totalMemory();
-		long freeMem = Runtime.getRuntime().freeMemory();
-		return "Memory used: " + (totalMem - freeMem) / (1024 * 1024)
-				+ " MB (total: " + totalMem / (1024 * 1024) + " MB )";
+		try {
+			// return
+			return (IPersistentDependencyStoreFactory) _factoryTracker
+					.waitForService(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**

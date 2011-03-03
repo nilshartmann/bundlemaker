@@ -5,14 +5,19 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.parser.ResourceCache;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.resource.ReferenceType;
-import org.bundlemaker.core.resource.Resource;
 import org.bundlemaker.core.resource.ResourceKey;
-import org.bundlemaker.core.store.db4o.internal.Activator;
-import org.bundlemaker.core.store.db4o.internal.PersistentDependencyStoreImpl;
+import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
@@ -40,17 +45,19 @@ public class DBTest {
 	@Test
 	public void testDatabase() throws CoreException {
 
-		Assert.assertNotNull(Activator.getDb4oService());
+		IProject project = BundleMakerCore
+				.getOrCreateSimpleProjectWithBundleMakerNature("dbtest");
+		IBundleMakerProject bundleMakerProject = BundleMakerCore
+				.getBundleMakerProject(project, null);
+		IPersistentDependencyStore store = Activator.getDefault()
+				.getPersistentDependencyStore(bundleMakerProject);
+		Assert.assertNotNull(store);
 
 		// step 2: delete the existing '.bundlemaker/db4o.store' file
 		File file = new File(FILE_NAME);
 		if (file.exists()) {
 			Assert.assertTrue(file.delete());
 		}
-		PersistentDependencyStoreImpl store = new PersistentDependencyStoreImpl(
-				Activator.getDb4oService(), FILE_NAME);
-
-		store.init();
 
 		Assert.assertNotNull(store.getResources());
 
@@ -118,17 +125,20 @@ public class DBTest {
 
 		for (int i = 0; i < resourceCount; i++) {
 
-			Resource resource = cache.getOrCreateResource(new ResourceKey(
-					"0000001",
-					"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/KJKJKJ",
-					"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/" + i));
+			IModifiableResource resource = cache
+					.getOrCreateResource(new ResourceKey(
+							"0000001",
+							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/KJKJKJ",
+							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/"
+									+ i));
 
 			// Resource resource = new Resource("", "", "" + i);
 
 			for (int j = 0; j < referenceCount; j++) {
 
 				resource.recordReference("referencedElement" + j,
-						ReferenceType.TYPE_REFERENCE, true, false, false, false);
+						new ReferenceAttributes(ReferenceType.TYPE_REFERENCE,
+								true, true, false, false, false, false, false));
 			}
 
 			// flyweight

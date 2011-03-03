@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.taskdefs.Mkdir;
-import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
 public class IntegrationTestUtils {
@@ -18,12 +18,12 @@ public class IntegrationTestUtils {
 	 * <p>
 	 * </p>
 	 */
-	public static BundleMakerProjectDescription createProjectDescription(
-			BundleMakerProjectDescription projectDescription)
+	public static IBundleMakerProjectDescription createProjectDescription(
+			IBundleMakerProjectDescription projectDescription)
 			throws CoreException {
 
 		// step 1:
-		projectDescription.getModifiableFileBasedContent().clear();
+		projectDescription.clear();
 
 		// step 2: add the JRE
 		projectDescription.setJre("jdk16");

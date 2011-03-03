@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import org.osgi.framework.Constants;
+
 /**
  * <p>
  * </p>
@@ -52,34 +54,59 @@ public class JarInfoService {
 
 	private static String extractName(File file) throws IOException {
 
-		String version = null;
+		//
+		String result = null;
 
-		version = LogicalJarNameResolver.extractName(file.getName());
+		// try to extract the name from the root directory
+		JarFile jarFile = new JarFile(file);
 
-		if (version == null) {
+		// Try to analyze the jar file
+		Manifest manifest = jarFile.getManifest();
 
-			// try to extract the name from the root directory
-			JarFile jarFile = new JarFile(file);
-
-			version = LogicalJarNameResolver
-					.extractNameFromRootDirectory(jarFile);
-
-			// Try to analyze the jar file
-			Manifest manifest = jarFile.getManifest();
-
-			if (manifest != null) {
-
-				// try to extract the name from the main class attribute
-				version = LogicalJarNameResolver
-						.extractNameFromMainClassAttribute(manifest);
-
-				// try to extract the name from the implementation title
-				// attribute
-				version = LogicalJarNameResolver
-						.extractNameFromImplementationTitle(manifest);
+		// step 1: check if a symbolic name exists
+		if (manifest != null) {
+			
+			result = manifest.getMainAttributes().getValue(
+					Constants.BUNDLE_SYMBOLICNAME);
+			
+			if (result != null) {
+				return result;
 			}
 		}
-		return version;
+
+		// step 2: 
+		result = LogicalJarNameResolver.extractName(file.getName());
+		if (result != null) {
+			return result;
+		}
+
+		// step 3: 
+		result = LogicalJarNameResolver.extractNameFromRootDirectory(jarFile);
+		if (result != null) {
+			return result;
+		}
+
+		// step 4: 
+		if (manifest != null) {
+
+			// try to extract the name from the main class attribute
+			result = LogicalJarNameResolver
+					.extractNameFromMainClassAttribute(manifest);
+			if (result != null) {
+				return result;
+			}
+
+			// try to extract the name from the implementation title
+			// attribute
+			result = LogicalJarNameResolver
+					.extractNameFromImplementationTitle(manifest);
+			if (result != null) {
+				return result;
+			}
+		}
+
+		//
+		return result;
 	}
 
 	private static String extractVersion(File file) throws IOException {

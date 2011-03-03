@@ -6,7 +6,7 @@
    <extension
          point="org.bundlemaker.core.parserfactory">
       <parserfactory
-            class="org.bundlemaker.core.parser.jdt.JdtParserFactory">
+            class="org.bundlemaker.core.parser.jdt.internal.JdtParserFactory">
       </parserfactory>
    </extension>
 </plugin>

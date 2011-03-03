@@ -2,9 +2,11 @@ package org.bundlemaker.core.internal.parser;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IDirectoryFragment;
+import org.bundlemaker.core.resource.IResourceKey;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -25,6 +27,8 @@ public abstract class AbstractDirectoryFragment implements IDirectoryFragment {
 
 	/** - */
 	private IDirectory _directory;
+	
+	private Set<IResourceKey> _resourceKeys;
 
 	/**
 	 * <p>
@@ -85,7 +89,6 @@ public abstract class AbstractDirectoryFragment implements IDirectoryFragment {
 		return _ifile;
 	}
 
-	@Override
 	public boolean isWorkspaceRelative() {
 		return _ifile != null;
 	}

@@ -1,6 +1,6 @@
 package org.bundlemaker.core.transformation.resourceset;
 
-import org.bundlemaker.core.modules.ResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 
 /**
  * <p>
@@ -21,6 +21,6 @@ public interface IResourceSetProcessor {
 	 * @param targetResourceModule
 	 * @param resourceSet
 	 */
-	public void processResources(ResourceModule originResourceModule,
-			ResourceModule targetResourceModule, ResourceSet resourceSet);
+	public void processResources(IModifiableResourceModule originResourceModule,
+			IModifiableResourceModule targetResourceModule, ResourceSet resourceSet);
 }

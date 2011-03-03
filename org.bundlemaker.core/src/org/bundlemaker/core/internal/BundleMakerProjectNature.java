@@ -1,20 +1,12 @@
 package org.bundlemaker.core.internal;
 
-import java.io.IOException;
-
 import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.model.internal.projectdescription.EProjectDescription;
-import org.bundlemaker.core.model.internal.projectdescription.ProjectdescriptionFactory;
+import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 
 /**
  * <p>
@@ -26,27 +18,27 @@ import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 public class BundleMakerProjectNature implements IProjectNature {
 
 	/** the associated bundle maker project */
-	private IProject project;
+	private IProject _project;
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public IProject getProject() {
-		return project;
+		return _project;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setProject(IProject value) {
-		project = value;
+		_project = value;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void configure() throws CoreException {
-		createFolder(project
+		createFolder(_project
 				.getFolder(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME));
 		addConfigurationFile();
 	}
@@ -55,7 +47,7 @@ public class BundleMakerProjectNature implements IProjectNature {
 	 * {@inheritDoc}
 	 */
 	public void deconfigure() throws CoreException {
-		IFolder folder = project
+		IFolder folder = _project
 				.getFolder(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME);
 		folder.delete(true, null);
 	}
@@ -87,28 +79,8 @@ public class BundleMakerProjectNature implements IProjectNature {
 	 * @throws CoreException
 	 */
 	private void addConfigurationFile() throws CoreException {
-
-		// TODO
-
-		try {
-			EProjectDescription projectDescription = ProjectdescriptionFactory.eINSTANCE
-					.createEProjectDescription();
-
-			URI uri = URI.createPlatformResourceURI(
-					project.getFullPath()
-							.append(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME)
-							.append(BundleMakerCore.PROJECT_DESCRIPTION_NAME)
-							.toString(), true);
-
-			Resource resource = new XMLResourceImpl(uri);
-			resource.getContents().add(projectDescription);
-			resource.save(null);
-
-		} catch (IOException e) {
-
-			// TODO: MSG
-			throw new CoreException(new Status(IStatus.ERROR,
-					BundleMakerCore.BUNDLE_ID, ""));
-		}
+		ProjectDescriptionStore
+				.saveProjectDescription(_project,
+						new BundleMakerProjectDescription(null));
 	}
 }

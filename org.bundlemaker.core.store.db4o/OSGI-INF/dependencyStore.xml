@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<component name="db4oPersistentDependencyStoreFactory">
+	<implementation class="org.bundlemaker.core.store.db4o.internal.PersistentDependencyStoreFactoryComponent"/>
+	<service>
+		<provide interface="org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory"/>
+	</service>
+	<reference name="Db4oService"
+		interface="com.db4o.osgi.Db4oService"
+		bind="setDb4oService"
+		unbind="unsetDb4oService"
+		cardinality="1..1"
+		policy="static" />
+</component>

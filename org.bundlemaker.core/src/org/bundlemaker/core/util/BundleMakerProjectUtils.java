@@ -1,6 +1,7 @@
 package org.bundlemaker.core.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -78,8 +79,8 @@ public class BundleMakerProjectUtils {
 
 		try {
 
-			return extractProblematicLine(problem.getResource()
-					.getInputStream(), sourceStart, sourceEnd);
+			return extractProblematicLine(new ByteArrayInputStream(problem
+					.getResource().getContent()), sourceStart, sourceEnd);
 
 		} catch (Exception e) {// Catch exception if any
 			return new String[] { "", "" };
