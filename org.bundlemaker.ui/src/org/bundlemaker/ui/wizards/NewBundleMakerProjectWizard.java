@@ -7,7 +7,7 @@ import java.net.URI;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.ui.internal.UIImages;
 import org.eclipse.core.commands.ExecutionException;
@@ -161,7 +161,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 			IBundleMakerProject bundleMakerProject = BundleMakerCore
 					.getBundleMakerProject(newProjectHandle,
 							new NullProgressMonitor());
-			BundleMakerProjectDescription bundleMakerProjectDescription = bundleMakerProject
+			IBundleMakerProjectDescription bundleMakerProjectDescription = bundleMakerProject
 					.getProjectDescription();
 			bundleMakerProjectDescription.setJre(mainPage.getSelectedJreId());
 			bundleMakerProject.saveProjectDescription();

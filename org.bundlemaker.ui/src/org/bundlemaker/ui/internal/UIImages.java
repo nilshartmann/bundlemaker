@@ -14,7 +14,8 @@ import org.eclipse.swt.graphics.Image;
  */
 public enum UIImages {
 
-	BUNDLEMAKER_ICON("icons/bundlemaker-icon.png");
+	BUNDLEMAKER_ICON("icons/bundlemaker-icon.png"), BINARY_FOLDER(
+			"icons/binary_folder.gif"), SOURCE_FOLDER("icons/source_folder.gif");
 
 	private final String path;
 
