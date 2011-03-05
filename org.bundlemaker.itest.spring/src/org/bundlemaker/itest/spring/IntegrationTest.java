@@ -153,8 +153,8 @@ public class IntegrationTest {
 		//
 		exportToSimpleReport(bundleMakerProject, modularizedSystem);
 
-		// // export to binary bundle
-		// exportToBinaryBundle(bundleMakerProject, modularizedSystem);
+		// export to binary bundle
+		exportToBinaryBundle(bundleMakerProject, modularizedSystem);
 
 		// exportToPdeProjects
 		exportToPdeProjects(bundleMakerProject, modularizedSystem);

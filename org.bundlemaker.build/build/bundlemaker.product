@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="%productName" uid="bundmaker.product" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="false">
+<product name="bundlemaker" uid="bundmaker.product" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="false">
 
    <aboutInfo>
       <image path="eclipse_lg.gif"/>
@@ -25,6 +25,18 @@
       startupProgressRect="0,280,455,15"
       startupMessageRect="7,220,441,20"
       startupForegroundColor="C8D5EA" />
+   <launcher name="bundlemaker">
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+
+   <vm>
+   </vm>
+
+
    <plugins>
       <plugin id="com.db4o.osgi"/>
       <plugin id="com.ibm.icu"/>
@@ -42,6 +54,9 @@
       <plugin id="org.bundlemaker.core.parser.bytecode"/>
       <plugin id="org.bundlemaker.core.parser.jdt"/>
       <plugin id="org.bundlemaker.core.store.db4o" fragment="true"/>
+      <plugin id="org.bundlemaker.core.store.db4o.ptest" fragment="true"/>
+      <plugin id="org.bundlemaker.core.test" fragment="true"/>
+      <plugin id="org.bundlemaker.core.test.inspector" fragment="true"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>

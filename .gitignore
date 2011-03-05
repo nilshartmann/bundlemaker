@@ -2,3 +2,4 @@
 .metadata
 */bin/*
 */*clover/*
+org.bundlemaker.drools.test/*

@@ -54,7 +54,7 @@ public final class JarFileUtils {
 		try {
 
 			// open the archive file
-			jarOutputStream = new JarOutputStream(outputStream);
+			jarOutputStream = new JarOutputStream(outputStream, manifest);
 
 			// add all the entries
 			for (IResource resourceStandin : resources) {
@@ -77,15 +77,7 @@ public final class JarFileUtils {
 					jarOutputStream.closeEntry();
 				}
 			}
-
-			//
-			String manifestfilename = "META-INF/MANIFEST.MF";
-			JarEntry manifestfile = new JarEntry(manifestfilename);
-			byte manifestbytes[] = serialiseManifest(manifest);
-			jarOutputStream.putNextEntry(manifestfile);
-			jarOutputStream.write(manifestbytes, 0, manifestbytes.length);
-			jarOutputStream.closeEntry();
-
+			
 			//
 			jarOutputStream.flush();
 
