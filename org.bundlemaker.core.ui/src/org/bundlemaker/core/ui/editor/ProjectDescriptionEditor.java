@@ -27,69 +27,66 @@ import org.eclipse.ui.forms.editor.FormEditor;
  */
 public class ProjectDescriptionEditor extends FormEditor {
 
-	public ProjectDescriptionEditor() {
-		super();
-	}
+  public ProjectDescriptionEditor() {
+    super();
+  }
 
-	@Override
-	protected void addPages() {
-		try {
-			addPage(new ProjectDescriptionOverviewPage(this));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+  @Override
+  protected void addPages() {
+    try {
+      addPage(new ProjectDescriptionOverviewPage(this));
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
 
-	}
+  }
 
-	@Override
-	public void init(IEditorSite site, IEditorInput input)
-			throws PartInitException {
-		super.init(site, input);
-		if (input == null) {
-			System.err.println("Input is null ?!?!?!");
-			return;
-		}
-		IFileEditorInput adapter = (IFileEditorInput) input
-				.getAdapter(IFileEditorInput.class);
-		if (adapter == null) {
-			System.err.println("Unsupported EditorInput " + input
-					+ " cannot be adapted to an "
-					+ IFileEditorInput.class.getName());
-			return;
-		}
-		System.out.println("input: " + input);
-		System.out.println("input class: " + input.getClass().getName());
-		System.out.println("adapter: " + adapter);
-		IProject project = adapter.getFile().getProject();
-		try {
-			IBundleMakerProject bundleMakerProject = BundleMakerCore
-					.getBundleMakerProject(project, new NullProgressMonitor());
-			List<? extends IFileBasedContent> fileBasedContent = bundleMakerProject
-					.getProjectDescription().getFileBasedContent();
-			for (IFileBasedContent iFileBasedContent : fileBasedContent) {
-				System.out.println("content: " + iFileBasedContent);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+  @Override
+  public void init(IEditorSite site, IEditorInput input) throws PartInitException {
+    super.init(site, input);
+    if (input == null) {
+      System.err.println("Input is null ?!?!?!");
+      return;
+    }
+    IFileEditorInput adapter = (IFileEditorInput) input.getAdapter(IFileEditorInput.class);
+    if (adapter == null) {
+      System.err.println("Unsupported EditorInput " + input + " cannot be adapted to an "
+          + IFileEditorInput.class.getName());
+      return;
+    }
+    System.out.println("input: " + input);
+    System.out.println("input class: " + input.getClass().getName());
+    System.out.println("adapter: " + adapter);
+    IProject project = adapter.getFile().getProject();
+    try {
+      IBundleMakerProject bundleMakerProject = BundleMakerCore
+          .getBundleMakerProject(project, new NullProgressMonitor());
+      List<? extends IFileBasedContent> fileBasedContent = bundleMakerProject.getProjectDescription()
+          .getFileBasedContent();
+      for (IFileBasedContent iFileBasedContent : fileBasedContent) {
+        System.out.println("content: " + iFileBasedContent);
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
 
-	}
+  }
 
-	@Override
-	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
+  @Override
+  public void doSave(IProgressMonitor monitor) {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	@Override
-	public void doSaveAs() {
-		// TODO Auto-generated method stub
+  @Override
+  public void doSaveAs() {
+    // TODO Auto-generated method stub
 
-	}
+  }
 
-	@Override
-	public boolean isSaveAsAllowed() {
-		return false;
-	}
+  @Override
+  public boolean isSaveAsAllowed() {
+    return false;
+  }
 
 }
