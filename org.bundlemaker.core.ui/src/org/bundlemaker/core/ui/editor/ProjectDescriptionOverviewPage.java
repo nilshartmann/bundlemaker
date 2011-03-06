@@ -11,12 +11,19 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -117,9 +124,8 @@ public class ProjectDescriptionOverviewPage extends FormPage {
 				.createComposite(projectContentSection);
 		sectionComposite.setLayout(new GridLayout());
 
-		Tree projectContentTree = toolkit.createTree(sectionComposite,
+		final Tree projectContentTree = toolkit.createTree(sectionComposite,
 				SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
-
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.heightHint = 200;
 		gd.widthHint = 100;
@@ -127,11 +133,41 @@ public class ProjectDescriptionOverviewPage extends FormPage {
 
 		_treeViewer = new TreeViewer(projectContentTree);
 		_treeViewer.setLabelProvider(new WorkbenchLabelProvider());
-		_treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
+		BaseWorkbenchContentProvider provider = new BaseWorkbenchContentProvider();
+		_treeViewer.setContentProvider(provider);
 
 		System.out.println("Init treeviewer mit projectdescription "
 				+ _projectDescription.getFileBasedContent());
 		_treeViewer.setInput(_projectDescription);
+		
+		Button addArchivesButton = toolkit.createButton(sectionComposite, "Add archive resources...", SWT.PUSH);
+		addArchivesButton.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				FileDialog fileDialog = new FileDialog(new Shell(), SWT.MULTI);
+				if (fileDialog.open() == null) {
+					return;
+				}
+				String[] fileNames = fileDialog.getFileNames();
+				System.out.println("filterpath: " +fileDialog.getFilterPath());
+				for (String string : fileNames) {
+					IPath path = new Path(fileDialog.getFilterPath()).append(string);
+					String binaryRoot = path.toOSString();
+					System.out.println(string + " -> " + path + " -> " + binaryRoot);
+					_projectDescription.addResourceContent(binaryRoot);
+					_treeViewer.refresh();
+					
+				}
+				
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 		toolkit.paintBordersFor(sectionComposite);
 
