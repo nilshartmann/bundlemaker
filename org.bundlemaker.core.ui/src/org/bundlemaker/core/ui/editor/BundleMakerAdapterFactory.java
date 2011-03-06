@@ -8,7 +8,7 @@ import java.util.Set;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IResourceContent;
-import org.bundlemaker.ui.internal.UIImages;
+import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;

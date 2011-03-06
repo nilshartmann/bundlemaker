@@ -2,20 +2,20 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="org.bundlemaker.ui.newWizards"
+         id="org.bundlemaker.core.ui.newWizards"
          name="Bundlemaker Wizards"
          point="org.eclipse.ui.newWizards">
       <category
-            id="org.bundlemaker.ui.wizards.category"
+            id="org.bundlemaker.core.ui.wizards.category"
             name="Bundlemaker">
       </category>
       <wizard
             canFinishEarly="false"
-            category="org.bundlemaker.ui.wizards.category"
-            class="org.bundlemaker.ui.wizards.NewBundleMakerProjectWizard"
+            category="org.bundlemaker.core.ui.wizards.category"
+            class="org.bundlemaker.core.ui.wizards.NewBundleMakerProjectWizard"
             hasPages="true"
             icon="icons/bundlemaker-icon.png"
-            id="org.bundlemaker.ui.wizards.newwizard"
+            id="org.bundlemaker.core.ui.wizards.newwizard"
             name="Bundlemaker project"
             project="true">
          <description>
@@ -33,7 +33,7 @@
             id="org.bundlemaker.core.ui.editor.projectdescription"
             name="Bundlemaker editor">
          <contentTypeBinding
-               contentTypeId="org.bundlemaker.ui.contenttypes.projectdescription">
+               contentTypeId="org.bundlemaker.core.ui.contenttypes.projectdescription">
          </contentTypeBinding>
       </editor>
    </extension>
@@ -44,7 +44,7 @@
       <content-type
             base-type="org.eclipse.core.runtime.xml"
             file-names="projectdescription.xml"
-            id="org.bundlemaker.ui.contenttypes.projectdescription"
+            id="org.bundlemaker.core.ui.contenttypes.projectdescription"
             name="Bundlemaker project description"
             priority="normal">
       </content-type>

@@ -9,7 +9,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.ui.internal.UIImages;
+import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -30,6 +30,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * <p>
+ * Grafical editor for BundleMakers project contents
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)

@@ -1,4 +1,4 @@
-package org.bundlemaker.ui.internal;
+package org.bundlemaker.core.ui.internal;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;

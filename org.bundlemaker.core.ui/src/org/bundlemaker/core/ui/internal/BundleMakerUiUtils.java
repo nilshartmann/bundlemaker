@@ -1,4 +1,4 @@
-package org.bundlemaker.ui.internal;
+package org.bundlemaker.core.ui.internal;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;

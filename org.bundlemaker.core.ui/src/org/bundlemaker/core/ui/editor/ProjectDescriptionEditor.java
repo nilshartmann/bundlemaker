@@ -19,6 +19,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 
 /**
  * <p>
+ * Provides a grafical editor for BundleMaker's project artefacts
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -28,7 +29,6 @@ public class ProjectDescriptionEditor extends FormEditor {
 
 	public ProjectDescriptionEditor() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

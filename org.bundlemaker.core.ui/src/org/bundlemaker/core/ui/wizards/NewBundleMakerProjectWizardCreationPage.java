@@ -1,4 +1,4 @@
-package org.bundlemaker.ui.wizards;
+package org.bundlemaker.core.ui.wizards;
 
 import java.util.LinkedList;
 import java.util.List;

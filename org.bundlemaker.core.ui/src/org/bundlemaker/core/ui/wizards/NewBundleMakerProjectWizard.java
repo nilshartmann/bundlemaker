@@ -1,4 +1,4 @@
-package org.bundlemaker.ui.wizards;
+package org.bundlemaker.core.ui.wizards;
 
 import static java.lang.String.format;
 
@@ -8,8 +8,8 @@ import java.net.URI;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.ui.internal.BundleMakerUiUtils;
-import org.bundlemaker.ui.internal.UIImages;
+import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
+import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
