@@ -50,7 +50,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @return
 	 */
 	public Map<String, Set<IType>> getAmbiguousTypes() {
@@ -123,43 +123,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 	}
 
 	@Override
-	public Set<IResource> getUnassignedResources() {
-
-		// TODO
-
-		// Set<IResource> result = new HashSet<IResource>();
-		//
-		// for (IFileBasedContent content : _projectDescription
-		// .getFileBasedContent()) {
-		//
-		// if (content.isResourceContent()) {
-		//
-		// for (IResource resourceStandin : content
-		// .getResourceContent().getBinaryResources()) {
-		//
-		// if (resourceStandin.getContainingModules().isEmpty()) {
-		// result.add(resourceStandin);
-		// }
-		// }
-		//
-		// for (IResource resourceStandin : content
-		// .getResourceContent().getSourceResources()) {
-		//
-		// if (resourceStandin.getContainingModules().isEmpty()) {
-		// result.add(resourceStandin);
-		// }
-		// }
-		// }
-		// }
-		//
-		// // return the result
-		// return result;
-
-		return null;
-	}
-
-	@Override
-	public Set<IModule> getContainingModules(String fullyQualifiedName) {
+	public Set<IModule> getTypeContainingModules(String fullyQualifiedName) {
 
 		//
 		if (getTypeNameToTypeCache().containsKey(fullyQualifiedName)) {
@@ -196,10 +160,10 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 	}
 
 	@Override
-	public IModule getContainingModule(String fullyQualifiedName)
+	public IModule getTypeContainingModule(String fullyQualifiedName)
 			throws AmbiguousDependencyException {
 
-		Set<IModule> result = getContainingModules(fullyQualifiedName);
+		Set<IModule> result = getTypeContainingModules(fullyQualifiedName);
 
 		if (result.isEmpty()) {
 			return null;
@@ -236,6 +200,15 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
 		// return the type
 		return types.toArray(new IType[0])[0];
+	}
+
+	@Override
+	public Set<IType> getTypes(String fullyQualifiedName) {
+
+		// get type modules
+		Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
+
+		return types != null ? types : new HashSet<IType>();
 	}
 
 	@Override
@@ -404,6 +377,20 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
 		// return the result
 		return result;
+	}
+
+	@Override
+	public Set<IModule> getPackageContainingModules(
+			String fullyQualifiedPackageName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IModule getPackageContainingModule(String fullyQualifiedPackageName)
+			throws AmbiguousDependencyException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**

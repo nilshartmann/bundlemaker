@@ -261,7 +261,7 @@ public class Structure101Exporter implements IModularizedSystemExporter,
 
 		//
 		Set<IModule> referencedModules = modularizedSystem
-				.getContainingModules(reference.getFullyQualifiedName());
+				.getTypeContainingModules(reference.getFullyQualifiedName());
 
 		if (referencedModules.size() > 1) {
 			 System.out.println("~~~~~~~");

@@ -2,14 +2,10 @@ package org.bundlemaker.core.modules;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
 
@@ -19,7 +15,7 @@ import org.bundlemaker.core.transformation.ITransformation;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModularizedSystem {
+public interface IModularizedSystem extends ICrossReferencer {
 
 	/**
 	 * <p>
@@ -32,9 +28,10 @@ public interface IModularizedSystem {
 
 	/**
 	 * <p>
+	 * Returns the associated {@link IBundleMakerProject}.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the associated {@link IBundleMakerProject}.
 	 */
 	IBundleMakerProject getBundleMakerProject();
 
@@ -52,7 +49,7 @@ public interface IModularizedSystem {
 	 * Returns the (modifiable) transformation list.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the (modifiable) transformation list.
 	 */
 	List<ITransformation> getTransformations();
 
@@ -121,41 +118,12 @@ public interface IModularizedSystem {
 
 	/**
 	 * <p>
-	 * Returns a set with all unassigned resources.
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<IResource> getUnassignedResources();
-
-	/**
-	 * <p>
 	 * </p>
 	 * 
 	 * @param fullyQualifiedName
 	 * @return
 	 */
-	Set<IModule> getContainingModules(String fullyQualifiedName);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @return
-	 */
-	Set<IType> getReferencingTypes(String fullyQualifiedName);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @return
-	 * @throws AmbiguousDependencyException
-	 */
-	IModule getContainingModule(String fullyQualifiedName)
-			throws AmbiguousDependencyException;
+	Set<IType> getTypes(String fullyQualifiedName);
 
 	/**
 	 * <p>
@@ -170,72 +138,45 @@ public interface IModularizedSystem {
 
 	/**
 	 * <p>
+	 * Returns a set of {@link IModule IModules} that contain a type with the
+	 * specified name.
 	 * </p>
 	 * 
-	 * @param module
-	 * @return
+	 * @param fullyQualifiedName
+	 *            the fully qualified name.
+	 * @return a set of {@link IModule IModules} that contain a type with the
+	 *         specified name.
 	 */
-	IReferencedModulesQueryResult getReferencedModules(IResourceModule module,
-			boolean hideContainedTypes, boolean includeSourceReferences);
+	Set<IModule> getTypeContainingModules(String fullyQualifiedName);
 
 	/**
 	 * <p>
 	 * </p>
 	 * 
-	 * @param resource
+	 * @param fullyQualifiedName
 	 * @return
+	 * @throws AmbiguousDependencyException
 	 */
-	IReferencedModulesQueryResult getReferencedModules(IResource resource);
+	IModule getTypeContainingModule(String fullyQualifiedName)
+			throws AmbiguousDependencyException;
 
 	/**
 	 * <p>
 	 * </p>
 	 * 
-	 * @param module
-	 * @param hideContainedTypes
-	 * @param includeSourceReferences
+	 * @param fullyQualifiedPackageName
 	 * @return
 	 */
-	Set<String> getUnsatisfiedReferencedTypes(IResourceModule module,
-			boolean hideContainedTypes, boolean includeSourceReferences);
+	Set<IModule> getPackageContainingModules(String fullyQualifiedPackageName);
 
 	/**
 	 * <p>
 	 * </p>
 	 * 
-	 * @param module
-	 * @param hideContainedTypes
-	 * @param includeSourceReferences
+	 * @param fullyQualifiedPackageName
 	 * @return
+	 * @throws AmbiguousDependencyException
 	 */
-	Set<String> getUnsatisfiedReferencedPackages(IResourceModule module,
-			boolean hideContainedTypes, boolean includeSourceReferences);
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Map<String, Set<IModule>> getAmbiguousPackages();
-
-	Map<String, Set<IType>> getAmbiguousTypes();
-
-	// TODO
-	Collection<IType> getTypeReferencesTransitiveClosure(String typeName,
-			IQueryFilter<IType> filter);
-
-	// TODO
-	Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName,
-			IQueryFilter<IType> filter);
-
-	// TODO
-	Collection<IResource> getResourceReferencesTransitiveClosure(
-			IResource resource, ContentType contentType,
-			IQueryFilter<IType> queryFilter);
-
-	// TODO
-	Collection<IResource> getResourceIsReferencedTransitiveClosure(
-			IResource resource, ContentType contentType,
-			IQueryFilter<IResource> queryFilter);
+	IModule getPackageContainingModule(String fullyQualifiedPackageName)
+			throws AmbiguousDependencyException;
 }

@@ -129,7 +129,7 @@ public class ReferencesCache {
 
 			// get the modules
 			Set<IModule> modules = _modularizedSystem
-					.getContainingModules(typeName);
+					.getTypeContainingModules(typeName);
 
 			// add to the type caches
 			if (modules.isEmpty()) {
