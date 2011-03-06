@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui;
+package org.bundlemaker.core.ui.internal;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
