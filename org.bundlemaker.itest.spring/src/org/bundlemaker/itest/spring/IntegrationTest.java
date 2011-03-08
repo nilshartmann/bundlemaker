@@ -1,10 +1,13 @@
 package org.bundlemaker.itest.spring;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -20,8 +23,11 @@ import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
 import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.query.TypeQueryFilters;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -33,6 +39,15 @@ import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.pde.api.tools.internal.model.ApiModelFactory;
+import org.eclipse.pde.api.tools.internal.provisional.Factory;
+import org.eclipse.pde.api.tools.internal.provisional.VisibilityModifiers;
+import org.eclipse.pde.api.tools.internal.provisional.comparator.ApiComparator;
+import org.eclipse.pde.api.tools.internal.provisional.comparator.IDelta;
+import org.eclipse.pde.api.tools.internal.provisional.descriptors.IReferenceTypeDescriptor;
+import org.eclipse.pde.api.tools.internal.provisional.model.IApiBaseline;
+import org.eclipse.pde.api.tools.internal.provisional.model.IApiComponent;
+import org.eclipse.pde.api.tools.internal.provisional.model.IApiTypeContainer;
 import org.junit.Test;
 
 /**
@@ -57,6 +72,33 @@ public class IntegrationTest {
 	 */
 	@Test
 	public void testIntegrationTestSpring() throws Exception {
+
+		// IApiBaseline baseline =
+		// ApiModelFactory.newApiBaseline("testBaseLine");
+		// IApiComponent component1 = new SpecialComponent(
+		// baseline,
+		// new File(
+		// "R:/environments/bundlemaker2-environment/git-workspace/org.bundlemaker.itest.spring/spring/libs/bsh-2.0b4.jar"));
+		//
+		// IApiBaseline baseline2 = ApiModelFactory
+		// .newApiBaseline("testBaseLine2");
+		// IApiComponent component2 = new SpecialComponent(
+		// baseline2,
+		// new File(
+		// "R:/environments/bundlemaker2-environment/git-workspace/org.bundlemaker.itest.spring/spring/libs/testng-5.8-jdk15.jar"));
+		//
+		// ApiComparator apiComparator = new ApiComparator();
+		//
+		// //
+		// IDelta delta = apiComparator.compare(component2, component1,
+		// baseline2,
+		// baseline, VisibilityModifiers.ALL_VISIBILITIES, null);
+		//
+		// System.out.println(delta);
+
+		// if (true) {
+		// return;
+		// }
 
 		// delete the project
 		if (PARSE) {
@@ -118,46 +160,47 @@ public class IntegrationTest {
 		// apply the transformation
 		modularizedSystem.applyTransformations();
 
+		//
+		Map<String, Set<IType>> ambiguousTypesMap = modularizedSystem
+				.getAmbiguousTypes();
+
+		List<String> ambiguousTypes = new ArrayList<String>(
+				ambiguousTypesMap.keySet());
+		Collections.sort(ambiguousTypes);
+
+		//
+		for (String ambiguousType : ambiguousTypes) {
+
+			//
+			Set<IModule> referencedModules = modularizedSystem
+					.getTypeContainingModules(ambiguousType);
+
+			if (referencedModules.size() > 1) {
+				System.out.println("~~~~~~~");
+				System.out.println(ambiguousType);
+				for (IModule iModule : referencedModules) {
+					System.out.println(" - " + iModule.getModuleIdentifier());
+				}
+			}
+		}
+
 		// // check the model
 		// checkTypeModel(modularizedSystem);
 		//
 		// //
 		// checkModularizedSystem(modularizedSystem);
-		//
-		// //
-		// System.out
-		// .println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
-		//
-		// IType type = modularizedSystem
-		// .getType("org.springframework.beans.GenericTypeAwarePropertyDescriptor");
-		//
-		// //
-		// Collection<IResource> resources = modularizedSystem
-		// .getResourceIsReferencedTransitiveClosure(
-		// type.getSourceResource(), ContentType.SOURCE,
-		// TypeQueryFilters.TRUE_QUERY_FILTER);
-		//
-		// for (IResource iResource : resources) {
-		// System.out.println(" * " + iResource.getPath());
-		// }
-		//
-		// System.out
-		// .println(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ");
 
 		// // // export to simple report
-		// exportToSimpleReport(bundleMakerProject, modularizedSystem);
-
-		// export to structure 101
-		exportToStructure101(bundleMakerProject, modularizedSystem);
-
+		// // exportToSimpleReport(bundleMakerProject, modularizedSystem);
 		//
-		exportToSimpleReport(bundleMakerProject, modularizedSystem);
-
-		// export to binary bundle
-		exportToBinaryBundle(bundleMakerProject, modularizedSystem);
-
-		// exportToPdeProjects
-		exportToPdeProjects(bundleMakerProject, modularizedSystem);
+		// // export to structure 101
+		// exportToStructure101(bundleMakerProject, modularizedSystem);
+		//
+		// // export to binary bundle
+		// exportToBinaryBundle(bundleMakerProject, modularizedSystem);
+		//
+		// // exportToPdeProjects
+		// exportToPdeProjects(bundleMakerProject, modularizedSystem);
 	}
 
 	private void checkTypeModel(IModularizedSystem modularizedSystem) {
