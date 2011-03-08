@@ -15,7 +15,7 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ICrossReferencer {
+public interface ICrossReferencer extends IModulSys2 {
 
 	/**
 	 * <p>

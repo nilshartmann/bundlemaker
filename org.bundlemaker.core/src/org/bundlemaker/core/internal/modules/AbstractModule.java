@@ -11,6 +11,7 @@ import org.bundlemaker.core.modules.ITypeContainer;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.NameQueryFilters;
+import org.bundlemaker.core.modules.query.TypeQueryFilters;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -107,7 +108,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @param typeNames
 	 * @return
 	 */
@@ -127,7 +128,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 		//
 		return true;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -179,6 +180,14 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 */
 	@Override
 	public Set<IType> getContainedTypes() {
+		return getContainedTypes(TypeQueryFilters.TRUE_QUERY_FILTER);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<IType> getContainedTypes(final IQueryFilter<IType> filter) {
 
 		// create the result set
 		final Set<IType> result = new HashSet<IType>();
@@ -187,7 +196,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 		doWithAllContainers(new ContainerClosure<T>() {
 			@Override
 			public boolean doWithContainer(T resourceContainer) {
-				result.addAll(resourceContainer.getContainedTypes());
+				result.addAll(resourceContainer.getContainedTypes(filter));
 				return false;
 			}
 		});

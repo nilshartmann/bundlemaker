@@ -47,6 +47,14 @@ public interface ITypeContainer {
 
 	/**
 	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	Collection<IType> getContainedTypes(IQueryFilter<IType> filter);
+
+	/**
+	 * <p>
 	 * Returns a {@link Set} with the names of all contained types.
 	 * </p>
 	 * 

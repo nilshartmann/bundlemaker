@@ -48,7 +48,7 @@ public class TypeContainer implements ITypeContainer {
 	/**
 	 * <p>
 	 * </p>
-	 *
+	 * 
 	 * @param typeNames
 	 * @return
 	 */
@@ -68,7 +68,7 @@ public class TypeContainer implements ITypeContainer {
 		//
 		return true;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -77,6 +77,30 @@ public class TypeContainer implements ITypeContainer {
 
 		// return an unmodifiable copy
 		return Collections.unmodifiableCollection(_containedTypes.values());
+	}
+
+	@Override
+	public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
+
+		// assert
+		Assert.isNotNull(filter);
+
+		// create the result
+		Set<IType> result = new HashSet<IType>();
+
+		//
+		for (IType containedType : _containedTypes.values()) {
+
+			if (!result.contains(containedType)
+					&& filter.matches(containedType)) {
+
+				// add the result
+				result.add(containedType);
+			}
+		}
+
+		// return result
+		return Collections.unmodifiableSet(result);
 	}
 
 	/**
