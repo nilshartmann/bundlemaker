@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -115,6 +116,8 @@ public class ProjectDescriptionOverviewPage extends FormPage {
     FormToolkit toolkit = mform.getToolkit();
     final ScrolledForm form = mform.getForm();
 
+    final Shell shell = form.getBody().getShell();
+
     Section projectContentSection = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.EXPANDED);
     projectContentSection.setText("Project content");
 
@@ -144,7 +147,7 @@ public class ProjectDescriptionOverviewPage extends FormPage {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
-        FileDialog fileDialog = new FileDialog(new Shell(), SWT.MULTI);
+        FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
         if (fileDialog.open() == null) {
           return;
         }
@@ -165,8 +168,25 @@ public class ProjectDescriptionOverviewPage extends FormPage {
 
       @Override
       public void widgetDefaultSelected(SelectionEvent e) {
-        // TODO Auto-generated method stub
+      }
+    });
 
+    Button addResourceButton = toolkit.createButton(sectionComposite, "Add resource...", SWT.PUSH);
+    addResourceButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        ResourceLocationSelectorDialog dlg = new ResourceLocationSelectorDialog(shell);
+        if (dlg.open() == Window.OK) {
+          _projectDescription.addResourceContent(dlg.getResourceName(), dlg.getResourceVersion(),
+              dlg.getResourceBinaryPath(), dlg.getResourceSourcePath());
+
+          _treeViewer.refresh();
+        }
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
       }
     });
 
