@@ -37,7 +37,8 @@
 		<location dir="${bundlemaker-workspace}/target.platform/AST-View" />
 		<location dir="${bundlemaker-workspace}/target.platform/bundlor-1.0.0.RELEASE" />
 		<location dir="${bundlemaker-workspace}/target.platform/div" />
-		<location dir="${bundlemaker-workspace}/target.platform/easymock-2.5.2" />
+		<location dir="${bundlemaker-workspace}/target.platform/drools-5.1.1" />
+		<location dir="${bundlemaker-workspace}/target.platform/easymock-3.0" />
 		<location dir="${bundlemaker-workspace}/target.platform/miglayout-3.7.3.1" />
 		<location dir="${bundlemaker-workspace}/target.platform/slf4j-1.5.10" />
 		<location dir="${eclipse.install.dir}" />
