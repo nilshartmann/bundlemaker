@@ -87,12 +87,4 @@ public interface IResourceKey {
 	 * @return
 	 */
 	byte[] getContent();
-
-	// /**
-	// * <p>
-	// * </p>
-	// *
-	// * @return
-	// */
-	// String getHashValue();
 }

@@ -10,7 +10,6 @@ import org.bundlemaker.core.internal.projectdescription.ResourceContent;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
-import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -55,15 +54,13 @@ public class ProjectDescriptionStore {
 
 			if (content.isResourceContent()) {
 
-				IResourceContent resourceContent = content.getResourceContent();
-
 				XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
 				xmlFileBasedContent.setResourceContent(xmlResourceContent);
 
-				xmlResourceContent.setAnalyzeSourceResources(resourceContent
+				xmlResourceContent.setAnalyzeSourceResources(content
 						.isAnalyzeSourceResources());
 
-				for (IPath path : resourceContent.getSourcePaths()) {
+				for (IPath path : content.getSourcePaths()) {
 					xmlResourceContent.getSourcePathNames()
 							.add(path.toString());
 				}

@@ -234,6 +234,7 @@ public class BundleMakerProjectDescription implements
 
 	@Override
 	public void addTypeContent(String binaryRoot) {
+		Assert.isNotNull(binaryRoot);
 
 		// get the jar info
 		JarInfo jarInfo = JarInfoService.extractJarInfo(new File(binaryRoot));
@@ -244,6 +245,9 @@ public class BundleMakerProjectDescription implements
 
 	@Override
 	public void addTypeContent(String name, String version, String binaryRoot) {
+		Assert.isNotNull(name);
+		Assert.isNotNull(version);
+		Assert.isNotNull(binaryRoot);
 
 		addTypeContent(name, version, new String[] { binaryRoot });
 	}
@@ -251,6 +255,9 @@ public class BundleMakerProjectDescription implements
 	@Override
 	public void addTypeContent(String name, String version,
 			List<String> binaryRoot) {
+		Assert.isNotNull(name);
+		Assert.isNotNull(version);
+		Assert.isNotNull(binaryRoot);
 
 		addTypeContent(name, version, binaryRoot.toArray(new String[0]));
 	}
@@ -258,6 +265,11 @@ public class BundleMakerProjectDescription implements
 	// TODO: analyze source!!
 	private FileBasedContent addResourceContent(String name, String version,
 			String[] binaryRoot, String[] sourceRoot) {
+
+		Assert.isNotNull(name);
+		Assert.isNotNull(version);
+		Assert.isNotNull(binaryRoot);
+		Assert.isNotNull(sourceRoot);
 
 		// create new file based content
 		FileBasedContent fileBasedContent = new FileBasedContent();
@@ -330,21 +342,42 @@ public class BundleMakerProjectDescription implements
 		return fileBasedContent;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	public List<FileBasedContent> getModifiableFileBasedContent() {
 
 		//
 		return _fileBasedContent;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
 	public int getCurrentId() {
 		return _currentId;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void setJre(String jre) {
 		_jre = jre;
 	}
 
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param currentId
+	 */
 	public void setCurrentId(int currentId) {
 		_currentId = currentId;
 	}

@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -18,7 +17,7 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceContent implements IResourceContent {
+public class ResourceContent {
 
 	/** - */
 	private Set<IPath> _sourcePaths;
@@ -48,7 +47,6 @@ public class ResourceContent implements IResourceContent {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Set<IPath> getSourcePaths() {
 		return Collections.unmodifiableSet(_sourcePaths);
 	}
@@ -59,7 +57,6 @@ public class ResourceContent implements IResourceContent {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public boolean isAnalyzeSourceResources() {
 		return _analyzeSourceResources;
 	}
@@ -67,7 +64,6 @@ public class ResourceContent implements IResourceContent {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public IResource getResource(IPath path, ContentType type) {
 
 		switch (type) {
@@ -86,7 +82,6 @@ public class ResourceContent implements IResourceContent {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public Set<? extends IResource> getResources(ContentType type) {
 
 		switch (type) {
@@ -105,7 +100,6 @@ public class ResourceContent implements IResourceContent {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public IResource getBinaryResource(IPath path) {
 
 		//
@@ -119,14 +113,12 @@ public class ResourceContent implements IResourceContent {
 		return null;
 	}
 
-	@Override
 	public Set<? extends IResource> getBinaryResources() {
 
 		//
 		return Collections.unmodifiableSet(_binaryResources);
 	}
 
-	@Override
 	public IResource getSourceResource(IPath path) {
 
 		//
@@ -141,7 +133,6 @@ public class ResourceContent implements IResourceContent {
 		return null;
 	}
 
-	@Override
 	public Set<? extends IResource> getSourceResources() {
 
 		//

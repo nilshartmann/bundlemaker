@@ -236,11 +236,10 @@ public class ProjectParser {
 	private boolean matches(ParserType parserType, IFileBasedContent content) {
 		return ((parserType.equals(ParserType.BINARY) || parserType
 				.equals(ParserType.BINARY_AND_SOURCE)) && !content
-				.getResourceContent().getBinaryResources().isEmpty())
+				.getBinaryResources().isEmpty())
 				|| ((parserType.equals(ParserType.SOURCE) || parserType
 						.equals(ParserType.BINARY_AND_SOURCE))
-						&& !content.getResourceContent().getSourceResources()
-								.isEmpty() && content.getResourceContent()
+						&& !content.getSourceResources().isEmpty() && content
 						.isAnalyzeSourceResources());
 	}
 
@@ -400,19 +399,16 @@ public class ProjectParser {
 		//
 		if (parser.getParserType().equals(ParserType.BINARY)) {
 
-			return new int[] {
-					content.getResourceContent().getBinaryResources().size(), 0 };
+			return new int[] { content.getBinaryResources().size(), 0 };
 
 		} else if (parser.getParserType().equals(ParserType.SOURCE)) {
 
-			return new int[] { 0,
-					content.getResourceContent().getSourceResources().size() };
+			return new int[] { 0, content.getSourceResources().size() };
 
 		} else if (parser.getParserType().equals(ParserType.BINARY_AND_SOURCE)) {
 
-			return new int[] {
-					content.getResourceContent().getBinaryResources().size(),
-					content.getResourceContent().getSourceResources().size() };
+			return new int[] { content.getBinaryResources().size(),
+					content.getSourceResources().size() };
 		}
 
 		return new int[] { 0, 0 };

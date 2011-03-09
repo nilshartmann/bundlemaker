@@ -10,8 +10,8 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.exporter,
- org.bundlemaker.core.exporter.manifest,
  org.bundlemaker.core.exporter.util,
+ org.bundlemaker.core.internal,
  org.bundlemaker.core.modules,
  org.bundlemaker.core.modules.modifiable,
  org.bundlemaker.core.modules.query,

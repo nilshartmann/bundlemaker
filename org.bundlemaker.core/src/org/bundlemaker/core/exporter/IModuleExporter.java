@@ -6,6 +6,8 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
+ * Defines the interface for module exporter. A module exporter can export a
+ * single {@link IResourceModule} to an external format.
  * </p>
  * <p>
  * Clients may implement this interface.
@@ -17,28 +19,36 @@ public interface IModuleExporter {
 
 	/**
 	 * <p>
-	 * Returns this {@link IModuleExporter} can export the specified
-	 * {@link IResourceModule}.
+	 * Returns <code>true</code> if this {@link IModuleExporter} can export the
+	 * specified {@link IResourceModule}.
 	 * </p>
 	 * 
 	 * @param modularizedSystem
+	 *            the {@link IModularizedSystem}
 	 * @param module
+	 *            the {@link IResourceModule}
 	 * @param context
+	 *            the {@link IModuleExporterContext}
 	 * 
-	 * @return
+	 * @return <code>true</code> if this {@link IModuleExporter} can export the
+	 *         specified {@link IResourceModule}.
 	 */
 	boolean canExport(IModularizedSystem modularizedSystem,
 			IResourceModule module, IModuleExporterContext context);
 
 	/**
 	 * <p>
+	 * Exports the specified {@link IResourceModule} to an external format.
 	 * </p>
 	 * 
 	 * @param modularizedSystem
+	 *            the {@link IModularizedSystem}
 	 * @param module
+	 *            the {@link IResourceModule}
 	 * @param context
+	 *            the {@link IModuleExporterContext}
 	 * 
-	 * @throws Exception
+	 * @throws CoreException
 	 */
 	void export(IModularizedSystem modularizedSystem, IResourceModule module,
 			IModuleExporterContext context) throws CoreException;

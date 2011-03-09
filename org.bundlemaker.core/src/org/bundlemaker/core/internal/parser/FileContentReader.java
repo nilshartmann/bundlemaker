@@ -49,11 +49,10 @@ public class FileContentReader {
 			getAllPackages(fileBasedContent, directoryMap, path.toFile(), false);
 		}
 
-		if (!fileBasedContent.getResourceContent().getSourcePaths().isEmpty()
+		if (!fileBasedContent.getSourcePaths().isEmpty()
 				&& (!filterNonAnalyzableSource || fileBasedContent
-						.getResourceContent().isAnalyzeSourceResources())) {
-			for (IPath path : fileBasedContent.getResourceContent()
-					.getSourcePaths()) {
+						.isAnalyzeSourceResources())) {
+			for (IPath path : fileBasedContent.getSourcePaths()) {
 				getAllPackages(fileBasedContent, directoryMap, path.toFile(),
 						true);
 			}
@@ -179,7 +178,8 @@ public class FileContentReader {
 				JarFileBasedDirectoryFragment jarFileBasedDirectoryFragment = null;
 
 				List<IDirectoryFragment> fragments = isSourceContent ? directory
-						.getSourceDirectoryFragments() : directory.getBinaryDirectoryFragments();
+						.getSourceDirectoryFragments() : directory
+						.getBinaryDirectoryFragments();
 				//
 				for (IDirectoryFragment directoryFragment : fragments) {
 
