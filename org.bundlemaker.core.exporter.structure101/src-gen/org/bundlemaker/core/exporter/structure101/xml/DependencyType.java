@@ -5,7 +5,6 @@
 // Generated on: 2011.01.07 at 02:59:31 PM MEZ 
 //
 
-
 package org.bundlemaker.core.exporter.structure101.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,11 +12,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for dependencyType complex type.
+ * <p>
+ * Java class for dependencyType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="dependencyType">
@@ -37,83 +37,76 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "dependencyType")
 public class DependencyType {
 
-    @XmlAttribute(required = true)
-    protected String from;
-    @XmlAttribute(required = true)
-    protected String to;
-    @XmlAttribute(required = true)
-    protected String type;
+  @XmlAttribute(required = true)
+  protected String from;
 
-    /**
-     * Gets the value of the from property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFrom() {
-        return from;
-    }
+  @XmlAttribute(required = true)
+  protected String to;
 
-    /**
-     * Sets the value of the from property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFrom(String value) {
-        this.from = value;
-    }
+  @XmlAttribute(required = true)
+  protected String type;
 
-    /**
-     * Gets the value of the to property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTo() {
-        return to;
-    }
+  /**
+   * Gets the value of the from property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getFrom() {
+    return from;
+  }
 
-    /**
-     * Sets the value of the to property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTo(String value) {
-        this.to = value;
-    }
+  /**
+   * Sets the value of the from property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setFrom(String value) {
+    this.from = value;
+  }
 
-    /**
-     * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getType() {
-        return type;
-    }
+  /**
+   * Gets the value of the to property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getTo() {
+    return to;
+  }
 
-    /**
-     * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setType(String value) {
-        this.type = value;
-    }
+  /**
+   * Sets the value of the to property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setTo(String value) {
+    this.to = value;
+  }
+
+  /**
+   * Gets the value of the type property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getType() {
+    return type;
+  }
+
+  /**
+   * Sets the value of the type property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setType(String value) {
+    this.type = value;
+  }
 
 }

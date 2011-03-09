@@ -7,14 +7,13 @@ import org.bundlemaker.core.modules.IResourceModule;
 
 /**
  * <p>
- * Defines the common interface for resources. A resource is either a file (e.g.
- * a java source file or a class file) or an entry in an archive file. It
- * contains 0 to n {@link IType ITypes}. It also contains 0 to n
- * {@link IReference IReferences}.
+ * Defines the common interface for resources. A resource is either a file (e.g. a java source file or a class file) or
+ * an entry in an archive file. It contains 0 to n {@link IType ITypes}. It also contains 0 to n {@link IReference
+ * IReferences}.
  * </p>
  * <p>
- * Note that both the {@link IResource} and the contained {@link IType ITypes}
- * can contain {@link IReference IReferences}.
+ * Note that both the {@link IResource} and the contained {@link IType ITypes} can contain {@link IReference
+ * IReferences}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -24,58 +23,53 @@ import org.bundlemaker.core.modules.IResourceModule;
  */
 public interface IResource extends IResourceKey, Comparable<IResource> {
 
-	/**
-	 * <p>
-	 * Returns all {@link IReference IReferences} that are originated in this
-	 * resource.
-	 * </p>
-	 * <p>
-	 * <b>Note:</b> The result set does <b>not</b> contain any references of the
-	 * contained types.
-	 * </p>
-	 * 
-	 * @return all {@link IReference IReferences} that are originated in this
-	 *         resource.
-	 */
-	Set<? extends IReference> getReferences();
+  /**
+   * <p>
+   * Returns all {@link IReference IReferences} that are originated in this resource.
+   * </p>
+   * <p>
+   * <b>Note:</b> The result set does <b>not</b> contain any references of the contained types.
+   * </p>
+   * 
+   * @return all {@link IReference IReferences} that are originated in this resource.
+   */
+  Set<? extends IReference> getReferences();
 
-	/**
-	 * <p>
-	 * Returns all the contained types in this resource. If the resource does
-	 * not contain any type, an empty list will be returned instead.
-	 * </p>
-	 * 
-	 * @return all the contained types in this resource. If the resource does
-	 *         not contain any type, an empty list will be returned instead.
-	 */
-	Set<? extends IType> getContainedTypes();
+  /**
+   * <p>
+   * Returns all the contained types in this resource. If the resource does not contain any type, an empty list will be
+   * returned instead.
+   * </p>
+   * 
+   * @return all the contained types in this resource. If the resource does not contain any type, an empty list will be
+   *         returned instead.
+   */
+  Set<? extends IType> getContainedTypes();
 
-	/**
-	 * <p>
-	 * Returns <code>true</code>, if the resource contains one or more
-	 * {@link IType ITypes}.
-	 * </p>
-	 * 
-	 * @return <code>true</code>, if the resource contains one or more
-	 *         {@link IType ITypes}.
-	 */
-	boolean containsTypes();
+  /**
+   * <p>
+   * Returns <code>true</code>, if the resource contains one or more {@link IType ITypes}.
+   * </p>
+   * 
+   * @return <code>true</code>, if the resource contains one or more {@link IType ITypes}.
+   */
+  boolean containsTypes();
 
-	/**
-	 * <p>
-	 * Returns the {@link IResourceModule} that contains this {@link IResource}.
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @return the {@link IResourceModule} that contains this {@link IResource}.
-	 */
-	IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
+  /**
+   * <p>
+   * Returns the {@link IResourceModule} that contains this {@link IResource}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return the {@link IResourceModule} that contains this {@link IResource}.
+   */
+  IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<? extends IResource> getStickyResources();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<? extends IResource> getStickyResources();
 }

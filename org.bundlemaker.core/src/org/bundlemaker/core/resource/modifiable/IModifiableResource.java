@@ -16,29 +16,29 @@ import org.bundlemaker.core.resource.TypeEnum;
  */
 public interface IModifiableResource extends IResource, IReferenceRecorder {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @return
-	 */
-	public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @return
+   */
+  public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @return
-	 */
-	public Type getType(String fullyQualifiedName);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @return
+   */
+  public Type getType(String fullyQualifiedName);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param stickyResource
-	 */
-	public void addStickyResource(IModifiableResource stickyResource);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param stickyResource
+   */
+  public void addStickyResource(IModifiableResource stickyResource);
 }

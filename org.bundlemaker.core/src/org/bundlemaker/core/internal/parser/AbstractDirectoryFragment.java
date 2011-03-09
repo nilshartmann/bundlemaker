@@ -19,77 +19,77 @@ import org.eclipse.core.runtime.Assert;
  */
 public abstract class AbstractDirectoryFragment implements IDirectoryFragment {
 
-	/** - */
-	private IFile _ifile;
+  /** - */
+  private IFile             _ifile;
 
-	/** - */
-	private File _file;
+  /** - */
+  private File              _file;
 
-	/** - */
-	private IDirectory _directory;
-	
-	private Set<IResourceKey> _resourceKeys;
+  /** - */
+  private IDirectory        _directory;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link AbstractDirectoryFragment}.
-	 * </p>
-	 * 
-	 * @param root
-	 */
-	public AbstractDirectoryFragment(File root) {
-		Assert.isNotNull(root);
+  private Set<IResourceKey> _resourceKeys;
 
-		_file = root;
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractDirectoryFragment}.
+   * </p>
+   * 
+   * @param root
+   */
+  public AbstractDirectoryFragment(File root) {
+    Assert.isNotNull(root);
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link AbstractDirectoryFragment}.
-	 * </p>
-	 * 
-	 * @param ifile
-	 */
-	public AbstractDirectoryFragment(IFile ifile) {
-		Assert.isNotNull(ifile);
+    _file = root;
+  }
 
-		_ifile = ifile;
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractDirectoryFragment}.
+   * </p>
+   * 
+   * @param ifile
+   */
+  public AbstractDirectoryFragment(IFile ifile) {
+    Assert.isNotNull(ifile);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public abstract List<String> getContent();
+    _ifile = ifile;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public abstract int getResourceCount();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public abstract List<String> getContent();
 
-	public IDirectory getDirectory() {
-		return _directory;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public abstract int getResourceCount();
 
-	public void setDirectory(IDirectory directory) {
-		_directory = directory;
-	}
+  public IDirectory getDirectory() {
+    return _directory;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public File getDirectoryFragmentRoot() {
-		return _ifile != null ? _ifile.getRawLocation().toFile() : _file;
-	}
+  public void setDirectory(IDirectory directory) {
+    _directory = directory;
+  }
 
-	@Override
-	public IResource getWorkspaceRelativeRoot() {
-		return _ifile;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public File getDirectoryFragmentRoot() {
+    return _ifile != null ? _ifile.getRawLocation().toFile() : _file;
+  }
 
-	public boolean isWorkspaceRelative() {
-		return _ifile != null;
-	}
+  @Override
+  public IResource getWorkspaceRelativeRoot() {
+    return _ifile;
+  }
+
+  public boolean isWorkspaceRelative() {
+    return _ifile != null;
+  }
 }

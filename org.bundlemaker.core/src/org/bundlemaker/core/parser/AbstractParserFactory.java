@@ -11,41 +11,40 @@ import org.eclipse.core.runtime.CoreException;
  */
 public abstract class AbstractParserFactory implements IParserFactory {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initialize() {
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void initialize() {
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void dispose() {
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void dispose() {
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initialize(IBundleMakerProject bundleMakerProject)
-			throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
 
-	}
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isInitialized(IBundleMakerProject bundleMakerProject) {
-		return true;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isInitialized(IBundleMakerProject bundleMakerProject) {
+    return true;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void dispose(IBundleMakerProject bundleMakerProject) {
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void dispose(IBundleMakerProject bundleMakerProject) {
+  }
 }

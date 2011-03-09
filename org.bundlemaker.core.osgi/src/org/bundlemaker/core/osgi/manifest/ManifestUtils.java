@@ -41,235 +41,218 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  */
 public class ManifestUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param existingManifest
-	 * @return
-	 */
-	public static boolean isBundleManifest(ManifestContents existingManifest) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param existingManifest
+   * @return
+   */
+  public static boolean isBundleManifest(ManifestContents existingManifest) {
 
-		//
-		return existingManifest.getMainAttributes().containsKey(
-				Constants.BUNDLE_SYMBOLICNAME);
-	}
+    //
+    return existingManifest.getMainAttributes().containsKey(Constants.BUNDLE_SYMBOLICNAME);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param template
-	 * @return
-	 */
-	public static List<HeaderDeclaration> parseManifestValue(String template) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param template
+   * @return
+   */
+  public static List<HeaderDeclaration> parseManifestValue(String template) {
 
-		if (template != null && !template.isEmpty()) {
-			return HeaderParserFactory
-					.newHeaderParser(new SimpleParserLogger()).parseHeader(
-							template);
-		} else {
-			return new ArrayList<HeaderDeclaration>(0);
-		}
-	}
+    if (template != null && !template.isEmpty()) {
+      return HeaderParserFactory.newHeaderParser(new SimpleParserLogger()).parseHeader(template);
+    } else {
+      return new ArrayList<HeaderDeclaration>(0);
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param declarations
-	 * @param packageName
-	 * @return
-	 */
-	public static HeaderDeclaration findMostSpecificDeclaration(
-			List<HeaderDeclaration> declarations, String packageName) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param declarations
+   * @param packageName
+   * @return
+   */
+  public static HeaderDeclaration findMostSpecificDeclaration(List<HeaderDeclaration> declarations, String packageName) {
 
-		HeaderDeclaration match = null;
-		int matchSpecificity = -1;
+    HeaderDeclaration match = null;
+    int matchSpecificity = -1;
 
-		for (HeaderDeclaration headerDeclaration : declarations) {
-			for (String stem : headerDeclaration.getNames()) {
-				int m = MatchUtils.rankedMatch(packageName, stem);
-				if (m > matchSpecificity) {
-					match = headerDeclaration;
-					matchSpecificity = m;
-				}
-			}
-		}
-		return match;
-	}
+    for (HeaderDeclaration headerDeclaration : declarations) {
+      for (String stem : headerDeclaration.getNames()) {
+        int m = MatchUtils.rankedMatch(packageName, stem);
+        if (m > matchSpecificity) {
+          match = headerDeclaration;
+          matchSpecificity = m;
+        }
+      }
+    }
+    return match;
+  }
 
-	public static ManifestContents readManifestContents(
-			IResource manifestResource) throws IOException {
+  public static ManifestContents readManifestContents(IResource manifestResource) throws IOException {
 
-		ManifestContents originalManifestContents;
+    ManifestContents originalManifestContents;
 
-		if (manifestResource != null) {
+    if (manifestResource != null) {
 
-			RecoveringManifestParser parser = new RecoveringManifestParser();
-			originalManifestContents = parser.parse(new String(manifestResource
-					.getContent()));
+      RecoveringManifestParser parser = new RecoveringManifestParser();
+      originalManifestContents = parser.parse(new String(manifestResource.getContent()));
 
-		} else {
-			originalManifestContents = new SimpleManifestContents();
-		}
-		return originalManifestContents;
-	}
+    } else {
+      originalManifestContents = new SimpleManifestContents();
+    }
+    return originalManifestContents;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param file
-	 * @return
-	 */
-	public static ManifestContents readManifestContents(File file) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param file
+   * @return
+   */
+  public static ManifestContents readManifestContents(File file) {
 
-		//
-		Assert.isNotNull(file);
+    //
+    Assert.isNotNull(file);
 
-		if (!file.exists()) {
-			return null;
-		}
+    if (!file.exists()) {
+      return null;
+    }
 
-		// read the bundleManifest
-		BundleManifest bundleManifest;
+    // read the bundleManifest
+    BundleManifest bundleManifest;
 
-		try {
-			bundleManifest = BundleManifestFactory
-					.createBundleManifest(new FileReader(file));
-			//
-			ManifestContents result = ManifestUtils
-					.toManifestContents(bundleManifest);
+    try {
+      bundleManifest = BundleManifestFactory.createBundleManifest(new FileReader(file));
+      //
+      ManifestContents result = ManifestUtils.toManifestContents(bundleManifest);
 
-			return result;
+      return result;
 
-		} catch (FileNotFoundException e) {
-			return null;
-		} catch (IOException e) {
-			return null;
-		}
-	}
+    } catch (FileNotFoundException e) {
+      return null;
+    } catch (IOException e) {
+      return null;
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param jarFile
-	 * @return
-	 * @throws IOException
-	 */
-	public static ManifestContents readManifestContents(JarFile jarFile)
-			throws IOException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param jarFile
+   * @return
+   * @throws IOException
+   */
+  public static ManifestContents readManifestContents(JarFile jarFile) throws IOException {
 
-		ZipEntry zipEntry = jarFile.getEntry("META-INF/MANIFEST.MF");
+    ZipEntry zipEntry = jarFile.getEntry("META-INF/MANIFEST.MF");
 
-		if (zipEntry != null) {
+    if (zipEntry != null) {
 
-			InputStream inputStream = jarFile.getInputStream(zipEntry);
-			RecoveringManifestParser recoveringManifestParser = new RecoveringManifestParser();
-			recoveringManifestParser.parse(new InputStreamReader(inputStream));
-			return recoveringManifestParser.getManifestContents();
+      InputStream inputStream = jarFile.getInputStream(zipEntry);
+      RecoveringManifestParser recoveringManifestParser = new RecoveringManifestParser();
+      recoveringManifestParser.parse(new InputStreamReader(inputStream));
+      return recoveringManifestParser.getManifestContents();
 
-		} else {
-			return toManifestContents(BundleManifestFactory
-					.createBundleManifest());
-		}
-	}
+    } else {
+      return toManifestContents(BundleManifestFactory.createBundleManifest());
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleManifest
-	 * @return
-	 */
-	public static ManifestContents toManifestContents(
-			BundleManifest bundleManifest) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleManifest
+   * @return
+   */
+  public static ManifestContents toManifestContents(BundleManifest bundleManifest) {
 
-		// COPY!!
+    // COPY!!
 
-		Dictionary<String, String> headers = bundleManifest.toDictionary();
-		ManifestContents manifest = new SimpleManifestContents(
-				headers.get("Manifest-Version"));
-		Map<String, String> attributes = manifest.getMainAttributes();
+    Dictionary<String, String> headers = bundleManifest.toDictionary();
+    ManifestContents manifest = new SimpleManifestContents(headers.get("Manifest-Version"));
+    Map<String, String> attributes = manifest.getMainAttributes();
 
-		Enumeration<String> headerNames = headers.keys();
-		while (headerNames.hasMoreElements()) {
-			String headerName = headerNames.nextElement();
-			attributes.put(headerName, headers.get(headerName));
-		}
+    Enumeration<String> headerNames = headers.keys();
+    while (headerNames.hasMoreElements()) {
+      String headerName = headerNames.nextElement();
+      attributes.put(headerName, headers.get(headerName));
+    }
 
-		//
-		return manifest;
-	}
+    //
+    return manifest;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param manifestContents
-	 * @return
-	 */
-	public static Manifest toManifest(ManifestContents manifestContents) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param manifestContents
+   * @return
+   */
+  public static Manifest toManifest(ManifestContents manifestContents) {
 
-		Manifest manifest = new Manifest();
+    Manifest manifest = new Manifest();
 
-		for (Entry<String, String> entry : manifestContents.getMainAttributes()
-				.entrySet()) {
+    for (Entry<String, String> entry : manifestContents.getMainAttributes().entrySet()) {
 
-			//
-			manifest.getMainAttributes().putValue(entry.getKey(),
-					entry.getValue());
-		}
+      //
+      manifest.getMainAttributes().putValue(entry.getKey(), entry.getValue());
+    }
 
-		for (String sectionName : manifestContents.getSectionNames()) {
+    for (String sectionName : manifestContents.getSectionNames()) {
 
-			Attributes attributes = new Attributes();
+      Attributes attributes = new Attributes();
 
-			for (Entry<String, String> entry : manifestContents
-					.getAttributesForSection(sectionName).entrySet()) {
+      for (Entry<String, String> entry : manifestContents.getAttributesForSection(sectionName).entrySet()) {
 
-				//
-				attributes.putValue(entry.getKey(), entry.getValue());
-			}
+        //
+        attributes.putValue(entry.getKey(), entry.getValue());
+      }
 
-			manifest.getEntries().put(sectionName, attributes);
-		}
+      manifest.getEntries().put(sectionName, attributes);
+    }
 
-		//
-		return manifest;
-	}
+    //
+    return manifest;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param base
-	 * @param add
-	 */
-	public static void mergeManifests(ManifestContents base,
-			ManifestContents add) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param base
+   * @param add
+   */
+  public static void mergeManifests(ManifestContents base, ManifestContents add) {
 
-		// COPY!!
+    // COPY!!
 
-		base.getMainAttributes().putAll(add.getMainAttributes());
-		for (String sectionName : add.getSectionNames()) {
-			base.getAttributesForSection(sectionName).putAll(
-					add.getAttributesForSection(sectionName));
-		}
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public static Properties convertManifest(Manifest manifest) {
-		Attributes attributes = manifest.getMainAttributes();
-		Iterator iter = attributes.keySet().iterator();
-		Properties result = new Properties();
-		while (iter.hasNext()) {
-			Attributes.Name key = (Attributes.Name) iter.next();
-			result.put(key.toString(), attributes.get(key));
-		}
-		return result;
-	}
+    base.getMainAttributes().putAll(add.getMainAttributes());
+    for (String sectionName : add.getSectionNames()) {
+      base.getAttributesForSection(sectionName).putAll(add.getAttributesForSection(sectionName));
+    }
+  }
+
+  @SuppressWarnings("rawtypes")
+  public static Properties convertManifest(Manifest manifest) {
+    Attributes attributes = manifest.getMainAttributes();
+    Iterator iter = attributes.keySet().iterator();
+    Properties result = new Properties();
+    while (iter.hasNext()) {
+      Attributes.Name key = (Attributes.Name) iter.next();
+      result.put(key.toString(), attributes.get(key));
+    }
+    return result;
+  }
 
 }

@@ -15,48 +15,46 @@ import org.bundlemaker.core.exporter.structure101.xml.ObjectFactory;
 
 public class Structure101ExporterUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedType
-	 * @return
-	 */
-	public static String getPackageName(String fullyQualifiedType) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedType
+   * @return
+   */
+  public static String getPackageName(String fullyQualifiedType) {
 
-		//
-		return fullyQualifiedType.indexOf('.') != -1 ? fullyQualifiedType
-				.substring(0, fullyQualifiedType.lastIndexOf('.')) : "";
-	}
+    //
+    return fullyQualifiedType.indexOf('.') != -1 ? fullyQualifiedType.substring(0, fullyQualifiedType.lastIndexOf('.'))
+        : "";
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param productsType
-	 * @param outputStream
-	 */
-	public static void marshal(DataType dataType, OutputStream outputStream) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param productsType
+   * @param outputStream
+   */
+  public static void marshal(DataType dataType, OutputStream outputStream) {
 
-		try {
+    try {
 
-			//
-			JAXBContext jc = JAXBContext.newInstance(DataType.class,
-					DependenciesType.class, DependencyType.class,
-					ModulesType.class, ModuleType.class, ObjectFactory.class);
+      //
+      JAXBContext jc = JAXBContext.newInstance(DataType.class, DependenciesType.class, DependencyType.class,
+          ModulesType.class, ModuleType.class, ObjectFactory.class);
 
-			//
-			Marshaller marshaller = jc.createMarshaller();
+      //
+      Marshaller marshaller = jc.createMarshaller();
 
-			// set formatted output
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      // set formatted output
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-			//
-			marshaller.marshal(new ObjectFactory().createData(dataType),
-					outputStream);
+      //
+      marshaller.marshal(new ObjectFactory().createData(dataType), outputStream);
 
-		} catch (JAXBException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
+    } catch (JAXBException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
 }

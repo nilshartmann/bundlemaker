@@ -5,40 +5,37 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 
 /**
  */
-public abstract class AbstractValidatingModularizedSystem extends
-		AbstractCachingModularizedSystem {
+public abstract class AbstractValidatingModularizedSystem extends AbstractCachingModularizedSystem {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param name
-	 * @param projectDescription
-	 */
-	public AbstractValidatingModularizedSystem(String name,
-			IBundleMakerProjectDescription projectDescription) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param name
+   * @param projectDescription
+   */
+  public AbstractValidatingModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
 
-		//
-		super(name, projectDescription);
-	}
+    //
+    super(name, projectDescription);
+  }
 
-	@Override
-	protected void postApplyTransformations() {
-		assertTypesHaveModules();
-	}
+  @Override
+  protected void postApplyTransformations() {
+    assertTypesHaveModules();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 */
-	private void assertTypesHaveModules() {
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  private void assertTypesHaveModules() {
 
-		// CHECK: check for duplicate entries
-		for (IModifiableResourceModule module : getModifiableResourceModulesMap()
-				.values()) {
+    // CHECK: check for duplicate entries
+    for (IModifiableResourceModule module : getModifiableResourceModulesMap().values()) {
 
-			((ResourceModule) module).validate();
-		}
-	}
+      ((ResourceModule) module).validate();
+    }
+  }
 }

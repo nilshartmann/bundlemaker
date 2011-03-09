@@ -17,66 +17,59 @@ import org.eclipse.pde.internal.core.target.provisional.ITargetHandle;
 import org.eclipse.pde.internal.core.target.provisional.ITargetPlatformService;
 
 @SuppressWarnings("restriction")
-public class TargetPlatformProjectExporter extends
-		ModularizedSystemExporterAdapter {
+public class TargetPlatformProjectExporter extends ModularizedSystemExporterAdapter {
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link TargetPlatformProjectExporter}.
-	 * </p>
-	 * 
-	 */
-	public TargetPlatformProjectExporter() {
-		super(new BinaryBundleExporter());
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link TargetPlatformProjectExporter}.
+   * </p>
+   * 
+   */
+  public TargetPlatformProjectExporter() {
+    super(new BinaryBundleExporter());
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param templateDirectory
-	 */
-	public void setTemplateDirectory(File templateDirectory) {
-		((BinaryBundleExporter) getModuleExporter())
-				.setTemplateRootDirectory(templateDirectory);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param templateDirectory
+   */
+  public void setTemplateDirectory(File templateDirectory) {
+    ((BinaryBundleExporter) getModuleExporter()).setTemplateRootDirectory(templateDirectory);
+  }
 
-	@Override
-	protected IModuleExporterContext preExportModules() throws Exception {
+  @Override
+  protected IModuleExporterContext preExportModules() throws Exception {
 
-		// get a non-existing project name
-		String projectName = Helper.getUniqueProjectName(String.format(
-				"%s.target", getCurrentModularizedSystem().getName()));
+    // get a non-existing project name
+    String projectName = Helper.getUniqueProjectName(String
+        .format("%s.target", getCurrentModularizedSystem().getName()));
 
-		// delete and create project
-		IProject project = Helper.deleteAndCreateProject(projectName, null);
+    // delete and create project
+    IProject project = Helper.deleteAndCreateProject(projectName, null);
 
-		//
-		IFolder folder = project.getFolder("bundles");
-		folder.create(true, true, null);
+    //
+    IFolder folder = project.getFolder("bundles");
+    folder.create(true, true, null);
 
-		IFile targetFile = project.getFile(projectName);
+    IFile targetFile = project.getFile(projectName);
 
-		ITargetPlatformService targetPlatformService = Activator
-				.getTargetPlatformService();
+    ITargetPlatformService targetPlatformService = Activator.getTargetPlatformService();
 
-		ITargetHandle targetHandle = targetPlatformService
-				.getTarget(targetFile);
+    ITargetHandle targetHandle = targetPlatformService.getTarget(targetFile);
 
-		ITargetDefinition targetDefinition = targetHandle.getTargetDefinition();
-		targetDefinition.setName(projectName);
+    ITargetDefinition targetDefinition = targetHandle.getTargetDefinition();
+    targetDefinition.setName(projectName);
 
-		IBundleContainer bundleContainer = targetPlatformService
-				.newDirectoryContainer("${project_loc:/" + projectName
-						+ "}/bundles");
+    IBundleContainer bundleContainer = targetPlatformService.newDirectoryContainer("${project_loc:/" + projectName
+        + "}/bundles");
 
-		targetDefinition
-				.setBundleContainers(new IBundleContainer[] { bundleContainer });
+    targetDefinition.setBundleContainers(new IBundleContainer[] { bundleContainer });
 
-		targetPlatformService.saveTargetDefinition(targetDefinition);
+    targetPlatformService.saveTargetDefinition(targetDefinition);
 
-		return new DefaultModuleExporterContext(getCurrentContext()
-				.getBundleMakerProject(), folder.getRawLocation().toFile(),
-				getCurrentContext().getModularizedSystem());
-	}
+    return new DefaultModuleExporterContext(getCurrentContext().getBundleMakerProject(), folder.getRawLocation()
+        .toFile(), getCurrentContext().getModularizedSystem());
+  }
 }

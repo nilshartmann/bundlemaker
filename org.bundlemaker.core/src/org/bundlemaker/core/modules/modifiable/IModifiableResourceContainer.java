@@ -8,6 +8,6 @@ import org.bundlemaker.core.resource.IResource;
 
 public interface IModifiableResourceContainer extends IResourceContainer {
 
-	Set<IResource> getModifiableResourcesSet(ContentType binary);
+  Set<IResource> getModifiableResourcesSet(ContentType binary);
 
 }

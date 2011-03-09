@@ -6,8 +6,8 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * Defines the interface for module exporter. A module exporter can export a
- * single {@link IResourceModule} to an external format.
+ * Defines the interface for module exporter. A module exporter can export a single {@link IResourceModule} to an
+ * external format.
  * </p>
  * <p>
  * Clients may implement this interface.
@@ -17,39 +17,36 @@ import org.eclipse.core.runtime.CoreException;
  */
 public interface IModuleExporter {
 
-	/**
-	 * <p>
-	 * Returns <code>true</code> if this {@link IModuleExporter} can export the
-	 * specified {@link IResourceModule}.
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 *            the {@link IModularizedSystem}
-	 * @param module
-	 *            the {@link IResourceModule}
-	 * @param context
-	 *            the {@link IModuleExporterContext}
-	 * 
-	 * @return <code>true</code> if this {@link IModuleExporter} can export the
-	 *         specified {@link IResourceModule}.
-	 */
-	boolean canExport(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context);
+  /**
+   * <p>
+   * Returns <code>true</code> if this {@link IModuleExporter} can export the specified {@link IResourceModule}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   *          the {@link IModularizedSystem}
+   * @param module
+   *          the {@link IResourceModule}
+   * @param context
+   *          the {@link IModuleExporterContext}
+   * 
+   * @return <code>true</code> if this {@link IModuleExporter} can export the specified {@link IResourceModule}.
+   */
+  boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context);
 
-	/**
-	 * <p>
-	 * Exports the specified {@link IResourceModule} to an external format.
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 *            the {@link IModularizedSystem}
-	 * @param module
-	 *            the {@link IResourceModule}
-	 * @param context
-	 *            the {@link IModuleExporterContext}
-	 * 
-	 * @throws CoreException
-	 */
-	void export(IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) throws CoreException;
+  /**
+   * <p>
+   * Exports the specified {@link IResourceModule} to an external format.
+   * </p>
+   * 
+   * @param modularizedSystem
+   *          the {@link IModularizedSystem}
+   * @param module
+   *          the {@link IResourceModule}
+   * @param context
+   *          the {@link IModuleExporterContext}
+   * 
+   * @throws CoreException
+   */
+  void export(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context)
+      throws CoreException;
 }

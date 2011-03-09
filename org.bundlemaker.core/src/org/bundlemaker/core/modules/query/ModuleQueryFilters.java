@@ -10,12 +10,12 @@ import org.bundlemaker.core.modules.IModule;
  */
 public class ModuleQueryFilters {
 
-	/** TRUE_QUERY_FILTER */
-	public static IQueryFilter<IModule> TRUE_QUERY_FILTER = new IQueryFilter<IModule>() {
-		
-		@Override
-		public boolean matches(IModule type) {
-			return true;
-		}
-	};
+  /** TRUE_QUERY_FILTER */
+  public static IQueryFilter<IModule> TRUE_QUERY_FILTER = new IQueryFilter<IModule>() {
+
+                                                          @Override
+                                                          public boolean matches(IModule type) {
+                                                            return true;
+                                                          }
+                                                        };
 }

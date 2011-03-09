@@ -21,176 +21,173 @@ import org.eclipse.core.runtime.Assert;
  */
 public class TypeContainer implements ITypeContainer {
 
-	/** the contained type names */
-	private Map<String, IType> _containedTypes;
+  /** the contained type names */
+  private Map<String, IType> _containedTypes;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link TypeContainer}.
-	 * </p>
-	 */
-	public TypeContainer() {
+  /**
+   * <p>
+   * Creates a new instance of type {@link TypeContainer}.
+   * </p>
+   */
+  public TypeContainer() {
 
-		// create the contained types sets
-		_containedTypes = new HashMap<String, IType>();
-	}
+    // create the contained types sets
+    _containedTypes = new HashMap<String, IType>();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IType getType(String fullyQualifiedName) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IType getType(String fullyQualifiedName) {
 
-		//
-		return _containedTypes.get(fullyQualifiedName);
-	}
+    //
+    return _containedTypes.get(fullyQualifiedName);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeNames
-	 * @return
-	 */
-	public boolean containsAll(Set<String> typeNames) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeNames
+   * @return
+   */
+  public boolean containsAll(Set<String> typeNames) {
 
-		try {
-			for (String typeName : typeNames) {
-				if (getType(typeName) == null) {
-					return false;
-				}
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    try {
+      for (String typeName : typeNames) {
+        if (getType(typeName) == null) {
+          return false;
+        }
+      }
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
-		//
-		return true;
-	}
+    //
+    return true;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Collection<IType> getContainedTypes() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<IType> getContainedTypes() {
 
-		// return an unmodifiable copy
-		return Collections.unmodifiableCollection(_containedTypes.values());
-	}
+    // return an unmodifiable copy
+    return Collections.unmodifiableCollection(_containedTypes.values());
+  }
 
-	@Override
-	public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
+  @Override
+  public Collection<IType> getContainedTypes(IQueryFilter<IType> filter) {
 
-		// assert
-		Assert.isNotNull(filter);
+    // assert
+    Assert.isNotNull(filter);
 
-		// create the result
-		Set<IType> result = new HashSet<IType>();
+    // create the result
+    Set<IType> result = new HashSet<IType>();
 
-		//
-		for (IType containedType : _containedTypes.values()) {
+    //
+    for (IType containedType : _containedTypes.values()) {
 
-			if (!result.contains(containedType)
-					&& filter.matches(containedType)) {
+      if (!result.contains(containedType) && filter.matches(containedType)) {
 
-				// add the result
-				result.add(containedType);
-			}
-		}
+        // add the result
+        result.add(containedType);
+      }
+    }
 
-		// return result
-		return Collections.unmodifiableSet(result);
-	}
+    // return result
+    return Collections.unmodifiableSet(result);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<String> getContainedTypeNames() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<String> getContainedTypeNames() {
 
-		// return an unmodifiable copy
-		return Collections.unmodifiableSet(_containedTypes.keySet());
-	}
+    // return an unmodifiable copy
+    return Collections.unmodifiableSet(_containedTypes.keySet());
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<String> getContainedTypeNames(IQueryFilter filter) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<String> getContainedTypeNames(IQueryFilter filter) {
 
-		// assert
-		Assert.isNotNull(filter);
+    // assert
+    Assert.isNotNull(filter);
 
-		// create the result
-		Set<String> result = new HashSet<String>();
+    // create the result
+    Set<String> result = new HashSet<String>();
 
-		//
-		for (String containedType : _containedTypes.keySet()) {
+    //
+    for (String containedType : _containedTypes.keySet()) {
 
-			if (!result.contains(containedType)
-					&& filter.matches(containedType)) {
+      if (!result.contains(containedType) && filter.matches(containedType)) {
 
-				// add the result
-				result.add(containedType);
-			}
-		}
+        // add the result
+        result.add(containedType);
+      }
+    }
 
-		// return result
-		return Collections.unmodifiableSet(result);
-	}
+    // return result
+    return Collections.unmodifiableSet(result);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<String> getContainedPackageNames() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<String> getContainedPackageNames() {
 
-		return getContainedPackageNames(StringQueryFilters.TRUE_QUERY_FILTER);
-	}
+    return getContainedPackageNames(StringQueryFilters.TRUE_QUERY_FILTER);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<String> getContainedPackageNames(IQueryFilter filter) {
-		Assert.isNotNull(filter);
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<String> getContainedPackageNames(IQueryFilter filter) {
+    Assert.isNotNull(filter);
 
-		// create the result
-		Set<String> result = new HashSet<String>();
+    // create the result
+    Set<String> result = new HashSet<String>();
 
-		//
-		for (String containedType : _containedTypes.keySet()) {
+    //
+    for (String containedType : _containedTypes.keySet()) {
 
-			//
-			String packageName = "";
+      //
+      String packageName = "";
 
-			//
-			if (containedType.indexOf('.') != -1) {
+      //
+      if (containedType.indexOf('.') != -1) {
 
-				// get the packageName
-				packageName = containedType.substring(0,
-						containedType.lastIndexOf('.'));
-			}
+        // get the packageName
+        packageName = containedType.substring(0, containedType.lastIndexOf('.'));
+      }
 
-			//
-			if (!result.contains(packageName) && filter.matches(packageName)) {
-				result.add(packageName);
-			}
+      //
+      if (!result.contains(packageName) && filter.matches(packageName)) {
+        result.add(packageName);
+      }
 
-		}
+    }
 
-		// return result
-		return Collections.unmodifiableSet(result);
-	}
+    // return result
+    return Collections.unmodifiableSet(result);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Map<String, IType> getModifiableContainedTypesMap() {
-		return _containedTypes;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Map<String, IType> getModifiableContainedTypesMap() {
+    return _containedTypes;
+  }
 }

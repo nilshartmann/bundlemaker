@@ -16,127 +16,124 @@ import org.bundlemaker.core.util.GenericCache;
  */
 public class ReferencesCache {
 
-	/** - */
-	private IModularizedSystem _modularizedSystem;
+  /** - */
+  private IModularizedSystem                 _modularizedSystem;
 
-	/** - */
-	private IResourceModule _resourceModule;
+  /** - */
+  private IResourceModule                    _resourceModule;
 
-	/** - */
-	private GenericCache<String, Set<IModule>> _typeToModuleCache;
+  /** - */
+  private GenericCache<String, Set<IModule>> _typeToModuleCache;
 
-	/** - */
-	private GenericCache<String, Set<String>> _packageToTypesCache;
+  /** - */
+  private GenericCache<String, Set<String>>  _packageToTypesCache;
 
-	/** - */
-	private Set<String> _unsatisfiedTypes;
+  /** - */
+  private Set<String>                        _unsatisfiedTypes;
 
-	/** - */
-	boolean _includeSourceReferences;
+  /** - */
+  boolean                                    _includeSourceReferences;
 
-	/** - */
-	boolean _includeIndirectReferences;
+  /** - */
+  boolean                                    _includeIndirectReferences;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ReferencesCache}.
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param resourceModule
-	 * @param includeSourceReferences
-	 * @param includeIndirectReferences
-	 */
-	public ReferencesCache(IModularizedSystem modularizedSystem,
-			IResourceModule resourceModule, boolean includeSourceReferences,
-			boolean includeIndirectReferences) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link ReferencesCache}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @param resourceModule
+   * @param includeSourceReferences
+   * @param includeIndirectReferences
+   */
+  public ReferencesCache(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
+      boolean includeSourceReferences, boolean includeIndirectReferences) {
 
-		//
-		_modularizedSystem = modularizedSystem;
-		_resourceModule = resourceModule;
-		_includeSourceReferences = includeSourceReferences;
-		_includeIndirectReferences = includeIndirectReferences;
+    //
+    _modularizedSystem = modularizedSystem;
+    _resourceModule = resourceModule;
+    _includeSourceReferences = includeSourceReferences;
+    _includeIndirectReferences = includeIndirectReferences;
 
-		//
-		_typeToModuleCache = new GenericCache<String, Set<IModule>>() {
-			@Override
-			protected Set<IModule> create(String key) {
-				return new HashSet<IModule>();
-			}
-		};
+    //
+    _typeToModuleCache = new GenericCache<String, Set<IModule>>() {
+      @Override
+      protected Set<IModule> create(String key) {
+        return new HashSet<IModule>();
+      }
+    };
 
-		//
-		_packageToTypesCache = new GenericCache<String, Set<String>>() {
-			@Override
-			protected Set<String> create(String key) {
-				return new HashSet<String>();
-			}
-		};
+    //
+    _packageToTypesCache = new GenericCache<String, Set<String>>() {
+      @Override
+      protected Set<String> create(String key) {
+        return new HashSet<String>();
+      }
+    };
 
-		//
-		_unsatisfiedTypes = new HashSet<String>();
+    //
+    _unsatisfiedTypes = new HashSet<String>();
 
-		//
-		initializeCaches();
-	}
+    //
+    initializeCaches();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public GenericCache<String, Set<IModule>> getReferenceTypeToExportingModuleCache() {
-		return _typeToModuleCache;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<String, Set<IModule>> getReferenceTypeToExportingModuleCache() {
+    return _typeToModuleCache;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public GenericCache<String, Set<String>> getReferencedPackageToContainingTypesCache() {
-		return _packageToTypesCache;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<String, Set<String>> getReferencedPackageToContainingTypesCache() {
+    return _packageToTypesCache;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<String> getUnsatisfiedTypes() {
-		return _unsatisfiedTypes;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<String> getUnsatisfiedTypes() {
+    return _unsatisfiedTypes;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	private void initializeCaches() {
+  /**
+   * <p>
+   * </p>
+   */
+  private void initializeCaches() {
 
-		//
-		for (String typeName : _resourceModule.getReferencedTypeNames(true,
-				_includeSourceReferences, _includeIndirectReferences)) {
+    //
+    for (String typeName : _resourceModule.getReferencedTypeNames(true, _includeSourceReferences,
+        _includeIndirectReferences)) {
 
-			// get the package type
-			String packageName = typeName.contains(".") ? typeName.substring(0,
-					typeName.lastIndexOf('.')) : "";
+      // get the package type
+      String packageName = typeName.contains(".") ? typeName.substring(0, typeName.lastIndexOf('.')) : "";
 
-			// add to the package to type cache
-			_packageToTypesCache.getOrCreate(packageName).add(typeName);
+      // add to the package to type cache
+      _packageToTypesCache.getOrCreate(packageName).add(typeName);
 
-			// get the modules
-			Set<IModule> modules = _modularizedSystem
-					.getTypeContainingModules(typeName);
+      // get the modules
+      Set<IModule> modules = _modularizedSystem.getTypeContainingModules(typeName);
 
-			// add to the type caches
-			if (modules.isEmpty()) {
-				_unsatisfiedTypes.add(typeName);
-			} else {
-				_typeToModuleCache.getOrCreate(typeName).addAll(modules);
-			}
-		}
-	}
+      // add to the type caches
+      if (modules.isEmpty()) {
+        _unsatisfiedTypes.add(typeName);
+      } else {
+        _typeToModuleCache.getOrCreate(typeName).addAll(modules);
+      }
+    }
+  }
 }

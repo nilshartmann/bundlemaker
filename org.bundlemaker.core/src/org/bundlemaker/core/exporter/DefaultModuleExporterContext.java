@@ -17,95 +17,95 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  */
 public class DefaultModuleExporterContext implements IModuleExporterContext {
 
-	/** - */
-	private IBundleMakerProject _bundleMakerProject;
+  /** - */
+  private IBundleMakerProject _bundleMakerProject;
 
-	/** - */
-	private File _destinationDirectory;
+  /** - */
+  private File                _destinationDirectory;
 
-	/** - */
-	private IModularizedSystem _modularizedSystem;
+  /** - */
+  private IModularizedSystem  _modularizedSystem;
 
-	/** - */
-	private Map<Object, Object> _additionalAttribute;
+  /** - */
+  private Map<Object, Object> _additionalAttribute;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link DefaultModuleExporterContext}.
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 * @param destinationDirectory
-	 * @param modularizedSystem
-	 */
-	public DefaultModuleExporterContext(IBundleMakerProject bundleMakerProject,
-			File destinationDirectory, IModularizedSystem modularizedSystem) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link DefaultModuleExporterContext}.
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param destinationDirectory
+   * @param modularizedSystem
+   */
+  public DefaultModuleExporterContext(IBundleMakerProject bundleMakerProject, File destinationDirectory,
+      IModularizedSystem modularizedSystem) {
 
-		//
-		_bundleMakerProject = bundleMakerProject;
+    //
+    _bundleMakerProject = bundleMakerProject;
 
-		//
-		_destinationDirectory = destinationDirectory;
+    //
+    _destinationDirectory = destinationDirectory;
 
-		//
-		_modularizedSystem = modularizedSystem;
+    //
+    _modularizedSystem = modularizedSystem;
 
-		//
-		_additionalAttribute = new HashMap<Object, Object>();
-	}
+    //
+    _additionalAttribute = new HashMap<Object, Object>();
+  }
 
-	/**
-	 * 
-	 */
-	@Override
-	public IBundleMakerProject getBundleMakerProject() {
-		return _bundleMakerProject;
-	}
-
-	/**
+  /**
 	 * 
 	 */
-	@Override
-	public File getDestinationDirectory() {
-		return _destinationDirectory;
-	}
+  @Override
+  public IBundleMakerProject getBundleMakerProject() {
+    return _bundleMakerProject;
+  }
 
-	@Override
-	public IModularizedSystem getModularizedSystem() {
-		return _modularizedSystem;
-	}
-
-	/**
-	 * <p>
-	 * </p>
+  /**
 	 * 
-	 * @param key
-	 * @return
 	 */
-	public boolean containsAttribute(Object key) {
-		return _additionalAttribute.containsKey(key);
-	}
+  @Override
+  public File getDestinationDirectory() {
+    return _destinationDirectory;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param key
-	 * @return
-	 */
-	public Object getAttribute(Object key) {
-		return _additionalAttribute.get(key);
-	}
+  @Override
+  public IModularizedSystem getModularizedSystem() {
+    return _modularizedSystem;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param key
-	 * @param value
-	 * @return
-	 */
-	public Object put(Object key, Object value) {
-		return _additionalAttribute.put(key, value);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @return
+   */
+  public boolean containsAttribute(Object key) {
+    return _additionalAttribute.containsKey(key);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @return
+   */
+  public Object getAttribute(Object key) {
+    return _additionalAttribute.get(key);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @param value
+   * @return
+   */
+  public Object put(Object key, Object value) {
+    return _additionalAttribute.put(key, value);
+  }
 }

@@ -13,42 +13,42 @@ import org.eclipse.core.runtime.Assert;
  */
 public abstract class AbstractResourceClosureQuery {
 
-	/** - */
-	private Set<IResource> _resources;
+  /** - */
+  private Set<IResource>    _resources;
 
-	/** - */
-	private ModularizedSystem _modularizedSystem;
+  /** - */
+  private ModularizedSystem _modularizedSystem;
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	public AbstractResourceClosureQuery(ModularizedSystem modularizedSystem) {
+  /**
+   * <p>
+   * </p>
+   */
+  public AbstractResourceClosureQuery(ModularizedSystem modularizedSystem) {
 
-		Assert.isNotNull(modularizedSystem);
+    Assert.isNotNull(modularizedSystem);
 
-		_modularizedSystem = modularizedSystem;
+    _modularizedSystem = modularizedSystem;
 
-		_resources = new HashSet<IResource>();
-	}
+    _resources = new HashSet<IResource>();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected ModularizedSystem getModularizedSystem() {
-		return _modularizedSystem;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected ModularizedSystem getModularizedSystem() {
+    return _modularizedSystem;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<IResource> getResources() {
-		return _resources;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<IResource> getResources() {
+    return _resources;
+  }
 }

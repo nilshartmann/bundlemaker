@@ -13,75 +13,75 @@ import org.bundlemaker.core.resource.IReference;
  */
 public interface IReferencedModulesQueryResult {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean hasErrors();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasErrors();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Map<IReference, IModule> getReferencedModulesMap();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Map<IReference, IModule> getReferencedModulesMap();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<IModule> getReferencedModules();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<IModule> getReferencedModules();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean hasReferencesWithAmbiguousModules();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasReferencesWithAmbiguousModules();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean hasUnsatisfiedReferences();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasUnsatisfiedReferences();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<IReference> getUnsatisfiedReferences();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<IReference> getUnsatisfiedReferences();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Set<String> getUnsatisfiedReferencedTypes();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<String> getUnsatisfiedReferencedTypes();
 }

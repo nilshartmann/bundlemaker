@@ -41,144 +41,128 @@ import org.eclipse.ui.statushandlers.StatusManager;
  */
 public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 
-	public NewBundleMakerProjectWizard() {
+  public NewBundleMakerProjectWizard() {
 
-	}
+  }
 
-	@Override
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setNeedsProgressMonitor(true);
-		setWindowTitle("New Bundlemaker Project");
-		setDefaultPageImageDescriptor(UIImages.BUNDLEMAKER_ICON
-				.getImageDescriptor());
+  @Override
+  public void init(IWorkbench workbench, IStructuredSelection selection) {
+    setNeedsProgressMonitor(true);
+    setWindowTitle("New Bundlemaker Project");
+    setDefaultPageImageDescriptor(UIImages.BUNDLEMAKER_ICON.getImageDescriptor());
 
-	}
+  }
 
-	NewBundleMakerProjectWizardCreationPage mainPage;
+  NewBundleMakerProjectWizardCreationPage mainPage;
 
-	@Override
-	public void addPages() {
-		super.addPages();
+  @Override
+  public void addPages() {
+    super.addPages();
 
-		// add bundlemaker page
-		mainPage = new NewBundleMakerProjectWizardCreationPage();
-		addPage(mainPage);
-	}
+    // add bundlemaker page
+    mainPage = new NewBundleMakerProjectWizardCreationPage();
+    addPage(mainPage);
+  }
 
-	@Override
-	public boolean performFinish() {
-		createNewProject();
+  @Override
+  public boolean performFinish() {
+    createNewProject();
 
-		if (newProject == null) {
-			return false;
-		}
+    if (newProject == null) {
+      return false;
+    }
 
-		return true;
+    return true;
 
-	}
+  }
 
-	IProject newProject;
+  IProject newProject;
 
-	private IProject createNewProject() {
-		if (newProject != null) {
-			return newProject;
-		}
+  private IProject createNewProject() {
+    if (newProject != null) {
+      return newProject;
+    }
 
-		// get a project handle
-		final IProject newProjectHandle = mainPage.getProjectHandle();
+    // get a project handle
+    final IProject newProjectHandle = mainPage.getProjectHandle();
 
-		// get a project descriptor
-		URI location = null;
-		if (!mainPage.useDefaults()) {
-			location = mainPage.getLocationURI();
-		}
+    // get a project descriptor
+    URI location = null;
+    if (!mainPage.useDefaults()) {
+      location = mainPage.getLocationURI();
+    }
 
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		final IProjectDescription description = workspace
-				.newProjectDescription(newProjectHandle.getName());
-		description.setLocationURI(location);
+    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
+    description.setLocationURI(location);
 
-		// create the new project operation
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor)
-					throws InvocationTargetException {
-				CreateProjectOperation op = new CreateProjectOperation(
-						description, "Create new Bundlemaker project");
-				try {
-					// see bug
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
-					// directly execute the operation so that the undo state is
-					// not preserved. Making this undoable resulted in too many
-					// accidental file deletions.
-					op.execute(monitor,
-							WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
-				} catch (ExecutionException e) {
-					throw new InvocationTargetException(e);
-				}
-			}
-		};
+    // create the new project operation
+    IRunnableWithProgress op = new IRunnableWithProgress() {
+      public void run(IProgressMonitor monitor) throws InvocationTargetException {
+        CreateProjectOperation op = new CreateProjectOperation(description, "Create new Bundlemaker project");
+        try {
+          // see bug
+          // https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
+          // directly execute the operation so that the undo state is
+          // not preserved. Making this undoable resulted in too many
+          // accidental file deletions.
+          op.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
+        } catch (ExecutionException e) {
+          throw new InvocationTargetException(e);
+        }
+      }
+    };
 
-		// run the new project creation operation
-		try {
-			getContainer().run(true, true, op);
-		} catch (InterruptedException e) {
-			return null;
-		} catch (InvocationTargetException e) {
-			Throwable t = e.getTargetException();
-			if (t instanceof ExecutionException
-					&& t.getCause() instanceof CoreException) {
-				CoreException cause = (CoreException) t.getCause();
-				IStatus status;
-				if (cause.getStatus().getCode() == IResourceStatus.CASE_VARIANT_EXISTS) {
-					status = BundleMakerUiUtils
-							.newWarning(
-									format("The underlying file system is case insensitive. There is an existing project or directory that conflicts with '%s'",
-											newProjectHandle.getName()), cause);
-				} else {
-					status = BundleMakerUiUtils.newStatus(cause,
-							"Problems while creating the project");
-				}
-				StatusAdapter statusAdapter = new StatusAdapter(status);
-				statusAdapter.setProperty(
-						IStatusAdapterConstants.TITLE_PROPERTY,
-						"Project creation problems");
-				StatusManager.getManager().handle(status, StatusManager.BLOCK);
-			} else {
-				StatusAdapter statusAdapter = new StatusAdapter(
-						BundleMakerUiUtils.newWarning(
-								format("Internal error: %s", t.getMessage()), t));
-				statusAdapter.setProperty(
-						IStatusAdapterConstants.TITLE_PROPERTY,
-						"Project creation problems");
-				StatusManager.getManager().handle(statusAdapter,
-						StatusManager.LOG | StatusManager.BLOCK);
-			}
-			return null;
-		}
+    // run the new project creation operation
+    try {
+      getContainer().run(true, true, op);
+    } catch (InterruptedException e) {
+      return null;
+    } catch (InvocationTargetException e) {
+      Throwable t = e.getTargetException();
+      if (t instanceof ExecutionException && t.getCause() instanceof CoreException) {
+        CoreException cause = (CoreException) t.getCause();
+        IStatus status;
+        if (cause.getStatus().getCode() == IResourceStatus.CASE_VARIANT_EXISTS) {
+          status = BundleMakerUiUtils
+              .newWarning(
+                  format(
+                      "The underlying file system is case insensitive. There is an existing project or directory that conflicts with '%s'",
+                      newProjectHandle.getName()), cause);
+        } else {
+          status = BundleMakerUiUtils.newStatus(cause, "Problems while creating the project");
+        }
+        StatusAdapter statusAdapter = new StatusAdapter(status);
+        statusAdapter.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Project creation problems");
+        StatusManager.getManager().handle(status, StatusManager.BLOCK);
+      } else {
+        StatusAdapter statusAdapter = new StatusAdapter(BundleMakerUiUtils.newWarning(
+            format("Internal error: %s", t.getMessage()), t));
+        statusAdapter.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Project creation problems");
+        StatusManager.getManager().handle(statusAdapter, StatusManager.LOG | StatusManager.BLOCK);
+      }
+      return null;
+    }
 
-		try {
-			BundleMakerCore.addBundleMakerNature(newProjectHandle);
-			IBundleMakerProject bundleMakerProject = BundleMakerCore
-					.getBundleMakerProject(newProjectHandle,
-							new NullProgressMonitor());
-			IBundleMakerProjectDescription bundleMakerProjectDescription = bundleMakerProject
-					.getProjectDescription();
-			bundleMakerProjectDescription.setJre(mainPage.getSelectedJreId());
-			bundleMakerProject.saveProjectDescription();
+    try {
+      BundleMakerCore.addBundleMakerNature(newProjectHandle);
+      IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(newProjectHandle,
+          new NullProgressMonitor());
+      IBundleMakerProjectDescription bundleMakerProjectDescription = bundleMakerProject.getProjectDescription();
+      bundleMakerProjectDescription.setJre(mainPage.getSelectedJreId());
+      bundleMakerProject.saveProjectDescription();
 
-		} catch (CoreException ex) {
-			IStatus status = BundleMakerUiUtils.newStatus(ex,
-					"Could not add Bundlemaker nature");
-			StatusAdapter statusAdapter = new StatusAdapter(status);
-			statusAdapter.setProperty(IStatusAdapterConstants.TITLE_PROPERTY,
-					"Project creation problems");
-			StatusManager.getManager().handle(status, StatusManager.BLOCK);
-			return null;
+    } catch (CoreException ex) {
+      IStatus status = BundleMakerUiUtils.newStatus(ex, "Could not add Bundlemaker nature");
+      StatusAdapter statusAdapter = new StatusAdapter(status);
+      statusAdapter.setProperty(IStatusAdapterConstants.TITLE_PROPERTY, "Project creation problems");
+      StatusManager.getManager().handle(status, StatusManager.BLOCK);
+      return null;
 
-		}
+    }
 
-		newProject = newProjectHandle;
+    newProject = newProjectHandle;
 
-		return newProject;
-	}
+    return newProject;
+  }
 }

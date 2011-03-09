@@ -13,14 +13,14 @@ import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
  */
 public interface IResourceSetProcessor {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param originResourceModule
-	 * @param targetResourceModule
-	 * @param resourceSet
-	 */
-	public void processResources(IModifiableResourceModule originResourceModule,
-			IModifiableResourceModule targetResourceModule, ResourceSet resourceSet);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param originResourceModule
+   * @param targetResourceModule
+   * @param resourceSet
+   */
+  public void processResources(IModifiableResourceModule originResourceModule,
+      IModifiableResourceModule targetResourceModule, ResourceSet resourceSet);
 }

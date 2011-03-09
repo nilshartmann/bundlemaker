@@ -23,243 +23,230 @@ import org.eclipse.core.runtime.IPath;
  */
 public class FileBasedContent implements IFileBasedContent {
 
-	/** - */
-	private static final Set<IPath> EMPTY_PATH_SET = Collections
-			.unmodifiableSet(new HashSet<IPath>());
+  /** - */
+  private static final Set<IPath>               EMPTY_PATH_SET     = Collections.unmodifiableSet(new HashSet<IPath>());
 
-	/** - */
-	private static final Set<? extends IResource> EMPTY_RESOURCE_SET = Collections
-			.unmodifiableSet(new HashSet<IResource>());
+  /** - */
+  private static final Set<? extends IResource> EMPTY_RESOURCE_SET = Collections
+                                                                       .unmodifiableSet(new HashSet<IResource>());
 
-	/** - */
-	private boolean _isInitialized;
+  /** - */
+  private boolean                               _isInitialized;
 
-	/** - */
-	private String _id;
+  /** - */
+  private String                                _id;
 
-	/** - */
-	private String _name;
+  /** - */
+  private String                                _name;
 
-	/** - */
-	private String _version;
+  /** - */
+  private String                                _version;
 
-	/** - */
-	private Set<IPath> _binaryPaths;
+  /** - */
+  private Set<IPath>                            _binaryPaths;
 
-	/** - */
-	private ResourceContent _resourceContent;
+  /** - */
+  private ResourceContent                       _resourceContent;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link FileBasedContent}.
-	 * </p>
-	 */
-	public FileBasedContent() {
+  /**
+   * <p>
+   * Creates a new instance of type {@link FileBasedContent}.
+   * </p>
+   */
+  public FileBasedContent() {
 
-		//
-		_isInitialized = false;
+    //
+    _isInitialized = false;
 
-		//
-		_binaryPaths = new HashSet<IPath>();
-	}
+    //
+    _binaryPaths = new HashSet<IPath>();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getId() {
-		return _id;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getId() {
+    return _id;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getName() {
-		return _name;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getName() {
+    return _name;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getVersion() {
-		return _version;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getVersion() {
+    return _version;
+  }
 
-	@Override
-	public Set<IPath> getBinaryPaths() {
-		return Collections.unmodifiableSet(_binaryPaths);
-	}
+  @Override
+  public Set<IPath> getBinaryPaths() {
+    return Collections.unmodifiableSet(_binaryPaths);
+  }
 
-	@Override
-	public boolean isResourceContent() {
-		return _resourceContent != null;
-	}
+  @Override
+  public boolean isResourceContent() {
+    return _resourceContent != null;
+  }
 
-	public ResourceContent getModifiableResourceContent() {
-		return _resourceContent;
-	}
+  public ResourceContent getModifiableResourceContent() {
+    return _resourceContent;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<IPath> getModifiableBinaryPaths() {
-		return _binaryPaths;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<IPath> getModifiableBinaryPaths() {
+    return _binaryPaths;
+  }
 
-	@Override
-	public Set<IPath> getSourcePaths() {
-		return _resourceContent != null ? _resourceContent.getSourcePaths()
-				: EMPTY_PATH_SET;
-	}
+  @Override
+  public Set<IPath> getSourcePaths() {
+    return _resourceContent != null ? _resourceContent.getSourcePaths() : EMPTY_PATH_SET;
+  }
 
-	@Override
-	public boolean isAnalyzeSourceResources() {
-		return _resourceContent != null ? _resourceContent
-				.isAnalyzeSourceResources() : false;
-	}
+  @Override
+  public boolean isAnalyzeSourceResources() {
+    return _resourceContent != null ? _resourceContent.isAnalyzeSourceResources() : false;
+  }
 
-	@Override
-	public IResource getResource(IPath path, ContentType type) {
-		return _resourceContent != null ? _resourceContent.getResource(path,
-				type) : null;
-	}
+  @Override
+  public IResource getResource(IPath path, ContentType type) {
+    return _resourceContent != null ? _resourceContent.getResource(path, type) : null;
+  }
 
-	@Override
-	public Set<? extends IResource> getResources(ContentType type) {
-		return _resourceContent != null ? _resourceContent.getResources(type)
-				: EMPTY_RESOURCE_SET;
-	}
+  @Override
+  public Set<? extends IResource> getResources(ContentType type) {
+    return _resourceContent != null ? _resourceContent.getResources(type) : EMPTY_RESOURCE_SET;
+  }
 
-	@Override
-	public IResource getBinaryResource(IPath path) {
-		return _resourceContent != null ? _resourceContent
-				.getBinaryResource(path) : null;
-	}
+  @Override
+  public IResource getBinaryResource(IPath path) {
+    return _resourceContent != null ? _resourceContent.getBinaryResource(path) : null;
+  }
 
-	@Override
-	public Set<? extends IResource> getBinaryResources() {
-		return _resourceContent != null ? _resourceContent.getBinaryResources()
-				: EMPTY_RESOURCE_SET;
-	}
+  @Override
+  public Set<? extends IResource> getBinaryResources() {
+    return _resourceContent != null ? _resourceContent.getBinaryResources() : EMPTY_RESOURCE_SET;
+  }
 
-	@Override
-	public IResource getSourceResource(IPath path) {
-		return _resourceContent != null ? _resourceContent
-				.getSourceResource(path) : null;
-	}
+  @Override
+  public IResource getSourceResource(IPath path) {
+    return _resourceContent != null ? _resourceContent.getSourceResource(path) : null;
+  }
 
-	@Override
-	public Set<? extends IResource> getSourceResources() {
-		return _resourceContent != null ? _resourceContent.getSourceResources()
-				: EMPTY_RESOURCE_SET;
-	}
+  @Override
+  public Set<? extends IResource> getSourceResources() {
+    return _resourceContent != null ? _resourceContent.getSourceResources() : EMPTY_RESOURCE_SET;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param id
-	 */
-	public void setId(String id) {
-		_id = id;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param id
+   */
+  public void setId(String id) {
+    _id = id;
+  }
 
-	public void setName(String name) {
-		_name = name;
-	}
+  public void setName(String name) {
+    _name = name;
+  }
 
-	public void setVersion(String version) {
-		_version = version;
-	}
+  public void setVersion(String version) {
+    _version = version;
+  }
 
-	public void setResourceContent(ResourceContent resourceContent) {
-		_resourceContent = resourceContent;
-	}
+  public void setResourceContent(ResourceContent resourceContent) {
+    _resourceContent = resourceContent;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fileBasedContent
-	 * @param bundleMakerProject
-	 * @throws CoreException
-	 */
-	public void initialize(IBundleMakerProject bundleMakerProject) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fileBasedContent
+   * @param bundleMakerProject
+   * @throws CoreException
+   */
+  public void initialize(IBundleMakerProject bundleMakerProject) {
 
-		// return if content already is initialized
-		if (_isInitialized) {
-			return;
-		}
+    // return if content already is initialized
+    if (_isInitialized) {
+      return;
+    }
 
-		if (isResourceContent()) {
+    if (isResourceContent()) {
 
-			// add the binary resources
-			for (IPath root : _binaryPaths) {
+      // add the binary resources
+      for (IPath root : _binaryPaths) {
 
-				// get the root
-				String rootPath = root.toFile().getAbsolutePath();
+        // get the root
+        String rootPath = root.toFile().getAbsolutePath();
 
-				try {
+        try {
 
-					for (String child : FileUtils.getAllChildren(root.toFile())) {
+          for (String child : FileUtils.getAllChildren(root.toFile())) {
 
-						// create the resource standin
-						ResourceStandin resourceStandin = new ResourceStandin(
-								_id, rootPath, child);
+            // create the resource standin
+            ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
 
-						// add the resource
-						_resourceContent.getModifiableBinaryResources().add(
-								resourceStandin);
-					}
+            // add the resource
+            _resourceContent.getModifiableBinaryResources().add(resourceStandin);
+          }
 
-				} catch (CoreException e) {
+        } catch (CoreException e) {
 
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
 
-			// add the source resources
-			for (IPath root : _resourceContent.getSourcePaths()) {
+      // add the source resources
+      for (IPath root : _resourceContent.getSourcePaths()) {
 
-				// get the root
-				String rootPath = root.toFile().getAbsolutePath();
+        // get the root
+        String rootPath = root.toFile().getAbsolutePath();
 
-				try {
+        try {
 
-					for (String child : FileUtils.getAllChildren(root.toFile())) {
+          for (String child : FileUtils.getAllChildren(root.toFile())) {
 
-						// create the resource standin
-						ResourceStandin resourceStandin = new ResourceStandin(
-								_id, rootPath, child);
+            // create the resource standin
+            ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
 
-						// add the resource
-						_resourceContent.getModifiableSourceResources().add(
-								resourceStandin);
-					}
+            // add the resource
+            _resourceContent.getModifiableSourceResources().add(resourceStandin);
+          }
 
-				} catch (CoreException e) {
+        } catch (CoreException e) {
 
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
 
-		// set initialized
-		_isInitialized = true;
-	}
+    // set initialized
+    _isInitialized = true;
+  }
 
-	public Collection<ResourceStandin> getModifiableBinaryResources() {
-		return _resourceContent.getModifiableBinaryResources();
-	}
+  public Collection<ResourceStandin> getModifiableBinaryResources() {
+    return _resourceContent.getModifiableBinaryResources();
+  }
 
-	public Collection<ResourceStandin> getModifiableSourceResources() {
-		return _resourceContent.getModifiableSourceResources();
-	}
+  public Collection<ResourceStandin> getModifiableSourceResources() {
+    return _resourceContent.getModifiableSourceResources();
+  }
 }

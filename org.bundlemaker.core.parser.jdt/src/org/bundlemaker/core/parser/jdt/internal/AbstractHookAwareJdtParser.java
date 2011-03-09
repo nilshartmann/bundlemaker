@@ -19,78 +19,74 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  */
 public abstract class AbstractHookAwareJdtParser implements IParser {
 
-	/** - */
-	private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
+  /** - */
+  private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
 
-	/** - */
-	private List<IJdtSourceParserHook> _currentHooks;
+  /** - */
+  private List<IJdtSourceParserHook>                     _currentHooks;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 * @throws CoreException
-	 */
-	public AbstractHookAwareJdtParser(
-			ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @throws CoreException
+   */
+  public AbstractHookAwareJdtParser(ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry) {
 
-		Assert.isNotNull(hookRegistry);
+    Assert.isNotNull(hookRegistry);
 
-		//
-		_hookRegistry = hookRegistry;
-	}
+    //
+    _hookRegistry = hookRegistry;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void parseBundleMakerProjectStart(
-			IBundleMakerProject bundleMakerProject) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject) {
 
-		// initialize current hooks
-		_currentHooks = _hookRegistry.getExtensionObjects();
+    // initialize current hooks
+    _currentHooks = _hookRegistry.getExtensionObjects();
 
-		// notify 'start'
-		for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
-			sourceParserHook.parseBundleMakerProjectStart(bundleMakerProject);
-		}
-	}
+    // notify 'start'
+    for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
+      sourceParserHook.parseBundleMakerProjectStart(bundleMakerProject);
+    }
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void parseBundleMakerProjectStop(
-			IBundleMakerProject bundleMakerProject) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject) {
 
-		// notify 'stop'
-		for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
-			sourceParserHook.parseBundleMakerProjectStop(bundleMakerProject);
-		}
-		
-		//
-		_currentHooks = null;
-	}
+    // notify 'stop'
+    for (IJdtSourceParserHook sourceParserHook : _currentHooks) {
+      sourceParserHook.parseBundleMakerProjectStop(bundleMakerProject);
+    }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param iCompilationUnit
-	 * @param compilationUnit
-	 */
-	protected final void callSourceParserHooks(IResourceKey resourceKey,
-			CompilationUnit compilationUnit) {
+    //
+    _currentHooks = null;
+  }
 
-		//
-		Assert.isNotNull(_currentHooks);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param iCompilationUnit
+   * @param compilationUnit
+   */
+  protected final void callSourceParserHooks(IResourceKey resourceKey, CompilationUnit compilationUnit) {
 
-		//
-		for (IJdtSourceParserHook hook : _currentHooks) {
+    //
+    Assert.isNotNull(_currentHooks);
 
-			//
-			hook.analyzeCompilationUnit(resourceKey, compilationUnit);
-		}
-	}
+    //
+    for (IJdtSourceParserHook hook : _currentHooks) {
+
+      //
+      hook.analyzeCompilationUnit(resourceKey, compilationUnit);
+    }
+  }
 }

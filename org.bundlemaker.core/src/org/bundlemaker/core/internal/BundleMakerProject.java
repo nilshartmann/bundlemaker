@@ -45,497 +45,467 @@ import org.eclipse.core.runtime.Status;
  */
 public class BundleMakerProject implements IBundleMakerProject {
 
-	/** the associated eclipse project (the bundle make project) */
-	private IProject _project;
-
-	/** the bundle maker project description */
-	private BundleMakerProjectDescription _projectDescription;
-
-	/** the associated info store */
-	private IDependencyStore _additionalInfoStore;
-
-	/** the state the project is in */
-	private BundleMakerProjectState _projectState;
-
-	/** the project description working copies */
-	private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
-
-	/** - */
-	private IProgressMonitor _currentProgressMonitor;
-
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link BundleMakerProject}.
-	 * </p>
-	 * 
-	 * @param project
-	 * @throws Exception
-	 */
-	public BundleMakerProject(IProject project) throws CoreException {
-
-		// TODO: CoreException
-		Assert.isTrue(project.hasNature(BundleMakerCore.NATURE_ID));
-
-		// set the project
-		_project = project;
+  /** the associated eclipse project (the bundle make project) */
+  private IProject                       _project;
 
-		// read the projectDescription
-		_projectDescription = loadProjectDescription();
+  /** the bundle maker project description */
+  private BundleMakerProjectDescription  _projectDescription;
 
-		// create the working copies map
-		_modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
+  /** the associated info store */
+  private IDependencyStore               _additionalInfoStore;
 
-	}
+  /** the state the project is in */
+  private BundleMakerProjectState        _projectState;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void saveProjectDescription() throws CoreException {
+  /** the project description working copies */
+  private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
 
-		//
-		ProjectDescriptionStore.saveProjectDescription(_project,
-				_projectDescription);
-	}
+  /** - */
+  private IProgressMonitor               _currentProgressMonitor;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public BundleMakerProjectState getState() {
-		return _projectState;
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link BundleMakerProject}.
+   * </p>
+   * 
+   * @param project
+   * @throws Exception
+   */
+  public BundleMakerProject(IProject project) throws CoreException {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void initialize(IProgressMonitor progressMonitor)
-			throws CoreException {
+    // TODO: CoreException
+    Assert.isTrue(project.hasNature(BundleMakerCore.NATURE_ID));
 
-		// set the progress monitor
-		_currentProgressMonitor = progressMonitor;
+    // set the project
+    _project = project;
 
-		// save the project description
-		saveProjectDescription();
+    // read the projectDescription
+    _projectDescription = loadProjectDescription();
 
-		// reload the project description
-		_projectDescription.initialize(this);
+    // create the working copies map
+    _modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
 
-		// set the initialized flag
-		_projectState = BundleMakerProjectState.INITIALIZED;
+  }
 
-		// step 4: call initialize on the parser factories
-		for (IParserFactory parserFactory : Activator.getDefault()
-				.getParserFactoryRegistry().getParserFactories()) {
-			parserFactory.initialize(this);
-		}
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void saveProjectDescription() throws CoreException {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<IProblem> parse(IProgressMonitor progressMonitor,
-			boolean parseIndirectReferences) throws CoreException {
+    //
+    ProjectDescriptionStore.saveProjectDescription(_project, _projectDescription);
+  }
 
-		// set the progress monitor
-		_currentProgressMonitor = progressMonitor;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public BundleMakerProjectState getState() {
+    return _projectState;
+  }
 
-		// assert
-		assertState(BundleMakerProjectState.INITIALIZED,
-				BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
+  /**
+   * {@inheritDoc}
+   */
+  public void initialize(IProgressMonitor progressMonitor) throws CoreException {
 
-		// create the project parser
-		ProjectParser projectParser = new ProjectParser(this,
-				parseIndirectReferences);
+    // set the progress monitor
+    _currentProgressMonitor = progressMonitor;
 
-		// parse the project
-		List<IProblem> problems = projectParser
-				.parseBundleMakerProject(progressMonitor);
+    // save the project description
+    saveProjectDescription();
 
-		_projectState = BundleMakerProjectState.PARSED;
+    // reload the project description
+    _projectDescription.initialize(this);
 
-		// return the problems
-		return problems;
-	}
+    // set the initialized flag
+    _projectState = BundleMakerProjectState.INITIALIZED;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void open(IProgressMonitor progressMonitor) throws CoreException {
+    // step 4: call initialize on the parser factories
+    for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
+      parserFactory.initialize(this);
+    }
+  }
 
-		// set the progress monitor
-		_currentProgressMonitor = progressMonitor;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences) throws CoreException {
 
-		// assert
-		assertState(BundleMakerProjectState.INITIALIZED,
-				BundleMakerProjectState.PARSED);
+    // set the progress monitor
+    _currentProgressMonitor = progressMonitor;
 
-		// TODO: up-to-date-check
+    // assert
+    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
 
-		// get the dependency store
-		IDependencyStore dependencyStore = getDependencyStore(null);
+    // create the project parser
+    ProjectParser projectParser = new ProjectParser(this, parseIndirectReferences);
 
-		List<Resource> resources = dependencyStore.getResources();
+    // parse the project
+    List<IProblem> problems = projectParser.parseBundleMakerProject(progressMonitor);
 
-		Map<Resource, Resource> map = new HashMap<Resource, Resource>();
+    _projectState = BundleMakerProjectState.PARSED;
 
-		ProgressMonitor monitor = new ProgressMonitor();
+    // return the problems
+    return problems;
+  }
 
-		// TODO
-		monitor.beginTask("Opening database ", resources.size());
+  /**
+   * {@inheritDoc}
+   */
+  public void open(IProgressMonitor progressMonitor) throws CoreException {
 
-		for (Resource resource : resources) {
+    // set the progress monitor
+    _currentProgressMonitor = progressMonitor;
 
-			map.put(resource, resource);
+    // assert
+    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED);
 
-			// create copies of references
-			Set<Reference> references = new HashSet<Reference>();
-			for (Reference reference : resource.getModifiableReferences()) {
+    // TODO: up-to-date-check
 
-				// TODO
-				if (reference == null) {
-					continue;
-				}
+    // get the dependency store
+    IDependencyStore dependencyStore = getDependencyStore(null);
 
-				Reference newReference = new Reference(reference);
-				references.add(newReference);
-				newReference.setResource(resource);
-			}
-			resource.getModifiableReferences().clear();
-			resource.getModifiableReferences().addAll(references);
+    List<Resource> resources = dependencyStore.getResources();
 
-			//
-			for (Type type : resource.getModifiableContainedTypes()) {
+    Map<Resource, Resource> map = new HashMap<Resource, Resource>();
 
-				// create copies of references
-				Set<Reference> typeReferences = new HashSet<Reference>();
-				for (Reference reference : type.getModifiableReferences()) {
+    ProgressMonitor monitor = new ProgressMonitor();
 
-					// TODO
-					if (reference == null) {
-						continue;
-					}
+    // TODO
+    monitor.beginTask("Opening database ", resources.size());
 
-					Reference newReference = new Reference(reference);
-					typeReferences.add(newReference);
-					newReference.setType(type);
-				}
+    for (Resource resource : resources) {
 
-				type.getModifiableReferences().clear();
-				type.getModifiableReferences().addAll(typeReferences);
-			}
+      map.put(resource, resource);
 
-			// set monitor
-			monitor.worked(1);
-		}
+      // create copies of references
+      Set<Reference> references = new HashSet<Reference>();
+      for (Reference reference : resource.getModifiableReferences()) {
 
-		monitor.done();
+        // TODO
+        if (reference == null) {
+          continue;
+        }
 
-		List<FileBasedContent> fileBasedContents = _projectDescription
-				.getModifiableFileBasedContent();
-
-		// TODO
-		for (FileBasedContent fileBasedContent : fileBasedContents) {
-
-			// Map<String, ResourceStandin> typeToResourceStandin = new
-			// HashMap<String, ResourceStandin>();
-
-			if (fileBasedContent.isResourceContent()) {
-
-				for (ResourceStandin resourceStandin : fileBasedContent.getModifiableBinaryResources()) {
-
-					setupResourceStandin(resourceStandin, map, false);
-					Assert.isNotNull(resourceStandin.getResource());
-					for (IType type : resourceStandin.getContainedTypes()) {
-
-						// ALWAYS assert a binary resource
-						Assert.isNotNull(
-								type.getBinaryResource(),
-								"No binary resource for type "
-										+ type.getFullyQualifiedName());
-					}
-				}
-
-				for (ResourceStandin resourceStandin : fileBasedContent.getModifiableSourceResources()) {
-
-					setupResourceStandin(resourceStandin, map, true);
-					Assert.isNotNull(resourceStandin.getResource());
-					for (IType type : resourceStandin.getContainedTypes()) {
-
-						if (type.getBinaryResource() == null) {
-							System.out.println("No binary resource for type "
-									+ type.getFullyQualifiedName());
-						}
-					}
-				}
-			}
-		}
-
-		// set 'READY' state
-		_projectState = BundleMakerProjectState.OPENED;
-
-		// create default working copy
-		createModularizedSystemWorkingCopy(getProject().getName());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws CoreException
-	 */
-	@Override
-	public IModularizedSystem createModularizedSystemWorkingCopy(String name)
-			throws CoreException {
-
-		// assert
-		Assert.isNotNull(name);
-		Assert.isTrue(name.trim().length() > 0);
-		assertState(BundleMakerProjectState.OPENED);
-
-		//
-		if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
-			// TODO
-			throw new RuntimeException("");
-		}
-
-		// create the modularized system
-		ModularizedSystem modularizedSystem = new ModularizedSystem(name,
-				_projectDescription);
-
-		// create the default transformation
-		ITransformation basicContentTransformation = new BasicProjectContentTransformation();
-		modularizedSystem.getTransformations().add(basicContentTransformation);
-
-		// add the result to the hash map
-		_modifiableModualizedSystemWorkingCopies.put(name, modularizedSystem);
-
-		//
-		return modularizedSystem;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws CoreException
-	 */
-	@Override
-	public boolean hasModularizedSystemWorkingCopy(String name)
-			throws CoreException {
-
-		// assert
-		assertState(BundleMakerProjectState.OPENED);
-
-		return _modifiableModualizedSystemWorkingCopies.containsKey(name);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws CoreException
-	 */
-	@Override
-	public IModularizedSystem getModularizedSystemWorkingCopy(String name)
-			throws CoreException {
-
-		// assert
-		assertState(BundleMakerProjectState.OPENED);
-
-		if (!hasModularizedSystemWorkingCopy(name)) {
-			// TODO
-			throw new RuntimeException(name);
-		}
-
-		return _modifiableModualizedSystemWorkingCopies.get(name);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws CoreException
-	 */
-	@Override
-	public void deleteModularizedSystemWorkingCopy(String name)
-			throws CoreException {
-
-		// assert
-		assertState(BundleMakerProjectState.OPENED);
-
-		if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
-			_modifiableModualizedSystemWorkingCopies.remove(name);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public IProject getProject() {
-		return _project.getProject();
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public IBundleMakerProjectDescription getProjectDescription() {
-		return _projectDescription;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param progressMonitor
-	 * @return
-	 * @throws CoreException
-	 */
-	public IDependencyStore getDependencyStore(IProgressMonitor progressMonitor)
-			throws CoreException {
-
-		// set the progress monitor
-		_currentProgressMonitor = progressMonitor;
-
-		// assert
-		assertState(BundleMakerProjectState.INITIALIZED,
-				BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
-
-		if (_additionalInfoStore == null) {
-			return Activator.getDefault().getPersistentDependencyStore(this);
-		}
-
-		return _additionalInfoStore;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((_project == null) ? 0 : _project.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BundleMakerProject other = (BundleMakerProject) obj;
-		if (_project == null) {
-			if (other._project != null)
-				return false;
-		} else if (!_project.equals(other._project))
-			return false;
-		return true;
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceStandin
-	 * @param map
-	 */
-	private void setupResourceStandin(ResourceStandin resourceStandin,
-			Map<Resource, Resource> map, boolean isSource) {
-
-		// get the associated resource
-		Resource resource = map.get(new ResourceKey(resourceStandin
-				.getContentId(), resourceStandin.getRoot(), resourceStandin
-				.getPath()));
-
-		// create empty resource if no resource was stored in the database
-		if (resource == null) {
-			resource = new Resource(resourceStandin.getContentId(),
-					resourceStandin.getRoot(), resourceStandin.getPath());
-		}
-
-		// associate resource and resource stand-in...
-		resourceStandin.setResource(resource);
-		// ... and set the opposite
-		resource.setResourceStandin(resourceStandin);
-
-		// set the references
-		Set<Reference> resourceReferences = new HashSet<Reference>();
-		for (Reference reference : resource.getModifiableReferences()) {
-			Reference newReference = new Reference(reference);
-			newReference.setResource(resource);
-			resourceReferences.add(newReference);
-		}
-		resource.getModifiableReferences().clear();
-		resource.getModifiableReferences().addAll(resourceReferences);
-
-		// set the type-back-references
-		for (Type type : resource.getModifiableContainedTypes()) {
-
-			if (isSource) {
-				type.setSourceResource(resource);
-			} else {
-				type.setBinaryResource(resource);
-			}
-
-			// set the references
-			Set<Reference> typeReferences = new HashSet<Reference>();
-			for (Reference reference : type.getModifiableReferences()) {
-
-				// TODO
-				if (reference == null) {
-					continue;
-				}
-
-				Reference newReference = new Reference(reference);
-				newReference.setType(type);
-				typeReferences.add(newReference);
-			}
-			type.getModifiableReferences().clear();
-			type.getModifiableReferences().addAll(typeReferences);
-		}
-
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 * @throws CoreException
-	 */
-	private BundleMakerProjectDescription loadProjectDescription()
-			throws CoreException {
-
-		//
-		return ProjectDescriptionStore.loadProjectDescription(this);
-	}
-
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param state
-	 * @throws CoreException
-	 */
-	private void assertState(BundleMakerProjectState... state)
-			throws CoreException {
-
-		// check the states
-		for (BundleMakerProjectState aState : state) {
-			if (aState != null && aState.equals(getState())) {
-				return;
-			}
-		}
-
-		// throw new exception
-		throw new CoreException(
-				new Status(
-						IStatus.ERROR,
-						BundleMakerCore.BUNDLE_ID,
-						String.format(
-								"BundleMakerProject must be in on of the following states: '%s', but current state is '%s'.",
-								Arrays.asList(state), getState())));
-	}
+        Reference newReference = new Reference(reference);
+        references.add(newReference);
+        newReference.setResource(resource);
+      }
+      resource.getModifiableReferences().clear();
+      resource.getModifiableReferences().addAll(references);
+
+      //
+      for (Type type : resource.getModifiableContainedTypes()) {
+
+        // create copies of references
+        Set<Reference> typeReferences = new HashSet<Reference>();
+        for (Reference reference : type.getModifiableReferences()) {
+
+          // TODO
+          if (reference == null) {
+            continue;
+          }
+
+          Reference newReference = new Reference(reference);
+          typeReferences.add(newReference);
+          newReference.setType(type);
+        }
+
+        type.getModifiableReferences().clear();
+        type.getModifiableReferences().addAll(typeReferences);
+      }
+
+      // set monitor
+      monitor.worked(1);
+    }
+
+    monitor.done();
+
+    List<FileBasedContent> fileBasedContents = _projectDescription.getModifiableFileBasedContent();
+
+    // TODO
+    for (FileBasedContent fileBasedContent : fileBasedContents) {
+
+      // Map<String, ResourceStandin> typeToResourceStandin = new
+      // HashMap<String, ResourceStandin>();
+
+      if (fileBasedContent.isResourceContent()) {
+
+        for (ResourceStandin resourceStandin : fileBasedContent.getModifiableBinaryResources()) {
+
+          setupResourceStandin(resourceStandin, map, false);
+          Assert.isNotNull(resourceStandin.getResource());
+          for (IType type : resourceStandin.getContainedTypes()) {
+
+            // ALWAYS assert a binary resource
+            Assert.isNotNull(type.getBinaryResource(), "No binary resource for type " + type.getFullyQualifiedName());
+          }
+        }
+
+        for (ResourceStandin resourceStandin : fileBasedContent.getModifiableSourceResources()) {
+
+          setupResourceStandin(resourceStandin, map, true);
+          Assert.isNotNull(resourceStandin.getResource());
+          for (IType type : resourceStandin.getContainedTypes()) {
+
+            if (type.getBinaryResource() == null) {
+              System.out.println("No binary resource for type " + type.getFullyQualifiedName());
+            }
+          }
+        }
+      }
+    }
+
+    // set 'READY' state
+    _projectState = BundleMakerProjectState.OPENED;
+
+    // create default working copy
+    createModularizedSystemWorkingCopy(getProject().getName());
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  public IModularizedSystem createModularizedSystemWorkingCopy(String name) throws CoreException {
+
+    // assert
+    Assert.isNotNull(name);
+    Assert.isTrue(name.trim().length() > 0);
+    assertState(BundleMakerProjectState.OPENED);
+
+    //
+    if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
+      // TODO
+      throw new RuntimeException("");
+    }
+
+    // create the modularized system
+    ModularizedSystem modularizedSystem = new ModularizedSystem(name, _projectDescription);
+
+    // create the default transformation
+    ITransformation basicContentTransformation = new BasicProjectContentTransformation();
+    modularizedSystem.getTransformations().add(basicContentTransformation);
+
+    // add the result to the hash map
+    _modifiableModualizedSystemWorkingCopies.put(name, modularizedSystem);
+
+    //
+    return modularizedSystem;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  public boolean hasModularizedSystemWorkingCopy(String name) throws CoreException {
+
+    // assert
+    assertState(BundleMakerProjectState.OPENED);
+
+    return _modifiableModualizedSystemWorkingCopies.containsKey(name);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  public IModularizedSystem getModularizedSystemWorkingCopy(String name) throws CoreException {
+
+    // assert
+    assertState(BundleMakerProjectState.OPENED);
+
+    if (!hasModularizedSystemWorkingCopy(name)) {
+      // TODO
+      throw new RuntimeException(name);
+    }
+
+    return _modifiableModualizedSystemWorkingCopies.get(name);
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  public void deleteModularizedSystemWorkingCopy(String name) throws CoreException {
+
+    // assert
+    assertState(BundleMakerProjectState.OPENED);
+
+    if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
+      _modifiableModualizedSystemWorkingCopies.remove(name);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public IProject getProject() {
+    return _project.getProject();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IBundleMakerProjectDescription getProjectDescription() {
+    return _projectDescription;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param progressMonitor
+   * @return
+   * @throws CoreException
+   */
+  public IDependencyStore getDependencyStore(IProgressMonitor progressMonitor) throws CoreException {
+
+    // set the progress monitor
+    _currentProgressMonitor = progressMonitor;
+
+    // assert
+    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
+
+    if (_additionalInfoStore == null) {
+      return Activator.getDefault().getPersistentDependencyStore(this);
+    }
+
+    return _additionalInfoStore;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_project == null) ? 0 : _project.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    BundleMakerProject other = (BundleMakerProject) obj;
+    if (_project == null) {
+      if (other._project != null)
+        return false;
+    } else if (!_project.equals(other._project))
+      return false;
+    return true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceStandin
+   * @param map
+   */
+  private void setupResourceStandin(ResourceStandin resourceStandin, Map<Resource, Resource> map, boolean isSource) {
+
+    // get the associated resource
+    Resource resource = map.get(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
+        resourceStandin.getPath()));
+
+    // create empty resource if no resource was stored in the database
+    if (resource == null) {
+      resource = new Resource(resourceStandin.getContentId(), resourceStandin.getRoot(), resourceStandin.getPath());
+    }
+
+    // associate resource and resource stand-in...
+    resourceStandin.setResource(resource);
+    // ... and set the opposite
+    resource.setResourceStandin(resourceStandin);
+
+    // set the references
+    Set<Reference> resourceReferences = new HashSet<Reference>();
+    for (Reference reference : resource.getModifiableReferences()) {
+      Reference newReference = new Reference(reference);
+      newReference.setResource(resource);
+      resourceReferences.add(newReference);
+    }
+    resource.getModifiableReferences().clear();
+    resource.getModifiableReferences().addAll(resourceReferences);
+
+    // set the type-back-references
+    for (Type type : resource.getModifiableContainedTypes()) {
+
+      if (isSource) {
+        type.setSourceResource(resource);
+      } else {
+        type.setBinaryResource(resource);
+      }
+
+      // set the references
+      Set<Reference> typeReferences = new HashSet<Reference>();
+      for (Reference reference : type.getModifiableReferences()) {
+
+        // TODO
+        if (reference == null) {
+          continue;
+        }
+
+        Reference newReference = new Reference(reference);
+        newReference.setType(type);
+        typeReferences.add(newReference);
+      }
+      type.getModifiableReferences().clear();
+      type.getModifiableReferences().addAll(typeReferences);
+    }
+
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @throws CoreException
+   */
+  private BundleMakerProjectDescription loadProjectDescription() throws CoreException {
+
+    //
+    return ProjectDescriptionStore.loadProjectDescription(this);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param state
+   * @throws CoreException
+   */
+  private void assertState(BundleMakerProjectState... state) throws CoreException {
+
+    // check the states
+    for (BundleMakerProjectState aState : state) {
+      if (aState != null && aState.equals(getState())) {
+        return;
+      }
+    }
+
+    // throw new exception
+    throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, String.format(
+        "BundleMakerProject must be in on of the following states: '%s', but current state is '%s'.",
+        Arrays.asList(state), getState())));
+  }
 }

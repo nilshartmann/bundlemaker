@@ -10,19 +10,19 @@ import java.util.Map;
  */
 public interface IResourceModule extends IResourceContainer, IModule {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	IResourceContainer getSelfResourceContainer();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IResourceContainer getSelfResourceContainer();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Map<String, ? extends IResourceContainer> getContainedResourceContainers();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Map<String, ? extends IResourceContainer> getContainedResourceContainers();
 }

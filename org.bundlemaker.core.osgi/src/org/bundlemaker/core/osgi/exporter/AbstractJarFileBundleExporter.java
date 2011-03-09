@@ -25,134 +25,123 @@ import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFac
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractJarFileBundleExporter extends
-		AbstractManifestTemplateBasedExporter {
+public abstract class AbstractJarFileBundleExporter extends AbstractManifestTemplateBasedExporter {
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws CoreException
-	 */
-	@Override
-	protected void doExport() throws CoreException {
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  protected void doExport() throws CoreException {
 
-		// create new file if repackaging is required
-		if (ModuleExporterUtils.requiresRepackaging(getCurrentModule(),
-				ContentType.BINARY)) {
+    // create new file if repackaging is required
+    if (ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ContentType.BINARY)) {
 
-			// create new File
-			createNewJarFile();
-		}
+      // create new File
+      createNewJarFile();
+    }
 
-		// copy (and patch) the original
-		else {
+    // copy (and patch) the original
+    else {
 
-			// get the root file
-			File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(),
-					ContentType.BINARY);
+      // get the root file
+      File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ContentType.BINARY);
 
-			//
-			System.out.println("patching " + rootFile.getAbsolutePath());
+      //
+      System.out.println("patching " + rootFile.getAbsolutePath());
 
-			// get the manifest writer
-			ManifestWriter manifestWriter = new StandardManifestWriterFactory()
-					.create(rootFile.getAbsolutePath(), getDestinationFile()
-							.getAbsolutePath());
+      // get the manifest writer
+      ManifestWriter manifestWriter = new StandardManifestWriterFactory().create(rootFile.getAbsolutePath(),
+          getDestinationFile().getAbsolutePath());
 
-			//
-			manifestWriter.write(getCurrentManifest());
-		}
-	}
+      //
+      manifestWriter.write(getCurrentManifest());
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @throws CoreException
-	 */
-	private void createNewJarFile() throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  private void createNewJarFile() throws CoreException {
 
-		try {
+    try {
 
-			// create the output stream
-			OutputStream outputStream = createOutputStream(
-					getCurrentModularizedSystem(), getCurrentModule(),
-					getCurrentContext());
+      // create the output stream
+      OutputStream outputStream = createOutputStream(getCurrentModularizedSystem(), getCurrentModule(),
+          getCurrentContext());
 
-			// export the jar archive
-			JarFileUtils.createJarArchive(
-					getCurrentModule().getResources(ContentType.BINARY),
-					ManifestUtils.toManifest(getCurrentManifest()),
-					outputStream);
+      // export the jar archive
+      JarFileUtils.createJarArchive(getCurrentModule().getResources(ContentType.BINARY),
+          ManifestUtils.toManifest(getCurrentManifest()), outputStream);
 
-			// close the output stream
-			outputStream.close();
+      // close the output stream
+      outputStream.close();
 
-		} catch (IOException e) {
-			// TODO
-			e.printStackTrace();
-			throw new CoreException(new Status(IStatus.ERROR, "", ""));
-		} catch (Exception e) {
-			// TODO
-			e.printStackTrace();
-			throw new CoreException(new Status(IStatus.ERROR, "", ""));
-		}
-	}
+    } catch (IOException e) {
+      // TODO
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR, "", ""));
+    } catch (Exception e) {
+      // TODO
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR, "", ""));
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	protected OutputStream createOutputStream(
-			IModularizedSystem modularizedSystem, IResourceModule module,
-			IModuleExporterContext context) throws Exception {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @param module
+   * @param context
+   * @return
+   * @throws Exception
+   */
+  protected OutputStream createOutputStream(IModularizedSystem modularizedSystem, IResourceModule module,
+      IModuleExporterContext context) throws Exception {
 
-		File targetFile = getDestinationFile();
+    File targetFile = getDestinationFile();
 
-		// return a new file output stream
-		return new FileOutputStream(targetFile);
-	}
+    // return a new file output stream
+    return new FileOutputStream(targetFile);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 */
-	protected File getDestinationFile() {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @param module
+   * @param context
+   * @return
+   */
+  protected File getDestinationFile() {
 
-		// create the target file
-		File targetFile = new File(getCurrentContext()
-				.getDestinationDirectory(),
-				computeJarFileName(getCurrentModule()));
+    // create the target file
+    File targetFile = new File(getCurrentContext().getDestinationDirectory(), computeJarFileName(getCurrentModule()));
 
-		// create the parent directories
-		if (!targetFile.getParentFile().exists()) {
-			targetFile.getParentFile().mkdirs();
-		}
-		return targetFile;
-	}
+    // create the parent directories
+    if (!targetFile.getParentFile().exists()) {
+      targetFile.getParentFile().mkdirs();
+    }
+    return targetFile;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param module
-	 * @return
-	 */
-	protected String computeJarFileName(IResourceModule module) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   * @return
+   */
+  protected String computeJarFileName(IResourceModule module) {
 
-		//
-		return module.getModuleIdentifier().getName() + "_"
-				+ module.getModuleIdentifier().getVersion() + ".jar";
-	}
+    //
+    return module.getModuleIdentifier().getName() + "_" + module.getModuleIdentifier().getVersion() + ".jar";
+  }
 }

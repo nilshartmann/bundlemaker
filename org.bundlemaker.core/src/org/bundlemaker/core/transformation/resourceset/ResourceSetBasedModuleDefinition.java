@@ -17,137 +17,134 @@ import org.eclipse.core.runtime.IPath;
  */
 public class ResourceSetBasedModuleDefinition {
 
-	/** - */
-	private IModuleIdentifier _moduleIdentifier;
+  /** - */
+  private IModuleIdentifier   _moduleIdentifier;
 
-	/** - */
-	private IPath _classification;
+  /** - */
+  private IPath               _classification;
 
-	/** - */
-	private List<ResourceSet> _resourceSets;
+  /** - */
+  private List<ResourceSet>   _resourceSets;
 
-	/** - */
-	private Map<String, Object> _userAttributes;
+  /** - */
+  private Map<String, Object> _userAttributes;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ResourceSetBasedModuleDefinition}.
-	 * </p>
-	 */
-	public ResourceSetBasedModuleDefinition() {
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceSetBasedModuleDefinition}.
+   * </p>
+   */
+  public ResourceSetBasedModuleDefinition() {
 
-		//
-		_resourceSets = new ArrayList<ResourceSet>();
-		_userAttributes = new HashMap<String, Object>();
-	}
+    //
+    _resourceSets = new ArrayList<ResourceSet>();
+    _userAttributes = new HashMap<String, Object>();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public IModuleIdentifier getModuleIdentifier() {
-		return _moduleIdentifier;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IModuleIdentifier getModuleIdentifier() {
+    return _moduleIdentifier;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param moduleIdentifier
-	 */
-	public void setModuleIdentifier(IModuleIdentifier moduleIdentifier) {
-		_moduleIdentifier = moduleIdentifier;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param moduleIdentifier
+   */
+  public void setModuleIdentifier(IModuleIdentifier moduleIdentifier) {
+    _moduleIdentifier = moduleIdentifier;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public IPath getClassification() {
-		return _classification;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IPath getClassification() {
+    return _classification;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param classification
-	 */
-	public void setClassification(IPath classification) {
-		_classification = classification;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param classification
+   */
+  public void setClassification(IPath classification) {
+    _classification = classification;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public List<ResourceSet> getResourceSets() {
-		return _resourceSets;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<ResourceSet> getResourceSets() {
+    return _resourceSets;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Map<String, Object> getUserAttributes() {
-		return _userAttributes;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Map<String, Object> getUserAttributes() {
+    return _userAttributes;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceSetBasedModuleDefinition
-	 * @param fromModuleIdentifier
-	 * @param includes
-	 * @param excludes
-	 */
-	public void addResourceSet(IModuleIdentifier fromModuleIdentifier,
-			String[] includes, String[] excludes) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceSetBasedModuleDefinition
+   * @param fromModuleIdentifier
+   * @param includes
+   * @param excludes
+   */
+  public void addResourceSet(IModuleIdentifier fromModuleIdentifier, String[] includes, String[] excludes) {
 
-		ResourceSet resourceSet = new ResourceSet();
+    ResourceSet resourceSet = new ResourceSet();
 
-		resourceSet.setModuleIdentifier(fromModuleIdentifier);
+    resourceSet.setModuleIdentifier(fromModuleIdentifier);
 
-		if (includes != null) {
-			for (String include : includes) {
-				resourceSet.getIncludes().add(include);
-			}
-		}
+    if (includes != null) {
+      for (String include : includes) {
+        resourceSet.getIncludes().add(include);
+      }
+    }
 
-		if (excludes != null) {
-			for (String exclude : excludes) {
-				resourceSet.getExcludes().add(exclude);
-			}
-		}
+    if (excludes != null) {
+      for (String exclude : excludes) {
+        resourceSet.getExcludes().add(exclude);
+      }
+    }
 
-		_resourceSets.add(resourceSet);
-	}
+    _resourceSets.add(resourceSet);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceSetBasedModuleDefinition
-	 * @param fromName
-	 * @param fromVersion
-	 * @param includes
-	 * @param excludes
-	 */
-	public void addResourceSet(String fromName, String fromVersion,
-			String[] includes, String[] excludes) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceSetBasedModuleDefinition
+   * @param fromName
+   * @param fromVersion
+   * @param includes
+   * @param excludes
+   */
+  public void addResourceSet(String fromName, String fromVersion, String[] includes, String[] excludes) {
 
-		IModuleIdentifier originIdentifier = new ModuleIdentifier(fromName,
-				fromVersion);
+    IModuleIdentifier originIdentifier = new ModuleIdentifier(fromName, fromVersion);
 
-		addResourceSet(originIdentifier, includes, excludes);
-	}
+    addResourceSet(originIdentifier, includes, excludes);
+  }
 }

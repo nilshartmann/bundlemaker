@@ -16,40 +16,39 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 
-	/** - */
-	private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
+  /** - */
+  private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param useRequireBundle
-	 */
-	public void setDependencyStyle(DependencyStyle dependencyStyle) {
-		_dependencyStyle = dependencyStyle;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param useRequireBundle
+   */
+  public void setDependencyStyle(DependencyStyle dependencyStyle) {
+    _dependencyStyle = dependencyStyle;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	protected ManifestContents createManifest() throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @param module
+   * @param context
+   * @return
+   * @throws Exception
+   */
+  protected ManifestContents createManifest() throws CoreException {
 
-		// create the manifest
-		BundleManifestCreator creator = new BundleManifestCreator(
-				getCurrentModularizedSystem(), getCurrentModule(),
-				getCurrentContext(), getCurrentManifestTemplate());
+    // create the manifest
+    BundleManifestCreator creator = new BundleManifestCreator(getCurrentModularizedSystem(), getCurrentModule(),
+        getCurrentContext(), getCurrentManifestTemplate());
 
-		// set useRequireBundle
-		creator.setDependencyStyle(_dependencyStyle);
+    // set useRequireBundle
+    creator.setDependencyStyle(_dependencyStyle);
 
-		// create manifest
-		return creator.createManifest();
-	}
+    // create manifest
+    return creator.createManifest();
+  }
 }

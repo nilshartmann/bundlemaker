@@ -11,79 +11,77 @@ import java.util.Iterator;
  */
 public class ManifestHeaderUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param <T>
-	 * @param collection
-	 * @return
-	 */
-	public static <T> String listToString(Collection<T> collection) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param <T>
+   * @param collection
+   * @return
+   */
+  public static <T> String listToString(Collection<T> collection) {
 
-		//
-		return listToString(collection, new ToStringStrategy<T>() {
+    //
+    return listToString(collection, new ToStringStrategy<T>() {
 
-			@Override
-			public String toString(T element) {
-				return element.toString();
-			}
-		}, ",");
-	}
+      @Override
+      public String toString(T element) {
+        return element.toString();
+      }
+    }, ",");
+  }
 
-	public static <T> String listToString(Collection<T> collection,
-			ToStringStrategy<T> strategy) {
+  public static <T> String listToString(Collection<T> collection, ToStringStrategy<T> strategy) {
 
-		return listToString(collection, strategy, ",");
-	}
+    return listToString(collection, strategy, ",");
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param collection
-	 * @return
-	 */
-	public static <T> String listToString(Collection<T> collection,
-			ToStringStrategy<T> strategy, String delimiter) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param collection
+   * @return
+   */
+  public static <T> String listToString(Collection<T> collection, ToStringStrategy<T> strategy, String delimiter) {
 
-		// create the string builder
-		StringBuilder stringBuilder = new StringBuilder();
+    // create the string builder
+    StringBuilder stringBuilder = new StringBuilder();
 
-		// get the iterator
-		Iterator<T> iterator = collection.iterator();
+    // get the iterator
+    Iterator<T> iterator = collection.iterator();
 
-		// iterate over the collection
-		while (iterator.hasNext()) {
+    // iterate over the collection
+    while (iterator.hasNext()) {
 
-			//
-			T entry = iterator.next();
+      //
+      T entry = iterator.next();
 
-			//
-			stringBuilder.append(strategy.toString(entry));
+      //
+      stringBuilder.append(strategy.toString(entry));
 
-			//
-			if (iterator.hasNext()) {
-				stringBuilder.append(delimiter);
-			}
+      //
+      if (iterator.hasNext()) {
+        stringBuilder.append(delimiter);
+      }
 
-			//
-			entry.toString();
-		}
+      //
+      entry.toString();
+    }
 
-		//
-		return stringBuilder.toString();
-	}
+    //
+    return stringBuilder.toString();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-	 * 
-	 * @param <T>
-	 */
-	public interface ToStringStrategy<T> {
-		String toString(T element);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   * 
+   * @param <T>
+   */
+  public interface ToStringStrategy<T> {
+    String toString(T element);
+  }
 }

@@ -8,5 +8,5 @@ package org.bundlemaker.core.resource;
  */
 public enum ReferenceType {
 
-	PACKAGE_REFERENCE, TYPE_REFERENCE;
+  PACKAGE_REFERENCE, TYPE_REFERENCE;
 }

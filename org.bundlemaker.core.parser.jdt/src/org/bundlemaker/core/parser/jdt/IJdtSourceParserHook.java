@@ -13,30 +13,27 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  */
 public interface IJdtSourceParserHook {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 */
-	public void parseBundleMakerProjectStart(
-			IBundleMakerProject bundleMakerProject);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   */
+  public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public void analyzeCompilationUnit(IResourceKey resourceKey,
-			CompilationUnit compilationUnit);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public void analyzeCompilationUnit(IResourceKey resourceKey, CompilationUnit compilationUnit);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 */
-	public void parseBundleMakerProjectStop(
-			IBundleMakerProject bundleMakerProject);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   */
+  public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject);
 }

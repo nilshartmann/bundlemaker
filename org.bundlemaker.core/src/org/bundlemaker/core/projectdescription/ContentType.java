@@ -9,9 +9,9 @@ package org.bundlemaker.core.projectdescription;
  */
 public enum ContentType {
 
-	/** source content */
-	SOURCE,
+  /** source content */
+  SOURCE,
 
-	/** binary content */
-	BINARY;
+  /** binary content */
+  BINARY;
 }

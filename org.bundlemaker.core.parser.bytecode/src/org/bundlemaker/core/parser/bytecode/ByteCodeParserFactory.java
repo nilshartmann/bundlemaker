@@ -13,15 +13,14 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class ByteCodeParserFactory extends AbstractParserFactory {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IParser createParser(IBundleMakerProject bundleMakerProject,
-			boolean parseIndirectReferences)
-			throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IParser createParser(IBundleMakerProject bundleMakerProject, boolean parseIndirectReferences)
+      throws CoreException {
 
-		// return the new byte code parser
-		return new ByteCodeParser();
-	}
+    // return the new byte code parser
+    return new ByteCodeParser();
+  }
 }

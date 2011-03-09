@@ -27,284 +27,258 @@ import org.eclipse.core.runtime.Path;
  */
 public class FileContentReader {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fileBasedContent
-	 * @param filterNonAnalyzableSource
-	 * @return
-	 */
-	public static List<IDirectory> getDirectories(
-			IFileBasedContent fileBasedContent,
-			boolean filterNonAnalyzableSource) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fileBasedContent
+   * @param filterNonAnalyzableSource
+   * @return
+   */
+  public static List<IDirectory> getDirectories(IFileBasedContent fileBasedContent, boolean filterNonAnalyzableSource) {
 
-		Assert.isNotNull(fileBasedContent);
+    Assert.isNotNull(fileBasedContent);
 
-		// create the (result) directory map
-		Map<String, Directory> directoryMap = new HashMap<String, Directory>();
+    // create the (result) directory map
+    Map<String, Directory> directoryMap = new HashMap<String, Directory>();
 
-		// add all binary paths
-		for (IPath path : fileBasedContent.getBinaryPaths()) {
-			getAllPackages(fileBasedContent, directoryMap, path.toFile(), false);
-		}
+    // add all binary paths
+    for (IPath path : fileBasedContent.getBinaryPaths()) {
+      getAllPackages(fileBasedContent, directoryMap, path.toFile(), false);
+    }
 
-		if (!fileBasedContent.getSourcePaths().isEmpty()
-				&& (!filterNonAnalyzableSource || fileBasedContent
-						.isAnalyzeSourceResources())) {
-			for (IPath path : fileBasedContent.getSourcePaths()) {
-				getAllPackages(fileBasedContent, directoryMap, path.toFile(),
-						true);
-			}
-		}
+    if (!fileBasedContent.getSourcePaths().isEmpty()
+        && (!filterNonAnalyzableSource || fileBasedContent.isAnalyzeSourceResources())) {
+      for (IPath path : fileBasedContent.getSourcePaths()) {
+        getAllPackages(fileBasedContent, directoryMap, path.toFile(), true);
+      }
+    }
 
-		Collection<Directory> result = directoryMap.values();
+    Collection<Directory> result = directoryMap.values();
 
-		// TODO!!
-		for (Iterator<Directory> iterator = result.iterator(); iterator
-				.hasNext();) {
+    // TODO!!
+    for (Iterator<Directory> iterator = result.iterator(); iterator.hasNext();) {
 
-			Directory directory = iterator.next();
+      Directory directory = iterator.next();
 
-			// TODO!!
-			if (!directory.isValid()) {
-				iterator.remove();
-			}
-		}
+      // TODO!!
+      if (!directory.isValid()) {
+        iterator.remove();
+      }
+    }
 
-		// return the result
-		return new LinkedList<IDirectory>(result);
-	}
+    // return the result
+    return new LinkedList<IDirectory>(result);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fileContent
-	 * @param packages
-	 * @param contentRoot
-	 * @param isSource
-	 */
-	private static void getAllPackages(IFileBasedContent fileContent,
-			Map<String, Directory> packages, File contentRoot, boolean isSource) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fileContent
+   * @param packages
+   * @param contentRoot
+   * @param isSource
+   */
+  private static void getAllPackages(IFileBasedContent fileContent, Map<String, Directory> packages, File contentRoot,
+      boolean isSource) {
 
-		// TODO
-		if (!contentRoot.exists()) {
-			throw new RuntimeException("File '" + contentRoot.getAbsolutePath()
-					+ "' does not exist!");
-		}
+    // TODO
+    if (!contentRoot.exists()) {
+      throw new RuntimeException("File '" + contentRoot.getAbsolutePath() + "' does not exist!");
+    }
 
-		//
-		if (contentRoot.isDirectory()) {
-			getAllPackagesFromDirectory(fileContent, contentRoot, packages,
-					isSource);
-		} else {
-			getAllPackagesFromJar(fileContent, contentRoot, packages, isSource);
-		}
-	}
+    //
+    if (contentRoot.isDirectory()) {
+      getAllPackagesFromDirectory(fileContent, contentRoot, packages, isSource);
+    } else {
+      getAllPackagesFromJar(fileContent, contentRoot, packages, isSource);
+    }
+  }
 
-	/**
-	 * <p>
-	 * Returns all the names of the packages that are contained in the specified
-	 * jar file. The package list contains the packages that contain classes as
-	 * well as all parent packages of those.
-	 * </p>
-	 * 
-	 * @param jar
-	 * @return
-	 * @throws IOException
-	 */
-	private static Map<String, Directory> getAllPackagesFromJar(
-			IFileBasedContent fileContent, File jar,
-			Map<String, Directory> directoryMap, boolean isSourceContent) {
+  /**
+   * <p>
+   * Returns all the names of the packages that are contained in the specified jar file. The package list contains the
+   * packages that contain classes as well as all parent packages of those.
+   * </p>
+   * 
+   * @param jar
+   * @return
+   * @throws IOException
+   */
+  private static Map<String, Directory> getAllPackagesFromJar(IFileBasedContent fileContent, File jar,
+      Map<String, Directory> directoryMap, boolean isSourceContent) {
 
-		Assert.isNotNull(directoryMap);
-		Assert.isTrue(jar != null && jar.isFile());
+    Assert.isNotNull(directoryMap);
+    Assert.isTrue(jar != null && jar.isFile());
 
-		// create the jarFile wrapper...
-		JarFile jarFile = null;
+    // create the jarFile wrapper...
+    JarFile jarFile = null;
 
-		try {
-			jarFile = new JarFile(jar);
-		} catch (IOException e) {
-			throw new RuntimeException(String.format(
-					"Could not create jar file from file '%s'.",
-					jar.getAbsolutePath()));
-		}
+    try {
+      jarFile = new JarFile(jar);
+    } catch (IOException e) {
+      throw new RuntimeException(String.format("Could not create jar file from file '%s'.", jar.getAbsolutePath()));
+    }
 
-		//
-		Assert.isNotNull(jarFile);
+    //
+    Assert.isNotNull(jarFile);
 
-		// Iterate over entries...
-		Enumeration<?> enumeration = jarFile.entries();
+    // Iterate over entries...
+    Enumeration<?> enumeration = jarFile.entries();
 
-		while (enumeration.hasMoreElements()) {
-			JarEntry jarEntry = (JarEntry) enumeration.nextElement();
+    while (enumeration.hasMoreElements()) {
+      JarEntry jarEntry = (JarEntry) enumeration.nextElement();
 
-			// add package for each found directory...
-			String directoryName = null;
-			String entryName = null;
+      // add package for each found directory...
+      String directoryName = null;
+      String entryName = null;
 
-			// if the jar entry is a directory, the directory name is the name
-			// of the jar entry...
-			if (jarEntry.isDirectory()) {
-				directoryName = jarEntry.getName();
-			}
-			// otherwise the directory name has to be computed
-			else {
-				int splitIndex = jarEntry.getName().lastIndexOf('/');
-				if (splitIndex != -1) {
-					directoryName = jarEntry.getName().substring(0, splitIndex);
-					entryName = jarEntry.getName().substring(splitIndex);
-				}
-			}
+      // if the jar entry is a directory, the directory name is the name
+      // of the jar entry...
+      if (jarEntry.isDirectory()) {
+        directoryName = jarEntry.getName();
+      }
+      // otherwise the directory name has to be computed
+      else {
+        int splitIndex = jarEntry.getName().lastIndexOf('/');
+        if (splitIndex != -1) {
+          directoryName = jarEntry.getName().substring(0, splitIndex);
+          entryName = jarEntry.getName().substring(splitIndex);
+        }
+      }
 
-			if (directoryName != null && entryName != null) {
+      if (directoryName != null && entryName != null) {
 
-				// convert path to package name
-				String packageName = directoryName.endsWith("/") ? directoryName
-						.substring(0, directoryName.length() - 1)
-						: directoryName;
+        // convert path to package name
+        String packageName = directoryName.endsWith("/") ? directoryName.substring(0, directoryName.length() - 1)
+            : directoryName;
 
-				// create package if necessary
-				if (!directoryMap.containsKey(packageName)) {
-					directoryMap.put(packageName, new Directory(fileContent,
-							new Path(packageName), null, null));
-				}
+        // create package if necessary
+        if (!directoryMap.containsKey(packageName)) {
+          directoryMap.put(packageName, new Directory(fileContent, new Path(packageName), null, null));
+        }
 
-				Directory directory = directoryMap.get(packageName);
+        Directory directory = directoryMap.get(packageName);
 
-				//
-				JarFileBasedDirectoryFragment jarFileBasedDirectoryFragment = null;
+        //
+        JarFileBasedDirectoryFragment jarFileBasedDirectoryFragment = null;
 
-				List<IDirectoryFragment> fragments = isSourceContent ? directory
-						.getSourceDirectoryFragments() : directory
-						.getBinaryDirectoryFragments();
-				//
-				for (IDirectoryFragment directoryFragment : fragments) {
+        List<IDirectoryFragment> fragments = isSourceContent ? directory.getSourceDirectoryFragments() : directory
+            .getBinaryDirectoryFragments();
+        //
+        for (IDirectoryFragment directoryFragment : fragments) {
 
-					// TODO
-					if (directoryFragment instanceof JarFileBasedDirectoryFragment
-							&& ((JarFileBasedDirectoryFragment) directoryFragment)
-									.getJarFile().equals(jarFile)) {
+          // TODO
+          if (directoryFragment instanceof JarFileBasedDirectoryFragment
+              && ((JarFileBasedDirectoryFragment) directoryFragment).getJarFile().equals(jarFile)) {
 
-						jarFileBasedDirectoryFragment = ((JarFileBasedDirectoryFragment) directoryFragment);
-					}
-				}
+            jarFileBasedDirectoryFragment = ((JarFileBasedDirectoryFragment) directoryFragment);
+          }
+        }
 
-				//
-				if (jarFileBasedDirectoryFragment == null) {
+        //
+        if (jarFileBasedDirectoryFragment == null) {
 
-					jarFileBasedDirectoryFragment = new JarFileBasedDirectoryFragment(
-							new File(jarFile.getName()), jarFile);
+          jarFileBasedDirectoryFragment = new JarFileBasedDirectoryFragment(new File(jarFile.getName()), jarFile);
 
-					//
-					if (isSourceContent) {
-						directory
-								.addSourceContent(jarFileBasedDirectoryFragment);
-					} else {
-						directory
-								.addBinaryContent(jarFileBasedDirectoryFragment);
-					}
-				}
+          //
+          if (isSourceContent) {
+            directory.addSourceContent(jarFileBasedDirectoryFragment);
+          } else {
+            directory.addBinaryContent(jarFileBasedDirectoryFragment);
+          }
+        }
 
-				jarFileBasedDirectoryFragment.addJarEntry(jarEntry);
-			}
-		}
+        jarFileBasedDirectoryFragment.addJarEntry(jarEntry);
+      }
+    }
 
-		// return result...
-		return directoryMap;
-	}
+    // return result...
+    return directoryMap;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param content
-	 * @param directory
-	 * @param packages
-	 * @param isSource
-	 */
-	private static void getAllPackagesFromDirectory(IFileBasedContent content,
-			File directory, Map<String, Directory> packages, boolean isSource) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param content
+   * @param directory
+   * @param packages
+   * @param isSource
+   */
+  private static void getAllPackagesFromDirectory(IFileBasedContent content, File directory,
+      Map<String, Directory> packages, boolean isSource) {
 
-		//
-		getAllPackagesFromDirectory(content, directory, directory, packages,
-				isSource);
-	}
+    //
+    getAllPackagesFromDirectory(content, directory, directory, packages, isSource);
+  }
 
-	/**
-	 * <p>
-	 * Returns all children of 'root'.
-	 * </p>
-	 * 
-	 * @param fileContent
-	 * @param root
-	 * @param directory
-	 * @param packages
-	 * @param isSource
-	 */
-	private static void getAllPackagesFromDirectory(
-			IFileBasedContent fileContent, File root, File directory,
-			Map<String, Directory> packages, boolean isSource) {
+  /**
+   * <p>
+   * Returns all children of 'root'.
+   * </p>
+   * 
+   * @param fileContent
+   * @param root
+   * @param directory
+   * @param packages
+   * @param isSource
+   */
+  private static void getAllPackagesFromDirectory(IFileBasedContent fileContent, File root, File directory,
+      Map<String, Directory> packages, boolean isSource) {
 
-		// get the package directories
-		String packageDirectory = root.equals(directory) ? "" : directory
-				.getAbsolutePath().substring(
-						root.getAbsolutePath().length() + 1);
+    // get the package directories
+    String packageDirectory = root.equals(directory) ? "" : directory.getAbsolutePath().substring(
+        root.getAbsolutePath().length() + 1);
 
-		// 'normalize' the package directory
-		packageDirectory = packageDirectory.replace('\\', '/');
+    // 'normalize' the package directory
+    packageDirectory = packageDirectory.replace('\\', '/');
 
-		// declare the directory content
-		FolderBasedDirectoryFragment folderBasedDirectoryContent = null;
+    // declare the directory content
+    FolderBasedDirectoryFragment folderBasedDirectoryContent = null;
 
-		// iterate over all file
-		for (File child : directory.listFiles()) {
+    // iterate over all file
+    for (File child : directory.listFiles()) {
 
-			// handle file
-			if (child.isFile()) {
+      // handle file
+      if (child.isFile()) {
 
-				// create IFolderBasedDirectoryContent if necessary
-				if (folderBasedDirectoryContent == null) {
+        // create IFolderBasedDirectoryContent if necessary
+        if (folderBasedDirectoryContent == null) {
 
-					// create package if necessary
-					if (!packages.containsKey(packageDirectory)) {
-						packages.put(packageDirectory, new Directory(
-								fileContent, new Path(packageDirectory), null,
-								null));
-					}
+          // create package if necessary
+          if (!packages.containsKey(packageDirectory)) {
+            packages.put(packageDirectory, new Directory(fileContent, new Path(packageDirectory), null, null));
+          }
 
-					// create the Directory object
-					Directory dir = packages.get(packageDirectory);
-					folderBasedDirectoryContent = new FolderBasedDirectoryFragment(
-							root);
+          // create the Directory object
+          Directory dir = packages.get(packageDirectory);
+          folderBasedDirectoryContent = new FolderBasedDirectoryFragment(root);
 
-					// add as source...
-					if (isSource) {
-						dir.addSourceContent(folderBasedDirectoryContent);
-					}
+          // add as source...
+          if (isSource) {
+            dir.addSourceContent(folderBasedDirectoryContent);
+          }
 
-					// ...or binary content
-					else {
-						dir.addBinaryContent(folderBasedDirectoryContent);
-					}
-				}
+          // ...or binary content
+          else {
+            dir.addBinaryContent(folderBasedDirectoryContent);
+          }
+        }
 
-				// add the content
-				folderBasedDirectoryContent.getContent().add(
-						packageDirectory + "/" + child.getName());
+        // add the content
+        folderBasedDirectoryContent.getContent().add(packageDirectory + "/" + child.getName());
 
-			}
+      }
 
-			// handle directories
-			else {
+      // handle directories
+      else {
 
-				// recursive call
-				getAllPackagesFromDirectory(fileContent, root, child, packages,
-						isSource);
-			}
-		}
-	}
+        // recursive call
+        getAllPackagesFromDirectory(fileContent, root, child, packages, isSource);
+      }
+    }
+  }
 
 }

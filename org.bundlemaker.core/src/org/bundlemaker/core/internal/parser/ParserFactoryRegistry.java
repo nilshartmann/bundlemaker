@@ -23,113 +23,107 @@ import org.eclipse.core.runtime.dynamichelpers.IExtensionTracker;
  */
 public class ParserFactoryRegistry implements IExtensionChangeHandler {
 
-	/** - */
-	public static final String EXTENSION_POINT_ID = "org.bundlemaker.core.parserfactory";
+  /** - */
+  public static final String   EXTENSION_POINT_ID = "org.bundlemaker.core.parserfactory";
 
-	/** - */
-	private ExtensionTracker _tracker;
+  /** - */
+  private ExtensionTracker     _tracker;
 
-	/** - */
-	private List<IParserFactory> _parserFactories;
+  /** - */
+  private List<IParserFactory> _parserFactories;
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	public void initialize() {
+  /**
+   * <p>
+   * </p>
+   */
+  public void initialize() {
 
-		//
-		_parserFactories = new LinkedList<IParserFactory>();
+    //
+    _parserFactories = new LinkedList<IParserFactory>();
 
-		// get the extension registry
-		IExtensionRegistry registry = RegistryFactory.getRegistry();
+    // get the extension registry
+    IExtensionRegistry registry = RegistryFactory.getRegistry();
 
-		// get the extension points
-		IExtensionPoint extensionPoint = registry
-				.getExtensionPoint(EXTENSION_POINT_ID);
+    // get the extension points
+    IExtensionPoint extensionPoint = registry.getExtensionPoint(EXTENSION_POINT_ID);
 
-		// get the extension tracker
-		_tracker = new ExtensionTracker(registry);
+    // get the extension tracker
+    _tracker = new ExtensionTracker(registry);
 
-		// 
-		for (IExtension extension : extensionPoint.getExtensions()) {
-			addExtension(_tracker, extension);
-		}
+    //
+    for (IExtension extension : extensionPoint.getExtensions()) {
+      addExtension(_tracker, extension);
+    }
 
-		// register IExtensionChangeHandler
-		_tracker.registerHandler(this, ExtensionTracker
-				.createExtensionPointFilter(extensionPoint));
-	}
+    // register IExtensionChangeHandler
+    _tracker.registerHandler(this, ExtensionTracker.createExtensionPointFilter(extensionPoint));
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	public void dispose() {
-		_tracker.unregisterHandler(this);
-	}
+  /**
+   * <p>
+   * </p>
+   */
+  public void dispose() {
+    _tracker.unregisterHandler(this);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public List<IParserFactory> getParserFactories() {
-		return Collections.unmodifiableList(_parserFactories);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<IParserFactory> getParserFactories() {
+    return Collections.unmodifiableList(_parserFactories);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addExtension(IExtensionTracker tracker, IExtension extension) {
+  /**
+   * {@inheritDoc}
+   */
+  public void addExtension(IExtensionTracker tracker, IExtension extension) {
 
-		try {
+    try {
 
-			IParserFactory parserFactory = createParserFactoryFromExtension(extension);
-			parserFactory.initialize();
+      IParserFactory parserFactory = createParserFactoryFromExtension(extension);
+      parserFactory.initialize();
 
-			_tracker.registerObject(extension, parserFactory,
-					IExtensionTracker.REF_STRONG);
+      _tracker.registerObject(extension, parserFactory, IExtensionTracker.REF_STRONG);
 
-			// the parser factories
-			_parserFactories.add(parserFactory);
+      // the parser factories
+      _parserFactories.add(parserFactory);
 
-		} catch (CoreException e) {
-			// 
-		}
-	}
+    } catch (CoreException e) {
+      //
+    }
+  }
 
-	public void removeExtension(IExtension extension, Object[] objects) {
+  public void removeExtension(IExtension extension, Object[] objects) {
 
-		for (Object object : objects) {
-			IParserFactory parserFactory = (IParserFactory) object;
-			parserFactory.dispose();
-			_parserFactories.remove(parserFactory);
-			_tracker.unregisterObject(extension, parserFactory);
-		}
-	}
+    for (Object object : objects) {
+      IParserFactory parserFactory = (IParserFactory) object;
+      parserFactory.dispose();
+      _parserFactories.remove(parserFactory);
+      _tracker.unregisterObject(extension, parserFactory);
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param extension
-	 * @return
-	 * @throws CoreException
-	 */
-	private IParserFactory createParserFactoryFromExtension(IExtension extension)
-			throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param extension
+   * @return
+   * @throws CoreException
+   */
+  private IParserFactory createParserFactoryFromExtension(IExtension extension) throws CoreException {
 
-		// 
-		IConfigurationElement actionElement = extension
-				.getConfigurationElements()[0];
+    //
+    IConfigurationElement actionElement = extension.getConfigurationElements()[0];
 
-		//
-		IParserFactory result = (IParserFactory) actionElement
-				.createExecutableExtension("class");
+    //
+    IParserFactory result = (IParserFactory) actionElement.createExecutableExtension("class");
 
-		//
-		return result;
-	}
+    //
+    return result;
+  }
 }

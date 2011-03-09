@@ -19,62 +19,55 @@ import org.bundlemaker.core.modules.query.ResourceModuleQueryFilters;
  */
 public class ModularizedSystemTests {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 */
-	public static void testGetModules(IModularizedSystem modularizedSystem) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   */
+  public static void testGetModules(IModularizedSystem modularizedSystem) {
 
-		//
-		Assert.assertNotNull(modularizedSystem);
+    //
+    Assert.assertNotNull(modularizedSystem);
 
-		//
-		Assert.assertNotNull(modularizedSystem.getAllModules());
-		Assert.assertEquals(113, modularizedSystem.getAllModules().size());
+    //
+    Assert.assertNotNull(modularizedSystem.getAllModules());
+    Assert.assertEquals(113, modularizedSystem.getAllModules().size());
 
-		//
-		Collection<IModule> modules = modularizedSystem
-				.getAllModules(new IQueryFilter<IModule>() {
-					public boolean matches(IModule content) {
-						return content.getModuleIdentifier().getName()
-								.startsWith("Spring");
-					}
-				});
-		Assert.assertNotNull(modules);
-		Assert.assertEquals(8, modules.size());
+    //
+    Collection<IModule> modules = modularizedSystem.getAllModules(new IQueryFilter<IModule>() {
+      public boolean matches(IModule content) {
+        return content.getModuleIdentifier().getName().startsWith("Spring");
+      }
+    });
+    Assert.assertNotNull(modules);
+    Assert.assertEquals(8, modules.size());
 
-		//
-		Assert.assertNotNull(modularizedSystem.getNonResourceModules());
-		Assert.assertEquals(1, modularizedSystem.getNonResourceModules().size());
-		modules = modularizedSystem.getAllModules(new IQueryFilter<IModule>() {
-			public boolean matches(IModule content) {
-				return content.getModuleIdentifier().getName()
-						.startsWith("jdk16");
-			}
-		});
-		Assert.assertNotNull(modules);
-		Assert.assertEquals(1, modules.size());
+    //
+    Assert.assertNotNull(modularizedSystem.getNonResourceModules());
+    Assert.assertEquals(1, modularizedSystem.getNonResourceModules().size());
+    modules = modularizedSystem.getAllModules(new IQueryFilter<IModule>() {
+      public boolean matches(IModule content) {
+        return content.getModuleIdentifier().getName().startsWith("jdk16");
+      }
+    });
+    Assert.assertNotNull(modules);
+    Assert.assertEquals(1, modules.size());
 
-		//
-		Assert.assertNotNull(modularizedSystem.getResourceModules());
-		Assert.assertEquals(112, modularizedSystem.getResourceModules().size());
-		Collection<IResourceModule> resourceModules = modularizedSystem
-				.getResourceModules(ResourceModuleQueryFilters.TRUE_QUERY_FILTER);
-		Assert.assertNotNull(resourceModules);
-		Assert.assertEquals(112, resourceModules.size());
+    //
+    Assert.assertNotNull(modularizedSystem.getResourceModules());
+    Assert.assertEquals(112, modularizedSystem.getResourceModules().size());
+    Collection<IResourceModule> resourceModules = modularizedSystem
+        .getResourceModules(ResourceModuleQueryFilters.TRUE_QUERY_FILTER);
+    Assert.assertNotNull(resourceModules);
+    Assert.assertEquals(112, resourceModules.size());
 
-		//
-		Assert.assertNotNull(modularizedSystem.getModule(new ModuleIdentifier(
-				"jdk16", "jdk16")));
-		Assert.assertNotNull(modularizedSystem.getModule(new ModuleIdentifier(
-				"Spring-JDBC", "2.5.6")));
+    //
+    Assert.assertNotNull(modularizedSystem.getModule(new ModuleIdentifier("jdk16", "jdk16")));
+    Assert.assertNotNull(modularizedSystem.getModule(new ModuleIdentifier("Spring-JDBC", "2.5.6")));
 
-		//
-		Assert.assertNull(modularizedSystem
-				.getResourceModule(new ModuleIdentifier("jdk16", "jdk16")));
-		Assert.assertNotNull(modularizedSystem
-				.getResourceModule(new ModuleIdentifier("Spring-JDBC", "2.5.6")));
-	}
+    //
+    Assert.assertNull(modularizedSystem.getResourceModule(new ModuleIdentifier("jdk16", "jdk16")));
+    Assert.assertNotNull(modularizedSystem.getResourceModule(new ModuleIdentifier("Spring-JDBC", "2.5.6")));
+  }
 }

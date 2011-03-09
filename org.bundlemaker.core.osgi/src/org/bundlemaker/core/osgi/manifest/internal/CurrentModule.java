@@ -15,79 +15,78 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public class CurrentModule {
 
-	/** - */
-	private IModularizedSystem _modularizedSystem;
+  /** - */
+  private IModularizedSystem     _modularizedSystem;
 
-	/** - */
-	private IResourceModule _resourceModule;
+  /** - */
+  private IResourceModule        _resourceModule;
 
-	/** - */
-	private ManifestContents _manifestTemplate;
+  /** - */
+  private ManifestContents       _manifestTemplate;
 
-	/** - */
-	private IModuleExporterContext _context;
+  /** - */
+  private IModuleExporterContext _context;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link CurrentModule}.
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param resourceModule
-	 * @param manifestTemplate
-	 */
-	public CurrentModule(IModularizedSystem modularizedSystem,
-			IResourceModule resourceModule, IModuleExporterContext context,
-			ManifestContents manifestTemplate) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link CurrentModule}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @param resourceModule
+   * @param manifestTemplate
+   */
+  public CurrentModule(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
+      IModuleExporterContext context, ManifestContents manifestTemplate) {
 
-		Assert.isNotNull(modularizedSystem);
-		Assert.isNotNull(resourceModule);
-		Assert.isNotNull(context);
-		Assert.isNotNull(manifestTemplate);
+    Assert.isNotNull(modularizedSystem);
+    Assert.isNotNull(resourceModule);
+    Assert.isNotNull(context);
+    Assert.isNotNull(manifestTemplate);
 
-		_modularizedSystem = modularizedSystem;
-		_resourceModule = resourceModule;
-		_manifestTemplate = manifestTemplate;
-		_context = context;
-	}
+    _modularizedSystem = modularizedSystem;
+    _resourceModule = resourceModule;
+    _manifestTemplate = manifestTemplate;
+    _context = context;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public final IModularizedSystem getModularizedSystem() {
-		return _modularizedSystem;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final IModularizedSystem getModularizedSystem() {
+    return _modularizedSystem;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public final IResourceModule getResourceModule() {
-		return _resourceModule;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final IResourceModule getResourceModule() {
+    return _resourceModule;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public final ManifestContents getManifestTemplate() {
-		return _manifestTemplate;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final ManifestContents getManifestTemplate() {
+    return _manifestTemplate;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public final IModuleExporterContext getContext() {
-		return _context;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final IModuleExporterContext getContext() {
+    return _context;
+  }
 }

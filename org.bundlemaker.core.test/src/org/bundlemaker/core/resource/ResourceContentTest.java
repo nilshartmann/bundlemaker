@@ -7,22 +7,20 @@ import org.junit.Test;
 
 public class ResourceContentTest {
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	@Test(timeout = 500)
-	public void testResourceContent() {
+  /**
+   * <p>
+   * </p>
+   */
+  @Test(timeout = 500)
+  public void testResourceContent() {
 
-		ResourceContent content = new ResourceContent();
+    ResourceContent content = new ResourceContent();
 
-		for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < 100000; i++) {
 
-			content.getModifiableBinaryResources().add(
-					new ResourceStandin("id", "root", "path" + i));
-		}
+      content.getModifiableBinaryResources().add(new ResourceStandin("id", "root", "path" + i));
+    }
 
-		Assert.assertEquals(100000, content.getModifiableBinaryResources()
-				.size());
-	}
+    Assert.assertEquals(100000, content.getModifiableBinaryResources().size());
+  }
 }

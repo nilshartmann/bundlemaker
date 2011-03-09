@@ -13,51 +13,48 @@ import java.lang.reflect.Proxy;
  */
 public class StopWatchProxy implements InvocationHandler {
 
-	/** - */
-	private Object _target;
+  /** - */
+  private Object _target;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param obj
-	 * @return
-	 */
-	public static Object newInstance(Object obj) {
-		return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj
-				.getClass().getInterfaces(), new StopWatchProxy(obj));
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param obj
+   * @return
+   */
+  public static Object newInstance(Object obj) {
+    return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(), new StopWatchProxy(
+        obj));
+  }
 
-	private StopWatchProxy(Object obj) {
-		this._target = obj;
-	}
+  private StopWatchProxy(Object obj) {
+    this._target = obj;
+  }
 
-	public Object invoke(Object proxy, Method m, Object[] args)
-			throws Throwable {
+  public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
 
-		Object result;
+    Object result;
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
 
-		try {
+    try {
 
-			result = m.invoke(_target, args);
+      result = m.invoke(_target, args);
 
-		} catch (InvocationTargetException e) {
-			throw e.getTargetException();
-		} catch (Exception e) {
-			throw new RuntimeException("unexpected invocation exception: "
-					+ e.getMessage());
-		} finally {
-			
-			stopWatch.stop();
+    } catch (InvocationTargetException e) {
+      throw e.getTargetException();
+    } catch (Exception e) {
+      throw new RuntimeException("unexpected invocation exception: " + e.getMessage());
+    } finally {
 
-			//
-			System.out
-					.println(m.getName() + " : " + stopWatch.getElapsedTime());
-		}
+      stopWatch.stop();
 
-		return result;
-	}
+      //
+      System.out.println(m.getName() + " : " + stopWatch.getElapsedTime());
+    }
+
+    return result;
+  }
 }

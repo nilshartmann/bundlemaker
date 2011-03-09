@@ -22,176 +22,165 @@ import org.eclipse.core.runtime.Status;
 
 /**
  * <p>
- * Helper class that provides utility methods for retrieving all children of a
- * given file.
+ * Helper class that provides utility methods for retrieving all children of a given file.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class FileUtils {
 
-	// public static void copyFile(File in, File out) throws IOException {
-	// FileChannel inChannel = new FileInputStream(in).getChannel();
-	// FileChannel outChannel = new FileOutputStream(out).getChannel();
-	// try {
-	// inChannel.transferTo(0, inChannel.size(), outChannel);
-	// } catch (IOException e) {
-	// throw e;
-	// } finally {
-	// if (inChannel != null)
-	// inChannel.close();
-	// if (outChannel != null)
-	// outChannel.close();
-	// }
-	// }
+  // public static void copyFile(File in, File out) throws IOException {
+  // FileChannel inChannel = new FileInputStream(in).getChannel();
+  // FileChannel outChannel = new FileOutputStream(out).getChannel();
+  // try {
+  // inChannel.transferTo(0, inChannel.size(), outChannel);
+  // } catch (IOException e) {
+  // throw e;
+  // } finally {
+  // if (inChannel != null)
+  // inChannel.close();
+  // if (outChannel != null)
+  // outChannel.close();
+  // }
+  // }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param string
-	 * @return
-	 */
-	public static String normalize(String string) {
-		return string.replace('/', File.separatorChar).replace('\\',
-				File.separatorChar);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param string
+   * @return
+   */
+  public static String normalize(String string) {
+    return string.replace('/', File.separatorChar).replace('\\', File.separatorChar);
+  }
 
-	/**
-	 * Closes the supplied stream if it's available.
-	 * 
-	 * @param closeable
-	 *            the closeable. Maybe <code>null</code>.
-	 */
-	public static final void close(Closeable closeable) {
-		if (closeable != null) {
-			try {
-				closeable.close();
-			} catch (IOException ex) {
-				// generally not interesting so a warning is appropriate here
-				//
-			}
-		}
-	}
+  /**
+   * Closes the supplied stream if it's available.
+   * 
+   * @param closeable
+   *          the closeable. Maybe <code>null</code>.
+   */
+  public static final void close(Closeable closeable) {
+    if (closeable != null) {
+      try {
+        closeable.close();
+      } catch (IOException ex) {
+        // generally not interesting so a warning is appropriate here
+        //
+      }
+    }
+  }
 
-	/**
-	 * Copies the complete content from an InputStream into an OutputStream
-	 * using a specified buffer. Both streams will be closed after completion or
-	 * in case an exception comes up.
-	 * 
-	 * @param instream
-	 *            The InputStream providing the content. Not <code>null</code>.
-	 * @param outstream
-	 *            The OutputStream used to write the content to. Not
-	 *            <code>null</code>.
-	 * @param buffer
-	 *            The buffer used for the copying process. Not <code>null</code>
-	 *            .
-	 * 
-	 * @throws IOException
-	 *             Copying failed for some reason.
-	 */
-	public static final void copy(InputStream instream, OutputStream outstream,
-			byte[] buffer) throws IOException {
+  /**
+   * Copies the complete content from an InputStream into an OutputStream using a specified buffer. Both streams will be
+   * closed after completion or in case an exception comes up.
+   * 
+   * @param instream
+   *          The InputStream providing the content. Not <code>null</code>.
+   * @param outstream
+   *          The OutputStream used to write the content to. Not <code>null</code>.
+   * @param buffer
+   *          The buffer used for the copying process. Not <code>null</code> .
+   * 
+   * @throws IOException
+   *           Copying failed for some reason.
+   */
+  public static final void copy(InputStream instream, OutputStream outstream, byte[] buffer) throws IOException {
 
-		Assert.isNotNull(instream);
-		Assert.isNotNull(outstream);
+    Assert.isNotNull(instream);
+    Assert.isNotNull(outstream);
 
-		try {
-			int read = instream.read(buffer);
-			while (read != -1) {
-				if (read > 0) {
-					outstream.write(buffer, 0, read);
-				}
-				read = instream.read(buffer);
-			}
-		} finally {
-			close(outstream);
-			close(instream);
-		}
-	}
+    try {
+      int read = instream.read(buffer);
+      while (read != -1) {
+        if (read > 0) {
+          outstream.write(buffer, 0, read);
+        }
+        read = instream.read(buffer);
+      }
+    } finally {
+      close(outstream);
+      close(instream);
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param file
-	 * @return
-	 * @throws CoreException
-	 */
-	public static List<String> getAllChildren(File file) throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param file
+   * @return
+   * @throws CoreException
+   */
+  public static List<String> getAllChildren(File file) throws CoreException {
 
-		//
-		if (file.isDirectory()) {
+    //
+    if (file.isDirectory()) {
 
-			List<String> result = new LinkedList<String>();
-			getAllChildren(file, file, result);
-			return result;
-		}
+      List<String> result = new LinkedList<String>();
+      getAllChildren(file, file, result);
+      return result;
+    }
 
-		//
-		else if (file.isFile()
-				&& (file.getName().endsWith(".zip") || file.getName().endsWith(
-						".jar"))) {
+    //
+    else if (file.isFile() && (file.getName().endsWith(".zip") || file.getName().endsWith(".jar"))) {
 
-			try {
-				ZipFile zipFile = new ZipFile(file);
+      try {
+        ZipFile zipFile = new ZipFile(file);
 
-				Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
+        Enumeration<? extends ZipEntry> enumeration = zipFile.entries();
 
-				List<String> result = new LinkedList<String>();
+        List<String> result = new LinkedList<String>();
 
-				while (enumeration.hasMoreElements()) {
-					ZipEntry zipEntry = (ZipEntry) enumeration.nextElement();
-					if (!zipEntry.isDirectory()) {
-						String name = zipEntry.getName();
-						name = name.replace('\\', '/');
-						result.add(name);
-					}
-				}
+        while (enumeration.hasMoreElements()) {
+          ZipEntry zipEntry = (ZipEntry) enumeration.nextElement();
+          if (!zipEntry.isDirectory()) {
+            String name = zipEntry.getName();
+            name = name.replace('\\', '/');
+            result.add(name);
+          }
+        }
 
-				return result;
+        return result;
 
-			} catch (Exception e) {
-				// throw the core exception
-				throw new CoreException(new Status(IStatus.ERROR,
-						BundleMakerCore.BUNDLE_ID, ""));
-			}
-		}
+      } catch (Exception e) {
+        // throw the core exception
+        throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, ""));
+      }
+    }
 
-		// throw the core exception
-		throw new CoreException(new Status(IStatus.ERROR,
-				BundleMakerCore.BUNDLE_ID, String.format(
-						"File '%s' does not exist.", file.getAbsolutePath())));
-	}
+    // throw the core exception
+    throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, String.format(
+        "File '%s' does not exist.", file.getAbsolutePath())));
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param root
-	 * @param directory
-	 * @return
-	 */
-	private static void getAllChildren(File root, File directory,
-			List<String> content) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param root
+   * @param directory
+   * @return
+   */
+  private static void getAllChildren(File root, File directory, List<String> content) {
 
-		int length = root.getAbsolutePath().length();
+    int length = root.getAbsolutePath().length();
 
-		//
-		for (File child : directory.listFiles()) {
+    //
+    for (File child : directory.listFiles()) {
 
-			if (child.isFile()) {
+      if (child.isFile()) {
 
-				String entry = child.getAbsolutePath().substring(length + 1);
+        String entry = child.getAbsolutePath().substring(length + 1);
 
-				entry = entry.replace("\\", "/");
+        entry = entry.replace("\\", "/");
 
-				content.add(entry);
+        content.add(entry);
 
-			} else if (child.isDirectory()) {
-				getAllChildren(root, child, content);
-			}
-		}
-	}
+      } else if (child.isDirectory()) {
+        getAllChildren(root, child, content);
+      }
+    }
+  }
 }

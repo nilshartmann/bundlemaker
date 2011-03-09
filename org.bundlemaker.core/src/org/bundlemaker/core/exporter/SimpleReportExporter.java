@@ -29,145 +29,135 @@ import org.eclipse.core.runtime.Status;
  */
 public class SimpleReportExporter extends AbstractExporter {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean canExport(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
 
-		return true;
-	}
+    return true;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void doExport() throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void doExport() throws CoreException {
 
-		StringBuilder builder = new StringBuilder();
-		builder.append(getCurrentModule().getModuleIdentifier().toString()
-				+ "\n");
+    StringBuilder builder = new StringBuilder();
+    builder.append(getCurrentModule().getModuleIdentifier().toString() + "\n");
 
-		builder.append("\n");
-		builder.append("Source-Content: \n");
+    builder.append("\n");
+    builder.append("Source-Content: \n");
 
-		for (IResource resource : asSortedList(getCurrentModule().getResources(
-				ContentType.SOURCE))) {
-			builder.append(resource.getPath() + "\n");
+    for (IResource resource : asSortedList(getCurrentModule().getResources(ContentType.SOURCE))) {
+      builder.append(resource.getPath() + "\n");
 
-			for (IType type : resource.getContainedTypes()) {
-				builder.append(" - " + type.getFullyQualifiedName() + "\n");
+      for (IType type : resource.getContainedTypes()) {
+        builder.append(" - " + type.getFullyQualifiedName() + "\n");
 
-				for (IReference reference : type.getReferences()) {
-					builder.append("   - " + reference.toString() + "\n");
-				}
-			}
-		}
+        for (IReference reference : type.getReferences()) {
+          builder.append("   - " + reference.toString() + "\n");
+        }
+      }
+    }
 
-		builder.append("\n");
-		builder.append("Binary-Content: \n");
-		for (IResource resource : asSortedList(getCurrentModule().getResources(
-				ContentType.BINARY))) {
-			builder.append(resource.getPath() + "\n");
+    builder.append("\n");
+    builder.append("Binary-Content: \n");
+    for (IResource resource : asSortedList(getCurrentModule().getResources(ContentType.BINARY))) {
+      builder.append(resource.getPath() + "\n");
 
-			for (IResource stickyResources : resource.getStickyResources()) {
-				builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
-			}
+      for (IResource stickyResources : resource.getStickyResources()) {
+        builder.append(" ~sticky~ " + stickyResources.getPath() + "\n");
+      }
 
-			for (IType type : resource.getContainedTypes()) {
-				builder.append(" - " + type.getFullyQualifiedName() + "\n");
+      for (IType type : resource.getContainedTypes()) {
+        builder.append(" - " + type.getFullyQualifiedName() + "\n");
 
-				for (IReference reference : type.getReferences()) {
-					builder.append("   - " + reference.toString() + "\n");
-				}
-			}
-		}
+        for (IReference reference : type.getReferences()) {
+          builder.append("   - " + reference.toString() + "\n");
+        }
+      }
+    }
 
-		builder.append("\n");
-		builder.append("Referenced Types: \n");
-		Set<String> referencedTypes = getCurrentModule()
-				.getReferencedTypeNames(true, true, false);
-		for (String referencedType : asSortedList(referencedTypes)) {
-			builder.append(referencedType + "\n");
-		}
-		
-		builder.append("\n");
-		builder.append("Indirectly referenced Types: \n");
-		Set<String> indirectlyReferencedTypes = getCurrentModule()
-				.getReferencedTypeNames(true, true, true);
-		for (String referencedType : asSortedList(indirectlyReferencedTypes)) {
-			if (!referencedTypes.contains(referencedType)) {
-				builder.append(referencedType + "\n");
-			}
-		}
+    builder.append("\n");
+    builder.append("Referenced Types: \n");
+    Set<String> referencedTypes = getCurrentModule().getReferencedTypeNames(true, true, false);
+    for (String referencedType : asSortedList(referencedTypes)) {
+      builder.append(referencedType + "\n");
+    }
 
-		builder.append("\n");
-		builder.append("Referenced Modules: \n");
-		IReferencedModulesQueryResult queryResult = getCurrentModularizedSystem()
-				.getReferencedModules(getCurrentModule(), true, true);
+    builder.append("\n");
+    builder.append("Indirectly referenced Types: \n");
+    Set<String> indirectlyReferencedTypes = getCurrentModule().getReferencedTypeNames(true, true, true);
+    for (String referencedType : asSortedList(indirectlyReferencedTypes)) {
+      if (!referencedTypes.contains(referencedType)) {
+        builder.append(referencedType + "\n");
+      }
+    }
 
-		for (IModule referencedModule : queryResult.getReferencedModules()) {
-			builder.append(referencedModule.getModuleIdentifier().toString()
-					+ "\n");
-		}
+    builder.append("\n");
+    builder.append("Referenced Modules: \n");
+    IReferencedModulesQueryResult queryResult = getCurrentModularizedSystem().getReferencedModules(getCurrentModule(),
+        true, true);
 
-		builder.append("\n");
-		builder.append("Missing Types: \n");
-		for (String missingType : queryResult.getUnsatisfiedReferencedTypes()) {
-			builder.append(missingType + "\n");
-		}
+    for (IModule referencedModule : queryResult.getReferencedModules()) {
+      builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
+    }
 
-		builder.append("\n");
-		builder.append("Types with ambigious modules: \n");
-		for (Entry<String, Set<IModule>> missingType : queryResult
-				.getReferencedTypesWithAmbiguousModules().entrySet()) {
+    builder.append("\n");
+    builder.append("Missing Types: \n");
+    for (String missingType : queryResult.getUnsatisfiedReferencedTypes()) {
+      builder.append(missingType + "\n");
+    }
 
-			builder.append(missingType.getKey() + ":\n");
-			for (IModule typeModule : missingType.getValue()) {
-				builder.append(" - "
-						+ typeModule.getModuleIdentifier().toString() + "\n");
-			}
-		}
+    builder.append("\n");
+    builder.append("Types with ambigious modules: \n");
+    for (Entry<String, Set<IModule>> missingType : queryResult.getReferencedTypesWithAmbiguousModules().entrySet()) {
 
-		try {
-			//
-			File outFile = new File(getCurrentContext()
-					.getDestinationDirectory(), getCurrentModule()
-					.getModuleIdentifier().toString() + ".txt");
+      builder.append(missingType.getKey() + ":\n");
+      for (IModule typeModule : missingType.getValue()) {
+        builder.append(" - " + typeModule.getModuleIdentifier().toString() + "\n");
+      }
+    }
 
-			if (!outFile.getParentFile().exists()) {
-				outFile.getParentFile().mkdirs();
-			}
+    try {
+      //
+      File outFile = new File(getCurrentContext().getDestinationDirectory(), getCurrentModule().getModuleIdentifier()
+          .toString() + ".txt");
 
-			FileWriter fileWriter = new FileWriter(outFile);
-			fileWriter.write(builder.toString());
-			fileWriter.flush();
-			fileWriter.close();
-		} catch (IOException e) {
-			// TODO
-			e.printStackTrace();
-			throw new CoreException(new Status(IStatus.ERROR, "", ""));
-		}
-	}
+      if (!outFile.getParentFile().exists()) {
+        outFile.getParentFile().mkdirs();
+      }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param <T>
-	 * @param set
-	 * @return
-	 */
-	private static <T extends Comparable<T>> List<T> asSortedList(Set<T> set) {
+      FileWriter fileWriter = new FileWriter(outFile);
+      fileWriter.write(builder.toString());
+      fileWriter.flush();
+      fileWriter.close();
+    } catch (IOException e) {
+      // TODO
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR, "", ""));
+    }
+  }
 
-		//
-		List<T> arrayList = new ArrayList<T>(set);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param <T>
+   * @param set
+   * @return
+   */
+  private static <T extends Comparable<T>> List<T> asSortedList(Set<T> set) {
 
-		//
-		Collections.sort(arrayList);
+    //
+    List<T> arrayList = new ArrayList<T>(set);
 
-		//
-		return arrayList;
-	}
+    //
+    Collections.sort(arrayList);
+
+    //
+    return arrayList;
+  }
 }

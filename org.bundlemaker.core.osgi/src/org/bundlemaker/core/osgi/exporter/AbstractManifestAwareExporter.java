@@ -23,138 +23,129 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
-	// TODO
-	public static final String OSGI_FRAGMENT_HOST = "OSGI_FRAGMENT_HOST";
+  // TODO
+  public static final String                      OSGI_FRAGMENT_HOST = "OSGI_FRAGMENT_HOST";
 
-	/** - */
-	private GenericCache<IModule, ManifestContents> _manifestCache;
+  /** - */
+  private GenericCache<IModule, ManifestContents> _manifestCache;
 
-	/** - */
-	private ManifestContents _manifestContents;
+  /** - */
+  private ManifestContents                        _manifestContents;
 
-	/** - */
-	private ManifestContents _hostManifestContents;
+  /** - */
+  private ManifestContents                        _hostManifestContents;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link AbstractManifestAwareExporter}.
-	 * </p>
-	 */
-	public AbstractManifestAwareExporter() {
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractManifestAwareExporter}.
+   * </p>
+   */
+  public AbstractManifestAwareExporter() {
 
-		//
-		_manifestCache = new GenericCache<IModule, ManifestContents>() {
+    //
+    _manifestCache = new GenericCache<IModule, ManifestContents>() {
 
-			@Override
-			protected ManifestContents create(IModule key) {
+      @Override
+      protected ManifestContents create(IModule key) {
 
-				try {
+        try {
 
-					//
-					ManifestContents manifestContents = createManifest();
-					Assert.isNotNull(
-							manifestContents,
-							String.format(
-									"The method createManifest(IModularizedSystem, "
-											+ "IResourceModule, IModuleExporterContext) of class "
-											+ "'%s' returned 'null'.", this
-											.getClass().getName()));
+          //
+          ManifestContents manifestContents = createManifest();
+          Assert.isNotNull(manifestContents, String.format("The method createManifest(IModularizedSystem, "
+              + "IResourceModule, IModuleExporterContext) of class " + "'%s' returned 'null'.", this.getClass()
+              .getName()));
 
-					return manifestContents;
+          return manifestContents;
 
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					throw new RuntimeException("");
-				}
-			}
+        } catch (CoreException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+          throw new RuntimeException("");
+        }
+      }
 
-		};
-	}
+    };
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected final ManifestContents getHostManifestContents() {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected final ManifestContents getHostManifestContents() {
 
-		//
-		return _hostManifestContents;
-	}
+    //
+    return _hostManifestContents;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected final boolean isFragment() {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected final boolean isFragment() {
 
-		//
-		return _hostManifestContents != null;
-	}
+    //
+    return _hostManifestContents != null;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected ManifestContents getCurrentManifest() {
-		Assert.isNotNull(_manifestContents, String.format(
-				"No manifest set. The method createManifest(IModularizedSystem, "
-						+ "IResourceModule, IModuleExporterContext) of class "
-						+ "'%s' has not been called yet.", this.getClass()
-						.getName()));
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected ManifestContents getCurrentManifest() {
+    Assert.isNotNull(_manifestContents, String.format("No manifest set. The method createManifest(IModularizedSystem, "
+        + "IResourceModule, IModuleExporterContext) of class " + "'%s' has not been called yet.", this.getClass()
+        .getName()));
 
-		return _manifestContents;
-	}
+    return _manifestContents;
+  }
 
-	@Override
-	protected void preExportModule() throws CoreException {
+  @Override
+  protected void preExportModule() throws CoreException {
 
-		// call super
-		super.preExportModule();
+    // call super
+    super.preExportModule();
 
-		// get the manifest contents
-		_manifestContents = _manifestCache.getOrCreate(getCurrentModule());
+    // get the manifest contents
+    _manifestContents = _manifestCache.getOrCreate(getCurrentModule());
 
-		// check the manifest
-		try {
-			StateObjectFactory.defaultFactory.createBundleDescription(null,
-					ManifestUtils.convertManifest(ManifestUtils
-							.toManifest(_manifestContents)), "internal", 1);
-		} catch (BundleException e) {
-			// TODO
-			e.printStackTrace();
-			throw new CoreException(new Status(IStatus.ERROR, "", ""));
-		}
+    // check the manifest
+    try {
+      StateObjectFactory.defaultFactory.createBundleDescription(null,
+          ManifestUtils.convertManifest(ManifestUtils.toManifest(_manifestContents)), "internal", 1);
+    } catch (BundleException e) {
+      // TODO
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR, "", ""));
+    }
 
-		// get the host manifest
-		if (getCurrentModule().getUserAttributes().containsKey(
-				OSGI_FRAGMENT_HOST)) {
+    // get the host manifest
+    if (getCurrentModule().getUserAttributes().containsKey(OSGI_FRAGMENT_HOST)) {
 
-			IModule hostModule = (IModule) getCurrentModule()
-					.getUserAttributes().get(OSGI_FRAGMENT_HOST);
+      IModule hostModule = (IModule) getCurrentModule().getUserAttributes().get(OSGI_FRAGMENT_HOST);
 
-			// if () {
-			// IModule host = getHostModule()
-			// _hostManifestContents = _manifestCache.get(host);
-			// }
-		}
-	}
+      // if () {
+      // IModule host = getHostModule()
+      // _hostManifestContents = _manifestCache.get(host);
+      // }
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	protected abstract ManifestContents createManifest() throws CoreException;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @param module
+   * @param context
+   * @return
+   * @throws Exception
+   */
+  protected abstract ManifestContents createManifest() throws CoreException;
 }

@@ -23,106 +23,98 @@ import org.eclipse.core.runtime.Path;
  */
 public class JdtParserFactory implements IParserFactory {
 
-	/** - */
-	private IResourceChangeListener _resourceChangeListener;
+  /** - */
+  private IResourceChangeListener                        _resourceChangeListener;
 
-	/** - */
-	private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
+  /** - */
+  private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initialize() {
-		_resourceChangeListener = new DeleteAssociatedProjectChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(
-				_resourceChangeListener,
-				IResourceChangeEvent.PRE_CLOSE
-						| IResourceChangeEvent.PRE_DELETE);
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void initialize() {
+    _resourceChangeListener = new DeleteAssociatedProjectChangeListener();
+    ResourcesPlugin.getWorkspace().addResourceChangeListener(_resourceChangeListener,
+        IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 
-		_hookRegistry = new ExtensionRegistryTracker<IJdtSourceParserHook>(
-				CoreParserJdt.EXTENSION_POINT_ID);
-		_hookRegistry.initialize();
-	}
+    _hookRegistry = new ExtensionRegistryTracker<IJdtSourceParserHook>(CoreParserJdt.EXTENSION_POINT_ID);
+    _hookRegistry.initialize();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void dispose() {
-		_hookRegistry.dispose();
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void dispose() {
+    _hookRegistry.dispose();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean isInitialized(IBundleMakerProject bundleMakerProject) {
-		return JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject);
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isInitialized(IBundleMakerProject bundleMakerProject) {
+    return JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void initialize(IBundleMakerProject bundleMakerProject)
-			throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
 
-		// TODO: review
+    // TODO: review
 
-		// create or get the java project
-		if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
-			JdtProjectHelper.newAssociatedJavaProject(bundleMakerProject);
-			JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
-		}
+    // create or get the java project
+    if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
+      JdtProjectHelper.newAssociatedJavaProject(bundleMakerProject);
+      JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
+    }
 
-		// create associated java project
-		// if (createAssociatedJavaProject(bundleMakerProject)) {
-		// }
-	}
+    // create associated java project
+    // if (createAssociatedJavaProject(bundleMakerProject)) {
+    // }
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IParser createParser(IBundleMakerProject bundleMakerProject,
-			boolean parseIndirectReferences) throws CoreException {
-		return new JdtParser(bundleMakerProject, _hookRegistry,
-				parseIndirectReferences);
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IParser createParser(IBundleMakerProject bundleMakerProject, boolean parseIndirectReferences)
+      throws CoreException {
+    return new JdtParser(bundleMakerProject, _hookRegistry, parseIndirectReferences);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void dispose(IBundleMakerProject bundleMakerProject) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void dispose(IBundleMakerProject bundleMakerProject) {
 
-	}
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	private boolean createAssociatedJavaProject(
-			IBundleMakerProject bundleMakerProject) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private boolean createAssociatedJavaProject(IBundleMakerProject bundleMakerProject) {
 
-		//
-		if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
-			return true;
-		}
+    //
+    if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
+      return true;
+    }
 
-		//
-		IProject project = JdtProjectHelper
-				.getAssociatedJavaProjectAsProject(bundleMakerProject);
+    //
+    IProject project = JdtProjectHelper.getAssociatedJavaProjectAsProject(bundleMakerProject);
 
-		//
-		IResource resource = bundleMakerProject.getProject().findMember(
-				new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME)
-						.append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
+    //
+    IResource resource = bundleMakerProject.getProject().findMember(
+        new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
 
-		//
-		return resource.getLocalTimeStamp() > project.getLocalTimeStamp();
-	}
+    //
+    return resource.getLocalTimeStamp() > project.getLocalTimeStamp();
+  }
 }

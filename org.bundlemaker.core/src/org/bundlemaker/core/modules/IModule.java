@@ -12,37 +12,37 @@ import org.eclipse.core.runtime.IPath;
  */
 public interface IModule extends ITypeContainer {
 
-	/**
-	 * <p>
-	 * Returns the module identifier of this module.
-	 * </p>
-	 * 
-	 * @return the module identifier of this module.
-	 */
-	IModuleIdentifier getModuleIdentifier();
+  /**
+   * <p>
+   * Returns the module identifier of this module.
+   * </p>
+   * 
+   * @return the module identifier of this module.
+   */
+  IModuleIdentifier getModuleIdentifier();
 
-	/**
-	 * <p>
-	 * Returns the classification of this module.
-	 * </p>
-	 * 
-	 * @return the classification
-	 */
-	IPath getClassification();
+  /**
+   * <p>
+   * Returns the classification of this module.
+   * </p>
+   * 
+   * @return the classification
+   */
+  IPath getClassification();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean hasClassification();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasClassification();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	Map<String, Object> getUserAttributes();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Map<String, Object> getUserAttributes();
 }

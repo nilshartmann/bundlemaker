@@ -33,181 +33,171 @@ import org.junit.Test;
  */
 public class IntegrationTest {
 
-	/** - */
-	public static final String PROJECT_NAME = "eclipse";
+  /** - */
+  public static final String   PROJECT_NAME = "eclipse";
 
-	/** - */
-	private static final boolean PARSE = Boolean.getBoolean("parse");
+  /** - */
+  private static final boolean PARSE        = Boolean.getBoolean("parse");
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testIntegrationTestEclipse() throws Exception {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
+  @Test
+  public void testIntegrationTestEclipse() throws Exception {
 
-		// delete the project
-		if (PARSE) {
-			EclipseProjectUtils.deleteProjectIfExists(PROJECT_NAME);
-		}
+    // delete the project
+    if (PARSE) {
+      EclipseProjectUtils.deleteProjectIfExists(PROJECT_NAME);
+    }
 
-		// create simple project
-		IProject simpleProject = BundleMakerCore
-				.getOrCreateSimpleProjectWithBundleMakerNature(PROJECT_NAME);
+    // create simple project
+    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(PROJECT_NAME);
 
-		// get the BundleMaker project
-		IBundleMakerProject bundleMakerProject = BundleMakerCore
-				.getBundleMakerProject(simpleProject, null);
+    // get the BundleMaker project
+    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
 
-		// create the project description
-		if (PARSE) {
-			IntegrationTestUtils.createProjectDescription(bundleMakerProject
-					.getProjectDescription());
-			bundleMakerProject.saveProjectDescription();
-		}
+    // create the project description
+    if (PARSE) {
+      IntegrationTestUtils.createProjectDescription(bundleMakerProject.getProjectDescription());
+      bundleMakerProject.saveProjectDescription();
+    }
 
-		// create the progress monitor
-		IProgressMonitor progressMonitor = new ProgressMonitor();
+    // create the progress monitor
+    IProgressMonitor progressMonitor = new ProgressMonitor();
 
-		// initialize the project
-		bundleMakerProject.initialize(progressMonitor);
+    // initialize the project
+    bundleMakerProject.initialize(progressMonitor);
 
-		// parse the project
-		if (PARSE) {
+    // parse the project
+    if (PARSE) {
 
-			StopWatch stopWatch = new StopWatch();
-			stopWatch.start();
+      StopWatch stopWatch = new StopWatch();
+      stopWatch.start();
 
-			List<? extends IProblem> problems = bundleMakerProject
-					.parse(progressMonitor, true);
+      List<? extends IProblem> problems = bundleMakerProject.parse(progressMonitor, true);
 
-			stopWatch.stop();
-			System.out.println(stopWatch.getElapsedTime());
+      stopWatch.stop();
+      System.out.println(stopWatch.getElapsedTime());
 
-			BundleMakerProjectUtils.dumpProblems(problems);
-		}
+      BundleMakerProjectUtils.dumpProblems(problems);
+    }
 
-		// open the project
-		bundleMakerProject.open(progressMonitor);
+    // open the project
+    bundleMakerProject.open(progressMonitor);
 
-		// get the working copy
-		bundleMakerProject.createModularizedSystemWorkingCopy("test");
-		IModularizedSystem modularizedSystem = bundleMakerProject
-				.getModularizedSystemWorkingCopy("test");
+    // get the working copy
+    bundleMakerProject.createModularizedSystemWorkingCopy("test");
+    IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy("test");
 
-		// transform
-		modularizedSystem.applyTransformations();
+    // transform
+    modularizedSystem.applyTransformations();
 
-		//
-		assertModelSetup(modularizedSystem);
+    //
+    assertModelSetup(modularizedSystem);
 
-		//
-		exportToStructure101(bundleMakerProject, modularizedSystem);
-		exportToSimpleReport(bundleMakerProject, modularizedSystem);
+    //
+    exportToStructure101(bundleMakerProject, modularizedSystem);
+    exportToSimpleReport(bundleMakerProject, modularizedSystem);
 
-		// //
-		// IReferencedModulesQueryResult queryResult = modularizedSystem
-		// .getReferencedModules(modularizedSystem
-		// .getResourceModule(new ModuleIdentifier("eclipse",
-		// "3.6.1")), true);
-		//
-		// for (ITypeModule module : queryResult.getReferencedModules()) {
-		// System.out.println(module.getModuleIdentifier().toString());
-		// }
-		//
-		// for (Entry<IReference, Set<ITypeModule>> entry : queryResult
-		// .getReferencesWithAmbiguousModules().entrySet()) {
-		// System.out.println(" - " + entry.getKey());
-		// System.out.println("   - " + entry.getValue());
-		// }
-		//
-		// System.out
-		// .println("*****************************************************");
-		//
-		// for (Entry<IReference, ITypeModule> entry : queryResult
-		// .getReferencedModulesMap().entrySet()) {
-		//
-		// System.out.println(" - " + entry.getKey());
-		// System.out.println("   - " + entry.getValue());
-		// }
-	}
+    // //
+    // IReferencedModulesQueryResult queryResult = modularizedSystem
+    // .getReferencedModules(modularizedSystem
+    // .getResourceModule(new ModuleIdentifier("eclipse",
+    // "3.6.1")), true);
+    //
+    // for (ITypeModule module : queryResult.getReferencedModules()) {
+    // System.out.println(module.getModuleIdentifier().toString());
+    // }
+    //
+    // for (Entry<IReference, Set<ITypeModule>> entry : queryResult
+    // .getReferencesWithAmbiguousModules().entrySet()) {
+    // System.out.println(" - " + entry.getKey());
+    // System.out.println("   - " + entry.getValue());
+    // }
+    //
+    // System.out
+    // .println("*****************************************************");
+    //
+    // for (Entry<IReference, ITypeModule> entry : queryResult
+    // .getReferencedModulesMap().entrySet()) {
+    //
+    // System.out.println(" - " + entry.getKey());
+    // System.out.println("   - " + entry.getValue());
+    // }
+  }
 
-	private void exportToStructure101(IBundleMakerProject bundleMakerProject,
-			IModularizedSystem modularizedSystem) throws Exception {
-		// create the exporter context
-		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
-				bundleMakerProject, new File("c:/temp"), modularizedSystem);
+  private void exportToStructure101(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
+      throws Exception {
+    // create the exporter context
+    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, new File(
+        "c:/temp"), modularizedSystem);
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		Structure101Exporter exporter = new Structure101Exporter();
-		exporter.export(modularizedSystem, exporterContext);
-		stopWatch.stop();
-		System.out.println("Dauer " + stopWatch.getElapsedTime());
-	}
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    Structure101Exporter exporter = new Structure101Exporter();
+    exporter.export(modularizedSystem, exporterContext);
+    stopWatch.stop();
+    System.out.println("Dauer " + stopWatch.getElapsedTime());
+  }
 
-	private void exportToSimpleReport(IBundleMakerProject bundleMakerProject,
-			IModularizedSystem modularizedSystem) throws Exception {
+  private void exportToSimpleReport(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
+      throws Exception {
 
-		//
-		File destination = new File(System.getProperty("user.dir"),
-				"destination");
-		destination.mkdirs();
+    //
+    File destination = new File(System.getProperty("user.dir"), "destination");
+    destination.mkdirs();
 
-		// create the exporter context
-		DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
-				bundleMakerProject, destination, modularizedSystem);
+    // create the exporter context
+    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
+        modularizedSystem);
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		SimpleReportExporter exporter = new SimpleReportExporter();
-		new ModularizedSystemExporterAdapter(exporter).export(
-				modularizedSystem, exporterContext);
-		stopWatch.stop();
-		System.out.println("Dauer " + stopWatch.getElapsedTime());
-	}
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    SimpleReportExporter exporter = new SimpleReportExporter();
+    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
+    stopWatch.stop();
+    System.out.println("Dauer " + stopWatch.getElapsedTime());
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 */
-	private void assertModelSetup(IModularizedSystem modularizedSystem) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   */
+  private void assertModelSetup(IModularizedSystem modularizedSystem) {
 
-		// assert
-		for (IResourceModule resourceModule : modularizedSystem
-				.getResourceModules()) {
+    // assert
+    for (IResourceModule resourceModule : modularizedSystem.getResourceModules()) {
 
-			// step 1: assert binary content
-			for (IResource resource : resourceModule
-					.getResources(ContentType.BINARY)) {
+      // step 1: assert binary content
+      for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
 
-				//
-				Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
+        //
+        Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
 
-				//
-				for (IReference reference : resource.getReferences()) {
-					//
-					Assert.assertSame(resource, reference.getResource());
-				}
-			}
+        //
+        for (IReference reference : resource.getReferences()) {
+          //
+          Assert.assertSame(resource, reference.getResource());
+        }
+      }
 
-			//
-			for (IResource resource : resourceModule
-					.getResources(ContentType.SOURCE)) {
+      //
+      for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
 
-				//
-				Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
+        //
+        Assert.assertSame(resourceModule, resource.getAssociatedResourceModule(modularizedSystem));
 
-				//
-				for (IReference reference : resource.getReferences()) {
-					//
-					Assert.assertSame(resource, reference.getResource());
-				}
-			}
-		}
-	}
+        //
+        for (IReference reference : resource.getReferences()) {
+          //
+          Assert.assertSame(resource, reference.getResource());
+        }
+      }
+    }
+  }
 }

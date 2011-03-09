@@ -20,93 +20,90 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class ParserCallable implements Callable<List<IProblem>> {
 
-	/** the block size **/
-	// TODO: MOVE
-	private static final int BLOCKSIZE = 2000;
+  /** the block size **/
+  // TODO: MOVE
+  private static final int  BLOCKSIZE = 2000;
 
-	private IFileBasedContent _content;
+  private IFileBasedContent _content;
 
-	/** the package fragments */
-	private List<IDirectory> _directories;
+  /** the package fragments */
+  private List<IDirectory>  _directories;
 
-	/** the list of all errors */
-	private List<IProblem> _errors;
+  /** the list of all errors */
+  private List<IProblem>    _errors;
 
-	/** - */
-	private IParser _parser;
+  /** - */
+  private IParser           _parser;
 
-	/** - */
-	private IResourceCache _resourceCache;
+  /** - */
+  private IResourceCache    _resourceCache;
 
-	/** - */
-	private IProgressMonitor _progressMonitor;
+  /** - */
+  private IProgressMonitor  _progressMonitor;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ParserCallable}.
-	 * </p>
-	 * 
-	 * @param content
-	 * @param directories
-	 * @param parser
-	 * @param resourceCache
-	 */
-	public ParserCallable(IFileBasedContent content,
-			List<IDirectory> directories, IParser parser,
-			IResourceCache resourceCache, IProgressMonitor progressMonitor) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link ParserCallable}.
+   * </p>
+   * 
+   * @param content
+   * @param directories
+   * @param parser
+   * @param resourceCache
+   */
+  public ParserCallable(IFileBasedContent content, List<IDirectory> directories, IParser parser,
+      IResourceCache resourceCache, IProgressMonitor progressMonitor) {
 
-		//
-		Assert.isNotNull(content);
-		Assert.isNotNull(directories);
-		Assert.isNotNull(parser);
-		Assert.isNotNull(resourceCache);
+    //
+    Assert.isNotNull(content);
+    Assert.isNotNull(directories);
+    Assert.isNotNull(parser);
+    Assert.isNotNull(resourceCache);
 
-		//
-		_content = content;
+    //
+    _content = content;
 
-		// set the directories to parse
-		_directories = directories;
+    // set the directories to parse
+    _directories = directories;
 
-		//
-		_parser = parser;
+    //
+    _parser = parser;
 
-		//
-		_resourceCache = resourceCache;
-		
-		//
-		_progressMonitor = progressMonitor;
-	}
+    //
+    _resourceCache = resourceCache;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<IProblem> call() throws Exception {
+    //
+    _progressMonitor = progressMonitor;
+  }
 
-		//
-		_errors = new LinkedList<IProblem>();
+  /**
+   * {@inheritDoc}
+   */
+  public List<IProblem> call() throws Exception {
 
-		// iterate
-		for (int i = 0, resourceCount = 0, fromIndex = 0; i < _directories
-				.size(); i++) {
+    //
+    _errors = new LinkedList<IProblem>();
 
-			// class file count
-			// TODO
-			resourceCount = resourceCount
-					+ _directories.get(i).getBinaryContentCount();
+    // iterate
+    for (int i = 0, resourceCount = 0, fromIndex = 0; i < _directories.size(); i++) {
 
-			if (resourceCount > BLOCKSIZE || i + 1 == _directories.size()) {
+      // class file count
+      // TODO
+      resourceCount = resourceCount + _directories.get(i).getBinaryContentCount();
 
-				// parse
-				_errors.addAll(_parser.parse(_content, _directories.subList(fromIndex, i + 1),
-						_resourceCache, _progressMonitor));
+      if (resourceCount > BLOCKSIZE || i + 1 == _directories.size()) {
 
-				// set index
-				resourceCount = 0;
-				fromIndex = i + 1;
-			}
-		}
+        // parse
+        _errors
+            .addAll(_parser.parse(_content, _directories.subList(fromIndex, i + 1), _resourceCache, _progressMonitor));
 
-		// return the errors
-		return _errors;
-	}
+        // set index
+        resourceCount = 0;
+        fromIndex = i + 1;
+      }
+    }
+
+    // return the errors
+    return _errors;
+  }
 }

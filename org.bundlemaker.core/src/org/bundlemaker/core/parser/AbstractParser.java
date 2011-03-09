@@ -18,80 +18,73 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public abstract class AbstractParser implements IParser {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void parseBundleMakerProjectStart(
-			IBundleMakerProject bundleMakerProject) {
-		// ignore
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject) {
+    // ignore
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache,
-			IProgressMonitor progressMonitor) throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IProblem> parse(IFileBasedContent content, List<IDirectory> directoryList, IResourceCache cache,
+      IProgressMonitor progressMonitor) throws CoreException {
 
-		List<IProblem> _errors = new LinkedList<IProblem>();
+    List<IProblem> _errors = new LinkedList<IProblem>();
 
-		// iterate over the directories and parse the directory fragments
-		for (IDirectory directory : directoryList) {
+    // iterate over the directories and parse the directory fragments
+    for (IDirectory directory : directoryList) {
 
-			// TODO Support for ParserType.SOURCE_AND_BINARY
-			List<IDirectoryFragment> directoryFragments = getParserType()
-					.equals(ParserType.BINARY) ? directory
-					.getBinaryDirectoryFragments() : directory
-					.getSourceDirectoryFragments();
+      // TODO Support for ParserType.SOURCE_AND_BINARY
+      List<IDirectoryFragment> directoryFragments = getParserType().equals(ParserType.BINARY) ? directory
+          .getBinaryDirectoryFragments() : directory.getSourceDirectoryFragments();
 
-			for (IDirectoryFragment directoryFragment : directoryFragments) {
+      for (IDirectoryFragment directoryFragment : directoryFragments) {
 
-				// finally: parse the class files
-				for (IResourceKey resourceKey : directoryFragment
-						.getResourceKeys()) {
+        // finally: parse the class files
+        for (IResourceKey resourceKey : directoryFragment.getResourceKeys()) {
 
-					if (canParse(resourceKey)) {
+          if (canParse(resourceKey)) {
 
-						// parse the class file
-						parseResource(resourceKey, content, cache);
-					}
-					//
-					progressMonitor.worked(1);
-				}
-			}
-		}
+            // parse the class file
+            parseResource(resourceKey, content, cache);
+          }
+          //
+          progressMonitor.worked(1);
+        }
+      }
+    }
 
-		//
-		return _errors;
-	}
+    //
+    return _errors;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void parseBundleMakerProjectStop(
-			IBundleMakerProject bundleMakerProject) {
-		// ignore
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject) {
+    // ignore
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceKey
-	 * @param cache
-	 */
-	protected abstract void parseResource(IResourceKey resourceKey,
-			IFileBasedContent content, IResourceCache cache);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceKey
+   * @param cache
+   */
+  protected abstract void parseResource(IResourceKey resourceKey, IFileBasedContent content, IResourceCache cache);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceKey
-	 * @return
-	 */
-	protected abstract boolean canParse(IResourceKey resourceKey);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceKey
+   * @return
+   */
+  protected abstract boolean canParse(IResourceKey resourceKey);
 }
