@@ -37,6 +37,8 @@ import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.MemoryUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
+import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;
+import org.bundlemaker.itest.spring.tests.ModuleTest;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.pde.api.tools.internal.model.ApiModelFactory;
@@ -161,28 +163,32 @@ public class IntegrationTest {
 		modularizedSystem.applyTransformations();
 
 		//
-		Map<String, Set<IType>> ambiguousTypesMap = modularizedSystem
-				.getAmbiguousTypes();
+		ModularizedSystemTests.testGetModules(modularizedSystem);
+		ModuleTest.testModules(modularizedSystem);
 
-		List<String> ambiguousTypes = new ArrayList<String>(
-				ambiguousTypesMap.keySet());
-		Collections.sort(ambiguousTypes);
-
+		// //
+		// Map<String, Set<IType>> ambiguousTypesMap = modularizedSystem
+		// .getAmbiguousTypes();
 		//
-		for (String ambiguousType : ambiguousTypes) {
-
-			//
-			Set<IModule> referencedModules = modularizedSystem
-					.getTypeContainingModules(ambiguousType);
-
-			if (referencedModules.size() > 1) {
-				System.out.println("~~~~~~~");
-				System.out.println(ambiguousType);
-				for (IModule iModule : referencedModules) {
-					System.out.println(" - " + iModule.getModuleIdentifier());
-				}
-			}
-		}
+		// List<String> ambiguousTypes = new ArrayList<String>(
+		// ambiguousTypesMap.keySet());
+		// Collections.sort(ambiguousTypes);
+		//
+		// //
+		// for (String ambiguousType : ambiguousTypes) {
+		//
+		// //
+		// Set<IModule> referencedModules = modularizedSystem
+		// .getTypeContainingModules(ambiguousType);
+		//
+		// if (referencedModules.size() > 1) {
+		// System.out.println("~~~~~~~");
+		// System.out.println(ambiguousType);
+		// for (IModule iModule : referencedModules) {
+		// System.out.println(" - " + iModule.getModuleIdentifier());
+		// }
+		// }
+		// }
 
 		// // check the model
 		// checkTypeModel(modularizedSystem);
@@ -236,7 +242,7 @@ public class IntegrationTest {
 
 		Assert.assertNotNull(resourceModule);
 
-		Set<String> typeNames = resourceModule.getContainedTypeNames();
+		Collection<String> typeNames = resourceModule.getContainedTypeNames();
 		Assert.assertEquals(212, typeNames.size());
 
 		int externalBinaryReferencesCount = resourceModule.getAllReferences(

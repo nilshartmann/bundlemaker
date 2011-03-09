@@ -16,15 +16,6 @@ public interface ITypeContainer {
 
 	/**
 	 * <p>
-	 * </p>
-	 * 
-	 * @param typeNames
-	 * @return
-	 */
-	boolean containsAll(Set<String> typeNames);
-
-	/**
-	 * <p>
 	 * Returns the {@link IType} with the specified fully qualified name or
 	 * <code>null</code> if no {@link IType} with the specified name exists.
 	 * </p>
@@ -47,44 +38,66 @@ public interface ITypeContainer {
 
 	/**
 	 * <p>
+	 * Returns a collection with all contained {@link IType ITypes} that match
+	 * the specified {@link IQueryFilter}.
 	 * </p>
 	 * 
-	 * @return
+	 * @return a collection with all contained {@link IType ITypes} that match
+	 *         the specified {@link IQueryFilter}.
 	 */
 	Collection<IType> getContainedTypes(IQueryFilter<IType> filter);
 
 	/**
 	 * <p>
-	 * Returns a {@link Set} with the names of all contained types.
+	 * Returns a collection with the names of all contained types.
 	 * </p>
 	 * 
-	 * @return a {@link Set} with the names of all contained types.
+	 * @return a collection with the names of all contained types.
 	 */
-	Set<String> getContainedTypeNames();
+	Collection<String> getContainedTypeNames();
 
 	/**
 	 * <p>
+	 * Returns a collection with the names of all contained types that match the
+	 * specified {@link IQueryFilter}.
 	 * </p>
 	 * 
 	 * @param filter
-	 * @return
+	 *            the {@link IQueryFilter}
+	 * @return a collection with the names of all contained types that match the
+	 *         specified {@link IQueryFilter}.
 	 */
-	Set<String> getContainedTypeNames(IQueryFilter<String> filter);
+	Collection<String> getContainedTypeNames(IQueryFilter<String> filter);
 
 	/**
 	 * <p>
+	 * Returns a collection with the names of all contained packages.
 	 * </p>
 	 * 
-	 * @return
+	 * @return a collection with the names of all contained packages.
 	 */
 	Set<String> getContainedPackageNames();
 
 	/**
 	 * <p>
+	 * Returns a collection with the names of all contained packages that match
+	 * the specified filter.
 	 * </p>
 	 * 
 	 * @param filter
-	 * @return
+	 * @return a collection with the names of all contained packages that match
+	 *         the specified filter.
 	 */
 	Set<String> getContainedPackageNames(IQueryFilter<String> filter);
+
+	/**
+	 * <p>
+	 * Returns <code>true</code>, if this container contains all specified
+	 * types.
+	 * </p>
+	 * 
+	 * @param typeNames
+	 * @return
+	 */
+	boolean containsAll(Set<String> typeNames);
 }

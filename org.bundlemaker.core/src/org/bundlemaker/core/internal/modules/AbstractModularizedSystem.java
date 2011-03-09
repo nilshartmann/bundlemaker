@@ -13,8 +13,10 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
@@ -130,13 +132,17 @@ public abstract class AbstractModularizedSystem implements
 	 * {@inheritDoc}
 	 */
 	@Override
-	public final IModule getNonResourceModule(IModuleIdentifier identifier) {
+	public final IModule getModule(IModuleIdentifier identifier) {
 
 		//
 		Assert.isNotNull(identifier);
 
 		//
-		return _nonResourceModules.get(identifier);
+		if (_resourceModules.containsKey(identifier)) {
+			return _resourceModules.get(identifier);
+		} else {
+			return _nonResourceModules.get(identifier);
+		}
 	}
 
 	/**
@@ -149,6 +155,16 @@ public abstract class AbstractModularizedSystem implements
 		return Collections
 				.unmodifiableCollection((Collection<? extends IModule>) _nonResourceModules
 						.values());
+	}
+
+	@Override
+	public IModule getModule(String name, String version) {
+		return getModule(new ModuleIdentifier(name, version));
+	}
+
+	@Override
+	public IResourceModule getResourceModule(String name, String version) {
+		return getResourceModule(new ModuleIdentifier(name, version));
 	}
 
 	/**
@@ -197,6 +213,69 @@ public abstract class AbstractModularizedSystem implements
 
 		//
 		return _resourceModules.get(identifier);
+	}
+
+	@Override
+	public Collection<IModule> getAllModules(IQueryFilter<IModule> filter) {
+
+		// create the result list
+		Set<IModule> result = new HashSet<IModule>(_nonResourceModules.size()
+				+ _resourceModules.size());
+
+		// all all modules
+		for (IModule iModule : _nonResourceModules.values()) {
+			if (filter.matches(iModule)) {
+				result.add(iModule);
+			}
+		}
+
+		//
+		for (IModule iModule : _resourceModules.values()) {
+			if (filter.matches(iModule)) {
+				result.add(iModule);
+			}
+		}
+
+		// return an unmodifiable copy
+		return Collections.unmodifiableSet(result);
+	}
+
+	@Override
+	public Collection<IModule> getNonResourceModules(
+			IQueryFilter<IModule> filter) {
+
+		// create the result list
+		Set<IModule> result = new HashSet<IModule>(_nonResourceModules.size()
+				+ _resourceModules.size());
+
+		// all all modules
+		for (IModule iModule : _nonResourceModules.values()) {
+			if (filter.matches(iModule)) {
+				result.add(iModule);
+			}
+		}
+
+		// return an unmodifiable copy
+		return Collections.unmodifiableSet(result);
+	}
+
+	@Override
+	public Collection<IResourceModule> getResourceModules(
+			IQueryFilter<IResourceModule> filter) {
+
+		// create the result list
+		Set<IResourceModule> result = new HashSet<IResourceModule>(
+				_nonResourceModules.size() + _resourceModules.size());
+
+		//
+		for (IResourceModule iModule : _resourceModules.values()) {
+			if (filter.matches(iModule)) {
+				result.add(iModule);
+			}
+		}
+
+		// return an unmodifiable copy
+		return Collections.unmodifiableSet(result);
 	}
 
 	/**

@@ -10,7 +10,7 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.modules.query.NameQueryFilters;
+import org.bundlemaker.core.modules.query.StringQueryFilters;
 import org.bundlemaker.core.modules.query.TypeQueryFilters;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
@@ -102,7 +102,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 */
 	@Override
 	public Set<String> getContainedTypeNames() {
-		return getContainedTypeNames(NameQueryFilters.TRUE_QUERY_FILTER);
+		return getContainedTypeNames(StringQueryFilters.TRUE_QUERY_FILTER);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 	 */
 	@Override
 	public Set<String> getContainedPackageNames() {
-		return getContainedPackageNames(NameQueryFilters.TRUE_QUERY_FILTER);
+		return getContainedPackageNames(StringQueryFilters.TRUE_QUERY_FILTER);
 	}
 
 	/**
@@ -316,6 +316,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I>
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("rawtypes")
 		AbstractModule other = (AbstractModule) obj;
 		if (_moduleIdentifier == null) {
 			if (other._moduleIdentifier != null)

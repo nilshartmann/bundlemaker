@@ -14,17 +14,19 @@ public interface IModule extends ITypeContainer {
 
 	/**
 	 * <p>
+	 * Returns the module identifier of this module.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the module identifier of this module.
 	 */
 	IModuleIdentifier getModuleIdentifier();
 
 	/**
 	 * <p>
+	 * Returns the classification of this module.
 	 * </p>
 	 * 
-	 * @return
+	 * @return the classification
 	 */
 	IPath getClassification();
 

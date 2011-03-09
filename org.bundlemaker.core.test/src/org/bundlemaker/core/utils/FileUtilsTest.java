@@ -30,8 +30,8 @@ public class FileUtilsTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		List<String> children = FileUtils.getAllChildren(new File(
-				"D:/_work/SVN - osgibuch"));
+		List<String> children = FileUtils.getAllChildren(new File(System
+				.getProperty("user.dir"), "test-environment"));
 
 		stopWatch.stop();
 		System.out.println(stopWatch.getElapsedTime());
