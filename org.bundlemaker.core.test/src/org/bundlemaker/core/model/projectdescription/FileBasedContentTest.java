@@ -48,34 +48,29 @@ public class FileBasedContentTest {
 
 		//
 		assertEquals(1, fileBasedContent.getBinaryPaths().size());
-		assertEquals(1, fileBasedContent.getResourceContent().getSourcePaths()
-				.size());
+		assertEquals(1, fileBasedContent.getSourcePaths().size());
 
 		//
-		assertEquals(98, fileBasedContent.getResourceContent()
-				.getBinaryResources().size());
+		assertEquals(98, fileBasedContent.getBinaryResources().size());
 
-		assertEquals(85, fileBasedContent.getResourceContent()
-				.getSourceResources().size());
+		assertEquals(85, fileBasedContent.getSourceResources().size());
 
 		//
 		assertEquals(
 				"com/springsource/bundlor/ClassPath.class",
 				fileBasedContent
-						.getResourceContent()
-						.getBinaryResource(
-								new Path(
-										"com/springsource/bundlor/ClassPath.class"))
+
+				.getBinaryResource(
+						new Path("com/springsource/bundlor/ClassPath.class"))
 						.getPath());
 
 		//
 		assertEquals(
 				"com/springsource/bundlor/ClassPath.java",
 				fileBasedContent
-						.getResourceContent()
-						.getSourceResource(
-								new Path(
-										"com/springsource/bundlor/ClassPath.java"))
+
+				.getSourceResource(
+						new Path("com/springsource/bundlor/ClassPath.java"))
 						.getPath());
 	}
 }

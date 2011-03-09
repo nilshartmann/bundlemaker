@@ -243,8 +243,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 
 			if (fileBasedContent.isResourceContent()) {
 
-				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
-						.getResourceContent()).getModifiableBinaryResources()) {
+				for (ResourceStandin resourceStandin : fileBasedContent.getModifiableBinaryResources()) {
 
 					setupResourceStandin(resourceStandin, map, false);
 					Assert.isNotNull(resourceStandin.getResource());
@@ -258,8 +257,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 					}
 				}
 
-				for (ResourceStandin resourceStandin : ((ResourceContent) fileBasedContent
-						.getResourceContent()).getModifiableSourceResources()) {
+				for (ResourceStandin resourceStandin : fileBasedContent.getModifiableSourceResources()) {
 
 					setupResourceStandin(resourceStandin, map, true);
 					Assert.isNotNull(resourceStandin.getResource());

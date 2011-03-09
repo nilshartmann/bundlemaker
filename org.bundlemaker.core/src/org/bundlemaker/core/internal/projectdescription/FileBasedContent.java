@@ -1,13 +1,15 @@
 package org.bundlemaker.core.internal.projectdescription;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IResourceContent;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -20,6 +22,14 @@ import org.eclipse.core.runtime.IPath;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class FileBasedContent implements IFileBasedContent {
+
+	/** - */
+	private static final Set<IPath> EMPTY_PATH_SET = Collections
+			.unmodifiableSet(new HashSet<IPath>());
+
+	/** - */
+	private static final Set<? extends IResource> EMPTY_RESOURCE_SET = Collections
+			.unmodifiableSet(new HashSet<IResource>());
 
 	/** - */
 	private boolean _isInitialized;
@@ -87,11 +97,6 @@ public class FileBasedContent implements IFileBasedContent {
 		return _resourceContent != null;
 	}
 
-	@Override
-	public IResourceContent getResourceContent() {
-		return _resourceContent;
-	}
-
 	public ResourceContent getModifiableResourceContent() {
 		return _resourceContent;
 	}
@@ -104,6 +109,54 @@ public class FileBasedContent implements IFileBasedContent {
 	 */
 	public Set<IPath> getModifiableBinaryPaths() {
 		return _binaryPaths;
+	}
+
+	@Override
+	public Set<IPath> getSourcePaths() {
+		return _resourceContent != null ? _resourceContent.getSourcePaths()
+				: EMPTY_PATH_SET;
+	}
+
+	@Override
+	public boolean isAnalyzeSourceResources() {
+		return _resourceContent != null ? _resourceContent
+				.isAnalyzeSourceResources() : false;
+	}
+
+	@Override
+	public IResource getResource(IPath path, ContentType type) {
+		return _resourceContent != null ? _resourceContent.getResource(path,
+				type) : null;
+	}
+
+	@Override
+	public Set<? extends IResource> getResources(ContentType type) {
+		return _resourceContent != null ? _resourceContent.getResources(type)
+				: EMPTY_RESOURCE_SET;
+	}
+
+	@Override
+	public IResource getBinaryResource(IPath path) {
+		return _resourceContent != null ? _resourceContent
+				.getBinaryResource(path) : null;
+	}
+
+	@Override
+	public Set<? extends IResource> getBinaryResources() {
+		return _resourceContent != null ? _resourceContent.getBinaryResources()
+				: EMPTY_RESOURCE_SET;
+	}
+
+	@Override
+	public IResource getSourceResource(IPath path) {
+		return _resourceContent != null ? _resourceContent
+				.getSourceResource(path) : null;
+	}
+
+	@Override
+	public Set<? extends IResource> getSourceResources() {
+		return _resourceContent != null ? _resourceContent.getSourceResources()
+				: EMPTY_RESOURCE_SET;
 	}
 
 	/**
@@ -200,5 +253,13 @@ public class FileBasedContent implements IFileBasedContent {
 
 		// set initialized
 		_isInitialized = true;
+	}
+
+	public Collection<ResourceStandin> getModifiableBinaryResources() {
+		return _resourceContent.getModifiableBinaryResources();
+	}
+
+	public Collection<ResourceStandin> getModifiableSourceResources() {
+		return _resourceContent.getModifiableSourceResources();
 	}
 }

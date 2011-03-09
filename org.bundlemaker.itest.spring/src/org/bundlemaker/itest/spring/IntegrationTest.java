@@ -1,13 +1,10 @@
 package org.bundlemaker.itest.spring;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -17,39 +14,25 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
-import org.bundlemaker.core.exporter.pde.exporter.PdePluginProjectModuleExporter;
-import org.bundlemaker.core.exporter.pde.exporter.TargetPlatformProjectExporter;
+import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
-import org.bundlemaker.core.exporter.util.BinaryBundleExporter;
-import org.bundlemaker.core.exporter.util.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.query.TypeQueryFilters;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
+import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
-import org.bundlemaker.core.util.MemoryUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;
 import org.bundlemaker.itest.spring.tests.ModuleTest;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.pde.api.tools.internal.model.ApiModelFactory;
-import org.eclipse.pde.api.tools.internal.provisional.Factory;
-import org.eclipse.pde.api.tools.internal.provisional.VisibilityModifiers;
-import org.eclipse.pde.api.tools.internal.provisional.comparator.ApiComparator;
-import org.eclipse.pde.api.tools.internal.provisional.comparator.IDelta;
-import org.eclipse.pde.api.tools.internal.provisional.descriptors.IReferenceTypeDescriptor;
-import org.eclipse.pde.api.tools.internal.provisional.model.IApiBaseline;
-import org.eclipse.pde.api.tools.internal.provisional.model.IApiComponent;
-import org.eclipse.pde.api.tools.internal.provisional.model.IApiTypeContainer;
 import org.junit.Test;
 
 /**
@@ -410,14 +393,13 @@ public class IntegrationTest {
 				.getProjectDescription().getFileBasedContent()) {
 
 			//
-			Assert.assertNotNull(fileBasedContent.getResourceContent());
+			Assert.assertTrue(fileBasedContent.isResourceContent());
 
 			//
 			Map<String, IType> typeMap = new HashMap<String, IType>();
 
 			// step 1: assert binary content
-			for (IResource resource : fileBasedContent.getResourceContent()
-					.getBinaryResources()) {
+			for (IResource resource : fileBasedContent.getBinaryResources()) {
 
 				// assert that the binary resources don't have any references
 				Assert.assertEquals(0, resource.getReferences().size());
@@ -466,8 +448,7 @@ public class IntegrationTest {
 			}
 
 			// step 2: assert source content
-			for (IResource resource : fileBasedContent.getResourceContent()
-					.getSourceResources()) {
+			for (IResource resource : fileBasedContent.getSourceResources()) {
 
 				// assert that the binary resources don't have any references
 				// Assert.assertEquals(0, resource.getReferences().size());

@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.core.osgi
+Bundle-SymbolicName: org.bundlemaker.core.osgi
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.pde.core;bundle-version="3.6.0",
+ org.bundlemaker.core;bundle-version="1.0.0",
+ org.eclipse.core.resources;bundle-version="3.6.0",
+ org.eclipse.jdt.core;bundle-version="3.6.0",
+ org.eclipse.jdt.launching;bundle-version="3.5.100",
+ com.springsource.bundlor;bundle-version="1.0.0",
+ com.springsource.util.parser.manifest;bundle-version="2.0.0",
+ com.springsource.util.osgi;bundle-version="2.0.0"
+Export-Package: org.bundlemaker.core.osgi,
+ org.bundlemaker.core.osgi.exporter,
+ org.bundlemaker.core.osgi.manifest,
+ org.bundlemaker.core.osgi.pde.exporter
+Bundle-Activator: org.bundlemaker.core.osgi.Activator
+

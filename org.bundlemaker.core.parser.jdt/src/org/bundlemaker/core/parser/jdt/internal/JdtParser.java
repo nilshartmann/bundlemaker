@@ -109,8 +109,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
 		// parse the compilation units
 		if (content.isResourceContent()
-				&& !content.getResourceContent().getSourceResources().isEmpty()
-				&& content.getResourceContent().isAnalyzeSourceResources()) {
+				&& !content.getSourceResources().isEmpty()
+				&& content.isAnalyzeSourceResources()) {
 
 			_errors.addAll(parseCompilationUnits(directoryList, cache, content,
 					progressMonitor));

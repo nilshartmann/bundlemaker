@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IPath;
@@ -67,15 +66,14 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 			IFileBasedContent content = (IFileBasedContent) o;
 			children.addAll(asBundleMakerPaths(content.getBinaryPaths(), true));
 			if (content.isResourceContent()) {
-				IResourceContent resourceContent = content.getResourceContent();
-				children.addAll(getChildren(resourceContent));
+				children.addAll(getChildren(content));
 			}
 			return children.toArray();
 		}
 
-		private Collection<Object> getChildren(IResourceContent resourceContent) {
+		private Collection<Object> getChildren(IFileBasedContent content) {
 			List<Object> children = new LinkedList<Object>();
-			Set<IPath> sourcePaths = resourceContent.getSourcePaths();
+			Set<IPath> sourcePaths = content.getSourcePaths();
 			for (IPath iPath : sourcePaths) {
 				children.add(new BundleMakerPath(iPath, false));
 			}
@@ -207,8 +205,6 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 						IBundleMakerProjectDescription.class);
 		Platform.getAdapterManager().registerAdapters(
 				bundleMakerAdapterFactory, IFileBasedContent.class);
-		Platform.getAdapterManager().registerAdapters(
-				bundleMakerAdapterFactory, IResourceContent.class);
 		Platform.getAdapterManager().registerAdapters(
 				bundleMakerAdapterFactory, BundleMakerPath.class);
 
