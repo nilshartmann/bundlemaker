@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.IPath;
  */
 public interface IModifiableResourceModule extends IResourceModule {
 
-	void setClassification(IPath classification);
+  void setClassification(IPath classification);
 
-	IModifiableResourceContainer getModifiableSelfResourceContainer();
+  IModifiableResourceContainer getModifiableSelfResourceContainer();
 }

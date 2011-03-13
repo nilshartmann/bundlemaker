@@ -15,35 +15,41 @@ import org.eclipse.swt.layout.GridLayout;
  */
 public class FormLayoutUtils {
 
-	public static final int FORM_BODY_MARGIN_HEIGHT = 0;
-	public static final int FORM_BODY_MARGIN_WIDTH = 0;
-	// FORM BODY
-	public static final int FORM_BODY_MARGIN_TOP = 12;
-	public static final int FORM_BODY_MARGIN_BOTTOM = 12;
-	public static final int FORM_BODY_MARGIN_LEFT = 6;
-	public static final int FORM_BODY_MARGIN_RIGHT = 6;
-	public static final int FORM_BODY_HORIZONTAL_SPACING = 20;
-	public static final int FORM_BODY_VERTICAL_SPACING = 17;
+  public static final int FORM_BODY_MARGIN_HEIGHT      = 0;
 
-	public static GridLayout createFormGridLayout(
-			boolean makeColumnsEqualWidth, int numColumns) {
-		GridLayout layout = new GridLayout();
+  public static final int FORM_BODY_MARGIN_WIDTH       = 0;
 
-		layout.marginHeight = FORM_BODY_MARGIN_HEIGHT;
-		layout.marginWidth = FORM_BODY_MARGIN_WIDTH;
+  // FORM BODY
+  public static final int FORM_BODY_MARGIN_TOP         = 12;
 
-		layout.marginTop = FORM_BODY_MARGIN_TOP;
-		layout.marginBottom = FORM_BODY_MARGIN_BOTTOM;
-		layout.marginLeft = FORM_BODY_MARGIN_LEFT;
-		layout.marginRight = FORM_BODY_MARGIN_RIGHT;
+  public static final int FORM_BODY_MARGIN_BOTTOM      = 12;
 
-		layout.horizontalSpacing = FORM_BODY_HORIZONTAL_SPACING;
-		layout.verticalSpacing = FORM_BODY_VERTICAL_SPACING;
+  public static final int FORM_BODY_MARGIN_LEFT        = 6;
 
-		layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
-		layout.numColumns = numColumns;
+  public static final int FORM_BODY_MARGIN_RIGHT       = 6;
 
-		return layout;
-	}
+  public static final int FORM_BODY_HORIZONTAL_SPACING = 20;
+
+  public static final int FORM_BODY_VERTICAL_SPACING   = 17;
+
+  public static GridLayout createFormGridLayout(boolean makeColumnsEqualWidth, int numColumns) {
+    GridLayout layout = new GridLayout();
+
+    layout.marginHeight = FORM_BODY_MARGIN_HEIGHT;
+    layout.marginWidth = FORM_BODY_MARGIN_WIDTH;
+
+    layout.marginTop = FORM_BODY_MARGIN_TOP;
+    layout.marginBottom = FORM_BODY_MARGIN_BOTTOM;
+    layout.marginLeft = FORM_BODY_MARGIN_LEFT;
+    layout.marginRight = FORM_BODY_MARGIN_RIGHT;
+
+    layout.horizontalSpacing = FORM_BODY_HORIZONTAL_SPACING;
+    layout.verticalSpacing = FORM_BODY_VERTICAL_SPACING;
+
+    layout.makeColumnsEqualWidth = makeColumnsEqualWidth;
+    layout.numColumns = numColumns;
+
+    return layout;
+  }
 
 }

@@ -18,215 +18,202 @@ import org.bundlemaker.core.resource.ReferenceType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ReferencedModulesQueryResult implements
-		IReferencedModulesQueryResult {
+public class ReferencedModulesQueryResult implements IReferencedModulesQueryResult {
 
-	/** - */
-	private Map<IReference, IModule> _referencesToModulesMap;
+  /** - */
+  private Map<IReference, IModule>      _referencesToModulesMap;
 
-	/** - */
-	private Map<IReference, Set<IModule>> _referencesToAmbiguousModulesMap;
+  /** - */
+  private Map<IReference, Set<IModule>> _referencesToAmbiguousModulesMap;
 
-	/** - */
-	private Set<IReference> _unsatisfiedReferences;
+  /** - */
+  private Set<IReference>               _unsatisfiedReferences;
 
-	/** - */
-	private IResourceModule _selfModule;
+  /** - */
+  private IResourceModule               _selfModule;
 
-	/** - */
-	private Set<String> _unsatisfiedReferencedTypes;
+  /** - */
+  private Set<String>                   _unsatisfiedReferencedTypes;
 
-	/** - */
-	private Map<String, Set<IModule>> _referencedTypesToAmbiguousModulesMap;
+  /** - */
+  private Map<String, Set<IModule>>     _referencedTypesToAmbiguousModulesMap;
 
-	/** - */
-	private Set<IModule> _referencedModules;
+  /** - */
+  private Set<IModule>                  _referencedModules;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ReferencedModulesQueryResult}.
-	 * </p>
-	 */
-	public ReferencedModulesQueryResult(IResourceModule self) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link ReferencedModulesQueryResult}.
+   * </p>
+   */
+  public ReferencedModulesQueryResult(IResourceModule self) {
 
-		//
-		_referencesToModulesMap = new HashMap<IReference, IModule>();
-		_referencesToAmbiguousModulesMap = new HashMap<IReference, Set<IModule>>();
-		_unsatisfiedReferences = new HashSet<IReference>();
+    //
+    _referencesToModulesMap = new HashMap<IReference, IModule>();
+    _referencesToAmbiguousModulesMap = new HashMap<IReference, Set<IModule>>();
+    _unsatisfiedReferences = new HashSet<IReference>();
 
-		//
-		_selfModule = self;
-	}
+    //
+    _selfModule = self;
+  }
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ReferencedModulesQueryResult}.
-	 * </p>
-	 */
-	public ReferencedModulesQueryResult() {
-		this(null);
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link ReferencedModulesQueryResult}.
+   * </p>
+   */
+  public ReferencedModulesQueryResult() {
+    this(null);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasErrors() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasErrors() {
 
-		//
-		return _unsatisfiedReferences.isEmpty()
-				&& _referencesToAmbiguousModulesMap.isEmpty();
-	}
+    //
+    return _unsatisfiedReferences.isEmpty() && _referencesToAmbiguousModulesMap.isEmpty();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Map<IReference, IModule> getReferencedModulesMap() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<IReference, IModule> getReferencedModulesMap() {
 
-		//
-		return _referencesToModulesMap;
-	}
+    //
+    return _referencesToModulesMap;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasReferencesWithAmbiguousModules() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasReferencesWithAmbiguousModules() {
 
-		//
-		return !_referencesToAmbiguousModulesMap.isEmpty();
-	}
+    //
+    return !_referencesToAmbiguousModulesMap.isEmpty();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules() {
 
-		//
-		return _referencesToAmbiguousModulesMap;
-	}
+    //
+    return _referencesToAmbiguousModulesMap;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasUnsatisfiedReferences() {
-		//
-		return !_unsatisfiedReferences.isEmpty();
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasUnsatisfiedReferences() {
+    //
+    return !_unsatisfiedReferences.isEmpty();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<IReference> getUnsatisfiedReferences() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<IReference> getUnsatisfiedReferences() {
 
-		//
-		return _unsatisfiedReferences;
-	}
+    //
+    return _unsatisfiedReferences;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<IModule> getReferencedModules() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<IModule> getReferencedModules() {
 
-		if (_referencedModules == null) {
-			
-			_referencedModules = new HashSet<IModule>();
-			
-			// step 2: add the type modules
-			for (IModule iTypeModule : _referencesToModulesMap.values()) {
-				if (!iTypeModule.equals(_selfModule)) {
-					_referencedModules.add(iTypeModule);
-				}
-			}
-		}
-		
-		//
-		return _referencedModules;
-	}
+    if (_referencedModules == null) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules() {
+      _referencedModules = new HashSet<IModule>();
 
-		if (_referencedTypesToAmbiguousModulesMap == null) {
-			
-			_referencedTypesToAmbiguousModulesMap = new HashMap<String, Set<IModule>>();
-			
-			// step 2: add the type modules
-			for (Entry<IReference, Set<IModule>> entry : _referencesToAmbiguousModulesMap
-					.entrySet()) {
+      // step 2: add the type modules
+      for (IModule iTypeModule : _referencesToModulesMap.values()) {
+        if (!iTypeModule.equals(_selfModule)) {
+          _referencedModules.add(iTypeModule);
+        }
+      }
+    }
 
-				// only process type references
-				if (entry.getKey().getReferenceType()
-						.equals(ReferenceType.TYPE_REFERENCE)) {
+    //
+    return _referencedModules;
+  }
 
-					// process
-					for (IModule typeModule : entry.getValue()) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules() {
 
-						// ignore self modules
-						if (!typeModule.equals(_selfModule)) {
+    if (_referencedTypesToAmbiguousModulesMap == null) {
 
-							// create the type module set if necessary
-							if (!_referencedTypesToAmbiguousModulesMap
-									.containsKey(entry.getKey()
-											.getFullyQualifiedName())) {
+      _referencedTypesToAmbiguousModulesMap = new HashMap<String, Set<IModule>>();
 
-								_referencedTypesToAmbiguousModulesMap.put(entry
-										.getKey().getFullyQualifiedName(),
-										new HashSet<IModule>());
-							}
+      // step 2: add the type modules
+      for (Entry<IReference, Set<IModule>> entry : _referencesToAmbiguousModulesMap.entrySet()) {
 
-							// add the type module
-							_referencedTypesToAmbiguousModulesMap.get(
-									entry.getKey().getFullyQualifiedName())
-									.add(typeModule);
-						}
-					}
-				}
-			}
-		}
-		
-		// 
-		return _referencedTypesToAmbiguousModulesMap;
-	}
+        // only process type references
+        if (entry.getKey().getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<String> getUnsatisfiedReferencedTypes() {
+          // process
+          for (IModule typeModule : entry.getValue()) {
 
-		//
-		if (_unsatisfiedReferencedTypes == null) {
+            // ignore self modules
+            if (!typeModule.equals(_selfModule)) {
 
-			_unsatisfiedReferencedTypes = new HashSet<String>();
+              // create the type module set if necessary
+              if (!_referencedTypesToAmbiguousModulesMap.containsKey(entry.getKey().getFullyQualifiedName())) {
 
-			// add the type modules
-			for (IReference unsatisfiedReference : _unsatisfiedReferences) {
+                _referencedTypesToAmbiguousModulesMap.put(entry.getKey().getFullyQualifiedName(),
+                    new HashSet<IModule>());
+              }
 
-				// only process type references
-				if (unsatisfiedReference.getReferenceType().equals(
-						ReferenceType.TYPE_REFERENCE)) {
+              // add the type module
+              _referencedTypesToAmbiguousModulesMap.get(entry.getKey().getFullyQualifiedName()).add(typeModule);
+            }
+          }
+        }
+      }
+    }
 
-					if (!_unsatisfiedReferencedTypes
-							.contains(unsatisfiedReference
-									.getFullyQualifiedName())) {
-						
-						_unsatisfiedReferencedTypes.add(unsatisfiedReference
-								.getFullyQualifiedName());
-					}
-				}
+    //
+    return _referencedTypesToAmbiguousModulesMap;
+  }
 
-			}
-		}
-		// return the result
-		return _unsatisfiedReferencedTypes;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<String> getUnsatisfiedReferencedTypes() {
+
+    //
+    if (_unsatisfiedReferencedTypes == null) {
+
+      _unsatisfiedReferencedTypes = new HashSet<String>();
+
+      // add the type modules
+      for (IReference unsatisfiedReference : _unsatisfiedReferences) {
+
+        // only process type references
+        if (unsatisfiedReference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
+
+          if (!_unsatisfiedReferencedTypes.contains(unsatisfiedReference.getFullyQualifiedName())) {
+
+            _unsatisfiedReferencedTypes.add(unsatisfiedReference.getFullyQualifiedName());
+          }
+        }
+
+      }
+    }
+    // return the result
+    return _unsatisfiedReferencedTypes;
+  }
 }

@@ -15,120 +15,110 @@ import org.junit.Test;
 
 public class ReferenceContainerTest {
 
-	private ReferenceContainer _referenceContainer;
-	private Set<Reference> _references;
+  private ReferenceContainer _referenceContainer;
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	@Before
-	public void pre() {
-		// set up
-		FlyWeightCache flyWeightCache = new FlyWeightCache();
-		_references = new HashSet<Reference>();
-		_referenceContainer = new ReferenceContainer(flyWeightCache) {
+  private Set<Reference>     _references;
 
-			@Override
-			protected Set<Reference> createReferencesSet() {
-				return _references;
-			}
-		};
-	}
+  /**
+   * <p>
+   * </p>
+   */
+  @Before
+  public void pre() {
+    // set up
+    FlyWeightCache flyWeightCache = new FlyWeightCache();
+    _references = new HashSet<Reference>();
+    _referenceContainer = new ReferenceContainer(flyWeightCache) {
 
-	@Test
-	public void test() {
+      @Override
+      protected Set<Reference> createReferencesSet() {
+        return _references;
+      }
+    };
+  }
 
-		// test: assert same reference
-		for (int i = 0; i < 10; i++) {
-			_referenceContainer.recordReference("a.b.c",
-					new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true,
-							true, false, false, false, false, false));
-		}
+  @Test
+  public void test() {
 
-		// assert
-		Assert.assertEquals(1, _references.size());
+    // test: assert same reference
+    for (int i = 0; i < 10; i++) {
+      _referenceContainer.recordReference("a.b.c", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, true,
+          false, false, false, false, false));
+    }
 
-		// test: assert same reference with different attributes
-		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
-				ReferenceType.TYPE_REFERENCE, true, true, true, false, false, false, false));
-		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
-				ReferenceType.TYPE_REFERENCE, true, false, true, true, false, false, false));
+    // assert
+    Assert.assertEquals(1, _references.size());
 
-		// assert
-		Assert.assertEquals(1, _references.size());
+    // test: assert same reference with different attributes
+    _referenceContainer.recordReference("a.b.c", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, true,
+        true, false, false, false, false));
+    _referenceContainer.recordReference("a.b.c", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, false,
+        true, true, false, false, false));
 
-		// test: assert same reference with different attributes
-		_referenceContainer.recordReference("a.b.c.d", new ReferenceAttributes(
-				ReferenceType.TYPE_REFERENCE, true, true, true, false, false, false, false));
-		_referenceContainer.recordReference("a.b.c.f", new ReferenceAttributes(
-				ReferenceType.TYPE_REFERENCE, true, false, true, true, false, false, false));
+    // assert
+    Assert.assertEquals(1, _references.size());
 
-		// assert
-		Assert.assertEquals(3, _references.size());
-		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true,
-				true, true, false);
-		assertReference("a.b.c.d", ReferenceType.TYPE_REFERENCE, true, true,
-				true, false, false);
-		assertReference("a.b.c.f", ReferenceType.TYPE_REFERENCE, true, false,
-				true, true, false);
-	}
+    // test: assert same reference with different attributes
+    _referenceContainer.recordReference("a.b.c.d", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, true,
+        true, false, false, false, false));
+    _referenceContainer.recordReference("a.b.c.f", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, false,
+        true, true, false, false, false));
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 */
-	@Test
-	public void referenceUpdate() {
+    // assert
+    Assert.assertEquals(3, _references.size());
+    assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true, true, true, false);
+    assertReference("a.b.c.d", ReferenceType.TYPE_REFERENCE, true, true, true, false, false);
+    assertReference("a.b.c.f", ReferenceType.TYPE_REFERENCE, true, false, true, true, false);
+  }
 
-		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
-				ReferenceType.TYPE_REFERENCE, true, true, false, false, true, false, false));
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  @Test
+  public void referenceUpdate() {
 
-		_referenceContainer.recordReference("a.b.c", new ReferenceAttributes(
-				ReferenceType.TYPE_REFERENCE, true, true, true, false, false, false, false));
+    _referenceContainer.recordReference("a.b.c", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, true,
+        false, false, true, false, false));
 
-		_referenceContainer
-				.recordReference("a.b.c", new ReferenceAttributes(
-						ReferenceType.TYPE_REFERENCE, true, false, false,
-						false, false, false, false));
+    _referenceContainer.recordReference("a.b.c", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, true,
+        true, false, false, false, false));
 
-		Assert.assertEquals(1, _references.size());
+    _referenceContainer.recordReference("a.b.c", new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true, false,
+        false, false, false, false, false));
 
-		assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true,
-				true, false, true);
-	}
+    Assert.assertEquals(1, _references.size());
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @param referenceType
-	 * @param isExtends
-	 * @param isImplements
-	 * @param isCompiletime
-	 * @param isRuntime
-	 */
-	private void assertReference(String fullyQualifiedName,
-			ReferenceType referenceType, boolean isExtends,
-			boolean isImplements, boolean isClassAnnotation,
-			boolean isCompiletime, boolean isRuntime) {
+    assertReference("a.b.c", ReferenceType.TYPE_REFERENCE, true, true, true, false, true);
+  }
 
-		// assert
-		for (Reference reference : _references) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @param referenceType
+   * @param isExtends
+   * @param isImplements
+   * @param isCompiletime
+   * @param isRuntime
+   */
+  private void assertReference(String fullyQualifiedName, ReferenceType referenceType, boolean isExtends,
+      boolean isImplements, boolean isClassAnnotation, boolean isCompiletime, boolean isRuntime) {
 
-			if (reference.getFullyQualifiedName().equals(fullyQualifiedName)) {
+    // assert
+    for (Reference reference : _references) {
 
-				Assert.assertEquals(referenceType, reference.getReferenceType());
-				Assert.assertEquals(reference.isExtends(), isExtends);
-				Assert.assertEquals(reference.isImplements(), isImplements);
-				Assert.assertEquals(reference.isClassAnnotation(),
-						isClassAnnotation);
-				Assert.assertEquals(reference.isCompileTimeReference(),
-						isCompiletime);
-				Assert.assertEquals(reference.isRuntimeReference(), isRuntime);
-			}
-		}
-	}
+      if (reference.getFullyQualifiedName().equals(fullyQualifiedName)) {
+
+        Assert.assertEquals(referenceType, reference.getReferenceType());
+        Assert.assertEquals(reference.isExtends(), isExtends);
+        Assert.assertEquals(reference.isImplements(), isImplements);
+        Assert.assertEquals(reference.isClassAnnotation(), isClassAnnotation);
+        Assert.assertEquals(reference.isCompileTimeReference(), isCompiletime);
+        Assert.assertEquals(reference.isRuntimeReference(), isRuntime);
+      }
+    }
+  }
 }

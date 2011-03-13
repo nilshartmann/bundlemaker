@@ -5,7 +5,6 @@
 // Generated on: 2011.01.07 at 02:59:31 PM MEZ 
 //
 
-
 package org.bundlemaker.core.exporter.structure101.xml;
 
 import java.util.ArrayList;
@@ -15,11 +14,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for modulesType complex type.
+ * <p>
+ * Java class for modulesType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="modulesType">
@@ -36,41 +36,38 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "modulesType", propOrder = {
-    "module"
-})
+@XmlType(name = "modulesType", propOrder = { "module" })
 public class ModulesType {
 
-    @XmlElement(required = true)
-    protected List<ModuleType> module;
+  @XmlElement(required = true)
+  protected List<ModuleType> module;
 
-    /**
-     * Gets the value of the module property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the module property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getModule().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ModuleType }
-     * 
-     * 
-     */
-    public List<ModuleType> getModule() {
-        if (module == null) {
-            module = new ArrayList<ModuleType>();
-        }
-        return this.module;
+  /**
+   * Gets the value of the module property.
+   * 
+   * <p>
+   * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+   * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+   * the module property.
+   * 
+   * <p>
+   * For example, to add a new item, do as follows:
+   * 
+   * <pre>
+   * getModule().add(newItem);
+   * </pre>
+   * 
+   * 
+   * <p>
+   * Objects of the following type(s) are allowed in the list {@link ModuleType }
+   * 
+   * 
+   */
+  public List<ModuleType> getModule() {
+    if (module == null) {
+      module = new ArrayList<ModuleType>();
     }
+    return this.module;
+  }
 
 }

@@ -18,194 +18,170 @@ import org.eclipse.core.runtime.Assert;
 
 public class ResourceSetBasedTransformation implements ITransformation {
 
-	/** - */
-	public static final String USER_ATTRIBUTE_KEY = "ResourceSetBasedTransformation-USER_ATTRIBUTE_KEY";
+  /** - */
+  public static final String                     USER_ATTRIBUTE_KEY = "ResourceSetBasedTransformation-USER_ATTRIBUTE_KEY";
 
-	/** - */
-	private List<ResourceSetBasedModuleDefinition> _moduleDefinitions;
+  /** - */
+  private List<ResourceSetBasedModuleDefinition> _moduleDefinitions;
 
-	/** - */
-	private IResourceSetProcessor _resourceSetProcessor;
+  /** - */
+  private IResourceSetProcessor                  _resourceSetProcessor;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ResourceSetBasedTransformation}.
-	 * </p>
-	 */
-	public ResourceSetBasedTransformation() {
-		_moduleDefinitions = new ArrayList<ResourceSetBasedModuleDefinition>();
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceSetBasedTransformation}.
+   * </p>
+   */
+  public ResourceSetBasedTransformation() {
+    _moduleDefinitions = new ArrayList<ResourceSetBasedModuleDefinition>();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void apply(IModifiableModularizedSystem modularizedSystem) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void apply(IModifiableModularizedSystem modularizedSystem) {
 
-		//
-		for (ResourceSetBasedModuleDefinition moduleDefinition : _moduleDefinitions) {
+    //
+    for (ResourceSetBasedModuleDefinition moduleDefinition : _moduleDefinitions) {
 
-			// get the target module
-			IModuleIdentifier targetModuleIdentifier = moduleDefinition
-					.getModuleIdentifier();
+      // get the target module
+      IModuleIdentifier targetModuleIdentifier = moduleDefinition.getModuleIdentifier();
 
-			// log
-			System.out.println("Creating module '"
-					+ targetModuleIdentifier.toString() + "'...");
+      // log
+      System.out.println("Creating module '" + targetModuleIdentifier.toString() + "'...");
 
-			IModifiableResourceModule targetResourceModule = modularizedSystem
-					.getModifiableResourceModule(targetModuleIdentifier);
+      IModifiableResourceModule targetResourceModule = modularizedSystem
+          .getModifiableResourceModule(targetModuleIdentifier);
 
-			// create a new one if necessary
-			if (targetResourceModule == null) {
+      // create a new one if necessary
+      if (targetResourceModule == null) {
 
-				targetResourceModule = modularizedSystem
-						.createResourceModule(new ModuleIdentifier(
-								targetModuleIdentifier.getName(),
-								targetModuleIdentifier.getVersion()));
-			}
+        targetResourceModule = modularizedSystem.createResourceModule(new ModuleIdentifier(targetModuleIdentifier
+            .getName(), targetModuleIdentifier.getVersion()));
+      }
 
-			// set classifications
-			if (moduleDefinition.getClassification() != null) {
-				targetResourceModule.setClassification(moduleDefinition
-						.getClassification());
-			}
+      // set classifications
+      if (moduleDefinition.getClassification() != null) {
+        targetResourceModule.setClassification(moduleDefinition.getClassification());
+      }
 
-			// set user attributes
-			targetResourceModule.getUserAttributes().putAll(
-					moduleDefinition.getUserAttributes());
+      // set user attributes
+      targetResourceModule.getUserAttributes().putAll(moduleDefinition.getUserAttributes());
 
-			if (!targetResourceModule.getUserAttributes().containsKey(
-					USER_ATTRIBUTE_KEY)) {
-				targetResourceModule.getUserAttributes().put(
-						USER_ATTRIBUTE_KEY, moduleDefinition.getResourceSets());
-			} else {
-				@SuppressWarnings("unchecked")
-				List<ResourceSet> resourceSets = (List<ResourceSet>) targetResourceModule
-						.getUserAttributes().get(USER_ATTRIBUTE_KEY);
-				resourceSets.addAll(moduleDefinition.getResourceSets());
-			}
+      if (!targetResourceModule.getUserAttributes().containsKey(USER_ATTRIBUTE_KEY)) {
+        targetResourceModule.getUserAttributes().put(USER_ATTRIBUTE_KEY, moduleDefinition.getResourceSets());
+      } else {
+        @SuppressWarnings("unchecked")
+        List<ResourceSet> resourceSets = (List<ResourceSet>) targetResourceModule.getUserAttributes().get(
+            USER_ATTRIBUTE_KEY);
+        resourceSets.addAll(moduleDefinition.getResourceSets());
+      }
 
-			//
-			for (ResourceSet resourceSet : moduleDefinition.getResourceSets()) {
+      //
+      for (ResourceSet resourceSet : moduleDefinition.getResourceSets()) {
 
-				IModifiableResourceModule originResourceModule = modularizedSystem
-						.getModifiableResourceModule(resourceSet
-								.getModuleIdentifier());
+        IModifiableResourceModule originResourceModule = modularizedSystem.getModifiableResourceModule(resourceSet
+            .getModuleIdentifier());
 
-				// origin resource module does not exist
-				if (originResourceModule == null) {
+        // origin resource module does not exist
+        if (originResourceModule == null) {
 
-					for (IModule typeModule : modularizedSystem.getAllModules()) {
+          for (IModule typeModule : modularizedSystem.getAllModules()) {
 
-						System.out.println(" - "
-								+ typeModule.getModuleIdentifier().toString());
-					}
+            System.out.println(" - " + typeModule.getModuleIdentifier().toString());
+          }
 
-					throw new RuntimeException(String.format(
-							"Module '%s' does not exist.", resourceSet
-									.getModuleIdentifier().toString()));
-				}
+          throw new RuntimeException(String.format("Module '%s' does not exist.", resourceSet.getModuleIdentifier()
+              .toString()));
+        }
 
-				// handle custom ResourceSetProcessor
-				if (_resourceSetProcessor != null) {
-					_resourceSetProcessor.processResources(
-							originResourceModule, targetResourceModule,
-							resourceSet);
-				}
+        // handle custom ResourceSetProcessor
+        if (_resourceSetProcessor != null) {
+          _resourceSetProcessor.processResources(originResourceModule, targetResourceModule, resourceSet);
+        }
 
-				//
-				else {
-					processResources(originResourceModule,
-							targetResourceModule, resourceSet);
-				}
-			}
-		}
-	}
+        //
+        else {
+          processResources(originResourceModule, targetResourceModule, resourceSet);
+        }
+      }
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param name
-	 * @param version
-	 * @return
-	 */
-	public ResourceSetBasedModuleDefinition addModuleDefinition(String name,
-			String version) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param name
+   * @param version
+   * @return
+   */
+  public ResourceSetBasedModuleDefinition addModuleDefinition(String name, String version) {
 
-		return addModuleDefinition(name, version, new HashMap<String, Object>());
-	}
+    return addModuleDefinition(name, version, new HashMap<String, Object>());
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceSetBasedTransformationImpl
-	 * @param name
-	 * @param version
-	 * @return
-	 */
-	public ResourceSetBasedModuleDefinition addModuleDefinition(
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceSetBasedTransformationImpl
+   * @param name
+   * @param version
+   * @return
+   */
+  public ResourceSetBasedModuleDefinition addModuleDefinition(
 
-	String name, String version, Map<String, Object> userAttibutes) {
+  String name, String version, Map<String, Object> userAttibutes) {
 
-		Assert.isNotNull(name);
-		Assert.isNotNull(version);
+    Assert.isNotNull(name);
+    Assert.isNotNull(version);
 
-		// TODO: check if duplicate
+    // TODO: check if duplicate
 
-		// create
-		ResourceSetBasedModuleDefinition moduleDefinition = new ResourceSetBasedModuleDefinition();
-		ModuleIdentifier targetIdentifier = new ModuleIdentifier(name, version);
-		moduleDefinition.setModuleIdentifier(targetIdentifier);
-		moduleDefinition.getUserAttributes().putAll(userAttibutes);
+    // create
+    ResourceSetBasedModuleDefinition moduleDefinition = new ResourceSetBasedModuleDefinition();
+    ModuleIdentifier targetIdentifier = new ModuleIdentifier(name, version);
+    moduleDefinition.setModuleIdentifier(targetIdentifier);
+    moduleDefinition.getUserAttributes().putAll(userAttibutes);
 
-		// add
-		_moduleDefinitions.add(moduleDefinition);
+    // add
+    _moduleDefinitions.add(moduleDefinition);
 
-		// return result
-		return moduleDefinition;
-	}
+    // return result
+    return moduleDefinition;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param originResourceModule
-	 * @param targetResourceModule
-	 * @param resourceSet
-	 */
-	private void processResources(
-			IModifiableResourceModule originResourceModule,
-			IModifiableResourceModule targetResourceModule,
-			ResourceSet resourceSet) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param originResourceModule
+   * @param targetResourceModule
+   * @param resourceSet
+   */
+  private void processResources(IModifiableResourceModule originResourceModule,
+      IModifiableResourceModule targetResourceModule, ResourceSet resourceSet) {
 
-		List<IResource> resourceStandinsToMove = resourceSet
-				.getMatchingResources(originResourceModule, ContentType.BINARY);
+    List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(originResourceModule, ContentType.BINARY);
 
-		TransformationUtils.addAll(targetResourceModule
-				.getModifiableSelfResourceContainer()
-				.getModifiableResourcesSet(ContentType.BINARY),
-				resourceStandinsToMove);
+    TransformationUtils.addAll(
+        targetResourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.BINARY),
+        resourceStandinsToMove);
 
-		TransformationUtils.removeAll(originResourceModule,
-				resourceStandinsToMove, ContentType.BINARY);
+    TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.BINARY);
 
-		resourceStandinsToMove = resourceSet.getMatchingResources(
-				originResourceModule, ContentType.SOURCE);
+    resourceStandinsToMove = resourceSet.getMatchingResources(originResourceModule, ContentType.SOURCE);
 
-		TransformationUtils.addAll(targetResourceModule
-				.getModifiableSelfResourceContainer()
-				.getModifiableResourcesSet(ContentType.SOURCE),
-				resourceStandinsToMove);
+    TransformationUtils.addAll(
+        targetResourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE),
+        resourceStandinsToMove);
 
-		TransformationUtils.removeAll(originResourceModule,
-				resourceStandinsToMove, ContentType.SOURCE);
-	}
+    TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.SOURCE);
+  }
 
-	public void setResourceSetProcessor(
-			IResourceSetProcessor resourceSetProcessor) {
-		_resourceSetProcessor = resourceSetProcessor;
-	}
+  public void setResourceSetProcessor(IResourceSetProcessor resourceSetProcessor) {
+    _resourceSetProcessor = resourceSetProcessor;
+  }
 }

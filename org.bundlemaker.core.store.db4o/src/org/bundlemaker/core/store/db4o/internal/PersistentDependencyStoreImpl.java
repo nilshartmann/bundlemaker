@@ -14,37 +14,35 @@ import com.db4o.query.Query;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PersistentDependencyStoreImpl extends
-		AbstractPersistentDependencyStore {
+public class PersistentDependencyStoreImpl extends AbstractPersistentDependencyStore {
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link PersistentDependencyStoreImpl}.
-	 * </p>
-	 * 
-	 * @param db4oService
-	 * @param fileName
-	 */
-	public PersistentDependencyStoreImpl(Db4oService db4oService,
-			String fileName) {
-		super(db4oService, fileName);
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link PersistentDependencyStoreImpl}.
+   * </p>
+   * 
+   * @param db4oService
+   * @param fileName
+   */
+  public PersistentDependencyStoreImpl(Db4oService db4oService, String fileName) {
+    super(db4oService, fileName);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Resource> getResources() {
+  /**
+   * {@inheritDoc}
+   */
+  @SuppressWarnings("unchecked")
+  public List<Resource> getResources() {
 
-		Query query = getDatabase().query();
-		query.constrain(Resource.class);
-		return query.execute();
-	}
+    Query query = getDatabase().query();
+    query.constrain(Resource.class);
+    return query.execute();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void updateResource(IModifiableResource bundleElement) {
-		getDatabase().store(bundleElement);
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public void updateResource(IModifiableResource bundleElement) {
+    getDatabase().store(bundleElement);
+  }
 }

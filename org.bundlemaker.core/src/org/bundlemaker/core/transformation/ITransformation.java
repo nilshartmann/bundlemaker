@@ -13,11 +13,11 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
  */
 public interface ITransformation {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 */
-	public void apply(IModifiableModularizedSystem modularizedSystem);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   */
+  public void apply(IModifiableModularizedSystem modularizedSystem);
 }

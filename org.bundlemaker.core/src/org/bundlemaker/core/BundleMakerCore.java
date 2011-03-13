@@ -22,137 +22,129 @@ import org.eclipse.core.runtime.Status;
  */
 public final class BundleMakerCore {
 
-	/** the nature id */
-	public static final String BUNDLE_ID = "org.bundlemaker.core";
+  /** the nature id */
+  public static final String BUNDLE_ID                  = "org.bundlemaker.core";
 
-	/** the nature id */
-	public static final String NATURE_ID = "org.bundlemaker.core.bundlemakernature";
+  /** the nature id */
+  public static final String NATURE_ID                  = "org.bundlemaker.core.bundlemakernature";
 
-	/** the bundle make directory name */
-	public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
+  /** the bundle make directory name */
+  public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
 
-	/** the project description file name */
-	public static final String PROJECT_DESCRIPTION_NAME = "projectdescription.xml";
+  /** the project description file name */
+  public static final String PROJECT_DESCRIPTION_NAME   = "projectdescription.xml";
 
-	/**
-	 * <p>
-	 * Creates a bundle maker project for the given {@link IProject}. The
-	 * specified project must have the bundle maker nature.
-	 * </p>
-	 * 
-	 * @param project
-	 * @return
-	 * @throws CoreException
-	 */
-	public static IBundleMakerProject getBundleMakerProject(IProject project,
-			IProgressMonitor progressMonitor) throws CoreException {
-		Assert.isNotNull(project);
+  /**
+   * <p>
+   * Creates a bundle maker project for the given {@link IProject}. The specified project must have the bundle maker
+   * nature.
+   * </p>
+   * 
+   * @param project
+   * @return
+   * @throws CoreException
+   */
+  public static IBundleMakerProject getBundleMakerProject(IProject project, IProgressMonitor progressMonitor)
+      throws CoreException {
+    Assert.isNotNull(project);
 
-		// check if nature exists
-		if (!project.exists()) {
-			// TODO: I18N
-			throw new CoreException(new Status(IStatus.ERROR,
-					BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
-							+ "' has to exist."));
-		}
+    // check if nature exists
+    if (!project.exists()) {
+      // TODO: I18N
+      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
+          + "' has to exist."));
+    }
 
-		// check if nature exists
-		if (!project.hasNature(NATURE_ID)) {
-			// TODO: I18N
-			throw new CoreException(new Status(IStatus.ERROR,
-					BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
-							+ "' must have nature '" + NATURE_ID + "'."));
-		}
+    // check if nature exists
+    if (!project.hasNature(NATURE_ID)) {
+      // TODO: I18N
+      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Project '" + project.getName()
+          + "' must have nature '" + NATURE_ID + "'."));
+    }
 
-		// // try to get project from cache
-		BundleMakerProject bundleMakerProject = (BundleMakerProject) Activator
-				.getDefault().getBundleMakerProject(project);
+    // // try to get project from cache
+    BundleMakerProject bundleMakerProject = (BundleMakerProject) Activator.getDefault().getBundleMakerProject(project);
 
-		// create project if necessary
-		if (bundleMakerProject == null) {
+    // create project if necessary
+    if (bundleMakerProject == null) {
 
-			// step 1: create the project
-			bundleMakerProject = new BundleMakerProject(project);
+      // step 1: create the project
+      bundleMakerProject = new BundleMakerProject(project);
 
-			// // step 2: initialize
-			// bundleMakerProject.initialize(progressMonitor);
+      // // step 2: initialize
+      // bundleMakerProject.initialize(progressMonitor);
 
-			// step 3: cache the bundle maker project
-			Activator.getDefault().cacheBundleMakerProject(project,
-					bundleMakerProject);
-		}
+      // step 3: cache the bundle maker project
+      Activator.getDefault().cacheBundleMakerProject(project, bundleMakerProject);
+    }
 
-		// return result
-		return bundleMakerProject;
-	}
+    // return result
+    return bundleMakerProject;
+  }
 
-	/**
-	 * <p>
-	 * Create a simple project with the bundle maker nature.
-	 * </p>
-	 * 
-	 * @param projectName
-	 * @return
-	 * @throws CoreException
-	 */
-	public static IProject getOrCreateSimpleProjectWithBundleMakerNature(
-			String projectName) throws CoreException {
+  /**
+   * <p>
+   * Create a simple project with the bundle maker nature.
+   * </p>
+   * 
+   * @param projectName
+   * @return
+   * @throws CoreException
+   */
+  public static IProject getOrCreateSimpleProjectWithBundleMakerNature(String projectName) throws CoreException {
 
-		// create the bundle maker project
-		IProject project = EclipseProjectUtils
-				.getOrCreateSimpleProject(projectName);
+    // create the bundle maker project
+    IProject project = EclipseProjectUtils.getOrCreateSimpleProject(projectName);
 
-		// add the bundle maker nature
-		BundleMakerCore.addBundleMakerNature(project);
+    // add the bundle maker nature
+    BundleMakerCore.addBundleMakerNature(project);
 
-		// return the newly created project
-		return project;
-	}
+    // return the newly created project
+    return project;
+  }
 
-	/**
-	 * <p>
-	 * Adds the bundle maker nature to the given project.
-	 * </p>
-	 * 
-	 * @param project
-	 *            the project
-	 * @throws CoreException
-	 */
-	public static void addBundleMakerNature(IProject project)
-			throws CoreException {
+  /**
+   * <p>
+   * Adds the bundle maker nature to the given project.
+   * </p>
+   * 
+   * @param project
+   *          the project
+   * @throws CoreException
+   */
+  public static void addBundleMakerNature(IProject project) throws CoreException {
 
-		if (!project.hasNature(BundleMakerCore.NATURE_ID)) {
+    if (!project.hasNature(BundleMakerCore.NATURE_ID)) {
 
-			// get the project description
-			IProjectDescription description = project.getDescription();
+      // get the project description
+      IProjectDescription description = project.getDescription();
 
-			// set the new nature
-			String[] prevNatures = description.getNatureIds();
-			String[] newNatures = new String[prevNatures.length + 1];
-			System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-			newNatures[prevNatures.length] = BundleMakerCore.NATURE_ID;
-			description.setNatureIds(newNatures);
+      // set the new nature
+      String[] prevNatures = description.getNatureIds();
+      String[] newNatures = new String[prevNatures.length + 1];
+      System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
+      newNatures[prevNatures.length] = BundleMakerCore.NATURE_ID;
+      description.setNatureIds(newNatures);
 
-			// set the new description
-			project.setDescription(description, null);
-		}
-	}
+      // set the new description
+      project.setDescription(description, null);
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param simpleProjectName
-	 * @return
-	 * @throws CoreException
-	 */
-	public static IBundleMakerProject getBundleMakerProject(
-			String simpleProjectName) throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param simpleProjectName
+   * @return
+   * @throws CoreException
+   */
+  public static IBundleMakerProject getBundleMakerProject(String simpleProjectName) throws CoreException {
 
-		// get the project
-		IProject project = EclipseProjectUtils.getProject(simpleProjectName);
+    // get the project
+    IProject project = EclipseProjectUtils.getProject(simpleProjectName);
 
-		// get the bundle maker project
-		return BundleMakerCore.getBundleMakerProject(project, null);
-	}
+    // get the bundle maker project
+    return BundleMakerCore.getBundleMakerProject(project, null);
+  }
 }

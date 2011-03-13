@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IResourceContent;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IPath;
@@ -17,201 +16,191 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * <p>
- * Provides {@link IWorkbenchAdapter IWorkbenchAdapters} for BundleMaker's model
- * elements
+ * Provides {@link IWorkbenchAdapter IWorkbenchAdapters} for BundleMaker's model elements
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
 public class BundleMakerAdapterFactory implements IAdapterFactory {
-	private final BundleMakerProjectDescriptionAdapter _bundleMakerProjectDescriptionAdapter = new BundleMakerProjectDescriptionAdapter();
+  private final BundleMakerProjectDescriptionAdapter _bundleMakerProjectDescriptionAdapter = new BundleMakerProjectDescriptionAdapter();
 
-	private final FileBasedContentAdapter _fileBasedContentAdapter = new FileBasedContentAdapter();
-	private final BundleMakerPathAdapter _bundleMakerPathAdapter = new BundleMakerPathAdapter();
+  private final FileBasedContentAdapter              _fileBasedContentAdapter              = new FileBasedContentAdapter();
 
-	class BundleMakerProjectDescriptionAdapter implements IWorkbenchAdapter {
+  private final BundleMakerPathAdapter               _bundleMakerPathAdapter               = new BundleMakerPathAdapter();
 
-		@Override
-		public Object[] getChildren(Object o) {
-			IBundleMakerProjectDescription description = (IBundleMakerProjectDescription) o;
-			List<? extends IFileBasedContent> fileBasedContent = description
-					.getFileBasedContent();
-			return fileBasedContent.toArray(new IFileBasedContent[0]);
-		}
+  class BundleMakerProjectDescriptionAdapter implements IWorkbenchAdapter {
 
-		@Override
-		public ImageDescriptor getImageDescriptor(Object object) {
-			return null;
-		}
+    @Override
+    public Object[] getChildren(Object o) {
+      IBundleMakerProjectDescription description = (IBundleMakerProjectDescription) o;
+      List<? extends IFileBasedContent> fileBasedContent = description.getFileBasedContent();
+      return fileBasedContent.toArray(new IFileBasedContent[0]);
+    }
 
-		@Override
-		public String getLabel(Object o) {
-			IBundleMakerProjectDescription description = (IBundleMakerProjectDescription) o;
-			return description.getBundleMakerProject().getProject().getName();
-		}
+    @Override
+    public ImageDescriptor getImageDescriptor(Object object) {
+      return null;
+    }
 
-		@Override
-		public Object getParent(Object o) {
-			return null;
-		}
+    @Override
+    public String getLabel(Object o) {
+      IBundleMakerProjectDescription description = (IBundleMakerProjectDescription) o;
+      return description.getBundleMakerProject().getProject().getName();
+    }
 
-	}
+    @Override
+    public Object getParent(Object o) {
+      return null;
+    }
 
-	class FileBasedContentAdapter implements IWorkbenchAdapter {
+  }
 
-		@Override
-		public Object[] getChildren(Object o) {
+  class FileBasedContentAdapter implements IWorkbenchAdapter {
 
-			List<Object> children = new LinkedList<Object>();
-			IFileBasedContent content = (IFileBasedContent) o;
-			children.addAll(asBundleMakerPaths(content.getBinaryPaths(), true));
-			if (content.isResourceContent()) {
-				IResourceContent resourceContent = content.getResourceContent();
-				children.addAll(getChildren(resourceContent));
-			}
-			return children.toArray();
-		}
+    @Override
+    public Object[] getChildren(Object o) {
 
-		private Collection<Object> getChildren(IResourceContent resourceContent) {
-			List<Object> children = new LinkedList<Object>();
-			Set<IPath> sourcePaths = resourceContent.getSourcePaths();
-			for (IPath iPath : sourcePaths) {
-				children.add(new BundleMakerPath(iPath, false));
-			}
-			return children;
-		}
+      List<Object> children = new LinkedList<Object>();
+      IFileBasedContent content = (IFileBasedContent) o;
+      children.addAll(asBundleMakerPaths(content.getBinaryPaths(), true));
+      if (content.isResourceContent()) {
+        children.addAll(getChildren(content));
+      }
+      return children.toArray();
+    }
 
-		@Override
-		public ImageDescriptor getImageDescriptor(Object object) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+    private Collection<Object> getChildren(IFileBasedContent content) {
+      List<Object> children = new LinkedList<Object>();
+      Set<IPath> sourcePaths = content.getSourcePaths();
+      for (IPath iPath : sourcePaths) {
+        children.add(new BundleMakerPath(iPath, false));
+      }
+      return children;
+    }
 
-		@Override
-		public String getLabel(Object o) {
-			IFileBasedContent content = (IFileBasedContent) o;
-			return String.format("%s [%s]", content.getName(),
-					content.getVersion(), content.isResourceContent());
-		}
+    @Override
+    public ImageDescriptor getImageDescriptor(Object object) {
+      // TODO Auto-generated method stub
+      return null;
+    }
 
-		@Override
-		public Object getParent(Object o) {
-			return null;
-		}
-	}
+    @Override
+    public String getLabel(Object o) {
+      IFileBasedContent content = (IFileBasedContent) o;
+      return String.format("%s [%s]", content.getName(), content.getVersion(), content.isResourceContent());
+    }
 
-	static Collection<BundleMakerPath> asBundleMakerPaths(
-			Collection<IPath> paths, boolean binary) {
-		List<BundleMakerPath> bundleMakerPaths = new LinkedList<BundleMakerAdapterFactory.BundleMakerPath>();
-		for (IPath path : paths) {
-			bundleMakerPaths.add(new BundleMakerPath(path, binary));
-		}
-		return bundleMakerPaths;
-	}
+    @Override
+    public Object getParent(Object o) {
+      return null;
+    }
+  }
 
-	/**
-	 * An adapter for a {@link BundleMakerPath}-Element
-	 * <p>
-	 * </p>
-	 * 
-	 * 
-	 */
-	class BundleMakerPathAdapter implements IWorkbenchAdapter {
+  static Collection<BundleMakerPath> asBundleMakerPaths(Collection<IPath> paths, boolean binary) {
+    List<BundleMakerPath> bundleMakerPaths = new LinkedList<BundleMakerAdapterFactory.BundleMakerPath>();
+    for (IPath path : paths) {
+      bundleMakerPaths.add(new BundleMakerPath(path, binary));
+    }
+    return bundleMakerPaths;
+  }
 
-		@Override
-		public Object[] getChildren(Object o) {
-			return new Object[0];
-		}
+  /**
+   * An adapter for a {@link BundleMakerPath}-Element
+   * <p>
+   * </p>
+   * 
+   * 
+   */
+  class BundleMakerPathAdapter implements IWorkbenchAdapter {
 
-		@Override
-		public ImageDescriptor getImageDescriptor(Object object) {
-			BundleMakerPath path = (BundleMakerPath) object;
-			if (path.isBinary()) {
-				return UIImages.BINARY_FOLDER.getImageDescriptor();
-			}
-			return UIImages.SOURCE_FOLDER.getImageDescriptor();
-		}
+    @Override
+    public Object[] getChildren(Object o) {
+      return new Object[0];
+    }
 
-		@Override
-		public String getLabel(Object o) {
-			BundleMakerPath path = (BundleMakerPath) o;
-			return path.getLabel();
-		}
+    @Override
+    public ImageDescriptor getImageDescriptor(Object object) {
+      BundleMakerPath path = (BundleMakerPath) object;
+      if (path.isBinary()) {
+        return UIImages.BINARY_FOLDER.getImageDescriptor();
+      }
+      return UIImages.SOURCE_FOLDER.getImageDescriptor();
+    }
 
-		@Override
-		public Object getParent(Object o) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+    @Override
+    public String getLabel(Object o) {
+      BundleMakerPath path = (BundleMakerPath) o;
+      return path.getLabel();
+    }
 
-	}
+    @Override
+    public Object getParent(Object o) {
+      // TODO Auto-generated method stub
+      return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Object getAdapter(Object adaptableObject,
-			@SuppressWarnings("rawtypes") Class adapterType) {
-		if (adapterType != IWorkbenchAdapter.class) {
-			return null;
-		}
+  }
 
-		if (adaptableObject instanceof IBundleMakerProjectDescription) {
-			return _bundleMakerProjectDescriptionAdapter;
-		}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getAdapter(Object adaptableObject, @SuppressWarnings("rawtypes") Class adapterType) {
+    if (adapterType != IWorkbenchAdapter.class) {
+      return null;
+    }
 
-		if (adaptableObject instanceof IFileBasedContent) {
-			return _fileBasedContentAdapter;
-		}
+    if (adaptableObject instanceof IBundleMakerProjectDescription) {
+      return _bundleMakerProjectDescriptionAdapter;
+    }
 
-		if (adaptableObject instanceof BundleMakerPath) {
-			return _bundleMakerPathAdapter;
-		}
+    if (adaptableObject instanceof IFileBasedContent) {
+      return _fileBasedContentAdapter;
+    }
 
-		return null;
-	}
+    if (adaptableObject instanceof BundleMakerPath) {
+      return _bundleMakerPathAdapter;
+    }
 
-	static class BundleMakerPath {
-		private final IPath _path;
-		private final boolean _binary;
+    return null;
+  }
 
-		public BundleMakerPath(IPath path, boolean binary) {
-			super();
-			_path = path;
-			_binary = binary;
-		}
+  static class BundleMakerPath {
+    private final IPath   _path;
 
-		public String getLabel() {
-			return _path.toString();
-		}
+    private final boolean _binary;
 
-		public boolean isBinary() {
-			return _binary;
-		}
-	}
+    public BundleMakerPath(IPath path, boolean binary) {
+      super();
+      _path = path;
+      _binary = binary;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("rawtypes")
-	@Override
-	public Class[] getAdapterList() {
-		return new Class[] { IWorkbenchAdapter.class };
-	}
+    public String getLabel() {
+      return _path.toString();
+    }
 
-	public static void register() {
-		BundleMakerAdapterFactory bundleMakerAdapterFactory = new BundleMakerAdapterFactory();
-		Platform.getAdapterManager()
-				.registerAdapters(bundleMakerAdapterFactory,
-						IBundleMakerProjectDescription.class);
-		Platform.getAdapterManager().registerAdapters(
-				bundleMakerAdapterFactory, IFileBasedContent.class);
-		Platform.getAdapterManager().registerAdapters(
-				bundleMakerAdapterFactory, IResourceContent.class);
-		Platform.getAdapterManager().registerAdapters(
-				bundleMakerAdapterFactory, BundleMakerPath.class);
+    public boolean isBinary() {
+      return _binary;
+    }
+  }
 
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @SuppressWarnings("rawtypes")
+  @Override
+  public Class[] getAdapterList() {
+    return new Class[] { IWorkbenchAdapter.class };
+  }
+
+  public static void register() {
+    BundleMakerAdapterFactory bundleMakerAdapterFactory = new BundleMakerAdapterFactory();
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProjectDescription.class);
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IFileBasedContent.class);
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, BundleMakerPath.class);
+
+  }
 
 }

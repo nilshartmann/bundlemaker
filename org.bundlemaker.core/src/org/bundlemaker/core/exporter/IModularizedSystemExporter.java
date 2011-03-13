@@ -4,8 +4,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 
 /**
  * <p>
- * Common interface for all exporters that export an entire
- * {@link IModularizedSystem}.
+ * Common interface for all exporters that export an entire {@link IModularizedSystem}.
  * </p>
  * <p>
  * Clients may implement this interface.
@@ -15,17 +14,16 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  */
 public interface IModularizedSystemExporter {
 
-	/**
-	 * <p>
-	 * Exports the specified {@link IModularizedSystem}.
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 *            the system to export.
-	 * @param context
-	 *            the context
-	 * @throws Exception
-	 */
-	void export(IModularizedSystem modularizedSystem,
-			IModuleExporterContext context) throws Exception;
+  /**
+   * <p>
+   * Exports the specified {@link IModularizedSystem}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   *          the system to export.
+   * @param context
+   *          the context
+   * @throws Exception
+   */
+  void export(IModularizedSystem modularizedSystem, IModuleExporterContext context) throws Exception;
 }

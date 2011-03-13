@@ -13,119 +13,114 @@ import org.eclipse.core.runtime.Path;
 
 public class Helper {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param projectName
-	 * @return
-	 */
-	public static String getUniqueProjectName(String projectName) {
-		//
-		String newProjectName = projectName;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param projectName
+   * @return
+   */
+  public static String getUniqueProjectName(String projectName) {
+    //
+    String newProjectName = projectName;
 
-		// if the project name exists, add a post-fix
-		if (doesNonGeneratedProjectExist(newProjectName)) {
+    // if the project name exists, add a post-fix
+    if (doesNonGeneratedProjectExist(newProjectName)) {
 
-			//
-			int postfix = 0;
+      //
+      int postfix = 0;
 
-			//
-			while (doesNonGeneratedProjectExist(newProjectName)) {
+      //
+      while (doesNonGeneratedProjectExist(newProjectName)) {
 
-				//
-				postfix++;
+        //
+        postfix++;
 
-				//
-				newProjectName = String.format("%s (%s)", projectName, postfix);
-			}
+        //
+        newProjectName = String.format("%s (%s)", projectName, postfix);
+      }
 
-			//
-			projectName = newProjectName;
-		}
+      //
+      projectName = newProjectName;
+    }
 
-		return projectName;
-	}
+    return projectName;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param projectName
-	 * @return
-	 * @throws CoreException
-	 */
-	public static IProject deleteAndCreateProject(String projectName,
-			IPath location) throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param projectName
+   * @return
+   * @throws CoreException
+   */
+  public static IProject deleteAndCreateProject(String projectName, IPath location) throws CoreException {
 
-		// create project
-		IProject project = ResourcesPlugin.getWorkspace().getRoot()
-				.getProject(projectName);
+    // create project
+    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 
-		// delete the project if exists
-		if (project.exists()) {
-			project.delete(true, true, null);
-		}
+    // delete the project if exists
+    if (project.exists()) {
+      project.delete(true, true, null);
+    }
 
-		// create the project if not exists
-		if (!project.exists()) {
+    // create the project if not exists
+    if (!project.exists()) {
 
-			// create the description
-			IProjectDescription desc = project.getWorkspace()
-					.newProjectDescription(project.getName());
+      // create the description
+      IProjectDescription desc = project.getWorkspace().newProjectDescription(project.getName());
 
-			//
-			if (location != null) {
-				desc.setLocation(location);
-			}
+      //
+      if (location != null) {
+        desc.setLocation(location);
+      }
 
-			//
-			project.create(desc, null);
+      //
+      project.create(desc, null);
 
-			//
-			if (!project.isOpen()) {
-				project.open(null);
-			}
+      //
+      if (!project.isOpen()) {
+        project.open(null);
+      }
 
-			// add the 'bundlemakergenerated' flag
-			IFile file = project.getFile(".bundlemakergenerated");
-			if (!file.exists()) {
-				file.create(new ByteArrayInputStream(new byte[0]), true, null);
-			} else {
-				file.setContents(new ByteArrayInputStream(new byte[0]),
-						IFile.FORCE, null);
-			}
-		}
+      // add the 'bundlemakergenerated' flag
+      IFile file = project.getFile(".bundlemakergenerated");
+      if (!file.exists()) {
+        file.create(new ByteArrayInputStream(new byte[0]), true, null);
+      } else {
+        file.setContents(new ByteArrayInputStream(new byte[0]), IFile.FORCE, null);
+      }
+    }
 
-		// return the result
-		return project;
-	}
+    // return the result
+    return project;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param projectName
-	 * @return
-	 */
-	private static boolean doesNonGeneratedProjectExist(String projectName) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param projectName
+   * @return
+   */
+  private static boolean doesNonGeneratedProjectExist(String projectName) {
 
-		try {
+    try {
 
-			boolean result = EclipseProjectUtils.exists(projectName)
-					&& !EclipseProjectUtils.exists(new Path(projectName
-							+ "/.bundlemakergenerated"));
+      boolean result = EclipseProjectUtils.exists(projectName)
+          && !EclipseProjectUtils.exists(new Path(projectName + "/.bundlemakergenerated"));
 
-			//
-			EclipseProjectUtils.getOrCreateSimpleProject(projectName);
+      //
+      EclipseProjectUtils.getOrCreateSimpleProject(projectName);
 
-			//
-			return result;
+      //
+      return result;
 
-		} catch (CoreException e) {
+    } catch (CoreException e) {
 
-			//
-			return true;
-		}
-	}
+      //
+      return true;
+    }
+  }
 }

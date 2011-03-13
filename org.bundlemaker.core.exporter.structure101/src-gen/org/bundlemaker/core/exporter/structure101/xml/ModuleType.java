@@ -5,7 +5,6 @@
 // Generated on: 2011.01.07 at 02:59:31 PM MEZ 
 //
 
-
 package org.bundlemaker.core.exporter.structure101.xml;
 
 import java.util.ArrayList;
@@ -16,11 +15,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for moduleType complex type.
+ * <p>
+ * Java class for moduleType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="moduleType">
@@ -40,119 +40,110 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "moduleType", propOrder = {
-    "submodule"
-})
+@XmlType(name = "moduleType", propOrder = { "submodule" })
 public class ModuleType {
 
-    @XmlElement(required = true)
-    protected List<ModuleType> submodule;
-    @XmlAttribute(required = true)
-    protected String type;
-    @XmlAttribute(required = true)
-    protected String name;
-    @XmlAttribute(required = true)
-    protected String id;
+  @XmlElement(required = true)
+  protected List<ModuleType> submodule;
 
-    /**
-     * Gets the value of the submodule property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the submodule property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getSubmodule().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ModuleType }
-     * 
-     * 
-     */
-    public List<ModuleType> getSubmodule() {
-        if (submodule == null) {
-            submodule = new ArrayList<ModuleType>();
-        }
-        return this.submodule;
-    }
+  @XmlAttribute(required = true)
+  protected String           type;
 
-    /**
-     * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getType() {
-        return type;
-    }
+  @XmlAttribute(required = true)
+  protected String           name;
 
-    /**
-     * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setType(String value) {
-        this.type = value;
-    }
+  @XmlAttribute(required = true)
+  protected String           id;
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
+  /**
+   * Gets the value of the submodule property.
+   * 
+   * <p>
+   * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+   * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+   * the submodule property.
+   * 
+   * <p>
+   * For example, to add a new item, do as follows:
+   * 
+   * <pre>
+   * getSubmodule().add(newItem);
+   * </pre>
+   * 
+   * 
+   * <p>
+   * Objects of the following type(s) are allowed in the list {@link ModuleType }
+   * 
+   * 
+   */
+  public List<ModuleType> getSubmodule() {
+    if (submodule == null) {
+      submodule = new ArrayList<ModuleType>();
     }
+    return this.submodule;
+  }
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+  /**
+   * Gets the value of the type property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getType() {
+    return type;
+  }
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
+  /**
+   * Sets the value of the type property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setType(String value) {
+    this.type = value;
+  }
 
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
-    }
+  /**
+   * Gets the value of the name property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Sets the value of the name property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setName(String value) {
+    this.name = value;
+  }
+
+  /**
+   * Gets the value of the id property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getId() {
+    return id;
+  }
+
+  /**
+   * Sets the value of the id property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setId(String value) {
+    this.id = value;
+  }
 
 }

@@ -20,91 +20,85 @@ import org.bundlemaker.core.util.TransformationUtils;
  */
 public class RemoveResourcesTransformation implements ITransformation {
 
-	/** - */
-	private List<ResourceSet> _resourcesToRemove;
+  /** - */
+  private List<ResourceSet> _resourcesToRemove;
 
-	public RemoveResourcesTransformation() {
-		_resourcesToRemove = new ArrayList<ResourceSet>();
-	}
+  public RemoveResourcesTransformation() {
+    _resourcesToRemove = new ArrayList<ResourceSet>();
+  }
 
-	public List<ResourceSet> getResourcesToRemove() {
-		return _resourcesToRemove;
-	}
+  public List<ResourceSet> getResourcesToRemove() {
+    return _resourcesToRemove;
+  }
 
-	@Override
-	public void apply(IModifiableModularizedSystem modularizedSystem) {
+  @Override
+  public void apply(IModifiableModularizedSystem modularizedSystem) {
 
-		//
-		for (ResourceSet resourceSet : _resourcesToRemove) {
+    //
+    for (ResourceSet resourceSet : _resourcesToRemove) {
 
-			//
-			IModifiableResourceModule resourceModule = modularizedSystem
-					.getModifiableResourceModule(resourceSet
-							.getModuleIdentifier());
+      //
+      IModifiableResourceModule resourceModule = modularizedSystem.getModifiableResourceModule(resourceSet
+          .getModuleIdentifier());
 
-			List<IResource> resourceStandinsToMove = resourceSet
-					.getMatchingResources(resourceModule, ContentType.BINARY);
+      List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.BINARY);
 
-			TransformationUtils.removeAll(resourceModule,
-					resourceStandinsToMove, ContentType.BINARY);
+      TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, ContentType.BINARY);
 
-			resourceStandinsToMove = resourceSet.getMatchingResources(
-					resourceModule, ContentType.SOURCE);
+      resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.SOURCE);
 
-			TransformationUtils.removeAll(resourceModule,
-					resourceStandinsToMove, ContentType.SOURCE);
+      TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, ContentType.SOURCE);
 
-		}
-	}
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param name
-	 * @param version
-	 * @param includes
-	 * @param excludes
-	 */
-	public void addResourceSet(RemoveResourcesTransformation transformation,
-			String name, String version, String[] includes, String[] excludes) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param name
+   * @param version
+   * @param includes
+   * @param excludes
+   */
+  public void addResourceSet(RemoveResourcesTransformation transformation, String name, String version,
+      String[] includes, String[] excludes) {
 
-		//
-		addResourceSet(new ModuleIdentifier(name, version), includes, excludes);
-	}
+    //
+    addResourceSet(new ModuleIdentifier(name, version), includes, excludes);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fromModuleIdentifier
-	 * @param includes
-	 * @param excludes
-	 */
-	public void addResourceSet(IModuleIdentifier fromModuleIdentifier,
-			String[] includes, String[] excludes) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fromModuleIdentifier
+   * @param includes
+   * @param excludes
+   */
+  public void addResourceSet(IModuleIdentifier fromModuleIdentifier, String[] includes, String[] excludes) {
 
-		//
-		ResourceSet resourceSet = new ResourceSet();
+    //
+    ResourceSet resourceSet = new ResourceSet();
 
-		//
-		resourceSet.setModuleIdentifier(fromModuleIdentifier);
+    //
+    resourceSet.setModuleIdentifier(fromModuleIdentifier);
 
-		//
-		if (includes != null) {
-			for (String include : includes) {
-				resourceSet.getIncludes().add(include);
-			}
-		}
+    //
+    if (includes != null) {
+      for (String include : includes) {
+        resourceSet.getIncludes().add(include);
+      }
+    }
 
-		//
-		if (excludes != null) {
-			for (String exclude : excludes) {
-				resourceSet.getExcludes().add(exclude);
-			}
-		}
+    //
+    if (excludes != null) {
+      for (String exclude : excludes) {
+        resourceSet.getExcludes().add(exclude);
+      }
+    }
 
-		//
-		_resourcesToRemove.add(resourceSet);
-	}
+    //
+    _resourcesToRemove.add(resourceSet);
+  }
 }

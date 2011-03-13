@@ -14,90 +14,90 @@ import org.eclipse.core.runtime.Assert;
  */
 public abstract class GenericCache<K, V> {
 
-	/** - */
-	private Map<K, V> _cacheMap;
+  /** - */
+  private Map<K, V> _cacheMap;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link GenericCache}.
-	 * </p>
-	 */
-	public GenericCache() {
+  /**
+   * <p>
+   * Creates a new instance of type {@link GenericCache}.
+   * </p>
+   */
+  public GenericCache() {
 
-		// create the type to artifact map
-		_cacheMap = new HashMap<K, V>();
+    // create the type to artifact map
+    _cacheMap = new HashMap<K, V>();
 
-	}
+  }
 
-	public int size() {
-		return _cacheMap.size();
-	}
+  public int size() {
+    return _cacheMap.size();
+  }
 
-	public void clear() {
-		_cacheMap.clear();
-	}
+  public void clear() {
+    _cacheMap.clear();
+  }
 
-	public boolean isEmpty() {
-		return _cacheMap.isEmpty();
-	}
+  public boolean isEmpty() {
+    return _cacheMap.isEmpty();
+  }
 
-	public boolean containsKey(Object key) {
-		return _cacheMap.containsKey(key);
-	}
+  public boolean containsKey(Object key) {
+    return _cacheMap.containsKey(key);
+  }
 
-	public V get(Object key) {
-		return _cacheMap.get(key);
-	}
+  public V get(Object key) {
+    return _cacheMap.get(key);
+  }
 
-	public Map<K, V> getMap() {
-		return _cacheMap;
-	}
+  public Map<K, V> getMap() {
+    return _cacheMap;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Collection<V> values() {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Collection<V> values() {
 
-		//
-		return _cacheMap.values();
-	}
+    //
+    return _cacheMap.values();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param key
-	 * @return
-	 * 
-	 * @throws AmbiguousDependencyException
-	 */
-	public final V getOrCreate(K key) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @return
+   * 
+   * @throws AmbiguousDependencyException
+   */
+  public final V getOrCreate(K key) {
 
-		//
-		Assert.isNotNull(key);
+    //
+    Assert.isNotNull(key);
 
-		//
-		if (!_cacheMap.containsKey(key)) {
+    //
+    if (!_cacheMap.containsKey(key)) {
 
-			V value = create(key);
+      V value = create(key);
 
-			_cacheMap.put(key, value);
-		}
+      _cacheMap.put(key, value);
+    }
 
-		//
-		return _cacheMap.get(key);
+    //
+    return _cacheMap.get(key);
 
-	}
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param key
-	 * @return
-	 */
-	protected abstract V create(K key) ;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @return
+   */
+  protected abstract V create(K key);
 }

@@ -16,74 +16,73 @@ import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 @SuppressWarnings("restriction")
 public class ModifiableResourceCompilationUnit implements ICompilationUnit {
 
-	/** - */
-	private IResource _resource;
+  /** - */
+  private IResource _resource;
 
-	/** - */
-	private char[] _content;
+  /** - */
+  private char[]    _content;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ModifiableResourceCompilationUnit}.
-	 * </p>
-	 * 
-	 * @param resource
-	 * @throws IOException
-	 */
-	public ModifiableResourceCompilationUnit(IResource resource, char[] content)
-			throws IOException {
-		Assert.isNotNull(resource);
+  /**
+   * <p>
+   * Creates a new instance of type {@link ModifiableResourceCompilationUnit}.
+   * </p>
+   * 
+   * @param resource
+   * @throws IOException
+   */
+  public ModifiableResourceCompilationUnit(IResource resource, char[] content) throws IOException {
+    Assert.isNotNull(resource);
 
-		// assign the resource
-		_resource = resource;
+    // assign the resource
+    _resource = resource;
 
-		//
-		if (content != null) {
-			_content = content;
-		} else {
-			_content = new String(resource.getContent()).toCharArray();
-		}
-	}
+    //
+    if (content != null) {
+      _content = content;
+    } else {
+      _content = new String(resource.getContent()).toCharArray();
+    }
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public char[] getFileName() {
-		return _resource.getPath().toCharArray();
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public char[] getFileName() {
+    return _resource.getPath().toCharArray();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public char[] getContents() {
-		return _content;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public char[] getContents() {
+    return _content;
 
-	}
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public char[] getMainTypeName() {
-		String result = _resource.getName();
-		result = result.substring(0, result.length() - ".java".length());
-		return result.toCharArray();
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public char[] getMainTypeName() {
+    String result = _resource.getName();
+    result = result.substring(0, result.length() - ".java".length());
+    return result.toCharArray();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public char[][] getPackageName() {
-		String packageName = _resource.getPackageName();
-		String[] splittedPackageName = packageName.split("\\.");
-		char[][] result = new char[splittedPackageName.length][];
-		for (int i = 0; i < splittedPackageName.length; i++) {
-			String name = splittedPackageName[i];
-			result[i] = name.toCharArray();
-		}
-		return result;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public char[][] getPackageName() {
+    String packageName = _resource.getPackageName();
+    String[] splittedPackageName = packageName.split("\\.");
+    char[][] result = new char[splittedPackageName.length][];
+    for (int i = 0; i < splittedPackageName.length; i++) {
+      String name = splittedPackageName[i];
+      result[i] = name.toCharArray();
+    }
+    return result;
+  }
 }

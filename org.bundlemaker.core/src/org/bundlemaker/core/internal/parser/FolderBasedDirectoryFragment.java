@@ -18,98 +18,96 @@ import org.eclipse.core.resources.IFile;
  */
 public class FolderBasedDirectoryFragment extends AbstractDirectoryFragment {
 
-	/** - */
-	private List<String> _entries = new LinkedList<String>();
+  /** - */
+  private List<String>      _entries = new LinkedList<String>();
 
-	//
-	private Set<IResourceKey> _resourceKeys;
+  //
+  private Set<IResourceKey> _resourceKeys;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link FolderBasedDirectoryFragment}.
-	 * </p>
-	 * 
-	 * @param file
-	 */
-	public FolderBasedDirectoryFragment(File file) {
-		super(file);
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link FolderBasedDirectoryFragment}.
+   * </p>
+   * 
+   * @param file
+   */
+  public FolderBasedDirectoryFragment(File file) {
+    super(file);
+  }
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link FolderBasedDirectoryFragment}.
-	 * </p>
-	 * 
-	 * @param ifile
-	 */
-	public FolderBasedDirectoryFragment(IFile ifile) {
-		super(ifile);
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link FolderBasedDirectoryFragment}.
+   * </p>
+   * 
+   * @param ifile
+   */
+  public FolderBasedDirectoryFragment(IFile ifile) {
+    super(ifile);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<IResourceKey> getResourceKeys() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<IResourceKey> getResourceKeys() {
 
-		//
-		if (_resourceKeys == null) {
+    //
+    if (_resourceKeys == null) {
 
-			//
-			_resourceKeys = new HashSet<IResourceKey>();
+      //
+      _resourceKeys = new HashSet<IResourceKey>();
 
-			// parse each class file
-			for (String content : getContent()) {
+      // parse each class file
+      for (String content : getContent()) {
 
-				_resourceKeys.add(new ResourceKey(getDirectory()
-						.getFileBasedContent().getId(),
-						getDirectoryFragmentRoot().getAbsolutePath(), content));
-			}
-		}
+        _resourceKeys.add(new ResourceKey(getDirectory().getFileBasedContent().getId(), getDirectoryFragmentRoot()
+            .getAbsolutePath(), content));
+      }
+    }
 
-		//
-		return _resourceKeys;
-	}
+    //
+    return _resourceKeys;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 */
-	public void addEntry(String entry) {
-		_entries.add(entry);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  public void addEntry(String entry) {
+    _entries.add(entry);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<String> getContent() {
-		return _entries;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<String> getContent() {
+    return _entries;
+  }
 
-	public List<File> getFileEntries() {
+  public List<File> getFileEntries() {
 
-		List<File> result = new LinkedList<File>();
+    List<File> result = new LinkedList<File>();
 
-		for (String entry : _entries) {
-			result.add(new File(getDirectoryFragmentRoot(), entry));
-		}
+    for (String entry : _entries) {
+      result.add(new File(getDirectoryFragmentRoot(), entry));
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getResourceCount() {
-		return _entries.size();
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getResourceCount() {
+    return _entries.size();
+  }
 
-	@Override
-	public String toString() {
-		return "DirectoryPackageContent [getPackageRoot()="
-				+ getDirectoryFragmentRoot() + ", _entries=" + _entries + "]";
-	}
+  @Override
+  public String toString() {
+    return "DirectoryPackageContent [getPackageRoot()=" + getDirectoryFragmentRoot() + ", _entries=" + _entries + "]";
+  }
 }

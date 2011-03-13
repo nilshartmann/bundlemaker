@@ -5,7 +5,6 @@
 // Generated on: 2011.02.17 at 01:35:18 PM MEZ 
 //
 
-
 package org.bundlemaker.core.model.internal.projectdescription.xml;
 
 import java.util.ArrayList;
@@ -16,11 +15,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for XmlFileBasedContentType complex type.
+ * <p>
+ * Java class for XmlFileBasedContentType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="XmlFileBasedContentType">
@@ -41,145 +41,133 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "XmlFileBasedContentType", propOrder = {
-    "binaryPathNames",
-    "resourceContent"
-})
+@XmlType(name = "XmlFileBasedContentType", propOrder = { "binaryPathNames", "resourceContent" })
 public class XmlFileBasedContentType {
 
-    @XmlElement(nillable = true)
-    protected List<String> binaryPathNames;
-    protected XmlResourceContentType resourceContent;
-    @XmlAttribute
-    protected String id;
-    @XmlAttribute
-    protected String name;
-    @XmlAttribute
-    protected String version;
+  @XmlElement(nillable = true)
+  protected List<String>           binaryPathNames;
 
-    /**
-     * Gets the value of the binaryPathNames property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the binaryPathNames property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getBinaryPathNames().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
-     * 
-     */
-    public List<String> getBinaryPathNames() {
-        if (binaryPathNames == null) {
-            binaryPathNames = new ArrayList<String>();
-        }
-        return this.binaryPathNames;
-    }
+  protected XmlResourceContentType resourceContent;
 
-    /**
-     * Gets the value of the resourceContent property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XmlResourceContentType }
-     *     
-     */
-    public XmlResourceContentType getResourceContent() {
-        return resourceContent;
-    }
+  @XmlAttribute
+  protected String                 id;
 
-    /**
-     * Sets the value of the resourceContent property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XmlResourceContentType }
-     *     
-     */
-    public void setResourceContent(XmlResourceContentType value) {
-        this.resourceContent = value;
-    }
+  @XmlAttribute
+  protected String                 name;
 
-    /**
-     * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getId() {
-        return id;
-    }
+  @XmlAttribute
+  protected String                 version;
 
-    /**
-     * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setId(String value) {
-        this.id = value;
+  /**
+   * Gets the value of the binaryPathNames property.
+   * 
+   * <p>
+   * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+   * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+   * the binaryPathNames property.
+   * 
+   * <p>
+   * For example, to add a new item, do as follows:
+   * 
+   * <pre>
+   * getBinaryPathNames().add(newItem);
+   * </pre>
+   * 
+   * 
+   * <p>
+   * Objects of the following type(s) are allowed in the list {@link String }
+   * 
+   * 
+   */
+  public List<String> getBinaryPathNames() {
+    if (binaryPathNames == null) {
+      binaryPathNames = new ArrayList<String>();
     }
+    return this.binaryPathNames;
+  }
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
+  /**
+   * Gets the value of the resourceContent property.
+   * 
+   * @return possible object is {@link XmlResourceContentType }
+   * 
+   */
+  public XmlResourceContentType getResourceContent() {
+    return resourceContent;
+  }
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+  /**
+   * Sets the value of the resourceContent property.
+   * 
+   * @param value
+   *          allowed object is {@link XmlResourceContentType }
+   * 
+   */
+  public void setResourceContent(XmlResourceContentType value) {
+    this.resourceContent = value;
+  }
 
-    /**
-     * Gets the value of the version property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getVersion() {
-        return version;
-    }
+  /**
+   * Gets the value of the id property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getId() {
+    return id;
+  }
 
-    /**
-     * Sets the value of the version property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setVersion(String value) {
-        this.version = value;
-    }
+  /**
+   * Sets the value of the id property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setId(String value) {
+    this.id = value;
+  }
+
+  /**
+   * Gets the value of the name property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Sets the value of the name property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setName(String value) {
+    this.name = value;
+  }
+
+  /**
+   * Gets the value of the version property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getVersion() {
+    return version;
+  }
+
+  /**
+   * Sets the value of the version property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setVersion(String value) {
+    this.version = value;
+  }
 
 }

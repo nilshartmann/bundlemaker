@@ -20,126 +20,124 @@ import org.bundlemaker.core.resource.ResourceKey;
  */
 public class ResourceStandin extends ResourceKey implements IResource {
 
-	/** - */
-	private Resource _resource;
+  /** - */
+  private Resource       _resource;
 
-	/** - */
-	private Set<IResource> _stickyResourceStandins;
+  /** - */
+  private Set<IResource> _stickyResourceStandins;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link ResourceStandin}.
-	 * </p>
-	 * 
-	 * @param contentId
-	 * @param root
-	 * @param path
-	 * @param archiveFileCache
-	 */
-	public ResourceStandin(String contentId, String root, String path) {
-		super(contentId, root, path);
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceStandin}.
+   * </p>
+   * 
+   * @param contentId
+   * @param root
+   * @param path
+   * @param archiveFileCache
+   */
+  public ResourceStandin(String contentId, String root, String path) {
+    super(contentId, root, path);
+  }
 
-	@Override
-	public IResourceModule getAssociatedResourceModule(
-			IModularizedSystem modularizedSystem) {
-		
-		//
-		return ((ModularizedSystem)modularizedSystem).getAssociatedResourceModule(this);
-	}
+  @Override
+  public IResourceModule getAssociatedResourceModule(IModularizedSystem modularizedSystem) {
 
-	public IResource getResource() {
-		return _resource;
-	}
+    //
+    return ((ModularizedSystem) modularizedSystem).getAssociatedResourceModule(this);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resource
-	 */
-	public void setResource(Resource resource) {
-		_resource = resource;
-	}
+  public IResource getResource() {
+    return _resource;
+  }
 
-	@Override
-	public int compareTo(IResource other) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   */
+  public void setResource(Resource resource) {
+    _resource = resource;
+  }
 
-		if (!getContentId().equals(other.getContentId())) {
-			return getContentId().compareTo(other.getContentId());
-		}
-		if (!getRoot().equals(other.getRoot())) {
-			return getRoot().compareTo(other.getRoot());
-		}
-		if (!getPath().equals(other.getPath())) {
-			return getPath().compareTo(other.getPath());
-		}
+  @Override
+  public int compareTo(IResource other) {
 
-		return 0;
-	}
+    if (!getContentId().equals(other.getContentId())) {
+      return getContentId().compareTo(other.getContentId());
+    }
+    if (!getRoot().equals(other.getRoot())) {
+      return getRoot().compareTo(other.getRoot());
+    }
+    if (!getPath().equals(other.getPath())) {
+      return getPath().compareTo(other.getPath());
+    }
 
-	@Override
-	public Set<? extends IReference> getReferences() {
+    return 0;
+  }
 
-		//
-		if (_resource == null) {
-			// TODO
-			throw new RuntimeException();
-		}
+  @Override
+  public Set<? extends IReference> getReferences() {
 
-		return _resource.getReferences();
-	}
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
 
-	@Override
-	public Set<? extends IType> getContainedTypes() {
+    return _resource.getReferences();
+  }
 
-		//
-		if (_resource == null) {
-			// TODO
-			throw new RuntimeException();
-		}
+  @Override
+  public Set<? extends IType> getContainedTypes() {
 
-		return _resource.getContainedTypes();
-	}
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
 
-	@Override
-	public boolean containsTypes() {
+    return _resource.getContainedTypes();
+  }
 
-		//
-		if (_resource == null) {
-			// TODO
-			throw new RuntimeException();
-		}
+  @Override
+  public boolean containsTypes() {
 
-		return _resource.containsTypes();
-	}
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
 
-	@Override
-	public Set<? extends IResource> getStickyResources() {
+    return _resource.containsTypes();
+  }
 
-		//
-		if (_resource == null) {
-			throw new RuntimeException();
-		}
+  @Override
+  public Set<? extends IResource> getStickyResources() {
 
-		//
-		if (_resource.getStickyResources().isEmpty()) {
-			return Collections.emptySet();
-		}
+    //
+    if (_resource == null) {
+      throw new RuntimeException();
+    }
 
-		// lazy init
-		if (_stickyResourceStandins == null) {
+    //
+    if (_resource.getStickyResources().isEmpty()) {
+      return Collections.emptySet();
+    }
 
-			// create new set
-			_stickyResourceStandins = new HashSet<IResource>();
+    // lazy init
+    if (_stickyResourceStandins == null) {
 
-			// add resource standins
-			for (IResource resource : _resource.getStickyResources()) {
-				_stickyResourceStandins.add(((Resource) resource)
-						.getResourceStandin());
-			}
-		}
+      // create new set
+      _stickyResourceStandins = new HashSet<IResource>();
 
-		return _stickyResourceStandins;
-	}
+      // add resource standins
+      for (IResource resource : _resource.getStickyResources()) {
+        _stickyResourceStandins.add(((Resource) resource).getResourceStandin());
+      }
+    }
+
+    return _stickyResourceStandins;
+  }
 }

@@ -1,11 +1,13 @@
 package org.bundlemaker.core.internal.modules;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -22,140 +24,228 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractCachingModularizedSystem extends
-		AbstractTransformationAwareModularizedSystem {
+public abstract class AbstractCachingModularizedSystem extends AbstractTransformationAwareModularizedSystem {
 
-	/** type name -> type */
-	private GenericCache<String, Set<IType>> _typeNameToTypeCache;
+  /** type name -> type */
+  private GenericCache<String, Set<IType>> _typeNameToTypeCache;
 
-	/** type name -> referring type */
-	private GenericCache<String, Set<IType>> _typeNameToReferringCache;
+  /** type name -> referring type */
+  private GenericCache<String, Set<IType>> _typeNameToReferringCache;
 
-	/** - */
-	private Map<IResource, IResourceModule> _resourceToResourceModuleMap;
+  /** - */
+  private Map<IResource, IResourceModule>  _resourceToResourceModuleMap;
 
-	/** - */
-	private Map<IType, IModule> _typeToModuleMap;
+  /** - */
+  private Map<IType, IModule>              _typeToModuleMap;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link AbstractCachingModularizedSystem}.
-	 * </p>
-	 * 
-	 * @param name
-	 * @param projectDescription
-	 */
-	public AbstractCachingModularizedSystem(String name,
-			IBundleMakerProjectDescription projectDescription) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractCachingModularizedSystem}.
+   * </p>
+   * 
+   * @param name
+   * @param projectDescription
+   */
+  public AbstractCachingModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
 
-		// call the super constructor
-		super(name, projectDescription);
+    // call the super constructor
+    super(name, projectDescription);
 
-		// create type name to type cache
-		_typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
-			@Override
-			protected Set<IType> create(String key) {
-				return new HashSet<IType>();
-			}
-		};
+    // create type name to type cache
+    _typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
+      @Override
+      protected Set<IType> create(String key) {
+        return new HashSet<IType>();
+      }
+    };
 
-		//
-		_typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
-			@Override
-			protected Set<IType> create(String key) {
-				return new HashSet<IType>();
-			}
-		};
+    //
+    _typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
+      @Override
+      protected Set<IType> create(String key) {
+        return new HashSet<IType>();
+      }
+    };
 
-		//
-		_resourceToResourceModuleMap = new HashMap<IResource, IResourceModule>();
-		_typeToModuleMap = new HashMap<IType, IModule>();
-	}
+    //
+    _resourceToResourceModuleMap = new HashMap<IResource, IResourceModule>();
+    _typeToModuleMap = new HashMap<IType, IModule>();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public GenericCache<String, Set<IType>> getTypeNameToTypeCache() {
-		return _typeNameToTypeCache;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<String, Set<IType>> getTypeNameToTypeCache() {
+    return _typeNameToTypeCache;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public GenericCache<String, Set<IType>> getTypeNameToReferringCache() {
-		return _typeNameToReferringCache;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<String, Set<IType>> getTypeNameToReferringCache() {
+    return _typeNameToReferringCache;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public IResourceModule getAssociatedResourceModule(IResource resource) {
+  @Override
+  public IModule getTypeContainingModule(String fullyQualifiedName) throws AmbiguousDependencyException {
 
-		Assert.isNotNull(resource);
+    Set<IModule> result = getTypeContainingModules(fullyQualifiedName);
 
-		if (resource instanceof Resource) {
-			resource = ((Resource) resource).getResourceStandin();
-		}
-		return _resourceToResourceModuleMap.get(resource);
-	}
+    if (result.isEmpty()) {
+      return null;
+    }
 
-	public IModule getAssociatedModule(IType type) {
+    if (result.size() > 1) {
+      throw new AmbiguousDependencyException("AmbiguousModuleDependencyException: " + fullyQualifiedName);
+    }
 
-		Assert.isNotNull(type);
-		return _typeToModuleMap.get(type);
-	}
+    return result.toArray(new IModule[0])[0];
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	@Override
-	protected void initializeResourceModules() {
-		super.initializeResourceModules();
+  @Override
+  public IType getType(String fullyQualifiedName) throws AmbiguousDependencyException {
 
-		getTypeNameToTypeCache().clear();
-		getTypeNameToReferringCache().clear();
+    Assert.isNotNull(fullyQualifiedName);
 
-		// step 1: cache the type modules
-		for (IModule module : getNonResourceModules()) {
-			for (IType type : module.getContainedTypes()) {
-				getTypeNameToTypeCache().getOrCreate(
-						type.getFullyQualifiedName()).add(type);
-				_typeToModuleMap.put(type, module);
-			}
-		}
+    // get type modules
+    Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
 
-		// step 2: cache the resource modules
-		for (IResourceModule module : getResourceModules()) {
+    // return null if type is unknown
+    if (types == null) {
+      return null;
+    }
 
-			//
-			for (IResource resource : module.getResources(ContentType.SOURCE)) {
-				_resourceToResourceModuleMap.put(resource, module);
-			}
-			for (IResource resource : module.getResources(ContentType.BINARY)) {
-				_resourceToResourceModuleMap.put(resource, module);
-			}
+    // if multiple type modules exist, throw an exception
+    if (types.size() > 1) {
 
-			//
-			for (IType type : module.getContainedTypes()) {
+      // TODO
+      new AmbiguousDependencyException(fullyQualifiedName);
+    }
 
-				_typeToModuleMap.put(type, module);
+    // return the type
+    return types.toArray(new IType[0])[0];
+  }
 
-				if (getTypeNameToTypeCache().getOrCreate(
-						type.getFullyQualifiedName()).add(type)) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<IType> getTypes(String fullyQualifiedName) {
 
-					for (IReference reference : type.getReferences()) {
-						getTypeNameToReferringCache().getOrCreate(
-								reference.getFullyQualifiedName()).add(type);
-					}
-				}
-			}
-		}
-	}
+    //
+    Assert.isNotNull(fullyQualifiedName);
+    Assert.isTrue(fullyQualifiedName.trim().length() > 0);
+
+    // get type modules
+    Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
+    types = types != null ? types : new HashSet<IType>();
+
+    // return the result
+    return Collections.unmodifiableSet(types);
+  }
+
+  @Override
+  public Set<IModule> getPackageContainingModules(String fullyQualifiedPackageName) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public IModule getPackageContainingModule(String fullyQualifiedPackageName) throws AmbiguousDependencyException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Set<IModule> getTypeContainingModules(String fullyQualifiedName) {
+
+    //
+    if (getTypeNameToTypeCache().containsKey(fullyQualifiedName)) {
+
+      Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
+
+      Set<IModule> result = new HashSet<IModule>(types.size());
+
+      for (IType type : types) {
+        // TODO: direct call
+        result.add(type.getModule(this));
+      }
+
+      //
+      return Collections.unmodifiableSet(result);
+
+    } else {
+      return Collections.emptySet();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public IResourceModule getAssociatedResourceModule(IResource resource) {
+
+    Assert.isNotNull(resource);
+
+    if (resource instanceof Resource) {
+      resource = ((Resource) resource).getResourceStandin();
+    }
+    return _resourceToResourceModuleMap.get(resource);
+  }
+
+  public IModule getAssociatedModule(IType type) {
+
+    Assert.isNotNull(type);
+    return _typeToModuleMap.get(type);
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  @Override
+  protected void initializeResourceModules() {
+    super.initializeResourceModules();
+
+    getTypeNameToTypeCache().clear();
+    getTypeNameToReferringCache().clear();
+
+    // step 1: cache the type modules
+    for (IModule module : getNonResourceModules()) {
+      for (IType type : module.getContainedTypes()) {
+        getTypeNameToTypeCache().getOrCreate(type.getFullyQualifiedName()).add(type);
+        _typeToModuleMap.put(type, module);
+      }
+    }
+
+    // step 2: cache the resource modules
+    for (IResourceModule module : getResourceModules()) {
+
+      //
+      for (IResource resource : module.getResources(ContentType.SOURCE)) {
+        _resourceToResourceModuleMap.put(resource, module);
+      }
+      for (IResource resource : module.getResources(ContentType.BINARY)) {
+        _resourceToResourceModuleMap.put(resource, module);
+      }
+
+      //
+      for (IType type : module.getContainedTypes()) {
+
+        _typeToModuleMap.put(type, module);
+
+        if (getTypeNameToTypeCache().getOrCreate(type.getFullyQualifiedName()).add(type)) {
+
+          for (IReference reference : type.getReferences()) {
+            getTypeNameToReferringCache().getOrCreate(reference.getFullyQualifiedName()).add(type);
+          }
+        }
+      }
+    }
+  }
 }

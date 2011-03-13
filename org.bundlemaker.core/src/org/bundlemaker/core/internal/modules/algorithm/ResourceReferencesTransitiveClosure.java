@@ -14,91 +14,85 @@ import org.bundlemaker.core.resource.IType;
  * <p>
  * </p>
  */
-public class ResourceReferencesTransitiveClosure extends
-		AbstractResourceClosureQuery {
+public class ResourceReferencesTransitiveClosure extends AbstractResourceClosureQuery {
 
-	/**
-	 * <p>
-	 * Creates a new instance of type
-	 * {@link ResourceReferencesTransitiveClosure}.
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 */
-	public ResourceReferencesTransitiveClosure(
-			ModularizedSystem modularizedSystem) {
-		super(modularizedSystem);
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link ResourceReferencesTransitiveClosure}.
+   * </p>
+   * 
+   * @param modularizedSystem
+   */
+  public ResourceReferencesTransitiveClosure(ModularizedSystem modularizedSystem) {
+    super(modularizedSystem);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeName
-	 */
-	public void resolveResource(IResource resource, ContentType contentType,
-			IQueryFilter<IType> queryFilter) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeName
+   */
+  public void resolveResource(IResource resource, ContentType contentType, IQueryFilter<IType> queryFilter) {
 
-		//
-		if (getResources().contains(resource)) {
-			return;
-		}
+    //
+    if (getResources().contains(resource)) {
+      return;
+    }
 
-		getResources().add(resource);
+    getResources().add(resource);
 
-		//
-		for (IReference reference : getReferences(resource)) {
+    //
+    for (IReference reference : getReferences(resource)) {
 
-			//
-			String typeName = reference.getFullyQualifiedName();
+      //
+      String typeName = reference.getFullyQualifiedName();
 
-			Set<IType> types = getModularizedSystem().getTypeNameToTypeCache()
-					.get(typeName);
+      Set<IType> types = getModularizedSystem().getTypeNameToTypeCache().get(typeName);
 
-			if (types == null || types.isEmpty()) {
-				System.out.println("NO TYPE FOR '" + typeName + "'.");
-				return;
-			}
+      if (types == null || types.isEmpty()) {
+        System.out.println("NO TYPE FOR '" + typeName + "'.");
+        return;
+      }
 
-			if (types.size() > 1) {
-				System.out.println("MULTIPLE TYPE FOR '" + typeName + "'.");
-			}
+      if (types.size() > 1) {
+        System.out.println("MULTIPLE TYPE FOR '" + typeName + "'.");
+      }
 
-			//
-			IType type = ((IType[]) types.toArray(new IType[0]))[0];
+      //
+      IType type = ((IType[]) types.toArray(new IType[0]))[0];
 
-			//
-			IResource res = contentType.equals(ContentType.SOURCE) ? type
-					.getSourceResource() : type.getBinaryResource();
+      //
+      IResource res = contentType.equals(ContentType.SOURCE) ? type.getSourceResource() : type.getBinaryResource();
 
-			if (res != null) {
-				resolveResource(res, contentType, queryFilter);
-			}
-		}
-	}
-	
-	/**
-	 * <p>
-	 * </p>
-	 *
-	 * @param resource
-	 * @return
-	 */
-	private Set<IReference> getReferences(IResource resource) {
-		//
-		Set<IReference> result = new HashSet<IReference>();
+      if (res != null) {
+        resolveResource(res, contentType, queryFilter);
+      }
+    }
+  }
 
-		//
-		if (resource.getReferences() != null) {
-			result.addAll(resource.getReferences());
-		}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @return
+   */
+  private Set<IReference> getReferences(IResource resource) {
+    //
+    Set<IReference> result = new HashSet<IReference>();
 
-		//
-		for (IType type : resource.getContainedTypes()) {
-			result.addAll(type.getReferences());
-		}
+    //
+    if (resource.getReferences() != null) {
+      result.addAll(resource.getReferences());
+    }
 
-		//
-		return result;
-	}
+    //
+    for (IType type : resource.getContainedTypes()) {
+      result.addAll(type.getReferences());
+    }
+
+    //
+    return result;
+  }
 }

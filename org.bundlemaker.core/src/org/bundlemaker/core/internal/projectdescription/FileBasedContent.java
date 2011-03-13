@@ -1,13 +1,15 @@
 package org.bundlemaker.core.internal.projectdescription;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IResourceContent;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -21,184 +23,230 @@ import org.eclipse.core.runtime.IPath;
  */
 public class FileBasedContent implements IFileBasedContent {
 
-	/** - */
-	private boolean _isInitialized;
+  /** - */
+  private static final Set<IPath>               EMPTY_PATH_SET     = Collections.unmodifiableSet(new HashSet<IPath>());
 
-	/** - */
-	private String _id;
+  /** - */
+  private static final Set<? extends IResource> EMPTY_RESOURCE_SET = Collections
+                                                                       .unmodifiableSet(new HashSet<IResource>());
 
-	/** - */
-	private String _name;
+  /** - */
+  private boolean                               _isInitialized;
 
-	/** - */
-	private String _version;
+  /** - */
+  private String                                _id;
 
-	/** - */
-	private Set<IPath> _binaryPaths;
+  /** - */
+  private String                                _name;
 
-	/** - */
-	private ResourceContent _resourceContent;
+  /** - */
+  private String                                _version;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link FileBasedContent}.
-	 * </p>
-	 */
-	public FileBasedContent() {
+  /** - */
+  private Set<IPath>                            _binaryPaths;
 
-		//
-		_isInitialized = false;
+  /** - */
+  private ResourceContent                       _resourceContent;
 
-		//
-		_binaryPaths = new HashSet<IPath>();
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link FileBasedContent}.
+   * </p>
+   */
+  public FileBasedContent() {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getId() {
-		return _id;
-	}
+    //
+    _isInitialized = false;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getName() {
-		return _name;
-	}
+    //
+    _binaryPaths = new HashSet<IPath>();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getVersion() {
-		return _version;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getId() {
+    return _id;
+  }
 
-	@Override
-	public Set<IPath> getBinaryPaths() {
-		return Collections.unmodifiableSet(_binaryPaths);
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getName() {
+    return _name;
+  }
 
-	@Override
-	public boolean isResourceContent() {
-		return _resourceContent != null;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getVersion() {
+    return _version;
+  }
 
-	@Override
-	public IResourceContent getResourceContent() {
-		return _resourceContent;
-	}
+  @Override
+  public Set<IPath> getBinaryPaths() {
+    return Collections.unmodifiableSet(_binaryPaths);
+  }
 
-	public ResourceContent getModifiableResourceContent() {
-		return _resourceContent;
-	}
+  @Override
+  public boolean isResourceContent() {
+    return _resourceContent != null;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Set<IPath> getModifiableBinaryPaths() {
-		return _binaryPaths;
-	}
+  public ResourceContent getModifiableResourceContent() {
+    return _resourceContent;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param id
-	 */
-	public void setId(String id) {
-		_id = id;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<IPath> getModifiableBinaryPaths() {
+    return _binaryPaths;
+  }
 
-	public void setName(String name) {
-		_name = name;
-	}
+  @Override
+  public Set<IPath> getSourcePaths() {
+    return _resourceContent != null ? _resourceContent.getSourcePaths() : EMPTY_PATH_SET;
+  }
 
-	public void setVersion(String version) {
-		_version = version;
-	}
+  @Override
+  public boolean isAnalyzeSourceResources() {
+    return _resourceContent != null ? _resourceContent.isAnalyzeSourceResources() : false;
+  }
 
-	public void setResourceContent(ResourceContent resourceContent) {
-		_resourceContent = resourceContent;
-	}
+  @Override
+  public IResource getResource(IPath path, ContentType type) {
+    return _resourceContent != null ? _resourceContent.getResource(path, type) : null;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fileBasedContent
-	 * @param bundleMakerProject
-	 * @throws CoreException
-	 */
-	public void initialize(IBundleMakerProject bundleMakerProject) {
+  @Override
+  public Set<? extends IResource> getResources(ContentType type) {
+    return _resourceContent != null ? _resourceContent.getResources(type) : EMPTY_RESOURCE_SET;
+  }
 
-		// return if content already is initialized
-		if (_isInitialized) {
-			return;
-		}
+  @Override
+  public IResource getBinaryResource(IPath path) {
+    return _resourceContent != null ? _resourceContent.getBinaryResource(path) : null;
+  }
 
-		if (isResourceContent()) {
+  @Override
+  public Set<? extends IResource> getBinaryResources() {
+    return _resourceContent != null ? _resourceContent.getBinaryResources() : EMPTY_RESOURCE_SET;
+  }
 
-			// add the binary resources
-			for (IPath root : _binaryPaths) {
+  @Override
+  public IResource getSourceResource(IPath path) {
+    return _resourceContent != null ? _resourceContent.getSourceResource(path) : null;
+  }
 
-				// get the root
-				String rootPath = root.toFile().getAbsolutePath();
+  @Override
+  public Set<? extends IResource> getSourceResources() {
+    return _resourceContent != null ? _resourceContent.getSourceResources() : EMPTY_RESOURCE_SET;
+  }
 
-				try {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param id
+   */
+  public void setId(String id) {
+    _id = id;
+  }
 
-					for (String child : FileUtils.getAllChildren(root.toFile())) {
+  public void setName(String name) {
+    _name = name;
+  }
 
-						// create the resource standin
-						ResourceStandin resourceStandin = new ResourceStandin(
-								_id, rootPath, child);
+  public void setVersion(String version) {
+    _version = version;
+  }
 
-						// add the resource
-						_resourceContent.getModifiableBinaryResources().add(
-								resourceStandin);
-					}
+  public void setResourceContent(ResourceContent resourceContent) {
+    _resourceContent = resourceContent;
+  }
 
-				} catch (CoreException e) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fileBasedContent
+   * @param bundleMakerProject
+   * @throws CoreException
+   */
+  public void initialize(IBundleMakerProject bundleMakerProject) {
 
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+    // return if content already is initialized
+    if (_isInitialized) {
+      return;
+    }
 
-			// add the source resources
-			for (IPath root : _resourceContent.getSourcePaths()) {
+    if (isResourceContent()) {
 
-				// get the root
-				String rootPath = root.toFile().getAbsolutePath();
+      // add the binary resources
+      for (IPath root : _binaryPaths) {
 
-				try {
+        // get the root
+        String rootPath = root.toFile().getAbsolutePath();
 
-					for (String child : FileUtils.getAllChildren(root.toFile())) {
+        try {
 
-						// create the resource standin
-						ResourceStandin resourceStandin = new ResourceStandin(
-								_id, rootPath, child);
+          for (String child : FileUtils.getAllChildren(root.toFile())) {
 
-						// add the resource
-						_resourceContent.getModifiableSourceResources().add(
-								resourceStandin);
-					}
+            // create the resource standin
+            ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
 
-				} catch (CoreException e) {
+            // add the resource
+            _resourceContent.getModifiableBinaryResources().add(resourceStandin);
+          }
 
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+        } catch (CoreException e) {
 
-		// set initialized
-		_isInitialized = true;
-	}
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+
+      // add the source resources
+      for (IPath root : _resourceContent.getSourcePaths()) {
+
+        // get the root
+        String rootPath = root.toFile().getAbsolutePath();
+
+        try {
+
+          for (String child : FileUtils.getAllChildren(root.toFile())) {
+
+            // create the resource standin
+            ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
+
+            // add the resource
+            _resourceContent.getModifiableSourceResources().add(resourceStandin);
+          }
+
+        } catch (CoreException e) {
+
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
+
+    // set initialized
+    _isInitialized = true;
+  }
+
+  public Collection<ResourceStandin> getModifiableBinaryResources() {
+    return _resourceContent.getModifiableBinaryResources();
+  }
+
+  public Collection<ResourceStandin> getModifiableSourceResources() {
+    return _resourceContent.getModifiableSourceResources();
+  }
 }

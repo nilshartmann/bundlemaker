@@ -5,7 +5,6 @@
 // Generated on: 2011.01.07 at 02:59:31 PM MEZ 
 //
 
-
 package org.bundlemaker.core.exporter.structure101.xml;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,11 +13,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for dataType complex type.
+ * <p>
+ * Java class for dataType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="dataType">
@@ -37,89 +37,79 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dataType", propOrder = {
-    "modules",
-    "dependencies"
-})
+@XmlType(name = "dataType", propOrder = { "modules", "dependencies" })
 public class DataType {
 
-    @XmlElement(required = true)
-    protected ModulesType modules;
-    @XmlElement(required = true)
-    protected DependenciesType dependencies;
-    @XmlAttribute(required = true)
-    protected String flavor;
+  @XmlElement(required = true)
+  protected ModulesType      modules;
 
-    /**
-     * Gets the value of the modules property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ModulesType }
-     *     
-     */
-    public ModulesType getModules() {
-        return modules;
-    }
+  @XmlElement(required = true)
+  protected DependenciesType dependencies;
 
-    /**
-     * Sets the value of the modules property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ModulesType }
-     *     
-     */
-    public void setModules(ModulesType value) {
-        this.modules = value;
-    }
+  @XmlAttribute(required = true)
+  protected String           flavor;
 
-    /**
-     * Gets the value of the dependencies property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DependenciesType }
-     *     
-     */
-    public DependenciesType getDependencies() {
-        return dependencies;
-    }
+  /**
+   * Gets the value of the modules property.
+   * 
+   * @return possible object is {@link ModulesType }
+   * 
+   */
+  public ModulesType getModules() {
+    return modules;
+  }
 
-    /**
-     * Sets the value of the dependencies property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DependenciesType }
-     *     
-     */
-    public void setDependencies(DependenciesType value) {
-        this.dependencies = value;
-    }
+  /**
+   * Sets the value of the modules property.
+   * 
+   * @param value
+   *          allowed object is {@link ModulesType }
+   * 
+   */
+  public void setModules(ModulesType value) {
+    this.modules = value;
+  }
 
-    /**
-     * Gets the value of the flavor property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFlavor() {
-        return flavor;
-    }
+  /**
+   * Gets the value of the dependencies property.
+   * 
+   * @return possible object is {@link DependenciesType }
+   * 
+   */
+  public DependenciesType getDependencies() {
+    return dependencies;
+  }
 
-    /**
-     * Sets the value of the flavor property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFlavor(String value) {
-        this.flavor = value;
-    }
+  /**
+   * Sets the value of the dependencies property.
+   * 
+   * @param value
+   *          allowed object is {@link DependenciesType }
+   * 
+   */
+  public void setDependencies(DependenciesType value) {
+    this.dependencies = value;
+  }
+
+  /**
+   * Gets the value of the flavor property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getFlavor() {
+    return flavor;
+  }
+
+  /**
+   * Sets the value of the flavor property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setFlavor(String value) {
+    this.flavor = value;
+  }
 
 }

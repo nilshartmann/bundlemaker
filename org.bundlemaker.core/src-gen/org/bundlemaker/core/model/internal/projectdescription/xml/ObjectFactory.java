@@ -5,7 +5,6 @@
 // Generated on: 2011.02.17 at 01:35:18 PM MEZ 
 //
 
-
 package org.bundlemaker.core.model.internal.projectdescription.xml;
 
 import javax.xml.bind.JAXBElement;
@@ -13,64 +12,61 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the org.bundlemaker.core.model.internal.projectdescription.xml package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
- * provided in this class.
+ * This object contains factory methods for each Java content interface and Java element interface generated in the
+ * org.bundlemaker.core.model.internal.projectdescription.xml package.
+ * <p>
+ * An ObjectFactory allows you to programatically construct new instances of the Java representation for XML content.
+ * The Java representation of XML content can consist of schema derived interfaces and classes representing the binding
+ * of schema type definitions, element declarations and model groups. Factory methods for each of these are provided in
+ * this class.
  * 
  */
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _XmlProjectDescription_QNAME = new QName("", "XmlProjectDescription");
+  private final static QName _XmlProjectDescription_QNAME = new QName("", "XmlProjectDescription");
 
-    /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.bundlemaker.core.model.internal.projectdescription.xml
-     * 
-     */
-    public ObjectFactory() {
-    }
+  /**
+   * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package:
+   * org.bundlemaker.core.model.internal.projectdescription.xml
+   * 
+   */
+  public ObjectFactory() {
+  }
 
-    /**
-     * Create an instance of {@link XmlResourceContentType }
-     * 
-     */
-    public XmlResourceContentType createXmlResourceContentType() {
-        return new XmlResourceContentType();
-    }
+  /**
+   * Create an instance of {@link XmlResourceContentType }
+   * 
+   */
+  public XmlResourceContentType createXmlResourceContentType() {
+    return new XmlResourceContentType();
+  }
 
-    /**
-     * Create an instance of {@link XmlProjectDescriptionType }
-     * 
-     */
-    public XmlProjectDescriptionType createXmlProjectDescriptionType() {
-        return new XmlProjectDescriptionType();
-    }
+  /**
+   * Create an instance of {@link XmlProjectDescriptionType }
+   * 
+   */
+  public XmlProjectDescriptionType createXmlProjectDescriptionType() {
+    return new XmlProjectDescriptionType();
+  }
 
-    /**
-     * Create an instance of {@link XmlFileBasedContentType }
-     * 
-     */
-    public XmlFileBasedContentType createXmlFileBasedContentType() {
-        return new XmlFileBasedContentType();
-    }
+  /**
+   * Create an instance of {@link XmlFileBasedContentType }
+   * 
+   */
+  public XmlFileBasedContentType createXmlFileBasedContentType() {
+    return new XmlFileBasedContentType();
+  }
 
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link XmlProjectDescriptionType }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "", name = "XmlProjectDescription")
-    public JAXBElement<XmlProjectDescriptionType> createXmlProjectDescription(XmlProjectDescriptionType value) {
-        return new JAXBElement<XmlProjectDescriptionType>(_XmlProjectDescription_QNAME, XmlProjectDescriptionType.class, null, value);
-    }
+  /**
+   * Create an instance of {@link JAXBElement }{@code <}{@link XmlProjectDescriptionType }{@code >}
+   * 
+   */
+  @XmlElementDecl(namespace = "", name = "XmlProjectDescription")
+  public JAXBElement<XmlProjectDescriptionType> createXmlProjectDescription(XmlProjectDescriptionType value) {
+    return new JAXBElement<XmlProjectDescriptionType>(_XmlProjectDescription_QNAME, XmlProjectDescriptionType.class,
+        null, value);
+  }
 
 }

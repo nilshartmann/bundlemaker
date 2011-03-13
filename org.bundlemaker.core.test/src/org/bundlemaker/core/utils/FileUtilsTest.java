@@ -18,24 +18,23 @@ import org.junit.Test;
  */
 public class FileUtilsTest {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @throws CoreException
-	 */
-	@Test
-	public void testFileUtils() throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  @Test
+  public void testFileUtils() throws CoreException {
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
 
-		List<String> children = FileUtils.getAllChildren(new File(
-				"D:/_work/SVN - osgibuch"));
+    List<String> children = FileUtils.getAllChildren(new File(System.getProperty("user.dir"), "test-environment"));
 
-		stopWatch.stop();
-		System.out.println(stopWatch.getElapsedTime());
+    stopWatch.stop();
+    System.out.println(stopWatch.getElapsedTime());
 
-		Assert.assertEquals(4749, children.size());
-	}
+    Assert.assertEquals(4749, children.size());
+  }
 }

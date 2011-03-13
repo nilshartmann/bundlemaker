@@ -11,94 +11,90 @@ import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 
 public class EmbedModuleTransformation implements ITransformation {
 
-	private IModuleIdentifier _hostModuleIdentifier;
+  private IModuleIdentifier       _hostModuleIdentifier;
 
-	private List<IModuleIdentifier> _embeddedModulesIdentifiers;
+  private List<IModuleIdentifier> _embeddedModulesIdentifiers;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link EmbedModuleTransformation}.
-	 * </p>
-	 */
-	public EmbedModuleTransformation() {
+  /**
+   * <p>
+   * Creates a new instance of type {@link EmbedModuleTransformation}.
+   * </p>
+   */
+  public EmbedModuleTransformation() {
 
-		//
-		_embeddedModulesIdentifiers = new ArrayList<IModuleIdentifier>();
-	}
+    //
+    _embeddedModulesIdentifiers = new ArrayList<IModuleIdentifier>();
+  }
 
-	public IModuleIdentifier getHostModuleIdentifier() {
-		return _hostModuleIdentifier;
-	}
+  public IModuleIdentifier getHostModuleIdentifier() {
+    return _hostModuleIdentifier;
+  }
 
-	public void setHostModuleIdentifier(IModuleIdentifier hostModuleIdentifier) {
-		_hostModuleIdentifier = hostModuleIdentifier;
-	}
+  public void setHostModuleIdentifier(IModuleIdentifier hostModuleIdentifier) {
+    _hostModuleIdentifier = hostModuleIdentifier;
+  }
 
-	public List<IModuleIdentifier> getEmbeddedModulesIdentifiers() {
-		return _embeddedModulesIdentifiers;
-	}
+  public List<IModuleIdentifier> getEmbeddedModulesIdentifiers() {
+    return _embeddedModulesIdentifiers;
+  }
 
-	@Override
-	public void apply(IModifiableModularizedSystem modularizedSystem) {
+  @Override
+  public void apply(IModifiableModularizedSystem modularizedSystem) {
 
-		// step 1: define modules variables
-		IResourceModule hostModule = null;
+    // step 1: define modules variables
+    IResourceModule hostModule = null;
 
-		List<IResourceModule> embeddedModules = new LinkedList<IResourceModule>();
+    List<IResourceModule> embeddedModules = new LinkedList<IResourceModule>();
 
-		// step 2: fetch host and embedded modules
-		for (IModifiableResourceModule embeddedModule : modularizedSystem
-				.getModifiableResourceModulesMap().values()) {
+    // step 2: fetch host and embedded modules
+    for (IModifiableResourceModule embeddedModule : modularizedSystem.getModifiableResourceModulesMap().values()) {
 
-			// try to fetch host module
-			if (embeddedModule.getModuleIdentifier().equals(
-					_hostModuleIdentifier)) {
+      // try to fetch host module
+      if (embeddedModule.getModuleIdentifier().equals(_hostModuleIdentifier)) {
 
-				// set the host module
-				hostModule = embeddedModule;
-			}
+        // set the host module
+        hostModule = embeddedModule;
+      }
 
-			// try to fetch embedded modules
-			else {
+      // try to fetch embedded modules
+      else {
 
-				for (IModuleIdentifier embeddedModulesIdentifier : _embeddedModulesIdentifiers) {
+        for (IModuleIdentifier embeddedModulesIdentifier : _embeddedModulesIdentifiers) {
 
-					if (embeddedModule.getModuleIdentifier().equals(
-							embeddedModulesIdentifier)) {
-						embeddedModules.add(embeddedModule);
-					}
-				}
-			}
-		}
+          if (embeddedModule.getModuleIdentifier().equals(embeddedModulesIdentifier)) {
+            embeddedModules.add(embeddedModule);
+          }
+        }
+      }
+    }
 
-		// step 3: add the embedded modules as container
-		for (IResourceModule embeddedModule : embeddedModules) {
+    // step 3: add the embedded modules as container
+    for (IResourceModule embeddedModule : embeddedModules) {
 
-			// // get the module name
-			// String embeddedModuleName = ModelUtils.toString(embeddedModule
-			// .getModuleIdentifier());
-			//
-			// // get the resource container
-			// ResourceContainer embeddedContainer = embeddedModule
-			// .getSelfContainer().getModifiableResourcesSet(contentType);
-			//
-			// // embed the container
-			// hostModule.getModifiableContainedResourceContainers().put(
-			// embeddedModuleName, embeddedContainer);
-			//
-			// // embed all embedded containers
-			// if (embeddedModule.getModifiableContainedResourceContainers()
-			// .size() > 0) {
-			//
-			// // add the map
-			// hostModule.getModifiableContainedResourceContainers().putAll(
-			// embeddedModule
-			// .getModifiableContainedResourceContainers());
-			// }
+      // // get the module name
+      // String embeddedModuleName = ModelUtils.toString(embeddedModule
+      // .getModuleIdentifier());
+      //
+      // // get the resource container
+      // ResourceContainer embeddedContainer = embeddedModule
+      // .getSelfContainer().getModifiableResourcesSet(contentType);
+      //
+      // // embed the container
+      // hostModule.getModifiableContainedResourceContainers().put(
+      // embeddedModuleName, embeddedContainer);
+      //
+      // // embed all embedded containers
+      // if (embeddedModule.getModifiableContainedResourceContainers()
+      // .size() > 0) {
+      //
+      // // add the map
+      // hostModule.getModifiableContainedResourceContainers().putAll(
+      // embeddedModule
+      // .getModifiableContainedResourceContainers());
+      // }
 
-			// remove as top level module
-			modularizedSystem.getModifiableResourceModulesMap().remove(
-					embeddedModule.getModuleIdentifier());
-		}
-	}
+      // remove as top level module
+      modularizedSystem.getModifiableResourceModulesMap().remove(embeddedModule.getModuleIdentifier());
+    }
+  }
 }
