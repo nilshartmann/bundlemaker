@@ -2,91 +2,125 @@ package org.bundlemaker.core.exporter;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
+ * Abstract base class for all exporters.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractExporter implements IModuleExporter {
 
-	/** - */
-	private IModularizedSystem _currentModularizedSystem;
+  /** the modularized system */
+  private IModularizedSystem     _currentModularizedSystem;
 
-	/** - */
-	private IResourceModule _currentModule;
+  /** the current module */
+  private IResourceModule        _currentModule;
 
-	/** - */
-	private IModuleExporterContext _currentContext;
+  /** the current context */
+  private IModuleExporterContext _currentContext;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected IModularizedSystem getCurrentModularizedSystem() {
-		return _currentModularizedSystem;
-	}
+  /**
+   * <p>
+   * Returns the current {@link IModularizedSystem}.
+   * </p>
+   * 
+   * @return the current {@link IModularizedSystem}
+   */
+  protected IModularizedSystem getCurrentModularizedSystem() {
+    return _currentModularizedSystem;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected IResourceModule getCurrentModule() {
-		return _currentModule;
-	}
+  /**
+   * <p>
+   * Returns the current {@link IResourceModule}.
+   * </p>
+   * 
+   * @return the current {@link IResourceModule}
+   */
+  protected IResourceModule getCurrentModule() {
+    return _currentModule;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected IModuleExporterContext getCurrentContext() {
-		return _currentContext;
-	}
+  /**
+   * <p>
+   * Returns the current {@link IModuleExporterContext}.
+   * </p>
+   * 
+   * @return the current {@link IModuleExporterContext}
+   */
+  protected IModuleExporterContext getCurrentContext() {
+    return _currentContext;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean canExport(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
 
-		return true;
-	}
+    //
+    return true;
+  }
 
-	@Override
-	public final void export(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context)
-			throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void export(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context)
+      throws CoreException {
 
-		_currentModularizedSystem = modularizedSystem;
-		_currentContext = context;
-		_currentModule = module;
+    Assert.isNotNull(modularizedSystem);
+    Assert.isNotNull(module);
+    Assert.isNotNull(context);
 
-		preExportModule();
+    // set attributes
+    _currentModularizedSystem = modularizedSystem;
+    _currentContext = context;
+    _currentModule = module;
 
-		doExport();
+    // pre export
+    preExportModule();
 
-		postExportModule();
+    // export
+    doExport();
 
-	}
+    // post export
+    postExportModule();
+  }
 
-	protected void preExportModule() throws CoreException {
+  /**
+   * <p>
+   * This method is called <i>before</i> the module is exported.
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  protected void preExportModule() throws CoreException {
+    // empty implementation
+  }
 
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  protected void doExport() throws CoreException {
+    // empty implementation
+  }
 
-	protected void doExport() throws CoreException {
-
-	}
-
-	protected void postExportModule() throws CoreException {
-
-	}
+  /**
+   * <p>
+   * This method is called <i>after</i> the module is exported.
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  protected void postExportModule() throws CoreException {
+    // empty implementation
+  }
 }

@@ -25,115 +25,109 @@ import org.eclipse.core.runtime.Assert;
  */
 public final class JarFileUtils {
 
-	/**
-	 * <p>
-	 * Creates a jar archive for the given list of {@link IResource IResources}.
-	 * </p>
-	 * 
-	 * @param resources
-	 *            the list of resources
-	 * @param manifest
-	 *            the manifest file
-	 * @param archiveFile
-	 *            the archive file to create
-	 */
-	public static void createJarArchive(Set<IResource> resources,
-			Manifest manifest, OutputStream outputStream) {
+  /**
+   * <p>
+   * Creates a jar archive for the given list of {@link IResource IResources}.
+   * </p>
+   * 
+   * @param resources
+   *          the list of resources
+   * @param manifest
+   *          the manifest file
+   * @param archiveFile
+   *          the archive file to create
+   */
+  public static void createJarArchive(Set<IResource> resources, Manifest manifest, OutputStream outputStream) {
 
-		Assert.isNotNull(resources);
-		Assert.isNotNull(manifest);
+    Assert.isNotNull(resources);
+    Assert.isNotNull(manifest);
 
-		manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION,
-				"1.0");
+    manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
 
-		// create the input and output streams
+    // create the input and output streams
 
-		JarOutputStream jarOutputStream = null;
-		InputStream inputStream = null;
+    JarOutputStream jarOutputStream = null;
+    InputStream inputStream = null;
 
-		try {
+    try {
 
-			// open the archive file
-			jarOutputStream = new JarOutputStream(outputStream, manifest);
+      // open the archive file
+      jarOutputStream = new JarOutputStream(outputStream, manifest);
 
-			// add all the entries
-			for (IResource resourceStandin : resources) {
+      // add all the entries
+      for (IResource resourceStandin : resources) {
 
-				// add everything but the manifest
-				if (!"META-INF/MANIFEST.MF".equalsIgnoreCase(resourceStandin
-						.getPath())) {
+        // add everything but the manifest
+        if (!"META-INF/MANIFEST.MF".equalsIgnoreCase(resourceStandin.getPath())) {
 
-					// add archive entry
-					JarEntry newEntry = new JarEntry(resourceStandin.getPath());
-					jarOutputStream.putNextEntry(newEntry);
+          // add archive entry
+          JarEntry newEntry = new JarEntry(resourceStandin.getPath());
+          jarOutputStream.putNextEntry(newEntry);
 
-					// copy
-					inputStream = new ByteArrayInputStream(
-							resourceStandin.getContent());
-					copy(inputStream, jarOutputStream);
+          // copy
+          inputStream = new ByteArrayInputStream(resourceStandin.getContent());
+          copy(inputStream, jarOutputStream);
 
-					inputStream.close();
+          inputStream.close();
 
-					jarOutputStream.closeEntry();
-				}
-			}
-			
-			//
-			jarOutputStream.flush();
+          jarOutputStream.closeEntry();
+        }
+      }
 
-		} catch (Exception ex) {
-			// TODO
-			ex.printStackTrace();
+      //
+      jarOutputStream.flush();
 
-		} finally {
-			close(jarOutputStream);
-			close(inputStream);
-		}
-	}
+    } catch (Exception ex) {
+      // TODO
+      ex.printStackTrace();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param in
-	 * @param out
-	 * @throws IOException
-	 */
-	private static void copy(InputStream in, OutputStream out)
-			throws IOException {
-		byte[] buffer = new byte[8192];
-		int bytesRead = -1;
-		while ((bytesRead = in.read(buffer)) != -1) {
-			out.write(buffer, 0, bytesRead);
-		}
-		out.flush();
-	}
+    } finally {
+      close(jarOutputStream);
+      close(inputStream);
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param closeable
-	 */
-	private static void close(Closeable closeable) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param in
+   * @param out
+   * @throws IOException
+   */
+  private static void copy(InputStream in, OutputStream out) throws IOException {
+    byte[] buffer = new byte[8192];
+    int bytesRead = -1;
+    while ((bytesRead = in.read(buffer)) != -1) {
+      out.write(buffer, 0, bytesRead);
+    }
+    out.flush();
+  }
 
-		if (closeable != null) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param closeable
+   */
+  private static void close(Closeable closeable) {
 
-			try {
-				closeable.close();
-			} catch (IOException e) {
-				//
-			}
-		}
-	}
+    if (closeable != null) {
 
-	private static byte[] serialiseManifest(Manifest manifest)
-			throws IOException {
-		ByteArrayOutputStream byteout = new ByteArrayOutputStream();
-		manifest.write(byteout);
-		byteout.close();
-		byte[] result = byteout.toByteArray();
-		return result;
-	}
+      try {
+        closeable.close();
+      } catch (IOException e) {
+        //
+      }
+    }
+  }
+
+  private static byte[] serialiseManifest(Manifest manifest) throws IOException {
+    ByteArrayOutputStream byteout = new ByteArrayOutputStream();
+    manifest.write(byteout);
+    byteout.close();
+    byte[] result = byteout.toByteArray();
+    return result;
+  }
 
 }

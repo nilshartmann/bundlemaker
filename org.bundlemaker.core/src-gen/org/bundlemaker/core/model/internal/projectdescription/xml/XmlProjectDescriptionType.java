@@ -5,7 +5,6 @@
 // Generated on: 2011.02.17 at 01:35:18 PM MEZ 
 //
 
-
 package org.bundlemaker.core.model.internal.projectdescription.xml;
 
 import java.util.ArrayList;
@@ -15,11 +14,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for XmlProjectDescriptionType complex type.
+ * <p>
+ * Java class for XmlProjectDescriptionType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="XmlProjectDescriptionType">
@@ -38,84 +38,80 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "XmlProjectDescriptionType", propOrder = {
-    "fileBasedContent"
-})
+@XmlType(name = "XmlProjectDescriptionType", propOrder = { "fileBasedContent" })
 public class XmlProjectDescriptionType {
 
-    protected List<XmlFileBasedContentType> fileBasedContent;
-    @XmlAttribute(required = true)
-    protected int currentId;
-    @XmlAttribute(required = true)
-    protected String jre;
+  protected List<XmlFileBasedContentType> fileBasedContent;
 
-    /**
-     * Gets the value of the fileBasedContent property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the fileBasedContent property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getFileBasedContent().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link XmlFileBasedContentType }
-     * 
-     * 
-     */
-    public List<XmlFileBasedContentType> getFileBasedContent() {
-        if (fileBasedContent == null) {
-            fileBasedContent = new ArrayList<XmlFileBasedContentType>();
-        }
-        return this.fileBasedContent;
-    }
+  @XmlAttribute(required = true)
+  protected int                           currentId;
 
-    /**
-     * Gets the value of the currentId property.
-     * 
-     */
-    public int getCurrentId() {
-        return currentId;
-    }
+  @XmlAttribute(required = true)
+  protected String                        jre;
 
-    /**
-     * Sets the value of the currentId property.
-     * 
-     */
-    public void setCurrentId(int value) {
-        this.currentId = value;
+  /**
+   * Gets the value of the fileBasedContent property.
+   * 
+   * <p>
+   * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+   * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+   * the fileBasedContent property.
+   * 
+   * <p>
+   * For example, to add a new item, do as follows:
+   * 
+   * <pre>
+   * getFileBasedContent().add(newItem);
+   * </pre>
+   * 
+   * 
+   * <p>
+   * Objects of the following type(s) are allowed in the list {@link XmlFileBasedContentType }
+   * 
+   * 
+   */
+  public List<XmlFileBasedContentType> getFileBasedContent() {
+    if (fileBasedContent == null) {
+      fileBasedContent = new ArrayList<XmlFileBasedContentType>();
     }
+    return this.fileBasedContent;
+  }
 
-    /**
-     * Gets the value of the jre property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getJre() {
-        return jre;
-    }
+  /**
+   * Gets the value of the currentId property.
+   * 
+   */
+  public int getCurrentId() {
+    return currentId;
+  }
 
-    /**
-     * Sets the value of the jre property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setJre(String value) {
-        this.jre = value;
-    }
+  /**
+   * Sets the value of the currentId property.
+   * 
+   */
+  public void setCurrentId(int value) {
+    this.currentId = value;
+  }
+
+  /**
+   * Gets the value of the jre property.
+   * 
+   * @return possible object is {@link String }
+   * 
+   */
+  public String getJre() {
+    return jre;
+  }
+
+  /**
+   * Sets the value of the jre property.
+   * 
+   * @param value
+   *          allowed object is {@link String }
+   * 
+   */
+  public void setJre(String value) {
+    this.jre = value;
+  }
 
 }

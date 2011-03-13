@@ -6,11 +6,11 @@ import org.osgi.framework.*;
 
 class Db4oServiceFactory implements ServiceFactory {
 
-	public Object getService(Bundle bundle, ServiceRegistration registration) {
-		return new Db4oServiceImpl(bundle);
-	}
+  public Object getService(Bundle bundle, ServiceRegistration registration) {
+    return new Db4oServiceImpl(bundle);
+  }
 
-	public void ungetService(Bundle bundle, ServiceRegistration registration, Object service) {
-	}
+  public void ungetService(Bundle bundle, ServiceRegistration registration, Object service) {
+  }
 
 }

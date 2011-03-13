@@ -19,46 +19,46 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  */
 public interface IModuleExporterContext {
 
-	/**
-	 * <p>
-	 * Returns the {@link IBundleMakerProject}.
-	 * </p>
-	 * 
-	 * @return
-	 */
-	IBundleMakerProject getBundleMakerProject();
+  /**
+   * <p>
+   * Returns the {@link IBundleMakerProject}.
+   * </p>
+   * 
+   * @return
+   */
+  IBundleMakerProject getBundleMakerProject();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	File getDestinationDirectory();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  File getDestinationDirectory();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	IModularizedSystem getModularizedSystem();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IModularizedSystem getModularizedSystem();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param key
-	 * @return
-	 */
-	boolean containsAttribute(Object key);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @return
+   */
+  boolean containsAttribute(Object key);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param key
-	 * @return
-	 */
-	Object getAttribute(Object key);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @return
+   */
+  Object getAttribute(Object key);
 }

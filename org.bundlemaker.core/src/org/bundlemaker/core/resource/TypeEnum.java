@@ -9,15 +9,15 @@ package org.bundlemaker.core.resource;
  */
 public enum TypeEnum {
 
-	/** - */
-	CLASS,
+  /** - */
+  CLASS,
 
-	/** - */
-	INTERFACE,
+  /** - */
+  INTERFACE,
 
-	/** - */
-	ANNOTATION,
+  /** - */
+  ANNOTATION,
 
-	/** - */
-	ENUM;
+  /** - */
+  ENUM;
 }

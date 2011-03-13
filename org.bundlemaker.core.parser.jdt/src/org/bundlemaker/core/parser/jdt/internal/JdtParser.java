@@ -46,280 +46,253 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  */
 public class JdtParser extends AbstractHookAwareJdtParser {
 
-	/** the AST parser */
-	private ASTParser _parser;
+  /** the AST parser */
+  private ASTParser                    _parser;
 
-	/** the associated java project */
-	private IJavaProject _javaProject;
+  /** the associated java project */
+  private IJavaProject                 _javaProject;
 
-	/** the indirectly references analyzer **/
-	private IndirectlyReferencesAnalyzer _indirectlyReferencesAnalyzer;
+  /** the indirectly references analyzer **/
+  private IndirectlyReferencesAnalyzer _indirectlyReferencesAnalyzer;
 
-	/** - */
-	private boolean _parseIndirectReferences;
+  /** - */
+  private boolean                      _parseIndirectReferences;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 * @throws CoreException
-	 */
-	public JdtParser(IBundleMakerProject bundleMakerProject,
-			ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry,
-			boolean parseIndirectReferences) throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @throws CoreException
+   */
+  public JdtParser(IBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry,
+      boolean parseIndirectReferences) throws CoreException {
 
-		super(hookRegistry);
+    super(hookRegistry);
 
-		Assert.isNotNull(bundleMakerProject);
+    Assert.isNotNull(bundleMakerProject);
 
-		// create the AST parser
-		_parser = ASTParser.newParser(AST.JLS3);
+    // create the AST parser
+    _parser = ASTParser.newParser(AST.JLS3);
 
-		// the associated java project
-		_javaProject = JdtProjectHelper
-				.getAssociatedJavaProject(bundleMakerProject);
+    // the associated java project
+    _javaProject = JdtProjectHelper.getAssociatedJavaProject(bundleMakerProject);
 
-		//
-		_indirectlyReferencesAnalyzer = new IndirectlyReferencesAnalyzer(
-				_javaProject);
+    //
+    _indirectlyReferencesAnalyzer = new IndirectlyReferencesAnalyzer(_javaProject);
 
-		//
-		_parseIndirectReferences = parseIndirectReferences;
-	}
+    //
+    _parseIndirectReferences = parseIndirectReferences;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ParserType getParserType() {
-		return ParserType.SOURCE;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public ParserType getParserType() {
+    return ParserType.SOURCE;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<IProblem> parse(IFileBasedContent content,
-			List<IDirectory> directoryList, IResourceCache cache,
-			IProgressMonitor progressMonitor) throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IProblem> parse(IFileBasedContent content, List<IDirectory> directoryList, IResourceCache cache,
+      IProgressMonitor progressMonitor) throws CoreException {
 
-		// create the error list
-		List<IProblem> _errors = new LinkedList<IProblem>();
+    // create the error list
+    List<IProblem> _errors = new LinkedList<IProblem>();
 
-		// parse the compilation units
-		if (content.isResourceContent()
-				&& !content.getResourceContent().getSourceResources().isEmpty()
-				&& content.getResourceContent().isAnalyzeSourceResources()) {
+    // parse the compilation units
+    if (content.isResourceContent() && !content.getSourceResources().isEmpty() && content.isAnalyzeSourceResources()) {
 
-			_errors.addAll(parseCompilationUnits(directoryList, cache, content,
-					progressMonitor));
-		}
+      _errors.addAll(parseCompilationUnits(directoryList, cache, content, progressMonitor));
+    }
 
-		// return the errors
-		return _errors;
-	}
+    // return the errors
+    return _errors;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param progressMonitor
-	 * 
-	 * @param compilationUnits
-	 * @throws JavaModelException
-	 */
-	private List<IProblem> parseCompilationUnits(
-			List<IDirectory> directoryList, IResourceCache cache,
-			IFileBasedContent fileBasedContent, IProgressMonitor progressMonitor)
-			throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param progressMonitor
+   * 
+   * @param compilationUnits
+   * @throws JavaModelException
+   */
+  private List<IProblem> parseCompilationUnits(List<IDirectory> directoryList, IResourceCache cache,
+      IFileBasedContent fileBasedContent, IProgressMonitor progressMonitor) throws CoreException {
 
-		//
-		List<IProblem> problems = new LinkedList<IProblem>();
+    //
+    List<IProblem> problems = new LinkedList<IProblem>();
 
-		//
-		for (IDirectory directory : directoryList) {
+    //
+    for (IDirectory directory : directoryList) {
 
-			//
-			if (!directory.getDirectoryName().equals(new Path("META-INF"))
-					&& directory.hasSourceContent()) {
+      //
+      if (!directory.getDirectoryName().equals(new Path("META-INF")) && directory.hasSourceContent()) {
 
-				//
-				for (IDirectoryFragment directoryFragment : directory
-						.getSourceDirectoryFragments()) {
+        //
+        for (IDirectoryFragment directoryFragment : directory.getSourceDirectoryFragments()) {
 
-					//
-					for (IResourceKey resourceKey : directoryFragment
-							.getResourceKeys()) {
+          //
+          for (IResourceKey resourceKey : directoryFragment.getResourceKeys()) {
 
-						//
-						parseResource(resourceKey, cache, problems);
+            //
+            parseResource(resourceKey, cache, problems);
 
-						progressMonitor.worked(1);
-					}
-				}
-			}
-		}
+            progressMonitor.worked(1);
+          }
+        }
+      }
+    }
 
-		//
-		return problems;
-	}
+    //
+    return problems;
+  }
 
-	/**
-	 * @param resourceKey
-	 * @param cache
-	 */
-	private void parseResource(IResourceKey resourceKey, IResourceCache cache,
-			List<IProblem> problems) {
+  /**
+   * @param resourceKey
+   * @param cache
+   */
+  private void parseResource(IResourceKey resourceKey, IResourceCache cache, List<IProblem> problems) {
 
-		//
-		if (!resourceKey.getPath().endsWith(".java")) {
-			return;
-		}
+    //
+    if (!resourceKey.getPath().endsWith(".java")) {
+      return;
+    }
 
-		// get the modifiable resource
-		IModifiableResource modifiableResource = cache
-				.getOrCreateResource(resourceKey);
+    // get the modifiable resource
+    IModifiableResource modifiableResource = cache.getOrCreateResource(resourceKey);
 
-		try {
+    try {
 
-			// TODO configurable
-			Map options = new HashMap();
-			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-			options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
-					JavaCore.VERSION_1_6);
-			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      // TODO configurable
+      Map options = new HashMap();
+      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+      options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
 
-			// _parser.setSource(iCompilationUnit);
-			char[] content = new String(modifiableResource.getContent())
-					.toCharArray();
-			_parser.setProject(_javaProject);
-			_parser.setSource(content);
+      // _parser.setSource(iCompilationUnit);
+      char[] content = new String(modifiableResource.getContent()).toCharArray();
+      _parser.setProject(_javaProject);
+      _parser.setSource(content);
 
-			// TODO
-			_parser.setUnitName("/" + _javaProject.getProject().getName() + "/"
-					+ modifiableResource.getPath());
-			_parser.setCompilerOptions(options);
-			_parser.setResolveBindings(true);
+      // TODO
+      _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
+      _parser.setCompilerOptions(options);
+      _parser.setResolveBindings(true);
 
-			CompilationUnit compilationUnit = (CompilationUnit) _parser
-					.createAST(null);
+      CompilationUnit compilationUnit = (CompilationUnit) _parser.createAST(null);
 
-			analyzeCompilationUnit(modifiableResource, compilationUnit,
-					problems);
+      analyzeCompilationUnit(modifiableResource, compilationUnit, problems);
 
-			// step 3: compute the indirectly referenced types
-			if (_parseIndirectReferences) {
-				computeIndirectlyReferencedTypes(modifiableResource, content);
-			}
+      // step 3: compute the indirectly referenced types
+      if (_parseIndirectReferences) {
+        computeIndirectlyReferencedTypes(modifiableResource, content);
+      }
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modifiableResource
-	 * @param content
-	 * @throws IOException
-	 */
-	private void computeIndirectlyReferencedTypes(
-			IModifiableResource modifiableResource, char[] content)
-			throws IOException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modifiableResource
+   * @param content
+   * @throws IOException
+   */
+  private void computeIndirectlyReferencedTypes(IModifiableResource modifiableResource, char[] content)
+      throws IOException {
 
-		// get all the referenced types (directly and indirectly)
-		Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer
-				.getAllReferencedTypes(modifiableResource, content);
+    // get all the referenced types (directly and indirectly)
+    Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer.getAllReferencedTypes(
+        modifiableResource, content);
 
-		// get all directly referenced types
-		Set<String> directlyReferenced = new HashSet<String>();
-		for (IReference reference : modifiableResource.getReferences()) {
-			if (reference.getReferenceType().equals(
-					ReferenceType.TYPE_REFERENCE)) {
-				directlyReferenced.add(reference.getFullyQualifiedName());
-			}
-		}
-		for (IType type : modifiableResource.getContainedTypes()) {
-			for (IReference reference : type.getReferences()) {
-				if (reference.getReferenceType().equals(
-						ReferenceType.TYPE_REFERENCE)) {
-					directlyReferenced.add(reference.getFullyQualifiedName());
-				}
-			}
-		}
+    // get all directly referenced types
+    Set<String> directlyReferenced = new HashSet<String>();
+    for (IReference reference : modifiableResource.getReferences()) {
+      if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
+        directlyReferenced.add(reference.getFullyQualifiedName());
+      }
+    }
+    for (IType type : modifiableResource.getContainedTypes()) {
+      for (IReference reference : type.getReferences()) {
+        if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
+          directlyReferenced.add(reference.getFullyQualifiedName());
+        }
+      }
+    }
 
-		// add only the indirectly referenced types
-		for (String type : directlyAndIndirectlyReferencedTypes) {
+    // add only the indirectly referenced types
+    for (String type : directlyAndIndirectlyReferencedTypes) {
 
-			if (!directlyReferenced.contains(type)) {
-				modifiableResource
-						.recordReference(type, new ReferenceAttributes(
-								ReferenceType.TYPE_REFERENCE, false, false,
-								false, false, false, false, true));
-			}
-		}
-	}
+      if (!directlyReferenced.contains(type)) {
+        modifiableResource.recordReference(type, new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, false, false,
+            false, false, false, false, true));
+      }
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param rootMap
-	 * @param progressMonitor
-	 * 
-	 * @param entry
-	 * @param content
-	 * @throws JavaModelException
-	 */
-	private List<IProblem> analyzeCompilationUnit(
-			IModifiableResource modifiableResource,
-			CompilationUnit compilationUnit, List<IProblem> problems)
-			throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param rootMap
+   * @param progressMonitor
+   * 
+   * @param entry
+   * @param content
+   * @throws JavaModelException
+   */
+  private List<IProblem> analyzeCompilationUnit(IModifiableResource modifiableResource,
+      CompilationUnit compilationUnit, List<IProblem> problems) throws CoreException {
 
-		// step 1: set the directly referenced types
-		JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
-		compilationUnit.accept(visitor);
+    // step 1: set the directly referenced types
+    JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
+    compilationUnit.accept(visitor);
 
-		// step 2:
-		callSourceParserHooks(modifiableResource, compilationUnit);
+    // step 2:
+    callSourceParserHooks(modifiableResource, compilationUnit);
 
-		// step 4: add the errors to the error list
-		for (IProblem problem : visitor.getProblems()) {
+    // step 4: add the errors to the error list
+    for (IProblem problem : visitor.getProblems()) {
 
-			// add errors
-			if (problem.isError()) {
-				System.out.println(problem.getMessage());
-				problems.add(problem);
-			}
-		}
+      // add errors
+      if (problem.isError()) {
+        System.out.println(problem.getMessage());
+        problems.add(problem);
+      }
+    }
 
-		// step 5: finally return
-		return problems;
-	}
+    // step 5: finally return
+    return problems;
+  }
 
-	/**
-	 * @param is
-	 * @return
-	 * @throws IOException
-	 */
-	public static char[] getCharsFromInputStream(InputStream is)
-			throws IOException {
+  /**
+   * @param is
+   * @return
+   * @throws IOException
+   */
+  public static char[] getCharsFromInputStream(InputStream is) throws IOException {
 
-		Reader reader = new InputStreamReader(is);
-		StringWriter result = new StringWriter();
+    Reader reader = new InputStreamReader(is);
+    StringWriter result = new StringWriter();
 
-		int data = reader.read();
-		while (data != -1) {
-			char theChar = (char) data;
-			result.append(theChar);
-			data = reader.read();
-		}
+    int data = reader.read();
+    while (data != -1) {
+      char theChar = (char) data;
+      result.append(theChar);
+      data = reader.read();
+    }
 
-		reader.close();
-		return result.toString().toCharArray();
-	}
+    reader.close();
+    return result.toString().toCharArray();
+  }
 }

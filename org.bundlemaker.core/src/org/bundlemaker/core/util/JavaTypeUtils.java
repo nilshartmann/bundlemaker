@@ -10,59 +10,57 @@ import org.eclipse.core.runtime.Assert;
  */
 public class JavaTypeUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullQualifiedName
-	 * @return
-	 */
-	public static boolean isLocalOrAnonymousTypeName(String fullQualifiedName) {
-		Assert.isNotNull(fullQualifiedName);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullQualifiedName
+   * @return
+   */
+  public static boolean isLocalOrAnonymousTypeName(String fullQualifiedName) {
+    Assert.isNotNull(fullQualifiedName);
 
-		return fullQualifiedName.matches(".*\\$\\d.*");
-	}
+    return fullQualifiedName.matches(".*\\$\\d.*");
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullQualifiedName
-	 * @return
-	 */
-	public static String getEnclosingNonLocalAndNonAnonymousTypeName(
-			String fullQualifiedName) {
-		Assert.isNotNull(fullQualifiedName);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullQualifiedName
+   * @return
+   */
+  public static String getEnclosingNonLocalAndNonAnonymousTypeName(String fullQualifiedName) {
+    Assert.isNotNull(fullQualifiedName);
 
-		// local or anonymous?
-		if (isLocalOrAnonymousTypeName(fullQualifiedName)) {
+    // local or anonymous?
+    if (isLocalOrAnonymousTypeName(fullQualifiedName)) {
 
-			String[] parts = fullQualifiedName.split("\\$\\d");
-			return parts[0];
+      String[] parts = fullQualifiedName.split("\\$\\d");
+      return parts[0];
 
-		} else {
-			return fullQualifiedName;
-		}
-	}
+    } else {
+      return fullQualifiedName;
+    }
+  }
 
-	public static String convertToFullyQualifiedName(String classFilePath) {
+  public static String convertToFullyQualifiedName(String classFilePath) {
 
-		String fullyQualifiedName = classFilePath.substring(0,
-				classFilePath.length() - ".class".length());
+    String fullyQualifiedName = classFilePath.substring(0, classFilePath.length() - ".class".length());
 
-		if (fullyQualifiedName.startsWith("/")) {
-			fullyQualifiedName = fullyQualifiedName.substring(1);
-		}
+    if (fullyQualifiedName.startsWith("/")) {
+      fullyQualifiedName = fullyQualifiedName.substring(1);
+    }
 
-		fullyQualifiedName = fullyQualifiedName.replace('/', '.');
+    fullyQualifiedName = fullyQualifiedName.replace('/', '.');
 
-		return fullyQualifiedName;
-	}
+    return fullyQualifiedName;
+  }
 
-	public static String convertFromFullyQualifiedName(String fullyQualifiedName) {
+  public static String convertFromFullyQualifiedName(String fullyQualifiedName) {
 
-		String result = fullyQualifiedName.replace('.', '/');
+    String result = fullyQualifiedName.replace('.', '/');
 
-		return result + ".class";
-	}
+    return result + ".class";
+  }
 }

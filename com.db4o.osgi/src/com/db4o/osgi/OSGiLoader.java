@@ -7,30 +7,30 @@ import org.osgi.framework.*;
 import com.db4o.reflect.jdk.*;
 
 class OSGiLoader implements JdkLoader {
-	
-	private final Bundle _bundle;
-	private JdkLoader _loader;
-	
-	public OSGiLoader(Bundle bundle, JdkLoader loader) {
-		_bundle = bundle;
-		_loader = loader;
-	}
 
-	public Class loadClass(String className) {
-		Class clazz = _loader.loadClass(className);
-		if (clazz != null) {
-			return clazz;
-		}
-		try {
-			return _bundle.loadClass(className);
-		} 
-		catch (ClassNotFoundException exc) {
-			return null;
-		}
-	}
+  private final Bundle _bundle;
 
-	public Object deepClone(Object context) {
-		return new OSGiLoader(_bundle, (JdkLoader) _loader.deepClone(context));
-	}
+  private JdkLoader    _loader;
+
+  public OSGiLoader(Bundle bundle, JdkLoader loader) {
+    _bundle = bundle;
+    _loader = loader;
+  }
+
+  public Class loadClass(String className) {
+    Class clazz = _loader.loadClass(className);
+    if (clazz != null) {
+      return clazz;
+    }
+    try {
+      return _bundle.loadClass(className);
+    } catch (ClassNotFoundException exc) {
+      return null;
+    }
+  }
+
+  public Object deepClone(Object context) {
+    return new OSGiLoader(_bundle, (JdkLoader) _loader.deepClone(context));
+  }
 
 }

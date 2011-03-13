@@ -14,52 +14,52 @@ import org.eclipse.core.runtime.Assert;
  */
 public abstract class AbstractTypeClosureQuery {
 
-	/** - */
-	private Map<String, IType> _typesMap;
+  /** - */
+  private Map<String, IType> _typesMap;
 
-	/** - */
-	private ModularizedSystem _modularizedSystem;
+  /** - */
+  private ModularizedSystem  _modularizedSystem;
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	public AbstractTypeClosureQuery(ModularizedSystem modularizedSystem) {
+  /**
+   * <p>
+   * </p>
+   */
+  public AbstractTypeClosureQuery(ModularizedSystem modularizedSystem) {
 
-		Assert.isNotNull(modularizedSystem);
+    Assert.isNotNull(modularizedSystem);
 
-		_modularizedSystem = modularizedSystem;
+    _modularizedSystem = modularizedSystem;
 
-		_typesMap = new HashMap<String, IType>();
-	}
+    _typesMap = new HashMap<String, IType>();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected ModularizedSystem getModularizedSystem() {
-		return _modularizedSystem;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected ModularizedSystem getModularizedSystem() {
+    return _modularizedSystem;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected Map<String, IType> getTypesMap() {
-		return _typesMap;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected Map<String, IType> getTypesMap() {
+    return _typesMap;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public Collection<IType> getTypes() {
-		return _typesMap.values();
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Collection<IType> getTypes() {
+    return _typesMap.values();
+  }
 }

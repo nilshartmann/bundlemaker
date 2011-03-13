@@ -19,92 +19,86 @@ import org.objectweb.asm.ClassReader;
  */
 public class ByteCodeParser extends AbstractParser {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public ParserType getParserType() {
-		return ParserType.BINARY;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public ParserType getParserType() {
+    return ParserType.BINARY;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected boolean canParse(IResourceKey resourceKey) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected boolean canParse(IResourceKey resourceKey) {
 
-		//
-		if (!resourceKey.getPath().endsWith(".class")) {
-			return false;
-		}
+    //
+    if (!resourceKey.getPath().endsWith(".class")) {
+      return false;
+    }
 
-		//
-		return resourceKey.isValidJavaPackage();
-	}
+    //
+    return resourceKey.isValidJavaPackage();
+  }
 
-	@Override
-	protected void parseResource(IResourceKey resourceKey,
-			IFileBasedContent content, IResourceCache cache) {
+  @Override
+  protected void parseResource(IResourceKey resourceKey, IFileBasedContent content, IResourceCache cache) {
 
-		// get the IModifiableResource
-		IModifiableResource resource = cache.getOrCreateResource(resourceKey);
+    // get the IModifiableResource
+    IModifiableResource resource = cache.getOrCreateResource(resourceKey);
 
-		// if the resource already contains a type, it already has been parsed.
-		// In this case we can return immediately
-		if (!resource.getContainedTypes().isEmpty()) {
-			return;
-		}
+    // if the resource already contains a type, it already has been parsed.
+    // In this case we can return immediately
+    if (!resource.getContainedTypes().isEmpty()) {
+      return;
+    }
 
-		// if the resource does not contain a anonymous or local type
-		// the enclosing resource is the resource (the default)
-		IModifiableResource enclosingResource = resource;
+    // if the resource does not contain a anonymous or local type
+    // the enclosing resource is the resource (the default)
+    IModifiableResource enclosingResource = resource;
 
-		// get fully qualified type name
-		String fullyQualifiedName = JavaTypeUtils
-				.convertToFullyQualifiedName(resource.getPath());
+    // get fully qualified type name
+    String fullyQualifiedName = JavaTypeUtils.convertToFullyQualifiedName(resource.getPath());
 
-		// if the type is an anonymous or local type,
-		// we have to get the enclosing type name
-		if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
+    // if the type is an anonymous or local type,
+    // we have to get the enclosing type name
+    if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
-			// get the name of the enclosing type
-			String enclosingName = JavaTypeUtils
-					.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
+      // get the name of the enclosing type
+      String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
-			// the resource key for the enclosing type
-			ResourceKey enclosingKey = new ResourceKey(
-					resourceKey.getContentId(), resourceKey.getRoot(),
-					JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
+      // the resource key for the enclosing type
+      ResourceKey enclosingKey = new ResourceKey(resourceKey.getContentId(), resourceKey.getRoot(),
+          JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
-			// get the enclosing resource
-			enclosingResource = cache.getOrCreateResource(enclosingKey);
+      // get the enclosing resource
+      enclosingResource = cache.getOrCreateResource(enclosingKey);
 
-			// if we have to parse the enclosing type
-			if (enclosingResource.getContainedTypes().isEmpty()) {
-				parseResource(enclosingKey, content, cache);
+      // if we have to parse the enclosing type
+      if (enclosingResource.getContainedTypes().isEmpty()) {
+        parseResource(enclosingKey, content, cache);
 
-				if (enclosingResource.getContainedTypes().isEmpty()) {
-					// TODO
-					// TODO remove null handling in AsmReferenceRecorder
-					// Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
-				}
-			}
-		}
+        if (enclosingResource.getContainedTypes().isEmpty()) {
+          // TODO
+          // TODO remove null handling in AsmReferenceRecorder
+          // Assert.isTrue(!enclosingResource.getContainedTypes().isEmpty());
+        }
+      }
+    }
 
-		try {
+    try {
 
-			// create a new references recorder
-			AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(
-					resource, enclosingResource);
+      // create a new references recorder
+      AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(resource, enclosingResource);
 
-			// parse the class file
-			ClassReader reader = new ClassReader(resource.getContent());
-			reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder),
-					0);
+      // parse the class file
+      ClassReader reader = new ClassReader(resource.getContent());
+      reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder), 0);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
-	}
+  }
 }

@@ -29,126 +29,117 @@ import org.junit.Test;
  */
 public class DBTest {
 
-	/** - */
-	private static final String FILE_NAME = String.format("%s/database",
-			System.getProperty("user.dir"));
+  /** - */
+  private static final String FILE_NAME = String.format("%s/database", System.getProperty("user.dir"));
 
-	// /** - */
-	// private ObjectContainer _objectContainer;
+  // /** - */
+  // private ObjectContainer _objectContainer;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @throws CoreException
-	 */
-	@Test
-	public void testDatabase() throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  @Test
+  public void testDatabase() throws CoreException {
 
-		IProject project = BundleMakerCore
-				.getOrCreateSimpleProjectWithBundleMakerNature("dbtest");
-		IBundleMakerProject bundleMakerProject = BundleMakerCore
-				.getBundleMakerProject(project, null);
-		IPersistentDependencyStore store = Activator.getDefault()
-				.getPersistentDependencyStore(bundleMakerProject);
-		Assert.assertNotNull(store);
+    IProject project = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature("dbtest");
+    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project, null);
+    IPersistentDependencyStore store = Activator.getDefault().getPersistentDependencyStore(bundleMakerProject);
+    Assert.assertNotNull(store);
 
-		// step 2: delete the existing '.bundlemaker/db4o.store' file
-		File file = new File(FILE_NAME);
-		if (file.exists()) {
-			Assert.assertTrue(file.delete());
-		}
+    // step 2: delete the existing '.bundlemaker/db4o.store' file
+    File file = new File(FILE_NAME);
+    if (file.exists()) {
+      Assert.assertTrue(file.delete());
+    }
 
-		Assert.assertNotNull(store.getResources());
+    Assert.assertNotNull(store.getResources());
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
 
-		ResourceCache cache = new ResourceCache(store);
-		createTestDatabase(50000, 30, cache);
+    ResourceCache cache = new ResourceCache(store);
+    createTestDatabase(50000, 30, cache);
 
-		stopWatch.stop();
+    stopWatch.stop();
 
-		System.out.println("Time: " + stopWatch.getElapsedTime());
-		System.out.println("Size: " + new File(FILE_NAME).length() / 1024);
+    System.out.println("Time: " + stopWatch.getElapsedTime());
+    System.out.println("Size: " + new File(FILE_NAME).length() / 1024);
 
-		// store.dispose();
-		//
-		// store = new PersistentDependencyStoreImpl(
-		// Activator.getDb4oService(), FILE_NAME);
-		//
-		// store.init();
+    // store.dispose();
+    //
+    // store = new PersistentDependencyStoreImpl(
+    // Activator.getDb4oService(), FILE_NAME);
+    //
+    // store.init();
 
-		List<Resource> resources = store.getResources();
+    List<Resource> resources = store.getResources();
 
-		Assert.assertEquals(50000, resources.size());
-		for (Resource resource : resources) {
-			Assert.assertFalse(resource.getReferences().isEmpty());
-			Assert.assertEquals(30, resource.getReferences().size());
-		}
+    Assert.assertEquals(50000, resources.size());
+    for (Resource resource : resources) {
+      Assert.assertFalse(resource.getReferences().isEmpty());
+      Assert.assertEquals(30, resource.getReferences().size());
+    }
 
-		// List<Resource> result = _objectContainer.query(Resource.class);
-		//
-		// stopWatch = new StopWatch();
-		// stopWatch.start();
-		//
-		// for (Resource myResource : result) {
-		// myResource.getPath();
-		// }
-		//
-		// stopWatch.stop();
-		//
-		// System.out.println("Time: " + stopWatch.getElapsedTime());
-		// System.out.println("Size: " + new File(FILE_NAME).length() / 1024);
-		//
-		// for (Resource myResource : result) {
-		// Assert.assertNotNull(myResource.getRoot());
-		// }
-	}
+    // List<Resource> result = _objectContainer.query(Resource.class);
+    //
+    // stopWatch = new StopWatch();
+    // stopWatch.start();
+    //
+    // for (Resource myResource : result) {
+    // myResource.getPath();
+    // }
+    //
+    // stopWatch.stop();
+    //
+    // System.out.println("Time: " + stopWatch.getElapsedTime());
+    // System.out.println("Size: " + new File(FILE_NAME).length() / 1024);
+    //
+    // for (Resource myResource : result) {
+    // Assert.assertNotNull(myResource.getRoot());
+    // }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceCount
-	 * @param referenceCount
-	 * @param store
-	 * @throws CoreException
-	 */
-	private void createTestDatabase(int resourceCount, int referenceCount,
-			ResourceCache cache) throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceCount
+   * @param referenceCount
+   * @param store
+   * @throws CoreException
+   */
+  private void createTestDatabase(int resourceCount, int referenceCount, ResourceCache cache) throws CoreException {
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
 
-		System.out.println("Creating content...");
+    System.out.println("Creating content...");
 
-		for (int i = 0; i < resourceCount; i++) {
+    for (int i = 0; i < resourceCount; i++) {
 
-			IModifiableResource resource = cache
-					.getOrCreateResource(new ResourceKey(
-							"0000001",
-							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/KJKJKJ",
-							"aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/"
-									+ i));
+      IModifiableResource resource = cache.getOrCreateResource(new ResourceKey("0000001",
+          "aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/KJKJKJ",
+          "aksjdhkajshdkajshdkajs/kajshdkjashd/kajhsdkajshd/" + i));
 
-			// Resource resource = new Resource("", "", "" + i);
+      // Resource resource = new Resource("", "", "" + i);
 
-			for (int j = 0; j < referenceCount; j++) {
+      for (int j = 0; j < referenceCount; j++) {
 
-				resource.recordReference("referencedElement" + j,
-						new ReferenceAttributes(ReferenceType.TYPE_REFERENCE,
-								true, true, false, false, false, false, false));
-			}
+        resource.recordReference("referencedElement" + j, new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, true,
+            true, false, false, false, false, false));
+      }
 
-			// flyweight
+      // flyweight
 
-		}
+    }
 
-		System.out.println("Content done: " + stopWatch.getElapsedTime());
+    System.out.println("Content done: " + stopWatch.getElapsedTime());
 
-		cache.commit(new ProgressMonitor());
+    cache.commit(new ProgressMonitor());
 
-		System.out.println("Cache commit: " + stopWatch.getElapsedTime());
-	}
+    System.out.println("Cache commit: " + stopWatch.getElapsedTime());
+  }
 }

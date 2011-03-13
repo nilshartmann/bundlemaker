@@ -22,110 +22,101 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class ModuleExporterUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceStandins
-	 * @return
-	 */
-	public static boolean requiresRepackaging(IResourceModule resourceModule,
-			ContentType contentType) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceStandins
+   * @return
+   */
+  public static boolean requiresRepackaging(IResourceModule resourceModule, ContentType contentType) {
 
-		Assert.isNotNull(resourceModule,
-				"Parameter 'resourceModule' has to be set!");
-		Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
+    Assert.isNotNull(resourceModule, "Parameter 'resourceModule' has to be set!");
+    Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
 
-		// step 1: requires repackaging if contained containers not empty
-		if (!resourceModule.getContainedResourceContainers().isEmpty()) {
-			return true;
-		}
+    // step 1: requires repackaging if contained containers not empty
+    if (!resourceModule.getContainedResourceContainers().isEmpty()) {
+      return true;
+    }
 
-		// step 2: get the root file (or return true)
-		return requiresRepackaging(resourceModule.getSelfResourceContainer(),
-				contentType);
-	}
+    // step 2: get the root file (or return true)
+    return requiresRepackaging(resourceModule.getSelfResourceContainer(), contentType);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceContainer
-	 * @param contentType
-	 * @return
-	 */
-	public static boolean requiresRepackaging(
-			IResourceContainer resourceContainer, ContentType contentType) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceContainer
+   * @param contentType
+   * @return
+   */
+  public static boolean requiresRepackaging(IResourceContainer resourceContainer, ContentType contentType) {
 
-		Assert.isNotNull(resourceContainer,
-				"Parameter 'resourceContainer' has to be set!");
-		Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
+    Assert.isNotNull(resourceContainer, "Parameter 'resourceContainer' has to be set!");
+    Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
 
-		// step 2: get the root file (or return true)
-		String root = null;
-		for (IResource resourceStandin : resourceContainer
-				.getResources(contentType)) {
-			if (root == null) {
-				root = resourceStandin.getRoot();
-			} else if (!root.equals(resourceStandin.getRoot())) {
-				return true;
-			}
-		}
+    // step 2: get the root file (or return true)
+    String root = null;
+    for (IResource resourceStandin : resourceContainer.getResources(contentType)) {
+      if (root == null) {
+        root = resourceStandin.getRoot();
+      } else if (!root.equals(resourceStandin.getRoot())) {
+        return true;
+      }
+    }
 
-		// TODO: root == null -> no content
+    // TODO: root == null -> no content
 
-		// step 3: check the content
-		try {
+    // step 3: check the content
+    try {
 
-			// get all children
-			List<String> content = FileUtils.getAllChildren(new File(root));
+      // get all children
+      List<String> content = FileUtils.getAllChildren(new File(root));
 
-			// get resources count
-			if (resourceContainer.getResources(contentType).size() != content
-					.size()) {
-				return true;
-			}
+      // get resources count
+      if (resourceContainer.getResources(contentType).size() != content.size()) {
+        return true;
+      }
 
-			//
-			for (String entry : content) {
-				if (resourceContainer.getResource(entry, contentType) == null) {
-					return true;
-				}
-			}
+      //
+      for (String entry : content) {
+        if (resourceContainer.getResource(entry, contentType) == null) {
+          return true;
+        }
+      }
 
-		} catch (CoreException e) {
-			return true;
-		}
+    } catch (CoreException e) {
+      return true;
+    }
 
-		// step 4: finally return false
-		return false;
-	}
+    // step 4: finally return false
+    return false;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceModule
-	 * @return
-	 * @throws IOException
-	 */
-	public static File getRootFile(IResourceModule resourceModule,
-			ContentType contentType) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceModule
+   * @return
+   * @throws IOException
+   */
+  public static File getRootFile(IResourceModule resourceModule, ContentType contentType) {
 
-		//
-		Assert.isNotNull(resourceModule);
-		Assert.isNotNull(contentType);
+    //
+    Assert.isNotNull(resourceModule);
+    Assert.isNotNull(contentType);
 
-		//
-		if (ModuleExporterUtils.requiresRepackaging(resourceModule, contentType)) {
-			return null;
-		}
+    //
+    if (ModuleExporterUtils.requiresRepackaging(resourceModule, contentType)) {
+      return null;
+    }
 
-		// get resource standin
-		IResource resourceStandin = resourceModule.getResources(
-				contentType).toArray(new IResource[0])[0];
+    // get resource standin
+    IResource resourceStandin = resourceModule.getResources(contentType).toArray(new IResource[0])[0];
 
-		// return the root
-		return new File(resourceStandin.getRoot());
-	}
+    // return the root
+    return new File(resourceStandin.getRoot());
+  }
 }

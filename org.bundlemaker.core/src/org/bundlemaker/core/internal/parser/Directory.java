@@ -17,193 +17,192 @@ import org.eclipse.core.runtime.IPath;
  */
 public class Directory implements IDirectory {
 
-	/** - */
-	private IFileBasedContent _fileBasedContent;
+  /** - */
+  private IFileBasedContent        _fileBasedContent;
 
-	/** the package path (e.g. 'de/example/xy') */
-	private IPath _path;
+  /** the package path (e.g. 'de/example/xy') */
+  private IPath                    _path;
 
-	/** the binary content */
-	private List<IDirectoryFragment> _binaryDirectoryFragments;
+  /** the binary content */
+  private List<IDirectoryFragment> _binaryDirectoryFragments;
 
-	/** the source content */
-	private List<IDirectoryFragment> _sourceDirectoryFragments;
+  /** the source content */
+  private List<IDirectoryFragment> _sourceDirectoryFragments;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param projectContent
-	 * @param path
-	 * @param binaryContent
-	 * @param sourceContent
-	 */
-	public Directory(IFileBasedContent projectContent, IPath path,
-			IDirectoryFragment binaryContent, IDirectoryFragment sourceContent) {
-		Assert.isNotNull(projectContent);
-		Assert.isNotNull(path);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param projectContent
+   * @param path
+   * @param binaryContent
+   * @param sourceContent
+   */
+  public Directory(IFileBasedContent projectContent, IPath path, IDirectoryFragment binaryContent,
+      IDirectoryFragment sourceContent) {
+    Assert.isNotNull(projectContent);
+    Assert.isNotNull(path);
 
-		//
-		_fileBasedContent = projectContent;
+    //
+    _fileBasedContent = projectContent;
 
-		// the package path
-		_path = path;
+    // the package path
+    _path = path;
 
-		// create the content lists
-		_binaryDirectoryFragments = new ArrayList<IDirectoryFragment>();
-		_sourceDirectoryFragments = new ArrayList<IDirectoryFragment>();
+    // create the content lists
+    _binaryDirectoryFragments = new ArrayList<IDirectoryFragment>();
+    _sourceDirectoryFragments = new ArrayList<IDirectoryFragment>();
 
-		if (binaryContent != null) {
-			_binaryDirectoryFragments.add(binaryContent);
-		}
+    if (binaryContent != null) {
+      _binaryDirectoryFragments.add(binaryContent);
+    }
 
-		if (sourceContent != null) {
-			_sourceDirectoryFragments.add(sourceContent);
-		}
-	}
+    if (sourceContent != null) {
+      _sourceDirectoryFragments.add(sourceContent);
+    }
+  }
 
-	@Override
-	public IFileBasedContent getFileBasedContent() {
-		return _fileBasedContent;
-	}
+  @Override
+  public IFileBasedContent getFileBasedContent() {
+    return _fileBasedContent;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public IPath getDirectoryName() {
-		return _path;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public IPath getDirectoryName() {
+    return _path;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<IDirectoryFragment> getBinaryDirectoryFragments() {
-		return _binaryDirectoryFragments;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IDirectoryFragment> getBinaryDirectoryFragments() {
+    return _binaryDirectoryFragments;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<IDirectoryFragment> getSourceDirectoryFragments() {
-		return _sourceDirectoryFragments;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IDirectoryFragment> getSourceDirectoryFragments() {
+    return _sourceDirectoryFragments;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasSourceContent() {
-		return !_sourceDirectoryFragments.isEmpty();
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasSourceContent() {
+    return !_sourceDirectoryFragments.isEmpty();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getBinaryContentCount() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getBinaryContentCount() {
 
-		int result = 0;
+    int result = 0;
 
-		for (IDirectoryFragment directoryContent : _binaryDirectoryFragments) {
-			result = result + directoryContent.getResourceCount();
-		}
+    for (IDirectoryFragment directoryContent : _binaryDirectoryFragments) {
+      result = result + directoryContent.getResourceCount();
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getSourceContentCount() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getSourceContentCount() {
 
-		int result = 0;
+    int result = 0;
 
-		for (IDirectoryFragment directoryContent : _sourceDirectoryFragments) {
-			result = result + directoryContent.getResourceCount();
-		}
+    for (IDirectoryFragment directoryContent : _sourceDirectoryFragments) {
+      result = result + directoryContent.getResourceCount();
+    }
 
-		return result;
-	}
+    return result;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param binaryContent
-	 */
-	void addBinaryContent(IDirectoryFragment binaryContent) {
-		Assert.isNotNull(binaryContent);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param binaryContent
+   */
+  void addBinaryContent(IDirectoryFragment binaryContent) {
+    Assert.isNotNull(binaryContent);
 
-		_binaryDirectoryFragments.add(binaryContent);
+    _binaryDirectoryFragments.add(binaryContent);
 
-		((AbstractDirectoryFragment) binaryContent).setDirectory(this);
-	}
+    ((AbstractDirectoryFragment) binaryContent).setDirectory(this);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param sourceContent
-	 */
-	void addSourceContent(IDirectoryFragment sourceContent) {
-		Assert.isNotNull(sourceContent);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param sourceContent
+   */
+  void addSourceContent(IDirectoryFragment sourceContent) {
+    Assert.isNotNull(sourceContent);
 
-		_sourceDirectoryFragments.add(sourceContent);
+    _sourceDirectoryFragments.add(sourceContent);
 
-		((AbstractDirectoryFragment) sourceContent).setDirectory(this);
-	}
+    ((AbstractDirectoryFragment) sourceContent).setDirectory(this);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	boolean isValid() {
-		return !_binaryDirectoryFragments.isEmpty();
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isValid() {
+    return !_binaryDirectoryFragments.isEmpty();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((_path == null) ? 0 : _path.hashCode());
-		return result;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_path == null) ? 0 : _path.hashCode());
+    return result;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Directory other = (Directory) obj;
-		if (_path == null) {
-			if (other._path != null)
-				return false;
-		} else if (!_path.equals(other._path))
-			return false;
-		return true;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Directory other = (Directory) obj;
+    if (_path == null) {
+      if (other._path != null)
+        return false;
+    } else if (!_path.equals(other._path))
+      return false;
+    return true;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return "Package [_packageName=" + _path + ", _binaryContent="
-				+ _binaryDirectoryFragments + ", _sourceContent="
-				+ _sourceDirectoryFragments + "]";
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+    return "Package [_packageName=" + _path + ", _binaryContent=" + _binaryDirectoryFragments + ", _sourceContent="
+        + _sourceDirectoryFragments + "]";
+  }
 }

@@ -7,12 +7,11 @@ import org.junit.Test;
 
 public class SpringDbInspector {
 
-	@Test
-	public void test() throws CoreException {
+  @Test
+  public void test() throws CoreException {
 
-		DbInspector dbInspector = new DbInspector();
-		dbInspector.testDatabase(BundleMakerCore
-				.getOrCreateSimpleProjectWithBundleMakerNature("spring"));
+    DbInspector dbInspector = new DbInspector();
+    dbInspector.testDatabase(BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature("spring"));
 
-	}
+  }
 }

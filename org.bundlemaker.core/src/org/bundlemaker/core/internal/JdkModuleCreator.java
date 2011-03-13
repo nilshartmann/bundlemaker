@@ -16,83 +16,76 @@ import org.eclipse.jdt.launching.LibraryLocation;
 
 public class JdkModuleCreator {
 
-	/**
-	 * @param bundleMakerProject
-	 * @return
-	 * @throws CoreException
-	 */
-	public static List<TypeModule> getJdkModules() throws CoreException {
+  /**
+   * @param bundleMakerProject
+   * @return
+   * @throws CoreException
+   */
+  public static List<TypeModule> getJdkModules() throws CoreException {
 
-		// the vmInstalls
-		List<IVMInstall> vmInstalls = new ArrayList<IVMInstall>();
+    // the vmInstalls
+    List<IVMInstall> vmInstalls = new ArrayList<IVMInstall>();
 
-		vmInstalls.add(JavaRuntime.getDefaultVMInstall());
+    vmInstalls.add(JavaRuntime.getDefaultVMInstall());
 
-		// create the result set
-		List<TypeModule> result = new ArrayList<TypeModule>();
+    // create the result set
+    List<TypeModule> result = new ArrayList<TypeModule>();
 
-		try {
-			// create virtual modules for the vms
-			for (IVMInstall vmInstall : vmInstalls) {
-				TypeModule module = createModuleForVMInstall(vmInstall);
-				result.add(module);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    try {
+      // create virtual modules for the vms
+      for (IVMInstall vmInstall : vmInstalls) {
+        TypeModule module = createModuleForVMInstall(vmInstall);
+        result.add(module);
+      }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
-		// return the result
-		return result;
-	}
+    // return the result
+    return result;
+  }
 
-	/**
-	 * @param vmInstall
-	 * @return
-	 * @throws CoreException
-	 * @throws IOException
-	 */
-	private static TypeModule createModuleForVMInstall(IVMInstall vmInstall)
-			throws CoreException, IOException {
+  /**
+   * @param vmInstall
+   * @return
+   * @throws CoreException
+   * @throws IOException
+   */
+  private static TypeModule createModuleForVMInstall(IVMInstall vmInstall) throws CoreException, IOException {
 
-		TypeModule virtualModule = new TypeModule(new ModuleIdentifier(
-				vmInstall.getName(), vmInstall.getName()));
+    TypeModule virtualModule = new TypeModule(new ModuleIdentifier(vmInstall.getName(), vmInstall.getName()));
 
-		for (LibraryLocation libraryLocation : JavaRuntime
-				.getLibraryLocations(vmInstall)) {
+    for (LibraryLocation libraryLocation : JavaRuntime.getLibraryLocations(vmInstall)) {
 
-			List<String> children = FileUtils.getAllChildren(libraryLocation
-					.getSystemLibraryPath().toFile());
+      List<String> children = FileUtils.getAllChildren(libraryLocation.getSystemLibraryPath().toFile());
 
-			for (String child : children) {
+      for (String child : children) {
 
-				// TODO: Parsing!! ITYPE
-				if (child.endsWith(".class")) {
-					String typeName = child.substring(0, child.length()
-							- ".class".length());
+        // TODO: Parsing!! ITYPE
+        if (child.endsWith(".class")) {
+          String typeName = child.substring(0, child.length() - ".class".length());
 
-					// if (packageName.indexOf('.') != -1) {
-					//
-					// packageName = packageName.substring(0,
-					// packageName.lastIndexOf('.'));
+          // if (packageName.indexOf('.') != -1) {
+          //
+          // packageName = packageName.substring(0,
+          // packageName.lastIndexOf('.'));
 
-					typeName = typeName.replace('/', '.');
-					typeName = typeName.replace('\\', '.');
+          typeName = typeName.replace('/', '.');
+          typeName = typeName.replace('\\', '.');
 
-					// TODO
-					Type type = new Type(typeName, TypeEnum.CLASS);
-					//
-					// type.setTypeModule(virtualModule);
+          // TODO
+          Type type = new Type(typeName, TypeEnum.CLASS);
+          //
+          // type.setTypeModule(virtualModule);
 
-					virtualModule.getModifiableSelfResourceContainer()
-							.getModifiableContainedTypesMap()
-							.put(typeName, type);
-					// }
-				}
-			}
+          virtualModule.getModifiableSelfResourceContainer().getModifiableContainedTypesMap().put(typeName, type);
+          // }
+        }
+      }
 
-		}
+    }
 
-		return virtualModule;
-	}
+    return virtualModule;
+  }
 }

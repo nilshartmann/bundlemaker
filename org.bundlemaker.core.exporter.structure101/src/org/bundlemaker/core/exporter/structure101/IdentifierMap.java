@@ -8,108 +8,105 @@ import org.eclipse.core.runtime.Assert;
 
 public class IdentifierMap {
 
-	/** - */
-	private long _uniqueIdCounter = 0;
+  /** - */
+  private long                _uniqueIdCounter = 0;
 
-	/** - */
-	private Map<String, String> _idMap;
+  /** - */
+  private Map<String, String> _idMap;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link IdentifierMap}.
-	 * </p>
-	 */
-	public IdentifierMap() {
+  /**
+   * <p>
+   * Creates a new instance of type {@link IdentifierMap}.
+   * </p>
+   */
+  public IdentifierMap() {
 
-		// create lists and maps
-		_idMap = new HashMap<String, String>();
+    // create lists and maps
+    _idMap = new HashMap<String, String>();
 
-		// reset counter
-		_uniqueIdCounter = 0;
-	}
+    // reset counter
+    _uniqueIdCounter = 0;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @return
-	 */
-	public String getModuleId(IModule typeModule) {
-		return getShortenId(getModuleName(typeModule));
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeModule
+   * @return
+   */
+  public String getModuleId(IModule typeModule) {
+    return getShortenId(getModuleName(typeModule));
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @param packageName
-	 * @return
-	 */
-	public String getPackageId(IModule typeModule, String packageName) {
-		return getShortenId(getModuleName(typeModule) + "_" + packageName);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeModule
+   * @param packageName
+   * @return
+   */
+  public String getPackageId(IModule typeModule, String packageName) {
+    return getShortenId(getModuleName(typeModule) + "_" + packageName);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @param fullyQualifiedType
-	 * @return
-	 */
-	public String getResourceId(IModule typeModule, String resourceName) {
-		return getShortenId(getModuleName(typeModule) + "_"
-				+ resourceName);
-	}
-	
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @param fullyQualifiedType
-	 * @return
-	 */
-	public String getClassId(IModule typeModule, String fullyQualifiedType) {
-		
-		Assert.isNotNull(typeModule);
-		Assert.isNotNull(fullyQualifiedType);
-		
-		return getShortenId(getModuleName(typeModule) + "_"
-				+ fullyQualifiedType);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeModule
+   * @param fullyQualifiedType
+   * @return
+   */
+  public String getResourceId(IModule typeModule, String resourceName) {
+    return getShortenId(getModuleName(typeModule) + "_" + resourceName);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param longID
-	 * @return
-	 */
-	private String getShortenId(String longID) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeModule
+   * @param fullyQualifiedType
+   * @return
+   */
+  public String getClassId(IModule typeModule, String fullyQualifiedType) {
 
-		//
-		if (!_idMap.containsKey(longID)) {
-			_idMap.put(longID, Long.toString(_uniqueIdCounter++));
-		}
+    Assert.isNotNull(typeModule);
+    Assert.isNotNull(fullyQualifiedType);
 
-		// get the id
-		return _idMap.get(longID);
-	}
+    return getShortenId(getModuleName(typeModule) + "_" + fullyQualifiedType);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeModule
-	 * @return
-	 */
-	private String getModuleName(IModule typeModule) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param longID
+   * @return
+   */
+  private String getShortenId(String longID) {
 
-		// get the id
-		return typeModule.getModuleIdentifier().getName() + "_"
-				+ typeModule.getModuleIdentifier().getVersion();
-	}
+    //
+    if (!_idMap.containsKey(longID)) {
+      _idMap.put(longID, Long.toString(_uniqueIdCounter++));
+    }
+
+    // get the id
+    return _idMap.get(longID);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeModule
+   * @return
+   */
+  private String getModuleName(IModule typeModule) {
+
+    // get the id
+    return typeModule.getModuleIdentifier().getName() + "_" + typeModule.getModuleIdentifier().getVersion();
+  }
 }

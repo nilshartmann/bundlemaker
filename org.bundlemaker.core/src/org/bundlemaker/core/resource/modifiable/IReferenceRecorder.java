@@ -11,13 +11,12 @@ package org.bundlemaker.core.resource.modifiable;
  */
 public interface IReferenceRecorder {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @param referenceAttributes
-	 */
-	public void recordReference(String fullyQualifiedName,
-			ReferenceAttributes referenceAttributes);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @param referenceAttributes
+   */
+  public void recordReference(String fullyQualifiedName, ReferenceAttributes referenceAttributes);
 }

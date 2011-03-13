@@ -8,19 +8,19 @@ package org.bundlemaker.core.modules;
  */
 public interface IModuleIdentifier {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	String getName();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  String getName();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	String getVersion();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  String getVersion();
 }

@@ -19,112 +19,101 @@ import org.eclipse.core.runtime.Status;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DeleteAssociatedProjectChangeListener implements
-		IResourceChangeListener {
+public class DeleteAssociatedProjectChangeListener implements IResourceChangeListener {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void resourceChanged(IResourceChangeEvent event) {
+  /**
+   * {@inheritDoc}
+   */
+  public void resourceChanged(IResourceChangeEvent event) {
 
-		// get the resource
-		IResource resource = event.getResource();
+    // get the resource
+    IResource resource = event.getResource();
 
-		switch (event.getType()) {
+    switch (event.getType()) {
 
-		case IResourceChangeEvent.PRE_CLOSE:
+    case IResourceChangeEvent.PRE_CLOSE:
 
-			// do nothing
-			break;
+      // do nothing
+      break;
 
-		case IResourceChangeEvent.PRE_DELETE:
+    case IResourceChangeEvent.PRE_DELETE:
 
-			// delete project
-			deleteAssociatedProjectIfNecessary(resource);
-			break;
+      // delete project
+      deleteAssociatedProjectIfNecessary(resource);
+      break;
 
-		case IResourceChangeEvent.POST_CHANGE:
+    case IResourceChangeEvent.POST_CHANGE:
 
-			// do nothing
-			break;
+      // do nothing
+      break;
 
-		case IResourceChangeEvent.PRE_BUILD:
+    case IResourceChangeEvent.PRE_BUILD:
 
-			// do nothing
-			break;
+      // do nothing
+      break;
 
-		case IResourceChangeEvent.POST_BUILD:
+    case IResourceChangeEvent.POST_BUILD:
 
-			// do nothing
-			break;
-		}
-	}
+      // do nothing
+      break;
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resource
-	 */
-	private void deleteAssociatedProjectIfNecessary(final IResource resource) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   */
+  private void deleteAssociatedProjectIfNecessary(final IResource resource) {
 
-		try {
+    try {
 
-			if (resource instanceof IProject
-					&& ((IProject) resource)
-							.hasNature(BundleMakerCore.NATURE_ID)) {
+      if (resource instanceof IProject && ((IProject) resource).hasNature(BundleMakerCore.NATURE_ID)) {
 
-				// create a new workspace job
-				WorkspaceJob workspaceJob = new WorkspaceJob("delete") {
+        // create a new workspace job
+        WorkspaceJob workspaceJob = new WorkspaceJob("delete") {
 
-					@Override
-					public IStatus runInWorkspace(IProgressMonitor monitor)
-							throws CoreException {
+          @Override
+          public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
-						try {
+            try {
 
-							IBundleMakerProject bundleMakerProject = BundleMakerCore
-									.getBundleMakerProject((IProject) resource,
-											null);
+              IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject((IProject) resource, null);
 
-							if (JdtProjectHelper
-									.hasAssociatedJavaProject(bundleMakerProject)) {
+              if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
 
-								// get the associated java project
-								IProject associatedJavaProject = JdtProjectHelper
-										.getAssociatedJavaProjectAsProject(bundleMakerProject);
+                // get the associated java project
+                IProject associatedJavaProject = JdtProjectHelper.getAssociatedJavaProjectAsProject(bundleMakerProject);
 
-								if (!associatedJavaProject.isOpen()) {
+                if (!associatedJavaProject.isOpen()) {
 
-									// simply delete the project
-									associatedJavaProject.open(null);
-								}
+                  // simply delete the project
+                  associatedJavaProject.open(null);
+                }
 
-								associatedJavaProject.delete(true, null);
+                associatedJavaProject.delete(true, null);
 
-							}
+              }
 
-							//
-							return new Status(IStatus.OK,
-									CoreParserJdt.BUNDLE_ID, null);
+              //
+              return new Status(IStatus.OK, CoreParserJdt.BUNDLE_ID, null);
 
-						} catch (Exception e) {
+            } catch (Exception e) {
 
-							// TODO
-							return new Status(IStatus.ERROR,
-									CoreParserJdt.BUNDLE_ID,
-									"Could not delete project.");
-						}
+              // TODO
+              return new Status(IStatus.ERROR, CoreParserJdt.BUNDLE_ID, "Could not delete project.");
+            }
 
-					}
-				};
+          }
+        };
 
-				// schedule the job
-				workspaceJob.schedule();
-			}
+        // schedule the job
+        workspaceJob.schedule();
+      }
 
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
+  }
 }

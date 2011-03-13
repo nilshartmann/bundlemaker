@@ -17,79 +17,64 @@ import org.junit.Test;
  */
 public class ReferenceTest {
 
-	/**
-	 * <p>
-	 * </p>
-	 */
-	@Test
-	public void testCreateOrGetReference() {
+  /**
+   * <p>
+   * </p>
+   */
+  @Test
+  public void testCreateOrGetReference() {
 
-		int resourcesCount = 50000;
-		int referencesCount = 30;
-		int cacheSize = resourcesCount * referencesCount;
+    int resourcesCount = 50000;
+    int referencesCount = 30;
+    int cacheSize = resourcesCount * referencesCount;
 
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
 
-		//
-		ResourceCache resourceCache = new ResourceCache(
-				new DummyDependencyStore());
+    //
+    ResourceCache resourceCache = new ResourceCache(new DummyDependencyStore());
 
-		for (int i = 0; i < resourcesCount; i++) {
+    for (int i = 0; i < resourcesCount; i++) {
 
-			Resource resource = new Resource("contentId", "root", "path",
-					resourceCache);
+      Resource resource = new Resource("contentId", "root", "path", resourceCache);
 
-			for (int j = 0; j < referencesCount; j++) {
-				resource.recordReference("name" + i + "#" + j,
-						new ReferenceAttributes(
-								ReferenceType.PACKAGE_REFERENCE, true, true,
-								true, false, false, false, false));
-			}
+      for (int j = 0; j < referencesCount; j++) {
+        resource.recordReference("name" + i + "#" + j, new ReferenceAttributes(ReferenceType.PACKAGE_REFERENCE, true,
+            true, true, false, false, false, false));
+      }
 
-			Assert.assertEquals(referencesCount, resource.getReferences()
-					.size());
-		}
+      Assert.assertEquals(referencesCount, resource.getReferences().size());
+    }
 
-		stopWatch.stop();
+    stopWatch.stop();
 
-		// Assert.assertTrue(
-		// String.format("Elapsed time '%s'.", stopWatch.getElapsedTime()),
-		// stopWatch.getElapsedTime() < 3000);
-		Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache()
-				.getReferenceCache().size());
-		stopWatch = new StopWatch();
-		stopWatch.start();
-		for (int i = 0; i < 10000; i++) {
+    // Assert.assertTrue(
+    // String.format("Elapsed time '%s'.", stopWatch.getElapsedTime()),
+    // stopWatch.getElapsedTime() < 3000);
+    Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache().getReferenceCache().size());
+    stopWatch = new StopWatch();
+    stopWatch.start();
+    for (int i = 0; i < 10000; i++) {
 
-			Reference reference = resourceCache.getFlyWeightCache()
-					.getReference(
-							"name" + i + "#1",
-							new ReferenceAttributes(
-									ReferenceType.PACKAGE_REFERENCE, true,
-									true, true, false, false, false, false));
+      Reference reference = resourceCache.getFlyWeightCache().getReference("name" + i + "#1",
+          new ReferenceAttributes(ReferenceType.PACKAGE_REFERENCE, true, true, true, false, false, false, false));
 
-			Assert.assertNotNull(reference);
-		}
-		stopWatch.stop();
-		System.out.println("Existing ones " + stopWatch.getElapsedTime());
+      Assert.assertNotNull(reference);
+    }
+    stopWatch.stop();
+    System.out.println("Existing ones " + stopWatch.getElapsedTime());
 
-		Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache()
-				.getReferenceCache().size());
-		stopWatch = new StopWatch();
-		stopWatch.start();
-		for (int i = 0; i < 10000; i++) {
+    Assert.assertEquals(cacheSize, resourceCache.getFlyWeightCache().getReferenceCache().size());
+    stopWatch = new StopWatch();
+    stopWatch.start();
+    for (int i = 0; i < 10000; i++) {
 
-			Reference reference = resourceCache.getFlyWeightCache()
-					.getReference(
-							"name" + i + "#40",
-							new ReferenceAttributes(
-									ReferenceType.PACKAGE_REFERENCE, true,
-									true, true, false, false, false, false));
+      Reference reference = resourceCache.getFlyWeightCache().getReference("name" + i + "#40",
+          new ReferenceAttributes(ReferenceType.PACKAGE_REFERENCE, true, true, true, false, false, false, false));
 
-			Assert.assertNotNull(reference);
-		}
-		stopWatch.stop();
-		System.out.println("Non existing ones " + stopWatch.getElapsedTime());
-	}
+      Assert.assertNotNull(reference);
+    }
+    stopWatch.stop();
+    System.out.println("Non existing ones " + stopWatch.getElapsedTime());
+  }
 }

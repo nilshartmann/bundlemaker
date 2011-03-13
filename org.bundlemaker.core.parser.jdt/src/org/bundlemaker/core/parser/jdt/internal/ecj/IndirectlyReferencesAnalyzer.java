@@ -25,103 +25,96 @@ import org.eclipse.jdt.internal.core.builder.NameEnvironment;
 @SuppressWarnings("restriction")
 public class IndirectlyReferencesAnalyzer {
 
-	/** - **/
-	private IJavaProject _javaProject;
+  /** - **/
+  private IJavaProject         _javaProject;
 
-	/** - **/
-	private Compiler _compiler;
+  /** - **/
+  private Compiler             _compiler;
 
-	/** - **/
-	private NameEnvironmentProxy _environment;
+  /** - **/
+  private NameEnvironmentProxy _environment;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param javaProject
-	 */
-	public IndirectlyReferencesAnalyzer(IJavaProject javaProject) {
-		Assert.isNotNull(javaProject);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param javaProject
+   */
+  public IndirectlyReferencesAnalyzer(IJavaProject javaProject) {
+    Assert.isNotNull(javaProject);
 
-		// the java project
-		_javaProject = javaProject;
+    // the java project
+    _javaProject = javaProject;
 
-		// the name Environment
-		_environment = new NameEnvironmentProxy(new NameEnvironment(
-				_javaProject));
+    // the name Environment
+    _environment = new NameEnvironmentProxy(new NameEnvironment(_javaProject));
 
-		// the error handling policy
-		IErrorHandlingPolicy errorHandlingPolicy = new IErrorHandlingPolicy() {
-			public boolean proceedOnErrors() {
-				return false; // stop if there are some errors
-			}
+    // the error handling policy
+    IErrorHandlingPolicy errorHandlingPolicy = new IErrorHandlingPolicy() {
+      public boolean proceedOnErrors() {
+        return false; // stop if there are some errors
+      }
 
-			public boolean stopOnFirstError() {
-				return false;
-			}
-		};
+      public boolean stopOnFirstError() {
+        return false;
+      }
+    };
 
-		// the compiler options
-		CompilerOptions compilerOptions = new CompilerOptions(
-				_javaProject.getOptions(true));
+    // the compiler options
+    CompilerOptions compilerOptions = new CompilerOptions(_javaProject.getOptions(true));
 
-		// TODO: make configurable...
-		compilerOptions.docCommentSupport = false;
+    // TODO: make configurable...
+    compilerOptions.docCommentSupport = false;
 
-		// the compiler requestor
-		ICompilerRequestor compilerRequestor = new ICompilerRequestor() {
+    // the compiler requestor
+    ICompilerRequestor compilerRequestor = new ICompilerRequestor() {
 
-			public void acceptResult(CompilationResult result) {
-				if (result.hasErrors()) {
-					// TODO...
-					// System.err.println(result);
-				}
-			}
-		};
+      public void acceptResult(CompilationResult result) {
+        if (result.hasErrors()) {
+          // TODO...
+          // System.err.println(result);
+        }
+      }
+    };
 
-		// the problem factory
-		IProblemFactory problemFactory = new DefaultProblemFactory();
+    // the problem factory
+    IProblemFactory problemFactory = new DefaultProblemFactory();
 
-		// create the compiler
-		_compiler = new Compiler(_environment, errorHandlingPolicy,
-				compilerOptions, compilerRequestor, problemFactory);
-	}
+    // create the compiler
+    _compiler = new Compiler(_environment, errorHandlingPolicy, compilerOptions, compilerRequestor, problemFactory);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modifiableResource
-	 * @return
-	 * @throws IOException
-	 */
-	public Set<String> getAllReferencedTypes(
-			IModifiableResource modifiableResource) throws IOException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modifiableResource
+   * @return
+   * @throws IOException
+   */
+  public Set<String> getAllReferencedTypes(IModifiableResource modifiableResource) throws IOException {
 
-		//
-		return getAllReferencedTypes(modifiableResource, new String(
-				modifiableResource.getContent()).toCharArray());
-	}
+    //
+    return getAllReferencedTypes(modifiableResource, new String(modifiableResource.getContent()).toCharArray());
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modifiableResource
-	 * @param content
-	 * @return
-	 * @throws IOException
-	 */
-	public Set<String> getAllReferencedTypes(
-			IModifiableResource modifiableResource, char[] content)
-			throws IOException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modifiableResource
+   * @param content
+   * @return
+   * @throws IOException
+   */
+  public Set<String> getAllReferencedTypes(IModifiableResource modifiableResource, char[] content) throws IOException {
 
-		ICompilationUnit[] units = new ICompilationUnit[] { new ModifiableResourceCompilationUnit(
-				modifiableResource, content) };
-		_environment.resetRequestedTypes();
-		_compiler.compile(units);
+    ICompilationUnit[] units = new ICompilationUnit[] { new ModifiableResourceCompilationUnit(modifiableResource,
+        content) };
+    _environment.resetRequestedTypes();
+    _compiler.compile(units);
 
-		return _environment.getRequestedTypes();
-	}
+    return _environment.getRequestedTypes();
+  }
 
 }

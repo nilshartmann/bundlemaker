@@ -11,12 +11,12 @@ import org.bundlemaker.core.resource.modifiable.IModifiableResource;
  */
 public interface IResourceCache {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceKey
-	 * @return
-	 */
-	IModifiableResource getOrCreateResource(IResourceKey resourceKey);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceKey
+   * @return
+   */
+  IModifiableResource getOrCreateResource(IResourceKey resourceKey);
 }

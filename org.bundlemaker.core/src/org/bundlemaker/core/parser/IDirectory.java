@@ -16,60 +16,60 @@ import org.eclipse.core.runtime.IPath;
  */
 public interface IDirectory {
 
-	/**
-	 * <p>
-	 * Returns the {@link IFileBasedContent} that defines this directory entry.
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public IFileBasedContent getFileBasedContent();
+  /**
+   * <p>
+   * Returns the {@link IFileBasedContent} that defines this directory entry.
+   * </p>
+   * 
+   * @return
+   */
+  public IFileBasedContent getFileBasedContent();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public IPath getDirectoryName();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IPath getDirectoryName();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public List<IDirectoryFragment> getBinaryDirectoryFragments();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<IDirectoryFragment> getBinaryDirectoryFragments();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public int getBinaryContentCount();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public int getBinaryContentCount();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public boolean hasSourceContent();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean hasSourceContent();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public List<IDirectoryFragment> getSourceDirectoryFragments();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<IDirectoryFragment> getSourceDirectoryFragments();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public int getSourceContentCount();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public int getSourceContentCount();
 }

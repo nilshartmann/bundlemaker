@@ -21,75 +21,66 @@ import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceCon
  */
 public class XmlProjectDescriptionExporterUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param xmlProjectDescription
-	 * @param outputStream
-	 */
-	public static String marshal(XmlProjectDescriptionType xmlProjectDescription) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param xmlProjectDescription
+   * @param outputStream
+   */
+  public static String marshal(XmlProjectDescriptionType xmlProjectDescription) {
 
-		try {
+    try {
 
-			// the JAXBContext
-			JAXBContext jaxbContext = JAXBContext.newInstance(
-					XmlFileBasedContentType.class,
-					XmlProjectDescriptionType.class,
-					XmlResourceContentType.class);
+      // the JAXBContext
+      JAXBContext jaxbContext = JAXBContext.newInstance(XmlFileBasedContentType.class, XmlProjectDescriptionType.class,
+          XmlResourceContentType.class);
 
-			// create the marshaller
-			Marshaller marshaller = jaxbContext.createMarshaller();
+      // create the marshaller
+      Marshaller marshaller = jaxbContext.createMarshaller();
 
-			// set formatted output
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      // set formatted output
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-			//
-			StringWriter result = new StringWriter();
+      //
+      StringWriter result = new StringWriter();
 
-			//
-			marshaller
-					.marshal(
-							new ObjectFactory()
-									.createXmlProjectDescription(xmlProjectDescription),
-							result);
+      //
+      marshaller.marshal(new ObjectFactory().createXmlProjectDescription(xmlProjectDescription), result);
 
-			//
-			return result.toString();
+      //
+      return result.toString();
 
-		} catch (JAXBException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
+    } catch (JAXBException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param outputStream
-	 * @return
-	 */
-	public static XmlProjectDescriptionType unmarshal(InputStream inputStream) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param outputStream
+   * @return
+   */
+  public static XmlProjectDescriptionType unmarshal(InputStream inputStream) {
 
-		try {
+    try {
 
-			// the JAXBContext
-			JAXBContext jaxbContext = JAXBContext.newInstance(
-					XmlFileBasedContentType.class,
-					XmlProjectDescriptionType.class,
-					XmlResourceContentType.class);
+      // the JAXBContext
+      JAXBContext jaxbContext = JAXBContext.newInstance(XmlFileBasedContentType.class, XmlProjectDescriptionType.class,
+          XmlResourceContentType.class);
 
-			// create the marshaller
-			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+      // create the marshaller
+      Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 
-			//
-			JAXBElement<XmlProjectDescriptionType> root = unmarshaller
-					.unmarshal(new StreamSource(inputStream),
-							XmlProjectDescriptionType.class);
-			return root.getValue();
+      //
+      JAXBElement<XmlProjectDescriptionType> root = unmarshaller.unmarshal(new StreamSource(inputStream),
+          XmlProjectDescriptionType.class);
+      return root.getValue();
 
-		} catch (JAXBException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
+    } catch (JAXBException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
 }

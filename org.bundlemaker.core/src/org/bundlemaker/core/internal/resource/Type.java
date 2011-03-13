@@ -23,292 +23,280 @@ import org.eclipse.core.runtime.Assert;
  */
 public class Type implements IType, IModifiableType {
 
-	/** the fully qualified name */
-	private FlyWeightString _fullyQualifiedName;
+  /** the fully qualified name */
+  private FlyWeightString              _fullyQualifiedName;
 
-	/** the references set */
-	private Set<Reference> _references;
+  /** the references set */
+  private Set<Reference>               _references;
 
-	/** the type of this type (enum, class, interface, annotation) **/
-	private TypeEnum _typeEnum;
+  /** the type of this type (enum, class, interface, annotation) **/
+  private TypeEnum                     _typeEnum;
 
-	/** transient: the source resource */
-	private transient Resource _sourceResource;
+  /** transient: the source resource */
+  private transient Resource           _sourceResource;
 
-	/** transient: the binary resource */
-	private transient Resource _binaryResource;
+  /** transient: the binary resource */
+  private transient Resource           _binaryResource;
 
-	/** transient: the reference container */
-	private transient ReferenceContainer _referenceContainer;
+  /** transient: the reference container */
+  private transient ReferenceContainer _referenceContainer;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 * @param typeEnum
-	 */
-	public Type(String fullyQualifiedName, TypeEnum typeEnum) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @param typeEnum
+   */
+  public Type(String fullyQualifiedName, TypeEnum typeEnum) {
 
-		Assert.isNotNull(fullyQualifiedName);
-		Assert.isNotNull(typeEnum);
+    Assert.isNotNull(fullyQualifiedName);
+    Assert.isNotNull(typeEnum);
 
-		//
-		_fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
+    //
+    _fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
 
-		// the type of the type
-		_typeEnum = typeEnum;
-	}
+    // the type of the type
+    _typeEnum = typeEnum;
+  }
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link Type}.
-	 * </p>
-	 * 
-	 * @param fullyQualifiedName
-	 */
-	public Type(String fullyQualifiedName) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link Type}.
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   */
+  public Type(String fullyQualifiedName) {
 
-		Assert.isNotNull(fullyQualifiedName);
+    Assert.isNotNull(fullyQualifiedName);
 
-		//
-		_fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
-	}
+    //
+    _fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param flyWeightCache
-	 */
-	public Type(String fullyQualifiedName, TypeEnum typeEnum,
-			FlyWeightCache flyWeightCache) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param flyWeightCache
+   */
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, FlyWeightCache flyWeightCache) {
 
-		Assert.isNotNull(fullyQualifiedName);
-		Assert.isNotNull(typeEnum);
-		Assert.isNotNull(flyWeightCache);
+    Assert.isNotNull(fullyQualifiedName);
+    Assert.isNotNull(typeEnum);
+    Assert.isNotNull(flyWeightCache);
 
-		//
-		_fullyQualifiedName = flyWeightCache
-				.getFlyWeightString(fullyQualifiedName);
+    //
+    _fullyQualifiedName = flyWeightCache.getFlyWeightString(fullyQualifiedName);
 
-		// the type of the type
-		_typeEnum = typeEnum;
+    // the type of the type
+    _typeEnum = typeEnum;
 
-		//
-		_referenceContainer = new ReferenceContainer(flyWeightCache) {
-			@Override
-			protected Set<Reference> createReferencesSet() {
-				return references();
-			}
-		};
-	}
+    //
+    _referenceContainer = new ReferenceContainer(flyWeightCache) {
+      @Override
+      protected Set<Reference> createReferencesSet() {
+        return references();
+      }
+    };
+  }
 
-	@Override
-	public String getFullyQualifiedName() {
-		return _fullyQualifiedName.toString();
-	}
+  @Override
+  public String getFullyQualifiedName() {
+    return _fullyQualifiedName.toString();
+  }
 
-	@Override
-	public String getPackageName() {
+  @Override
+  public String getPackageName() {
 
-		//
-		String typeName = _fullyQualifiedName.toString();
+    //
+    String typeName = _fullyQualifiedName.toString();
 
-		// get index of the last '.'
-		int lastIndex = typeName.lastIndexOf('.');
+    // get index of the last '.'
+    int lastIndex = typeName.lastIndexOf('.');
 
-		//
-		return lastIndex == -1 ? "" : typeName.substring(0, lastIndex);
-	}
+    //
+    return lastIndex == -1 ? "" : typeName.substring(0, lastIndex);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String getName() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getName() {
 
-		// get the fully qualified name
-		String fullyQualifiedName = _fullyQualifiedName.toString();
+    // get the fully qualified name
+    String fullyQualifiedName = _fullyQualifiedName.toString();
 
-		// get the index
-		int index = fullyQualifiedName.lastIndexOf('.');
+    // get the index
+    int index = fullyQualifiedName.lastIndexOf('.');
 
-		// return the result
-		return index != -1 ? fullyQualifiedName.substring(index + 1)
-				: fullyQualifiedName;
-	}
+    // return the result
+    return index != -1 ? fullyQualifiedName.substring(index + 1) : fullyQualifiedName;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Set<? extends IReference> getReferences() {
-		return Collections.unmodifiableSet(references());
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<? extends IReference> getReferences() {
+    return Collections.unmodifiableSet(references());
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IReference getReference(String fullyQualifiedName) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IReference getReference(String fullyQualifiedName) {
 
-		//
-		Assert.isNotNull(fullyQualifiedName);
+    //
+    Assert.isNotNull(fullyQualifiedName);
 
-		//
-		for (Reference reference : _references) {
+    //
+    for (Reference reference : _references) {
 
-			//
-			if (fullyQualifiedName.equals(reference.getFullyQualifiedName())) {
-				return reference;
-			}
-		}
+      //
+      if (fullyQualifiedName.equals(reference.getFullyQualifiedName())) {
+        return reference;
+      }
+    }
 
-		//
-		return null;
-	}
+    //
+    return null;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public TypeEnum getType() {
-		return _typeEnum;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public TypeEnum getType() {
+    return _typeEnum;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IResource getSourceResource() {
-		return _sourceResource != null ? _sourceResource.getResourceStandin()
-				: null;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IResource getSourceResource() {
+    return _sourceResource != null ? _sourceResource.getResourceStandin() : null;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IResource getBinaryResource() {
-		return _binaryResource != null ? _binaryResource.getResourceStandin()
-				: null;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IResource getBinaryResource() {
+    return _binaryResource != null ? _binaryResource.getResourceStandin() : null;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasSourceResource() {
-		return _sourceResource != null;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasSourceResource() {
+    return _sourceResource != null;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean hasBinaryResource() {
-		return _binaryResource != null;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasBinaryResource() {
+    return _binaryResource != null;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public IModule getModule(IModularizedSystem modularizedSystem) {
-		Assert.isNotNull(modularizedSystem);
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModule getModule(IModularizedSystem modularizedSystem) {
+    Assert.isNotNull(modularizedSystem);
 
-		IModule result = null;
+    IModule result = null;
 
-		if (_binaryResource != null) {
-			result = _binaryResource
-					.getAssociatedResourceModule(modularizedSystem);
-		} else if (_sourceResource != null) {
-			result = _sourceResource
-					.getAssociatedResourceModule(modularizedSystem);
-		} else {
-			result = ((ModularizedSystem) modularizedSystem)
-					.getAssociatedModule(this);
-		}
+    if (_binaryResource != null) {
+      result = _binaryResource.getAssociatedResourceModule(modularizedSystem);
+    } else if (_sourceResource != null) {
+      result = _sourceResource.getAssociatedResourceModule(modularizedSystem);
+    } else {
+      result = ((ModularizedSystem) modularizedSystem).getAssociatedModule(this);
+    }
 
-		if (result == null) {
-			throw new RuntimeException("Type has no module " + this.toString());
-		} else {
-			return result;
-		}
-	}
+    if (result == null) {
+      throw new RuntimeException("Type has no module " + this.toString());
+    } else {
+      return result;
+    }
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void recordReference(String fullyQualifiedName,
-			ReferenceAttributes referenceAttributes) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void recordReference(String fullyQualifiedName, ReferenceAttributes referenceAttributes) {
 
-		_referenceContainer.recordReference(fullyQualifiedName,
-				referenceAttributes);
-	}
+    _referenceContainer.recordReference(fullyQualifiedName, referenceAttributes);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param sourceResource
-	 */
-	public void setSourceResource(Resource sourceResource) {
-		_sourceResource = sourceResource;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param sourceResource
+   */
+  public void setSourceResource(Resource sourceResource) {
+    _sourceResource = sourceResource;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param binaryResource
-	 */
-	public void setBinaryResource(Resource binaryResource) {
-		_binaryResource = binaryResource;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param binaryResource
+   */
+  public void setBinaryResource(Resource binaryResource) {
+    _binaryResource = binaryResource;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param typeEnum
-	 */
-	public void setTypeEnum(TypeEnum typeEnum) {
-		_typeEnum = typeEnum;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeEnum
+   */
+  public void setTypeEnum(TypeEnum typeEnum) {
+    _typeEnum = typeEnum;
+  }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.bundlemaker.core.resource.IModifiableType#getModifiableReferences()
-	 */
-	public Set<Reference> getModifiableReferences() {
-		return references();
-	}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.resource.IModifiableType#getModifiableReferences()
+   */
+  public Set<Reference> getModifiableReferences() {
+    return references();
+  }
 
-	@Override
-	public String toString() {
-		return "Type [_fullyQualifiedName=" + _fullyQualifiedName
-				+ ", _typeEnum=" + _typeEnum + "]";
-	}
+  @Override
+  public String toString() {
+    return "Type [_fullyQualifiedName=" + _fullyQualifiedName + ", _typeEnum=" + _typeEnum + "]";
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	private Set<Reference> references() {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private Set<Reference> references() {
 
-		// create if necessary
-		if (_references == null) {
-			_references = new HashSet<Reference>();
-		}
+    // create if necessary
+    if (_references == null) {
+      _references = new HashSet<Reference>();
+    }
 
-		// return the result
-		return _references;
-	}
+    // return the result
+    return _references;
+  }
 }

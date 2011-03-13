@@ -5,7 +5,6 @@
 // Generated on: 2011.02.17 at 01:35:18 PM MEZ 
 //
 
-
 package org.bundlemaker.core.model.internal.projectdescription.xml;
 
 import java.util.ArrayList;
@@ -16,11 +15,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for XmlResourceContentType complex type.
+ * <p>
+ * Java class for XmlResourceContentType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="XmlResourceContentType">
@@ -38,67 +38,62 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "XmlResourceContentType", propOrder = {
-    "sourcePathNames"
-})
+@XmlType(name = "XmlResourceContentType", propOrder = { "sourcePathNames" })
 public class XmlResourceContentType {
 
-    @XmlElement(nillable = true)
-    protected List<String> sourcePathNames;
-    @XmlAttribute
-    protected Boolean analyzeSourceResources;
+  @XmlElement(nillable = true)
+  protected List<String> sourcePathNames;
 
-    /**
-     * Gets the value of the sourcePathNames property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the sourcePathNames property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getSourcePathNames().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
-     * 
-     * 
-     */
-    public List<String> getSourcePathNames() {
-        if (sourcePathNames == null) {
-            sourcePathNames = new ArrayList<String>();
-        }
-        return this.sourcePathNames;
-    }
+  @XmlAttribute
+  protected Boolean      analyzeSourceResources;
 
-    /**
-     * Gets the value of the analyzeSourceResources property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
-     */
-    public Boolean isAnalyzeSourceResources() {
-        return analyzeSourceResources;
+  /**
+   * Gets the value of the sourcePathNames property.
+   * 
+   * <p>
+   * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+   * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+   * the sourcePathNames property.
+   * 
+   * <p>
+   * For example, to add a new item, do as follows:
+   * 
+   * <pre>
+   * getSourcePathNames().add(newItem);
+   * </pre>
+   * 
+   * 
+   * <p>
+   * Objects of the following type(s) are allowed in the list {@link String }
+   * 
+   * 
+   */
+  public List<String> getSourcePathNames() {
+    if (sourcePathNames == null) {
+      sourcePathNames = new ArrayList<String>();
     }
+    return this.sourcePathNames;
+  }
 
-    /**
-     * Sets the value of the analyzeSourceResources property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
-     */
-    public void setAnalyzeSourceResources(Boolean value) {
-        this.analyzeSourceResources = value;
-    }
+  /**
+   * Gets the value of the analyzeSourceResources property.
+   * 
+   * @return possible object is {@link Boolean }
+   * 
+   */
+  public Boolean isAnalyzeSourceResources() {
+    return analyzeSourceResources;
+  }
+
+  /**
+   * Sets the value of the analyzeSourceResources property.
+   * 
+   * @param value
+   *          allowed object is {@link Boolean }
+   * 
+   */
+  public void setAnalyzeSourceResources(Boolean value) {
+    this.analyzeSourceResources = value;
+  }
 
 }

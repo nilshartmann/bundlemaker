@@ -30,257 +30,233 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractTransformationAwareModularizedSystem extends
-		AbstractModularizedSystem {
+public abstract class AbstractTransformationAwareModularizedSystem extends AbstractModularizedSystem {
 
-	/**
-	 * <p>
-	 * Creates a new instance of type
-	 * {@link AbstractTransformationAwareModularizedSystem}.
-	 * </p>
-	 * 
-	 * @param name
-	 * @param projectDescription
-	 */
-	public AbstractTransformationAwareModularizedSystem(String name,
-			IBundleMakerProjectDescription projectDescription) {
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractTransformationAwareModularizedSystem}.
+   * </p>
+   * 
+   * @param name
+   * @param projectDescription
+   */
+  public AbstractTransformationAwareModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
 
-		//
-		super(name, projectDescription);
-	}
+    //
+    super(name, projectDescription);
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public final void applyTransformations() {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void applyTransformations() {
 
-		// step 1: clear prior results
-		getModifiableResourceModulesMap().clear();
-		getModifiableNonResourceModulesMap().clear();
+    // step 1: clear prior results
+    getModifiableResourceModulesMap().clear();
+    getModifiableNonResourceModulesMap().clear();
 
-		preApplyTransformations();
+    preApplyTransformations();
 
-		// step 2: set up the JRE
-		// TODO!!!!
-		System.out.println("// step 2: set up the JRE");
-		try {
+    // step 2: set up the JRE
+    // TODO!!!!
+    System.out.println("// step 2: set up the JRE");
+    try {
 
-			TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
-			getModifiableNonResourceModulesMap().put(
-					jdkModule.getModuleIdentifier(), jdkModule);
-			setExecutionEnvironment(jdkModule);
+      TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
+      getModifiableNonResourceModulesMap().put(jdkModule.getModuleIdentifier(), jdkModule);
+      setExecutionEnvironment(jdkModule);
 
-		} catch (CoreException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+    } catch (CoreException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
 
-		// step 3: create the type modules
-		System.out.println("// step 3: create the type modules");
+    // step 3: create the type modules
+    System.out.println("// step 3: create the type modules");
 
-		for (IFileBasedContent fileBasedContent : getProjectDescription()
-				.getFileBasedContent()) {
+    for (IFileBasedContent fileBasedContent : getProjectDescription().getFileBasedContent()) {
 
-			if (!fileBasedContent.isResourceContent()) {
+      if (!fileBasedContent.isResourceContent()) {
 
-				IModuleIdentifier identifier = new ModuleIdentifier(
-						fileBasedContent.getName(),
-						fileBasedContent.getVersion());
+        IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
 
-				// TODO!!
-				TypeModule typeModule = createTypeModule(
-						identifier,
-						new File[] { fileBasedContent.getBinaryPaths().toArray(
-								new IPath[0])[0].toFile() });
+        // TODO!!
+        TypeModule typeModule = createTypeModule(identifier,
+            new File[] { fileBasedContent.getBinaryPaths().toArray(new IPath[0])[0].toFile() });
 
-				getModifiableNonResourceModulesMap().put(
-						typeModule.getModuleIdentifier(), typeModule);
+        getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
 
-			}
-		}
+      }
+    }
 
-		//
-		initializeNonResourceModules();
+    //
+    initializeNonResourceModules();
 
-		// step 4: transform modules
-		System.out.println("// step 4: transform modules");
-		for (ITransformation transformation : getTransformations()) {
+    // step 4: transform modules
+    System.out.println("// step 4: transform modules");
+    for (ITransformation transformation : getTransformations()) {
 
-			// step 4.1: apply transformation
-			transformation.apply((IModifiableModularizedSystem) this);
+      // step 4.1: apply transformation
+      transformation.apply((IModifiableModularizedSystem) this);
 
-			// step 4.2: clean up empty modules
-			for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()
-					.entrySet().iterator(); iterator.hasNext();) {
+      // step 4.2: clean up empty modules
+      for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()
+          .entrySet().iterator(); iterator.hasNext();) {
 
-				// get next module
-				Entry<IModuleIdentifier, IModifiableResourceModule> module = iterator
-						.next();
+        // get next module
+        Entry<IModuleIdentifier, IModifiableResourceModule> module = iterator.next();
 
-				// if the module is empty - remove it
-				if (module.getValue().getResources(ContentType.BINARY)
-						.isEmpty()
-						&& module.getValue().getResources(ContentType.SOURCE)
-								.isEmpty()) {
+        // if the module is empty - remove it
+        if (module.getValue().getResources(ContentType.BINARY).isEmpty()
+            && module.getValue().getResources(ContentType.SOURCE).isEmpty()) {
 
-					// remove the module
-					iterator.remove();
-				}
-			}
+          // remove the module
+          iterator.remove();
+        }
+      }
 
-			// step 4.3: initialize
-			for (IModifiableResourceModule module : getModifiableResourceModulesMap()
-					.values()) {
+      // step 4.3: initialize
+      for (IModifiableResourceModule module : getModifiableResourceModulesMap().values()) {
 
-				((ResourceModule) module).initializeContainedTypes();
-			}
-			
-			//
-			initializeResourceModules();
-		}
+        ((ResourceModule) module).initializeContainedTypes();
+      }
 
-		postApplyTransformations();
+      //
+      initializeResourceModules();
+    }
 
-		System.out.println("// done");
-	}
+    postApplyTransformations();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 */
-	protected void preApplyTransformations() {
-		//
-	}
+    System.out.println("// done");
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @throws Exception
-	 */
-	protected void initializeNonResourceModules() {
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  protected void preApplyTransformations() {
+    //
+  }
 
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
+  protected void initializeNonResourceModules() {
 
-	protected void initializeResourceModules() {
+  }
 
-	}
+  protected void initializeResourceModules() {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 */
-	protected void postApplyTransformations() {
-		//
-	}
+  }
 
-	@Override
-	public IModifiableResourceModule createResourceModule(
-			IModuleIdentifier createModuleIdentifier) {
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  protected void postApplyTransformations() {
+    //
+  }
 
-		//
-		ResourceModule resourceModule = new ResourceModule(
-				createModuleIdentifier);
+  @Override
+  public IModifiableResourceModule createResourceModule(IModuleIdentifier createModuleIdentifier) {
 
-		//
-		getModifiableResourceModulesMap().put(
-				resourceModule.getModuleIdentifier(), resourceModule);
+    //
+    ResourceModule resourceModule = new ResourceModule(createModuleIdentifier);
 
-		//
-		return resourceModule;
-	}
+    //
+    getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param identifier
-	 * @param file
-	 * @return
-	 */
-	protected TypeModule createTypeModule(IModuleIdentifier identifier,
-			File file) {
-		return createTypeModule(identifier, new File[] { file });
-	}
+    //
+    return resourceModule;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param identifier
-	 * @param files
-	 * @return
-	 */
-	protected TypeModule createTypeModule(IModuleIdentifier identifier,
-			File[] files) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param identifier
+   * @param file
+   * @return
+   */
+  protected TypeModule createTypeModule(IModuleIdentifier identifier, File file) {
+    return createTypeModule(identifier, new File[] { file });
+  }
 
-		// create the type module
-		TypeModule typeModule = new TypeModule(identifier);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param identifier
+   * @param files
+   * @return
+   */
+  protected TypeModule createTypeModule(IModuleIdentifier identifier, File[] files) {
 
-		//
-		for (int i = 0; i < files.length; i++) {
+    // create the type module
+    TypeModule typeModule = new TypeModule(identifier);
 
-			// add all the contained types
-			try {
+    //
+    for (int i = 0; i < files.length; i++) {
 
-				// TODO DIRECTORIES!!
-				// TODO:PARSE!!
-				List<String> types = getContainedTypes(files[i]);
+      // add all the contained types
+      try {
 
-				for (String type : types) {
+        // TODO DIRECTORIES!!
+        // TODO:PARSE!!
+        List<String> types = getContainedTypes(files[i]);
 
-					// TODO: TypeEnum!!
-					Type type2 = new Type(type, TypeEnum.CLASS);
-					
-					// type2.setTypeModule(typeModule);
+        for (String type : types) {
 
-					typeModule.getModifiableSelfResourceContainer()
-							.getModifiableContainedTypesMap().put(type, type2);
-				}
+          // TODO: TypeEnum!!
+          Type type2 = new Type(type, TypeEnum.CLASS);
 
-			} catch (IOException e) {
+          // type2.setTypeModule(typeModule);
 
-				//
-				e.printStackTrace();
-			}
-		}
-		// return the module
-		return typeModule;
-	}
+          typeModule.getModifiableSelfResourceContainer().getModifiableContainedTypesMap().put(type, type2);
+        }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param file
-	 * @return
-	 * @throws IOException
-	 */
-	private static List<String> getContainedTypes(File file) throws IOException {
+      } catch (IOException e) {
 
-		// create the result list
-		List<String> result = new LinkedList<String>();
+        //
+        e.printStackTrace();
+      }
+    }
+    // return the module
+    return typeModule;
+  }
 
-		// create the jar file
-		JarFile jarFile = new JarFile(file);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param file
+   * @return
+   * @throws IOException
+   */
+  private static List<String> getContainedTypes(File file) throws IOException {
 
-		// get the entries
-		Enumeration<JarEntry> entries = jarFile.entries();
-		while (entries.hasMoreElements()) {
-			JarEntry jarEntry = (JarEntry) entries.nextElement();
-			if (jarEntry.getName().endsWith(".class")) {
-				result.add(jarEntry
-						.getName()
-						.substring(0,
-								jarEntry.getName().length() - ".class".length())
-						.replace('/', '.'));
-			}
-		}
+    // create the result list
+    List<String> result = new LinkedList<String>();
 
-		// return the result
-		return result;
-	}
+    // create the jar file
+    JarFile jarFile = new JarFile(file);
+
+    // get the entries
+    Enumeration<JarEntry> entries = jarFile.entries();
+    while (entries.hasMoreElements()) {
+      JarEntry jarEntry = (JarEntry) entries.nextElement();
+      if (jarEntry.getName().endsWith(".class")) {
+        result.add(jarEntry.getName().substring(0, jarEntry.getName().length() - ".class".length()).replace('/', '.'));
+      }
+    }
+
+    // return the result
+    return result;
+  }
 }

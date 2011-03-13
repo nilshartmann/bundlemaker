@@ -18,76 +18,74 @@ import org.bundlemaker.core.resource.IResource;
  */
 public class TransformationUtils {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param target
-	 * @param toAdd
-	 */
-	// TODO MOVE
-	public static void addAll(Set<IResource> target, Collection<IResource> toAdd) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param target
+   * @param toAdd
+   */
+  // TODO MOVE
+  public static void addAll(Set<IResource> target, Collection<IResource> toAdd) {
 
-		for (IResource IResource : toAdd) {
-			if (IResource instanceof ResourceStandin) {
-				target.add((ResourceStandin) IResource);
-			}
-		}
-	}
+    for (IResource IResource : toAdd) {
+      if (IResource instanceof ResourceStandin) {
+        target.add((ResourceStandin) IResource);
+      }
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param resourceModule
-	 * @param resourceStandins
-	 * @param binary
-	 */
-	// TODO MOVE
-	public static void removeAll(IModifiableResourceModule resourceModule,
-			Collection<IResource> resourceStandins, ContentType binary) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceModule
+   * @param resourceStandins
+   * @param binary
+   */
+  // TODO MOVE
+  public static void removeAll(IModifiableResourceModule resourceModule, Collection<IResource> resourceStandins,
+      ContentType binary) {
 
-		Collection<IResource> result = resourceModule
-				.getModifiableSelfResourceContainer()
-				.getModifiableResourcesSet(binary);
+    Collection<IResource> result = resourceModule.getModifiableSelfResourceContainer()
+        .getModifiableResourcesSet(binary);
 
-		_removeAll(result, resourceStandins);
+    _removeAll(result, resourceStandins);
 
-		// TODO!
-		// for (ModifiableResourceContainer resourceContainer : resourceModule
-		// .getModifiableContainedResourceContainers().values()) {
-		//
-		// removeAll(resourceContainer.getModifiableResources(binary),
-		// resourceStandins);
-		// }
-	}
+    // TODO!
+    // for (ModifiableResourceContainer resourceContainer : resourceModule
+    // .getModifiableContainedResourceContainers().values()) {
+    //
+    // removeAll(resourceContainer.getModifiableResources(binary),
+    // resourceStandins);
+    // }
+  }
 
-	// /**
-	// * <p>
-	// * </p>
-	// *
-	// * @param moduleIdentifier
-	// * @return
-	// */
-	// public static ModifiableResourceModule findResourceModule(
-	// List<ModifiableResourceModule> modules,
-	// IModuleIdentifier moduleIdentifier) {
-	//
-	// for (ModifiableResourceModule resourceModule : modules) {
-	// if (ModelUtils.equals(resourceModule.getModuleIdentifier(),
-	// moduleIdentifier)) {
-	// return resourceModule;
-	// }
-	// }
-	//
-	// return null;
-	// }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param moduleIdentifier
+  // * @return
+  // */
+  // public static ModifiableResourceModule findResourceModule(
+  // List<ModifiableResourceModule> modules,
+  // IModuleIdentifier moduleIdentifier) {
+  //
+  // for (ModifiableResourceModule resourceModule : modules) {
+  // if (ModelUtils.equals(resourceModule.getModuleIdentifier(),
+  // moduleIdentifier)) {
+  // return resourceModule;
+  // }
+  // }
+  //
+  // return null;
+  // }
 
-	private static void _removeAll(Collection<IResource> target,
-			Collection<IResource> toRemove) {
+  private static void _removeAll(Collection<IResource> target, Collection<IResource> toRemove) {
 
-		for (IResource IResource : toRemove) {
-			target.remove(IResource);
-		}
-	}
+    for (IResource IResource : toRemove) {
+      target.remove(IResource);
+    }
+  }
 }

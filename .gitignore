@@ -3,3 +3,4 @@
 */bin/*
 */*clover/*
 org.bundlemaker.drools.test/*
+org.eclipse*
