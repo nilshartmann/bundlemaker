@@ -3,7 +3,7 @@ package org.bundlemaker.core.internal.modules.algorithm;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 

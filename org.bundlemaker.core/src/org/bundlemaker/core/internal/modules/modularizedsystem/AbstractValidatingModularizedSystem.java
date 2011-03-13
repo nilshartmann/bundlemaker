@@ -1,11 +1,12 @@
-package org.bundlemaker.core.internal.modules;
+package org.bundlemaker.core.internal.modules.modularizedsystem;
 
+import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 
 /**
  */
-public abstract class AbstractValidatingModularizedSystem extends AbstractCachingModularizedSystem {
+public abstract class AbstractValidatingModularizedSystem extends AbstractQueryableModularizedSystem {
 
   /**
    * <p>

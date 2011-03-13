@@ -1,7 +1,9 @@
 package org.bundlemaker.itest.spring;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,10 @@ import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
+import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
@@ -129,7 +134,7 @@ public class IntegrationTest {
     checkResourceModel(bundleMakerProject);
 
     // get the default modularized system
-    IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy(bundleMakerProject
+    final IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy(bundleMakerProject
         .getProject().getName());
 
     // add the transformations
@@ -139,18 +144,61 @@ public class IntegrationTest {
     // apply the transformation
     modularizedSystem.applyTransformations();
 
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "bsh.**" }, null, "bsh", "2.0b4"));
+
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "com.sun.jmx.**", "com.sun.management.**", "com.sun.rowset.**",
+            "com.sun.activation.**", "javax.activation.**", "javax.jws.**", "javax.management.**",
+            "org.omg.stub.javax.management.**", "javax.xml.**", "javax.sql.rowset.**", "javax.annotation.**",
+            "org.w3c.dom.**" }, null, "jdk16", "jdk16"));
+
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "com.thoughtworks.qdox.**" }, null, "qdox", "1.5"));
+
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "javax.persistence.**" }, null, "toplink-essentials", "1.0"));
+
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "javax.transaction.**" }, null, "jta", "0.0.0"));
+
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "junit.**" }, null, "junit", "4.4"));
+
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "org.apache.commons.collections.**" }, null,
+            "commons-collections", "3.2"));
+    
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "org.aspectj.**" }, null,
+            "aspectjrt", "0.0.0"));
+    
+    modularizedSystem.getModuleSelectors().add(
+        new PatternBasedModuleSelector(new String[] { "org.aopalliance.**" }, null,
+            "aopalliance", "0.0.0"));
+
     //
     ModularizedSystemTests.testGetModules(modularizedSystem);
     ModuleTest.testModules(modularizedSystem);
 
-    // //
-    // Map<String, Set<IType>> ambiguousTypesMap = modularizedSystem
-    // .getAmbiguousTypes();
     //
-    // List<String> ambiguousTypes = new ArrayList<String>(
-    // ambiguousTypesMap.keySet());
-    // Collections.sort(ambiguousTypes);
+    IResourceModule resourceModule = modularizedSystem.getResourceModule("Spring-JDBC", "2.5.6");
+
     //
+    Map<String, Set<IType>> ambiguousTypesMap = modularizedSystem.getAmbiguousTypes();
+    List<String> ambiguousTypes = new ArrayList<String>(ambiguousTypesMap.keySet());
+    Collections.sort(ambiguousTypes);
+    for (String typeName : ambiguousTypes) {
+      try {
+        modularizedSystem.getType(typeName, resourceModule);
+      } catch (AmbiguousElementException e) {
+        System.out.println(" - " + typeName);
+        for (IType type : modularizedSystem.getTypes(typeName, resourceModule)) {
+          System.out.println("   - " + type.getModule(modularizedSystem));
+        }
+      }
+    }
+
     // //
     // for (String ambiguousType : ambiguousTypes) {
     //

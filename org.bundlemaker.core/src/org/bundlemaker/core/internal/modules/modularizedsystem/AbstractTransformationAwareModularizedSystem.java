@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.modules;
+package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.bundlemaker.core.internal.JdkModuleCreator;
+import org.bundlemaker.core.internal.modules.ResourceModule;
+import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -169,6 +171,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     //
     ResourceModule resourceModule = new ResourceModule(createModuleIdentifier);
 
+    resourceModule.setModularizedSystem(this);
+
     //
     getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
 
@@ -200,6 +204,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     // create the type module
     TypeModule typeModule = new TypeModule(identifier);
+    typeModule.setModularizedSystem(this);
 
     //
     for (int i = 0; i < files.length; i++) {

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 

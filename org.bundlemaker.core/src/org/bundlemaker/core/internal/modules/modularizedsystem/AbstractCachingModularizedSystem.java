@@ -1,14 +1,17 @@
-package org.bundlemaker.core.internal.modules;
+package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.modules.AmbiguousDependencyException;
+import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
@@ -92,99 +95,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     return _typeNameToReferringCache;
   }
 
-  @Override
-  public IModule getTypeContainingModule(String fullyQualifiedName) throws AmbiguousDependencyException {
-
-    Set<IModule> result = getTypeContainingModules(fullyQualifiedName);
-
-    if (result.isEmpty()) {
-      return null;
-    }
-
-    if (result.size() > 1) {
-      throw new AmbiguousDependencyException("AmbiguousModuleDependencyException: " + fullyQualifiedName);
-    }
-
-    return result.toArray(new IModule[0])[0];
-  }
-
-  @Override
-  public IType getType(String fullyQualifiedName) throws AmbiguousDependencyException {
-
-    Assert.isNotNull(fullyQualifiedName);
-
-    // get type modules
-    Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
-
-    // return null if type is unknown
-    if (types == null) {
-      return null;
-    }
-
-    // if multiple type modules exist, throw an exception
-    if (types.size() > 1) {
-
-      // TODO
-      new AmbiguousDependencyException(fullyQualifiedName);
-    }
-
-    // return the type
-    return types.toArray(new IType[0])[0];
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<IType> getTypes(String fullyQualifiedName) {
-
-    //
-    Assert.isNotNull(fullyQualifiedName);
-    Assert.isTrue(fullyQualifiedName.trim().length() > 0);
-
-    // get type modules
-    Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
-    types = types != null ? types : new HashSet<IType>();
-
-    // return the result
-    return Collections.unmodifiableSet(types);
-  }
-
-  @Override
-  public Set<IModule> getPackageContainingModules(String fullyQualifiedPackageName) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public IModule getPackageContainingModule(String fullyQualifiedPackageName) throws AmbiguousDependencyException {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Set<IModule> getTypeContainingModules(String fullyQualifiedName) {
-
-    //
-    if (getTypeNameToTypeCache().containsKey(fullyQualifiedName)) {
-
-      Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
-
-      Set<IModule> result = new HashSet<IModule>(types.size());
-
-      for (IType type : types) {
-        // TODO: direct call
-        result.add(type.getModule(this));
-      }
-
-      //
-      return Collections.unmodifiableSet(result);
-
-    } else {
-      return Collections.emptySet();
-    }
-  }
-
+ 
   /**
    * {@inheritDoc}
    */

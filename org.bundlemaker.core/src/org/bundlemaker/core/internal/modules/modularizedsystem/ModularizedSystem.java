@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.modules;
+package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -8,11 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.ReferencedModulesQueryResult;
 import org.bundlemaker.core.internal.modules.algorithm.ResourceIsReferencedTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.ResourceReferencesTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.TypeIsReferencedTransitiveClosure;
 import org.bundlemaker.core.internal.modules.algorithm.TypeReferencesTransitiveClosure;
-import org.bundlemaker.core.modules.AmbiguousDependencyException;
+import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;

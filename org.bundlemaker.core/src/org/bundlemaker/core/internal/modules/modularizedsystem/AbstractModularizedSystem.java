@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.modules;
+package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;

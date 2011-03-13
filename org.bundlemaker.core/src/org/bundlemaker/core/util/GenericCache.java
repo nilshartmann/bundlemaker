@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.modules.AmbiguousDependencyException;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -71,8 +70,6 @@ public abstract class GenericCache<K, V> {
    * 
    * @param key
    * @return
-   * 
-   * @throws AmbiguousDependencyException
    */
   public final V getOrCreate(K key) {
 

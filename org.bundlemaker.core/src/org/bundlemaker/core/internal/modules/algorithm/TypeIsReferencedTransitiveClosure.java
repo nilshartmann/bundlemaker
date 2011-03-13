@@ -2,7 +2,7 @@ package org.bundlemaker.core.internal.modules.algorithm;
 
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.ModularizedSystem;
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;

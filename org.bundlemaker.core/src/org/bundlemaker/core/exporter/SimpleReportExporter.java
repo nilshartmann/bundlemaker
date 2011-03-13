@@ -34,7 +34,6 @@ public class SimpleReportExporter extends AbstractExporter {
    */
   @Override
   public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
-
     return true;
   }
 
