@@ -3,14 +3,10 @@
  */
 package org.bundlemaker.core.ui.editor;
 
-import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.internal.UIImages;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
@@ -24,8 +20,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.editor.FormPage;
@@ -45,9 +39,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  */
 public class ProjectDescriptionOverviewPage extends FormPage {
 
-  private TreeViewer                     _treeViewer;
-
-  private IBundleMakerProjectDescription _projectDescription;
+  private TreeViewer _treeViewer;
 
   public ProjectDescriptionOverviewPage(ProjectDescriptionEditor editor) {
     super(editor, "Project overview", "Project overview");
@@ -69,34 +61,17 @@ public class ProjectDescriptionOverviewPage extends FormPage {
 
   }
 
-  @Override
-  protected void setInput(IEditorInput input) {
-    super.setInput(input);
-    if (input == null) {
-      BundleMakerUiUtils.logErrorMessage("Input is null");
-      return;
-    }
-    IFileEditorInput adapter = (IFileEditorInput) input.getAdapter(IFileEditorInput.class);
-    if (adapter == null) {
-      BundleMakerUiUtils.logErrorMessage("Unsupported EditorInput '%s' cannot be adapted to '%s'", input,
-          IFileEditorInput.class.getName());
-      return;
-    }
-
-    IProject project = adapter.getFile().getProject();
-    try {
-      // TODO use ProgressMonitor
-      IBundleMakerProject bundleMakerProject = BundleMakerCore
-          .getBundleMakerProject(project, new NullProgressMonitor());
-
-      if (_treeViewer != null) {
-        _treeViewer.setInput(bundleMakerProject.getProjectDescription());
-      }
-      _projectDescription = bundleMakerProject.getProjectDescription();
-    } catch (Exception ex) {
-      BundleMakerUiUtils.logError("Could not open BundleMaker project", ex);
-    }
-
+  /**
+   * <p>
+   * Returns the {@link IBundleMakerProjectDescription} that this editor is working on.
+   * </p>
+   * 
+   * @return the project description. Never null.
+   */
+  protected IBundleMakerProjectDescription getBundleMakerProjectDescription() {
+    ProjectDescriptionEditor descriptionEditor = (ProjectDescriptionEditor) getEditor();
+    IBundleMakerProject bundleMakerProject = descriptionEditor.getBundleMakerProject();
+    return bundleMakerProject.getProjectDescription();
   }
 
   private void createProjectContentSection(final IManagedForm mform) {
@@ -122,13 +97,13 @@ public class ProjectDescriptionOverviewPage extends FormPage {
     BaseWorkbenchContentProvider provider = new BaseWorkbenchContentProvider();
     _treeViewer.setContentProvider(provider);
 
-    System.out.println("Init treeviewer mit projectdescription " + _projectDescription.getFileBasedContent());
-    _treeViewer.setInput(_projectDescription);
+    System.out.println("Init treeviewer mit projectdescription " + getBundleMakerProjectDescription());
+    _treeViewer.setInput(getBundleMakerProjectDescription());
 
     Button addArchivesButton = toolkit.createButton(sectionComposite, "Add archive resources...", SWT.PUSH);
 
     final SectionPart projectContentSectionPart = new SectionPart(projectContentSection);
-    projectContentSectionPart.initialize(mform);
+    mform.addPart(projectContentSectionPart);
 
     addArchivesButton.addSelectionListener(new SelectionListener() {
 
@@ -139,18 +114,19 @@ public class ProjectDescriptionOverviewPage extends FormPage {
           return;
         }
         String[] fileNames = fileDialog.getFileNames();
-        System.out.println("filterpath: " + fileDialog.getFilterPath());
-        for (String string : fileNames) {
-          IPath path = new Path(fileDialog.getFilterPath()).append(string);
-          String binaryRoot = path.toOSString();
-          System.out.println(string + " -> " + path + " -> " + binaryRoot);
-          _projectDescription.addResourceContent(binaryRoot);
+        if (fileNames.length > 0) {
+          // Add all selected archives to the project description
+          for (String string : fileNames) {
+            IPath path = new Path(fileDialog.getFilterPath()).append(string);
+            String binaryRoot = path.toOSString();
+            getBundleMakerProjectDescription().addResourceContent(binaryRoot);
+          }
+          // Refresh view
           _treeViewer.refresh();
-          // projectContentSectionPart.markDirty();
-          // firePropertyChange(PROP_DIRTY);
 
+          // mark editor dirty
+          projectContentSectionPart.markDirty();
         }
-
       }
 
       @Override
@@ -165,10 +141,15 @@ public class ProjectDescriptionOverviewPage extends FormPage {
       public void widgetSelected(SelectionEvent e) {
         ResourceLocationSelectorDialog dlg = new ResourceLocationSelectorDialog(shell);
         if (dlg.open() == Window.OK) {
-          _projectDescription.addResourceContent(dlg.getResourceName(), dlg.getResourceVersion(),
+          // Add selected resource to projectdescription
+          getBundleMakerProjectDescription().addResourceContent(dlg.getResourceName(), dlg.getResourceVersion(),
               dlg.getResourceBinaryPath(), dlg.getResourceSourcePath());
 
+          // Refresh UI
           _treeViewer.refresh();
+
+          // Mark editor dirty
+          projectContentSectionPart.markDirty();
         }
       }
 
