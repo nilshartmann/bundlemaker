@@ -25,4 +25,12 @@ public interface IResourceModule extends IResourceContainer, IModule {
    * @return
    */
   Map<String, ? extends IResourceContainer> getContainedResourceContainers();
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  boolean containsSources();
 }

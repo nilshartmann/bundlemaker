@@ -181,6 +181,11 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     return this;
   }
 
+  @Override
+  public boolean containsSources() {
+    return !getResources(ContentType.SOURCE).isEmpty();
+  }
+
   /**
    * <p>
    * </p>

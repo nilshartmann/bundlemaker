@@ -168,7 +168,10 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
 
       Set<TypeToTypeDependency> dependencies = new HashSet<TypeToTypeDependency>();
 
-      for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+      // TODO: Make configurable
+      ContentType contentType = resourceModule.containsSources() ? ContentType.SOURCE : ContentType.BINARY;
+        
+      for (IResource resource : resourceModule.getResources(contentType)) {
 
         for (IReference reference : resource.getReferences()) {
 
