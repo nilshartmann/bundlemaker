@@ -2,9 +2,36 @@
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/concept.dtd">
 <concept id="conceptId">
  <title>Bundlemaker project</title>
- <shortdesc></shortdesc>
+ <shortdesc>The Bundlemaker project is the central unit within the analysis and transformation of an
+  input system. It contains a project description that defines the content of the application that
+  should be analysed. It also has a defined state model that determines which actions can be
+  executed on a given project.</shortdesc>
  <conbody>
-  <p>Concept definition.</p>
-  <image href="./diagrams/cd-bundlemaker-project.png" scale="40"/>
+  <section><title>Project layout</title><p>From a technical point of view a bundle maker project is
+    an ordinary eclipse project (not a JDT project!) that has the
+     <codeph>org.bundlemaker.core.internal.BundleMakerProjectNature</codeph> nature. A Bundlemaker
+    project always contains a <codeph>bundlemaker.xml</codeph> file (the project description file)
+    and a (hidden) <codeph>.bundlemaker</codeph> folder (the project local storage area). </p>
+   <image href="./images/bundlemaker-project-layout.png"/>
+  </section>
+  <section><title>Retrieving the IBundleMakerProject instance</title><p>For each Bundlemaker project
+    exists an associated <codeph>IBundleMakerProject</codeph> instance . To retrieve this instance
+    you can use the method
+     <codeph>BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(String name)</codeph>:
+    <codeblock>
+  // get or create simple project with bundlemaker nature
+  IProject simpleProject = BundleMakerCore.
+    getOrCreateSimpleProjectWithBundleMakerNature("MyProject");
+
+  // get the BundleMaker project
+  IBundleMakerProject bundleMakerProject = 
+    BundleMakerCore.getBundleMakerProject(simpleProject, null);
+   </codeblock>
+   </p>
+   <image href="./diagrams/cd-bundlemaker-project.png" scale="40"/>
+  </section>
+  <section><title>The project state model</title>
+   <image href="./images/bundlemaker-project-statediagram.png" scale="60"/>
+  </section>
  </conbody>
 </concept>

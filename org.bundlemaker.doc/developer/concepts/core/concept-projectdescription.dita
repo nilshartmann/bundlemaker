@@ -20,7 +20,8 @@
     IBundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
    </codeblock>
    </p>
-   <title>Adding content to the project description</title>
+  </section>
+  <section><title>Adding content to the project description</title>
    <p>The IBundleMakerProjectDescription interface contains a bunch of methods that can be used to
     add content<ul id="ul_kid_wyw_qb">
      <li>Resource content contains the resources that you want to be analyzed and manipulated. E.g.

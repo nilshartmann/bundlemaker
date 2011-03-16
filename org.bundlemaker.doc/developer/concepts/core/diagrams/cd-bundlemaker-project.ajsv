@@ -2,7 +2,6 @@
 <!--AgileJ Ltd. (http://www.agilej.com)-->
 <ajsv>
     <diagram style="defaultDiagramStyle" version="1.7.3.v20110116-2128">
-        <class className="org.bundlemaker.core.BundleMakerProjectState" project="org.bundlemaker.core" xLocation="933" yLocation="810"/>
         <class className="org.bundlemaker.core.IBundleMakerProject" project="org.bundlemaker.core" xLocation="544" yLocation="392"/>
     </diagram>
 </ajsv>
