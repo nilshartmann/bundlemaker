@@ -99,7 +99,7 @@ public interface IFileBasedContent {
    * Returns the {@link IResource} for the specified path and type
    * </p>
    * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>),
+   * If this content entry is not a resource content (<code>isResourceContent()</code> returns <code>false</code>),
    * <code>null</code> will be returned.
    * </p>
    * 
