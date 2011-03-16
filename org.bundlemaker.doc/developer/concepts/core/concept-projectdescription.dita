@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/concept.dtd">
 <concept id="conceptId">
- <title>The IBundleMakerProjectDescription</title>
+ <title>Project description</title>
  <conbody>
   <section><title>Overview</title>
-   <p>To define the project content for a <codeph>IBundleMakerProject</codeph>, you have to retrieve
-    and manipulate the associated <codeph>IBundleMakerProjectDescription</codeph>. Each bundlemaker
-    project contains exactly one project description, as shown in the illustration above: </p>
+   <p>The system that should be analyzed and transformed using bundlemaker must defined within a
+    project description
+     (<codeph>org.bundlemaker.core.projectdescription.IBundleMakerProjcetDescription</codeph>). Each
+    bundlemaker project contains exactly one project description, as shown in the illustration
+    above. </p>
    <image href="./images/ClassDiagram.png"/>
   </section>
   <section><title>Retrieving the project description</title>
-   <p>The project description of a bundlemaker project can can be retrieved using the method
+   <p>The bundlemaker project description can can be retrieved using the method
      <codeph>IBundleMakerProject.getProjectDescription()</codeph>:
     <codeblock>
     IBundleMakerProject bundleMakerProject = ...;
@@ -18,10 +20,9 @@
     IBundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
    </codeblock>
    </p>
-  </section>
-  <section><title>Adding content to the project description</title>
+   <title>Adding content to the project description</title>
    <p>The IBundleMakerProjectDescription interface contains a bunch of methods that can be used to
-    add content<ul>
+    add content<ul id="ul_kid_wyw_qb">
      <li>Resource content contains the resources that you want to be analyzed and manipulated. E.g.
       if you want to transform a simple JAR archive into an OSGi bundle or some source code in valid
       PDE project, you have to add them to the project description as resource content.</li>
