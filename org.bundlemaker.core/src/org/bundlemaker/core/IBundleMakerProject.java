@@ -78,22 +78,6 @@ public interface IBundleMakerProject {
 
   /**
    * <p>
-   * Saves the {@link BundleMakerProjectDescription}.
-   * </p>
-   * <p>
-   * The project description is saved internally in the xml file
-   * <code>"&lt;project-directory&gt;/.bundlemaker/projectdescription.xml"</code> . Note that it's not intended to
-   * directly modify this file.
-   * </p>
-   * 
-   * @throws CoreException
-   * 
-   * @precondition none
-   */
-  public void saveProjectDescription() throws CoreException;
-
-  /**
-   * <p>
    * Returns the state this {@link IBundleMakerProject} is in.
    * </p>
    * 

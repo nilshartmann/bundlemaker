@@ -150,7 +150,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
           new NullProgressMonitor());
       IBundleMakerProjectDescription bundleMakerProjectDescription = bundleMakerProject.getProjectDescription();
       bundleMakerProjectDescription.setJre(mainPage.getSelectedJreId());
-      bundleMakerProject.saveProjectDescription();
+      bundleMakerProjectDescription.save();
 
     } catch (CoreException ex) {
       IStatus status = BundleMakerUiUtils.newStatus(ex, "Could not add Bundlemaker nature");

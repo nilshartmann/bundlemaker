@@ -19,9 +19,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.ProjectDescriptionStore;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -372,5 +374,13 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
    */
   public void setCurrentId(int currentId) {
     _currentId = currentId;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void save() throws CoreException {
+    ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
   }
 }

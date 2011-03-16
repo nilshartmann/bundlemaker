@@ -25,7 +25,6 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem
 import org.bundlemaker.core.internal.parser.ProjectParser;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
-import org.bundlemaker.core.internal.projectdescription.ResourceContent;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
@@ -101,16 +100,6 @@ public class BundleMakerProject implements IBundleMakerProject {
    * {@inheritDoc}
    */
   @Override
-  public void saveProjectDescription() throws CoreException {
-
-    //
-    ProjectDescriptionStore.saveProjectDescription(_project, _projectDescription);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public BundleMakerProjectState getState() {
     return _projectState;
   }
@@ -124,7 +113,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     _currentProgressMonitor = progressMonitor;
 
     // save the project description
-    saveProjectDescription();
+    _projectDescription.save();
 
     // reload the project description
     _projectDescription.initialize(this);

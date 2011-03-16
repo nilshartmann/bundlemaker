@@ -13,6 +13,8 @@ package org.bundlemaker.core.projectdescription;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -191,4 +193,20 @@ public interface IBundleMakerProjectDescription {
    * </p>
    */
   void clear();
+
+  /**
+   * <p>
+   * Saves the {@link BundleMakerProjectDescription}.
+   * </p>
+   * <p>
+   * The project description is saved internally in the xml file
+   * <code>"&lt;project-directory&gt;/.bundlemaker/projectdescription.xml"</code> . Note that it's not intended to
+   * directly modify this file.
+   * </p>
+   * 
+   * @throws CoreException
+   * 
+   * @precondition none
+   */
+  void save() throws CoreException;
 }
