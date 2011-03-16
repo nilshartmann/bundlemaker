@@ -3,12 +3,10 @@
  */
 package org.bundlemaker.core.ui.editor;
 
-import java.util.List;
-
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
@@ -69,45 +67,34 @@ public class ProjectDescriptionOverviewPage extends FormPage {
 
     createProjectContentSection(mform);
 
-    // SectionPart sectionPart = new SectionPart(projectContentSection);
-    // mform.addPart(sectionPart);
-
   }
 
   @Override
   protected void setInput(IEditorInput input) {
     super.setInput(input);
     if (input == null) {
-      System.err.println("Input is null ?!?!?!");
+      BundleMakerUiUtils.logErrorMessage("Input is null");
       return;
     }
     IFileEditorInput adapter = (IFileEditorInput) input.getAdapter(IFileEditorInput.class);
     if (adapter == null) {
-      System.err.println("Unsupported EditorInput " + input + " cannot be adapted to an "
-          + IFileEditorInput.class.getName());
+      BundleMakerUiUtils.logErrorMessage("Unsupported EditorInput '%s' cannot be adapted to '%s'", input,
+          IFileEditorInput.class.getName());
       return;
     }
-    System.out.println("************ input: " + input);
-    System.out.println("input class: " + input.getClass().getName());
-    System.out.println("adapter: " + adapter);
+
     IProject project = adapter.getFile().getProject();
     try {
+      // TODO use ProgressMonitor
       IBundleMakerProject bundleMakerProject = BundleMakerCore
           .getBundleMakerProject(project, new NullProgressMonitor());
-      List<? extends IFileBasedContent> fileBasedContent = bundleMakerProject.getProjectDescription()
-          .getFileBasedContent();
-      for (IFileBasedContent iFileBasedContent : fileBasedContent) {
-        System.out.println("content: " + iFileBasedContent);
-      }
+
       if (_treeViewer != null) {
-        System.out.println("Setze treeviewer!!!!");
         _treeViewer.setInput(bundleMakerProject.getProjectDescription());
-      } else {
-        System.out.println("TreeViewer is null !!!!");
       }
       _projectDescription = bundleMakerProject.getProjectDescription();
     } catch (Exception ex) {
-      ex.printStackTrace();
+      BundleMakerUiUtils.logError("Could not open BundleMaker project", ex);
     }
 
   }
