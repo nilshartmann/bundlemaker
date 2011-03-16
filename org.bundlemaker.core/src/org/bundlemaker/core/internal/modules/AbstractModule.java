@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
 import org.bundlemaker.core.modules.IModule;
@@ -42,6 +43,9 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
 
   /** the embedded container */
   private Map<String, T>      _embeddedContainers;
+
+  /** - */
+  private IModularizedSystem  _modularizedSystem;
 
   /**
    * <p>
@@ -86,6 +90,14 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   @Override
   public boolean hasClassification() {
     return _classification != null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModularizedSystem getModularizedSystem() {
+    return _modularizedSystem;
   }
 
   /**
@@ -262,6 +274,16 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    */
   public void setClassification(IPath classification) {
     _classification = classification;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   */
+  public final void setModularizedSystem(IModularizedSystem modularizedSystem) {
+    _modularizedSystem = modularizedSystem;
   }
 
   /**
