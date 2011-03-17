@@ -4,7 +4,7 @@ Bundle-Name: com.springsource.util.osgi.internal
 Bundle-SymbolicName: com.springsource.util.osgi.internal
 Bundle-Version: 2.0.0.RELEASE
 Bundle-Vendor: gerd wuetherich
-Fragment-Host: com.springsource.util.osgi
+Fragment-Host: com.springsource.util.osgi;bundle-version="2.0.0.RELEASE"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.springsource.util.osgi.internal;version="2.0.0.RELEASE",
  com.springsource.util.osgi.manifest.internal;version="2.0.0.RELEASE"

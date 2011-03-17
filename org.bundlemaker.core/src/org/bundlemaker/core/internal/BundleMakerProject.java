@@ -112,10 +112,8 @@ public class BundleMakerProject implements IBundleMakerProject {
     // set the progress monitor
     _currentProgressMonitor = progressMonitor;
 
-    // save the project description
-    _projectDescription.save();
-
     // reload the project description
+    _projectDescription = loadProjectDescription();
     _projectDescription.initialize(this);
 
     // set the initialized flag

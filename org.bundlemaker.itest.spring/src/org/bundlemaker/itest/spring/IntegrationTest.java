@@ -34,6 +34,7 @@ import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
+import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;
 import org.bundlemaker.itest.spring.tests.ModuleTest;
 import org.eclipse.core.resources.IProject;
@@ -46,103 +47,50 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class IntegrationTest {
-
-  /** - */
-  public static final String   PROJECT_NAME = "spring";
-
-  /** - */
-  private static final boolean PARSE        = Boolean.getBoolean("parse");
+public class IntegrationTest extends AbstractIntegrationTest {
 
   /**
    * <p>
+   * Creates a new instance of type {@link IntegrationTest}.
    * </p>
-   * 
-   * @throws Exception
    */
-  @Test
-  public void testIntegrationTestSpring() throws Exception {
+  public IntegrationTest() {
+    super("spring", false, false, false);
+  }
 
-    // IApiBaseline baseline =
-    // ApiModelFactory.newApiBaseline("testBaseLine");
-    // IApiComponent component1 = new SpecialComponent(
-    // baseline,
-    // new File(
-    // "R:/environments/bundlemaker2-environment/git-workspace/org.bundlemaker.itest.spring/spring/libs/bsh-2.0b4.jar"));
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void doAddProjectDescription(IBundleMakerProject bundleMakerProject) throws Exception {
+
     //
-    // IApiBaseline baseline2 = ApiModelFactory
-    // .newApiBaseline("testBaseLine2");
-    // IApiComponent component2 = new SpecialComponent(
-    // baseline2,
-    // new File(
-    // "R:/environments/bundlemaker2-environment/git-workspace/org.bundlemaker.itest.spring/spring/libs/testng-5.8-jdk15.jar"));
-    //
-    // ApiComparator apiComparator = new ApiComparator();
-    //
-    // //
-    // IDelta delta = apiComparator.compare(component2, component1,
-    // baseline2,
-    // baseline, VisibilityModifiers.ALL_VISIBILITIES, null);
-    //
-    // System.out.println(delta);
+    IntegrationTestUtils.createProjectDescription(bundleMakerProject.getProjectDescription());
+    bundleMakerProject.getProjectDescription().save();
+  }
 
-    // if (true) {
-    // return;
-    // }
-
-    // delete the project
-    if (PARSE) {
-      EclipseProjectUtils.deleteProjectIfExists(PROJECT_NAME);
-    }
-
-    // create simple project
-    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(PROJECT_NAME);
-
-    // get the BundleMaker project
-    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
-
-    // create the project description
-    if (PARSE) {
-      IntegrationTestUtils.createProjectDescription(bundleMakerProject.getProjectDescription());
-      bundleMakerProject.getProjectDescription().save();
-    }
-
-    // create the progress monitor
-    IProgressMonitor progressMonitor = new ProgressMonitor();
-
-    // initialize the project
-    bundleMakerProject.initialize(progressMonitor);
-
-    // parse the project
-    if (PARSE) {
-
-      StopWatch stopWatch = new StopWatch();
-      stopWatch.start();
-
-      List<? extends IProblem> problems = bundleMakerProject.parse(progressMonitor, true);
-
-      stopWatch.stop();
-      System.out.println(stopWatch.getElapsedTime());
-
-      BundleMakerProjectUtils.dumpProblems(problems);
-    }
-
-    // open the project
-    bundleMakerProject.open(progressMonitor);
-
+  @Override
+  protected void doCheckBundleMakerProject(IBundleMakerProject bundleMakerProject) {
     // check the model
     checkResourceModel(bundleMakerProject);
+  }
 
-    // get the default modularized system
-    final IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy(bundleMakerProject
-        .getProject().getName());
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void doAddTransformations(IModularizedSystem modularizedSystem) {
 
     // add the transformations
     IntegrationTestUtils.addEmbedAntTransformation(modularizedSystem);
     IntegrationTestUtils.addModularizeSpringTransformation(modularizedSystem);
+  }
 
-    // apply the transformation
-    modularizedSystem.applyTransformations();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void doPostProcessModularizedSystem(IModularizedSystem modularizedSystem) {
 
     modularizedSystem.getModuleSelectors().add(
         new PatternBasedModuleSelector(new String[] { "bsh.**" }, null, "bsh", "2.0b4"));
@@ -168,19 +116,30 @@ public class IntegrationTest {
     modularizedSystem.getModuleSelectors().add(
         new PatternBasedModuleSelector(new String[] { "org.apache.commons.collections.**" }, null,
             "commons-collections", "3.2"));
-    
+
     modularizedSystem.getModuleSelectors().add(
-        new PatternBasedModuleSelector(new String[] { "org.aspectj.**" }, null,
-            "aspectjrt", "0.0.0"));
-    
+        new PatternBasedModuleSelector(new String[] { "org.aspectj.**" }, null, "aspectjrt", "0.0.0"));
+
     modularizedSystem.getModuleSelectors().add(
-        new PatternBasedModuleSelector(new String[] { "org.aopalliance.**" }, null,
-            "aopalliance", "0.0.0"));
+        new PatternBasedModuleSelector(new String[] { "org.aopalliance.**" }, null, "aopalliance", "0.0.0"));
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void doCheckModularizedSystem(IModularizedSystem modularizedSystem) {
 
     //
     ModularizedSystemTests.testGetModules(modularizedSystem);
     ModuleTest.testModules(modularizedSystem);
+  }
 
+  @Override
+  protected void doAdditionalExports(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
+      throws Exception {
+    
     //
     IResourceModule resourceModule = modularizedSystem.getResourceModule("Spring-JDBC", "2.5.6");
 
@@ -197,7 +156,7 @@ public class IntegrationTest {
           System.out.println("   - " + type.getModule(modularizedSystem));
         }
       }
-    }
+  }
 
     // //
     // for (String ambiguousType : ambiguousTypes) {
@@ -524,4 +483,31 @@ public class IntegrationTest {
   public static boolean isLocalOrAnonymousType(String fullQualifiedName) {
     return fullQualifiedName.matches(".*\\$\\d.*");
   }
+
+  // IApiBaseline baseline =
+  // ApiModelFactory.newApiBaseline("testBaseLine");
+  // IApiComponent component1 = new SpecialComponent(
+  // baseline,
+  // new File(
+  // "R:/environments/bundlemaker2-environment/git-workspace/org.bundlemaker.itest.spring/spring/libs/bsh-2.0b4.jar"));
+  //
+  // IApiBaseline baseline2 = ApiModelFactory
+  // .newApiBaseline("testBaseLine2");
+  // IApiComponent component2 = new SpecialComponent(
+  // baseline2,
+  // new File(
+  // "R:/environments/bundlemaker2-environment/git-workspace/org.bundlemaker.itest.spring/spring/libs/testng-5.8-jdk15.jar"));
+  //
+  // ApiComparator apiComparator = new ApiComparator();
+  //
+  // //
+  // IDelta delta = apiComparator.compare(component2, component1,
+  // baseline2,
+  // baseline, VisibilityModifiers.ALL_VISIBILITIES, null);
+  //
+  // System.out.println(delta);
+
+  // if (true) {
+  // return;
+  // }
 }

@@ -1,24 +1,10 @@
 package org.bundlemaker.itest.adhoc;
 
 import java.io.File;
-import java.util.List;
+import java.io.FileFilter;
 
-import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
-import org.bundlemaker.core.exporter.SimpleReportExporter;
-import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
-import org.bundlemaker.core.util.BundleMakerProjectUtils;
-import org.bundlemaker.core.util.EclipseProjectUtils;
-import org.bundlemaker.core.util.ProgressMonitor;
-import org.bundlemaker.core.util.StopWatch;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.junit.Test;
+import org.bundlemaker.itest.AbstractIntegrationTest;
 
 /**
  * <p>
@@ -26,158 +12,41 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class IntegrationTest {
+public class IntegrationTest extends AbstractIntegrationTest {
 
-  /** - */
-  public static final String   PROJECT_NAME = "ad-hoc";
+	/**
+	 * <p>
+	 * </p>
+	 */
+	public IntegrationTest() {
 
-  /** - */
-  private static final boolean PARSE        = Boolean.getBoolean("parse");
+		// call super constructor
+		super("ad-hoc", true, true, false);
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void testIntegrationTestSpring() throws Exception {
+	@Override
+	protected void doAddProjectDescription(IBundleMakerProject bundleMakerProject)
+			throws Exception {
 
-    // delete the project
-    if (PARSE) {
-      EclipseProjectUtils.deleteProjectIfExists(PROJECT_NAME);
-    }
+		// step 1:
+		bundleMakerProject.getProjectDescription().clear();
 
-    // create simple project
-    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(PROJECT_NAME);
+		// step 2: add the JRE
+		bundleMakerProject.getProjectDescription().setJre("jdk16");
 
-    // get the BundleMaker project
-    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
-
-    // create the project description
-    if (PARSE) {
-      IntegrationTestUtils.createProjectDescription(bundleMakerProject.getProjectDescription());
-    }
-
-    // create the progress monitor
-    IProgressMonitor progressMonitor = new ProgressMonitor();
-
-    // initialize the project
-    bundleMakerProject.initialize(progressMonitor);
-
-    // parse the project
-    if (PARSE) {
-
-      StopWatch stopWatch = new StopWatch();
-      stopWatch.start();
-
-      List<? extends IProblem> problems = bundleMakerProject.parse(progressMonitor, true);
-
-      stopWatch.stop();
-      System.out.println(stopWatch.getElapsedTime());
-
-      BundleMakerProjectUtils.dumpProblems(problems);
-    }
-
-    // open the project
-    bundleMakerProject.open(progressMonitor);
-
-    // get the default modularized system
-    IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy(bundleMakerProject
-        .getProject().getName());
-
-    // apply the transformation
-    modularizedSystem.applyTransformations();
-
-    // export to simple report
-    exportToSimpleReport(bundleMakerProject, modularizedSystem);
-
-    // export to structure 101
-    exportToStructure101(bundleMakerProject, modularizedSystem);
-
-    //
-    exportToBinaryBundle(bundleMakerProject, modularizedSystem);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @param modularizedSystem
-   * @throws Exception
-   */
-  private void exportToBinaryBundle(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
-      throws Exception {
-
-    //
-    File destination = new File(System.getProperty("user.dir"), "destination");
-    destination.mkdirs();
-
-    // create the exporter context
-    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
-        modularizedSystem);
-
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    BinaryBundleExporter exporter = new BinaryBundleExporter();
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
-    stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @param modularizedSystem
-   * @throws Exception
-   */
-  private void exportToStructure101(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
-      throws Exception {
-
-    //
-    File destination = new File(System.getProperty("user.dir"), "destination");
-    destination.mkdirs();
-
-    // create the exporter context
-    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
-        modularizedSystem);
-
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    Structure101Exporter exporter = new Structure101Exporter();
-    exporter.export(modularizedSystem, exporterContext);
-    stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @param modularizedSystem
-   * @throws Exception
-   */
-  private void exportToSimpleReport(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
-      throws Exception {
-
-    //
-    File destination = new File(System.getProperty("user.dir"), "destination");
-    destination.mkdirs();
-
-    // create the exporter context
-    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
-        modularizedSystem);
-
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    SimpleReportExporter exporter = new SimpleReportExporter();
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
-    stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
-  }
-
+		// step 3: add classes
+		File libsDir = new File(System.getProperty("user.dir"), "adhoc-input");
+		File[] jarFiles = libsDir.listFiles(new FileFilter() {
+			public boolean accept(File pathname) {
+				return !(pathname.getName().contains(".svn") || pathname
+						.getName().contains(".SVN"));
+			}
+		});
+		for (File externalJar : jarFiles) {
+			bundleMakerProject.getProjectDescription().addResourceContent(
+					externalJar.getAbsolutePath());
+		}
+		
+		bundleMakerProject.getProjectDescription().save();
+	}
 }

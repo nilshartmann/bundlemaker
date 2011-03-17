@@ -1,29 +1,20 @@
 package org.bundlemaker.itest.eclipse;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
-import org.bundlemaker.core.exporter.SimpleReportExporter;
-import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.util.BundleMakerProjectUtils;
-import org.bundlemaker.core.util.EclipseProjectUtils;
-import org.bundlemaker.core.util.ProgressMonitor;
-import org.bundlemaker.core.util.StopWatch;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.junit.Test;
+import org.bundlemaker.itest.AbstractIntegrationTest;
 
 /**
  * <p>
@@ -31,144 +22,65 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class IntegrationTest {
-
-  /** - */
-  public static final String   PROJECT_NAME = "eclipse";
-
-  /** - */
-  private static final boolean PARSE        = Boolean.getBoolean("parse");
+public class IntegrationTest extends AbstractIntegrationTest {
 
   /**
    * <p>
+   * Creates a new instance of type {@link IntegrationTest}.
    * </p>
-   * 
-   * @throws Exception
    */
-  @Test
-  public void testIntegrationTestEclipse() throws Exception {
-
-    // delete the project
-    if (PARSE) {
-      EclipseProjectUtils.deleteProjectIfExists(PROJECT_NAME);
-    }
-
-    // create simple project
-    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(PROJECT_NAME);
-
-    // get the BundleMaker project
-    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
-
-    // create the project description
-    if (PARSE) {
-      IntegrationTestUtils.createProjectDescription(bundleMakerProject.getProjectDescription());
-      bundleMakerProject.getProjectDescription().save();
-    }
-
-    // create the progress monitor
-    IProgressMonitor progressMonitor = new ProgressMonitor();
-
-    // initialize the project
-    bundleMakerProject.initialize(progressMonitor);
-
-    // parse the project
-    if (PARSE) {
-
-      StopWatch stopWatch = new StopWatch();
-      stopWatch.start();
-
-      List<? extends IProblem> problems = bundleMakerProject.parse(progressMonitor, true);
-
-      stopWatch.stop();
-      System.out.println(stopWatch.getElapsedTime());
-
-      BundleMakerProjectUtils.dumpProblems(problems);
-    }
-
-    // open the project
-    bundleMakerProject.open(progressMonitor);
-
-    // get the working copy
-    bundleMakerProject.createModularizedSystemWorkingCopy("test");
-    IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy("test");
-
-    // transform
-    modularizedSystem.applyTransformations();
-
-    //
-    assertModelSetup(modularizedSystem);
-
-    //
-    exportToStructure101(bundleMakerProject, modularizedSystem);
-    exportToSimpleReport(bundleMakerProject, modularizedSystem);
-
-    // //
-    // IReferencedModulesQueryResult queryResult = modularizedSystem
-    // .getReferencedModules(modularizedSystem
-    // .getResourceModule(new ModuleIdentifier("eclipse",
-    // "3.6.1")), true);
-    //
-    // for (ITypeModule module : queryResult.getReferencedModules()) {
-    // System.out.println(module.getModuleIdentifier().toString());
-    // }
-    //
-    // for (Entry<IReference, Set<ITypeModule>> entry : queryResult
-    // .getReferencesWithAmbiguousModules().entrySet()) {
-    // System.out.println(" - " + entry.getKey());
-    // System.out.println("   - " + entry.getValue());
-    // }
-    //
-    // System.out
-    // .println("*****************************************************");
-    //
-    // for (Entry<IReference, ITypeModule> entry : queryResult
-    // .getReferencedModulesMap().entrySet()) {
-    //
-    // System.out.println(" - " + entry.getKey());
-    // System.out.println("   - " + entry.getValue());
-    // }
-  }
-
-  private void exportToStructure101(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
-      throws Exception {
-    // create the exporter context
-    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, new File(
-        "c:/temp"), modularizedSystem);
-
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    Structure101Exporter exporter = new Structure101Exporter();
-    exporter.export(modularizedSystem, exporterContext);
-    stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
-  }
-
-  private void exportToSimpleReport(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
-      throws Exception {
-
-    //
-    File destination = new File(System.getProperty("user.dir"), "destination");
-    destination.mkdirs();
-
-    // create the exporter context
-    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
-        modularizedSystem);
-
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    SimpleReportExporter exporter = new SimpleReportExporter();
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
-    stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
+  public IntegrationTest() {
+    super("eclipse", true, true, false);
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
+   * {@inheritDoc}
    */
-  private void assertModelSetup(IModularizedSystem modularizedSystem) {
+  @Override
+  protected void doAddProjectDescription(IBundleMakerProject bundleMakerProject) throws Exception {
+
+    // step 1:
+    bundleMakerProject.getProjectDescription().clear();
+
+    // step 2: add the JRE
+    bundleMakerProject.getProjectDescription().setJre("jdk16");
+
+    // step 3: add the source and classes
+    File sourceDirectory = new File(System.getProperty("user.dir"), "eclipse/source");
+
+    File classesDir = new File(System.getProperty("user.dir"), "eclipse/classes");
+    File[] jarFiles = classesDir.listFiles(new FileFilter() {
+      public boolean accept(File pathname) {
+        return !(pathname.getName().contains(".svn") || pathname.getName().contains(".SVN"));
+      }
+    });
+    List<String> classes = new LinkedList<String>();
+    for (File file : jarFiles) {
+      classes.add(file.getAbsolutePath());
+    }
+    bundleMakerProject.getProjectDescription().addResourceContent("eclipse", "3.6.1", classes,
+        Arrays.asList(new String[] { sourceDirectory.getAbsolutePath() }));
+
+    // step 4: process the class path entries
+    File libsDir = new File(System.getProperty("user.dir"), "eclipse/libs");
+    jarFiles = libsDir.listFiles(new FileFilter() {
+      public boolean accept(File pathname) {
+        return !(pathname.getName().contains(".svn") || pathname.getName().contains(".SVN"));
+      }
+    });
+    for (File externalJar : jarFiles) {
+      bundleMakerProject.getProjectDescription().addResourceContent(externalJar.getAbsolutePath());
+    }
+
+    //
+    bundleMakerProject.getProjectDescription().save();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void doCheckModularizedSystem(IModularizedSystem modularizedSystem) {
 
     // assert
     for (IResourceModule resourceModule : modularizedSystem.getResourceModules()) {
