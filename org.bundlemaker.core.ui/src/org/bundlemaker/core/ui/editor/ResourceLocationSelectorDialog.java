@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.Text;
 
 /**
  * <p>
+ * A Dialog that prompts for all informations needed for a
+ * {@link org.bundlemaker.core.projectdescription.IFileBasedContent IFileBasedContent}
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -202,12 +204,6 @@ public class ResourceLocationSelectorDialog extends TitleAreaDialog {
 
       updateEnablement();
     }
-  }
-
-  @Override
-  protected void okPressed() {
-    // TODO Auto-generated method stub
-    super.okPressed();
   }
 
 }
