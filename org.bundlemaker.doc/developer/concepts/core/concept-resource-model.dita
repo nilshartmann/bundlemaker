@@ -15,6 +15,6 @@
  <shortdesc/>
  <conbody>
   <p>The bundlemaker resource model:</p>
-  <image href="./diagram/resource-model.png" scale="70"/>
+  <image href="./diagrams/cd-resource-model.png" scale="40"/>
  </conbody>
 </concept>

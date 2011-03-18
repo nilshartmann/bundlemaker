@@ -24,9 +24,10 @@
     and a (hidden) <codeph>.bundlemaker</codeph> folder (the project local storage area). </p>
    <image href="./images/bundlemaker-project-layout.png"/>
   </section>
-  <section><title>Retrieving the IBundleMakerProject instance</title><p>For each Bundlemaker project
-    exists an associated <codeph>IBundleMakerProject</codeph> instance . To retrieve this instance
-    you can use the method
+  <section>
+   <title>Retrieving the IBundleMakerProject instance</title>
+   For each Bundlemaker project exists an associated <codeph>IBundleMakerProject</codeph>
+    instance . To retrieve this instance you can use the method
      <codeph>BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(String name)</codeph>:
     <codeblock>
   // get or create simple project with bundlemaker nature
@@ -37,8 +38,6 @@
   IBundleMakerProject bundleMakerProject = 
     BundleMakerCore.getBundleMakerProject(simpleProject, null);
    </codeblock>
-   </p>
-   <image href="./diagrams/cd-bundlemaker-project.png" scale="40"/>
   </section>
   <section><title>The project state model</title>
    <image href="./images/bundlemaker-project-statediagram.png" scale="60"/>

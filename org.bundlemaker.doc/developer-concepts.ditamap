@@ -10,7 +10,7 @@
       Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
 -->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/map.dtd">
-<map title="Bundlemaker concepts">
+<map title="Bundlemaker concepts" rev="0.1">
 
     <topicref href="./developer/concepts/overview/concept-overview.dita" type="concept">
         <topicref href="./developer/concepts/overview/concept-why-bundlemaker.dita" type="concept"/>

@@ -52,7 +52,7 @@
                     contains a corresponding target definition file <codeph>spring.target</codeph>).
                         <b>NOTE: CURRENTLY THE RESULTING WORKSPACE STILL CONTAINS SOME COMPILE
                         ERRORS - THE CAUSES ARE KNOWN AND WILL BE FIXED WITHIN THE NEXT TIME...</b>
-                    <image href="./images/dev-getting-started-SprInt-Result.png"/>
+                    <image href="./images/dev-getting-started-SprInt-Result.png" scale="65"/>
                 </stepresult>
             </step>
         </steps>
