@@ -13,14 +13,10 @@
 <concept id="conceptId">
  <title>Project description</title>
  <conbody>
-  <section><title>Overview</title>
-   <p>The system that should be analyzed and transformed using bundlemaker must defined within a
-    project description
-     (<codeph>org.bundlemaker.core.projectdescription.IBundleMakerProjcetDescription</codeph>). Each
-    bundlemaker project contains exactly one project description, as shown in the illustration
-    above. </p>
-   <image href="./images/ClassDiagram.png"/>
-  </section>
+  <p>The system that should be analyzed and transformed using bundlemaker must defined within a
+   project description
+    (<codeph>org.bundlemaker.core.projectdescription.IBundleMakerProjcetDescription</codeph>). Each
+   bundlemaker project contains exactly one project description, as shown in the illustration above. </p>
   <section><title>Retrieving the project description</title>
    <p>The bundlemaker project description can can be retrieved using the method
      <codeph>IBundleMakerProject.getProjectDescription()</codeph>:
@@ -37,18 +33,9 @@
      <li>Resource content contains the resources that you want to be analyzed and manipulated. E.g.
       if you want to transform a simple JAR archive into an OSGi bundle or some source code in valid
       PDE project, you have to add them to the project description as resource content.</li>
-     <li>asd</li>
+     <li>[TBD]</li>
     </ul>
    </p>
   </section>
-  
-  <example>
-   <codeblock>
-    IBundleMakerProject bundleMakerProject = ...;
-    
-    IBundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
-   </codeblock>
-   
-  </example>
  </conbody>
 </concept>

@@ -315,7 +315,7 @@ public interface IModularizedSystem {
    * @return
    */
   @Deprecated
-  public List<ITypeSelector> getModuleSelectors();
+  public List<ITypeSelector> getTypeSelectors();
 
   /**
    * <p>

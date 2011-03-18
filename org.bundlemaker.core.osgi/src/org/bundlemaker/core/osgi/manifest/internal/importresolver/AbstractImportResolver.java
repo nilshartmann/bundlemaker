@@ -1,13 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2011 Gerd Wuetherich (gerd@gerd-wuetherich.de).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors:
- *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
- ******************************************************************************/
 package org.bundlemaker.core.osgi.manifest.internal.importresolver;
 
 import java.util.ArrayList;
@@ -42,339 +32,375 @@ import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
  */
 public abstract class AbstractImportResolver extends AbstractResolver {
 
-  /** - */
-  private ReferencesCache         _referencesCache;
+	/** - */
+	private ReferencesCache _referencesCache;
 
-  /** - */
-  private ImportPackage           _importPackage;
+	/** - */
+	private ImportPackage _importPackage;
 
-  /** - */
-  private RequireBundle           _requireBundle;
+	/** - */
+	private RequireBundle _requireBundle;
 
-  /** - */
-  private List<HeaderDeclaration> _importPackageTemplates;
+	/** - */
+	private List<HeaderDeclaration> _importPackageTemplates;
 
-  /** - */
-  private List<HeaderDeclaration> _requireBundleTemplates;
+	/** - */
+	private List<HeaderDeclaration> _requireBundleTemplates;
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @param resourceModule
-   * @param manifestTemplate
-   * @param importPackage
-   * @param requireBundle
-   */
-  public AbstractImportResolver(CurrentModule currentModule, ImportPackage importPackage, RequireBundle requireBundle) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @param resourceModule
+	 * @param manifestTemplate
+	 * @param importPackage
+	 * @param requireBundle
+	 */
+	public AbstractImportResolver(CurrentModule currentModule,
+			ImportPackage importPackage, RequireBundle requireBundle) {
 
-    super(currentModule);
+		super(currentModule);
 
-    Assert.isNotNull(importPackage);
-    Assert.isNotNull(requireBundle);
+		Assert.isNotNull(importPackage);
+		Assert.isNotNull(requireBundle);
 
-    //
-    _importPackage = importPackage;
-    _requireBundle = requireBundle;
+		//
+		_importPackage = importPackage;
+		_requireBundle = requireBundle;
 
-    //
-    // TODO
-    _referencesCache = new ReferencesCache(currentModule.getModularizedSystem(), currentModule.getResourceModule(),
-        true, true);
+		//
+		// TODO
+		_referencesCache = new ReferencesCache(
+				currentModule.getModularizedSystem(),
+				currentModule.getResourceModule(), true, true);
 
-    //
-    initTemplates();
-  }
+		//
+		initTemplates();
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected final ReferencesCache getReferencesCache() {
-    return _referencesCache;
-  }
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	protected final ReferencesCache getReferencesCache() {
+		return _referencesCache;
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public ImportPackage getImportPackage() {
-    return _importPackage;
-  }
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public ImportPackage getImportPackage() {
+		return _importPackage;
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public RequireBundle getRequireBundle() {
-    return _requireBundle;
-  }
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public RequireBundle getRequireBundle() {
+		return _requireBundle;
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public List<HeaderDeclaration> getImportPackageTemplates() {
-    return _importPackageTemplates;
-  }
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public List<HeaderDeclaration> getImportPackageTemplates() {
+		return _importPackageTemplates;
+	}
 
-  /**
-   * <p>
-   * </p>
-   */
-  public abstract void addImportPackageAndRequiredBundle();
+	/**
+	 * <p>
+	 * </p>
+	 */
+	public abstract void addImportPackageAndRequiredBundle();
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param packageName
-   */
-  public final void addImportedPackage(String packageName) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageName
+	 */
+	public final void addImportedPackage(String packageName) {
 
-    //
-    addImportedPackage(packageName, null, null, null, null);
-  }
+		//
+		addImportedPackage(packageName, null, null, null, null);
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param packageName
-   * @param resolution
-   */
-  public final void addImportedPackage(String packageName, Resolution resolution) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageName
+	 * @param resolution
+	 */
+	public final void addImportedPackage(String packageName,
+			Resolution resolution) {
 
-    //
-    addImportedPackage(packageName, resolution, null, null, null);
-  }
+		//
+		addImportedPackage(packageName, resolution, null, null, null);
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param packageName
-   * @param resolution
-   * @param packageVersion
-   */
-  public final void addImportedPackage(String packageName, Resolution resolution, VersionRange packageVersion) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageName
+	 * @param resolution
+	 * @param packageVersion
+	 */
+	public final void addImportedPackage(String packageName,
+			Resolution resolution, VersionRange packageVersion) {
 
-    //
-    addImportedPackage(packageName, resolution, packageVersion, null, null);
-  }
+		//
+		addImportedPackage(packageName, resolution, packageVersion, null, null);
+	}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param packageName
-   */
-  public final void addImportedPackage(String packageName, Resolution resolution, VersionRange packageVersion,
-      String bundleSymbolicName, VersionRange bundleVersion) {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageName
+	 */
+	public final void addImportedPackage(String packageName,
+			Resolution resolution, VersionRange packageVersion,
+			String bundleSymbolicName, VersionRange bundleVersion) {
 
-    // step 1: create the 'ImportedPackage' instance
-    ImportedPackage importedPackage = _importPackage.addImportedPackage(packageName);
+		// TODO HACK
+		if (packageName.startsWith("com.sun") || packageName.startsWith("sun")) {
+			return;
+		}
+		
+		//
+		for (ImportedPackage importedPackage : _importPackage
+				.getImportedPackages()) {
+			if (importedPackage.getPackageName().equals(packageName)) {
+				return;
+			}
+		}
 
-    // step 2: set the attributes
-    if (resolution != null) {
-      importedPackage.setResolution(resolution);
-    }
-    if (packageVersion != null) {
-      importedPackage.setVersion(packageVersion);
-    }
-    if (bundleSymbolicName != null) {
-      importedPackage.setBundleSymbolicName(bundleSymbolicName);
-    }
-    if (bundleVersion != null) {
-      importedPackage.setBundleVersion(bundleVersion);
-    }
+		// step 1: create the 'ImportedPackage' instance
+		ImportedPackage importedPackage = _importPackage
+				.addImportedPackage(packageName);
 
-    // finally: the template ALWAYS overrides the computed values
-    HeaderDeclaration importPackageTemplate = ManifestUtils.findMostSpecificDeclaration(_importPackageTemplates,
-        packageName);
+		// step 2: set the attributes
+		if (resolution != null) {
+			importedPackage.setResolution(resolution);
+		}
+		if (packageVersion != null) {
+			importedPackage.setVersion(packageVersion);
+		}
+		if (bundleSymbolicName != null) {
+			importedPackage.setBundleSymbolicName(bundleSymbolicName);
+		}
+		if (bundleVersion != null) {
+			importedPackage.setBundleVersion(bundleVersion);
+		}
 
-    // assign the template values
-    if (importPackageTemplate != null) {
+		// finally: the template ALWAYS overrides the computed values
+		HeaderDeclaration importPackageTemplate = ManifestUtils
+				.findMostSpecificDeclaration(_importPackageTemplates,
+						packageName);
 
-      // add the attributes
-      importedPackage.getAttributes().putAll(importPackageTemplate.getAttributes());
+		// assign the template values
+		if (importPackageTemplate != null) {
 
-      // add the directives
-      importedPackage.getDirectives().putAll(importPackageTemplate.getDirectives());
-    }
-  }
+			// add the attributes
+			importedPackage.getAttributes().putAll(
+					importPackageTemplate.getAttributes());
 
-  /**
-   * <p>
-   * </p>
-   */
-  public final void addRequireBundle(String bundleSymbolicName, VersionRange bundleVersion, Resolution resolution,
-      Visibility visibility) {
+			// add the directives
+			importedPackage.getDirectives().putAll(
+					importPackageTemplate.getDirectives());
+		}
+	}
 
-    // step 1: create the 'RequiredBundle' instance
-    RequiredBundle requiredBundle = _requireBundle.addRequiredBundle(bundleSymbolicName);
+	/**
+	 * <p>
+	 * </p>
+	 */
+	public final void addRequireBundle(String bundleSymbolicName,
+			VersionRange bundleVersion, Resolution resolution,
+			Visibility visibility) {
 
-    // step 2: set the attributes
-    if (bundleVersion != null) {
-      requiredBundle.setBundleVersion(bundleVersion);
-    }
-    if (resolution != null) {
-      requiredBundle.setResolution(resolution);
-    }
-    if (visibility != null) {
-      requiredBundle.setVisibility(visibility);
-    }
+		// step 1: create the 'RequiredBundle' instance
+		RequiredBundle requiredBundle = _requireBundle
+				.addRequiredBundle(bundleSymbolicName);
 
-    // finally: the template ALWAYS overrides the computed values
-    HeaderDeclaration requireBundleTemplate = ManifestUtils.findMostSpecificDeclaration(_requireBundleTemplates,
-        bundleSymbolicName);
+		// step 2: set the attributes
+		if (bundleVersion != null) {
+			requiredBundle.setBundleVersion(bundleVersion);
+		}
+		if (resolution != null) {
+			requiredBundle.setResolution(resolution);
+		}
+		if (visibility != null) {
+			requiredBundle.setVisibility(visibility);
+		}
 
-    // assign the template values
-    if (requireBundleTemplate != null) {
+		// finally: the template ALWAYS overrides the computed values
+		HeaderDeclaration requireBundleTemplate = ManifestUtils
+				.findMostSpecificDeclaration(_requireBundleTemplates,
+						bundleSymbolicName);
 
-      // add the attributes
-      requiredBundle.getAttributes().putAll(requireBundleTemplate.getAttributes());
+		// assign the template values
+		if (requireBundleTemplate != null) {
 
-      // add the directives
-      requiredBundle.getDirectives().putAll(requireBundleTemplate.getDirectives());
-    }
-  }
+			// add the attributes
+			requiredBundle.getAttributes().putAll(
+					requireBundleTemplate.getAttributes());
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleSymbolicName
-   */
-  public final void addRequireBundle(String bundleSymbolicName) {
+			// add the directives
+			requiredBundle.getDirectives().putAll(
+					requireBundleTemplate.getDirectives());
+		}
+	}
 
-    addRequireBundle(bundleSymbolicName, null, null, null);
-  }
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleSymbolicName
+	 */
+	public final void addRequireBundle(String bundleSymbolicName) {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleSymbolicName
-   * @param bundleVersion
-   */
-  public final void addRequireBundle(String bundleSymbolicName, VersionRange bundleVersion) {
+		addRequireBundle(bundleSymbolicName, null, null, null);
+	}
 
-    addRequireBundle(bundleSymbolicName, bundleVersion, null, null);
-  }
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param bundleSymbolicName
+	 * @param bundleVersion
+	 */
+	public final void addRequireBundle(String bundleSymbolicName,
+			VersionRange bundleVersion) {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param packageName
-   * @return
-   */
-  protected boolean containsUnsatisfiedTypes(String packageName) {
+		addRequireBundle(bundleSymbolicName, bundleVersion, null, null);
+	}
 
-    //
-    Set<String> typeNames = getReferencesCache().getReferencedPackageToContainingTypesCache().get(packageName);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageName
+	 * @return
+	 */
+	protected boolean containsUnsatisfiedTypes(String packageName) {
 
-    //
-    for (String typeName : typeNames) {
-      if (getReferencesCache().getUnsatisfiedTypes().contains(typeName)) {
-        return true;
-      }
-    }
+		//
+		Set<String> typeNames = getReferencesCache()
+				.getReferencedPackageToContainingTypesCache().get(packageName);
 
-    //
-    return false;
-  }
+		//
+		for (String typeName : typeNames) {
+			if (getReferencesCache().getUnsatisfiedTypes().contains(typeName)) {
+				return true;
+			}
+		}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param exportingModules
-   * @param set
-   * @return
-   */
-  protected List<IModule> reduce(List<IModule> exportingModules, Set<String> typeNames) {
+		//
+		return false;
+	}
 
-    Assert.isNotNull(exportingModules);
-    Assert.isNotNull(typeNames);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param exportingModules
+	 * @param set
+	 * @return
+	 */
+	protected List<IModule> reduce(List<IModule> exportingModules,
+			Set<String> typeNames) {
 
-    //
-    for (IModule module : exportingModules) {
-      if (module.containsAll(typeNames)) {
-        List<IModule> result = new LinkedList<IModule>();
-        result.add(module);
-        return result;
-      }
-    }
+		Assert.isNotNull(exportingModules);
+		Assert.isNotNull(typeNames);
 
-    //
-    return exportingModules;
-  }
+		//
+		for (IModule module : exportingModules) {
+			if (module.containsAll(typeNames)) {
+				List<IModule> result = new LinkedList<IModule>();
+				result.add(module);
+				return result;
+			}
+		}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param packageName
-   * @return
-   */
-  protected List<IModule> getExportingModules(String packageName) {
+		//
+		return exportingModules;
+	}
 
-    //
-    List<IModule> result = new ArrayList<IModule>();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param packageName
+	 * @return
+	 */
+	protected List<IModule> getExportingModules(String packageName) {
 
-    //
-    Set<String> types = getReferencesCache().getReferencedPackageToContainingTypesCache().get(packageName);
+		//
+		List<IModule> result = new ArrayList<IModule>();
 
-    for (String type : types) {
+		//
+		Set<String> types = getReferencesCache()
+				.getReferencedPackageToContainingTypesCache().get(packageName);
 
-      Set<IModule> module = getReferencesCache().getReferenceTypeToExportingModuleCache().get(type);
+		for (String type : types) {
 
-      if (module != null) {
-        result.addAll(module);
-      } else {
-        System.out.println("No Module for " + type);
-      }
+			Set<IModule> module = getReferencesCache()
+					.getReferenceTypeToExportingModuleCache().get(type);
 
-    }
+			if (module != null) {
+				result.addAll(module);
+			} else {
+				System.out.println("No Module for " + type);
+			}
 
-    //
-    return result;
-  }
+		}
 
-  /**
-   * <p>
-   * </p>
-   * 
-   */
-  private void initTemplates() {
+		//
+		return result;
+	}
 
-    // get the import package template
-    String importPackageTemplateHeader = getManifestTemplate().getMainAttributes().get(
-        ManifestConstants.HEADER_IMPORT_TEMPLATE);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 */
+	private void initTemplates() {
 
-    _importPackageTemplates = importPackageTemplateHeader != null ? HeaderParserFactory.newHeaderParser(
-        new SimpleParserLogger()).parsePackageHeader(importPackageTemplateHeader, Constants.IMPORT_PACKAGE)
-        : ManifestConstants.EMPTY_HEADERDECLARATION_LIST;
+		// get the import package template
+		String importPackageTemplateHeader = getManifestTemplate()
+				.getMainAttributes().get(
+						ManifestConstants.HEADER_IMPORT_TEMPLATE);
 
-    // get the require bundle template
-    String requiredBundleTemplateHeader = getManifestTemplate().getMainAttributes().get(
-        ManifestConstants.HEADER_REQUIRE_BUNDLE_TEMPLATE);
+		_importPackageTemplates = importPackageTemplateHeader != null ? HeaderParserFactory
+				.newHeaderParser(new SimpleParserLogger()).parsePackageHeader(
+						importPackageTemplateHeader, Constants.IMPORT_PACKAGE)
+				: ManifestConstants.EMPTY_HEADERDECLARATION_LIST;
 
-    _requireBundleTemplates = requiredBundleTemplateHeader != null ? HeaderParserFactory.newHeaderParser(
-        new SimpleParserLogger()).parsePackageHeader(importPackageTemplateHeader, Constants.REQUIRE_BUNDLE)
-        : ManifestConstants.EMPTY_HEADERDECLARATION_LIST;
+		// get the require bundle template
+		String requiredBundleTemplateHeader = getManifestTemplate()
+				.getMainAttributes().get(
+						ManifestConstants.HEADER_REQUIRE_BUNDLE_TEMPLATE);
 
-  }
+		_requireBundleTemplates = requiredBundleTemplateHeader != null ? HeaderParserFactory
+				.newHeaderParser(new SimpleParserLogger()).parsePackageHeader(
+						importPackageTemplateHeader, Constants.REQUIRE_BUNDLE)
+				: ManifestConstants.EMPTY_HEADERDECLARATION_LIST;
+
+	}
 
 }

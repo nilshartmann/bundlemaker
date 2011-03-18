@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/task.dtd">
+<task id="taskId">
+    <title>Running the spring integration test</title>
+    <shortdesc>The spring integration test is located in
+            <codeph>org.bundlemaker.itest.spring</codeph>. It takes the spring framework (version
+        2.5.6) tohether with all depenencies as it's input and parses the source code as well as the
+        byte code.</shortdesc>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>Download the spring framework and repackage it for the integration test.</cmd>
+                <info>For your convenience the spring integration contains an ant build file (and an
+                    associated launch configuration) that downloads the spring framework and
+                    repackages it for the integration test. To execute the launch configuration just
+                    execute the <codeph>[org.bundlemaker.itest.spring] Prepare
+                        integrationtest</codeph> launch configuration. <p><image
+                            href="./images/dev-getting-started-SprInt-Prepare.png"/></p></info>
+                <stepresult>After execution the launch configuration the project
+                        <codeph>org.bundlemaker.itest.spring</codeph> should contain a directory
+                        <codeph>spring</codeph> with the spring source and classes. <p><image
+                            href="./images/dev-getting-started-SprInt-Workspace.png"/></p>
+                </stepresult>
+            </step>
+            <step>
+                <cmd>Execute the Spring integration test</cmd>
+                <info><p>Once the spring framework is downloaded and repackaged, you can execute the
+                        Spring integration test. If you execute the test for the first time, you
+                        have to launch the <codeph>[org.bundlemaker.itest.spring] IntegrationTest -
+                            Reparse</codeph> configuration. This causes the integration test to
+                        parse all source and class files.</p>
+                    <image href="./images/dev-getting-started-SprInt-Reparse.png"/>
+                    <p>If you already have executed the Parse step, you can execute the
+                            <codeph>[org.bundlemaker.itest.spring] IntegrationTest</codeph>
+                        configuration. In this case the sources and binaries are not parsed but the
+                        depenencies are read from the database.</p>
+                </info>
+                <stepresult><p>As the result of the integration test execution, you have a target
+                        platform and several PDE plug-in projects that are contained in the
+                        destination folder.</p><image
+                        href="./images/dev-getting-started-SprInt-destination.png"/></stepresult>
+            </step>
+            <step>
+                <cmd>Starting the GUI to inspect the workspace</cmd>
+                <info><p>You can start a new eclipse instance to inspect the exported PDE plug-in
+                        projects. Just execute the <codeph>[org.bundlemaker.itest.spring]
+                            BundleMaker UI (Spring)</codeph> launcher.</p>
+                    <image href="./images/dev-getting-started-SprInt-Start-UI.png"/></info>
+                <stepresult>As the result of executing the GUI, a new eclipse instance starts up
+                    that contains the generated projects. Please make sure that you set the
+                    generated target platform correctly (project <codeph>spring.target</codeph>
+                    contains a corresponding target definition file <codeph>spring.target</codeph>).
+                        <b>NOTE: CURRENTLY THE RESULTING WORKSPACE STILL CONTAINS SOME COMPILE
+                        ERRORS - THE CAUSES ARE KNOWN AND WILL BE FIXED WITHIN THE NEXT TIME...</b>
+                    <image href="./images/dev-getting-started-SprInt-Result.png" scale="65"/>
+                </stepresult>
+            </step>
+        </steps>
+    </taskbody>
+</task>

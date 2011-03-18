@@ -516,7 +516,6 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
 
     //
     if (contentType.equals(ContentType.SOURCE) && resourceModule.getResources(ContentType.SOURCE).isEmpty()) {
-
       //
       contentType = ContentType.BINARY;
     }
