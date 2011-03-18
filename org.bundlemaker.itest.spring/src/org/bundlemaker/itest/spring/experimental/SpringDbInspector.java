@@ -1,4 +1,4 @@
-package org.bundlemaker.itest.spring;
+package org.bundlemaker.itest.spring.experimental;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.test.inspector.DbInspector;

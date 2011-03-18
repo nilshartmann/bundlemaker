@@ -14,12 +14,15 @@ import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
+import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.Test;
 
 /**
@@ -45,6 +48,9 @@ public abstract class AbstractIntegrationTest {
   /** - */
   private boolean              _exportAsSimpleReport;
 
+  /** - */
+  private boolean              _exportAsPdeProjects;
+
   /**
    * @param projectName
    * @param exportAsSimpleReport
@@ -52,7 +58,7 @@ public abstract class AbstractIntegrationTest {
    * @param exportAsBinaryBundles
    */
   public AbstractIntegrationTest(String projectName, boolean exportAsSimpleReport, boolean exportAsStructure101,
-      boolean exportAsBinaryBundles) {
+      boolean exportAsBinaryBundles, boolean exportAsPdeProjects) {
 
     Assert.assertNotNull(projectName);
 
@@ -60,6 +66,7 @@ public abstract class AbstractIntegrationTest {
     _exportAsSimpleReport = exportAsSimpleReport;
     _exportAsStructure101 = exportAsStructure101;
     _exportAsBinaryBundles = exportAsBinaryBundles;
+    _exportAsPdeProjects = exportAsPdeProjects;
   }
 
   /**
@@ -156,13 +163,19 @@ public abstract class AbstractIntegrationTest {
       exportAsBinaryBundle(bundleMakerProject, modularizedSystem);
     }
 
+    //
+    if (_exportAsPdeProjects) {
+      log("Exporting as binary bundles...");
+      exportAsPdeProjects(bundleMakerProject, modularizedSystem);
+    }
+
     doAdditionalExports(bundleMakerProject, modularizedSystem);
   }
 
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param bundleMakerProject
    */
   protected void doCheckBundleMakerProject(IBundleMakerProject bundleMakerProject) {
@@ -172,7 +185,7 @@ public abstract class AbstractIntegrationTest {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param modularizedSystem
    */
   protected void doPostProcessModularizedSystem(IModularizedSystem modularizedSystem) {
@@ -242,7 +255,7 @@ public abstract class AbstractIntegrationTest {
     BinaryBundleExporter exporter = new BinaryBundleExporter();
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
     stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
+    System.out.println("Elapsed time " + stopWatch.getElapsedTime());
   }
 
   /**
@@ -269,7 +282,7 @@ public abstract class AbstractIntegrationTest {
     Structure101Exporter exporter = new Structure101Exporter();
     exporter.export(modularizedSystem, exporterContext);
     stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
+    System.out.println("Elapsed time " + stopWatch.getElapsedTime());
   }
 
   /**
@@ -296,7 +309,39 @@ public abstract class AbstractIntegrationTest {
     SimpleReportExporter exporter = new SimpleReportExporter();
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
     stopWatch.stop();
-    System.out.println("Dauer " + stopWatch.getElapsedTime());
+    System.out.println("Elapsed time " + stopWatch.getElapsedTime());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param modularizedSystem
+   * @throws Exception
+   */
+  private void exportAsPdeProjects(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
+      throws Exception {
+
+    //
+    File destination = new File(System.getProperty("user.dir"), "destination");
+    destination.mkdirs();
+
+    // create the exporter context
+    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
+        modularizedSystem);
+
+    File templateDirectory = new File(System.getProperty("user.dir"), "templates");
+
+    TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
+    targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
+    targetPlatformProjectExporter.export(modularizedSystem, exporterContext);
+
+    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
+    pdeExporter.setUseClassifcationForExportDestination(true);
+    pdeExporter.setTemplateRootDirectory(templateDirectory);
+
+    new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext);
   }
 
   /**
@@ -305,5 +350,15 @@ public abstract class AbstractIntegrationTest {
    */
   protected void log(String message) {
     System.out.println(String.format("[%s] %s", this.getClass().getName(), message));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public static String getDefaultVmName() {
+    return JavaRuntime.getDefaultVMInstall().getName();
   }
 }

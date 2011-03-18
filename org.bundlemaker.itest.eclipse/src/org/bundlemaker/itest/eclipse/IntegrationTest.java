@@ -30,7 +30,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
    * </p>
    */
   public IntegrationTest() {
-    super("eclipse", true, true, false);
+    super("eclipse", true, true, false, false);
   }
 
   /**
@@ -43,7 +43,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
     bundleMakerProject.getProjectDescription().clear();
 
     // step 2: add the JRE
-    bundleMakerProject.getProjectDescription().setJre("jdk16");
+    bundleMakerProject.getProjectDescription().setJre(AbstractIntegrationTest.getDefaultVmName());
 
     // step 3: add the source and classes
     File sourceDirectory = new File(System.getProperty("user.dir"), "eclipse/source");

@@ -12,6 +12,7 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.transformation.EmbedModuleTransformation;
 import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedTransformation;
+import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.eclipse.core.runtime.CoreException;
 
 public class IntegrationTestUtils {
@@ -25,38 +26,55 @@ public class IntegrationTestUtils {
     // create from identifier
     IModuleIdentifier fromIdentifier = new ModuleIdentifier("Spring", "2.5.6");
 
-    transformation.addModuleDefinition("Spring-Core", "2.5.6").addResourceSet(
+    transformation.addModuleDefinition("spring-core", "2.5.6").addResourceSet(
         fromIdentifier,
         new String[] { "org/springframework/core/**", "org/springframework/metadata/**", "org/springframework/util/**",
             "org/springframework/asm/**" }, null);
 
-    transformation.addModuleDefinition("Spring-AOP", "2.5.6").addResourceSet(fromIdentifier,
+    transformation.addModuleDefinition("spring-aop", "2.5.6").addResourceSet(fromIdentifier,
         new String[] { "org/springframework/aop/**" }, null);
 
-    transformation.addModuleDefinition("Spring-Beans", "2.5.6").addResourceSet(fromIdentifier,
+    transformation.addModuleDefinition("spring-beans", "2.5.6").addResourceSet(fromIdentifier,
         new String[] { "org/springframework/beans/**" }, null);
 
-    transformation.addModuleDefinition("Spring-Context", "2.5.6").addResourceSet(
+    transformation.addModuleDefinition("spring-context", "2.5.6").addResourceSet(
         fromIdentifier,
-        new String[] { "org/springframework/context/**", "org/springframework/instrument/classloading/**",
-            "org/springframework/instrument/ejb/**", "org/springframework/jmx/**", "org/springframework/jndi/**",
+        new String[] { "org/springframework/context/**", "org/springframework/instrument/**",
+            "org/springframework/jmx/**", "org/springframework/ejb/**", "org/springframework/jndi/**",
             "org/springframework/remoting/*", "org/springframework/remoting/rmi/**",
             "org/springframework/remoting/soap/**", "org/springframework/remoting/support/**",
             "org/springframework/scheduling/**", "org/springframework/scripting/**",
             "org/springframework/stereotype/**", "org/springframework/ui/**", "org/springframework/validation/**" },
         new String[] { "org/springframework/scheduling/quartz/**" });
 
-    transformation.addModuleDefinition("Spring-JDBC", "2.5.6").addResourceSet(fromIdentifier,
+    transformation.addModuleDefinition("spring-context-support", "2.5.6").addResourceSet(
+        fromIdentifier,
+        new String[] { "org/springframework/cache/ehcache/**", "org/springframework/mail/**",
+            "org/springframework/scheduling/commonj/**", "org/springframework/scheduling/quartz/**",
+            "org/springframework/ui/freemarker/**", "org/springframework/ui/jasperreports/**",
+            "org/springframework/ui/velocity/**" }, null);
+
+    transformation.addModuleDefinition("spring-jdbc", "2.5.6").addResourceSet(fromIdentifier,
         new String[] { "org/springframework/jdbc/**" }, null);
 
-    transformation.addModuleDefinition("Spring-JMS", "2.5.6").addResourceSet(fromIdentifier,
+    transformation.addModuleDefinition("spring-jms", "2.5.6").addResourceSet(fromIdentifier,
         new String[] { "org/springframework/jms/**" }, null);
 
-    transformation.addModuleDefinition("Spring-TX", "2.5.6")
+    transformation.addModuleDefinition("spring-tx", "2.5.6")
         .addResourceSet(
             fromIdentifier,
             new String[] { "org/springframework/dao/**", "org/springframework/jca/**",
                 "org/springframework/transaction/**" }, null);
+
+    transformation.addModuleDefinition("spring-orm", "2.5.6").addResourceSet(fromIdentifier,
+        new String[] { "org/springframework/orm/**" }, null);
+
+    transformation.addModuleDefinition("spring-web", "2.5.6").addResourceSet(
+        fromIdentifier,
+        new String[] { "org/springframework/remoting/caucho/**", "org/springframework/remoting/httpinvoker/**",
+            "org/springframework/remoting/jaxrpc/**", "org/springframework/remoting/jaxws/**",
+            "org/springframework/web/**" }, null);
+
     // ****************************************************************************************
   }
 
@@ -84,7 +102,7 @@ public class IntegrationTestUtils {
     projectDescription.clear();
 
     // step 2: add the JRE
-    projectDescription.setJre("jdk16");
+    projectDescription.setJre(AbstractIntegrationTest.getDefaultVmName());
 
     // step 3: add the source and classes
     File classesZip = new File(System.getProperty("user.dir"), "spring/classes.zip");

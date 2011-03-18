@@ -1,4 +1,4 @@
-package org.bundlemaker.itest.spring;
+package org.bundlemaker.itest.spring.experimental;
 
 import java.io.File;
 import java.io.FileOutputStream;

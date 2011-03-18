@@ -51,7 +51,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   }
 
   @Override
-  public List<ITypeSelector> getModuleSelectors() {
+  public List<ITypeSelector> getTypeSelectors() {
     return _moduleSelectors;
   }
 

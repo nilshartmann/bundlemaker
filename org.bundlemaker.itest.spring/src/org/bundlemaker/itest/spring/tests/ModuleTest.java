@@ -14,10 +14,10 @@ public class ModuleTest {
   public static void testModules(IModularizedSystem modularizedSystem) {
 
     //
-    IModule module = modularizedSystem.getModule("Spring-Context", "2.5.6");
+    IModule module = modularizedSystem.getModule("spring-context", "2.5.6");
 
     //
-    Assert.assertEquals(49, module.getContainedPackageNames().size());
+    Assert.assertEquals(53, module.getContainedPackageNames().size());
 
     //
     Collection<IType> types = module.getContainedTypes(TypeQueryFilters.newPatternBasedTypeFilter(
@@ -28,7 +28,6 @@ public class ModuleTest {
     types = module.getContainedTypes(TypeQueryFilters.newPatternBasedTypeFilter(
         new String[] { "org\\.springframework\\.context\\.[^.]*" }, new String[] {}));
     Assert.assertEquals(15, types.size());
-    System.out.println(types);
 
     for (IType iType : types) {
       IType iType2 = module.getType(iType.getFullyQualifiedName());

@@ -76,8 +76,9 @@ public class TargetPlatformProjectExporter extends ModularizedSystemExporterAdap
         + "}/bundles");
 
     targetDefinition.setBundleContainers(new IBundleContainer[] { bundleContainer });
-
     targetPlatformService.saveTargetDefinition(targetDefinition);
+
+    SystemBundleCopier.copySystemBundle(folder.getRawLocation().toFile());
 
     return new DefaultModuleExporterContext(getCurrentContext().getBundleMakerProject(), folder.getRawLocation()
         .toFile(), getCurrentContext().getModularizedSystem());

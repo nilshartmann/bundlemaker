@@ -1,4 +1,4 @@
-package org.bundlemaker.itest.spring;
+package org.bundlemaker.itest.spring.experimental;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PatternBasedModuleSelector implements ITypeSelector {
+public class PatternBasedTypeSelector implements ITypeSelector {
 
   /** - */
   private Set<IModuleIdentifier> _sourceModuleIdentifier;
@@ -33,13 +33,13 @@ public class PatternBasedModuleSelector implements ITypeSelector {
 
   /**
    * <p>
-   * Creates a new instance of type {@link PatternBasedModuleSelector}.
+   * Creates a new instance of type {@link PatternBasedTypeSelector}.
    * </p>
    * 
    * @param includes
    * @param excludes
    */
-  public PatternBasedModuleSelector(String[] typeIncludes, String[] typeExcludes,
+  public PatternBasedTypeSelector(String[] typeIncludes, String[] typeExcludes,
       ModuleIdentifier selectedModuleIdentifier) {
 
     //
@@ -48,7 +48,7 @@ public class PatternBasedModuleSelector implements ITypeSelector {
 
   /**
    * <p>
-   * Creates a new instance of type {@link PatternBasedModuleSelector}.
+   * Creates a new instance of type {@link PatternBasedTypeSelector}.
    * </p>
    * 
    * @param typeIncludes
@@ -56,13 +56,13 @@ public class PatternBasedModuleSelector implements ITypeSelector {
    * @param name
    * @param version
    */
-  public PatternBasedModuleSelector(String[] typeIncludes, String[] typeExcludes, String name, String version) {
+  public PatternBasedTypeSelector(String[] typeIncludes, String[] typeExcludes, String name, String version) {
     this(typeIncludes, typeExcludes, new ModuleIdentifier(name, version));
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link PatternBasedModuleSelector}.
+   * Creates a new instance of type {@link PatternBasedTypeSelector}.
    * </p>
    * 
    * @param sourceModuleIdentifier
@@ -70,7 +70,7 @@ public class PatternBasedModuleSelector implements ITypeSelector {
    * @param typeExcludes
    * @param moduleIdentifier
    */
-  public PatternBasedModuleSelector(ModuleIdentifier sourceModuleIdentifier, String[] typeIncludes,
+  public PatternBasedTypeSelector(ModuleIdentifier sourceModuleIdentifier, String[] typeIncludes,
       String[] typeExcludes, ModuleIdentifier selectedModuleIdentifier) {
 
     Assert.isNotNull(selectedModuleIdentifier);
@@ -88,7 +88,7 @@ public class PatternBasedModuleSelector implements ITypeSelector {
 
   /**
    * <p>
-   * Creates a new instance of type {@link PatternBasedModuleSelector}.
+   * Creates a new instance of type {@link PatternBasedTypeSelector}.
    * </p>
    * 
    * @param sourceName
@@ -98,7 +98,7 @@ public class PatternBasedModuleSelector implements ITypeSelector {
    * @param targetName
    * @param targetVersion
    */
-  public PatternBasedModuleSelector(String sourceName, String sourceVersion, String[] typeIncludes,
+  public PatternBasedTypeSelector(String sourceName, String sourceVersion, String[] typeIncludes,
       String[] typeExcludes, String targetName, String targetVersion) {
 
     this(new ModuleIdentifier(sourceName, sourceVersion), typeIncludes, typeExcludes, new ModuleIdentifier(targetName,
