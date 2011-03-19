@@ -53,7 +53,10 @@ public class BundleManifestCreator {
   private CurrentModule   _currentModule;
 
   /** - */
-  private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
+  private DependencyStyle _dependencyStyle         = DependencyStyle.PREFER_IMPORT_PACKAGE;
+
+  /** - */
+  private boolean         _useOriginalOSGiManifest = true;
 
   /**
    * <p>
@@ -75,6 +78,10 @@ public class BundleManifestCreator {
 
     //
     _currentModule = new CurrentModule(modularizedSystem, resourceModule, context, manifestTemplate);
+  }
+
+  public void setUseOriginalOSGiManifest(boolean useOriginalOSGiManifest) {
+    _useOriginalOSGiManifest = useOriginalOSGiManifest;
   }
 
   /**
@@ -99,7 +106,7 @@ public class BundleManifestCreator {
       existingManifest = ManifestUtils.readManifestContents(existingManifestResource);
 
       // return immediately if manifest already is a bundle manifest
-      if (ManifestUtils.isBundleManifest(existingManifest)
+      if (_useOriginalOSGiManifest && ManifestUtils.isBundleManifest(existingManifest)
           && !ModuleExporterUtils.requiresRepackaging(_currentModule.getResourceModule(), ContentType.BINARY)) {
 
         // return the existing manifest

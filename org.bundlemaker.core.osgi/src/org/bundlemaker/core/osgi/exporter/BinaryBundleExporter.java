@@ -26,39 +26,54 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 
-  /** - */
-  private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
+	/** - */
+	private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param useRequireBundle
-   */
-  public void setDependencyStyle(DependencyStyle dependencyStyle) {
-    _dependencyStyle = dependencyStyle;
-  }
+	/** - */
+	private boolean _useOriginalOSGiManifest = true;
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @param module
-   * @param context
-   * @return
-   * @throws Exception
-   */
-  protected ManifestContents createManifest() throws CoreException {
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param useRequireBundle
+	 */
+	public void setDependencyStyle(DependencyStyle dependencyStyle) {
+		_dependencyStyle = dependencyStyle;
+	}
 
-    // create the manifest
-    BundleManifestCreator creator = new BundleManifestCreator(getCurrentModularizedSystem(), getCurrentModule(),
-        getCurrentContext(), getCurrentManifestTemplate());
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param useOriginalOSGiManifest
+	 */
+	public void setUseOriginalOSGiManifest(boolean useOriginalOSGiManifest) {
+		_useOriginalOSGiManifest = useOriginalOSGiManifest;
+	}
 
-    // set useRequireBundle
-    creator.setDependencyStyle(_dependencyStyle);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @param modularizedSystem
+	 * @param module
+	 * @param context
+	 * @return
+	 * @throws Exception
+	 */
+	protected ManifestContents createManifest() throws CoreException {
 
-    // create manifest
-    return creator.createManifest();
-  }
+		// create the manifest
+		BundleManifestCreator creator = new BundleManifestCreator(
+				getCurrentModularizedSystem(), getCurrentModule(),
+				getCurrentContext(), getCurrentManifestTemplate());
+
+		// set
+		creator.setDependencyStyle(_dependencyStyle);
+		creator.setUseOriginalOSGiManifest(_useOriginalOSGiManifest);
+
+		// create manifest
+		return creator.createManifest();
+	}
 }

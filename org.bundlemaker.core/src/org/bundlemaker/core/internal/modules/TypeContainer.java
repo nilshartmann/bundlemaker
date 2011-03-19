@@ -178,13 +178,12 @@ public class TypeContainer implements ITypeContainer {
 
         // get the packageName
         packageName = containedType.substring(0, containedType.lastIndexOf('.'));
-      }
 
-      //
-      if (!result.contains(packageName) && filter.matches(packageName)) {
-        result.add(packageName);
+        //
+        if (!result.contains(packageName) && filter.matches(packageName)) {
+          result.add(packageName);
+        }
       }
-
     }
 
     // return result
