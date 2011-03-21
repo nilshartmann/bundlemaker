@@ -35,7 +35,7 @@ import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFac
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractJarFileBundleExporter extends AbstractManifestTemplateBasedExporter {
+public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwareExporter {
 
   /**
    * {@inheritDoc}
