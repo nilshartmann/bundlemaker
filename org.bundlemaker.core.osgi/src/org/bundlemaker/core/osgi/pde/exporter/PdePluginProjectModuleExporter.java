@@ -20,8 +20,9 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.Activator;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
-import org.bundlemaker.core.osgi.exporter.AbstractManifestTemplateBasedExporter;
-import org.bundlemaker.core.osgi.manifest.BundleManifestCreator;
+import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
+import org.bundlemaker.core.osgi.internal.manifest.ExportPackagePreferences;
+import org.bundlemaker.core.osgi.internal.manifest.PackageWiringPreferences;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
@@ -41,6 +42,7 @@ import org.eclipse.pde.core.project.IBundleClasspathEntry;
 import org.eclipse.pde.core.project.IBundleProjectDescription;
 import org.eclipse.pde.core.project.IBundleProjectService;
 
+import com.springsource.bundlor.util.BundleManifestUtils;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -50,150 +52,144 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PdePluginProjectModuleExporter extends
-		AbstractManifestAwareExporter {
+public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporter {
 
-	/** - */
-	private static final String SRC_DIRECTORY_NAME = "src";
+  /** - */
+  private static final String              SRC_DIRECTORY_NAME = "src";
 
-	/** - */
-	private static final String BIN_DIRECTORY_NAME = "bin";
+  /** - */
+  private static final String              BIN_DIRECTORY_NAME = "bin";
 
-	/** - */
-	private boolean _useClassifcationForExportDestination;
+  /** - */
+  private boolean                          _useClassifcationForExportDestination;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public boolean isUseClassifcationForExportDestination() {
-		return _useClassifcationForExportDestination;
-	}
+  /** - */
+  private DroolsBasedBundleManifestCreator _manifestCreator;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param useClassifcationForExportDestination
-	 */
-	public void setUseClassifcationForExportDestination(
-			boolean useClassifcationForExportDestination) {
-		_useClassifcationForExportDestination = useClassifcationForExportDestination;
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link PdePluginProjectModuleExporter}.
+   * </p>
+   * 
+   */
+  public PdePluginProjectModuleExporter() {
+    _manifestCreator = new DroolsBasedBundleManifestCreator();
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean canExport(IModularizedSystem modularizedSystem,
-			IResourceModule module, IModuleExporterContext context) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean isUseClassifcationForExportDestination() {
+    return _useClassifcationForExportDestination;
+  }
 
-		//
-		return !module.getResources(ContentType.SOURCE).isEmpty();
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param useClassifcationForExportDestination
+   */
+  public void setUseClassifcationForExportDestination(boolean useClassifcationForExportDestination) {
+    _useClassifcationForExportDestination = useClassifcationForExportDestination;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void doExport() throws CoreException {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean canExport(IModularizedSystem modularizedSystem, IResourceModule module, IModuleExporterContext context) {
 
-		// step 1: get a non-existing project name
-		String projectName = Helper.getUniqueProjectName(getCurrentModule()
-				.getModuleIdentifier().getName());
+    //
+    return !module.getResources(ContentType.SOURCE).isEmpty();
+  }
 
-		// step 2: delete and create project
-		IPath location = null;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void doExport() throws CoreException {
 
-		if (isUseClassifcationForExportDestination()) {
+    // step 1: get a non-existing project name
+    String projectName = Helper.getUniqueProjectName(getCurrentModule().getModuleIdentifier().getName());
 
-			Path destinationDirectoryPath = new Path(getCurrentContext()
-					.getDestinationDirectory().getAbsolutePath());
+    // step 2: delete and create project
+    IPath location = null;
 
-			location = destinationDirectoryPath.append(
-					getCurrentModule().getClassification()).append(projectName);
-		}
+    if (isUseClassifcationForExportDestination()) {
 
-		// (re-)create the project
-		IProject project = Helper.deleteAndCreateProject(projectName, location);
+      Path destinationDirectoryPath = new Path(getCurrentContext().getDestinationDirectory().getAbsolutePath());
 
-		// step 3: add java and plug-nature
-		IProjectDescription description = project.getDescription();
-		description.setNatureIds(new String[] { JavaCore.NATURE_ID,
-				IBundleProjectDescription.PLUGIN_NATURE });
-		project.setDescription(description, null);
+      location = destinationDirectoryPath.append(getCurrentModule().getClassification()).append(projectName);
+    }
 
-		// 'clean' the java project
-		IJavaProject javaProject = JavaCore.create(project);
-		javaProject.setRawClasspath(new IClasspathEntry[] { JavaRuntime
-				.getDefaultJREContainerEntry() }, null);
-		javaProject.save(null, true);
+    // (re-)create the project
+    IProject project = Helper.deleteAndCreateProject(projectName, location);
 
-		// step 4: create and set the bundle project description
-		IBundleProjectService bundleProjectService = Activator
-				.getBundleProjectService();
+    // step 3: add java and plug-nature
+    IProjectDescription description = project.getDescription();
+    description.setNatureIds(new String[] { JavaCore.NATURE_ID, IBundleProjectDescription.PLUGIN_NATURE });
+    project.setDescription(description, null);
 
-		IBundleProjectDescription bundleProjectDescription = bundleProjectService
-				.getDescription(project);
+    // 'clean' the java project
+    IJavaProject javaProject = JavaCore.create(project);
+    javaProject.setRawClasspath(new IClasspathEntry[] { JavaRuntime.getDefaultJREContainerEntry() }, null);
+    javaProject.save(null, true);
 
-		//
-		for (String header : getCurrentManifest().getMainAttributes().keySet()) {
-			bundleProjectDescription.setHeader(header, getCurrentManifest()
-					.getMainAttributes().get(header));
-		}
+    // step 4: create and set the bundle project description
+    IBundleProjectService bundleProjectService = Activator.getBundleProjectService();
 
-		// set source dir
-		IBundleClasspathEntry bundleClasspathEntry = bundleProjectService
-				.newBundleClasspathEntry(new Path(SRC_DIRECTORY_NAME),
-						new Path(BIN_DIRECTORY_NAME), null);
+    IBundleProjectDescription bundleProjectDescription = bundleProjectService.getDescription(project);
 
-		//
-		bundleProjectDescription
-				.setBundleClassath(new IBundleClasspathEntry[] { bundleClasspathEntry });
+    //
+    for (String header : getCurrentManifest().getMainAttributes().keySet()) {
+      bundleProjectDescription.setHeader(header, getCurrentManifest().getMainAttributes().get(header));
+    }
 
-		//
-		bundleProjectDescription.apply(null);
+    // set source dir
+    IBundleClasspathEntry bundleClasspathEntry = bundleProjectService.newBundleClasspathEntry(new Path(
+        SRC_DIRECTORY_NAME), new Path(BIN_DIRECTORY_NAME), null);
 
-		// step 5: copy the source files
-		IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
+    //
+    bundleProjectDescription.setBundleClassath(new IBundleClasspathEntry[] { bundleClasspathEntry });
 
-		// copy the source
-		for (IResource resourceStandin : getCurrentModule().getResources(
-				ContentType.SOURCE)) {
+    //
+    bundleProjectDescription.apply(null);
 
-			if (!resourceStandin.getPath().startsWith("META-INF")) {
+    // step 5: copy the source files
+    IFolder srcFolder = project.getFolder(SRC_DIRECTORY_NAME);
 
-				//
-				File targetFile = new File(srcFolder.getRawLocation().toFile(),
-						resourceStandin.getPath());
-				targetFile.getParentFile().mkdirs();
+    // copy the source
+    for (IResource resourceStandin : getCurrentModule().getResources(ContentType.SOURCE)) {
 
-				try {
-					//
-					FileUtils.copy(
-							new ByteArrayInputStream(resourceStandin
-									.getContent()), new FileOutputStream(
-									targetFile), new byte[1024]);
-				} catch (Exception e) {
-					// TODO
-					e.printStackTrace();
-					throw new CoreException(new Status(IStatus.ERROR, "asd",
-							"asd"));
-				}
-			}
-		}
-	}
+      if (!resourceStandin.getPath().startsWith("META-INF")) {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected ManifestContents createManifest() throws CoreException {
+        //
+        File targetFile = new File(srcFolder.getRawLocation().toFile(), resourceStandin.getPath());
+        targetFile.getParentFile().mkdirs();
 
-		// create the manifest
-		return new BundleManifestCreator(getCurrentModularizedSystem(),
-				getCurrentModule(), getCurrentContext(),
-				getCurrentManifestTemplate()).createManifest();
-	}
+        try {
+          //
+          FileUtils.copy(new ByteArrayInputStream(resourceStandin.getContent()), new FileOutputStream(targetFile),
+              new byte[1024]);
+        } catch (Exception e) {
+          // TODO
+          e.printStackTrace();
+          throw new CoreException(new Status(IStatus.ERROR, "asd", "asd"));
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected ManifestContents createManifest() throws CoreException {
+    return _manifestCreator.createManifest(getCurrentModularizedSystem(), getCurrentModule(),
+        BundleManifestUtils.createBundleManifest(getCurrentManifestTemplate()),
+        BundleManifestUtils.createBundleManifest(getOriginalManifest()), new ExportPackagePreferences(),
+        new PackageWiringPreferences());
+  }
 }

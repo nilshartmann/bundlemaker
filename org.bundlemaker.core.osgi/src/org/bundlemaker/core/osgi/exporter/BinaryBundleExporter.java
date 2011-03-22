@@ -10,10 +10,14 @@
  ******************************************************************************/
 package org.bundlemaker.core.osgi.exporter;
 
-import org.bundlemaker.core.osgi.manifest.BundleManifestCreator;
+import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
+import org.bundlemaker.core.osgi.internal.manifest.ExportPackagePreferences;
+import org.bundlemaker.core.osgi.internal.manifest.PackageWiringPreferences;
 import org.bundlemaker.core.osgi.manifest.DependencyStyle;
+import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.eclipse.core.runtime.CoreException;
 
+import com.springsource.bundlor.util.BundleManifestUtils;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -26,54 +30,77 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 
-	/** - */
-	private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
+  /** - */
+  private DependencyStyle                  _dependencyStyle         = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
-	/** - */
-	private boolean _useOriginalOSGiManifest = true;
+  /** - */
+  private boolean                          _useOriginalOSGiManifest = true;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param useRequireBundle
-	 */
-	public void setDependencyStyle(DependencyStyle dependencyStyle) {
-		_dependencyStyle = dependencyStyle;
-	}
+  /** - */
+  private DroolsBasedBundleManifestCreator _manifestCreator;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param useOriginalOSGiManifest
-	 */
-	public void setUseOriginalOSGiManifest(boolean useOriginalOSGiManifest) {
-		_useOriginalOSGiManifest = useOriginalOSGiManifest;
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link BinaryBundleExporter}.
+   * </p>
+   */
+  public BinaryBundleExporter() {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	protected ManifestContents createManifest() throws CoreException {
+    //
+    _manifestCreator = new DroolsBasedBundleManifestCreator();
+  }
 
-		// create the manifest
-		BundleManifestCreator creator = new BundleManifestCreator(
-				getCurrentModularizedSystem(), getCurrentModule(),
-				getCurrentContext(), getCurrentManifestTemplate());
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param useRequireBundle
+   */
+  public void setDependencyStyle(DependencyStyle dependencyStyle) {
+    _dependencyStyle = dependencyStyle;
+  }
 
-		// set
-		creator.setDependencyStyle(_dependencyStyle);
-		creator.setUseOriginalOSGiManifest(_useOriginalOSGiManifest);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param useOriginalOSGiManifest
+   */
+  public void setUseOriginalOSGiManifest(boolean useOriginalOSGiManifest) {
+    _useOriginalOSGiManifest = useOriginalOSGiManifest;
+  }
 
-		// create manifest
-		return creator.createManifest();
-	}
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param modularizedSystem
+  // * @param module
+  // * @param context
+  // * @return
+  // * @throws Exception
+  // */
+  // protected ManifestContents createManifest() throws CoreException {
+  //
+  // // create the manifest
+  // IBundleManifestCreator creator = new DroolsBasedBundleManifestCreator();
+  //
+  // // set
+  // creator.setDependencyStyle(_dependencyStyle);
+  // creator.setUseOriginalOSGiManifest(_useOriginalOSGiManifest);
+  //
+  // // create manifest
+  // return creator.createManifest(getCurrentModularizedSystem(),
+  // getCurrentModule(), getCurrentContext(), sgetCurrentManifestTemplate());
+  // }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected ManifestContents createManifest() throws CoreException {
+    return _manifestCreator.createManifest(getCurrentModularizedSystem(), getCurrentModule(),
+        BundleManifestUtils.createBundleManifest(getCurrentManifestTemplate()),
+        BundleManifestUtils.createBundleManifest(getOriginalManifest()), new ExportPackagePreferences(),
+        new PackageWiringPreferences());
+  }
 }

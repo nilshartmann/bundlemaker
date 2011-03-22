@@ -1,0 +1,70 @@
+package org.bundlemaker.core.osgi.manifest.rules
+
+import org.bundlemaker.core.modules.IResourceModule;
+import com.springsource.util.osgi.manifest.BundleManifest;
+import org.bundlemaker.core.osgi.internal.manifest.IdentifiableBundleManifest;
+import org.osgi.framework.Version;
+import org.bundlemaker.core.osgi.utils.ManifestUtils;
+import org.bundlemaker.core.osgi.exporter.ManifestConstants;
+
+/**
+ * Eingabe:
+ * - IModularizedSystem
+ * - IResourceModule
+ * - BundleManifest
+ */
+
+rule "Bundle-SymbolicName"
+when
+    $resourceModule : IResourceModule()
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+then
+    $bundleManifest.getBundleSymbolicName().setSymbolicName($resourceModule.getModuleIdentifier().getName());
+end
+
+rule "Bundle-Name"
+when
+    $resourceModule : IResourceModule()
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+then
+    $bundleManifest.setBundleName($resourceModule.getModuleIdentifier().getName());
+end
+
+rule "Bundle-Version"
+when
+    $resourceModule : IResourceModule()
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) )
+then
+    $bundleManifest.setBundleVersion(new Version($resourceModule.getModuleIdentifier().getVersion()));
+end
+
+rule "Default-Bundle-Version"
+when
+    $resourceModule : IResourceModule()
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    not( eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) ))
+then
+    $bundleManifest.setBundleVersion(new Version("0.0.0"));
+end
+
+rule "Copy all original manifest header that are not 'ORIGINAL_HEADERS_NOT_TO_COPY'"
+when
+ 	$originalManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.ORIGINAL_MANIFEST )
+ 	$bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+ 	$key : String() from $originalManifest.getHeaders()
+ 	not( eval ( ManifestConstants.ORIGINAL_HEADERS_NOT_TO_COPY.contains($key) )) 
+ then
+	$bundleManifest.setHeader($key, $originalManifest.getHeader($key));
+end
+
+rule "Copy all manifest template header that are not 'TEMPLATE_HEADERS_NOT_TO_COPY'"
+salience -10
+when
+ 	$manifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )
+ 	$bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+ 	$key : String() from $manifestTemplate.getHeaders()
+ 	not( eval ( ManifestConstants.TEMPLATE_HEADERS_NOT_TO_COPY.contains($key) )) 
+ then
+	$bundleManifest.setHeader($key, $manifestTemplate.getHeader($key));
+end

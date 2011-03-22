@@ -165,7 +165,7 @@ public abstract class AbstractIntegrationTest {
 
     //
     if (_exportAsPdeProjects) {
-      log("Exporting as binary bundles...");
+      log("Exporting as PDE projects...");
       exportAsPdeProjects(bundleMakerProject, modularizedSystem);
     }
 
@@ -343,7 +343,6 @@ public abstract class AbstractIntegrationTest {
     TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
     targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
     targetPlatformProjectExporter.export(modularizedSystem, exporterContext);
-
   }
 
   /**

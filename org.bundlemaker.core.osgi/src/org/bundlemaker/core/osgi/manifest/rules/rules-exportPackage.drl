@@ -1,0 +1,83 @@
+package org.bundlemaker.core.osgi.manifest.rules
+
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IType;
+import com.springsource.util.osgi.manifest.BundleManifest;
+import com.springsource.util.osgi.manifest.ExportedPackage;
+import com.springsource.util.osgi.manifest.ExportPackage;
+import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
+import org.osgi.framework.Version;
+import org.bundlemaker.core.osgi.internal.manifest.DroolsManifestUtils;
+import org.bundlemaker.core.osgi.manifest.IExportPackagePreferences;
+import org.bundlemaker.core.osgi.internal.manifest.IdentifiableBundleManifest;
+import org.bundlemaker.core.osgi.exporter.ManifestConstants;
+import org.bundlemaker.core.osgi.utils.ManifestUtils;
+
+/**
+ * Mandatory input values are:
+ * - IModularizedSystem
+ * - IResourceModule
+ * - IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+ * - IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE ) 
+ * - IExportPackagePreferences
+ */
+
+/**
+ *
+ *   
+ */
+rule "export the package of a type (if it's not already exported)"
+when
+    $r : IResourceModule()
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    $type : IType() from $r.getContainedTypes()
+    not ( ExportedPackage( packageName == $type.packageName ) )
+then
+   // create a new ExportedPackage
+   ExportedPackage exportedPackage = $bundleManifest.getExportPackage().addExportedPackage($type.getPackageName());
+   insert( exportedPackage );
+end
+
+/**
+ *
+ *   
+ */
+rule "set export package version"
+when
+    $resourceModule : IResourceModule()
+    $exportedPackage : ExportedPackage( version.toString != $resourceModule.moduleIdentifier.version)
+    IExportPackagePreferences( noExportPackageVersion == false ) 
+    eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) )
+then
+   $exportedPackage.setVersion(new Version($resourceModule.getModuleIdentifier().getVersion()));
+end
+
+/**
+ *
+ *   
+ * We set the salience to -100 to ensure that the rule will be fired as the last rule:
+ * template entries *always* overwrite computed values!
+ */
+rule "set attributes and directives from template manifest"
+salience -100
+when
+    $manifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )
+    $exportedPackage : ExportedPackage()
+    eval ( DroolsManifestUtils.hasMostSpecificPackageTemplate($manifestTemplate, ManifestConstants.HEADER_EXPORT_TEMPLATE, $exportedPackage.getPackageName()) )
+then
+    HeaderDeclaration header = DroolsManifestUtils.getMostSpecificPackageTemplate($manifestTemplate, ManifestConstants.HEADER_EXPORT_TEMPLATE, $exportedPackage.getPackageName());
+    $exportedPackage.getAttributes().putAll(header.getAttributes());
+    $exportedPackage.getDirectives().putAll(header.getDirectives());
+end
+
+//
+// TODO: 
+// - Support for "uses" directive
+// - Support for "mandatory" directive
+// - Support for "include" directive
+// - Support for "exclude" directive
+// - Support for private packages
+// - Support for private types 
+
+

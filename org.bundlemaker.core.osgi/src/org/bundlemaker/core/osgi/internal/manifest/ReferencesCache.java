@@ -8,15 +8,19 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.osgi.manifest.internal.importresolver;
+package org.bundlemaker.core.osgi.internal.manifest;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.util.GenericCache;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -26,7 +30,7 @@ import org.bundlemaker.core.util.GenericCache;
  */
 public class ReferencesCache {
 
-  /** - */
+  /**  */
   private IModularizedSystem                 _modularizedSystem;
 
   /** - */
@@ -93,20 +97,88 @@ public class ReferencesCache {
    * <p>
    * </p>
    * 
+   * @param packageName
    * @return
    */
-  public GenericCache<String, Set<IModule>> getReferenceTypeToExportingModuleCache() {
-    return _typeToModuleCache;
+  public List<IModule> getExportingModules(String packageName) {
+
+    //
+    List<IModule> result = new ArrayList<IModule>();
+
+    //
+    Set<String> types = getReferencedPackageToContainingTypesCache().get(packageName);
+
+    for (String type : types) {
+      Set<IModule> module = getReferenceTypeToExportingModuleCache().get(type);
+      if (module != null) {
+        result.addAll(module);
+      }
+    }
+
+    //
+    return reduce(result, types);
   }
 
   /**
    * <p>
    * </p>
    * 
+   * @param exportingModules
+   * @param typeNames
    * @return
    */
-  public GenericCache<String, Set<String>> getReferencedPackageToContainingTypesCache() {
-    return _packageToTypesCache;
+  public List<IModule> reduce(List<IModule> exportingModules, Set<String> typeNames) {
+
+    Assert.isNotNull(exportingModules);
+    Assert.isNotNull(typeNames);
+
+    //
+    for (IModule module : exportingModules) {
+      if (module.containsAll(typeNames)) {
+        List<IModule> result = new LinkedList<IModule>();
+        result.add(module);
+        return result;
+      }
+    }
+
+    //
+    return exportingModules;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param packageName
+   * @return
+   */
+  public boolean hasExportingModules(String packageName) {
+
+    //
+    return getExportingModules(packageName).size() > 0;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param packageName
+   * @return
+   */
+  public boolean containsUnsatisfiedTypes(String packageName) {
+
+    //
+    Set<String> typeNames = getReferencedPackageToContainingTypesCache().get(packageName);
+
+    //
+    for (String typeName : typeNames) {
+      if (getUnsatisfiedTypes().contains(typeName)) {
+        return true;
+      }
+    }
+
+    //
+    return false;
   }
 
   /**
@@ -117,6 +189,26 @@ public class ReferencesCache {
    */
   public Set<String> getUnsatisfiedTypes() {
     return _unsatisfiedTypes;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private GenericCache<String, Set<IModule>> getReferenceTypeToExportingModuleCache() {
+    return _typeToModuleCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private GenericCache<String, Set<String>> getReferencedPackageToContainingTypesCache() {
+    return _packageToTypesCache;
   }
 
   /**

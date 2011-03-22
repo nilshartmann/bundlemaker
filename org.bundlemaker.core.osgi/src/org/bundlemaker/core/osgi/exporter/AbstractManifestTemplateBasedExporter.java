@@ -12,7 +12,7 @@ package org.bundlemaker.core.osgi.exporter;
 
 import java.io.File;
 
-import org.bundlemaker.core.osgi.manifest.ManifestUtils;
+import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.eclipse.core.runtime.CoreException;
 
 import com.springsource.bundlor.util.SimpleManifestContents;
