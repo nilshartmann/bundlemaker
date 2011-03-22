@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import com.springsource.bundlor.ManifestWriter;
-import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFactory;
 
 /**
  * <p>
@@ -59,8 +58,7 @@ public abstract class AbstractJarFileBundleExporter extends AbstractBundleManife
       File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ContentType.BINARY);
 
       // get the manifest writer
-      ManifestWriter manifestWriter = new StandardManifestWriterFactory().create(rootFile.getAbsolutePath(),
-          getDestinationFile().getAbsolutePath());
+      ManifestWriter manifestWriter = new JarFileManifestWriter(rootFile, getDestinationFile());
 
       //
       manifestWriter.write(getCurrentManifest());
