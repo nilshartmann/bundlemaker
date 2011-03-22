@@ -26,6 +26,5 @@ public interface IBundleManifestCreator {
    * @return
    */
   public ManifestContents createManifest(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
-      BundleManifest manifestTemplate, BundleManifest originalManifest,
-      IExportPackagePreferences exportPackagePreferences, IPackageWiringPreferences packageWiringPreferences);
+      BundleManifest manifestTemplate, BundleManifest originalManifest, IManifestPreferences manifestPreferences);
 }

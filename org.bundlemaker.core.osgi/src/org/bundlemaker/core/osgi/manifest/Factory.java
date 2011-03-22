@@ -1,8 +1,7 @@
 package org.bundlemaker.core.osgi.manifest;
 
 import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
-import org.bundlemaker.core.osgi.internal.manifest.ExportPackagePreferences;
-import org.bundlemaker.core.osgi.internal.manifest.PackageWiringPreferences;
+import org.bundlemaker.core.osgi.internal.manifest.ManifestPreferences;
 
 public class Factory {
 
@@ -10,11 +9,7 @@ public class Factory {
     return new DroolsBasedBundleManifestCreator();
   }
 
-  public static IExportPackagePreferences createExportPackagePreferences() {
-    return new ExportPackagePreferences();
-  }
-
-  public static IPackageWiringPreferences createPackageWiringPreferences() {
-    return new PackageWiringPreferences();
+  public static IManifestPreferences createManifestPreferences(boolean sourceManifest) {
+    return new ManifestPreferences(sourceManifest);
   }
 }

@@ -9,10 +9,10 @@ import com.springsource.util.osgi.manifest.ExportPackage;
 import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 import org.osgi.framework.Version;
 import org.bundlemaker.core.osgi.internal.manifest.DroolsManifestUtils;
-import org.bundlemaker.core.osgi.manifest.IExportPackagePreferences;
 import org.bundlemaker.core.osgi.internal.manifest.IdentifiableBundleManifest;
 import org.bundlemaker.core.osgi.exporter.ManifestConstants;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 
 /**
  * Mandatory input values are:
@@ -31,7 +31,9 @@ rule "export the package of a type (if it's not already exported)"
 when
     $r : IResourceModule()
     $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    $manifestPreferences : IManifestPreferences()
     $type : IType() from $r.getContainedTypes()
+    eval ($type.hasSourceResource() || ! ($manifestPreferences.isSourceManifest()))
     not ( ExportedPackage( packageName == $type.packageName ) )
 then
    // create a new ExportedPackage
@@ -47,7 +49,7 @@ rule "set export package version"
 when
     $resourceModule : IResourceModule()
     $exportedPackage : ExportedPackage( version.toString != $resourceModule.moduleIdentifier.version)
-    IExportPackagePreferences( noExportPackageVersion == false ) 
+    IManifestPreferences( noExportPackageVersion == false ) 
     eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) )
 then
    $exportedPackage.setVersion(new Version($resourceModule.getModuleIdentifier().getVersion()));

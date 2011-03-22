@@ -3,8 +3,7 @@ package org.bundlemaker.core.osgi.internal.manifest;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
-import org.bundlemaker.core.osgi.manifest.IExportPackagePreferences;
-import org.bundlemaker.core.osgi.manifest.IPackageWiringPreferences;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.util.StopWatch;
 import org.drools.KnowledgeBase;
@@ -83,8 +82,7 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
   }
 
   public ManifestContents createManifest(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
-      BundleManifest manifestTemplate, BundleManifest originalManifest,
-      IExportPackagePreferences exportPackagePreferences, IPackageWiringPreferences packageWiringPreferences) {
+      BundleManifest manifestTemplate, BundleManifest originalManifest, IManifestPreferences manifestPreferences) {
 
     System.out.println("createManifest - start");
     StopWatch stopWatch = new StopWatch();
@@ -100,10 +98,9 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     ksession.insert(new IdentifiableBundleManifest(result, IdentifiableBundleManifest.BUNDLE_MANIFEST));
     ksession.insert(new IdentifiableBundleManifest(manifestTemplate, IdentifiableBundleManifest.MANIFEST_TEMPLATE));
     ksession.insert(new IdentifiableBundleManifest(originalManifest, IdentifiableBundleManifest.ORIGINAL_MANIFEST));
-    ksession.insert(exportPackagePreferences);
-    ksession.insert(packageWiringPreferences);
-    ksession.insert(new ReferencesCache(modularizedSystem, resourceModule, packageWiringPreferences
-        .includeSourceDependencies(), packageWiringPreferences.includeIndirectlyReferencedClasses()));
+    ksession.insert(manifestPreferences);
+    ksession.insert(new ReferencesCache(modularizedSystem, resourceModule, manifestPreferences.isSourceManifest(),
+        manifestPreferences.isSourceManifest()));
 
     ksession.fireAllRules();
 

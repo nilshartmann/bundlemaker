@@ -9,11 +9,11 @@ import org.bundlemaker.core.osgi.manifest.DependencyStyle;
 import com.springsource.util.osgi.manifest.ImportedPackage;
 import org.bundlemaker.core.osgi.internal.manifest.ReferencesCache;
 import com.springsource.util.osgi.manifest.Resolution;
-import org.bundlemaker.core.osgi.manifest.IPackageWiringPreferences;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import com.springsource.util.osgi.manifest.RequiredBundle;
 import com.springsource.util.osgi.VersionRange;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 
 /**
  * Eingabe:
@@ -24,7 +24,7 @@ import com.springsource.util.osgi.VersionRange;
  */
 rule "strict import packages - create imported package"
 when
-    IPackageWiringPreferences( dependencyStyle == DependencyStyle.STRICT_IMPORT_PACKAGE ) 
+    IManifestPreferences( dependencyStyle == DependencyStyle.STRICT_IMPORT_PACKAGE ) 
     $resourceModule : IResourceModule()
     $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
     $referencedPackageName : String() from $resourceModule.getReferencedPackageNames(true, true, true)
@@ -45,7 +45,7 @@ end
 
 rule "RequiredBundle: strict require bundle - "
 when
-    IPackageWiringPreferences( dependencyStyle == DependencyStyle.STRICT_REQUIRE_BUNDLE ) 
+    IManifestPreferences( dependencyStyle == DependencyStyle.STRICT_REQUIRE_BUNDLE ) 
     $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
     $resourceModule : IResourceModule()
     $referencesCache : ReferencesCache()

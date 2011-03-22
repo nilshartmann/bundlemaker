@@ -35,7 +35,7 @@ import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFac
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwareExporter {
+public abstract class AbstractJarFileBundleExporter extends AbstractBundleManifestCreatorExporter {
 
   /**
    * {@inheritDoc}
@@ -57,9 +57,6 @@ public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwar
 
       // get the root file
       File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ContentType.BINARY);
-
-      //
-      System.out.println("patching " + rootFile.getAbsolutePath());
 
       // get the manifest writer
       ManifestWriter manifestWriter = new StandardManifestWriterFactory().create(rootFile.getAbsolutePath(),

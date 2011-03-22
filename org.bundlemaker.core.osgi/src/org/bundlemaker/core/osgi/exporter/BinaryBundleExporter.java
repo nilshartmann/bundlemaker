@@ -10,15 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.osgi.exporter;
 
-import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
-import org.bundlemaker.core.osgi.internal.manifest.ExportPackagePreferences;
-import org.bundlemaker.core.osgi.internal.manifest.PackageWiringPreferences;
+import org.bundlemaker.core.osgi.internal.manifest.ManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.DependencyStyle;
-import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
-import org.eclipse.core.runtime.CoreException;
-
-import com.springsource.bundlor.util.BundleManifestUtils;
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 
 /**
  * <p>
@@ -31,24 +25,10 @@ import com.springsource.util.parser.manifest.ManifestContents;
 public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 
   /** - */
-  private DependencyStyle                  _dependencyStyle         = DependencyStyle.PREFER_IMPORT_PACKAGE;
+  private DependencyStyle _dependencyStyle         = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
   /** - */
-  private boolean                          _useOriginalOSGiManifest = true;
-
-  /** - */
-  private DroolsBasedBundleManifestCreator _manifestCreator;
-
-  /**
-   * <p>
-   * Creates a new instance of type {@link BinaryBundleExporter}.
-   * </p>
-   */
-  public BinaryBundleExporter() {
-
-    //
-    _manifestCreator = new DroolsBasedBundleManifestCreator();
-  }
+  private boolean         _useOriginalOSGiManifest = true;
 
   /**
    * <p>
@@ -70,37 +50,10 @@ public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
     _useOriginalOSGiManifest = useOriginalOSGiManifest;
   }
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param modularizedSystem
-  // * @param module
-  // * @param context
-  // * @return
-  // * @throws Exception
-  // */
-  // protected ManifestContents createManifest() throws CoreException {
-  //
-  // // create the manifest
-  // IBundleManifestCreator creator = new DroolsBasedBundleManifestCreator();
-  //
-  // // set
-  // creator.setDependencyStyle(_dependencyStyle);
-  // creator.setUseOriginalOSGiManifest(_useOriginalOSGiManifest);
-  //
-  // // create manifest
-  // return creator.createManifest(getCurrentModularizedSystem(),
-  // getCurrentModule(), getCurrentContext(), sgetCurrentManifestTemplate());
-  // }
-
   /**
-   * {@inheritDoc}
+   * @return
    */
-  protected ManifestContents createManifest() throws CoreException {
-    return _manifestCreator.createManifest(getCurrentModularizedSystem(), getCurrentModule(),
-        BundleManifestUtils.createBundleManifest(getCurrentManifestTemplate()),
-        BundleManifestUtils.createBundleManifest(getOriginalManifest()), new ExportPackagePreferences(),
-        new PackageWiringPreferences());
+  protected IManifestPreferences createManifestPreferences() {
+    return new ManifestPreferences(false);
   }
 }

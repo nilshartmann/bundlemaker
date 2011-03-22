@@ -107,6 +107,10 @@ public class ReferencesCache {
 
     //
     Set<String> types = getReferencedPackageToContainingTypesCache().get(packageName);
+    
+    if (types == null) {
+      return result; 
+    }
 
     for (String type : types) {
       Set<IModule> module = getReferenceTypeToExportingModuleCache().get(type);

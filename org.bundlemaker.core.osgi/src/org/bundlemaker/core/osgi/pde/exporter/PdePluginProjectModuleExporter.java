@@ -19,10 +19,11 @@ import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.Activator;
+import org.bundlemaker.core.osgi.exporter.AbstractBundleManifestCreatorExporter;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
 import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
-import org.bundlemaker.core.osgi.internal.manifest.ExportPackagePreferences;
-import org.bundlemaker.core.osgi.internal.manifest.PackageWiringPreferences;
+import org.bundlemaker.core.osgi.internal.manifest.ManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
@@ -52,29 +53,16 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporter {
+public class PdePluginProjectModuleExporter extends AbstractBundleManifestCreatorExporter {
 
   /** - */
-  private static final String              SRC_DIRECTORY_NAME = "src";
+  private static final String SRC_DIRECTORY_NAME = "src";
 
   /** - */
-  private static final String              BIN_DIRECTORY_NAME = "bin";
+  private static final String BIN_DIRECTORY_NAME = "bin";
 
   /** - */
-  private boolean                          _useClassifcationForExportDestination;
-
-  /** - */
-  private DroolsBasedBundleManifestCreator _manifestCreator;
-
-  /**
-   * <p>
-   * Creates a new instance of type {@link PdePluginProjectModuleExporter}.
-   * </p>
-   * 
-   */
-  public PdePluginProjectModuleExporter() {
-    _manifestCreator = new DroolsBasedBundleManifestCreator();
-  }
+  private boolean             _useClassifcationForExportDestination;
 
   /**
    * <p>
@@ -184,12 +172,9 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
   }
 
   /**
-   * {@inheritDoc}
+   * @return
    */
-  protected ManifestContents createManifest() throws CoreException {
-    return _manifestCreator.createManifest(getCurrentModularizedSystem(), getCurrentModule(),
-        BundleManifestUtils.createBundleManifest(getCurrentManifestTemplate()),
-        BundleManifestUtils.createBundleManifest(getOriginalManifest()), new ExportPackagePreferences(),
-        new PackageWiringPreferences());
+  protected IManifestPreferences createManifestPreferences() {
+    return new ManifestPreferences(true);
   }
 }
