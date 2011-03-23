@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
+ * A wrapper around an {@link IBundleMakerProjectDescription} that filters either the binary resource content or the
+ * type content
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -19,42 +21,38 @@ import org.eclipse.core.runtime.Assert;
  */
 public class BundleMakerProjectDescriptionWrapper {
 
-  private final IFileBasedContent[] _content;
+  private final IBundleMakerProjectDescription _description;
 
-  public BundleMakerProjectDescriptionWrapper(IFileBasedContent[] content) {
-    super();
-    _content = content;
+  private final boolean                        _resources;
+
+  private BundleMakerProjectDescriptionWrapper(IBundleMakerProjectDescription description, boolean resources) {
+    _description = description;
+    _resources = resources;
   }
 
   public static BundleMakerProjectDescriptionWrapper forResources(IBundleMakerProjectDescription description) {
     Assert.isNotNull(description);
 
-    return new BundleMakerProjectDescriptionWrapper(getContent(description, true));
+    return new BundleMakerProjectDescriptionWrapper(description, true);
   }
 
   public static BundleMakerProjectDescriptionWrapper forTypes(IBundleMakerProjectDescription description) {
     Assert.isNotNull(description);
 
-    return new BundleMakerProjectDescriptionWrapper(getContent(description, false));
+    return new BundleMakerProjectDescriptionWrapper(description, false);
   }
 
-  private static IFileBasedContent[] getContent(IBundleMakerProjectDescription description, boolean resources) {
-    List<? extends IFileBasedContent> fileBasedContent = description.getFileBasedContent();
+  public IFileBasedContent[] getContent() {
+    List<? extends IFileBasedContent> fileBasedContent = _description.getFileBasedContent();
     List<IFileBasedContent> filteredContent = new LinkedList<IFileBasedContent>();
     for (IFileBasedContent iFileBasedContent : fileBasedContent) {
-      if (iFileBasedContent.isResourceContent() == resources) {
+      if (iFileBasedContent.isResourceContent() == _resources) {
         filteredContent.add(iFileBasedContent);
       }
     }
 
-    System.out.println("getContent (" + resources + "): " + filteredContent);
-
     return filteredContent.toArray(new IFileBasedContent[0]);
 
-  }
-
-  public IFileBasedContent[] getContent() {
-    return _content;
   }
 
 }

@@ -3,12 +3,17 @@
  */
 package org.bundlemaker.core.ui.editor;
 
+import java.util.Iterator;
+
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -41,8 +46,6 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * 
  */
 public class ContentPage extends FormPage {
-
-  private TreeViewer _treeViewer;
 
   public ContentPage(ProjectDescriptionEditor editor) {
     super(editor, "Content", "Content");
@@ -78,7 +81,8 @@ public class ContentPage extends FormPage {
 
   }
 
-  private void createResourcesSection(final IManagedForm mform, String title, String description, boolean resources) {
+  private void createResourcesSection(final IManagedForm mform, String title, String description,
+      final boolean resources) {
     FormToolkit toolkit = mform.getToolkit();
     final ScrolledForm form = mform.getForm();
 
@@ -97,23 +101,26 @@ public class ContentPage extends FormPage {
 
     resourcesSection.setClient(client);
 
-    final Tree projectContentTree = toolkit.createTree(client, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
+    final SectionPart resourcesSectionPart = new SectionPart(resourcesSection);
+    mform.addPart(resourcesSectionPart);
+
+    final Tree projectContentTree = toolkit.createTree(client, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
     GridData gd = new GridData(GridData.FILL_BOTH);
     gd.heightHint = 200;
     gd.widthHint = 100;
     projectContentTree.setLayoutData(gd);
 
-    _treeViewer = new TreeViewer(projectContentTree);
-    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    final TreeViewer treeViewer = new TreeViewer(projectContentTree);
+    treeViewer.setLabelProvider(new WorkbenchLabelProvider());
     BaseWorkbenchContentProvider provider = new BaseWorkbenchContentProvider();
-    _treeViewer.setContentProvider(provider);
+    treeViewer.setContentProvider(provider);
 
     IBundleMakerProjectDescription bundleMakerProjectDescription = getBundleMakerProjectDescription();
     System.out.println("Init treeviewer mit projectdescription " + bundleMakerProjectDescription);
     BundleMakerProjectDescriptionWrapper wrapper = (resources ? BundleMakerProjectDescriptionWrapper
         .forResources(bundleMakerProjectDescription) : BundleMakerProjectDescriptionWrapper
         .forTypes(bundleMakerProjectDescription));
-    _treeViewer.setInput(wrapper);
+    treeViewer.setInput(wrapper);
 
     Composite buttonBar = toolkit.createComposite(client);
     buttonBar.setLayout(new GridLayout(1, false));
@@ -125,12 +132,109 @@ public class ContentPage extends FormPage {
     Button editButton = toolkit.createButton(buttonBar, "Edit...", SWT.PUSH);
     editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-    Button addButton = toolkit.createButton(buttonBar, "Add...", SWT.PUSH);
+    final Button addButton = toolkit.createButton(buttonBar, "Add...", SWT.PUSH);
     addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    Button quickAddButton = toolkit.createButton(buttonBar, "Smart add...", SWT.PUSH);
-    quickAddButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    addButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        ResourceLocationSelectorDialog dlg = new ResourceLocationSelectorDialog(addButton.getShell());
+        if (dlg.open() == Window.OK) {
+          // Add selected resource to projectdescription
+          if (resources) {
+            getBundleMakerProjectDescription().addResourceContent(dlg.getResourceName(), dlg.getResourceVersion(),
+                dlg.getResourceBinaryPath(), dlg.getResourceSourcePath());
+          } else {
+            getBundleMakerProjectDescription().addTypeContent(dlg.getResourceName(), dlg.getResourceVersion(),
+                dlg.getResourceBinaryPath());
+
+          }
+
+          // Refresh UI
+          treeViewer.refresh();
+
+          // Mark editor dirty
+          resourcesSectionPart.markDirty();
+        }
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+      }
+    });
+
+    final Button smartAddArchivesButton = toolkit.createButton(buttonBar, "Smart add archives...", SWT.PUSH);
+    smartAddArchivesButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    smartAddArchivesButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        FileDialog fileDialog = new FileDialog(smartAddArchivesButton.getShell(), SWT.MULTI);
+        fileDialog.setText("Add " + (resources ? " Resources" : "Types"));
+        if (fileDialog.open() == null) {
+          return;
+        }
+        String[] fileNames = fileDialog.getFileNames();
+        if (fileNames.length > 0) {
+          // Add all selected archives to the project description
+          for (String string : fileNames) {
+            IPath path = new Path(fileDialog.getFilterPath()).append(string);
+            String binaryRoot = path.toOSString();
+            if (resources) {
+              getBundleMakerProjectDescription().addResourceContent(binaryRoot);
+            } else {
+              getBundleMakerProjectDescription().addTypeContent(binaryRoot);
+            }
+          }
+          // Refresh view
+          treeViewer.refresh();
+
+          // mark editor dirty
+          resourcesSectionPart.markDirty();
+        }
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+      }
+    });
     Button removeButton = toolkit.createButton(buttonBar, "Remove", SWT.PUSH);
     removeButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    removeButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        ISelection selection = treeViewer.getSelection();
+        if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
+          // TODO enablement
+          return;
+        }
+
+        IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+        Iterator iterator = structuredSelection.iterator();
+        while (iterator.hasNext()) {
+          Object element = iterator.next();
+          System.out.println("element: " + element);
+          if (element instanceof IFileBasedContent) {
+            IFileBasedContent content = (IFileBasedContent) element;
+            String id = content.getId();
+            getBundleMakerProjectDescription().removeContent(id);
+          }
+          // Refresh view
+          treeViewer.refresh();
+
+          // mark editor dirty
+          resourcesSectionPart.markDirty();
+
+        }
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+        // TODO Auto-generated method stub
+
+      }
+    });
     toolkit.paintBordersFor(client);
   }
 
@@ -184,13 +288,13 @@ public class ContentPage extends FormPage {
     gd.widthHint = 100;
     projectContentTree.setLayoutData(gd);
 
-    _treeViewer = new TreeViewer(projectContentTree);
-    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    final TreeViewer treeViewer = new TreeViewer(projectContentTree);
+    treeViewer.setLabelProvider(new WorkbenchLabelProvider());
     BaseWorkbenchContentProvider provider = new BaseWorkbenchContentProvider();
-    _treeViewer.setContentProvider(provider);
+    treeViewer.setContentProvider(provider);
 
     System.out.println("Init treeviewer mit projectdescription " + getBundleMakerProjectDescription());
-    _treeViewer.setInput(getBundleMakerProjectDescription());
+    treeViewer.setInput(getBundleMakerProjectDescription());
 
     Button addArchivesButton = toolkit.createButton(sectionComposite, "Add archive resources...", SWT.PUSH);
 
@@ -214,7 +318,7 @@ public class ContentPage extends FormPage {
             getBundleMakerProjectDescription().addResourceContent(binaryRoot);
           }
           // Refresh view
-          _treeViewer.refresh();
+          treeViewer.refresh();
 
           // mark editor dirty
           projectContentSectionPart.markDirty();
@@ -238,7 +342,7 @@ public class ContentPage extends FormPage {
               dlg.getResourceBinaryPath(), dlg.getResourceSourcePath());
 
           // Refresh UI
-          _treeViewer.refresh();
+          treeViewer.refresh();
 
           // Mark editor dirty
           projectContentSectionPart.markDirty();
