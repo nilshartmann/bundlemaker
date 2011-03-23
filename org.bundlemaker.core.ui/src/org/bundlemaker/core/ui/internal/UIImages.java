@@ -22,9 +22,39 @@ import org.eclipse.swt.graphics.Image;
  */
 public enum UIImages {
 
-  BUNDLEMAKER_ICON("icons/bundlemaker-icon.png"), BINARY_FOLDER("icons/binary_folder.gif"), SOURCE_FOLDER(
-      "icons/source_folder.gif");
+  /**
+   * the BundleMaker logo
+   */
+  BUNDLEMAKER_ICON("icons/bundlemaker-icon.png"),
+  /**
+   * Represents a Resource Content
+   */
+  RESOURCE_CONTENT("icons/resource_content.gif"),
+  /**
+   * a folder containing binaries
+   */
+  BINARY_FOLDER("icons/binary_folder.gif"),
+  /**
+   * a folder containing source files
+   */
+  SOURCE_FOLDER("icons/source_folder.gif"),
+  /**
+   * represents an archive with binary resources
+   */
+  BINARY_ARCHIVE("icons/binary_archive.gif"),
+  /**
+   * represents an archive with sources
+   */
+  SOURCE_ARCHIVE("icons/source_archive.gif"),
+  /**
+   * 
+   */
+  REFRESH("icons/refresh.gif") //
+  ;
 
+  /**
+   * The bundle-relative path to the icon
+   */
   private final String path;
 
   private UIImages(final String path) {

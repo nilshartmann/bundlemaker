@@ -1,13 +1,6 @@
-/*******************************************************************************
- * Copyright (c) 2011 Bundlemaker project team.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/**
  * 
- * Contributors:
- *     Bundlemaker project team - initial API and implementation
- ******************************************************************************/
+ */
 package org.bundlemaker.core.ui.editor;
 
 import org.bundlemaker.core.BundleMakerCore;
@@ -42,7 +35,8 @@ public class ProjectDescriptionEditor extends FormEditor {
   @Override
   protected void addPages() {
     try {
-      addPage(new ProjectDescriptionOverviewPage(this));
+      addPage(new ContentPage(this));
+      addPage(new TransformationFormPage(this));
     } catch (Exception ex) {
       BundleMakerUiUtils.logError("Could not add page to editor", ex);
     }
@@ -93,6 +87,7 @@ public class ProjectDescriptionEditor extends FormEditor {
 
     // Open the BundleMaker project
     IProject project = adapter.getFile().getProject();
+    setPartName(project.getName());
     try {
       // TODO use ProgressMonitor
       IBundleMakerProject bundleMakerProject = BundleMakerCore

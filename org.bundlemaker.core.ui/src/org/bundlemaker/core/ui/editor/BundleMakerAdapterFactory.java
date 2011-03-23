@@ -33,19 +33,18 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  * 
  */
 public class BundleMakerAdapterFactory implements IAdapterFactory {
-  private final BundleMakerProjectDescriptionAdapter _bundleMakerProjectDescriptionAdapter = new BundleMakerProjectDescriptionAdapter();
+  private final FileBasedContentAdapter                     _fileBasedContentAdapter                     = new FileBasedContentAdapter();
 
-  private final FileBasedContentAdapter              _fileBasedContentAdapter              = new FileBasedContentAdapter();
+  private final BundleMakerPathAdapter                      _bundleMakerPathAdapter                      = new BundleMakerPathAdapter();
 
-  private final BundleMakerPathAdapter               _bundleMakerPathAdapter               = new BundleMakerPathAdapter();
+  private final BundleMakerProjectDescriptionWrapperAdapter _bundleMakerProjectDescriptionWrapperAdapter = new BundleMakerProjectDescriptionWrapperAdapter();
 
-  class BundleMakerProjectDescriptionAdapter implements IWorkbenchAdapter {
+  class BundleMakerProjectDescriptionWrapperAdapter implements IWorkbenchAdapter {
 
     @Override
     public Object[] getChildren(Object o) {
-      IBundleMakerProjectDescription description = (IBundleMakerProjectDescription) o;
-      List<? extends IFileBasedContent> fileBasedContent = description.getFileBasedContent();
-      return fileBasedContent.toArray(new IFileBasedContent[0]);
+      BundleMakerProjectDescriptionWrapper wrapper = (BundleMakerProjectDescriptionWrapper) o;
+      return wrapper.getContent();
     }
 
     @Override
@@ -55,8 +54,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public String getLabel(Object o) {
-      IBundleMakerProjectDescription description = (IBundleMakerProjectDescription) o;
-      return description.getBundleMakerProject().getProject().getName();
+      return null;
     }
 
     @Override
@@ -75,7 +73,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       IFileBasedContent content = (IFileBasedContent) o;
       children.addAll(asBundleMakerPaths(content.getBinaryPaths(), true));
       if (content.isResourceContent()) {
-        children.addAll(getChildren(content));
+        children.addAll(asBundleMakerPaths(content.getSourcePaths(), false));
+        // children.addAll(getChildren(content));
       }
       return children.toArray();
     }
@@ -84,15 +83,15 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       List<Object> children = new LinkedList<Object>();
       Set<IPath> sourcePaths = content.getSourcePaths();
       for (IPath iPath : sourcePaths) {
-        children.add(new BundleMakerPath(iPath, false));
+
+        children.add(new BundleMakerPath(iPath, false, iPath.toFile().isDirectory()));
       }
       return children;
     }
 
     @Override
     public ImageDescriptor getImageDescriptor(Object object) {
-      // TODO Auto-generated method stub
-      return null;
+      return UIImages.RESOURCE_CONTENT.getImageDescriptor();
     }
 
     @Override
@@ -103,6 +102,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public Object getParent(Object o) {
+      IFileBasedContent content = (IFileBasedContent) o;
       return null;
     }
   }
@@ -110,7 +110,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
   static Collection<BundleMakerPath> asBundleMakerPaths(Collection<IPath> paths, boolean binary) {
     List<BundleMakerPath> bundleMakerPaths = new LinkedList<BundleMakerAdapterFactory.BundleMakerPath>();
     for (IPath path : paths) {
-      bundleMakerPaths.add(new BundleMakerPath(path, binary));
+      bundleMakerPaths.add(new BundleMakerPath(path, binary, path.toFile().isDirectory()));
     }
     return bundleMakerPaths;
   }
@@ -132,10 +132,16 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     @Override
     public ImageDescriptor getImageDescriptor(Object object) {
       BundleMakerPath path = (BundleMakerPath) object;
-      if (path.isBinary()) {
-        return UIImages.BINARY_FOLDER.getImageDescriptor();
+      if (path.isFolder()) {
+        if (path.isBinary()) {
+          return UIImages.BINARY_FOLDER.getImageDescriptor();
+        }
+        return UIImages.SOURCE_FOLDER.getImageDescriptor();
       }
-      return UIImages.SOURCE_FOLDER.getImageDescriptor();
+      if (path.isBinary()) {
+        return UIImages.BINARY_ARCHIVE.getImageDescriptor();
+      }
+      return UIImages.SOURCE_ARCHIVE.getImageDescriptor();
     }
 
     @Override
@@ -161,8 +167,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       return null;
     }
 
-    if (adaptableObject instanceof IBundleMakerProjectDescription) {
-      return _bundleMakerProjectDescriptionAdapter;
+    if (adaptableObject instanceof BundleMakerProjectDescriptionWrapper) {
+      return _bundleMakerProjectDescriptionWrapperAdapter;
     }
 
     if (adaptableObject instanceof IFileBasedContent) {
@@ -181,10 +187,17 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     private final boolean _binary;
 
-    public BundleMakerPath(IPath path, boolean binary) {
+    private final boolean _folder;
+
+    public BundleMakerPath(IPath path, boolean binary, boolean folder) {
       super();
       _path = path;
       _binary = binary;
+      _folder = folder;
+    }
+
+    public boolean isFolder() {
+      return _folder;
     }
 
     public String getLabel() {
@@ -207,6 +220,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
   public static void register() {
     BundleMakerAdapterFactory bundleMakerAdapterFactory = new BundleMakerAdapterFactory();
+    Platform.getAdapterManager()
+        .registerAdapters(bundleMakerAdapterFactory, BundleMakerProjectDescriptionWrapper.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProjectDescription.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IFileBasedContent.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, BundleMakerPath.class);

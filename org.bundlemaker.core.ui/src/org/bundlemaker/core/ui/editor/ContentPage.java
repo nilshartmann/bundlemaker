@@ -1,13 +1,6 @@
-/*******************************************************************************
- * Copyright (c) 2011 Bundlemaker project team.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+/**
  * 
- * Contributors:
- *     Bundlemaker project team - initial API and implementation
- ******************************************************************************/
+ */
 package org.bundlemaker.core.ui.editor;
 
 import org.bundlemaker.core.IBundleMakerProject;
@@ -15,6 +8,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -27,9 +21,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.editor.FormPage;
+import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
@@ -44,12 +40,12 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ProjectDescriptionOverviewPage extends FormPage {
+public class ContentPage extends FormPage {
 
   private TreeViewer _treeViewer;
 
-  public ProjectDescriptionOverviewPage(ProjectDescriptionEditor editor) {
-    super(editor, "Project overview", "Project overview");
+  public ContentPage(ProjectDescriptionEditor editor) {
+    super(editor, "Content", "Content");
   }
 
   protected void createFormContent(IManagedForm mform) {
@@ -64,8 +60,78 @@ public class ProjectDescriptionOverviewPage extends FormPage {
     form.setText("Bundlemaker project");
     form.getBody().setLayout(FormLayoutUtils.createFormGridLayout(true, 1));
 
-    createProjectContentSection(mform);
+    createStateSection(mform);
 
+    createResourcesSection(
+        mform,
+        "Resources:",
+        "A <b>resource</b> is part of the project that will be parsed, transformed and exported by BundleMaker. Resources are comparable with sources in a Java project.",
+        true);
+
+    createResourcesSection(
+        mform,
+        "Types:",
+        "With <b>types</b> you specify the dependencies that are needed by your resources. Types will <b>not</b> be parsed, transformed or exported. Types are comparable with binary dependencies that are specified on the classpath of a Java project.",
+        false);
+
+    // createProjectContentSection(mform);
+
+  }
+
+  private void createResourcesSection(final IManagedForm mform, String title, String description, boolean resources) {
+    FormToolkit toolkit = mform.getToolkit();
+    final ScrolledForm form = mform.getForm();
+
+    Section resourcesSection = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.EXPANDED
+        | Section.TWISTIE);
+    FormText descriptionText = toolkit.createFormText(resourcesSection, false);
+    descriptionText.setText("<form><p>" + description + "</p></form>", true, false);
+    resourcesSection.setDescriptionControl(descriptionText);
+    resourcesSection.setText(title);
+    // resourcesSection.setDescription(description);
+    resourcesSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+    Composite client = toolkit.createComposite(resourcesSection);
+    client.setLayoutData(new GridData(GridData.FILL_BOTH));
+    client.setLayout(new GridLayout(2, false));
+
+    resourcesSection.setClient(client);
+
+    final Tree projectContentTree = toolkit.createTree(client, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
+    GridData gd = new GridData(GridData.FILL_BOTH);
+    gd.heightHint = 200;
+    gd.widthHint = 100;
+    projectContentTree.setLayoutData(gd);
+
+    _treeViewer = new TreeViewer(projectContentTree);
+    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    BaseWorkbenchContentProvider provider = new BaseWorkbenchContentProvider();
+    _treeViewer.setContentProvider(provider);
+
+    IBundleMakerProjectDescription bundleMakerProjectDescription = getBundleMakerProjectDescription();
+    System.out.println("Init treeviewer mit projectdescription " + bundleMakerProjectDescription);
+    BundleMakerProjectDescriptionWrapper wrapper = (resources ? BundleMakerProjectDescriptionWrapper
+        .forResources(bundleMakerProjectDescription) : BundleMakerProjectDescriptionWrapper
+        .forTypes(bundleMakerProjectDescription));
+    _treeViewer.setInput(wrapper);
+
+    Composite buttonBar = toolkit.createComposite(client);
+    buttonBar.setLayout(new GridLayout(1, false));
+    gd = new GridData();
+    gd.verticalAlignment = GridData.BEGINNING;
+    gd.horizontalAlignment = GridData.FILL;
+    buttonBar.setLayoutData(gd);
+
+    Button editButton = toolkit.createButton(buttonBar, "Edit...", SWT.PUSH);
+    editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+    Button addButton = toolkit.createButton(buttonBar, "Add...", SWT.PUSH);
+    addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    Button quickAddButton = toolkit.createButton(buttonBar, "Smart add...", SWT.PUSH);
+    quickAddButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    Button removeButton = toolkit.createButton(buttonBar, "Remove", SWT.PUSH);
+    removeButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    toolkit.paintBordersFor(client);
   }
 
   /**
@@ -79,6 +145,25 @@ public class ProjectDescriptionOverviewPage extends FormPage {
     ProjectDescriptionEditor descriptionEditor = (ProjectDescriptionEditor) getEditor();
     IBundleMakerProject bundleMakerProject = descriptionEditor.getBundleMakerProject();
     return bundleMakerProject.getProjectDescription();
+  }
+
+  private void createStateSection(final IManagedForm mform) {
+    FormToolkit toolkit = mform.getToolkit();
+    final ScrolledForm form = mform.getForm();
+    Composite client = toolkit.createComposite(form.getBody());
+    client.setLayout(new GridLayout(2, false));
+    client.setLayoutData(new GridData());
+    FormText formText = toolkit.createFormText(client, false);
+    formText.setFont("header", JFaceResources.getBannerFont());
+    formText.setColor("statecolor", toolkit.getColors().getColor(IFormColors.TITLE));
+    formText
+        .setText(
+            "<form><p><span font=\"header\">BundleMaker project state:</span> <span font=\"header\" color=\"statecolor\">initialized.</span></p></form>",
+            true, false);
+    Button button = toolkit.createButton(client, "(Re-)Parse", SWT.PUSH);
+    button.setLayoutData(new GridData());
+    button.setImage(UIImages.REFRESH.getImage());
+
   }
 
   private void createProjectContentSection(final IManagedForm mform) {
