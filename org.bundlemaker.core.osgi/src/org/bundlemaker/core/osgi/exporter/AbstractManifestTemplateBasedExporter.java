@@ -12,8 +12,7 @@ package org.bundlemaker.core.osgi.exporter;
 
 import java.io.File;
 
-import org.bundlemaker.core.osgi.manifest.ManifestUtils;
-import org.eclipse.core.runtime.Assert;
+import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.eclipse.core.runtime.CoreException;
 
 import com.springsource.bundlor.util.SimpleManifestContents;
@@ -27,49 +26,10 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * 
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class AbstractManifestTemplateBasedExporter extends AbstractManifestAwareExporter {
+public abstract class AbstractManifestTemplateBasedExporter extends AbstractTemplateDirectoryBasedExporter {
 
-  /** - */
+  /** the manifest template contents */
   private ManifestContents _manifestTemplateContents;
-
-  /** - */
-  private File             _templateRootDirectory;
-
-  /** - */
-  private File             _projectTemplateDirectory;
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param templateRootDirectory
-   */
-  public final void setTemplateRootDirectory(File templateRootDirectory) {
-    Assert.isNotNull(templateRootDirectory);
-    Assert.isTrue(templateRootDirectory.isDirectory());
-
-    _templateRootDirectory = templateRootDirectory;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected final File getCurrentTemplateRootDirectory() {
-    return _templateRootDirectory;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected final File getCurrentProjectTemplateDirectory() {
-    return _projectTemplateDirectory;
-  }
 
   /**
    * <p>
@@ -87,15 +47,11 @@ public abstract class AbstractManifestTemplateBasedExporter extends AbstractMani
   @Override
   protected void preExportModule() throws CoreException {
 
-    // 'create' the project template directory
-    _projectTemplateDirectory = createProjectTemplateDirectory();
-
-    // get the template manifest
-    _manifestTemplateContents = createManifestTemplate();
-
     //
     super.preExportModule();
 
+    // get the template manifest
+    _manifestTemplateContents = createManifestTemplate();
   }
 
   /**
@@ -107,14 +63,19 @@ public abstract class AbstractManifestTemplateBasedExporter extends AbstractMani
   protected ManifestContents createManifestTemplate() {
 
     //
-    if (_templateRootDirectory == null) {
+    if (getCurrentTemplateRootDirectory() == null) {
       return createDefaultManifestTemplate();
     }
 
     File templateFile = getManifestTemplateFile();
 
+    if (templateFile == null) {
+      return createDefaultManifestTemplate();
+    }
+
     ManifestContents templateManifestContents = ManifestUtils.readManifestContents(templateFile);
 
+    //
     if (templateManifestContents != null) {
       return templateManifestContents;
     }
@@ -133,16 +94,54 @@ public abstract class AbstractManifestTemplateBasedExporter extends AbstractMani
    */
   protected File getManifestTemplateFile() {
 
-    // get the template file
-    File templateFile = new File(_templateRootDirectory, getCurrentModule().getModuleIdentifier().toString()
-        + ".template");
+    //
+    File rootDirectory = null;
 
-    if (!templateFile.exists()) {
-      templateFile = new File(_templateRootDirectory, getCurrentModule().getModuleIdentifier().getName() + ".template");
+    // step 1: does a module template directory exists (e.g.
+    // '<root>/x.y.z_1.2.3/' or '<root>/x.y.z/')?
+    if (hasCurrentModuleTemplateDirectory()) {
+
+      // step 1a: get the current root directory
+      rootDirectory = getCurrentModuleTemplateDirectory();
+
+      // step 1b: try '<root>/<module-root>/x.y.z_1.2.3.template'
+      File templateFile = new File(rootDirectory, getCurrentModule().getModuleIdentifier().toString() + ".template");
+
+      // step 1c: try '<root>/<module-root>/x.y.z.template'
+      if (!templateFile.exists()) {
+        templateFile = new File(rootDirectory, getCurrentModule().getModuleIdentifier().getName() + ".template");
+      }
+
+      // step 1d: try '<root>/<module-root>/manifest.template'
+      if (!templateFile.exists()) {
+        templateFile = new File(rootDirectory, "manifest.template");
+      }
+
+      // step 1e: try '<root>/<module-root>/manifest.properties'
+      // DON'T USE - JUST FOR BACKWARD COMPATIBILITY
+      if (!templateFile.exists()) {
+        templateFile = new File(rootDirectory, "manifest.template");
+      }
+
+      //
+      return templateFile.exists() ? templateFile : null;
     }
 
-    //
-    return templateFile;
+    // step 2: try the root template directory
+    else {
+
+      // step 1b: try '<root>/x.y.z_1.2.3.template'
+      File templateFile = new File(getCurrentTemplateRootDirectory(), getCurrentModule().getModuleIdentifier()
+          .toString() + ".template");
+
+      // step 1c: try '<root>/x.y.z.template'
+      if (!templateFile.exists()) {
+        templateFile = new File(rootDirectory, getCurrentModule().getModuleIdentifier().getName() + ".template");
+      }
+
+      //
+      return templateFile.exists() ? templateFile : null;
+    }
   }
 
   /**
@@ -153,15 +152,5 @@ public abstract class AbstractManifestTemplateBasedExporter extends AbstractMani
    */
   protected ManifestContents createDefaultManifestTemplate() {
     return new SimpleManifestContents();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected File createProjectTemplateDirectory() {
-    return _projectTemplateDirectory;
   }
 }

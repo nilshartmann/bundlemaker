@@ -1,0 +1,77 @@
+package org.bundlemaker.core.osgi.manifest.rules
+
+import org.bundlemaker.core.modules.IResourceModule;
+import com.springsource.util.osgi.manifest.BundleManifest;
+import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.osgi.internal.manifest.IdentifiableBundleManifest;
+import org.bundlemaker.core.osgi.exporter.ManifestConstants;
+import org.bundlemaker.core.osgi.manifest.DependencyStyle;
+import com.springsource.util.osgi.manifest.ImportedPackage;
+import org.bundlemaker.core.osgi.internal.manifest.ReferencesCache;
+import com.springsource.util.osgi.manifest.Resolution;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IModuleIdentifier;
+import com.springsource.util.osgi.manifest.RequiredBundle;
+import com.springsource.util.osgi.VersionRange;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
+
+/**
+ * Eingabe:
+ * - IModularizedSystem
+ * - IResourceModule
+ * - BundleManifest
+ * - IExportPackagePreferences
+ */
+rule "strict import packages - create imported package"
+when
+    IManifestPreferences( dependencyStyle == DependencyStyle.STRICT_IMPORT_PACKAGE ) 
+    $resourceModule : IResourceModule()
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    $referencedPackageName : String() from $resourceModule.getReferencedPackageNames(true, true, true)
+then
+   // create a new importedPackage
+   ImportedPackage importedPackage = $bundleManifest.getImportPackage().addImportedPackage($referencedPackageName);
+   insert( importedPackage );
+end
+
+rule "set imported package optional if not exporter exists"
+when
+    $importedPackage : ImportedPackage()
+    $referencesCache : ReferencesCache()
+    eval( $referencesCache.hasExportingModules($importedPackage.getPackageName()) )
+then
+   $importedPackage.setResolution(Resolution.OPTIONAL);
+end
+
+rule "RequiredBundle: strict require bundle - "
+when
+    IManifestPreferences( dependencyStyle == DependencyStyle.STRICT_REQUIRE_BUNDLE ) 
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    $resourceModule : IResourceModule()
+    $referencesCache : ReferencesCache()
+    $modularizedSystem : IModularizedSystem()
+    $referencedPackageName : String() from $resourceModule.getReferencedPackageNames(true, true, true)
+    $exportingModule : IModule() from $referencesCache.getExportingModules($referencedPackageName)
+    $symbolicName : String() from $exportingModule.getModuleIdentifier().getName()
+    not ( RequiredBundle(bundleSymbolicName == $symbolicName) )
+then
+   // create a required bundle
+   RequiredBundle requiredBundle = $bundleManifest.getRequireBundle().addRequiredBundle($symbolicName);
+   if ($modularizedSystem.getModules($symbolicName).size() > 1) {
+     requiredBundle.setBundleVersion(new VersionRange("[" + $exportingModule.getModuleIdentifier().getVersion() + "," + $exportingModule.getModuleIdentifier().getVersion() + "]"));
+   }
+   insert( requiredBundle );
+end
+
+rule "RequiredBundle: replace require bundle 'system.bundle' "
+salience -50
+when
+   $modularizedSystem : IModularizedSystem()
+   $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+   $symbolicName : String() from $modularizedSystem.getExecutionEnvironment().getModuleIdentifier().getName()
+   $requiredBundle : RequiredBundle(bundleSymbolicName == $symbolicName)
+then
+   // create a required bundle
+   $bundleManifest.getRequireBundle().getRequiredBundles().remove($requiredBundle);
+   RequiredBundle systemBundle = $bundleManifest.getRequireBundle().addRequiredBundle("system.bundle");
+end

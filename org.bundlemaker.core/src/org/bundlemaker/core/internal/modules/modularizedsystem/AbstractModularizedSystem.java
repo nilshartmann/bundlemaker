@@ -157,6 +157,36 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    * {@inheritDoc}
    */
   @Override
+  public Collection<IModule> getModules(String name) {
+
+    //
+    Assert.isNotNull(name);
+
+    //
+    Collection<IModule> result = new LinkedList<IModule>();
+
+    //
+    for (IModule iModule : _resourceModules.values()) {
+      if (name.equals(iModule.getModuleIdentifier().getName())) {
+        result.add(iModule);
+      }
+    }
+
+    //
+    for (IModule iModule : _nonResourceModules.values()) {
+      if (name.equals(iModule.getModuleIdentifier().getName())) {
+        result.add(iModule);
+      }
+    }
+
+    //
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public final Collection<IModule> getNonResourceModules() {
 
     //

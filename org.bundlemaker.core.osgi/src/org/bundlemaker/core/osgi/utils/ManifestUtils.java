@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.osgi.manifest;
+package org.bundlemaker.core.osgi.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,6 +32,7 @@ import java.util.zip.ZipEntry;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
+import org.osgi.framework.Version;
 
 import com.springsource.bundlor.util.MatchUtils;
 import com.springsource.bundlor.util.SimpleManifestContents;
@@ -50,6 +51,15 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ManifestUtils {
+
+  public static boolean isValidOSGiVersion(String version) {
+    try {
+      new Version(version);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
 
   /**
    * <p>

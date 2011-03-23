@@ -19,7 +19,7 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.osgi.manifest.ManifestUtils;
+import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import com.springsource.bundlor.ManifestWriter;
-import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFactory;
 
 /**
  * <p>
@@ -35,7 +34,7 @@ import com.springsource.bundlor.support.manifestwriter.StandardManifestWriterFac
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractJarFileBundleExporter extends AbstractManifestTemplateBasedExporter {
+public abstract class AbstractJarFileBundleExporter extends AbstractBundleManifestCreatorExporter {
 
   /**
    * {@inheritDoc}
@@ -58,12 +57,8 @@ public abstract class AbstractJarFileBundleExporter extends AbstractManifestTemp
       // get the root file
       File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ContentType.BINARY);
 
-      //
-      System.out.println("patching " + rootFile.getAbsolutePath());
-
       // get the manifest writer
-      ManifestWriter manifestWriter = new StandardManifestWriterFactory().create(rootFile.getAbsolutePath(),
-          getDestinationFile().getAbsolutePath());
+      ManifestWriter manifestWriter = new JarFileManifestWriter(rootFile, getDestinationFile());
 
       //
       manifestWriter.write(getCurrentManifest());

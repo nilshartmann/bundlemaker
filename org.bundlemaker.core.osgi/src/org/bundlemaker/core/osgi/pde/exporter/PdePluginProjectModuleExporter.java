@@ -19,8 +19,11 @@ import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.Activator;
-import org.bundlemaker.core.osgi.exporter.AbstractManifestTemplateBasedExporter;
-import org.bundlemaker.core.osgi.manifest.BundleManifestCreator;
+import org.bundlemaker.core.osgi.exporter.AbstractBundleManifestCreatorExporter;
+import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
+import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
+import org.bundlemaker.core.osgi.internal.manifest.ManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
@@ -40,6 +43,7 @@ import org.eclipse.pde.core.project.IBundleClasspathEntry;
 import org.eclipse.pde.core.project.IBundleProjectDescription;
 import org.eclipse.pde.core.project.IBundleProjectService;
 
+import com.springsource.bundlor.util.BundleManifestUtils;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -49,7 +53,7 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PdePluginProjectModuleExporter extends AbstractManifestTemplateBasedExporter {
+public class PdePluginProjectModuleExporter extends AbstractBundleManifestCreatorExporter {
 
   /** - */
   private static final String SRC_DIRECTORY_NAME = "src";
@@ -168,12 +172,9 @@ public class PdePluginProjectModuleExporter extends AbstractManifestTemplateBase
   }
 
   /**
-   * {@inheritDoc}
+   * @return
    */
-  protected ManifestContents createManifest() throws CoreException {
-
-    // create the manifest
-    return new BundleManifestCreator(getCurrentModularizedSystem(), getCurrentModule(), getCurrentContext(),
-        getCurrentManifestTemplate()).createManifest();
+  protected IManifestPreferences createManifestPreferences() {
+    return new ManifestPreferences(true);
   }
 }

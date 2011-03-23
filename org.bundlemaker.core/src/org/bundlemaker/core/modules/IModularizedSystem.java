@@ -146,6 +146,15 @@ public interface IModularizedSystem {
 
   /**
    * <p>
+   * </p>
+   *
+   * @param name
+   * @return
+   */
+  Collection<IModule> getModules(String name);
+
+  /**
+   * <p>
    * Returns the {@link IResourceModule} with the given identifier. This method is a convenience method and fully
    * equivalent to:
    * 

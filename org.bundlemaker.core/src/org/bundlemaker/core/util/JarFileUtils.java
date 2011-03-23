@@ -68,7 +68,7 @@ public final class JarFileUtils {
       for (IResource resourceStandin : resources) {
 
         // add everything but the manifest
-        if (!"META-INF/MANIFEST.MF".equalsIgnoreCase(resourceStandin.getPath())) {
+        if (!skipResource(resourceStandin.getPath())) {
 
           // add archive entry
           JarEntry newEntry = new JarEntry(resourceStandin.getPath());
@@ -95,6 +95,30 @@ public final class JarFileUtils {
       close(jarOutputStream);
       close(inputStream);
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @return
+   */
+  public static boolean skipResource(String path) {
+
+    // skip the original manifest
+    if ("META-INF/MANIFEST.MF".equalsIgnoreCase(path) || "META-INF/".equalsIgnoreCase(path)) {
+      return true;
+    }
+
+    // skip META-INF/*.RSA, META-INF/*.DSA and META-INF/*.SF files
+    if (path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Rr][Ss][Aa]") || path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Dd][Ss][Aa]")
+        || path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Ss][Ff]")) {
+      return true;
+    }
+
+    // default: don't skip
+    return false;
   }
 
   /**
@@ -139,5 +163,4 @@ public final class JarFileUtils {
     byte[] result = byteout.toByteArray();
     return result;
   }
-
 }

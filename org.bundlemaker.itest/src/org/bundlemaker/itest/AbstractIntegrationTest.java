@@ -165,7 +165,7 @@ public abstract class AbstractIntegrationTest {
 
     //
     if (_exportAsPdeProjects) {
-      log("Exporting as binary bundles...");
+      log("Exporting as PDE projects...");
       exportAsPdeProjects(bundleMakerProject, modularizedSystem);
     }
 
@@ -253,6 +253,8 @@ public abstract class AbstractIntegrationTest {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     BinaryBundleExporter exporter = new BinaryBundleExporter();
+    File templates = new File(System.getProperty("user.dir"), "templates");
+    exporter.setTemplateRootDirectory(templates);
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
     stopWatch.stop();
     System.out.println("Elapsed time " + stopWatch.getElapsedTime());
@@ -333,15 +335,14 @@ public abstract class AbstractIntegrationTest {
 
     File templateDirectory = new File(System.getProperty("user.dir"), "templates");
 
-    TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
-    targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
-    targetPlatformProjectExporter.export(modularizedSystem, exporterContext);
-
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
     pdeExporter.setUseClassifcationForExportDestination(true);
     pdeExporter.setTemplateRootDirectory(templateDirectory);
-
     new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext);
+
+    TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
+    targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
+    targetPlatformProjectExporter.export(modularizedSystem, exporterContext);
   }
 
   /**

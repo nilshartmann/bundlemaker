@@ -10,9 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.osgi.exporter;
 
-import org.bundlemaker.core.exporter.AbstractExporter;
+import java.io.IOException;
+
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.osgi.manifest.ManifestUtils;
+import org.bundlemaker.core.osgi.utils.ManifestUtils;
+import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -21,6 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.service.resolver.StateObjectFactory;
 import org.osgi.framework.BundleException;
 
+import com.springsource.util.osgi.manifest.BundleManifestFactory;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -31,7 +35,7 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * 
  * @noextend This class is not intended to be subclassed by clients.
  */
-public abstract class AbstractManifestAwareExporter extends AbstractExporter {
+public abstract class AbstractManifestAwareExporter extends AbstractManifestTemplateBasedExporter {
 
   // TODO
   public static final String                      OSGI_FRAGMENT_HOST = "OSGI_FRAGMENT_HOST";
@@ -41,6 +45,9 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
   /** - */
   private ManifestContents                        _manifestContents;
+
+  /** - */
+  private ManifestContents                        _originalManifestContents;
 
   /** - */
   private ManifestContents                        _hostManifestContents;
@@ -85,8 +92,6 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
    * @return
    */
   protected final ManifestContents getHostManifestContents() {
-
-    //
     return _hostManifestContents;
   }
 
@@ -116,6 +121,42 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
     return _manifestContents;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected ManifestContents getOriginalManifest() {
+
+    // the original manifest contents
+    if (_originalManifestContents == null) {
+
+      // the existing bundle manifest resource
+      IResource existingManifestResource = getCurrentModule().getResource("META-INF/MANIFEST.MF", ContentType.BINARY);
+
+      // create default manifest
+      if (existingManifestResource == null) {
+        _originalManifestContents = ManifestUtils.toManifestContents(BundleManifestFactory.createBundleManifest());
+      }
+
+      // the existing bundle manifest
+      try {
+        _originalManifestContents = ManifestUtils.readManifestContents(existingManifestResource);
+      } catch (IOException exception) {
+        exception.printStackTrace();
+        _originalManifestContents = ManifestUtils.toManifestContents(BundleManifestFactory.createBundleManifest());
+
+      }
+    }
+
+    //
+    return _originalManifestContents;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected void preExportModule() throws CoreException {
 

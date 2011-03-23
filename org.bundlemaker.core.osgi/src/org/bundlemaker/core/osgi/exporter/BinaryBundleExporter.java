@@ -10,11 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.osgi.exporter;
 
-import org.bundlemaker.core.osgi.manifest.BundleManifestCreator;
+import org.bundlemaker.core.osgi.internal.manifest.ManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.DependencyStyle;
-import org.eclipse.core.runtime.CoreException;
-
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 
 /**
  * <p>
@@ -26,54 +24,36 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public class BinaryBundleExporter extends AbstractJarFileBundleExporter {
 
-	/** - */
-	private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
+  /** - */
+  private DependencyStyle _dependencyStyle         = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
-	/** - */
-	private boolean _useOriginalOSGiManifest = true;
+  /** - */
+  private boolean         _useOriginalOSGiManifest = true;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param useRequireBundle
-	 */
-	public void setDependencyStyle(DependencyStyle dependencyStyle) {
-		_dependencyStyle = dependencyStyle;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param useRequireBundle
+   */
+  public void setDependencyStyle(DependencyStyle dependencyStyle) {
+    _dependencyStyle = dependencyStyle;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param useOriginalOSGiManifest
-	 */
-	public void setUseOriginalOSGiManifest(boolean useOriginalOSGiManifest) {
-		_useOriginalOSGiManifest = useOriginalOSGiManifest;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param useOriginalOSGiManifest
+   */
+  public void setUseOriginalOSGiManifest(boolean useOriginalOSGiManifest) {
+    _useOriginalOSGiManifest = useOriginalOSGiManifest;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param modularizedSystem
-	 * @param module
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	protected ManifestContents createManifest() throws CoreException {
-
-		// create the manifest
-		BundleManifestCreator creator = new BundleManifestCreator(
-				getCurrentModularizedSystem(), getCurrentModule(),
-				getCurrentContext(), getCurrentManifestTemplate());
-
-		// set
-		creator.setDependencyStyle(_dependencyStyle);
-		creator.setUseOriginalOSGiManifest(_useOriginalOSGiManifest);
-
-		// create manifest
-		return creator.createManifest();
-	}
+  /**
+   * @return
+   */
+  protected IManifestPreferences createManifestPreferences() {
+    return new ManifestPreferences(false);
+  }
 }
