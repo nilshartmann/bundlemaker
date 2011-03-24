@@ -33,6 +33,7 @@ when
     $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
     $manifestPreferences : IManifestPreferences()
     $type : IType() from $r.getContainedTypes()
+    eval ($type.getPackageName().trim().length() > 0)
     eval ($type.hasSourceResource() || ! ($manifestPreferences.isSourceManifest()))
     not ( ExportedPackage( packageName == $type.packageName ) )
 then
