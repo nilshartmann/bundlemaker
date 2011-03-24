@@ -13,6 +13,8 @@ package org.bundlemaker.core.parser.jdt.internal.ecj;
 import java.io.IOException;
 import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
@@ -22,6 +24,7 @@ import org.eclipse.jdt.internal.compiler.ICompilerRequestor;
 import org.eclipse.jdt.internal.compiler.IErrorHandlingPolicy;
 import org.eclipse.jdt.internal.compiler.IProblemFactory;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.core.builder.NameEnvironment;
@@ -36,13 +39,16 @@ import org.eclipse.jdt.internal.core.builder.NameEnvironment;
 public class IndirectlyReferencesAnalyzer {
 
   /** - **/
-  private IJavaProject         _javaProject;
+  private IJavaProject                      _javaProject;
 
   /** - **/
-  private Compiler             _compiler;
+  private Compiler                          _compiler;
 
   /** - **/
-  private NameEnvironmentProxy _environment;
+  private TracingNameEnvironmentProxy       _environment;
+
+  /** - */
+  private ResourceAwareNameEnvironmentProxy _resourceAwareNameEnvironment;
 
   /**
    * <p>
@@ -50,14 +56,17 @@ public class IndirectlyReferencesAnalyzer {
    * 
    * @param javaProject
    */
-  public IndirectlyReferencesAnalyzer(IJavaProject javaProject) {
+  public IndirectlyReferencesAnalyzer(IJavaProject javaProject,
+      IBundleMakerProjectDescription bundleMakerProjectDescription) {
     Assert.isNotNull(javaProject);
+    Assert.isNotNull(bundleMakerProjectDescription);
 
     // the java project
     _javaProject = javaProject;
 
-    // the name Environment
-    _environment = new NameEnvironmentProxy(new NameEnvironment(_javaProject));
+    _resourceAwareNameEnvironment = new ResourceAwareNameEnvironmentProxy(new NameEnvironment(_javaProject),
+        bundleMakerProjectDescription);
+    _environment = new TracingNameEnvironmentProxy(_resourceAwareNameEnvironment);
 
     // the error handling policy
     IErrorHandlingPolicy errorHandlingPolicy = new IErrorHandlingPolicy() {
@@ -117,10 +126,9 @@ public class IndirectlyReferencesAnalyzer {
    * @return
    * @throws IOException
    */
-  public Set<String> getAllReferencedTypes(IModifiableResource modifiableResource, char[] content) throws IOException {
+  public Set<String> getAllReferencedTypes(IResource resource, char[] content) throws IOException {
 
-    ICompilationUnit[] units = new ICompilationUnit[] { new ModifiableResourceCompilationUnit(modifiableResource,
-        content) };
+    ICompilationUnit[] units = new ICompilationUnit[] { _resourceAwareNameEnvironment.getCompilationUnit(resource) };
     _environment.resetRequestedTypes();
     _compiler.compile(units);
 

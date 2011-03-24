@@ -21,10 +21,10 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
  * <p>
  * </p>
  * 
- * @author wuetherich
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 @SuppressWarnings("restriction")
-public class NameEnvironmentProxy implements INameEnvironment {
+public class TracingNameEnvironmentProxy implements INameEnvironment {
 
   /** the name environment */
   private INameEnvironment _nameEnvironment;
@@ -38,7 +38,7 @@ public class NameEnvironmentProxy implements INameEnvironment {
    * 
    * @param nameEnvironment
    */
-  public NameEnvironmentProxy(INameEnvironment nameEnvironment) {
+  public TracingNameEnvironmentProxy(INameEnvironment nameEnvironment) {
     Assert.isNotNull(nameEnvironment);
 
     // set the name environment
@@ -78,12 +78,15 @@ public class NameEnvironmentProxy implements INameEnvironment {
    */
   public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName) {
 
+    //
     NameEnvironmentAnswer answer = _nameEnvironment.findType(typeName, packageName);
 
+    //
     if (answer != null) {
-      _requestedTypes.add(getAsString(packageName) + "." + new String(typeName));
+      _requestedTypes.add(NameEnvironmentUtils.getAsString(typeName, packageName, '.'));
     }
 
+    //
     return answer;
   }
 
@@ -95,7 +98,7 @@ public class NameEnvironmentProxy implements INameEnvironment {
     NameEnvironmentAnswer answer = _nameEnvironment.findType(compoundTypeName);
 
     if (answer != null) {
-      _requestedTypes.add(getAsString(compoundTypeName));
+      _requestedTypes.add(NameEnvironmentUtils.getAsString(compoundTypeName, '.'));
     }
 
     return answer;
@@ -106,35 +109,5 @@ public class NameEnvironmentProxy implements INameEnvironment {
    */
   public boolean isPackage(char[][] parentPackageName, char[] packageName) {
     return _nameEnvironment.isPackage(parentPackageName, packageName);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param compoundTypeName
-   * @return
-   */
-  private String getAsString(char[][] compoundTypeName) {
-
-    //
-    StringBuilder builder = new StringBuilder();
-
-    //
-    for (int i = 0; i < compoundTypeName.length; i++) {
-
-      //
-      char[] cs = compoundTypeName[i];
-
-      //
-      builder.append(new String(cs));
-
-      //
-      if (i + 1 < compoundTypeName.length) {
-        builder.append('.');
-      }
-    }
-
-    return builder.toString();
   }
 }
