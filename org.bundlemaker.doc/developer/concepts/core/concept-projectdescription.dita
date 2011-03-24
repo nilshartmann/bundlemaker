@@ -16,7 +16,10 @@
   <p>The system that should be analyzed and transformed using bundlemaker must defined within a
    project description
     (<codeph>org.bundlemaker.core.projectdescription.IBundleMakerProjcetDescription</codeph>). Each
-   bundlemaker project contains exactly one project description, as shown in the illustration above. </p>
+   bundlemaker project contains exactly one project description. </p>
+  <p><b>[TBD: CURRENTLY BUNDLEMAKER ONLY SUPPORT FILE BASED CONTENT (FOLDERS AND ARCHIVES). WE DON'T
+    HAVE SUPPORT FOR ECLIPSE JAVA PROJECTS YET. THIS IS PLANNED BUT SCHEDULED FOR A 1.1
+   RELEASE]</b></p>
   <section><title>Retrieving the project description</title>
    <p>The bundlemaker project description can can be retrieved using the method
      <codeph>IBundleMakerProject.getProjectDescription()</codeph>:
