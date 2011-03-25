@@ -11,9 +11,56 @@
 -->
 <!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/concept.dtd">
 <concept id="conceptId">
- <title>Modules</title>
- <shortdesc></shortdesc>
+ <title>Modules and IModularizedSystem</title>
+ <shortdesc>Once a <codeph>IBundleMakerProject</codeph> is in the <codeph>READY</codeph> state, you can
+  create and manipulate one or more instances of type
+  <codeph>org.bundlemaker.core.modules.IModularizedSystem</codeph>. A
+  <codeph>IModularizedSystem</codeph> contains all the modules that make up your the input system.
+  It allows you to restructure your modules using transformations, and it provides several methods
+  to retrieve information about modules, types, resources and so on.</shortdesc>
  <conbody>
-  <p>Concept definition.</p>
+  <section><title>Creating an <codeph>IModularizedSystem</codeph> instance</title>
+   <p>To create an instance of type <codeph>IModularizedSystem</codeph> you have to call the method
+     <codeph>IBundleMakerProject.createModularizedSystemWorkingCopy(String name)</codeph>. Once the
+    instance is created, fetch it from the <codeph>IModularizedSystem</codeph> using the
+     <codeph>getModularizedSystemWorkingCopy(String name)</codeph> method.
+    <codeblock>
+  IBundleMakerProject bmProject = ...
+  
+  if (bmProject.getState().equals(BundleMakerProjectState.READY)) {
+
+    if (!bmProject.hasModularizedSystemWorkingCopy("test")) {
+      bmProject.createModularizedSystemWorkingCopy("test");
+    }
+
+    IModularizedSystem modularizedSystem = bmProject.getModularizedSystemWorkingCopy("test");
+  } 
+    </codeblock>
+   </p>
+  </section>
+  <section><title>Modularizing a given system using transformations</title>
+   <p>The first thing you have to do with an <codeph>IModularizedSystem</codeph> is to create the
+    modules that make up your system. In BundleMaker this is done using transformations. The easiest
+    ways to generate a module structure is simply to call <codeph>applyTransformations()</codeph>.
+    Each <codeph>IModularizedSystem</codeph> contains a default transformation that creates an
+    instance of type <codeph>org.bundlemaker.core.modules.IModule</codeph> for each content entry
+    defined in the project description. Once the (default) transformation is applied, you can
+    retreive the modules from the <codeph>IModularizedSystem</codeph>.</p>
+   <codeblock>
+  IModularizedSystem modularizedSystem = ...;
+  
+  // apply the transformation
+  modularizedSystem.applyTransformations();
+  
+  // get all defined modules
+  for (IModule module : modularizedSystem.getAllModules()) {
+    System.out.println(module.getModuleIdentifier());
+  }
+   </codeblock>
+   <p>For more information about transformation and how to use them take a look at [TODO]</p>
+  </section>
+  <section><title><codeph>IModule</codeph>s and <codeph>IResourceModule</codeph>s</title>
+  <image href="./diagrams/cd-resource-model.png" scale="40"/>
+  </section>
  </conbody>
 </concept>

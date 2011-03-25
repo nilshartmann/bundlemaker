@@ -49,8 +49,7 @@
     <li><b>CREATED:</b> Just after creating an <codeph>IBundleMakerProject></codeph> it is in the
       <codeph>CREATED</codeph> state. It is the initial state and you can't do anything useful with
      a bundlemaker project in this state except setting the project description and calling
-      <codeph>initialize()</codeph>. See <xref/> for further information about setting the project
-     description.</li>
+      <codeph>initialize()</codeph>.</li>
     <li><b>INITIALIZED:</b>To set an <codeph>IBundleMakerProject></codeph> to the
       <codeph>INITIALIZED</codeph> you have to exeute the <codeph>initialize()</codeph> method. This
      cause the project to build an internal index of the content (and all contained resources)
