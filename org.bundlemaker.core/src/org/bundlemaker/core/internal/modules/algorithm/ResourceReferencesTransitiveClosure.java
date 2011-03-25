@@ -66,7 +66,7 @@ public class ResourceReferencesTransitiveClosure extends AbstractResourceClosure
       }
 
       if (types.size() > 1) {
-        System.out.println("MULTIPLE TYPE FOR '" + typeName + "'.");
+        System.out.println("MULTIPLE TYPES FOR '" + typeName + "'.");
       }
 
       //
