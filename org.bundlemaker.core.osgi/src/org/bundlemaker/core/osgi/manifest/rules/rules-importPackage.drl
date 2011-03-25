@@ -61,7 +61,7 @@ then
    if ($modularizedSystem.getModules($symbolicName).size() > 1) {
      requiredBundle.setBundleVersion(new VersionRange("[" + $exportingModule.getModuleIdentifier().getVersion() + "," + $exportingModule.getModuleIdentifier().getVersion() + "]"));
    }
-   // requiredBundle.setVisibility(Visibility.REEXPORT);
+   requiredBundle.setVisibility(Visibility.REEXPORT);
    insert( requiredBundle );
 end
 
@@ -76,4 +76,5 @@ then
    // create a required bundle
    $bundleManifest.getRequireBundle().getRequiredBundles().remove($requiredBundle);
    RequiredBundle systemBundle = $bundleManifest.getRequireBundle().addRequiredBundle("system.bundle");
+   systemBundle.setVisibility(Visibility.REEXPORT);
 end
