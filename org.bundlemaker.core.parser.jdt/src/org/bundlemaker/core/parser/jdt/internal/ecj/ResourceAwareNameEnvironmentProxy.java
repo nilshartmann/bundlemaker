@@ -18,6 +18,7 @@ import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
+@SuppressWarnings("restriction")
 public class ResourceAwareNameEnvironmentProxy implements INameEnvironment {
 
   /** the name environment */
@@ -26,6 +27,7 @@ public class ResourceAwareNameEnvironmentProxy implements INameEnvironment {
   /** - */
   private Map<String, IResource>                    _sources;
 
+  /** - */
   private GenericCache<IResource, ICompilationUnit> _genericCache;
 
   /**
@@ -66,7 +68,7 @@ public class ResourceAwareNameEnvironmentProxy implements INameEnvironment {
 
       @Override
       protected ICompilationUnit create(IResource resource) {
-        return new CompilationUnitImpl(resource);
+        return new CompilationUnitImpl(resource, null);
       }
     };
   }
@@ -137,7 +139,7 @@ public class ResourceAwareNameEnvironmentProxy implements INameEnvironment {
 
     //
     if (_sources.containsKey(path)) {
-      return new NameEnvironmentAnswer(_genericCache.get(_sources.get(path)), null);
+      return new NameEnvironmentAnswer(_genericCache.getOrCreate(_sources.get(path)), null);
     }
 
     //

@@ -15,9 +15,9 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.Compiler;
 import org.eclipse.jdt.internal.compiler.ICompilerRequestor;
@@ -39,16 +39,16 @@ import org.eclipse.jdt.internal.core.builder.NameEnvironment;
 public class IndirectlyReferencesAnalyzer {
 
   /** - **/
-  private IJavaProject                      _javaProject;
+  private IJavaProject                _javaProject;
 
   /** - **/
-  private Compiler                          _compiler;
+  private Compiler                    _compiler;
 
   /** - **/
-  private TracingNameEnvironmentProxy       _environment;
+  private TracingNameEnvironmentProxy _environment;
 
   /** - */
-  private ResourceAwareNameEnvironmentProxy _resourceAwareNameEnvironment;
+  private static final boolean        USE_RESOURCE_AWARE_NAME_ENVIRONMENT_PROXY = false;
 
   /**
    * <p>
@@ -64,9 +64,14 @@ public class IndirectlyReferencesAnalyzer {
     // the java project
     _javaProject = javaProject;
 
-    _resourceAwareNameEnvironment = new ResourceAwareNameEnvironmentProxy(new NameEnvironment(_javaProject),
-        bundleMakerProjectDescription);
-    _environment = new TracingNameEnvironmentProxy(_resourceAwareNameEnvironment);
+    INameEnvironment iNameEnvironment = new NameEnvironment(_javaProject);
+
+    if (USE_RESOURCE_AWARE_NAME_ENVIRONMENT_PROXY) {
+      _environment = new TracingNameEnvironmentProxy(new ResourceAwareNameEnvironmentProxy(iNameEnvironment,
+          bundleMakerProjectDescription));
+    } else {
+      _environment = new TracingNameEnvironmentProxy(iNameEnvironment);
+    }
 
     // the error handling policy
     IErrorHandlingPolicy errorHandlingPolicy = new IErrorHandlingPolicy() {
@@ -90,8 +95,13 @@ public class IndirectlyReferencesAnalyzer {
 
       public void acceptResult(CompilationResult result) {
         if (result.hasErrors()) {
-          // TODO...
-          // System.err.println(result);
+
+          System.out.println(result.getFileName());
+
+          for (CategorizedProblem problem : result.getErrors()) {
+            // TODO...
+            System.out.println(problem);
+          }
         }
       }
     };
@@ -108,31 +118,15 @@ public class IndirectlyReferencesAnalyzer {
    * </p>
    * 
    * @param modifiableResource
-   * @return
-   * @throws IOException
-   */
-  public Set<String> getAllReferencedTypes(IModifiableResource modifiableResource) throws IOException {
-
-    //
-    return getAllReferencedTypes(modifiableResource, new String(modifiableResource.getContent()).toCharArray());
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modifiableResource
    * @param content
    * @return
    * @throws IOException
    */
   public Set<String> getAllReferencedTypes(IResource resource, char[] content) throws IOException {
 
-    ICompilationUnit[] units = new ICompilationUnit[] { _resourceAwareNameEnvironment.getCompilationUnit(resource) };
+    ICompilationUnit[] units = new ICompilationUnit[] { new CompilationUnitImpl(resource, content) };
     _environment.resetRequestedTypes();
     _compiler.compile(units);
-
     return _environment.getRequestedTypes();
   }
-
 }
