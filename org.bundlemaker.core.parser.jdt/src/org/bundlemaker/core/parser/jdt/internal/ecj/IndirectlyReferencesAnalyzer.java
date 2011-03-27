@@ -13,15 +13,18 @@ package org.bundlemaker.core.parser.jdt.internal.ecj;
 import java.io.IOException;
 import java.util.Set;
 
-import org.bundlemaker.core.resource.modifiable.IModifiableResource;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.compiler.CategorizedProblem;
 import org.eclipse.jdt.internal.compiler.CompilationResult;
 import org.eclipse.jdt.internal.compiler.Compiler;
 import org.eclipse.jdt.internal.compiler.ICompilerRequestor;
 import org.eclipse.jdt.internal.compiler.IErrorHandlingPolicy;
 import org.eclipse.jdt.internal.compiler.IProblemFactory;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
+import org.eclipse.jdt.internal.compiler.env.INameEnvironment;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.core.builder.NameEnvironment;
@@ -36,13 +39,16 @@ import org.eclipse.jdt.internal.core.builder.NameEnvironment;
 public class IndirectlyReferencesAnalyzer {
 
   /** - **/
-  private IJavaProject         _javaProject;
+  private IJavaProject                _javaProject;
 
   /** - **/
-  private Compiler             _compiler;
+  private Compiler                    _compiler;
 
   /** - **/
-  private NameEnvironmentProxy _environment;
+  private TracingNameEnvironmentProxy _environment;
+
+  /** - */
+  private static final boolean        USE_RESOURCE_AWARE_NAME_ENVIRONMENT_PROXY = false;
 
   /**
    * <p>
@@ -50,14 +56,22 @@ public class IndirectlyReferencesAnalyzer {
    * 
    * @param javaProject
    */
-  public IndirectlyReferencesAnalyzer(IJavaProject javaProject) {
+  public IndirectlyReferencesAnalyzer(IJavaProject javaProject,
+      IBundleMakerProjectDescription bundleMakerProjectDescription) {
     Assert.isNotNull(javaProject);
+    Assert.isNotNull(bundleMakerProjectDescription);
 
     // the java project
     _javaProject = javaProject;
 
-    // the name Environment
-    _environment = new NameEnvironmentProxy(new NameEnvironment(_javaProject));
+    INameEnvironment iNameEnvironment = new NameEnvironment(_javaProject);
+
+    if (USE_RESOURCE_AWARE_NAME_ENVIRONMENT_PROXY) {
+      _environment = new TracingNameEnvironmentProxy(new ResourceAwareNameEnvironmentProxy(iNameEnvironment,
+          bundleMakerProjectDescription));
+    } else {
+      _environment = new TracingNameEnvironmentProxy(iNameEnvironment);
+    }
 
     // the error handling policy
     IErrorHandlingPolicy errorHandlingPolicy = new IErrorHandlingPolicy() {
@@ -81,8 +95,13 @@ public class IndirectlyReferencesAnalyzer {
 
       public void acceptResult(CompilationResult result) {
         if (result.hasErrors()) {
-          // TODO...
-          // System.err.println(result);
+
+          System.out.println(result.getFileName());
+
+          for (CategorizedProblem problem : result.getErrors()) {
+            // TODO...
+            System.out.println(problem);
+          }
         }
       }
     };
@@ -99,32 +118,15 @@ public class IndirectlyReferencesAnalyzer {
    * </p>
    * 
    * @param modifiableResource
-   * @return
-   * @throws IOException
-   */
-  public Set<String> getAllReferencedTypes(IModifiableResource modifiableResource) throws IOException {
-
-    //
-    return getAllReferencedTypes(modifiableResource, new String(modifiableResource.getContent()).toCharArray());
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modifiableResource
    * @param content
    * @return
    * @throws IOException
    */
-  public Set<String> getAllReferencedTypes(IModifiableResource modifiableResource, char[] content) throws IOException {
+  public Set<String> getAllReferencedTypes(IResource resource, char[] content) throws IOException {
 
-    ICompilationUnit[] units = new ICompilationUnit[] { new ModifiableResourceCompilationUnit(modifiableResource,
-        content) };
+    ICompilationUnit[] units = new ICompilationUnit[] { new CompilationUnitImpl(resource, content) };
     _environment.resetRequestedTypes();
     _compiler.compile(units);
-
     return _environment.getRequestedTypes();
   }
-
 }

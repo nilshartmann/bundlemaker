@@ -135,7 +135,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     _currentProgressMonitor = progressMonitor;
 
     // assert
-    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
+    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
 
     // create the project parser
     ProjectParser projectParser = new ProjectParser(this, parseIndirectReferences);
@@ -257,7 +257,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     }
 
     // set 'READY' state
-    _projectState = BundleMakerProjectState.OPENED;
+    _projectState = BundleMakerProjectState.READY;
 
     // create default working copy
     createModularizedSystemWorkingCopy(getProject().getName());
@@ -274,7 +274,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     // assert
     Assert.isNotNull(name);
     Assert.isTrue(name.trim().length() > 0);
-    assertState(BundleMakerProjectState.OPENED);
+    assertState(BundleMakerProjectState.READY);
 
     //
     if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
@@ -305,7 +305,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   public boolean hasModularizedSystemWorkingCopy(String name) throws CoreException {
 
     // assert
-    assertState(BundleMakerProjectState.OPENED);
+    assertState(BundleMakerProjectState.READY);
 
     return _modifiableModualizedSystemWorkingCopies.containsKey(name);
   }
@@ -319,7 +319,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   public IModularizedSystem getModularizedSystemWorkingCopy(String name) throws CoreException {
 
     // assert
-    assertState(BundleMakerProjectState.OPENED);
+    assertState(BundleMakerProjectState.READY);
 
     if (!hasModularizedSystemWorkingCopy(name)) {
       // TODO
@@ -338,7 +338,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   public void deleteModularizedSystemWorkingCopy(String name) throws CoreException {
 
     // assert
-    assertState(BundleMakerProjectState.OPENED);
+    assertState(BundleMakerProjectState.READY);
 
     if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
       _modifiableModualizedSystemWorkingCopies.remove(name);
@@ -376,7 +376,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     _currentProgressMonitor = progressMonitor;
 
     // assert
-    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.OPENED);
+    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
 
     if (_additionalInfoStore == null) {
       return Activator.getDefault().getPersistentDependencyStore(this);

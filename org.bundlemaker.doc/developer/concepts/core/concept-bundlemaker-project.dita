@@ -25,11 +25,11 @@
    <image href="./images/bundlemaker-project-layout.png"/>
   </section>
   <section>
-   <title>Retrieving the IBundleMakerProject instance</title>
-   For each Bundlemaker project exists an associated <codeph>IBundleMakerProject</codeph>
-    instance . To retrieve this instance you can use the method
-     <codeph>BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(String name)</codeph>:
-    <codeblock>
+   <title>Retrieving the IBundleMakerProject instance</title> There exists an associated
+    <codeph>IBundleMakerProject</codeph> instance for each project with a bundlemaker nature . To
+   retrieve this instance you can use the method
+    <codeph>BundleMakerCore.getBundleMakerProject(IProject project, IProgressMonitor
+    progressMonitor)</codeph>: <codeblock>
   // get or create simple project with bundlemaker nature
   IProject simpleProject = BundleMakerCore.
     getOrCreateSimpleProjectWithBundleMakerNature("MyProject");
@@ -38,9 +38,32 @@
   IBundleMakerProject bundleMakerProject = 
     BundleMakerCore.getBundleMakerProject(simpleProject, null);
    </codeblock>
-  </section>
-  <section><title>The project state model</title>
-   <image href="./images/bundlemaker-project-statediagram.png" scale="60"/>
+   <title>The project state model</title>
+   <p>An <codeph>IBundleMakerProject></codeph> has a well defined lifecycle that is shown in the
+    illustration below.</p>
+   <image href="./images/bundlemaker-project-statediagram.png" scale="60" id="image_tfv_oqn_tb"/>
+   <p>The lifecycle contains the four states <codeph>CREATED</codeph>, <codeph>INITIALIZED</codeph>,
+     <codeph>PARSED</codeph> and <codeph>READY</codeph>. Not all of these state are visible to the
+    end user, but it is crucial to understand their meaning within the bundlemaker API.</p>
+   <ul>
+    <li><b>CREATED:</b> Just after creating an <codeph>IBundleMakerProject></codeph> it is in the
+      <codeph>CREATED</codeph> state. It is the initial state and you can't do anything useful with
+     a bundlemaker project in this state except setting the project description and calling
+      <codeph>initialize()</codeph>.</li>
+    <li><b>INITIALIZED:</b>To set an <codeph>IBundleMakerProject></codeph> to the
+      <codeph>INITIALIZED</codeph> you have to exeute the <codeph>initialize()</codeph> method. This
+     cause the project to build an internal index of the content (and all contained resources)
+     defined in the project description.</li>
+    <li><b>PARSED:</b>To set an <codeph>IBundleMakerProject></codeph> to the <codeph>PARSED</codeph>
+     you have to exeute the <codeph>parse()</codeph> method. This cause the project to parse all
+     resources that are defined in the project description.</li>
+    <li><b>READY:</b>To set an <codeph>IBundleMakerProject></codeph> to the <codeph>READY</codeph>
+     you have to exeute the <codeph>open()</codeph> method. This cause the project to associate the
+     contained resources with the parsed dependency information from the underlying database. Note
+     that you can directly switch from the <codeph>INITIALIZED</codeph> state to the
+      <codeph>READY</codeph> if a valid database exists.</li>
+   </ul>
+   <b>[TBD: CURRENTLY WE DON'T HAVE ANY CHECKS IF AN EXISTING DATABASE IS "VALID".]</b>
   </section>
  </conbody>
 </concept>

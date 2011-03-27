@@ -89,7 +89,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     _javaProject = JdtProjectHelper.getAssociatedJavaProject(bundleMakerProject);
 
     //
-    _indirectlyReferencesAnalyzer = new IndirectlyReferencesAnalyzer(_javaProject);
+    _indirectlyReferencesAnalyzer = new IndirectlyReferencesAnalyzer(_javaProject,
+        bundleMakerProject.getProjectDescription());
 
     //
     _parseIndirectReferences = parseIndirectReferences;

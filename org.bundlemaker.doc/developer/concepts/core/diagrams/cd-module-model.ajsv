@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--AgileJ Ltd. (http://www.agilej.com)-->
+<ajsv>
+    <diagram style="defaultDiagramStyle" version="1.7.3.v20110116-2128">
+        <class className="org.bundlemaker.core.modules.IModule" project="org.bundlemaker.core" xLocation="1961" yLocation="-6"/>
+        <class className="org.bundlemaker.core.modules.ITypeContainer" project="org.bundlemaker.core" xLocation="1608" yLocation="-377"/>
+        <class className="org.bundlemaker.core.modules.IResourceModule" project="org.bundlemaker.core" xLocation="1575" yLocation="311"/>
+        <class className="org.bundlemaker.core.modules.IResourceContainer" project="org.bundlemaker.core" xLocation="842" yLocation="-13"/>
+    </diagram>
+</ajsv>
