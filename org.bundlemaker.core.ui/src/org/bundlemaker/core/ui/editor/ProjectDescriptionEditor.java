@@ -36,7 +36,7 @@ public class ProjectDescriptionEditor extends FormEditor {
   protected void addPages() {
     try {
       addPage(new ContentPage(this));
-      addPage(new TransformationFormPage(this));
+      addPage(new TransformationPage(this));
     } catch (Exception ex) {
       BundleMakerUiUtils.logError("Could not add page to editor", ex);
     }

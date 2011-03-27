@@ -19,5 +19,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: BundleMaker Team
 Import-Package: org.bundlemaker.core,
+ org.bundlemaker.core.osgi.exporter,
  org.bundlemaker.core.util
 Bundle-Activator: org.bundlemaker.core.ui.internal.Activator
