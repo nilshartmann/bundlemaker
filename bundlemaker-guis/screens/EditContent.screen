@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Note" x="138" y="96" width="1" height="1" text="(" measuredWidth="1" measuredHeight="1">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Note" x="128" y="8" width="569" height="57" text="_(Modal) subdialog that will be opened, when a Type- or ResourceContent will be added or modified._&#xD;&#xA;&#xD;&#xA;" measuredWidth="569" measuredHeight="57">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Window" x="304" y="176" width="353" height="417" text="Edit/Add ResourceContent/TypeContent" measuredWidth="353" measuredHeight="417"/>
+  <widgets xsi:type="model:WidgetGroup" x="314" y="287" measuredWidth="327" measuredHeight="26">
+    <widgets xsi:type="model:TextField" x="69" width="258" text="Spring" measuredWidth="258" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" y="3" text="Name:" measuredWidth="40" measuredHeight="23">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="314" y="319" measuredWidth="327" measuredHeight="23">
+    <widgets xsi:type="model:TextField" x="69" width="258" text="2.5.6" measuredWidth="258" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" text="Version:" measuredWidth="47" measuredHeight="23">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="314" y="550" measuredWidth="327" measuredHeight="37">
+    <widgets xsi:type="model:Button" x="185" y="12" width="61" text="OK" measuredWidth="61" measuredHeight="25" state="focused" link="ProjectOverview.screen">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" x="265" y="12" width="57" text="Cancel" measuredWidth="57" measuredHeight="25" link="ProjectOverview.screen">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" width="327" measuredWidth="327" measuredHeight="6"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="96" y="423" measuredWidth="200" measuredHeight="81">
+    <widgets xsi:type="model:Note" width="194" height="57" text="Sources-List is not display whe a *TypeContent* is edited in the dialog" measuredWidth="194" measuredHeight="57">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Arrow" x="104" y="56" width="96" height="25" measuredWidth="96" measuredHeight="25" left="false" right="true"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="314" y="455" measuredWidth="327" measuredHeight="84">
+    <widgets xsi:type="model:Label" y="1" text="Sources:" measuredWidth="49" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:List" x="69" y="1" width="161" height="81" text="r:/spring/sources&#xD;&#xA;spring-patch-sources.zip" measuredWidth="161" measuredHeight="81" verticalScrollbar="true">
+      <font/>
+      <items x="0" y="2" width="144" height="21" text="r:/spring/sources"/>
+      <items x="0" y="23" width="144" height="21" text="spring-patch-sources.zip"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" x="235" measuredWidth="92" measuredHeight="84">
+      <widgets xsi:type="model:Button" width="92" text="Add archive..." measuredWidth="92" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Button" y="59" width="92" text="Remove" measuredWidth="92" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Button" y="29" width="92" text="Add folder..." measuredWidth="92" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="314" y="359" measuredWidth="327" measuredHeight="84">
+    <widgets xsi:type="model:Label" text="Binaries:" measuredWidth="49" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:List" x="69" width="161" height="82" text="r:/spring/classes&#xD;&#xA;r:/spring/spring-patch.jar" measuredWidth="161" measuredHeight="82" verticalScrollbar="true">
+      <font/>
+      <items x="0" y="2" width="144" height="21" text="r:/spring/classes"/>
+      <items x="0" y="23" width="144" height="21" text="r:/spring/spring-patch.jar"/>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" x="235" measuredWidth="92" measuredHeight="84">
+      <widgets xsi:type="model:Button" width="92" text="Add archive..." measuredWidth="92" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Button" y="59" width="92" text="Remove" measuredWidth="92" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Button" y="29" width="92" text="Add folder..." measuredWidth="92" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="315" y="267" width="326" measuredWidth="326" measuredHeight="6"/>
+  <widgets xsi:type="model:Label" x="320" y="208" text="Define ResourceContent" measuredWidth="143" measuredHeight="23">
+    <font bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Text" x="336" y="231" width="366" height="36" text="Modify the ResourceContents content" measuredWidth="366" measuredHeight="36">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Image" x="555" y="200" measuredWidth="86" measuredHeight="66" src="../assets/bundlemaker-icon.png"/>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

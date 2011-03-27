@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:HLine" x="416" y="227" width="471" measuredWidth="471" measuredHeight="6"/>
+  <widgets xsi:type="model:TabbedPane" x="406" y="128" width="489" height="705" text="{country-flag2}  spring.bundlemaker   {close}" measuredWidth="489" measuredHeight="705" selection="0">
+    <items x="10" y="0" width="166" height="28" text="{country-flag2}  spring.bundlemaker   {close}"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TabbedPane" x="406" y="243" width="489" height="580" text="Content,Transformations" measuredWidth="489" measuredHeight="580" selection="0" position="bottom">
+    <items x="10" y="553" width="59" height="27" text="Content"/>
+    <items x="69" y="553" width="105" height="27" text="Transformations"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="416" y="161" measuredWidth="301" measuredHeight="64">
+    <widgets xsi:type="model:WidgetGroup" y="39" measuredWidth="301" measuredHeight="25">
+      <widgets xsi:type="model:Label" y="1" text="BundleMaker project state:" measuredWidth="143" measuredHeight="23">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Label" x="147" y="1" text="initialized" measuredWidth="75" measuredHeight="23" textAlignment="Center" icon="circled-minus (small)">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Button" x="232" text="Parse" measuredWidth="69" measuredHeight="25" icon="refresh (small)">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" measuredWidth="266" measuredHeight="40">
+      <widgets xsi:type="model:Label" x="78" y="3" text="Bundlemaker project" measuredWidth="188" measuredHeight="34">
+        <font size="14"/>
+      </widgets>
+      <widgets xsi:type="model:Image" width="63" height="40" measuredWidth="63" measuredHeight="40" src="../assets/bundlemaker-icon.png"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Popup" x="144" y="269" text="{edit} &amp;Edit&#xA;{delete} &amp;Remove&#xA;---&#xA;Add &amp;binary archives...&#xA;Add binary &amp;folder...&#xA;Add &amp;sources archives...&#xA;Add source f&amp;older...&#xA;" measuredWidth="147" measuredHeight="153">
+    <items link="EditContent.screen" x="0" y="2" width="147" height="23" text="{edit} &amp;Edit"/>
+    <items x="0" y="25" width="147" height="23" text="{delete} &amp;Remove"/>
+    <items x="0" y="48" width="147" height="11" text="---"/>
+    <items link="AddArchives.screen" x="0" y="59" width="147" height="23" text="Add &amp;binary archives..."/>
+    <items x="0" y="82" width="147" height="23" text="Add binary &amp;folder..."/>
+    <items link="AddArchives.screen" x="0" y="105" width="147" height="23" text="Add &amp;sources archives..."/>
+    <items x="0" y="128" width="147" height="23" text="Add source f&amp;older..."/>
+  </widgets>
+  <widgets xsi:type="model:Note" x="96" y="449" width="228" height="74" text="*Contextmenu*, that will be opened when a line with name and version of a ResourceContent or TypeContent is selected." measuredWidth="228" measuredHeight="74">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Note" x="904" y="304" width="279" height="433" text="*&quot;Edit&quot;-Buttons:*&#xD;&#xA;Allows the modification of the selected ResourceContent resp. TypeContent in a specialized dialog (EditContentDialog). This is same as using the context menu.&#xD;&#xA;&#xD;&#xA;*&quot;Add&quot;-Buttons:*&#xD;&#xA;Adds a new content (opens AddContentDialog dialog)&#xD;&#xA;&#xD;&#xA; *&quot;Smart Add&quot; Buttons*: &#xD;&#xA; &quot;Intelligent&quot; adding of a set of Resourcen/Types. This uses the &#xD;&#xA;IBundleProjectDescription.addResourceContent(String)) method. The selected jar files are added to the tree. &#xD;&#xA;&#xD;&#xA;*&quot;Remove&quot; Buttons*:&#xD;&#xA;removes the selected entries:&#xD;&#xA;** from the IBundleMakerProjectDescription (when clicked while a Resource- or TypeContent is selected).&#xD;&#xA;** from IFileBasedContent when a folder or jar file is selected" measuredWidth="279" measuredHeight="433" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Callout" x="192" y="269" text="1" measuredWidth="26" measuredHeight="26" link="EditContent.screen">
+    <font bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="416" y="253" text="{desc} *Resources:*" measuredWidth="89" measuredHeight="24">
+    <font size="9" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="416" y="276" width="449" measuredWidth="449" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Text" x="420" y="276" width="463" height="37" text="With resources you specify the content that will be parsed, transformed and exported by BundleMaker. Comparable with source files in a Java project." measuredWidth="463" measuredHeight="37">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tree" x="420" y="312" width="365" height="200" text="[v] Spring \[2.5.6\]&#xA;-[>] r:\spring\classes&#xA;-[>] r:\spring\sources&#xA;-spring-patch.jar&#xA;-spring-patch-sources.zip&#xA;[v] Hibernate \[3.5.1\]&#xA;-hibernate-3.5.1.jar&#xA;[>] EclipseLink \[2.0.1RC1\]&#xA;[>] Quartz Scheduler \[1.2.3\]" measuredWidth="365" measuredHeight="200" value="5" verticalScrollbar="true" alpha="64" selection="">
+    <items x="0" y="5" width="348" height="21" text="[v] Spring \[2.5.6\]"/>
+    <items x="0" y="26" width="348" height="21" text="-[>] r:\spring\classes"/>
+    <items x="0" y="47" width="348" height="21" text="-[>] r:\spring\sources"/>
+    <items x="0" y="68" width="348" height="21" text="-spring-patch.jar"/>
+    <items x="0" y="89" width="348" height="21" text="-spring-patch-sources.zip"/>
+    <items x="0" y="110" width="348" height="21" text="[v] Hibernate \[3.5.1\]"/>
+    <items x="0" y="131" width="348" height="21" text="-hibernate-3.5.1.jar"/>
+    <items x="0" y="152" width="348" height="21" text="[>] EclipseLink \[2.0.1RC1\]"/>
+    <items x="0" y="173" width="348" height="21" text="[>] Quartz Scheduler \[1.2.3\]"/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="420" y="520" width="465" measuredWidth="465" measuredHeight="6"/>
+  <widgets xsi:type="model:Label" x="420" y="529" text="{desc} *Types:*" measuredWidth="62" measuredHeight="24">
+    <font bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Text" x="424" y="552" width="463" height="49" text="With types you specify the dependencies of your resources. Types will _not_ be parsed, transformed or exported. Comparable with the binary dependencies specified on the classpath of a Java project." measuredWidth="463" measuredHeight="49">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tree" x="424" y="600" width="365" height="186" text="[v] Log4j \[1.4.0\]&#xA;-log4j.jar&#xA;[v] Apache Logging \[2.0.0\]&#xA;-apache-logging-2.0.0.jar&#xA;-apache-logging-spi-2.0.0.jar&#xA;[>] Apache Commons Collections \[1.5.0\]&#xA;" measuredWidth="365" measuredHeight="186" value="5" verticalScrollbar="true" alpha="64" selection="">
+    <items x="0" y="5" width="348" height="21" text="[v] Log4j \[1.4.0\]"/>
+    <items x="0" y="26" width="348" height="21" text="-log4j.jar"/>
+    <items x="0" y="47" width="348" height="21" text="[v] Apache Logging \[2.0.0\]"/>
+    <items x="0" y="68" width="348" height="21" text="-apache-logging-2.0.0.jar"/>
+    <items x="0" y="89" width="348" height="21" text="-apache-logging-spi-2.0.0.jar"/>
+    <items x="0" y="110" width="348" height="21" text="[>] Apache Commons Collections \[1.5.0\]"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="797" y="312" measuredWidth="86" measuredHeight="121">
+    <widgets xsi:type="model:Button" y="64" width="86" text="&amp;Quick add..." measuredWidth="86" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" y="32" width="86" text="Add..." measuredWidth="86" measuredHeight="25" link="EditContent.screen">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" y="96" width="86" text="&amp;Remove" measuredWidth="86" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" width="86" text="Edit..." measuredWidth="86" measuredHeight="25" link="EditContent.screen">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="797" y="600" measuredWidth="86" measuredHeight="121">
+    <widgets xsi:type="model:Button" y="64" width="86" text="&amp;Quick add..." measuredWidth="86" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" y="32" width="86" text="Add..." measuredWidth="86" measuredHeight="25" link="EditContent.screen">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" y="96" width="86" text="&amp;Remove" measuredWidth="86" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" width="86" text="Edit..." measuredWidth="86" measuredHeight="25" link="EditContent.screen">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" x="156" y="649" width="185" height="87" text="*Contextmenue* on a file/older: &#xD;&#xA;- *Remove* -> same as Remove *Button* (s. right side.)&#xD;&#xA;" measuredWidth="185" measuredHeight="87" textAlignment="Left">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Popup" x="144" y="608" text="{delete} &amp;Remove, Del&#xA;" measuredWidth="125" measuredHeight="27">
+    <items x="0" y="2" width="125" height="23" text="{delete} &amp;Remove, Del"/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" x="296" y="352" width="139" height="267" measuredWidth="139" measuredHeight="267"/>
+  <widgets xsi:type="model:Arrow" x="340" y="672" width="101" height="16" measuredWidth="101" measuredHeight="16"/>
+  <widgets xsi:type="model:Note" x="232" y="72" text="ProjectOverview - using two separated  tree views" measuredWidth="267" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Note" x="144" y="120" width="225" height="124" text="Both sections *Resources* and *Types* are *expandable*. (see on the 'Dependencies'-Tab of the PDE Manifest Editor the section 'Automated Management of Dependencies')" measuredWidth="225" measuredHeight="124">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" x="304" y="328" width="121" height="16" measuredWidth="121" measuredHeight="16"/>
+  <widgets xsi:type="model:Arrow" x="320" y="224" width="97" height="35" measuredWidth="97" measuredHeight="35"/>
+  <hRuler/>
+  <vRuler>
+    <guides position="449"/>
+  </vRuler>
+  <font name="Comic Sans MS" size="8"/>
+</model:Screen>
