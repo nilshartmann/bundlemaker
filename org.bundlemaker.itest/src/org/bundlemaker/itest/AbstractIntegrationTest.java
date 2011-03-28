@@ -6,6 +6,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
@@ -13,6 +14,7 @@ import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
@@ -123,6 +125,21 @@ public abstract class AbstractIntegrationTest {
     // open the project
     log("Opening project...");
     bundleMakerProject.open(progressMonitor);
+
+    // EXAMPLE CODE - REMOVE
+    if (bundleMakerProject.getState().equals(BundleMakerProjectState.READY)) {
+
+      if (!bundleMakerProject.hasModularizedSystemWorkingCopy("test")) {
+        bundleMakerProject.createModularizedSystemWorkingCopy("test");
+      }
+
+      IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy("test");
+
+      for (IModule module : modularizedSystem.getAllModules()) {
+        System.out.println(module.getModuleIdentifier());
+      }
+    }
+    // EXAMPLE CODE - REMOVE
 
     //
     doCheckBundleMakerProject(bundleMakerProject);
