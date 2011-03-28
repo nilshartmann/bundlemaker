@@ -43,7 +43,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * <p>
- * Grafical editor for BundleMakers project contents
+ * Graphical editor for BundleMakers project contents
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -219,7 +219,7 @@ public class ContentPage extends FormPage {
         }
 
         IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-        Iterator iterator = structuredSelection.iterator();
+        Iterator<?> iterator = structuredSelection.iterator();
         while (iterator.hasNext()) {
           Object element = iterator.next();
           System.out.println("element: " + element);
@@ -310,98 +310,6 @@ public class ContentPage extends FormPage {
     });
   }
 
-  // private void createProjectContentSection(final IManagedForm mform) {
-  // FormToolkit toolkit = mform.getToolkit();
-  // final ScrolledForm form = mform.getForm();
-  //
-  // final Shell shell = form.getBody().getShell();
-  //
-  // Section projectContentSection = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.EXPANDED);
-  // projectContentSection.setText("Project content");
-  //
-  // Composite sectionComposite = toolkit.createComposite(projectContentSection);
-  // sectionComposite.setLayout(new GridLayout());
-  //
-  // final Tree projectContentTree = toolkit.createTree(sectionComposite, SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL);
-  // GridData gd = new GridData(GridData.FILL_BOTH);
-  // gd.heightHint = 200;
-  // gd.widthHint = 100;
-  // projectContentTree.setLayoutData(gd);
-  //
-  // final TreeViewer treeViewer = new TreeViewer(projectContentTree);
-  // treeViewer.setLabelProvider(new WorkbenchLabelProvider());
-  // BaseWorkbenchContentProvider provider = new BaseWorkbenchContentProvider();
-  // treeViewer.setContentProvider(provider);
-  //
-  // System.out.println("Init treeviewer mit projectdescription " + getBundleMakerProjectDescription());
-  // treeViewer.setInput(getBundleMakerProjectDescription());
-  //
-  // Button addArchivesButton = toolkit.createButton(sectionComposite, "Add archive resources...", SWT.PUSH);
-  //
-  // final SectionPart projectContentSectionPart = new SectionPart(projectContentSection);
-  // mform.addPart(projectContentSectionPart);
-  //
-  // addArchivesButton.addSelectionListener(new SelectionListener() {
-  //
-  // @Override
-  // public void widgetSelected(SelectionEvent e) {
-  // FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
-  // if (fileDialog.open() == null) {
-  // return;
-  // }
-  // String[] fileNames = fileDialog.getFileNames();
-  // if (fileNames.length > 0) {
-  // // Add all selected archives to the project description
-  // for (String string : fileNames) {
-  // IPath path = new Path(fileDialog.getFilterPath()).append(string);
-  // String binaryRoot = path.toOSString();
-  // getBundleMakerProjectDescription().addResourceContent(binaryRoot);
-  // }
-  // // Refresh view
-  // treeViewer.refresh();
-  //
-  // // mark editor dirty
-  // projectContentSectionPart.markDirty();
-  // }
-  // }
-  //
-  // @Override
-  // public void widgetDefaultSelected(SelectionEvent e) {
-  // }
-  // });
-  //
-  // Button addResourceButton = toolkit.createButton(sectionComposite, "Add resource...", SWT.PUSH);
-  // addResourceButton.addSelectionListener(new SelectionListener() {
-  //
-  // @Override
-  // public void widgetSelected(SelectionEvent e) {
-  // ResourceLocationSelectorDialog dlg = new ResourceLocationSelectorDialog(shell);
-  // if (dlg.open() == Window.OK) {
-  // // Add selected resource to projectdescription
-  // getBundleMakerProjectDescription().addResourceContent(dlg.getResourceName(), dlg.getResourceVersion(),
-  // dlg.getResourceBinaryPath(), dlg.getResourceSourcePath());
-  //
-  // // Refresh UI
-  // treeViewer.refresh();
-  //
-  // // Mark editor dirty
-  // projectContentSectionPart.markDirty();
-  // }
-  // }
-  //
-  // @Override
-  // public void widgetDefaultSelected(SelectionEvent e) {
-  // }
-  // });
-  //
-  // toolkit.paintBordersFor(sectionComposite);
-  //
-  // gd = new GridData(GridData.FILL_BOTH);
-  // projectContentSection.setLayoutData(gd);
-  // projectContentSection.setClient(sectionComposite);
-  // projectContentSection.setExpanded(true);
-  //
-  // }
   private void parseProject() {
     try {
       PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {

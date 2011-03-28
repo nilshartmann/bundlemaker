@@ -85,7 +85,7 @@
   <widgets xsi:type="model:HLine" x="280" y="389" width="611" measuredWidth="611" measuredHeight="6"/>
   <widgets xsi:type="model:VLine" x="277" y="108" height="358" measuredWidth="6" measuredHeight="358"/>
   <widgets xsi:type="model:VLine" x="35" y="468" height="22" measuredWidth="6" measuredHeight="22"/>
-  <widgets xsi:type="model:Note" x="560" y="148" text="Editor for transformation scripts (based on xtext?)&#xD;&#xA; .bmt => bundlemaker transformation ;-)" measuredWidth="269" measuredHeight="40">
+  <widgets xsi:type="model:Note" x="575" y="146" text="Editor for transformation scripts (based on xtext?)&#xD;&#xA; .bmt => bundlemaker transformation ;-) with&#xD;&#xA; Code completion for Module-Names, Versions, ..." measuredWidth="274" measuredHeight="55">
     <font/>
   </widgets>
   <widgets xsi:type="model:WidgetGroup" x="569" y="280" measuredWidth="283" measuredHeight="153">
