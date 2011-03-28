@@ -3,4 +3,7 @@
 */bin/*
 */*clover/*
 org.bundlemaker.drools.test/*
-org.eclipse*
+org.eclipse.pde.api.tools/*
+org.eclipse.pde.api.tools.ui/*
+ 
+
