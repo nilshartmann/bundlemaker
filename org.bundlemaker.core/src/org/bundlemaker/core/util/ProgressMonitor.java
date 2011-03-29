@@ -47,7 +47,6 @@ public class ProgressMonitor extends NullProgressMonitor {
    */
   public void beginTask(String name, int totalWork) {
     Assert.isNotNull(name);
-    Assert.isTrue(totalWork > 0);
 
     _totalWork = totalWork;
 
