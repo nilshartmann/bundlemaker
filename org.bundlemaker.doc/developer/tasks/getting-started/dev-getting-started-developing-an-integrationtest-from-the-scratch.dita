@@ -27,10 +27,11 @@
                 <cmd>Download and unzip the spring example</cmd>
                 <info>
                     <p>As the next step please download the spring classes, sources and required
-                        libaries from [TBD]. The archive contains a pre-packaged spring framework
-                        with all required dependencies. Create a new folder in the 'spring-test'
-                        project named 'spring' and unzip the content of the archive into this
-                        folder.</p>
+                        libaries <xref
+                            href="http://www.bundlemaker.org/sites/bundlemaker.org/files/bundlemaker-spring-example.zip"
+                            >here</xref>. The archive contains a pre-packaged spring framework with
+                        all required dependencies. Create a new folder in the 'spring-test' project
+                        named 'spring' and unzip the content of the archive into this folder.</p>
                     <image href="./images/dev-getting-started-DIFS-prepare-spring.png" scale="100"/>
                 </info>
             </step>
@@ -83,17 +84,11 @@
                     <p>Once the test class is created, we can start to develop the integration test.
                         The first thing we have to do is to programmtically create a bundlemaker
                         project. Whenever you want to analyse and transform a system, you have to do
-                        it in the context of a bundlemaker project. Inside the workspace a
-                        bundlemaker project is a simple eclipse project that has the
-                            <codeph>org.bundlemaker.core.bundlemakernature</codeph> nature. The
-                            <codeph>org.bundlemaker.core</codeph> bundle contains a helper class
-                            <codeph>EclipseProjectUtils</codeph> that provides several utility
-                        methods to create new (bundlemaker) projects. You can use this class to
-                        delete a project if it exists (1) and create a new simple project with the
-                        bundlemaker nature (2). To fetch the associated
-                            <codeph>IBundleMakerProject</codeph> instance, you can call
-                            <codeph>BundleMakerCore.getBundleMakerProject(IProject project,
-                            IProgressMonitor progressMonitor)</codeph> (3).</p>
+                        it in the context of a bundlemaker project. Technically a bundlemaker
+                        project is a simple eclipse project that has the
+                            <codeph>org.bundlemaker.core.bundlemakernature</codeph> nature. You can
+                        use the following code to create a bundlemaker project called
+                            <i>'spring-example'</i> within the target workspace.</p>
                     <codeblock>
   @Test
   public void test() {
@@ -112,11 +107,26 @@
     ...
 
   }
-            </codeblock>
+                    </codeblock>
+                    <p>Explanation:</p>
+                    <ul>
+                        <li><b>(1)</b> You can use the helper class
+                                <codeph>EclipseProjectUtils</codeph> that is contained in the bundle
+                                <codeph>org.bundlemaker.core</codeph> to delete an eclipse project
+                            with the specified name (if one exits).</li>
+                        <li><b>(2)</b> You can also use this class to create (or simply get) a
+                            project with the specified name. The method
+                                <codeph>EclipseProjectUtils.getOrCreateSimpleProjectWithBundleMakerNature(String)</codeph>
+                            returns an existing instance (if one exists) or creates a new one. </li>
+                        <li><b>(3)</b> To fetch the associated <codeph>IBundleMakerProject</codeph>
+                            instance, you can call
+                                <codeph>BundleMakerCore.getBundleMakerProject(IProject project,
+                                IProgressMonitor progressMonitor)</codeph></li>
+                    </ul>
                 </info>
             </step>
             <step>
-                <cmd>Creating the bundlemaker project</cmd>
+                <cmd>Setting the project description</cmd>
                 <info>
                     <codeblock>           
   @Test
@@ -220,7 +230,28 @@
                 </info>
             </step>
             <step>
-                <cmd/>
+                <cmd>Exporting the modularized system</cmd>
+                <info>
+                    <codeblock>
+  // (10) create the destination directory
+  File destination = new File(System.getProperty("user.dir"), 
+    "destination");
+  destination.mkdirs();
+
+  // (11) create the exporter context
+  DefaultModuleExporterContext exporterContext = 
+    new DefaultModuleExporterContext(bundleMakerProject, 
+      destination, modularizedSystem);
+
+  // (12) export plug-in projects
+  new ModularizedSystemExporterAdapter(new PdePluginProjectModuleExporter()).export(
+    modularizedSystem, exporterContext);
+
+  // (13) export target platform project
+  TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
+  targetPlatformProjectExporter.export(modularizedSystem, exporterContext);                        
+                    </codeblock>
+                </info>
             </step>
             <step>
                 <cmd/>
@@ -232,7 +263,135 @@
             </step>
         </steps>
         <result>
+            <p>Here is the complete test class:</p>
             <codeblock>
+package springtest;
+
+import java.io.File;
+import java.util.List;
+
+import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
+import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.util.BundleMakerProjectUtils;
+import org.bundlemaker.core.util.EclipseProjectUtils;
+import org.bundlemaker.core.util.ProgressMonitor;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.junit.Test;
+
+public class SpringTest {
+
+	@Test
+	public void test() throws Exception {
+
+    // (1) delete project if exists
+    EclipseProjectUtils.deleteProjectIfExists("spring-example");
+
+    // (2) create simple project
+    IProject simpleProject = BundleMakerCore
+      .getOrCreateSimpleProjectWithBundleMakerNature("spring-example");
+
+    // (3) get the BundleMaker project
+    IBundleMakerProject bundleMakerProject = BundleMakerCore
+      .getBundleMakerProject(simpleProject, null);
+
+    // (4) set the project description
+    setProjectDescription(bundleMakerProject);
+
+    // (5) initialize the project
+    bundleMakerProject.initialize(new ProgressMonitor());
+
+    // (6) parse and dump the problems
+    List&lt;? extends IProblem&gt; problems = bundleMakerProject.parse(
+      new ProgressMonitor(), true);
+
+    BundleMakerProjectUtils.dumpProblems(problems);
+
+    // (7) open the project
+    bundleMakerProject.open(new ProgressMonitor());
+
+	  // (8) get the default modularized system
+	  IModularizedSystem modularizedSystem = bundleMakerProject
+	    .getModularizedSystemWorkingCopy(bundleMakerProject
+	        .getProject().getName());
+
+	  // (9)
+	  modularizedSystem.applyTransformations();
+
+	  // (10) create the destination directory
+	  File destination = new File(System.getProperty("user.dir"), 
+	    "destination");
+	  destination.mkdirs();
+
+	  // (11) create the exporter context
+	  DefaultModuleExporterContext exporterContext = 
+	    new DefaultModuleExporterContext(bundleMakerProject, 
+	      destination, modularizedSystem);
+
+	  // (12) export plug-in projects
+	  new ModularizedSystemExporterAdapter(new PdePluginProjectModuleExporter()).export(
+	    modularizedSystem, exporterContext);
+
+	  // (13) export target platform project
+	  TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
+	  targetPlatformProjectExporter.export(modularizedSystem, exporterContext);   
+	}
+
+  /**
+   * Helper method that creates a bundlemaker project description.
+   *
+   * @param bundleMakerProject 
+   * @throws CoreException
+   */            
+  private void setProjectDescription(IBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    // (4-1) get the project description instance
+    IBundleMakerProjectDescription projectDescription = bundleMakerProject
+      .getProjectDescription();
+
+    // (4-2) remove any content
+    projectDescription.clear();
+
+    // (4-3) set the name of the associated JRE
+    projectDescription.setJre(
+      JavaRuntime.getDefaultVMInstall().getName());
+
+    // (4-4) add a content entry for the spring 
+    // framework that contains sources and binary files 
+    File classesZip = new File(System.getProperty("user.dir"),
+      "spring/classes.zip");
+
+    File sourceDirectory = new File(System.getProperty("user.dir"),
+      "spring/source.zip");
+
+    projectDescription
+      .addResourceContent("Spring", "2.5.6",
+        classesZip.getAbsolutePath(),
+         sourceDirectory.getAbsolutePath());
+
+    // (4-5) add content entries for all archive
+    // files in the 'spring/libs' folder
+    File libsDir = new File(System.getProperty("user.dir"), 
+      "spring/libs");
+    
+    for (File externalJar : libsDir.listFiles()) {
+    projectDescription
+      .addResourceContent(externalJar.getAbsolutePath());
+    }
+
+    // (4-6) finally we have to save the project description
+    projectDescription.save();
+  }
+}
                 
             </codeblock>
         </result>
