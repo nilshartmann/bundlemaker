@@ -37,9 +37,6 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public abstract class AbstractManifestAwareExporter extends AbstractManifestTemplateBasedExporter {
 
-  // TODO
-  public static final String                      OSGI_FRAGMENT_HOST = "OSGI_FRAGMENT_HOST";
-
   /** - */
   private GenericCache<IModule, ManifestContents> _manifestCache;
 
@@ -177,9 +174,9 @@ public abstract class AbstractManifestAwareExporter extends AbstractManifestTemp
     }
 
     // get the host manifest
-    if (getCurrentModule().getUserAttributes().containsKey(OSGI_FRAGMENT_HOST)) {
+    if (getCurrentModule().getUserAttributes().containsKey(ManifestConstants.OSGI_FRAGMENT_HOST)) {
 
-      IModule hostModule = (IModule) getCurrentModule().getUserAttributes().get(OSGI_FRAGMENT_HOST);
+      IModule hostModule = (IModule) getCurrentModule().getUserAttributes().get(ManifestConstants.OSGI_FRAGMENT_HOST);
 
       // if () {
       // IModule host = getHostModule()

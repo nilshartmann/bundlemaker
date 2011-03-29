@@ -20,6 +20,9 @@ import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 
 public interface ManifestConstants {
 
+  // TODO
+  public static final String                  OSGI_FRAGMENT_HOST             = "OSGI_FRAGMENT_HOST";
+
   /** - */
   public static final List<HeaderDeclaration> EMPTY_HEADERDECLARATION_LIST   = Collections.emptyList();
 

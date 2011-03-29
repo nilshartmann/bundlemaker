@@ -6,6 +6,7 @@ import org.bundlemaker.core.osgi.internal.manifest.IdentifiableBundleManifest;
 import org.osgi.framework.Version;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.osgi.exporter.ManifestConstants;
+import org.bundlemaker.core.modules.IModule;
 
 /**
  * Eingabe:
@@ -44,6 +45,17 @@ when
     eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) )
 then
     $bundleManifest.setBundleVersion(new Version($resourceModule.getModuleIdentifier().getVersion()));
+end
+
+rule "Fragment-Host"
+when
+    $resourceModule : IResourceModule()
+    eval( ManifestUtils.isFragment($resourceModule) )
+    $hostModule : IModule() from ManifestUtils.getFragmentHost($resourceModule)
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+then
+	String fragmentHostName = $hostModule.getModuleIdentifier().getName();
+    $bundleManifest.getFragmentHost().setBundleSymbolicName(fragmentHostName);
 end
 
 rule "Default-Bundle-Version"
