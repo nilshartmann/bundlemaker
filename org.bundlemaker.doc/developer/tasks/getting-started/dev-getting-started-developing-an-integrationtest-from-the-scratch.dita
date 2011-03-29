@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/task.dtd">
+<task id="taskId">
+    <title>Developing an integration test from the scratch</title>
+    <shortdesc>After executing the pre-built spring integration test, it is now time to develop an
+        integration test from the scratch. This tuorial gives you a complete walkthrough of how to
+        programmatically analyse and transform a system (in this case the spring framework). The
+        integration test will be implemented a a JUnit test.</shortdesc>
+    <taskbody>
+        <prereq>Please make sure that your workspace is correctly set up and contains the latest
+            sources from the git-hub repository.</prereq>
+        <steps>
+            <step>
+                <cmd>Create a new plug-in project</cmd>
+                <info>
+                    <p>Before you start with the development of the test case, you have to create
+                        the containing plug-project. You can easily create a new PDE plug-project
+                        using the 'Plug-In Project Wizard' of the PDE. Please name the new project
+                        'spring-test'. You don't have to create an activator for this project, so
+                        you can uncheck the associated check box.</p>
+                    <p>After creating the project your workspace should look like shown in the
+                        figure below.</p>
+                    <image href="./images/dev-getting-started-DIFS-new-project.png" scale="40"/>
+                </info>
+            </step>
+            <step>
+                <cmd>Download and unzip the spring example</cmd>
+                <info>
+                    <p>As the next step please download the spring classes, sources and required
+                        libaries from [TBD]. The archive contains a pre-packaged spring framework
+                        with all required dependencies. Create a new folder in the 'spring-test'
+                        project named 'spring' and unzip the content of the archive into this
+                        folder.</p>
+                    <image href="./images/dev-getting-started-DIFS-prepare-spring.png" scale="100"/>
+                </info>
+            </step>
+            <step>
+                <cmd>Add required plug-ins</cmd>
+                <info>
+                    <p>You can now add all required bundles to the plug-in project manifest. Please
+                        add the following bundles:<ul>
+                            <li>org.bundlemaker.core</li>
+                            <li>org.bundlemaker.core.osgi</li>
+                            <li>org.eclipse.core.runtime</li>
+                            <li>org.eclipse.core.resources</li>
+                            <li>org.junit</li>
+                            <li>org.eclipse.jdt.launching</li>
+                        </ul>
+                    </p>
+                    <p>After adding the dependencies your manifest should look like shown in the
+                        figure below.</p>
+                    <image href="./images/dev-getting-started-DIFS-adding-dependencies.png"
+                        scale="60"/>
+                </info>
+            </step>
+            <step>
+                <cmd>Create test class</cmd>
+                <info>
+                    <p>Create a new (test) class in the package <codeph>springtest</codeph> named
+                            <codeph>SpringTest</codeph>. </p>
+                    <image href="./images/dev-getting-started-DIFS-create-SpringTest.png"/>
+                    <p>Open the java editor and add a (yet empty) test method called
+                            <codeph>test</codeph>. Please assure that the method is annotated with
+                        the <codeph>@Test</codeph> annotation.</p>
+                    <codeblock>
+  package springtest;
+
+  import org.junit.Test;
+
+  public class SpringTest {
+
+    @Test
+    public void test() {
+    
+    }
+  }
+</codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Programmatically creating the bundlemaker project</cmd>
+                <info>
+                    <p>Once the test class is created, we can start to develop the integration test.
+                        The first thing we have to do is to programmtically create a bundlemaker
+                        project. Whenever you want to analyse and transform a system, you have to do
+                        it in the context of a bundlemaker project. Inside the workspace a
+                        bundlemaker project is a simple eclipse project that has the
+                            <codeph>org.bundlemaker.core.bundlemakernature</codeph> nature. The
+                            <codeph>org.bundlemaker.core</codeph> bundle contains a helper class
+                            <codeph>EclipseProjectUtils</codeph> that provides several utility
+                        methods to create new (bundlemaker) projects. You can use this class to
+                        delete a project if it exists (1) and create a new simple project with the
+                        bundlemaker nature (2). To fetch the associated
+                            <codeph>IBundleMakerProject</codeph> instance, you can call
+                            <codeph>BundleMakerCore.getBundleMakerProject(IProject project,
+                            IProgressMonitor progressMonitor)</codeph> (3).</p>
+                    <codeblock>
+  @Test
+  public void test() {
+
+    // (1) delete project if exists
+    EclipseProjectUtils.deleteProjectIfExists("spring-example");
+
+    // (2) create simple project
+    IProject simpleProject = BundleMakerCore
+      .getOrCreateSimpleProjectWithBundleMakerNature("spring-example");
+
+    // (3) get the BundleMaker project
+    IBundleMakerProject bundleMakerProject = BundleMakerCore
+      .getBundleMakerProject(simpleProject, null);
+
+    ...
+
+  }
+            </codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Creating the bundlemaker project</cmd>
+                <info>
+                    <codeblock>           
+  @Test
+  public void test() {
+  
+    ...
+	
+    // (4) set the project description
+    setProjectDescription(bundleMakerProject);
+
+    ...
+  }
+
+  /**
+   * Helper method that creates a bundlemaker project description.
+   *
+   * @param bundleMakerProject 
+   * @throws CoreException
+   */            
+  private void setProjectDescription(IBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    // (4-1) get the project description instance
+    IBundleMakerProjectDescription projectDescription = bundleMakerProject
+      .getProjectDescription();
+
+    // (4-2) remove any content
+    projectDescription.clear();
+
+    // (4-3) set the name of the associated JRE
+    projectDescription.setJre(
+      JavaRuntime.getDefaultVMInstall().getName());
+
+    // (4-4) add a content entry for the spring 
+    // framework that contains sources and binary files 
+    File classesZip = new File(System.getProperty("user.dir"),
+      "spring/classes.zip");
+
+    File sourceDirectory = new File(System.getProperty("user.dir"),
+      "spring/source.zip");
+
+    projectDescription
+      .addResourceContent("Spring", "2.5.6",
+        classesZip.getAbsolutePath(),
+         sourceDirectory.getAbsolutePath());
+
+    // (4-5) add content entries for all archive
+    // files in the 'spring/libs' folder
+    File libsDir = new File(System.getProperty("user.dir"), 
+      "spring/libs");
+    
+    for (File externalJar : libsDir.listFiles()) {
+    projectDescription
+      .addResourceContent(externalJar.getAbsolutePath());
+    }
+
+    // (4-6) finally we have to save the project description
+    projectDescription.save();
+  }
+                    </codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Parsing and opening the bundlemaker project</cmd>
+                <info>
+                    <codeblock>
+  @Test
+  public void test() {
+
+    ...
+  
+    // (5) initialize the project
+    bundleMakerProject.initialize(new ProgressMonitor());
+
+    // (6) parse and dump the problems
+    List&lt;? extends IProblem&gt; problems = bundleMakerProject.parse(
+      new ProgressMonitor(), true);
+
+    BundleMakerProjectUtils.dumpProblems(problems);
+
+    // (7) open the project
+    bundleMakerProject.open(new ProgressMonitor());
+
+    ...
+  }
+                    </codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd>Applying transformations</cmd>
+                <info>
+                    <codeblock>
+  // (8) get the default modularized system
+  IModularizedSystem modularizedSystem = bundleMakerProject
+		.getModularizedSystemWorkingCopy(bundleMakerProject
+				.getProject().getName());
+
+  // (9)
+  modularizedSystem.applyTransformations();
+                    </codeblock>
+                </info>
+            </step>
+            <step>
+                <cmd/>
+            </step>
+            <step>
+                <cmd/>
+                <info>
+                    <ul>
+                        <li>org.bundlemaker.core</li>
+                    </ul>
+                </info>
+            </step>
+        </steps>
+        <result>
+            <codeblock>
+                
+            </codeblock>
+        </result>
+    </taskbody>
+</task>
