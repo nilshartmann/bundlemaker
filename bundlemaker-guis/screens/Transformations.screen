@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Window" x="128" y="72" width="368" height="217" text="Transformations" measuredWidth="368" measuredHeight="217"/>
+  <widgets xsi:type="model:Label" x="144" y="210" text="Transformations:" measuredWidth="95" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="144" y="136" measuredWidth="337" measuredHeight="97">
+    <widgets xsi:type="model:WidgetGroup" x="256" y="5" measuredWidth="81" measuredHeight="88">
+      <widgets xsi:type="model:Button" width="81" text="&amp;Add..." measuredWidth="81" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Button" y="33" width="81" text="&amp;Remove" measuredWidth="81" measuredHeight="25">
+        <font/>
+      </widgets>
+      <widgets xsi:type="model:Button" y="63" width="81" text="&amp;Configure..." measuredWidth="81" measuredHeight="25">
+        <font/>
+      </widgets>
+    </widgets>
+    <widgets xsi:type="model:WidgetGroup" measuredWidth="249" measuredHeight="97">
+      <widgets xsi:type="model:List" width="249" height="97" text="Define new Modules via ResourceSets&#xA;Remove cycles&#xA;" measuredWidth="249" measuredHeight="97">
+        <font/>
+        <items x="0" y="2" width="249" height="21" text="Define new Modules via ResourceSets"/>
+        <items x="0" y="23" width="249" height="21" text="Remove cycles"/>
+      </widgets>
+      <widgets xsi:type="model:VScrollbar" x="232" height="97" measuredWidth="17" measuredHeight="97"/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="144" y="101" measuredWidth="337" measuredHeight="23">
+    <widgets xsi:type="model:Label" text="Name:" measuredWidth="40" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" x="48" width="289" text="Spring to OSGi - Variant 1" measuredWidth="289" measuredHeight="23">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="144" y="240" measuredWidth="337" measuredHeight="33">
+    <widgets xsi:type="model:HLine" width="337" measuredWidth="337" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" x="216" y="8" width="56" text="OK" measuredWidth="56" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" x="281" y="8" text="Cancel" measuredWidth="56" measuredHeight="25">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" x="88" y="296" width="433" height="345" text="The &quot;Transformations&quot; dialog above allows the definition of &quot;Transformation Sets&quot;.&#xD;&#xA;&#xD;&#xA;A *Transformation Set* has a (unique) name and a list of TransformationConfigurations.&#xD;&#xA;A *TransformationConfiguration* is the configuration for a Transformation. A TransformationConfiguration defines a thin interface that allows the contribution of frontends for (self-written) transformations&#xD;&#xA;A TransformationConfiguration has a (unique) name and a String taking it's (individual) configuration parameters. The BundleMaker GUI plug-in is responsible for saving and restoring the parameters.&#xD;&#xA;The *Configure Button* opens a TransformationConfiguration-specific editor.&#xD;&#xA;&#xD;&#xA;The API of a TransformationConfiguration interface could look like this:&#xD;&#xA;public interface TransformationConfiguration &#xD;&#xA;  String getName(); // will be persisted&#xD;&#xA;  String getConfigurationData(); // will be persisted&#xD;&#xA;  String restoreFrom(String name, String configurationData);&#xD;&#xA;  &#xD;&#xA;  void addTo(IModularizedSystem targetSystem)&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" measuredWidth="433" measuredHeight="345">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="176" y="704" measuredWidth="241" measuredHeight="161">
+    <widgets xsi:type="model:Window" width="241" height="161" text="BundleMaker Default Transformation" measuredWidth="241" measuredHeight="161"/>
+    <widgets xsi:type="model:HLine" x="10" y="110" width="223" measuredWidth="223" measuredHeight="6"/>
+    <widgets xsi:type="model:Button" x="112" y="118" width="56" text="OK" measuredWidth="56" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" x="177" y="118" text="Cancel" measuredWidth="56" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" x="197" y="55" text="..." measuredWidth="29" measuredHeight="25">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" x="56" y="21" width="177" text="Define new Modules via Re..." measuredWidth="177" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" x="10" y="21" text="Name:" measuredWidth="40" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" x="10" y="56" text="Script:" measuredWidth="38" measuredHeight="23">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:TextField" x="56" y="56" width="137" text="spring.bmt" measuredWidth="137" measuredHeight="23">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" x="104" y="872" width="481" height="97" text="Configuration editor for the BundleMaker default transformation.&#xD;&#xA;&#xD;&#xA;As the transformation itself is described in a xtext-based Script language the only information that is needed is the name of the script" measuredWidth="481" measuredHeight="97">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
