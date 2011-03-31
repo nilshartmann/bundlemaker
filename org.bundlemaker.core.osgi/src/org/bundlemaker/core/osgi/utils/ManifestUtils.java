@@ -65,7 +65,7 @@ public class ManifestUtils {
   public static boolean isFragment(IResourceModule module) {
 
     //
-    return getFragmentHost(module) != null;
+    return !module.equals(getFragmentHost(module));
   }
 
   /**
@@ -75,13 +75,13 @@ public class ManifestUtils {
    * @param module
    * @return
    */
-  public static IModule getFragmentHost(IResourceModule module) {
+  public static IModule getFragmentHost(IModule module) {
 
     //
     IModule hostModule = (IModule) module.getUserAttributes().get(ManifestConstants.OSGI_FRAGMENT_HOST);
 
     //
-    return hostModule;
+    return hostModule != null ? hostModule : module;
   }
 
   public static boolean isValidOSGiVersion(String version) {

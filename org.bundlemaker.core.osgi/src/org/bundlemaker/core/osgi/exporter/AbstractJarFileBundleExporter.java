@@ -34,7 +34,7 @@ import com.springsource.bundlor.ManifestWriter;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractJarFileBundleExporter extends AbstractBundleManifestCreatorExporter {
+public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwareExporter {
 
   /**
    * {@inheritDoc}
@@ -61,7 +61,7 @@ public abstract class AbstractJarFileBundleExporter extends AbstractBundleManife
       ManifestWriter manifestWriter = new JarFileManifestWriter(rootFile, getDestinationFile());
 
       //
-      manifestWriter.write(getCurrentManifest());
+      manifestWriter.write(getManifestContents());
     }
   }
 
@@ -81,7 +81,7 @@ public abstract class AbstractJarFileBundleExporter extends AbstractBundleManife
 
       // export the jar archive
       JarFileUtils.createJarArchive(getCurrentModule().getResources(ContentType.BINARY),
-          ManifestUtils.toManifest(getCurrentManifest()), outputStream);
+          ManifestUtils.toManifest(getManifestContents()), outputStream);
 
       // close the output stream
       outputStream.close();

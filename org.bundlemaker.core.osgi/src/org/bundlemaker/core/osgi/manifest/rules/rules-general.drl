@@ -58,6 +58,15 @@ then
     $bundleManifest.getFragmentHost().setBundleSymbolicName(fragmentHostName);
 end
 
+rule "Eclipse-ExtensibleAPI"
+when
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    $resourceModule : IResourceModule()
+    eval( ! ManifestUtils.isFragment($resourceModule) )
+then
+    $bundleManifest.setHeader("Eclipse-ExtensibleAPI", "true");
+end
+
 rule "Default-Bundle-Version"
 when
     $resourceModule : IResourceModule()
