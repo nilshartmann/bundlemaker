@@ -128,6 +128,16 @@
             <step>
                 <cmd>Setting the project description</cmd>
                 <info>
+                    <p> Now you have the IBundleMakerProject instance, you have to add some content
+                        to the project. For reason of clearity we will do this in an explicit method
+                        named <codeph>setProjectDescription(IBundleMakerProject)</codeph>.</p>
+                    <p>Whenever you want to add content (source/binary directories or archives) to
+                        the project description, you have to add them either as <i>resources
+                            content</i> or as <i>type content</i>. Resource content contains the
+                        classes and source that should be analyzed and transformed, while type
+                        content contains classes that are only needed to fullfill dependencies that
+                        resource content have. Type content will not be parsed, and you can not
+                        transform type content in any way.</p>
                     <codeblock>           
   @Test
   public void test() {
@@ -187,11 +197,38 @@
     projectDescription.save();
   }
                     </codeblock>
+                    <p>Explanation:</p>
+                    <ul>
+                        <li><b>(4)</b> Delegate the work to the helper method.</li>
+                        <li><b>(4-1)</b> To fetch the
+                                <codeph>IBundleMakerProjectDescription</codeph> instance simply call
+                            the method <codeph>getProjectDescription()</codeph> on the bundlemaker
+                            project.</li>
+                        <li><b>(4-2)</b> As we want to create a new project description, we have to
+                            call <codeph>projectDescription.clear()</codeph> to remove any content
+                            entries that may have been added before. After calling this method the
+                            project description doesn't contain any entries anymore.</li>
+                        <li><b>(4-3)</b> Within the parsing process bundlemaker maker has to refer
+                            to an underlying JRE to resolve the contained types. Therefore we have
+                            to add the name of the JRE that should be used. [TBD]</li>
+                        <li><b>(4-4)</b> For the spring project we add the
+                                <codeph>classes.zip</codeph> and the <codeph>source.zip</codeph> as
+                            one resource content entry with the name "Spring" and the version
+                            "2.5.6".</li>
+                        <li><b>(4-5) We also add all the spring jars as resource content to the
+                                project description. The reason why we add them as resource content
+                                (instead of type content) is that we want to transform all the
+                                libraries to valid OSGi bundles.</b>
+                        </li>
+                        <li><b>(4-6)</b> When the project description is set up, it must be saved.
+                        </li>
+                    </ul>
                 </info>
             </step>
             <step>
                 <cmd>Parsing and opening the bundlemaker project</cmd>
                 <info>
+                    <p/>
                     <codeblock>
   @Test
   public void test() {
@@ -254,7 +291,7 @@
                 </info>
             </step>
             <step>
-                <cmd/>
+                <cmd>Creating a launch configuration</cmd>
                 <info>
                     <ul>
                         <li>org.bundlemaker.core</li>

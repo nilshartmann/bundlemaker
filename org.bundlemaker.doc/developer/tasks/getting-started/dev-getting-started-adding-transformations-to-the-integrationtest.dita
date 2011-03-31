@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/task.dtd">
+<task id="taskId">
+    <title>Task title</title>
+    <shortdesc/>
+    <taskbody>
+        <context>
+            <p>Context for the current task</p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Task step.</cmd>
+
+            </step>
+        </steps>
+        <result>
+            <p/>
+            <codeblock>
+  package springtest;
+
+  import org.bundlemaker.core.modules.IModularizedSystem;
+  import org.bundlemaker.core.modules.IModuleIdentifier;
+  import org.bundlemaker.core.modules.ModuleIdentifier;
+  import org.bundlemaker.core.transformation.EmbedModuleTransformation;
+  import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedTransformation;
+
+  public class TransformationUtils {
+
+    /**
+     * 
+     * @param modularizedSystem
+     */
+    public static void addModularizeSpringTransformation(IModularizedSystem modularizedSystem) {
+
+      // create a new ResourceSetBasedTransformation
+      ResourceSetBasedTransformation transformation = new ResourceSetBasedTransformation();
+
+      // add them to the list of transformations
+      modularizedSystem.getTransformations().add(transformation);
+
+      // create from identifier
+      IModuleIdentifier fromIdentifier = new ModuleIdentifier("Spring", "2.5.6");
+
+      // create the 'spring-core' module definition
+      transformation.addModuleDefinition("spring-core", "2.5.6").addResourceSet(
+        fromIdentifier,
+        new String[] { "org/springframework/core/**", "org/springframework/metadata/**", "org/springframework/util/**",
+            "org/springframework/asm/**" }, null);
+
+      // create the 'spring-aop' module definition
+      transformation.addModuleDefinition("spring-aop", "2.5.6").addResourceSet(fromIdentifier,
+        new String[] { "org/springframework/aop/**" }, null);
+
+      // create the 'spring-beans' module definition
+      transformation.addModuleDefinition("spring-beans", "2.5.6").addResourceSet(fromIdentifier,
+        new String[] { "org/springframework/beans/**" }, null);
+
+      // create the 'spring-context' module definition
+      transformation.addModuleDefinition("spring-context", "2.5.6").addResourceSet(
+        fromIdentifier,
+        new String[] { "org/springframework/context/**", "org/springframework/instrument/**",
+            "org/springframework/jmx/**", "org/springframework/ejb/**", "org/springframework/jndi/**",
+            "org/springframework/remoting/*", "org/springframework/remoting/rmi/**",
+            "org/springframework/remoting/soap/**", "org/springframework/remoting/support/**",
+            "org/springframework/scheduling/**", "org/springframework/scripting/**",
+            "org/springframework/stereotype/**", "org/springframework/ui/**", "org/springframework/validation/**" },
+        new String[] { "org/springframework/scheduling/quartz/**" });
+
+      // create the 'spring-context-support' module definition
+      transformation.addModuleDefinition("spring-context-support", "2.5.6").addResourceSet(
+        fromIdentifier,
+        new String[] { "org/springframework/cache/ehcache/**", "org/springframework/mail/**",
+            "org/springframework/scheduling/commonj/**", "org/springframework/scheduling/quartz/**",
+            "org/springframework/ui/freemarker/**", "org/springframework/ui/jasperreports/**",
+            "org/springframework/ui/velocity/**" }, null);
+
+      // create the 'spring-jdbc' module definition
+      transformation.addModuleDefinition("spring-jdbc", "2.5.6").addResourceSet(fromIdentifier,
+        new String[] { "org/springframework/jdbc/**" }, null);
+
+      // create the 'spring-jms' module definition
+      transformation.addModuleDefinition("spring-jms", "2.5.6").addResourceSet(fromIdentifier,
+        new String[] { "org/springframework/jms/**" }, null);
+
+      // create the 'spring-tx' module definition
+      transformation.addModuleDefinition("spring-tx", "2.5.6")
+        .addResourceSet(
+            fromIdentifier,
+            new String[] { "org/springframework/dao/**", "org/springframework/jca/**",
+                "org/springframework/transaction/**" }, null);
+
+      // create the 'spring-orm' module definition
+      transformation.addModuleDefinition("spring-orm", "2.5.6").addResourceSet(fromIdentifier,
+        new String[] { "org/springframework/orm/**" }, null);
+
+      // create the 'spring-web' module definition
+      transformation.addModuleDefinition("spring-web", "2.5.6").addResourceSet(
+        fromIdentifier,
+        new String[] { "org/springframework/remoting/caucho/**", "org/springframework/remoting/httpinvoker/**",
+            "org/springframework/remoting/jaxrpc/**", "org/springframework/remoting/jaxws/**",
+            "org/springframework/web/**" }, null);
+    }
+  }              
+            </codeblock>
+        </result>
+    </taskbody>
+</task>
