@@ -37,10 +37,10 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
   private IModifiableType     _bundleMakerType;
 
   /** - */
-  private String              _fullQualifiedTypeName;
+  private String              _fullyQualifiedTypeName;
 
   /** - */
-  private String              _fullQualifiedEnclosingTypeName;
+  private String              _fullyQualifiedEnclosingTypeName;
 
   /**
    * <p>
@@ -72,6 +72,9 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
       //
       Assert.isNotNull(fullyQualifiedName);
 
+      // set the type name
+      _fullyQualifiedTypeName = fullyQualifiedName;
+
       //
       if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
@@ -85,6 +88,9 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
           //
           _bundleMakerType = ((IModifiableType[]) _enclosingClassFileResource.getContainedTypes().toArray(
               new IModifiableType[0]))[0];
+
+          _fullyQualifiedEnclosingTypeName = _bundleMakerType.getFullyQualifiedName();
+
         } else {
 
           // create the fall-back type
@@ -114,8 +120,8 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
 
     try {
 
-      if (fullyQualifiedName != null && !fullyQualifiedName.equals(_fullQualifiedTypeName)
-          && !fullyQualifiedName.equals(_fullQualifiedEnclosingTypeName)) {
+      if (fullyQualifiedName != null && !fullyQualifiedName.equals(_fullyQualifiedTypeName)
+          && !fullyQualifiedName.equals(_fullyQualifiedEnclosingTypeName)) {
 
         //
         if (!_resource.equals(_enclosingClassFileResource)) {
