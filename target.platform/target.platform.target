@@ -11,6 +11,8 @@
 <location path="${project_loc:target.platform}/AST-View" type="Directory"/>
 <location path="${project_loc:target.platform}/drools-5.1.1" type="Directory"/>
 <location path="${project_loc:target.platform}/easymock-3.0" type="Directory"/>
+<location path="${project_loc:target.platform}/xtext/xtext" type="Directory"/>
+<location path="${project_loc:target.platform}/xtext/emf" type="Directory"/>
 </locations>
 <environment>
 <os>win32</os>

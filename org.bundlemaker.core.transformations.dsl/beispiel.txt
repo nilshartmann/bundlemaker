@@ -1,0 +1,14 @@
+remove-from spring-core 2.5.6
+  include org/springframework/generated/**, org/springframework/docs
+  exclude org/springframework/docs/getting-started.html
+
+embed-into Spring-All 1.0.0
+  modules spring-core 2.5.6, spring-tx 2.5.6
+
+create-module Spring-Transactions 1.0.0
+  from spring-core 2.5.6
+    include org/springframework/generated/**, org/springframework/docs
+    exclude org/springframework/docs/getting-started.html
+  from spring-tx
+    include **
+;

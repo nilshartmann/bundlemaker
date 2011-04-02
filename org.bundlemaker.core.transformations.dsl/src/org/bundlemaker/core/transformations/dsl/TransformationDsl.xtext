@@ -1,0 +1,48 @@
+grammar org.bundlemaker.core.transformations.dsl.TransformationDsl with org.eclipse.xtext.common.Terminals
+
+generate transformationDsl "http://www.bundlemaker.org/core/transformations/dsl/TransformationDsl"
+
+TransformationModel:
+	(transformations+=Transformation)*;
+	
+Transformation:
+	RemoveFrom | EmbedInto | CreateModule
+;
+
+RemoveFrom:
+ 'remove-from' (resourceSet=ResourceSet) ';'
+;
+
+EmbedInto:
+ 'embed-into' hostModule=ModuleIdentifier 'modules'  modules+=ModuleIdentifier (',' modules+=ModuleIdentifier)* ';'
+;
+
+CreateModule:
+ 'create-module' module=ModuleIdentifier (from+=From)* ';'
+;
+
+From:
+ 'from' (resourceSet=ResourceSet)
+;
+
+ResourceSet:
+ moduleIdentifier=ModuleIdentifier ('include' includeResources=ResourceList)? ('exclude' excludeResources=ResourceList)?
+;
+
+terminal BMID  		: '^'?('a'..'z'|'A'..'Z'|'_'|'-') ('a'..'z'|'A'..'Z'|'_'|'-'|'0'..'9')*;
+
+MODULEID:
+  BMID("." BMID)*
+;
+
+ModuleIdentifier:
+ modulename=MODULEID version=STRING
+;
+
+ResourceList:
+	resources+=STRING (',' resources+=STRING)*
+;
+
+
+
+

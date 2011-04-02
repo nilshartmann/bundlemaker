@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="transformationDsl"
+    nsURI="http://www.bundlemaker.org/core/transformations/dsl/TransformationDsl"
+    nsPrefix="transformationDsl">
+  <eClassifiers xsi:type="ecore:EClass" name="TransformationModel">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transformations" upperBound="-1"
+        eType="#//Transformation" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transformation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RemoveFrom" eSuperTypes="#//Transformation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceSet" eType="#//ResourceSet"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EmbedInto" eSuperTypes="#//Transformation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hostModule" eType="#//ModuleIdentifier"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="modules" upperBound="-1"
+        eType="#//ModuleIdentifier" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CreateModule" eSuperTypes="#//Transformation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//ModuleIdentifier"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="from" upperBound="-1" eType="#//From"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="From">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resourceSet" eType="#//ResourceSet"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceSet">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="moduleIdentifier" eType="#//ModuleIdentifier"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="includeResources" eType="#//ResourceList"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="excludeResources" eType="#//ResourceList"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ModuleIdentifier">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modulename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="version" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ResourceList">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="resources" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>
