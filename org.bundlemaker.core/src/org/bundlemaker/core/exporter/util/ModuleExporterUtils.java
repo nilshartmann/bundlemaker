@@ -78,6 +78,10 @@ public class ModuleExporterUtils {
 
     // TODO: root == null -> no content
 
+    if (new File(root).isDirectory()) {
+      return true;
+    }
+    
     // step 3: check the content
     try {
 
