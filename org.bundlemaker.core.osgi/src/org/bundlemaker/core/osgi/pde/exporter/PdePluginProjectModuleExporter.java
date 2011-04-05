@@ -19,9 +19,7 @@ import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.Activator;
-import org.bundlemaker.core.osgi.exporter.AbstractBundleManifestCreatorExporter;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
-import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
 import org.bundlemaker.core.osgi.internal.manifest.ManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -43,9 +41,6 @@ import org.eclipse.pde.core.project.IBundleClasspathEntry;
 import org.eclipse.pde.core.project.IBundleProjectDescription;
 import org.eclipse.pde.core.project.IBundleProjectService;
 
-import com.springsource.bundlor.util.BundleManifestUtils;
-import com.springsource.util.parser.manifest.ManifestContents;
-
 /**
  * h
  * <p>
@@ -53,7 +48,7 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PdePluginProjectModuleExporter extends AbstractBundleManifestCreatorExporter {
+public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporter {
 
   /** - */
   private static final String SRC_DIRECTORY_NAME = "src";
@@ -63,6 +58,15 @@ public class PdePluginProjectModuleExporter extends AbstractBundleManifestCreato
 
   /** - */
   private boolean             _useClassifcationForExportDestination;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link PdePluginProjectModuleExporter}.
+   * </p>
+   */
+  public PdePluginProjectModuleExporter() {
+    setManifestPreferences(new ManifestPreferences(true));
+  }
 
   /**
    * <p>
@@ -132,8 +136,8 @@ public class PdePluginProjectModuleExporter extends AbstractBundleManifestCreato
     IBundleProjectDescription bundleProjectDescription = bundleProjectService.getDescription(project);
 
     //
-    for (String header : getCurrentManifest().getMainAttributes().keySet()) {
-      bundleProjectDescription.setHeader(header, getCurrentManifest().getMainAttributes().get(header));
+    for (String header : getManifestContents().getMainAttributes().keySet()) {
+      bundleProjectDescription.setHeader(header, getManifestContents().getMainAttributes().get(header));
     }
 
     // set source dir
@@ -169,12 +173,5 @@ public class PdePluginProjectModuleExporter extends AbstractBundleManifestCreato
         }
       }
     }
-  }
-
-  /**
-   * @return
-   */
-  protected IManifestPreferences createManifestPreferences() {
-    return new ManifestPreferences(true);
   }
 }

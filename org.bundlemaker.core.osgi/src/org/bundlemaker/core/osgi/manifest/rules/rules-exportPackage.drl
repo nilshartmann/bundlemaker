@@ -22,11 +22,6 @@ import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
  * - IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE ) 
  * - IExportPackagePreferences
  */
-
-/**
- *
- *   
- */
 rule "export the package of a type (if it's not already exported)"
 when
     $r : IResourceModule()

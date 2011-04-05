@@ -29,6 +29,9 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.osgi.exporter.ManifestConstants;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
@@ -51,6 +54,35 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ManifestUtils {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   * @return
+   */
+  public static boolean isFragment(IResourceModule module) {
+
+    //
+    return !module.equals(getFragmentHost(module));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   * @return
+   */
+  public static IModule getFragmentHost(IModule module) {
+
+    //
+    IModule hostModule = (IModule) module.getUserAttributes().get(ManifestConstants.OSGI_FRAGMENT_HOST);
+
+    //
+    return hostModule != null ? hostModule : module;
+  }
 
   public static boolean isValidOSGiVersion(String version) {
     try {

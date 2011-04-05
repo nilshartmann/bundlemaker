@@ -53,13 +53,15 @@ when
     $modularizedSystem : IModularizedSystem()
     $referencedPackageName : String() from $resourceModule.getReferencedPackageNames(true, true, true)
     $exportingModule : IModule() from $referencesCache.getExportingModules($referencedPackageName)
-    $symbolicName : String() from $exportingModule.getModuleIdentifier().getName()
+    $exportingHostModule : IModule() from ManifestUtils.getFragmentHost($exportingModule)
+    $symbolicName : String() from $exportingHostModule.getModuleIdentifier().getName()
     not ( RequiredBundle(bundleSymbolicName == $symbolicName) )
+    not ( eval ( ManifestUtils.isFragment($resourceModule) && ManifestUtils.getFragmentHost($resourceModule).equals($exportingHostModule)))
 then
    // create a required bundle
    RequiredBundle requiredBundle = $bundleManifest.getRequireBundle().addRequiredBundle($symbolicName);
    if ($modularizedSystem.getModules($symbolicName).size() > 1) {
-     requiredBundle.setBundleVersion(new VersionRange("[" + $exportingModule.getModuleIdentifier().getVersion() + "," + $exportingModule.getModuleIdentifier().getVersion() + "]"));
+     requiredBundle.setBundleVersion(new VersionRange("[" + $exportingHostModule.getModuleIdentifier().getVersion() + "," + $exportingHostModule.getModuleIdentifier().getVersion() + "]"));
    }
    requiredBundle.setVisibility(Visibility.REEXPORT);
    insert( requiredBundle );
