@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.bundlemaker.core.transformations.dsl/src-gen"
+    editDirectory="/org.bundlemaker.core.transformations.dsl.edit/src" editorDirectory="/org.bundlemaker.core.transformations.dsl.editor/src"
+    modelPluginID="org.bundlemaker.core.transformations.dsl" forceOverwrite="true"
+    modelName="TransformationDsl" updateClasspath="false" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    complianceLevel="5.0" copyrightFields="false" editPluginID="org.bundlemaker.core.transformations.dsl.edit"
+    editorPluginID="org.bundlemaker.core.transformations.dsl.editor">
+  <genPackages prefix="TransformationDsl" basePackage="org.bundlemaker.core.transformations.dsl"
+      disposableProviderFactory="true" ecorePackage="TransformationDsl.ecore#/">
+    <genClasses ecoreClass="TransformationDsl.ecore#//TransformationModel">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//TransformationModel/transformations"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//Transformation"/>
+    <genClasses ecoreClass="TransformationDsl.ecore#//RemoveFrom">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//RemoveFrom/resourceSet"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//EmbedInto">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//EmbedInto/hostModule"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//EmbedInto/modules"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//CreateModule">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//CreateModule/module"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//CreateModule/from"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//From">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//From/resourceSet"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//ResourceSet">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//ResourceSet/moduleIdentifier"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//ResourceSet/includeResources"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//ResourceSet/excludeResources"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//ModuleIdentifier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//ModuleIdentifier/modulename"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//ModuleIdentifier/version"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//ResourceList">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//ResourceList/resources"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

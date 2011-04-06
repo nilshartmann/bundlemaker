@@ -4,18 +4,25 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
+import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
+import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedModuleDefinition;
 import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedTransformation;
+import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
+import org.bundlemaker.core.transformations.dsl.ui.utils.TransformationDslUtils;
 import org.bundlemaker.core.ui.editor.transformation.Evaluator;
 import org.bundlemaker.core.ui.editor.transformation.NewModule;
+import org.bundlemaker.core.ui.editor.transformation.TransformationExecutor;
 import org.bundlemaker.core.ui.editor.transformation.Transformations;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.util.StopWatch;
@@ -99,8 +106,88 @@ public class TransformationPage extends FormPage {
       }
     });
 
+    Composite dslComposite = toolkit.createComposite(form.getBody(), SWT.BORDER);
+    dslComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    dslComposite.setLayout(new GridLayout(3, false));
+
+    final Text uriText = toolkit.createText(dslComposite, "platform:/resource/spring/transform-spring.bmt");
+    uriText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    final Button parseButton = toolkit.createButton(dslComposite, "Apply", SWT.PUSH);
+    parseButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        testParsing(uriText.getText().trim());
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+
+      }
+    });
+
+    final Button exportButton = toolkit.createButton(dslComposite, "Export", SWT.PUSH);
+    exportButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        try {
+
+          IModularizedSystem modularizedSystem = getModularizedSystem("eins");
+          Collection<IModule> allModules = modularizedSystem.getAllModules();
+          System.out.println("Modules: ");
+          for (IModule iModule : allModules) {
+            System.out.println("Module: " + iModule.getModuleIdentifier());
+          }
+          System.out.println("ResourceModules:");
+          Collection<IResourceModule> resourceModules = modularizedSystem.getResourceModules();
+          for (IResourceModule iResourceModule : resourceModules) {
+            System.out.println("ResourceModule: " + iResourceModule.getModuleIdentifier());
+          }
+          exportToSimpleReport(getBundleMakerProject(), modularizedSystem);
+          exportAsPdeProjects(getBundleMakerProject(), modularizedSystem);
+        } catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+
+      }
+    });
+
     refreshStateLabel();
 
+  }
+
+  private void testParsing(String uri) {
+
+    try {
+      TransformationModel model = TransformationDslUtils.parse(uri);
+      TransformationExecutor executor = new TransformationExecutor(createModularizedSystem("eins"), model);
+      executor.apply();
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+  }
+
+  private IModularizedSystem createModularizedSystem(String name) throws Exception {
+    IBundleMakerProject project = getBundleMakerProject();
+
+    if (project.hasModularizedSystemWorkingCopy(name)) {
+      project.deleteModularizedSystemWorkingCopy(name);
+    }
+    return getModularizedSystem(name);
+  }
+
+  private IModularizedSystem getModularizedSystem(String name) throws Exception {
+    IBundleMakerProject project = getBundleMakerProject();
+    if (project.hasModularizedSystemWorkingCopy(name)) {
+      return project.getModularizedSystemWorkingCopy(name);
+    }
+    return project.createModularizedSystemWorkingCopy(name);
   }
 
   /**
@@ -121,7 +208,17 @@ public class TransformationPage extends FormPage {
       PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
         public void run(final IProgressMonitor monitor) {
           try {
-            getBundleMakerProject().open(monitor);
+            IBundleMakerProject project = getBundleMakerProject();
+
+            if (project.getState() == null || project.getState() == BundleMakerProjectState.CREATED) {
+              project.initialize(monitor);
+            }
+
+            if (project.getState() == BundleMakerProjectState.INITIALIZED) {
+              project.parse(monitor, true);
+            }
+
+            project.open(monitor);
           } catch (Exception ex) {
             ex.printStackTrace();
           }
@@ -152,13 +249,8 @@ public class TransformationPage extends FormPage {
       system.getTransformations().add(transformation);
       system.applyTransformations();
 
-      Collection<IResourceModule> resourceModules = system.getResourceModules();
-      for (IResourceModule iResourceModule : resourceModules) {
-        System.out.println("resource module: " + iResourceModule);
-      }
-
       exportToSimpleReport(bundleMakerProject, system);
-      exportToBinaryBundle(bundleMakerProject, system);
+      exportAsPdeProjects(bundleMakerProject, system);
 
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -175,26 +267,28 @@ public class TransformationPage extends FormPage {
       throws Exception {
 
     //
-    File destination = new File("D:/bm", "report");
+    File destination = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/report");
     destination.mkdirs();
 
     // create the exporter context
     DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
         modularizedSystem);
-
+    System.out.println("exportToSimpleReport...");
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     SimpleReportExporter exporter = new SimpleReportExporter();
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
     stopWatch.stop();
     System.out.println("Dauer " + stopWatch.getElapsedTime());
+    System.out.println("exportToSimpleReport done!");
   }
 
   private void exportToBinaryBundle(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
       throws Exception {
 
     //
-    File destination = new File("D:/bm", "bundles");
+    File destination = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/bundles");
+
     destination.mkdirs();
 
     // create the exporter context
@@ -207,6 +301,33 @@ public class TransformationPage extends FormPage {
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
     stopWatch.stop();
     System.out.println("Dauer " + stopWatch.getElapsedTime());
+  }
+
+  private void exportAsPdeProjects(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
+      throws Exception {
+
+    //
+    File destination = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/pde");
+    destination.mkdirs();
+
+    // create the exporter context
+    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
+        modularizedSystem);
+
+    File templateDirectory = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/templates");
+    // templateDi
+
+    System.out.println("exportAsProjects...");
+    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
+    pdeExporter.setUseClassifcationForExportDestination(true);
+    // pdeExporter.setTemplateRootDirectory(templateDirectory);
+    new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext);
+
+    TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
+    // targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
+    targetPlatformProjectExporter.export(modularizedSystem, exporterContext);
+
+    System.out.println("exportAsProjects done!");
   }
 
   private String getTransformationScript() {

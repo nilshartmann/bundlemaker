@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.core.transformations.dsl
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0
+Bundle-SymbolicName: org.bundlemaker.core.transformations.dsl; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.generator;resolution:=optional,
+ org.apache.commons.logging;resolution:=optional,
+ org.eclipse.emf.codegen.ecore;resolution:=optional,
+ org.eclipse.emf.mwe.utils;resolution:=optional,
+ org.eclipse.emf.mwe2.launch;resolution:=optional,
+ com.ibm.icu;resolution:=optional,
+ org.eclipse.xtext.xtend;resolution:=optional,
+ org.eclipse.xtext.util,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.common,
+ org.antlr.runtime
+Import-Package: org.apache.log4j
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ClassPath: antlr-generator-3.0.1.jar,.
+Export-Package: org.bundlemaker.core.transformations.dsl,
+ org.bundlemaker.core.transformations.dsl.services,
+ org.bundlemaker.core.transformations.dsl.transformationDsl,
+ org.bundlemaker.core.transformations.dsl.transformationDsl.impl,
+ org.bundlemaker.core.transformations.dsl.transformationDsl.util,
+ org.bundlemaker.core.transformations.dsl.parseTreeConstruction,
+ org.bundlemaker.core.transformations.dsl.parser.antlr,
+ org.bundlemaker.core.transformations.dsl.parser.antlr.internal,
+ org.bundlemaker.core.transformations.dsl.validation
+

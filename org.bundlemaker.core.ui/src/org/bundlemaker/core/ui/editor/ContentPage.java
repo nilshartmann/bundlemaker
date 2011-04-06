@@ -145,6 +145,7 @@ public class ContentPage extends FormPage {
         ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(editButton.getShell(), resources, false);
         if (dialog.open() == Window.OK) {
           if (resources) {
+            System.out.println("sourcepaths: " + dialog.getSourcePaths());
             getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
                 dialog.getBinaryPaths(), dialog.getSourcePaths());
           } else {
@@ -268,7 +269,7 @@ public class ContentPage extends FormPage {
     BundleMakerProjectState projectState = getBundleMakerProjectDescription().getBundleMakerProject().getState();
     System.out.println("projectState: '" + projectState + "'");
 
-    String state = String.valueOf(projectState);
+    String state = (projectState == null ? "unknown" : projectState.toString());
 
     _stateFormText.setText(
         "<form><p><span font=\"header\">BundleMaker project state:</span> <span font=\"header\" color=\"statecolor\">"
@@ -277,6 +278,8 @@ public class ContentPage extends FormPage {
     _stateFormText.getParent().redraw();
 
   }
+
+  private Button _parseButton;
 
   private void createStateSection(final IManagedForm mform) {
     FormToolkit toolkit = mform.getToolkit();
@@ -294,10 +297,31 @@ public class ContentPage extends FormPage {
     _stateFormText.setColor("statecolor", toolkit.getColors().getColor(IFormColors.TITLE));
 
     refreshProjectStateDisplay();
-    Button button = toolkit.createButton(client, "(Re-)Parse", SWT.PUSH);
-    button.setLayoutData(new GridData());
-    button.setImage(UIImages.REFRESH.getImage());
-    button.addSelectionListener(new SelectionListener() {
+
+    Composite buttonBar = toolkit.createComposite(client);
+    buttonBar.setLayoutData(new GridData());
+    buttonBar.setLayout(new GridLayout(3, false));
+
+    final Button initializeButton = toolkit.createButton(buttonBar, "Initialize", SWT.PUSH);
+    initializeButton.setLayoutData(new GridData());
+    // initializeButton.setImage(UIImages.REFRESH.getImage());
+    initializeButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        initializeProject();
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+
+      }
+    });
+
+    Button _parseButton = toolkit.createButton(buttonBar, "(Re-)Parse", SWT.PUSH);
+    _parseButton.setLayoutData(new GridData());
+    _parseButton.setImage(UIImages.REFRESH.getImage());
+    _parseButton.addSelectionListener(new SelectionListener() {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
@@ -308,6 +332,21 @@ public class ContentPage extends FormPage {
       public void widgetDefaultSelected(SelectionEvent e) {
       }
     });
+
+    final Button openButton = toolkit.createButton(buttonBar, "Open", SWT.PUSH);
+    openButton.setLayoutData(new GridData());
+    openButton.addSelectionListener(new SelectionListener() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        openProject();
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+
+      }
+    });
   }
 
   private void parseProject() {
@@ -315,8 +354,8 @@ public class ContentPage extends FormPage {
       PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
         public void run(final IProgressMonitor monitor) {
           try {
-            getBundleMakerProjectDescription().getBundleMakerProject().initialize(monitor);
-            getBundleMakerProjectDescription().getBundleMakerProject().parse(monitor, true);
+            IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
+            project.parse(monitor, true);
           } catch (Exception ex) {
             ex.printStackTrace();
           }
@@ -327,6 +366,43 @@ public class ContentPage extends FormPage {
     }
 
     refreshProjectStateDisplay();
+  }
 
+  private void initializeProject() {
+    try {
+      PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+        public void run(final IProgressMonitor monitor) {
+          try {
+            IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
+            project.initialize(monitor);
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+    refreshProjectStateDisplay();
+  }
+
+  private void openProject() {
+    try {
+      PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+        public void run(final IProgressMonitor monitor) {
+          try {
+            IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
+            project.open(monitor);
+          } catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      });
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+    refreshProjectStateDisplay();
   }
 }
