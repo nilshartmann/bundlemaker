@@ -11,6 +11,8 @@
 package org.bundlemaker.core.internal;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -93,6 +95,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // create the working copies map
     _modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
+
+    //
+    _projectState = BundleMakerProjectState.CREATED;
 
   }
 
@@ -261,6 +266,15 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // create default working copy
     createModularizedSystemWorkingCopy(getProject().getName());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<IModularizedSystem> getModularizedSystemWorkingCopies() throws CoreException {
+    Collection<? extends IModularizedSystem> result = _modifiableModualizedSystemWorkingCopies.values();
+    return Collections.unmodifiableCollection(result);
   }
 
   /**

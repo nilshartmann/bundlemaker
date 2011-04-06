@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.bundlemaker.core.internal.BundleMakerProject;
@@ -126,6 +127,15 @@ public interface IBundleMakerProject {
    */
   void open(IProgressMonitor progressMonitor) throws CoreException;
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   * @throws CoreException
+   */
+  Collection<IModularizedSystem> getModularizedSystemWorkingCopies() throws CoreException;
+  
   /**
    * <p>
    * Creates a new working copy of type {@link IModularizedSystem}.
