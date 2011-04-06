@@ -43,6 +43,9 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   /** the name of working copy */
   private String                                            _name;
 
+  /** the user attributes */
+  private Map<String, Object>                               _userAttributes;
+
   /** the project description */
   private IBundleMakerProjectDescription                    _projectDescription;
 
@@ -72,9 +75,10 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     Assert.isNotNull(projectDescription);
 
     _name = name;
-
+    
     _projectDescription = projectDescription;
 
+    _userAttributes = new HashMap<String, Object>();
     _transformations = new LinkedList<ITransformation>();
     _resourceModules = new HashMap<IModuleIdentifier, IModifiableResourceModule>();
     _nonResourceModules = new HashMap<IModuleIdentifier, TypeModule>();
@@ -87,6 +91,15 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   public final String getName() {
     return _name;
   }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<String, Object> getUserAttributes() {
+    return _userAttributes;
+  }
+
 
   /**
    * {@inheritDoc}

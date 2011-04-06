@@ -39,6 +39,14 @@ public interface IModularizedSystem {
    * @return the name of the modularized system.
    */
   String getName();
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  Map<String, Object> getUserAttributes();
 
   /**
    * <p>

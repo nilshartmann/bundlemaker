@@ -35,6 +35,10 @@ public class DelegatingModularizedSystem implements IModularizedSystem {
     _modularizedSystem = modularizedSystem;
   }
 
+  public Map<String, Object> getUserAttributes() {
+    return _modularizedSystem.getUserAttributes();
+  }
+
   public Collection<IModule> getAllModules() {
     return _modularizedSystem.getAllModules();
   }
