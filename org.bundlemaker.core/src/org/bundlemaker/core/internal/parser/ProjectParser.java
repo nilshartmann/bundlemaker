@@ -125,7 +125,7 @@ public class ProjectParser {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
 
-    cache.commit(new ProgressMonitor());
+    cache.commit(progressMonitor);
     cache.clear();
 
     // TODO
