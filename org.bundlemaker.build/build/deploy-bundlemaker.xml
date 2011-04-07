@@ -41,6 +41,8 @@
 		<location dir="${bundlemaker-workspace}/target.platform/easymock-3.0" />
 		<location dir="${bundlemaker-workspace}/target.platform/miglayout-3.7.3.1" />
 		<location dir="${bundlemaker-workspace}/target.platform/slf4j-1.5.10" />
+		<location dir="${bundlemaker-workspace}/target.platform/xtext/emf" />
+		<location dir="${bundlemaker-workspace}/target.platform/xtext/xtext" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 
