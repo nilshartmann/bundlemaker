@@ -21,6 +21,7 @@ import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -109,6 +110,18 @@ public class ResourceStandin extends ResourceKey implements IResource {
     }
 
     return _resource.getContainedTypes();
+  }
+
+  @Override
+  public IType getContainedType() throws CoreException {
+
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
+
+    return _resource.getContainedType();
   }
 
   @Override

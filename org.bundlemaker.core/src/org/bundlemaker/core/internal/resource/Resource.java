@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -26,6 +27,9 @@ import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 
 /**
  * <p>
@@ -105,6 +109,27 @@ public class Resource extends ResourceKey implements IModifiableResource {
   @Override
   public Set<? extends IType> getContainedTypes() {
     return Collections.unmodifiableSet(containedTypes());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IType getContainedType() throws CoreException {
+
+    //
+    if (_containedTypes == null || _containedTypes.isEmpty()) {
+      return null;
+    }
+
+    //
+    if (_containedTypes.size() == 1) {
+      return _containedTypes.toArray(new IType[0])[0];
+    }
+
+    // throw new exception
+    throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID,
+        String.format("Resource '%s' contains more than one type.")));
   }
 
   /**

@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -59,6 +60,14 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    *         returned instead.
    */
   Set<? extends IType> getContainedTypes();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IType getContainedType() throws CoreException;
 
   /**
    * <p>
