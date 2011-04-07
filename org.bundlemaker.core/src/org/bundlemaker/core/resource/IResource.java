@@ -38,7 +38,11 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * Returns all {@link IReference IReferences} that are originated in this resource.
    * </p>
    * <p>
-   * <b>Note:</b> The result set does <b>not</b> contain any references of the contained types.
+   * <b>Note:</b> The result set does <b>not</b> contain any references of the contained types. If you want to access
+   * these references as well, you have explicitly to request them from the contained types. The reason why there is no
+   * method that aggregates these dependencies is that references contain information that are specific to the
+   * originator (e.g. {@link IReference#isExtends()} or {@link IReference#isImplements()}).
+   * 
    * </p>
    * 
    * @return all {@link IReference IReferences} that are originated in this resource.
