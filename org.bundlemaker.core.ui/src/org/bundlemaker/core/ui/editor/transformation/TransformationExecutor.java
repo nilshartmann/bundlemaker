@@ -7,11 +7,9 @@ import java.util.List;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.transformation.EmbedModuleTransformation;
 import org.bundlemaker.core.transformation.ITransformation;
-import org.bundlemaker.core.transformation.RemoveResourcesTransformation;
-import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedModuleDefinition;
-import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedTransformation;
+import org.bundlemaker.core.transformations.EmbedModuleTransformation;
+import org.bundlemaker.core.transformations.RemoveResourcesTransformation;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.EmbedInto;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.From;
@@ -20,6 +18,8 @@ import org.bundlemaker.core.transformations.dsl.transformationDsl.RemoveFrom;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceSet;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.Transformation;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
+import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedModuleDefinition;
+import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
 import org.eclipse.emf.common.util.EList;
 
 public class TransformationExecutor {

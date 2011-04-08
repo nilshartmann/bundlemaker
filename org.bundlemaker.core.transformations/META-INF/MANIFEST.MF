@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Transformation
+Bundle-SymbolicName: org.bundlemaker.core.transformations
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ org.bundlemaker.core;bundle-version="1.0.0",
+ org.apache.ant;bundle-version="1.7.1"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bundlemaker.core.transformations,
+ org.bundlemaker.core.transformations.resourceset

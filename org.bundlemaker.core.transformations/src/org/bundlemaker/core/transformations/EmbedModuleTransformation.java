@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.transformations;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,6 +18,7 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.transformation.ITransformation;
 
 public class EmbedModuleTransformation implements ITransformation {
 

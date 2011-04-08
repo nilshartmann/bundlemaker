@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.transformations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,8 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.transformation.resourceset.ResourceSet;
+import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.transformations.resourceset.ResourceSet;
 import org.bundlemaker.core.util.TransformationUtils;
 
 /**

@@ -10,8 +10,8 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.transformation.EmbedModuleTransformation;
-import org.bundlemaker.core.transformation.resourceset.ResourceSetBasedTransformation;
+import org.bundlemaker.core.transformations.EmbedModuleTransformation;
+import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.eclipse.core.runtime.CoreException;
 
