@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>com.springsource.util.osgi.internal</name>
+	<name>org.bundlemaker.com.springsource.util.osgi.internal</name>
 	<comment></comment>
 	<projects>
 	</projects>

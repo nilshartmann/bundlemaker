@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: com.springsource.util.osgi.internal
-Bundle-SymbolicName: com.springsource.util.osgi.internal
+Bundle-SymbolicName: org.bundlemaker.com.springsource.util.osgi.internal
 Bundle-Version: 2.0.0.RELEASE
 Bundle-Vendor: gerd wuetherich
 Fragment-Host: com.springsource.util.osgi;bundle-version="2.0.0.RELEASE"
