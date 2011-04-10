@@ -53,6 +53,8 @@
       <plugin id="org.bundlemaker.core.parser.bytecode"/>
       <plugin id="org.bundlemaker.core.parser.jdt"/>
       <plugin id="org.bundlemaker.core.store.db4o" fragment="true"/>
+      <plugin id="org.bundlemaker.core.transformations.dsl"/>
+      <plugin id="org.bundlemaker.core.transformations.dsl.ui"/>
       <plugin id="org.bundlemaker.core.ui"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.core.commands"/>
