@@ -44,9 +44,9 @@
       <plugin id="com.springsource.util.common"/>
       <plugin id="com.springsource.util.math"/>
       <plugin id="com.springsource.util.osgi"/>
-      <plugin id="com.springsource.util.osgi.internal" fragment="true"/>
       <plugin id="com.springsource.util.parser.manifest"/>
       <plugin id="org.apache.ant"/>
+      <plugin id="org.bundlemaker.com.springsource.util.osgi.internal" fragment="true"/>
       <plugin id="org.bundlemaker.core"/>
       <plugin id="org.bundlemaker.core.exporter.structure101"/>
       <plugin id="org.bundlemaker.core.osgi"/>
