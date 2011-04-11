@@ -32,6 +32,7 @@ import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IDependencyStore;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
@@ -266,6 +267,34 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // create default working copy
     createModularizedSystemWorkingCopy(getProject().getName());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void dispose() {
+
+    // delete the dependency store
+    try {
+
+      //
+      IDependencyStore dependencyStore = getDependencyStore(null);
+
+      //
+      if (dependencyStore instanceof IPersistentDependencyStore) {
+        ((IPersistentDependencyStore) dependencyStore).dispose();
+      }
+
+    } catch (CoreException e) {
+      // TODO
+      e.printStackTrace();
+    }
+
+    Activator.getDefault().removeCachedBundleMakerProject(_project);
+
+    // set the project state
+    _projectState = BundleMakerProjectState.DISPOSED;
   }
 
   /**

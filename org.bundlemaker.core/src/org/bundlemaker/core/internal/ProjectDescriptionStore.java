@@ -11,6 +11,8 @@
 package org.bundlemaker.core.internal;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
@@ -85,6 +87,13 @@ public class ProjectDescriptionStore {
     } else {
       iFile.setContents(in, true, false, null);
     }
+    
+    try {
+      in.close();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   public static BundleMakerProjectDescription loadProjectDescription(IBundleMakerProject project) throws CoreException {
@@ -97,7 +106,14 @@ public class ProjectDescriptionStore {
     iFile.refreshLocal(IFile.DEPTH_INFINITE, null);
 
     //
-    XmlProjectDescriptionType xmlProjectDescription = XmlProjectDescriptionExporterUtils.unmarshal(iFile.getContents());
+    InputStream inputStream = iFile.getContents();
+    XmlProjectDescriptionType xmlProjectDescription = XmlProjectDescriptionExporterUtils.unmarshal(inputStream);
+    try {
+      inputStream.close();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     BundleMakerProjectDescription result = new BundleMakerProjectDescription(project);
     result.setCurrentId(xmlProjectDescription.getCurrentId());

@@ -94,7 +94,11 @@ public class EclipseProjectUtils {
 
     // create the project if not exists
     if (project.exists()) {
-      project.delete(true, null);
+      try {
+        project.delete(true, true, null);
+      } catch (Exception e) {
+        // e.printStackTrace();
+      }
     }
   }
 

@@ -37,207 +37,211 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public class Activator extends Plugin {
 
-	/** the null progress monitor */
-	public static final IProgressMonitor NULL_PROGRESS_MONITOR = new NullProgressMonitor();
+  /** the null progress monitor */
+  public static final IProgressMonitor       NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
-	/** the plug-in id */
-	public static final String PLUGIN_ID = "org.bundlemaker.core";
+  /** the plug-in id */
+  public static final String                 PLUGIN_ID             = "org.bundlemaker.core";
 
-	/** the activator instance */
-	private static Activator _activator;
+  /** the activator instance */
+  private static Activator                   _activator;
 
-	/** - */
-	private static BundleContext _context;
+  /** - */
+  private static BundleContext               _context;
 
-	/** the factory tracker */
-	private ServiceTracker _factoryTracker;
+  /** the factory tracker */
+  private ServiceTracker                     _factoryTracker;
 
-	/** the project cache */
-	private Map<IProject, IBundleMakerProject> _projectCache;
+  /** the project cache */
+  private Map<IProject, IBundleMakerProject> _projectCache;
 
-	/** - */
-	private ParserFactoryRegistry _parserFactoryRegistry;
+  /** - */
+  private ParserFactoryRegistry              _parserFactoryRegistry;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link Activator}.
-	 * </p>
-	 * 
-	 */
-	public Activator() {
-	}
+  /**
+   * <p>
+   * Creates a new instance of type {@link Activator}.
+   * </p>
+   * 
+   */
+  public Activator() {
+  }
 
-	/**
-	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
+  /**
+   * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
+   */
+  public void start(BundleContext context) throws Exception {
+    super.start(context);
 
-		// create the factory tracker
-		_factoryTracker = new ServiceTracker(context,
-				IPersistentDependencyStoreFactory.class.getName(), null);
-		_factoryTracker.open();
+    // create the factory tracker
+    _factoryTracker = new ServiceTracker(context, IPersistentDependencyStoreFactory.class.getName(), null);
+    _factoryTracker.open();
 
-		// create the maps and caches
-		_projectCache = new HashMap<IProject, IBundleMakerProject>();
+    // create the maps and caches
+    _projectCache = new HashMap<IProject, IBundleMakerProject>();
 
-		//
-		_parserFactoryRegistry = new ParserFactoryRegistry();
-		_parserFactoryRegistry.initialize();
+    //
+    _parserFactoryRegistry = new ParserFactoryRegistry();
+    _parserFactoryRegistry.initialize();
 
-		//
-		enableAutoBuild(false);
+    //
+    enableAutoBuild(false);
 
-		//
-		_activator = this;
+    //
+    _activator = this;
 
-		//
-		_context = context;
-	}
+    //
+    _context = context;
+  }
 
-	/**
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
+  /**
+   * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
+   */
+  public void stop(BundleContext context) throws Exception {
 
-		//
-		_activator = null;
+    //
+    _activator = null;
 
-		//
-		_context = null;
+    //
+    _context = null;
 
-		//
-		_factoryTracker.close();
+    //
+    _factoryTracker.close();
 
-		super.stop(context);
-	}
+    super.stop(context);
+  }
 
-	/**
-	 * <p>
-	 * Returns the shared instance
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public static Activator getDefault() {
+  /**
+   * <p>
+   * Returns the shared instance
+   * </p>
+   * 
+   * @return
+   */
+  public static Activator getDefault() {
 
-		//
-		if (_activator == null) {
+    //
+    if (_activator == null) {
 
-			//
-			throw new RuntimeException(
-					"Bundle 'org.bundlemaker.core' has to be started.");
-		}
+      //
+      throw new RuntimeException("Bundle 'org.bundlemaker.core' has to be started.");
+    }
 
-		// return the activator
-		return _activator;
-	}
+    // return the activator
+    return _activator;
+  }
 
-	public static BundleContext getContext() {
-		return _context;
-	}
+  public static BundleContext getContext() {
+    return _context;
+  }
 
-	public ParserFactoryRegistry getParserFactoryRegistry() {
-		return _parserFactoryRegistry;
-	}
+  public ParserFactoryRegistry getParserFactoryRegistry() {
+    return _parserFactoryRegistry;
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param project
-	 * @return
-	 */
-	public IBundleMakerProject getBundleMakerProject(IProject project) {
-		return _projectCache.get(project);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param project
+   * @return
+   */
+  public IBundleMakerProject getBundleMakerProject(IProject project) {
+    return _projectCache.get(project);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param project
-	 * @param bundleMakerProject
-	 */
-	public void cacheBundleMakerProject(IProject project,
-			IBundleMakerProject bundleMakerProject) {
-		_projectCache.put(project, bundleMakerProject);
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param project
+   * @param bundleMakerProject
+   */
+  public void cacheBundleMakerProject(IProject project, IBundleMakerProject bundleMakerProject) {
+    _projectCache.put(project, bundleMakerProject);
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param bundleMakerProject
-	 * @return
-	 */
-	public IPersistentDependencyStore getPersistentDependencyStore(
-			IBundleMakerProject bundleMakerProject) {
+  /**
+   * <p>
+   * </p>
+   *
+   * @param project
+   */
+  public void removeCachedBundleMakerProject(IProject project) {
+    _projectCache.remove(project);
+  }
 
-		IPersistentDependencyStoreFactory factory = getPersistentInfoStoreFactory();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @return
+   */
+  public IPersistentDependencyStore getPersistentDependencyStore(IBundleMakerProject bundleMakerProject) {
 
-		// TODO
+    IPersistentDependencyStoreFactory factory = getPersistentInfoStoreFactory();
 
-		IPersistentDependencyStore infoStore = factory
-				.getPersistentDependencyStore(bundleMakerProject);
+    // TODO
 
-		return infoStore;
-	}
+    IPersistentDependencyStore infoStore = factory.getPersistentDependencyStore(bundleMakerProject);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public IPersistentDependencyStoreFactory getPersistentInfoStoreFactory() {
+    return infoStore;
+  }
 
-		try {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IPersistentDependencyStoreFactory getPersistentInfoStoreFactory() {
 
-			//
-			IPersistentDependencyStoreFactory result = (IPersistentDependencyStoreFactory) _factoryTracker
-					.waitForService(5000);
+    try {
 
-			//
-			if (result == null) {
-				// TODO
-				throw new RuntimeException(
-						"No IPersistentDependencyStoreFactory available. Please make sure that DS is started.");
-			}
+      //
+      IPersistentDependencyStoreFactory result = (IPersistentDependencyStoreFactory) _factoryTracker
+          .waitForService(5000);
 
-			//
-			return result;
+      //
+      if (result == null) {
+        // TODO
+        throw new RuntimeException(
+            "No IPersistentDependencyStoreFactory available. Please make sure that DS is started.");
+      }
 
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+      //
+      return result;
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param progressMonitor
-	 * @return
-	 */
-	public IProgressMonitor getProgressMonitor(IProgressMonitor progressMonitor) {
-		return progressMonitor != null ? progressMonitor
-				: NULL_PROGRESS_MONITOR;
-	}
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 
-	public boolean enableAutoBuild(boolean enabled) {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceDescription desc = workspace.getDescription();
-		boolean isAutoBuilding = desc.isAutoBuilding();
-		if (isAutoBuilding != enabled) {
-			desc.setAutoBuilding(enabled);
-			try {
-				workspace.setDescription(desc);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-		return isAutoBuilding;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param progressMonitor
+   * @return
+   */
+  public IProgressMonitor getProgressMonitor(IProgressMonitor progressMonitor) {
+    return progressMonitor != null ? progressMonitor : NULL_PROGRESS_MONITOR;
+  }
+
+  public boolean enableAutoBuild(boolean enabled) {
+    IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    IWorkspaceDescription desc = workspace.getDescription();
+    boolean isAutoBuilding = desc.isAutoBuilding();
+    if (isAutoBuilding != enabled) {
+      desc.setAutoBuilding(enabled);
+      try {
+        workspace.setDescription(desc);
+      } catch (CoreException e) {
+        e.printStackTrace();
+      }
+    }
+    return isAutoBuilding;
+  }
 }

@@ -85,7 +85,17 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
 
     // step 1: return the cached version if one exists
     if (_cache.containsKey(project)) {
-      return _cache.get(project);
+
+      //
+      IPersistentDependencyStore dependencyStore = _cache.get(project);
+
+      //
+      if (!dependencyStore.isInitialized()) {
+        dependencyStore.init();
+      }
+
+      //
+      return dependencyStore;
     }
 
     // step 2: create a new store

@@ -40,4 +40,25 @@ public interface IPersistentDependencyStore extends IDependencyStore {
    * </p>
    */
   void commit();
+
+  /**
+   * <p>
+   * </p>
+   */
+  void init();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isInitialized();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  void dispose();
 }

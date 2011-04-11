@@ -125,6 +125,25 @@ public class ResourceCacheTest {
     @Override
     public void commit() {
     }
+
+    @Override
+    public void init() {
+      // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public boolean isInitialized() {
+      // TODO Auto-generated method stub
+      return false;
+    }
+
+    @Override
+    public void dispose() {
+      // TODO Auto-generated method stub
+
+    }
+
   }
 
   /**

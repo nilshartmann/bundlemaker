@@ -130,12 +130,18 @@ public interface IBundleMakerProject {
   /**
    * <p>
    * </p>
-   *
+   */
+  void dispose();
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @return
    * @throws CoreException
    */
   Collection<IModularizedSystem> getModularizedSystemWorkingCopies() throws CoreException;
-  
+
   /**
    * <p>
    * Creates a new working copy of type {@link IModularizedSystem}.
