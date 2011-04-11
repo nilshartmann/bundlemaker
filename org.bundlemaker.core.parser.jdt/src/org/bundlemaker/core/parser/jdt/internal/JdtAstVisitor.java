@@ -927,7 +927,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
       // add the type parameters
       for (ITypeBinding iTypeBinding : typeBinding.getTypeArguments()) {
-        resolveTypeBinding(iTypeBinding, isExtends, isImplements, isClassAnnotation);
+        resolveTypeBinding(iTypeBinding, false, false, false);
       }
 
     }
