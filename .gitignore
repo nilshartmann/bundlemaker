@@ -1,9 +1,6 @@
-*.class
 .metadata
 */bin/*
 */*clover/*
 org.bundlemaker.drools.test/*
 org.eclipse.pde.api.tools/*
 org.eclipse.pde.api.tools.ui/*
- 
-
