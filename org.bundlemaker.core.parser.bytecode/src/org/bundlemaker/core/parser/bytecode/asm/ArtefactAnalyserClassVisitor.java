@@ -131,14 +131,14 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
           }
           if (Character.isJavaIdentifierStart(name.charAt(0))) {
             // no uses
-            VisitorUtils.recordReferencedTypes(_recorder, false, false, true, name);
+            VisitorUtils.recordReferencedTypes(_recorder, false, false, false, name);
           }
         }
       }
     }
 
     // no uses
-    VisitorUtils.recordReferencedTypes(_recorder, false, false, true, t);
+    VisitorUtils.recordReferencedTypes(_recorder, false, false, false, t);
 
     //
     return new ArtefactAnalyserFieldVisitor(_recorder);
@@ -150,12 +150,12 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
   @Override
   public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 
-    VisitorUtils.recordReferencedTypes(_recorder, false, false, true, Type.getArgumentTypes(desc));
-    VisitorUtils.recordReferencedTypes(_recorder, false, false, true, Type.getReturnType(desc));
+    VisitorUtils.recordReferencedTypes(_recorder, false, false, false, Type.getArgumentTypes(desc));
+    VisitorUtils.recordReferencedTypes(_recorder, false, false, false, Type.getReturnType(desc));
 
     if (exceptions != null) {
       for (String exception : exceptions) {
-        VisitorUtils.recordReferencedTypes(_recorder, false, false, true, Type.getObjectType(exception));
+        VisitorUtils.recordReferencedTypes(_recorder, false, false, false, Type.getObjectType(exception));
       }
     }
 
