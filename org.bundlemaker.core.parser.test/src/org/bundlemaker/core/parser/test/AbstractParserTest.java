@@ -1,6 +1,6 @@
 package org.bundlemaker.core.parser.test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.util.Arrays;
@@ -13,8 +13,10 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
@@ -31,7 +33,7 @@ public abstract class AbstractParserTest {
   private static final String TEST_PROJECT_VERSION = "1.0.0";
 
   /** - */
-  public static final String  TEST_PROJECT_NAME    = "TEST_PROJECT";
+  public String               _testProjectName;
 
   /** - */
   private IBundleMakerProject _bundleMakerProject;
@@ -45,13 +47,16 @@ public abstract class AbstractParserTest {
   @Before
   public void before() throws CoreException {
 
+    //
+    _testProjectName = this.getClass().getSimpleName();
+
     // delete the project
     log("Deleting existing project...");
-    EclipseProjectUtils.deleteProjectIfExists(TEST_PROJECT_NAME);
+    EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
 
     // create simple project
     log("Creating new bundlemaker project...");
-    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(TEST_PROJECT_NAME);
+    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(_testProjectName);
 
     // get the BM project
     _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
@@ -70,7 +75,7 @@ public abstract class AbstractParserTest {
     _bundleMakerProject.dispose();
 
     // delete the project
-    EclipseProjectUtils.deleteProjectIfExists(TEST_PROJECT_NAME);
+    EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
   }
 
   /**
@@ -103,13 +108,13 @@ public abstract class AbstractParserTest {
     log("Opening project...");
     _bundleMakerProject.open(null);
 
-    IModularizedSystem modularizedSystem = _bundleMakerProject.getModularizedSystemWorkingCopy(TEST_PROJECT_NAME);
+    IModularizedSystem modularizedSystem = _bundleMakerProject.getModularizedSystemWorkingCopy(_testProjectName);
 
     // apply the transformation
     modularizedSystem.applyTransformations();
 
     // get the resource module
-    IResourceModule resourceModule = modularizedSystem.getResourceModule(TEST_PROJECT_NAME, TEST_PROJECT_VERSION);
+    IResourceModule resourceModule = modularizedSystem.getResourceModule(_testProjectName, TEST_PROJECT_VERSION);
 
     //
     testResult(modularizedSystem, resourceModule);
@@ -142,7 +147,7 @@ public abstract class AbstractParserTest {
     File source = new File(directory, "src");
     Assert.assertTrue(source.isDirectory());
 
-    projectDescription.addResourceContent(TEST_PROJECT_NAME, TEST_PROJECT_VERSION, classes.getAbsolutePath(),
+    projectDescription.addResourceContent(_testProjectName, TEST_PROJECT_VERSION, classes.getAbsolutePath(),
         source.getAbsolutePath());
 
     // step 4: process the class path entries
@@ -190,7 +195,7 @@ public abstract class AbstractParserTest {
 
     //
     if (expectedReferences.length != type.getReferences().size()) {
-      dumpReferences(type, expectedReferences);
+      dumpReferences(type, expectedReferencesList, expectedReferences);
     }
 
     //
@@ -206,11 +211,20 @@ public abstract class AbstractParserTest {
 
     //
     if (!expectedReferencesList.isEmpty()) {
-      dumpReferences(type, expectedReferences);
+      dumpReferences(type, expectedReferencesList, expectedReferences);
     }
   }
 
-  private void dumpReferences(IType type, ExpectedReference... expectedReferences) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @param missingReferencesList
+   * @param expectedReferences
+   */
+  private void dumpReferences(IType type, List<ExpectedReference> missingReferencesList,
+      ExpectedReference... expectedReferences) {
 
     System.out.println("Actual references:");
 
@@ -218,12 +232,41 @@ public abstract class AbstractParserTest {
       System.out.println(" - " + actualReference);
     }
 
-    System.out.println("Missing expected references:");
+    System.out.println("Expected references:");
     for (ExpectedReference expectedReference : expectedReferences) {
       System.out.println(" - " + expectedReference);
     }
 
+    System.out.println("Missing references:");
+    for (ExpectedReference missingReference : missingReferencesList) {
+      System.out.println(" - " + missingReference);
+    }
+
     Assert.fail();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceModule
+   * @param path
+   * @param contentType
+   * @param expectedReferences
+   * @throws CoreException
+   */
+  protected void assertResourceWithSingleTypeAndAllReferences(IResourceModule resourceModule, String path,
+      ContentType contentType, ExpectedReference... expectedReferences) throws CoreException {
+
+    //
+    IResource resource = resourceModule.getResource(path, contentType);
+
+    assertNotNull(resource);
+
+    IType type = resource.getContainedType();
+    assertNotNull(type);
+
+    assertAllReferences(type, expectedReferences);
   }
 
   /**
