@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
@@ -18,9 +19,11 @@ public class FileBasedContentTest {
   /**
    * <p>
    * </p>
+   * 
+   * @throws CoreException
    */
   @Test
-  public void test() {
+  public void test() throws CoreException {
 
     //
     FileBasedContent fileBasedContent = new FileBasedContent();

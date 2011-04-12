@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.projectdescription;
 
-import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -138,8 +137,9 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
    * </p>
    * 
    * @param bundlemakerProject
+   * @throws CoreException 
    */
-  public void initialize(IBundleMakerProject bundlemakerProject) {
+  public void initialize(IBundleMakerProject bundlemakerProject) throws CoreException {
 
     // TODO
     if (isValid()) {
@@ -203,12 +203,19 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
   @Override
   public void addResourceContent(String binaryRoot, String sourceRoot) {
+    
+    try {
+      
+      // get the jar info
+      JarInfo jarInfo = JarInfoService.extractJarInfo(VariableResolver.resolveVariable(binaryRoot));
 
-    // get the jar info
-    JarInfo jarInfo = JarInfoService.extractJarInfo(new File(binaryRoot));
-
-    //
-    addResourceContent(jarInfo.getName(), jarInfo.getVersion(), binaryRoot, sourceRoot);
+      //
+      addResourceContent(jarInfo.getName(), jarInfo.getVersion(), binaryRoot, sourceRoot);
+      
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -234,10 +241,16 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
   public void addTypeContent(String binaryRoot) {
     Assert.isNotNull(binaryRoot);
 
-    // get the jar info
-    JarInfo jarInfo = JarInfoService.extractJarInfo(new File(binaryRoot));
+    try {
+      // get the jar info
+      JarInfo jarInfo = JarInfoService.extractJarInfo(VariableResolver.resolveVariable(binaryRoot));
 
-    addTypeContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot });
+      addTypeContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot });
+      
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   @Override

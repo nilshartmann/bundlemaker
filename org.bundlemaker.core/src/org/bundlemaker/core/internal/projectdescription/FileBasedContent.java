@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.projectdescription;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,7 +22,6 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
@@ -190,7 +190,7 @@ public class FileBasedContent implements IFileBasedContent {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public void initialize(IBundleMakerProject bundleMakerProject) {
+  public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
 
     // return if content already is initialized
     if (_isInitialized) {
@@ -205,21 +205,13 @@ public class FileBasedContent implements IFileBasedContent {
         // get the root
         String rootPath = root.toFile().getAbsolutePath();
 
-        try {
+        for (String child : FileUtils.getAllChildren(root.toFile())) {
 
-          for (String child : FileUtils.getAllChildren(root.toFile())) {
+          // create the resource standin
+          ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
 
-            // create the resource standin
-            ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
-
-            // add the resource
-            _resourceContent.getModifiableBinaryResources().add(resourceStandin);
-          }
-
-        } catch (CoreException e) {
-
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          // add the resource
+          _resourceContent.getModifiableBinaryResources().add(resourceStandin);
         }
       }
 
@@ -227,23 +219,17 @@ public class FileBasedContent implements IFileBasedContent {
       for (IPath root : _resourceContent.getSourcePaths()) {
 
         // get the root
-        String rootPath = root.toFile().getAbsolutePath();
+        String rootPath = root.toString();
 
-        try {
+        rootPath = VariableResolver.resolveVariable(root).getAbsolutePath();
 
-          for (String child : FileUtils.getAllChildren(root.toFile())) {
+        for (String child : FileUtils.getAllChildren(new File(rootPath))) {
 
-            // create the resource standin
-            ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
+          // create the resource standin
+          ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
 
-            // add the resource
-            _resourceContent.getModifiableSourceResources().add(resourceStandin);
-          }
-
-        } catch (CoreException e) {
-
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          // add the resource
+          _resourceContent.getModifiableSourceResources().add(resourceStandin);
         }
       }
     }

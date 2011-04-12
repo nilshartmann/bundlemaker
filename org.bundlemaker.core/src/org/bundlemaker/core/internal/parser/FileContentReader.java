@@ -22,10 +22,12 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.bundlemaker.core.internal.projectdescription.VariableResolver;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
@@ -44,8 +46,9 @@ public class FileContentReader {
    * @param fileBasedContent
    * @param filterNonAnalyzableSource
    * @return
+   * @throws CoreException 
    */
-  public static List<IDirectory> getDirectories(IFileBasedContent fileBasedContent, boolean filterNonAnalyzableSource) {
+  public static List<IDirectory> getDirectories(IFileBasedContent fileBasedContent, boolean filterNonAnalyzableSource) throws CoreException {
 
     Assert.isNotNull(fileBasedContent);
 
@@ -54,13 +57,13 @@ public class FileContentReader {
 
     // add all binary paths
     for (IPath path : fileBasedContent.getBinaryPaths()) {
-      getAllPackages(fileBasedContent, directoryMap, path.toFile(), false);
+      getAllPackages(fileBasedContent, directoryMap, VariableResolver.resolveVariable(path), false);
     }
 
     if (!fileBasedContent.getSourcePaths().isEmpty()
         && (!filterNonAnalyzableSource || fileBasedContent.isAnalyzeSourceResources())) {
       for (IPath path : fileBasedContent.getSourcePaths()) {
-        getAllPackages(fileBasedContent, directoryMap, path.toFile(), true);
+        getAllPackages(fileBasedContent, directoryMap, VariableResolver.resolveVariable(path), true);
       }
     }
 
