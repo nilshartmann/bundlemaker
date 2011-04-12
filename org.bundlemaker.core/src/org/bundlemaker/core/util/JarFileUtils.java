@@ -112,7 +112,8 @@ public final class JarFileUtils {
     }
 
     // skip META-INF/*.RSA, META-INF/*.DSA and META-INF/*.SF files
-    if (path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Rr][Ss][Aa]") || path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Dd][Ss][Aa]")
+    if (path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Rr][Ss][Aa]")
+        || path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Dd][Ss][Aa]")
         || path.matches("[Mm][Ee][Tt][Aa]-[Ii][Nn][Ff]/[^/]*\\.[Ss][Ff]")) {
       return true;
     }

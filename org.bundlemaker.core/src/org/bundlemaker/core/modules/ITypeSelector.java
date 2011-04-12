@@ -29,8 +29,8 @@ public interface ITypeSelector {
    * method {@link ITypeSelector#selectType(IModule, String, Set)}.
    * </p>
    * <p>
-   * In case that this method returns <code>true</code> the result of method {@link ITypeSelector#getSourceModules()}
-   * is ignored.
+   * In case that this method returns <code>true</code> the result of method {@link ITypeSelector#getSourceModules()} is
+   * ignored.
    * </p>
    * 
    * @return <code>true</code> if (and only if) this module selector matches all existing {@link IResourceModule

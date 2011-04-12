@@ -164,7 +164,7 @@ public class Activator extends Plugin {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param project
    */
   public void removeCachedBundleMakerProject(IProject project) {

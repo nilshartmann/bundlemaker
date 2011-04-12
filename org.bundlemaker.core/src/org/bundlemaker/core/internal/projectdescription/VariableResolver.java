@@ -26,7 +26,7 @@ public class VariableResolver {
    * @throws CoreException
    */
   public static File resolveVariable(IPath expression) throws CoreException {
-    
+
     //
     return resolveVariable(expression.toString());
   }
@@ -34,7 +34,7 @@ public class VariableResolver {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param expression
    * @return
    * @throws CoreException

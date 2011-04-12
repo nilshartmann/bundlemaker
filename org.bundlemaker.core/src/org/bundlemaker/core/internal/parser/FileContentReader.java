@@ -46,9 +46,10 @@ public class FileContentReader {
    * @param fileBasedContent
    * @param filterNonAnalyzableSource
    * @return
-   * @throws CoreException 
+   * @throws CoreException
    */
-  public static List<IDirectory> getDirectories(IFileBasedContent fileBasedContent, boolean filterNonAnalyzableSource) throws CoreException {
+  public static List<IDirectory> getDirectories(IFileBasedContent fileBasedContent, boolean filterNonAnalyzableSource)
+      throws CoreException {
 
     Assert.isNotNull(fileBasedContent);
 

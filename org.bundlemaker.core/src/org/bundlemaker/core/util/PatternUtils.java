@@ -66,7 +66,7 @@ public class PatternUtils {
     }
     return validIdentifier;
   }
-  
+
   public static void main(String[] args) {
     String pattern = convertAntStylePattern("de.ads.*.asd.**");
     System.out.println(pattern);

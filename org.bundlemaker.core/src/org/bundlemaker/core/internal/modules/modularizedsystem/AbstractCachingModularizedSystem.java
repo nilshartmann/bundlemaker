@@ -105,7 +105,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     return _typeNameToReferringCache;
   }
 
- 
   /**
    * {@inheritDoc}
    */
@@ -135,6 +134,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     getTypeNameToTypeCache().clear();
     getTypeNameToReferringCache().clear();
+    _typeToModuleMap.clear();
+    _resourceToResourceModuleMap.clear();
 
     // step 1: cache the type modules
     for (IModule module : getNonResourceModules()) {

@@ -81,7 +81,7 @@ public class ModuleExporterUtils {
     if (new File(root).isDirectory()) {
       return true;
     }
-    
+
     // step 3: check the content
     try {
 

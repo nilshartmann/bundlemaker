@@ -12,6 +12,6 @@ package org.bundlemaker.core.analysis.rules;
 
 public enum Severity {
 
-	ERROR, ACCEPTABLE
-	
+  ERROR, ACCEPTABLE
+
 }

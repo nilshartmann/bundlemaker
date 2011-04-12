@@ -87,7 +87,7 @@ public class ProjectDescriptionStore {
     } else {
       iFile.setContents(in, true, false, null);
     }
-    
+
     try {
       in.close();
     } catch (IOException e) {

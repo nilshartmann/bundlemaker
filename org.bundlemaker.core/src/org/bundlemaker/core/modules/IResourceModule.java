@@ -39,7 +39,7 @@ public interface IResourceModule extends IResourceContainer, IModule {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   boolean containsSources();

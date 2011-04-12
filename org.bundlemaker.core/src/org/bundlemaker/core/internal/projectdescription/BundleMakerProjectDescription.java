@@ -137,7 +137,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
    * </p>
    * 
    * @param bundlemakerProject
-   * @throws CoreException 
+   * @throws CoreException
    */
   public void initialize(IBundleMakerProject bundlemakerProject) throws CoreException {
 
@@ -203,15 +203,15 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
   @Override
   public void addResourceContent(String binaryRoot, String sourceRoot) {
-    
+
     try {
-      
+
       // get the jar info
       JarInfo jarInfo = JarInfoService.extractJarInfo(VariableResolver.resolveVariable(binaryRoot));
 
       //
       addResourceContent(jarInfo.getName(), jarInfo.getVersion(), binaryRoot, sourceRoot);
-      
+
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -246,7 +246,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
       JarInfo jarInfo = JarInfoService.extractJarInfo(VariableResolver.resolveVariable(binaryRoot));
 
       addTypeContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot });
-      
+
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

@@ -75,7 +75,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     Assert.isNotNull(projectDescription);
 
     _name = name;
-    
+
     _projectDescription = projectDescription;
 
     _userAttributes = new HashMap<String, Object>();
@@ -91,7 +91,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   public final String getName() {
     return _name;
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -99,7 +99,6 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   public Map<String, Object> getUserAttributes() {
     return _userAttributes;
   }
-
 
   /**
    * {@inheritDoc}
