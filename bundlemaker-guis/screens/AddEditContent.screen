@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Window" x="24" y="25" width="619" height="445" text="Edit Content" measuredWidth="619" measuredHeight="445"/>
+  <widgets xsi:type="model:HLine" x="33" y="125" width="597" measuredWidth="597" measuredHeight="6"/>
+  <widgets xsi:type="model:Label" x="38" y="136" text="Location:" measuredWidth="57" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Combo" x="95" y="132" width="530" text="${project_loc:myProject}/lib/blubb" measuredWidth="530" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="461" y="203" width="163" text="Browse external archive..." measuredWidth="163" measuredHeight="27" link="AddExternalArchives.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="514" y="238" width="110" text="Variables..." measuredWidth="110" measuredHeight="27" link="SelectVariable.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="33" y="403" width="597" measuredWidth="597" measuredHeight="6"/>
+  <widgets xsi:type="model:Button" x="397" y="420" width="107" height="27" text="Finish" measuredWidth="107" measuredHeight="27" link="EditContent.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="511" y="420" width="107" height="27" text="Cancel" measuredWidth="107" measuredHeight="27">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Placeholder" x="555" y="57" width="75" height="66" measuredWidth="75" measuredHeight="66"/>
+  <widgets xsi:type="model:Label" x="40" y="66" text="Edit Content" measuredWidth="82" measuredHeight="25">
+    <font bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Text" x="45" y="91" width="510" height="34" text="Select a directory or an archive to add. " measuredWidth="510" measuredHeight="34">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="464" y="168" text="Browse external folder..." measuredWidth="160" measuredHeight="27">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="340" y="203" width="110" text="Browse archive..." measuredWidth="110" measuredHeight="27" link="AddArchives.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="340" y="168" width="109" text="Browse folder..." measuredWidth="109" measuredHeight="27">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Note" x="80" y="184" width="244" height="65" text="Workspace-locale content will be added with the ${project_loc:xyz} variable" measuredWidth="244" measuredHeight="65">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Arrow" x="247" y="156" width="53" height="29" measuredWidth="53" measuredHeight="29"/>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

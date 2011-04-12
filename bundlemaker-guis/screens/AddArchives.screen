@@ -1,7 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:Window" x="112" y="160" width="561" height="417" text="Add archives" measuredWidth="561" measuredHeight="417"/>
-  <widgets xsi:type="model:Image" x="122" y="186" measuredWidth="547" measuredHeight="382" src="FileDialogContent.png"/>
+  <widgets xsi:type="model:Window" x="25" y="25" width="483" height="536" text="Archive Selection" measuredWidth="483" measuredHeight="536"/>
+  <widgets xsi:type="model:Label" x="45" y="72" text="Choose the archives to be added to project description:" measuredWidth="311" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" x="47" y="100" width="418" measuredWidth="418" measuredHeight="25">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tree" x="45" y="124" width="443" height="329" text="bundlemaker-guis&#xA;com.db4o.osgi&#xA;-.settings&#xA;-bin&#xA;-lib&#xA;-META-INF&#xA;-src&#xA;-.classpath&#xA;-.project&#xA;-build.properties&#xA;org.bundlemaker.build&#xA;org.bundlemaker.com.springsource.util.osgi.internal&#xA;org.bundlemaker.core&#xA;org.bundlemaker.core.exporter.structure101&#xA;org.bundlemaker.core.feature&#xA;org.bundlemaker.core.osgi&#xA;org.bundlemaker.core.parser.bytecode&#xA;org.bundlemaker.core.parser.jdt&#xA;org.bundlemaker.core.parser.test&#xA;org.bundlemaker.core.store.db4o&#xA;org.bundlemaker.core.store.db4o.ptest&#xA;org.bundlemaker.core.test&#xA;org.bundlemaker.core.test.inspector&#xA;org.bundlemaker.core.transformations&#xA;org.bundlemaker.core.transformations.dsl&#xA;org.bundlemaker.core.transformations.dsl.ui&#xA;org.bundlemaker.core.ui&#xA;org.bundlemaker.doc&#xA;org.bundlemaker.drools.test&#xA;org.bundlemaker.itest&#xA;org.bundlemaker.itest.adhoc&#xA;org.bundlemaker.itest.eclipse&#xA;org.bundlemaker.itest.otto&#xA;org.bundlemaker.itest.spring&#xA;org.bundlemaker.org.drools.feature&#xA;org.bundlemaker.org.springsource.bundlor&#xA;org.bundlemaker.structure101&#xA;target.platform&#xA;" measuredWidth="443" measuredHeight="329" verticalScrollbar="true">
+    <items x="0" y="5" width="426" height="23" text="bundlemaker-guis"/>
+    <items x="0" y="28" width="426" height="23" text="com.db4o.osgi"/>
+    <items x="0" y="51" width="426" height="23" text="-.settings"/>
+    <items x="0" y="74" width="426" height="23" text="-bin"/>
+    <items x="0" y="97" width="426" height="23" text="-lib"/>
+    <items x="0" y="120" width="426" height="23" text="-META-INF"/>
+    <items x="0" y="143" width="426" height="23" text="-src"/>
+    <items x="0" y="166" width="426" height="23" text="-.classpath"/>
+    <items x="0" y="189" width="426" height="23" text="-.project"/>
+    <items x="0" y="212" width="426" height="23" text="-build.properties"/>
+    <items x="0" y="235" width="426" height="23" text="org.bundlemaker.build"/>
+    <items x="0" y="258" width="426" height="23" text="org.bundlemaker.com.springsource.util.osgi.internal"/>
+    <items x="0" y="281" width="426" height="23" text="org.bundlemaker.core"/>
+    <items x="0" y="304" width="426" height="23" text="org.bundlemaker.core.exporter.structure101"/>
+    <items x="0" y="327" width="426" height="23" text="org.bundlemaker.core.feature"/>
+    <items x="0" y="350" width="426" height="23" text="org.bundlemaker.core.osgi"/>
+    <items x="0" y="373" width="426" height="23" text="org.bundlemaker.core.parser.bytecode"/>
+    <items x="0" y="396" width="426" height="23" text="org.bundlemaker.core.parser.jdt"/>
+    <items x="0" y="419" width="426" height="23" text="org.bundlemaker.core.parser.test"/>
+    <items x="0" y="442" width="426" height="23" text="org.bundlemaker.core.store.db4o"/>
+    <items x="0" y="465" width="426" height="23" text="org.bundlemaker.core.store.db4o.ptest"/>
+    <items x="0" y="488" width="426" height="23" text="org.bundlemaker.core.test"/>
+    <items x="0" y="511" width="426" height="23" text="org.bundlemaker.core.test.inspector"/>
+    <items x="0" y="534" width="426" height="23" text="org.bundlemaker.core.transformations"/>
+    <items x="0" y="557" width="426" height="23" text="org.bundlemaker.core.transformations.dsl"/>
+    <items x="0" y="580" width="426" height="23" text="org.bundlemaker.core.transformations.dsl.ui"/>
+    <items x="0" y="603" width="426" height="23" text="org.bundlemaker.core.ui"/>
+    <items x="0" y="626" width="426" height="23" text="org.bundlemaker.doc"/>
+    <items x="0" y="649" width="426" height="23" text="org.bundlemaker.drools.test"/>
+    <items x="0" y="672" width="426" height="23" text="org.bundlemaker.itest"/>
+    <items x="0" y="695" width="426" height="23" text="org.bundlemaker.itest.adhoc"/>
+    <items x="0" y="718" width="426" height="23" text="org.bundlemaker.itest.eclipse"/>
+    <items x="0" y="741" width="426" height="23" text="org.bundlemaker.itest.otto"/>
+    <items x="0" y="764" width="426" height="23" text="org.bundlemaker.itest.spring"/>
+    <items x="0" y="787" width="426" height="23" text="org.bundlemaker.org.drools.feature"/>
+    <items x="0" y="810" width="426" height="23" text="org.bundlemaker.org.springsource.bundlor"/>
+    <items x="0" y="833" width="426" height="23" text="org.bundlemaker.structure101"/>
+    <items x="0" y="856" width="426" height="23" text="target.platform"/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="267" y="511" width="107" height="27" text="OK" measuredWidth="107" measuredHeight="27" state="disabled" link="AddEditContent.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="381" y="511" width="107" height="27" text="Cancel" measuredWidth="107" measuredHeight="27" link="AddEditContent.screen">
+    <font/>
+  </widgets>
   <hRuler/>
   <vRuler/>
   <font name="Comic Sans MS" size="8"/>
