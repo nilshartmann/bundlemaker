@@ -3,16 +3,13 @@
 
 <target name="BundleMaker Target">
 <locations>
-<location path="${project_loc:target.platform}/div" type="Directory"/>
+<location path="${project_loc:target.platform}/emf-2.6.1" type="Directory"/>
 <location path="${project_loc:target.platform}/bundlor-1.0.0.RELEASE" type="Directory"/>
-<location path="${project_loc:target.platform}/slf4j-1.5.10" type="Directory"/>
-<location path="${project_loc:target.platform}/miglayout-3.7.3.1" type="Directory"/>
 <location path="${eclipse_home}" type="Profile"/>
-<location path="${project_loc:target.platform}/AST-View" type="Directory"/>
+<location path="${project_loc:target.platform}/slf4j-1.5.10" type="Directory"/>
+<location path="${project_loc:target.platform}/xtext" type="Directory"/>
+<location path="${project_loc:target.platform}/test/easymock-3.0" type="Directory"/>
 <location path="${project_loc:target.platform}/drools-5.1.1" type="Directory"/>
-<location path="${project_loc:target.platform}/easymock-3.0" type="Directory"/>
-<location path="${project_loc:target.platform}/xtext/xtext" type="Directory"/>
-<location path="${project_loc:target.platform}/xtext/emf" type="Directory"/>
 </locations>
 <launcherArgs>
 <vmArgs>-Xms40m -Xmx256m</vmArgs>

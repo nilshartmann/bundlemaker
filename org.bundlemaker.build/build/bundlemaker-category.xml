@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.bundlemaker.core.feature_1.0.0.qualifier.jar" id="org.bundlemaker.core.feature" version="1.0.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>
+   <feature url="features/org.bundlemaker.org.drools.feature_5.1.1.jar" id="org.bundlemaker.org.drools.feature" version="5.1.1">
+      <category name="BundleMaker Dependencies"/>
+   </feature>
+   <feature url="features/org.bundlemaker.org.springsource.bundlor.feature_1.0.0.RELEASE.jar" id="org.bundlemaker.org.springsource.bundlor.feature" version="1.0.0.RELEASE">
+      <category name="BundleMaker Dependencies"/>
+   </feature>
+   <category-def name="BundleMaker" label="BundleMaker"/>
+   <category-def name="BundleMaker Dependencies" label="BundleMaker Dependencies"/>
+</site>
