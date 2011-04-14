@@ -36,9 +36,8 @@
 	<ant4eclipse:targetPlatform id="target.platform">
 		<location dir="${bundlemaker-workspace}/target.platform/bundlor-1.0.0.RELEASE" />
 		<location dir="${bundlemaker-workspace}/target.platform/drools-5.1.1" />
-		<location dir="${bundlemaker-workspace}/target.platform/emf-2.6.1" />
 		<location dir="${bundlemaker-workspace}/target.platform/slf4j-1.5.10" />
-		<location dir="${bundlemaker-workspace}/target.platform/xtext" />
+		<location dir="${bundlemaker-workspace}/target.platform/xtext-1.0.1" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 
@@ -69,7 +68,8 @@
 
 		<!-- -->
 		<createP2Repo eclipseDir="${eclipse.install.dir}"
-		              repositoryDir="${bundlemaker-deploy-dir}/bundlemaker"
+		              sourceDir="${bundlemaker-deploy-dir}/bundlemaker"
+		              repositoryDir="${bundlemaker-deploy-dir}/bundlemaker-repo"
 		              categoryDefinition="${basedir}/bundlemaker-category.xml" />
 
 	</target>
@@ -79,6 +79,7 @@
          = = = = = = = = = = = = = = = = = -->
 	<macrodef name="createP2Repo">
 		<attribute name="eclipseDir" />
+		<attribute name="sourceDir" />
 		<attribute name="repositoryDir" />
 		<attribute name="categoryDefinition" />
 		<sequential>
@@ -117,8 +118,9 @@
 				<arg value="-artifactRepository" />
 				<arg value="file://@{repositoryDir}" />
 				<arg value="-source" />
-				<arg value="@{repositoryDir}" />
+				<arg value="@{sourceDir}" />
 				<arg value="-compress" />
+				<arg value="-publishArtifacts" />
 			</java>
 
 			<!-- -->
