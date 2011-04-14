@@ -48,6 +48,11 @@
 		</dirset>
 	</ant4eclipse:workspaceDefinition>
 
+	<ant4eclipse:platformConfiguration id="win32.win32.x86"
+	                                   windowingSystem="win32"
+	                                   operatingSystem="win32"
+	                                   architecture="x86" />
+
 	<!-- ================================= 
           target: deploy-bundlemaker              
          ================================= -->
@@ -62,6 +67,7 @@
 		<buildFeature workspaceId="myWorkspace"
 		              projectName="org.bundlemaker.core.feature"
 		              targetPlatformId="target.platform"
+		              platformConfigurationId="win32.win32.x86"
 		              destination="${bundlemaker-deploy-dir}/bundlemaker"
 		              clearDestination="true"
 		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences" />
