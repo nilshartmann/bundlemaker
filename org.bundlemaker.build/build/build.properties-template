@@ -1,0 +1,7 @@
+# the jdk directory
+jdk16.dir=R:/software/jdk/jdk16
+
+# the eclipse install directory (used in the definition of the target platform)
+eclipse.install.dir=R:/software/ide/eclipse361
+
+configuration.dir=
