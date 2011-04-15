@@ -545,7 +545,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // throw new exception
     throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, String.format(
-        "BundleMakerProject must be in on of the following states: '%s', but current state is '%s'.",
+        "BundleMakerProject must be in one of the following states: '%s', but current state is '%s'.",
         Arrays.asList(state), getState())));
   }
 }
