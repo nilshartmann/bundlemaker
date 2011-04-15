@@ -116,6 +116,8 @@
 			<java failonerror="true"
 			      fork="true"
 			      jar="${equinox.launcher.jar.location}">
+				<arg value="-configuration" />
+				<arg value="${configuration.dir}" />
 				<arg value="-consolelog" />
 				<arg value="-application" />
 				<arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher" />
@@ -133,6 +135,8 @@
 			<java failonerror="true"
 			      fork="true"
 			      jar="${equinox.launcher.jar.location}">
+				<arg value="-configuration" />
+				<arg value="${configuration.dir}" />
 				<arg value="-consolelog" />
 				<arg value="-application" />
 				<arg value="org.eclipse.equinox.p2.publisher.CategoryPublisher" />
