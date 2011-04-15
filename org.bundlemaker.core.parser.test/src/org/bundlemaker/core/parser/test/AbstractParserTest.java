@@ -28,7 +28,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class AbstractParserTest {
+public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest {
 
   private static final String TEST_PROJECT_VERSION = "1.0.0";
 
@@ -85,14 +85,7 @@ public abstract class AbstractParserTest {
   @Test
   public void testParser() throws CoreException {
 
-    //
-    File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), this.getClass()
-        .getSimpleName());
-    Assert.assertTrue(testDataDirectory.isDirectory());
-
-    // create the project description
-    log("Adding project description...");
-    addProjectDescription(_bundleMakerProject, testDataDirectory);
+    addProjectDescription();
 
     // initialize the project
     log("Initializing project...");
@@ -118,49 +111,6 @@ public abstract class AbstractParserTest {
 
     //
     testResult(modularizedSystem, resourceModule);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @throws CoreException
-   */
-  protected void addProjectDescription(IBundleMakerProject bundleMakerProject, File directory) throws CoreException {
-
-    Assert.assertTrue(directory.isDirectory());
-
-    //
-    IBundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
-
-    // step 1:
-    projectDescription.clear();
-
-    // step 2: add the JRE
-    projectDescription.setJre(getDefaultVmName());
-
-    // step 3: add the source and classes
-    File classes = new File(directory, "classes");
-    Assert.assertTrue(classes.isDirectory());
-
-    File source = new File(directory, "src");
-    Assert.assertTrue(source.isDirectory());
-
-    projectDescription.addResourceContent(_testProjectName, TEST_PROJECT_VERSION, classes.getAbsolutePath(),
-        source.getAbsolutePath());
-
-    // step 4: process the class path entries
-    File libsDir = new File(directory, "libs");
-    if (libsDir.exists()) {
-      File[] jarFiles = libsDir.listFiles();
-      for (File externalJar : jarFiles) {
-        projectDescription.addResourceContent(externalJar.getAbsolutePath());
-      }
-    }
-
-    //
-    projectDescription.save();
   }
 
   /**
