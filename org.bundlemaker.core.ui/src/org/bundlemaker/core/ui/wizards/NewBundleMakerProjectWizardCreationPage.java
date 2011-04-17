@@ -10,22 +10,16 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.wizards;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.eclipse.jdt.launching.IVMInstall;
-import org.eclipse.jdt.launching.IVMInstallType;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.jdt.internal.debug.ui.jres.BuildJREDescriptor;
+import org.eclipse.jdt.internal.debug.ui.jres.JREsComboBlock;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 /**
@@ -37,10 +31,13 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
+@SuppressWarnings("restriction")
 public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCreationPage {
 
-  /** A combo box containing all JREs */
-  private Combo _jreCombo;
+  /**
+   * The block that allows selecting the JRE/Execution Environment
+   */
+  private JREsComboBlock _jreComboBlock;
 
   public NewBundleMakerProjectWizardCreationPage() {
     super("NewBundleMakerProjectWizardCreationPage");
@@ -61,6 +58,8 @@ public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCre
     // Create the JRE selection box
     createJreGroup(control);
 
+    // Pre-select default JRE
+    preselectJre();
   }
 
   /**
@@ -76,155 +75,61 @@ public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCre
     jreGroup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
     jreGroup.setLayout(new GridLayout(2, false));
 
-    // new JRE label
-    Label jreLabel = new Label(jreGroup, SWT.NONE);
-    jreLabel.setText("&JRE:");
-    jreLabel.setFont(parent.getFont());
-
-    // add JRE ComboBox
-    _jreCombo = new Combo(jreGroup, SWT.READ_ONLY);
-    GridData textData = new GridData(SWT.LEFT, SWT.CENTER, true, false);
-    textData.horizontalIndent = 20;
-    _jreCombo.setLayoutData(textData);
-    _jreCombo.setFont(parent.getFont());
-
-    // populate combo box with installed JREs
-    populateJreComboBox();
-
-  }
-
-  /**
-   * <p>
-   * Adds all installed JREs to the JRE combobox
-   * </p>
-   * 
-   */
-  private void populateJreComboBox() {
-    // Create a viewer for the JRE combo box
-    ComboViewer viewer = new ComboViewer(_jreCombo);
-
-    // Get all installed JRE descriptions
-    List<JreDescription> availableJreDescriptions = getInstalledJreDescriptions();
-
-    // Use an ArrayContentProvider
-    viewer.setContentProvider(ArrayContentProvider.getInstance());
-
-    // Set the label provider
-    viewer.setLabelProvider(new LabelProvider() {
-
-      @Override
-      public String getText(Object element) {
-        // use the JRE name as label inside the combo box
-        JreDescription jreDescription = (JreDescription) element;
-        return super.getText(jreDescription.getName());
+    _jreComboBlock = new JREsComboBlock(true);
+    _jreComboBlock.setDefaultJREDescriptor(new BuildJREDescriptor());
+    _jreComboBlock.setTitle("JRE");
+    _jreComboBlock.createControl(jreGroup);
+    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+    _jreComboBlock.getControl().setLayoutData(gd);
+    _jreComboBlock.addPropertyChangeListener(new IPropertyChangeListener() {
+      public void propertyChange(PropertyChangeEvent event) {
+        setErrorMessageFromStatus(_jreComboBlock.getStatus());
       }
     });
 
-    // set the input (list of all JREs)
-    viewer.setInput(availableJreDescriptions);
+  }
 
-    // pre-select the default JRE
-    for (JreDescription jreDescription : availableJreDescriptions) {
-      if (jreDescription.isDefaultJre()) {
-        viewer.setSelection(new StructuredSelection(jreDescription));
-        break;
-      }
+  /**
+   * Sets the message from given IStatus as the dialog's error message, if status is not OK. Otherwise sets error
+   * message to null.
+   * 
+   * @param status
+   */
+  private void setErrorMessageFromStatus(IStatus status) {
+    if (status == null || status.isOK()) {
+      setErrorMessage(null);
+    } else {
+      setErrorMessage(status.getMessage());
     }
   }
 
   /**
-   * 
-   * <p>
-   * Gets a list of {@link JreDescription JreDescriptions} of all installed JREs
-   * </p>
-   * 
-   * @return
+   * Initializes the JRE selection
    */
-  private List<JreDescription> getInstalledJreDescriptions() {
-    List<JreDescription> installedJres = new LinkedList<JreDescription>();
-
-    // Get default JreId
-    final String defaultJreId = JavaRuntime.getDefaultVMInstall().getId();
-
-    // Get all VM Install types
-    IVMInstallType[] types = JavaRuntime.getVMInstallTypes();
-
-    // Iterate over all VM-Types then over all installations of each type
-    for (int i = 0; i < types.length; i++) {
-      IVMInstallType type = types[i];
-
-      // Iterate over all vm installs
-      IVMInstall[] jres = type.getVMInstalls();
-      for (int j = 0; j < jres.length; j++) {
-        // Create JreDescription for VM
-        JreDescription jreDescription = new JreDescription(jres[j].getId(), jres[j].getName(), jres[j].getId().equals(
-            defaultJreId));
-
-        // add to result
-        installedJres.add(jreDescription);
-      }
-    }
-
-    // return the list of installed JREs
-    return installedJres;
-  }
-
-  /**
-   * <p>
-   * A description of an installed JRE
-   * </p>
-   * 
-   * @author Nils Hartmann (nils@nilshartmann.net)
-   * 
-   */
-  class JreDescription {
-    private final String  _id;
-
-    private final String  _name;
-
-    private final boolean _defaultJre;
-
-    public JreDescription(String id, String name, boolean defaultJre) {
-      super();
-      _id = id;
-      _name = name;
-      _defaultJre = defaultJre;
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @return the Id of the JRE
-     */
-    public String getId() {
-      return _id;
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @return the name of the JRE
-     */
-    public String getName() {
-      return _name;
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @return true if this is the default JRE
-     */
-    public boolean isDefaultJre() {
-      return _defaultJre;
-    }
+  protected void preselectJre() {
+    _jreComboBlock.setPath(JavaRuntime.newDefaultJREContainerPath());
   }
 
   public String getSelectedJreId() {
-    int selectionIndex = _jreCombo.getSelectionIndex();
-    String item = _jreCombo.getItem(selectionIndex);
-    return item;
+    return _jreComboBlock.getPath().toString();
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.ui.dialogs.WizardNewProjectCreationPage#validatePage()
+   */
+  @Override
+  protected boolean validatePage() {
+    if (!super.validatePage()) {
+      return false;
+    }
+
+    // Validate JRE selection
+    IStatus status = _jreComboBlock.getStatus();
+    setErrorMessageFromStatus(status);
+
+    return status.isOK();
+  }
+
 }
