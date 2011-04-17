@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Window" x="25" y="25" width="645" height="512" text="New BundleMaker Project" measuredWidth="645" measuredHeight="512"/>
+  <widgets xsi:type="model:HLine" x="25" y="113" width="645" measuredWidth="645" measuredHeight="6"/>
+  <widgets xsi:type="model:Label" x="46" y="138" text="Project name:" measuredWidth="78" measuredHeight="21">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" x="128" y="136" width="521" measuredWidth="521" measuredHeight="21">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Checkbox" x="46" y="172" text="Use default location" measuredWidth="128" measuredHeight="21" selected="true">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="46" y="203" text="Location:" measuredWidth="54" measuredHeight="21" state="disabled">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" x="104" y="200" width="442" text="/Users/nils/develop/bundlemaker/workspace" measuredWidth="442" measuredHeight="21" state="disabled">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="551" y="195" width="98" height="30" text="Browse..." measuredWidth="98" measuredHeight="30" state="disabled">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Group" x="41" y="237" width="613" height="120" text="JRE" measuredWidth="613" measuredHeight="120"/>
+  <widgets xsi:type="model:WidgetGroup" x="59" y="263" measuredWidth="577" measuredHeight="80">
+    <widgets xsi:type="model:RadioButton" y="2" text="Use an execution environment JRE:" measuredWidth="206" measuredHeight="21" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" x="345" width="232" text="JavaSE-1.6" measuredWidth="232" measuredHeight="21">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" y="31" text="Use a project specific JRE: " measuredWidth="161" measuredHeight="21">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" x="345" y="29" width="232" text="JVM Contents (MacOS X Default)" measuredWidth="232" measuredHeight="21" state="disabled">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" y="58" text="Use default JRE (currently 'JVM Contents (MacOS X Default)')" measuredWidth="337" measuredHeight="21">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" x="482" y="59" text="[Configure JREs...]" measuredWidth="94" measuredHeight="21">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="41" y="376" measuredWidth="613" measuredHeight="95">
+    <widgets xsi:type="model:Group" width="613" height="95" text="Working sets" measuredWidth="613" measuredHeight="95"/>
+    <widgets xsi:type="model:Checkbox" x="17" y="25" text="Add project to working sets" measuredWidth="170" measuredHeight="21">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" x="17" y="56" text="Working sets:" measuredWidth="78" measuredHeight="21" state="disabled">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" x="99" y="52" width="394" measuredWidth="394" measuredHeight="21" state="disabled">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" x="498" y="48" width="98" height="30" text="Select..." measuredWidth="98" measuredHeight="30" state="disabled">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="31" y="480" width="645" measuredWidth="645" measuredHeight="6"/>
+  <widgets xsi:type="model:Icon" x="48" y="499" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Button" x="261" y="493" width="98" height="30" text="&lt; Back" measuredWidth="98" measuredHeight="30" state="disabled">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="359" y="493" width="98" height="30" text="Next >" measuredWidth="98" measuredHeight="30" state="disabled">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="463" y="493" width="98" height="30" text="Cancel" measuredWidth="98" measuredHeight="30">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" x="567" y="493" width="98" height="30" text="Finish" measuredWidth="98" measuredHeight="30" link="ProjectOverview.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Placeholder" x="595" y="47" width="75" height="66" measuredWidth="75" measuredHeight="66"/>
+  <widgets xsi:type="model:Label" x="31" y="54" text="Create a BundleMaker Project" measuredWidth="172" measuredHeight="21">
+    <font bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Text" x="36" y="77" width="559" height="36" text="Enter project name and JRE" measuredWidth="559" measuredHeight="36">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Note" x="440" y="392" width="169" height="41" text="Working set selection not in first iteration" measuredWidth="169" measuredHeight="41">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

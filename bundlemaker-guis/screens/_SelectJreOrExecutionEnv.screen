@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Group" x="16" y="32" width="613" height="120" text="JRE" measuredWidth="613" measuredHeight="120"/>
+  <widgets xsi:type="model:RadioButton" x="34" y="60" text="Use an execution environment JRE:" measuredWidth="206" measuredHeight="21" selected="true">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Combo" x="379" y="58" width="232" text="JavaSE-1.6" measuredWidth="232" measuredHeight="21">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:RadioButton" x="34" y="89" text="Use a project specific JRE: " measuredWidth="161" measuredHeight="21">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Combo" x="379" y="87" width="232" text="JVM Contents (MacOS X Default)" measuredWidth="232" measuredHeight="21" state="disabled">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:RadioButton" x="34" y="116" text="Use default JRE (currently 'JVM Contents (MacOS X Default)')" measuredWidth="337" measuredHeight="21">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="516" y="117" text="[Configure JREs...]" measuredWidth="94" measuredHeight="21">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Note" x="60" y="227" text="see org.eclipse.jdt.internal.debug.ui.jres.JREsComboBlock" measuredWidth="318" measuredHeight="23">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

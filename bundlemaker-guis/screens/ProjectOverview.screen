@@ -1,138 +1,156 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
   <widgets xsi:type="model:HLine" x="416" y="227" width="471" measuredWidth="471" measuredHeight="6"/>
-  <widgets xsi:type="model:TabbedPane" x="406" y="128" width="489" height="705" text="{country-flag2}  spring.bundlemaker   {close}" measuredWidth="489" measuredHeight="705" selection="0">
-    <items x="10" y="0" width="175" height="30" text="{country-flag2}  spring.bundlemaker   {close}"/>
+  <widgets xsi:type="model:TabbedPane" x="406" y="32" width="489" height="801" text="{country-flag2}  spring.bundlemaker   {close}" measuredWidth="489" measuredHeight="801" selection="0">
+    <items x="10" y="0" width="132" height="24" text="{country-flag2}  spring.bundlemaker   {close}"/>
     <font/>
   </widgets>
-  <widgets xsi:type="model:TabbedPane" x="406" y="243" width="489" height="580" text="Content,Transformations" measuredWidth="489" measuredHeight="580" selection="0" position="bottom">
-    <items x="10" y="550" width="63" height="30" text="Content"/>
-    <items x="73" y="550" width="112" height="30" text="Transformations"/>
+  <widgets xsi:type="model:TabbedPane" x="406" y="128" width="489" height="695" text="Content,Transformations" measuredWidth="489" measuredHeight="695" selection="0" position="bottom">
+    <items x="10" y="676" width="49" height="19" text="Content"/>
+    <items x="59" y="676" width="81" height="19" text="Transformations"/>
     <font/>
   </widgets>
-  <widgets xsi:type="model:WidgetGroup" x="416" y="161" measuredWidth="303" measuredHeight="66">
-    <widgets xsi:type="model:WidgetGroup" y="39" measuredWidth="303" measuredHeight="27">
-      <widgets xsi:type="model:Label" y="1" text="BundleMaker project state:" measuredWidth="158" measuredHeight="25">
+  <widgets xsi:type="model:WidgetGroup" x="416" y="61" measuredWidth="293" measuredHeight="60">
+    <widgets xsi:type="model:WidgetGroup" y="39" measuredWidth="293" measuredHeight="21">
+      <widgets xsi:type="model:Label" y="1" text="BundleMaker project state:" measuredWidth="105" measuredHeight="19">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Label" x="147" y="1" text="initialized" measuredWidth="78" measuredHeight="25" textAlignment="Center" icon="circled-minus (small)">
+      <widgets xsi:type="model:Label" x="147" y="1" text="initialized" measuredWidth="57" measuredHeight="19" textAlignment="Center" icon="circled-minus (small)">
         <font/>
       </widgets>
-      <widgets xsi:type="model:Button" x="232" text="Parse" measuredWidth="71" measuredHeight="27" icon="refresh (small)">
+      <widgets xsi:type="model:Button" x="232" text="Parse" measuredWidth="61" measuredHeight="21" icon="refresh (small)">
         <font/>
       </widgets>
     </widgets>
-    <widgets xsi:type="model:WidgetGroup" measuredWidth="286" measuredHeight="40">
-      <widgets xsi:type="model:Label" x="78" y="3" text="Bundlemaker project" measuredWidth="208" measuredHeight="37">
+    <widgets xsi:type="model:WidgetGroup" measuredWidth="220" measuredHeight="40">
+      <widgets xsi:type="model:Label" x="78" y="3" text="Bundlemaker project" measuredWidth="142" measuredHeight="27">
         <font size="14"/>
       </widgets>
       <widgets xsi:type="model:Image" width="63" height="40" measuredWidth="63" measuredHeight="40" src="../assets/bundlemaker-icon.png"/>
     </widgets>
   </widgets>
-  <widgets xsi:type="model:Popup" x="144" y="269" text="{edit} &amp;Edit&#xA;{delete} &amp;Remove&#xA;---&#xA;Add &amp;binary archives...&#xA;Add binary &amp;folder...&#xA;Add &amp;sources archives...&#xA;Add source f&amp;older...&#xA;" measuredWidth="155" measuredHeight="166">
-    <items link="EditContent.screen" x="0" y="2" width="155" height="25" text="{edit} &amp;Edit"/>
-    <items x="0" y="27" width="155" height="25" text="{delete} &amp;Remove"/>
-    <items x="0" y="52" width="155" height="12" text="---"/>
-    <items link="AddArchives.screen" x="0" y="64" width="155" height="25" text="Add &amp;binary archives..."/>
-    <items x="0" y="89" width="155" height="25" text="Add binary &amp;folder..."/>
-    <items link="AddArchives.screen" x="0" y="114" width="155" height="25" text="Add &amp;sources archives..."/>
-    <items x="0" y="139" width="155" height="25" text="Add source f&amp;older..."/>
+  <widgets xsi:type="model:Popup" x="184" y="271" width="95" text="{edit} &amp;Edit&#xA;{delete} &amp;Remove" measuredWidth="95" measuredHeight="48">
+    <items link="EditContent.screen" x="0" y="2" width="95" height="22" text="{edit} &amp;Edit"/>
+    <items x="0" y="24" width="95" height="22" text="{delete} &amp;Remove"/>
   </widgets>
-  <widgets xsi:type="model:Note" x="96" y="449" width="228" height="74" text="*Contextmenu*, that will be opened when a line with name and version of a ResourceContent or TypeContent is selected." measuredWidth="228" measuredHeight="74">
+  <widgets xsi:type="model:Note" x="156" y="320" width="132" height="74" text="*Contextmenu*, that will be opened when a line with name and version of a ResourceContent or TypeContent is selected." measuredWidth="132" measuredHeight="74">
     <font/>
   </widgets>
   <widgets xsi:type="model:Note" x="904" y="304" width="279" height="433" text="*&quot;Edit&quot;-Buttons:*&#xD;&#xA;Allows the modification of the selected ResourceContent resp. TypeContent in a specialized dialog (EditContentDialog). This is same as using the context menu.&#xD;&#xA;&#xD;&#xA;*&quot;Add&quot;-Buttons:*&#xD;&#xA;Adds a new content (opens AddContentDialog dialog)&#xD;&#xA;&#xD;&#xA; *&quot;Smart Add&quot; Buttons*: &#xD;&#xA; &quot;Intelligent&quot; adding of a set of Resourcen/Types. This uses the &#xD;&#xA;IBundleProjectDescription.addResourceContent(String)) method. The selected jar files are added to the tree. &#xD;&#xA;&#xD;&#xA;*&quot;Remove&quot; Buttons*:&#xD;&#xA;removes the selected entries:&#xD;&#xA;** from the IBundleMakerProjectDescription (when clicked while a Resource- or TypeContent is selected).&#xD;&#xA;** from IFileBasedContent when a folder or jar file is selected" measuredWidth="279" measuredHeight="433" textAlignment="Left">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Callout" x="192" y="269" text="1" measuredWidth="26" measuredHeight="26" link="EditContent.screen">
+  <widgets xsi:type="model:Callout" x="192" y="269" text="1" measuredWidth="21" measuredHeight="21" link="EditContent.screen">
     <font bold="true"/>
   </widgets>
-  <widgets xsi:type="model:Label" x="416" y="253" text="{desc} *Resources:*" measuredWidth="94" measuredHeight="27">
+  <widgets xsi:type="model:Label" x="416" y="253" text="{desc} *Resources:*" measuredWidth="72" measuredHeight="24">
     <font size="9" bold="true"/>
   </widgets>
-  <widgets xsi:type="model:Label" x="416" y="276" width="449" measuredWidth="449" measuredHeight="25">
+  <widgets xsi:type="model:Label" x="416" y="276" width="449" measuredWidth="449" measuredHeight="19">
     <font/>
   </widgets>
   <widgets xsi:type="model:Text" x="420" y="276" width="463" height="37" text="With resources you specify the content that will be parsed, transformed and exported by BundleMaker. Comparable with source files in a Java project." measuredWidth="463" measuredHeight="37">
     <font/>
   </widgets>
   <widgets xsi:type="model:Tree" x="420" y="312" width="309" height="200" text="[v] Spring \[2.5.6\]&#xA;-[>] r:\spring\classes&#xA;-[>] r:\spring\sources&#xA;-spring-patch.jar&#xA;-spring-patch-sources.zip&#xA;[v] Hibernate \[3.5.1\]&#xA;-hibernate-3.5.1.jar&#xA;[>] EclipseLink \[2.0.1RC1\]&#xA;[>] Quartz Scheduler \[1.2.3\]" measuredWidth="309" measuredHeight="200" value="5" verticalScrollbar="true" alpha="64" selection="">
-    <items x="0" y="5" width="292" height="23" text="[v] Spring \[2.5.6\]"/>
-    <items x="0" y="28" width="292" height="23" text="-[>] r:\spring\classes"/>
-    <items x="0" y="51" width="292" height="23" text="-[>] r:\spring\sources"/>
-    <items x="0" y="74" width="292" height="23" text="-spring-patch.jar"/>
-    <items x="0" y="97" width="292" height="23" text="-spring-patch-sources.zip"/>
-    <items x="0" y="120" width="292" height="23" text="[v] Hibernate \[3.5.1\]"/>
-    <items x="0" y="143" width="292" height="23" text="-hibernate-3.5.1.jar"/>
-    <items x="0" y="166" width="292" height="23" text="[>] EclipseLink \[2.0.1RC1\]"/>
-    <items x="0" y="189" width="292" height="23" text="[>] Quartz Scheduler \[1.2.3\]"/>
+    <items x="0" y="5" width="292" height="20" text="[v] Spring \[2.5.6\]"/>
+    <items x="0" y="25" width="292" height="20" text="-[>] r:\spring\classes"/>
+    <items x="0" y="45" width="292" height="20" text="-[>] r:\spring\sources"/>
+    <items x="0" y="65" width="292" height="20" text="-spring-patch.jar"/>
+    <items x="0" y="85" width="292" height="20" text="-spring-patch-sources.zip"/>
+    <items x="0" y="105" width="292" height="20" text="[v] Hibernate \[3.5.1\]"/>
+    <items x="0" y="125" width="292" height="20" text="-hibernate-3.5.1.jar"/>
+    <items x="0" y="145" width="292" height="20" text="[>] EclipseLink \[2.0.1RC1\]"/>
+    <items x="0" y="165" width="292" height="20" text="[>] Quartz Scheduler \[1.2.3\]"/>
   </widgets>
   <widgets xsi:type="model:HLine" x="420" y="520" width="465" measuredWidth="465" measuredHeight="6"/>
-  <widgets xsi:type="model:Label" x="420" y="529" text="{desc} *Types:*" measuredWidth="65" measuredHeight="24">
+  <widgets xsi:type="model:Label" x="420" y="529" text="{desc} *Types:*" measuredWidth="49" measuredHeight="24">
     <font bold="true"/>
   </widgets>
   <widgets xsi:type="model:Text" x="424" y="552" width="463" height="49" text="With types you specify the dependencies of your resources. Types will _not_ be parsed, transformed or exported. Comparable with the binary dependencies specified on the classpath of a Java project." measuredWidth="463" measuredHeight="49">
     <font/>
   </widgets>
   <widgets xsi:type="model:Tree" x="424" y="600" width="305" height="186" text="[v] Log4j \[1.4.0\]&#xA;-log4j.jar&#xA;[v] Apache Logging \[2.0.0\]&#xA;-apache-logging-2.0.0.jar&#xA;-apache-logging-spi-2.0.0.jar&#xA;[>] Apache Commons Collections \[1.5.0\]&#xA;" measuredWidth="305" measuredHeight="186" value="5" verticalScrollbar="true" alpha="64" selection="">
-    <items x="0" y="5" width="288" height="23" text="[v] Log4j \[1.4.0\]"/>
-    <items x="0" y="28" width="288" height="23" text="-log4j.jar"/>
-    <items x="0" y="51" width="288" height="23" text="[v] Apache Logging \[2.0.0\]"/>
-    <items x="0" y="74" width="288" height="23" text="-apache-logging-2.0.0.jar"/>
-    <items x="0" y="97" width="288" height="23" text="-apache-logging-spi-2.0.0.jar"/>
-    <items x="0" y="120" width="288" height="23" text="[>] Apache Commons Collections \[1.5.0\]"/>
+    <items x="0" y="5" width="288" height="20" text="[v] Log4j \[1.4.0\]"/>
+    <items x="0" y="25" width="288" height="20" text="-log4j.jar"/>
+    <items x="0" y="45" width="288" height="20" text="[v] Apache Logging \[2.0.0\]"/>
+    <items x="0" y="65" width="288" height="20" text="-apache-logging-2.0.0.jar"/>
+    <items x="0" y="85" width="288" height="20" text="-apache-logging-spi-2.0.0.jar"/>
+    <items x="0" y="105" width="288" height="20" text="[>] Apache Commons Collections \[1.5.0\]"/>
   </widgets>
   <widgets xsi:type="model:Note" x="156" y="649" width="185" height="87" text="*Contextmenue* on a file/older: &#xD;&#xA;- *Remove* -> same as Remove *Button* (s. right side.)&#xD;&#xA;" measuredWidth="185" measuredHeight="87" textAlignment="Left">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Popup" x="144" y="608" text="{delete} &amp;Remove, Del&#xA;" measuredWidth="128" measuredHeight="29">
-    <items x="0" y="2" width="128" height="25" text="{delete} &amp;Remove, Del"/>
+  <widgets xsi:type="model:Popup" x="144" y="608" text="{delete} &amp;Remove, Del&#xA;" measuredWidth="107" measuredHeight="26">
+    <items x="0" y="2" width="107" height="22" text="{delete} &amp;Remove, Del"/>
   </widgets>
   <widgets xsi:type="model:Arrow" x="296" y="352" width="139" height="267" measuredWidth="139" measuredHeight="267"/>
   <widgets xsi:type="model:Arrow" x="340" y="672" width="101" height="16" measuredWidth="101" measuredHeight="16"/>
-  <widgets xsi:type="model:Note" x="232" y="72" text="ProjectOverview - using two separated  tree views" measuredWidth="292" measuredHeight="27">
+  <widgets xsi:type="model:Note" x="98" y="61" text="ProjectOverview - using two separated  tree views" measuredWidth="190" measuredHeight="21">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Note" x="144" y="120" width="225" height="124" text="Both sections *Resources* and *Types* are *expandable*. (see on the 'Dependencies'-Tab of the PDE Manifest Editor the section 'Automated Management of Dependencies')" measuredWidth="225" measuredHeight="124">
+  <widgets xsi:type="model:Note" x="144" y="120" width="225" height="124" text="Sections *JRE*, *Resources* and *Types* are *expandable*. (see on the 'Dependencies'-Tab of the PDE Manifest Editor the section 'Automated Management of Dependencies')" measuredWidth="225" measuredHeight="124">
     <font/>
   </widgets>
   <widgets xsi:type="model:Arrow" x="304" y="328" width="121" height="16" measuredWidth="121" measuredHeight="16"/>
   <widgets xsi:type="model:Arrow" x="320" y="224" width="97" height="35" measuredWidth="97" measuredHeight="35"/>
-  <widgets xsi:type="model:ScratchOut" x="144" y="328" width="153" height="107" measuredWidth="153" measuredHeight="107"/>
-  <widgets xsi:type="model:WidgetGroup" x="736" y="312" measuredWidth="147" measuredHeight="153">
-    <widgets xsi:type="model:Button" y="64" width="147" text="&amp;Add archives..." measuredWidth="147" measuredHeight="27">
+  <widgets xsi:type="model:WidgetGroup" x="736" y="312" measuredWidth="147" measuredHeight="147">
+    <widgets xsi:type="model:Button" y="64" width="147" text="&amp;Add archives..." measuredWidth="147" measuredHeight="21">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" y="32" width="147" text="Add..." measuredWidth="147" measuredHeight="27" link="EditContent.screen">
+    <widgets xsi:type="model:Button" y="32" width="147" text="Add..." measuredWidth="147" measuredHeight="21" link="EditContent.screen">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" y="126" width="147" text="&amp;Remove" measuredWidth="147" measuredHeight="27">
+    <widgets xsi:type="model:Button" y="126" width="147" text="&amp;Remove" measuredWidth="147" measuredHeight="21">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" width="147" text="Edit..." measuredWidth="147" measuredHeight="27" link="EditContent.screen">
+    <widgets xsi:type="model:Button" width="147" text="Edit..." measuredWidth="147" measuredHeight="21" link="EditContent.screen">
       <font/>
     </widgets>
-    <widgets xsi:type="model:Button" y="96" width="147" text="&amp;Add external archives..." measuredWidth="147" measuredHeight="27">
-      <font/>
-    </widgets>
-  </widgets>
-  <widgets xsi:type="model:WidgetGroup" x="736" y="602" measuredWidth="147" measuredHeight="153">
-    <widgets xsi:type="model:Button" y="64" width="147" text="&amp;Add archives..." measuredWidth="147" measuredHeight="27">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Button" y="32" width="147" text="Add..." measuredWidth="147" measuredHeight="27" link="EditContent.screen">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Button" y="126" width="147" text="&amp;Remove" measuredWidth="147" measuredHeight="27">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Button" width="147" text="Edit..." measuredWidth="147" measuredHeight="27" link="EditContent.screen">
-      <font/>
-    </widgets>
-    <widgets xsi:type="model:Button" y="96" width="147" text="&amp;Add external archives..." measuredWidth="147" measuredHeight="27">
+    <widgets xsi:type="model:Button" y="96" width="147" text="&amp;Add external archives..." measuredWidth="147" measuredHeight="21">
       <font/>
     </widgets>
   </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="736" y="602" measuredWidth="147" measuredHeight="147">
+    <widgets xsi:type="model:Button" y="64" width="147" text="&amp;Add archives..." measuredWidth="147" measuredHeight="21">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" y="32" width="147" text="Add..." measuredWidth="147" measuredHeight="21" link="EditContent.screen">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" y="126" width="147" text="&amp;Remove" measuredWidth="147" measuredHeight="21">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" width="147" text="Edit..." measuredWidth="147" measuredHeight="21" link="EditContent.screen">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Button" y="96" width="147" text="&amp;Add external archives..." measuredWidth="147" measuredHeight="21">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Label" x="416" y="138" text="{desc} *JRE:*" measuredWidth="47" measuredHeight="24">
+    <font size="9" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="420" y="163" measuredWidth="467" measuredHeight="78">
+    <widgets xsi:type="model:RadioButton" text="Use an execution environment JRE:" measuredWidth="146" measuredHeight="19" selected="true">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" x="235" width="232" text="JavaSE-1.6" measuredWidth="232" measuredHeight="19">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" y="29" text="Use a project specific JRE: " measuredWidth="120" measuredHeight="19">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Combo" x="235" y="29" width="232" text="JVM Contents (MacOS X Default)" measuredWidth="232" measuredHeight="19" state="disabled">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:RadioButton" y="56" text="Use default JRE (currently 'JVM Contents (MacOS X Default)')" measuredWidth="255" measuredHeight="19">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Label" x="372" y="59" text="[Configure JREs...]" measuredWidth="67" measuredHeight="19">
+      <font/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="416" y="243" width="465" measuredWidth="465" measuredHeight="6"/>
   <hRuler/>
   <vRuler>
     <guides position="449"/>
