@@ -37,6 +37,7 @@ import org.bundlemaker.core.internal.transformation.BasicProjectContentTransform
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -295,6 +296,28 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // set the project state
     _projectState = BundleMakerProjectState.DISPOSED;
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  @Override
+  public final List<IResource> getSourceResources() {
+    return _projectDescription.getSourceResources();
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  @Override
+  public final List<IResource> getBinaryResources() {
+    return _projectDescription.getBinaryResources();
   }
 
   /**

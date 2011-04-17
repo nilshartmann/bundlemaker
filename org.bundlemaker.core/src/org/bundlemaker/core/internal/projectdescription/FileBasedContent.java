@@ -190,7 +190,7 @@ public class FileBasedContent implements IFileBasedContent {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
+  public void initialize(BundleMakerProjectDescription projectDescription) throws CoreException {
 
     // return if content already is initialized
     if (_isInitialized) {
@@ -198,6 +198,8 @@ public class FileBasedContent implements IFileBasedContent {
     }
 
     if (isResourceContent()) {
+
+      MessageDigestGenerator generator = new MessageDigestGenerator();
 
       // add the binary resources
       for (IPath root : _binaryPaths) {
@@ -209,6 +211,8 @@ public class FileBasedContent implements IFileBasedContent {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
+          generator.getMessageDigest(root.toFile(), child);
+          projectDescription.addBinaryResource(resourceStandin);
 
           // add the resource
           _resourceContent.getModifiableBinaryResources().add(resourceStandin);
@@ -221,12 +225,16 @@ public class FileBasedContent implements IFileBasedContent {
         // get the root
         String rootPath = root.toString();
 
+        //
         rootPath = VariableResolver.resolveVariable(root).getAbsolutePath();
 
+        //
         for (String child : FileUtils.getAllChildren(new File(rootPath))) {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
+          generator.getMessageDigest(root.toFile(), child);
+          projectDescription.addSourceResource(resourceStandin);
 
           // add the resource
           _resourceContent.getModifiableSourceResources().add(resourceStandin);

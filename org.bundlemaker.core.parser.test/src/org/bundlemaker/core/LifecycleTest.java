@@ -34,6 +34,10 @@ public class LifecycleTest extends AbstractBundleMakerProjectTest {
     getBundleMakerProject().initialize(new ProgressMonitor());
     assertEquals(BundleMakerProjectState.INITIALIZED, getBundleMakerProject().getState());
 
+    // assert resource list
+    assertEquals(2, getBundleMakerProject().getBinaryResources().size());
+    assertEquals(2, getBundleMakerProject().getSourceResources().size());
+
     //
     getBundleMakerProject().parse(new ProgressMonitor(), true);
     assertEquals(BundleMakerProjectState.PARSED, getBundleMakerProject().getState());
