@@ -59,6 +59,14 @@ public interface IResourceKey {
    * 
    * @return
    */
+  byte[] getHashvalue();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   String getDirectory();
 
   /**

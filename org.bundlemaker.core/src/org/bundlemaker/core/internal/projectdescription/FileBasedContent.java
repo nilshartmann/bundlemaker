@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -211,7 +210,7 @@ public class FileBasedContent implements IFileBasedContent {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
-          generator.getMessageDigest(root.toFile(), child);
+          resourceStandin.setHashvalue(generator.getMessageDigest(root.toFile(), child));
           projectDescription.addBinaryResource(resourceStandin);
 
           // add the resource
@@ -233,7 +232,7 @@ public class FileBasedContent implements IFileBasedContent {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
-          generator.getMessageDigest(root.toFile(), child);
+          resourceStandin.setHashvalue(generator.getMessageDigest(root.toFile(), child));
           projectDescription.addSourceResource(resourceStandin);
 
           // add the resource
