@@ -21,6 +21,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResourceStatus;
@@ -30,13 +31,18 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
@@ -51,16 +57,23 @@ import org.eclipse.ui.statushandlers.StatusManager;
  */
 public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 
+  /**
+   * The project that has been created after the wizard has been successfully completed
+   */
+  private IProject   _newProject;
+
+  private IWorkbench _workbench;
+
   public NewBundleMakerProjectWizard() {
 
   }
 
   @Override
   public void init(IWorkbench workbench, IStructuredSelection selection) {
+    _workbench = workbench;
     setNeedsProgressMonitor(true);
     setWindowTitle("New Bundlemaker Project");
     setDefaultPageImageDescriptor(UIImages.BUNDLEMAKER_ICON.getImageDescriptor());
-
   }
 
   NewBundleMakerProjectWizardCreationPage mainPage;
@@ -78,19 +91,19 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
   public boolean performFinish() {
     createNewProject();
 
-    if (newProject == null) {
+    if (_newProject == null) {
       return false;
     }
 
+    // open the bundlemaker project description editor
+    openProjectDescriptionEditor(_newProject);
     return true;
 
   }
 
-  IProject newProject;
-
   private IProject createNewProject() {
-    if (newProject != null) {
-      return newProject;
+    if (_newProject != null) {
+      return _newProject;
     }
 
     // get a project handle
@@ -171,8 +184,28 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 
     }
 
-    newProject = newProjectHandle;
+    _newProject = newProjectHandle;
 
-    return newProject;
+    return _newProject;
+  }
+
+  /**
+   * Opens the BundleMaker project description editor for the specified project
+   * 
+   * @param project
+   */
+  private void openProjectDescriptionEditor(IProject project) {
+    IFile iFile = _newProject.getProject().getFile(
+        new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
+
+    IWorkbenchPage activePage = _workbench.getActiveWorkbenchWindow().getActivePage();
+
+    IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(iFile.getName());
+    try {
+      activePage.openEditor(new FileEditorInput(iFile), desc.getId());
+    } catch (Exception ex) {
+      BundleMakerUiUtils.logError("Could not open editor for " + iFile.getProjectRelativePath(), ex);
+    }
+
   }
 }
