@@ -11,10 +11,14 @@
 package org.bundlemaker.core.osgi.exporter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.helper.ManifestCreatorHelper;
 import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
@@ -41,187 +45,209 @@ import com.springsource.util.parser.manifest.ManifestContents;
  */
 public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
-	/** - */
-	private CycleAwareGenericCache _manifestCache;
+  /** - */
+  private CycleAwareGenericCache             _manifestCache;
 
-	/** - */
-	private ManifestContents _manifestContents;
+  /** - */
+  private ManifestContents                   _manifestContents;
 
-	/** - */
-	private IBundleManifestCreator _creator;
+  /** - */
+  private IBundleManifestCreator             _creator;
 
-	/** the root directory for all templates */
-	private File _templateRootDirectory;
+  /** the root directory for all templates */
+  private File                               _templateRootDirectory;
 
-	/** - */
-	private IManifestPreferences _manifestPreferences;
+  /** - */
+  private IManifestPreferences               _manifestPreferences;
 
-	/**
-	 * <p>
-	 * Creates a new instance of type {@link AbstractManifestAwareExporter}.
-	 * </p>
-	 */
-	public AbstractManifestAwareExporter() {
+  /** - */
+  private List<IManifestContentsInterceptor> _interceptors;
 
-		// TODO
-		_creator = new DroolsBasedBundleManifestCreator();
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractManifestAwareExporter}.
+   * </p>
+   */
+  public AbstractManifestAwareExporter() {
 
-		//
-		_manifestCache = new CycleAwareGenericCache();
-	}
+    // TODO
+    _creator = new DroolsBasedBundleManifestCreator();
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param templateRootDirectory
-	 */
-	public final void setTemplateRootDirectory(File templateRootDirectory) {
-		Assert.isNotNull(templateRootDirectory);
-		Assert.isTrue(templateRootDirectory.isDirectory());
+    //
+    _manifestCache = new CycleAwareGenericCache();
 
-		_templateRootDirectory = templateRootDirectory;
-	}
+    //
+    _interceptors = new ArrayList<IManifestContentsInterceptor>();
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param manifestPreferences
-	 */
-	public void setManifestPreferences(IManifestPreferences manifestPreferences) {
-		Assert.isNotNull(manifestPreferences);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final List<IManifestContentsInterceptor> getInterceptors() {
+    return _interceptors;
+  }
 
-		_manifestPreferences = manifestPreferences;
-	}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param templateRootDirectory
+   */
+  public final void setTemplateRootDirectory(File templateRootDirectory) {
+    Assert.isNotNull(templateRootDirectory);
+    Assert.isTrue(templateRootDirectory.isDirectory());
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	public ManifestContents getManifestContents() {
-		return _manifestContents;
-	}
+    _templateRootDirectory = templateRootDirectory;
+  }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void preExportModule() throws CoreException {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param manifestPreferences
+   */
+  public void setManifestPreferences(IManifestPreferences manifestPreferences) {
+    Assert.isNotNull(manifestPreferences);
 
-		// call super
-		super.preExportModule();
+    _manifestPreferences = manifestPreferences;
+  }
 
-		// get the manifest contents
-		_manifestCache.clearCycleSet();
-		_manifestContents = _manifestCache.getOrCreate(getCurrentModule());
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public ManifestContents getManifestContents() {
+    return _manifestContents;
+  }
 
-		// check the manifest
-		try {
-			StateObjectFactory.defaultFactory.createBundleDescription(null,
-					ManifestUtils.convertManifest(ManifestUtils
-							.toManifest(_manifestContents)), "internal", 1);
-		} catch (BundleException e) {
-			// TODO
-			e.printStackTrace();
-			throw new CoreException(new Status(IStatus.ERROR, "", ""));
-		}
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void preExportModule() throws CoreException {
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected String getCurrentModuleTemplateDirectory() {
+    // call super
+    super.preExportModule();
 
-		// TODO
-		ManifestCreatorHelper helper = new ManifestCreatorHelper(
-				getCurrentModularizedSystem(), getCurrentModule(),
-				getCurrentContext(), _templateRootDirectory, null, _creator,
-				_manifestPreferences);
+    // get the manifest contents
+    _manifestCache.clearCycleSet();
+    _manifestContents = _manifestCache.getOrCreate(getCurrentModule());
 
-		return helper.getModuleTemplateDirectory() != null ? helper
-				.getModuleTemplateDirectory().getAbsolutePath() : null;
-	}
+    // check the manifest
+    try {
+      StateObjectFactory.defaultFactory.createBundleDescription(null,
+          ManifestUtils.convertManifest(ManifestUtils.toManifest(_manifestContents)), "internal", 1);
+    } catch (BundleException e) {
+      // TODO
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR, "", ""));
+    }
+  }
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @return
-	 */
-	protected boolean hasCurrentModuleTemplateDirectory() {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected String getCurrentModuleTemplateDirectory() {
 
-		// TODO
-		ManifestCreatorHelper helper = new ManifestCreatorHelper(
-				getCurrentModularizedSystem(), getCurrentModule(),
-				getCurrentContext(), _templateRootDirectory, null, _creator,
-				_manifestPreferences);
+    // TODO
+    ManifestCreatorHelper helper = new ManifestCreatorHelper(getCurrentModularizedSystem(), getCurrentModule(),
+        getCurrentContext(), _templateRootDirectory, null, _creator, _manifestPreferences);
 
-		return helper.getModuleTemplateDirectory() != null
-				&& helper.getModuleTemplateDirectory().exists();
-	}
+    return helper.getModuleTemplateDirectory() != null ? helper.getModuleTemplateDirectory().getAbsolutePath() : null;
+  }
 
-	/**
-	 * @author P200329
-	 * 
-	 */
-	private final class CycleAwareGenericCache extends
-			GenericCache<IResourceModule, ManifestContents> {
-		//
-		private Set<IResourceModule> _hostModules = new HashSet<IResourceModule>();
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected boolean hasCurrentModuleTemplateDirectory() {
 
-		public void clearCycleSet() {
-			_hostModules.clear();
-		}
+    // TODO
+    ManifestCreatorHelper helper = new ManifestCreatorHelper(getCurrentModularizedSystem(), getCurrentModule(),
+        getCurrentContext(), _templateRootDirectory, null, _creator, _manifestPreferences);
 
-		@Override
-		protected ManifestContents create(IResourceModule resourceModule) {
+    return helper.getModuleTemplateDirectory() != null && helper.getModuleTemplateDirectory().exists();
+  }
 
-			//
-			ManifestContents hostManifestContents = null;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param manifestContents
+   */
+  private void executeInterceptors(ManifestContents manifestContents, IModularizedSystem modularizedSystem,
+      IModule module) {
 
-			if (ManifestUtils.isFragment(resourceModule)) {
+    //
+    for (IManifestContentsInterceptor interceptor : _interceptors) {
+      
+      //
+      interceptor.manipulateManifestContents(manifestContents, modularizedSystem, module);
+    }
+  }
 
-				//
-				IResourceModule hostModule = (IResourceModule) ManifestUtils
-						.getFragmentHost(resourceModule);
+  /**
+   * @author P200329
+   * 
+   */
+  private final class CycleAwareGenericCache extends GenericCache<IResourceModule, ManifestContents> {
+    //
+    private Set<IResourceModule> _hostModules = new HashSet<IResourceModule>();
 
-				if (!hostModule.equals(resourceModule)) {
+    public void clearCycleSet() {
+      _hostModules.clear();
+    }
 
-					//
-					if (_hostModules.contains(hostModule)) {
-						// TODO
-						throw new RuntimeException("CycleException "
-								+ _hostModules);
-					} else {
-						_hostModules.add(hostModule);
-						hostManifestContents = this.getOrCreate(hostModule);
-					}
-				}
-			}
+    @Override
+    protected ManifestContents create(IResourceModule resourceModule) {
 
-			//
-			ManifestCreatorHelper helper = new ManifestCreatorHelper(
-					getCurrentModularizedSystem(), resourceModule,
-					getCurrentContext(), _templateRootDirectory,
-					hostManifestContents, _creator, _manifestPreferences);
+      //
+      ManifestContents hostManifestContents = null;
 
-			//
-			ManifestContents manifestContents = helper.createManifest();
+      if (ManifestUtils.isFragment(resourceModule)) {
 
-			//
-			Assert.isNotNull(manifestContents, String.format(
-					"The method create(IModule) of class "
-							+ "'%s' returned 'null'.", helper.getClass()
-							.getName()));
+        //
+        IResourceModule hostModule = (IResourceModule) ManifestUtils.getFragmentHost(resourceModule);
 
-			//
-			return manifestContents;
-		}
-	}
+        if (!hostModule.equals(resourceModule)) {
+
+          //
+          if (_hostModules.contains(hostModule)) {
+            // TODO
+            throw new RuntimeException("CycleException " + _hostModules);
+          } else {
+            _hostModules.add(hostModule);
+            hostManifestContents = this.getOrCreate(hostModule);
+          }
+        }
+      }
+
+      //
+      ManifestCreatorHelper helper = new ManifestCreatorHelper(getCurrentModularizedSystem(), resourceModule,
+          getCurrentContext(), _templateRootDirectory, hostManifestContents, _creator, _manifestPreferences);
+
+      //
+      ManifestContents manifestContents = helper.createManifest();
+
+      //
+      executeInterceptors(manifestContents, getCurrentModularizedSystem(), resourceModule);
+
+      //
+      Assert.isNotNull(manifestContents,
+          String.format("The method create(IModule) of class " + "'%s' returned 'null'.", helper.getClass().getName()));
+
+      //
+      return manifestContents;
+    }
+  }
 }
