@@ -2,6 +2,8 @@ package org.bundlemaker.itest.spring;
 
 import java.util.Collection;
 
+import junit.framework.Assert;
+
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -119,16 +121,19 @@ public class IntegrationTest extends AbstractIntegrationTest {
     ModuleTest.testModules(modularizedSystem);
 
     //
-    IResourceModule resourceModule = modularizedSystem.getResourceModule("spring-orm", "2.5.6");
-    IResource resource = resourceModule.getResource(
-        "org/springframework/orm/hibernate3/AbstractSessionFactoryBean.java", ContentType.SOURCE);
+    Assert.assertNotNull(modularizedSystem.getExecutionEnvironment());
 
+    // //
+    // IResourceModule resourceModule = modularizedSystem.getResourceModule("spring-orm", "2.5.6");
+    // IResource resource = resourceModule.getResource(
+    // "org/springframework/orm/hibernate3/AbstractSessionFactoryBean.java", ContentType.SOURCE);
     //
-    Collection<IResource> transitiveClosure = modularizedSystem.getResourceReferencesTransitiveClosure(resource,
-        ContentType.SOURCE, null);
-
-    for (IResource iResource : transitiveClosure) {
-      System.out.println("____" + iResource);
-    }
+    // //
+    // Collection<IResource> transitiveClosure = modularizedSystem.getResourceReferencesTransitiveClosure(resource,
+    // ContentType.SOURCE, null);
+    //
+    // for (IResource iResource : transitiveClosure) {
+    // System.out.println("____" + iResource);
+    // }
   }
 }

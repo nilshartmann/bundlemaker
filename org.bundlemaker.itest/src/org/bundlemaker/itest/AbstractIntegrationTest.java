@@ -377,6 +377,6 @@ public abstract class AbstractIntegrationTest {
    * @return
    */
   public static String getDefaultVmName() {
-    return JavaRuntime.getDefaultVMInstall().getName();
+    return "org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6";
   }
 }
