@@ -189,8 +189,10 @@ public class ManifestUtils {
       return result;
 
     } catch (FileNotFoundException e) {
+      e.printStackTrace();
       return null;
     } catch (IOException e) {
+      e.printStackTrace();
       return null;
     }
   }
