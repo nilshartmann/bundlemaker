@@ -30,7 +30,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
    */
   public IntegrationTest() {
     // super("spring", true, false, false, true);
-    super("spring", true, false, false, false);
+    super("spring", true, false, false, true);
   }
 
   /**

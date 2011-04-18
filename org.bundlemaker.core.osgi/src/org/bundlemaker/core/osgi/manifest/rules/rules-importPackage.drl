@@ -60,11 +60,25 @@ when
 then
    // create a required bundle
    RequiredBundle requiredBundle = $bundleManifest.getRequireBundle().addRequiredBundle($symbolicName);
+   // set a version range if multiple versions exist
    if ($modularizedSystem.getModules($symbolicName).size() > 1) {
      requiredBundle.setBundleVersion(new VersionRange("[" + $exportingHostModule.getModuleIdentifier().getVersion() + "," + $exportingHostModule.getModuleIdentifier().getVersion() + "]"));
    }
+   // set the visibility to reexport (TODO!!)
    requiredBundle.setVisibility(Visibility.REEXPORT);
    insert( requiredBundle );
+end
+
+rule "RequiredBundle - Template"
+salience 50
+when
+    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    $bundleManifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )
+    $requiredBundle :  RequiredBundle() from $bundleManifestTemplate.getRequireBundle().getRequiredBundles();
+    not ( RequiredBundle(bundleSymbolicName == $requiredBundle.bundleSymbolicName) )
+then
+    $bundleManifest.getRequireBundle().getRequiredBundles().add($requiredBundle);
+    insert( $requiredBundle );
 end
 
 rule "RequiredBundle: replace require bundle 'system.bundle' "
