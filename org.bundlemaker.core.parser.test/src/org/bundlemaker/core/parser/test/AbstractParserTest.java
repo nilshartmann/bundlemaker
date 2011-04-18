@@ -20,6 +20,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
+import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -93,7 +94,7 @@ public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest 
 
     // parse the project
     log("Parsing project...");
-    List<? extends IProblem> problems = _bundleMakerProject.parse(null, true);
+    List<? extends IProblem> problems = _bundleMakerProject.parse(new ProgressMonitor(), true);
 
     BundleMakerProjectUtils.dumpProblems(problems);
 

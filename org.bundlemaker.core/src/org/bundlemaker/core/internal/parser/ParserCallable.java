@@ -16,12 +16,9 @@ import java.util.concurrent.Callable;
 
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.parser.IDirectory;
-import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.IResourceKey;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 

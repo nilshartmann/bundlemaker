@@ -105,8 +105,8 @@ public class IntegrationTestUtils {
     projectDescription.setJre(AbstractIntegrationTest.getDefaultVmName());
 
     // step 3: add the source and classes
-    File classesZip = new File(System.getProperty("user.dir"), "spring/classes");
-    File sourceDirectory = new File(System.getProperty("user.dir"), "spring/source");
+    File classesZip = new File(System.getProperty("user.dir"), "spring/classes.zip");
+    File sourceDirectory = new File(System.getProperty("user.dir"), "spring/source.zip");
     projectDescription.addResourceContent("Spring", "2.5.6", classesZip.getAbsolutePath(),
         sourceDirectory.getAbsolutePath());
 

@@ -1,4 +1,4 @@
-package org.bundlemaker.core;
+package org.bundlemaker.core.util;
 
 import java.io.UnsupportedEncodingException;
 
@@ -9,7 +9,7 @@ import java.io.UnsupportedEncodingException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  * 
  */
-public class MDHelper {
+public class ByteArrayUtil {
 
   /** - */
   static final byte[] HEX_CHAR_TABLE = { (byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5',
@@ -24,7 +24,7 @@ public class MDHelper {
    * @return
    * @throws UnsupportedEncodingException
    */
-  public static String getHexString(byte[] raw) throws UnsupportedEncodingException {
+  public static String getHexString(byte[] raw) {
     byte[] hex = new byte[2 * raw.length];
     int index = 0;
 
@@ -33,6 +33,12 @@ public class MDHelper {
       hex[index++] = HEX_CHAR_TABLE[v >>> 4];
       hex[index++] = HEX_CHAR_TABLE[v & 0xF];
     }
-    return new String(hex, "ASCII");
+    try {
+      return new String(hex, "ASCII");
+    } catch (UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      throw new RuntimeException();
+    }
   }
 }
