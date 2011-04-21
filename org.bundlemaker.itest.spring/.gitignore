@@ -1,3 +1,5 @@
 spring/*
 proxy.properties
 destination/*
+/destination
+/spring
