@@ -55,6 +55,37 @@ import com.springsource.util.parser.manifest.RecoveringManifestParser;
  */
 public class ManifestUtils {
 
+  //
+  private static final String EXCLUDED_REQUIRED_BUNDLES = "Excluded-Required-Bundles";
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param templateManifest
+   * @param bundleSymbolicName
+   * @return
+   */
+  public static boolean isExcludedRequiredBundle(BundleManifest templateManifest, String bundleSymbolicName) {
+
+    // get the import package template
+    String templateHeader = templateManifest.getHeader(EXCLUDED_REQUIRED_BUNDLES);
+
+    if (templateHeader == null) {
+      return false;
+    }
+
+    //
+    List<HeaderDeclaration> excludedRequiredBundleTemplates = ManifestUtils.parseManifestValue(templateHeader);
+
+    // get the template
+    HeaderDeclaration declaration = ManifestUtils.findMostSpecificDeclaration(excludedRequiredBundleTemplates,
+        bundleSymbolicName);
+
+    // return the result
+    return declaration != null;
+  }
+
   /**
    * <p>
    * </p>

@@ -15,6 +15,7 @@ import com.springsource.util.osgi.manifest.RequiredBundle;
 import com.springsource.util.osgi.VersionRange;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import com.springsource.util.osgi.manifest.RequiredBundle.Visibility;
+import org.bundlemaker.core.osgi.internal.manifest.DroolsManifestUtils;
 
 /**
  * Eingabe:
@@ -48,6 +49,7 @@ rule "RequiredBundle: strict require bundle - "
 when
     IManifestPreferences( dependencyStyle == DependencyStyle.STRICT_REQUIRE_BUNDLE ) 
     $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+    $bundleManifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )
     $resourceModule : IResourceModule()
     $referencesCache : ReferencesCache()
     $modularizedSystem : IModularizedSystem()
@@ -55,8 +57,11 @@ when
     $exportingModule : IModule() from $referencesCache.getExportingModules($referencedPackageName)
     $exportingHostModule : IModule() from ManifestUtils.getFragmentHost($exportingModule)
     $symbolicName : String() from $exportingHostModule.getModuleIdentifier().getName()
+    // assure that the required has not been created yet
     not ( RequiredBundle(bundleSymbolicName == $symbolicName) )
-    not ( eval ( ManifestUtils.isFragment($resourceModule) && ManifestUtils.getFragmentHost($resourceModule).equals($exportingHostModule)))
+    // assure that the required bundle is not excluded or the host for this fragment
+    not ( eval ( ManifestUtils.isExcludedRequiredBundle($bundleManifestTemplate,$symbolicName) || 
+               ( ManifestUtils.isFragment($resourceModule) && ManifestUtils.getFragmentHost($resourceModule).equals($exportingHostModule))))
 then
    // create a required bundle
    RequiredBundle requiredBundle = $bundleManifest.getRequireBundle().addRequiredBundle($symbolicName);
