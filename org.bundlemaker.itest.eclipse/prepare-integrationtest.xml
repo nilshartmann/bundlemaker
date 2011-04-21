@@ -3,7 +3,7 @@
          default="prepare-integrationtest">
 
 	<property name="eclipse-prepackaged-url"
-	          value="http://www.bundlemaker.org/sites/bundlemaker.org/files/org.bundlemaker.itest.eclipse_eclipse.zip" />
+	          value="http://drupal.bundlemaker.org/sites/bundlemaker.org/files/org.bundlemaker.itest.eclipse_eclipse.zip" />
 
 	<property file="${basedir}/proxy.properties" />
 
