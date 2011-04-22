@@ -19,6 +19,7 @@ import java.util.Map;
 import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.model.IDependency;
+import org.bundlemaker.core.internal.analysis.AbstractArtifact;
 
 /**
  * <p>Diese Klasse repraesentiert die Primaerartefakte innerhalb eines Softwaresystems
@@ -39,11 +40,19 @@ public class Artifact extends AbstractArtifact {
 	Map<IArtifact, IDependency> dependencies;
 	
 	public Artifact(ArtifactType type, String name) {
-		super(type, name);
+		super(type);
 		dependencies = new HashMap<IArtifact, IDependency>();
 	}	
 	
 	@Override
+  public String getName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+
+  @Override
 	public String getQualifiedName() {
 		return getParent().getName() + "." + getName();
 	}

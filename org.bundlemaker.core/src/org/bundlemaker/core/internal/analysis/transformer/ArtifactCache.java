@@ -8,14 +8,20 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.analysis;
+package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractArtifactContainer;
+import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterTypeModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.model.ArtifactContainer;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.GenericCache;
@@ -30,10 +36,10 @@ import org.eclipse.core.runtime.IPath;
 public class ArtifactCache {
 
   /** - */
-  private GenericCache<IPath, ArtifactContainer>            _classificationCache;
+  private GenericCache<IPath, ArtifactContainer>            _groupCache;
 
   /** - */
-  private GenericCache<IModule, ArtifactContainer>          _moduleCache;
+  private GenericCache<IModule, AbstractArtifactContainer>  _moduleCache;
 
   /** - */
   private GenericCache<ModulePackageKey, ArtifactContainer> _packageCache;
@@ -58,7 +64,7 @@ public class ArtifactCache {
    * @param modularizedSystem
    */
   public ArtifactCache(IModularizedSystem modularizedSystem) {
-    this(modularizedSystem, new ArtifactContainer(ArtifactType.Package, "root"));
+    this(modularizedSystem, new ArtifactContainer(ArtifactType.Root, "root"));
   }
 
   /**
@@ -98,6 +104,28 @@ public class ArtifactCache {
    * <p>
    * </p>
    * 
+   * @param resourceModule
+   * @return
+   */
+  public IArtifact getModuleArtifact(IModule module) {
+
+    try {
+
+      //
+      return _moduleCache.getOrCreate(module);
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+
+      return null;
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param type
    * @return
    */
@@ -123,7 +151,7 @@ public class ArtifactCache {
    * @param resource
    * @return
    */
-  public Resource2IArtifactAdapter getResourceArtifact(IResource resource) {
+  public AdapterResource2IArtifact getResourceArtifact(IResource resource) {
 
     Assert.isNotNull(resource);
 
@@ -135,7 +163,7 @@ public class ArtifactCache {
     try {
 
       //
-      return (Resource2IArtifactAdapter) _resourceCache.getOrCreate(key);
+      return (AdapterResource2IArtifact) _resourceCache.getOrCreate(key);
 
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -183,8 +211,8 @@ public class ArtifactCache {
    */
   private void initCaches() {
 
-    // STEP 2: CLASSIFICATION CACHE
-    _classificationCache = new GenericCache<IPath, ArtifactContainer>() {
+    // STEP 2: GROUP CACHE
+    _groupCache = new GenericCache<IPath, ArtifactContainer>() {
 
       @Override
       protected ArtifactContainer create(IPath classification) {
@@ -195,7 +223,7 @@ public class ArtifactCache {
         }
 
         //
-        IArtifact baseArtifact = _classificationCache.getOrCreate(classification.removeLastSegments(1));
+        IArtifact baseArtifact = _groupCache.getOrCreate(classification.removeLastSegments(1));
 
         //
         ArtifactContainer result = new ArtifactContainer(ArtifactType.Group, classification.lastSegment());
@@ -210,18 +238,18 @@ public class ArtifactCache {
     };
 
     // STEP 3: MODULE CACHE
-    _moduleCache = new GenericCache<IModule, ArtifactContainer>() {
+    _moduleCache = new GenericCache<IModule, AbstractArtifactContainer>() {
 
       @Override
-      protected ArtifactContainer create(IModule typeModule) {
+      protected AbstractArtifactContainer create(IModule typeModule) {
 
         // get the parent
-        IArtifact parent = typeModule.hasClassification() ? _classificationCache.getOrCreate(typeModule
-            .getClassification()) : ArtifactCache.this._rootArtifact;
+        IArtifact parent = typeModule.hasClassification() ? _groupCache.getOrCreate(typeModule.getClassification())
+            : ArtifactCache.this._rootArtifact;
 
         //
-        ArtifactContainer artifactContainer = new ArtifactContainer(ArtifactType.Module, typeModule
-            .getModuleIdentifier().getName());
+        AbstractArtifactContainer artifactContainer = typeModule instanceof IResourceModule ? new AdapterResourceModule2IArtifact(
+            (IResourceModule) typeModule) : new AdapterTypeModule2IArtifact();
 
         //
         artifactContainer.setParent(parent);
@@ -232,80 +260,80 @@ public class ArtifactCache {
       }
     };
 
-    // STEP 4: PACKAGE CACHE
-    _packageCache = new GenericCache<ModulePackageKey, ArtifactContainer>() {
-
-      @Override
-      protected ArtifactContainer create(ModulePackageKey modulePackageKey) {
-
-        // get the parent
-        IArtifact parent = _moduleCache.getOrCreate(modulePackageKey.getModule());
-
-        //
-        ArtifactContainer artifactContainer = new ArtifactContainer(ArtifactType.Package,
-            modulePackageKey.getPackageName());
-
-        //
-        artifactContainer.setParent(parent);
-        parent.getChildren().add(artifactContainer);
-
-        //
-        return artifactContainer;
-      }
-    };
-
-    // SETP 5: RESOURCE CACHE
-    _resourceCache = new GenericCache<ModuleResourceKey, IArtifact>() {
-
-      @Override
-      protected IArtifact create(ModuleResourceKey key) {
-
-        // compute the package name
-        int lastIndex = key.getResourcePath().lastIndexOf('/');
-        String packageName = lastIndex != -1 ? key.getResourcePath().substring(0, lastIndex) : "";
-        packageName = packageName.replace('/', '.');
-
-        // get the module package
-        ModulePackageKey modulePackageKey = new ModulePackageKey(key.getResourceModule(), packageName);
-
-        // get the parent
-        ArtifactContainer parent = _packageCache.getOrCreate(modulePackageKey);
-
-        //
-        IArtifact artifact = new Resource2IArtifactAdapter(key.getResourcePath(), ArtifactCache.this, parent);
-        parent.getChildren().add(artifact);
-
-        //
-        return artifact;
-      }
-    };
-
-    // STEP 6: TYPE CACHE
-    _typeCache = new GenericCache<IType, IArtifact>() {
-
-      @Override
-      protected IArtifact create(IType type) {
-
-        //
-        IResource resource = type.hasBinaryResource() ? type.getBinaryResource() : type.getSourceResource();
-
-        //
-        IModule module = resource != null ? resource.getAssociatedResourceModule(_modularizedSystem) : type
-            .getModule(_modularizedSystem);
-
-        // get the module package
-        ModulePackageKey modulePackageKey = new ModulePackageKey(module, type.getPackageName());
-
-        // get the parent
-        ArtifactContainer parent = _packageCache.getOrCreate(modulePackageKey);
-
-        //
-        IArtifact artifact = new Type2IArtifactAdapter(type, ArtifactCache.this, parent);
-        parent.getChildren().add(artifact);
-
-        //
-        return artifact;
-      }
-    };
+    // // STEP 4: PACKAGE CACHE
+    // _packageCache = new GenericCache<ModulePackageKey, ArtifactContainer>() {
+    //
+    // @Override
+    // protected ArtifactContainer create(ModulePackageKey modulePackageKey) {
+    //
+    // // get the parent
+    // IArtifact parent = _moduleCache.getOrCreate(modulePackageKey.getModule());
+    //
+    // //
+    // ArtifactContainer artifactContainer = new ArtifactContainer(ArtifactType.Package,
+    // modulePackageKey.getPackageName());
+    //
+    // //
+    // artifactContainer.setParent(parent);
+    // parent.getChildren().add(artifactContainer);
+    //
+    // //
+    // return artifactContainer;
+    // }
+    // };
+    //
+    // // SETP 5: RESOURCE CACHE
+    // _resourceCache = new GenericCache<ModuleResourceKey, IArtifact>() {
+    //
+    // @Override
+    // protected IArtifact create(ModuleResourceKey key) {
+    //
+    // // compute the package name
+    // int lastIndex = key.getResourcePath().lastIndexOf('/');
+    // String packageName = lastIndex != -1 ? key.getResourcePath().substring(0, lastIndex) : "";
+    // packageName = packageName.replace('/', '.');
+    //
+    // // get the module package
+    // ModulePackageKey modulePackageKey = new ModulePackageKey(key.getResourceModule(), packageName);
+    //
+    // // get the parent
+    // ArtifactContainer parent = _packageCache.getOrCreate(modulePackageKey);
+    //
+    // //
+    // IArtifact artifact = new AdapterResource2IArtifact(key.getResourcePath(), ArtifactCache.this, parent);
+    // parent.getChildren().add(artifact);
+    //
+    // //
+    // return artifact;
+    // }
+    // };
+    //
+    // // STEP 6: TYPE CACHE
+    // _typeCache = new GenericCache<IType, IArtifact>() {
+    //
+    // @Override
+    // protected IArtifact create(IType type) {
+    //
+    // //
+    // IResource resource = type.hasBinaryResource() ? type.getBinaryResource() : type.getSourceResource();
+    //
+    // //
+    // IModule module = resource != null ? resource.getAssociatedResourceModule(_modularizedSystem) : type
+    // .getModule(_modularizedSystem);
+    //
+    // // get the module package
+    // ModulePackageKey modulePackageKey = new ModulePackageKey(module, type.getPackageName());
+    //
+    // // get the parent
+    // ArtifactContainer parent = _packageCache.getOrCreate(modulePackageKey);
+    //
+    // //
+    // IArtifact artifact = new AdapterType2IArtifact(type, ArtifactCache.this, parent);
+    // parent.getChildren().add(artifact);
+    //
+    // //
+    // return artifact;
+    // }
+    // };
   }
 }

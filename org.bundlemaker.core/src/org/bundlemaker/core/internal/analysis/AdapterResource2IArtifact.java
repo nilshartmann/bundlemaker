@@ -18,19 +18,28 @@ import java.util.Map;
 import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.model.IDependency;
-import org.bundlemaker.core.internal.analysis.model.AbstractArtifact;
 import org.bundlemaker.core.internal.analysis.model.DependencyAlt;
+import org.bundlemaker.core.internal.analysis.transformer.ArtifactCache;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
+ * <p>
+ * </p>
  * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Type2IArtifactAdapter extends AbstractArtifact {
+public class AdapterResource2IArtifact extends AbstractArtifact {
 
-  /** the bundle maker type */
-  private IType                       _type;
+  /** - */
+  private String                      _path;
+
+  /** the bundle maker resource */
+  private IResource                   _binaryResource;
+
+  /** the bundle maker resource */
+  private IResource                   _sourceResource;
 
   /** - */
   private ArtifactCache               _artifactCache;
@@ -45,9 +54,9 @@ public class Type2IArtifactAdapter extends AbstractArtifact {
    * @param type
    * @param classification
    */
-  public Type2IArtifactAdapter(IType type, ArtifactCache artifactCache, IArtifact parent) {
+  public AdapterResource2IArtifact(String path, ArtifactCache artifactCache, IArtifact parent) {
 
-    super(ArtifactType.Type, getNullSafeFullyQualifiedName(type));
+    super(ArtifactType.Type);
 
     Assert.isNotNull(artifactCache);
     Assert.isNotNull(parent);
@@ -56,9 +65,57 @@ public class Type2IArtifactAdapter extends AbstractArtifact {
 
     Assert.isNotNull(artifactCache);
 
-    _type = type;
+    _path = path;
 
     _artifactCache = artifactCache;
+  }
+
+  public void setBinaryResource(IResource binaryResource) {
+    _binaryResource = binaryResource;
+  }
+
+  public void setSourceResource(IResource sourceResource) {
+    _sourceResource = sourceResource;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean hasBinaryResource() {
+    return _binaryResource != null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean hasSourceResource() {
+    return _sourceResource != null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IResource getBinaryResource() {
+    return _binaryResource;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IResource getSourceResource() {
+    return _sourceResource;
   }
 
   /**
@@ -66,16 +123,13 @@ public class Type2IArtifactAdapter extends AbstractArtifact {
    */
   @Override
   public String getName() {
-    return _type.getName();
+    int lastIndex = _path.lastIndexOf('/');
+    return lastIndex != -1 ? _path.substring(lastIndex + 1) : _path;
   }
 
   @Override
   public String getQualifiedName() {
-    return _type.getFullyQualifiedName();
-  }
-
-  public IType getBundleMakerType() {
-    return _type;
+    return _path;
   }
 
   @Override
@@ -138,10 +192,11 @@ public class Type2IArtifactAdapter extends AbstractArtifact {
   @Override
   public Collection<IDependency> getDependencies() {
 
-    //
-    initDependencies();
+    // TODO: to handle resource dependencies, uncomment the following lines
+    // initDependencies();
+    // return _cachedDependencies.values();
 
-    return _cachedDependencies.values();
+    return Collections.emptyList();
   }
 
   @Override
@@ -164,13 +219,12 @@ public class Type2IArtifactAdapter extends AbstractArtifact {
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
     // iterate over all references
-    for (IReference reference : _type.getReferences()) {
+    for (IReference reference : _binaryResource.getReferences()) {
 
       //
       IArtifact artifact = _artifactCache.getArtifact(reference.getFullyQualifiedName());
 
       // TODO!!
-
       if (artifact != null) {
 
         // map to dependency
@@ -186,29 +240,8 @@ public class Type2IArtifactAdapter extends AbstractArtifact {
         // }
         //
         // dependency.setDependencyKind(dependencyKind);
-
         _cachedDependencies.put(artifact, dependency);
       }
     }
-
   }
-
-  @Override
-  public String toString() {
-    return "BundleMakerType2IBaseArtifactAdapter [_type=" + _type + "]";
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   * @return
-   */
-  private static final String getNullSafeFullyQualifiedName(IType type) {
-    Assert.isNotNull(type, "Parameter 'type' has to be set!");
-
-    return type.getFullyQualifiedName();
-  }
-
 }

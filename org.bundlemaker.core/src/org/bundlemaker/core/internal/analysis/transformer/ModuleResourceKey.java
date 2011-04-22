@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.analysis;
+package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.modules.IResourceModule;
 

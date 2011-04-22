@@ -8,7 +8,7 @@ import org.bundlemaker.core.modules.IModule;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Package2IArtifactAdapter {
+public class AdapterPackage2IArtifact {
 
   /**
    * <p>

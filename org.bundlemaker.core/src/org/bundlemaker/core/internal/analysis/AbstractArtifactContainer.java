@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.analysis.model;
+package org.bundlemaker.core.internal.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,18 +20,16 @@ import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.model.IDependency;
 import org.bundlemaker.core.internal.analysis.AbstractArtifact;
+import org.bundlemaker.core.internal.analysis.model.Dependency;
 
 /**
  * <p>
- * Implementiert eines gruppierenden Artefaktes
- * 
- * <p>
- * Gruppierende Artefakte koennen anderen gruppierenden Artefakte oder Primarartefakte beinhalten
+ * </p>
  * 
  * @author Kai Lehmann
- * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ArtifactContainer extends AbstractArtifact {
+public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
   private Collection<IArtifact>       children;
 
@@ -39,16 +37,13 @@ public class ArtifactContainer extends AbstractArtifact {
 
   private Collection<IArtifact>       leafs;
 
-  private String                      qualifiedName = null;
-
   private Map<IArtifact, IDependency> cachedDependencies;
 
-  public ArtifactContainer(ArtifactType type, String name) {
+  public AbstractArtifactContainer(ArtifactType type) {
     super(type);
 
     children = new ArrayList<IArtifact>();
     cachedDependencies = new HashMap<IArtifact, IDependency>();
-    qualifiedName = name;
   }
 
   @Override
@@ -58,36 +53,28 @@ public class ArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public String getQualifiedName() {
-    return qualifiedName;
-  }
-
-  public void setQualifiedName(String qualifiedName) {
-    this.qualifiedName = qualifiedName;
-  }
-
-  @Override
   public IDependency getDependency(IArtifact to) {
 
-    if (this.equals(to)) {
-      return new DependencyAlt(this, to, 0);
-    }
+    // if (this.equals(to)) {
+    // return new DependencyAlt(this, to, 0);
+    // }
+    //
+    // IDependency dependency = cachedDependencies.get(to);
+    // if (dependency != null) {
+    // return dependency;
+    // } else {
+    // dependency = new DependencyAlt(this, to, 0);
+    // for (IDependency reference : getDependencies()) {
+    // if (to.contains(reference.getTo())) {
+    // dependency.addDependency(reference);
+    // ((DependencyAlt) dependency).addWeight();
+    // }
+    // }
+    // cachedDependencies.put(to, dependency);
+    // return dependency;
+    // }
 
-    IDependency dependency = cachedDependencies.get(to);
-    if (dependency != null) {
-      return dependency;
-    } else {
-      dependency = new DependencyAlt(this, to, 0);
-      for (IDependency reference : getDependencies()) {
-        if (to.contains(reference.getTo())) {
-          dependency.addDependency(reference);
-          ((DependencyAlt) dependency).addWeight();
-        }
-      }
-      cachedDependencies.put(to, dependency);
-      return dependency;
-    }
-
+    return null;
   }
 
   public Collection<IDependency> getDependencies() {
@@ -120,7 +107,7 @@ public class ArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public DependencyAlt addDependency(IArtifact artifact) {
+  public Dependency addDependency(IArtifact artifact) {
     throw new UnsupportedOperationException("Nur Blätter können Abhängigkeiten besitzen");
   }
 
@@ -139,8 +126,8 @@ public class ArtifactContainer extends AbstractArtifact {
         if (child.getChildren().isEmpty()) {
           leafs.add(child);
         } else {
-          if (child instanceof ArtifactContainer) {
-            leafs.addAll(((ArtifactContainer) child).getLeafs());
+          if (child instanceof AbstractArtifactContainer) {
+            leafs.addAll(((AbstractArtifactContainer) child).getLeafs());
           }
         }
       }

@@ -9,6 +9,9 @@ Bundle-Vendor: Gerd Wuetherich (gerd@gerd-wuetherich.de)
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core,
+ org.bundlemaker.core.analysis,
+ org.bundlemaker.core.analysis.model,
+ org.bundlemaker.core.analysis.rules,
  org.bundlemaker.core.exporter,
  org.bundlemaker.core.exporter.util,
  org.bundlemaker.core.internal,
