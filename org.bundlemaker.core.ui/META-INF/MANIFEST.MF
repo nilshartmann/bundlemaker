@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.emf.common;bundle-version="2.6.0",
  org.eclipse.emf.ecore;bundle-version="2.6.1",
  org.bundlemaker.core.transformations;bundle-version="1.0.0",
- org.eclipse.jdt.debug.ui;bundle-version="3.5.0"
+ org.eclipse.jdt.debug.ui;bundle-version="3.5.0",
+ org.eclipse.jdt.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: BundleMaker Team
