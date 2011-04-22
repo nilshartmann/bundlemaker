@@ -204,8 +204,10 @@ public class FileBasedContent implements IFileBasedContent {
 
         // get the root
         String rootPath = root.toFile().getAbsolutePath();
+        
+        rootPath = VariableResolver.resolveVariable(root).getAbsolutePath();
 
-        for (String child : FileUtils.getAllChildren(root.toFile())) {
+        for (String child : FileUtils.getAllChildren(new File(rootPath))) {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
