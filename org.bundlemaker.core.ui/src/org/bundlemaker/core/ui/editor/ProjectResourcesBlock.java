@@ -139,13 +139,46 @@ public class ProjectResourcesBlock {
     editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     editButton.addSelectionListener(new SelectionListener() {
 
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
       @Override
       public void widgetSelected(SelectionEvent e) {
         Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(_treeViewer, IFileBasedContent.class);
         if (selectedContents.size() == 1) {
           IFileBasedContent content = selectedContents.iterator().next();
           ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(editButton.getShell(), content);
-          dialog.open();
+          if (dialog.open() != Window.OK) {
+            return;
+          }
+
+          // remove 'old' FileBasedContent
+          getBundleMakerProjectDescription().removeContent(content.getId());
+
+          // re-add content
+          if (_editResources) {
+            System.out.println("sourcepaths: " + dialog.getSourcePaths());
+            getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
+                dialog.getBinaryPaths(), dialog.getSourcePaths());
+          } else {
+            getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(),
+                dialog.getBinaryPaths());
+          }
+
+          // Refresh UI
+          _treeViewer.refresh();
+
+          firePropertyChange();
+
+          // Mark editor dirty
+          _resourcesSectionPart.markDirty();
         }
       }
 
