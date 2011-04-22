@@ -12,7 +12,9 @@ package org.bundlemaker.core.ui.editor;
 
 import static java.lang.String.format;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -24,6 +26,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -134,6 +137,57 @@ public class ProjectResourcesBlock {
 
     final Button editButton = toolkit.createButton(buttonBar, "Edit...", SWT.PUSH);
     editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    editButton.addSelectionListener(new SelectionListener() {
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(_treeViewer, IFileBasedContent.class);
+        if (selectedContents.size() == 1) {
+          IFileBasedContent content = selectedContents.iterator().next();
+          ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(editButton.getShell(), content);
+          if (dialog.open() != Window.OK) {
+            return;
+          }
+
+          // remove 'old' FileBasedContent
+          getBundleMakerProjectDescription().removeContent(content.getId());
+
+          // re-add content
+          if (_editResources) {
+            System.out.println("sourcepaths: " + dialog.getSourcePaths());
+            getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
+                dialog.getBinaryPaths(), dialog.getSourcePaths());
+          } else {
+            getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(),
+                dialog.getBinaryPaths());
+          }
+
+          // Refresh UI
+          _treeViewer.refresh();
+
+          firePropertyChange();
+
+          // Mark editor dirty
+          _resourcesSectionPart.markDirty();
+        }
+      }
+
+      @Override
+      public void widgetDefaultSelected(SelectionEvent e) {
+        // TODO Auto-generated method stub
+
+      }
+    });
 
     final Button addButton = toolkit.createButton(buttonBar, "Add...", SWT.PUSH);
     addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -141,7 +195,7 @@ public class ProjectResourcesBlock {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
-        ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(editButton.getShell(), _editResources, false);
+        ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(editButton.getShell(), _editResources);
         if (dialog.open() == Window.OK) {
           if (_editResources) {
             System.out.println("sourcepaths: " + dialog.getSourcePaths());
@@ -186,24 +240,20 @@ public class ProjectResourcesBlock {
           return;
         }
 
-        IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-        Iterator<?> iterator = structuredSelection.iterator();
-        while (iterator.hasNext()) {
-          Object element = iterator.next();
-          System.out.println("element: " + element);
-          if (element instanceof IFileBasedContent) {
-            IFileBasedContent content = (IFileBasedContent) element;
+        Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(_treeViewer, IFileBasedContent.class);
+        if (!selectedContents.isEmpty()) {
+          for (IFileBasedContent content : selectedContents) {
             String id = content.getId();
             getBundleMakerProjectDescription().removeContent(id);
+
+            // Refresh view
+            _treeViewer.refresh();
+
+            firePropertyChange();
+
+            // mark editor dirty
+            _resourcesSectionPart.markDirty();
           }
-          // Refresh view
-          _treeViewer.refresh();
-
-          firePropertyChange();
-
-          // mark editor dirty
-          _resourcesSectionPart.markDirty();
-
         }
       }
 
@@ -214,6 +264,30 @@ public class ProjectResourcesBlock {
       }
     });
     toolkit.paintBordersFor(client);
+
+  }
+
+  private <T> Collection<T> getSelectedElementsOfType(StructuredViewer viewer, Class<T> type) {
+    java.util.List<T> result = new LinkedList<T>();
+
+    ISelection selection = viewer.getSelection();
+    if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
+      // TODO enablement
+      return result;
+    }
+
+    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+    Iterator<?> iterator = structuredSelection.iterator();
+    while (iterator.hasNext()) {
+      Object element = iterator.next();
+      System.out.println("element: " + element);
+      if (type.isInstance(element)) {
+        @SuppressWarnings("unchecked")
+        T content = (T) element;
+        result.add(content);
+      }
+    }
+    return result;
 
   }
 

@@ -1,7 +1,11 @@
 package org.bundlemaker.core.ui.editor;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.Dialog;
@@ -44,15 +48,42 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
   private java.util.List<String> _sourceRoots;
 
-  public ModifyProjectContentDialog(Shell parentShell, boolean editResources, boolean newContent) {
+  public ModifyProjectContentDialog(Shell parentShell, IFileBasedContent existingContent) {
+    super(parentShell);
+    Assert.isNotNull(existingContent);
+    _newContent = false;
+    _editResources = existingContent.isResourceContent();
+    _name = existingContent.getName();
+    _version = existingContent.getVersion();
+    _binaryRoots = stringList(existingContent.getBinaryPaths());
+    _sourceRoots = stringList(existingContent.getSourcePaths());
+
+    configureDialog();
+  }
+
+  public ModifyProjectContentDialog(Shell parentShell, boolean editResources) {
     super(parentShell);
 
     _editResources = editResources;
-    _newContent = newContent;
+    _newContent = true;
+    configureDialog();
+  }
 
+  private void configureDialog() {
     setShellStyle(SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE
         | getDefaultOrientation());
     setHelpAvailable(false);
+
+  }
+
+  private static java.util.List<String> stringList(Set<IPath> paths) {
+    java.util.List<String> strings = new LinkedList<String>();
+    if (paths != null) {
+      for (IPath path : paths) {
+        strings.add(path.toString());
+      }
+    }
+    return strings;
   }
 
   @Override
@@ -75,9 +106,6 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     Composite dialogComposite = new Composite(areaComposite, SWT.NONE);
     dialogComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
     GridLayout gridLayout = FormLayoutUtils.createFormGridLayout(false, 2);
-    // GridLayout gridLayout = new GridLayout();
-    // gridLayout.numColumns = 2;
-    // gridLayout.makeColumnsEqualWidth = false;
     dialogComposite.setLayout(gridLayout);
 
     addNameAndVersionRow(dialogComposite);
@@ -86,10 +114,26 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
       _sourcesList = addContentList(dialogComposite, "Sources");
     }
 
+    prepopulateForm();
+
     Dialog.applyDialogFont(areaComposite);
 
     return areaComposite;
 
+  }
+
+  private void prepopulateForm() {
+    if (_newContent) {
+      return;
+    }
+
+    _nameTextField.setText(_name);
+    _versionTextField.setText(_version);
+
+    _binariesList.setItems(_binaryRoots.toArray(new String[0]));
+    if (_sourcesList != null) {
+      _sourcesList.setItems(_sourceRoots.toArray(new String[0]));
+    }
   }
 
   private void addNameAndVersionRow(Composite dialogComposite) {
