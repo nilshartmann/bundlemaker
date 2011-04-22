@@ -3,7 +3,6 @@ package org.bundlemaker.core;
 import org.bundlemaker.core.parser.test.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
