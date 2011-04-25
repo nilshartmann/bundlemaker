@@ -46,6 +46,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
+@SuppressWarnings("restriction")
 public class ContentListBlock {
 
   /**
@@ -64,6 +65,7 @@ public class ContentListBlock {
     contentListComposite.setLayoutData(layoutData);
     contentListComposite.setLayout(new GridLayout(2, false));
 
+    // Create the SWT List displaying the content
     _contentList = new List(contentListComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
     layoutData = new GridData(GridData.FILL_BOTH);
     layoutData.verticalIndent = 0;
@@ -77,6 +79,7 @@ public class ContentListBlock {
 
     });
 
+    // Create the button bar on the right side of the content list
     Composite buttonBar = new Composite(contentListComposite, SWT.NONE);
 
     buttonBar.setLayout(new GridLayout(1, false));
@@ -86,6 +89,7 @@ public class ContentListBlock {
     gd.verticalIndent = 0;
     buttonBar.setLayoutData(gd);
 
+    // Add the buttons
     _editButton = newTextButton(buttonBar, "Edit entry...", null);
 
     _removeButton = newTextButton(buttonBar, "Remove Entry", new SelectionAdapter() {
@@ -114,12 +118,6 @@ public class ContentListBlock {
     });
 
     newTextButton(buttonBar, "Add Folders...", new SelectionAdapter() {
-
-      /*
-       * (non-Javadoc)
-       * 
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected(SelectionEvent e) {
         addFolders(shell);
@@ -136,12 +134,6 @@ public class ContentListBlock {
     });
 
     newTextButton(buttonBar, "Add variable...", new SelectionAdapter() {
-
-      /*
-       * (non-Javadoc)
-       * 
-       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
       @Override
       public void widgetSelected(SelectionEvent e) {
         addVariable(shell);
@@ -149,12 +141,13 @@ public class ContentListBlock {
 
     });
 
+    // refresh initial enablement
     refreshEnablement();
 
   }
 
   /**
-   * Referesh the button enablement state according to the selection in the list
+   * Refresh the button enablement state according to the selection in the list
    */
   private void refreshEnablement() {
     int itemsSelected = _contentList.getSelectionCount();
@@ -177,6 +170,12 @@ public class ContentListBlock {
     }
   }
 
+  /**
+   * Add some or more external archives from the filesystem to the content
+   * 
+   * @param parentShell
+   * @param title
+   */
   private void addExternalArchives(Shell parentShell, String title) {
     FileDialog fileDialog = new FileDialog(parentShell, SWT.MULTI);
     fileDialog.setText(title);
@@ -194,10 +193,16 @@ public class ContentListBlock {
     }
   }
 
+  /**
+   * Add one ore more archives from the workspace to the content
+   * 
+   * @param parentShell
+   */
   private void addArchives(Shell parentShell) {
     IPath[] selected = BuildPathDialogAccess.chooseJAREntries(parentShell, null, new IPath[0]);
 
     if (selected == null || selected.length < 1) {
+      // nothing selected
       return;
     }
 
@@ -208,7 +213,11 @@ public class ContentListBlock {
 
   }
 
-  @SuppressWarnings("restriction")
+  /**
+   * Add one ore more workspace-relative folders to the content
+   * 
+   * @param shell
+   */
   private void addFolders(Shell shell) {
     MultipleFolderSelectionDialog dialog = new MultipleFolderSelectionDialog(shell, new WorkbenchLabelProvider(),
         new WorkbenchContentProvider());
@@ -228,6 +237,14 @@ public class ContentListBlock {
 
   }
 
+  /**
+   * Creates a default text button with the specified text and SelectionListener
+   * 
+   * @param composite
+   * @param text
+   * @param listener
+   * @return
+   */
   private Button newTextButton(Composite composite, String text, SelectionListener listener) {
 
     final Button button = new Button(composite, SWT.PUSH);
@@ -240,6 +257,11 @@ public class ContentListBlock {
 
   }
 
+  /**
+   * Add a Variable to the content
+   * 
+   * @param parentShell
+   */
   private void addVariable(Shell parentShell) {
     StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(parentShell);
     if (dialog.open() != Window.OK) {
@@ -253,11 +275,18 @@ public class ContentListBlock {
 
   }
 
+  /**
+   * Get the current items contained in the list
+   * 
+   * @return
+   */
   public java.util.List<String> getItems() {
     return Arrays.asList(_contentList.getItems());
   }
 
   /**
+   * Set the (initial) content of the list
+   * 
    * @param array
    */
   public void setItems(String[] items) {
