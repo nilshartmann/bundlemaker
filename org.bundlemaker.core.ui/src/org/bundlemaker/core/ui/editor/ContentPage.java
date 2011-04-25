@@ -68,8 +68,6 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
         "With <b>types</b> you specify the dependencies that are needed by your resources. Types will <b>not</b> be parsed, transformed or exported. Types are comparable with binary dependencies that are specified on the classpath of a Java project.",
         false);
 
-    // createProjectContentSection(mform);
-
   }
 
   /**
