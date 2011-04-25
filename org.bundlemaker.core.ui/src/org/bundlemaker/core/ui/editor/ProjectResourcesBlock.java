@@ -24,14 +24,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.ui.wizards.BuildPathDialogAccess;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -49,6 +49,10 @@ import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
+ * A block (represented by a Form Section) that can be used to edit either the resources or the types of the bundlemaker
+ * project description
+ * 
+ * @see IBundleMakerProjectDescription
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
@@ -79,6 +83,19 @@ public class ProjectResourcesBlock {
 
   private SectionPart                      _resourcesSectionPart;
 
+  private Button                           _removeButton;
+
+  private Button                           _editButton;
+
+  /**
+   * @param editResources
+   *          true if this block edits resources, false if it edits the project's types
+   * @param title
+   *          the title of this block
+   * @param description
+   *          the description to be display in the section's message part
+   * @param provider
+   */
   public ProjectResourcesBlock(boolean editResources, String title, String description,
       BundleMakerProjectProvider provider) {
     _editResources = editResources;
@@ -92,24 +109,24 @@ public class ProjectResourcesBlock {
     FormToolkit toolkit = mform.getToolkit();
     final ScrolledForm form = mform.getForm();
 
+    // Create the collapsible section
     Section resourcesSection = toolkit.createSection(form.getBody(), Section.TITLE_BAR | Section.EXPANDED
         | Section.TWISTIE);
     FormText descriptionText = toolkit.createFormText(resourcesSection, false);
     descriptionText.setText("<form><p>" + _description + "</p></form>", true, false);
     resourcesSection.setDescriptionControl(descriptionText);
     resourcesSection.setText(_title);
-    // resourcesSection.setDescription(description);
     resourcesSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
     Composite client = toolkit.createComposite(resourcesSection);
     client.setLayoutData(new GridData(GridData.FILL_BOTH));
     client.setLayout(new GridLayout(2, false));
-
     resourcesSection.setClient(client);
 
     _resourcesSectionPart = new SectionPart(resourcesSection);
     mform.addPart(_resourcesSectionPart);
 
+    // Create the tree view and viewer that displays the IFileBasedContent entries
     final Tree projectContentTree = toolkit.createTree(client, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
     GridData gd = new GridData(GridData.FILL_BOTH);
     gd.heightHint = 200;
@@ -128,159 +145,143 @@ public class ProjectResourcesBlock {
         .forTypes(bundleMakerProjectDescription));
     _treeViewer.setInput(wrapper);
 
-    Composite buttonBar = toolkit.createComposite(client);
-    buttonBar.setLayout(new GridLayout(1, false));
-    gd = new GridData();
-    gd.verticalAlignment = GridData.BEGINNING;
-    gd.horizontalAlignment = GridData.FILL;
-    buttonBar.setLayoutData(gd);
-
-    final Button editButton = toolkit.createButton(buttonBar, "Edit...", SWT.PUSH);
-    editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    editButton.addSelectionListener(new SelectionListener() {
-
-      /*
-       * (non-Javadoc)
-       * 
-       * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
-      /*
-       * (non-Javadoc)
-       * 
-       * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-       */
+    // Create the buttonbar
+    final VerticalFormButtonBar buttonBar = new VerticalFormButtonBar(client, toolkit);
+    final Shell shell = client.getShell();
+    _editButton = buttonBar.newButton("Edit...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(_treeViewer, IFileBasedContent.class);
-        if (selectedContents.size() == 1) {
-          IFileBasedContent content = selectedContents.iterator().next();
-          ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(editButton.getShell(), content);
-          if (dialog.open() != Window.OK) {
-            return;
-          }
-
-          // remove 'old' FileBasedContent
-          getBundleMakerProjectDescription().removeContent(content.getId());
-
-          // re-add content
-          if (_editResources) {
-            System.out.println("sourcepaths: " + dialog.getSourcePaths());
-            getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
-                dialog.getBinaryPaths(), dialog.getSourcePaths());
-          } else {
-            getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(),
-                dialog.getBinaryPaths());
-          }
-
-          // Refresh UI
-          _treeViewer.refresh();
-
-          firePropertyChange();
-
-          // Mark editor dirty
-          _resourcesSectionPart.markDirty();
-        }
+        editContent(shell);
       }
 
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-        // TODO Auto-generated method stub
+    });
 
+    // Create buttons
+    buttonBar.newButton("Add...", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        addContent(shell);
+      }
+
+    });
+
+    buttonBar.newButton("Add archives...", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        addArchives(shell);
       }
     });
 
-    final Button addButton = toolkit.createButton(buttonBar, "Add...", SWT.PUSH);
-    addButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    addButton.addSelectionListener(new SelectionListener() {
-
+    buttonBar.newButton("Add external archives...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(editButton.getShell(), _editResources);
-        if (dialog.open() == Window.OK) {
-          if (_editResources) {
-            System.out.println("sourcepaths: " + dialog.getSourcePaths());
-            getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
-                dialog.getBinaryPaths(), dialog.getSourcePaths());
-          } else {
-            getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(),
-                dialog.getBinaryPaths());
-          }
-          // Refresh UI
-          _treeViewer.refresh();
-
-          firePropertyChange();
-
-          // Mark editor dirty
-          _resourcesSectionPart.markDirty();
-
-        }
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
+        addExternalArchives(shell);
       }
     });
 
-    final Button addArchivesButton = toolkit.createButton(buttonBar, "Add archives...", SWT.PUSH);
-    addArchivesButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    final Button addExternalArchivesButton = toolkit.createButton(buttonBar, "Add external archives...", SWT.PUSH);
-    addArchivesButton.addSelectionListener(new AddArchivesSelectionListener(addArchivesButton.getShell()));
-    addExternalArchivesButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    addExternalArchivesButton.addSelectionListener(new AddExternalArchiveSelectionListener(addExternalArchivesButton
-        .getShell()));
-    Button removeButton = toolkit.createButton(buttonBar, "Remove", SWT.PUSH);
-    removeButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    removeButton.addSelectionListener(new SelectionListener() {
-
+    _removeButton = buttonBar.newButton("Remove", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        ISelection selection = _treeViewer.getSelection();
-        if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
-          // TODO enablement
-          return;
-        }
-
-        Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(_treeViewer, IFileBasedContent.class);
-        if (!selectedContents.isEmpty()) {
-          for (IFileBasedContent content : selectedContents) {
-            String id = content.getId();
-            getBundleMakerProjectDescription().removeContent(id);
-
-            // Refresh view
-            _treeViewer.refresh();
-
-            firePropertyChange();
-
-            // mark editor dirty
-            _resourcesSectionPart.markDirty();
-          }
-        }
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-        // TODO Auto-generated method stub
-
+        removeContent();
       }
     });
+
+    _treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+      @Override
+      public void selectionChanged(SelectionChangedEvent event) {
+        refreshEnablement();
+      }
+    });
+
+    // set initial enablement
+    refreshEnablement();
+
+    // paint the borders
     toolkit.paintBordersFor(client);
+  }
+
+  /**
+   * Opens the {@link ModifyProjectContentDialog} to edit the currently selected IFileBasedContent
+   * 
+   * @param shell
+   */
+  private void editContent(Shell shell) {
+    Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(IFileBasedContent.class);
+    if (selectedContents.size() != 1) {
+      return;
+    }
+
+    IFileBasedContent content = selectedContents.iterator().next();
+    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, content);
+    if (dialog.open() != Window.OK) {
+      return;
+    }
+
+    // remove 'old' FileBasedContent
+    getBundleMakerProjectDescription().removeContent(content.getId());
+
+    // re-add content
+    if (_editResources) {
+      getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
+          dialog.getBinaryPaths(), dialog.getSourcePaths());
+    } else {
+      getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths());
+    }
+
+    projectDescriptionChanged();
+  }
+
+  /**
+   * Add content to the project description using the {@link ModifyProjectContentDialog}
+   * 
+   * @param shell
+   */
+  private void addContent(Shell shell) {
+    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, _editResources);
+    if (dialog.open() != Window.OK) {
+      return;
+    }
+    if (_editResources) {
+      getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
+          dialog.getBinaryPaths(), dialog.getSourcePaths());
+    } else {
+      getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths());
+    }
+
+    projectDescriptionChanged();
 
   }
 
-  private <T> Collection<T> getSelectedElementsOfType(StructuredViewer viewer, Class<T> type) {
+  /**
+   * Remove the selected content from the project
+   */
+  private void removeContent() {
+    Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(IFileBasedContent.class);
+    if (!selectedContents.isEmpty()) {
+      for (IFileBasedContent content : selectedContents) {
+        String id = content.getId();
+        getBundleMakerProjectDescription().removeContent(id);
+      }
+      projectDescriptionChanged();
+    }
+  }
+
+  /**
+   * Returns all selected elements from the TreeViewer that are instances of the specified class
+   * 
+   * @param <T>
+   * @param type
+   * @return
+   */
+  private <T> Collection<T> getSelectedElementsOfType(Class<T> type) {
     java.util.List<T> result = new LinkedList<T>();
 
-    ISelection selection = viewer.getSelection();
-    if (selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
-      // TODO enablement
-      return result;
-    }
+    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
 
-    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-    Iterator<?> iterator = structuredSelection.iterator();
+    Iterator<?> iterator = selection.iterator();
     while (iterator.hasNext()) {
       Object element = iterator.next();
-      System.out.println("element: " + element);
       if (type.isInstance(element)) {
         @SuppressWarnings("unchecked")
         T content = (T) element;
@@ -291,18 +292,36 @@ public class ProjectResourcesBlock {
 
   }
 
+  /**
+   * Returns the {@link IBundleMakerProjectDescription} this block works on
+   * 
+   * @return
+   */
   private IBundleMakerProjectDescription getBundleMakerProjectDescription() {
     return _bundleMakerProjectProvider.getBundleMakerProject().getProjectDescription();
   }
 
+  /**
+   * Adds the specified {@link IPropertyChangeListener} to the list of listeners
+   * 
+   * @param listener
+   */
   public void addPropertyChangeListener(IPropertyChangeListener listener) {
     _listeners.add(listener);
   }
 
+  /**
+   * removes the specified {@link IPropertyChangeListener}
+   * 
+   * @param listener
+   */
   public void removePropertyChangeListener(IPropertyChangeListener listener) {
     _listeners.remove(listener);
   }
 
+  /**
+   * Notifies the registered listener that the project description has been changed
+   */
   private void firePropertyChange() {
     PropertyChangeEvent event = new PropertyChangeEvent(this, PROJECT_CONTENT_PROPERTY, null, null);
     Object[] listeners = _listeners.getListeners();
@@ -312,129 +331,95 @@ public class ProjectResourcesBlock {
     }
   }
 
-  abstract class AbstractModifyContentHandler implements SelectionListener {
-    protected final Shell _shell;
-
-    public AbstractModifyContentHandler(Shell shell) {
-      _shell = shell;
+  /**
+   * Adds external archives to the project description
+   * 
+   * @param shell
+   */
+  private void addExternalArchives(Shell shell) {
+    FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
+    fileDialog.setText("Add " + (_editResources ? " Resources" : "Types"));
+    fileDialog.setFilterExtensions(new String[] { "*.jar;*.zip", "*.*" });
+    if (fileDialog.open() == null) {
+      return;
+    }
+    String[] fileNames = fileDialog.getFileNames();
+    if (fileNames.length < 1) {
+      return;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
-     */
-    @Override
-    public final void widgetSelected(SelectionEvent e) {
-      if (execute()) {
-        _treeViewer.refresh();
-        // Refresh view
-
-        firePropertyChange();
-
-        // mark editor dirty
-        _resourcesSectionPart.markDirty();
-
+    // Add all selected archives to the project description
+    for (String string : fileNames) {
+      IPath path = new Path(fileDialog.getFilterPath()).append(string);
+      String binaryRoot = path.toOSString();
+      if (_editResources) {
+        getBundleMakerProjectDescription().addResourceContent(binaryRoot);
+      } else {
+        getBundleMakerProjectDescription().addTypeContent(binaryRoot);
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
-     */
-    @Override
-    public final void widgetDefaultSelected(SelectionEvent e) {
-    }
-
-    /**
-     * Do the work. Return true if the project has been modified otherwise false.
-     * 
-     * @return
-     */
-    protected abstract boolean execute();
+    projectDescriptionChanged();
 
   }
 
-  class AddExternalArchiveSelectionListener extends AbstractModifyContentHandler {
+  /**
+   * Adds archives from the workspace to the project description
+   * 
+   * @param shell
+   */
+  private void addArchives(Shell shell) {
+    IPath[] selected = BuildPathDialogAccess.chooseJAREntries(shell, _bundleMakerProjectProvider
+        .getBundleMakerProject().getProject().getFullPath(), new IPath[0]);
 
-    /**
-     * @param shell
-     */
-    public AddExternalArchiveSelectionListener(Shell shell) {
-      super(shell);
+    if (selected == null || selected.length < 1) {
+      return;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bundlemaker.core.ui.editor.ProjectResourcesBlock.AbstractModifyContentHandler#execute()
-     */
-    @Override
-    protected boolean execute() {
-      FileDialog fileDialog = new FileDialog(_shell, SWT.MULTI);
-      fileDialog.setText("Add " + (_editResources ? " Resources" : "Types"));
-      fileDialog.setFilterExtensions(new String[] { "*.jar;*.zip", "*.*" });
-      if (fileDialog.open() == null) {
-        return false;
+    for (IPath iPath : selected) {
+      String workspacePath = format("${workspace_loc:%s}", iPath.toString());
+      if (_editResources) {
+        getBundleMakerProjectDescription().addResourceContent(workspacePath);
+      } else {
+        getBundleMakerProjectDescription().addTypeContent(workspacePath);
       }
-      String[] fileNames = fileDialog.getFileNames();
-      if (fileNames.length > 0) {
-        // Add all selected archives to the project description
-        for (String string : fileNames) {
-          IPath path = new Path(fileDialog.getFilterPath()).append(string);
-          String binaryRoot = path.toOSString();
-          if (_editResources) {
-            getBundleMakerProjectDescription().addResourceContent(binaryRoot);
-          } else {
-            getBundleMakerProjectDescription().addTypeContent(binaryRoot);
-          }
-        }
-        return true;
-      }
-      return false;
     }
+
+    projectDescriptionChanged();
 
   }
 
-  class AddArchivesSelectionListener extends AbstractModifyContentHandler {
+  /**
+   * Indicate the the project description has been changed
+   */
+  private void projectDescriptionChanged() {
+    // Refresh view
+    _treeViewer.refresh();
 
-    /**
-     * @param shell
-     */
-    public AddArchivesSelectionListener(Shell shell) {
-      super(shell);
+    // notify listener
+    firePropertyChange();
+
+    // mark editor dirty
+    _resourcesSectionPart.markDirty();
+  }
+
+  /**
+   * sets the enabled state of the buttons according to the selection in the tree viewer
+   */
+  private void refreshEnablement() {
+    Collection<IFileBasedContent> selectedFileBasedContents = getSelectedElementsOfType(IFileBasedContent.class);
+    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
+    int selectedElements = selection.size();
+    if (selectedElements < 1 // nothing seleceted
+        || selectedElements != selectedFileBasedContents.size() // selection contains other elements than
+                                                                // IFileBasedContent
+    ) {
+      _removeButton.setEnabled(false);
+      _editButton.setEnabled(false);
+      return;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bundlemaker.core.ui.editor.ProjectResourcesBlock.AbstractModifyContentHandler#execute()
-     */
-    @Override
-    protected boolean execute() {
-      IPath[] selected = BuildPathDialogAccess.chooseJAREntries(_shell, _bundleMakerProjectProvider
-          .getBundleMakerProject().getProject().getFullPath(), new IPath[0]);
-
-      if (selected == null || selected.length < 1) {
-        return false;
-      }
-
-      for (IPath iPath : selected) {
-        String workspacePath = format("${workspace_loc:%s}", iPath.toString());
-        if (_editResources) {
-          getBundleMakerProjectDescription().addResourceContent(workspacePath);
-        } else {
-          getBundleMakerProjectDescription().addTypeContent(workspacePath);
-        }
-      }
-
-      return true;
-
-    }
+    _editButton.setEnabled(selectedFileBasedContents.size() == 1);
+    _removeButton.setEnabled(true);
 
   }
-  // IPath[] selected= BuildPathDialogAccess.chooseJAREntries(getShell(), fCurrJProject.getPath(),
-  // getUsedJARFiles(existing));
-
 }
