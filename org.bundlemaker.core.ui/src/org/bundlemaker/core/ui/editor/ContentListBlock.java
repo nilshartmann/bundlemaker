@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.ui.StringVariableSelectionDialog;
 import org.eclipse.jdt.internal.ui.wizards.TypedViewerFilter;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.MultipleFolderSelectionDialog;
 import org.eclipse.jdt.ui.wizards.BuildPathDialogAccess;
@@ -50,7 +51,11 @@ public class ContentListBlock {
   /**
    * The list containing the currently selected entries
    */
-  private List _contentList;
+  private List   _contentList;
+
+  private Button _removeButton;
+
+  private Button _editButton;
 
   public void createContent(Composite parent) {
     Composite contentListComposite = new Composite(parent, SWT.NONE);
@@ -64,6 +69,14 @@ public class ContentListBlock {
     layoutData.verticalIndent = 0;
     _contentList.setLayoutData(layoutData);
 
+    _contentList.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        refreshEnablement();
+      }
+
+    });
+
     Composite buttonBar = new Composite(contentListComposite, SWT.NONE);
 
     buttonBar.setLayout(new GridLayout(1, false));
@@ -73,10 +86,9 @@ public class ContentListBlock {
     gd.verticalIndent = 0;
     buttonBar.setLayoutData(gd);
 
-    newTextButton(buttonBar, "Add entry...", null);
-    newTextButton(buttonBar, "Edit entry...", null);
+    _editButton = newTextButton(buttonBar, "Edit entry...", null);
 
-    newTextButton(buttonBar, "Remove Entry", new SelectionAdapter() {
+    _removeButton = newTextButton(buttonBar, "Remove Entry", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         _contentList.remove(_contentList.getSelectionIndices());
@@ -101,7 +113,7 @@ public class ContentListBlock {
 
     });
 
-    newTextButton(buttonBar, "Add Folder...", new SelectionAdapter() {
+    newTextButton(buttonBar, "Add Folders...", new SelectionAdapter() {
 
       /*
        * (non-Javadoc)
@@ -110,19 +122,45 @@ public class ContentListBlock {
        */
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addFolder(shell);
+        addFolders(shell);
       }
 
     });
 
-    newTextButton(buttonBar, "Add external folder...", new SelectionAdapter() {
+    newTextButton(buttonBar, "Add external folders...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addExternalFolder(shell);
+        addExternalFolders(shell);
       }
 
     });
 
+    newTextButton(buttonBar, "Add variable...", new SelectionAdapter() {
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+       */
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        addVariable(shell);
+      }
+
+    });
+
+    refreshEnablement();
+
+  }
+
+  /**
+   * Referesh the button enablement state according to the selection in the list
+   */
+  private void refreshEnablement() {
+    int itemsSelected = _contentList.getSelectionCount();
+
+    _editButton.setEnabled(itemsSelected == 1);
+    _removeButton.setEnabled(itemsSelected > 0);
   }
 
   /**
@@ -131,7 +169,7 @@ public class ContentListBlock {
    * @param parentShell
    * @return
    */
-  private void addExternalFolder(Shell parentShell) {
+  private void addExternalFolders(Shell parentShell) {
     DirectoryDialog dialog = new DirectoryDialog(parentShell, SWT.MULTI);
     String folder = dialog.open();
     if (folder != null) {
@@ -171,7 +209,7 @@ public class ContentListBlock {
   }
 
   @SuppressWarnings("restriction")
-  private void addFolder(Shell shell) {
+  private void addFolders(Shell shell) {
     MultipleFolderSelectionDialog dialog = new MultipleFolderSelectionDialog(shell, new WorkbenchLabelProvider(),
         new WorkbenchContentProvider());
     dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
@@ -199,6 +237,19 @@ public class ContentListBlock {
       button.addSelectionListener(listener);
     }
     return button;
+
+  }
+
+  private void addVariable(Shell parentShell) {
+    StringVariableSelectionDialog dialog = new StringVariableSelectionDialog(parentShell);
+    if (dialog.open() != Window.OK) {
+      return;
+    }
+
+    String variableExpression = dialog.getVariableExpression();
+    if (variableExpression != null) {
+      _contentList.add(variableExpression);
+    }
 
   }
 
