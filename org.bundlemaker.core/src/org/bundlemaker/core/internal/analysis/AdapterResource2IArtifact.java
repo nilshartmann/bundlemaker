@@ -56,7 +56,7 @@ public class AdapterResource2IArtifact extends AbstractArtifact {
    */
   public AdapterResource2IArtifact(String path, ArtifactCache artifactCache, IArtifact parent) {
 
-    super(ArtifactType.Type);
+    super(ArtifactType.Type, parent);
 
     Assert.isNotNull(artifactCache);
     Assert.isNotNull(parent);

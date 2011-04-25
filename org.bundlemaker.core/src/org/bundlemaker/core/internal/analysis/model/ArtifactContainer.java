@@ -43,8 +43,8 @@ public class ArtifactContainer extends AbstractArtifact {
 
   private Map<IArtifact, IDependency> cachedDependencies;
 
-  public ArtifactContainer(ArtifactType type, String name) {
-    super(type);
+  public ArtifactContainer(ArtifactType type, String name, IArtifact parent) {
+    super(type, parent);
 
     children = new ArrayList<IArtifact>();
     cachedDependencies = new HashMap<IArtifact, IDependency>();

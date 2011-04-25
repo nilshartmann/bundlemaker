@@ -11,15 +11,10 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.core.analysis.model.IArtifact;
-import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.model.ArtifactContainer;
 import org.bundlemaker.core.internal.analysis.transformer.ArtifactCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -157,7 +152,7 @@ public class ModelTransformer {
 
     // the artifact cache
     ArtifactCache artifactCache = artifactContainer == null ? new ArtifactCache(modularizedSystem) : new ArtifactCache(
-        modularizedSystem, artifactContainer);
+        modularizedSystem);
 
     //
     for (IModule module : modules) {

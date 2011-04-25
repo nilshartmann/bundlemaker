@@ -45,11 +45,13 @@ public abstract class AbstractArtifact implements IArtifact {
    * 
    * @param type
    */
-  public AbstractArtifact(ArtifactType type) {
+  public AbstractArtifact(ArtifactType type, IArtifact parent) {
     Assert.isNotNull(type);
 
     // set the type
     this._type = type;
+
+    _parent = parent;
   }
 
   /**
@@ -64,7 +66,7 @@ public abstract class AbstractArtifact implements IArtifact {
    * {@inheritDoc}
    */
   @Override
-  public IArtifact getParent(ArtifactType type) {
+  public final IArtifact getParent(ArtifactType type) {
     IArtifact parent = this.getParent();
 
     if (parent == null) {
@@ -80,7 +82,7 @@ public abstract class AbstractArtifact implements IArtifact {
    * {@inheritDoc}
    */
   @Override
-  public ArtifactType getType() {
+  public final ArtifactType getType() {
     return _type;
   }
 
@@ -88,7 +90,7 @@ public abstract class AbstractArtifact implements IArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Integer getOrdinal() {
+  public final Integer getOrdinal() {
     if (ordinal != null) {
       return ordinal;
     } else if (this.getParent() != null) {
@@ -101,7 +103,7 @@ public abstract class AbstractArtifact implements IArtifact {
    * {@inheritDoc}
    */
   @Override
-  public List<IDependency> getDependencies(Collection<IArtifact> artifacts) {
+  public final List<IDependency> getDependencies(Collection<IArtifact> artifacts) {
     List<IDependency> dependencies = new ArrayList<IDependency>();
 
     for (IArtifact artifact : artifacts) {
@@ -113,15 +115,15 @@ public abstract class AbstractArtifact implements IArtifact {
     return dependencies;
   }
 
-  public void setParent(IArtifact parent) {
+  public final void setParent(IArtifact parent) {
     this._parent = parent;
   }
 
-  public void setOrdinal(Integer ordinal) {
+  public final void setOrdinal(Integer ordinal) {
     this.ordinal = ordinal;
   }
 
-  public String toString() {
+  public final String toString() {
     return this.getName();
   }
 

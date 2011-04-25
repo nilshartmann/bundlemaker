@@ -13,11 +13,13 @@ package org.bundlemaker.core.internal.analysis.transformer;
 import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractArtifactContainer;
+import org.bundlemaker.core.internal.analysis.AdapterGroup2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
-import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
-import org.bundlemaker.core.internal.analysis.AdapterTypeModule2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.model.ArtifactContainer;
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -36,7 +38,7 @@ import org.eclipse.core.runtime.IPath;
 public class ArtifactCache {
 
   /** - */
-  private GenericCache<IPath, ArtifactContainer>            _groupCache;
+  private GenericCache<IPath, AbstractArtifactContainer>    _groupCache;
 
   /** - */
   private GenericCache<IModule, AbstractArtifactContainer>  _moduleCache;
@@ -54,7 +56,7 @@ public class ArtifactCache {
   private IModularizedSystem                                _modularizedSystem;
 
   /** - */
-  private ArtifactContainer                                 _rootArtifact;
+  private AbstractArtifactContainer                         _rootArtifact;
 
   /**
    * <p>
@@ -64,7 +66,7 @@ public class ArtifactCache {
    * @param modularizedSystem
    */
   public ArtifactCache(IModularizedSystem modularizedSystem) {
-    this(modularizedSystem, new ArtifactContainer(ArtifactType.Root, "root"));
+    this(modularizedSystem, new AdapterModularizedSystem2IArtifact(modularizedSystem));
   }
 
   /**
@@ -75,7 +77,7 @@ public class ArtifactCache {
    * @param modularizedSystem
    * @param artifact
    */
-  public ArtifactCache(IModularizedSystem modularizedSystem, ArtifactContainer artifact) {
+  public ArtifactCache(IModularizedSystem modularizedSystem, AbstractArtifactContainer artifact) {
 
     Assert.isNotNull(modularizedSystem);
     Assert.isNotNull(artifact);
@@ -96,7 +98,7 @@ public class ArtifactCache {
    * 
    * @return
    */
-  public ArtifactContainer getRootArtifact() {
+  public IArtifact getRootArtifact() {
     return _rootArtifact;
   }
 
@@ -212,25 +214,23 @@ public class ArtifactCache {
   private void initCaches() {
 
     // STEP 2: GROUP CACHE
-    _groupCache = new GenericCache<IPath, ArtifactContainer>() {
+    _groupCache = new GenericCache<IPath, AbstractArtifactContainer>() {
 
       @Override
-      protected ArtifactContainer create(IPath classification) {
+      protected AbstractArtifactContainer create(IPath classification) {
 
         //
         if (classification == null || classification.isEmpty()) {
-          return (ArtifactContainer) ArtifactCache.this._rootArtifact;
+          return (AbstractArtifactContainer) ArtifactCache.this._rootArtifact;
         }
 
         //
-        IArtifact baseArtifact = _groupCache.getOrCreate(classification.removeLastSegments(1));
+        IArtifact parent = _groupCache.getOrCreate(classification.removeLastSegments(1));
+
+        System.out.println("Create " + classification + " : " + parent);
 
         //
-        ArtifactContainer result = new ArtifactContainer(ArtifactType.Group, classification.lastSegment());
-
-        //
-        result.setParent(baseArtifact);
-        baseArtifact.getChildren().add(result);
+        AdapterGroup2IArtifact result = new AdapterGroup2IArtifact(classification.lastSegment(), parent);
 
         //
         return result;
@@ -241,19 +241,17 @@ public class ArtifactCache {
     _moduleCache = new GenericCache<IModule, AbstractArtifactContainer>() {
 
       @Override
-      protected AbstractArtifactContainer create(IModule typeModule) {
+      protected AbstractArtifactContainer create(IModule module) {
 
         // get the parent
-        IArtifact parent = typeModule.hasClassification() ? _groupCache.getOrCreate(typeModule.getClassification())
+        IArtifact parent = module.hasClassification() ? _groupCache.getOrCreate(module.getClassification())
             : ArtifactCache.this._rootArtifact;
 
-        //
-        AbstractArtifactContainer artifactContainer = typeModule instanceof IResourceModule ? new AdapterResourceModule2IArtifact(
-            (IResourceModule) typeModule) : new AdapterTypeModule2IArtifact();
+        System.out.println("Create " + module.getModuleIdentifier() + " : " + parent);
 
         //
-        artifactContainer.setParent(parent);
-        parent.getChildren().add(artifactContainer);
+        AbstractArtifactContainer artifactContainer = module instanceof IResourceModule ? new AdapterResourceModule2IArtifact(
+            (IResourceModule) module, parent) : new AdapterModule2IArtifact(module, parent);
 
         //
         return artifactContainer;

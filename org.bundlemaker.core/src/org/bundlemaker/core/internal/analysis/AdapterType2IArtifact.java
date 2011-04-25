@@ -49,7 +49,7 @@ public class AdapterType2IArtifact extends AbstractArtifact {
   public AdapterType2IArtifact(IType type, ArtifactCache artifactCache,
       IArtifact parent) {
 
-    super(ArtifactType.Type);
+    super(ArtifactType.Type, parent);
 
     Assert.isNotNull(artifactCache);
     Assert.isNotNull(parent);
@@ -193,11 +193,6 @@ public class AdapterType2IArtifact extends AbstractArtifact {
       }
     }
 
-  }
-
-  @Override
-  public String toString() {
-    return "BundleMakerType2IBaseArtifactAdapter [_type=" + _type + "]";
   }
 
   /**

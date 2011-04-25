@@ -19,7 +19,6 @@ import java.util.Map;
 import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.model.IDependency;
-import org.bundlemaker.core.internal.analysis.AbstractArtifact;
 import org.bundlemaker.core.internal.analysis.model.Dependency;
 
 /**
@@ -37,23 +36,29 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
   private Collection<IArtifact>       leafs;
 
+  /** - */
   private Map<IArtifact, IDependency> cachedDependencies;
 
-  public AbstractArtifactContainer(ArtifactType type) {
-    super(type);
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractArtifactContainer}.
+   * </p>
+   * 
+   * @param type
+   */
+  public AbstractArtifactContainer(ArtifactType type, IArtifact parent) {
+    super(type, parent);
 
     children = new ArrayList<IArtifact>();
     cachedDependencies = new HashMap<IArtifact, IDependency>();
+
+    if (parent != null) {
+      parent.getChildren().add(this);
+    }
   }
 
   @Override
-  public String getName() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public IDependency getDependency(IArtifact to) {
+  public final IDependency getDependency(IArtifact to) {
 
     // if (this.equals(to)) {
     // return new DependencyAlt(this, to, 0);
@@ -77,14 +82,14 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     return null;
   }
 
-  public Collection<IDependency> getDependencies() {
+  public final Collection<IDependency> getDependencies() {
     if (dependencies == null) {
       aggregateDependencies();
     }
     return dependencies;
   }
 
-  private void aggregateDependencies() {
+  private final void aggregateDependencies() {
     dependencies = new ArrayList<IDependency>();
     for (IArtifact child : children) {
       dependencies.addAll(child.getDependencies());
@@ -93,7 +98,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public void addArtifact(IArtifact baseArtifact) {
+  public final void addArtifact(IArtifact baseArtifact) {
     IArtifact artifact = (IArtifact) baseArtifact;
     if (!children.contains(artifact)) {
       children.add(artifact);
@@ -102,24 +107,24 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
+  public final boolean removeArtifact(IArtifact artifact) {
     return children.remove(artifact);
   }
 
   @Override
-  public Dependency addDependency(IArtifact artifact) {
+  public final Dependency addDependency(IArtifact artifact) {
     throw new UnsupportedOperationException("Nur Blätter können Abhängigkeiten besitzen");
   }
 
   @Override
-  public boolean contains(IArtifact artifact) {
+  public final boolean contains(IArtifact artifact) {
     if (leafs == null || leafs.isEmpty()) {
       leafs = getLeafs();
     }
     return leafs.contains(artifact);
   }
 
-  public Collection<IArtifact> getLeafs() {
+  public final Collection<IArtifact> getLeafs() {
     if (leafs == null || leafs.isEmpty()) {
       leafs = new HashSet<IArtifact>();
       for (IArtifact child : children) {
@@ -137,12 +142,12 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public Collection<IArtifact> getChildren() {
+  public final Collection<IArtifact> getChildren() {
     return children;
   }
 
   @Override
-  public Integer size() {
+  public final Integer size() {
     return getLeafs().size();
   }
 }

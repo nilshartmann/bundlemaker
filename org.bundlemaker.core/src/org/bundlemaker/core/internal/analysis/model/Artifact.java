@@ -39,8 +39,8 @@ public class Artifact extends AbstractArtifact {
 	//Dependencies
 	Map<IArtifact, IDependency> dependencies;
 	
-	public Artifact(ArtifactType type, String name) {
-		super(type);
+	public Artifact(ArtifactType type, String name, IArtifact parent) {
+		super(type, parent);
 		dependencies = new HashMap<IArtifact, IDependency>();
 	}	
 	
