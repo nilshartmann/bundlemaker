@@ -26,6 +26,7 @@ import org.bundlemaker.core.exporter.structure101.xml.DependenciesType;
 import org.bundlemaker.core.exporter.structure101.xml.DependencyType;
 import org.bundlemaker.core.exporter.structure101.xml.ModuleType;
 import org.bundlemaker.core.exporter.structure101.xml.ModulesType;
+import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -180,12 +181,12 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
 
       // TODO: Make configurable
       ContentType contentType = resourceModule.containsSources() ? ContentType.SOURCE : ContentType.BINARY;
-        
+
       for (IResource resource : resourceModule.getResources(contentType)) {
 
         for (IReference reference : resource.getReferences()) {
 
-          IModule referencedModule = getReferencedModule(modularizedSystem, reference);
+          IModule referencedModule = getReferencedModule(modularizedSystem, reference, resourceModule);
 
           if (referencedModule == null) {
             continue;
@@ -214,7 +215,7 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
 
           for (IReference reference : type.getReferences()) {
 
-            IModule referencedModule = getReferencedModule(modularizedSystem, reference);
+            IModule referencedModule = getReferencedModule(modularizedSystem, reference, resourceModule);
 
             if (referencedModule == null) {
               continue;
@@ -253,29 +254,39 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
     }
   }
 
-  private IModule getReferencedModule(IModularizedSystem modularizedSystem, IReference reference) {
+  private IModule getReferencedModule(IModularizedSystem modularizedSystem, IReference reference,
+      IResourceModule resourceModule) {
 
     //
-    Set<IModule> referencedModules = modularizedSystem.getTypeContainingModules(reference.getFullyQualifiedName());
+    IModule referencedModule = null;
 
-    if (referencedModules.size() > 1) {
+    //
+    try {
+      referencedModule = modularizedSystem.getTypeContainingModule(reference.getFullyQualifiedName(), resourceModule);
+    } catch (AmbiguousElementException e) {
       System.out.println("~~~~~~~");
       System.out.println(reference.getFullyQualifiedName());
-      for (IModule iModule : referencedModules) {
+      for (IModule iModule : modularizedSystem.getTypeContainingModules(reference.getFullyQualifiedName())) {
         System.out.println(" - " + iModule.getModuleIdentifier());
       }
       return null;
     }
 
-    if (referencedModules.size() == 0) {
+    // if (referencedModules.size() > 1) {
+    // System.out.println("~~~~~~~");
+    // System.out.println(reference.getFullyQualifiedName());
+    // for (IModule iModule : referencedModules) {
+    // System.out.println(" - " + iModule.getModuleIdentifier());
+    // }
+    // return null;
+    // }
 
+    if (referencedModule == null) {
       System.out.println("MISSING TYPE " + reference.getFullyQualifiedName());
       return null;
-
     }
 
-    IModule referencedModule = ((IModule[]) referencedModules.toArray(new IModule[0]))[0];
-
+    //
     return referencedModule;
   }
 

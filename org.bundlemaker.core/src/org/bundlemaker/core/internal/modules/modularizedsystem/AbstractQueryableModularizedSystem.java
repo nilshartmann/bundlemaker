@@ -129,6 +129,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
 
   @Override
   public IModule getTypeContainingModule(String fullyQualifiedName) throws AmbiguousElementException {
+    // TODO: null is NOT ALLOWED HERE!!!
     return getTypeContainingModule(fullyQualifiedName, null);
   }
 
@@ -136,17 +137,15 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   public IModule getTypeContainingModule(String fullyQualifiedName, IResourceModule referencingModule)
       throws AmbiguousElementException {
 
-    Set<IModule> result = getTypeContainingModules(fullyQualifiedName);
+    //
+    IType type = getType(fullyQualifiedName, referencingModule);
 
-    if (result.isEmpty()) {
+    //
+    if (type == null) {
       return null;
     }
 
-    if (result.size() > 1) {
-      throw new AmbiguousElementException("AmbiguousModuleDependencyException: " + fullyQualifiedName);
-    }
-
-    return result.toArray(new IModule[0])[0];
+    return type.getModule(this);
   }
 
   @Override
