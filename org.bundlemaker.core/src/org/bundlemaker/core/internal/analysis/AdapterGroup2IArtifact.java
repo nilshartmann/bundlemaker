@@ -4,8 +4,15 @@ import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.eclipse.core.runtime.Assert;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class AdapterGroup2IArtifact extends AbstractArtifactContainer implements IArtifact {
 
+  /** the name */
   private String _name;
 
   /**
@@ -23,11 +30,17 @@ public class AdapterGroup2IArtifact extends AbstractArtifactContainer implements
     _name = name;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getName() {
     return _name;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getQualifiedName() {
     return _name;

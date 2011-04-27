@@ -1,14 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.model.IDependency;
-import org.bundlemaker.core.internal.analysis.model.Dependency;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -30,7 +23,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact imp
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   private IResourceModule getResourceModule() {

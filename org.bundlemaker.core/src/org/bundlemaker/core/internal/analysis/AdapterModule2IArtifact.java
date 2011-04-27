@@ -5,6 +5,12 @@ import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.Assert;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class AdapterModule2IArtifact extends AbstractArtifactContainer implements IArtifact {
 
   /** the resource module */
@@ -26,11 +32,17 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
     _module = module;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public final String getName() {
     return _module.getModuleIdentifier().toString();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public final String getQualifiedName() {
 
@@ -45,9 +57,10 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
 
   /**
    * <p>
+   * Returns the module.
    * </p>
    * 
-   * @return
+   * @return the module.
    */
   protected IModule getModule() {
     return _module;

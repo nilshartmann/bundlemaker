@@ -15,6 +15,10 @@ import org.bundlemaker.core.internal.analysis.model.ArtifactContainer;
 import org.bundlemaker.core.internal.analysis.transformer.ArtifactCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -159,43 +163,43 @@ public class ModelTransformer {
       artifactCache.getModuleArtifact(module);
     }
 
-    // // iterate over all the type modules
-    // for (IModule typeModule : modules) {
-    //
-    // // iterate over all contained types
-    // for (IType type : typeModule.getContainedTypes()) {
-    //
-    // // create the artifact
-    // artifactCache.getArtifact(type);
-    // }
-    //
-    // // generate resource artifacts
-    // if (_generateResourceArtifacts) {
-    //
-    // // cast to 'IResourceModule'
-    // if (typeModule instanceof IResourceModule) {
-    //
-    // // get the resource module
-    // IResourceModule resourceModule = (IResourceModule) typeModule;
-    //
-    // // iterate over all contained source resources
-    // for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
-    // if (!resource.containsTypes()) {
-    // // create the artifact
-    // artifactCache.getResourceArtifact(resource).setSourceResource(resource);
-    // }
-    // }
-    //
-    // // iterate over all contained binary resources
-    // for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
-    // if (!resource.containsTypes()) {
-    // // create the artifact
-    // artifactCache.getResourceArtifact(resource).setBinaryResource(resource);
-    // }
-    // }
-    // }
-    // }
-    // }
+    // iterate over all the type modules
+    for (IModule typeModule : modules) {
+
+      // // iterate over all contained types
+      // for (IType type : typeModule.getContainedTypes()) {
+      //
+      // // create the artifact
+      // artifactCache.getArtifact(type);
+      // }
+
+      // generate resource artifacts
+      if (_generateResourceArtifacts) {
+
+        // cast to 'IResourceModule'
+        if (typeModule instanceof IResourceModule) {
+
+          // get the resource module
+          IResourceModule resourceModule = (IResourceModule) typeModule;
+
+          // // iterate over all contained source resources
+          // for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+          // if (!resource.containsTypes()) {
+          // // create the artifact
+          // artifactCache.getResourceArtifact(resource).setSourceResource(resource);
+          // }
+          // }
+
+          // iterate over all contained binary resources
+          for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
+            if (!resource.containsTypes()) {
+              // create the artifact
+              artifactCache.getResourceArtifact(resource);
+            }
+          }
+        }
+      }
+    }
 
     // return the root artifact
     return artifactCache.getRootArtifact();

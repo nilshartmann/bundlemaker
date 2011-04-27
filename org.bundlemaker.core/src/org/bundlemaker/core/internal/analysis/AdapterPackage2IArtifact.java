@@ -1,21 +1,61 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.core.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModule;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterPackage2IArtifact {
+public class AdapterPackage2IArtifact extends AbstractArtifactContainer implements IArtifact {
+
+  /** - */
+  private String _qualifiedName;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link AdapterPackage2IArtifact}.
+   * </p>
+   * 
+   * @param qualifiedName
+   * @param parent
+   */
+  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent) {
+    super(ArtifactType.Package, parent);
+
+    Assert.isNotNull(qualifiedName);
+
+    // set the qualified name
+    _qualifiedName = qualifiedName;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getName() {
+    return _qualifiedName.indexOf('.') != -1 ? _qualifiedName.substring(_qualifiedName.lastIndexOf('.') + 1)
+        : _qualifiedName;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getQualifiedName() {
+    return _qualifiedName;
+  }
 
   /**
    * <p>
    * </p>
-   *
+   * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-   *
+   * 
    */
   public static class PackageKey {
 

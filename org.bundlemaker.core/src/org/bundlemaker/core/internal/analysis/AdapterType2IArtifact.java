@@ -20,7 +20,6 @@ import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.model.IDependency;
 import org.bundlemaker.core.internal.analysis.model.DependencyAlt;
 import org.bundlemaker.core.internal.analysis.transformer.ArtifactCache;
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
@@ -46,8 +45,7 @@ public class AdapterType2IArtifact extends AbstractArtifact {
    * @param type
    * @param classification
    */
-  public AdapterType2IArtifact(IType type, ArtifactCache artifactCache,
-      IArtifact parent) {
+  public AdapterType2IArtifact(IType type, ArtifactCache artifactCache, IArtifact parent) {
 
     super(ArtifactType.Type, parent);
 
@@ -207,5 +205,4 @@ public class AdapterType2IArtifact extends AbstractArtifact {
 
     return type.getFullyQualifiedName();
   }
-
 }

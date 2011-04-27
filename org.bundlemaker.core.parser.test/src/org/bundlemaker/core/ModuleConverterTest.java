@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -54,8 +55,6 @@ public class ModuleConverterTest extends AbstractBundleMakerProjectTest {
     ModelTransformer modelTransformer = new ModelTransformer(true);
     IArtifact rootArtifact = modelTransformer.transform(modularizedSystem);
 
-    System.out.println(rootArtifact.getChildren());
-
     // assert the root artifact is not null
     Assert.assertNotNull(rootArtifact);
 
@@ -64,24 +63,35 @@ public class ModuleConverterTest extends AbstractBundleMakerProjectTest {
     Assert.assertEquals(2, children.size());
 
     // assert the 'jdk16_jdk16' node
-    assertNode(children.get(0), "jdk16_jdk16", modularizedSystem.getName());
+    assertNode(children.get(0), ArtifactType.Module, "jdk16_jdk16", modularizedSystem.getName());
 
     // assert the 'bla' node
-    assertNode(children.get(1), "bla", modularizedSystem.getName());
+    assertNode(children.get(1), ArtifactType.Group, "bla", modularizedSystem.getName());
 
     // get child
     children = new LinkedList<IArtifact>(children.get(1).getChildren());
     Assert.assertEquals(1, children.size());
 
     // assert the 'bla' node
-    assertNode(children.get(0), "blub", "bla");
-    
+    assertNode(children.get(0), ArtifactType.Group, "blub", "bla");
+
     // get child
     children = new LinkedList<IArtifact>(children.get(0).getChildren());
     Assert.assertEquals(1, children.size());
 
-    // assert the 'bla' node
-    assertNode(children.get(0), "ModuleConverterTest_1.0.0", "blub");
+    // assert the 'ModuleConverterTest_1.0.0' node
+    assertNode(children.get(0), ArtifactType.Module, "ModuleConverterTest_1.0.0", "blub");
+
+    // assert the 'de.test' node
+    children = new LinkedList<IArtifact>(children.get(0).getChildren());
+    Assert.assertEquals(1, children.size());
+    assertNode(children.get(0), ArtifactType.Package, "test", "ModuleConverterTest_1.0.0");
+
+    // assert the resource nodes
+    children = new LinkedList<IArtifact>(children.get(0).getChildren());
+    Assert.assertEquals(2, children.size());
+    assertNode(children.get(0), ArtifactType.Resource, "Test.class", "test");
+    assertNode(children.get(1), ArtifactType.Resource, "Klasse.class", "test");
   }
 
   /**
@@ -89,9 +99,12 @@ public class ModuleConverterTest extends AbstractBundleMakerProjectTest {
    * </p>
    * 
    * @param node
+   * @param type
+   *          TODO
    * @param modularizedSystem
    */
-  private void assertNode(IArtifact node, String nodeName, String parentName) {
+  private void assertNode(IArtifact node, ArtifactType type, String nodeName, String parentName) {
+    Assert.assertEquals(type, node.getType());
     Assert.assertEquals(nodeName, node.getName());
     Assert.assertNotNull(node.getParent());
     Assert.assertEquals(parentName, node.getParent().getName());

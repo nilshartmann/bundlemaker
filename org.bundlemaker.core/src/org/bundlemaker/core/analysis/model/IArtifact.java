@@ -14,26 +14,13 @@ import java.util.Collection;
 
 /**
  * <p>
- * Interface eines Artefaktes.
- * 
+ * Defines the common interface of an artifact. An artifact is a part of the (software) system that should be analyzed,
+ * e.g. a type, a resource, a package or a module.
+ * </p>
  * <p>
- * Ein Artefakt beschreibt eine Einheit oder Teil eines Softwaresystems. Bspw. kann ein Artefakt eine Klasse, ein
- * Package, ein Bundle beschreiben.
- * 
- * <p>
- * Jedes Artefakt besitzt einen Namen, welcher der Anzeige in graphischen Benutzeroberflaechen dient, einen Typ, welcher
- * die Art des Artefaktes beschreibt (Klasse, Package, Bundle, etc.) sowie eine eindeutige ID, durch welche das
- * Artefakte eindeutig beschrieben werden kann
- * 
- * <p>
- * Prinzipiell wird zwischen zwei Arten von Artefakten unterschieden. Zum einen zwischen gruppierenden Artefakten, die
- * andere Artefakte als Kinder haben können sowie Primärartefakten, welche die kleinste Einheit in einem Softwaresystem
- * beschreiben.
- * 
- * <p>
- * Artefakte besitzen Abhaengigkeiten zu anderen Artefakten. Bei gruppierenden Artefakten ergeben sich die
- * Abhaengigkeiten aus den aggregierten Abhaengigkeiten ihrer Kinder. Bei Primaerartefakten werden die Abhaengigkeiten
- * direkt hinterlegt
+ * Each artifact has a name that can be shown in the GUI. An artifact also has a type that classifies the artifact (see
+ * {@link ArtifactType}).
+ * </p>
  * 
  * @author Frank Schlueter
  * @author Kai Lehmann
@@ -64,7 +51,7 @@ public interface IArtifact {
    * Returns the qualified name of this artifact.
    * </p>
    * 
-   * @return
+   * @return the qualified name of this artifact.
    */
   public String getQualifiedName();
 
@@ -98,13 +85,8 @@ public interface IArtifact {
    * @param parent
    *          the parent of this artifact
    */
+  @Deprecated
   public void setParent(IArtifact parent);
-
-  // public void setProperty(String key, Object value);
-  //
-  // public <T> T getProperty(String key, Class<T> t);
-  //
-  // public String getProperty(String key);
 
   /**
    * Gibt die Groesse des Artefaktes zurueck. Die Groesse des Artefaktes ergibt sich aus der Summe aller
