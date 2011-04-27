@@ -20,6 +20,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -34,7 +35,8 @@ import org.eclipse.core.runtime.IPath;
 public class FileBasedContent implements IFileBasedContent {
 
   /** - */
-  private static final Set<IPath>               EMPTY_PATH_SET     = Collections.unmodifiableSet(new HashSet<IPath>());
+  private static final Set<IRootPath>           EMPTY_PATH_SET     = Collections
+                                                                       .unmodifiableSet(new HashSet<IRootPath>());
 
   /** - */
   private static final Set<? extends IResource> EMPTY_RESOURCE_SET = Collections
@@ -53,7 +55,7 @@ public class FileBasedContent implements IFileBasedContent {
   private String                                _version;
 
   /** - */
-  private Set<IPath>                            _binaryPaths;
+  private Set<IRootPath>                        _binaryPaths;
 
   /** - */
   private ResourceContent                       _resourceContent;
@@ -69,7 +71,7 @@ public class FileBasedContent implements IFileBasedContent {
     _isInitialized = false;
 
     //
-    _binaryPaths = new HashSet<IPath>();
+    _binaryPaths = new HashSet<IRootPath>();
   }
 
   /**
@@ -97,7 +99,7 @@ public class FileBasedContent implements IFileBasedContent {
   }
 
   @Override
-  public Set<IPath> getBinaryPaths() {
+  public Set<IRootPath> getBinaryRootPaths() {
     return Collections.unmodifiableSet(_binaryPaths);
   }
 
@@ -116,12 +118,12 @@ public class FileBasedContent implements IFileBasedContent {
    * 
    * @return
    */
-  public Set<IPath> getModifiableBinaryPaths() {
+  public Set<IRootPath> getModifiableBinaryPaths() {
     return _binaryPaths;
   }
 
   @Override
-  public Set<IPath> getSourcePaths() {
+  public Set<IRootPath> getSourceRootPaths() {
     return _resourceContent != null ? _resourceContent.getSourcePaths() : EMPTY_PATH_SET;
   }
 
@@ -200,17 +202,12 @@ public class FileBasedContent implements IFileBasedContent {
     if (isResourceContent()) {
 
       // add the binary resources
-      for (IPath root : _binaryPaths) {
+      for (IRootPath root : _binaryPaths) {
 
-        // get the root
-        String rootPath = root.toFile().getAbsolutePath();
-        
-        rootPath = VariableResolver.resolveVariable(root).getAbsolutePath();
-
-        for (String child : FileUtils.getAllChildren(new File(rootPath))) {
+        for (String child : FileUtils.getAllChildren(root.getAsFile())) {
 
           // create the resource standin
-          ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
+          ResourceStandin resourceStandin = new ResourceStandin(_id, root.getUnresolvedPath().toString(), child);
 
           // add the resource
           _resourceContent.getModifiableBinaryResources().add(resourceStandin);
@@ -218,17 +215,12 @@ public class FileBasedContent implements IFileBasedContent {
       }
 
       // add the source resources
-      for (IPath root : _resourceContent.getSourcePaths()) {
+      for (IRootPath root : _resourceContent.getSourcePaths()) {
 
-        // get the root
-        String rootPath = root.toString();
-
-        rootPath = VariableResolver.resolveVariable(root).getAbsolutePath();
-
-        for (String child : FileUtils.getAllChildren(new File(rootPath))) {
+        for (String child : FileUtils.getAllChildren(root.getAsFile())) {
 
           // create the resource standin
-          ResourceStandin resourceStandin = new ResourceStandin(_id, rootPath, child);
+          ResourceStandin resourceStandin = new ResourceStandin(_id, root.getUnresolvedPath().toString(), child);
 
           // add the resource
           _resourceContent.getModifiableSourceResources().add(resourceStandin);

@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.PixelConverter;
@@ -47,8 +47,8 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _editResources = existingContent.isResourceContent();
     _name = existingContent.getName();
     _version = existingContent.getVersion();
-    _binaryRoots = stringList(existingContent.getBinaryPaths());
-    _sourceRoots = stringList(existingContent.getSourcePaths());
+    _binaryRoots = stringList(existingContent.getBinaryRootPaths());
+    _sourceRoots = stringList(existingContent.getSourceRootPaths());
 
     configureDialog();
   }
@@ -68,11 +68,11 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
   }
 
-  private static java.util.List<String> stringList(Set<IPath> paths) {
+  private static java.util.List<String> stringList(Set<IRootPath> paths) {
     java.util.List<String> strings = new LinkedList<String>();
     if (paths != null) {
-      for (IPath path : paths) {
-        strings.add(path.toString());
+      for (IRootPath path : paths) {
+        strings.add(path.getUnresolvedPath().toString());
       }
     }
     return strings;

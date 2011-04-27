@@ -63,7 +63,7 @@ public interface IFileBasedContent {
    * 
    * @return the set of all binary paths that belongs to this {@link IFileBasedContent}.
    */
-  Set<IPath> getBinaryPaths();
+  Set<IRootPath> getBinaryRootPaths();
 
   /**
    * <p>
@@ -88,7 +88,7 @@ public interface IFileBasedContent {
    * 
    * @return the set of all defined source paths for this content entry.
    */
-  Set<IPath> getSourcePaths();
+  Set<IRootPath> getSourceRootPaths();
 
   /**
    * <p>

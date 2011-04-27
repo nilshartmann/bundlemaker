@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
+import org.bundlemaker.core.internal.projectdescription.RootPath;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class FileBasedContentTest {
     fileBasedContent.setId("123");
 
     fileBasedContent.getModifiableBinaryPaths().add(
-        new Path(System.getProperty("user.dir")
+        new RootPath(System.getProperty("user.dir")
             + "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-1.0.0.RELEASE.jar"));
 
     //
@@ -41,15 +42,15 @@ public class FileBasedContentTest {
         .getModifiableResourceContent()
         .getModifiableSourcePaths()
         .add(
-            new Path(System.getProperty("user.dir")
+            new RootPath(System.getProperty("user.dir")
                 + "/../target.platform/bundlor-1.0.0.RELEASE/com.springsource.bundlor-sources-1.0.0.RELEASE.jar"));
 
     //
     fileBasedContent.initialize(null);
 
     //
-    assertEquals(1, fileBasedContent.getBinaryPaths().size());
-    assertEquals(1, fileBasedContent.getSourcePaths().size());
+    assertEquals(1, fileBasedContent.getBinaryRootPaths().size());
+    assertEquals(1, fileBasedContent.getSourceRootPaths().size());
 
     //
     assertEquals(98, fileBasedContent.getBinaryResources().size());

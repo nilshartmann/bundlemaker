@@ -22,13 +22,12 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import org.bundlemaker.core.internal.projectdescription.VariableResolver;
 import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -57,14 +56,14 @@ public class FileContentReader {
     Map<String, Directory> directoryMap = new HashMap<String, Directory>();
 
     // add all binary paths
-    for (IPath path : fileBasedContent.getBinaryPaths()) {
-      getAllPackages(fileBasedContent, directoryMap, VariableResolver.resolveVariable(path), false);
+    for (IRootPath path : fileBasedContent.getBinaryRootPaths()) {
+      getAllPackages(fileBasedContent, directoryMap, path.getAsFile(), false);
     }
 
-    if (!fileBasedContent.getSourcePaths().isEmpty()
+    if (!fileBasedContent.getSourceRootPaths().isEmpty()
         && (!filterNonAnalyzableSource || fileBasedContent.isAnalyzeSourceResources())) {
-      for (IPath path : fileBasedContent.getSourcePaths()) {
-        getAllPackages(fileBasedContent, directoryMap, VariableResolver.resolveVariable(path), true);
+      for (IRootPath path : fileBasedContent.getSourceRootPaths()) {
+        getAllPackages(fileBasedContent, directoryMap, path.getAsFile(), true);
       }
     }
 

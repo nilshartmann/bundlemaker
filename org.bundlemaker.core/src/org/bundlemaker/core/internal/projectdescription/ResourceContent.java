@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -30,7 +31,7 @@ import org.eclipse.core.runtime.Path;
 public class ResourceContent {
 
   /** - */
-  private Set<IPath>           _sourcePaths;
+  private Set<IRootPath>           _sourcePaths;
 
   /** - */
   private Set<ResourceStandin> _binaryResources;
@@ -49,7 +50,7 @@ public class ResourceContent {
   public ResourceContent() {
 
     //
-    _sourcePaths = new HashSet<IPath>();
+    _sourcePaths = new HashSet<IRootPath>();
     _binaryResources = new HashSet<ResourceStandin>();
     _sourceResources = new HashSet<ResourceStandin>();
   }
@@ -57,7 +58,7 @@ public class ResourceContent {
   /**
    * {@inheritDoc}
    */
-  public Set<IPath> getSourcePaths() {
+  public Set<IRootPath> getSourcePaths() {
     return Collections.unmodifiableSet(_sourcePaths);
   }
 
@@ -173,7 +174,7 @@ public class ResourceContent {
     return _binaryResources;
   }
 
-  public Set<IPath> getModifiableSourcePaths() {
+  public Set<IRootPath> getModifiableSourcePaths() {
     return _sourcePaths;
   }
 

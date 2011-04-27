@@ -95,7 +95,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
         // TODO!!
         TypeModule typeModule = createTypeModule(identifier,
-            new File[] { fileBasedContent.getBinaryPaths().toArray(new IPath[0])[0].toFile() });
+            new File[] { fileBasedContent.getBinaryRootPaths().toArray(new IPath[0])[0].toFile() });
 
         getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
 

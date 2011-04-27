@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.projectdescription;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.variables.IStringVariableManager;
+import org.eclipse.core.variables.VariablesPlugin;
 
 /**
  * <p>
@@ -207,7 +210,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
     try {
 
       // get the jar info
-      JarInfo jarInfo = JarInfoService.extractJarInfo(VariableResolver.resolveVariable(binaryRoot));
+      JarInfo jarInfo = JarInfoService.extractJarInfo(getAsFile(binaryRoot));
 
       //
       addResourceContent(jarInfo.getName(), jarInfo.getVersion(), binaryRoot, sourceRoot);
@@ -243,7 +246,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
     try {
       // get the jar info
-      JarInfo jarInfo = JarInfoService.extractJarInfo(VariableResolver.resolveVariable(binaryRoot));
+      JarInfo jarInfo = JarInfoService.extractJarInfo(getAsFile(binaryRoot));
 
       addTypeContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot });
 
@@ -291,7 +294,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
     // add the binary roots
     for (String string : binaryRoot) {
-      fileBasedContent.getModifiableBinaryPaths().add(new Path(string));
+      fileBasedContent.getModifiableBinaryPaths().add(new RootPath(string));
     }
 
     //
@@ -300,7 +303,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
     // add the source roots
     for (String string : sourceRoot) {
-      resourceContent.getModifiableSourcePaths().add(new Path(string));
+      resourceContent.getModifiableSourcePaths().add(new RootPath(string));
     }
 
     // add the analyze flag
@@ -339,7 +342,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
     // add the binary roots
     for (String string : binaryRoot) {
-      fileBasedContent.getModifiableBinaryPaths().add(new Path(string));
+      fileBasedContent.getModifiableBinaryPaths().add(new RootPath(string));
     }
 
     // add file based content
@@ -347,6 +350,22 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
     // return result
     return fileBasedContent;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @throws CoreException 
+   */
+  private File getAsFile(String path) throws CoreException {
+
+    //
+    IStringVariableManager stringVariableManager = VariablesPlugin.getDefault().getStringVariableManager();
+
+    //
+    return new File(stringVariableManager.performStringSubstitution(path));
   }
 
   /**

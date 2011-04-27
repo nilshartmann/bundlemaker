@@ -19,9 +19,11 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
+import org.bundlemaker.core.internal.projectdescription.RootPath;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -57,8 +59,8 @@ public class ProjectDescriptionStore {
       xmlFileBasedContent.setName(content.getName());
       xmlFileBasedContent.setVersion(content.getVersion());
 
-      for (IPath path : content.getBinaryPaths()) {
-        xmlFileBasedContent.getBinaryPathNames().add(path.toString());
+      for (IRootPath path : content.getBinaryRootPaths()) {
+        xmlFileBasedContent.getBinaryPathNames().add(path.getUnresolvedPath().toString());
       }
 
       if (content.isResourceContent()) {
@@ -68,8 +70,8 @@ public class ProjectDescriptionStore {
 
         xmlResourceContent.setAnalyzeSourceResources(content.isAnalyzeSourceResources());
 
-        for (IPath path : content.getSourcePaths()) {
-          xmlResourceContent.getSourcePathNames().add(path.toString());
+        for (IRootPath path : content.getSourceRootPaths()) {
+          xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
         }
       }
 
@@ -129,7 +131,7 @@ public class ProjectDescriptionStore {
       fileBasedContent.setVersion(eFileBasedContent.getVersion());
 
       for (String path : eFileBasedContent.getBinaryPathNames()) {
-        fileBasedContent.getModifiableBinaryPaths().add(new Path(path));
+        fileBasedContent.getModifiableBinaryPaths().add(new RootPath(path));
       }
 
       if (eFileBasedContent.getResourceContent() != null) {
@@ -144,7 +146,7 @@ public class ProjectDescriptionStore {
 
         for (String path : eFileBasedContent.getResourceContent().getSourcePathNames()) {
 
-          resourceContent.getModifiableSourcePaths().add(new Path(path));
+          resourceContent.getModifiableSourcePaths().add(new RootPath(path));
         }
       }
     }

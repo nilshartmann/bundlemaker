@@ -17,7 +17,9 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.ui.internal.UIImages;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
@@ -71,20 +73,20 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
       List<Object> children = new LinkedList<Object>();
       IFileBasedContent content = (IFileBasedContent) o;
-      children.addAll(asBundleMakerPaths(content.getBinaryPaths(), true));
+      children.addAll(asBundleMakerPaths(content.getBinaryRootPaths(), true));
       if (content.isResourceContent()) {
-        children.addAll(asBundleMakerPaths(content.getSourcePaths(), false));
+        children.addAll(asBundleMakerPaths(content.getSourceRootPaths(), false));
         // children.addAll(getChildren(content));
       }
       return children.toArray();
     }
 
-    private Collection<Object> getChildren(IFileBasedContent content) {
+    private Collection<Object> getChildren(IFileBasedContent content) throws CoreException {
       List<Object> children = new LinkedList<Object>();
-      Set<IPath> sourcePaths = content.getSourcePaths();
-      for (IPath iPath : sourcePaths) {
+      Set<IRootPath> sourcePaths = content.getSourceRootPaths();
+      for (IRootPath iPath : sourcePaths) {
 
-        children.add(new BundleMakerPath(iPath, false, iPath.toFile().isDirectory()));
+        children.add(new BundleMakerPath(iPath.getUnresolvedPath(), false, iPath.getAsFile().isDirectory()));
       }
       return children;
     }
@@ -107,10 +109,15 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     }
   }
 
-  static Collection<BundleMakerPath> asBundleMakerPaths(Collection<IPath> paths, boolean binary) {
+  static Collection<BundleMakerPath> asBundleMakerPaths(Collection<IRootPath> paths, boolean binary) {
     List<BundleMakerPath> bundleMakerPaths = new LinkedList<BundleMakerAdapterFactory.BundleMakerPath>();
-    for (IPath path : paths) {
-      bundleMakerPaths.add(new BundleMakerPath(path, binary, path.toFile().isDirectory()));
+    for (IRootPath path : paths) {
+      try {
+        bundleMakerPaths.add(new BundleMakerPath(path.getUnresolvedPath(), binary, path.getAsFile().isDirectory()));
+      } catch (CoreException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
     return bundleMakerPaths;
   }
