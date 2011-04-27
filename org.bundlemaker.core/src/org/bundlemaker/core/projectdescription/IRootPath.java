@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
+ * A {@link IRootPath} encapsulates the root path of a content entry.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -40,5 +41,4 @@ public interface IRootPath {
    * @return the path as a file.
    */
   File getAsFile() throws CoreException;
-
 }
