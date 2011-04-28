@@ -57,8 +57,8 @@ public class ResourceKey implements IResourceKey {
     Assert.isNotNull(root);
     Assert.isNotNull(path);
 
-    _contentId = new FlyWeightString(contentId);
-    _root = new FlyWeightString(root);
+    _contentId = new FlyWeightString(normalize(contentId));
+    _root = new FlyWeightString(normalize(root));
     _path = path;
   }
 
@@ -291,5 +291,15 @@ public class ResourceKey implements IResourceKey {
   @Override
   public String toString() {
     return "ResourceKey [_contentId=" + _contentId + ", _root=" + _root + ", _path=" + _path + "]";
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private String normalize(String string) {
+    return string.replace('\\', '/');
   }
 }
