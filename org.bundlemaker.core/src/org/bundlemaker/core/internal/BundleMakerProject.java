@@ -266,7 +266,8 @@ public class BundleMakerProject implements IBundleMakerProject {
     _projectState = BundleMakerProjectState.READY;
 
     // create default working copy
-    createModularizedSystemWorkingCopy(getProject().getName());
+    IModularizedSystem modularizedSystem = createModularizedSystemWorkingCopy(getProject().getName());
+    modularizedSystem.applyTransformations();
   }
 
   /**
