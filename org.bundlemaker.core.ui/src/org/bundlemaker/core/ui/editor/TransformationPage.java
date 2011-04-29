@@ -110,7 +110,7 @@ public class TransformationPage extends FormPage {
     dslComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     dslComposite.setLayout(new GridLayout(3, false));
 
-    final Text uriText = toolkit.createText(dslComposite, "platform:/resource/spring/transform-spring.bmt");
+    final Text uriText = toolkit.createText(dslComposite, "platform:/resource/spring/spring-transformation.bmt");
     uriText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     final Button parseButton = toolkit.createButton(dslComposite, "Apply", SWT.PUSH);
     parseButton.addSelectionListener(new SelectionListener() {
@@ -267,7 +267,7 @@ public class TransformationPage extends FormPage {
       throws Exception {
 
     //
-    File destination = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/report");
+    File destination = new File(getExportDir(modularizedSystem), "/report");
     destination.mkdirs();
 
     // create the exporter context
@@ -283,11 +283,19 @@ public class TransformationPage extends FormPage {
     System.out.println("exportToSimpleReport done!");
   }
 
+  private File getExportDir(IModularizedSystem modularizedSystem) {
+    File exportDir = new File(System.getProperty("user.dir"), "export");
+    File concreteDir = new File(exportDir, modularizedSystem.getName());
+    concreteDir.mkdirs();
+    System.out.println("Export dir: " + concreteDir);
+    return concreteDir;
+  }
+
   private void exportToBinaryBundle(IBundleMakerProject bundleMakerProject, IModularizedSystem modularizedSystem)
       throws Exception {
 
     //
-    File destination = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/bundles");
+    File destination = new File(getExportDir(modularizedSystem), "/bundles");
 
     destination.mkdirs();
 
@@ -307,15 +315,12 @@ public class TransformationPage extends FormPage {
       throws Exception {
 
     //
-    File destination = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/pde");
+    File destination = new File(getExportDir(modularizedSystem), "/pde");
     destination.mkdirs();
 
     // create the exporter context
     DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(bundleMakerProject, destination,
         modularizedSystem);
-
-    File templateDirectory = new File("r:/bundlemaker/export/" + modularizedSystem.getName() + "/templates");
-    // templateDi
 
     System.out.println("exportAsProjects...");
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
