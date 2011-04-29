@@ -78,7 +78,7 @@ public final class BundleMakerCore {
     }
 
     // // try to get project from cache
-    BundleMakerProject bundleMakerProject = (BundleMakerProject) Activator.getDefault().getBundleMakerProject(project);
+    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) Activator.getDefault().getBundleMakerProject(project);
 
     // create project if necessary
     if (bundleMakerProject == null) {

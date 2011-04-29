@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,15 +40,20 @@ import org.bundlemaker.core.internal.transformation.BasicProjectContentTransform
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.util.ByteArrayUtil;
 import org.bundlemaker.core.util.ProgressMonitor;
+import org.bundlemaker.core.util.StopWatch;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -71,9 +79,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
   /** the project description working copies */
   private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
-
-  /** - */
-  private IProgressMonitor               _currentProgressMonitor;
 
   /**
    * <p>
@@ -115,9 +120,6 @@ public class BundleMakerProject implements IBundleMakerProject {
    */
   public void initialize(IProgressMonitor progressMonitor) throws CoreException {
 
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
-
     // reload the project description
     _projectDescription = loadProjectDescription();
     _projectDescription.initialize(this);
@@ -137,9 +139,6 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public List<IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences) throws CoreException {
 
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
-
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
 
@@ -149,7 +148,10 @@ public class BundleMakerProject implements IBundleMakerProject {
     // parse the project
     List<IProblem> problems = projectParser.parseBundleMakerProject(progressMonitor);
 
+    //
     _projectState = BundleMakerProjectState.PARSED;
+
+    storeParsedContentFile();
 
     // return the problems
     return problems;
@@ -159,9 +161,6 @@ public class BundleMakerProject implements IBundleMakerProject {
    * {@inheritDoc}
    */
   public void open(IProgressMonitor progressMonitor) throws CoreException {
-
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
 
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED);
@@ -299,6 +298,28 @@ public class BundleMakerProject implements IBundleMakerProject {
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  @Override
+  public final List<IResource> getSourceResources() {
+    return _projectDescription.getSourceResources();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  @Override
+  public final List<IResource> getBinaryResources() {
+    return _projectDescription.getBinaryResources();
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -416,9 +437,6 @@ public class BundleMakerProject implements IBundleMakerProject {
    */
   public IDependencyStore getDependencyStore(IProgressMonitor progressMonitor) throws CoreException {
 
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
-
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
 
@@ -526,6 +544,41 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     //
     return ProjectDescriptionStore.loadProjectDescription(this);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  private void storeParsedContentFile() throws CoreException {
+
+    //
+    IFile iFile = getProject().getFile(new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append("content.parsed"));
+
+    // refresh
+    iFile.refreshLocal(IFile.DEPTH_INFINITE, null);
+
+    Set<String> hashvalues = new HashSet<String>();
+    for (IResource resource : getSourceResources()) {
+      hashvalues.add(ByteArrayUtil.getHexString(resource.getHashvalue()));
+    }
+    for (IResource resource : getBinaryResources()) {
+      hashvalues.add(ByteArrayUtil.getHexString(resource.getHashvalue()));
+    }
+
+    try {
+      PrintWriter printWriter = new PrintWriter(new FileWriter(iFile.getRawLocation().toFile()));
+      for (String value : hashvalues) {
+        printWriter.println(value);
+      }
+      printWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID,
+          "Exception while storing the parsed content list."));
+    }
   }
 
   /**

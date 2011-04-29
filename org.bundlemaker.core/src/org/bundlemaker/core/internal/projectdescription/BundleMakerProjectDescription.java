@@ -20,8 +20,11 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.ProjectDescriptionStore;
+import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -41,6 +44,12 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
   /** - */
   private List<FileBasedContent> _fileBasedContent;
+
+  /** the resource list */
+  private List<ResourceStandin>  _sourceResources;
+
+  /** the resource list */
+  private List<ResourceStandin>  _binaryResources;
 
   /** - */
   private String                 _jre;
@@ -65,6 +74,8 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
     //
     _fileBasedContent = new ArrayList<FileBasedContent>();
+    _sourceResources = new ArrayList<ResourceStandin>();
+    _binaryResources = new ArrayList<ResourceStandin>();
     _bundleMakerProject = bundleMakerProject;
   }
 
@@ -155,7 +166,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
 
     //
     for (FileBasedContent fileBasedContent : _fileBasedContent) {
-      fileBasedContent.initialize(bundlemakerProject);
+      fileBasedContent.initialize(this);
 
       //
       if (fileBasedContent.isResourceContent()) {
@@ -272,6 +283,32 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
     Assert.isNotNull(binaryRoot);
 
     addTypeContent(name, version, binaryRoot.toArray(new String[0]));
+  }
+
+  @SuppressWarnings("unchecked")
+  public final List<IResource> getSourceResources() {
+    List<? extends IResource> result = Collections.unmodifiableList(_sourceResources);
+    return (List<IResource>) result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public final List<IResource> getBinaryResources() {
+    List<? extends IResource> result = Collections.unmodifiableList(_binaryResources);
+    return (List<IResource>) result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   */
+  void addSourceResource(ResourceStandin resourceStandin) {
+    _sourceResources.add(resourceStandin);
+  }
+
+  void addBinaryResource(ResourceStandin resourceStandin) {
+    _binaryResources.add(resourceStandin);
   }
 
   // TODO: analyze source!!

@@ -31,6 +31,7 @@ import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.jdt.internal.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ReferenceType;
@@ -122,6 +123,12 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
     // return the errors
     return _errors;
+  }
+
+  @Override
+  public List<IProblem> parseResources(IFileBasedContent content, List<IResource> resources, IResourceCache cache,
+      IProgressMonitor _progressMonitor) throws CoreException {
+    return null;
   }
 
   /**

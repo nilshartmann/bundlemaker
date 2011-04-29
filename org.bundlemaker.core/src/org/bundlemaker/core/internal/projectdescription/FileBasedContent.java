@@ -10,13 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.projectdescription;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -192,7 +190,7 @@ public class FileBasedContent implements IFileBasedContent {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
+  public void initialize(BundleMakerProjectDescription projectDescription) throws CoreException {
 
     // return if content already is initialized
     if (_isInitialized) {
@@ -201,6 +199,8 @@ public class FileBasedContent implements IFileBasedContent {
 
     if (isResourceContent()) {
 
+      MessageDigestGenerator generator = new MessageDigestGenerator();
+
       // add the binary resources
       for (IRootPath root : _binaryPaths) {
 
@@ -208,6 +208,8 @@ public class FileBasedContent implements IFileBasedContent {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, root.getResolvedPath().toString(), child);
+          resourceStandin.setHashvalue(generator.getMessageDigest(root.getAsFile(), child));
+          projectDescription.addBinaryResource(resourceStandin);
 
           // add the resource
           _resourceContent.getModifiableBinaryResources().add(resourceStandin);
@@ -220,7 +222,9 @@ public class FileBasedContent implements IFileBasedContent {
         for (String child : FileUtils.getAllChildren(root.getAsFile())) {
 
           // create the resource standin
-          ResourceStandin resourceStandin = new ResourceStandin(_id, root.getUnresolvedPath().toString(), child);
+          ResourceStandin resourceStandin = new ResourceStandin(_id, root.getResolvedPath().toString(), child);
+          resourceStandin.setHashvalue(generator.getMessageDigest(root.getAsFile(), child));
+          projectDescription.addSourceResource(resourceStandin);
 
           // add the resource
           _resourceContent.getModifiableSourceResources().add(resourceStandin);
