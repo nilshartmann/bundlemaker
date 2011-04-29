@@ -43,6 +43,9 @@ public class ResourceKey implements IResourceKey {
   /** the path of the resource */
   private String          _path;
 
+  /** - **/
+  private byte[]          _hashvalue;
+
   /**
    * <p>
    * Creates a new instance of type {@link ResourceKey}.
@@ -224,6 +227,26 @@ public class ResourceKey implements IResourceKey {
     } else {
       throw new RuntimeException("FEHLER");
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final byte[] getHashvalue() {
+    return _hashvalue;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param hashvalue
+   */
+  public final void setHashvalue(byte[] hashvalue) {
+    _hashvalue = hashvalue;
   }
 
   /**

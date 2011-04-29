@@ -18,6 +18,7 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -132,6 +133,10 @@ public interface IBundleMakerProject {
    * </p>
    */
   void dispose();
+
+  List<IResource> getBinaryResources();
+
+  List<IResource> getSourceResources();
 
   /**
    * <p>

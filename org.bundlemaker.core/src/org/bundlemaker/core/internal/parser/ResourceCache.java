@@ -90,7 +90,7 @@ public class ResourceCache implements IResourceCache {
 
     //
     if (progressMonitor != null) {
-      progressMonitor.beginTask("write to disc", _resourceMap.values().size());
+      progressMonitor.beginTask("Writing to disc...", _resourceMap.values().size());
     }
 
     // update all
