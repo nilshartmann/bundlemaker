@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/task.dtd">
+<task id="taskId">
+    <title>Installing Bundlemaker (Eclipse 3.6 / Helios)</title>
+    <taskbody>
+        <context>
+            <p>Context for the current task</p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Open the <uicontrol>Help -> Install New Software...</uicontrol> dialog</cmd>
+            </step>
+            <step>
+                <cmd>Add the BundleMaker repository</cmd>
+                <info>
+                    <p>Add the BundleMaker update site: http://www.bundlemaker.org/updates/ </p>
+                    <p>
+                        <image href="./images/installing-bundlemaker-step_2.png" scale="50"/>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Assure that that the Helios update site is enabled.</cmd>
+                <info>
+                    <p>
+                        <image href="./images/installing-bundlemaker-step_3.png" scale="60"/>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Select the BundleMaker feature 'org.bundlemaker.core.feature'</cmd>
+                <info>
+                    <p>
+                        <image href="./images/installing-bundlemaker-step_4.png" scale="70"/>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Install details</cmd>
+            </step>
+            <step>
+                <cmd>Review licenses</cmd>
+                <info>
+                    <p>
+                        <image href="./images/installing-bundlemaker-step_6.png" scale="65"/>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Review licenses</cmd>
+                <info>
+                    <p>
+                        <image href="./images/installing-bundlemaker-step_7.png" scale="80"/>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Review licenses</cmd>
+                <info>
+                    <p>
+                        <image href="./images/installing-bundlemaker-step_8.png" scale="80"/>
+                    </p>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
