@@ -127,4 +127,12 @@ public interface IType {
    * @return
    */
   IModule getModule(IModularizedSystem modularizedSystem);
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  boolean isLocalOrAnonymousType();
 }

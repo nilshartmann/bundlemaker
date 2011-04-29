@@ -23,6 +23,7 @@ import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.IModifiableType;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
+import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -288,6 +289,17 @@ public class Type implements IType, IModifiableType {
     return references();
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isLocalOrAnonymousType() {
+    return _fullyQualifiedName.toString().matches(".*\\$\\d.*");
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString() {
     return "Type [_fullyQualifiedName=" + _fullyQualifiedName + ", _typeEnum=" + _typeEnum + "]";
