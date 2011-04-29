@@ -23,7 +23,6 @@ import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.Test;
 
 /**

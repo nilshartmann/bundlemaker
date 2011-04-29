@@ -16,9 +16,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.FlyWeightString;
 import org.eclipse.core.runtime.Assert;
@@ -42,6 +46,9 @@ public class ResourceKey implements IResourceKey {
 
   /** the path of the resource */
   private String          _path;
+
+  /** - */
+  private Long            _timestamp;
 
   /** - **/
   private byte[]          _hashvalue;
@@ -172,6 +179,7 @@ public class ResourceKey implements IResourceKey {
       try {
         ZipFile zipFile = new ZipFile(new File(getRoot()));
         ZipEntry zipEntry = zipFile.getEntry(getPath());
+        setTimeStamp(zipEntry);
 
         InputStream is = zipFile.getInputStream(zipEntry);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -187,9 +195,13 @@ public class ResourceKey implements IResourceKey {
         is.close();
         zipFile.close();
 
+        //
+        setHashValue(result);
+
+        // return the result
         return result;
 
-      } catch (IOException e) {
+      } catch (Exception e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
         throw new RuntimeException("");
@@ -204,7 +216,9 @@ public class ResourceKey implements IResourceKey {
 
       try {
 
-        InputStream is = new BufferedInputStream(new FileInputStream(new File(rootFile, getPath())));
+        File file = new File(rootFile, getPath());
+        setTimeStamp(file);
+        InputStream is = new BufferedInputStream(new FileInputStream(file));
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
         byte[] data = new byte[16384];
@@ -218,6 +232,10 @@ public class ResourceKey implements IResourceKey {
         is.close();
         buffer.close();
 
+        //
+        setHashValue(result);
+
+        //
         return result;
 
       } catch (Exception e) {
@@ -230,23 +248,53 @@ public class ResourceKey implements IResourceKey {
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
+   * {@inheritDoc}
+   */
+  public long getTimestamp() {
+
+    //
+    if (_timestamp == null && Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+
+      // jar file?
+      if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
+
+        try {
+          ZipFile zipFile = new ZipFile(new File(getRoot()));
+          ZipEntry zipEntry = zipFile.getEntry(getPath());
+          setTimeStamp(zipEntry);
+        } catch (ZipException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+
+      } else {
+        setTimeStamp(new File(getRoot(), getPath()));
+      }
+    }
+
+    return _timestamp;
+  }
+
+  /**
+   * {@inheritDoc}
    */
   public final byte[] getHashvalue() {
+
+    if (_hashvalue == null) {
+      getContent();
+    }
+
     return _hashvalue;
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param hashvalue
+   * {@inheritDoc}
    */
-  public final void setHashvalue(byte[] hashvalue) {
-    _hashvalue = hashvalue;
+  public final boolean hasHashvalue() {
+    return _hashvalue != null;
   }
 
   /**
@@ -324,5 +372,56 @@ public class ResourceKey implements IResourceKey {
    */
   private String normalize(String string) {
     return string.replace('\\', '/');
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param content
+   * @throws NoSuchAlgorithmException
+   */
+  private void setHashValue(byte[] content) throws NoSuchAlgorithmException {
+    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+      MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+      messagedigest.update(content);
+      _hashvalue = messagedigest.digest();
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param file
+   */
+  private void setTimeStamp(File file) {
+    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+      long timestamp = file.lastModified();
+      if (timestamp != 0l) {
+        _timestamp = timestamp;
+      } else {
+        System.out.println(this);
+        throw new RuntimeException();
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param zipEntry
+   */
+  private void setTimeStamp(ZipEntry zipEntry) {
+    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+      long timestamp = zipEntry.getTime();
+      if (timestamp != -1l) {
+        _timestamp = timestamp;
+      } else {
+        System.out.println(this);
+        throw new RuntimeException();
+      }
+    }
   }
 }

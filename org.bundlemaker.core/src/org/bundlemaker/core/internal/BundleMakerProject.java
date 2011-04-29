@@ -10,9 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -44,16 +41,12 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.transformation.ITransformation;
-import org.bundlemaker.core.util.ByteArrayUtil;
 import org.bundlemaker.core.util.ProgressMonitor;
-import org.bundlemaker.core.util.StopWatch;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -151,8 +144,6 @@ public class BundleMakerProject implements IBundleMakerProject {
     //
     _projectState = BundleMakerProjectState.PARSED;
 
-    storeParsedContentFile();
-
     // return the problems
     return problems;
   }
@@ -231,9 +222,6 @@ public class BundleMakerProject implements IBundleMakerProject {
     // TODO
     for (FileBasedContent fileBasedContent : fileBasedContents) {
 
-      // Map<String, ResourceStandin> typeToResourceStandin = new
-      // HashMap<String, ResourceStandin>();
-
       if (fileBasedContent.isResourceContent()) {
 
         for (ResourceStandin resourceStandin : fileBasedContent.getModifiableBinaryResources()) {
@@ -261,6 +249,8 @@ public class BundleMakerProject implements IBundleMakerProject {
       }
     }
 
+    System.out.println("RESOURCES TO DELETE FROM DATABASE: " + map.keySet());
+    
     // set 'READY' state
     _projectState = BundleMakerProjectState.READY;
 
@@ -479,15 +469,34 @@ public class BundleMakerProject implements IBundleMakerProject {
    * @param resourceStandin
    * @param map
    */
+  @SuppressWarnings("unused")
   private void setupResourceStandin(ResourceStandin resourceStandin, Map<Resource, Resource> map, boolean isSource) {
 
     // get the associated resource
-    Resource resource = map.get(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
+    // Resource resource = map.get(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
+    // resourceStandin.getPath()));
+    Resource resource = map.remove(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
         resourceStandin.getPath()));
 
     // create empty resource if no resource was stored in the database
     if (resource == null) {
+      if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+        System.out.println("NEEDS REPARSING: " + resourceStandin);
+        throw new RuntimeException();
+      }
       resource = new Resource(resourceStandin.getContentId(), resourceStandin.getRoot(), resourceStandin.getPath());
+    }
+
+    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+      if (resource.getTimestamp() != resourceStandin.getTimestamp()) {
+        System.out.println("TIMESTAMP CHANGED: " + resourceStandin);
+        byte[] storedResourceHashValue = resource.getHashvalue();
+        byte[] resourceStandinHashValue = resourceStandin.getHashvalue();
+        if (!Arrays.equals(storedResourceHashValue, resourceStandinHashValue)) {
+          System.out.println("NEEDS REPARSING: " + resourceStandin);
+          throw new RuntimeException();
+        }
+      }
     }
 
     // associate resource and resource stand-in...
@@ -544,41 +553,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     //
     return ProjectDescriptionStore.loadProjectDescription(this);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws CoreException
-   */
-  private void storeParsedContentFile() throws CoreException {
-
-    //
-    IFile iFile = getProject().getFile(new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append("content.parsed"));
-
-    // refresh
-    iFile.refreshLocal(IFile.DEPTH_INFINITE, null);
-
-    Set<String> hashvalues = new HashSet<String>();
-    for (IResource resource : getSourceResources()) {
-      hashvalues.add(ByteArrayUtil.getHexString(resource.getHashvalue()));
-    }
-    for (IResource resource : getBinaryResources()) {
-      hashvalues.add(ByteArrayUtil.getHexString(resource.getHashvalue()));
-    }
-
-    try {
-      PrintWriter printWriter = new PrintWriter(new FileWriter(iFile.getRawLocation().toFile()));
-      for (String value : hashvalues) {
-        printWriter.println(value);
-      }
-      printWriter.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID,
-          "Exception while storing the parsed content list."));
-    }
   }
 
   /**

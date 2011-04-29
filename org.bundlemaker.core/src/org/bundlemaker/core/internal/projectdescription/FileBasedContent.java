@@ -199,8 +199,6 @@ public class FileBasedContent implements IFileBasedContent {
 
     if (isResourceContent()) {
 
-      MessageDigestGenerator generator = new MessageDigestGenerator();
-
       // add the binary resources
       for (IRootPath root : _binaryPaths) {
 
@@ -208,7 +206,6 @@ public class FileBasedContent implements IFileBasedContent {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, root.getResolvedPath().toString(), child);
-          resourceStandin.setHashvalue(generator.getMessageDigest(root.getAsFile(), child));
           projectDescription.addBinaryResource(resourceStandin);
 
           // add the resource
@@ -223,7 +220,6 @@ public class FileBasedContent implements IFileBasedContent {
 
           // create the resource standin
           ResourceStandin resourceStandin = new ResourceStandin(_id, root.getResolvedPath().toString(), child);
-          resourceStandin.setHashvalue(generator.getMessageDigest(root.getAsFile(), child));
           projectDescription.addSourceResource(resourceStandin);
 
           // add the resource

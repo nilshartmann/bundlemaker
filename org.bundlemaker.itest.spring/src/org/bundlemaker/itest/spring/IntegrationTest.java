@@ -1,16 +1,11 @@
 package org.bundlemaker.itest.spring;
 
-import java.util.Collection;
-
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.bundlemaker.itest.spring.experimental.PatternBasedTypeSelector;
 import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;
