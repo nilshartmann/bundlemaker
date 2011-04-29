@@ -207,7 +207,7 @@ public class FileBasedContent implements IFileBasedContent {
         for (String child : FileUtils.getAllChildren(root.getAsFile())) {
 
           // create the resource standin
-          ResourceStandin resourceStandin = new ResourceStandin(_id, root.getUnresolvedPath().toString(), child);
+          ResourceStandin resourceStandin = new ResourceStandin(_id, root.getResolvedPath().toString(), child);
 
           // add the resource
           _resourceContent.getModifiableBinaryResources().add(resourceStandin);

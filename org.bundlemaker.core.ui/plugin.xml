@@ -43,7 +43,7 @@
          point="org.eclipse.core.contenttype.contentTypes">
       <content-type
             base-type="org.eclipse.core.runtime.xml"
-            file-names="projectdescription.xml"
+            file-names="bundlemaker.xml"
             id="org.bundlemaker.core.ui.contenttypes.projectdescription"
             name="Bundlemaker project description"
             priority="normal">

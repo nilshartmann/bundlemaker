@@ -121,8 +121,7 @@ public class JdtParserFactory implements IParserFactory {
     IProject project = JdtProjectHelper.getAssociatedJavaProjectAsProject(bundleMakerProject);
 
     //
-    IResource resource = bundleMakerProject.getProject().findMember(
-        new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
+    IResource resource = bundleMakerProject.getProject().findMember(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
 
     //
     return resource.getLocalTimeStamp() > project.getLocalTimeStamp();
