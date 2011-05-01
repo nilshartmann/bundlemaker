@@ -23,8 +23,6 @@ import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.Test;
 
 /**
@@ -99,12 +97,9 @@ public abstract class AbstractIntegrationTest {
       doAddProjectDescription(bundleMakerProject);
     }
 
-    // create the progress monitor
-    IProgressMonitor progressMonitor = new ProgressMonitor();
-
     // initialize the project
     log("Initializing project...");
-    bundleMakerProject.initialize(progressMonitor);
+    bundleMakerProject.initialize(new ProgressMonitor());
 
     // parse the project
     if (PARSE) {
@@ -114,7 +109,7 @@ public abstract class AbstractIntegrationTest {
       StopWatch stopWatch = new StopWatch();
       stopWatch.start();
 
-      List<? extends IProblem> problems = bundleMakerProject.parse(progressMonitor, true);
+      List<? extends IProblem> problems = bundleMakerProject.parse(new ProgressMonitor(), true);
 
       stopWatch.stop();
       log(stopWatch.getElapsedTime() + "");
@@ -124,7 +119,7 @@ public abstract class AbstractIntegrationTest {
 
     // open the project
     log("Opening project...");
-    bundleMakerProject.open(progressMonitor);
+    bundleMakerProject.open(new ProgressMonitor());
 
     // EXAMPLE CODE - REMOVE
     if (bundleMakerProject.getState().equals(BundleMakerProjectState.READY)) {

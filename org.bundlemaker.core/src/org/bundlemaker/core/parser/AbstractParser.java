@@ -16,6 +16,7 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -70,6 +71,12 @@ public abstract class AbstractParser implements IParser {
 
     //
     return _errors;
+  }
+
+  @Override
+  public List<IProblem> parseResources(IFileBasedContent content, List<IResource> resources, IResourceCache cache,
+      IProgressMonitor _progressMonitor) throws CoreException {
+    return null;
   }
 
   /**

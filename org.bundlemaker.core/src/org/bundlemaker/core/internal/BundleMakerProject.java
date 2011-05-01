@@ -37,6 +37,7 @@ import org.bundlemaker.core.internal.transformation.BasicProjectContentTransform
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -71,9 +72,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
   /** the project description working copies */
   private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
-
-  /** - */
-  private IProgressMonitor               _currentProgressMonitor;
 
   /**
    * <p>
@@ -115,9 +113,6 @@ public class BundleMakerProject implements IBundleMakerProject {
    */
   public void initialize(IProgressMonitor progressMonitor) throws CoreException {
 
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
-
     // reload the project description
     _projectDescription = loadProjectDescription();
     _projectDescription.initialize(this);
@@ -137,9 +132,6 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public List<IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences) throws CoreException {
 
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
-
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
 
@@ -149,6 +141,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     // parse the project
     List<IProblem> problems = projectParser.parseBundleMakerProject(progressMonitor);
 
+    //
     _projectState = BundleMakerProjectState.PARSED;
 
     // return the problems
@@ -159,9 +152,6 @@ public class BundleMakerProject implements IBundleMakerProject {
    * {@inheritDoc}
    */
   public void open(IProgressMonitor progressMonitor) throws CoreException {
-
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
 
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED);
@@ -232,9 +222,6 @@ public class BundleMakerProject implements IBundleMakerProject {
     // TODO
     for (FileBasedContent fileBasedContent : fileBasedContents) {
 
-      // Map<String, ResourceStandin> typeToResourceStandin = new
-      // HashMap<String, ResourceStandin>();
-
       if (fileBasedContent.isResourceContent()) {
 
         for (ResourceStandin resourceStandin : fileBasedContent.getModifiableBinaryResources()) {
@@ -262,11 +249,14 @@ public class BundleMakerProject implements IBundleMakerProject {
       }
     }
 
+    System.out.println("RESOURCES TO DELETE FROM DATABASE: " + map.keySet());
+    
     // set 'READY' state
     _projectState = BundleMakerProjectState.READY;
 
     // create default working copy
-    createModularizedSystemWorkingCopy(getProject().getName());
+    IModularizedSystem modularizedSystem = createModularizedSystemWorkingCopy(getProject().getName());
+    modularizedSystem.applyTransformations();
   }
 
   /**
@@ -295,6 +285,28 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // set the project state
     _projectState = BundleMakerProjectState.DISPOSED;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  @Override
+  public final List<IResource> getSourceResources() {
+    return _projectDescription.getSourceResources();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  @Override
+  public final List<IResource> getBinaryResources() {
+    return _projectDescription.getBinaryResources();
   }
 
   /**
@@ -415,9 +427,6 @@ public class BundleMakerProject implements IBundleMakerProject {
    */
   public IDependencyStore getDependencyStore(IProgressMonitor progressMonitor) throws CoreException {
 
-    // set the progress monitor
-    _currentProgressMonitor = progressMonitor;
-
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
 
@@ -460,15 +469,34 @@ public class BundleMakerProject implements IBundleMakerProject {
    * @param resourceStandin
    * @param map
    */
+  @SuppressWarnings("unused")
   private void setupResourceStandin(ResourceStandin resourceStandin, Map<Resource, Resource> map, boolean isSource) {
 
     // get the associated resource
-    Resource resource = map.get(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
+    // Resource resource = map.get(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
+    // resourceStandin.getPath()));
+    Resource resource = map.remove(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
         resourceStandin.getPath()));
 
     // create empty resource if no resource was stored in the database
     if (resource == null) {
+      if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+        System.out.println("NEEDS REPARSING: " + resourceStandin);
+        throw new RuntimeException();
+      }
       resource = new Resource(resourceStandin.getContentId(), resourceStandin.getRoot(), resourceStandin.getPath());
+    }
+
+    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+      if (resource.getTimestamp() != resourceStandin.getTimestamp()) {
+        System.out.println("TIMESTAMP CHANGED: " + resourceStandin);
+        byte[] storedResourceHashValue = resource.getHashvalue();
+        byte[] resourceStandinHashValue = resourceStandin.getHashvalue();
+        if (!Arrays.equals(storedResourceHashValue, resourceStandinHashValue)) {
+          System.out.println("NEEDS REPARSING: " + resourceStandin);
+          throw new RuntimeException();
+        }
+      }
     }
 
     // associate resource and resource stand-in...

@@ -78,8 +78,7 @@ public class ProjectDescriptionStore {
     }
 
     //
-    IFile iFile = project.getFile(new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME)
-        .append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
+    IFile iFile = project.getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
 
     ByteArrayInputStream in = new ByteArrayInputStream(XmlProjectDescriptionExporterUtils
         .marshal(xmlProjectDescription).getBytes());
@@ -102,7 +101,7 @@ public class ProjectDescriptionStore {
 
     //
     IFile iFile = project.getProject().getFile(
-        new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
+        BundleMakerCore.PROJECT_DESCRIPTION_PATH);
 
     // refresh
     iFile.refreshLocal(IFile.DEPTH_INFINITE, null);

@@ -17,8 +17,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -42,7 +44,10 @@ public final class BundleMakerCore {
   public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
 
   /** the project description file name */
-  public static final String PROJECT_DESCRIPTION_NAME   = "projectdescription.xml";
+  public static final String PROJECT_DESCRIPTION_NAME   = "bundlemaker.xml";
+
+  /** the project description path */
+  public static final IPath  PROJECT_DESCRIPTION_PATH   = new Path(PROJECT_DESCRIPTION_NAME);
 
   /**
    * <p>
@@ -73,7 +78,7 @@ public final class BundleMakerCore {
     }
 
     // // try to get project from cache
-    BundleMakerProject bundleMakerProject = (BundleMakerProject) Activator.getDefault().getBundleMakerProject(project);
+    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) Activator.getDefault().getBundleMakerProject(project);
 
     // create project if necessary
     if (bundleMakerProject == null) {

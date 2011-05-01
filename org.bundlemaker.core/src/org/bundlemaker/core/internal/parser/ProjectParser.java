@@ -20,11 +20,13 @@ import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IDirectory;
+import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
@@ -102,6 +104,14 @@ public class ProjectParser {
 
     // create the resource cache
     ResourceCache cache = new ResourceCache((IPersistentDependencyStore) _bundleMakerProject.getDependencyStore(null));
+
+    // creates resources for each resource
+    for (IResourceKey resourceKey : _bundleMakerProject.getSourceResources()) {
+      cache.getOrCreateResource(resourceKey);
+    }
+    for (IResourceKey resourceKey : _bundleMakerProject.getBinaryResources()) {
+      cache.getOrCreateResource(resourceKey);
+    }
 
     if (progressMonitor instanceof ProgressMonitor) {
       ProgressMonitor monitor = (ProgressMonitor) progressMonitor;

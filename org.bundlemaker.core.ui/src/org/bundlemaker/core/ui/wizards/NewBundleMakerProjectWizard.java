@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -195,8 +194,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
    * @param project
    */
   private void openProjectDescriptionEditor(IProject project) {
-    IFile iFile = _newProject.getProject().getFile(
-        new Path(BundleMakerCore.BUNDLEMAKER_DIRECTORY_NAME).append(BundleMakerCore.PROJECT_DESCRIPTION_NAME));
+    IFile iFile = _newProject.getProject().getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
 
     IWorkbenchPage activePage = _workbench.getActiveWorkbenchWindow().getActivePage();
 

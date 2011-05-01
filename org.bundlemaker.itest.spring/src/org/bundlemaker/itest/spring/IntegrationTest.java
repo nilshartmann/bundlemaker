@@ -1,19 +1,17 @@
 package org.bundlemaker.itest.spring;
 
-import java.util.Collection;
-
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.bundlemaker.itest.spring.experimental.PatternBasedTypeSelector;
 import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;
 import org.bundlemaker.itest.spring.tests.ModuleTest;
 import org.bundlemaker.itest.spring.tests.ResourceModelTests;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -29,8 +27,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
    * </p>
    */
   public IntegrationTest() {
-    // super("spring", true, false, false, true);
-    super("spring", true, false, false, true);
+    super("spring", true, false, false, false);
   }
 
   /**
@@ -65,6 +62,15 @@ public class IntegrationTest extends AbstractIntegrationTest {
    */
   @Override
   protected void doPostProcessModularizedSystem(IModularizedSystem modularizedSystem) {
+
+    //
+    try {
+      ModelTransformer modelTransformer = new ModelTransformer(true);
+      IArtifact rootArtifact = modelTransformer.transform(modularizedSystem);
+      ModelTransformer.dumpArtifact(rootArtifact);
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
 
     // add experimental
     modularizedSystem.getTypeSelectors().add(
