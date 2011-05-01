@@ -90,7 +90,18 @@ public class ContentListBlock {
     buttonBar.setLayoutData(gd);
 
     // Add the buttons
-    _editButton = newTextButton(buttonBar, "Edit entry...", null);
+    _editButton = newTextButton(buttonBar, "Edit entry...", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        String selection = _contentList.getSelection()[0];
+        EditEntryDialog dialog = new EditEntryDialog(shell, selection);
+        if (dialog.open() == Window.OK) {
+          String modifiedEntry = dialog.getEntry();
+          _contentList.setItem(_contentList.getSelectionIndex(), modifiedEntry);
+        }
+      }
+
+    });
 
     _removeButton = newTextButton(buttonBar, "Remove Entry", new SelectionAdapter() {
       @Override
