@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipEntry;
@@ -39,19 +40,22 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceKey implements IResourceKey {
 
   /** the content id */
-  private FlyWeightString _contentId;
+  private FlyWeightString       _contentId;
 
   /** the root of the resource */
-  private FlyWeightString _root;
+  private FlyWeightString       _root;
 
   /** the path of the resource */
-  private String          _path;
+  private String                _path;
 
   /** - */
-  private Long            _timestamp;
+  private Long                  _timestamp;
 
   /** - **/
-  private byte[]          _hashvalue;
+  private byte[]                _hashvalue;
+
+//  /** - */
+//  private WeakReference<byte[]> _contentCache;
 
   /**
    * <p>
@@ -173,6 +177,14 @@ public class ResourceKey implements IResourceKey {
   @Override
   public byte[] getContent() {
 
+    //
+//    if (_contentCache != null) {
+//      byte[] result = _contentCache.get();
+//      if (result != null) {
+//        return result;
+//      }
+//    }
+
     // jar file?
     if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
 
@@ -196,6 +208,7 @@ public class ResourceKey implements IResourceKey {
         zipFile.close();
 
         //
+//        _contentCache = new WeakReference<byte[]>(result);
         setHashValue(result);
 
         // return the result
@@ -233,6 +246,7 @@ public class ResourceKey implements IResourceKey {
         buffer.close();
 
         //
+//        _contentCache = new WeakReference<byte[]>(result);
         setHashValue(result);
 
         //

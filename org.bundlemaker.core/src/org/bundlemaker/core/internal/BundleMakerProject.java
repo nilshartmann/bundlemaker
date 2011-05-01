@@ -14,23 +14,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
-import org.bundlemaker.core.internal.parser.ProjectParser;
+import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
-import org.bundlemaker.core.internal.resource.Reference;
-import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
@@ -38,10 +31,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.transformation.ITransformation;
-import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -126,131 +116,17 @@ public class BundleMakerProject implements IBundleMakerProject {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public List<IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences) throws CoreException {
+  public void parseAndOpen(IProgressMonitor progressMonitor) throws CoreException {
 
     // assert
-    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
-
-    // create the project parser
-    ProjectParser projectParser = new ProjectParser(this, parseIndirectReferences);
-
-    // parse the project
-    List<IProblem> problems = projectParser.parseBundleMakerProject(progressMonitor);
-
-    //
-    _projectState = BundleMakerProjectState.PARSED;
-
-    // return the problems
-    return problems;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public void open(IProgressMonitor progressMonitor) throws CoreException {
-
-    // assert
-    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED);
-
-    // TODO: up-to-date-check
+    assertState(BundleMakerProjectState.INITIALIZED);
 
     // get the dependency store
-    IDependencyStore dependencyStore = getDependencyStore(null);
+    ModelSetup modelSetup = new ModelSetup(this);
+    modelSetup.setup(_projectDescription.getModifiableFileBasedContent(),
+        ((IPersistentDependencyStore) getDependencyStore(null)), progressMonitor);
 
-    List<Resource> resources = dependencyStore.getResources();
-
-    Map<Resource, Resource> map = new HashMap<Resource, Resource>();
-
-    ProgressMonitor monitor = new ProgressMonitor();
-
-    // TODO
-    monitor.beginTask("Opening database ", resources.size());
-
-    for (Resource resource : resources) {
-
-      map.put(resource, resource);
-
-      // create copies of references
-      Set<Reference> references = new HashSet<Reference>();
-      for (Reference reference : resource.getModifiableReferences()) {
-
-        // TODO
-        if (reference == null) {
-          continue;
-        }
-
-        Reference newReference = new Reference(reference);
-        references.add(newReference);
-        newReference.setResource(resource);
-      }
-      resource.getModifiableReferences().clear();
-      resource.getModifiableReferences().addAll(references);
-
-      //
-      for (Type type : resource.getModifiableContainedTypes()) {
-
-        // create copies of references
-        Set<Reference> typeReferences = new HashSet<Reference>();
-        for (Reference reference : type.getModifiableReferences()) {
-
-          // TODO
-          if (reference == null) {
-            continue;
-          }
-
-          Reference newReference = new Reference(reference);
-          typeReferences.add(newReference);
-          newReference.setType(type);
-        }
-
-        type.getModifiableReferences().clear();
-        type.getModifiableReferences().addAll(typeReferences);
-      }
-
-      // set monitor
-      monitor.worked(1);
-    }
-
-    monitor.done();
-
-    List<FileBasedContent> fileBasedContents = _projectDescription.getModifiableFileBasedContent();
-
-    // TODO
-    for (FileBasedContent fileBasedContent : fileBasedContents) {
-
-      if (fileBasedContent.isResourceContent()) {
-
-        for (ResourceStandin resourceStandin : fileBasedContent.getModifiableBinaryResources()) {
-
-          setupResourceStandin(resourceStandin, map, false);
-          Assert.isNotNull(resourceStandin.getResource());
-          for (IType type : resourceStandin.getContainedTypes()) {
-
-            // ALWAYS assert a binary resource
-            Assert.isNotNull(type.getBinaryResource(), "No binary resource for type " + type.getFullyQualifiedName());
-          }
-        }
-
-        for (ResourceStandin resourceStandin : fileBasedContent.getModifiableSourceResources()) {
-
-          setupResourceStandin(resourceStandin, map, true);
-          Assert.isNotNull(resourceStandin.getResource());
-          for (IType type : resourceStandin.getContainedTypes()) {
-
-            if (type.getBinaryResource() == null) {
-              System.out.println("No binary resource for type " + type.getFullyQualifiedName());
-            }
-          }
-        }
-      }
-    }
-
-    System.out.println("RESOURCES TO DELETE FROM DATABASE: " + map.keySet());
-    
     // set 'READY' state
     _projectState = BundleMakerProjectState.READY;
 
@@ -285,6 +161,15 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // set the project state
     _projectState = BundleMakerProjectState.DISPOSED;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IProblem> getProblems() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   /**
@@ -428,7 +313,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   public IDependencyStore getDependencyStore(IProgressMonitor progressMonitor) throws CoreException {
 
     // assert
-    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.PARSED, BundleMakerProjectState.READY);
+    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.READY);
 
     if (_additionalInfoStore == null) {
       return Activator.getDefault().getPersistentDependencyStore(this);
@@ -460,86 +345,6 @@ public class BundleMakerProject implements IBundleMakerProject {
     } else if (!_project.equals(other._project))
       return false;
     return true;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceStandin
-   * @param map
-   */
-  @SuppressWarnings("unused")
-  private void setupResourceStandin(ResourceStandin resourceStandin, Map<Resource, Resource> map, boolean isSource) {
-
-    // get the associated resource
-    // Resource resource = map.get(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
-    // resourceStandin.getPath()));
-    Resource resource = map.remove(new ResourceKey(resourceStandin.getContentId(), resourceStandin.getRoot(),
-        resourceStandin.getPath()));
-
-    // create empty resource if no resource was stored in the database
-    if (resource == null) {
-      if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-        System.out.println("NEEDS REPARSING: " + resourceStandin);
-        throw new RuntimeException();
-      }
-      resource = new Resource(resourceStandin.getContentId(), resourceStandin.getRoot(), resourceStandin.getPath());
-    }
-
-    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-      if (resource.getTimestamp() != resourceStandin.getTimestamp()) {
-        System.out.println("TIMESTAMP CHANGED: " + resourceStandin);
-        byte[] storedResourceHashValue = resource.getHashvalue();
-        byte[] resourceStandinHashValue = resourceStandin.getHashvalue();
-        if (!Arrays.equals(storedResourceHashValue, resourceStandinHashValue)) {
-          System.out.println("NEEDS REPARSING: " + resourceStandin);
-          throw new RuntimeException();
-        }
-      }
-    }
-
-    // associate resource and resource stand-in...
-    resourceStandin.setResource(resource);
-    // ... and set the opposite
-    resource.setResourceStandin(resourceStandin);
-
-    // set the references
-    Set<Reference> resourceReferences = new HashSet<Reference>();
-    for (Reference reference : resource.getModifiableReferences()) {
-      Reference newReference = new Reference(reference);
-      newReference.setResource(resource);
-      resourceReferences.add(newReference);
-    }
-    resource.getModifiableReferences().clear();
-    resource.getModifiableReferences().addAll(resourceReferences);
-
-    // set the type-back-references
-    for (Type type : resource.getModifiableContainedTypes()) {
-
-      if (isSource) {
-        type.setSourceResource(resource);
-      } else {
-        type.setBinaryResource(resource);
-      }
-
-      // set the references
-      Set<Reference> typeReferences = new HashSet<Reference>();
-      for (Reference reference : type.getModifiableReferences()) {
-
-        // TODO
-        if (reference == null) {
-          continue;
-        }
-
-        Reference newReference = new Reference(reference);
-        newReference.setType(type);
-        typeReferences.add(newReference);
-      }
-      type.getModifiableReferences().clear();
-      type.getModifiableReferences().addAll(typeReferences);
-    }
-
   }
 
   /**

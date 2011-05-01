@@ -8,17 +8,18 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.parser;
+package org.bundlemaker.core.internal.parserold;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.parser.IDirectory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IResourceKey;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -30,26 +31,23 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class ParserCallable implements Callable<List<IProblem>> {
 
-  /** the block size **/
-  // TODO: MOVE
-  private static final int  BLOCKSIZE = 2000;
-
-  private IFileBasedContent _content;
+  /** - */
+  private IFileBasedContent  _content;
 
   /** the package fragments */
-  private List<IDirectory>  _directories;
+  private List<IResourceKey> _resources;
 
   /** the list of all errors */
-  private List<IProblem>    _errors;
+  private List<IProblem>     _errors;
 
   /** - */
-  private IParser           _parser;
+  private IParser            _parser;
 
   /** - */
-  private IResourceCache    _resourceCache;
+  private IResourceCache     _resourceCache;
 
   /** - */
-  private IProgressMonitor  _progressMonitor;
+  private IProgressMonitor   _progressMonitor;
 
   /**
    * <p>
@@ -57,16 +55,16 @@ public class ParserCallable implements Callable<List<IProblem>> {
    * </p>
    * 
    * @param content
-   * @param directories
+   * @param resources
    * @param parser
    * @param resourceCache
    */
-  public ParserCallable(IFileBasedContent content, List<IDirectory> directories, IParser parser,
+  public ParserCallable(IFileBasedContent content, List<IResourceKey> resources, IParser parser,
       IResourceCache resourceCache, IProgressMonitor progressMonitor) {
 
     //
     Assert.isNotNull(content);
-    Assert.isNotNull(directories);
+    Assert.isNotNull(resources);
     Assert.isNotNull(parser);
     Assert.isNotNull(resourceCache);
 
@@ -74,7 +72,7 @@ public class ParserCallable implements Callable<List<IProblem>> {
     _content = content;
 
     // set the directories to parse
-    _directories = directories;
+    _resources = resources;
 
     //
     _parser = parser;
@@ -94,24 +92,8 @@ public class ParserCallable implements Callable<List<IProblem>> {
     //
     _errors = new LinkedList<IProblem>();
 
-    // iterate
-    for (int i = 0, resourceCount = 0, fromIndex = 0; i < _directories.size(); i++) {
-
-      // class file count
-      // TODO
-      resourceCount = resourceCount + _directories.get(i).getBinaryContentCount();
-
-      if (resourceCount > BLOCKSIZE || i + 1 == _directories.size()) {
-
-        // parse
-        _errors
-            .addAll(_parser.parse(_content, _directories.subList(fromIndex, i + 1), _resourceCache, _progressMonitor));
-
-        // set index
-        resourceCount = 0;
-        fromIndex = i + 1;
-      }
-    }
+    // parse
+    _errors.addAll(_parser.parseResources(_content, _resources, _resourceCache, _progressMonitor));
 
     // return the errors
     return _errors;

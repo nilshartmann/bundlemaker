@@ -16,10 +16,7 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -29,54 +26,30 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public abstract class AbstractParser implements IParser {
 
+  private List<IProblem> _problems;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractParser}.
+   * </p>
+   */
+  public AbstractParser() {
+
+    //
+    _problems = new LinkedList<IProblem>();
+  }
+
+  @Override
+  public List<IProblem> getProblems() {
+    return _problems;
+  }
+
   /**
    * {@inheritDoc}
    */
   @Override
   public void parseBundleMakerProjectStart(IBundleMakerProject bundleMakerProject) {
     // ignore
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<IProblem> parse(IFileBasedContent content, List<IDirectory> directoryList, IResourceCache cache,
-      IProgressMonitor progressMonitor) throws CoreException {
-
-    List<IProblem> _errors = new LinkedList<IProblem>();
-
-    // iterate over the directories and parse the directory fragments
-    for (IDirectory directory : directoryList) {
-
-      // TODO Support for ParserType.SOURCE_AND_BINARY
-      List<IDirectoryFragment> directoryFragments = getParserType().equals(ParserType.BINARY) ? directory
-          .getBinaryDirectoryFragments() : directory.getSourceDirectoryFragments();
-
-      for (IDirectoryFragment directoryFragment : directoryFragments) {
-
-        // finally: parse the class files
-        for (IResourceKey resourceKey : directoryFragment.getResourceKeys()) {
-
-          if (canParse(resourceKey)) {
-
-            // parse the class file
-            parseResource(resourceKey, content, cache);
-          }
-          //
-          progressMonitor.worked(1);
-        }
-      }
-    }
-
-    //
-    return _errors;
-  }
-
-  @Override
-  public List<IProblem> parseResources(IFileBasedContent content, List<IResource> resources, IResourceCache cache,
-      IProgressMonitor _progressMonitor) throws CoreException {
-    return null;
   }
 
   /**
@@ -94,7 +67,7 @@ public abstract class AbstractParser implements IParser {
    * @param resourceKey
    * @param cache
    */
-  protected abstract void parseResource(IResourceKey resourceKey, IFileBasedContent content, IResourceCache cache);
+  public abstract void parseResource(IFileBasedContent content, IResourceKey resource, IResourceCache cache);
 
   /**
    * <p>
@@ -103,5 +76,6 @@ public abstract class AbstractParser implements IParser {
    * @param resourceKey
    * @return
    */
-  protected abstract boolean canParse(IResourceKey resourceKey);
+  public abstract boolean canParse(IResourceKey resourceKey);
+
 }

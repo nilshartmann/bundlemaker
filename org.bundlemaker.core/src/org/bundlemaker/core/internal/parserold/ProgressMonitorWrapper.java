@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.parser;
+package org.bundlemaker.core.internal.parserold;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 

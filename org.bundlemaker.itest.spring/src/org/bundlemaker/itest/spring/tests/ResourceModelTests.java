@@ -68,7 +68,6 @@ public class ResourceModelTests {
                   referenceMap.containsKey(reference.getFullyQualifiedName()));
 
               referenceMap.put(reference.getFullyQualifiedName(), reference);
-
             }
           }
         }

@@ -13,6 +13,7 @@ package org.bundlemaker.core.parser.jdt.internal;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
 import org.bundlemaker.core.resource.IResourceKey;
@@ -27,7 +28,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractHookAwareJdtParser implements IParser {
+public abstract class AbstractHookAwareJdtParser extends AbstractParser implements IParser {
 
   /** - */
   private ExtensionRegistryTracker<IJdtSourceParserHook> _hookRegistry;

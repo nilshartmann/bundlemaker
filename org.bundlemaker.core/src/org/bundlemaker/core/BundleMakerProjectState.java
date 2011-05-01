@@ -33,9 +33,6 @@ public enum BundleMakerProjectState {
   /** the INITIALIZED state */
   INITIALIZED,
 
-  /** the PARSED state */
-  PARSED,
-
   /** the OPENED state */
   READY,
 

@@ -41,7 +41,7 @@ public class ByteCodeParser extends AbstractParser {
    * {@inheritDoc}
    */
   @Override
-  protected boolean canParse(IResourceKey resourceKey) {
+  public boolean canParse(IResourceKey resourceKey) {
 
     //
     if (!resourceKey.getPath().endsWith(".class")) {
@@ -53,7 +53,7 @@ public class ByteCodeParser extends AbstractParser {
   }
 
   @Override
-  protected void parseResource(IResourceKey resourceKey, IFileBasedContent content, IResourceCache cache) {
+  public void parseResource(IFileBasedContent content, IResourceKey resourceKey, IResourceCache cache) {
 
     // get the IModifiableResource
     IModifiableResource resource = cache.getOrCreateResource(resourceKey);
@@ -87,7 +87,7 @@ public class ByteCodeParser extends AbstractParser {
 
       // if we have to parse the enclosing type
       if (enclosingResource.getContainedTypes().isEmpty()) {
-        parseResource(enclosingKey, content, cache);
+        parseResource(content, enclosingKey, cache);
 
         if (enclosingResource.getContainedTypes().isEmpty()) {
           // TODO
@@ -103,7 +103,8 @@ public class ByteCodeParser extends AbstractParser {
       AsmReferenceRecorder referenceRecorder = new AsmReferenceRecorder(resource, enclosingResource);
 
       // parse the class file
-      ClassReader reader = new ClassReader(resource.getContent());
+      byte[] bytes = resource.getContent();
+      ClassReader reader = new ClassReader(bytes);
       reader.accept(new ArtefactAnalyserClassVisitor(referenceRecorder), 0);
 
     } catch (Exception e) {

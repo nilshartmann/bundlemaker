@@ -11,10 +11,6 @@
 package org.bundlemaker.core.parser.jdt.internal;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -24,14 +20,11 @@ import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.parser.IDirectory;
-import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.jdt.internal.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ReferenceType;
@@ -40,8 +33,6 @@ import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -105,80 +96,80 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     return ParserType.SOURCE;
   }
 
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public List<IProblem> parse(IFileBasedContent content, List<IDirectory> directoryList, IResourceCache cache,
+  // IProgressMonitor progressMonitor) throws CoreException {
+  //
+  // // create the error list
+  // List<IProblem> _errors = new LinkedList<IProblem>();
+  //
+  // // parse the compilation units
+  // if (content.isResourceContent() && !content.getSourceResources().isEmpty() && content.isAnalyzeSourceResources()) {
+  //
+  // _errors.addAll(parseCompilationUnits(directoryList, cache, content, progressMonitor));
+  // }
+  //
+  // // return the errors
+  // return _errors;
+  // }
+  //
+  // @Override
+  // public List<IProblem> parseResources(IFileBasedContent content, List<IResource> resources, IResourceCache cache,
+  // IProgressMonitor _progressMonitor) throws CoreException {
+  // return null;
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param progressMonitor
+  // *
+  // * @param compilationUnits
+  // * @throws JavaModelException
+  // */
+  // private List<IProblem> parseCompilationUnits(List<IDirectory> directoryList, IResourceCache cache,
+  // IFileBasedContent fileBasedContent, IProgressMonitor progressMonitor) throws CoreException {
+  //
+  // //
+  // List<IProblem> problems = new LinkedList<IProblem>();
+  //
+  // //
+  // for (IDirectory directory : directoryList) {
+  //
+  // //
+  // if (!directory.getDirectoryName().equals(new Path("META-INF")) && directory.hasSourceContent()) {
+  //
+  // //
+  // for (IDirectoryFragment directoryFragment : directory.getSourceDirectoryFragments()) {
+  //
+  // //
+  // for (IResourceKey resourceKey : directoryFragment.getResourceKeys()) {
+  //
+  // //
+  // parseResource(resourceKey, cache, problems);
+  //
+  // progressMonitor.worked(1);
+  // }
+  // }
+  // }
+  // }
+  //
+  // //
+  // return problems;
+  // }
+
   /**
    * {@inheritDoc}
    */
   @Override
-  public List<IProblem> parse(IFileBasedContent content, List<IDirectory> directoryList, IResourceCache cache,
-      IProgressMonitor progressMonitor) throws CoreException {
-
-    // create the error list
-    List<IProblem> _errors = new LinkedList<IProblem>();
-
-    // parse the compilation units
-    if (content.isResourceContent() && !content.getSourceResources().isEmpty() && content.isAnalyzeSourceResources()) {
-
-      _errors.addAll(parseCompilationUnits(directoryList, cache, content, progressMonitor));
-    }
-
-    // return the errors
-    return _errors;
-  }
-
-  @Override
-  public List<IProblem> parseResources(IFileBasedContent content, List<IResource> resources, IResourceCache cache,
-      IProgressMonitor _progressMonitor) throws CoreException {
-    return null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param progressMonitor
-   * 
-   * @param compilationUnits
-   * @throws JavaModelException
-   */
-  private List<IProblem> parseCompilationUnits(List<IDirectory> directoryList, IResourceCache cache,
-      IFileBasedContent fileBasedContent, IProgressMonitor progressMonitor) throws CoreException {
+  public void parseResource(IFileBasedContent fileBasedContent, IResourceKey resourceKey, IResourceCache cache) {
 
     //
-    List<IProblem> problems = new LinkedList<IProblem>();
-
-    //
-    for (IDirectory directory : directoryList) {
-
-      //
-      if (!directory.getDirectoryName().equals(new Path("META-INF")) && directory.hasSourceContent()) {
-
-        //
-        for (IDirectoryFragment directoryFragment : directory.getSourceDirectoryFragments()) {
-
-          //
-          for (IResourceKey resourceKey : directoryFragment.getResourceKeys()) {
-
-            //
-            parseResource(resourceKey, cache, problems);
-
-            progressMonitor.worked(1);
-          }
-        }
-      }
-    }
-
-    //
-    return problems;
-  }
-
-  /**
-   * @param resourceKey
-   * @param cache
-   */
-  private void parseResource(IResourceKey resourceKey, IResourceCache cache, List<IProblem> problems) {
-
-    //
-    if (!resourceKey.getPath().endsWith(".java")) {
+    if (!canParse(resourceKey)) {
       return;
     }
 
@@ -205,17 +196,22 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       CompilationUnit compilationUnit = (CompilationUnit) _parser.createAST(null);
 
-      analyzeCompilationUnit(modifiableResource, compilationUnit, problems);
+      List<IProblem> problems = analyzeCompilationUnit(modifiableResource, compilationUnit);
+      getProblems().addAll(problems);
 
       // step 3: compute the indirectly referenced types
       if (_parseIndirectReferences) {
         computeIndirectlyReferencedTypes(modifiableResource, content);
       }
-
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public boolean canParse(IResourceKey resourceKey) {
+    return resourceKey.getPath().endsWith(".java");
   }
 
   /**
@@ -269,8 +265,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param content
    * @throws JavaModelException
    */
-  private List<IProblem> analyzeCompilationUnit(IModifiableResource modifiableResource,
-      CompilationUnit compilationUnit, List<IProblem> problems) throws CoreException {
+  private List<IProblem> analyzeCompilationUnit(IModifiableResource modifiableResource, CompilationUnit compilationUnit)
+      throws CoreException {
 
     // step 1: set the directly referenced types
     JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
@@ -278,6 +274,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
     // step 2:
     callSourceParserHooks(modifiableResource, compilationUnit);
+
+    List<IProblem> problems = new LinkedList<IProblem>();
 
     // step 4: add the errors to the error list
     for (IProblem problem : visitor.getProblems()) {
@@ -293,24 +291,24 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     return problems;
   }
 
-  /**
-   * @param is
-   * @return
-   * @throws IOException
-   */
-  public static char[] getCharsFromInputStream(InputStream is) throws IOException {
-
-    Reader reader = new InputStreamReader(is);
-    StringWriter result = new StringWriter();
-
-    int data = reader.read();
-    while (data != -1) {
-      char theChar = (char) data;
-      result.append(theChar);
-      data = reader.read();
-    }
-
-    reader.close();
-    return result.toString().toCharArray();
-  }
+  // /**
+  // * @param is
+  // * @return
+  // * @throws IOException
+  // */
+  // public static char[] getCharsFromInputStream(InputStream is) throws IOException {
+  //
+  // Reader reader = new InputStreamReader(is);
+  // StringWriter result = new StringWriter();
+  //
+  // int data = reader.read();
+  // while (data != -1) {
+  // char theChar = (char) data;
+  // result.append(theChar);
+  // data = reader.read();
+  // }
+  //
+  // reader.close();
+  // return result.toString().toCharArray();
+  // }
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.parser;
+package org.bundlemaker.core.internal.parserold;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -18,9 +18,8 @@ import java.util.concurrent.FutureTask;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.parser.ResourceCache;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
-import org.bundlemaker.core.parser.IDirectory;
-import org.bundlemaker.core.parser.IDirectoryFragment;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
@@ -166,6 +165,8 @@ public class ProjectParser {
     }
 
     //
+    content.getBinaryResources();
+    content.getSourceResources();
     List<IDirectory> allDirectories = FileContentReader.getDirectories(content, true);
 
     // compute the part size
@@ -324,7 +325,6 @@ public class ProjectParser {
         position++;
       }
     }
-
   }
 
   /**
