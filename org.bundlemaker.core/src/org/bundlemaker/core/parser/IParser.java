@@ -66,6 +66,6 @@ public interface IParser {
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
   public enum ParserType {
-    BINARY, SOURCE, BINARY_AND_SOURCE;
+    BINARY, BINARY_AND_SOURCE, SOURCE;
   }
 }

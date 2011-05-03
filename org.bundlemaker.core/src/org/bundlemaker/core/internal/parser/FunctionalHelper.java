@@ -45,6 +45,8 @@ public class FunctionalHelper {
           if (parser.canParse(resourceStandin)) {
             parser.parseResource(fileBasedContent, resourceStandin, resourceCache);
           }
+
+          monitor.worked(1);
         }
       }
     }
@@ -64,23 +66,36 @@ public class FunctionalHelper {
       Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
 
     //
-    Set<ResourceStandin> result = new HashSet<ResourceStandin>();
+    monitor.beginTask("", resourceStandins.size());
 
     //
-    for (ResourceStandin resourceStandin : resourceStandins) {
+    Set<ResourceStandin> result;
 
-      // check if the operation has been canceled
-      checkIfCanceled(monitor);
+    try {
 
-      // get the associated resource
-      Resource resource = storedResourcesMap.remove(resourceStandin);
+      result = new HashSet<ResourceStandin>();
 
-      // add if resource has to be re-parsed
-      if (hasToBeReparsed(resourceStandin, resource)) {
-        result.add(resourceStandin);
-      } else {
-        resourceCache.addToStoredResourcesMap(resource, resource);
+      //
+      for (ResourceStandin resourceStandin : resourceStandins) {
+
+        // check if the operation has been canceled
+        checkIfCanceled(monitor);
+
+        // get the associated resource
+        Resource resource = storedResourcesMap.remove(resourceStandin);
+
+        // add if resource has to be re-parsed
+        if (hasToBeReparsed(resourceStandin, resource)) {
+          result.add(resourceStandin);
+        } else {
+          resourceCache.addToStoredResourcesMap(resource, resource);
+        }
+
+        monitor.worked(1);
       }
+
+    } finally {
+      monitor.done();
     }
 
     // return the result

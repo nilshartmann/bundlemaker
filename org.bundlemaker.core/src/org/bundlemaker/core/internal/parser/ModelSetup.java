@@ -1,8 +1,10 @@
 package org.bundlemaker.core.internal.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,13 +14,13 @@ import java.util.concurrent.FutureTask;
 
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.parserold.ProjectParser;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
+import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.eclipse.core.runtime.Assert;
@@ -26,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * <p>
@@ -36,8 +39,9 @@ import org.eclipse.core.runtime.OperationCanceledException;
 public class ModelSetup {
 
   /** THREAD_COUNT */
-  private static final int THREAD_COUNT = Runtime.getRuntime().availableProcessors();
-  // private static final int   THREAD_COUNT             = 1;
+  private static final int   THREAD_COUNT             = Runtime.getRuntime().availableProcessors();
+
+  // private static final int THREAD_COUNT = 1;
 
   // /** the list of all errors */
   // public List<IProblem> _errors;
@@ -74,15 +78,18 @@ public class ModelSetup {
    * @param dependencyStore
    */
   public void setup(List<FileBasedContent> fileBasedContents, IPersistentDependencyStore dependencyStore,
-      IProgressMonitor monitor) throws OperationCanceledException, CoreException {
+      IProgressMonitor mainMonitor) throws OperationCanceledException, CoreException {
 
     Assert.isNotNull(fileBasedContents);
     Assert.isNotNull(dependencyStore);
 
-    // step 1: create new null monitor if necessary
-    if (monitor == null) {
-      monitor = new NullProgressMonitor();
+    // create new null monitor if necessary
+    if (mainMonitor == null) {
+      mainMonitor = new NullProgressMonitor();
     }
+
+    // create the sub-monitor
+    SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, 100);
 
     //
     setupParsers();
@@ -90,98 +97,157 @@ public class ModelSetup {
     //
     notifyParseStart();
 
-    // step 2: reads all the resources from the underlying dependency store and puts it in a map
-    Map<IResourceKey, Resource> storedResourcesMap = readFromDependencyStore(dependencyStore, monitor);
+    try {
+      // ***********************************************************************************************
+      // STEP 1: Read all the resources from the underlying dependency store and put it in a map
+      // ***********************************************************************************************
+      mainMonitor.subTask("Reading from datastore...");
+      Map<IResourceKey, Resource> storedResourcesMap = readFromDependencyStore(dependencyStore,
+          progressMonitor.newChild(10));
 
-    // step 3: create the resource cache that holds all resources that must be stored
-    ResourceCache resourceCache = new ResourceCache(dependencyStore);
+      // ***********************************************************************************************
+      // STEP 2: Perform up-to-date check and parse new or modified resources
+      // ***********************************************************************************************
+      // create the resource cache that holds all resources that must be stored
+      mainMonitor.subTask("Reparsing...");
+      ResourceCache resourceCache = new ResourceCache(dependencyStore);
+      compareAndUpdate(fileBasedContents, storedResourcesMap, resourceCache, progressMonitor.newChild(60));
 
-    // step 4: perform up-to-date check and parse new or modified resources
-    for (FileBasedContent fileBasedContent : fileBasedContents) {
+      // ***********************************************************************************************
+      // STEP 3: Update dependency store
+      // ***********************************************************************************************
+      mainMonitor.subTask("Writing to disc...");
+      resourceCache.commit(progressMonitor.newChild(30));
+      // TODO: deleteResourcesFromDependencyStore(storedResourcesMap.values());
 
-      // we only have check resource content
-      if (fileBasedContent.isResourceContent()) {
+      // ***********************************************************************************************
+      // STEP 4: Setup the resource content
+      // ***********************************************************************************************
+      mainMonitor.subTask("Set up model...");
+      Map<IResourceKey, Resource> newMap = resourceCache.getCombinedMap();
 
-        // step 4.1: compute new and modified resources
-        Set<ResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-            fileBasedContent.getModifiableBinaryResources(), storedResourcesMap, resourceCache, monitor);
+      // set up binary resources
+      FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
+          false, progressMonitor);
 
-        Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-            fileBasedContent.getModifiableSourceResources(), storedResourcesMap, resourceCache, monitor);
+      // set up binary resources
+      FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
+          true, progressMonitor);
 
-        // step 4.2:
-        for (ResourceStandin resourceStandin : newAndModifiedBinaryResources) {
-          resourceCache.getOrCreateResource(resourceStandin);
-        }
+      progressMonitor.worked(1);
 
-        for (ResourceStandin resourceStandin : newAndModifiedSourceResources) {
-          resourceCache.getOrCreateResource(resourceStandin);
-        }
-
-        System.out.println(" ****** COMPARE COMPLETED ");
-
-        resourceCache.setupTypeCache(fileBasedContent);
-
-        System.out.println(" ****** setupTypeCache COMPLETED ");
-
-        multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
-            newAndModifiedBinaryResources, resourceCache, fileBasedContent, monitor);
-
-        System.out.println(" ****** REPARSE COMPLETED ");
-      }
+    } finally {
+      progressMonitor.done();
     }
-
-    // step 4: update dependency store
-    resourceCache.commit(monitor);
-    // deleteResourcesFromDependencyStore(storedResourcesMap.values());
-
-    //
-    Map<IResourceKey, Resource> newMap = resourceCache.getCombinedMap();
-
-    // step 5: setup the resource content
-
-    // step 5.1: set up binary resources
-    FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
-        false, monitor);
-
-    // step 5.2: set up binary resources
-    FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
-        true, monitor);
 
     //
     notifyParseStop();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fileBasedContents
+   * @param storedResourcesMap
+   * @param resourceCache
+   * @param mainMonitor
+   */
+  private void compareAndUpdate(List<FileBasedContent> fileBasedContents,
+      Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
+
+    //
+    int contentCount = fileBasedContents.size();
+    SubMonitor subMonitor = SubMonitor.convert(mainMonitor, contentCount);
+
+    try {
+
+      //
+      for (FileBasedContent fileBasedContent : fileBasedContents) {
+
+        SubMonitor contentMonitor = subMonitor.newChild(1);
+
+        // we only have check resource content
+        if (fileBasedContent.isResourceContent()) {
+
+          SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (fileBasedContent
+              .getModifiableBinaryResources().size() + fileBasedContent.getModifiableSourceResources().size()));
+
+          // step 4.1: compute new and modified resources
+          Set<ResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
+              fileBasedContent.getModifiableBinaryResources(), storedResourcesMap, resourceCache,
+              new NullProgressMonitor());
+
+          Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
+              fileBasedContent.getModifiableSourceResources(), storedResourcesMap, resourceCache,
+              new NullProgressMonitor());
+
+          // step 4.2:
+          for (ResourceStandin resourceStandin : newAndModifiedBinaryResources) {
+            resourceCache.getOrCreateResource(resourceStandin);
+          }
+          for (ResourceStandin resourceStandin : newAndModifiedSourceResources) {
+            resourceCache.getOrCreateResource(resourceStandin);
+          }
+
+          resourceCache.setupTypeCache(fileBasedContent);
+
+          // adjust work remaining
+          int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
+
+          resourceContentMonitor.setWorkRemaining(remaining);
+
+          multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources, newAndModifiedBinaryResources,
+              resourceCache, fileBasedContent, resourceContentMonitor.newChild(remaining));
+
+        }
+
+        // adjust monitor in case that fileBasedContent is NOT resource content
+        subMonitor.setWorkRemaining(contentCount--);
+      }
+    } finally {
+      subMonitor.done();
+    }
   }
 
   private void multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
       Collection<ResourceStandin> sourceResources, Collection<ResourceStandin> binaryResources,
       ResourceCache resourceCache, FileBasedContent fileBasedContent, IProgressMonitor monitor) {
 
-    //
-    List<ResourceStandin>[] sourceSublists = splitIntoSublists(new ArrayList<ResourceStandin>(sourceResources));
-    List<ResourceStandin>[] binarySublists = splitIntoSublists(new ArrayList<ResourceStandin>(binaryResources));
+    monitor.beginTask("PARSE ", sourceResources.size() + binaryResources.size());
 
-    // set up the callables
-    CallableReparse[] callables = new CallableReparse[THREAD_COUNT];
-    for (int i = 0; i < callables.length; i++) {
-      callables[i] = new CallableReparse(fileBasedContent, sourceSublists[i], binarySublists[i],
-          _parsers4threads.get(i), storedResourcesMap, resourceCache, monitor);
-    }
+    try {
 
-    // create the future tasks
-    FutureTask<Void>[] futureTasks = new FutureTask[THREAD_COUNT];
-    for (int i = 0; i < futureTasks.length; i++) {
-      futureTasks[i] = new FutureTask<Void>(callables[i]);
-      new Thread(futureTasks[i]).start();
-    }
+      //
+      List<ResourceStandin>[] sourceSublists = splitIntoSublists(new ArrayList<ResourceStandin>(sourceResources));
+      List<ResourceStandin>[] binarySublists = splitIntoSublists(new ArrayList<ResourceStandin>(binaryResources));
 
-    // collect the result
-    for (int i = 0; i < futureTasks.length; i++) {
-      try {
-        futureTasks[i].get();
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+      // set up the callables
+      CallableReparse[] callables = new CallableReparse[THREAD_COUNT];
+      for (int i = 0; i < callables.length; i++) {
+        callables[i] = new CallableReparse(fileBasedContent, sourceSublists[i], binarySublists[i],
+            _parsers4threads.get(i), storedResourcesMap, resourceCache, monitor);
       }
+
+      // create the future tasks
+      FutureTask<Void>[] futureTasks = new FutureTask[THREAD_COUNT];
+      for (int i = 0; i < futureTasks.length; i++) {
+        futureTasks[i] = new FutureTask<Void>(callables[i]);
+        new Thread(futureTasks[i]).start();
+      }
+
+      // collect the result
+      for (int i = 0; i < futureTasks.length; i++) {
+        try {
+          futureTasks[i].get();
+        } catch (Exception e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+
+    } finally {
+      monitor.done();
     }
   }
 
@@ -286,29 +352,16 @@ public class ModelSetup {
       }
     }
 
-    // TODO
-    // // first the source parsers
-    // int position = 0;
-    // for (int i = 0; i < parserFactories.size(); i++) {
-    // if (!parsers4threads[i][0].getParserType().equals(ParserType.BINARY)) {
-    // for (int j = 0; j < THREAD_COUNT; j++) {
-    // _parsers[position][j] = parsers4threads[i][j];
-    // }
-    // position++;
-    // }
-    // }
-    //
-    // // then the binary parsers
-    // for (int i = 0; i < parserFactories.size(); i++) {
-    // if (parsers4threads[i][0].getParserType().equals(ParserType.BINARY)) {
-    // for (int j = 0; j < THREAD_COUNT; j++) {
-    // _parsers[position][j] = parsers4threads[i][j];
-    // }
-    // position++;
-    // }
-    // }
+    // sort
+    for (int i = 0; i < parsers4threads.size(); i++) {
+      Arrays.sort(parsers4threads.get(i), new Comparator<IParser>() {
+        @Override
+        public int compare(IParser o1, IParser o2) {
+          return o2.getParserType().compareTo(o1.getParserType());
+        }
+      });
+    }
 
-    // assign
     _parsers4threads = parsers4threads;
   }
 

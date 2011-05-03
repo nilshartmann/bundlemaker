@@ -2,10 +2,8 @@ package org.bundlemaker.core.internal.parser;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
-import org.bundlemaker.core.internal.parserold.ParserCallable;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
@@ -89,12 +87,12 @@ public class CallableReparse implements Callable<Void> {
   @Override
   public Void call() throws Exception {
 
-    // step 4.4: set up binary resources
-    FunctionalHelper.parseNewOrModifiedResources(_content, _binaryResources, _resourceCache, ParserType.BINARY,
-        _parser, _progressMonitor);
-
     // step 4.5: set up source resources
     FunctionalHelper.parseNewOrModifiedResources(_content, _sourceResources, _resourceCache, ParserType.SOURCE,
+        _parser, _progressMonitor);
+
+    // step 4.4: set up binary resources
+    FunctionalHelper.parseNewOrModifiedResources(_content, _binaryResources, _resourceCache, ParserType.BINARY,
         _parser, _progressMonitor);
 
     return null;
