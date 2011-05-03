@@ -26,10 +26,13 @@ import org.eclipse.debug.ui.StringVariableSelectionDialog;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.ArchiveFileFilter;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.FolderSelectionDialog;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -206,6 +209,26 @@ public class EditEntryDialog extends TitleAreaDialog {
     if (res != null) {
       _entryText.setText(Path.fromOSString(res).makeAbsolute().toOSString());
     }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.jface.dialogs.TrayDialog#createButtonBar(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected Control createButtonBar(Composite parent) {
+    Control c = super.createButtonBar(parent);
+    final Button okButton = getButton(IDialogConstants.OK_ID);
+    _entryText.addModifyListener(new ModifyListener() {
+
+      @Override
+      public void modifyText(ModifyEvent e) {
+        okButton.setEnabled(_entryText.getText().trim().isEmpty() == false);
+      }
+    });
+
+    return c;
   }
 
   private Button createButton(Composite parent, String text, SelectionListener selectionListener) {
