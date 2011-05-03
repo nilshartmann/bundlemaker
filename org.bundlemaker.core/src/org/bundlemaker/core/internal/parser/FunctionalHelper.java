@@ -38,8 +38,6 @@ public class FunctionalHelper {
 
         for (ResourceStandin resourceStandin : resources) {
 
-          System.out.println("Parsing '" + resourceStandin + "'");
-
           // check if the operation has been canceled
           FunctionalHelper.checkIfCanceled(monitor);
 
