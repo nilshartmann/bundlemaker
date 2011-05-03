@@ -24,6 +24,7 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
@@ -120,7 +121,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   public void parseAndOpen(IProgressMonitor progressMonitor) throws CoreException {
 
     // assert
-    assertState(BundleMakerProjectState.INITIALIZED);
+    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.READY);
 
     // get the dependency store
     ModelSetup modelSetup = new ModelSetup(this);
@@ -131,7 +132,8 @@ public class BundleMakerProject implements IBundleMakerProject {
     _projectState = BundleMakerProjectState.READY;
 
     // create default working copy
-    IModularizedSystem modularizedSystem = createModularizedSystemWorkingCopy(getProject().getName());
+    IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
+        .getName()) : createModularizedSystemWorkingCopy(getProject().getName());
     modularizedSystem.applyTransformations();
   }
 
@@ -192,6 +194,26 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public final List<IResource> getBinaryResources() {
     return _projectDescription.getBinaryResources();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final List<ResourceStandin> getSourceResourceStandins() {
+    return _projectDescription.getSourceResourceStandins();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final List<ResourceStandin> getBinaryResourceStandins() {
+    return _projectDescription.getBinaryResourceStandins();
   }
 
   /**
@@ -298,6 +320,7 @@ public class BundleMakerProject implements IBundleMakerProject {
    * 
    * @return
    */
+  @Override
   public IBundleMakerProjectDescription getProjectDescription() {
     return _projectDescription;
   }

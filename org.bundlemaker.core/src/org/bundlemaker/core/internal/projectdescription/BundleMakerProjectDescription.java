@@ -297,6 +297,14 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
     return (List<IResource>) result;
   }
 
+  public final List<ResourceStandin> getSourceResourceStandins() {
+    return Collections.unmodifiableList(_sourceResources);
+  }
+
+  public final List<ResourceStandin> getBinaryResourceStandins() {
+    return Collections.unmodifiableList(_binaryResources);
+  }
+
   /**
    * <p>
    * </p>
@@ -394,7 +402,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
    * </p>
    * 
    * @return
-   * @throws CoreException 
+   * @throws CoreException
    */
   private File getAsFile(String path) throws CoreException {
 

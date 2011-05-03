@@ -27,7 +27,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
    * </p>
    */
   public IntegrationTest() {
-    super("spring", true, true, false, false);
+    super("spring", false, false, false, false);
   }
 
   /**

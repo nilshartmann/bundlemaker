@@ -1,9 +1,14 @@
 package org.bundlemaker.core.internal.parser;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.FutureTask;
 
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
@@ -14,10 +19,8 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.util.MemoryUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,7 +36,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 public class ModelSetup {
 
   /** THREAD_COUNT */
-  private static final int   THREAD_COUNT             = Runtime.getRuntime().availableProcessors();
+  private static final int THREAD_COUNT = Runtime.getRuntime().availableProcessors();
+  // private static final int   THREAD_COUNT             = 1;
 
   // /** the list of all errors */
   // public List<IProblem> _errors;
@@ -41,8 +45,8 @@ public class ModelSetup {
   /** the bundle maker project */
   private BundleMakerProject _bundleMakerProject;
 
-  /** the parser array: the first index is the parser, the second the thread */
-  private IParser[][]        _parsers;
+  /**  */
+  private List<IParser[]>    _parsers4threads;
 
   /** - */
   private boolean            _parseIndirectReferences = true;
@@ -95,46 +99,35 @@ public class ModelSetup {
     // step 4: perform up-to-date check and parse new or modified resources
     for (FileBasedContent fileBasedContent : fileBasedContents) {
 
-      // TODO: perform in multiple threads
-      {
+      // we only have check resource content
+      if (fileBasedContent.isResourceContent()) {
 
-        // we only have check resource content
-        if (fileBasedContent.isResourceContent()) {
+        // step 4.1: compute new and modified resources
+        Set<ResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
+            fileBasedContent.getModifiableBinaryResources(), storedResourcesMap, resourceCache, monitor);
 
-          // step 4.1: compute new and modified resources
-          Set<ResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              fileBasedContent.getModifiableBinaryResources(), storedResourcesMap, resourceCache, monitor);
+        Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
+            fileBasedContent.getModifiableSourceResources(), storedResourcesMap, resourceCache, monitor);
 
-          Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-              fileBasedContent.getModifiableSourceResources(), storedResourcesMap, resourceCache, monitor);
-
-          // step 4.2:
-          for (ResourceStandin resourceStandin : newAndModifiedBinaryResources) {
-            resourceCache.getOrCreateResource(resourceStandin);
-          }
-
-          for (ResourceStandin resourceStandin : newAndModifiedSourceResources) {
-            resourceCache.getOrCreateResource(resourceStandin);
-          }
-
-          // step 4.3:
-          if (!(newAndModifiedBinaryResources.isEmpty() && newAndModifiedSourceResources.isEmpty())) {
-            resourceCache.setupTypeCache(fileBasedContent);
-          }
-
-          // step 4.4: set up binary resources
-          if (!newAndModifiedBinaryResources.isEmpty()) {
-            parseNewOrModifiedResources(fileBasedContent, newAndModifiedBinaryResources, resourceCache,
-                ParserType.BINARY, monitor);
-          }
-
-          // step 4.5: set up source resources
-          if (!newAndModifiedSourceResources.isEmpty()) {
-            parseNewOrModifiedResources(fileBasedContent, newAndModifiedSourceResources, resourceCache,
-                ParserType.SOURCE, monitor);
-          }
+        // step 4.2:
+        for (ResourceStandin resourceStandin : newAndModifiedBinaryResources) {
+          resourceCache.getOrCreateResource(resourceStandin);
         }
 
+        for (ResourceStandin resourceStandin : newAndModifiedSourceResources) {
+          resourceCache.getOrCreateResource(resourceStandin);
+        }
+
+        System.out.println(" ****** COMPARE COMPLETED ");
+
+        resourceCache.setupTypeCache(fileBasedContent);
+
+        System.out.println(" ****** setupTypeCache COMPLETED ");
+
+        multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
+            newAndModifiedBinaryResources, resourceCache, fileBasedContent, monitor);
+
+        System.out.println(" ****** REPARSE COMPLETED ");
       }
     }
 
@@ -146,58 +139,79 @@ public class ModelSetup {
     Map<IResourceKey, Resource> newMap = resourceCache.getCombinedMap();
 
     // step 5: setup the resource content
-    // TODO: perform in multiple threads
-    for (FileBasedContent fileBasedContent : fileBasedContents) {
 
-      // TODO: perform in multiple threads
-      // we only have to set up resources for resource content
-      if (fileBasedContent.isResourceContent()) {
+    // step 5.1: set up binary resources
+    FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getBinaryResourceStandins(), newMap,
+        false, monitor);
 
-        // step 5.1: set up binary resources
-        FunctionalHelper.associateResourceStandinsWithResources(fileBasedContent.getModifiableBinaryResources(),
-            newMap, false, monitor);
-
-        // step 5.2: set up binary resources
-        FunctionalHelper.associateResourceStandinsWithResources(fileBasedContent.getModifiableSourceResources(),
-            newMap, true, monitor);
-      }
-    }
+    // step 5.2: set up binary resources
+    FunctionalHelper.associateResourceStandinsWithResources(_bundleMakerProject.getSourceResourceStandins(), newMap,
+        true, monitor);
 
     //
     notifyParseStop();
-
-    // // TODO: REMOVE?
-    // // ALWAYS assert a binary resource for the contained types
-    // for (ResourceStandin resourceStandin : fileBasedContent.getModifiableBinaryResources()) {
-    // for (IType type : resourceStandin.getContainedTypes()) {
-    // Assert.isNotNull(type.getBinaryResource(), "No binary resource for type " + type.getFullyQualifiedName());
-    // }
-    // }
   }
 
-  private void parseNewOrModifiedResources(FileBasedContent fileBasedContent, Set<ResourceStandin> resources,
-      ResourceCache resourceCache, ParserType parserType, IProgressMonitor monitor) throws CoreException {
+  private void multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
+      Collection<ResourceStandin> sourceResources, Collection<ResourceStandin> binaryResources,
+      ResourceCache resourceCache, FileBasedContent fileBasedContent, IProgressMonitor monitor) {
 
-    for (int i = 0; i < _parsers.length; i++) {
+    //
+    List<ResourceStandin>[] sourceSublists = splitIntoSublists(new ArrayList<ResourceStandin>(sourceResources));
+    List<ResourceStandin>[] binarySublists = splitIntoSublists(new ArrayList<ResourceStandin>(binaryResources));
 
-      IParser parser = _parsers[i][0];
+    // set up the callables
+    CallableReparse[] callables = new CallableReparse[THREAD_COUNT];
+    for (int i = 0; i < callables.length; i++) {
+      callables[i] = new CallableReparse(fileBasedContent, sourceSublists[i], binarySublists[i],
+          _parsers4threads.get(i), storedResourcesMap, resourceCache, monitor);
+    }
 
-      if (parser.getParserType().equals(parserType)) {
+    // create the future tasks
+    FutureTask<Void>[] futureTasks = new FutureTask[THREAD_COUNT];
+    for (int i = 0; i < futureTasks.length; i++) {
+      futureTasks[i] = new FutureTask<Void>(callables[i]);
+      new Thread(futureTasks[i]).start();
+    }
 
-        for (ResourceStandin resourceStandin : resources) {
-
-          
-          // check if the operation has been canceled
-          FunctionalHelper.checkIfCanceled(monitor);
-
-          //
-          if (parser.canParse(resourceStandin)) {
-            System.out.println(resourceStandin.toString() + " : " + MemoryUtils.getMemoryUsage());
-            parser.parseResource(fileBasedContent, resourceStandin, resourceCache);
-          }
-        }
+    // collect the result
+    for (int i = 0; i < futureTasks.length; i++) {
+      try {
+        futureTasks[i].get();
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param list
+   * @return
+   */
+  private List<ResourceStandin>[] splitIntoSublists(List<ResourceStandin> list) {
+
+    // compute the part size
+    float partSizeAsFloat = list.size() / (float) THREAD_COUNT;
+    int partSize = (int) Math.ceil(partSizeAsFloat);
+
+    // split the package list in n sublist (one for each thread)
+    List<ResourceStandin>[] sublists = new List[THREAD_COUNT];
+    for (int i = 0; i < THREAD_COUNT; i++) {
+      if ((i + 1) * partSize <= list.size()) {
+        sublists[i] = list.subList(i * partSize, (i + 1) * partSize);
+      } else if ((i) * partSize <= list.size()) {
+        sublists[i] = list.subList(i * partSize, list.size());
+      } else {
+        sublists[i] = Collections.emptyList();
+      }
+    }
+
+    // sub lists
+    return sublists;
   }
 
   /**
@@ -260,36 +274,42 @@ public class ModelSetup {
     }
 
     // create one parser for each thread...
-    IParser[][] parsers = new IParser[parserFactories.size()][THREAD_COUNT];
-    _parsers = new IParser[parserFactories.size()][THREAD_COUNT];
+    List<IParser[]> parsers4threads = new LinkedList<IParser[]>();
+    for (int i = 0; i < THREAD_COUNT; i++) {
+      parsers4threads.add(new IParser[parserFactories.size()]);
+    }
 
     // ... setup
-    for (int i = 0; i < parserFactories.size(); i++) {
-      for (int j = 0; j < THREAD_COUNT; j++) {
-        parsers[i][j] = parserFactories.get(i).createParser(_bundleMakerProject, _parseIndirectReferences);
+    for (IParser[] parsers : parsers4threads) {
+      for (int i = 0; i < parsers.length; i++) {
+        parsers[i] = parserFactories.get(i).createParser(_bundleMakerProject, _parseIndirectReferences);
       }
     }
 
-    // first the source parsers
-    int position = 0;
-    for (int i = 0; i < parserFactories.size(); i++) {
-      if (!parsers[i][0].getParserType().equals(ParserType.BINARY)) {
-        for (int j = 0; j < THREAD_COUNT; j++) {
-          _parsers[position][j] = parsers[i][j];
-        }
-        position++;
-      }
-    }
+    // TODO
+    // // first the source parsers
+    // int position = 0;
+    // for (int i = 0; i < parserFactories.size(); i++) {
+    // if (!parsers4threads[i][0].getParserType().equals(ParserType.BINARY)) {
+    // for (int j = 0; j < THREAD_COUNT; j++) {
+    // _parsers[position][j] = parsers4threads[i][j];
+    // }
+    // position++;
+    // }
+    // }
+    //
+    // // then the binary parsers
+    // for (int i = 0; i < parserFactories.size(); i++) {
+    // if (parsers4threads[i][0].getParserType().equals(ParserType.BINARY)) {
+    // for (int j = 0; j < THREAD_COUNT; j++) {
+    // _parsers[position][j] = parsers4threads[i][j];
+    // }
+    // position++;
+    // }
+    // }
 
-    // then the binary parsers
-    for (int i = 0; i < parserFactories.size(); i++) {
-      if (parsers[i][0].getParserType().equals(ParserType.BINARY)) {
-        for (int j = 0; j < THREAD_COUNT; j++) {
-          _parsers[position][j] = parsers[i][j];
-        }
-        position++;
-      }
-    }
+    // assign
+    _parsers4threads = parsers4threads;
   }
 
   /**
@@ -301,7 +321,7 @@ public class ModelSetup {
   private void notifyParseStart() throws CoreException {
 
     //
-    for (IParser[] parsers : _parsers) {
+    for (IParser[] parsers : _parsers4threads) {
       for (IParser parser : parsers) {
 
         // notify 'start'
@@ -319,7 +339,7 @@ public class ModelSetup {
   private void notifyParseStop() throws CoreException {
 
     //
-    for (IParser[] parsers : _parsers) {
+    for (IParser[] parsers : _parsers4threads) {
       for (IParser parser : parsers) {
 
         // notify 'stop'

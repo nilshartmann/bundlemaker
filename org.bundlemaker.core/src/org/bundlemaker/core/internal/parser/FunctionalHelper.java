@@ -4,26 +4,53 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.Activator;
+import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
-import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.parser.IParser.ParserType;
+import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.MemoryUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 
 public class FunctionalHelper {
+
+  static void parseNewOrModifiedResources(FileBasedContent fileBasedContent, Collection<ResourceStandin> resources,
+      ResourceCache resourceCache, ParserType parserType, IParser[] parsers, IProgressMonitor monitor)
+      throws CoreException {
+
+    for (int i = 0; i < parsers.length; i++) {
+
+      IParser parser = parsers[i];
+
+      if (parser.getParserType().equals(parserType)) {
+
+        for (ResourceStandin resourceStandin : resources) {
+
+          System.out.println("Parsing '" + resourceStandin + "'");
+
+          // check if the operation has been canceled
+          FunctionalHelper.checkIfCanceled(monitor);
+
+          //
+          if (parser.canParse(resourceStandin)) {
+            parser.parseResource(fileBasedContent, resourceStandin, resourceCache);
+          }
+        }
+      }
+    }
+  }
 
   /**
    * <p>
@@ -76,12 +103,12 @@ public class FunctionalHelper {
       checkIfCanceled(monitor);
 
       // get the associated resource
-      Resource resource = map.remove(resourceStandin);
+      Resource resource = map.get(resourceStandin);
 
       if (resource == null) {
         throw new RuntimeException(resourceStandin.toString());
       }
-      
+
       // set up the resource stand-in
       setupResourceStandin(resourceStandin, resource, isSource);
 
@@ -113,7 +140,7 @@ public class FunctionalHelper {
 
     Assert.isNotNull(resourceStandin);
     Assert.isNotNull(resource, "No resource for " + resourceStandin.toString());
-    
+
     // associate resource and resource stand-in...
     resourceStandin.setResource(resource);
     // ... and set the opposite
