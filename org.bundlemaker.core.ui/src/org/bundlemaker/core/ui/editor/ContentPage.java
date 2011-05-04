@@ -56,17 +56,14 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
     createStateSection(mform);
 
-    createResourcesSection(
-        mform,
-        "Resources:",
-        "A <b>resource</b> is part of the project that will be parsed, transformed and exported by BundleMaker. Resources are comparable with sources in a Java project.",
-        true);
+    createResourcesSection(mform, "Resources:",
+        "A <b>resource</b> is part of a project that can be parsed, transformed and exported by BundleMaker.", true);
 
-    createResourcesSection(
-        mform,
-        "Types:",
-        "With <b>types</b> you specify the dependencies that are needed by your resources. Types will <b>not</b> be parsed, transformed or exported. Types are comparable with binary dependencies that are specified on the classpath of a Java project.",
-        false);
+    // createResourcesSection(
+    // mform,
+    // "Types:",
+    // "With <b>types</b> you specify the dependencies that are needed by your resources. Types will <b>not</b> be parsed, transformed or exported. Types are comparable with binary dependencies that are specified on the classpath of a Java project.",
+    // false);
 
   }
 
