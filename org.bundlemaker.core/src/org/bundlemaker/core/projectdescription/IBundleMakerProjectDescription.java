@@ -139,6 +139,8 @@ public interface IBundleMakerProjectDescription {
    * @param sourceRoot
    */
   void addResourceContent(String binaryRoot, String sourceRoot);
+  
+  void addResourceContent(String binaryRoot, String sourceRoot, boolean analyzeSource);
 
   /**
    * <p>
@@ -164,6 +166,8 @@ public interface IBundleMakerProjectDescription {
    * @param sourceRoot
    */
   void addResourceContent(String name, String version, String binaryRoot, String sourceRoot);
+  
+  void addResourceContent(String name, String version, String binaryRoot, String sourceRoot, boolean analyzeSource);
 
   /**
    * <p>
@@ -176,6 +180,8 @@ public interface IBundleMakerProjectDescription {
    * @param sourceRoots
    */
   void addResourceContent(String name, String version, List<String> binaryRoots, List<String> sourceRoots);
+  
+  void addResourceContent(String name, String version, List<String> binaryRoots, List<String> sourceRoots, boolean analyzeSource);
 
   /**
    * <p>
