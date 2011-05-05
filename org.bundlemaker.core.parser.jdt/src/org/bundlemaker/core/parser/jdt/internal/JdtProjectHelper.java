@@ -51,8 +51,6 @@ public class JdtProjectHelper {
    */
   public static void setupAssociatedJavaProject(IBundleMakerProject project) throws CoreException {
 
-    System.out.println("setupAssociatedJavaProject");
-
     IJavaProject javaProject = getAssociatedJavaProject(project);
 
     IResource[] children = javaProject.getProject().members();
@@ -121,7 +119,12 @@ public class JdtProjectHelper {
 
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IProject associatedProject = root.getProject(getAssociatedJavaProjectName(bundleMakerProject));
-
+    try {
+      associatedProject.setHidden(true);
+    } catch (CoreException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
     IJavaProject javaProject = JavaCore.create(associatedProject);
 
     try {
@@ -174,15 +177,20 @@ public class JdtProjectHelper {
       associatedProject.delete(true, null);
     }
 
-    associatedProject.create(null);
-    associatedProject.open(null);
-    associatedProject.setHidden(false);
+    IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(
+        getAssociatedJavaProjectName(bundleMakerProject));
 
-    IProjectDescription description = associatedProject.getDescription();
     description.setNatureIds(new String[] { JavaCore.NATURE_ID });
-    associatedProject.setDescription(description, null);
 
-    return JavaCore.create(associatedProject);
+    associatedProject.create(description, IResource.HIDDEN, null);
+    associatedProject.open(IResource.HIDDEN, null);
+
+    IJavaProject javaProject = JavaCore.create(associatedProject);
+
+    associatedProject.setHidden(true);
+    associatedProject.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+    return javaProject;
   }
 
   /**
@@ -214,7 +222,6 @@ public class JdtProjectHelper {
    * @return
    */
   private static String getAssociatedJavaProjectName(IProject project) {
-
     return project.getName() + BUNDLEMAKER_JDT_PROJECT_POSTFIX;
   }
 
