@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
@@ -102,7 +103,12 @@ public class ResourceCache implements IResourceCache {
     }
 
     // update all
-    for (IModifiableResource modifiableResource : _newResourceMap.values()) {
+    for (Resource modifiableResource : _newResourceMap.values()) {
+
+      if (modifiableResource.getHashvalue() == null) {
+        modifiableResource.computeHashvalue();
+      }
+
       _dependencyStore.updateResource(modifiableResource);
 
       //

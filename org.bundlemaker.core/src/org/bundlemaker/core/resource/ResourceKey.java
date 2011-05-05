@@ -49,7 +49,7 @@ public class ResourceKey implements IResourceKey {
   private String                          _path;
 
   /** - */
-  private Long                            _timestamp;
+  private long                            _timestamp = -1;
 
   /** - **/
   private byte[]                          _hashvalue;
@@ -209,7 +209,7 @@ public class ResourceKey implements IResourceKey {
 
         //
         _contentCache = new WeakReference<byte[]>(result);
-        setHashValue(result);
+        internalSetHashValue(result);
 
         // return the result
         return result;
@@ -247,7 +247,7 @@ public class ResourceKey implements IResourceKey {
 
         //
         _contentCache = new WeakReference<byte[]>(result);
-        setHashValue(result);
+        internalSetHashValue(result);
 
         //
         return result;
@@ -267,7 +267,7 @@ public class ResourceKey implements IResourceKey {
   public long getTimestamp() {
 
     //
-    if (_timestamp == null && Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+    if (_timestamp == -1 && Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
 
       // jar file?
       if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
@@ -296,12 +296,17 @@ public class ResourceKey implements IResourceKey {
    * {@inheritDoc}
    */
   public final byte[] getHashvalue() {
+    return _hashvalue;
+  }
 
+  /**
+   * <p>
+   * </p>
+   */
+  public void computeHashvalue() {
     if (_hashvalue == null) {
       getContent();
     }
-
-    return _hashvalue;
   }
 
   /**
@@ -395,7 +400,7 @@ public class ResourceKey implements IResourceKey {
    * @param content
    * @throws NoSuchAlgorithmException
    */
-  private void setHashValue(byte[] content) throws NoSuchAlgorithmException {
+  private void internalSetHashValue(byte[] content) throws NoSuchAlgorithmException {
     if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
       MessageDigest messagedigest = MessageDigest.getInstance("SHA");
       messagedigest.update(content);

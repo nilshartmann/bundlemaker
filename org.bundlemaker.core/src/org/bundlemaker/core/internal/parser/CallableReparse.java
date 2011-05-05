@@ -1,9 +1,11 @@
 package org.bundlemaker.core.internal.parser;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.bundlemaker.core.internal.parser.ModelSetup.Directory;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
@@ -16,28 +18,22 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class CallableReparse implements Callable<Void> {
 
   /** - */
-  private ResourceCache               _resourceCache;
+  private ResourceCache         _resourceCache;
 
   /** - */
-  private IProgressMonitor            _progressMonitor;
+  private IProgressMonitor      _progressMonitor;
 
   /** - */
-  private FileBasedContent            _content;
+  private FileBasedContent      _content;
 
   /** - */
-  private Collection<ResourceStandin> _sourceResources;
-
-  /** - */
-  private Collection<ResourceStandin> _binaryResources;
-
-  /** - */
-  private Map<IResourceKey, Resource> _storedResourcesMap;
+  private Collection<Directory> _directories;
 
   // /** the list of all errors */
   // private List<IProblem> _errors;
 
   /** - */
-  private IParser[]                   _parser;
+  private IParser[]             _parser;
 
   /**
    * <p>
@@ -49,14 +45,12 @@ public class CallableReparse implements Callable<Void> {
    * @param parser
    * @param resourceCache
    */
-  public CallableReparse(FileBasedContent content, Collection<ResourceStandin> sourceResources,
-      Collection<ResourceStandin> binaryResources, IParser[] parser, Map<IResourceKey, Resource> storedResourcesMap,
+  public CallableReparse(FileBasedContent content, Collection<Directory> directories, IParser[] parser,
       ResourceCache resourceCache, IProgressMonitor progressMonitor) {
 
     //
     Assert.isNotNull(content);
-    Assert.isNotNull(sourceResources);
-    Assert.isNotNull(binaryResources);
+    Assert.isNotNull(directories);
     Assert.isNotNull(parser);
     Assert.isNotNull(resourceCache);
     Assert.isNotNull(progressMonitor);
@@ -65,17 +59,13 @@ public class CallableReparse implements Callable<Void> {
     _content = content;
 
     // set the directories to parse
-    _sourceResources = sourceResources;
-    _binaryResources = binaryResources;
+    _directories = directories;
 
     //
     _parser = parser;
 
     //
     _resourceCache = resourceCache;
-
-    //
-    _storedResourcesMap = storedResourcesMap;
 
     //
     _progressMonitor = progressMonitor;
@@ -87,13 +77,15 @@ public class CallableReparse implements Callable<Void> {
   @Override
   public Void call() throws Exception {
 
-    // step 4.5: set up source resources
-    FunctionalHelper.parseNewOrModifiedResources(_content, _sourceResources, _resourceCache, ParserType.SOURCE,
-        _parser, _progressMonitor);
+    for (Directory directory : _directories) {
+      FunctionalHelper.parseNewOrModifiedResources(_content, directory.getSourceResources(), _resourceCache,
+          ParserType.SOURCE, _parser, _progressMonitor);
+    }
 
-    // step 4.4: set up binary resources
-    FunctionalHelper.parseNewOrModifiedResources(_content, _binaryResources, _resourceCache, ParserType.BINARY,
-        _parser, _progressMonitor);
+    for (Directory directory : _directories) {
+      FunctionalHelper.parseNewOrModifiedResources(_content, directory.getBinaryResources(), _resourceCache,
+          ParserType.BINARY, _parser, _progressMonitor);
+    }
 
     return null;
   }

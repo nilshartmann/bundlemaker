@@ -20,9 +20,9 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
-import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.resource.IResourceKey;
+import org.bundlemaker.core.util.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -214,19 +214,52 @@ public class ModelSetup {
       Collection<ResourceStandin> sourceResources, Collection<ResourceStandin> binaryResources,
       ResourceCache resourceCache, FileBasedContent fileBasedContent, IProgressMonitor monitor) {
 
+    //
     monitor.beginTask("PARSE ", sourceResources.size() + binaryResources.size());
 
     try {
 
       //
-      List<ResourceStandin>[] sourceSublists = splitIntoSublists(new ArrayList<ResourceStandin>(sourceResources));
-      List<ResourceStandin>[] binarySublists = splitIntoSublists(new ArrayList<ResourceStandin>(binaryResources));
+      GenericCache<String, Directory> directories = new GenericCache<String, ModelSetup.Directory>() {
+        @Override
+        protected Directory create(String key) {
+          return new Directory();
+        }
+      };
+
+      //
+      for (ResourceStandin resourceStandin : binaryResources) {
+        directories.getOrCreate(resourceStandin.getDirectory()).addBinaryResource(resourceStandin);
+      }
+      for (ResourceStandin resourceStandin : sourceResources) {
+        directories.getOrCreate(resourceStandin.getDirectory()).addSourceResource(resourceStandin);
+      }
+
+      // compute the part size
+      float partSizeAsFloat = directories.size() / (float) THREAD_COUNT;
+      int partSize = (int) Math.ceil(partSizeAsFloat);
+
+      // split the package list in n sublist (one for each thread)
+      List<Directory> dirs = new ArrayList<ModelSetup.Directory>(directories.values());
+      List<Directory>[] packageFragmentsParts = new List[THREAD_COUNT];
+      for (int i = 0; i < THREAD_COUNT; i++) {
+        if ((i + 1) * partSize <= directories.size()) {
+          packageFragmentsParts[i] = dirs.subList(i * partSize, (i + 1) * partSize);
+        } else if ((i) * partSize <= dirs.size()) {
+          packageFragmentsParts[i] = dirs.subList(i * partSize, dirs.size());
+        } else {
+          packageFragmentsParts[i] = Collections.EMPTY_LIST;
+        }
+      }
+
+      //
+      System.out.println("HALLO");
 
       // set up the callables
       CallableReparse[] callables = new CallableReparse[THREAD_COUNT];
       for (int i = 0; i < callables.length; i++) {
-        callables[i] = new CallableReparse(fileBasedContent, sourceSublists[i], binarySublists[i],
-            _parsers4threads.get(i), storedResourcesMap, resourceCache, monitor);
+        callables[i] = new CallableReparse(fileBasedContent, packageFragmentsParts[i], _parsers4threads.get(i),
+            resourceCache, monitor);
       }
 
       // create the future tasks
@@ -398,6 +431,86 @@ public class ModelSetup {
         // notify 'stop'
         parser.parseBundleMakerProjectStop(_bundleMakerProject);
       }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public static class Directory {
+
+    /** - */
+    private List<ResourceStandin> _binaryResources;
+
+    /** - */
+    private List<ResourceStandin> _sourceResources;
+
+    /** - */
+    private int                   _count = 0;
+
+    /**
+     * <p>
+     * Creates a new instance of type {@link Directory}.
+     * </p>
+     */
+    public Directory() {
+      _binaryResources = new LinkedList<ResourceStandin>();
+      _sourceResources = new LinkedList<ResourceStandin>();
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param resourceStandin
+     */
+    public void addBinaryResource(ResourceStandin resourceStandin) {
+      _binaryResources.add(resourceStandin);
+      _count++;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param resourceStandin
+     */
+    public void addSourceResource(ResourceStandin resourceStandin) {
+      _sourceResources.add(resourceStandin);
+      _count++;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public List<ResourceStandin> getBinaryResources() {
+      return _binaryResources;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public List<ResourceStandin> getSourceResources() {
+      return _sourceResources;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public int getCount() {
+      return _count;
     }
   }
 }

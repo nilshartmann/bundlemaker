@@ -15,10 +15,8 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
-import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.MemoryUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -211,6 +209,11 @@ public class FunctionalHelper {
     //
     if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
       if (resource.getTimestamp() != resourceStandin.getTimestamp()) {
+
+        if (!resourceStandin.hasHashvalue()) {
+          resourceStandin.computeHashvalue();
+        }
+
         byte[] storedResourceHashValue = resource.getHashvalue();
         byte[] resourceStandinHashValue = resourceStandin.getHashvalue();
         if (!Arrays.equals(storedResourceHashValue, resourceStandinHashValue)) {
