@@ -20,14 +20,12 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.ProjectDescriptionStore;
-import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
 
@@ -242,13 +240,43 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
   public void addResourceContent(String name, String version, String binaryRoot, String sourceRoot) {
 
     addResourceContent(name, version, new String[] { binaryRoot }, sourceRoot != null ? new String[] { sourceRoot }
-        : new String[] {});
+        : new String[] {}, true);
   }
 
   @Override
   public void addResourceContent(String name, String version, List<String> binaryRoot, List<String> sourceRoot) {
 
-    addResourceContent(name, version, binaryRoot.toArray(new String[0]), sourceRoot.toArray(new String[0]));
+    addResourceContent(name, version, binaryRoot.toArray(new String[0]), sourceRoot.toArray(new String[0]), true);
+  }
+
+  @Override
+  public void addResourceContent(String binaryRoot, String sourceRoot, boolean analyzeSource) {
+
+    try {
+      // get the jar info
+      JarInfo jarInfo = JarInfoService.extractJarInfo(getAsFile(binaryRoot));
+
+      //
+      addResourceContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot },
+          sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, true);
+
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void addResourceContent(String name, String version, String binaryRoot, String sourceRoot,
+      boolean analyzeSource) {
+    addResourceContent(name, version, new String[] { binaryRoot }, sourceRoot != null ? new String[] { sourceRoot }
+        : new String[] {}, true);
+  }
+
+  @Override
+  public void addResourceContent(String name, String version, List<String> binaryRoots, List<String> sourceRoots,
+      boolean analyzeSource) {
+    addResourceContent(name, version, binaryRoots.toArray(new String[0]), sourceRoots.toArray(new String[0]), true);
   }
 
   @Override
@@ -297,6 +325,14 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
     return (List<IResource>) result;
   }
 
+  public final List<ResourceStandin> getSourceResourceStandins() {
+    return Collections.unmodifiableList(_sourceResources);
+  }
+
+  public final List<ResourceStandin> getBinaryResourceStandins() {
+    return Collections.unmodifiableList(_binaryResources);
+  }
+
   /**
    * <p>
    * </p>
@@ -312,7 +348,8 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
   }
 
   // TODO: analyze source!!
-  private FileBasedContent addResourceContent(String name, String version, String[] binaryRoot, String[] sourceRoot) {
+  private FileBasedContent addResourceContent(String name, String version, String[] binaryRoot, String[] sourceRoot,
+      boolean analyseSource) {
 
     Assert.isNotNull(name);
     Assert.isNotNull(version);
@@ -344,7 +381,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
     }
 
     // add the analyze flag
-    resourceContent.setAnalyzeSourceResources(true);
+    resourceContent.setAnalyzeSourceResources(analyseSource);
 
     // add file based content
     _fileBasedContent.add(fileBasedContent);
@@ -394,7 +431,7 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
    * </p>
    * 
    * @return
-   * @throws CoreException 
+   * @throws CoreException
    */
   private File getAsFile(String path) throws CoreException {
 

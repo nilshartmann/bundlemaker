@@ -214,11 +214,7 @@ public class TransformationPage extends FormPage {
               project.initialize(monitor);
             }
 
-            if (project.getState() == BundleMakerProjectState.INITIALIZED) {
-              project.parse(monitor, true);
-            }
-
-            project.open(monitor);
+            project.parseAndOpen(monitor);
           } catch (Exception ex) {
             ex.printStackTrace();
           }

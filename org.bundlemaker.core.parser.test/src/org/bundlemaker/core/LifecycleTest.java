@@ -53,8 +53,8 @@ public class LifecycleTest extends AbstractBundleMakerProjectTest {
    */
   private void parse() throws CoreException {
     // parse the project
-    getBundleMakerProject().parse(new ProgressMonitor(), true);
-    assertEquals(BundleMakerProjectState.PARSED, getBundleMakerProject().getState());
+    getBundleMakerProject().parseAndOpen(new ProgressMonitor());
+    assertEquals(BundleMakerProjectState.READY, getBundleMakerProject().getState());
   }
 
   /**

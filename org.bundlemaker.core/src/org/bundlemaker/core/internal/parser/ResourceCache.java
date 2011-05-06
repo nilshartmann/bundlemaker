@@ -15,9 +15,12 @@ import java.util.Map;
 
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.TypeEnum;
@@ -35,16 +38,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class ResourceCache implements IResourceCache {
 
   /** the element map */
-  private Map<IResourceKey, Resource> _resourceMap;
+  Map<IResourceKey, Resource>        _storedResourcesMap;
 
   /** the element map */
-  private Map<String, Type>           _typeMap;
+  Map<IResourceKey, Resource>        _newResourceMap;
+
+  /** the element map */
+  private Map<String, Type>          _typeMap;
 
   /** the dependency store */
-  private IPersistentDependencyStore  _dependencyStore;
+  private IPersistentDependencyStore _dependencyStore;
 
   /** - */
-  private FlyWeightCache              _flyWeightCache;
+  private FlyWeightCache             _flyWeightCache;
 
   /**
    * <p>
@@ -60,8 +66,11 @@ public class ResourceCache implements IResourceCache {
     // set the dependency store
     _dependencyStore = dependencyStore;
 
+    //
+    _storedResourcesMap = new HashMap<IResourceKey, Resource>();
+
     // set the element map
-    _resourceMap = new HashMap<IResourceKey, Resource>();
+    _newResourceMap = new HashMap<IResourceKey, Resource>();
 
     //
     _typeMap = new HashMap<String, Type>();
@@ -77,7 +86,7 @@ public class ResourceCache implements IResourceCache {
   public synchronized void clear() throws CoreException {
 
     // clear the map
-    _resourceMap.clear();
+    _newResourceMap.clear();
   }
 
   /**
@@ -90,11 +99,16 @@ public class ResourceCache implements IResourceCache {
 
     //
     if (progressMonitor != null) {
-      progressMonitor.beginTask("Writing to disc...", _resourceMap.values().size());
+      progressMonitor.beginTask("Writing to disc...", _newResourceMap.values().size());
     }
 
     // update all
-    for (IModifiableResource modifiableResource : _resourceMap.values()) {
+    for (Resource modifiableResource : _newResourceMap.values()) {
+
+      if (modifiableResource.getHashvalue() == null) {
+        modifiableResource.computeHashvalue();
+      }
+
       _dependencyStore.updateResource(modifiableResource);
 
       //
@@ -120,7 +134,15 @@ public class ResourceCache implements IResourceCache {
   public synchronized IModifiableResource getOrCreateResource(IResourceKey resourceKey) {
 
     //
-    Resource resource = _resourceMap.get(resourceKey);
+    Resource resource = _storedResourcesMap.get(resourceKey);
+
+    // return result if != null
+    if (resource != null) {
+      return resource;
+    }
+
+    //
+    resource = _newResourceMap.get(resourceKey);
 
     // return result if != null
     if (resource != null) {
@@ -131,8 +153,7 @@ public class ResourceCache implements IResourceCache {
     resource = new Resource(resourceKey.getContentId(), resourceKey.getRoot(), resourceKey.getPath(), this);
 
     // store the Resource
-    _resourceMap.put(new ResourceKey(resourceKey.getContentId(), resourceKey.getRoot(), resourceKey.getPath()),
-        resource);
+    _newResourceMap.put(resource, resource);
 
     // return the result
     return resource;
@@ -166,15 +187,89 @@ public class ResourceCache implements IResourceCache {
     return type;
   }
 
+  @Deprecated
   public Map<IResourceKey, Resource> getResourceMap() {
-    return _resourceMap;
+    return _newResourceMap;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public FlyWeightCache getFlyWeightCache() {
     return _flyWeightCache;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param key
+   * @param resource
+   */
+  public void addToStoredResourcesMap(IResourceKey key, Resource resource) {
+    _storedResourcesMap.put(key, resource);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fileBasedContent
+   * @param map
+   */
+  public void setupTypeCache(IFileBasedContent fileBasedContent) {
+
+    // clear the type map
+    _typeMap.clear();
+
+    //
+    for (IResource resource : fileBasedContent.getBinaryResources()) {
+
+      Resource storedResource = _storedResourcesMap.get(resource);
+
+      if (storedResource != null) {
+        for (Type type : storedResource.getModifiableContainedTypes()) {
+          _typeMap.put(type.getFullyQualifiedName(), type);
+          type.createReferenceContainer(_flyWeightCache);
+        }
+      }
+    }
+
+    //
+    for (IResource resource : fileBasedContent.getSourceResources()) {
+
+      Resource storedResource = _storedResourcesMap.get(resource);
+
+      if (storedResource != null) {
+        for (Type type : storedResource.getModifiableContainedTypes()) {
+          if (!_typeMap.containsKey(type.getFullyQualifiedName())) {
+            _typeMap.put(type.getFullyQualifiedName(), type);
+            type.createReferenceContainer(_flyWeightCache);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
   public void resetTypeCache() {
     _typeMap.clear();
+  }
+
+  public Map<IResourceKey, Resource> getCombinedMap() {
+
+    Map<IResourceKey, Resource> result = new HashMap<IResourceKey, Resource>();
+
+    result.putAll(_storedResourcesMap);
+    result.putAll(_newResourceMap);
+
+    return result;
   }
 }

@@ -40,8 +40,7 @@ public class ModuleConverterTest extends AbstractBundleMakerProjectTest {
 
     //
     getBundleMakerProject().initialize(new ProgressMonitor());
-    getBundleMakerProject().parse(new ProgressMonitor(), true);
-    getBundleMakerProject().open(new ProgressMonitor());
+    getBundleMakerProject().parseAndOpen(new ProgressMonitor());
 
     //
     IModularizedSystem modularizedSystem = getBundleMakerProject()

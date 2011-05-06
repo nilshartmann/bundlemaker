@@ -1,14 +1,12 @@
 package org.bundlemaker.itest;
 
 import java.io.File;
-import java.util.List;
 
 import junit.framework.Assert;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.SimpleReportExporter;
@@ -18,7 +16,6 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
-import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
@@ -34,7 +31,7 @@ import org.junit.Test;
 public abstract class AbstractIntegrationTest {
 
   /** - */
-  private static final boolean PARSE = Boolean.getBoolean("parse");
+  private static final boolean CLEAN = Boolean.getBoolean("parse");
 
   /** - */
   public String                _projectName;
@@ -79,7 +76,7 @@ public abstract class AbstractIntegrationTest {
   public void integrationTest() throws Exception {
 
     // delete the project
-    if (PARSE) {
+    if (CLEAN) {
       log("Deleting existing project...");
       EclipseProjectUtils.deleteProjectIfExists(_projectName);
     }
@@ -92,7 +89,7 @@ public abstract class AbstractIntegrationTest {
     IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
 
     // create the project description
-    if (PARSE) {
+    if (CLEAN) {
       log("Adding project description...");
       doAddProjectDescription(bundleMakerProject);
     }
@@ -101,25 +98,11 @@ public abstract class AbstractIntegrationTest {
     log("Initializing project...");
     bundleMakerProject.initialize(new ProgressMonitor());
 
-    // parse the project
-    if (PARSE) {
-
-      log("Parsing project...");
-
-      StopWatch stopWatch = new StopWatch();
-      stopWatch.start();
-
-      List<? extends IProblem> problems = bundleMakerProject.parse(new ProgressMonitor(), true);
-
-      stopWatch.stop();
-      log(stopWatch.getElapsedTime() + "");
-
-      BundleMakerProjectUtils.dumpProblems(problems);
-    }
-
     // open the project
-    log("Opening project...");
-    bundleMakerProject.open(new ProgressMonitor());
+    log("Parsing and opening project...");
+    bundleMakerProject.parseAndOpen(new ProgressMonitor());
+
+    // BundleMakerProjectUtils.dumpProblems(problems);
 
     // EXAMPLE CODE - REMOVE
     if (bundleMakerProject.getState().equals(BundleMakerProjectState.READY)) {

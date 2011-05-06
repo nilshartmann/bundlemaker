@@ -104,13 +104,7 @@ public class Type implements IType, IModifiableType {
     // the type of the type
     _typeEnum = typeEnum;
 
-    //
-    _referenceContainer = new ReferenceContainer(flyWeightCache) {
-      @Override
-      protected Set<Reference> createReferencesSet() {
-        return references();
-      }
-    };
+    createReferenceContainer(flyWeightCache);
   }
 
   @Override
@@ -303,6 +297,22 @@ public class Type implements IType, IModifiableType {
   @Override
   public String toString() {
     return "Type [_fullyQualifiedName=" + _fullyQualifiedName + ", _typeEnum=" + _typeEnum + "]";
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param flyWeightCache
+   */
+  public void createReferenceContainer(FlyWeightCache flyWeightCache) {
+    //
+    _referenceContainer = new ReferenceContainer(flyWeightCache) {
+      @Override
+      protected Set<Reference> createReferencesSet() {
+        return references();
+      }
+    };
   }
 
   /**

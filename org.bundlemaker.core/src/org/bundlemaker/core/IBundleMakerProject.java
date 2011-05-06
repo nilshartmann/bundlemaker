@@ -105,8 +105,6 @@ public interface IBundleMakerProject {
 
   /**
    * <p>
-   * Parses the {@link BundleMakerProject} and stores the analyzed dependencies in the underlying
-   * {@link IDependencyStore}.
    * </p>
    * 
    * @param progressMonitor
@@ -115,18 +113,15 @@ public interface IBundleMakerProject {
    * 
    * @precondition BundleMakerProjectState.INITIALIZED | BundleMakerProjectState.PARSED | BundleMakerProjectState.OPENED
    */
-  List<? extends IProblem> parse(IProgressMonitor progressMonitor, boolean parseIndirectReferences)
-      throws CoreException;
+  void parseAndOpen(IProgressMonitor progressMonitor) throws CoreException;
 
   /**
    * <p>
-   * Opens the {@link BundleMakerProject}. Opening a {@link IBundleMakerProject} forces the project to read all the
-   * dependencies from the underlying dependency database and complete the set up of the internal data model.
    * </p>
    * 
-   * @throws CoreException
+   * @return
    */
-  void open(IProgressMonitor progressMonitor) throws CoreException;
+  List<IProblem> getProblems();
 
   /**
    * <p>
@@ -134,8 +129,20 @@ public interface IBundleMakerProject {
    */
   void dispose();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   List<IResource> getBinaryResources();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   List<IResource> getSourceResources();
 
   /**

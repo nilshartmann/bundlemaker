@@ -150,36 +150,36 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     buttonBar.setLayoutData(new GridData());
     buttonBar.setLayout(new GridLayout(3, false));
 
-    final Button initializeButton = toolkit.createButton(buttonBar, "Initialize", SWT.PUSH);
-    initializeButton.setLayoutData(new GridData());
-    // initializeButton.setImage(UIImages.REFRESH.getImage());
-    initializeButton.addSelectionListener(new SelectionListener() {
+    // final Button initializeButton = toolkit.createButton(buttonBar, "Initialize", SWT.PUSH);
+    // initializeButton.setLayoutData(new GridData());
+    // // initializeButton.setImage(UIImages.REFRESH.getImage());
+    // initializeButton.addSelectionListener(new SelectionListener() {
+    //
+    // @Override
+    // public void widgetSelected(SelectionEvent e) {
+    // initializeProject();
+    // }
+    //
+    // @Override
+    // public void widgetDefaultSelected(SelectionEvent e) {
+    //
+    // }
+    // });
 
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        initializeProject();
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-
-      }
-    });
-
-    Button _parseButton = toolkit.createButton(buttonBar, "(Re-)Parse", SWT.PUSH);
-    _parseButton.setLayoutData(new GridData());
-    _parseButton.setImage(UIImages.REFRESH.getImage());
-    _parseButton.addSelectionListener(new SelectionListener() {
-
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        parseProject();
-      }
-
-      @Override
-      public void widgetDefaultSelected(SelectionEvent e) {
-      }
-    });
+    // Button _parseButton = toolkit.createButton(buttonBar, "(Re-)Parse", SWT.PUSH);
+    // _parseButton.setLayoutData(new GridData());
+    // _parseButton.setImage(UIImages.REFRESH.getImage());
+    // _parseButton.addSelectionListener(new SelectionListener() {
+    //
+    // @Override
+    // public void widgetSelected(SelectionEvent e) {
+    // parseProject();
+    // }
+    //
+    // @Override
+    // public void widgetDefaultSelected(SelectionEvent e) {
+    // }
+    // });
 
     final Button openButton = toolkit.createButton(buttonBar, "Open", SWT.PUSH);
     openButton.setLayoutData(new GridData());
@@ -197,43 +197,43 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     });
   }
 
-  private void parseProject() {
-    try {
-      PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-        public void run(final IProgressMonitor monitor) {
-          try {
-            IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
-            project.parse(monitor, true);
-          } catch (Exception ex) {
-            ex.printStackTrace();
-          }
-        }
-      });
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
+  // private void parseProject() {
+  // try {
+  // PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+  // public void run(final IProgressMonitor monitor) {
+  // try {
+  // IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
+  // project.parse(monitor, true);
+  // } catch (Exception ex) {
+  // ex.printStackTrace();
+  // }
+  // }
+  // });
+  // } catch (Exception ex) {
+  // ex.printStackTrace();
+  // }
+  //
+  // refreshProjectStateDisplay();
+  // }
 
-    refreshProjectStateDisplay();
-  }
-
-  private void initializeProject() {
-    try {
-      PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-        public void run(final IProgressMonitor monitor) {
-          try {
-            IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
-            project.initialize(monitor);
-          } catch (Exception ex) {
-            ex.printStackTrace();
-          }
-        }
-      });
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-
-    refreshProjectStateDisplay();
-  }
+  // private void initializeProject() {
+  // try {
+  // PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+  // public void run(final IProgressMonitor monitor) {
+  // try {
+  // IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
+  // project.initialize(monitor);
+  // } catch (Exception ex) {
+  // ex.printStackTrace();
+  // }
+  // }
+  // });
+  // } catch (Exception ex) {
+  // ex.printStackTrace();
+  // }
+  //
+  // refreshProjectStateDisplay();
+  // }
 
   private void openProject() {
     try {
@@ -241,7 +241,8 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
         public void run(final IProgressMonitor monitor) {
           try {
             IBundleMakerProject project = getBundleMakerProjectDescription().getBundleMakerProject();
-            project.open(monitor);
+            project.initialize(monitor);
+            project.parseAndOpen(monitor);
           } catch (Exception ex) {
             ex.printStackTrace();
           }

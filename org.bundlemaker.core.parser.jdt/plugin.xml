@@ -9,4 +9,16 @@
             class="org.bundlemaker.core.parser.jdt.internal.JdtParserFactory">
       </parserfactory>
    </extension>
+   
+   <extension
+       point="org.eclipse.jdt.ui.javaElementFilters">
+    <filter
+          class="org.bundlemaker.core.parser.jdt.internal.JavaElementFilter"
+          description="Filters any bundlemaker JDT project."
+          enabled="true"
+          id="filter-id"
+          name="FilterName">
+    </filter>
+ </extension>
+
 </plugin>

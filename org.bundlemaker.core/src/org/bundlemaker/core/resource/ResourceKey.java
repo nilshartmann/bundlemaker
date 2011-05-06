@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipEntry;
@@ -39,19 +40,22 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceKey implements IResourceKey {
 
   /** the content id */
-  private FlyWeightString _contentId;
+  private FlyWeightString                 _contentId;
 
   /** the root of the resource */
-  private FlyWeightString _root;
+  private FlyWeightString                 _root;
 
   /** the path of the resource */
-  private String          _path;
+  private String                          _path;
 
   /** - */
-  private Long            _timestamp;
+  private long                            _timestamp = -1;
 
   /** - **/
-  private byte[]          _hashvalue;
+  private byte[]                          _hashvalue;
+
+  /** - */
+  private transient WeakReference<byte[]> _contentCache;
 
   /**
    * <p>
@@ -173,6 +177,14 @@ public class ResourceKey implements IResourceKey {
   @Override
   public byte[] getContent() {
 
+    //
+    if (_contentCache != null) {
+      byte[] result = _contentCache.get();
+      if (result != null) {
+        return result;
+      }
+    }
+
     // jar file?
     if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
 
@@ -196,7 +208,8 @@ public class ResourceKey implements IResourceKey {
         zipFile.close();
 
         //
-        setHashValue(result);
+        _contentCache = new WeakReference<byte[]>(result);
+        internalSetHashValue(result);
 
         // return the result
         return result;
@@ -233,7 +246,8 @@ public class ResourceKey implements IResourceKey {
         buffer.close();
 
         //
-        setHashValue(result);
+        _contentCache = new WeakReference<byte[]>(result);
+        internalSetHashValue(result);
 
         //
         return result;
@@ -253,7 +267,7 @@ public class ResourceKey implements IResourceKey {
   public long getTimestamp() {
 
     //
-    if (_timestamp == null && Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+    if (_timestamp == -1 && Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
 
       // jar file?
       if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
@@ -282,12 +296,17 @@ public class ResourceKey implements IResourceKey {
    * {@inheritDoc}
    */
   public final byte[] getHashvalue() {
+    return _hashvalue;
+  }
 
+  /**
+   * <p>
+   * </p>
+   */
+  public void computeHashvalue() {
     if (_hashvalue == null) {
       getContent();
     }
-
-    return _hashvalue;
   }
 
   /**
@@ -381,7 +400,7 @@ public class ResourceKey implements IResourceKey {
    * @param content
    * @throws NoSuchAlgorithmException
    */
-  private void setHashValue(byte[] content) throws NoSuchAlgorithmException {
+  private void internalSetHashValue(byte[] content) throws NoSuchAlgorithmException {
     if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
       MessageDigest messagedigest = MessageDigest.getInstance("SHA");
       messagedigest.update(content);
