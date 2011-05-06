@@ -94,14 +94,9 @@ public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest 
 
     // parse the project
     log("Parsing project...");
-    List<? extends IProblem> problems = _bundleMakerProject.parse(new ProgressMonitor(), true);
+    _bundleMakerProject.parseAndOpen(new ProgressMonitor());
 
-    BundleMakerProjectUtils.dumpProblems(problems);
-
-    // open the project
-    log("Opening project...");
-    _bundleMakerProject.open(null);
-
+    //
     IModularizedSystem modularizedSystem = _bundleMakerProject.getModularizedSystemWorkingCopy(_testProjectName);
 
     // apply the transformation
