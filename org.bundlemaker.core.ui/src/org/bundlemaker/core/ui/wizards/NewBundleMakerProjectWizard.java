@@ -17,7 +17,7 @@ import java.net.URI;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.commands.ExecutionException;
@@ -170,9 +170,10 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
       BundleMakerCore.addBundleMakerNature(newProjectHandle);
       IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(newProjectHandle,
           new NullProgressMonitor());
-      IBundleMakerProjectDescription bundleMakerProjectDescription = bundleMakerProject.getProjectDescription();
-      bundleMakerProjectDescription.setJre(mainPage.getSelectedJreId());
-      bundleMakerProjectDescription.save();
+      IModifiableBundleMakerProjectDescription modifiableProjectDescription = bundleMakerProject
+          .getModifiableProjectDescription();
+      modifiableProjectDescription.setJre(mainPage.getSelectedJreId());
+      modifiableProjectDescription.save();
 
     } catch (CoreException ex) {
       IStatus status = BundleMakerUiUtils.newStatus(ex, "Could not add Bundlemaker nature");

@@ -37,10 +37,10 @@ public class IntegrationTest extends AbstractIntegrationTest {
   protected void doAddProjectDescription(IBundleMakerProject bundleMakerProject) throws Exception {
 
     // create the project description
-    IntegrationTestUtils.createProjectDescription(bundleMakerProject.getProjectDescription());
+    IntegrationTestUtils.createProjectDescription(bundleMakerProject.getModifiableProjectDescription());
 
     // save the project description
-    bundleMakerProject.getProjectDescription().save();
+    bundleMakerProject.getModifiableProjectDescription().save();
   }
 
   /**

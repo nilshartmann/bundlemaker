@@ -31,6 +31,7 @@ import org.bundlemaker.core.internal.transformation.BasicProjectContentTransform
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.resources.IProject;
@@ -322,6 +323,11 @@ public class BundleMakerProject implements IBundleMakerProject {
    */
   @Override
   public IBundleMakerProjectDescription getProjectDescription() {
+    return _projectDescription;
+  }
+  
+  @Override
+  public IModifiableBundleMakerProjectDescription getModifiableProjectDescription() {
     return _projectDescription;
   }
 

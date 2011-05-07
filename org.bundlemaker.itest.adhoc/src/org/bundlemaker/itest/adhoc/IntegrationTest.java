@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 
 /**
@@ -28,10 +29,10 @@ public class IntegrationTest extends AbstractIntegrationTest {
   protected void doAddProjectDescription(IBundleMakerProject bundleMakerProject) throws Exception {
 
     // step 1:
-    bundleMakerProject.getProjectDescription().clear();
+    bundleMakerProject.getModifiableProjectDescription().clear();
 
     // step 2: add the JRE
-    bundleMakerProject.getProjectDescription().setJre(AbstractIntegrationTest.getDefaultVmName());
+    bundleMakerProject.getModifiableProjectDescription().setJre(AbstractIntegrationTest.getDefaultVmName());
 
     // step 3: add classes
     File libsDir = new File(System.getProperty("user.dir"), "adhoc-input");
@@ -41,9 +42,9 @@ public class IntegrationTest extends AbstractIntegrationTest {
       }
     });
     for (File externalJar : jarFiles) {
-      bundleMakerProject.getProjectDescription().addResourceContent(externalJar.getAbsolutePath());
+      bundleMakerProject.getModifiableProjectDescription().addResourceContent(externalJar.getAbsolutePath());
     }
 
-    bundleMakerProject.getProjectDescription().save();
+    bundleMakerProject.getModifiableProjectDescription().save();
   }
 }
