@@ -7,7 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -21,37 +22,37 @@ import org.eclipse.core.runtime.Assert;
  */
 public class BundleMakerProjectDescriptionWrapper {
 
-  private final IBundleMakerProjectDescription _description;
+  private final IModifiableBundleMakerProjectDescription _description;
 
-  private final boolean                        _resources;
+  private final boolean                                  _resources;
 
-  private BundleMakerProjectDescriptionWrapper(IBundleMakerProjectDescription description, boolean resources) {
+  private BundleMakerProjectDescriptionWrapper(IModifiableBundleMakerProjectDescription description, boolean resources) {
     _description = description;
     _resources = resources;
   }
 
-  public static BundleMakerProjectDescriptionWrapper forResources(IBundleMakerProjectDescription description) {
+  public static BundleMakerProjectDescriptionWrapper forResources(IModifiableBundleMakerProjectDescription description) {
     Assert.isNotNull(description);
 
     return new BundleMakerProjectDescriptionWrapper(description, true);
   }
 
-  public static BundleMakerProjectDescriptionWrapper forTypes(IBundleMakerProjectDescription description) {
+  public static BundleMakerProjectDescriptionWrapper forTypes(IModifiableBundleMakerProjectDescription description) {
     Assert.isNotNull(description);
 
     return new BundleMakerProjectDescriptionWrapper(description, false);
   }
 
-  public IFileBasedContent[] getContent() {
-    List<? extends IFileBasedContent> fileBasedContent = _description.getFileBasedContent();
-    List<IFileBasedContent> filteredContent = new LinkedList<IFileBasedContent>();
-    for (IFileBasedContent iFileBasedContent : fileBasedContent) {
+  public IModifiableFileBasedContent[] getContent() {
+    List<? extends IModifiableFileBasedContent> fileBasedContent = _description.getModifiableFileBasedContent();
+    List<IModifiableFileBasedContent> filteredContent = new LinkedList<IModifiableFileBasedContent>();
+    for (IModifiableFileBasedContent iFileBasedContent : fileBasedContent) {
       if (iFileBasedContent.isResourceContent() == _resources) {
         filteredContent.add(iFileBasedContent);
       }
     }
 
-    return filteredContent.toArray(new IFileBasedContent[0]);
+    return filteredContent.toArray(new IModifiableFileBasedContent[0]);
 
   }
 

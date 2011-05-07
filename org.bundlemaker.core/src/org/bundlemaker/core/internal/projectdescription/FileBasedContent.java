@@ -183,6 +183,12 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     _resourceContent = resourceContent;
   }
 
+  public void setAnalyzeSourceResources(boolean flag) {
+    if (_resourceContent != null) {
+      _resourceContent.setAnalyzeSourceResources(flag);
+    }
+  }
+
   /**
    * <p>
    * </p>
