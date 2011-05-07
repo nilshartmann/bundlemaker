@@ -14,7 +14,7 @@
             category="org.bundlemaker.core.ui.wizards.category"
             class="org.bundlemaker.core.ui.wizards.NewBundleMakerProjectWizard"
             hasPages="true"
-            icon="icons/bundlemaker-icon.png"
+            icon="icons/bundlemaker-icon-small.png"
             id="org.bundlemaker.core.ui.wizards.newwizard"
             name="Bundlemaker project"
             project="true">
@@ -48,6 +48,15 @@
             name="Bundlemaker project description"
             priority="normal">
       </content-type>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.bundlemaker.core.ui.perspective.BundleMakerPerspectiveFactory"
+            icon="icons/bundlemaker-icon-small.png"
+            id="org.bundlemaker.core.ui.bundlemakerperspective"
+            name="BundleMaker">
+      </perspective>
    </extension>
 
 </plugin>
