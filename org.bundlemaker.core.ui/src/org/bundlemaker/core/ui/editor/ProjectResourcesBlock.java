@@ -18,20 +18,30 @@ import java.util.LinkedList;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.ui.wizards.BuildPathDialogAccess;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.CheckboxCellEditor;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -46,7 +56,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * A block (represented by a Form Section) that can be used to edit either the resources or the types of the bundlemaker
@@ -127,16 +136,20 @@ public class ProjectResourcesBlock {
     mform.addPart(_resourcesSectionPart);
 
     // Create the tree view and viewer that displays the IFileBasedContent entries
-    final Tree projectContentTree = toolkit.createTree(client, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
+
+    final Tree projectContentTree = toolkit.createTree(client, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+        | SWT.FULL_SELECTION);
     GridData gd = new GridData(GridData.FILL_BOTH);
     gd.heightHint = 200;
     gd.widthHint = 100;
     projectContentTree.setLayoutData(gd);
+    projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);
-    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
-    BaseWorkbenchContentProvider provider = new BaseWorkbenchContentProvider();
-    _treeViewer.setContentProvider(provider);
+
+    // _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
+    createColumns();
 
     IBundleMakerProjectDescription bundleMakerProjectDescription = getBundleMakerProjectDescription();
     System.out.println("Init treeviewer mit projectdescription " + bundleMakerProjectDescription);
@@ -199,6 +212,160 @@ public class ProjectResourcesBlock {
 
     // paint the borders
     toolkit.paintBordersFor(client);
+  }
+
+  /**
+   * 
+   */
+  private void createColumns() {
+    Tree tree = _treeViewer.getTree();
+    TableLayout layout = new TableLayout();
+    TreeViewerColumn column = new TreeViewerColumn(_treeViewer, SWT.NONE);
+    column.setLabelProvider(new BundleMakerPathColumnLabelProvider(true));
+    column.getColumn().setResizable(true);
+    column.getColumn().setMoveable(true);
+    column.getColumn().setText("Resource");
+    layout.addColumnData(new ColumnWeightData(80));
+
+    column = new TreeViewerColumn(_treeViewer, SWT.NONE);
+    column.setLabelProvider(new BundleMakerPathColumnLabelProvider(false));
+    column.setEditingSupport(new BundleMakerPathEditingSupport(_treeViewer));
+    column.getColumn().setResizable(true);
+    column.getColumn().setMoveable(true);
+    column.getColumn().setText("Analyze");
+    column.getColumn().setAlignment(SWT.CENTER);
+    layout.addColumnData(new ColumnWeightData(20));
+
+    tree.setLayout(layout);
+    tree.setHeaderVisible(true);
+    tree.layout(true);
+  }
+
+  private class BundleMakerPathEditingSupport extends EditingSupport {
+
+    public BundleMakerPathEditingSupport(ColumnViewer viewer) {
+      super(viewer);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
+     */
+    @Override
+    protected CellEditor getCellEditor(Object element) {
+
+      if (!canEdit(element)) {
+        return null;
+      }
+
+      return new CheckboxCellEditor(null, SWT.CHECK);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
+     */
+    @Override
+    protected boolean canEdit(Object element) {
+      if (!(element instanceof IFileBasedContent)) {
+        return false;
+      }
+
+      IFileBasedContent content = (IFileBasedContent) element;
+      return content.isResourceContent();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
+     */
+    @Override
+    protected Object getValue(Object element) {
+      IFileBasedContent content = (IFileBasedContent) element;
+      return content.isAnalyzeSourceResources();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
+     */
+    @Override
+    protected void setValue(Object element, Object value) {
+      IFileBasedContent content = (IFileBasedContent) element;
+      Boolean analyze = (Boolean) value;
+      System.out.println("Set analyze on " + content + " to -> " + analyze);
+      content.setAnalyzeSourceResources(analyze);
+      _treeViewer.refresh();
+    }
+
+  }
+
+  class BundleMakerPathColumnLabelProvider extends ColumnLabelProvider {
+
+    private final boolean _resourceColumn;
+
+    /**
+     * @param column
+     */
+    public BundleMakerPathColumnLabelProvider(boolean resourceColumn) {
+      _resourceColumn = resourceColumn;
+    }
+
+    @Override
+    public Image getImage(Object element) {
+      if (!_resourceColumn) {
+        if (element instanceof IFileBasedContent) {
+          IFileBasedContent content = (IFileBasedContent) element;
+          if (!content.isResourceContent()) {
+            return null;
+          }
+          // TODO: ResourceContent ohne Sources sollte isAnalyzeSourceResources() false haben ???
+          if (content.isAnalyzeSourceResources()) {
+            return UIImages.BINARY_ARCHIVE.getImage();
+          }
+          return null;
+        }
+
+      }
+      if (!(element instanceof BundleMakerPath)) {
+        return null;
+      }
+      BundleMakerPath path = (BundleMakerPath) element;
+
+      if (_resourceColumn) {
+        if (path.isFolder()) {
+          if (path.isBinary()) {
+            return UIImages.BINARY_FOLDER.getImage();
+          }
+          return UIImages.SOURCE_FOLDER.getImage();
+        }
+        if (path.isBinary()) {
+          return UIImages.BINARY_ARCHIVE.getImage();
+        }
+        return UIImages.SOURCE_ARCHIVE.getImage();
+      }
+
+      return super.getImage(element);
+    }
+
+    @Override
+    public String getText(Object element) {
+      if (!_resourceColumn) {
+        return null;
+      }
+
+      if (element instanceof IFileBasedContent) {
+        IFileBasedContent content = (IFileBasedContent) element;
+        return String.format("%s [%s]", content.getName(), content.getVersion());
+      }
+
+      BundleMakerPath path = (BundleMakerPath) element;
+      return path.getLabel();
+    }
   }
 
   /**

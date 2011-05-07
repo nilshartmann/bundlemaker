@@ -181,6 +181,12 @@ public class FileBasedContent implements IFileBasedContent {
   public void setResourceContent(ResourceContent resourceContent) {
     _resourceContent = resourceContent;
   }
+  
+  public void setAnalyzeSourceResources(boolean flag) {
+    if( _resourceContent != null) { 
+        _resourceContent.setAnalyzeSourceResources(flag); 
+       }
+  }
 
   /**
    * <p>

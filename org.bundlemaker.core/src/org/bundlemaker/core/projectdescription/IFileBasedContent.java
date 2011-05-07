@@ -192,4 +192,7 @@ public interface IFileBasedContent {
    * @return a Set of resources, never null.
    */
   Set<? extends IResource> getSourceResources();
+  
+  public void setAnalyzeSourceResources(boolean flag);
+
 }
