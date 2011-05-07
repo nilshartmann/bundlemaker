@@ -25,5 +25,6 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
  */
 public interface IModifiableFileBasedContent extends IFileBasedContent {
 
-  // TODO
+  public void setAnalyzeSourceResources(boolean flag);
+
 }

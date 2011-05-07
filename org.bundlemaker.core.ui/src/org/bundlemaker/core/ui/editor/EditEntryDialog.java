@@ -15,16 +15,24 @@ import static java.lang.String.format;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.variables.IStringVariableManager;
+import org.eclipse.core.variables.VariablesPlugin;
 import org.eclipse.debug.ui.StringVariableSelectionDialog;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.ArchiveFileFilter;
 import org.eclipse.jdt.internal.ui.wizards.buildpaths.FolderSelectionDialog;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -134,11 +142,30 @@ public class EditEntryDialog extends TitleAreaDialog {
   private void selectFromWorkspace(Shell shell) {
     FolderSelectionDialog dialog = new FolderSelectionDialog(shell, new WorkbenchLabelProvider(),
         new WorkbenchContentProvider());
-    dialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
+    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    dialog.setInput(workspaceRoot);
     dialog.setTitle("Select path");
     dialog.setMessage("Select a folder or archive of from your workspace");
     ViewerFilter filter = new ArchiveFileFilter((List) null, false, false);
     dialog.addFilter(filter); // new TypedViewerFilter(new Class[] { IProject.class, IFolder.class, IFile.class }));
+
+    String entryText = _entryText.getText();
+    if (!entryText.trim().isEmpty()) {
+      try {
+        // Try to find the resource in order to pre-select it in the dialog
+        IStringVariableManager stringVariableManager = VariablesPlugin.getDefault().getStringVariableManager();
+        String resolved = stringVariableManager.performStringSubstitution(entryText.trim());
+        Path resolvedPath = new Path(resolved);
+        IPath relativePath = resolvedPath.makeRelativeTo(workspaceRoot.getLocation());
+        IResource resource = workspaceRoot.findMember(relativePath);
+        System.out.println("resource: " + resource);
+
+        dialog.setInitialSelection(resource);
+      } catch (CoreException ex) {
+        ex.printStackTrace();
+
+      }
+    }
 
     if (dialog.open() == Window.OK) {
       IResource resource = (IResource) dialog.getFirstResult();
@@ -164,6 +191,8 @@ public class EditEntryDialog extends TitleAreaDialog {
     FileDialog dialog = new FileDialog(parent);
     dialog.setText("Select external archive");
     dialog.setFilterExtensions(new String[] { "*.jar;*.zip", "*.*" });
+    Path currPath = new Path(_entryText.getText());
+    dialog.setFilterPath(currPath.toOSString());
     String res = dialog.open();
     if (res != null) {
       _entryText.setText(Path.fromOSString(res).makeAbsolute().toOSString());
@@ -174,12 +203,32 @@ public class EditEntryDialog extends TitleAreaDialog {
     DirectoryDialog dialog = new DirectoryDialog(parentShell);
     dialog.setMessage("Select an external folder");
     dialog.setText("External folder");
-    // dialog.setFilterPath(currPath.toOSString());
+    Path currPath = new Path(_entryText.getText());
+    dialog.setFilterPath(currPath.toOSString());
     String res = dialog.open();
     if (res != null) {
       _entryText.setText(Path.fromOSString(res).makeAbsolute().toOSString());
     }
+  }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.jface.dialogs.TrayDialog#createButtonBar(org.eclipse.swt.widgets.Composite)
+   */
+  @Override
+  protected Control createButtonBar(Composite parent) {
+    Control c = super.createButtonBar(parent);
+    final Button okButton = getButton(IDialogConstants.OK_ID);
+    _entryText.addModifyListener(new ModifyListener() {
+
+      @Override
+      public void modifyText(ModifyEvent e) {
+        okButton.setEnabled(_entryText.getText().trim().isEmpty() == false);
+      }
+    });
+
+    return c;
   }
 
   private Button createButton(Composite parent, String text, SelectionListener selectionListener) {
@@ -194,22 +243,12 @@ public class EditEntryDialog extends TitleAreaDialog {
     return button;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
-   */
   @Override
   protected void configureShell(Shell newShell) {
     super.configureShell(newShell);
     newShell.setText("Edit entry");
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
-   */
   @Override
   protected void okPressed() {
     _entry = _entryText.getText();

@@ -23,7 +23,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.debug.ui;bundle-version="3.5.0",
  org.eclipse.jdt.ui,
  org.eclipse.debug.ui;bundle-version="3.5.0",
- org.bundlemaker.core.analysis;bundle-version="1.0.0"
+ org.bundlemaker.core.analysis;bundle-version="1.0.0",
+ org.eclipse.core.variables;bundle-version="3.2.400"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: BundleMaker Team

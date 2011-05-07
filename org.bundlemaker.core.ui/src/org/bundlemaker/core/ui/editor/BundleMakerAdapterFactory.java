@@ -21,7 +21,6 @@ import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -110,7 +109,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
   }
 
   static Collection<BundleMakerPath> asBundleMakerPaths(Collection<IRootPath> paths, boolean binary) {
-    List<BundleMakerPath> bundleMakerPaths = new LinkedList<BundleMakerAdapterFactory.BundleMakerPath>();
+    List<BundleMakerPath> bundleMakerPaths = new LinkedList<BundleMakerPath>();
     for (IRootPath path : paths) {
       try {
         bundleMakerPaths.add(new BundleMakerPath(path.getUnresolvedPath(), binary, path.getAsFile().isDirectory()));
@@ -187,33 +186,6 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     }
 
     return null;
-  }
-
-  static class BundleMakerPath {
-    private final IPath   _path;
-
-    private final boolean _binary;
-
-    private final boolean _folder;
-
-    public BundleMakerPath(IPath path, boolean binary, boolean folder) {
-      super();
-      _path = path;
-      _binary = binary;
-      _folder = folder;
-    }
-
-    public boolean isFolder() {
-      return _folder;
-    }
-
-    public String getLabel() {
-      return _path.toString();
-    }
-
-    public boolean isBinary() {
-      return _binary;
-    }
   }
 
   /**
