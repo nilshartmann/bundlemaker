@@ -18,6 +18,7 @@ import java.util.LinkedList;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
@@ -297,8 +298,8 @@ public class ProjectResourcesBlock {
    * 
    * @return
    */
-  private IBundleMakerProjectDescription getBundleMakerProjectDescription() {
-    return _bundleMakerProjectProvider.getBundleMakerProject().getProjectDescription();
+  private IModifiableBundleMakerProjectDescription getBundleMakerProjectDescription() {
+    return _bundleMakerProjectProvider.getBundleMakerProject().getModifiableProjectDescription();
   }
 
   /**

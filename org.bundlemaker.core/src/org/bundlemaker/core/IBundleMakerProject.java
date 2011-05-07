@@ -18,6 +18,7 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -63,7 +64,7 @@ public interface IBundleMakerProject {
    * IBundleMakerProject bundleMakerProject = ...
    * 
    * // get the project description
-   * BundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
+   * IModifiableBundleMakerProjectDescription projectDescription = getModifiableProjectDescription();
    * 
    * // make changes to the project description
    * projectDescription.setJRE("jdk16");
@@ -76,6 +77,8 @@ public interface IBundleMakerProject {
    * 
    * @precondition none
    */
+  public IModifiableBundleMakerProjectDescription getModifiableProjectDescription();
+  
   public IBundleMakerProjectDescription getProjectDescription();
 
   /**

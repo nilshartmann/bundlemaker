@@ -50,7 +50,7 @@ public class ProjectDescriptionEditor extends FormEditor {
 
     // save the project
     try {
-      _bundleMakerProject.getProjectDescription().save();
+      _bundleMakerProject.getModifiableProjectDescription().save();
 
       // propage new dirty state
       editorDirtyStateChanged();

@@ -23,6 +23,8 @@ import org.bundlemaker.core.internal.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -35,7 +37,7 @@ import org.eclipse.core.variables.VariablesPlugin;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProjectDescription implements IBundleMakerProjectDescription {
+public class BundleMakerProjectDescription implements IModifiableBundleMakerProjectDescription {
 
   /** - */
   private static NumberFormat    FORMATTER  = new DecimalFormat("000000");
@@ -100,6 +102,12 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
    */
   @Override
   public IFileBasedContent getFileBasedContent(String id) {
+    //
+    return getModifiableFileBasedContent(id);
+  }
+
+  @Override
+  public IModifiableFileBasedContent getModifiableFileBasedContent(String id) {
 
     // file based content
     for (FileBasedContent fileBasedContent : _fileBasedContent) {
@@ -208,13 +216,13 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
   }
 
   @Override
-  public void addResourceContent(String binaryRoot) {
+  public IModifiableFileBasedContent addResourceContent(String binaryRoot) {
 
-    addResourceContent(binaryRoot, null);
+    return addResourceContent(binaryRoot, null);
   }
 
   @Override
-  public void addResourceContent(String binaryRoot, String sourceRoot) {
+  public IModifiableFileBasedContent addResourceContent(String binaryRoot, String sourceRoot) {
 
     try {
 
@@ -222,95 +230,103 @@ public class BundleMakerProjectDescription implements IBundleMakerProjectDescrip
       JarInfo jarInfo = JarInfoService.extractJarInfo(getAsFile(binaryRoot));
 
       //
-      addResourceContent(jarInfo.getName(), jarInfo.getVersion(), binaryRoot, sourceRoot);
+      return addResourceContent(jarInfo.getName(), jarInfo.getVersion(), binaryRoot, sourceRoot);
 
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
   }
 
   @Override
-  public void addResourceContent(String name, String version, String binaryRoot) {
+  public IModifiableFileBasedContent addResourceContent(String name, String version, String binaryRoot) {
 
-    addResourceContent(name, version, binaryRoot, null);
+    return addResourceContent(name, version, binaryRoot, null);
   }
 
   @Override
-  public void addResourceContent(String name, String version, String binaryRoot, String sourceRoot) {
+  public IModifiableFileBasedContent addResourceContent(String name, String version, String binaryRoot,
+      String sourceRoot) {
 
-    addResourceContent(name, version, new String[] { binaryRoot }, sourceRoot != null ? new String[] { sourceRoot }
-        : new String[] {}, true);
+    return addResourceContent(name, version, new String[] { binaryRoot },
+        sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, true);
   }
 
   @Override
-  public void addResourceContent(String name, String version, List<String> binaryRoot, List<String> sourceRoot) {
+  public IModifiableFileBasedContent addResourceContent(String name, String version, List<String> binaryRoot,
+      List<String> sourceRoot) {
 
-    addResourceContent(name, version, binaryRoot.toArray(new String[0]), sourceRoot.toArray(new String[0]), true);
+    return addResourceContent(name, version, binaryRoot.toArray(new String[0]), sourceRoot.toArray(new String[0]), true);
   }
 
   @Override
-  public void addResourceContent(String binaryRoot, String sourceRoot, boolean analyzeSource) {
+  public IModifiableFileBasedContent addResourceContent(String binaryRoot, String sourceRoot, boolean analyzeSource) {
 
     try {
       // get the jar info
       JarInfo jarInfo = JarInfoService.extractJarInfo(getAsFile(binaryRoot));
 
       //
-      addResourceContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot },
+      return addResourceContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot },
           sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, true);
 
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
   }
 
   @Override
-  public void addResourceContent(String name, String version, String binaryRoot, String sourceRoot,
-      boolean analyzeSource) {
-    addResourceContent(name, version, new String[] { binaryRoot }, sourceRoot != null ? new String[] { sourceRoot }
-        : new String[] {}, true);
+  public IModifiableFileBasedContent addResourceContent(String name, String version, String binaryRoot,
+      String sourceRoot, boolean analyzeSource) {
+
+    return addResourceContent(name, version, new String[] { binaryRoot },
+        sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, true);
   }
 
   @Override
-  public void addResourceContent(String name, String version, List<String> binaryRoots, List<String> sourceRoots,
-      boolean analyzeSource) {
-    addResourceContent(name, version, binaryRoots.toArray(new String[0]), sourceRoots.toArray(new String[0]), true);
+  public IModifiableFileBasedContent addResourceContent(String name, String version, List<String> binaryRoots,
+      List<String> sourceRoots, boolean analyzeSource) {
+
+    return addResourceContent(name, version, binaryRoots.toArray(new String[0]), sourceRoots.toArray(new String[0]),
+        true);
   }
 
   @Override
-  public void addTypeContent(String binaryRoot) {
+  public IModifiableFileBasedContent addTypeContent(String binaryRoot) {
     Assert.isNotNull(binaryRoot);
 
     try {
       // get the jar info
       JarInfo jarInfo = JarInfoService.extractJarInfo(getAsFile(binaryRoot));
 
-      addTypeContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot });
+      return addTypeContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot });
 
     } catch (CoreException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+      return null;
     }
   }
 
   @Override
-  public void addTypeContent(String name, String version, String binaryRoot) {
+  public IModifiableFileBasedContent addTypeContent(String name, String version, String binaryRoot) {
     Assert.isNotNull(name);
     Assert.isNotNull(version);
     Assert.isNotNull(binaryRoot);
 
-    addTypeContent(name, version, new String[] { binaryRoot });
+    return addTypeContent(name, version, new String[] { binaryRoot });
   }
 
   @Override
-  public void addTypeContent(String name, String version, List<String> binaryRoot) {
+  public IModifiableFileBasedContent addTypeContent(String name, String version, List<String> binaryRoot) {
     Assert.isNotNull(name);
     Assert.isNotNull(version);
     Assert.isNotNull(binaryRoot);
 
-    addTypeContent(name, version, binaryRoot.toArray(new String[0]));
+    return addTypeContent(name, version, binaryRoot.toArray(new String[0]));
   }
 
   @SuppressWarnings("unchecked")

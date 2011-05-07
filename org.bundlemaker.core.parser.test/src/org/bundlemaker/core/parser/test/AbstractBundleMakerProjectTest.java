@@ -5,6 +5,7 @@ import java.io.File;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -107,7 +108,7 @@ public abstract class AbstractBundleMakerProjectTest {
     Assert.assertTrue(directory.isDirectory());
 
     //
-    IBundleMakerProjectDescription projectDescription = bundleMakerProject.getProjectDescription();
+    IModifiableBundleMakerProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
 
     // step 1:
     projectDescription.clear();

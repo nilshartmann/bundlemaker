@@ -40,10 +40,10 @@ public class IntegrationTest extends AbstractIntegrationTest {
   protected void doAddProjectDescription(IBundleMakerProject bundleMakerProject) throws Exception {
 
     // step 1:
-    bundleMakerProject.getProjectDescription().clear();
+    bundleMakerProject.getModifiableProjectDescription().clear();
 
     // step 2: add the JRE
-    bundleMakerProject.getProjectDescription().setJre(AbstractIntegrationTest.getDefaultVmName());
+    bundleMakerProject.getModifiableProjectDescription().setJre(AbstractIntegrationTest.getDefaultVmName());
 
     // step 3: add the source and classes
     File sourceDirectory = new File(System.getProperty("user.dir"), "eclipse/source");
@@ -58,7 +58,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
     for (File file : jarFiles) {
       classes.add(file.getAbsolutePath());
     }
-    bundleMakerProject.getProjectDescription().addResourceContent("eclipse", "3.6.1", classes,
+    bundleMakerProject.getModifiableProjectDescription().addResourceContent("eclipse", "3.6.1", classes,
         Arrays.asList(new String[] { sourceDirectory.getAbsolutePath() }));
 
     // step 4: process the class path entries
@@ -69,11 +69,11 @@ public class IntegrationTest extends AbstractIntegrationTest {
       }
     });
     for (File externalJar : jarFiles) {
-      bundleMakerProject.getProjectDescription().addResourceContent(externalJar.getAbsolutePath());
+      bundleMakerProject.getModifiableProjectDescription().addResourceContent(externalJar.getAbsolutePath());
     }
 
     //
-    bundleMakerProject.getProjectDescription().save();
+    bundleMakerProject.getModifiableProjectDescription().save();
   }
 
   /**
