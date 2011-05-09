@@ -22,6 +22,7 @@ import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
@@ -119,6 +120,46 @@ public class FileBasedContent implements IModifiableFileBasedContent {
    */
   public Set<IRootPath> getModifiableBinaryPaths() {
     return _binaryPaths;
+  }
+  
+  public Set<IRootPath> getModifiableSourcePaths() {
+    return _resourceContent != null ? _resourceContent.getModifiableSourcePaths() : EMPTY_PATH_SET;
+  }
+  
+  /* (non-Javadoc)
+   * @see org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent#setBinaryPaths(java.lang.String[])
+   */
+  @Override
+  public void setBinaryPaths(String[] binaryRootPaths) {
+    Assert.isNotNull(binaryRootPaths);
+    
+    
+    Set<IRootPath> binaryPaths = getModifiableBinaryPaths();
+    binaryPaths.clear();
+
+    for (String path : binaryRootPaths) {
+      binaryPaths.add(new RootPath(path));
+    }
+  }
+
+  /* (non-Javadoc)
+   * @see org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent#setSourcePaths(java.lang.String[])
+   */
+  @Override
+  public void setSourcePaths(String[] sourceRootPaths) {
+    Assert.isNotNull(sourceRootPaths);
+    if (_resourceContent == null) {
+      System.err.println("Warning! Attemt to set source paths on binary resource! Ignore.");
+      return;
+    }
+    
+    Set<IRootPath> modifiableSourcePaths = _resourceContent.getModifiableSourcePaths();
+    modifiableSourcePaths.clear();
+    
+    for (String path : sourceRootPaths) {
+      modifiableSourcePaths.add(new RootPath(path));
+    }
+
   }
 
   @Override

@@ -177,6 +177,8 @@ public class ResourceContent {
   public Set<IRootPath> getModifiableSourcePaths() {
     return _sourcePaths;
   }
+  
+  
 
   public void setAnalyzeSourceResources(boolean analyzeSourceResources) {
     _analyzeSourceResources = analyzeSourceResources;
