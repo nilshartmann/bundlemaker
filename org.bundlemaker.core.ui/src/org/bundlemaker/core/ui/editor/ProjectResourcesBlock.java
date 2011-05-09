@@ -377,26 +377,28 @@ public class ProjectResourcesBlock {
    * @param shell
    */
   private void editContent(Shell shell) {
-    Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(IFileBasedContent.class);
+    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
     if (selectedContents.size() != 1) {
       return;
     }
 
-    IFileBasedContent content = selectedContents.iterator().next();
+    IModifiableFileBasedContent content = selectedContents.iterator().next();
     ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, content);
     if (dialog.open() != Window.OK) {
       return;
     }
 
-    // remove 'old' FileBasedContent
-    getBundleMakerProjectDescription().removeContent(content.getId());
-
-    // re-add content
     if (_editResources) {
-      getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
-          dialog.getBinaryPaths(), dialog.getSourcePaths());
+      content.setName(dialog.getName());
+      content.setVersion(dialog.getVersion());
+
+      content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
+      content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
     } else {
-      getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths());
+      content.setName(dialog.getName());
+      content.setVersion(dialog.getVersion());
+
+      content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
     }
 
     projectDescriptionChanged();
