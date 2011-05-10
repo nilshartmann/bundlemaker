@@ -72,9 +72,9 @@ public abstract class AbstractIntegrationTest {
   @Test
   public void integrationTest() throws Exception {
 
-    // delete the project
-    log("Deleting existing project...");
-    EclipseProjectUtils.deleteProjectIfExists(_projectName);
+    // // delete the project
+    // log("Deleting existing project...");
+    // EclipseProjectUtils.deleteProjectIfExists(_projectName);
 
     // create simple project
     log("Creating new bundlemaker project...");
