@@ -23,6 +23,7 @@ import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.util.GenericCache;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,22 +39,19 @@ import org.eclipse.core.runtime.SubMonitor;
  */
 public class ModelSetup {
 
+  public static final boolean LOG                      = true;
+
   /** THREAD_COUNT */
-  private static final int   THREAD_COUNT             = Runtime.getRuntime().availableProcessors();
-
-  // private static final int THREAD_COUNT = 1;
-
-  // /** the list of all errors */
-  // public List<IProblem> _errors;
+  private static final int    THREAD_COUNT             = Runtime.getRuntime().availableProcessors();
 
   /** the bundle maker project */
-  private BundleMakerProject _bundleMakerProject;
+  private BundleMakerProject  _bundleMakerProject;
 
   /**  */
-  private List<IParser[]>    _parsers4threads;
+  private List<IParser[]>     _parsers4threads;
 
   /** - */
-  private boolean            _parseIndirectReferences = true;
+  private boolean             _parseIndirectReferences = true;
 
   /**
    * <p>
@@ -77,7 +75,7 @@ public class ModelSetup {
    * @param modifiableFileBasedContent
    * @param dependencyStore
    */
-  public void setup(List<FileBasedContent> fileBasedContents, IPersistentDependencyStore dependencyStore,
+  public void setup(final List<FileBasedContent> fileBasedContents, final IPersistentDependencyStore dependencyStore,
       IProgressMonitor mainMonitor) throws OperationCanceledException, CoreException {
 
     Assert.isNotNull(fileBasedContents);
@@ -89,7 +87,7 @@ public class ModelSetup {
     }
 
     // create the sub-monitor
-    SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, 100);
+    final SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, 100);
 
     //
     setupParsers();
@@ -98,27 +96,44 @@ public class ModelSetup {
     notifyParseStart();
 
     try {
+
       // ***********************************************************************************************
       // STEP 1: Read all the resources from the underlying dependency store and put it in a map
       // ***********************************************************************************************
       mainMonitor.subTask("Reading from datastore...");
-      Map<IResourceKey, Resource> storedResourcesMap = readFromDependencyStore(dependencyStore,
-          progressMonitor.newChild(10));
+
+      // execute as loggable action...
+      final Map<IResourceKey, Resource> storedResourcesMap = StaticLog.log(LOG, "Reading from datastore",
+          new LoggableAction<Map<IResourceKey, Resource>>() {
+            @Override
+            public Map<IResourceKey, Resource> execute() {
+              return readFromDependencyStore(dependencyStore, progressMonitor.newChild(10));
+            }
+          });
 
       // ***********************************************************************************************
       // STEP 2: Perform up-to-date check and parse new or modified resources
       // ***********************************************************************************************
       // create the resource cache that holds all resources that must be stored
       mainMonitor.subTask("Reparsing...");
-      ResourceCache resourceCache = new ResourceCache(dependencyStore);
-      compareAndUpdate(fileBasedContents, storedResourcesMap, resourceCache, progressMonitor.newChild(60));
+      final ResourceCache resourceCache = new ResourceCache(dependencyStore);
+
+      // execute as loggable action...
+      StaticLog.log(LOG, "Compare and update...", new LoggableAction<Void>() {
+        @Override
+        public Void execute() {
+          compareAndUpdate(fileBasedContents, storedResourcesMap, resourceCache, progressMonitor.newChild(60));
+          return null;
+        }
+      });
 
       // ***********************************************************************************************
       // STEP 3: Update dependency store
       // ***********************************************************************************************
+
       mainMonitor.subTask("Writing to disc...");
-      resourceCache.commit(progressMonitor.newChild(30));
-      // TODO: deleteResourcesFromDependencyStore(storedResourcesMap.values());
+      resourceCache.commit(progressMonitor.newChild(25));
+      deleteResourcesFromDependencyStore(storedResourcesMap.values(), dependencyStore, progressMonitor.newChild(5));
 
       // ***********************************************************************************************
       // STEP 4: Setup the resource content
@@ -157,6 +172,9 @@ public class ModelSetup {
       Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
 
     //
+    StopWatch stopWatch = null;
+
+    //
     int contentCount = fileBasedContents.size();
     SubMonitor subMonitor = SubMonitor.convert(mainMonitor, contentCount);
 
@@ -170,6 +188,12 @@ public class ModelSetup {
         // we only have check resource content
         if (fileBasedContent.isResourceContent()) {
 
+          //
+          if (LOG) {
+            stopWatch = new StopWatch();
+            stopWatch.start();
+          }
+
           SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (fileBasedContent
               .getModifiableBinaryResources().size() + fileBasedContent.getModifiableSourceResources().size()));
 
@@ -181,6 +205,17 @@ public class ModelSetup {
           Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
               fileBasedContent.getModifiableSourceResources(), storedResourcesMap, resourceCache,
               new NullProgressMonitor());
+
+          //
+          if (LOG) {
+            StaticLog.log(String.format(" - compare and update '%s_%s' - computeNewAndModifiedResources [%s ms]",
+                fileBasedContent.getName(), fileBasedContent.getVersion(), stopWatch.getElapsedTime()));
+
+            StaticLog
+                .log(String.format("   - new/modified binary resources: %s", newAndModifiedBinaryResources.size()));
+            StaticLog
+                .log(String.format("   - new/modified source resources: %s", newAndModifiedSourceResources.size()));
+          }
 
           // step 4.2:
           for (ResourceStandin resourceStandin : newAndModifiedBinaryResources) {
@@ -252,9 +287,6 @@ public class ModelSetup {
         }
       }
 
-      //
-      System.out.println("HALLO");
-
       // set up the callables
       CallableReparse[] callables = new CallableReparse[THREAD_COUNT];
       for (int i = 0; i < callables.length; i++) {
@@ -288,29 +320,33 @@ public class ModelSetup {
    * <p>
    * </p>
    * 
-   * @param list
-   * @return
+   * @param values
    */
-  private List<ResourceStandin>[] splitIntoSublists(List<ResourceStandin> list) {
+  private void deleteResourcesFromDependencyStore(Collection<Resource> values,
+      IPersistentDependencyStore dependencyStore, IProgressMonitor progressMonitor) {
 
-    // compute the part size
-    float partSizeAsFloat = list.size() / (float) THREAD_COUNT;
-    int partSize = (int) Math.ceil(partSizeAsFloat);
+    //
+    if (progressMonitor != null) {
+      progressMonitor.beginTask("Clean up database...", values.size());
+    }
 
-    // split the package list in n sublist (one for each thread)
-    List<ResourceStandin>[] sublists = new List[THREAD_COUNT];
-    for (int i = 0; i < THREAD_COUNT; i++) {
-      if ((i + 1) * partSize <= list.size()) {
-        sublists[i] = list.subList(i * partSize, (i + 1) * partSize);
-      } else if ((i) * partSize <= list.size()) {
-        sublists[i] = list.subList(i * partSize, list.size());
-      } else {
-        sublists[i] = Collections.emptyList();
+    //
+    for (Resource resource : values) {
+      dependencyStore.delete(resource);
+
+      //
+      if (progressMonitor != null) {
+        progressMonitor.worked(1);
       }
     }
 
-    // sub lists
-    return sublists;
+    // commit the changes
+    dependencyStore.commit();
+
+    //
+    if (progressMonitor != null) {
+      progressMonitor.done();
+    }
   }
 
   /**
