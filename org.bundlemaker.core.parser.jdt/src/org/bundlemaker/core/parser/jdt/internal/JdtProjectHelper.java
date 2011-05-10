@@ -125,12 +125,7 @@ public class JdtProjectHelper {
 
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IProject associatedProject = root.getProject(getAssociatedJavaProjectName(bundleMakerProject));
-    try {
-      associatedProject.setHidden(true);
-    } catch (CoreException e1) {
-      // TODO Auto-generated catch block
-      e1.printStackTrace();
-    }
+
     IJavaProject javaProject = JavaCore.create(associatedProject);
 
     try {
