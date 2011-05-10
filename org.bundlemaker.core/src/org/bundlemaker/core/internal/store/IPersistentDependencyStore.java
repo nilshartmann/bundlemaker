@@ -36,6 +36,14 @@ public interface IPersistentDependencyStore extends IDependencyStore {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @param resource
+   */
+  void delete(Resource resource);
+
+  /**
+   * <p>
    * Commits all updates to the database since the last call of the <code>commit</code> method.
    * </p>
    */

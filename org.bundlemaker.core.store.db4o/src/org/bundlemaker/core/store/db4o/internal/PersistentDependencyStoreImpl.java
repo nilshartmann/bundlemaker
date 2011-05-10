@@ -55,4 +55,11 @@ public class PersistentDependencyStoreImpl extends AbstractPersistentDependencyS
   public void updateResource(IModifiableResource bundleElement) {
     getDatabase().store(bundleElement);
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void delete(Resource resource) {
+    getDatabase().delete(resource);
+  }
 }

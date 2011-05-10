@@ -113,6 +113,11 @@ public class ResourceCacheTest {
   private class Dummy implements IPersistentDependencyStore {
 
     @Override
+    public void delete(Resource resource) {
+      // TODO Auto-generated method stub
+    }
+
+    @Override
     public List<Resource> getResources() {
       return null;
     }

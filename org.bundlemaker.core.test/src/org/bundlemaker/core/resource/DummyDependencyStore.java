@@ -8,6 +8,14 @@ import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 
 public class DummyDependencyStore implements IPersistentDependencyStore {
 
+  
+  
+  @Override
+  public void delete(Resource resource) {
+    // TODO Auto-generated method stub
+    
+  }
+
   @Override
   public List<Resource> getResources() {
     // TODO Auto-generated method stub
