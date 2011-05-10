@@ -10,7 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.projectdescription.modifiable;
 
+import java.util.Set;
+
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 
 /**
  * <p>
@@ -26,5 +29,20 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 public interface IModifiableFileBasedContent extends IFileBasedContent {
 
   public void setAnalyzeSourceResources(boolean flag);
-
+  
+  /**
+   * Set the name of this IFileBasedContent to the given value
+   * @param name
+   */
+  public void setName(String name);
+  
+  /**
+   * Set the Version of this IFileBasedContent to the given value
+   * @param version
+   */
+  public void setVersion(String version);
+  
+  public void setBinaryPaths(String[] binaryRootPaths);
+  public void setSourcePaths(String[] sourceRootPaths);
+  
 }
