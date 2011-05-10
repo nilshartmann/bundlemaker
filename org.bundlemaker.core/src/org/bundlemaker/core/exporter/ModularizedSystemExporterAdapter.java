@@ -11,6 +11,7 @@
 package org.bundlemaker.core.exporter;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.eclipse.core.runtime.Assert;
@@ -24,19 +25,19 @@ import org.eclipse.core.runtime.Assert;
 public class ModularizedSystemExporterAdapter implements IModularizedSystemExporter {
 
   /** - */
-  private IModuleExporter               _moduleExporter;
+  private IModuleExporter        _moduleExporter;
 
   /** - */
-  private IModularizedSystem            _currentModularizedSystem;
+  private IModularizedSystem     _currentModularizedSystem;
 
   /** - */
-  private IResourceModule               _currentModule;
+  private IResourceModule        _currentModule;
 
   /** - */
-  private IModuleExporterContext        _currentContext;
+  private IModuleExporterContext _currentContext;
 
   /** - */
-  private IQueryFilter<IResourceModule> _moduleFilter;
+  private IQueryFilter<IModule>  _moduleFilter;
 
   /**
    * <p>
@@ -57,7 +58,7 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
    * 
    * @param moduleFilter
    */
-  public void setModuleFilter(IQueryFilter<IResourceModule> moduleFilter) {
+  public void setModuleFilter(IQueryFilter<IModule> moduleFilter) {
     _moduleFilter = moduleFilter;
   }
 
