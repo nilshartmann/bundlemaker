@@ -11,6 +11,7 @@
 package org.bundlemaker.core.parser;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -38,22 +39,13 @@ public interface IParserFactory {
 
   /**
    * <p>
-   * Initializes the {@link IParserFactory} for the specified project.
+   * Initializes the {@link IParserFactory} for the specified project. If the {@link IBundleMakerProjectDescription} of
+   * an {@link IBundleMakerProject} has changed, the {@link IBundleMakerProject} <b>always</b> will be re-initialized.
    * </p>
    * 
    * @param bundleMakerProject
    */
   public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException;
-
-  /**
-   * <p>
-   * Returns <code>true</code>, if this {@link IParserFactory} already has been initialized.
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @return <code>true</code>, if this {@link IParserFactory} already has been initialized.
-   */
-  public boolean isInitialized(IBundleMakerProject bundleMakerProject);
 
   /**
    * <p>

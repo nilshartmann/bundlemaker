@@ -51,8 +51,10 @@ public class JdtProjectHelper {
    */
   public static void setupAssociatedJavaProject(IBundleMakerProject project) throws CoreException {
 
+    // step 1: get the associated JDT project
     IJavaProject javaProject = getAssociatedJavaProject(project);
 
+    // step 2: delete linked resources (should not be necessary anymore)
     IResource[] children = javaProject.getProject().members();
     for (IResource iResource : children) {
       if (iResource.isLinked()) {
@@ -60,13 +62,16 @@ public class JdtProjectHelper {
       }
     }
 
+    // step 3: create the entries list
     List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
 
+    // step 3.1: add the vm path
     IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
     IPath path = JavaRuntime.newJREContainerPath(vmInstall);
     IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
     entries.add(classpathEntry);
 
+    // step 3.2: add the binary paths
     for (IFileBasedContent projectContent : project.getProjectDescription().getFileBasedContent()) {
 
       // add binary paths
@@ -76,6 +81,7 @@ public class JdtProjectHelper {
       }
     }
 
+    // set the classpath
     javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
   }
 

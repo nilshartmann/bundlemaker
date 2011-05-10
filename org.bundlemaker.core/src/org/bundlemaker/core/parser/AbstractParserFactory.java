@@ -47,14 +47,6 @@ public abstract class AbstractParserFactory implements IParserFactory {
    * {@inheritDoc}
    */
   @Override
-  public boolean isInitialized(IBundleMakerProject bundleMakerProject) {
-    return true;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public void dispose(IBundleMakerProject bundleMakerProject) {
   }
 }

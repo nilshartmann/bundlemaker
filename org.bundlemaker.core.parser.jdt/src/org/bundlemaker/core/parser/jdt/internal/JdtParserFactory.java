@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -64,27 +63,14 @@ public class JdtParserFactory implements IParserFactory {
    * {@inheritDoc}
    */
   @Override
-  public boolean isInitialized(IBundleMakerProject bundleMakerProject) {
-    return JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public void initialize(IBundleMakerProject bundleMakerProject) throws CoreException {
-
-    // TODO: review
 
     // create or get the java project
     if (!JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
       JdtProjectHelper.newAssociatedJavaProject(bundleMakerProject);
-      JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
     }
 
-    // create associated java project
-    // if (createAssociatedJavaProject(bundleMakerProject)) {
-    // }
+    JdtProjectHelper.setupAssociatedJavaProject(bundleMakerProject);
   }
 
   /**
