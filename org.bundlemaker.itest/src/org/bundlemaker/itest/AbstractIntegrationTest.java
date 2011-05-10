@@ -31,22 +31,19 @@ import org.junit.Test;
 public abstract class AbstractIntegrationTest {
 
   /** - */
-  private static final boolean CLEAN = Boolean.getBoolean("parse");
+  public String   _projectName;
 
   /** - */
-  public String                _projectName;
+  private boolean _exportAsStructure101;
 
   /** - */
-  private boolean              _exportAsStructure101;
+  private boolean _exportAsBinaryBundles;
 
   /** - */
-  private boolean              _exportAsBinaryBundles;
+  private boolean _exportAsSimpleReport;
 
   /** - */
-  private boolean              _exportAsSimpleReport;
-
-  /** - */
-  private boolean              _exportAsPdeProjects;
+  private boolean _exportAsPdeProjects;
 
   /**
    * @param projectName
@@ -76,10 +73,8 @@ public abstract class AbstractIntegrationTest {
   public void integrationTest() throws Exception {
 
     // delete the project
-    if (CLEAN) {
-      log("Deleting existing project...");
-      EclipseProjectUtils.deleteProjectIfExists(_projectName);
-    }
+    log("Deleting existing project...");
+    EclipseProjectUtils.deleteProjectIfExists(_projectName);
 
     // create simple project
     log("Creating new bundlemaker project...");
@@ -89,10 +84,8 @@ public abstract class AbstractIntegrationTest {
     IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
 
     // create the project description
-    if (CLEAN) {
-      log("Adding project description...");
-      doAddProjectDescription(bundleMakerProject);
-    }
+    log("Adding project description...");
+    doAddProjectDescription(bundleMakerProject);
 
     // initialize the project
     log("Initializing project...");
