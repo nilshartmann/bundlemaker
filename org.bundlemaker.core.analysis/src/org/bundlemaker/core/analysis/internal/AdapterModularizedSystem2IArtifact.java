@@ -1,14 +1,19 @@
 package org.bundlemaker.core.analysis.internal;
 
-import org.bundlemaker.core.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.model.IArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.runtime.Assert;
 
-public class AdapterModularizedSystem2IArtifact extends AbstractArtifactContainer implements IArtifact {
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
+public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContainer {
 
-  private IModularizedSystem _modularizedSystem;
+  private IModifiableModularizedSystem _modularizedSystem;
 
   /**
    * <p>
@@ -17,7 +22,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractArtifactContaine
    * 
    * @param modularizedSystem
    */
-  public AdapterModularizedSystem2IArtifact(IModularizedSystem modularizedSystem) {
+  public AdapterModularizedSystem2IArtifact(IModifiableModularizedSystem modularizedSystem) {
     super(ArtifactType.Root, null);
 
     Assert.isNotNull(modularizedSystem);
@@ -34,5 +39,55 @@ public class AdapterModularizedSystem2IArtifact extends AbstractArtifactContaine
   @Override
   public final String getQualifiedName() {
     return getName();
+  }
+
+  public IModifiableModularizedSystem getModularizedSystem() {
+    return _modularizedSystem;
+  }
+
+  @Override
+  public boolean canAdd(IArtifact artifact) {
+    return artifact.getType().equals(ArtifactType.Group) || artifact.getType().equals(ArtifactType.Module);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addArtifact(IArtifact artifact) {
+
+    // asserts
+    Assert.isNotNull(artifact);
+    assertCanAdd(artifact);
+
+    // call the super method
+    super.addArtifact(artifact);
+    // TODO!!!
+    artifact.setParent(this);
+
+    // CHANGE THE UNDERLYING MODEL
+    AdapterUtils.addResourceModuleToModularizedSystem(artifact);
+    AdapterUtils.getModularizedSystem(artifact).initializeResourceModules();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean removeArtifact(IArtifact artifact) {
+
+    Assert.isNotNull(artifact);
+
+    boolean result = super.removeArtifact(artifact);
+
+    // CHANGE THE UNDERLYING MODEL
+    AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
+    AdapterUtils.getModularizedSystem(this).initializeResourceModules();
+
+    // TODO!!!
+    artifact.setParent(null);
+
+    //
+    return result;
   }
 }

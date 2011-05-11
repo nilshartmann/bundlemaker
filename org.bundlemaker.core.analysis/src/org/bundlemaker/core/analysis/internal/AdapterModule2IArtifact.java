@@ -1,8 +1,9 @@
 package org.bundlemaker.core.analysis.internal;
 
-import org.bundlemaker.core.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -11,7 +12,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractArtifactContainer implements IArtifact {
+public class AdapterModule2IArtifact extends AbstractAdvancedContainer {
 
   /** the resource module */
   private IModule _module;
@@ -24,22 +25,24 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
    * @param modularizedSystem
    */
   public AdapterModule2IArtifact(IModule module, IArtifact parent) {
-    super(ArtifactType.Module, parent);
+    super(ArtifactType.Module, module.getModuleIdentifier().toString());
 
     Assert.isNotNull(module);
+    Assert.isTrue(parent instanceof AbstractArtifactContainer);
 
     // set the resource module
     _module = module;
+    
+    // set parent/children dependency
+    setParent(parent);
+    ((AbstractArtifactContainer) parent).getChildren().add(this);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public final String getName() {
-    return _module.getModuleIdentifier().toString();
+  public boolean canAdd(IArtifact artifact) {
+    return true;
   }
-
+  
   /**
    * {@inheritDoc}
    */

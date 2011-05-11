@@ -1,7 +1,7 @@
 package org.bundlemaker.core.analysis.internal;
 
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 
 /**
  * <p>
@@ -9,7 +9,7 @@ import org.bundlemaker.core.modules.IResourceModule;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact implements IArtifact {
+public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
   /**
    * <p>

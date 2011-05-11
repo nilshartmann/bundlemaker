@@ -10,9 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.analysis.internal;
 
-import org.bundlemaker.core.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 
 /**
  * <p>
@@ -20,7 +21,7 @@ import org.bundlemaker.core.resource.IResource;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterResource2IArtifact extends AbstractArtifactContainer implements IArtifact {
+public class AdapterResource2IArtifact extends AbstractAdvancedContainer {
 
   /** the bundle maker resource */
   private IResource _resource;
@@ -37,13 +38,22 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
    * @param parent
    */
   public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IArtifact parent) {
-    super(ArtifactType.Resource, parent);
+    super(ArtifactType.Resource, resource.getName());
+
+    // set parent/children dependency
+    setParent(parent);
+    ((AbstractArtifactContainer) parent).getChildren().add(this);
 
     //
     _resource = resource;
 
     //
     _isSourceResource = isSourceResource;
+  }
+
+  @Override
+  public boolean canAdd(IArtifact artifact) {
+    return true;
   }
 
   @Override

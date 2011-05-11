@@ -15,13 +15,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.analysis.internal.model.DependencyAlt;
 import org.bundlemaker.core.analysis.internal.transformer.ArtifactCache;
-import org.bundlemaker.core.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.model.IDependency;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.IDependency;
+import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.dependencyanalysis.base.model.impl.Dependency;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -47,27 +49,18 @@ public class AdapterType2IArtifact extends AbstractArtifact {
    */
   public AdapterType2IArtifact(IType type, ArtifactCache artifactCache, IArtifact parent) {
 
-    super(ArtifactType.Type, parent);
+    super(ArtifactType.Type, type.getName());
 
     Assert.isNotNull(artifactCache);
     Assert.isNotNull(parent);
 
+    // set parent/children dependency
     setParent(parent);
-    parent.getChildren().add(this);
-
-    Assert.isNotNull(artifactCache);
+    ((AbstractArtifactContainer) parent).getChildren().add(this);
 
     _type = type;
 
     _artifactCache = artifactCache;
-  }
-
-  /**
-   * @see org.bundlemaker.dependencyanalysis.base.model.IBaseArtifact#getName()
-   */
-  @Override
-  public String getName() {
-    return _type.getName();
   }
 
   @Override
@@ -81,21 +74,19 @@ public class AdapterType2IArtifact extends AbstractArtifact {
 
   @Override
   public boolean removeArtifact(IArtifact artifact) {
-
     // throw new unsupported operation exception
     throw new UnsupportedOperationException();
   }
 
   @Override
   public void addArtifact(IArtifact artifact) {
-
     // throw new unsupported operation exception
     throw new UnsupportedOperationException();
   }
 
   @Override
+  @Deprecated
   public IDependency addDependency(IArtifact artifact) {
-
     // throw new unsupported operation exception
     throw new UnsupportedOperationException();
   }
@@ -125,7 +116,7 @@ public class AdapterType2IArtifact extends AbstractArtifact {
     if (artifact.getLeafs() == null) {
       return _cachedDependencies.get(artifact);
     } else {
-      DependencyAlt dependencyContainer = new DependencyAlt(this, artifact, 0);
+      Dependency dependencyContainer = new Dependency(this, artifact, 0);
       for (IArtifact leaf : artifact.getLeafs()) {
         IDependency dependency = getDependency(leaf);
         if ((dependency != null) && (dependency.getTo().getType() == ArtifactType.Type)) {
@@ -175,7 +166,7 @@ public class AdapterType2IArtifact extends AbstractArtifact {
       if (artifact != null) {
 
         // map to dependency
-        DependencyAlt dependency = new DependencyAlt(this, artifact);
+        Dependency dependency = new Dependency(this, artifact);
 
         // DependencyKind dependencyKind = DependencyKind.USES;
         // if (reference.isImplements()) {

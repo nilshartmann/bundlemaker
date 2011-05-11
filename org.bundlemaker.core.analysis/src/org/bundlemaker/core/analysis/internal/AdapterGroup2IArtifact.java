@@ -1,7 +1,13 @@
 package org.bundlemaker.core.analysis.internal;
 
-import org.bundlemaker.core.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.model.IArtifact;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -10,10 +16,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterGroup2IArtifact extends AbstractArtifactContainer implements IArtifact {
-
-  /** the name */
-  private String _name;
+public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
   /**
    * <p>
@@ -23,19 +26,11 @@ public class AdapterGroup2IArtifact extends AbstractArtifactContainer implements
    * @param modularizedSystem
    */
   public AdapterGroup2IArtifact(String name, IArtifact parent) {
-    super(ArtifactType.Group, parent);
+    super(ArtifactType.Group, name);
 
-    Assert.isNotNull(name);
-
-    _name = name;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String getName() {
-    return _name;
+    // set parent/children dependency
+    setParent(parent);
+    ((AbstractArtifactContainer) parent).getChildren().add(this);
   }
 
   /**
@@ -43,6 +38,78 @@ public class AdapterGroup2IArtifact extends AbstractArtifactContainer implements
    */
   @Override
   public String getQualifiedName() {
-    return _name;
+
+    //
+    List<String> groupNames = new LinkedList<String>();
+
+    //
+    IArtifact group = this;
+    while (group != null && ArtifactType.Group.equals(group.getType())) {
+      groupNames.add(group.getName());
+      group = group.getParent();
+    }
+
+    //
+    Collections.reverse(groupNames);
+
+    //
+    StringBuilder builder = new StringBuilder();
+
+    //
+    for (Iterator<String> iterator = groupNames.iterator(); iterator.hasNext();) {
+      builder.append(iterator.next());
+      if (iterator.hasNext()) {
+        builder.append("/");
+      }
+    }
+
+    //
+    return builder.toString();
+  }
+
+  @Override
+  public boolean canAdd(IArtifact artifact) {
+    return artifact.getType().equals(ArtifactType.Group) || artifact.getType().equals(ArtifactType.Module);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addArtifact(IArtifact artifact) {
+
+    // asserts
+    Assert.isNotNull(artifact);
+    assertCanAdd(artifact);
+
+    // call the super method
+    super.addArtifact(artifact);
+    // TODO!!!
+    artifact.setParent(this);
+
+    // CHANGE THE UNDERLYING MODEL
+    AdapterUtils.addResourceModuleToModularizedSystem(artifact);
+    AdapterUtils.getModularizedSystem(artifact).initializeResourceModules();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean removeArtifact(IArtifact artifact) {
+
+    Assert.isNotNull(artifact);
+
+    boolean result = super.removeArtifact(artifact);
+
+    // CHANGE THE UNDERLYING MODEL
+    AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
+    AdapterUtils.getModularizedSystem(this).initializeResourceModules();
+
+    // TODO!!!
+    artifact.setParent(null);
+    
+    //
+    return result;
   }
 }

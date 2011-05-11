@@ -1,8 +1,9 @@
 package org.bundlemaker.core.analysis.internal;
 
-import org.bundlemaker.core.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -11,7 +12,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterPackage2IArtifact extends AbstractArtifactContainer implements IArtifact {
+public class AdapterPackage2IArtifact extends AbstractAdvancedContainer {
 
   /** - */
   private String _qualifiedName;
@@ -25,7 +26,11 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
    * @param parent
    */
   public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent) {
-    super(ArtifactType.Package, parent);
+    super(ArtifactType.Package, _getName(qualifiedName));
+    
+    // set parent/children dependency
+    setParent(parent);
+    ((AbstractArtifactContainer) parent).getChildren().add(this);
 
     Assert.isNotNull(qualifiedName);
 
@@ -33,13 +38,14 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
     _qualifiedName = qualifiedName;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public String getName() {
-    return _qualifiedName.indexOf('.') != -1 ? _qualifiedName.substring(_qualifiedName.lastIndexOf('.') + 1)
-        : _qualifiedName;
+  public boolean canAdd(IArtifact artifact) {
+    return true;
+  }
+  
+  public static String _getName(String qualifiedName) {
+    return qualifiedName.indexOf('.') != -1 ? qualifiedName.substring(qualifiedName.lastIndexOf('.') + 1)
+        : qualifiedName;
   }
 
   /**

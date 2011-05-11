@@ -10,15 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.analysis.internal.model.ArtifactContainer;
 import org.bundlemaker.core.analysis.internal.transformer.ArtifactCache;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -51,9 +51,9 @@ public class ModelTransformer {
    * @return
    * @throws Exception
    */
-  public IArtifact transform(IModularizedSystem modularizedSystem) throws CoreException {
+  public IAdvancedArtifact transform(IModularizedSystem modularizedSystem) throws CoreException {
 
-    return transform(modularizedSystem, modularizedSystem.getAllModules().toArray(new IModule[0]), null);
+    return transform(modularizedSystem, modularizedSystem.getAllModules().toArray(new IModule[0]));
   }
 
   // /**
@@ -161,12 +161,10 @@ public class ModelTransformer {
    * @return
    * @throws Exception
    */
-  private IArtifact transform(IModularizedSystem modularizedSystem, IModule[] modules,
-      ArtifactContainer artifactContainer) {
+  private IAdvancedArtifact transform(IModularizedSystem modularizedSystem, IModule[] modules) {
 
     // the artifact cache
-    ArtifactCache artifactCache = artifactContainer == null ? new ArtifactCache(modularizedSystem) : new ArtifactCache(
-        modularizedSystem);
+    ArtifactCache artifactCache = new ArtifactCache((IModifiableModularizedSystem) modularizedSystem);
 
     //
     for (IModule module : modules) {

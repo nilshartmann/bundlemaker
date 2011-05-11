@@ -4,8 +4,8 @@ import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.bundlemaker.itest.spring.experimental.PatternBasedTypeSelector;
 import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;

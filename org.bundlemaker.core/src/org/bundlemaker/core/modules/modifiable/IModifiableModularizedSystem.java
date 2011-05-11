@@ -50,4 +50,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    */
   IModifiableResourceModule createResourceModule(IModuleIdentifier moduleIdentifier);
 
+  // TODO
+  void initializeResourceModules();
+
 }

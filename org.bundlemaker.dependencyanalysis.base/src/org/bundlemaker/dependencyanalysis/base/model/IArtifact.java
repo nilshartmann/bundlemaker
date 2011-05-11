@@ -24,7 +24,7 @@ import java.util.Collection;
  * @author Frank Schl&uuml;ter
  */
 // TODO remove 'extends Serializable'
-public interface IArtifact extends Serializable {
+public interface IArtifact {
 
   /**
    * <p>
@@ -204,8 +204,4 @@ public interface IArtifact extends Serializable {
   // TODO: Do we need this method as an *interface* method?
   @Deprecated
   public void setParent(IArtifact parent);
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  public IArtifact getCopy();
 }

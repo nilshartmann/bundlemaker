@@ -1,8 +1,8 @@
 package org.bundlemaker.core.analysis.ui.view.navigator;
 
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ui.Activator;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;

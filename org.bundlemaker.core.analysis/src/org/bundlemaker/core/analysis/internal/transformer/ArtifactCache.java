@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.analysis.internal.transformer;
 
-import org.bundlemaker.core.analysis.internal.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.internal.AdapterGroup2IArtifact;
 import org.bundlemaker.core.analysis.internal.AdapterModularizedSystem2IArtifact;
 import org.bundlemaker.core.analysis.internal.AdapterModule2IArtifact;
@@ -18,14 +18,16 @@ import org.bundlemaker.core.analysis.internal.AdapterPackage2IArtifact;
 import org.bundlemaker.core.analysis.internal.AdapterResource2IArtifact;
 import org.bundlemaker.core.analysis.internal.AdapterResourceModule2IArtifact;
 import org.bundlemaker.core.analysis.internal.AdapterType2IArtifact;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.GenericCache;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -55,7 +57,7 @@ public class ArtifactCache {
   private IModularizedSystem                                         _modularizedSystem;
 
   /** - */
-  private AbstractArtifactContainer                                  _rootArtifact;
+  private IAdvancedArtifact                                          _rootArtifact;
 
   /**
    * <p>
@@ -64,7 +66,7 @@ public class ArtifactCache {
    * 
    * @param modularizedSystem
    */
-  public ArtifactCache(IModularizedSystem modularizedSystem) {
+  public ArtifactCache(IModifiableModularizedSystem modularizedSystem) {
     this(modularizedSystem, new AdapterModularizedSystem2IArtifact(modularizedSystem));
   }
 
@@ -76,7 +78,7 @@ public class ArtifactCache {
    * @param modularizedSystem
    * @param artifact
    */
-  public ArtifactCache(IModularizedSystem modularizedSystem, AbstractArtifactContainer artifact) {
+  public ArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact artifact) {
 
     Assert.isNotNull(modularizedSystem);
     Assert.isNotNull(artifact);
@@ -97,7 +99,7 @@ public class ArtifactCache {
    * 
    * @return
    */
-  public IArtifact getRootArtifact() {
+  public IAdvancedArtifact getRootArtifact() {
     return _rootArtifact;
   }
 

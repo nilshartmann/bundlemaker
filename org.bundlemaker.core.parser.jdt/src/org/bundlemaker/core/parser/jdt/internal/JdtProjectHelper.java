@@ -105,6 +105,22 @@ public class JdtProjectHelper {
     if (!ResourcesPlugin.getWorkspace().getRoot().exists(new Path(associatedProjectName))) {
       return false;
     } else {
+      
+      try {
+        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(associatedProjectName);
+        project.open(null);
+        
+        IJavaProject javaProject = JavaCore.create(project);
+
+        try {
+          javaProject.open(null);
+        } catch (JavaModelException e) {
+          throw new RuntimeException(e.getMessage());
+        }
+      } catch (Exception e) {
+        return false;
+      }
+      
       return true;
     }
   }

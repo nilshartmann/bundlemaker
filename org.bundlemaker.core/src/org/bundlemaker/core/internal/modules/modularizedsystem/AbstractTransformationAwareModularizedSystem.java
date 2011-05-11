@@ -167,7 +167,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
   }
 
-  protected void initializeResourceModules() {
+  public void initializeResourceModules() {
 
   }
 
