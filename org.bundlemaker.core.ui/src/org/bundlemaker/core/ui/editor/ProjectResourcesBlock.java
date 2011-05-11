@@ -15,6 +15,7 @@ import static java.lang.String.format;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -51,6 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormText;
@@ -97,6 +99,10 @@ public class ProjectResourcesBlock {
   private Button                           _removeButton;
 
   private Button                           _editButton;
+
+  private Button                           _moveDownButton;
+
+  private Button                           _moveUpButton;
 
   /**
    * @param editResources
@@ -198,6 +204,18 @@ public class ProjectResourcesBlock {
       @Override
       public void widgetSelected(SelectionEvent e) {
         removeContent();
+      }
+    });
+    _moveUpButton = buttonBar.newButton("Up", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        moveUp();
+      }
+    });
+    _moveDownButton = buttonBar.newButton("Down", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        moveDown();
       }
     });
 
@@ -388,20 +406,64 @@ public class ProjectResourcesBlock {
       return;
     }
 
+    // Update the content
+    content.setName(dialog.getName());
+    content.setVersion(dialog.getVersion());
+    content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
+
     if (_editResources) {
-      content.setName(dialog.getName());
-      content.setVersion(dialog.getVersion());
-
       content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
-      content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
-    } else {
-      content.setName(dialog.getName());
-      content.setVersion(dialog.getVersion());
-
-      content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
     }
 
     projectDescriptionChanged();
+  }
+
+  private void moveUp() {
+    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
+    if (selectedContents.size() != 1) {
+      return;
+    }
+
+    IModifiableFileBasedContent content = selectedContents.iterator().next();
+
+    IModifiableBundleMakerProjectDescription description = getBundleMakerProjectDescription();
+    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) description
+        .getModifiableFileBasedContent();
+
+    for (int i = 1; i < modifiableFileBasedContent.size(); i++) {
+      if (content.equals(modifiableFileBasedContent.get(i))) {
+        modifiableFileBasedContent.remove(i);
+        modifiableFileBasedContent.add(i - 1, content);
+
+        projectDescriptionChanged();
+
+        break;
+      }
+    }
+  }
+
+  private void moveDown() {
+    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
+    if (selectedContents.size() != 1) {
+      return;
+    }
+
+    IModifiableFileBasedContent content = selectedContents.iterator().next();
+
+    IModifiableBundleMakerProjectDescription description = getBundleMakerProjectDescription();
+    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) description
+        .getModifiableFileBasedContent();
+
+    for (int i = 0; i < modifiableFileBasedContent.size() - 1; i++) {
+      if (content.equals(modifiableFileBasedContent.get(i))) {
+        modifiableFileBasedContent.remove(i);
+        modifiableFileBasedContent.add(i + 1, content);
+
+        projectDescriptionChanged();
+
+        break;
+      }
+    }
   }
 
   /**
@@ -573,6 +635,8 @@ public class ProjectResourcesBlock {
 
     // mark editor dirty
     _resourcesSectionPart.markDirty();
+
+    refreshEnablement();
   }
 
   /**
@@ -588,10 +652,21 @@ public class ProjectResourcesBlock {
     ) {
       _removeButton.setEnabled(false);
       _editButton.setEnabled(false);
-      return;
+    } else {
+      _editButton.setEnabled(selectedFileBasedContents.size() == 1);
+      _removeButton.setEnabled(true);
     }
-    _editButton.setEnabled(selectedFileBasedContents.size() == 1);
-    _removeButton.setEnabled(true);
-
+    TreeItem[] selectedItems = _treeViewer.getTree().getSelection();
+    System.out.println("selecteditems: " + selectedItems.length);
+    if (selectedItems.length == 1) {
+      // TODO: Allow multiple selection
+      // TODO: what should happen if a path (not a IFileBasedContent) is selected?
+      int selectedIndex = _treeViewer.getTree().indexOf(selectedItems[0]);
+      _moveDownButton.setEnabled(selectedIndex < _treeViewer.getTree().getItemCount() - 1);
+      _moveUpButton.setEnabled(selectedIndex > 0);
+    } else {
+      _moveDownButton.setEnabled(false);
+      _moveUpButton.setEnabled(false);
+    }
   }
 }

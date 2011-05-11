@@ -10,10 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.projectdescription.modifiable;
 
-import java.util.Set;
-
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
 
 /**
  * <p>

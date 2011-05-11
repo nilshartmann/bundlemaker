@@ -291,7 +291,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       List<String> sourceRoots, boolean analyzeSource) {
 
     return addResourceContent(name, version, binaryRoots.toArray(new String[0]), sourceRoots.toArray(new String[0]),
-        analyzeSource);
+        true);
   }
 
   @Override
