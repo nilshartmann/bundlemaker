@@ -49,7 +49,15 @@ public enum UIImages {
   /**
    * 
    */
-  REFRESH("icons/refresh.gif") //
+  REFRESH("icons/refresh.gif"),
+  /**
+   * An empty box visualizing the not-checked state of a checkbox
+   */
+  UNCHECKED("icons/unchecked.gif"),
+  /**
+   * A checked box visualizing the checked state of a checkbox
+   */
+  CHECKED("icons/checked.gif"), //
   ;
 
   /**
