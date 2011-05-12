@@ -19,40 +19,34 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
+ *         TODO is this class neccessary ???
  */
 public class BundleMakerProjectDescriptionWrapper {
 
   private final IModifiableBundleMakerProjectDescription _description;
 
-  private final boolean                                  _resources;
-
-  private BundleMakerProjectDescriptionWrapper(IModifiableBundleMakerProjectDescription description, boolean resources) {
+  public BundleMakerProjectDescriptionWrapper(IModifiableBundleMakerProjectDescription description) {
+    Assert.isNotNull(description);
     _description = description;
-    _resources = resources;
-  }
-
-  public static BundleMakerProjectDescriptionWrapper forResources(IModifiableBundleMakerProjectDescription description) {
-    Assert.isNotNull(description);
-
-    return new BundleMakerProjectDescriptionWrapper(description, true);
-  }
-
-  public static BundleMakerProjectDescriptionWrapper forTypes(IModifiableBundleMakerProjectDescription description) {
-    Assert.isNotNull(description);
-
-    return new BundleMakerProjectDescriptionWrapper(description, false);
   }
 
   public IModifiableFileBasedContent[] getContent() {
     List<? extends IModifiableFileBasedContent> fileBasedContent = _description.getModifiableFileBasedContent();
-    List<IModifiableFileBasedContent> filteredContent = new LinkedList<IModifiableFileBasedContent>();
+
+    List<IModifiableFileBasedContent> resourceContent = new LinkedList<IModifiableFileBasedContent>();
     for (IModifiableFileBasedContent iFileBasedContent : fileBasedContent) {
-      if (iFileBasedContent.isResourceContent() == _resources) {
-        filteredContent.add(iFileBasedContent);
+      if (iFileBasedContent.isResourceContent()) {
+        resourceContent.add(iFileBasedContent);
       }
     }
 
-    return filteredContent.toArray(new IModifiableFileBasedContent[0]);
+    for (IModifiableFileBasedContent iFileBasedContent : fileBasedContent) {
+      if (!iFileBasedContent.isResourceContent()) {
+        resourceContent.add(iFileBasedContent);
+      }
+    }
+
+    return resourceContent.toArray(new IModifiableFileBasedContent[0]);
 
   }
 

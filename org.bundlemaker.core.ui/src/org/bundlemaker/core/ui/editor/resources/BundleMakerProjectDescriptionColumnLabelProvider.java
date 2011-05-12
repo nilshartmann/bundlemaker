@@ -68,17 +68,30 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends ColumnLabelProvid
    * @return
    */
   private Image getImageForFileBasedContent(IFileBasedContent content) {
-    if (_column > 0) {
-      if (!content.isResourceContent()) {
-        return null;
+    Image image = null;
+
+    switch (_column) {
+    case 1:
+      if (content.isResourceContent()) {
+        image = UIImages.CHECKED.getImage();
+      } else {
+        image = UIImages.UNCHECKED.getImage();
       }
-      // TODO: ResourceContent ohne Sources sollte isAnalyzeSourceResources() false haben ???
-      if (content.isAnalyzeSourceResources()) {
-        return UIImages.CHECKED.getImage();
+      break;
+    case 2:
+      if (content.isResourceContent()) {
+        if (content.isAnalyzeSourceResources()) {
+          image = UIImages.CHECKED.getImage();
+        } else {
+          image = UIImages.UNCHECKED.getImage();
+        }
       }
-      return UIImages.UNCHECKED.getImage();
+      break;
+    default:
+      break;
     }
-    return null;
+
+    return image;
   }
 
   @Override
