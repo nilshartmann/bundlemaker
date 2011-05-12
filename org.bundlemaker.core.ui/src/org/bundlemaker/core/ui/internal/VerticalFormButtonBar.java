@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.editor;
+package org.bundlemaker.core.ui.internal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;
@@ -38,7 +38,7 @@ public class VerticalFormButtonBar {
    * @param toolkit
    *          The toolkit that is used to create the button bar and the actual buttons
    */
-  VerticalFormButtonBar(Composite parentComposite, FormToolkit toolkit) {
+  public VerticalFormButtonBar(Composite parentComposite, FormToolkit toolkit) {
     _formToolkit = toolkit;
     _buttonBar = toolkit.createComposite(parentComposite);
     _buttonBar.setLayout(new GridLayout(1, false));

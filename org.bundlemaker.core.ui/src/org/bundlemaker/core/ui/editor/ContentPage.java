@@ -6,6 +6,7 @@ package org.bundlemaker.core.ui.editor;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.ui.editor.resources.ProjectResourcesBlock;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.PixelConverter;
