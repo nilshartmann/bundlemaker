@@ -29,19 +29,37 @@ public class ModelTransformer {
    * <p>
    * </p>
    * 
+   * @param bundleMakerProject
+   * @param modifiableModularizedSystem
    * @return
    */
   public static IDependencyModel getDependencyModel(IBundleMakerProject bundleMakerProject,
       IModifiableModularizedSystem modifiableModularizedSystem) {
-    
+
     //
     return new DependencyModel(bundleMakerProject, modifiableModularizedSystem);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return
+   * @throws CoreException
+   */
   public static IArtifact transform(IModifiableModularizedSystem modularizedSystem) throws CoreException {
     return new DefaultArtifactCache(modularizedSystem).transform();
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return
+   * @throws CoreException
+   */
   public static IArtifact transformWithAggregatedTypes(IModifiableModularizedSystem modularizedSystem)
       throws CoreException {
     return new AggregatedTypesArtifactCache(modularizedSystem).transform();

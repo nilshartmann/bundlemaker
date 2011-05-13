@@ -62,7 +62,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
             modularizedSystem.applyTransformations();
 
             try {
-              IArtifact artifact = ModelTransformer.transformWithAggregatedTypes((IModifiableModularizedSystem) modularizedSystem);
+              IArtifact artifact = ModelTransformer.transform((IModifiableModularizedSystem) modularizedSystem);
               // ModelTransformer.dumpArtifact(artifact);
               result.add(artifact);
             } catch (CoreException e) {
