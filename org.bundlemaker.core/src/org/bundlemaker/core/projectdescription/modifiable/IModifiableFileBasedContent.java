@@ -41,5 +41,10 @@ public interface IModifiableFileBasedContent extends IFileBasedContent {
   
   public void setBinaryPaths(String[] binaryRootPaths);
   public void setSourcePaths(String[] sourceRootPaths);
+
+  /**
+   * @param value
+   */
+  public void setResourceContent(boolean value);
   
 }
