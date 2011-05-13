@@ -21,7 +21,12 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
 
   public static EditingSupport newEditingSupportForAnalyzeSources(ProjectResourcesBlock projectResourcesBlock,
       ColumnViewer columnViewer) {
-    return new AnalyzeSourceEditingSupport(projectResourcesBlock, columnViewer);
+    return new AnalyzeResourceSourceEditingSupport(projectResourcesBlock, columnViewer);
+  }
+
+  public static EditingSupport newEditingSupportForAnalyzeResource(ProjectResourcesBlock projectResourcesBlock,
+      ColumnViewer columnViewer) {
+    return new AnalyzeResourceEditingSupport(projectResourcesBlock, columnViewer);
   }
 
   /**
@@ -29,7 +34,7 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
    */
   private final ProjectResourcesBlock _projectResourcesBlock;
 
-  public FileBasedContentEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
+  private FileBasedContentEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
     super(viewer);
     _projectResourcesBlock = projectResourcesBlock;
   }
@@ -97,35 +102,47 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
 
   protected abstract void setValueInternal(IModifiableFileBasedContent content, boolean value);
 
-  static class AnalyzeSourceEditingSupport extends FileBasedContentEditingSupport {
+  static class AnalyzeResourceEditingSupport extends FileBasedContentEditingSupport {
 
     /**
      * @param projectResourcesBlock
      * @param viewer
      */
-    public AnalyzeSourceEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
+    public AnalyzeResourceEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
       super(projectResourcesBlock, viewer);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bundlemaker.core.ui.editor.resources.FileBasedContentEditingSupport#setValueInternal(org.bundlemaker.core
-     * .projectdescription.modifiable.IModifiableFileBasedContent, boolean)
+    @Override
+    protected void setValueInternal(IModifiableFileBasedContent content, boolean value) {
+      content.setResourceContent(value);
+    }
+
+    @Override
+    protected boolean getValueInternal(IModifiableFileBasedContent content) {
+      return content.isResourceContent();
+    }
+
+    protected boolean canEditInternal(IModifiableFileBasedContent content) {
+      return true;
+    }
+
+  }
+
+  static class AnalyzeResourceSourceEditingSupport extends FileBasedContentEditingSupport {
+
+    /**
+     * @param projectResourcesBlock
+     * @param viewer
      */
+    public AnalyzeResourceSourceEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
+      super(projectResourcesBlock, viewer);
+    }
+
     @Override
     protected void setValueInternal(IModifiableFileBasedContent content, boolean value) {
       content.setAnalyzeSourceResources(value);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bundlemaker.core.ui.editor.resources.FileBasedContentEditingSupport#getValueInternal(org.bundlemaker.core
-     * .projectdescription.modifiable.IModifiableFileBasedContent)
-     */
     @Override
     protected boolean getValueInternal(IModifiableFileBasedContent content) {
       return content.isAnalyzeSourceResources();

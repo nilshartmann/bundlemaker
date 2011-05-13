@@ -79,7 +79,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
   private void createResourcesSection(final IManagedForm mform, String title, String description,
       final boolean resources) {
 
-    ProjectResourcesBlock block = new ProjectResourcesBlock(resources, title, description, this);
+    ProjectResourcesBlock block = new ProjectResourcesBlock(title, description, this);
     block.addPropertyChangeListener(new IPropertyChangeListener() {
 
       @Override

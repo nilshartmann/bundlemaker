@@ -219,6 +219,18 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   public void setVersion(String version) {
     _version = version;
   }
+  
+  @Override
+  public void setResourceContent(boolean resourceContent) {
+    if (resourceContent == false) {
+      _resourceContent = null;
+    } else {
+      if (_resourceContent == null) {
+        setResourceContent(new ResourceContent());
+      }
+    }
+    
+  }
 
   public void setResourceContent(ResourceContent resourceContent) {
     _resourceContent = resourceContent;
