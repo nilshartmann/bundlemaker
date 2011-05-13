@@ -15,14 +15,12 @@ import java.util.Map;
 
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
-import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.eclipse.core.runtime.Assert;
@@ -104,11 +102,8 @@ public class ResourceCache implements IResourceCache {
 
     // update all
     for (Resource modifiableResource : _newResourceMap.values()) {
-
-      if (modifiableResource.getHashvalue() == null) {
-        modifiableResource.computeHashvalue();
-      }
-
+      
+      //
       _dependencyStore.updateResource(modifiableResource);
 
       //

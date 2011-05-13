@@ -38,7 +38,7 @@ import org.osgi.util.tracker.ServiceTracker;
 public class Activator extends Plugin {
 
   /** -- **/
-  public final static boolean                ENABLE_HASHVALUES_FOR_COMPARISON = true;
+  public final static boolean                ENABLE_HASHVALUES_FOR_COMPARISON = false;
 
   /** the null progress monitor */
   public static final IProgressMonitor       NULL_PROGRESS_MONITOR            = new NullProgressMonitor();

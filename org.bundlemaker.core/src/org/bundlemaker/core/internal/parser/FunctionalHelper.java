@@ -199,17 +199,16 @@ public class FunctionalHelper {
 
   static boolean hasToBeReparsed(ResourceStandin resourceStandin, Resource resource) {
 
-    // create empty resource if no resource was stored in the database
+    // resource has to be re-parsed if no resource was stored in the database
     if (resource == null) {
-      if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-        return true;
-      }
+      return true;
     }
 
-    //
-    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-      if (resource.getTimestamp() != resourceStandin.getTimestamp()) {
+    // check the time stamp
+    if (resource.getTimestamp() != resourceStandin.getTimestamp()) {
 
+      // we can additionally check the hash values...
+      if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
         if (!resourceStandin.hasHashvalue()) {
           resourceStandin.computeHashvalue();
         }
@@ -219,6 +218,11 @@ public class FunctionalHelper {
         if (!Arrays.equals(storedResourceHashValue, resourceStandinHashValue)) {
           return true;
         }
+      }
+      
+      //
+      else {
+        return true;
       }
     }
 

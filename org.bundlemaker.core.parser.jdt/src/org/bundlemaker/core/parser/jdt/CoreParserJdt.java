@@ -13,6 +13,9 @@ package org.bundlemaker.core.parser.jdt;
 /**
  */
 public class CoreParserJdt {
+  
+  /** the bundle maker JDT project postfix */
+  public static final String BUNDLEMAKER_JDT_PROJECT_POSTFIX = "$bundlemakerJdt";
 
   /** - */
   public static final String BUNDLE_ID          = "org.bundlemaker.core.parser.jdt";

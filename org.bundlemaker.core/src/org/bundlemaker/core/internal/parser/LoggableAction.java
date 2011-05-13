@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.parser;
 
+import org.eclipse.core.runtime.CoreException;
+
 /**
  * <p>
  * </p>
@@ -14,5 +16,5 @@ public interface LoggableAction<T> {
    * </p>
    * 
    */
-  public T execute();
+  public T execute() throws CoreException;
 }

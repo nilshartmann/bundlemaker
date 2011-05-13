@@ -1,6 +1,5 @@
 package org.bundlemaker.core;
 
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
@@ -17,7 +16,7 @@ public class DependencyModuleConverterTest extends AbstractModuleConverterTest {
     // transform the model
     IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getBundleMakerProject(),
         getModularizedSystem());
-    ArtifactUtils.dumpArtifact(dependencyModel.getRoot());
+    // ArtifactUtils.dumpArtifact(dependencyModel.getRoot());
 
     IArtifact artifact = ((IAdvancedArtifact) dependencyModel.getRoot())
         .getChild("bla/blub/DependencyModuleConverterTest_1.0.0/de.test.inner2/Inner2");

@@ -169,7 +169,7 @@ public class DefaultArtifactCache extends AbstractBaseArtifactCache {
       protected IArtifact create(IType type) {
 
         //
-        IResource resource = type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
+        IResource resource = /*type.hasSourceResource() ? type.getSourceResource() : */ type.getBinaryResource();
 
         //
         IModule module = resource != null ? resource.getAssociatedResourceModule(getModularizedSystem()) : type

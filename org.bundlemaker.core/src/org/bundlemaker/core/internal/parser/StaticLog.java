@@ -1,6 +1,7 @@
 package org.bundlemaker.core.internal.parser;
 
 import org.bundlemaker.core.util.StopWatch;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -31,7 +32,7 @@ public class StaticLog {
     System.out.println(String.format(message, args));
   }
 
-  public static <T> T log(boolean log, String message, LoggableAction<T> loggableAction) {
+  public static <T> T log(boolean log, String message, LoggableAction<T> loggableAction) throws CoreException {
 
     //
     StopWatch stopWatch = null;
