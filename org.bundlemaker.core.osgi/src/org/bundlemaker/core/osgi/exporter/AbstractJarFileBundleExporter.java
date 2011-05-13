@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.util.ModuleExporterUtils;
@@ -21,6 +23,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -45,7 +48,8 @@ public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwar
   protected void doExport() throws CoreException {
 
     // create new file if repackaging is required
-    if (ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ContentType.BINARY)) {
+    if (ModuleExporterUtils.hasAdditionalResources(getCurrentModuleTemplateDirectory())
+        || ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ContentType.BINARY)) {
 
       // create new File
       createNewJarFile();
@@ -79,9 +83,14 @@ public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwar
       OutputStream outputStream = createOutputStream(getCurrentModularizedSystem(), getCurrentModule(),
           getCurrentContext());
 
+      //
+      Set<ResourceKey> resourceKeys = ModuleExporterUtils.getAdditionalResources(getCurrentModuleTemplateDirectory());
+
+      resourceKeys = filterAdditionalResources(resourceKeys);
+
       // export the jar archive
       JarFileUtils.createJarArchive(getCurrentModule().getResources(ContentType.BINARY),
-          ManifestUtils.toManifest(getManifestContents()), outputStream);
+          ManifestUtils.toManifest(getManifestContents()), resourceKeys, outputStream);
 
       // close the output stream
       outputStream.close();
@@ -95,6 +104,26 @@ public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwar
       e.printStackTrace();
       throw new CoreException(new Status(IStatus.ERROR, "", ""));
     }
+  }
+
+  /**
+   * @param resourceKeys
+   * @return
+   */
+  protected Set<ResourceKey> filterAdditionalResources(Set<ResourceKey> resourceKeys) {
+
+    //
+    Set<ResourceKey> filteredResult = new HashSet<ResourceKey>();
+
+    //
+    for (ResourceKey resourceKey : resourceKeys) {
+      if (!"manifest.properties".equals(resourceKey.getName())) {
+        filteredResult.add(resourceKey);
+      }
+    }
+
+    //
+    return filteredResult;
   }
 
   /**

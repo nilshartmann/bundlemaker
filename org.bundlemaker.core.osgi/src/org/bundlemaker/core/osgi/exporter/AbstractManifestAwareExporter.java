@@ -155,13 +155,13 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
    * 
    * @return
    */
-  protected String getCurrentModuleTemplateDirectory() {
+  protected File getCurrentModuleTemplateDirectory() {
 
     // TODO
     ManifestCreatorHelper helper = new ManifestCreatorHelper(getCurrentModularizedSystem(), getCurrentModule(),
         getCurrentContext(), _templateRootDirectory, null, _creator, _manifestPreferences);
 
-    return helper.getModuleTemplateDirectory() != null ? helper.getModuleTemplateDirectory().getAbsolutePath() : null;
+    return helper.getModuleTemplateDirectory() != null ? helper.getModuleTemplateDirectory() : null;
   }
 
   /**
@@ -190,7 +190,7 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
     //
     for (IManifestContentsInterceptor interceptor : _interceptors) {
-      
+
       //
       interceptor.manipulateManifestContents(manifestContents, modularizedSystem, module);
     }
