@@ -134,13 +134,13 @@ public class ProjectResourcesBlock {
     mform.addPart(_resourcesSectionPart);
 
     // Create the tree view and viewer that displays the IFileBasedContent entries
-
-    final Tree projectContentTree = toolkit.createTree(client, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+    Composite treeComposite = new Composite(client, SWT.NO);
+    final Tree projectContentTree = toolkit.createTree(treeComposite, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
         | SWT.FULL_SELECTION);
     GridData gd = new GridData(GridData.FILL_BOTH);
     gd.heightHint = 200;
     gd.widthHint = 100;
-    projectContentTree.setLayoutData(gd);
+    treeComposite.setLayoutData(gd);
     projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);

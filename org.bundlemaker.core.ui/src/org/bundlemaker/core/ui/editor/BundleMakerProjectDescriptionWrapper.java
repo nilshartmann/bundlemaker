@@ -3,7 +3,6 @@
  */
 package org.bundlemaker.core.ui.editor;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
@@ -33,20 +32,21 @@ public class BundleMakerProjectDescriptionWrapper {
   public IModifiableFileBasedContent[] getContent() {
     List<? extends IModifiableFileBasedContent> fileBasedContent = _description.getModifiableFileBasedContent();
 
-    List<IModifiableFileBasedContent> resourceContent = new LinkedList<IModifiableFileBasedContent>();
-    for (IModifiableFileBasedContent iFileBasedContent : fileBasedContent) {
-      if (iFileBasedContent.isResourceContent()) {
-        resourceContent.add(iFileBasedContent);
-      }
-    }
+    //
+    // List<IModifiableFileBasedContent> resourceContent = new LinkedList<IModifiableFileBasedContent>();
+    // for (IModifiableFileBasedContent iFileBasedContent : fileBasedContent) {
+    // if (iFileBasedContent.isResourceContent()) {
+    // resourceContent.add(iFileBasedContent);
+    // }
+    // }
+    //
+    // for (IModifiableFileBasedContent iFileBasedContent : fileBasedContent) {
+    // if (!iFileBasedContent.isResourceContent()) {
+    // resourceContent.add(iFileBasedContent);
+    // }
+    // }
 
-    for (IModifiableFileBasedContent iFileBasedContent : fileBasedContent) {
-      if (!iFileBasedContent.isResourceContent()) {
-        resourceContent.add(iFileBasedContent);
-      }
-    }
-
-    return resourceContent.toArray(new IModifiableFileBasedContent[0]);
+    return fileBasedContent.toArray(new IModifiableFileBasedContent[0]);
 
   }
 
