@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.editor.resources;
 
 import static java.lang.String.format;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -290,52 +291,76 @@ public class ProjectResourcesBlock {
 
   private void moveUp() {
     Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-    if (selectedContents.size() != 1) {
+    if (selectedContents.isEmpty()) {
       return;
     }
 
-    IModifiableFileBasedContent content = selectedContents.iterator().next();
-
-    IModifiableBundleMakerProjectDescription description = getBundleMakerProjectDescription();
     @SuppressWarnings("unchecked")
-    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) description
+    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) getBundleMakerProjectDescription()
         .getModifiableFileBasedContent();
+    List<IModifiableFileBasedContent> newList = moveUp(modifiableFileBasedContent, selectedContents);
 
-    for (int i = 1; i < modifiableFileBasedContent.size(); i++) {
-      if (content.equals(modifiableFileBasedContent.get(i))) {
-        modifiableFileBasedContent.remove(i);
-        modifiableFileBasedContent.add(i - 1, content);
+    modifiableFileBasedContent.clear();
+    modifiableFileBasedContent.addAll(newList);
 
-        projectDescriptionChanged();
+    projectDescriptionChanged();
 
-        break;
-      }
-    }
   }
 
   private void moveDown() {
-    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-    if (selectedContents.size() != 1) {
+    Collection<IModifiableFileBasedContent> toMoveDown = getSelectedElementsOfType(IModifiableFileBasedContent.class);
+
+    if (toMoveDown.isEmpty()) {
       return;
     }
 
-    IModifiableFileBasedContent content = selectedContents.iterator().next();
-
-    IModifiableBundleMakerProjectDescription description = getBundleMakerProjectDescription();
     @SuppressWarnings("unchecked")
-    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) description
+    List<IModifiableFileBasedContent> fileBasedContent = (List<IModifiableFileBasedContent>) getBundleMakerProjectDescription()
         .getModifiableFileBasedContent();
+    List<IModifiableFileBasedContent> newOrder = reverse(moveUp(reverse(fileBasedContent), toMoveDown));
+    fileBasedContent.clear();
+    fileBasedContent.addAll(newOrder);
 
-    for (int i = 0; i < modifiableFileBasedContent.size() - 1; i++) {
-      if (content.equals(modifiableFileBasedContent.get(i))) {
-        modifiableFileBasedContent.remove(i);
-        modifiableFileBasedContent.add(i + 1, content);
+    projectDescriptionChanged();
 
-        projectDescriptionChanged();
+  }
 
-        break;
+  /**
+   * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
+   * 
+   */
+  private List<IModifiableFileBasedContent> reverse(List<IModifiableFileBasedContent> p) {
+    List<IModifiableFileBasedContent> reverse = new ArrayList<IModifiableFileBasedContent>(p.size());
+    for (int i = p.size() - 1; i >= 0; i--) {
+      reverse.add(p.get(i));
+    }
+    return reverse;
+  }
+
+  /**
+   * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
+   * 
+   */
+  private List<IModifiableFileBasedContent> moveUp(List<IModifiableFileBasedContent> elements,
+      Collection<IModifiableFileBasedContent> move) {
+    int nElements = elements.size();
+    List<IModifiableFileBasedContent> res = new ArrayList<IModifiableFileBasedContent>(nElements);
+    IModifiableFileBasedContent floating = null;
+    for (int i = 0; i < nElements; i++) {
+      IModifiableFileBasedContent curr = elements.get(i);
+      if (move.contains(curr)) {
+        res.add(curr);
+      } else {
+        if (floating != null) {
+          res.add(floating);
+        }
+        floating = curr;
       }
     }
+    if (floating != null) {
+      res.add(floating);
+    }
+    return res;
   }
 
   /**
@@ -523,7 +548,7 @@ public class ProjectResourcesBlock {
     }
     TreeItem[] selectedItems = _treeViewer.getTree().getSelection();
     System.out.println("selecteditems: " + selectedItems.length);
-    if (selectedItems.length == 1) {
+    if (selectedItems.length > 0) {
       // TODO: Allow multiple selection
       // TODO: what should happen if a path (not a IFileBasedContent) is selected?
       int selectedIndex = _treeViewer.getTree().indexOf(selectedItems[0]);
