@@ -8,12 +8,12 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.analysis.internal.transformer;
+package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterPackage2IArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterResource2IArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterType2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterPackage2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -30,32 +30,38 @@ import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContai
  * Implements an cache for the base artifacts.
  * </p>
  */
-public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
+public class DefaultArtifactCache extends AbstractBaseArtifactCache {
 
   /**
    * <p>
-   * Creates a new instance of type {@link AggregatedTypesArtifactCache}.
+   * Creates a new instance of type {@link DefaultArtifactCache}.
    * </p>
    * 
    * @param modularizedSystem
    */
-  public AggregatedTypesArtifactCache(IModifiableModularizedSystem modularizedSystem) {
+  public DefaultArtifactCache(IModifiableModularizedSystem modularizedSystem) {
     super(modularizedSystem);
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link AggregatedTypesArtifactCache}.
+   * Creates a new instance of type {@link DefaultArtifactCache}.
    * </p>
    * 
    * @param modularizedSystem
    * @param artifact
    */
-  protected AggregatedTypesArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact artifact) {
+  protected DefaultArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact artifact) {
     super(modularizedSystem, artifact);
   }
 
-  @Override
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @throws Exception
+   */
   protected IAdvancedArtifact transform(IModularizedSystem modularizedSystem, IModule[] modules) {
 
     //
@@ -70,7 +76,7 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
       for (IType type : typeModule.getContainedTypes()) {
 
         // filter local or anonymous type names
-        if (!type.isInnerType()) {
+        if (!type.isLocalOrAnonymousType()) {
 
           // create the artifact
           this.getTypeArtifact(type);
@@ -94,7 +100,6 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
         // iterate over all contained binary resources
         for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
           if (!resource.containsTypes()) {
-
             // create the artifact
             this.getResourceArtifact(resource);
           }
@@ -163,23 +168,35 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
       @Override
       protected IArtifact create(IType type) {
 
-        // get the associated resources
-        IResource binaryResource = type.getBinaryResource();
-
-        // get the associated module
-        IModule module = binaryResource != null ? binaryResource.getAssociatedResourceModule(getModularizedSystem())
-            : type.getModule(getModularizedSystem());
-
-        // get the module package
-        ModulePackageKey modulePackageKey = new ModulePackageKey(module, type.getPackageName());
-
-        // get the parent
-        AbstractArtifactContainer parent = getPackageCache().getOrCreate(modulePackageKey);
+        //
+        IResource resource = /*type.hasSourceResource() ? type.getSourceResource() : */ type.getBinaryResource();
 
         //
-        AdapterType2IArtifact artifact = new AdapterType2IArtifact(type, AggregatedTypesArtifactCache.this, parent,
-            true);
-        artifact.setAggregateInnerTypes(true);
+        IModule module = resource != null ? resource.getAssociatedResourceModule(getModularizedSystem()) : type
+            .getModule(getModularizedSystem());
+
+        // get the parent
+        AbstractArtifactContainer parent = null;
+
+        if (module instanceof IResourceModule) {
+
+          // get the module package
+          ModuleResourceKey resourceKey = new ModuleResourceKey((IResourceModule) module, resource);
+
+          //
+          parent = getResourceCache().getOrCreate(resourceKey);
+
+        } else {
+
+          // get the module package
+          ModulePackageKey modulePackageKey = new ModulePackageKey(module, type.getPackageName());
+
+          // get the parent
+          parent = getPackageCache().getOrCreate(modulePackageKey);
+        }
+
+        //
+        IArtifact artifact = new AdapterType2IArtifact(type, DefaultArtifactCache.this, parent, false);
 
         //
         return artifact;

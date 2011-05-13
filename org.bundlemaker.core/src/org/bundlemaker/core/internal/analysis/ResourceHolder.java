@@ -1,4 +1,4 @@
-package org.bundlemaker.core.analysis.internal;
+package org.bundlemaker.core.internal.analysis;
 
 import java.util.Collections;
 import java.util.LinkedList;

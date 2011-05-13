@@ -14,7 +14,7 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 
 /**
  * <p>
- * Describes a file based content entry in an {@link IModifiableBundleMakerProjectDescription}. A file base content
+ * Describes a modifiable file based content entry in an {@link IModifiableBundleMakerProjectDescription}. A file base content
  * entry can contain one or many directories or archive files (*.zip or *.jar).
  * </p>
  * 
@@ -25,26 +25,54 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
  */
 public interface IModifiableFileBasedContent extends IFileBasedContent {
 
-  public void setAnalyzeSourceResources(boolean flag);
-  
   /**
+   * <p>
+   * </p>
+   * 
+   * @param flag
+   */
+  public void setAnalyzeSourceResources(boolean flag);
+
+  /**
+   * <p>
    * Set the name of this IFileBasedContent to the given value
+   * </p>
+   * 
    * @param name
    */
   public void setName(String name);
-  
+
   /**
+   * <p>
    * Set the Version of this IFileBasedContent to the given value
+   * </p>
+   * 
    * @param version
    */
   public void setVersion(String version);
-  
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param binaryRootPaths
+   */
   public void setBinaryPaths(String[] binaryRootPaths);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param sourceRootPaths
+   */
   public void setSourcePaths(String[] sourceRootPaths);
 
   /**
+   * <p>
+   * </p>
+   * 
    * @param value
    */
   public void setResourceContent(boolean value);
-  
+
 }

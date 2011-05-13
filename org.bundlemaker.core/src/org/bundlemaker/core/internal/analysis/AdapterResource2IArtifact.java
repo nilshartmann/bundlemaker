@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.analysis.internal;
+package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.analysis.internal;
+package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;

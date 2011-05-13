@@ -8,11 +8,11 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.analysis.internal.transformer;
+package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterModularizedSystem2IArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterResource2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;

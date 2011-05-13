@@ -8,47 +8,47 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.analysis.internal.transformer;
+package org.bundlemaker.core.internal.analysis.transformer;
 
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  *
  */
-public class ModulePackageKey {
+public class ModuleResourceKey {
 
   /** - */
-  private IModule _resourceModule;
+  private IResourceModule _resourceModule;
 
   /** - */
-  private String  _packageName;
+  private IResource       _resource;
 
   /**
    * <p>
    * </p>
    * 
    * @param resourceModule
-   * @param packageName
+   * @param resource
    */
-  public ModulePackageKey(IModule resourceModule, String packageName) {
-
+  public ModuleResourceKey(IResourceModule resourceModule, IResource resource) {
     _resourceModule = resourceModule;
-    _packageName = packageName;
+    _resource = resource;
   }
 
-  public IModule getModule() {
+  public IResourceModule getResourceModule() {
     return _resourceModule;
   }
 
-  public String getPackageName() {
-    return _packageName;
+  public IResource getResource() {
+    return _resource;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_packageName == null) ? 0 : _packageName.hashCode());
+    result = prime * result + ((_resource == null) ? 0 : _resource.hashCode());
     result = prime * result + ((_resourceModule == null) ? 0 : _resourceModule.hashCode());
     return result;
   }
@@ -61,11 +61,11 @@ public class ModulePackageKey {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ModulePackageKey other = (ModulePackageKey) obj;
-    if (_packageName == null) {
-      if (other._packageName != null)
+    ModuleResourceKey other = (ModuleResourceKey) obj;
+    if (_resource == null) {
+      if (other._resource != null)
         return false;
-    } else if (!_packageName.equals(other._packageName))
+    } else if (!_resource.equals(other._resource))
       return false;
     if (_resourceModule == null) {
       if (other._resourceModule != null)

@@ -6,6 +6,9 @@ import org.eclipse.core.runtime.Assert;
  * <p>
  * Defines the type of an artifact.
  * </p>
+ * 
+ * @author Kai Lehmann
+ * @author Frank Schl&uuml;ter
  */
 public enum ArtifactType {
 
@@ -61,7 +64,7 @@ public enum ArtifactType {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   // TODO: RENAME!
@@ -72,7 +75,7 @@ public enum ArtifactType {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   public boolean isContainer() {

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.analysis.internal;
+package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;

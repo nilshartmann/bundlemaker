@@ -1,9 +1,9 @@
-package org.bundlemaker.core.analysis.internal.transformer;
+package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterGroup2IArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterModule2IArtifact;
-import org.bundlemaker.core.analysis.internal.AdapterResourceModule2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterGroup2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterModule2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;

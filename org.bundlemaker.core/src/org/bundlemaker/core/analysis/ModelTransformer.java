@@ -11,9 +11,9 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.internal.DependencyModel;
-import org.bundlemaker.core.analysis.internal.transformer.AggregatedTypesArtifactCache;
-import org.bundlemaker.core.analysis.internal.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.DependencyModel;
+import org.bundlemaker.core.internal.analysis.transformer.AggregatedTypesArtifactCache;
+import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;

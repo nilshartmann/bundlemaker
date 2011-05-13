@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.analysis.internal;
+package org.bundlemaker.core.internal.analysis;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.internal.transformer.AbstractArtifactCache;
+import org.bundlemaker.core.internal.analysis.transformer.AbstractArtifactCache;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
