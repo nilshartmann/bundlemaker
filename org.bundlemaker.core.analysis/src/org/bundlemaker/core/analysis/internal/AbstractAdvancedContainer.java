@@ -6,6 +6,7 @@ import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -28,20 +29,21 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param name
-   * @return
+   * {@inheritDoc}
    */
-  public IArtifact getChildByName(String name) {
+  @Override
+  public IArtifact getChildByIdentifier(String identifier) {
 
     //
-    Assert.isNotNull(name);
+    Assert.isNotNull(identifier);
 
     //
     for (IArtifact artifact : getChildren()) {
-      if (artifact.getName().equals(name)) {
+
+      //
+      Assert.isTrue(artifact instanceof IAdvancedArtifact, artifact.getQualifiedName() + " : " + artifact.getClass());
+
+      if (identifier.equals(((IAdvancedArtifact) artifact).getIdentifier())) {
         return artifact;
       }
     }
@@ -50,19 +52,25 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     return null;
   }
 
-  public IArtifact getChild(IPath path) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IArtifact getChild(String path) {
 
     //
     Assert.isNotNull(path);
 
-    if (path.segmentCount() == 0) {
+    IPath iPath = new Path(path);
+
+    if (iPath.segmentCount() == 0) {
       return null;
-    } else if (path.segmentCount() == 1) {
-      return getChildByName(path.lastSegment());
+    } else if (iPath.segmentCount() == 1) {
+      return getChildByIdentifier(iPath.lastSegment());
     } else {
-      IArtifact directChild = getChildByName(path.segment(0));
-      if (directChild instanceof AbstractAdvancedContainer) {
-        return ((AbstractAdvancedContainer) directChild).getChild(path.removeFirstSegments(1));
+      IArtifact directChild = getChildByIdentifier(iPath.segment(0));
+      if (directChild != null && AbstractAdvancedContainer.class.isAssignableFrom(directChild.getClass())) {
+        return ((AbstractAdvancedContainer) directChild).getChild(iPath.removeFirstSegments(1).toString());
       }
     }
 
@@ -70,7 +78,26 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     return null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getIdentifier() {
+    return getName();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
   protected void assertCanAdd(IArtifact artifact) {
+
+    if (artifact == null) {
+      throw new RuntimeException("Can not add 'null' to " + this);
+    }
+
     if (!canAdd(artifact)) {
       throw new RuntimeException("Can not add " + artifact + " to " + this);
     }

@@ -32,17 +32,12 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer {
 
     // set the resource module
     _module = module;
-    
+
     // set parent/children dependency
     setParent(parent);
     ((AbstractArtifactContainer) parent).getChildren().add(this);
   }
 
-  @Override
-  public boolean canAdd(IArtifact artifact) {
-    return true;
-  }
-  
   /**
    * {@inheritDoc}
    */
@@ -56,6 +51,49 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer {
     }
 
     return classification + _module.getModuleIdentifier().toString();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addArtifact(IArtifact artifact) {
+
+    // asserts
+    Assert.isNotNull(artifact);
+    assertCanAdd(artifact);
+
+    //
+    super.addArtifact(artifact);
+
+    // TODO: TYPE CHECK??
+    AdapterUtils.addPackageToModule(artifact, this);
+    AdapterUtils.getModularizedSystem(artifact).initializeResourceModules();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean removeArtifact(IArtifact artifact) {
+
+    // asserts
+    Assert.isNotNull(artifact);
+
+    // get the result
+    boolean result = super.removeArtifact(artifact);
+
+    // TODO: TYPE CHECK??
+    AdapterUtils.removePackageFromModule(artifact, this);
+    AdapterUtils.getModularizedSystem(artifact).initializeResourceModules();
+
+    // return the result
+    return result;
+  }
+
+  @Override
+  public boolean canAdd(IArtifact artifact) {
+    return artifact != null && artifact.getType().equals(ArtifactType.Package);
   }
 
   /**

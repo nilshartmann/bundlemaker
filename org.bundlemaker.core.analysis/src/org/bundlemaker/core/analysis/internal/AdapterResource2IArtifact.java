@@ -21,7 +21,7 @@ import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContai
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterResource2IArtifact extends AbstractAdvancedContainer {
+public class AdapterResource2IArtifact extends AbstractAdvancedContainer /* implements IResourceHolder */{
 
   /** the bundle maker resource */
   private IResource _resource;
@@ -64,5 +64,13 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer {
   @Override
   public String getQualifiedName() {
     return getName();
+  }
+
+  public IResource getResource() {
+    return _resource;
+  }
+
+  public boolean isSourceResource() {
+    return _isSourceResource;
   }
 }

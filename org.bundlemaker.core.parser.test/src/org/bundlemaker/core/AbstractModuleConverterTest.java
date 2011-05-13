@@ -1,8 +1,8 @@
 package org.bundlemaker.core;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.parser.test.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
@@ -22,7 +22,7 @@ import org.junit.Before;
 public abstract class AbstractModuleConverterTest extends AbstractBundleMakerProjectTest {
 
   /** - */
-  private IModularizedSystem _modularizedSystem;
+  private IModifiableModularizedSystem _modularizedSystem;
 
   /**
    * <p>
@@ -30,7 +30,7 @@ public abstract class AbstractModuleConverterTest extends AbstractBundleMakerPro
    * 
    * @return
    */
-  public IModularizedSystem getModularizedSystem() {
+  public IModifiableModularizedSystem getModularizedSystem() {
     return _modularizedSystem;
   }
 
@@ -44,16 +44,16 @@ public abstract class AbstractModuleConverterTest extends AbstractBundleMakerPro
     getBundleMakerProject().initialize(new ProgressMonitor());
     getBundleMakerProject().parseAndOpen(new ProgressMonitor());
 
-    _modularizedSystem = getBundleMakerProject().getModularizedSystemWorkingCopy(getTestProjectName());
+    _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(getTestProjectName());
 
     _modularizedSystem.getTransformations().add(
-        new GroupTransformation(new ModuleIdentifier("ModuleConverterTest", "1.0.0"), new Path("bla/blub")));
+        new GroupTransformation(new ModuleIdentifier(getTestProjectName(), "1.0.0"), new Path("bla/blub")));
 
     _modularizedSystem.applyTransformations();
 
     //
-    IModule module = getModularizedSystem().getModule("ModuleConverterTest", "1.0.0");
-    Assert.assertEquals(2, module.getContainedTypes().size());
+    IModule module = getModularizedSystem().getModule(getTestProjectName(), "1.0.0");
+    Assert.assertNotNull(module);
   }
 
   @After

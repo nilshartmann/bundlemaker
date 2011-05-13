@@ -1,6 +1,5 @@
 package org.bundlemaker.dependencyanalysis.base.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -23,7 +22,6 @@ import java.util.Collection;
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
  */
-// TODO remove 'extends Serializable'
 public interface IArtifact {
 
   /**
@@ -196,12 +194,4 @@ public interface IArtifact {
    * @return
    */
   public Collection<IArtifact> getLeafs();
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  public IDependency addDependency(IArtifact artifact);
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  public void setParent(IArtifact parent);
 }

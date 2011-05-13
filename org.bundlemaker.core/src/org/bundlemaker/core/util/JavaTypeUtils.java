@@ -40,6 +40,40 @@ public class JavaTypeUtils {
    * @param fullQualifiedName
    * @return
    */
+  public static boolean isInnerTypeName(String fullQualifiedName) {
+    Assert.isNotNull(fullQualifiedName);
+
+    return fullQualifiedName.matches(".*\\$.*");
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullQualifiedName
+   * @return
+   */
+  public static String getEnclosingNonInnerTypeName(String fullQualifiedName) {
+    Assert.isNotNull(fullQualifiedName);
+
+    // local or anonymous?
+    if (isInnerTypeName(fullQualifiedName)) {
+
+      String[] parts = fullQualifiedName.split("\\$");
+      return parts[0];
+
+    } else {
+      return fullQualifiedName;
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fullQualifiedName
+   * @return
+   */
   public static String getEnclosingNonLocalAndNonAnonymousTypeName(String fullQualifiedName) {
     Assert.isNotNull(fullQualifiedName);
 

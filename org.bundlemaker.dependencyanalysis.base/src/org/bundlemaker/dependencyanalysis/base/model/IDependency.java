@@ -1,6 +1,5 @@
 package org.bundlemaker.dependencyanalysis.base.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.bundlemaker.dependencyanalysis.base.rules.Violation;
@@ -31,7 +30,7 @@ import org.bundlemaker.dependencyanalysis.base.rules.Violation;
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
  */
-public interface IDependency extends Serializable {
+public interface IDependency {
 
   /**
    * <p>
@@ -78,7 +77,7 @@ public interface IDependency extends Serializable {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   public boolean isTaggedIgnore();
@@ -86,7 +85,7 @@ public interface IDependency extends Serializable {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param taggedIgnore
    */
   public void setTaggedIgnore(boolean taggedIgnore);
@@ -135,24 +134,4 @@ public interface IDependency extends Serializable {
    * Entfernt die bislang in der Abhängigkeit enthalten Regelverstöße
    */
   public void clearViolations();
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  public void addWeight();
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  void setTo(IArtifact to);
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  void setFrom(IArtifact from);
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  public void addDependency(IDependency dependency);
-
-  // TODO: Do we need this method as an *interface* method?
-  @Deprecated
-  public void setDependencyKind(DependencyKind dependencyKind);
 }

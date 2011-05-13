@@ -3,6 +3,7 @@ package org.bundlemaker.core.analysis.internal;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.IModifiableArtifact;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -63,7 +64,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     // call the super method
     super.addArtifact(artifact);
     // TODO!!!
-    artifact.setParent(this);
+    ((IModifiableArtifact)artifact).setParent(this);
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.addResourceModuleToModularizedSystem(artifact);
@@ -85,7 +86,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     AdapterUtils.getModularizedSystem(this).initializeResourceModules();
 
     // TODO!!!
-    artifact.setParent(null);
+    ((IModifiableArtifact)artifact).setParent(null);
 
     //
     return result;

@@ -13,11 +13,15 @@ package org.bundlemaker.core.analysis.internal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.core.analysis.internal.transformer.ArtifactCache;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.internal.transformer.AbstractArtifactCache;
 import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.JavaTypeUtils;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependency;
@@ -29,16 +33,22 @@ import org.eclipse.core.runtime.Assert;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact {
+public class AdapterType2IArtifact extends AbstractArtifact implements IResourceHolder, IAdvancedArtifact {
 
   /** the bundle maker type */
   private IType                       _type;
 
   /** - */
-  private ArtifactCache               _artifactCache;
+  private AbstractArtifactCache       _artifactCache;
 
   /** - */
   private Map<IArtifact, IDependency> _cachedDependencies;
+
+  /** - */
+  private boolean                     _aggregateInnerTypes;
+
+  /** - */
+  private IResourceHolder             _resourceHolder;
 
   /**
    * <p>
@@ -47,12 +57,15 @@ public class AdapterType2IArtifact extends AbstractArtifact {
    * @param type
    * @param classification
    */
-  public AdapterType2IArtifact(IType type, ArtifactCache artifactCache, IArtifact parent) {
+  public AdapterType2IArtifact(IType type, AbstractArtifactCache artifactCache, IArtifact parent,
+      boolean aggregateInnerTypes) {
 
     super(ArtifactType.Type, type.getName());
 
     Assert.isNotNull(artifactCache);
     Assert.isNotNull(parent);
+
+    _aggregateInnerTypes = aggregateInnerTypes;
 
     // set parent/children dependency
     setParent(parent);
@@ -61,13 +74,61 @@ public class AdapterType2IArtifact extends AbstractArtifact {
     _type = type;
 
     _artifactCache = artifactCache;
+
+    //
+    _resourceHolder = new ResourceHolder(type, _aggregateInnerTypes);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IResource> getAssociatedBinaryResources() {
+    return _resourceHolder.getAssociatedBinaryResources();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IResource> getAssociatedSourceResources() {
+    return _resourceHolder.getAssociatedSourceResources();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean isAggregateInnerTypes() {
+    return _aggregateInnerTypes;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param aggregateInnerTypes
+   */
+  public void setAggregateInnerTypes(boolean aggregateInnerTypes) {
+    _aggregateInnerTypes = aggregateInnerTypes;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getQualifiedName() {
     return _type.getFullyQualifiedName();
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public IType getBundleMakerType() {
     return _type;
   }
@@ -80,13 +141,6 @@ public class AdapterType2IArtifact extends AbstractArtifact {
 
   @Override
   public void addArtifact(IArtifact artifact) {
-    // throw new unsupported operation exception
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  @Deprecated
-  public IDependency addDependency(IArtifact artifact) {
     // throw new unsupported operation exception
     throw new UnsupportedOperationException();
   }
@@ -111,6 +165,9 @@ public class AdapterType2IArtifact extends AbstractArtifact {
 
     //
     initDependencies();
+
+    // TODO: RESOURCES!
+    // STICKYTYPES!!
 
     //
     if (artifact.getLeafs() == null) {
@@ -155,13 +212,40 @@ public class AdapterType2IArtifact extends AbstractArtifact {
     //
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
+    initReferences(_type.getReferences());
+
+    //
+    if (_aggregateInnerTypes) {
+
+      // TODO RESOURCES
+      // TODO TOPLEVEL NON-MAIN TYPES
+
+      if (_type.hasBinaryResource()) {
+        for (IResource stickyResource : _type.getBinaryResource().getStickyResources()) {
+          for (IType type : stickyResource.getContainedTypes()) {
+            initReferences(type.getReferences());
+          }
+        }
+      }
+    }
+  }
+
+  private void initReferences(Collection<? extends IReference> references) {
+
     // iterate over all references
-    for (IReference reference : _type.getReferences()) {
+    for (IReference reference : references) {
 
       //
-      IArtifact artifact = _artifactCache.getArtifact(reference.getFullyQualifiedName());
+      String referenceName = reference.getFullyQualifiedName();
+      if (_aggregateInnerTypes && JavaTypeUtils.isInnerTypeName(referenceName)) {
+        referenceName = JavaTypeUtils.getEnclosingNonInnerTypeName(referenceName);
+      }
+
+      //
+      IArtifact artifact = _artifactCache.getTypeArtifact(referenceName);
 
       // TODO!!
+      // STICKY-TYPES/AGGREGATED TYPES
 
       if (artifact != null) {
 
@@ -182,7 +266,6 @@ public class AdapterType2IArtifact extends AbstractArtifact {
         _cachedDependencies.put(artifact, dependency);
       }
     }
-
   }
 
   /**
@@ -197,4 +280,25 @@ public class AdapterType2IArtifact extends AbstractArtifact {
 
     return type.getFullyQualifiedName();
   }
+
+  @Override
+  public String getIdentifier() {
+    return getName();
+  }
+
+  @Override
+  public boolean canAdd(IArtifact artifact) {
+    return false;
+  }
+
+  @Override
+  public IArtifact getChildByIdentifier(String identifier) {
+    return null;
+  }
+
+  @Override
+  public IArtifact getChild(String path) {
+    return null;
+  }
+
 }

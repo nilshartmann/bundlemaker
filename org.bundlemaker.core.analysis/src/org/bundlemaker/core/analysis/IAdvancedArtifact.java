@@ -1,7 +1,6 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -11,16 +10,31 @@ import org.eclipse.core.runtime.IPath;
  */
 public interface IAdvancedArtifact extends IArtifact {
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  String getIdentifier();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
   boolean canAdd(IArtifact artifact);
 
   /**
    * <p>
    * </p>
    * 
-   * @param name
+   * @param identifier
    * @return
    */
-  IArtifact getChildByName(String name);
+  IArtifact getChildByIdentifier(String identifier);
 
   /**
    * <p>
@@ -29,5 +43,5 @@ public interface IAdvancedArtifact extends IArtifact {
    * @param path
    * @return
    */
-  IArtifact getChild(IPath path);
+  IArtifact getChild(String path);
 }
