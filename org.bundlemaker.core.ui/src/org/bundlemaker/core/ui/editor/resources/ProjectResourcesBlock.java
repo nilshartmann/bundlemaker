@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.editor.resources;
 
 import static java.lang.String.format;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,13 +30,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.ui.wizards.BuildPathDialogAccess;
+import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
@@ -78,11 +79,6 @@ public class ProjectResourcesBlock {
    */
   private final ListenerList               _listeners               = new ListenerList();
 
-  /**
-   * If set to true this block edits resources otherwise types
-   */
-  private final boolean                    _editResources;
-
   private final String                     _title;
 
   private final String                     _description;
@@ -110,9 +106,7 @@ public class ProjectResourcesBlock {
    *          the description to be display in the section's message part
    * @param provider
    */
-  public ProjectResourcesBlock(boolean editResources, String title, String description,
-      BundleMakerProjectProvider provider) {
-    _editResources = editResources;
+  public ProjectResourcesBlock(String title, String description, BundleMakerProjectProvider provider) {
     _title = title;
     _description = description;
     _bundleMakerProjectProvider = provider;
@@ -141,13 +135,13 @@ public class ProjectResourcesBlock {
     mform.addPart(_resourcesSectionPart);
 
     // Create the tree view and viewer that displays the IFileBasedContent entries
-
-    final Tree projectContentTree = toolkit.createTree(client, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
+    Composite treeComposite = new Composite(client, SWT.NO);
+    final Tree projectContentTree = toolkit.createTree(treeComposite, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL
         | SWT.FULL_SELECTION);
     GridData gd = new GridData(GridData.FILL_BOTH);
     gd.heightHint = 200;
     gd.widthHint = 100;
-    projectContentTree.setLayoutData(gd);
+    treeComposite.setLayoutData(gd);
     projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);
@@ -158,9 +152,8 @@ public class ProjectResourcesBlock {
 
     IModifiableBundleMakerProjectDescription bundleMakerProjectDescription = getBundleMakerProjectDescription();
     System.out.println("Init treeviewer mit projectdescription " + bundleMakerProjectDescription);
-    BundleMakerProjectDescriptionWrapper wrapper = (_editResources ? BundleMakerProjectDescriptionWrapper
-        .forResources(bundleMakerProjectDescription) : BundleMakerProjectDescriptionWrapper
-        .forTypes(bundleMakerProjectDescription));
+    BundleMakerProjectDescriptionWrapper wrapper = new BundleMakerProjectDescriptionWrapper(
+        bundleMakerProjectDescription);
     _treeViewer.setInput(wrapper);
 
     // Create the buttonbar
@@ -236,24 +229,33 @@ public class ProjectResourcesBlock {
    */
   private void createColumns() {
     Tree tree = _treeViewer.getTree();
-    TableLayout layout = new TableLayout();
+    TreeColumnLayout layout = new TreeColumnLayout();
     TreeViewerColumn column = new TreeViewerColumn(_treeViewer, SWT.NONE);
     column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(0));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Resource");
-    layout.addColumnData(new ColumnWeightData(60));
+    layout.setColumnData(column.getColumn(), new ColumnWeightData(80));
 
     column = new TreeViewerColumn(_treeViewer, SWT.NONE);
     column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(1));
+    column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeResource(this, _treeViewer));
+    column.getColumn().setResizable(true);
+    column.getColumn().setMoveable(true);
+    column.getColumn().setText("Analyze");
+    column.getColumn().setAlignment(SWT.CENTER);
+    layout.setColumnData(column.getColumn(), new ColumnWeightData(10));
+
+    column = new TreeViewerColumn(_treeViewer, SWT.NONE);
+    column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(2));
     column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeSources(this, _treeViewer));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze Sources");
     column.getColumn().setAlignment(SWT.CENTER);
-    layout.addColumnData(new ColumnWeightData(40));
+    layout.setColumnData(column.getColumn(), new ColumnWeightData(20));
 
-    tree.setLayout(layout);
+    tree.getParent().setLayout(layout);
     tree.setHeaderVisible(true);
     tree.layout(true);
   }
@@ -280,7 +282,7 @@ public class ProjectResourcesBlock {
     content.setVersion(dialog.getVersion());
     content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
 
-    if (_editResources) {
+    if (content.isResourceContent()) {
       content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
     }
 
@@ -289,52 +291,76 @@ public class ProjectResourcesBlock {
 
   private void moveUp() {
     Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-    if (selectedContents.size() != 1) {
+    if (selectedContents.isEmpty()) {
       return;
     }
 
-    IModifiableFileBasedContent content = selectedContents.iterator().next();
-
-    IModifiableBundleMakerProjectDescription description = getBundleMakerProjectDescription();
     @SuppressWarnings("unchecked")
-    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) description
+    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) getBundleMakerProjectDescription()
         .getModifiableFileBasedContent();
+    List<IModifiableFileBasedContent> newList = moveUp(modifiableFileBasedContent, selectedContents);
 
-    for (int i = 1; i < modifiableFileBasedContent.size(); i++) {
-      if (content.equals(modifiableFileBasedContent.get(i))) {
-        modifiableFileBasedContent.remove(i);
-        modifiableFileBasedContent.add(i - 1, content);
+    modifiableFileBasedContent.clear();
+    modifiableFileBasedContent.addAll(newList);
 
-        projectDescriptionChanged();
+    projectDescriptionChanged();
 
-        break;
-      }
-    }
   }
 
   private void moveDown() {
-    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-    if (selectedContents.size() != 1) {
+    Collection<IModifiableFileBasedContent> toMoveDown = getSelectedElementsOfType(IModifiableFileBasedContent.class);
+
+    if (toMoveDown.isEmpty()) {
       return;
     }
 
-    IModifiableFileBasedContent content = selectedContents.iterator().next();
-
-    IModifiableBundleMakerProjectDescription description = getBundleMakerProjectDescription();
     @SuppressWarnings("unchecked")
-    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) description
+    List<IModifiableFileBasedContent> fileBasedContent = (List<IModifiableFileBasedContent>) getBundleMakerProjectDescription()
         .getModifiableFileBasedContent();
+    List<IModifiableFileBasedContent> newOrder = reverse(moveUp(reverse(fileBasedContent), toMoveDown));
+    fileBasedContent.clear();
+    fileBasedContent.addAll(newOrder);
 
-    for (int i = 0; i < modifiableFileBasedContent.size() - 1; i++) {
-      if (content.equals(modifiableFileBasedContent.get(i))) {
-        modifiableFileBasedContent.remove(i);
-        modifiableFileBasedContent.add(i + 1, content);
+    projectDescriptionChanged();
 
-        projectDescriptionChanged();
+  }
 
-        break;
+  /**
+   * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
+   * 
+   */
+  private List<IModifiableFileBasedContent> reverse(List<IModifiableFileBasedContent> p) {
+    List<IModifiableFileBasedContent> reverse = new ArrayList<IModifiableFileBasedContent>(p.size());
+    for (int i = p.size() - 1; i >= 0; i--) {
+      reverse.add(p.get(i));
+    }
+    return reverse;
+  }
+
+  /**
+   * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
+   * 
+   */
+  private List<IModifiableFileBasedContent> moveUp(List<IModifiableFileBasedContent> elements,
+      Collection<IModifiableFileBasedContent> move) {
+    int nElements = elements.size();
+    List<IModifiableFileBasedContent> res = new ArrayList<IModifiableFileBasedContent>(nElements);
+    IModifiableFileBasedContent floating = null;
+    for (int i = 0; i < nElements; i++) {
+      IModifiableFileBasedContent curr = elements.get(i);
+      if (move.contains(curr)) {
+        res.add(curr);
+      } else {
+        if (floating != null) {
+          res.add(floating);
+        }
+        floating = curr;
       }
     }
+    if (floating != null) {
+      res.add(floating);
+    }
+    return res;
   }
 
   /**
@@ -343,16 +369,17 @@ public class ProjectResourcesBlock {
    * @param shell
    */
   private void addContent(Shell shell) {
-    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, _editResources);
+    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, true);
     if (dialog.open() != Window.OK) {
       return;
     }
-    if (_editResources) {
-      getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
-          dialog.getBinaryPaths(), dialog.getSourcePaths());
-    } else {
-      getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths());
-    }
+    // if (_editResources) {
+    getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
+        dialog.getBinaryPaths(), dialog.getSourcePaths());
+    // } else {
+    // getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(),
+    // dialog.getBinaryPaths());
+    // }
 
     projectDescriptionChanged();
 
@@ -443,7 +470,7 @@ public class ProjectResourcesBlock {
    */
   private void addExternalArchives(Shell shell) {
     FileDialog fileDialog = new FileDialog(shell, SWT.MULTI);
-    fileDialog.setText("Add " + (_editResources ? " Resources" : "Types"));
+    fileDialog.setText("Add Resources");
     fileDialog.setFilterExtensions(new String[] { "*.jar;*.zip", "*.*" });
     if (fileDialog.open() == null) {
       return;
@@ -457,11 +484,7 @@ public class ProjectResourcesBlock {
     for (String string : fileNames) {
       IPath path = new Path(fileDialog.getFilterPath()).append(string);
       String binaryRoot = path.toOSString();
-      if (_editResources) {
-        getBundleMakerProjectDescription().addResourceContent(binaryRoot);
-      } else {
-        getBundleMakerProjectDescription().addTypeContent(binaryRoot);
-      }
+      getBundleMakerProjectDescription().addResourceContent(binaryRoot);
     }
 
     projectDescriptionChanged();
@@ -483,11 +506,7 @@ public class ProjectResourcesBlock {
 
     for (IPath iPath : selected) {
       String workspacePath = format("${workspace_loc:%s}", iPath.toString());
-      if (_editResources) {
-        getBundleMakerProjectDescription().addResourceContent(workspacePath);
-      } else {
-        getBundleMakerProjectDescription().addTypeContent(workspacePath);
-      }
+      getBundleMakerProjectDescription().addResourceContent(workspacePath);
     }
 
     projectDescriptionChanged();
@@ -529,7 +548,7 @@ public class ProjectResourcesBlock {
     }
     TreeItem[] selectedItems = _treeViewer.getTree().getSelection();
     System.out.println("selecteditems: " + selectedItems.length);
-    if (selectedItems.length == 1) {
+    if (selectedItems.length > 0) {
       // TODO: Allow multiple selection
       // TODO: what should happen if a path (not a IFileBasedContent) is selected?
       int selectedIndex = _treeViewer.getTree().indexOf(selectedItems[0]);
