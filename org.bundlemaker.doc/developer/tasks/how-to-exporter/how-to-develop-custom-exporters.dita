@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/task.dtd">
+<task id="taskId">
+    <title>Task title</title>
+    <shortdesc/>
+    <taskbody>
+        <context>
+            <p>BundleMaker comes with a bunch of exporters that allows you to export modules as OSGi
+                bundles, PDE plug-in project and so on. In case that you want to export modules in
+                formats that are not already available, you can easily implement a <i>custom exporter</i>.</p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Create a new PDE project that for the exporter.</cmd>
+            </step>
+            <step>
+                <cmd>Create the new exporter class, e.g. </cmd>
+                <info>
+                    <codeblock>
+                        public class SimpleFileSystemExprter extends AbstractExporter {
+
+                        }                        
+                    </codeblock>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

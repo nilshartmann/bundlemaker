@@ -10,8 +10,9 @@ import java.util.List;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -55,14 +56,13 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
           Collection<IModularizedSystem> modularizedSystems = bundleMakerProject.getModularizedSystemWorkingCopies();
 
           List<IArtifact> result = new LinkedList<IArtifact>();
-          ModelTransformer modelTransformer = new ModelTransformer(true);
           for (IModularizedSystem modularizedSystem : modularizedSystems) {
 
             //
             modularizedSystem.applyTransformations();
 
             try {
-              IArtifact artifact = modelTransformer.transform(modularizedSystem);
+              IArtifact artifact = ModelTransformer.transform((IModifiableModularizedSystem) modularizedSystem);
               // ModelTransformer.dumpArtifact(artifact);
               result.add(artifact);
             } catch (CoreException e) {

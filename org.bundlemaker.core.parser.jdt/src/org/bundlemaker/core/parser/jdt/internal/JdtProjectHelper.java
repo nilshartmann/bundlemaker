@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.eclipse.core.resources.IProject;
@@ -38,9 +39,6 @@ import org.eclipse.jdt.launching.JavaRuntime;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class JdtProjectHelper {
-
-  /** the bundle maker JDT project postfix */
-  public static final String BUNDLEMAKER_JDT_PROJECT_POSTFIX = "$bundlemakerJdt";
 
   /**
    * <p>
@@ -105,6 +103,22 @@ public class JdtProjectHelper {
     if (!ResourcesPlugin.getWorkspace().getRoot().exists(new Path(associatedProjectName))) {
       return false;
     } else {
+
+      try {
+        IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(associatedProjectName);
+        project.open(null);
+
+        IJavaProject javaProject = JavaCore.create(project);
+
+        try {
+          javaProject.open(null);
+        } catch (JavaModelException e) {
+          throw new RuntimeException(e.getMessage());
+        }
+      } catch (Exception e) {
+        return false;
+      }
+
       return true;
     }
   }
@@ -223,7 +237,7 @@ public class JdtProjectHelper {
    * @return
    */
   private static String getAssociatedJavaProjectName(IProject project) {
-    return project.getName() + BUNDLEMAKER_JDT_PROJECT_POSTFIX;
+    return project.getName() + CoreParserJdt.BUNDLEMAKER_JDT_PROJECT_POSTFIX;
   }
 
 }

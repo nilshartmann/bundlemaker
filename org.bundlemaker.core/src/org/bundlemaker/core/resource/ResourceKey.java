@@ -16,9 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -54,8 +52,8 @@ public class ResourceKey implements IResourceKey {
   /** - **/
   private byte[]                          _hashvalue;
 
-  /** - */
-  private transient WeakReference<byte[]> _contentCache;
+//  /** - */
+//  private transient SoftReference<byte[]> _contentCache;
 
   /**
    * <p>
@@ -177,13 +175,13 @@ public class ResourceKey implements IResourceKey {
   @Override
   public byte[] getContent() {
 
-    //
-    if (_contentCache != null) {
-      byte[] result = _contentCache.get();
-      if (result != null) {
-        return result;
-      }
-    }
+    // //
+    // if (_contentCache != null) {
+    // byte[] result = _contentCache.get();
+    // if (result != null) {
+    // return result;
+    // }
+    // }
 
     // jar file?
     if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
@@ -208,8 +206,12 @@ public class ResourceKey implements IResourceKey {
         zipFile.close();
 
         //
-        _contentCache = new WeakReference<byte[]>(result);
-        internalSetHashValue(result);
+        // _contentCache = new SoftReference<byte[]>(result);
+        if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+          MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+          messagedigest.update(result);
+          _hashvalue = messagedigest.digest();
+        }
 
         // return the result
         return result;
@@ -246,8 +248,12 @@ public class ResourceKey implements IResourceKey {
         buffer.close();
 
         //
-        _contentCache = new WeakReference<byte[]>(result);
-        internalSetHashValue(result);
+        // _contentCache = new SoftReference<byte[]>(result);
+        if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+        MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+        messagedigest.update(result);
+        _hashvalue = messagedigest.digest();
+        }
 
         //
         return result;
@@ -267,7 +273,7 @@ public class ResourceKey implements IResourceKey {
   public long getTimestamp() {
 
     //
-    if (_timestamp == -1 && Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
+    if (_timestamp == -1) {
 
       // jar file?
       if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
@@ -397,32 +403,15 @@ public class ResourceKey implements IResourceKey {
    * <p>
    * </p>
    * 
-   * @param content
-   * @throws NoSuchAlgorithmException
-   */
-  private void internalSetHashValue(byte[] content) throws NoSuchAlgorithmException {
-    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-      MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-      messagedigest.update(content);
-      _hashvalue = messagedigest.digest();
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param file
    */
   private void setTimeStamp(File file) {
-    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-      long timestamp = file.lastModified();
-      if (timestamp != 0l) {
-        _timestamp = timestamp;
-      } else {
-        System.out.println(this);
-        throw new RuntimeException();
-      }
+    long timestamp = file.lastModified();
+    if (timestamp != 0l) {
+      _timestamp = timestamp;
+    } else {
+      System.out.println(this);
+      throw new RuntimeException();
     }
   }
 
@@ -433,14 +422,12 @@ public class ResourceKey implements IResourceKey {
    * @param zipEntry
    */
   private void setTimeStamp(ZipEntry zipEntry) {
-    if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-      long timestamp = zipEntry.getTime();
-      if (timestamp != -1l) {
-        _timestamp = timestamp;
-      } else {
-        System.out.println(this);
-        throw new RuntimeException();
-      }
+    long timestamp = zipEntry.getTime();
+    if (timestamp != -1l) {
+      _timestamp = timestamp;
+    } else {
+      System.out.println(this);
+      throw new RuntimeException();
     }
   }
 }

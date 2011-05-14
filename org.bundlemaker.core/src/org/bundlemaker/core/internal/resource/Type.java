@@ -290,6 +290,14 @@ public class Type implements IType, IModifiableType {
   public boolean isLocalOrAnonymousType() {
     return _fullyQualifiedName.toString().matches(".*\\$\\d.*");
   }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isInnerType() {
+    return _fullyQualifiedName.toString().matches(".*\\$.*");
+  }
 
   /**
    * {@inheritDoc}

@@ -16,7 +16,6 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
-import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;

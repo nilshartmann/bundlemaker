@@ -3,9 +3,11 @@ package org.bundlemaker.itest.spring;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.bundlemaker.itest.spring.experimental.PatternBasedTypeSelector;
 import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;
@@ -65,9 +67,8 @@ public class IntegrationTest extends AbstractIntegrationTest {
 
     //
     try {
-      ModelTransformer modelTransformer = new ModelTransformer(true);
-      IArtifact rootArtifact = modelTransformer.transform(modularizedSystem);
-      ModelTransformer.dumpArtifact(rootArtifact);
+      IArtifact rootArtifact = ModelTransformer.transform((IModifiableModularizedSystem) modularizedSystem);
+      ArtifactUtils.dumpArtifact(rootArtifact);
     } catch (CoreException e) {
       e.printStackTrace();
     }

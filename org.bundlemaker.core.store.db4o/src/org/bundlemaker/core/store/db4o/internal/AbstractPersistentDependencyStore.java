@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.store.db4o.internal;
 
+import java.io.File;
+
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
@@ -84,6 +86,7 @@ public abstract class AbstractPersistentDependencyStore implements IPersistentDe
     configuration.activationDepth(10);
 
     // open file
+    new File(_fileName).getParentFile().mkdirs();
     _database = _db4oService.openFile(configuration, _fileName);
 
     // set initialized

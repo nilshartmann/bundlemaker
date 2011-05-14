@@ -2,6 +2,16 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+       point="org.eclipse.jdt.ui.javaElementFilters">
+    <filter
+          class="org.bundlemaker.core.parser.jdt.internal.JavaElementFilter"
+          description="Filters any bundlemaker JDT project."
+          enabled="true"
+          id="filter-id"
+          name="FilterName">
+    </filter>
+ </extension>
+   <extension
          id="org.bundlemaker.core.ui.newWizards"
          name="Bundlemaker Wizards"
          point="org.eclipse.ui.newWizards">

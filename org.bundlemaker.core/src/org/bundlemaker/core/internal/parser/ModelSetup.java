@@ -132,8 +132,15 @@ public class ModelSetup {
       // ***********************************************************************************************
 
       mainMonitor.subTask("Writing to disc...");
-      resourceCache.commit(progressMonitor.newChild(25));
-      deleteResourcesFromDependencyStore(storedResourcesMap.values(), dependencyStore, progressMonitor.newChild(5));
+      // execute as loggable action...
+      StaticLog.log(LOG, "Writing to disc...", new LoggableAction<Void>() {
+        @Override
+        public Void execute() throws CoreException {
+          resourceCache.commit(progressMonitor.newChild(25));
+          deleteResourcesFromDependencyStore(storedResourcesMap.values(), dependencyStore, progressMonitor.newChild(5));
+          return null;
+        }
+      });
 
       // ***********************************************************************************************
       // STEP 4: Setup the resource content

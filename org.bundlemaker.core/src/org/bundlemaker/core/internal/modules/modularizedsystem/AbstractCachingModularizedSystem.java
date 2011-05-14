@@ -129,7 +129,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * </p>
    */
   @Override
-  protected void initializeResourceModules() {
+  public void initializeResourceModules() {
     super.initializeResourceModules();
 
     getTypeNameToTypeCache().clear();

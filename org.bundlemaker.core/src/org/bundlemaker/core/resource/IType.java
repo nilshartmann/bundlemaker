@@ -135,4 +135,6 @@ public interface IType {
    * @return
    */
   boolean isLocalOrAnonymousType();
+
+  boolean isInnerType();
 }

@@ -89,7 +89,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     //
     _projectState = BundleMakerProjectState.CREATED;
-
   }
 
   /**

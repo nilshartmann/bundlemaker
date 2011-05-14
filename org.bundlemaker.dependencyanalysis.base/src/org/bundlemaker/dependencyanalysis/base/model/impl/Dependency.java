@@ -146,14 +146,6 @@ public class Dependency implements IDependency {
     return to;
   }
 
-  public void setTo(IArtifact to) {
-    this.to = to;
-  }
-
-  public void setFrom(IArtifact from) {
-    this.from = from;
-  }
-
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
@@ -187,6 +179,7 @@ public class Dependency implements IDependency {
     }
   }
 
+	
   public static void resetIgnored() {
     for (DependencyVisitor dependencyVisitor : dependencyVisitors) {
       dependencyVisitor.reload();

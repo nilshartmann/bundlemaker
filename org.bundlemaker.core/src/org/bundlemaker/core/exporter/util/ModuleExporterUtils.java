@@ -12,12 +12,15 @@ package org.bundlemaker.core.exporter.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -36,10 +39,58 @@ public class ModuleExporterUtils {
    * <p>
    * </p>
    * 
+   * @param templateDirectory
+   * @return
+   */
+  public static boolean hasAdditionalResources(File templateDirectory) {
+    return !getAdditionalResources(templateDirectory).isEmpty();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param templateDirectory
+   * @return
+   */
+  public static Set<ResourceKey> getAdditionalResources(File templateDirectory) {
+
+    //
+    Set<ResourceKey> result = new HashSet<ResourceKey>();
+
+    if (templateDirectory == null) {
+      return result;
+    }
+
+    try {
+      //
+      for (String child : FileUtils.getAllChildren(templateDirectory)) {
+
+        // create the resource standin
+        ResourceKey resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID", templateDirectory.getAbsolutePath(),
+            child);
+
+        // add the resource
+        result.add(resourceKey);
+      }
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    // return the result
+    return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param resourceStandins
    * @return
    */
-  public static boolean requiresRepackaging(IResourceModule resourceModule, ContentType contentType) {
+  public static boolean requiresRepackaging(IResourceModule resourceModule, File currentModuleTemplateDirectory,
+      ContentType contentType) {
 
     Assert.isNotNull(resourceModule, "Parameter 'resourceModule' has to be set!");
     Assert.isNotNull(contentType, "Parameter 'type' has to be set!");
@@ -49,7 +100,7 @@ public class ModuleExporterUtils {
       return true;
     }
 
-    // step 2: get the root file (or return true)
+    // step 3: get the root file (or return true)
     return requiresRepackaging(resourceModule.getSelfResourceContainer(), contentType);
   }
 

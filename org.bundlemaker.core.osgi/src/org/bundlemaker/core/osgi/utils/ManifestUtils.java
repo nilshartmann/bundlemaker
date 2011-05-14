@@ -216,10 +216,8 @@ public class ManifestUtils {
 
       return result;
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return null;
-    } catch (IOException e) {
+    } catch (Exception e) {
+      System.out.println("Exception while reading " + file.getAbsolutePath());
       e.printStackTrace();
       return null;
     }
