@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -171,7 +172,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public List<IProblem> getProblems() {
     // TODO Auto-generated method stub
-    return null;
+    return new LinkedList<IProblem>();
   }
 
   /**
