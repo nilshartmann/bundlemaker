@@ -11,6 +11,7 @@ import org.drools.KnowledgeBaseConfiguration;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.ResourceType;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.eclipse.core.runtime.Assert;
 
 import com.springsource.util.osgi.manifest.BundleManifest;
 import com.springsource.util.osgi.manifest.BundleManifestFactory;
@@ -84,6 +85,12 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
   public ManifestContents createManifest(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
       BundleManifest manifestTemplate, BundleManifest originalManifest, IManifestPreferences manifestPreferences) {
 
+    Assert.isNotNull(modularizedSystem);
+    Assert.isNotNull(resourceModule);
+    Assert.isNotNull(manifestTemplate);
+    Assert.isNotNull(originalManifest);
+    Assert.isNotNull(manifestPreferences);
+    
     System.out.println("createManifest - start");
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
@@ -93,14 +100,21 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
 
     // execute the knowledge base
     StatefulKnowledgeSession ksession = _knowledgeBase.newStatefulKnowledgeSession();
-    ksession.insert(new DelegatingModularizedSystem(modularizedSystem));
-    ksession.insert(new DelegatingResourceModule(resourceModule));
-    ksession.insert(new IdentifiableBundleManifest(result, IdentifiableBundleManifest.BUNDLE_MANIFEST));
-    ksession.insert(new IdentifiableBundleManifest(manifestTemplate, IdentifiableBundleManifest.MANIFEST_TEMPLATE));
-    ksession.insert(new IdentifiableBundleManifest(originalManifest, IdentifiableBundleManifest.ORIGINAL_MANIFEST));
-    ksession.insert(manifestPreferences);
-    ksession.insert(new ReferencesCache(modularizedSystem, resourceModule, manifestPreferences.isSourceManifest(),
-        manifestPreferences.isSourceManifest()));
+
+    // set 'global' values
+    ksession.setGlobal("_bundleManifest", new IdentifiableBundleManifest(result,
+        IdentifiableBundleManifest.BUNDLE_MANIFEST));
+    ksession.setGlobal("_originalManifest", new IdentifiableBundleManifest(originalManifest,
+        IdentifiableBundleManifest.ORIGINAL_MANIFEST));
+    ksession.setGlobal("_manifestTemplate", new IdentifiableBundleManifest(manifestTemplate,
+        IdentifiableBundleManifest.MANIFEST_TEMPLATE));
+
+    ksession.setGlobal("_resourceModule", new DelegatingResourceModule(resourceModule));
+    ksession.setGlobal("_modularizedSystem", new DelegatingModularizedSystem(modularizedSystem));
+    ksession.setGlobal("_manifestPreferences", manifestPreferences);
+    ksession.setGlobal("_referencesCache",
+        new ReferencesCache(modularizedSystem, resourceModule, manifestPreferences.isSourceManifest(),
+            manifestPreferences.isSourceManifest()));
 
     ksession.fireAllRules();
 

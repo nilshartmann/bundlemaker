@@ -65,6 +65,10 @@ public class ManifestUtils {
    */
   public static boolean isExcludedRequiredBundle(BundleManifest templateManifest, String bundleSymbolicName) {
 
+    if (templateManifest == null) {
+      return false;
+    }
+
     // get the import package template
     String templateHeader = templateManifest.getHeader(ManifestConstants.HEADER_EXCLUDED_REQUIRED_BUNDLES_TEMPLATE);
 

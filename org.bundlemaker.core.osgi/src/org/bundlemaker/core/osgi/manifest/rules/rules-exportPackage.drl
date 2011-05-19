@@ -13,6 +13,16 @@ import org.bundlemaker.core.osgi.internal.manifest.IdentifiableBundleManifest;
 import org.bundlemaker.core.osgi.exporter.ManifestConstants;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
+import org.bundlemaker.core.osgi.internal.manifest.ReferencesCache;
+
+// the global definitions
+global IResourceModule _resourceModule;
+global IModularizedSystem _modularizedSystem;
+global IManifestPreferences _manifestPreferences;
+global ReferencesCache _referencesCache;
+global IdentifiableBundleManifest _bundleManifest;
+global IdentifiableBundleManifest _originalManifest;
+global IdentifiableBundleManifest _manifestTemplate;
 
 /**
  * Mandatory input values are:
