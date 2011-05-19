@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bundlemaker.core.internal.modules.TypeModule;
+import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.resource.TypeEnum;
@@ -85,7 +86,7 @@ public class JdkModuleCreator {
           typeName = typeName.replace('\\', '.');
 
           // TODO
-          Type type = new Type(typeName, TypeEnum.CLASS);
+          Type type = new Type(typeName, TypeEnum.CLASS, DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER);
           //
           // type.setTypeModule(virtualModule);
 

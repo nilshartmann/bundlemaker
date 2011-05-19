@@ -28,6 +28,7 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
@@ -144,8 +145,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(module);
 
     // TODO: getReferencedTypes(???, ???)
-    for (IReference reference : module.getAllReferences(hideContainedTypes, includeSourceReferences,
-        includeSourceReferences)) {
+    for (IReference reference : module.getReferences(ReferenceQueryFilters.createReferenceFilter(hideContainedTypes,
+        includeSourceReferences, true, true, includeSourceReferences))) {
       _resolveReferencedModules(result, reference);
     }
 
@@ -182,7 +183,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     Set<String> result = new HashSet<String>();
 
     // iterate over the referenced types
-    for (String referencedType : module.getReferencedTypeNames(hideContainedTypes, includeSourceReferences, false)) {
+    for (String referencedType : module.getReferencedTypeNames(ReferenceQueryFilters.createReferenceFilter(
+        hideContainedTypes, includeSourceReferences, true, true, false))) {
 
       // get the module list
       Set<IType> typeList = getTypeNameToTypeCache().get(referencedType);

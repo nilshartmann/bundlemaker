@@ -16,10 +16,13 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
+import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -91,62 +94,156 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     return Collections.unmodifiableSet(result);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  @Deprecated
-  public Set<String> getReferencedTypeNames(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences) {
+  public Set<IReference> getReferences(IQueryFilter<IReference> filter) {
 
-    // return result
-    return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, false);
-  }
-
-  @Override
-  @Deprecated
-  public Set<IReference> getAllReferences(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences) {
-
-    // create the result
-    Set<IReference> result = new HashSet<IReference>();
-
-    //
-    getReferences(_binaryResources, hideContainedTypes, includeIndirectReferences, result);
-
-    //
-    if (includeSourceReferences) {
-      getReferences(_sourceResources, hideContainedTypes, includeIndirectReferences, result);
+    if (filter instanceof ReferenceFilter) {
+      ((ReferenceFilter) filter).setResourceModule(this.getResourceModule());
     }
 
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    
+    Set<IReference> result = new HashSet<IReference>();
+
+    // iterate over all resources
+    for (IResource resource : getResources(ContentType.BINARY)) {
+      for (IReference reference : resource.getReferences()) {
+        if (filter.matches(reference)) {
+          result.add(reference);
+        }
+      }
+    }
+
+    System.out.println("bin res " + stopWatch.getElapsedTime());
+    
+    for (IResource resource : getResources(ContentType.SOURCE)) {
+      for (IReference reference : resource.getReferences()) {
+        if (filter.matches(reference)) {
+          result.add(reference);
+        }
+      }
+    }
+
+    System.out.println("source res " + stopWatch.getElapsedTime());
+    
+    //
+    for (IType type : getContainedTypes()) {
+      for (IReference reference : type.getReferences()) {
+        if (filter.matches(reference)) {
+          result.add(reference);
+        }
+      }
+    }
+    
+    System.out.println("types " + stopWatch.getElapsedTime());
+
     // return result
-    return Collections.unmodifiableSet(result);
+    return result;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  @Deprecated
-  public Set<String> getReferencedPackageNames(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences) {
+  public Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter) {
 
-    // return result
-    return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, true);
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+
+    Set<IReference> references = getReferences(filter);
+
+    System.out.println("getReferences: " + stopWatch.getElapsedTime());
+
+    Set<String> result = new HashSet<String>();
+    for (IReference reference : references) {
+      result.add(reference.getFullyQualifiedName());
+    }
+
+    System.out.println("copy to String: " + stopWatch.getElapsedTime());
+
+    return result;
   }
 
-  /**
-   * <p>
-   * </p>
-   *
-   * @return
-   */
-  @Deprecated
-  public Set<String> getIndirectlyReferencedPackageNames() {
+  @Override
+  public Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter) {
 
-    // return result
-    return getReferences(true, true, false, true, true);
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    
+    Set<IReference> references = getReferences(filter);
+
+    System.out.println("getReferences: " + stopWatch.getElapsedTime());
+    
+    Set<String> result = new HashSet<String>();
+    for (IReference reference : references) {
+
+      if (reference.getFullyQualifiedName().indexOf('.') != -1) {
+        result.add(reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.')));
+      } else {
+        // TODO: brauchen wir das ?
+        // result.add("");
+      }
+    }
+
+    System.out.println("copy to String: " + stopWatch.getElapsedTime());
+    
+    return result;
   }
+
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // @Deprecated
+  // public Set<String> getReferencedTypeNames(boolean hideContainedTypes, boolean includeSourceReferences,
+  // boolean includeIndirectReferences) {
+  //
+  // // return result
+  // return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, false);
+  // }
+  //
+  // @Override
+  // @Deprecated
+  // public Set<IReference> getAllReferences(boolean hideContainedTypes, boolean includeSourceReferences,
+  // boolean includeIndirectReferences) {
+  //
+  // // create the result
+  // Set<IReference> result = new HashSet<IReference>();
+  //
+  // //
+  // getReferences(_binaryResources, hideContainedTypes, includeIndirectReferences, result);
+  //
+  // //
+  // if (includeSourceReferences) {
+  // getReferences(_sourceResources, hideContainedTypes, includeIndirectReferences, result);
+  // }
+  //
+  // // return result
+  // return Collections.unmodifiableSet(result);
+  // }
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // @Deprecated
+  // public Set<String> getReferencedPackageNames(boolean hideContainedTypes, boolean includeSourceReferences,
+  // boolean includeIndirectReferences) {
+  //
+  // // return result
+  // return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, true);
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // @Deprecated
+  // public Set<String> getIndirectlyReferencedPackageNames() {
+  //
+  // // return result
+  // return getReferences(true, true, false, true, true);
+  // }
 
   @Override
   public IResourceModule getResourceModule() {
@@ -215,160 +312,103 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     return ContentType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param hideContainedTypes
-   * @param includeSourceReferences
-   * @param includeIndirectReferences
-   * @param collectPackages
-   * @return
-   */
-  private Set<String> getReferences(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeDirectReferences, boolean includeIndirectReferences, boolean collectPackages) {
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param hideContainedTypes
+  // * @param includeSourceReferences
+  // * @param includeIndirectReferences
+  // * @param collectPackages
+  // * @return
+  // */
+  // private Set<String> getReferences(boolean hideContainedTypes, boolean includeSourceReferences,
+  // boolean includeDirectReferences, boolean includeIndirectReferences, boolean collectPackages) {
+  //
+  // // create the result
+  // Set<String> result = new HashSet<String>();
+  //
+  // //
+  // getReferences(_binaryResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
+  // collectPackages);
+  //
+  // //
+  // if (includeSourceReferences) {
+  // getReferences(_sourceResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
+  // collectPackages);
+  // }
+  //
+  // // return result
+  // return Collections.unmodifiableSet(result);
+  // }
 
-    // create the result
-    Set<String> result = new HashSet<String>();
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param resources
+  // * @param hideContainedTypes
+  // * @param includeIndirectReferences
+  // * TODO
+  // * @param result
+  // * @param containedTypes
+  // */
+  // private void getReferences(Set<? extends IResource> resources, boolean hideContainedTypes,
+  // boolean includeDirectReferences, boolean includeIndirectReferences, Set<String> result, boolean collectPackages) {
+  //
+  // // iterate over all resources
+  // for (IResource resource : resources) {
+  //
+  // // iterate over all resources
+  // for (IReference reference : resource.getReferences()) {
+  //
+  // addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
+  // collectPackages, result);
+  // }
+  //
+  // //
+  // for (IType type : resource.getContainedTypes()) {
+  //
+  // //
+  // for (IReference reference : type.getReferences()) {
+  //
+  // addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
+  // collectPackages, result);
+  // }
+  // }
+  // }
+  // }
 
-    //
-    getReferences(_binaryResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
-        collectPackages);
-
-    //
-    if (includeSourceReferences) {
-      getReferences(_sourceResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
-          collectPackages);
-    }
-
-    // return result
-    return Collections.unmodifiableSet(result);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resources
-   * @param hideContainedTypes
-   * @param includeIndirectReferences
-   *          TODO
-   * @param result
-   * @param containedTypes
-   */
-  private void getReferences(Set<? extends IResource> resources, boolean hideContainedTypes,
-      boolean includeDirectReferences, boolean includeIndirectReferences, Set<String> result, boolean collectPackages) {
-
-    // iterate over all resources
-    for (IResource resource : resources) {
-
-      // iterate over all resources
-      for (IReference reference : resource.getReferences()) {
-
-        addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
-            collectPackages, result);
-      }
-
-      //
-      for (IType type : resource.getContainedTypes()) {
-
-        //
-        for (IReference reference : type.getReferences()) {
-
-          addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
-              collectPackages, result);
-        }
-      }
-    }
-  }
-
-  private void addReference(IReference reference, boolean hideContainedTypes, boolean includeDirectReferences,
-      boolean includeIndirectReferences, boolean collectPackages, Set<String> result) {
-
-    if (reference.isDirectlyReferenced() && !includeDirectReferences) {
-      return;
-    }
-
-    if (!reference.isDirectlyReferenced() && !includeIndirectReferences) {
-      return;
-    }
-
-    if (!hideContainedTypes || !getContainedTypeNames().contains(reference.getFullyQualifiedName())) {
-
-      String entry;
-      if (collectPackages) {
-
-        if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-          entry = reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.'));
-        } else {
-          entry = "";
-        }
-
-      } else {
-        entry = reference.getFullyQualifiedName();
-      }
-
-      if (!result.contains(entry)) {
-        result.add(entry);
-      }
-
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resources
-   * @param hideContainedTypes
-   * @param includeIndirectReferences
-   *          TODO
-   * @param result
-   */
-  private void getReferences(Set<? extends IResource> resources, boolean hideContainedTypes,
-      boolean includeIndirectReferences, Set<IReference> result) {
-
-    // iterate over all resources
-    for (IResource resource : resources) {
-
-      // iterate over all resources
-      for (IReference reference : resource.getReferences()) {
-
-        if (!hideContainedTypes || !getContainedTypeNames().contains(reference.getFullyQualifiedName())) {
-
-          if (!reference.isDirectlyReferenced()) {
-
-            //
-            if (includeIndirectReferences && reference.isIndirectlyReferenced()) {
-              result.add(reference);
-            }
-
-          } else {
-            result.add(reference);
-          }
-        }
-      }
-
-      // step 2
-      for (IType type : resource.getContainedTypes()) {
-
-        for (IReference reference : type.getReferences()) {
-
-          if (!hideContainedTypes || !getContainedTypeNames().contains(reference.getFullyQualifiedName())) {
-
-            if (!reference.isDirectlyReferenced()) {
-
-              //
-              if (includeIndirectReferences && reference.isIndirectlyReferenced()) {
-                result.add(reference);
-              }
-
-            } else {
-              result.add(reference);
-            }
-          }
-        }
-      }
-    }
-  }
+  // private void addReference(IReference reference, boolean hideContainedTypes, boolean includeDirectReferences,
+  // boolean includeIndirectReferences, boolean collectPackages, Set<String> result) {
+  //
+  // if (reference.isDirectlyReferenced() && !includeDirectReferences) {
+  // return;
+  // }
+  //
+  // if (!reference.isDirectlyReferenced() && !includeIndirectReferences) {
+  // return;
+  // }
+  //
+  // if (!hideContainedTypes || !getContainedTypeNames().contains(reference.getFullyQualifiedName())) {
+  //
+  // String entry;
+  // if (collectPackages) {
+  //
+  // if (reference.getFullyQualifiedName().indexOf('.') != -1) {
+  // entry = reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.'));
+  // } else {
+  // entry = "";
+  // }
+  //
+  // } else {
+  // entry = reference.getFullyQualifiedName();
+  // }
+  //
+  // if (!result.contains(entry)) {
+  // result.add(entry);
+  // }
+  //
+  // }
+  // }
 }

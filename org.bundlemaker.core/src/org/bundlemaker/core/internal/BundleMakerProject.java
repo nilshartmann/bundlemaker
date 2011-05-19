@@ -22,6 +22,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
@@ -30,11 +31,13 @@ import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -136,6 +139,13 @@ public class BundleMakerProject implements IBundleMakerProject {
     IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
         .getName()) : createModularizedSystemWorkingCopy(getProject().getName());
     modularizedSystem.applyTransformations();
+
+    // TODO
+    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(this,
+        (IModifiableModularizedSystem) modularizedSystem);
+
+    //
+    Activator.getContext().registerService(IDependencyModel.class.getName(), dependencyModel, null);
   }
 
   /**
@@ -325,7 +335,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   public IBundleMakerProjectDescription getProjectDescription() {
     return _projectDescription;
   }
-  
+
   @Override
   public IModifiableBundleMakerProjectDescription getModifiableProjectDescription() {
     return _projectDescription;

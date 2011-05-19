@@ -12,6 +12,7 @@ package org.bundlemaker.core.modules;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -67,38 +68,26 @@ public interface IResourceContainer extends ITypeContainer {
    * <p>
    * </p>
    * 
-   * @param hideContainedTypes
-   * @param includeSourceReferences
+   * @param excludeContainedTypes
    * @return
    */
-  @Deprecated
-  Set<String> getReferencedTypeNames(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences);
+  Set<IReference> getReferences(IQueryFilter<IReference> filter);
 
   /**
    * <p>
    * </p>
    * 
-   * @param hideContainedTypes
-   * @param includeSourceReferences
+   * @param filter
    * @return
    */
-  @Deprecated
-  Set<IReference> getAllReferences(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences);
+  Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter);
 
   /**
    * <p>
    * </p>
    * 
-   * @param hideContainedTypes
-   * @param includeSourceReferences
+   * @param filter
    * @return
    */
-  @Deprecated
-  Set<String> getReferencedPackageNames(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences);
-
-  @Deprecated
-  Set<String> getIndirectlyReferencedPackageNames();
+  Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter);
 }

@@ -116,8 +116,8 @@ public class ReferenceContainerTest {
         Assert.assertEquals(reference.isExtends(), isExtends);
         Assert.assertEquals(reference.isImplements(), isImplements);
         Assert.assertEquals(reference.isClassAnnotation(), isClassAnnotation);
-        Assert.assertEquals(reference.isCompileTimeReference(), isCompiletime);
-        Assert.assertEquals(reference.isRuntimeReference(), isRuntime);
+        Assert.assertEquals(reference.isSourceReference(), isCompiletime);
+        Assert.assertEquals(reference.isBinaryReference(), isRuntime);
       }
     }
   }

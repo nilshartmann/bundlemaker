@@ -130,7 +130,7 @@ public class Reference implements IReference {
    * {@inheritDoc}
    */
   @Override
-  public boolean isCompileTimeReference() {
+  public boolean isSourceReference() {
     return _referenceAttributes.isCompileTime();
   }
 
@@ -138,7 +138,7 @@ public class Reference implements IReference {
    * {@inheritDoc}
    */
   @Override
-  public boolean isRuntimeReference() {
+  public boolean isBinaryReference() {
     return _referenceAttributes.isRuntimeTime();
   }
 

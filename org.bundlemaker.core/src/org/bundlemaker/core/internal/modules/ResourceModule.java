@@ -20,10 +20,12 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.StopWatch;
 
 /**
  * <p>
@@ -52,6 +54,78 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
   @Override
   public boolean containsResource(String path, ContentType contentType) {
     return getResource(path, contentType) != null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<IReference> getReferences(final IQueryFilter<IReference> filter) {
+
+    if (filter instanceof ReferenceFilter) {
+      ((ReferenceFilter) filter).setResourceModule(this);
+    }
+
+    // create the result set
+    final Set<IReference> result = new HashSet<IReference>();
+
+    //
+    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
+      @Override
+      public boolean doWithContainer(ResourceContainer resourceContainer) {
+        result.addAll(resourceContainer.getReferences(filter));
+        return false;
+      }
+    });
+
+    // return the result
+    return Collections.unmodifiableSet(result);
+  }
+
+  @Override
+  public Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter) {
+
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+
+    Set<IReference> references = getReferences(filter);
+
+    System.out.println("getReferences: " + stopWatch.getElapsedTime());
+
+    Set<String> result = new HashSet<String>();
+    for (IReference reference : references) {
+      result.add(reference.getFullyQualifiedName());
+    }
+
+    System.out.println("copy to String: " + stopWatch.getElapsedTime());
+
+    return result;
+  }
+
+  @Override
+  public Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter) {
+
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    
+    Set<IReference> references = getReferences(filter);
+
+    System.out.println("getReferences: " + stopWatch.getElapsedTime());
+    
+    Set<String> result = new HashSet<String>();
+    for (IReference reference : references) {
+
+      if (reference.getFullyQualifiedName().indexOf('.') != -1) {
+        result.add(reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.')));
+      } else {
+        // TODO: brauchen wir das ?
+        // result.add("");
+      }
+    }
+
+    System.out.println("copy to String: " + stopWatch.getElapsedTime());
+    
+    return result;
   }
 
   /**
@@ -90,93 +164,6 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
       @Override
       public boolean doWithContainer(ResourceContainer resourceContainer) {
         result.addAll(resourceContainer.getResources(contentType));
-        return false;
-      }
-    });
-
-    // return the result
-    return Collections.unmodifiableSet(result);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getReferencedTypeNames(final boolean hideContainedTypes, final boolean includeSourceReferences,
-      final boolean includeIndirectReferences) {
-
-    // create the result set
-    final Set<String> result = new HashSet<String>();
-
-    //
-    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
-      @Override
-      public boolean doWithContainer(ResourceContainer resourceContainer) {
-        result.addAll(resourceContainer.getReferencedTypeNames(hideContainedTypes, includeSourceReferences,
-            includeIndirectReferences));
-        return false;
-      }
-    });
-
-    // return the result
-    return Collections.unmodifiableSet(result);
-  }
-
-  public Set<String> getIndirectlyReferencedPackageNames() {
-    
-    // create the result set
-    final Set<String> result = new HashSet<String>();
-
-    //
-    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
-      @Override
-      public boolean doWithContainer(ResourceContainer resourceContainer) {
-        result.addAll(resourceContainer.getIndirectlyReferencedPackageNames());
-        return false;
-      }
-    });
-
-    // return the result
-    return Collections.unmodifiableSet(result);
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getReferencedPackageNames(final boolean hideContainedTypes, final boolean includeSourceReferences,
-      final boolean includeIndirectReferences) {
-
-    // create the result set
-    final Set<String> result = new HashSet<String>();
-
-    //
-    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
-      @Override
-      public boolean doWithContainer(ResourceContainer resourceContainer) {
-        result.addAll(resourceContainer.getReferencedPackageNames(hideContainedTypes, includeSourceReferences,
-            includeIndirectReferences));
-        return false;
-      }
-    });
-
-    // return the result
-    return Collections.unmodifiableSet(result);
-  }
-
-  @Override
-  public Set<IReference> getAllReferences(final boolean hideContainedTypes, final boolean includeSourceReferences,
-      final boolean includeIndirectReferences) {
-
-    // create the result set
-    final Set<IReference> result = new HashSet<IReference>();
-
-    //
-    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
-      @Override
-      public boolean doWithContainer(ResourceContainer resourceContainer) {
-        result.addAll(resourceContainer.getAllReferences(hideContainedTypes, includeSourceReferences,
-            includeIndirectReferences));
         return false;
       }
     });

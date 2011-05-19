@@ -43,21 +43,21 @@ public interface IReference {
 
   /**
    * <p>
-   * Returns <code>true</code> if this reference is a compile time reference.
+   * Returns <code>true</code> if the origin of this reference is a <b>source</b> resources.
    * </p>
    * 
-   * @return <code>true</code> if this reference is a compile time reference.
+   * @return <code>true</code> if the origin of this reference is a <b>source</b> resources.
    */
-  boolean isCompileTimeReference();
+  boolean isSourceReference();
 
   /**
    * <p>
-   * Returns <code>true</code> if this reference is a runtime reference.
+   * Returns <code>true</code> if the origin of this reference is a <b>binary</b> resources.
    * </p>
    * 
-   * @return <code>true</code> if this reference is a runtime reference.
+   * @return <code>true</code> if the origin of this reference is a <b>binary</b> resources.
    */
-  boolean isRuntimeReference();
+  boolean isBinaryReference();
 
   /**
    * <p>

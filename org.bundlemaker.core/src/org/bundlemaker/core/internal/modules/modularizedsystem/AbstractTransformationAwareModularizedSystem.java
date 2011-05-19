@@ -96,9 +96,9 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
         // TODO!!
         try {
-        TypeModule typeModule = createTypeModule(identifier,
-            new File[] { fileBasedContent.getBinaryRootPaths().toArray(new IRootPath[0])[0].getAsFile() });
-        getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
+          TypeModule typeModule = createTypeModule(fileBasedContent.getId(), identifier, new File[] { fileBasedContent
+              .getBinaryRootPaths().toArray(new IRootPath[0])[0].getAsFile() });
+          getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
         } catch (CoreException ex) {
           // TODO
           ex.printStackTrace();
@@ -203,8 +203,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param file
    * @return
    */
-  protected TypeModule createTypeModule(IModuleIdentifier identifier, File file) {
-    return createTypeModule(identifier, new File[] { file });
+  protected TypeModule createTypeModule(String contentId, IModuleIdentifier identifier, File file) {
+    return createTypeModule(contentId, identifier, new File[] { file });
   }
 
   /**
@@ -215,7 +215,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param files
    * @return
    */
-  protected TypeModule createTypeModule(IModuleIdentifier identifier, File[] files) {
+  protected TypeModule createTypeModule(String contentId, IModuleIdentifier identifier, File[] files) {
 
     // create the type module
     TypeModule typeModule = new TypeModule(identifier);
@@ -234,7 +234,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         for (String type : types) {
 
           // TODO: TypeEnum!!
-          Type type2 = new Type(type, TypeEnum.CLASS);
+          Type type2 = new Type(type, TypeEnum.CLASS, contentId);
 
           // type2.setTypeModule(typeModule);
 

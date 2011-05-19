@@ -16,6 +16,7 @@ import com.springsource.util.osgi.VersionRange;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import com.springsource.util.osgi.manifest.RequiredBundle.Visibility;
 import org.bundlemaker.core.osgi.internal.manifest.DroolsManifestUtils;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 
 // the global definitions
 global IResourceModule _resourceModule;
@@ -33,6 +34,7 @@ global IdentifiableBundleManifest _manifestTemplate;
  * - BundleManifest
  * - IExportPackagePreferences
  */
+/**
 rule "strict import packages - create imported package"
 when
     eval (_manifestPreferences.getDependencyStyle().equals(DependencyStyle.STRICT_IMPORT_PACKAGE))
@@ -52,13 +54,14 @@ when
 then
    $importedPackage.setResolution(Resolution.OPTIONAL);
 end
+**/
 
 rule "RequiredBundle: strict require bundle - "
 when
     // assure that dependencystyle is 'DependencyStyle.STRICT_REQUIRE_BUNDLE'
     eval (DependencyStyle.STRICT_REQUIRE_BUNDLE.equals(_manifestPreferences.getDependencyStyle()))
     // for all referenced package names
-    $referencedPackageName : String() from _resourceModule.getReferencedPackageNames(true, true, _manifestPreferences.isConsiderIndirectReferences())
+    $referencedPackageName : String() from _resourceModule.getReferencedPackageNames(ReferenceQueryFilters.createReferenceFilter(true, true, true, true, _manifestPreferences.isConsiderIndirectReferences()))
     // for all exporting modules of a referenced package name
     $exportingModule : IModule() from _referencesCache.getExportingModules($referencedPackageName)
     // get the host bundle
@@ -87,6 +90,7 @@ then
    // add to memory
    insert( requiredBundle );
 end
+
 
 rule "RequiredBundle - Template"
 salience 50
