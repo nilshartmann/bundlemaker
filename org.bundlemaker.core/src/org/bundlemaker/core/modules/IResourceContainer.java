@@ -26,6 +26,16 @@ public interface IResourceContainer extends ITypeContainer {
 
   /**
    * <p>
+   * Returns the containing {@link IResourceModule}. If the {@link IResourceContainer} is a {@link IResourceModule}, the
+   * {@link IResourceModule} itself will be returned.
+   * </p>
+   * 
+   * @return
+   */
+  IResourceModule getResourceModule();
+
+  /**
+   * <p>
    * </p>
    * 
    * @param path
@@ -61,6 +71,7 @@ public interface IResourceContainer extends ITypeContainer {
    * @param includeSourceReferences
    * @return
    */
+  @Deprecated
   Set<String> getReferencedTypeNames(boolean hideContainedTypes, boolean includeSourceReferences,
       boolean includeIndirectReferences);
 
@@ -72,6 +83,7 @@ public interface IResourceContainer extends ITypeContainer {
    * @param includeSourceReferences
    * @return
    */
+  @Deprecated
   Set<IReference> getAllReferences(boolean hideContainedTypes, boolean includeSourceReferences,
       boolean includeIndirectReferences);
 
@@ -83,18 +95,10 @@ public interface IResourceContainer extends ITypeContainer {
    * @param includeSourceReferences
    * @return
    */
+  @Deprecated
   Set<String> getReferencedPackageNames(boolean hideContainedTypes, boolean includeSourceReferences,
       boolean includeIndirectReferences);
 
-  /**
-   * <p>
-   * Returns the containing {@link IResourceModule}. If the {@link IResourceContainer} is a {@link IResourceModule}, the
-   * {@link IResourceModule} itself will be returned.
-   * </p>
-   * 
-   * @return
-   */
-  IResourceModule getResourceModule();
-
+  @Deprecated
   Set<String> getIndirectlyReferencedPackageNames();
 }

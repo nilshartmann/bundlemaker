@@ -10,12 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -97,6 +95,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * {@inheritDoc}
    */
   @Override
+  @Deprecated
   public Set<String> getReferencedTypeNames(boolean hideContainedTypes, boolean includeSourceReferences,
       boolean includeIndirectReferences) {
 
@@ -105,6 +104,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
   }
 
   @Override
+  @Deprecated
   public Set<IReference> getAllReferences(boolean hideContainedTypes, boolean includeSourceReferences,
       boolean includeIndirectReferences) {
 
@@ -127,6 +127,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * {@inheritDoc}
    */
   @Override
+  @Deprecated
   public Set<String> getReferencedPackageNames(boolean hideContainedTypes, boolean includeSourceReferences,
       boolean includeIndirectReferences) {
 
@@ -140,12 +141,14 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    *
    * @return
    */
+  @Deprecated
   public Set<String> getIndirectlyReferencedPackageNames() {
 
     // return result
     return getReferences(true, true, false, true, true);
   }
 
+  @Override
   public IResourceModule getResourceModule() {
     return _resourceModule;
   }
