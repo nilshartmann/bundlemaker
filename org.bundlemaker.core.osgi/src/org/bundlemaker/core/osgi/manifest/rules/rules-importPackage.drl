@@ -58,7 +58,7 @@ when
     // assure that dependencystyle is 'DependencyStyle.STRICT_REQUIRE_BUNDLE'
     eval (DependencyStyle.STRICT_REQUIRE_BUNDLE.equals(_manifestPreferences.getDependencyStyle()))
     // for all referenced package names
-    $referencedPackageName : String() from _resourceModule.getReferencedPackageNames(true, true, true)
+    $referencedPackageName : String() from _resourceModule.getReferencedPackageNames(true, true, _manifestPreferences.isConsiderIndirectReferences())
     // for all exporting modules of a referenced package name
     $exportingModule : IModule() from _referencesCache.getExportingModules($referencedPackageName)
     // get the host bundle
@@ -79,8 +79,10 @@ then
      requiredBundle.setBundleVersion(new VersionRange("[" + $exportingHostModule.getModuleIdentifier().getVersion() + "," + $exportingHostModule.getModuleIdentifier().getVersion() + "]"));
    }
    
-   // set the visibility to reexport (TODO!!)
-   requiredBundle.setVisibility(Visibility.REEXPORT);
+   // set the visibility to reexport
+   if (_manifestPreferences.isReexportRequiredBundles()) {
+     requiredBundle.setVisibility(Visibility.REEXPORT);
+   }
    
    // add to memory
    insert( requiredBundle );
@@ -105,6 +107,9 @@ then
    // create a required bundle
    _bundleManifest.getRequireBundle().getRequiredBundles().remove($requiredBundle);
    RequiredBundle systemBundle = _bundleManifest.getRequireBundle().addRequiredBundle("system.bundle");
-   // set the visibility to reexport (TODO!!)
-   systemBundle.setVisibility(Visibility.REEXPORT);
+   
+   // set the visibility to reexport
+   if (_manifestPreferences.isReexportRequiredBundles()) {
+     systemBundle.setVisibility(Visibility.REEXPORT);
+   }
 end
