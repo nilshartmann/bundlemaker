@@ -90,7 +90,7 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     Assert.isNotNull(manifestTemplate);
     Assert.isNotNull(originalManifest);
     Assert.isNotNull(manifestPreferences);
-    
+
     System.out.println("createManifest - start");
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
@@ -109,8 +109,9 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     ksession.setGlobal("_manifestTemplate", new IdentifiableBundleManifest(manifestTemplate,
         IdentifiableBundleManifest.MANIFEST_TEMPLATE));
 
-    ksession.setGlobal("_resourceModule", new DelegatingResourceModule(resourceModule));
-    ksession.setGlobal("_modularizedSystem", new DelegatingModularizedSystem(modularizedSystem));
+    // ksession.setGlobal("_resourceModule", new DelegatingResourceModule(resourceModule));
+    ksession.setGlobal("_resourceModule", resourceModule);
+    ksession.setGlobal("_modularizedSystem", modularizedSystem);
     ksession.setGlobal("_manifestPreferences", manifestPreferences);
     ksession.setGlobal("_referencesCache",
         new ReferencesCache(modularizedSystem, resourceModule, manifestPreferences.isSourceManifest(),
