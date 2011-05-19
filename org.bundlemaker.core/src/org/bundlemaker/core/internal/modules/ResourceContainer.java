@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -100,7 +101,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       boolean includeIndirectReferences) {
 
     // return result
-    return getReferences(hideContainedTypes, includeSourceReferences, includeIndirectReferences, false);
+    return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, false);
   }
 
   @Override
@@ -130,7 +131,19 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       boolean includeIndirectReferences) {
 
     // return result
-    return getReferences(hideContainedTypes, includeSourceReferences, includeIndirectReferences, true);
+    return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, true);
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  public Set<String> getIndirectlyReferencedPackageNames() {
+
+    // return result
+    return getReferences(true, true, false, true, true);
   }
 
   public IResourceModule getResourceModule() {
@@ -210,17 +223,19 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * @return
    */
   private Set<String> getReferences(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences, boolean collectPackages) {
+      boolean includeDirectReferences, boolean includeIndirectReferences, boolean collectPackages) {
 
     // create the result
     Set<String> result = new HashSet<String>();
 
     //
-    getReferences(_binaryResources, hideContainedTypes, includeIndirectReferences, result, collectPackages);
+    getReferences(_binaryResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
+        collectPackages);
 
     //
     if (includeSourceReferences) {
-      getReferences(_sourceResources, hideContainedTypes, includeIndirectReferences, result, collectPackages);
+      getReferences(_sourceResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
+          collectPackages);
     }
 
     // return result
@@ -239,7 +254,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * @param containedTypes
    */
   private void getReferences(Set<? extends IResource> resources, boolean hideContainedTypes,
-      boolean includeIndirectReferences, Set<String> result, boolean collectPackages) {
+      boolean includeDirectReferences, boolean includeIndirectReferences, Set<String> result, boolean collectPackages) {
 
     // iterate over all resources
     for (IResource resource : resources) {
@@ -247,7 +262,8 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       // iterate over all resources
       for (IReference reference : resource.getReferences()) {
 
-        addReference(reference, hideContainedTypes, includeIndirectReferences, collectPackages, result);
+        addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
+            collectPackages, result);
       }
 
       //
@@ -256,14 +272,19 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
         //
         for (IReference reference : type.getReferences()) {
 
-          addReference(reference, hideContainedTypes, includeIndirectReferences, collectPackages, result);
+          addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
+              collectPackages, result);
         }
       }
     }
   }
 
-  private void addReference(IReference reference, boolean hideContainedTypes, boolean includeIndirectReferences,
-      boolean collectPackages, Set<String> result) {
+  private void addReference(IReference reference, boolean hideContainedTypes, boolean includeDirectReferences,
+      boolean includeIndirectReferences, boolean collectPackages, Set<String> result) {
+
+    if (reference.isDirectlyReferenced() && !includeDirectReferences) {
+      return;
+    }
 
     if (!reference.isDirectlyReferenced() && !includeIndirectReferences) {
       return;

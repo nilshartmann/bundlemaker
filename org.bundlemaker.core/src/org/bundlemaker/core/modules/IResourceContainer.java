@@ -95,4 +95,6 @@ public interface IResourceContainer extends ITypeContainer {
    * @return
    */
   IResourceModule getResourceModule();
+
+  Set<String> getIndirectlyReferencedPackageNames();
 }

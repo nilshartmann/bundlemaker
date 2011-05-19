@@ -122,6 +122,24 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     return Collections.unmodifiableSet(result);
   }
 
+  public Set<String> getIndirectlyReferencedPackageNames() {
+    
+    // create the result set
+    final Set<String> result = new HashSet<String>();
+
+    //
+    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
+      @Override
+      public boolean doWithContainer(ResourceContainer resourceContainer) {
+        result.addAll(resourceContainer.getIndirectlyReferencedPackageNames());
+        return false;
+      }
+    });
+
+    // return the result
+    return Collections.unmodifiableSet(result);
+  }
+  
   /**
    * {@inheritDoc}
    */
