@@ -3,17 +3,12 @@ package org.bundlemaker.itest.spring;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.bundlemaker.itest.spring.experimental.PatternBasedTypeSelector;
 import org.bundlemaker.itest.spring.tests.ModularizedSystemTests;
 import org.bundlemaker.itest.spring.tests.ModuleTest;
 import org.bundlemaker.itest.spring.tests.ResourceModelTests;
-import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -29,7 +24,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
    * </p>
    */
   public IntegrationTest() {
-    super("spring", false, false, false, false);
+    super("spring", false, false, true, false);
   }
 
   /**
@@ -65,13 +60,13 @@ public class IntegrationTest extends AbstractIntegrationTest {
   @Override
   protected void doPostProcessModularizedSystem(IModularizedSystem modularizedSystem) {
 
-    //
-    try {
-      IArtifact rootArtifact = ModelTransformer.transform((IModifiableModularizedSystem) modularizedSystem);
-      ArtifactUtils.dumpArtifact(rootArtifact);
-    } catch (CoreException e) {
-      e.printStackTrace();
-    }
+    // //
+    // try {
+    // IArtifact rootArtifact = ModelTransformer.transform((IModifiableModularizedSystem) modularizedSystem);
+    // ArtifactUtils.dumpArtifact(rootArtifact);
+    // } catch (CoreException e) {
+    // e.printStackTrace();
+    // }
 
     // add experimental
     modularizedSystem.getTypeSelectors().add(

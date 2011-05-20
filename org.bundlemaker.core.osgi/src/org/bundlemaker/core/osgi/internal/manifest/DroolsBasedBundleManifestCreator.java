@@ -1,5 +1,7 @@
 package org.bundlemaker.core.osgi.internal.manifest;
 
+import java.util.Map;
+
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
@@ -13,6 +15,7 @@ import org.drools.builder.ResourceType;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.eclipse.core.runtime.Assert;
 
+import com.springsource.bundlor.util.BundleManifestUtils;
 import com.springsource.util.osgi.manifest.BundleManifest;
 import com.springsource.util.osgi.manifest.BundleManifestFactory;
 import com.springsource.util.parser.manifest.ManifestContents;
@@ -24,6 +27,8 @@ import com.springsource.util.parser.manifest.ManifestContents;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator {
+
+  private static final String   MANIFEST_PER_ENTRY_ATTRIBUTES_NAME = "Name";
 
   /** - */
   private DroolsServiceAccessor _serviceAccessor;
@@ -83,7 +88,7 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
   }
 
   public ManifestContents createManifest(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
-      BundleManifest manifestTemplate, BundleManifest originalManifest, IManifestPreferences manifestPreferences) {
+      ManifestContents manifestTemplate, ManifestContents originalManifest, IManifestPreferences manifestPreferences) {
 
     Assert.isNotNull(modularizedSystem);
     Assert.isNotNull(resourceModule);
@@ -104,10 +109,12 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     // set 'global' values
     ksession.setGlobal("_bundleManifest", new IdentifiableBundleManifest(result,
         IdentifiableBundleManifest.BUNDLE_MANIFEST));
-    ksession.setGlobal("_originalManifest", new IdentifiableBundleManifest(originalManifest,
-        IdentifiableBundleManifest.ORIGINAL_MANIFEST));
-    ksession.setGlobal("_manifestTemplate", new IdentifiableBundleManifest(manifestTemplate,
-        IdentifiableBundleManifest.MANIFEST_TEMPLATE));
+    ksession.setGlobal("_originalManifest",
+        new IdentifiableBundleManifest(BundleManifestUtils.createBundleManifest(originalManifest),
+            IdentifiableBundleManifest.ORIGINAL_MANIFEST));
+    ksession.setGlobal("_manifestTemplate",
+        new IdentifiableBundleManifest(BundleManifestUtils.createBundleManifest(manifestTemplate),
+            IdentifiableBundleManifest.MANIFEST_TEMPLATE));
 
     // ksession.setGlobal("_resourceModule", new DelegatingResourceModule(resourceModule));
     ksession.setGlobal("_resourceModule", resourceModule);
@@ -123,7 +130,24 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     System.out.println("createManifest - done");
     System.out.println(stopWatch.getElapsedTime());
 
+    // copy all 'per-entry' attributes from the manifest template to the final manifest
+    ManifestContents manifestContents = ManifestUtils.toManifestContents(result);
+
+    // copy all 'per-entry' attributes from the template
+    for (String sectionName : manifestTemplate.getSectionNames()) {
+
+      // get the section attributes
+      Map<String, String> sectionAttributes = manifestTemplate.getAttributesForSection(sectionName);
+
+      // copy the section attributes
+      for (String key : sectionAttributes.keySet()) {
+        if (!key.equalsIgnoreCase(MANIFEST_PER_ENTRY_ATTRIBUTES_NAME)) {
+          manifestContents.getAttributesForSection(sectionName).put(key, sectionAttributes.get(key));
+        }
+      }
+    }
+
     // get the new manifest contents
-    return ManifestUtils.toManifestContents(result);
+    return manifestContents;
   }
 }

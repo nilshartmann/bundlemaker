@@ -10,7 +10,6 @@ import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.eclipse.core.runtime.Assert;
 
-import com.springsource.bundlor.util.BundleManifestUtils;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -72,8 +71,7 @@ public class ManifestCreatorHelper extends AbstractManifestAwareExporterHelper {
   public ManifestContents createManifest() {
 
     //
-    return _manifestCreator.createManifest(getModularizedSystem(), getModule(),
-        BundleManifestUtils.createBundleManifest(getManifestTemplate()),
-        BundleManifestUtils.createBundleManifest(getOriginalManifest()), _manifestPreferences);
+    return _manifestCreator.createManifest(getModularizedSystem(), getModule(), getManifestTemplate(),
+        getOriginalManifest(), _manifestPreferences);
   }
 }

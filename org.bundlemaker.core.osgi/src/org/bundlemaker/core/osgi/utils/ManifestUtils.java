@@ -211,19 +211,18 @@ public class ManifestUtils {
     }
 
     // read the bundleManifest
-    BundleManifest bundleManifest;
-
     try {
-      bundleManifest = BundleManifestFactory.createBundleManifest(new FileReader(file));
-      //
-      ManifestContents result = ManifestUtils.toManifestContents(bundleManifest);
 
+      //
+      ManifestContents result = new RecoveringManifestParser().parse(new FileReader(file));
+
+      //
       return result;
 
     } catch (Exception e) {
       System.out.println("Exception while reading " + file.getAbsolutePath());
       e.printStackTrace();
-      return null;
+      throw new RuntimeException(e.getMessage(), e);
     }
   }
 
