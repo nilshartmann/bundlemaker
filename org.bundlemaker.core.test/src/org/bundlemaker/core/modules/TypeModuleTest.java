@@ -68,7 +68,7 @@ public class TypeModuleTest {
     //
     for (int i = 0; i < 100000; i++) {
       module.getModifiableSelfResourceContainer().getModifiableContainedTypesMap()
-          .put("a.b.c" + i, new Type("a.b.c" + i, TypeEnum.CLASS));
+          .put("a.b.c" + i, new Type("a.b.c" + i, TypeEnum.CLASS, "id"));
     }
 
     //

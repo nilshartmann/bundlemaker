@@ -46,7 +46,7 @@ public class TypeContainerTest {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     for (int i = 0; i < 100000; i++) {
-      typeContainer.getModifiableContainedTypesMap().put("a.b.c" + i, new Type("a.b.c" + i, TypeEnum.CLASS));
+      typeContainer.getModifiableContainedTypesMap().put("a.b.c" + i, new Type("a.b.c" + i, TypeEnum.CLASS, "id"));
     }
     stopWatch.stop();
     Assert.assertTrue(String.format("Elapsed time for creating: %s ms", stopWatch.getElapsedTime()),
