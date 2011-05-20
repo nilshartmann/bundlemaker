@@ -10,17 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.ReferenceType;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -31,89 +29,37 @@ import org.bundlemaker.core.resource.ReferenceType;
 public class ReferencedModulesQueryResult implements IReferencedModulesQueryResult {
 
   /** - */
-  private Map<IReference, IModule>      _referencesToModulesMap;
+  private IResourceModule _resourceModule;
 
   /** - */
-  private Map<IReference, Set<IModule>> _referencesToAmbiguousModulesMap;
+  private Set<IReference> _unsatisfiedReferences;
 
   /** - */
-  private Set<IReference>               _unsatisfiedReferences;
-
-  /** - */
-  private IResourceModule               _selfModule;
-
-  /** - */
-  private Set<String>                   _unsatisfiedReferencedTypes;
-
-  /** - */
-  private Map<String, Set<IModule>>     _referencedTypesToAmbiguousModulesMap;
-
-  /** - */
-  private Set<IModule>                  _referencedModules;
+  private Set<IModule>    _referencedModules;
 
   /**
    * <p>
    * Creates a new instance of type {@link ReferencedModulesQueryResult}.
    * </p>
    */
-  public ReferencedModulesQueryResult(IResourceModule self) {
+  public ReferencedModulesQueryResult(IResourceModule origin) {
 
     //
-    _referencesToModulesMap = new HashMap<IReference, IModule>();
-    _referencesToAmbiguousModulesMap = new HashMap<IReference, Set<IModule>>();
+    Assert.isNotNull(origin);
+
+    //
+    _resourceModule = origin;
+
+    //
     _unsatisfiedReferences = new HashSet<IReference>();
-
-    //
-    _selfModule = self;
-  }
-
-  /**
-   * <p>
-   * Creates a new instance of type {@link ReferencedModulesQueryResult}.
-   * </p>
-   */
-  public ReferencedModulesQueryResult() {
-    this(null);
+    _referencedModules = new HashSet<IModule>();
   }
 
   /**
    * {@inheritDoc}
    */
-  @Override
-  public boolean hasErrors() {
-
-    //
-    return _unsatisfiedReferences.isEmpty() && _referencesToAmbiguousModulesMap.isEmpty();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Map<IReference, IModule> getReferencedModulesMap() {
-
-    //
-    return _referencesToModulesMap;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean hasReferencesWithAmbiguousModules() {
-
-    //
-    return !_referencesToAmbiguousModulesMap.isEmpty();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules() {
-
-    //
-    return _referencesToAmbiguousModulesMap;
+  public IResourceModule getOrigin() {
+    return _resourceModule;
   }
 
   /**
@@ -121,7 +67,6 @@ public class ReferencedModulesQueryResult implements IReferencedModulesQueryResu
    */
   @Override
   public boolean hasUnsatisfiedReferences() {
-    //
     return !_unsatisfiedReferences.isEmpty();
   }
 
@@ -130,9 +75,7 @@ public class ReferencedModulesQueryResult implements IReferencedModulesQueryResu
    */
   @Override
   public Set<IReference> getUnsatisfiedReferences() {
-
-    //
-    return _unsatisfiedReferences;
+    return Collections.unmodifiableSet(_unsatisfiedReferences);
   }
 
   /**
@@ -140,20 +83,26 @@ public class ReferencedModulesQueryResult implements IReferencedModulesQueryResu
    */
   @Override
   public Set<IModule> getReferencedModules() {
+    return Collections.unmodifiableSet(_referencedModules);
+  }
 
-    if (_referencedModules == null) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<IReference> getModifiableUnsatisfiedReferences() {
+    return _unsatisfiedReferences;
+  }
 
-      _referencedModules = new HashSet<IModule>();
-
-      // step 2: add the type modules
-      for (IModule iTypeModule : _referencesToModulesMap.values()) {
-        if (!iTypeModule.equals(_selfModule)) {
-          _referencedModules.add(iTypeModule);
-        }
-      }
-    }
-
-    //
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<IModule> getModifiableReferencedModules() {
     return _referencedModules;
   }
 
@@ -161,69 +110,10 @@ public class ReferencedModulesQueryResult implements IReferencedModulesQueryResu
    * {@inheritDoc}
    */
   @Override
-  public Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules() {
-
-    if (_referencedTypesToAmbiguousModulesMap == null) {
-
-      _referencedTypesToAmbiguousModulesMap = new HashMap<String, Set<IModule>>();
-
-      // step 2: add the type modules
-      for (Entry<IReference, Set<IModule>> entry : _referencesToAmbiguousModulesMap.entrySet()) {
-
-        // only process type references
-        if (entry.getKey().getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
-
-          // process
-          for (IModule typeModule : entry.getValue()) {
-
-            // ignore self modules
-            if (!typeModule.equals(_selfModule)) {
-
-              // create the type module set if necessary
-              if (!_referencedTypesToAmbiguousModulesMap.containsKey(entry.getKey().getFullyQualifiedName())) {
-
-                _referencedTypesToAmbiguousModulesMap.put(entry.getKey().getFullyQualifiedName(),
-                    new HashSet<IModule>());
-              }
-
-              // add the type module
-              _referencedTypesToAmbiguousModulesMap.get(entry.getKey().getFullyQualifiedName()).add(typeModule);
-            }
-          }
-        }
-      }
-    }
+  public String toString() {
 
     //
-    return _referencedTypesToAmbiguousModulesMap;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getUnsatisfiedReferencedTypes() {
-
-    //
-    if (_unsatisfiedReferencedTypes == null) {
-
-      _unsatisfiedReferencedTypes = new HashSet<String>();
-
-      // add the type modules
-      for (IReference unsatisfiedReference : _unsatisfiedReferences) {
-
-        // only process type references
-        if (unsatisfiedReference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
-
-          if (!_unsatisfiedReferencedTypes.contains(unsatisfiedReference.getFullyQualifiedName())) {
-
-            _unsatisfiedReferencedTypes.add(unsatisfiedReference.getFullyQualifiedName());
-          }
-        }
-
-      }
-    }
-    // return the result
-    return _unsatisfiedReferencedTypes;
+    return "ReferencedModulesQueryResult [_resourceModule=" + _resourceModule + ", _unsatisfiedReferences="
+        + _unsatisfiedReferences + ", _referencedModules=" + _referencedModules + "]";
   }
 }

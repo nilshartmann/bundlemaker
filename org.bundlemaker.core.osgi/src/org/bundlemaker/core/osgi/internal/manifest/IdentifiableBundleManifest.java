@@ -5,8 +5,11 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Dictionary;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.osgi.framework.Version;
 
@@ -37,6 +40,8 @@ public class IdentifiableBundleManifest implements BundleManifest {
 
   /** - */
   private int             _role;
+
+  private Set<String>     _transitiveClosure;
 
   /**
    * <p>
@@ -193,4 +198,44 @@ public class IdentifiableBundleManifest implements BundleManifest {
     _bundleManifest.write(writer);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<String> getTransitiveClosure() {
+
+    if (_transitiveClosure == null) {
+      _transitiveClosure = new HashSet<String>();
+    }
+
+    return _transitiveClosure;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void finish() {
+
+    if (_transitiveClosure != null) {
+      
+      //
+      StringBuilder builder = new StringBuilder();
+      //
+      for (Iterator<String> iterator = _transitiveClosure.iterator(); iterator.hasNext();) {
+
+        //
+        builder.append(iterator.next());
+
+        //
+        if (iterator.hasNext()) {
+          builder.append(",");
+        }
+      }
+      //
+      setHeader("TRANSITIVE-CLOSURE", builder.toString());
+    }
+  }
 }

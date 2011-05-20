@@ -101,9 +101,6 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       ((ReferenceFilter) filter).setResourceModule(this.getResourceModule());
     }
 
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-    
     Set<IReference> result = new HashSet<IReference>();
 
     // iterate over all resources
@@ -115,8 +112,6 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       }
     }
 
-    System.out.println("bin res " + stopWatch.getElapsedTime());
-    
     for (IResource resource : getResources(ContentType.SOURCE)) {
       for (IReference reference : resource.getReferences()) {
         if (filter.matches(reference)) {
@@ -125,8 +120,6 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       }
     }
 
-    System.out.println("source res " + stopWatch.getElapsedTime());
-    
     //
     for (IType type : getContainedTypes()) {
       for (IReference reference : type.getReferences()) {
@@ -135,8 +128,6 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
         }
       }
     }
-    
-    System.out.println("types " + stopWatch.getElapsedTime());
 
     // return result
     return result;
@@ -167,11 +158,11 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
 
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
-    
+
     Set<IReference> references = getReferences(filter);
 
     System.out.println("getReferences: " + stopWatch.getElapsedTime());
-    
+
     Set<String> result = new HashSet<String>();
     for (IReference reference : references) {
 
@@ -184,7 +175,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     System.out.println("copy to String: " + stopWatch.getElapsedTime());
-    
+
     return result;
   }
 

@@ -15,13 +15,12 @@ import org.bundlemaker.core.resource.IReference;
 public class ReferenceQueryFilters {
 
   /** TRUE_QUERY_FILTER */
-  public static IQueryFilter<IReference> TRUE_QUERY_FILTER = new IQueryFilter<IReference>() {
+  public static IQueryFilter<IReference> ALL_REFERENCES_QUERY_FILTER                 = createReferenceFilter(false,
+                                                                                         true, true, true, true);
 
-                                                             @Override
-                                                             public boolean matches(IReference type) {
-                                                               return true;
-                                                             }
-                                                           };
+  /** ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER */
+  public static IQueryFilter<IReference> ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER = createReferenceFilter(true,
+                                                                                         true, true, true, false);
 
   /**
    * <p>
@@ -72,6 +71,7 @@ public class ReferenceQueryFilters {
     /** - */
     private boolean         includeDirectReferences   = true;
 
+    /** - */
     private Set<String>     _containedTypeNames;
 
     /**
@@ -158,6 +158,40 @@ public class ReferenceQueryFilters {
       }
 
       return _containedTypeNames;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + (exludeContainedTypes ? 1231 : 1237);
+      result = prime * result + (includeBinaryReferences ? 1231 : 1237);
+      result = prime * result + (includeDirectReferences ? 1231 : 1237);
+      result = prime * result + (includeIndirectReferences ? 1231 : 1237);
+      result = prime * result + (includeSourceReferences ? 1231 : 1237);
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      ReferenceFilter other = (ReferenceFilter) obj;
+      if (exludeContainedTypes != other.exludeContainedTypes)
+        return false;
+      if (includeBinaryReferences != other.includeBinaryReferences)
+        return false;
+      if (includeDirectReferences != other.includeDirectReferences)
+        return false;
+      if (includeIndirectReferences != other.includeIndirectReferences)
+        return false;
+      if (includeSourceReferences != other.includeSourceReferences)
+        return false;
+      return true;
     }
   }
 }

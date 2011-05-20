@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.resource.IReference;
@@ -29,47 +28,7 @@ public interface IReferencedModulesQueryResult {
    * 
    * @return
    */
-  boolean hasErrors();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Map<IReference, IModule> getReferencedModulesMap();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   Set<IModule> getReferencedModules();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasReferencesWithAmbiguousModules();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Map<IReference, Set<IModule>> getReferencesWithAmbiguousModules();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Map<String, Set<IModule>> getReferencedTypesWithAmbiguousModules();
 
   /**
    * <p>
@@ -93,5 +52,5 @@ public interface IReferencedModulesQueryResult {
    * 
    * @return
    */
-  Set<String> getUnsatisfiedReferencedTypes();
+  IResourceModule getOrigin();
 }

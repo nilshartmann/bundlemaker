@@ -76,7 +76,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
    * {@inheritDoc}
    */
   @Override
-  public IType getType(String fullyQualifiedName, IResourceModule referencingModule) throws AmbiguousElementException {
+  public IType getType(String fullyQualifiedName, IResourceModule referencingModule) {
 
     // assert
     Assert.isNotNull(fullyQualifiedName);
@@ -139,8 +139,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   }
 
   @Override
-  public IModule getTypeContainingModule(String fullyQualifiedName, IResourceModule referencingModule)
-      throws AmbiguousElementException {
+  public IModule getTypeContainingModule(String fullyQualifiedName, IResourceModule referencingModule) {
 
     //
     IType type = getType(fullyQualifiedName, referencingModule);

@@ -101,7 +101,7 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Referenced Types: \n");
     Set<String> referencedTypes = getCurrentModule().getReferencedTypeNames(
-        ReferenceQueryFilters.createReferenceFilter(true, true, true, true, false));
+        ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
     for (String referencedType : asSortedList(referencedTypes)) {
       builder.append(referencedType + "\n");
     }
@@ -109,7 +109,7 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Indirectly referenced Types: \n");
     Set<String> indirectlyReferencedTypes = getCurrentModule().getReferencedTypeNames(
-        ReferenceQueryFilters.createReferenceFilter(true, true, true, true, true));
+        ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
     for (String referencedType : asSortedList(indirectlyReferencedTypes)) {
       if (!referencedTypes.contains(referencedType)) {
         builder.append(referencedType + "\n");
@@ -119,27 +119,28 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Referenced Modules: \n");
     IReferencedModulesQueryResult queryResult = getCurrentModularizedSystem().getReferencedModules(getCurrentModule(),
-        true, true);
+        null);
 
     for (IModule referencedModule : queryResult.getReferencedModules()) {
       builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
     }
 
+    // TODO
     builder.append("\n");
     builder.append("Missing Types: \n");
-    for (String missingType : queryResult.getUnsatisfiedReferencedTypes()) {
+    for (IReference missingType : queryResult.getUnsatisfiedReferences()) {
       builder.append(missingType + "\n");
     }
 
-    builder.append("\n");
-    builder.append("Types with ambigious modules: \n");
-    for (Entry<String, Set<IModule>> missingType : queryResult.getReferencedTypesWithAmbiguousModules().entrySet()) {
-
-      builder.append(missingType.getKey() + ":\n");
-      for (IModule typeModule : missingType.getValue()) {
-        builder.append(" - " + typeModule.getModuleIdentifier().toString() + "\n");
-      }
-    }
+    // builder.append("\n");
+    // builder.append("Types with ambigious modules: \n");
+    // for (Entry<String, Set<IModule>> missingType : queryResult.getReferencedTypesWithAmbiguousModules().entrySet()) {
+    //
+    // builder.append(missingType.getKey() + ":\n");
+    // for (IModule typeModule : missingType.getValue()) {
+    // builder.append(" - " + typeModule.getModuleIdentifier().toString() + "\n");
+    // }
+    // }
 
     try {
       //

@@ -107,8 +107,9 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     StatefulKnowledgeSession ksession = _knowledgeBase.newStatefulKnowledgeSession();
 
     // set 'global' values
-    ksession.setGlobal("_bundleManifest", new IdentifiableBundleManifest(result,
-        IdentifiableBundleManifest.BUNDLE_MANIFEST));
+    IdentifiableBundleManifest bundleManifestWrapper = new IdentifiableBundleManifest(result,
+        IdentifiableBundleManifest.BUNDLE_MANIFEST);
+    ksession.setGlobal("_bundleManifest", bundleManifestWrapper);
     ksession.setGlobal("_originalManifest",
         new IdentifiableBundleManifest(BundleManifestUtils.createBundleManifest(originalManifest),
             IdentifiableBundleManifest.ORIGINAL_MANIFEST));
@@ -125,6 +126,8 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
             manifestPreferences.isSourceManifest()));
 
     ksession.fireAllRules();
+
+    bundleManifestWrapper.finish();
 
     stopWatch.stop();
     System.out.println("createManifest - done");

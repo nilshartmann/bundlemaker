@@ -238,14 +238,20 @@ public class Type implements IType, IModifiableType {
 
     if (_binaryResource != null) {
       result = _binaryResource.getAssociatedResourceModule(modularizedSystem);
-    } else if (_sourceResource != null) {
+    }
+
+    if (result == null && _sourceResource != null) {
       result = _sourceResource.getAssociatedResourceModule(modularizedSystem);
-    } else {
+    }
+
+    if (result == null) {
       result = ((ModularizedSystem) modularizedSystem).getAssociatedModule(this);
     }
 
     if (result == null) {
-      throw new RuntimeException("Type has no module " + this.toString());
+      // throw new RuntimeException("Type has no module " + this.toString());
+      System.out.println("Type has no module " + this.toString());
+      return null;
     } else {
       return result;
     }

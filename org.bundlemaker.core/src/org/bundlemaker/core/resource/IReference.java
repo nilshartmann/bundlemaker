@@ -91,6 +91,10 @@ public interface IReference {
    */
   boolean isClassAnnotation();
 
+  boolean isDirectlyReferenced();
+
+  boolean isIndirectlyReferenced();
+
   /**
    * <p>
    * Returns the originating {@link IResource} or <code>null</code>, if the reference does not belong to a resource. In
@@ -133,8 +137,4 @@ public interface IReference {
    * @return
    */
   boolean hasAssociatedType();
-
-  boolean isDirectlyReferenced();
-
-  boolean isIndirectlyReferenced();
 }

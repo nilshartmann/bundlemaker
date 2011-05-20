@@ -91,7 +91,6 @@ then
    insert( requiredBundle );
 end
 
-
 rule "RequiredBundle - Template"
 salience 50
 when
@@ -100,6 +99,20 @@ when
 then
     _bundleManifest.getRequireBundle().getRequiredBundles().add($requiredBundle);
     insert( $requiredBundle );
+end
+
+rule "RequiredBundle: add transitive closure"
+salience -20
+when
+   // assure that dependencystyle is 'DependencyStyle.STRICT_REQUIRE_BUNDLE'
+   eval (DependencyStyle.STRICT_REQUIRE_BUNDLE.equals(_manifestPreferences.getDependencyStyle()))
+   $module : IModule() from _modularizedSystem.getTransitiveReferencedModules(_resourceModule, ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER).getReferencedModules()
+   $moduleName : String() from $module.getModuleIdentifier().getName()
+   not (RequiredBundle(bundleSymbolicName == $moduleName))
+   $executionEnvironmentName : String() from _modularizedSystem.getExecutionEnvironment().getModuleIdentifier().getName()
+   eval (! $executionEnvironmentName.equals($moduleName))
+then
+   _bundleManifest.getTransitiveClosure().add($moduleName);
 end
 
 rule "RequiredBundle: replace require bundle 'system.bundle' "

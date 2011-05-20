@@ -49,16 +49,40 @@ public interface IManifestPreferences {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   boolean isConsiderIndirectReferences();
-  
+
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   boolean isReexportRequiredBundles();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param reexportRequiredBundles
+   */
+  void setReexportRequiredBundles(boolean reexportRequiredBundles);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param considerIndirectReferences
+   */
+  void setConsiderIndirectReferences(boolean considerIndirectReferences);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param sourceManifest
+   */
+  void setSourceManifest(boolean sourceManifest);
 }

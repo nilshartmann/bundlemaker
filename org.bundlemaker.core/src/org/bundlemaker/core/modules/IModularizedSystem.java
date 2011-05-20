@@ -19,6 +19,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -323,6 +324,28 @@ public interface IModularizedSystem {
   IModule getTypeContainingModule(String fullyQualifiedName, IResourceModule referencingModule)
       throws AmbiguousElementException;
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceModule
+   * @param referencesFilter
+   * @return
+   */
+  IReferencedModulesQueryResult getReferencedModules(IResourceModule resourceModule,
+      IQueryFilter<IReference> referencesFilter);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceModule
+   * @param referencesFilter
+   * @return
+   */
+  IReferencedModulesQueryResult getTransitiveReferencedModules(IResourceModule resourceModule,
+      IQueryFilter<IReference> referencesFilter);
+
   /******************************************************************************/
 
   /**
@@ -364,53 +387,6 @@ public interface IModularizedSystem {
    */
   @Deprecated
   Set<IType> getReferencingTypes(String fullyQualifiedName);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param module
-   * @return
-   */
-  @Deprecated
-  IReferencedModulesQueryResult getReferencedModules(IResourceModule module, boolean hideContainedTypes,
-      boolean includeSourceReferences);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   * @return
-   */
-  @Deprecated
-  IReferencedModulesQueryResult getReferencedModules(IResource resource);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param module
-   * @param hideContainedTypes
-   * @param includeSourceReferences
-   * @return
-   */
-  @Deprecated
-  Set<String> getUnsatisfiedReferencedTypes(IResourceModule module, boolean hideContainedTypes,
-      boolean includeSourceReferences);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param module
-   * @param hideContainedTypes
-   * @param includeSourceReferences
-   * @return
-   */
-  @Deprecated
-  Set<String> getUnsatisfiedReferencedPackages(IResourceModule module, boolean hideContainedTypes,
-      boolean includeSourceReferences);
 
   /**
    * <p>
