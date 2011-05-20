@@ -73,7 +73,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     // step 2: set up the JRE
     // TODO!!!!
-    System.out.println("// step 2: set up the JRE");
     try {
 
       TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
@@ -86,8 +85,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     }
 
     // step 3: create the type modules
-    System.out.println("// step 3: create the type modules");
-
     for (IFileBasedContent fileBasedContent : getProjectDescription().getFileBasedContent()) {
 
       if (!fileBasedContent.isResourceContent()) {
@@ -111,7 +108,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     initializeNonResourceModules();
 
     // step 4: transform modules
-    System.out.println("// step 4: transform modules");
     for (ITransformation transformation : getTransformations()) {
 
       // step 4.1: apply transformation
@@ -140,12 +136,10 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       }
 
       //
-      initializeResourceModules();
+      reinitializeCaches();
     }
 
     postApplyTransformations();
-
-    System.out.println("// done");
   }
 
   /**
@@ -167,7 +161,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
   }
 
-  public void initializeResourceModules() {
+  public void reinitializeCaches() {
 
   }
 

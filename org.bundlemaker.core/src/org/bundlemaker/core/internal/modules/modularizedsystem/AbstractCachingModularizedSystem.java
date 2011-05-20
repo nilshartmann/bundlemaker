@@ -129,8 +129,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * </p>
    */
   @Override
-  public void initializeResourceModules() {
-    super.initializeResourceModules();
+  public void reinitializeCaches() {
+    super.reinitializeCaches();
 
     getTypeNameToTypeCache().clear();
     getTypeNameToReferringCache().clear();

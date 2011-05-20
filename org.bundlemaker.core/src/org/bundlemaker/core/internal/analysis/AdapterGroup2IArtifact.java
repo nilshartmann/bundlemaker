@@ -90,7 +90,7 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.addResourceModuleToModularizedSystem(artifact);
-    AdapterUtils.getModularizedSystem(artifact).initializeResourceModules();
+    AdapterUtils.getModularizedSystem(artifact).reinitializeCaches();
   }
 
   /**
@@ -105,7 +105,7 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
-    AdapterUtils.getModularizedSystem(this).initializeResourceModules();
+    AdapterUtils.getModularizedSystem(this).reinitializeCaches();
 
     // TODO!!!
     ((IModifiableArtifact) artifact).setParent(null);

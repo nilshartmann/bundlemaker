@@ -81,7 +81,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer {
 
     // TODO: TYPE CHECK??
     AdapterUtils.addArtifactToPackage(this, artifact);
-    AdapterUtils.getModularizedSystem(artifact).initializeResourceModules();
+    AdapterUtils.getModularizedSystem(artifact).reinitializeCaches();
   }
 
   /**
@@ -98,7 +98,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer {
 
     // TODO: TYPE CHECK??
     AdapterUtils.removeArtifactFromPackage(artifact, this);
-    AdapterUtils.getModularizedSystem(artifact).initializeResourceModules();
+    AdapterUtils.getModularizedSystem(artifact).reinitializeCaches();
 
     // return the result
     return result;
