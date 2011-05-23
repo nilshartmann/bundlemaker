@@ -7,92 +7,74 @@ import org.osgi.framework.Version;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.osgi.exporter.ManifestConstants;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.osgi.internal.manifest.ReferencesCache;
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 
-/**
- * Eingabe:
- * - IModularizedSystem
- * - IResourceModule
- * - BundleManifest
- */
+// the global definitions
+global IResourceModule _resourceModule;
+global IModularizedSystem _modularizedSystem;
+global IManifestPreferences _manifestPreferences;
+global ReferencesCache _referencesCache;
+global IdentifiableBundleManifest _bundleManifest;
+global IdentifiableBundleManifest _originalManifest;
+global IdentifiableBundleManifest _manifestTemplate;
 
-rule "Bundle-ManifestVersion"
+rule "Bundle-ManifestVersion, Bundle-SymbolicName, Bundle-Name"
 when
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
+   eval( true )
 then
-    $bundleManifest.setBundleManifestVersion(2);
-end
+	// set the 'Bundle-ManifestVersion'
+    _bundleManifest.setBundleManifestVersion(2);
 
-rule "Bundle-SymbolicName"
-when
-    $resourceModule : IResourceModule()
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-then
-    $bundleManifest.getBundleSymbolicName().setSymbolicName($resourceModule.getModuleIdentifier().getName());
-end
+    // set the 'Bundle-SymbolicName'
+    _bundleManifest.getBundleSymbolicName().setSymbolicName(_resourceModule.getModuleIdentifier().getName());
 
-rule "Bundle-Name"
-when
-    $resourceModule : IResourceModule()
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-then
-    $bundleManifest.setBundleName($resourceModule.getModuleIdentifier().getName());
+	// set the 'Bundle-Name'
+    _bundleManifest.setBundleName(_resourceModule.getModuleIdentifier().getName());
 end
 
 rule "Bundle-Version"
 when
-    $resourceModule : IResourceModule()
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-    eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) )
+    eval( ManifestUtils.isValidOSGiVersion(_resourceModule.getModuleIdentifier().getVersion()) )
 then
-    $bundleManifest.setBundleVersion(new Version($resourceModule.getModuleIdentifier().getVersion()));
-end
-
-rule "Fragment-Host"
-when
-    $resourceModule : IResourceModule()
-    eval( ManifestUtils.isFragment($resourceModule) )
-    $hostModule : IModule() from ManifestUtils.getFragmentHost($resourceModule)
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-then
-	String fragmentHostName = $hostModule.getModuleIdentifier().getName();
-    $bundleManifest.getFragmentHost().setBundleSymbolicName(fragmentHostName);
-end
-
-rule "Eclipse-ExtensibleAPI"
-when
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-    $resourceModule : IResourceModule()
-    eval( ! ManifestUtils.isFragment($resourceModule) )
-then
-    $bundleManifest.setHeader("Eclipse-ExtensibleAPI", "true");
+    _bundleManifest.setBundleVersion(new Version(_resourceModule.getModuleIdentifier().getVersion()));
 end
 
 rule "Default-Bundle-Version"
 when
-    $resourceModule : IResourceModule()
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-    not( eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) ))
+    not( eval( ManifestUtils.isValidOSGiVersion(_resourceModule.getModuleIdentifier().getVersion()) ))
 then
-    $bundleManifest.setBundleVersion(new Version("0.0.0"));
+    _bundleManifest.setBundleVersion(new Version("0.0.0"));
+end
+
+rule "Fragment-Host"
+when
+    eval( ManifestUtils.isFragment(_resourceModule) )
+    $hostModule : IModule() from ManifestUtils.getFragmentHost(_resourceModule)
+then
+    _bundleManifest.getFragmentHost().setBundleSymbolicName($hostModule.getModuleIdentifier().getName());
+end
+
+rule "Eclipse-ExtensibleAPI"
+when
+    eval( ! ManifestUtils.isFragment(_resourceModule) )
+then
+    _bundleManifest.setHeader("Eclipse-ExtensibleAPI", "true");
 end
 
 rule "Copy all original manifest header that are not 'ORIGINAL_HEADERS_NOT_TO_COPY'"
 when
- 	$originalManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.ORIGINAL_MANIFEST )
- 	$bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
- 	$key : String() from $originalManifest.getHeaders()
+ 	$key : String() from _originalManifest.getHeaders()
  	not( eval ( ManifestConstants.ORIGINAL_HEADERS_NOT_TO_COPY.contains($key) )) 
  then
-	$bundleManifest.setHeader($key, $originalManifest.getHeader($key));
+	_bundleManifest.setHeader($key, _originalManifest.getHeader($key));
 end
 
 rule "Copy all manifest template header that are not 'TEMPLATE_HEADERS_NOT_TO_COPY'"
 salience -10
 when
- 	$manifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )
- 	$bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
- 	$key : String() from $manifestTemplate.getHeaders()
+ 	$key : String() from _manifestTemplate.getHeaders()
  	not( eval ( ManifestConstants.TEMPLATE_HEADERS_NOT_TO_COPY.contains($key) )) 
  then
-	$bundleManifest.setHeader($key, $manifestTemplate.getHeader($key));
+	_bundleManifest.setHeader($key, _manifestTemplate.getHeader($key));
 end

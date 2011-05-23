@@ -16,6 +16,16 @@ import com.springsource.util.osgi.VersionRange;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import com.springsource.util.osgi.manifest.RequiredBundle.Visibility;
 import org.bundlemaker.core.osgi.internal.manifest.DroolsManifestUtils;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
+
+// the global definitions
+global IResourceModule _resourceModule;
+global IModularizedSystem _modularizedSystem;
+global IManifestPreferences _manifestPreferences;
+global ReferencesCache _referencesCache;
+global IdentifiableBundleManifest _bundleManifest;
+global IdentifiableBundleManifest _originalManifest;
+global IdentifiableBundleManifest _manifestTemplate;
 
 /**
  * Eingabe:
@@ -24,78 +34,86 @@ import org.bundlemaker.core.osgi.internal.manifest.DroolsManifestUtils;
  * - BundleManifest
  * - IExportPackagePreferences
  */
+/**
 rule "strict import packages - create imported package"
 when
-    IManifestPreferences( dependencyStyle == DependencyStyle.STRICT_IMPORT_PACKAGE ) 
-    $resourceModule : IResourceModule()
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-    $referencedPackageName : String() from $resourceModule.getReferencedPackageNames(true, true, true)
+    eval (_manifestPreferences.getDependencyStyle().equals(DependencyStyle.STRICT_IMPORT_PACKAGE))
+    $referencedPackageName : String() from _resourceModule.getReferencedPackageNames(true, true, true)
 then
    // create a new importedPackage
-   ImportedPackage importedPackage = $bundleManifest.getImportPackage().addImportedPackage($referencedPackageName);
+   ImportedPackage importedPackage = _bundleManifest.getImportPackage().addImportedPackage($referencedPackageName);
+   
+   // add it
    insert( importedPackage );
 end
 
 rule "set imported package optional if not exporter exists"
 when
     $importedPackage : ImportedPackage()
-    $referencesCache : ReferencesCache()
-    eval( $referencesCache.hasExportingModules($importedPackage.getPackageName()) )
+    not( eval( _referencesCache.hasExportingModules($importedPackage.getPackageName()) ) )
 then
    $importedPackage.setResolution(Resolution.OPTIONAL);
 end
+**/
 
 rule "RequiredBundle: strict require bundle - "
 when
-    IManifestPreferences( dependencyStyle == DependencyStyle.STRICT_REQUIRE_BUNDLE ) 
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-    $bundleManifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )
-    $resourceModule : IResourceModule()
-    $referencesCache : ReferencesCache()
-    $modularizedSystem : IModularizedSystem()
-    $referencedPackageName : String() from $resourceModule.getReferencedPackageNames(true, true, true)
-    $exportingModule : IModule() from $referencesCache.getExportingModules($referencedPackageName)
+    // assure that dependencystyle is 'DependencyStyle.STRICT_REQUIRE_BUNDLE'
+    eval (DependencyStyle.STRICT_REQUIRE_BUNDLE.equals(_manifestPreferences.getDependencyStyle()))
+    // for all referenced package names
+    $referencedPackageName : String() from _resourceModule.getReferencedPackageNames(ReferenceQueryFilters.createReferenceFilter(true, true, true, true, _manifestPreferences.isConsiderIndirectReferences()))
+    // for all exporting modules of a referenced package name
+    $exportingModule : IModule() from _referencesCache.getExportingModules($referencedPackageName)
+    // get the host bundle
     $exportingHostModule : IModule() from ManifestUtils.getFragmentHost($exportingModule)
+	// get the symbolicname of the host bundle
     $symbolicName : String() from $exportingHostModule.getModuleIdentifier().getName()
     // assure that the required has not been created yet
-    not ( RequiredBundle(bundleSymbolicName == $symbolicName) )
-    // assure that the required bundle is not excluded or the host for this fragment
-    not ( eval ( ManifestUtils.isExcludedRequiredBundle($bundleManifestTemplate,$symbolicName) || 
-               ( ManifestUtils.isFragment($resourceModule) && ManifestUtils.getFragmentHost($resourceModule).equals($exportingHostModule))))
+   	not ( RequiredBundle(bundleSymbolicName == $symbolicName) )
+    // assure that the required bundle is not excluded or is the host for this fragment
+    eval ( !ManifestUtils.isExcludedRequiredBundle(_manifestTemplate, $symbolicName) && 
+           !(ManifestUtils.isFragment(_resourceModule) && ManifestUtils.getFragmentHost(_resourceModule).equals($exportingHostModule)) )
 then
    // create a required bundle
-   RequiredBundle requiredBundle = $bundleManifest.getRequireBundle().addRequiredBundle($symbolicName);
+   RequiredBundle requiredBundle = _bundleManifest.getRequireBundle().addRequiredBundle($symbolicName);
+   
    // set a version range if multiple versions exist
-   if ($modularizedSystem.getModules($symbolicName).size() > 1) {
+   if (_modularizedSystem.getModules($symbolicName).size() > 1) {
      requiredBundle.setBundleVersion(new VersionRange("[" + $exportingHostModule.getModuleIdentifier().getVersion() + "," + $exportingHostModule.getModuleIdentifier().getVersion() + "]"));
    }
-   // set the visibility to reexport (TODO!!)
-   requiredBundle.setVisibility(Visibility.REEXPORT);
+   
+   // set the visibility to reexport
+   if (_manifestPreferences.isReexportRequiredBundles()) {
+     requiredBundle.setVisibility(Visibility.REEXPORT);
+   }
+   
+   // add to memory
    insert( requiredBundle );
 end
+
 
 rule "RequiredBundle - Template"
 salience 50
 when
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-    $bundleManifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )
-    $requiredBundle :  RequiredBundle() from $bundleManifestTemplate.getRequireBundle().getRequiredBundles();
+    $requiredBundle :  RequiredBundle() from _manifestTemplate.getRequireBundle().getRequiredBundles();
     not ( RequiredBundle(bundleSymbolicName == $requiredBundle.bundleSymbolicName) )
 then
-    $bundleManifest.getRequireBundle().getRequiredBundles().add($requiredBundle);
+    _bundleManifest.getRequireBundle().getRequiredBundles().add($requiredBundle);
     insert( $requiredBundle );
 end
 
 rule "RequiredBundle: replace require bundle 'system.bundle' "
 salience -50
 when
-   $modularizedSystem : IModularizedSystem()
-   $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-   $symbolicName : String() from $modularizedSystem.getExecutionEnvironment().getModuleIdentifier().getName()
+   $symbolicName : String() from _modularizedSystem.getExecutionEnvironment().getModuleIdentifier().getName()
    $requiredBundle : RequiredBundle(bundleSymbolicName == $symbolicName)
 then
    // create a required bundle
-   $bundleManifest.getRequireBundle().getRequiredBundles().remove($requiredBundle);
-   RequiredBundle systemBundle = $bundleManifest.getRequireBundle().addRequiredBundle("system.bundle");
-   systemBundle.setVisibility(Visibility.REEXPORT);
+   _bundleManifest.getRequireBundle().getRequiredBundles().remove($requiredBundle);
+   RequiredBundle systemBundle = _bundleManifest.getRequireBundle().addRequiredBundle("system.bundle");
+   
+   // set the visibility to reexport
+   if (_manifestPreferences.isReexportRequiredBundles()) {
+     systemBundle.setVisibility(Visibility.REEXPORT);
+   }
 end

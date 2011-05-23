@@ -8,8 +8,15 @@ import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 
 public class ManifestPreferences implements IManifestPreferences {
 
+  /** - */
   private boolean _sourceManifest;
+
+  /** - */
+  private boolean _considerIndirectReferences;
   
+  /** - */
+  private boolean _reexportRequiredBundles;
+
   public ManifestPreferences(boolean sourceManifest) {
     _sourceManifest = sourceManifest;
   }
@@ -37,5 +44,26 @@ public class ManifestPreferences implements IManifestPreferences {
   @Override
   public boolean isSourceManifest() {
     return _sourceManifest;
+  }
+
+  @Override
+  public boolean isConsiderIndirectReferences() {
+    return _considerIndirectReferences;
+  }
+
+  public boolean isReexportRequiredBundles() {
+    return _reexportRequiredBundles;
+  }
+
+  public void setReexportRequiredBundles(boolean reexportRequiredBundles) {
+    _reexportRequiredBundles = reexportRequiredBundles;
+  }
+
+  public void setConsiderIndirectReferences(boolean considerIndirectReferences) {
+    _considerIndirectReferences = considerIndirectReferences;
+  }
+
+  public void setSourceManifest(boolean sourceManifest) {
+    _sourceManifest = sourceManifest;
   }
 }

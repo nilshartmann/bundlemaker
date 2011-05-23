@@ -45,4 +45,20 @@ public interface IManifestPreferences {
    * @return
    */
   public boolean noExportPackageVersion();
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  boolean isConsiderIndirectReferences();
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  boolean isReexportRequiredBundles();
 }

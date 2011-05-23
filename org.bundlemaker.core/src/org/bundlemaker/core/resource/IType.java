@@ -67,6 +67,14 @@ public interface IType {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  String getContentId();
+
+  /**
+   * <p>
    * Returns a set with all {@link IReference IReferences} of this type.
    * </p>
    * 
@@ -131,7 +139,7 @@ public interface IType {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   boolean isLocalOrAnonymousType();

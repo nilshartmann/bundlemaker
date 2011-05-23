@@ -35,6 +35,9 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   /** - */
   private List<ITypeSelector> _moduleSelectors;
 
+  /** - */
+  private ITypeSelector       _defaultTypeSelector;
+
   /**
    * <p>
    * Creates a new instance of type {@link AbstractQueryableModularizedSystem}.
@@ -48,8 +51,14 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
 
     //
     _moduleSelectors = new LinkedList<ITypeSelector>();
+
+    //
+    _defaultTypeSelector = new DefaultTypeSelector(projectDescription);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<ITypeSelector> getTypeSelectors() {
     return _moduleSelectors;
@@ -85,20 +94,16 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
 
       //
       if (referencingModule != null) {
-
         for (ITypeSelector moduleSelector : _moduleSelectors) {
-
-          //
           IType type = moduleSelector.selectType(referencingModule, fullyQualifiedName, types);
-
-          //
           if (type != null) {
             return type;
           }
         }
       }
 
-      throw new AmbiguousElementException(fullyQualifiedName);
+      return _defaultTypeSelector.selectType(referencingModule, fullyQualifiedName, types);
+      // throw new AmbiguousElementException(fullyQualifiedName);
     }
 
     // return the type

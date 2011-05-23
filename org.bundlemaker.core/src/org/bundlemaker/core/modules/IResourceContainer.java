@@ -12,6 +12,7 @@ package org.bundlemaker.core.modules;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -23,6 +24,16 @@ import org.bundlemaker.core.resource.IResource;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IResourceContainer extends ITypeContainer {
+
+  /**
+   * <p>
+   * Returns the containing {@link IResourceModule}. If the {@link IResourceContainer} is a {@link IResourceModule}, the
+   * {@link IResourceModule} itself will be returned.
+   * </p>
+   * 
+   * @return
+   */
+  IResourceModule getResourceModule();
 
   /**
    * <p>
@@ -57,42 +68,26 @@ public interface IResourceContainer extends ITypeContainer {
    * <p>
    * </p>
    * 
-   * @param hideContainedTypes
-   * @param includeSourceReferences
+   * @param excludeContainedTypes
    * @return
    */
-  Set<String> getReferencedTypeNames(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences);
+  Set<IReference> getReferences(IQueryFilter<IReference> filter);
 
   /**
    * <p>
    * </p>
    * 
-   * @param hideContainedTypes
-   * @param includeSourceReferences
+   * @param filter
    * @return
    */
-  Set<IReference> getAllReferences(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences);
+  Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter);
 
   /**
    * <p>
    * </p>
    * 
-   * @param hideContainedTypes
-   * @param includeSourceReferences
+   * @param filter
    * @return
    */
-  Set<String> getReferencedPackageNames(boolean hideContainedTypes, boolean includeSourceReferences,
-      boolean includeIndirectReferences);
-
-  /**
-   * <p>
-   * Returns the containing {@link IResourceModule}. If the {@link IResourceContainer} is a {@link IResourceModule}, the
-   * {@link IResourceModule} itself will be returned.
-   * </p>
-   * 
-   * @return
-   */
-  IResourceModule getResourceModule();
+  Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter);
 }

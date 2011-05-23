@@ -3,7 +3,6 @@ package org.bundlemaker.core.osgi.manifest;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 
-import com.springsource.util.osgi.manifest.BundleManifest;
 import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
@@ -26,5 +25,5 @@ public interface IBundleManifestCreator {
    * @return
    */
   public ManifestContents createManifest(IModularizedSystem modularizedSystem, IResourceModule resourceModule,
-      BundleManifest manifestTemplate, BundleManifest originalManifest, IManifestPreferences manifestPreferences);
+      ManifestContents manifestTemplate, ManifestContents originalManifest, IManifestPreferences manifestPreferences);
 }

@@ -13,51 +13,41 @@ import org.bundlemaker.core.osgi.internal.manifest.IdentifiableBundleManifest;
 import org.bundlemaker.core.osgi.exporter.ManifestConstants;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
+import org.bundlemaker.core.osgi.internal.manifest.ReferencesCache;
 
-/**
- * Mandatory input values are:
- * - IModularizedSystem
- * - IResourceModule
- * - IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
- * - IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE ) 
- * - IExportPackagePreferences
- */
+// the global definitions
+global IResourceModule _resourceModule;
+global IModularizedSystem _modularizedSystem;
+global IManifestPreferences _manifestPreferences;
+global ReferencesCache _referencesCache;
+global IdentifiableBundleManifest _bundleManifest;
+global IdentifiableBundleManifest _originalManifest;
+global IdentifiableBundleManifest _manifestTemplate;
+
 rule "export the package of a type (if it's not already exported)"
 when
-    $r : IResourceModule()
-    $bundleManifest : IdentifiableBundleManifest( role == IdentifiableBundleManifest.BUNDLE_MANIFEST )
-    $manifestPreferences : IManifestPreferences()
-    $type : IType() from $r.getContainedTypes()
+    $type : IType() from _resourceModule.getContainedTypes()
     eval ($type.getPackageName().trim().length() > 0)
-    eval ($type.hasSourceResource() || ! ($manifestPreferences.isSourceManifest()))
+    eval ($type.hasSourceResource() || ! (_manifestPreferences.isSourceManifest()))
     not ( ExportedPackage( packageName == $type.packageName ) )
 then
    // create a new ExportedPackage
-   ExportedPackage exportedPackage = $bundleManifest.getExportPackage().addExportedPackage($type.getPackageName());
+   ExportedPackage exportedPackage = _bundleManifest.getExportPackage().addExportedPackage($type.getPackageName());
    insert( exportedPackage );
 end
 
-/**
- *
- *   
- */
 rule "set export package version"
 when
-    $resourceModule : IResourceModule()
-    $exportedPackage : ExportedPackage( version.toString != $resourceModule.moduleIdentifier.version)
+    $exportedPackage : ExportedPackage( version.toString != _resourceModule.moduleIdentifier.version)
     IManifestPreferences( noExportPackageVersion == false ) 
-    eval( ManifestUtils.isValidOSGiVersion($resourceModule.getModuleIdentifier().getVersion()) )
+    eval( ManifestUtils.isValidOSGiVersion(_resourceModule.getModuleIdentifier().getVersion()) )
 then
-   $exportedPackage.setVersion(new Version($resourceModule.getModuleIdentifier().getVersion()));
+   $exportedPackage.setVersion(new Version(_resourceModule.getModuleIdentifier().getVersion()));
 end
 
-/**
- *
- *   
- * We set the salience to -100 to ensure that the rule will be fired as the last rule:
- * template entries *always* overwrite computed values!
- */
 rule "set attributes and directives from template manifest"
+// We set the salience to -100 to ensure that the rule will be fired as the last rule:
+// template entries *always* overwrite computed values!
 salience -100
 when
     $manifestTemplate : IdentifiableBundleManifest( role == IdentifiableBundleManifest.MANIFEST_TEMPLATE )

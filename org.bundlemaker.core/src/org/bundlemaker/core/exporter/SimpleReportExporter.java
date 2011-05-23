@@ -23,6 +23,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -99,14 +100,16 @@ public class SimpleReportExporter extends AbstractExporter {
 
     builder.append("\n");
     builder.append("Referenced Types: \n");
-    Set<String> referencedTypes = getCurrentModule().getReferencedTypeNames(true, true, false);
+    Set<String> referencedTypes = getCurrentModule().getReferencedTypeNames(
+        ReferenceQueryFilters.createReferenceFilter(true, true, true, true, false));
     for (String referencedType : asSortedList(referencedTypes)) {
       builder.append(referencedType + "\n");
     }
 
     builder.append("\n");
     builder.append("Indirectly referenced Types: \n");
-    Set<String> indirectlyReferencedTypes = getCurrentModule().getReferencedTypeNames(true, true, true);
+    Set<String> indirectlyReferencedTypes = getCurrentModule().getReferencedTypeNames(
+        ReferenceQueryFilters.createReferenceFilter(true, true, true, true, true));
     for (String referencedType : asSortedList(indirectlyReferencedTypes)) {
       if (!referencedTypes.contains(referencedType)) {
         builder.append(referencedType + "\n");

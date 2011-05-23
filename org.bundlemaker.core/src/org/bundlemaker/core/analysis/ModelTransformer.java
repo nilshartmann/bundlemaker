@@ -35,7 +35,6 @@ public class ModelTransformer {
    */
   public static IDependencyModel getDependencyModel(IBundleMakerProject bundleMakerProject,
       IModifiableModularizedSystem modifiableModularizedSystem) {
-
     //
     return new DependencyModel(bundleMakerProject, modifiableModularizedSystem);
   }
@@ -49,7 +48,8 @@ public class ModelTransformer {
    * @throws CoreException
    */
   public static IArtifact transform(IModifiableModularizedSystem modularizedSystem) throws CoreException {
-    return new DefaultArtifactCache(modularizedSystem).transform();
+    IArtifact root = new DefaultArtifactCache(modularizedSystem).transform();
+    return root;
   }
 
   /**

@@ -23,7 +23,6 @@ import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.IModifiableType;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
-import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -43,6 +42,9 @@ public class Type implements IType, IModifiableType {
   /** the type of this type (enum, class, interface, annotation) **/
   private TypeEnum                     _typeEnum;
 
+  /** - */
+  private transient String             _contentId;
+
   /** transient: the source resource */
   private transient Resource           _sourceResource;
 
@@ -59,32 +61,36 @@ public class Type implements IType, IModifiableType {
    * @param fullyQualifiedName
    * @param typeEnum
    */
-  public Type(String fullyQualifiedName, TypeEnum typeEnum) {
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, String contentId) {
 
     Assert.isNotNull(fullyQualifiedName);
     Assert.isNotNull(typeEnum);
+    Assert.isNotNull(contentId);
 
     //
     _fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
 
     // the type of the type
     _typeEnum = typeEnum;
-  }
-
-  /**
-   * <p>
-   * Creates a new instance of type {@link Type}.
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   */
-  public Type(String fullyQualifiedName) {
-
-    Assert.isNotNull(fullyQualifiedName);
 
     //
-    _fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
+    _contentId = contentId;
   }
+
+  // /**
+  // * <p>
+  // * Creates a new instance of type {@link Type}.
+  // * </p>
+  // *
+  // * @param fullyQualifiedName
+  // */
+  // public Type(String fullyQualifiedName) {
+  //
+  // Assert.isNotNull(fullyQualifiedName);
+  //
+  // //
+  // _fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
+  // }
 
   /**
    * <p>
@@ -105,6 +111,16 @@ public class Type implements IType, IModifiableType {
     _typeEnum = typeEnum;
 
     createReferenceContainer(flyWeightCache);
+  }
+
+  @Override
+  public String getContentId() {
+
+    if (_contentId != null) {
+      return _contentId;
+    }
+
+    return _binaryResource != null ? _binaryResource.getContentId() : _sourceResource.getContentId();
   }
 
   @Override
@@ -290,7 +306,7 @@ public class Type implements IType, IModifiableType {
   public boolean isLocalOrAnonymousType() {
     return _fullyQualifiedName.toString().matches(".*\\$\\d.*");
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -310,7 +326,7 @@ public class Type implements IType, IModifiableType {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param flyWeightCache
    */
   public void createReferenceContainer(FlyWeightCache flyWeightCache) {

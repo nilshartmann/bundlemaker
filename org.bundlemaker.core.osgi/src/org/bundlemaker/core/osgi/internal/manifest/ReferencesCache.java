@@ -19,7 +19,9 @@ import java.util.Set;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.util.GenericCache;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -107,9 +109,9 @@ public class ReferencesCache {
 
     //
     Set<String> types = getReferencedPackageToContainingTypesCache().get(packageName);
-    
+
     if (types == null) {
-      return result; 
+      return result;
     }
 
     for (String type : types) {
@@ -222,8 +224,11 @@ public class ReferencesCache {
   private void initializeCaches() {
 
     //
-    for (String typeName : _resourceModule.getReferencedTypeNames(true, _includeSourceReferences,
-        _includeIndirectReferences)) {
+    Set<String> typeNames = _resourceModule.getReferencedTypeNames(ReferenceQueryFilters.createReferenceFilter(true,
+        _includeSourceReferences, true, true, _includeIndirectReferences));
+
+    //
+    for (String typeName : typeNames) {
 
       // get the package type
       String packageName = typeName.contains(".") ? typeName.substring(0, typeName.lastIndexOf('.')) : "";
