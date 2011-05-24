@@ -231,7 +231,7 @@ public class ProjectResourcesBlock {
     Tree tree = _treeViewer.getTree();
     TreeColumnLayout layout = new TreeColumnLayout();
     TreeViewerColumn column = new TreeViewerColumn(_treeViewer, SWT.NONE);
-    column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(0));
+    column.setLabelProvider(new ResourceNameColumnLabelProvider());
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Resource");
