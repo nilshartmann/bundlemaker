@@ -96,10 +96,11 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     Assert.isNotNull(originalManifest);
     Assert.isNotNull(manifestPreferences);
 
-    System.out.println("createManifest - start");
+    System.out.println("createManifest - start  ");
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
 
+    //
     // create a new bundle manifest
     BundleManifest result = BundleManifestFactory.createBundleManifest();
 
