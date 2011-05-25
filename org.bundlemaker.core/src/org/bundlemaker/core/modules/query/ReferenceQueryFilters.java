@@ -128,17 +128,17 @@ public class ReferenceQueryFilters {
     @Override
     public boolean matches(IReference reference) {
 
-      if (!((reference.isBinaryReference() && includeBinaryReferences) || reference.isSourceReference()
-          && includeSourceReferences)) {
+      if (!(((reference.isBinaryReference() && includeBinaryReferences)) || (reference.isSourceReference()
+          && includeSourceReferences))) {
+
+    	  if (! (reference.isBinaryReference() || reference.isSourceReference())) {
+    		  System.out.println("Reference " + reference + " is neither binary- nor source reference!");
+    	  }
         return false;
       }
 
-      if (!((reference.isDirectlyReferenced() && includeDirectReferences) || reference.isIndirectlyReferenced()
-          && includeIndirectReferences)) {
-        return false;
-      }
-
-      if (!(reference.isBinaryReference() && includeBinaryReferences)) {
+      if (!((  reference.isDirectlyReferenced() && includeDirectReferences) || (reference.isIndirectlyReferenced()
+          && includeIndirectReferences))) {
         return false;
       }
 
