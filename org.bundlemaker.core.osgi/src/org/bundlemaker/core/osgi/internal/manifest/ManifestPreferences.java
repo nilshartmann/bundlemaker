@@ -17,7 +17,16 @@ public class ManifestPreferences implements IManifestPreferences {
   /** - */
   private boolean _reexportRequiredBundles;
 
+  /**
+   * <p>
+   * Creates a new instance of type {@link ManifestPreferences}.
+   * </p>
+   *
+   * @param sourceManifest
+   */
   public ManifestPreferences(boolean sourceManifest) {
+    
+    //
     _sourceManifest = sourceManifest;
   }
 
