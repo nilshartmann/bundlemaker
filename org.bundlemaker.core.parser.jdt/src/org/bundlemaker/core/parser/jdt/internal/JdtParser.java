@@ -249,7 +249,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       if (!directlyReferenced.contains(type)) {
         modifiableResource.recordReference(type, new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, false, false,
-            false, false, false, false, true));
+            false, true, false, false, true));
       }
     }
   }
@@ -290,25 +290,4 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     // step 5: finally return
     return problems;
   }
-
-  // /**
-  // * @param is
-  // * @return
-  // * @throws IOException
-  // */
-  // public static char[] getCharsFromInputStream(InputStream is) throws IOException {
-  //
-  // Reader reader = new InputStreamReader(is);
-  // StringWriter result = new StringWriter();
-  //
-  // int data = reader.read();
-  // while (data != -1) {
-  // char theChar = (char) data;
-  // result.append(theChar);
-  // data = reader.read();
-  // }
-  //
-  // reader.close();
-  // return result.toString().toCharArray();
-  // }
 }
