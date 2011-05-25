@@ -17,7 +17,6 @@
 package org.bundlemaker.core.osgi.exporter;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,6 +46,9 @@ final class JarFileManifestWriter implements ManifestWriter {
     this.outputFile = outputFile;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void write(ManifestContents manifest) {
     JarOutputStream out = null;
     InputStream in = null;
