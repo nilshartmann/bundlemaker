@@ -4,11 +4,12 @@
    <extension
        point="org.eclipse.jdt.ui.javaElementFilters">
     <filter
-          class="org.bundlemaker.core.parser.jdt.internal.JavaElementFilter"
+          class="org.bundlemaker.core.ui.internal.JavaElementFilter"
           description="Filters any bundlemaker JDT project."
           enabled="true"
-          id="filter-id"
-          name="FilterName">
+          pattern="*$JDT"
+          id="org.bundlemaker.core.ui.internal.JavaElementFilter"
+          name="BundleMaker$JDT project filter">
     </filter>
  </extension>
    <extension
@@ -59,6 +60,8 @@
             priority="normal">
       </content-type>
    </extension>
+   
+   <!-- the perspective -->
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
