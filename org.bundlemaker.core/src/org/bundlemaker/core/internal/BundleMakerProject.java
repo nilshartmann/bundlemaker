@@ -69,6 +69,8 @@ public class BundleMakerProject implements IBundleMakerProject {
   /** the project description working copies */
   private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
 
+  private IDependencyModel _dependencyModel;
+
   /**
    * <p>
    * Creates a new instance of type {@link BundleMakerProject}.
@@ -141,11 +143,11 @@ public class BundleMakerProject implements IBundleMakerProject {
     modularizedSystem.applyTransformations();
 
     // TODO
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(this,
+    _dependencyModel = ModelTransformer.getDependencyModel(this,
         (IModifiableModularizedSystem) modularizedSystem);
 
     //
-    Activator.getContext().registerService(IDependencyModel.class.getName(), dependencyModel, null);
+    Activator.getContext().registerService(IDependencyModel.class.getName(), _dependencyModel, null);
   }
 
   /**
@@ -339,6 +341,10 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public IModifiableBundleMakerProjectDescription getModifiableProjectDescription() {
     return _projectDescription;
+  }
+
+  public IDependencyModel getDependencyModel() {
+    return _dependencyModel;
   }
 
   /**
