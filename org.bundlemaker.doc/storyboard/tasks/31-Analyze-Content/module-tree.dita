@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE concept PUBLIC "-//OASIS//DTD DITA Concept//EN" "concept.dtd">
+<concept id="conceptId">
+ <title>The module tree</title>
+ <conbody>
+  <p>Each modularized system will be visualized in a so-called module tree. The module tree is shown
+   within the eclipse Project explorer as a sub-element of a BundleMaker project. The root of the
+   module tree is the modularized system.</p>
+  <image href="./images/module-tree.png" scale="50"/>
+  <section><title>Flat vs. hierarchical tree structure</title><p>It is possible to create different
+    module trees for a (transformed) system. E.g. the user must be able to choose if packages and/or
+    groups are shown flat or hierarchical:</p>
+   <image href="./images/module-tree-hierarchical-packages.png" scale="50"/>
+  </section>
+  <section><title>Resources and types</title>
+   <p>It also must be possible to determine if resources and/or types are shown. At least the
+    following selections must be available: <ul>
+     <li>Source resources with contained types <p>
+       <image href="./images/module-tree-source-res-with-types.png" scale="50"/>
+      </p></li>
+     <li>Source resources without contained types<p>
+       <image href="./images/module-tree-source-res-without-types.png" scale="50"/>
+      </p></li>
+     <li>Binary resources with contained types<p>
+       <image href="./images/module-tree-binary-res-with-types.png" scale="50"/>
+      </p></li>
+     <li>Binary resources without contained types<p>
+       <image href="./images/module-tree-binary-res-without-types.png" scale="50"/>
+      </p></li>
+     <li>Types only (no resources)<p>
+       <image href="./images/module-tree-types-only.png" scale="50"/>
+      </p></li>
+    </ul>
+   </p>
+  </section>
+  <section><title>Choosing the module tree style</title><p></p>
+   <image href="./images/module-tree-menu.png" scale="50"/>
+  </section>
+ </conbody>
+</concept>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="topic-1">
+  <title>Exporting content</title>
+  <body>
+    <p>If you want to analyze and transform a system with BundleMaker, you first have to create a
+      BundleMaker project. A BundleMaker project is an eclipse project with its' own BundleMaker
+      nature and contains a list of archives and/or folders with resources that make up your
+      system.</p>
+  </body>
+</topic>

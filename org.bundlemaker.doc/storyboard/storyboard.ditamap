@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2011 Gerd Wuetherich (gerd@gerd-wuetherich.de).
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the Eclipse Public License v1.0
+  which accompanies this distribution, and is available at
+  http://www.eclipse.org/legal/epl-v10.html
+  
+  Contributors:
+      Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
+-->
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/map.dtd">
+<map title="BundleMaker story board" rev="0.1">
+
+    <topicref href="./tasks/01-Parse-Content/Overview-Parse-Content.dita" type="concept">
+        <topicref href="./tasks/01-Parse-Content/01-Create_a_new_BundleMaker_project.dita"
+            type="task"/>
+        <topicref href="./tasks/01-Parse-Content/02-Edit_content.dita" type="task"/>
+        <topicref href="./tasks/01-Parse-Content/11-Parse-content.dita" type="task"/>
+    </topicref>
+
+    <topicref href="./tasks/31-Analyze-Content/Overview-Analyze-Content.dita" type="concept"> 
+        <topicref href="./tasks/31-Analyze-Content/module-tree.dita" type="task"/>
+    </topicref>
+
+    <topicref href="./tasks/51-Transform-Content/Overview-Transform-Content.dita" type="concept"> </topicref>
+
+    <topicref href="./tasks/71-Export-Content/Overview-Export-Content.dita" type="concept"> </topicref>
+
+</map>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taskId">
+    <title>Creating a new bundlemaker project</title>
+    <shortdesc/>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>Open the BundleMaker project wizard</cmd>
+                <info>
+                    <image href="./images/01/File-New-Wizard.png" scale="80"/>
+                </info>
+            </step>
+            <step>
+                <cmd>Fill out the "Wizard page"</cmd>
+                <info>
+                    <p>To complete the wizard, you have to fill in a valid project name. It is also possible to change the default location.</p>
+                    <image href="./images/01/Wizard_Page_1.png" scale="80"/>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

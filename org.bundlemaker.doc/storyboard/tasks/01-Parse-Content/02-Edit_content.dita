@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taskId">
+    <title>Edit project content</title>
+    <shortdesc/>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>Open the bundlemaker configuration editor</cmd>
+                <info>
+                    <p>Directly after creating a new BundleMaker project, it only contains a (yet
+                        empty) project configuration file named <codeph>bundlemaker.xml</codeph>. To
+                        edit the configuration, simply open the project configuration editor by
+                        double-clicking on the configuation file.</p>
+                    <image href="./images/02/Empty-BM-Project.png" scale="80"/>
+                </info>
+            </step>
+            <step>
+                <cmd>Add content</cmd>
+                <info>
+                    <image href="./images/02/Configuration-Editor.png" scale="70"/>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

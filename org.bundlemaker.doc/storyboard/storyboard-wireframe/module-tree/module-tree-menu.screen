@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Window" x="25" y="25" width="878" height="479" text="Eclipse" measuredWidth="878" measuredHeight="479"/>
+  <widgets xsi:type="model:Tree" x="34" y="133" width="232" height="259" text="--[>]  JEdit_4.4.pre1&#xA;---[>] org&#xA;----[>] gjt&#xA;-----[>] sp&#xA;------[>] jedit&#xA;-------[>] browser&#xA;--------v BrowserView.java&#xA;--------- BrowserView" measuredWidth="232" measuredHeight="259">
+    <items x="0" y="5" width="232" height="29" text="--[>]  JEdit_4.4.pre1"/>
+    <items x="0" y="34" width="232" height="29" text="---[>] org"/>
+    <items x="0" y="63" width="232" height="29" text="----[>] gjt"/>
+    <items x="0" y="92" width="232" height="29" text="-----[>] sp"/>
+    <items x="0" y="121" width="232" height="29" text="------[>] jedit"/>
+    <items x="0" y="150" width="232" height="29" text="-------[>] browser"/>
+    <items x="0" y="179" width="232" height="29" text="--------v BrowserView.java"/>
+    <items x="0" y="208" width="232" height="29" text="--------- BrowserView"/>
+  </widgets>
+  <widgets xsi:type="model:Menu" x="25" y="44" width="878" text="File,Edit,Source,Refactor,Navigate,Search,Project,Run,Window,Help" measuredWidth="878" measuredHeight="37">
+    <items x="5" y="0" width="34" height="37" text="File"/>
+    <items x="39" y="0" width="36" height="37" text="Edit"/>
+    <items x="75" y="0" width="58" height="37" text="Source"/>
+    <items x="133" y="0" width="68" height="37" text="Refactor"/>
+    <items x="201" y="0" width="72" height="37" text="Navigate"/>
+    <items x="273" y="0" width="57" height="37" text="Search"/>
+    <items x="330" y="0" width="58" height="37" text="Project"/>
+    <items x="388" y="0" width="38" height="37" text="Run"/>
+    <items x="426" y="0" width="68" height="37" text="Window"/>
+    <items x="494" y="0" width="42" height="37" text="Help"/>
+  </widgets>
+  <widgets xsi:type="model:VLine" x="35" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="157" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="210" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="339" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="415" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="514" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="575" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:Icon" x="52" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="68" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="90" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="113" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="136" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="592" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="608" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="630" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="646" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="668" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="691" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="707" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="729" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="745" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="174" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="190" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="227" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="243" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="265" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="281" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="303" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="319" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="432" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="455" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="478" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="494" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="356" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="379" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="395" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="531" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="554" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:VLine" x="841" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:Icon" x="849" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="109" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="131" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="153" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="175" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="197" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="52" y="474" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Panel" x="283" y="134" width="605" height="252" measuredWidth="605" measuredHeight="252"/>
+  <widgets xsi:type="model:TextArea" x="304" y="134" width="571" height="252" measuredWidth="571" measuredHeight="252" verticalScrollbar="true">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tabs" x="37" y="108" text="Package Explorer" measuredWidth="140" measuredHeight="37" selection="0">
+    <items x="1" y="0" width="138" height="37" text="Package Explorer"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="280" y="389" width="611" measuredWidth="611" measuredHeight="6"/>
+  <widgets xsi:type="model:VLine" x="277" y="108" height="358" measuredWidth="6" measuredHeight="358"/>
+  <widgets xsi:type="model:VLine" x="35" y="468" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:Icon" x="254" y="114" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:WidgetGroup" x="270" y="129" measuredWidth="178" measuredHeight="144">
+    <widgets xsi:type="model:Rectangle" width="178" height="144" measuredWidth="178" measuredHeight="144">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:HLine" x="7" y="46" width="163" measuredWidth="163" measuredHeight="6"/>
+    <widgets xsi:type="model:HLine" x="7" y="74" width="163" measuredWidth="163" measuredHeight="6"/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="279" y="178" text="Module Presentation >" measuredWidth="164" measuredHeight="29">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" x="441" y="188" width="167" height="193" measuredWidth="167" measuredHeight="193">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:List" x="447" y="190" text="(o) Flat&#xA;( ) Hierarchical" measuredWidth="112" measuredHeight="62" border="false" alpha="0">
+    <font/>
+    <items x="0" y="2" width="112" height="29" text="(o) Flat"/>
+    <items x="0" y="31" width="112" height="29" text="( ) Hierarchical"/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="447" y="251" width="155" measuredWidth="155" measuredHeight="6"/>
+  <widgets xsi:type="model:List" x="447" y="319" text="(o) Source Resources&#xA;( ) Binary Resources" measuredWidth="153" measuredHeight="62" border="false" alpha="0">
+    <font/>
+    <items x="0" y="2" width="153" height="29" text="(o) Source Resources"/>
+    <items x="0" y="31" width="153" height="29" text="( ) Binary Resources"/>
+  </widgets>
+  <widgets xsi:type="model:List" x="447" y="256" text="(o) Show Resources&#xD;&#xA;(o) Show Types" measuredWidth="144" measuredHeight="62" border="false" alpha="0">
+    <font/>
+    <items x="0" y="2" width="144" height="29" text="(o) Show Resources"/>
+    <items x="0" y="31" width="144" height="29" text="(o) Show Types"/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="447" y="315" width="155" measuredWidth="155" measuredHeight="6"/>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
