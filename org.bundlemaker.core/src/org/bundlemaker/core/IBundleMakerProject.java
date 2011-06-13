@@ -20,6 +20,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -206,4 +207,13 @@ public interface IBundleMakerProject {
    * @precondition BundleMakerProjectState.OPENED
    */
   void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
+  
+  /**
+   * Returns the {@link IDependencyModel} view of this project. 
+   * <p>
+   * </p>
+   *
+   * @precondition BundleMakerProjectState.OPENED
+   */
+  public IDependencyModel getDependencyModel();
 }

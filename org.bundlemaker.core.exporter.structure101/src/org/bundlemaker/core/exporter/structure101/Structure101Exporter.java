@@ -38,6 +38,7 @@ import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.GenericCache;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -104,7 +105,7 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
    * {@inheritDoc}
    */
   @Override
-  public void export(IModularizedSystem modularizedSystem, IModuleExporterContext context) throws Exception {
+  public void export(IModularizedSystem modularizedSystem, IModuleExporterContext context, IProgressMonitor progressMonitor) throws Exception {
 
     // set up the DataType element
     _result = new DataType();

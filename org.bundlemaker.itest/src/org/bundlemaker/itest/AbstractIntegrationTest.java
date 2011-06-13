@@ -242,7 +242,7 @@ public abstract class AbstractIntegrationTest {
     BinaryBundleExporter exporter = new BinaryBundleExporter();
     File templates = new File(System.getProperty("user.dir"), "templates");
     exporter.setTemplateRootDirectory(templates);
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
+    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Elapsed time " + stopWatch.getElapsedTime());
   }
@@ -269,7 +269,7 @@ public abstract class AbstractIntegrationTest {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     Structure101Exporter exporter = new Structure101Exporter();
-    exporter.export(modularizedSystem, exporterContext);
+    exporter.export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Elapsed time " + stopWatch.getElapsedTime());
   }
@@ -296,7 +296,7 @@ public abstract class AbstractIntegrationTest {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     SimpleReportExporter exporter = new SimpleReportExporter();
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
+    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Elapsed time " + stopWatch.getElapsedTime());
   }
@@ -325,11 +325,11 @@ public abstract class AbstractIntegrationTest {
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
     pdeExporter.setUseClassifcationForExportDestination(true);
     pdeExporter.setTemplateRootDirectory(templateDirectory);
-    new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext);
+    new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext, null);
 
     TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
     targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
-    targetPlatformProjectExporter.export(modularizedSystem, exporterContext);
+    targetPlatformProjectExporter.export(modularizedSystem, exporterContext, null);
   }
 
   /**

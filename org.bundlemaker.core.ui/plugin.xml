@@ -71,5 +71,63 @@
             name="BundleMaker">
       </perspective>
    </extension>
+   
+   <!-- the commands -->
+   <extension point="org.eclipse.ui.commands">
+      <command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler" name="PDE Plug-in Projects" /> 
+   </extension>  
+    <extension point="org.eclipse.ui.commands">
+      <command id="org.bundlemaker.core.ui.commands.ReportExportHandler" name="Simple Report" /> 
+   </extension>   
+   
+      <!-- the handlers -->
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler class="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+            commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler">
+         <activeWhen>
+         <reference
+               definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
+         </reference>
+         </activeWhen>
+         <enabledWhen>
+          <reference
+               definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
+               </reference>
+         </enabledWhen>
+      </handler>
+   </extension> 
+    <extension
+         point="org.eclipse.ui.handlers">
+      <handler class="org.bundlemaker.core.ui.commands.ReportExportHandler"
+            commandId="org.bundlemaker.core.ui.commands.ReportExportHandler">
+         <activeWhen>
+         <reference
+               definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
+         </reference>
+         </activeWhen>
+         <enabledWhen>
+          <reference
+               definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
+               </reference>
+         </enabledWhen>
+      </handler>
+   </extension> 
+   
+       <!-- the pop up menus -->
+   <extension point="org.eclipse.ui.menus">
+	   <menuContribution
+	       locationURI="popup:org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu">
+	       <menu
+              label="Export as..." >
+            	<command commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+              			 style="push" />
+              <command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
+              			 style="push" />
+           <visibleWhen
+                 checkEnabled="true" />
+	       </menu>
+	   </menuContribution> 
+   </extension>
 
 </plugin>

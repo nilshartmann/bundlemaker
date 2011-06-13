@@ -36,9 +36,9 @@
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
 	       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
-	       <menu
+	       <menu id="org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu"
               label="BundleMaker" >
-            	<command commandId="org.bundlemaker.core.ui.commands.Export"
+            	<command commandId="org.bundlemaker.core.ui.commands.Demo"
               			 style="push">
            <visibleWhen
                  checkEnabled="true" />
@@ -49,7 +49,7 @@
 
    <!-- the commands -->
    <extension point="org.eclipse.ui.commands">
-      <command id="org.bundlemaker.core.ui.commands.Export" name="Export" /> 
+      <command id="org.bundlemaker.core.ui.commands.Demo" name="Demo" /> 
    </extension>
    
    <!-- the expression definitions -->
@@ -71,8 +71,8 @@
    <!-- the handlers -->
    <extension
          point="org.eclipse.ui.handlers">
-      <handler class="org.bundlemaker.core.analysis.ui.commands.ExportHandler"
-            commandId="org.bundlemaker.core.ui.commands.Export">
+      <handler class="org.bundlemaker.core.analysis.ui.commands.DemoHandler"
+            commandId="org.bundlemaker.core.ui.commands.Demo">
          <activeWhen>
          <reference
                definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">

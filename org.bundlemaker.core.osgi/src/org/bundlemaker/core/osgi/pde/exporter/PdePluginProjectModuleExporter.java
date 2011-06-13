@@ -146,7 +146,6 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
 
     //
     bundleProjectDescription.setBundleClassath(new IBundleClasspathEntry[] { bundleClasspathEntry });
-
     //
     bundleProjectDescription.apply(null);
 

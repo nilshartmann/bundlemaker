@@ -24,6 +24,7 @@ import org.bundlemaker.core.ui.editor.transformation.Evaluator;
 import org.bundlemaker.core.ui.editor.transformation.NewModule;
 import org.bundlemaker.core.ui.editor.transformation.TransformationExecutor;
 import org.bundlemaker.core.ui.editor.transformation.Transformations;
+import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -167,6 +168,7 @@ public class TransformationPage extends FormPage {
       TransformationModel model = TransformationDslUtils.parse(uri);
       TransformationExecutor executor = new TransformationExecutor(createModularizedSystem("eins"), model);
       executor.apply();
+      BundleMakerUiUtils.refreshProjectExplorer(getBundleMakerProject());
     } catch (Exception ex) {
       ex.printStackTrace();
     }
@@ -273,7 +275,7 @@ public class TransformationPage extends FormPage {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     SimpleReportExporter exporter = new SimpleReportExporter();
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
+    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Dauer " + stopWatch.getElapsedTime());
     System.out.println("exportToSimpleReport done!");
@@ -302,7 +304,7 @@ public class TransformationPage extends FormPage {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     BinaryBundleExporter exporter = new BinaryBundleExporter();
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
+    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Dauer " + stopWatch.getElapsedTime());
   }
@@ -322,11 +324,11 @@ public class TransformationPage extends FormPage {
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
     pdeExporter.setUseClassifcationForExportDestination(true);
     // pdeExporter.setTemplateRootDirectory(templateDirectory);
-    new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext);
+    new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext, null);
 
     TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
     // targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
-    targetPlatformProjectExporter.export(modularizedSystem, exporterContext);
+    targetPlatformProjectExporter.export(modularizedSystem, exporterContext, null);
 
     System.out.println("exportAsProjects done!");
   }

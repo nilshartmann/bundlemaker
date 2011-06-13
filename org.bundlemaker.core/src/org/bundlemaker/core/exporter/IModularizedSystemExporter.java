@@ -11,6 +11,7 @@
 package org.bundlemaker.core.exporter;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -33,7 +34,10 @@ public interface IModularizedSystemExporter {
    *          the system to export.
    * @param context
    *          the context
+   * @param progressMonitor
+   *          the IProgressMonitor or null
    * @throws Exception
    */
-  void export(IModularizedSystem modularizedSystem, IModuleExporterContext context) throws Exception;
+  void export(IModularizedSystem modularizedSystem, IModuleExporterContext context, IProgressMonitor progressMonitor)
+      throws Exception;
 }
