@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.AbstractArtifactCache;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -198,6 +199,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
 
     // simply return null
     return null;
+  }
+  
+  @Override
+  public IModularizedSystem getModularizedSystem() {
+    return AdapterUtils.getModularizedSystem(this);
   }
 
   /**

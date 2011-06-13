@@ -10,9 +10,13 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.internal;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
  * <p>
@@ -88,6 +92,16 @@ public class BundleMakerUiUtils {
   public static void logErrorMessage(String message, Object... args) {
     IStatus error = newError(String.format(message, args), null);
     Activator.getDefault().getLog().log(error);
+  }
+
+  public static void refreshProjectExplorer(IBundleMakerProject bundleMakerProject) {
+    // TODO: better way to refresh BundleMaker Navigator entries?
+    IViewPart projectExplorerView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+        .findView("org.eclipse.ui.navigator.ProjectExplorer");
+    if (projectExplorerView instanceof CommonNavigator) {
+      CommonNavigator navigator = (CommonNavigator) projectExplorerView;
+      navigator.getCommonViewer().refresh(bundleMakerProject.getProject());
+    }
 
   }
 

@@ -1,5 +1,6 @@
 package org.bundlemaker.core.analysis;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 
 /**
@@ -44,4 +45,10 @@ public interface IAdvancedArtifact extends IArtifact {
    * @return
    */
   IArtifact getChild(String path);
+  
+  /**
+   * Returns the {@link IModularizedSystem} this artifact belongs to
+   * @return the modularized system, never null
+   */
+  public IModularizedSystem getModularizedSystem();
 }

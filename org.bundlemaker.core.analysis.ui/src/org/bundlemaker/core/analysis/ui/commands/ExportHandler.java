@@ -1,17 +1,21 @@
 package org.bundlemaker.core.analysis.ui.commands;
 
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
+import java.util.List;
+
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.commands.IHandler;
 
-public class ExportHandler extends AbstractHandler implements IHandler {
+public class ExportHandler extends AbstractBundleMakerHandler implements IHandler {
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerCommand#execute(java.util.List)
+   */
   @Override
-  public Object execute(ExecutionEvent event) throws ExecutionException {
+  protected void execute(List<IArtifact> selectedArtifacts) {
 
-    System.out.println("TEST TEST TEST TEST TEST");
-
-    return null;
+    System.out.println("selected: " + selectedArtifacts);
   }
+
 }

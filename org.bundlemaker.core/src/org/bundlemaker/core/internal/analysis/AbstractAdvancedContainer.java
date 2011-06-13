@@ -1,6 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
@@ -102,4 +103,14 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
       throw new RuntimeException("Can not add " + artifact + " to " + this);
     }
   }
+
+  /* (non-Javadoc)
+   * @see org.bundlemaker.core.analysis.IAdvancedArtifact#getModularizedSystem()
+   */
+  @Override
+  public IModularizedSystem getModularizedSystem() {
+    return AdapterUtils.getModularizedSystem(this);
+  }
+  
+  
 }
