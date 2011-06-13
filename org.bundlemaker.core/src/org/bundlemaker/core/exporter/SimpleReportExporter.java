@@ -16,13 +16,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
@@ -155,11 +154,13 @@ public class SimpleReportExporter extends AbstractExporter {
       fileWriter.write(builder.toString());
       fileWriter.flush();
       fileWriter.close();
+
     } catch (IOException e) {
       // TODO
       e.printStackTrace();
       throw new CoreException(new Status(IStatus.ERROR, "", ""));
     }
+
   }
 
   /**

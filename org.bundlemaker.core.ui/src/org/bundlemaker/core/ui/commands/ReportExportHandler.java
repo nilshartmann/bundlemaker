@@ -14,7 +14,6 @@ import java.io.File;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 
@@ -43,7 +42,7 @@ public class ReportExportHandler extends AbstractExportHandler {
         .getModularizedSystem().getBundleMakerProject(), destination, modularizedSystem);
     System.out.println("exportToSimpleReport...");
     SimpleReportExporter exporter = new SimpleReportExporter();
-    new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext);
+    doExport(exporter, modularizedSystem, exporterContext);
     System.out.println("exportToSimpleReport done!");
 
   }

@@ -14,7 +14,6 @@ import java.io.File;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
 
@@ -22,7 +21,7 @@ import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ExportHandler extends AbstractExportHandler {
+public class PdePluginProjectExportHandler extends AbstractExportHandler {
 
   /**
    * @param iArtifact
@@ -42,8 +41,9 @@ public class ExportHandler extends AbstractExportHandler {
     System.out.println("exportAsProjects to " + destination);
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
     pdeExporter.setUseClassifcationForExportDestination(true);
-    // pdeExporter.setTemplateRootDirectory(templateDirectory);
-    new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext);
+
+    // do the export
+    doExport(pdeExporter, modularizedSystem, exporterContext);
 
     System.out.println("exportAsProjects done!");
 

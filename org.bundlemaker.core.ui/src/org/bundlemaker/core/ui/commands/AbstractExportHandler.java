@@ -11,14 +11,24 @@
 package org.bundlemaker.core.ui.commands;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler;
+import org.bundlemaker.core.exporter.IModuleExporter;
+import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -34,10 +44,19 @@ public abstract class AbstractExportHandler extends AbstractBundleMakerHandler {
   @Override
   protected void execute(List<IArtifact> selectedArtifacts) throws Exception {
 
-    for (IArtifact iArtifact : selectedArtifacts) {
-      if (iArtifact instanceof IAdvancedArtifact) {
-        export((IAdvancedArtifact) iArtifact);
+    IArtifact currentArtifact = null;
+
+    try {
+      for (IArtifact iArtifact : selectedArtifacts) {
+        currentArtifact = iArtifact;
+        if (iArtifact instanceof IAdvancedArtifact) {
+          export((IAdvancedArtifact) iArtifact);
+        }
       }
+    } catch (Exception ex) {
+      reportError(Activator.PLUGIN_ID, "Could not export " + currentArtifact.getName() + ": " + ex, ex);
+      MessageDialog
+          .openError(new Shell(), "Export failed", "Could not export " + currentArtifact.getName() + ": " + ex);
     }
 
   }
@@ -50,6 +69,30 @@ public abstract class AbstractExportHandler extends AbstractBundleMakerHandler {
    * @throws Exception
    */
   protected abstract void export(IAdvancedArtifact advancedArtifact) throws Exception;
+
+  /**
+   * Executes the given exporter on a non-UI thread. The user gets feedback via ProgressMonitor
+   * 
+   * @param exporter
+   * @param modularizedSystem
+   * @param exporterContext
+   * @throws Exception
+   */
+  protected void doExport(final IModuleExporter exporter, final IModularizedSystem modularizedSystem,
+      final IModuleExporterContext exporterContext) throws Exception {
+
+    final ModularizedSystemExporterAdapter adapter = new ModularizedSystemExporterAdapter(exporter);
+
+    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+      public void run(final IProgressMonitor monitor) throws InvocationTargetException {
+        try {
+          adapter.export(modularizedSystem, exporterContext, monitor);
+        } catch (Exception ex) {
+          throw new InvocationTargetException(ex);
+        }
+      }
+    });
+  }
 
   protected File getDestinationDirectory() {
     DirectoryDialog dialog = new DirectoryDialog(new Shell());

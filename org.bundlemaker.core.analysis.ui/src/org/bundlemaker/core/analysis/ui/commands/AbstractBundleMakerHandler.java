@@ -64,14 +64,17 @@ public abstract class AbstractBundleMakerHandler extends AbstractHandler impleme
       try {
         execute(selectedArtifacts);
       } catch (Exception ex) {
-        Status errorStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Error while executing command: " + ex, ex);
-        Activator.getDefault().getLog().log(errorStatus);
+        reportError(Activator.PLUGIN_ID, "Error while executing command: " + ex, ex);
       }
-
     }
 
     // execute() methods always must return null
     return null;
+  }
+
+  protected void reportError(String pluginId, String message, Throwable ex) {
+    Status errorStatus = new Status(IStatus.ERROR, pluginId, message, ex);
+    Activator.getDefault().getLog().log(errorStatus);
   }
 
   /**

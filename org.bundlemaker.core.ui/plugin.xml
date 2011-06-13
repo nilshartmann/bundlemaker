@@ -74,7 +74,7 @@
    
    <!-- the commands -->
    <extension point="org.eclipse.ui.commands">
-      <command id="org.bundlemaker.core.ui.commands.ExportHandler" name="PDE Projects" /> 
+      <command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler" name="PDE Plug-in Projects" /> 
    </extension>  
     <extension point="org.eclipse.ui.commands">
       <command id="org.bundlemaker.core.ui.commands.ReportExportHandler" name="Simple Report" /> 
@@ -83,8 +83,8 @@
       <!-- the handlers -->
    <extension
          point="org.eclipse.ui.handlers">
-      <handler class="org.bundlemaker.core.ui.commands.ExportHandler"
-            commandId="org.bundlemaker.core.ui.commands.ExportHandler">
+      <handler class="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+            commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler">
          <activeWhen>
          <reference
                definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
@@ -120,7 +120,7 @@
 	       locationURI="popup:org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu">
 	       <menu
               label="Export as..." >
-            	<command commandId="org.bundlemaker.core.ui.commands.ExportHandler"
+            	<command commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
               			 style="push" />
               <command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
               			 style="push" />
