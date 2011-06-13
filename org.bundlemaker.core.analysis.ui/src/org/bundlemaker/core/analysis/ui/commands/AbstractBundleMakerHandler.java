@@ -14,11 +14,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.ui.Activator;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -58,7 +61,12 @@ public abstract class AbstractBundleMakerHandler extends AbstractHandler impleme
       }
 
       // Invoke execution method
-      execute(selectedArtifacts);
+      try {
+        execute(selectedArtifacts);
+      } catch (Exception ex) {
+        Status errorStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Error while executing command: " + ex, ex);
+        Activator.getDefault().getLog().log(errorStatus);
+      }
 
     }
 
@@ -73,6 +81,6 @@ public abstract class AbstractBundleMakerHandler extends AbstractHandler impleme
    *          The {@link IArtifact} objects that are selected in the tree. Never null.
    * @return
    */
-  protected abstract void execute(List<IArtifact> selectedArtifacts);
+  protected abstract void execute(List<IArtifact> selectedArtifacts) throws Exception;
 
 }

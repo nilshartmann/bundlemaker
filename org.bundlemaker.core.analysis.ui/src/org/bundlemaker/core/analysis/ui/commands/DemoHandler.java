@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
 
-public class ExportHandler extends AbstractBundleMakerHandler implements IHandler {
+public class DemoHandler extends AbstractBundleMakerHandler implements IHandler {
 
   /*
    * (non-Javadoc)
@@ -14,8 +16,7 @@ public class ExportHandler extends AbstractBundleMakerHandler implements IHandle
    */
   @Override
   protected void execute(List<IArtifact> selectedArtifacts) {
-
-    System.out.println("selected: " + selectedArtifacts);
+    MessageDialog.openInformation(new Shell(), "Artifact selected", "Selected artifacts: " + selectedArtifacts);
   }
 
 }
