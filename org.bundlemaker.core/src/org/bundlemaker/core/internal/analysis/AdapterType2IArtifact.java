@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact implements IResourceHolder, IAdvancedArtifact {
+public class AdapterType2IArtifact extends AbstractArtifact implements IResourceHolder, IAdvancedArtifact, ITypeHolder {
 
   /** the bundle maker type */
   private IType                       _type;
@@ -122,16 +122,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
   @Override
   public String getQualifiedName() {
     return _type.getFullyQualifiedName();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IType getBundleMakerType() {
-    return _type;
   }
 
   @Override
@@ -306,5 +296,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
   public IArtifact getChild(String path) {
     return null;
   }
+
+  @Override
+  public IType getAssociatedType() {
+    return _type;
+  }
+
+  
 
 }
