@@ -50,8 +50,9 @@ public class DependencyModel implements IDependencyModel {
       _artifactModel = ModelTransformer.transformWithAggregatedTypes(_modifiableModularizedSystem);
     } catch (CoreException e) {
       // TODO Auto-generated catch block
+      System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);
       e.printStackTrace();
-      throw new RuntimeException(e.getMessage(), e);
+      throw new RuntimeException("Error in ModelTransformer.transformWithAggregatedTypes: " + e.getMessage(), e);
     }
   }
 
