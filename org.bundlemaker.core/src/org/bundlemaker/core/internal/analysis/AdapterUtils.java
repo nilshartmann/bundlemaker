@@ -3,9 +3,11 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.runtime.Assert;
@@ -31,7 +33,7 @@ public class AdapterUtils {
    */
   public static IModifiableModularizedSystem getModularizedSystem(IArtifact artifact) {
 
-    IArtifact root = artifact.getParent(ArtifactType.Root);
+    IArtifact root = (artifact.getType() == ArtifactType.Root ? artifact : artifact.getParent(ArtifactType.Root));
 
     Assert.isNotNull(root);
     Assert.isTrue(root instanceof AdapterModularizedSystem2IArtifact);
@@ -235,6 +237,13 @@ public class AdapterUtils {
       // add the source resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE)
           .addAll(resourceHolder.getAssociatedSourceResources());
+      
+      // TODO !!!
+      if (resourceHolder instanceof AdapterType2IArtifact) {
+        IType type = ((AdapterType2IArtifact) resourceHolder).getBundleMakerType();
+        TypeContainer typeContainer = (TypeContainer) resourceModule.getModifiableSelfResourceContainer();
+        typeContainer.getModifiableContainedTypesMap().put(type.getFullyQualifiedName(), type);
+      }
     }
   }
 
@@ -258,6 +267,15 @@ public class AdapterUtils {
       // remove the source resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE)
           .removeAll(resourceHolder.getAssociatedSourceResources());
+      
+      if (resourceHolder instanceof AdapterType2IArtifact) {
+        AdapterType2IArtifact resourceHolder2 = (AdapterType2IArtifact) resourceHolder;
+        IType type = resourceHolder2.getBundleMakerType();
+        TypeContainer typeContainer = (TypeContainer) resourceModule.getModifiableSelfResourceContainer();
+        System.out.printf(" * Remove '%s' from '%s'%n", type.getFullyQualifiedName(),
+            resourceHolder2.getIdentifier());
+        typeContainer.getModifiableContainedTypesMap().remove(type.getFullyQualifiedName());
+      }      
     }
   }
 }

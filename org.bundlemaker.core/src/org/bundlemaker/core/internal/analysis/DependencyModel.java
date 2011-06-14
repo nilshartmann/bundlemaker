@@ -110,7 +110,7 @@ public class DependencyModel implements IDependencyModel {
 
       //
     case Group: {
-      return new AdapterGroup2IArtifact(name, null);
+      return new AdapterGroup2IArtifact(name, getRoot());
     }
 
       //
@@ -131,12 +131,12 @@ public class DependencyModel implements IDependencyModel {
       _modifiableModularizedSystem.getModifiableResourceModulesMap().remove(resourceModule.getModuleIdentifier());
 
       // create new resource module adapter
-      return new AdapterResourceModule2IArtifact(resourceModule, null);
+      return new AdapterResourceModule2IArtifact(resourceModule, getRoot());
     }
 
       //
     case Package: {
-      return new AdapterPackage2IArtifact(qualifiedName, null);
+      return new AdapterPackage2IArtifact(qualifiedName, getRoot());
     }
 
       //
