@@ -24,6 +24,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.DependencyKind;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependency;
 import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifact;
@@ -248,16 +249,16 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
         // map to dependency
         Dependency dependency = new Dependency(this, artifact);
 
-        // DependencyKind dependencyKind = DependencyKind.USES;
-        // if (reference.isImplements()) {
-        // dependencyKind = DependencyKind.IMPLEMENTS;
-        // } else if (reference.isExtends()) {
-        // dependencyKind = DependencyKind.EXTENDS;
-        // } else if (reference.isClassAnnotation()) {
-        // dependencyKind = DependencyKind.ANNOTATES;
-        // }
-        //
-        // dependency.setDependencyKind(dependencyKind);
+        DependencyKind dependencyKind = DependencyKind.USES;
+        if (reference.isImplements()) {
+          dependencyKind = DependencyKind.IMPLEMENTS;
+        } else if (reference.isExtends()) {
+          dependencyKind = DependencyKind.EXTENDS;
+        } else if (reference.isClassAnnotation()) {
+          dependencyKind = DependencyKind.ANNOTATES;
+        }
+
+        dependency.setDependencyKind(dependencyKind);
 
         _cachedDependencies.put(artifact, dependency);
       }
@@ -301,7 +302,5 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
   public IType getAssociatedType() {
     return _type;
   }
-
-  
 
 }
