@@ -71,6 +71,12 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
   @Override
   public void reinitializeCaches() {
+    if (Boolean.getBoolean("dont-reinitialize")) {
+      return;
+    }
+    
+    System.out.println(" --> reinitializeCaches()");
+    
     super.reinitializeCaches();
     _referencedModulesCache.clear();
   }

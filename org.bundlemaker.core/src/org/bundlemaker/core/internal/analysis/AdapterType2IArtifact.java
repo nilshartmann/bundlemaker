@@ -24,6 +24,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
+import org.bundlemaker.dependencyanalysis.base.model.DependencyKind;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependency;
 import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifact;
@@ -34,7 +35,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact implements IResourceHolder, IAdvancedArtifact {
+public class AdapterType2IArtifact extends AbstractArtifact implements IResourceHolder, IAdvancedArtifact, ITypeHolder {
 
   /** the bundle maker type */
   private IType                       _type;
@@ -122,16 +123,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
   @Override
   public String getQualifiedName() {
     return _type.getFullyQualifiedName();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IType getBundleMakerType() {
-    return _type;
   }
 
   @Override
@@ -258,16 +249,16 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
         // map to dependency
         Dependency dependency = new Dependency(this, artifact);
 
-        // DependencyKind dependencyKind = DependencyKind.USES;
-        // if (reference.isImplements()) {
-        // dependencyKind = DependencyKind.IMPLEMENTS;
-        // } else if (reference.isExtends()) {
-        // dependencyKind = DependencyKind.EXTENDS;
-        // } else if (reference.isClassAnnotation()) {
-        // dependencyKind = DependencyKind.ANNOTATES;
-        // }
-        //
-        // dependency.setDependencyKind(dependencyKind);
+        DependencyKind dependencyKind = DependencyKind.USES;
+        if (reference.isImplements()) {
+          dependencyKind = DependencyKind.IMPLEMENTS;
+        } else if (reference.isExtends()) {
+          dependencyKind = DependencyKind.EXTENDS;
+        } else if (reference.isClassAnnotation()) {
+          dependencyKind = DependencyKind.ANNOTATES;
+        }
+
+        dependency.setDependencyKind(dependencyKind);
 
         _cachedDependencies.put(artifact, dependency);
       }
@@ -305,6 +296,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
   @Override
   public IArtifact getChild(String path) {
     return null;
+  }
+
+  @Override
+  public IType getAssociatedType() {
+    return _type;
   }
 
 }

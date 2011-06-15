@@ -2,10 +2,15 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.runtime.Assert;
@@ -31,7 +36,7 @@ public class AdapterUtils {
    */
   public static IModifiableModularizedSystem getModularizedSystem(IArtifact artifact) {
 
-    IArtifact root = artifact.getParent(ArtifactType.Root);
+    IArtifact root = (artifact.getType() == ArtifactType.Root ? artifact : artifact.getParent(ArtifactType.Root));
 
     Assert.isNotNull(root);
     Assert.isTrue(root instanceof AdapterModularizedSystem2IArtifact);
@@ -106,6 +111,8 @@ public class AdapterUtils {
     //
     addResourcesToModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
         getAllContainedResourceHolder(artifact));
+    addTypesToModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
+        getAllContainedTypeHolder(artifact));
   }
 
   /**
@@ -124,6 +131,9 @@ public class AdapterUtils {
     //
     removeResourcesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
         getAllContainedResourceHolder(artifact));
+    removeTypesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
+        getAllContainedTypeHolder(artifact));
+
   }
 
   /**
@@ -145,6 +155,8 @@ public class AdapterUtils {
     //
     removeResourcesFromModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
         getAllContainedResourceHolder(package2Artifact));
+    removeTypesFromModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
+        getAllContainedTypeHolder(package2Artifact));    
   }
 
   /**
@@ -166,6 +178,8 @@ public class AdapterUtils {
     //
     addResourcesToModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
         getAllContainedResourceHolder(package2Artifact));
+    addTypesToModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
+        getAllContainedTypeHolder(package2Artifact));
   }
 
   /**
@@ -215,6 +229,27 @@ public class AdapterUtils {
     return result;
   }
 
+  private static List<ITypeHolder> getAllContainedTypeHolder(IArtifact artifact) {
+
+    List<ITypeHolder> result = new LinkedList<ITypeHolder>();
+
+    //
+    if (artifact instanceof ITypeHolder) {
+
+      result.add((ITypeHolder) artifact);
+
+      // DO NOT ADD THE CHILDREN OF 'IResourceHolder'
+
+    } else {
+      for (IArtifact child : artifact.getChildren()) {
+        result.addAll(getAllContainedTypeHolder(child));
+      }
+    }
+
+    //
+    return result;
+  }
+
   /**
    * <p>
    * </p>
@@ -235,6 +270,18 @@ public class AdapterUtils {
       // add the source resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE)
           .addAll(resourceHolder.getAssociatedSourceResources());
+      
+      }
+    }
+
+  private static void addTypesToModule(IModifiableResourceModule resourceModule, List<ITypeHolder> typeHolders) {
+    // Get the modifiable type container
+    IModifiableTypeContainer modifiableSelfTypeContainer = resourceModule.getModifiableSelfResourceContainer();
+    Map<String, IType> typesMap = modifiableSelfTypeContainer.getModifiableContainedTypesMap();
+    
+    for (ITypeHolder typeHolder : typeHolders) {
+      IType type = typeHolder.getAssociatedType();
+      typesMap.put(type.getFullyQualifiedName(), type);
     }
   }
 
@@ -258,6 +305,19 @@ public class AdapterUtils {
       // remove the source resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE)
           .removeAll(resourceHolder.getAssociatedSourceResources());
+      
+      }      
+    }
+
+  private static void removeTypesFromModule(IModifiableResourceModule resourceModule, List<ITypeHolder> typeHolders) {
+    // Get the modifiable type container
+    IModifiableTypeContainer modifiableSelfTypeContainer = resourceModule.getModifiableSelfResourceContainer();
+    Map<String, IType> typesMap = modifiableSelfTypeContainer.getModifiableContainedTypesMap();
+
+    // Remove all types from the container
+    for (ITypeHolder typeHolder : typeHolders) {
+      IType type = typeHolder.getAssociatedType();
+      typesMap.remove(type.getFullyQualifiedName());
     }
   }
 }
