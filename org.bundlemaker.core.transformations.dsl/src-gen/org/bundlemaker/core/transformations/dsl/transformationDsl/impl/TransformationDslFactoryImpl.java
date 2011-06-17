@@ -2,7 +2,6 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl.impl;
 
@@ -73,6 +72,7 @@ public class TransformationDslFactoryImpl extends EFactoryImpl implements Transf
       case TransformationDslPackage.REMOVE_FROM: return createRemoveFrom();
       case TransformationDslPackage.EMBED_INTO: return createEmbedInto();
       case TransformationDslPackage.CREATE_MODULE: return createCreateModule();
+      case TransformationDslPackage.LAYER: return createLayer();
       case TransformationDslPackage.FROM: return createFrom();
       case TransformationDslPackage.RESOURCE_SET: return createResourceSet();
       case TransformationDslPackage.MODULE_IDENTIFIER: return createModuleIdentifier();
@@ -135,6 +135,17 @@ public class TransformationDslFactoryImpl extends EFactoryImpl implements Transf
   {
     CreateModuleImpl createModule = new CreateModuleImpl();
     return createModule;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Layer createLayer()
+  {
+    LayerImpl layer = new LayerImpl();
+    return layer;
   }
 
   /**

@@ -36,10 +36,11 @@ protected class ThisRootNode extends RootToken {
 			case 2: return new RemoveFrom_Group(this, this, 2, inst);
 			case 3: return new EmbedInto_Group(this, this, 3, inst);
 			case 4: return new CreateModule_Group(this, this, 4, inst);
-			case 5: return new From_Group(this, this, 5, inst);
-			case 6: return new ResourceSet_Group(this, this, 6, inst);
-			case 7: return new ModuleIdentifier_Group(this, this, 7, inst);
-			case 8: return new ResourceList_Group(this, this, 8, inst);
+			case 5: return new Layer_Group(this, this, 5, inst);
+			case 6: return new From_Group(this, this, 6, inst);
+			case 7: return new ResourceSet_Group(this, this, 7, inst);
+			case 8: return new ModuleIdentifier_Group(this, this, 8, inst);
+			case 9: return new ResourceList_Group(this, this, 9, inst);
 			default: return null;
 		}	
 	}	
@@ -676,11 +677,11 @@ protected class EmbedInto_SemicolonKeyword_5 extends KeywordToken  {
 /************ begin Rule CreateModule ****************
  *
  * CreateModule:
- * 	"create-module" module=ModuleIdentifier from+=From* ";";
+ * 	"create-module" module=ModuleIdentifier layer=Layer? from+=From* ";";
  *
  **/
 
-// "create-module" module=ModuleIdentifier from+=From* ";"
+// "create-module" module=ModuleIdentifier layer=Layer? from+=From* ";"
 protected class CreateModule_Group extends GroupToken {
 	
 	public CreateModule_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -695,7 +696,7 @@ protected class CreateModule_Group extends GroupToken {
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new CreateModule_SemicolonKeyword_3(lastRuleCallOrigin, this, 0, inst);
+			case 0: return new CreateModule_SemicolonKeyword_4(lastRuleCallOrigin, this, 0, inst);
 			default: return null;
 		}	
 	}
@@ -776,16 +777,62 @@ protected class CreateModule_ModuleAssignment_1 extends AssignmentToken  {
 	}	
 }
 
-// from+=From*
-protected class CreateModule_FromAssignment_2 extends AssignmentToken  {
+// layer=Layer?
+protected class CreateModule_LayerAssignment_2 extends AssignmentToken  {
 	
-	public CreateModule_FromAssignment_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public CreateModule_LayerAssignment_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Assignment getGrammarElement() {
-		return grammarAccess.getCreateModuleAccess().getFromAssignment_2();
+		return grammarAccess.getCreateModuleAccess().getLayerAssignment_2();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Layer_Group(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("layer",false)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("layer");
+		if(value instanceof EObject) { // org::eclipse::xtext::impl::RuleCallImpl
+			IEObjectConsumer param = createEObjectConsumer((EObject)value);
+			if(param.isInstanceOf(grammarAccess.getLayerRule().getType().getClassifier())) {
+				type = AssignmentType.PARSER_RULE_CALL;
+				element = grammarAccess.getCreateModuleAccess().getLayerLayerParserRuleCall_2_0(); 
+				consumed = obj;
+				return param;
+			}
+		}
+		return null;
+	}
+
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		if(value == inst.getEObject() && !inst.isConsumed()) return null;
+		switch(index) {
+			case 0: return new CreateModule_ModuleAssignment_1(lastRuleCallOrigin, next, actIndex, consumed);
+			default: return null;
+		}	
+	}	
+}
+
+// from+=From*
+protected class CreateModule_FromAssignment_3 extends AssignmentToken  {
+	
+	public CreateModule_FromAssignment_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getCreateModuleAccess().getFromAssignment_3();
 	}
 
     @Override
@@ -804,7 +851,7 @@ protected class CreateModule_FromAssignment_2 extends AssignmentToken  {
 			IEObjectConsumer param = createEObjectConsumer((EObject)value);
 			if(param.isInstanceOf(grammarAccess.getFromRule().getType().getClassifier())) {
 				type = AssignmentType.PARSER_RULE_CALL;
-				element = grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_2_0(); 
+				element = grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_3_0(); 
 				consumed = obj;
 				return param;
 			}
@@ -816,30 +863,32 @@ protected class CreateModule_FromAssignment_2 extends AssignmentToken  {
 	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
 		if(value == inst.getEObject() && !inst.isConsumed()) return null;
 		switch(index) {
-			case 0: return new CreateModule_FromAssignment_2(lastRuleCallOrigin, next, actIndex, consumed);
-			case 1: return new CreateModule_ModuleAssignment_1(lastRuleCallOrigin, next, actIndex, consumed);
+			case 0: return new CreateModule_FromAssignment_3(lastRuleCallOrigin, next, actIndex, consumed);
+			case 1: return new CreateModule_LayerAssignment_2(lastRuleCallOrigin, next, actIndex, consumed);
+			case 2: return new CreateModule_ModuleAssignment_1(lastRuleCallOrigin, next, actIndex, consumed);
 			default: return null;
 		}	
 	}	
 }
 
 // ";"
-protected class CreateModule_SemicolonKeyword_3 extends KeywordToken  {
+protected class CreateModule_SemicolonKeyword_4 extends KeywordToken  {
 	
-	public CreateModule_SemicolonKeyword_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+	public CreateModule_SemicolonKeyword_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
 		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
 	}
 	
 	@Override
 	public Keyword getGrammarElement() {
-		return grammarAccess.getCreateModuleAccess().getSemicolonKeyword_3();
+		return grammarAccess.getCreateModuleAccess().getSemicolonKeyword_4();
 	}
 
     @Override
 	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
 		switch(index) {
-			case 0: return new CreateModule_FromAssignment_2(lastRuleCallOrigin, this, 0, inst);
-			case 1: return new CreateModule_ModuleAssignment_1(lastRuleCallOrigin, this, 1, inst);
+			case 0: return new CreateModule_FromAssignment_3(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new CreateModule_LayerAssignment_2(lastRuleCallOrigin, this, 1, inst);
+			case 2: return new CreateModule_ModuleAssignment_1(lastRuleCallOrigin, this, 2, inst);
 			default: return null;
 		}	
 	}
@@ -848,6 +897,101 @@ protected class CreateModule_SemicolonKeyword_3 extends KeywordToken  {
 
 
 /************ end Rule CreateModule ****************/
+
+
+/************ begin Rule Layer ****************
+ *
+ * Layer:
+ * 	"layer" layer=STRING;
+ *
+ **/
+
+// "layer" layer=STRING
+protected class Layer_Group extends GroupToken {
+	
+	public Layer_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getLayerAccess().getGroup();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Layer_LayerAssignment_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(getEObject().eClass() != grammarAccess.getLayerRule().getType().getClassifier())
+			return null;
+		return eObjectConsumer;
+	}
+
+}
+
+// "layer"
+protected class Layer_LayerKeyword_0 extends KeywordToken  {
+	
+	public Layer_LayerKeyword_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getLayerAccess().getLayerKeyword_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(this, index, index, inst);
+		}	
+	}
+
+}
+
+// layer=STRING
+protected class Layer_LayerAssignment_1 extends AssignmentToken  {
+	
+	public Layer_LayerAssignment_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getLayerAccess().getLayerAssignment_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new Layer_LayerKeyword_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("layer",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("layer");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getLayerAccess().getLayerSTRINGTerminalRuleCall_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getLayerAccess().getLayerSTRINGTerminalRuleCall_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+
+/************ end Rule Layer ****************/
 
 
 /************ begin Rule From ****************

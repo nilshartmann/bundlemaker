@@ -2,7 +2,6 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl;
 
@@ -192,13 +191,22 @@ public interface TransformationDslPackage extends EPackage
   int CREATE_MODULE__MODULE = TRANSFORMATION_FEATURE_COUNT + 0;
 
   /**
+   * The feature id for the '<em><b>Layer</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CREATE_MODULE__LAYER = TRANSFORMATION_FEATURE_COUNT + 1;
+
+  /**
    * The feature id for the '<em><b>From</b></em>' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int CREATE_MODULE__FROM = TRANSFORMATION_FEATURE_COUNT + 1;
+  int CREATE_MODULE__FROM = TRANSFORMATION_FEATURE_COUNT + 2;
 
   /**
    * The number of structural features of the '<em>Create Module</em>' class.
@@ -207,7 +215,35 @@ public interface TransformationDslPackage extends EPackage
    * @generated
    * @ordered
    */
-  int CREATE_MODULE_FEATURE_COUNT = TRANSFORMATION_FEATURE_COUNT + 2;
+  int CREATE_MODULE_FEATURE_COUNT = TRANSFORMATION_FEATURE_COUNT + 3;
+
+  /**
+   * The meta object id for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.LayerImpl <em>Layer</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.LayerImpl
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getLayer()
+   * @generated
+   */
+  int LAYER = 5;
+
+  /**
+   * The feature id for the '<em><b>Layer</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LAYER__LAYER = 0;
+
+  /**
+   * The number of structural features of the '<em>Layer</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int LAYER_FEATURE_COUNT = 1;
 
   /**
    * The meta object id for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.FromImpl <em>From</em>}' class.
@@ -217,7 +253,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getFrom()
    * @generated
    */
-  int FROM = 5;
+  int FROM = 6;
 
   /**
    * The feature id for the '<em><b>Resource Set</b></em>' containment reference.
@@ -245,7 +281,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getResourceSet()
    * @generated
    */
-  int RESOURCE_SET = 6;
+  int RESOURCE_SET = 7;
 
   /**
    * The feature id for the '<em><b>Module Identifier</b></em>' containment reference.
@@ -291,7 +327,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getModuleIdentifier()
    * @generated
    */
-  int MODULE_IDENTIFIER = 7;
+  int MODULE_IDENTIFIER = 8;
 
   /**
    * The feature id for the '<em><b>Modulename</b></em>' attribute.
@@ -328,7 +364,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getResourceList()
    * @generated
    */
-  int RESOURCE_LIST = 8;
+  int RESOURCE_LIST = 9;
 
   /**
    * The feature id for the '<em><b>Resources</b></em>' attribute list.
@@ -455,6 +491,17 @@ public interface TransformationDslPackage extends EPackage
   EReference getCreateModule_Module();
 
   /**
+   * Returns the meta object for the containment reference '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule#getLayer <em>Layer</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference '<em>Layer</em>'.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule#getLayer()
+   * @see #getCreateModule()
+   * @generated
+   */
+  EReference getCreateModule_Layer();
+
+  /**
    * Returns the meta object for the containment reference list '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule#getFrom <em>From</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -464,6 +511,27 @@ public interface TransformationDslPackage extends EPackage
    * @generated
    */
   EReference getCreateModule_From();
+
+  /**
+   * Returns the meta object for class '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.Layer <em>Layer</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Layer</em>'.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.Layer
+   * @generated
+   */
+  EClass getLayer();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.Layer#getLayer <em>Layer</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Layer</em>'.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.Layer#getLayer()
+   * @see #getLayer()
+   * @generated
+   */
+  EAttribute getLayer_Layer();
 
   /**
    * Returns the meta object for class '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.From <em>From</em>}'.
@@ -696,12 +764,38 @@ public interface TransformationDslPackage extends EPackage
     EReference CREATE_MODULE__MODULE = eINSTANCE.getCreateModule_Module();
 
     /**
+     * The meta object literal for the '<em><b>Layer</b></em>' containment reference feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CREATE_MODULE__LAYER = eINSTANCE.getCreateModule_Layer();
+
+    /**
      * The meta object literal for the '<em><b>From</b></em>' containment reference list feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
     EReference CREATE_MODULE__FROM = eINSTANCE.getCreateModule_From();
+
+    /**
+     * The meta object literal for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.LayerImpl <em>Layer</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.LayerImpl
+     * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getLayer()
+     * @generated
+     */
+    EClass LAYER = eINSTANCE.getLayer();
+
+    /**
+     * The meta object literal for the '<em><b>Layer</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute LAYER__LAYER = eINSTANCE.getLayer_Layer();
 
     /**
      * The meta object literal for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.FromImpl <em>From</em>}' class.

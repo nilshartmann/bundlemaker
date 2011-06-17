@@ -197,6 +197,34 @@ finally {
 
 
 
+// Entry rule entryRuleLayer
+entryRuleLayer 
+:
+{ before(grammarAccess.getLayerRule()); }
+	 ruleLayer
+{ after(grammarAccess.getLayerRule()); } 
+	 EOF 
+;
+
+// Rule Layer
+ruleLayer
+    @init {
+		int stackSize = keepStackSize();
+    }
+	:
+(
+{ before(grammarAccess.getLayerAccess().getGroup()); }
+(rule__Layer__Group__0)
+{ after(grammarAccess.getLayerAccess().getGroup()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+
 // Entry rule entryRuleFrom
 entryRuleFrom 
 :
@@ -796,9 +824,9 @@ rule__CreateModule__Group__2__Impl
     }
 :
 (
-{ before(grammarAccess.getCreateModuleAccess().getFromAssignment_2()); }
-(rule__CreateModule__FromAssignment_2)*
-{ after(grammarAccess.getCreateModuleAccess().getFromAssignment_2()); }
+{ before(grammarAccess.getCreateModuleAccess().getLayerAssignment_2()); }
+(rule__CreateModule__LayerAssignment_2)?
+{ after(grammarAccess.getCreateModuleAccess().getLayerAssignment_2()); }
 )
 
 ;
@@ -813,6 +841,7 @@ rule__CreateModule__Group__3
     }
 :
 	rule__CreateModule__Group__3__Impl
+	rule__CreateModule__Group__4
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -824,11 +853,39 @@ rule__CreateModule__Group__3__Impl
     }
 :
 (
-{ before(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_3()); }
+{ before(grammarAccess.getCreateModuleAccess().getFromAssignment_3()); }
+(rule__CreateModule__FromAssignment_3)*
+{ after(grammarAccess.getCreateModuleAccess().getFromAssignment_3()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__CreateModule__Group__4
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__CreateModule__Group__4__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__CreateModule__Group__4__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_4()); }
 
 	';' 
 
-{ after(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_3()); }
+{ after(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_4()); }
 )
 
 ;
@@ -839,6 +896,71 @@ finally {
 
 
 
+
+
+
+
+
+
+
+
+rule__Layer__Group__0
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__Layer__Group__0__Impl
+	rule__Layer__Group__1
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Layer__Group__0__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getLayerAccess().getLayerKeyword_0()); }
+
+	'layer' 
+
+{ after(grammarAccess.getLayerAccess().getLayerKeyword_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+
+rule__Layer__Group__1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+	rule__Layer__Group__1__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Layer__Group__1__Impl
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getLayerAccess().getLayerAssignment_1()); }
+(rule__Layer__LayerAssignment_1)
+{ after(grammarAccess.getLayerAccess().getLayerAssignment_1()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
 
 
 
@@ -1526,14 +1648,44 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__CreateModule__FromAssignment_2
+rule__CreateModule__LayerAssignment_2
     @init {
 		int stackSize = keepStackSize();
     }
 :
 (
-{ before(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_2_0()); }
-	ruleFrom{ after(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_2_0()); }
+{ before(grammarAccess.getCreateModuleAccess().getLayerLayerParserRuleCall_2_0()); }
+	ruleLayer{ after(grammarAccess.getCreateModuleAccess().getLayerLayerParserRuleCall_2_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__CreateModule__FromAssignment_3
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_3_0()); }
+	ruleFrom{ after(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_3_0()); }
+)
+
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__Layer__LayerAssignment_1
+    @init {
+		int stackSize = keepStackSize();
+    }
+:
+(
+{ before(grammarAccess.getLayerAccess().getLayerSTRINGTerminalRuleCall_1_0()); }
+	RULE_STRING{ after(grammarAccess.getLayerAccess().getLayerSTRINGTerminalRuleCall_1_0()); }
 )
 
 ;

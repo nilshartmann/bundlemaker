@@ -2,13 +2,13 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl.impl;
 
 import org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.EmbedInto;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.From;
+import org.bundlemaker.core.transformations.dsl.transformationDsl.Layer;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ModuleIdentifier;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.RemoveFrom;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceList;
@@ -67,6 +67,13 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
    * @generated
    */
   private EClass createModuleEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass layerEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -264,9 +271,39 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getCreateModule_From()
+  public EReference getCreateModule_Layer()
   {
     return (EReference)createModuleEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCreateModule_From()
+  {
+    return (EReference)createModuleEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLayer()
+  {
+    return layerEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getLayer_Layer()
+  {
+    return (EAttribute)layerEClass.getEStructuralFeatures().get(0);
   }
 
   /**
@@ -423,7 +460,11 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
 
     createModuleEClass = createEClass(CREATE_MODULE);
     createEReference(createModuleEClass, CREATE_MODULE__MODULE);
+    createEReference(createModuleEClass, CREATE_MODULE__LAYER);
     createEReference(createModuleEClass, CREATE_MODULE__FROM);
+
+    layerEClass = createEClass(LAYER);
+    createEAttribute(layerEClass, LAYER__LAYER);
 
     fromEClass = createEClass(FROM);
     createEReference(fromEClass, FROM__RESOURCE_SET);
@@ -489,7 +530,11 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
 
     initEClass(createModuleEClass, CreateModule.class, "CreateModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getCreateModule_Module(), this.getModuleIdentifier(), null, "module", null, 0, 1, CreateModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getCreateModule_Layer(), this.getLayer(), null, "layer", null, 0, 1, CreateModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCreateModule_From(), this.getFrom(), null, "from", null, 0, -1, CreateModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(layerEClass, Layer.class, "Layer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getLayer_Layer(), ecorePackage.getEString(), "layer", null, 0, 1, Layer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(fromEClass, From.class, "From", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getFrom_ResourceSet(), this.getResourceSet(), null, "resourceSet", null, 0, 1, From.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

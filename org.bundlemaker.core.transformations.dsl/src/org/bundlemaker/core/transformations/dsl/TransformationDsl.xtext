@@ -18,7 +18,11 @@ EmbedInto:
 ;
 
 CreateModule:
- 'create-module' module=ModuleIdentifier (from+=From)* ';'
+ 'create-module' module=ModuleIdentifier (layer=Layer)? (from+=From)* ';'
+;
+
+Layer:
+ 'layer' layer=STRING
 ;
 
 From:

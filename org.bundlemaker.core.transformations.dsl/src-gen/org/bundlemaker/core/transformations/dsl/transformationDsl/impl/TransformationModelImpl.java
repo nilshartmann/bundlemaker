@@ -2,7 +2,6 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl.impl;
 

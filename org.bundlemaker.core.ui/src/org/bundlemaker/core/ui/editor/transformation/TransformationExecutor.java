@@ -7,12 +7,14 @@ import java.util.List;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.transformations.EmbedModuleTransformation;
 import org.bundlemaker.core.transformations.RemoveResourcesTransformation;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.EmbedInto;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.From;
+import org.bundlemaker.core.transformations.dsl.transformationDsl.Layer;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ModuleIdentifier;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.RemoveFrom;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceSet;
@@ -20,6 +22,8 @@ import org.bundlemaker.core.transformations.dsl.transformationDsl.Transformation
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedModuleDefinition;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 
 public class TransformationExecutor {
@@ -52,7 +56,17 @@ public class TransformationExecutor {
   }
 
   private void apply(CreateModule createModule) {
-    ResourceSetBasedTransformation transformation = new ResourceSetBasedTransformation();
+
+    Layer layer = createModule.getLayer();
+    IPath classification = null;
+    if (layer != null) {
+      String layer2 = layer.getLayer();
+      if (layer2 != null) {
+        classification = new Path(layer2);
+      }
+    }
+
+    XResourceSetBasedTransformation transformation = new XResourceSetBasedTransformation(classification);
     ModuleIdentifier module = createModule.getModule();
     ResourceSetBasedModuleDefinition moduleDefinition = transformation.addModuleDefinition(module.getModulename(),
         module.getVersion());
@@ -64,6 +78,37 @@ public class TransformationExecutor {
     }
 
     add(transformation);
+  }
+
+  private class XResourceSetBasedTransformation extends ResourceSetBasedTransformation {
+    private final IPath _classification;
+
+    /**
+     * @param classification
+     */
+    public XResourceSetBasedTransformation(IPath classification) {
+      super();
+      _classification = classification;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation#setClassification(org.bundlemaker
+     * .core.transformations.resourceset.ResourceSetBasedModuleDefinition,
+     * org.bundlemaker.core.modules.modifiable.IModifiableResourceModule)
+     */
+    @Override
+    protected void setClassification(ResourceSetBasedModuleDefinition moduleDefinition,
+        IModifiableResourceModule targetResourceModule) {
+      if (_classification != null) {
+        targetResourceModule.setClassification(_classification);
+      } else {
+        super.setClassification(moduleDefinition, targetResourceModule);
+      }
+    }
+
   }
 
   private void apply(EmbedInto embedInto) {

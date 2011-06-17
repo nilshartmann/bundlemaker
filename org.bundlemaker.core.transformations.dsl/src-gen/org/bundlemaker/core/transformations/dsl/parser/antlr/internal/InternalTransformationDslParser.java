@@ -24,17 +24,17 @@ import java.util.ArrayList;
 @SuppressWarnings("all")
 public class InternalTransformationDslParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_BMID", "RULE_STRING", "RULE_ID", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'remove-from'", "';'", "'embed-into'", "'modules'", "','", "'create-module'", "'from'", "'include'", "'exclude'", "'.'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "RULE_STRING", "RULE_BMID", "RULE_ID", "RULE_INT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_WS", "RULE_ANY_OTHER", "'remove-from'", "';'", "'embed-into'", "'modules'", "','", "'create-module'", "'layer'", "'from'", "'include'", "'exclude'", "'.'"
     };
-    public static final int RULE_ML_COMMENT=8;
+    public static final int RULE_BMID=5;
     public static final int RULE_ID=6;
-    public static final int RULE_WS=10;
-    public static final int EOF=-1;
-    public static final int RULE_INT=7;
-    public static final int RULE_STRING=5;
+    public static final int RULE_STRING=4;
     public static final int RULE_ANY_OTHER=11;
-    public static final int RULE_BMID=4;
+    public static final int RULE_INT=7;
+    public static final int RULE_WS=10;
     public static final int RULE_SL_COMMENT=9;
+    public static final int EOF=-1;
+    public static final int RULE_ML_COMMENT=8;
 
         public InternalTransformationDslParser(TokenStream input) {
             super(input);
@@ -727,23 +727,25 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start ruleCreateModule
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:351:1: ruleCreateModule returns [EObject current=null] : ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_from_2_0= ruleFrom ) )* ';' ) ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:351:1: ruleCreateModule returns [EObject current=null] : ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_layer_2_0= ruleLayer ) )? ( (lv_from_3_0= ruleFrom ) )* ';' ) ;
     public final EObject ruleCreateModule() throws RecognitionException {
         EObject current = null;
 
         EObject lv_module_1_0 = null;
 
-        EObject lv_from_2_0 = null;
+        EObject lv_layer_2_0 = null;
+
+        EObject lv_from_3_0 = null;
 
 
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:356:6: ( ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_from_2_0= ruleFrom ) )* ';' ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:357:1: ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_from_2_0= ruleFrom ) )* ';' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:356:6: ( ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_layer_2_0= ruleLayer ) )? ( (lv_from_3_0= ruleFrom ) )* ';' ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:357:1: ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_layer_2_0= ruleLayer ) )? ( (lv_from_3_0= ruleFrom ) )* ';' )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:357:1: ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_from_2_0= ruleFrom ) )* ';' )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:357:3: 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_from_2_0= ruleFrom ) )* ';'
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:357:1: ( 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_layer_2_0= ruleLayer ) )? ( (lv_from_3_0= ruleFrom ) )* ';' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:357:3: 'create-module' ( (lv_module_1_0= ruleModuleIdentifier ) ) ( (lv_layer_2_0= ruleLayer ) )? ( (lv_from_3_0= ruleFrom ) )* ';'
             {
             match(input,17,FOLLOW_17_in_ruleCreateModule646); 
 
@@ -785,29 +787,76 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
             }
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:385:2: ( (lv_from_2_0= ruleFrom ) )*
-            loop4:
-            do {
-                int alt4=2;
-                int LA4_0 = input.LA(1);
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:385:2: ( (lv_layer_2_0= ruleLayer ) )?
+            int alt4=2;
+            int LA4_0 = input.LA(1);
 
-                if ( (LA4_0==18) ) {
-                    alt4=1;
+            if ( (LA4_0==18) ) {
+                alt4=1;
+            }
+            switch (alt4) {
+                case 1 :
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:386:1: (lv_layer_2_0= ruleLayer )
+                    {
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:386:1: (lv_layer_2_0= ruleLayer )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:387:3: lv_layer_2_0= ruleLayer
+                    {
+                     
+                    	        currentNode=createCompositeNode(grammarAccess.getCreateModuleAccess().getLayerLayerParserRuleCall_2_0(), currentNode); 
+                    	    
+                    pushFollow(FOLLOW_ruleLayer_in_ruleCreateModule688);
+                    lv_layer_2_0=ruleLayer();
+                    _fsp--;
+
+
+                    	        if (current==null) {
+                    	            current = factory.create(grammarAccess.getCreateModuleRule().getType().getClassifier());
+                    	            associateNodeWithAstElement(currentNode.getParent(), current);
+                    	        }
+                    	        try {
+                    	       		set(
+                    	       			current, 
+                    	       			"layer",
+                    	        		lv_layer_2_0, 
+                    	        		"Layer", 
+                    	        		currentNode);
+                    	        } catch (ValueConverterException vce) {
+                    				handleValueConverterException(vce);
+                    	        }
+                    	        currentNode = currentNode.getParent();
+                    	    
+
+                    }
+
+
+                    }
+                    break;
+
+            }
+
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:409:3: ( (lv_from_3_0= ruleFrom ) )*
+            loop5:
+            do {
+                int alt5=2;
+                int LA5_0 = input.LA(1);
+
+                if ( (LA5_0==19) ) {
+                    alt5=1;
                 }
 
 
-                switch (alt4) {
+                switch (alt5) {
             	case 1 :
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:386:1: (lv_from_2_0= ruleFrom )
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:410:1: (lv_from_3_0= ruleFrom )
             	    {
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:386:1: (lv_from_2_0= ruleFrom )
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:387:3: lv_from_2_0= ruleFrom
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:410:1: (lv_from_3_0= ruleFrom )
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:411:3: lv_from_3_0= ruleFrom
             	    {
             	     
-            	    	        currentNode=createCompositeNode(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_2_0(), currentNode); 
+            	    	        currentNode=createCompositeNode(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_3_0(), currentNode); 
             	    	    
-            	    pushFollow(FOLLOW_ruleFrom_in_ruleCreateModule688);
-            	    lv_from_2_0=ruleFrom();
+            	    pushFollow(FOLLOW_ruleFrom_in_ruleCreateModule710);
+            	    lv_from_3_0=ruleFrom();
             	    _fsp--;
 
 
@@ -819,7 +868,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
             	    	       		add(
             	    	       			current, 
             	    	       			"from",
-            	    	        		lv_from_2_0, 
+            	    	        		lv_from_3_0, 
             	    	        		"From", 
             	    	        		currentNode);
             	    	        } catch (ValueConverterException vce) {
@@ -835,13 +884,13 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
             	    break;
 
             	default :
-            	    break loop4;
+            	    break loop5;
                 }
             } while (true);
 
-            match(input,13,FOLLOW_13_in_ruleCreateModule699); 
+            match(input,13,FOLLOW_13_in_ruleCreateModule721); 
 
-                    createLeafNode(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_3(), null); 
+                    createLeafNode(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_4(), null); 
                 
 
             }
@@ -865,8 +914,118 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
     // $ANTLR end ruleCreateModule
 
 
+    // $ANTLR start entryRuleLayer
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:445:1: entryRuleLayer returns [EObject current=null] : iv_ruleLayer= ruleLayer EOF ;
+    public final EObject entryRuleLayer() throws RecognitionException {
+        EObject current = null;
+
+        EObject iv_ruleLayer = null;
+
+
+        try {
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:446:2: (iv_ruleLayer= ruleLayer EOF )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:447:2: iv_ruleLayer= ruleLayer EOF
+            {
+             currentNode = createCompositeNode(grammarAccess.getLayerRule(), currentNode); 
+            pushFollow(FOLLOW_ruleLayer_in_entryRuleLayer757);
+            iv_ruleLayer=ruleLayer();
+            _fsp--;
+
+             current =iv_ruleLayer; 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleLayer767); 
+
+            }
+
+        }
+         
+            catch (RecognitionException re) { 
+                recover(input,re); 
+                appendSkippedTokens();
+            } 
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end entryRuleLayer
+
+
+    // $ANTLR start ruleLayer
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:454:1: ruleLayer returns [EObject current=null] : ( 'layer' ( (lv_layer_1_0= RULE_STRING ) ) ) ;
+    public final EObject ruleLayer() throws RecognitionException {
+        EObject current = null;
+
+        Token lv_layer_1_0=null;
+
+         EObject temp=null; setCurrentLookahead(); resetLookahead(); 
+            
+        try {
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:459:6: ( ( 'layer' ( (lv_layer_1_0= RULE_STRING ) ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:460:1: ( 'layer' ( (lv_layer_1_0= RULE_STRING ) ) )
+            {
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:460:1: ( 'layer' ( (lv_layer_1_0= RULE_STRING ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:460:3: 'layer' ( (lv_layer_1_0= RULE_STRING ) )
+            {
+            match(input,18,FOLLOW_18_in_ruleLayer802); 
+
+                    createLeafNode(grammarAccess.getLayerAccess().getLayerKeyword_0(), null); 
+                
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:464:1: ( (lv_layer_1_0= RULE_STRING ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:465:1: (lv_layer_1_0= RULE_STRING )
+            {
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:465:1: (lv_layer_1_0= RULE_STRING )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:466:3: lv_layer_1_0= RULE_STRING
+            {
+            lv_layer_1_0=(Token)input.LT(1);
+            match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleLayer819); 
+
+            			createLeafNode(grammarAccess.getLayerAccess().getLayerSTRINGTerminalRuleCall_1_0(), "layer"); 
+            		
+
+            	        if (current==null) {
+            	            current = factory.create(grammarAccess.getLayerRule().getType().getClassifier());
+            	            associateNodeWithAstElement(currentNode, current);
+            	        }
+            	        try {
+            	       		set(
+            	       			current, 
+            	       			"layer",
+            	        		lv_layer_1_0, 
+            	        		"STRING", 
+            	        		lastConsumedNode);
+            	        } catch (ValueConverterException vce) {
+            				handleValueConverterException(vce);
+            	        }
+            	    
+
+            }
+
+
+            }
+
+
+            }
+
+
+            }
+
+             resetLookahead(); 
+                	lastConsumedNode = currentNode;
+                
+        }
+         
+            catch (RecognitionException re) { 
+                recover(input,re); 
+                appendSkippedTokens();
+            } 
+        finally {
+        }
+        return current;
+    }
+    // $ANTLR end ruleLayer
+
+
     // $ANTLR start entryRuleFrom
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:421:1: entryRuleFrom returns [EObject current=null] : iv_ruleFrom= ruleFrom EOF ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:496:1: entryRuleFrom returns [EObject current=null] : iv_ruleFrom= ruleFrom EOF ;
     public final EObject entryRuleFrom() throws RecognitionException {
         EObject current = null;
 
@@ -874,16 +1033,16 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:422:2: (iv_ruleFrom= ruleFrom EOF )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:423:2: iv_ruleFrom= ruleFrom EOF
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:497:2: (iv_ruleFrom= ruleFrom EOF )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:498:2: iv_ruleFrom= ruleFrom EOF
             {
              currentNode = createCompositeNode(grammarAccess.getFromRule(), currentNode); 
-            pushFollow(FOLLOW_ruleFrom_in_entryRuleFrom735);
+            pushFollow(FOLLOW_ruleFrom_in_entryRuleFrom860);
             iv_ruleFrom=ruleFrom();
             _fsp--;
 
              current =iv_ruleFrom; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleFrom745); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleFrom870); 
 
             }
 
@@ -901,7 +1060,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start ruleFrom
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:430:1: ruleFrom returns [EObject current=null] : ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) ) ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:505:1: ruleFrom returns [EObject current=null] : ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) ) ;
     public final EObject ruleFrom() throws RecognitionException {
         EObject current = null;
 
@@ -911,26 +1070,26 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:435:6: ( ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:436:1: ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:510:6: ( ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:511:1: ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:436:1: ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:436:3: 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:511:1: ( 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:511:3: 'from' ( (lv_resourceSet_1_0= ruleResourceSet ) )
             {
-            match(input,18,FOLLOW_18_in_ruleFrom780); 
+            match(input,19,FOLLOW_19_in_ruleFrom905); 
 
                     createLeafNode(grammarAccess.getFromAccess().getFromKeyword_0(), null); 
                 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:440:1: ( (lv_resourceSet_1_0= ruleResourceSet ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:441:1: (lv_resourceSet_1_0= ruleResourceSet )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:515:1: ( (lv_resourceSet_1_0= ruleResourceSet ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:516:1: (lv_resourceSet_1_0= ruleResourceSet )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:441:1: (lv_resourceSet_1_0= ruleResourceSet )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:442:3: lv_resourceSet_1_0= ruleResourceSet
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:516:1: (lv_resourceSet_1_0= ruleResourceSet )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:517:3: lv_resourceSet_1_0= ruleResourceSet
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getFromAccess().getResourceSetResourceSetParserRuleCall_1_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleResourceSet_in_ruleFrom801);
+            pushFollow(FOLLOW_ruleResourceSet_in_ruleFrom926);
             lv_resourceSet_1_0=ruleResourceSet();
             _fsp--;
 
@@ -980,7 +1139,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start entryRuleResourceSet
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:472:1: entryRuleResourceSet returns [EObject current=null] : iv_ruleResourceSet= ruleResourceSet EOF ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:547:1: entryRuleResourceSet returns [EObject current=null] : iv_ruleResourceSet= ruleResourceSet EOF ;
     public final EObject entryRuleResourceSet() throws RecognitionException {
         EObject current = null;
 
@@ -988,16 +1147,16 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:473:2: (iv_ruleResourceSet= ruleResourceSet EOF )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:474:2: iv_ruleResourceSet= ruleResourceSet EOF
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:548:2: (iv_ruleResourceSet= ruleResourceSet EOF )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:549:2: iv_ruleResourceSet= ruleResourceSet EOF
             {
              currentNode = createCompositeNode(grammarAccess.getResourceSetRule(), currentNode); 
-            pushFollow(FOLLOW_ruleResourceSet_in_entryRuleResourceSet837);
+            pushFollow(FOLLOW_ruleResourceSet_in_entryRuleResourceSet962);
             iv_ruleResourceSet=ruleResourceSet();
             _fsp--;
 
              current =iv_ruleResourceSet; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleResourceSet847); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleResourceSet972); 
 
             }
 
@@ -1015,7 +1174,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start ruleResourceSet
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:481:1: ruleResourceSet returns [EObject current=null] : ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? ) ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:556:1: ruleResourceSet returns [EObject current=null] : ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? ) ;
     public final EObject ruleResourceSet() throws RecognitionException {
         EObject current = null;
 
@@ -1029,22 +1188,22 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:486:6: ( ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:487:1: ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:561:6: ( ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:562:1: ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:487:1: ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:487:2: ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )?
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:562:1: ( ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )? )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:562:2: ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) ) ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )? ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )?
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:487:2: ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:488:1: (lv_moduleIdentifier_0_0= ruleModuleIdentifier )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:562:2: ( (lv_moduleIdentifier_0_0= ruleModuleIdentifier ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:563:1: (lv_moduleIdentifier_0_0= ruleModuleIdentifier )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:488:1: (lv_moduleIdentifier_0_0= ruleModuleIdentifier )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:489:3: lv_moduleIdentifier_0_0= ruleModuleIdentifier
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:563:1: (lv_moduleIdentifier_0_0= ruleModuleIdentifier )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:564:3: lv_moduleIdentifier_0_0= ruleModuleIdentifier
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getResourceSetAccess().getModuleIdentifierModuleIdentifierParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleModuleIdentifier_in_ruleResourceSet893);
+            pushFollow(FOLLOW_ruleModuleIdentifier_in_ruleResourceSet1018);
             lv_moduleIdentifier_0_0=ruleModuleIdentifier();
             _fsp--;
 
@@ -1071,31 +1230,31 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
             }
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:511:2: ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )?
-            int alt5=2;
-            int LA5_0 = input.LA(1);
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:586:2: ( 'include' ( (lv_includeResources_2_0= ruleResourceList ) ) )?
+            int alt6=2;
+            int LA6_0 = input.LA(1);
 
-            if ( (LA5_0==19) ) {
-                alt5=1;
+            if ( (LA6_0==20) ) {
+                alt6=1;
             }
-            switch (alt5) {
+            switch (alt6) {
                 case 1 :
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:511:4: 'include' ( (lv_includeResources_2_0= ruleResourceList ) )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:586:4: 'include' ( (lv_includeResources_2_0= ruleResourceList ) )
                     {
-                    match(input,19,FOLLOW_19_in_ruleResourceSet904); 
+                    match(input,20,FOLLOW_20_in_ruleResourceSet1029); 
 
                             createLeafNode(grammarAccess.getResourceSetAccess().getIncludeKeyword_1_0(), null); 
                         
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:515:1: ( (lv_includeResources_2_0= ruleResourceList ) )
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:516:1: (lv_includeResources_2_0= ruleResourceList )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:590:1: ( (lv_includeResources_2_0= ruleResourceList ) )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:591:1: (lv_includeResources_2_0= ruleResourceList )
                     {
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:516:1: (lv_includeResources_2_0= ruleResourceList )
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:517:3: lv_includeResources_2_0= ruleResourceList
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:591:1: (lv_includeResources_2_0= ruleResourceList )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:592:3: lv_includeResources_2_0= ruleResourceList
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getResourceSetAccess().getIncludeResourcesResourceListParserRuleCall_1_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleResourceList_in_ruleResourceSet925);
+                    pushFollow(FOLLOW_ruleResourceList_in_ruleResourceSet1050);
                     lv_includeResources_2_0=ruleResourceList();
                     _fsp--;
 
@@ -1128,31 +1287,31 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
             }
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:539:4: ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )?
-            int alt6=2;
-            int LA6_0 = input.LA(1);
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:614:4: ( 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) ) )?
+            int alt7=2;
+            int LA7_0 = input.LA(1);
 
-            if ( (LA6_0==20) ) {
-                alt6=1;
+            if ( (LA7_0==21) ) {
+                alt7=1;
             }
-            switch (alt6) {
+            switch (alt7) {
                 case 1 :
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:539:6: 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:614:6: 'exclude' ( (lv_excludeResources_4_0= ruleResourceList ) )
                     {
-                    match(input,20,FOLLOW_20_in_ruleResourceSet938); 
+                    match(input,21,FOLLOW_21_in_ruleResourceSet1063); 
 
                             createLeafNode(grammarAccess.getResourceSetAccess().getExcludeKeyword_2_0(), null); 
                         
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:543:1: ( (lv_excludeResources_4_0= ruleResourceList ) )
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:544:1: (lv_excludeResources_4_0= ruleResourceList )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:618:1: ( (lv_excludeResources_4_0= ruleResourceList ) )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:619:1: (lv_excludeResources_4_0= ruleResourceList )
                     {
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:544:1: (lv_excludeResources_4_0= ruleResourceList )
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:545:3: lv_excludeResources_4_0= ruleResourceList
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:619:1: (lv_excludeResources_4_0= ruleResourceList )
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:620:3: lv_excludeResources_4_0= ruleResourceList
                     {
                      
                     	        currentNode=createCompositeNode(grammarAccess.getResourceSetAccess().getExcludeResourcesResourceListParserRuleCall_2_1_0(), currentNode); 
                     	    
-                    pushFollow(FOLLOW_ruleResourceList_in_ruleResourceSet959);
+                    pushFollow(FOLLOW_ruleResourceList_in_ruleResourceSet1084);
                     lv_excludeResources_4_0=ruleResourceList();
                     _fsp--;
 
@@ -1208,7 +1367,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start entryRuleMODULEID
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:575:1: entryRuleMODULEID returns [String current=null] : iv_ruleMODULEID= ruleMODULEID EOF ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:650:1: entryRuleMODULEID returns [String current=null] : iv_ruleMODULEID= ruleMODULEID EOF ;
     public final String entryRuleMODULEID() throws RecognitionException {
         String current = null;
 
@@ -1216,16 +1375,16 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:576:2: (iv_ruleMODULEID= ruleMODULEID EOF )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:577:2: iv_ruleMODULEID= ruleMODULEID EOF
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:651:2: (iv_ruleMODULEID= ruleMODULEID EOF )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:652:2: iv_ruleMODULEID= ruleMODULEID EOF
             {
              currentNode = createCompositeNode(grammarAccess.getMODULEIDRule(), currentNode); 
-            pushFollow(FOLLOW_ruleMODULEID_in_entryRuleMODULEID998);
+            pushFollow(FOLLOW_ruleMODULEID_in_entryRuleMODULEID1123);
             iv_ruleMODULEID=ruleMODULEID();
             _fsp--;
 
              current =iv_ruleMODULEID.getText(); 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleMODULEID1009); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleMODULEID1134); 
 
             }
 
@@ -1243,7 +1402,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start ruleMODULEID
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:584:1: ruleMODULEID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* ) ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:659:1: ruleMODULEID returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] : (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* ) ;
     public final AntlrDatatypeRuleToken ruleMODULEID() throws RecognitionException {
         AntlrDatatypeRuleToken current = new AntlrDatatypeRuleToken();
 
@@ -1254,43 +1413,43 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
          setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:589:6: ( (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:590:1: (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:664:6: ( (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:665:1: (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:590:1: (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:590:6: this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:665:1: (this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )* )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:665:6: this_BMID_0= RULE_BMID (kw= '.' this_BMID_2= RULE_BMID )*
             {
             this_BMID_0=(Token)input.LT(1);
-            match(input,RULE_BMID,FOLLOW_RULE_BMID_in_ruleMODULEID1049); 
+            match(input,RULE_BMID,FOLLOW_RULE_BMID_in_ruleMODULEID1174); 
 
             		current.merge(this_BMID_0);
                 
              
                 createLeafNode(grammarAccess.getMODULEIDAccess().getBMIDTerminalRuleCall_0(), null); 
                 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:597:1: (kw= '.' this_BMID_2= RULE_BMID )*
-            loop7:
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:672:1: (kw= '.' this_BMID_2= RULE_BMID )*
+            loop8:
             do {
-                int alt7=2;
-                int LA7_0 = input.LA(1);
+                int alt8=2;
+                int LA8_0 = input.LA(1);
 
-                if ( (LA7_0==21) ) {
-                    alt7=1;
+                if ( (LA8_0==22) ) {
+                    alt8=1;
                 }
 
 
-                switch (alt7) {
+                switch (alt8) {
             	case 1 :
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:598:2: kw= '.' this_BMID_2= RULE_BMID
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:673:2: kw= '.' this_BMID_2= RULE_BMID
             	    {
             	    kw=(Token)input.LT(1);
-            	    match(input,21,FOLLOW_21_in_ruleMODULEID1068); 
+            	    match(input,22,FOLLOW_22_in_ruleMODULEID1193); 
 
             	            current.merge(kw);
             	            createLeafNode(grammarAccess.getMODULEIDAccess().getFullStopKeyword_1_0(), null); 
             	        
             	    this_BMID_2=(Token)input.LT(1);
-            	    match(input,RULE_BMID,FOLLOW_RULE_BMID_in_ruleMODULEID1083); 
+            	    match(input,RULE_BMID,FOLLOW_RULE_BMID_in_ruleMODULEID1208); 
 
             	    		current.merge(this_BMID_2);
             	        
@@ -1302,7 +1461,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
             	    break;
 
             	default :
-            	    break loop7;
+            	    break loop8;
                 }
             } while (true);
 
@@ -1329,7 +1488,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start entryRuleModuleIdentifier
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:618:1: entryRuleModuleIdentifier returns [EObject current=null] : iv_ruleModuleIdentifier= ruleModuleIdentifier EOF ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:693:1: entryRuleModuleIdentifier returns [EObject current=null] : iv_ruleModuleIdentifier= ruleModuleIdentifier EOF ;
     public final EObject entryRuleModuleIdentifier() throws RecognitionException {
         EObject current = null;
 
@@ -1337,16 +1496,16 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:619:2: (iv_ruleModuleIdentifier= ruleModuleIdentifier EOF )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:620:2: iv_ruleModuleIdentifier= ruleModuleIdentifier EOF
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:694:2: (iv_ruleModuleIdentifier= ruleModuleIdentifier EOF )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:695:2: iv_ruleModuleIdentifier= ruleModuleIdentifier EOF
             {
              currentNode = createCompositeNode(grammarAccess.getModuleIdentifierRule(), currentNode); 
-            pushFollow(FOLLOW_ruleModuleIdentifier_in_entryRuleModuleIdentifier1130);
+            pushFollow(FOLLOW_ruleModuleIdentifier_in_entryRuleModuleIdentifier1255);
             iv_ruleModuleIdentifier=ruleModuleIdentifier();
             _fsp--;
 
              current =iv_ruleModuleIdentifier; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleModuleIdentifier1140); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleModuleIdentifier1265); 
 
             }
 
@@ -1364,7 +1523,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start ruleModuleIdentifier
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:627:1: ruleModuleIdentifier returns [EObject current=null] : ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) ) ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:702:1: ruleModuleIdentifier returns [EObject current=null] : ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) ) ;
     public final EObject ruleModuleIdentifier() throws RecognitionException {
         EObject current = null;
 
@@ -1375,22 +1534,22 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:632:6: ( ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:633:1: ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:707:6: ( ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:708:1: ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:633:1: ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:633:2: ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:708:1: ( ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:708:2: ( (lv_modulename_0_0= ruleMODULEID ) ) ( (lv_version_1_0= RULE_STRING ) )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:633:2: ( (lv_modulename_0_0= ruleMODULEID ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:634:1: (lv_modulename_0_0= ruleMODULEID )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:708:2: ( (lv_modulename_0_0= ruleMODULEID ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:709:1: (lv_modulename_0_0= ruleMODULEID )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:634:1: (lv_modulename_0_0= ruleMODULEID )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:635:3: lv_modulename_0_0= ruleMODULEID
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:709:1: (lv_modulename_0_0= ruleMODULEID )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:710:3: lv_modulename_0_0= ruleMODULEID
             {
              
             	        currentNode=createCompositeNode(grammarAccess.getModuleIdentifierAccess().getModulenameMODULEIDParserRuleCall_0_0(), currentNode); 
             	    
-            pushFollow(FOLLOW_ruleMODULEID_in_ruleModuleIdentifier1186);
+            pushFollow(FOLLOW_ruleMODULEID_in_ruleModuleIdentifier1311);
             lv_modulename_0_0=ruleMODULEID();
             _fsp--;
 
@@ -1417,14 +1576,14 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
             }
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:657:2: ( (lv_version_1_0= RULE_STRING ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:658:1: (lv_version_1_0= RULE_STRING )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:732:2: ( (lv_version_1_0= RULE_STRING ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:733:1: (lv_version_1_0= RULE_STRING )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:658:1: (lv_version_1_0= RULE_STRING )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:659:3: lv_version_1_0= RULE_STRING
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:733:1: (lv_version_1_0= RULE_STRING )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:734:3: lv_version_1_0= RULE_STRING
             {
             lv_version_1_0=(Token)input.LT(1);
-            match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleModuleIdentifier1203); 
+            match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleModuleIdentifier1328); 
 
             			createLeafNode(grammarAccess.getModuleIdentifierAccess().getVersionSTRINGTerminalRuleCall_1_0(), "version"); 
             		
@@ -1473,7 +1632,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start entryRuleResourceList
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:689:1: entryRuleResourceList returns [EObject current=null] : iv_ruleResourceList= ruleResourceList EOF ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:764:1: entryRuleResourceList returns [EObject current=null] : iv_ruleResourceList= ruleResourceList EOF ;
     public final EObject entryRuleResourceList() throws RecognitionException {
         EObject current = null;
 
@@ -1481,16 +1640,16 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:690:2: (iv_ruleResourceList= ruleResourceList EOF )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:691:2: iv_ruleResourceList= ruleResourceList EOF
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:765:2: (iv_ruleResourceList= ruleResourceList EOF )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:766:2: iv_ruleResourceList= ruleResourceList EOF
             {
              currentNode = createCompositeNode(grammarAccess.getResourceListRule(), currentNode); 
-            pushFollow(FOLLOW_ruleResourceList_in_entryRuleResourceList1244);
+            pushFollow(FOLLOW_ruleResourceList_in_entryRuleResourceList1369);
             iv_ruleResourceList=ruleResourceList();
             _fsp--;
 
              current =iv_ruleResourceList; 
-            match(input,EOF,FOLLOW_EOF_in_entryRuleResourceList1254); 
+            match(input,EOF,FOLLOW_EOF_in_entryRuleResourceList1379); 
 
             }
 
@@ -1508,7 +1667,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
 
     // $ANTLR start ruleResourceList
-    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:698:1: ruleResourceList returns [EObject current=null] : ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* ) ;
+    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:773:1: ruleResourceList returns [EObject current=null] : ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* ) ;
     public final EObject ruleResourceList() throws RecognitionException {
         EObject current = null;
 
@@ -1518,20 +1677,20 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
          EObject temp=null; setCurrentLookahead(); resetLookahead(); 
             
         try {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:703:6: ( ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:704:1: ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:778:6: ( ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:779:1: ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:704:1: ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:704:2: ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:779:1: ( ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )* )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:779:2: ( (lv_resources_0_0= RULE_STRING ) ) ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )*
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:704:2: ( (lv_resources_0_0= RULE_STRING ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:705:1: (lv_resources_0_0= RULE_STRING )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:779:2: ( (lv_resources_0_0= RULE_STRING ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:780:1: (lv_resources_0_0= RULE_STRING )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:705:1: (lv_resources_0_0= RULE_STRING )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:706:3: lv_resources_0_0= RULE_STRING
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:780:1: (lv_resources_0_0= RULE_STRING )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:781:3: lv_resources_0_0= RULE_STRING
             {
             lv_resources_0_0=(Token)input.LT(1);
-            match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleResourceList1296); 
+            match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleResourceList1421); 
 
             			createLeafNode(grammarAccess.getResourceListAccess().getResourcesSTRINGTerminalRuleCall_0_0(), "resources"); 
             		
@@ -1557,33 +1716,33 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
 
             }
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:728:2: ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )*
-            loop8:
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:803:2: ( ',' ( (lv_resources_2_0= RULE_STRING ) ) )*
+            loop9:
             do {
-                int alt8=2;
-                int LA8_0 = input.LA(1);
+                int alt9=2;
+                int LA9_0 = input.LA(1);
 
-                if ( (LA8_0==16) ) {
-                    alt8=1;
+                if ( (LA9_0==16) ) {
+                    alt9=1;
                 }
 
 
-                switch (alt8) {
+                switch (alt9) {
             	case 1 :
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:728:4: ',' ( (lv_resources_2_0= RULE_STRING ) )
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:803:4: ',' ( (lv_resources_2_0= RULE_STRING ) )
             	    {
-            	    match(input,16,FOLLOW_16_in_ruleResourceList1312); 
+            	    match(input,16,FOLLOW_16_in_ruleResourceList1437); 
 
             	            createLeafNode(grammarAccess.getResourceListAccess().getCommaKeyword_1_0(), null); 
             	        
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:732:1: ( (lv_resources_2_0= RULE_STRING ) )
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:733:1: (lv_resources_2_0= RULE_STRING )
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:807:1: ( (lv_resources_2_0= RULE_STRING ) )
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:808:1: (lv_resources_2_0= RULE_STRING )
             	    {
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:733:1: (lv_resources_2_0= RULE_STRING )
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:734:3: lv_resources_2_0= RULE_STRING
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:808:1: (lv_resources_2_0= RULE_STRING )
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:809:3: lv_resources_2_0= RULE_STRING
             	    {
             	    lv_resources_2_0=(Token)input.LT(1);
-            	    match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleResourceList1329); 
+            	    match(input,RULE_STRING,FOLLOW_RULE_STRING_in_ruleResourceList1454); 
 
             	    			createLeafNode(grammarAccess.getResourceListAccess().getResourcesSTRINGTerminalRuleCall_1_1_0(), "resources"); 
             	    		
@@ -1614,7 +1773,7 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
             	    break;
 
             	default :
-            	    break loop8;
+            	    break loop9;
                 }
             } while (true);
 
@@ -1652,48 +1811,53 @@ public class InternalTransformationDslParser extends AbstractInternalAntlrParser
     public static final BitSet FOLLOW_ruleCreateModule_in_ruleTransformation277 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleRemoveFrom_in_entryRuleRemoveFrom312 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleRemoveFrom322 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_12_in_ruleRemoveFrom357 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_12_in_ruleRemoveFrom357 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_ruleResourceSet_in_ruleRemoveFrom378 = new BitSet(new long[]{0x0000000000002000L});
     public static final BitSet FOLLOW_13_in_ruleRemoveFrom388 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleEmbedInto_in_entryRuleEmbedInto424 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleEmbedInto434 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_14_in_ruleEmbedInto469 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_14_in_ruleEmbedInto469 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_ruleModuleIdentifier_in_ruleEmbedInto490 = new BitSet(new long[]{0x0000000000008000L});
-    public static final BitSet FOLLOW_15_in_ruleEmbedInto500 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_15_in_ruleEmbedInto500 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_ruleModuleIdentifier_in_ruleEmbedInto521 = new BitSet(new long[]{0x0000000000012000L});
-    public static final BitSet FOLLOW_16_in_ruleEmbedInto532 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_16_in_ruleEmbedInto532 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_ruleModuleIdentifier_in_ruleEmbedInto553 = new BitSet(new long[]{0x0000000000012000L});
     public static final BitSet FOLLOW_13_in_ruleEmbedInto565 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_ruleCreateModule_in_entryRuleCreateModule601 = new BitSet(new long[]{0x0000000000000000L});
     public static final BitSet FOLLOW_EOF_in_entryRuleCreateModule611 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_17_in_ruleCreateModule646 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ruleModuleIdentifier_in_ruleCreateModule667 = new BitSet(new long[]{0x0000000000042000L});
-    public static final BitSet FOLLOW_ruleFrom_in_ruleCreateModule688 = new BitSet(new long[]{0x0000000000042000L});
-    public static final BitSet FOLLOW_13_in_ruleCreateModule699 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleFrom_in_entryRuleFrom735 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleFrom745 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_18_in_ruleFrom780 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_ruleResourceSet_in_ruleFrom801 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleResourceSet_in_entryRuleResourceSet837 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleResourceSet847 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleModuleIdentifier_in_ruleResourceSet893 = new BitSet(new long[]{0x0000000000180002L});
-    public static final BitSet FOLLOW_19_in_ruleResourceSet904 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_ruleResourceList_in_ruleResourceSet925 = new BitSet(new long[]{0x0000000000100002L});
-    public static final BitSet FOLLOW_20_in_ruleResourceSet938 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_ruleResourceList_in_ruleResourceSet959 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMODULEID_in_entryRuleMODULEID998 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleMODULEID1009 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_BMID_in_ruleMODULEID1049 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_21_in_ruleMODULEID1068 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_RULE_BMID_in_ruleMODULEID1083 = new BitSet(new long[]{0x0000000000200002L});
-    public static final BitSet FOLLOW_ruleModuleIdentifier_in_entryRuleModuleIdentifier1130 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleModuleIdentifier1140 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleMODULEID_in_ruleModuleIdentifier1186 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_RULE_STRING_in_ruleModuleIdentifier1203 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_ruleResourceList_in_entryRuleResourceList1244 = new BitSet(new long[]{0x0000000000000000L});
-    public static final BitSet FOLLOW_EOF_in_entryRuleResourceList1254 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_RULE_STRING_in_ruleResourceList1296 = new BitSet(new long[]{0x0000000000010002L});
-    public static final BitSet FOLLOW_16_in_ruleResourceList1312 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_RULE_STRING_in_ruleResourceList1329 = new BitSet(new long[]{0x0000000000010002L});
+    public static final BitSet FOLLOW_17_in_ruleCreateModule646 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_ruleModuleIdentifier_in_ruleCreateModule667 = new BitSet(new long[]{0x00000000000C2000L});
+    public static final BitSet FOLLOW_ruleLayer_in_ruleCreateModule688 = new BitSet(new long[]{0x0000000000082000L});
+    public static final BitSet FOLLOW_ruleFrom_in_ruleCreateModule710 = new BitSet(new long[]{0x0000000000082000L});
+    public static final BitSet FOLLOW_13_in_ruleCreateModule721 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleLayer_in_entryRuleLayer757 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleLayer767 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_18_in_ruleLayer802 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleLayer819 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleFrom_in_entryRuleFrom860 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleFrom870 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_19_in_ruleFrom905 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_ruleResourceSet_in_ruleFrom926 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleResourceSet_in_entryRuleResourceSet962 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleResourceSet972 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleModuleIdentifier_in_ruleResourceSet1018 = new BitSet(new long[]{0x0000000000300002L});
+    public static final BitSet FOLLOW_20_in_ruleResourceSet1029 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ruleResourceList_in_ruleResourceSet1050 = new BitSet(new long[]{0x0000000000200002L});
+    public static final BitSet FOLLOW_21_in_ruleResourceSet1063 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_ruleResourceList_in_ruleResourceSet1084 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMODULEID_in_entryRuleMODULEID1123 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleMODULEID1134 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_BMID_in_ruleMODULEID1174 = new BitSet(new long[]{0x0000000000400002L});
+    public static final BitSet FOLLOW_22_in_ruleMODULEID1193 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_RULE_BMID_in_ruleMODULEID1208 = new BitSet(new long[]{0x0000000000400002L});
+    public static final BitSet FOLLOW_ruleModuleIdentifier_in_entryRuleModuleIdentifier1255 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleModuleIdentifier1265 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleMODULEID_in_ruleModuleIdentifier1311 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleModuleIdentifier1328 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_ruleResourceList_in_entryRuleResourceList1369 = new BitSet(new long[]{0x0000000000000000L});
+    public static final BitSet FOLLOW_EOF_in_entryRuleResourceList1379 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleResourceList1421 = new BitSet(new long[]{0x0000000000010002L});
+    public static final BitSet FOLLOW_16_in_ruleResourceList1437 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_RULE_STRING_in_ruleResourceList1454 = new BitSet(new long[]{0x0000000000010002L});
 
 }

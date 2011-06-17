@@ -2,7 +2,6 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl;
 
@@ -70,6 +69,15 @@ public interface TransformationDslFactory extends EFactory
    * @generated
    */
   CreateModule createCreateModule();
+
+  /**
+   * Returns a new object of class '<em>Layer</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Layer</em>'.
+   * @generated
+   */
+  Layer createLayer();
 
   /**
    * Returns a new object of class '<em>From</em>'.

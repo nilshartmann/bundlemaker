@@ -147,15 +147,17 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 		private final Keyword cCreateModuleKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cModuleAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cModuleModuleIdentifierParserRuleCall_1_0 = (RuleCall)cModuleAssignment_1.eContents().get(0);
-		private final Assignment cFromAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cFromFromParserRuleCall_2_0 = (RuleCall)cFromAssignment_2.eContents().get(0);
-		private final Keyword cSemicolonKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cLayerAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cLayerLayerParserRuleCall_2_0 = (RuleCall)cLayerAssignment_2.eContents().get(0);
+		private final Assignment cFromAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cFromFromParserRuleCall_3_0 = (RuleCall)cFromAssignment_3.eContents().get(0);
+		private final Keyword cSemicolonKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
 		//CreateModule:
-		//	"create-module" module=ModuleIdentifier from+=From* ";";
+		//	"create-module" module=ModuleIdentifier layer=Layer? from+=From* ";";
 		public ParserRule getRule() { return rule; }
 
-		//"create-module" module=ModuleIdentifier from+=From* ";"
+		//"create-module" module=ModuleIdentifier layer=Layer? from+=From* ";"
 		public Group getGroup() { return cGroup; }
 
 		//"create-module"
@@ -167,14 +169,44 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 		//ModuleIdentifier
 		public RuleCall getModuleModuleIdentifierParserRuleCall_1_0() { return cModuleModuleIdentifierParserRuleCall_1_0; }
 
+		//layer=Layer?
+		public Assignment getLayerAssignment_2() { return cLayerAssignment_2; }
+
+		//Layer
+		public RuleCall getLayerLayerParserRuleCall_2_0() { return cLayerLayerParserRuleCall_2_0; }
+
 		//from+=From*
-		public Assignment getFromAssignment_2() { return cFromAssignment_2; }
+		public Assignment getFromAssignment_3() { return cFromAssignment_3; }
 
 		//From
-		public RuleCall getFromFromParserRuleCall_2_0() { return cFromFromParserRuleCall_2_0; }
+		public RuleCall getFromFromParserRuleCall_3_0() { return cFromFromParserRuleCall_3_0; }
 
 		//";"
-		public Keyword getSemicolonKeyword_3() { return cSemicolonKeyword_3; }
+		public Keyword getSemicolonKeyword_4() { return cSemicolonKeyword_4; }
+	}
+
+	public class LayerElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "Layer");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cLayerKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cLayerAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cLayerSTRINGTerminalRuleCall_1_0 = (RuleCall)cLayerAssignment_1.eContents().get(0);
+		
+		//Layer:
+		//	"layer" layer=STRING;
+		public ParserRule getRule() { return rule; }
+
+		//"layer" layer=STRING
+		public Group getGroup() { return cGroup; }
+
+		//"layer"
+		public Keyword getLayerKeyword_0() { return cLayerKeyword_0; }
+
+		//layer=STRING
+		public Assignment getLayerAssignment_1() { return cLayerAssignment_1; }
+
+		//STRING
+		public RuleCall getLayerSTRINGTerminalRuleCall_1_0() { return cLayerSTRINGTerminalRuleCall_1_0; }
 	}
 
 	public class FromElements extends AbstractParserRuleElementFinder {
@@ -352,6 +384,7 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 	private RemoveFromElements pRemoveFrom;
 	private EmbedIntoElements pEmbedInto;
 	private CreateModuleElements pCreateModule;
+	private LayerElements pLayer;
 	private FromElements pFrom;
 	private ResourceSetElements pResourceSet;
 	private TerminalRule tBMID;
@@ -421,13 +454,23 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 	}
 
 	//CreateModule:
-	//	"create-module" module=ModuleIdentifier from+=From* ";";
+	//	"create-module" module=ModuleIdentifier layer=Layer? from+=From* ";";
 	public CreateModuleElements getCreateModuleAccess() {
 		return (pCreateModule != null) ? pCreateModule : (pCreateModule = new CreateModuleElements());
 	}
 	
 	public ParserRule getCreateModuleRule() {
 		return getCreateModuleAccess().getRule();
+	}
+
+	//Layer:
+	//	"layer" layer=STRING;
+	public LayerElements getLayerAccess() {
+		return (pLayer != null) ? pLayer : (pLayer = new LayerElements());
+	}
+	
+	public ParserRule getLayerRule() {
+		return getLayerAccess().getRule();
 	}
 
 	//From:

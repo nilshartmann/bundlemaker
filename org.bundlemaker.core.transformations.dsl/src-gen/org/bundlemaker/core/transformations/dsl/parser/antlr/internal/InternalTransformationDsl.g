@@ -385,9 +385,33 @@ ruleCreateModule returns [EObject current=null]
 )(
 (
 		{ 
-	        currentNode=createCompositeNode(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_2_0(), currentNode); 
+	        currentNode=createCompositeNode(grammarAccess.getCreateModuleAccess().getLayerLayerParserRuleCall_2_0(), currentNode); 
 	    }
-		lv_from_2_0=ruleFrom		{
+		lv_layer_2_0=ruleLayer		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getCreateModuleRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode.getParent(), $current);
+	        }
+	        try {
+	       		set(
+	       			$current, 
+	       			"layer",
+	        		lv_layer_2_0, 
+	        		"Layer", 
+	        		currentNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	        currentNode = currentNode.getParent();
+	    }
+
+)
+)?(
+(
+		{ 
+	        currentNode=createCompositeNode(grammarAccess.getCreateModuleAccess().getFromFromParserRuleCall_3_0(), currentNode); 
+	    }
+		lv_from_3_0=ruleFrom		{
 	        if ($current==null) {
 	            $current = factory.create(grammarAccess.getCreateModuleRule().getType().getClassifier());
 	            associateNodeWithAstElement(currentNode.getParent(), $current);
@@ -396,7 +420,7 @@ ruleCreateModule returns [EObject current=null]
 	       		add(
 	       			$current, 
 	       			"from",
-	        		lv_from_2_0, 
+	        		lv_from_3_0, 
 	        		"From", 
 	        		currentNode);
 	        } catch (ValueConverterException vce) {
@@ -408,9 +432,60 @@ ruleCreateModule returns [EObject current=null]
 )
 )*	';' 
     {
-        createLeafNode(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_3(), null); 
+        createLeafNode(grammarAccess.getCreateModuleAccess().getSemicolonKeyword_4(), null); 
     }
 )
+;
+
+
+
+
+
+// Entry rule entryRuleLayer
+entryRuleLayer returns [EObject current=null] 
+	:
+	{ currentNode = createCompositeNode(grammarAccess.getLayerRule(), currentNode); }
+	 iv_ruleLayer=ruleLayer 
+	 { $current=$iv_ruleLayer.current; } 
+	 EOF 
+;
+
+// Rule Layer
+ruleLayer returns [EObject current=null] 
+    @init { EObject temp=null; setCurrentLookahead(); resetLookahead(); 
+    }
+    @after { resetLookahead(); 
+    	lastConsumedNode = currentNode;
+    }:
+(	'layer' 
+    {
+        createLeafNode(grammarAccess.getLayerAccess().getLayerKeyword_0(), null); 
+    }
+(
+(
+		lv_layer_1_0=RULE_STRING
+		{
+			createLeafNode(grammarAccess.getLayerAccess().getLayerSTRINGTerminalRuleCall_1_0(), "layer"); 
+		}
+		{
+	        if ($current==null) {
+	            $current = factory.create(grammarAccess.getLayerRule().getType().getClassifier());
+	            associateNodeWithAstElement(currentNode, $current);
+	        }
+	        try {
+	       		set(
+	       			$current, 
+	       			"layer",
+	        		lv_layer_1_0, 
+	        		"STRING", 
+	        		lastConsumedNode);
+	        } catch (ValueConverterException vce) {
+				handleValueConverterException(vce);
+	        }
+	    }
+
+)
+))
 ;
 
 
