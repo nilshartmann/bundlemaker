@@ -11,16 +11,21 @@
 package org.bundlemaker.core.parser.jdt.internal;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.parser.IResourceCache;
+import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.jdt.internal.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -162,6 +167,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
   // return problems;
   // }
 
+  @SuppressWarnings("unchecked")
   /**
    * {@inheritDoc}
    */
@@ -179,10 +185,11 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     try {
 
       // TODO configurable
-      Map options = new HashMap();
-      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-      options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+//      @SuppressWarnings("rawtypes")
+//      Map options = new HashMap();
+//      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+//      options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+//      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
 
       // _parser.setSource(iCompilationUnit);
       char[] content = new String(modifiableResource.getContent()).toCharArray();
@@ -191,8 +198,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       // TODO
       _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
-      _parser.setCompilerOptions(options);
+      _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
+      
 
       CompilationUnit compilationUnit = (CompilationUnit) _parser.createAST(null);
 
@@ -289,5 +297,74 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
     // step 5: finally return
     return problems;
+  }
+  
+  private class CompilerOptions extends Hashtable<Object, Object> {
+    
+    
+
+    /* (non-Javadoc)
+     * @see java.util.Hashtable#isEmpty()
+     */
+    @Override
+    public synchronized boolean isEmpty() {
+      // TODO Auto-generated method stub
+      return super.isEmpty();
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Hashtable#elements()
+     */
+    @Override
+    public synchronized Enumeration<Object> elements() {
+      // TODO Auto-generated method stub
+      return super.elements();
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Hashtable#keySet()
+     */
+    @Override
+    public Set<Object> keySet() {
+      // TODO Auto-generated method stub
+      return super.keySet();
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Hashtable#entrySet()
+     */
+    @Override
+    public Set<Entry<Object, Object>> entrySet() {
+      // TODO Auto-generated method stub
+      return super.entrySet();
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Hashtable#values()
+     */
+    @Override
+    public Collection<Object> values() {
+      // TODO Auto-generated method stub
+      return super.values();
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Hashtable#containsKey(java.lang.Object)
+     */
+    @Override
+    public synchronized boolean containsKey(Object key) {
+      // TODO Auto-generated method stub
+      return super.containsKey(key);
+    }
+
+    /* (non-Javadoc)
+     * @see java.util.Hashtable#get(java.lang.Object)
+     */
+    @Override
+    public synchronized Object get(Object key) {
+      // TODO Auto-generated method stub
+      return super.get(key);
+    }
+    
   }
 }
