@@ -22,8 +22,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="CreateModule" eSuperTypes="#//Transformation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="module" eType="#//ModuleIdentifier"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="layer" eType="#//Layer"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="from" upperBound="-1" eType="#//From"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Layer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="layer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="From">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resourceSet" eType="#//ResourceSet"

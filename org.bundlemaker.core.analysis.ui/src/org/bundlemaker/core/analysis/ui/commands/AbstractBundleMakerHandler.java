@@ -62,7 +62,7 @@ public abstract class AbstractBundleMakerHandler extends AbstractHandler impleme
 
       // Invoke execution method
       try {
-        execute(selectedArtifacts);
+        execute(event, selectedArtifacts);
       } catch (Exception ex) {
         reportError(Activator.PLUGIN_ID, "Error while executing command: " + ex, ex);
       }
@@ -72,18 +72,17 @@ public abstract class AbstractBundleMakerHandler extends AbstractHandler impleme
     return null;
   }
 
-  protected void reportError(String pluginId, String message, Throwable ex) {
-    Status errorStatus = new Status(IStatus.ERROR, pluginId, message, ex);
-    Activator.getDefault().getLog().log(errorStatus);
-  }
-
   /**
    * Will be invoked when the command is executed. Subclasses must override this method to provide their execution logic
    * 
    * @param selectedArtifacts
    *          The {@link IArtifact} objects that are selected in the tree. Never null.
-   * @return
    */
-  protected abstract void execute(List<IArtifact> selectedArtifacts) throws Exception;
+  protected abstract void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception;
+
+  protected void reportError(String pluginId, String message, Throwable ex) {
+    Status errorStatus = new Status(IStatus.ERROR, pluginId, message, ex);
+    Activator.getDefault().getLog().log(errorStatus);
+  }
 
 }

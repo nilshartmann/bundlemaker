@@ -25,6 +25,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.util.TransformationUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 
 public class ResourceSetBasedTransformation implements ITransformation {
 
@@ -72,9 +73,8 @@ public class ResourceSetBasedTransformation implements ITransformation {
       }
 
       // set classifications
-      if (moduleDefinition.getClassification() != null) {
-        targetResourceModule.setClassification(moduleDefinition.getClassification());
-      }
+      setClassification(moduleDefinition, targetResourceModule);
+     
 
       // set user attributes
       targetResourceModule.getUserAttributes().putAll(moduleDefinition.getUserAttributes());
@@ -117,6 +117,24 @@ public class ResourceSetBasedTransformation implements ITransformation {
         }
       }
     }
+  }
+
+  /**
+   * Set the classification of the target module
+   * 
+   * <p>This implementation sets the classification of the target module
+   * to the same as the of the module definition. Subclasses may change this behavior. 
+   * @param moduleDefinition The module definition that is used to build the new module
+   * @param targetResourceModule the new module that should be classified
+   */
+  protected void setClassification(ResourceSetBasedModuleDefinition moduleDefinition,
+      IModifiableResourceModule targetResourceModule) {
+    
+    // set classification if no classification has been set yet
+    if (moduleDefinition.getClassification() != null) {
+      targetResourceModule.setClassification(moduleDefinition.getClassification());
+    }
+    
   }
 
   /**

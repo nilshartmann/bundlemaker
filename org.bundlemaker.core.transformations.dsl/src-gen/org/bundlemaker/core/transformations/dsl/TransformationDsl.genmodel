@@ -22,7 +22,11 @@
     </genClasses>
     <genClasses ecoreClass="TransformationDsl.ecore#//CreateModule">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//CreateModule/module"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//CreateModule/layer"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//CreateModule/from"/>
+    </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//Layer">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//Layer/layer"/>
     </genClasses>
     <genClasses ecoreClass="TransformationDsl.ecore#//From">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//From/resourceSet"/>

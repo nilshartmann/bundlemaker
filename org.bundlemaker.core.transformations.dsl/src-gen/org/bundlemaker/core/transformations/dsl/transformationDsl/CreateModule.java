@@ -2,7 +2,6 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl;
 
@@ -17,6 +16,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule#getModule <em>Module</em>}</li>
+ *   <li>{@link org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule#getLayer <em>Layer</em>}</li>
  *   <li>{@link org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule#getFrom <em>From</em>}</li>
  * </ul>
  * </p>
@@ -52,6 +52,32 @@ public interface CreateModule extends Transformation
    * @generated
    */
   void setModule(ModuleIdentifier value);
+
+  /**
+   * Returns the value of the '<em><b>Layer</b></em>' containment reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Layer</em>' containment reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Layer</em>' containment reference.
+   * @see #setLayer(Layer)
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationDslPackage#getCreateModule_Layer()
+   * @model containment="true"
+   * @generated
+   */
+  Layer getLayer();
+
+  /**
+   * Sets the value of the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule#getLayer <em>Layer</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Layer</em>' containment reference.
+   * @see #getLayer()
+   * @generated
+   */
+  void setLayer(Layer value);
 
   /**
    * Returns the value of the '<em><b>From</b></em>' containment reference list.

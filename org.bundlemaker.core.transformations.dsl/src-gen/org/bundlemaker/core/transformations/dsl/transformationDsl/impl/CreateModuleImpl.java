@@ -2,7 +2,6 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl.impl;
 
@@ -10,6 +9,7 @@ import java.util.Collection;
 
 import org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.From;
+import org.bundlemaker.core.transformations.dsl.transformationDsl.Layer;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ModuleIdentifier;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationDslPackage;
 
@@ -34,6 +34,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.CreateModuleImpl#getModule <em>Module</em>}</li>
+ *   <li>{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.CreateModuleImpl#getLayer <em>Layer</em>}</li>
  *   <li>{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.CreateModuleImpl#getFrom <em>From</em>}</li>
  * </ul>
  * </p>
@@ -51,6 +52,16 @@ public class CreateModuleImpl extends TransformationImpl implements CreateModule
    * @ordered
    */
   protected ModuleIdentifier module;
+
+  /**
+   * The cached value of the '{@link #getLayer() <em>Layer</em>}' containment reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getLayer()
+   * @generated
+   * @ordered
+   */
+  protected Layer layer;
 
   /**
    * The cached value of the '{@link #getFrom() <em>From</em>}' containment reference list.
@@ -136,6 +147,54 @@ public class CreateModuleImpl extends TransformationImpl implements CreateModule
    * <!-- end-user-doc -->
    * @generated
    */
+  public Layer getLayer()
+  {
+    return layer;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotificationChain basicSetLayer(Layer newLayer, NotificationChain msgs)
+  {
+    Layer oldLayer = layer;
+    layer = newLayer;
+    if (eNotificationRequired())
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TransformationDslPackage.CREATE_MODULE__LAYER, oldLayer, newLayer);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setLayer(Layer newLayer)
+  {
+    if (newLayer != layer)
+    {
+      NotificationChain msgs = null;
+      if (layer != null)
+        msgs = ((InternalEObject)layer).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TransformationDslPackage.CREATE_MODULE__LAYER, null, msgs);
+      if (newLayer != null)
+        msgs = ((InternalEObject)newLayer).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TransformationDslPackage.CREATE_MODULE__LAYER, null, msgs);
+      msgs = basicSetLayer(newLayer, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, TransformationDslPackage.CREATE_MODULE__LAYER, newLayer, newLayer));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EList<From> getFrom()
   {
     if (from == null)
@@ -157,6 +216,8 @@ public class CreateModuleImpl extends TransformationImpl implements CreateModule
     {
       case TransformationDslPackage.CREATE_MODULE__MODULE:
         return basicSetModule(null, msgs);
+      case TransformationDslPackage.CREATE_MODULE__LAYER:
+        return basicSetLayer(null, msgs);
       case TransformationDslPackage.CREATE_MODULE__FROM:
         return ((InternalEList<?>)getFrom()).basicRemove(otherEnd, msgs);
     }
@@ -175,6 +236,8 @@ public class CreateModuleImpl extends TransformationImpl implements CreateModule
     {
       case TransformationDslPackage.CREATE_MODULE__MODULE:
         return getModule();
+      case TransformationDslPackage.CREATE_MODULE__LAYER:
+        return getLayer();
       case TransformationDslPackage.CREATE_MODULE__FROM:
         return getFrom();
     }
@@ -194,6 +257,9 @@ public class CreateModuleImpl extends TransformationImpl implements CreateModule
     {
       case TransformationDslPackage.CREATE_MODULE__MODULE:
         setModule((ModuleIdentifier)newValue);
+        return;
+      case TransformationDslPackage.CREATE_MODULE__LAYER:
+        setLayer((Layer)newValue);
         return;
       case TransformationDslPackage.CREATE_MODULE__FROM:
         getFrom().clear();
@@ -216,6 +282,9 @@ public class CreateModuleImpl extends TransformationImpl implements CreateModule
       case TransformationDslPackage.CREATE_MODULE__MODULE:
         setModule((ModuleIdentifier)null);
         return;
+      case TransformationDslPackage.CREATE_MODULE__LAYER:
+        setLayer((Layer)null);
+        return;
       case TransformationDslPackage.CREATE_MODULE__FROM:
         getFrom().clear();
         return;
@@ -235,6 +304,8 @@ public class CreateModuleImpl extends TransformationImpl implements CreateModule
     {
       case TransformationDslPackage.CREATE_MODULE__MODULE:
         return module != null;
+      case TransformationDslPackage.CREATE_MODULE__LAYER:
+        return layer != null;
       case TransformationDslPackage.CREATE_MODULE__FROM:
         return from != null && !from.isEmpty();
     }

@@ -11,8 +11,10 @@
 package org.bundlemaker.core.parser.jdt.internal.ecj;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -56,6 +58,7 @@ public class IndirectlyReferencesAnalyzer {
    * 
    * @param javaProject
    */
+  @SuppressWarnings("unchecked")
   public IndirectlyReferencesAnalyzer(IJavaProject javaProject,
       IBundleMakerProjectDescription bundleMakerProjectDescription) {
     Assert.isNotNull(javaProject);
@@ -85,7 +88,10 @@ public class IndirectlyReferencesAnalyzer {
     };
 
     // the compiler options
-    CompilerOptions compilerOptions = new CompilerOptions(_javaProject.getOptions(true));
+    @SuppressWarnings("rawtypes")
+    Map options = CoreParserJdt.getCompilerOptionsWithComplianceLevel(_javaProject.getOptions(true));
+    System.out.println("options: " + options);
+    CompilerOptions compilerOptions = new CompilerOptions(options);
 
     // TODO: make configurable...
     compilerOptions.docCommentSupport = false;

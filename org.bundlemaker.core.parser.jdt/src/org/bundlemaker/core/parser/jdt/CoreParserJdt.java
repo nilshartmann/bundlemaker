@@ -10,6 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.jdt;
 
+import java.util.Hashtable;
+import java.util.Map;
+
+import org.eclipse.jdt.core.JavaCore;
+
 /**
  */
 public class CoreParserJdt {
@@ -22,4 +27,27 @@ public class CoreParserJdt {
 
   /** the EXTENSION_POINT_ID */
   public static final String EXTENSION_POINT_ID = "org.bundlemaker.core.parser.jdt.jdtsourceparserhook";
+
+  /**
+   * Returns the default compiler options. The returned map contains at least
+   * the source- and binary compliance level for the compiler set to java1.6
+   *  
+   * @param compilerOptions The available compiler options or null
+   * @return
+   */
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public static Map getCompilerOptionsWithComplianceLevel(Map compilerOptions) {
+    Map result = new Hashtable();
+    
+    // Add passed options if available
+    if (compilerOptions != null) {
+      result.putAll(compilerOptions);
+    }
+    
+      result.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+      result.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+      result.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+    
+    return result;
+  }
 }
