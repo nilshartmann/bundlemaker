@@ -23,6 +23,7 @@ import org.bundlemaker.core.ui.editor.transformation.TransformationExecutor;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -53,10 +54,12 @@ public class TransformHandler extends AbstractBundleMakerHandler {
   /*
    * (non-Javadoc)
    * 
-   * @see org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(java.util.List)
+   * @see
+   * org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
+   * , java.util.List)
    */
   @Override
-  protected void execute(List<IArtifact> selectedArtifacts) throws Exception {
+  protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
     for (IArtifact iArtifact : selectedArtifacts) {
       IAdvancedArtifact advancedArtifact = (IAdvancedArtifact) iArtifact;
       IModularizedSystem modularizedSystem = advancedArtifact.getModularizedSystem();

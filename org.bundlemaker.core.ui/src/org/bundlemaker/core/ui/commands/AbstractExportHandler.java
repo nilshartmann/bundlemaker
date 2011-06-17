@@ -22,6 +22,7 @@ import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -39,10 +40,12 @@ public abstract class AbstractExportHandler extends AbstractBundleMakerHandler {
   /*
    * (non-Javadoc)
    * 
-   * @see org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(java.util.List)
+   * @see
+   * org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
+   * , java.util.List)
    */
   @Override
-  protected void execute(List<IArtifact> selectedArtifacts) throws Exception {
+  protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
 
     IArtifact currentArtifact = null;
 
