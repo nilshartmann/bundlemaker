@@ -42,7 +42,7 @@ public class ModelSetup {
   public static final boolean LOG                      = true;
 
   /** THREAD_COUNT */
-  private static final int    THREAD_COUNT             = 1;   // Runtime.getRuntime().availableProcessors();
+  private static final int    THREAD_COUNT             = Runtime.getRuntime().availableProcessors();
 
   /** the bundle maker project */
   private BundleMakerProject  _bundleMakerProject;
