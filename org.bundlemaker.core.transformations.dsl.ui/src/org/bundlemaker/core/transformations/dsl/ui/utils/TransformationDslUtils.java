@@ -1,5 +1,7 @@
 package org.bundlemaker.core.transformations.dsl.ui.utils;
 
+import java.io.ByteArrayInputStream;
+
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
 import org.bundlemaker.core.transformations.dsl.ui.internal.TransformationDslActivator;
 import org.eclipse.emf.common.util.URI;
@@ -27,6 +29,23 @@ public class TransformationDslUtils {
 		System.out.println("model: " + model);
 		
 		return model;
+	}
+	
+	public static TransformationModel parseDocument(String document) throws Exception {
+	   Injector injector = TransformationDslActivator.getInstance().getInjector("org.bundlemaker.core.transformations.dsl.TransformationDsl");
+	    
+	    XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+	    resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+	    Resource resource = resourceSet.getResource(URI.createURI("dummy:/in-memory.bmt"), true);
+	    ByteArrayInputStream inputStream = new ByteArrayInputStream(document.getBytes());
+	    resource.load(inputStream, resourceSet.getLoadOptions());
+	    TransformationModel model = (TransformationModel)resource.getContents().get(0);
+	    
+	    System.out.println("model: " + model);
+	    
+	    return model;
+
+	  
 	}
 	
 	public static void register(Injector injector) {

@@ -10,12 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.commands;
 
-import java.net.URI;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler;
+import org.bundlemaker.core.analysis.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
 import org.bundlemaker.core.transformations.dsl.ui.utils.TransformationDslUtils;
@@ -49,7 +48,7 @@ import org.eclipse.ui.views.navigator.ResourceComparator;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class TransformHandler extends AbstractBundleMakerHandler {
+public class TransformHandler extends AbstractArtifactBasedHandler {
 
   /*
    * (non-Javadoc)
@@ -68,13 +67,18 @@ public class TransformHandler extends AbstractBundleMakerHandler {
       IFile selectedScript = selectTransformationScript(modularizedSystem.getBundleMakerProject());
 
       if (selectedScript != null) {
-        // TODO ask user for name of module
-        String moduleName = selectedScript.getLocation().removeFileExtension().lastSegment();
+        String moduleName = getModuleName(selectedScript);
 
         // Apply the transformation script
-        transform(modularizedSystem.getBundleMakerProject(), moduleName, selectedScript.getLocationURI());
+        transform(modularizedSystem.getBundleMakerProject(), moduleName, selectedScript);
       }
     }
+  }
+
+  static String getModuleName(IFile transformationScript) {
+    // TODO ask user for name of module
+    String moduleName = transformationScript.getLocation().removeFileExtension().lastSegment();
+    return moduleName;
   }
 
   /**
@@ -86,9 +90,9 @@ public class TransformHandler extends AbstractBundleMakerHandler {
    * @param uri
    * @throws Exception
    */
-  protected void transform(IBundleMakerProject bundleMakerProject, String moduleName, URI uri) throws Exception {
+  static void transform(IBundleMakerProject bundleMakerProject, String moduleName, IFile scriptFile) throws Exception {
     // Parse the transformation script
-    TransformationModel model = TransformationDslUtils.parse(uri.toString());
+    TransformationModel model = TransformationDslUtils.parse(scriptFile.getLocationURI().toString());
 
     // Execute the script and apply the contained transformation
     TransformationExecutor executor = new TransformationExecutor(
@@ -160,7 +164,7 @@ public class TransformHandler extends AbstractBundleMakerHandler {
    * @return
    * @throws Exception
    */
-  private IModularizedSystem createModularizedSystem(IBundleMakerProject bundleMakerProject, String name)
+  private static IModularizedSystem createModularizedSystem(IBundleMakerProject bundleMakerProject, String name)
       throws Exception {
 
     if (bundleMakerProject.hasModularizedSystemWorkingCopy(name)) {

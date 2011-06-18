@@ -8,7 +8,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
-public class DemoHandler extends AbstractBundleMakerHandler implements IHandler {
+public class DemoHandler extends AbstractArtifactBasedHandler implements IHandler {
 
   /*
    * (non-Javadoc)
