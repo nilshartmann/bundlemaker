@@ -90,7 +90,6 @@ public class IndirectlyReferencesAnalyzer {
     // the compiler options
     @SuppressWarnings("rawtypes")
     Map options = CoreParserJdt.getCompilerOptionsWithComplianceLevel(_javaProject.getOptions(true));
-    System.out.println("options: " + options);
     CompilerOptions compilerOptions = new CompilerOptions(options);
 
     // TODO: make configurable...
