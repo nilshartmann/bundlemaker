@@ -25,6 +25,11 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//CreateModule/layer"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference TransformationDsl.ecore#//CreateModule/from"/>
     </genClasses>
+    <genClasses ecoreClass="TransformationDsl.ecore#//ClassifyModules">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//ClassifyModules/modules"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//ClassifyModules/excludedModules"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//ClassifyModules/classification"/>
+    </genClasses>
     <genClasses ecoreClass="TransformationDsl.ecore#//Layer">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute TransformationDsl.ecore#//Layer/layer"/>
     </genClasses>

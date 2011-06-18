@@ -36,11 +36,12 @@ protected class ThisRootNode extends RootToken {
 			case 2: return new RemoveFrom_Group(this, this, 2, inst);
 			case 3: return new EmbedInto_Group(this, this, 3, inst);
 			case 4: return new CreateModule_Group(this, this, 4, inst);
-			case 5: return new Layer_Group(this, this, 5, inst);
-			case 6: return new From_Group(this, this, 6, inst);
-			case 7: return new ResourceSet_Group(this, this, 7, inst);
-			case 8: return new ModuleIdentifier_Group(this, this, 8, inst);
-			case 9: return new ResourceList_Group(this, this, 9, inst);
+			case 5: return new ClassifyModules_Group(this, this, 5, inst);
+			case 6: return new Layer_Group(this, this, 6, inst);
+			case 7: return new From_Group(this, this, 7, inst);
+			case 8: return new ResourceSet_Group(this, this, 8, inst);
+			case 9: return new ModuleIdentifier_Group(this, this, 9, inst);
+			case 10: return new ResourceList_Group(this, this, 10, inst);
 			default: return null;
 		}	
 	}	
@@ -106,11 +107,11 @@ protected class TransformationModel_TransformationsAssignment extends Assignment
 /************ begin Rule Transformation ****************
  *
  * Transformation:
- * 	RemoveFrom | EmbedInto | CreateModule;
+ * 	RemoveFrom | EmbedInto | CreateModule | ClassifyModules;
  *
  **/
 
-// RemoveFrom | EmbedInto | CreateModule
+// RemoveFrom | EmbedInto | CreateModule | ClassifyModules
 protected class Transformation_Alternatives extends AlternativesToken {
 
 	public Transformation_Alternatives(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
@@ -128,13 +129,15 @@ protected class Transformation_Alternatives extends AlternativesToken {
 			case 0: return new Transformation_RemoveFromParserRuleCall_0(lastRuleCallOrigin, this, 0, inst);
 			case 1: return new Transformation_EmbedIntoParserRuleCall_1(lastRuleCallOrigin, this, 1, inst);
 			case 2: return new Transformation_CreateModuleParserRuleCall_2(lastRuleCallOrigin, this, 2, inst);
+			case 3: return new Transformation_ClassifyModulesParserRuleCall_3(lastRuleCallOrigin, this, 3, inst);
 			default: return null;
 		}	
 	}
 
     @Override
 	public IEObjectConsumer tryConsume() {
-		if(getEObject().eClass() != grammarAccess.getCreateModuleRule().getType().getClassifier() && 
+		if(getEObject().eClass() != grammarAccess.getClassifyModulesRule().getType().getClassifier() && 
+		   getEObject().eClass() != grammarAccess.getCreateModuleRule().getType().getClassifier() && 
 		   getEObject().eClass() != grammarAccess.getEmbedIntoRule().getType().getClassifier() && 
 		   getEObject().eClass() != grammarAccess.getRemoveFromRule().getType().getClassifier())
 			return null;
@@ -240,6 +243,42 @@ protected class Transformation_CreateModuleParserRuleCall_2 extends RuleCallToke
 		if(getEObject().eClass() != grammarAccess.getCreateModuleRule().getType().getClassifier())
 			return null;
 		if(checkForRecursion(CreateModule_Group.class, eObjectConsumer)) return null;
+		return eObjectConsumer;
+	}
+	
+    @Override
+	public AbstractToken createFollowerAfterReturn(AbstractToken next,	int actIndex, int index, IEObjectConsumer inst) {
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(next, actIndex , index, inst);
+		}	
+	}	
+}
+
+// ClassifyModules
+protected class Transformation_ClassifyModulesParserRuleCall_3 extends RuleCallToken {
+	
+	public Transformation_ClassifyModulesParserRuleCall_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public RuleCall getGrammarElement() {
+		return grammarAccess.getTransformationAccess().getClassifyModulesParserRuleCall_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_Group(this, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(getEObject().eClass() != grammarAccess.getClassifyModulesRule().getType().getClassifier())
+			return null;
+		if(checkForRecursion(ClassifyModules_Group.class, eObjectConsumer)) return null;
 		return eObjectConsumer;
 	}
 	
@@ -897,6 +936,259 @@ protected class CreateModule_SemicolonKeyword_4 extends KeywordToken  {
 
 
 /************ end Rule CreateModule ****************/
+
+
+/************ begin Rule ClassifyModules ****************
+ *
+ * ClassifyModules:
+ * 	"classify-modules" modules=STRING ("but not " excludedModules=STRING)? "as" classification=STRING ";";
+ *
+ **/
+
+// "classify-modules" modules=STRING ("but not " excludedModules=STRING)? "as" classification=STRING ";"
+protected class ClassifyModules_Group extends GroupToken {
+	
+	public ClassifyModules_Group(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getGroup();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_SemicolonKeyword_5(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override
+	public IEObjectConsumer tryConsume() {
+		if(getEObject().eClass() != grammarAccess.getClassifyModulesRule().getType().getClassifier())
+			return null;
+		return eObjectConsumer;
+	}
+
+}
+
+// "classify-modules"
+protected class ClassifyModules_ClassifyModulesKeyword_0 extends KeywordToken  {
+	
+	public ClassifyModules_ClassifyModulesKeyword_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getClassifyModulesKeyword_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			default: return lastRuleCallOrigin.createFollowerAfterReturn(this, index, index, inst);
+		}	
+	}
+
+}
+
+// modules=STRING
+protected class ClassifyModules_ModulesAssignment_1 extends AssignmentToken  {
+	
+	public ClassifyModules_ModulesAssignment_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getModulesAssignment_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_ClassifyModulesKeyword_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("modules",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("modules");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getClassifyModulesAccess().getModulesSTRINGTerminalRuleCall_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getClassifyModulesAccess().getModulesSTRINGTerminalRuleCall_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// ("but not " excludedModules=STRING)?
+protected class ClassifyModules_Group_2 extends GroupToken {
+	
+	public ClassifyModules_Group_2(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Group getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getGroup_2();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_ExcludedModulesAssignment_2_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// "but not "
+protected class ClassifyModules_ButNotKeyword_2_0 extends KeywordToken  {
+	
+	public ClassifyModules_ButNotKeyword_2_0(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getButNotKeyword_2_0();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_ModulesAssignment_1(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// excludedModules=STRING
+protected class ClassifyModules_ExcludedModulesAssignment_2_1 extends AssignmentToken  {
+	
+	public ClassifyModules_ExcludedModulesAssignment_2_1(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getExcludedModulesAssignment_2_1();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_ButNotKeyword_2_0(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("excludedModules",false)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("excludedModules");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getClassifyModulesAccess().getExcludedModulesSTRINGTerminalRuleCall_2_1_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getClassifyModulesAccess().getExcludedModulesSTRINGTerminalRuleCall_2_1_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+
+// "as"
+protected class ClassifyModules_AsKeyword_3 extends KeywordToken  {
+	
+	public ClassifyModules_AsKeyword_3(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getAsKeyword_3();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_Group_2(lastRuleCallOrigin, this, 0, inst);
+			case 1: return new ClassifyModules_ModulesAssignment_1(lastRuleCallOrigin, this, 1, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+// classification=STRING
+protected class ClassifyModules_ClassificationAssignment_4 extends AssignmentToken  {
+	
+	public ClassifyModules_ClassificationAssignment_4(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Assignment getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getClassificationAssignment_4();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_AsKeyword_3(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+    @Override	
+	public IEObjectConsumer tryConsume() {
+		if((value = eObjectConsumer.getConsumable("classification",true)) == null) return null;
+		IEObjectConsumer obj = eObjectConsumer.cloneAndConsume("classification");
+		if(valueSerializer.isValid(obj.getEObject(), grammarAccess.getClassifyModulesAccess().getClassificationSTRINGTerminalRuleCall_4_0(), value, null)) {
+			type = AssignmentType.TERMINAL_RULE_CALL;
+			element = grammarAccess.getClassifyModulesAccess().getClassificationSTRINGTerminalRuleCall_4_0();
+			return obj;
+		}
+		return null;
+	}
+
+}
+
+// ";"
+protected class ClassifyModules_SemicolonKeyword_5 extends KeywordToken  {
+	
+	public ClassifyModules_SemicolonKeyword_5(AbstractToken lastRuleCallOrigin, AbstractToken next, int transitionIndex, IEObjectConsumer eObjectConsumer) {
+		super(lastRuleCallOrigin, next, transitionIndex, eObjectConsumer);
+	}
+	
+	@Override
+	public Keyword getGrammarElement() {
+		return grammarAccess.getClassifyModulesAccess().getSemicolonKeyword_5();
+	}
+
+    @Override
+	public AbstractToken createFollower(int index, IEObjectConsumer inst) {
+		switch(index) {
+			case 0: return new ClassifyModules_ClassificationAssignment_4(lastRuleCallOrigin, this, 0, inst);
+			default: return null;
+		}	
+	}
+
+}
+
+
+/************ end Rule ClassifyModules ****************/
 
 
 /************ begin Rule Layer ****************

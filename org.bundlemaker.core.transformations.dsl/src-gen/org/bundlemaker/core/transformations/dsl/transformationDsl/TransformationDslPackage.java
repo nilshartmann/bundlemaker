@@ -218,6 +218,52 @@ public interface TransformationDslPackage extends EPackage
   int CREATE_MODULE_FEATURE_COUNT = TRANSFORMATION_FEATURE_COUNT + 3;
 
   /**
+   * The meta object id for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.ClassifyModulesImpl <em>Classify Modules</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.ClassifyModulesImpl
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getClassifyModules()
+   * @generated
+   */
+  int CLASSIFY_MODULES = 5;
+
+  /**
+   * The feature id for the '<em><b>Modules</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLASSIFY_MODULES__MODULES = TRANSFORMATION_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Excluded Modules</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLASSIFY_MODULES__EXCLUDED_MODULES = TRANSFORMATION_FEATURE_COUNT + 1;
+
+  /**
+   * The feature id for the '<em><b>Classification</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLASSIFY_MODULES__CLASSIFICATION = TRANSFORMATION_FEATURE_COUNT + 2;
+
+  /**
+   * The number of structural features of the '<em>Classify Modules</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CLASSIFY_MODULES_FEATURE_COUNT = TRANSFORMATION_FEATURE_COUNT + 3;
+
+  /**
    * The meta object id for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.LayerImpl <em>Layer</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -225,7 +271,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getLayer()
    * @generated
    */
-  int LAYER = 5;
+  int LAYER = 6;
 
   /**
    * The feature id for the '<em><b>Layer</b></em>' attribute.
@@ -253,7 +299,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getFrom()
    * @generated
    */
-  int FROM = 6;
+  int FROM = 7;
 
   /**
    * The feature id for the '<em><b>Resource Set</b></em>' containment reference.
@@ -281,7 +327,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getResourceSet()
    * @generated
    */
-  int RESOURCE_SET = 7;
+  int RESOURCE_SET = 8;
 
   /**
    * The feature id for the '<em><b>Module Identifier</b></em>' containment reference.
@@ -327,7 +373,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getModuleIdentifier()
    * @generated
    */
-  int MODULE_IDENTIFIER = 8;
+  int MODULE_IDENTIFIER = 9;
 
   /**
    * The feature id for the '<em><b>Modulename</b></em>' attribute.
@@ -364,7 +410,7 @@ public interface TransformationDslPackage extends EPackage
    * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getResourceList()
    * @generated
    */
-  int RESOURCE_LIST = 9;
+  int RESOURCE_LIST = 10;
 
   /**
    * The feature id for the '<em><b>Resources</b></em>' attribute list.
@@ -511,6 +557,49 @@ public interface TransformationDslPackage extends EPackage
    * @generated
    */
   EReference getCreateModule_From();
+
+  /**
+   * Returns the meta object for class '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules <em>Classify Modules</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Classify Modules</em>'.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules
+   * @generated
+   */
+  EClass getClassifyModules();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules#getModules <em>Modules</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Modules</em>'.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules#getModules()
+   * @see #getClassifyModules()
+   * @generated
+   */
+  EAttribute getClassifyModules_Modules();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules#getExcludedModules <em>Excluded Modules</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Excluded Modules</em>'.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules#getExcludedModules()
+   * @see #getClassifyModules()
+   * @generated
+   */
+  EAttribute getClassifyModules_ExcludedModules();
+
+  /**
+   * Returns the meta object for the attribute '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules#getClassification <em>Classification</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Classification</em>'.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules#getClassification()
+   * @see #getClassifyModules()
+   * @generated
+   */
+  EAttribute getClassifyModules_Classification();
 
   /**
    * Returns the meta object for class '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.Layer <em>Layer</em>}'.
@@ -778,6 +867,40 @@ public interface TransformationDslPackage extends EPackage
      * @generated
      */
     EReference CREATE_MODULE__FROM = eINSTANCE.getCreateModule_From();
+
+    /**
+     * The meta object literal for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.ClassifyModulesImpl <em>Classify Modules</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.ClassifyModulesImpl
+     * @see org.bundlemaker.core.transformations.dsl.transformationDsl.impl.TransformationDslPackageImpl#getClassifyModules()
+     * @generated
+     */
+    EClass CLASSIFY_MODULES = eINSTANCE.getClassifyModules();
+
+    /**
+     * The meta object literal for the '<em><b>Modules</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute CLASSIFY_MODULES__MODULES = eINSTANCE.getClassifyModules_Modules();
+
+    /**
+     * The meta object literal for the '<em><b>Excluded Modules</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute CLASSIFY_MODULES__EXCLUDED_MODULES = eINSTANCE.getClassifyModules_ExcludedModules();
+
+    /**
+     * The meta object literal for the '<em><b>Classification</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute CLASSIFY_MODULES__CLASSIFICATION = eINSTANCE.getClassifyModules_Classification();
 
     /**
      * The meta object literal for the '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.impl.LayerImpl <em>Layer</em>}' class.

@@ -5,6 +5,7 @@
  */
 package org.bundlemaker.core.transformations.dsl.transformationDsl.impl;
 
+import org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.EmbedInto;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.From;
@@ -67,6 +68,13 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
    * @generated
    */
   private EClass createModuleEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass classifyModulesEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -291,6 +299,46 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getClassifyModules()
+  {
+    return classifyModulesEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getClassifyModules_Modules()
+  {
+    return (EAttribute)classifyModulesEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getClassifyModules_ExcludedModules()
+  {
+    return (EAttribute)classifyModulesEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getClassifyModules_Classification()
+  {
+    return (EAttribute)classifyModulesEClass.getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getLayer()
   {
     return layerEClass;
@@ -463,6 +511,11 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
     createEReference(createModuleEClass, CREATE_MODULE__LAYER);
     createEReference(createModuleEClass, CREATE_MODULE__FROM);
 
+    classifyModulesEClass = createEClass(CLASSIFY_MODULES);
+    createEAttribute(classifyModulesEClass, CLASSIFY_MODULES__MODULES);
+    createEAttribute(classifyModulesEClass, CLASSIFY_MODULES__EXCLUDED_MODULES);
+    createEAttribute(classifyModulesEClass, CLASSIFY_MODULES__CLASSIFICATION);
+
     layerEClass = createEClass(LAYER);
     createEAttribute(layerEClass, LAYER__LAYER);
 
@@ -514,6 +567,7 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
     removeFromEClass.getESuperTypes().add(this.getTransformation());
     embedIntoEClass.getESuperTypes().add(this.getTransformation());
     createModuleEClass.getESuperTypes().add(this.getTransformation());
+    classifyModulesEClass.getESuperTypes().add(this.getTransformation());
 
     // Initialize classes and features; add operations and parameters
     initEClass(transformationModelEClass, TransformationModel.class, "TransformationModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -532,6 +586,11 @@ public class TransformationDslPackageImpl extends EPackageImpl implements Transf
     initEReference(getCreateModule_Module(), this.getModuleIdentifier(), null, "module", null, 0, 1, CreateModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCreateModule_Layer(), this.getLayer(), null, "layer", null, 0, 1, CreateModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEReference(getCreateModule_From(), this.getFrom(), null, "from", null, 0, -1, CreateModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(classifyModulesEClass, ClassifyModules.class, "ClassifyModules", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getClassifyModules_Modules(), ecorePackage.getEString(), "modules", null, 0, 1, ClassifyModules.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getClassifyModules_ExcludedModules(), ecorePackage.getEString(), "excludedModules", null, 0, 1, ClassifyModules.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getClassifyModules_Classification(), ecorePackage.getEString(), "classification", null, 0, 1, ClassifyModules.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(layerEClass, Layer.class, "Layer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEAttribute(getLayer_Layer(), ecorePackage.getEString(), "layer", null, 0, 1, Layer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

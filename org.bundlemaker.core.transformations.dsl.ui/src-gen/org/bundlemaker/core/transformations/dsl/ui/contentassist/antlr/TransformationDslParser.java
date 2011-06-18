@@ -42,6 +42,8 @@ public class TransformationDslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getEmbedIntoAccess().getGroup(), "rule__EmbedInto__Group__0");
 					put(grammarAccess.getEmbedIntoAccess().getGroup_4(), "rule__EmbedInto__Group_4__0");
 					put(grammarAccess.getCreateModuleAccess().getGroup(), "rule__CreateModule__Group__0");
+					put(grammarAccess.getClassifyModulesAccess().getGroup(), "rule__ClassifyModules__Group__0");
+					put(grammarAccess.getClassifyModulesAccess().getGroup_2(), "rule__ClassifyModules__Group_2__0");
 					put(grammarAccess.getLayerAccess().getGroup(), "rule__Layer__Group__0");
 					put(grammarAccess.getFromAccess().getGroup(), "rule__From__Group__0");
 					put(grammarAccess.getResourceSetAccess().getGroup(), "rule__ResourceSet__Group__0");
@@ -60,6 +62,9 @@ public class TransformationDslParser extends AbstractContentAssistParser {
 					put(grammarAccess.getCreateModuleAccess().getModuleAssignment_1(), "rule__CreateModule__ModuleAssignment_1");
 					put(grammarAccess.getCreateModuleAccess().getLayerAssignment_2(), "rule__CreateModule__LayerAssignment_2");
 					put(grammarAccess.getCreateModuleAccess().getFromAssignment_3(), "rule__CreateModule__FromAssignment_3");
+					put(grammarAccess.getClassifyModulesAccess().getModulesAssignment_1(), "rule__ClassifyModules__ModulesAssignment_1");
+					put(grammarAccess.getClassifyModulesAccess().getExcludedModulesAssignment_2_1(), "rule__ClassifyModules__ExcludedModulesAssignment_2_1");
+					put(grammarAccess.getClassifyModulesAccess().getClassificationAssignment_4(), "rule__ClassifyModules__ClassificationAssignment_4");
 					put(grammarAccess.getLayerAccess().getLayerAssignment_1(), "rule__Layer__LayerAssignment_1");
 					put(grammarAccess.getFromAccess().getResourceSetAssignment_1(), "rule__From__ResourceSetAssignment_1");
 					put(grammarAccess.getResourceSetAccess().getModuleIdentifierAssignment_0(), "rule__ResourceSet__ModuleIdentifierAssignment_0");

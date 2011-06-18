@@ -15,9 +15,12 @@ public class InternalTransformationDslLexer extends Lexer {
     public static final int RULE_BMID=5;
     public static final int RULE_ID=6;
     public static final int RULE_ANY_OTHER=11;
-    public static final int Tokens=23;
+    public static final int T25=25;
+    public static final int Tokens=26;
+    public static final int T24=24;
     public static final int EOF=-1;
     public static final int RULE_SL_COMMENT=9;
+    public static final int T23=23;
     public static final int T22=22;
     public static final int T21=21;
     public static final int T20=20;
@@ -155,10 +158,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mT18() throws RecognitionException {
         try {
             int _type = T18;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:16:5: ( 'layer' )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:16:7: 'layer'
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:16:5: ( 'classify-modules' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:16:7: 'classify-modules'
             {
-            match("layer"); 
+            match("classify-modules"); 
 
 
             }
@@ -174,10 +177,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mT19() throws RecognitionException {
         try {
             int _type = T19;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:17:5: ( 'from' )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:17:7: 'from'
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:17:5: ( 'but not ' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:17:7: 'but not '
             {
-            match("from"); 
+            match("but not "); 
 
 
             }
@@ -193,10 +196,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mT20() throws RecognitionException {
         try {
             int _type = T20;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:18:5: ( 'include' )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:18:7: 'include'
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:18:5: ( 'as' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:18:7: 'as'
             {
-            match("include"); 
+            match("as"); 
 
 
             }
@@ -212,10 +215,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mT21() throws RecognitionException {
         try {
             int _type = T21;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:19:5: ( 'exclude' )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:19:7: 'exclude'
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:19:5: ( 'layer' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:19:7: 'layer'
             {
-            match("exclude"); 
+            match("layer"); 
 
 
             }
@@ -231,10 +234,11 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mT22() throws RecognitionException {
         try {
             int _type = T22;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:20:5: ( '.' )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:20:7: '.'
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:20:5: ( 'from' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:20:7: 'from'
             {
-            match('.'); 
+            match("from"); 
+
 
             }
 
@@ -245,14 +249,70 @@ public class InternalTransformationDslLexer extends Lexer {
     }
     // $ANTLR end T22
 
+    // $ANTLR start T23
+    public final void mT23() throws RecognitionException {
+        try {
+            int _type = T23;
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:21:5: ( 'include' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:21:7: 'include'
+            {
+            match("include"); 
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end T23
+
+    // $ANTLR start T24
+    public final void mT24() throws RecognitionException {
+        try {
+            int _type = T24;
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:22:5: ( 'exclude' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:22:7: 'exclude'
+            {
+            match("exclude"); 
+
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end T24
+
+    // $ANTLR start T25
+    public final void mT25() throws RecognitionException {
+        try {
+            int _type = T25;
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:23:5: ( '.' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:23:7: '.'
+            {
+            match('.'); 
+
+            }
+
+            this.type = _type;
+        }
+        finally {
+        }
+    }
+    // $ANTLR end T25
+
     // $ANTLR start RULE_BMID
     public final void mRULE_BMID() throws RecognitionException {
         try {
             int _type = RULE_BMID;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:838:11: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9' )* )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:838:13: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9' )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:959:11: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9' )* )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:959:13: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9' )*
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:838:13: ( '^' )?
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:959:13: ( '^' )?
             int alt1=2;
             int LA1_0 = input.LA(1);
 
@@ -261,7 +321,7 @@ public class InternalTransformationDslLexer extends Lexer {
             }
             switch (alt1) {
                 case 1 :
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:838:13: '^'
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:959:13: '^'
                     {
                     match('^'); 
 
@@ -280,7 +340,7 @@ public class InternalTransformationDslLexer extends Lexer {
                 recover(mse);    throw mse;
             }
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:838:46: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9' )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:959:46: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '-' | '0' .. '9' )*
             loop2:
             do {
                 int alt2=2;
@@ -328,10 +388,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mRULE_ID() throws RecognitionException {
         try {
             int _type = RULE_ID;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:840:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:840:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:961:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:961:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:840:11: ( '^' )?
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:961:11: ( '^' )?
             int alt3=2;
             int LA3_0 = input.LA(1);
 
@@ -340,7 +400,7 @@ public class InternalTransformationDslLexer extends Lexer {
             }
             switch (alt3) {
                 case 1 :
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:840:11: '^'
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:961:11: '^'
                     {
                     match('^'); 
 
@@ -359,7 +419,7 @@ public class InternalTransformationDslLexer extends Lexer {
                 recover(mse);    throw mse;
             }
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:840:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:961:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             loop4:
             do {
                 int alt4=2;
@@ -407,10 +467,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mRULE_INT() throws RecognitionException {
         try {
             int _type = RULE_INT;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:842:10: ( ( '0' .. '9' )+ )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:842:12: ( '0' .. '9' )+
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:963:10: ( ( '0' .. '9' )+ )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:963:12: ( '0' .. '9' )+
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:842:12: ( '0' .. '9' )+
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:963:12: ( '0' .. '9' )+
             int cnt5=0;
             loop5:
             do {
@@ -424,7 +484,7 @@ public class InternalTransformationDslLexer extends Lexer {
 
                 switch (alt5) {
             	case 1 :
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:842:13: '0' .. '9'
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:963:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -454,10 +514,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mRULE_STRING() throws RecognitionException {
         try {
             int _type = RULE_STRING;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:13: ( ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt8=2;
             int LA8_0 = input.LA(1);
 
@@ -469,16 +529,16 @@ public class InternalTransformationDslLexer extends Lexer {
             }
             else {
                 NoViableAltException nvae =
-                    new NoViableAltException("844:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )", 8, 0, input);
+                    new NoViableAltException("965:15: ( '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )", 8, 0, input);
 
                 throw nvae;
             }
             switch (alt8) {
                 case 1 :
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:16: '\"' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:20: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop6:
                     do {
                         int alt6=3;
@@ -494,7 +554,7 @@ public class InternalTransformationDslLexer extends Lexer {
 
                         switch (alt6) {
                     	case 1 :
-                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
+                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:21: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -511,7 +571,7 @@ public class InternalTransformationDslLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:62: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:62: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFE') ) {
                     	        input.consume();
@@ -537,10 +597,10 @@ public class InternalTransformationDslLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:82: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:82: '\\'' ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:87: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:87: ( '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' ) | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop7:
                     do {
                         int alt7=3;
@@ -556,7 +616,7 @@ public class InternalTransformationDslLexer extends Lexer {
 
                         switch (alt7) {
                     	case 1 :
-                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:88: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
+                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:88: '\\\\' ( 'b' | 't' | 'n' | 'f' | 'r' | '\"' | '\\'' | '\\\\' )
                     	    {
                     	    match('\\'); 
                     	    if ( input.LA(1)=='\"'||input.LA(1)=='\''||input.LA(1)=='\\'||input.LA(1)=='b'||input.LA(1)=='f'||input.LA(1)=='n'||input.LA(1)=='r'||input.LA(1)=='t' ) {
@@ -573,7 +633,7 @@ public class InternalTransformationDslLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:844:129: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:965:129: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFE') ) {
                     	        input.consume();
@@ -615,12 +675,12 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mRULE_ML_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_ML_COMMENT;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:846:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:846:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:967:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:967:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:846:24: ( options {greedy=false; } : . )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:967:24: ( options {greedy=false; } : . )*
             loop9:
             do {
                 int alt9=2;
@@ -645,7 +705,7 @@ public class InternalTransformationDslLexer extends Lexer {
 
                 switch (alt9) {
             	case 1 :
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:846:52: .
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:967:52: .
             	    {
             	    matchAny(); 
 
@@ -673,12 +733,12 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mRULE_SL_COMMENT() throws RecognitionException {
         try {
             int _type = RULE_SL_COMMENT;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop10:
             do {
                 int alt10=2;
@@ -691,7 +751,7 @@ public class InternalTransformationDslLexer extends Lexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFE') ) {
             	        input.consume();
@@ -712,7 +772,7 @@ public class InternalTransformationDslLexer extends Lexer {
                 }
             } while (true);
 
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:40: ( ( '\\r' )? '\\n' )?
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:40: ( ( '\\r' )? '\\n' )?
             int alt12=2;
             int LA12_0 = input.LA(1);
 
@@ -721,9 +781,9 @@ public class InternalTransformationDslLexer extends Lexer {
             }
             switch (alt12) {
                 case 1 :
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:41: ( '\\r' )? '\\n'
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:41: ( '\\r' )? '\\n'
                     {
-                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:41: ( '\\r' )?
+                    // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:41: ( '\\r' )?
                     int alt11=2;
                     int LA11_0 = input.LA(1);
 
@@ -732,7 +792,7 @@ public class InternalTransformationDslLexer extends Lexer {
                     }
                     switch (alt11) {
                         case 1 :
-                            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:848:41: '\\r'
+                            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:969:41: '\\r'
                             {
                             match('\r'); 
 
@@ -762,10 +822,10 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mRULE_WS() throws RecognitionException {
         try {
             int _type = RULE_WS;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:850:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:850:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:971:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:971:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:850:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:971:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt13=0;
             loop13:
             do {
@@ -818,8 +878,8 @@ public class InternalTransformationDslLexer extends Lexer {
     public final void mRULE_ANY_OTHER() throws RecognitionException {
         try {
             int _type = RULE_ANY_OTHER;
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:852:16: ( . )
-            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:852:18: .
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:973:16: ( . )
+            // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:973:18: .
             {
             matchAny(); 
 
@@ -833,8 +893,8 @@ public class InternalTransformationDslLexer extends Lexer {
     // $ANTLR end RULE_ANY_OTHER
 
     public void mTokens() throws RecognitionException {
-        // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:8: ( T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | RULE_BMID | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
-        int alt14=19;
+        // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:8: ( T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | T23 | T24 | T25 | RULE_BMID | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
+        int alt14=22;
         alt14 = dfa14.predict(input);
         switch (alt14) {
             case 1 :
@@ -915,56 +975,77 @@ public class InternalTransformationDslLexer extends Lexer {
                 }
                 break;
             case 12 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:54: RULE_BMID
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:54: T23
+                {
+                mT23(); 
+
+                }
+                break;
+            case 13 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:58: T24
+                {
+                mT24(); 
+
+                }
+                break;
+            case 14 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:62: T25
+                {
+                mT25(); 
+
+                }
+                break;
+            case 15 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:66: RULE_BMID
                 {
                 mRULE_BMID(); 
 
                 }
                 break;
-            case 13 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:64: RULE_ID
+            case 16 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:76: RULE_ID
                 {
                 mRULE_ID(); 
 
                 }
                 break;
-            case 14 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:72: RULE_INT
+            case 17 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:84: RULE_INT
                 {
                 mRULE_INT(); 
 
                 }
                 break;
-            case 15 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:81: RULE_STRING
+            case 18 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:93: RULE_STRING
                 {
                 mRULE_STRING(); 
 
                 }
                 break;
-            case 16 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:93: RULE_ML_COMMENT
+            case 19 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:105: RULE_ML_COMMENT
                 {
                 mRULE_ML_COMMENT(); 
 
                 }
                 break;
-            case 17 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:109: RULE_SL_COMMENT
+            case 20 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:121: RULE_SL_COMMENT
                 {
                 mRULE_SL_COMMENT(); 
 
                 }
                 break;
-            case 18 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:125: RULE_WS
+            case 21 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:137: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
-            case 19 :
-                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:133: RULE_ANY_OTHER
+            case 22 :
+                // ../org.bundlemaker.core.transformations.dsl/src-gen/org/bundlemaker/core/transformations/dsl/parser/antlr/internal/InternalTransformationDsl.g:1:145: RULE_ANY_OTHER
                 {
                 mRULE_ANY_OTHER(); 
 
@@ -978,133 +1059,161 @@ public class InternalTransformationDslLexer extends Lexer {
 
     protected DFA14 dfa14 = new DFA14(this);
     static final String DFA14_eotS =
-        "\1\uffff\1\25\1\uffff\2\25\1\uffff\4\25\1\uffff\1\23\1\25\2\uffff"+
-        "\3\23\2\uffff\1\25\1\uffff\1\25\1\uffff\3\25\1\uffff\4\25\1\uffff"+
-        "\1\25\5\uffff\16\25\1\75\6\25\1\104\1\uffff\6\25\1\uffff\2\25\1"+
-        "\115\1\25\1\117\1\25\1\121\1\25\1\uffff\1\25\1\uffff\1\25\1\uffff"+
-        "\4\25\1\131\1\25\1\133\1\uffff\1\25\1\uffff\1\25\1\136\1\uffff";
+        "\1\uffff\1\30\1\uffff\2\30\1\uffff\6\30\1\uffff\1\25\1\30\2\uffff"+
+        "\3\25\2\uffff\2\30\2\uffff\3\30\1\uffff\3\30\1\63\3\30\1\uffff\1"+
+        "\30\5\uffff\7\30\1\uffff\11\30\1\uffff\1\30\1\110\7\30\1\120\1\uffff"+
+        "\7\30\1\uffff\3\30\1\133\1\134\2\30\1\137\2\30\2\uffff\2\30\1\uffff"+
+        "\5\30\1\151\2\30\1\154\1\uffff\2\30\1\uffff\3\30\1\162\1\30\1\uffff"+
+        "\1\30\1\165\1\uffff";
     static final String DFA14_eofS =
-        "\137\uffff";
+        "\166\uffff";
     static final String DFA14_minS =
-        "\1\0\1\60\1\uffff\2\60\1\uffff\4\60\1\uffff\1\55\1\60\2\uffff\2"+
-        "\0\1\52\2\uffff\1\60\1\uffff\1\60\1\uffff\3\60\1\uffff\4\60\1\uffff"+
-        "\1\60\5\uffff\16\60\1\55\3\60\1\55\2\60\1\55\1\uffff\1\60\1\55\1"+
-        "\60\1\151\1\60\1\55\1\uffff\1\60\1\146\1\55\1\156\1\55\1\155\1\55"+
-        "\1\162\1\uffff\1\164\1\uffff\1\157\1\uffff\2\157\1\144\1\155\1\55"+
-        "\1\165\1\55\1\uffff\1\154\1\uffff\1\145\1\55\1\uffff";
+        "\1\0\1\60\1\uffff\2\60\1\uffff\6\60\1\uffff\1\55\1\60\2\uffff\2"+
+        "\0\1\52\2\uffff\2\60\2\uffff\3\60\1\uffff\3\60\1\55\3\60\1\uffff"+
+        "\1\60\5\uffff\6\60\1\40\1\uffff\11\60\1\uffff\1\60\1\55\2\60\1\55"+
+        "\4\60\1\55\1\uffff\1\60\1\55\1\151\3\60\1\55\1\uffff\1\60\1\146"+
+        "\1\156\2\55\1\60\1\155\1\55\1\162\1\164\2\uffff\1\55\1\157\1\uffff"+
+        "\2\157\1\155\1\144\1\155\1\55\1\157\1\165\1\55\1\uffff\1\144\1\154"+
+        "\1\uffff\1\165\1\145\1\154\1\55\1\145\1\uffff\1\163\1\55\1\uffff";
     static final String DFA14_maxS =
-        "\1\ufffe\1\172\1\uffff\2\172\1\uffff\4\172\1\uffff\2\172\2\uffff"+
-        "\2\ufffe\1\57\2\uffff\1\172\1\uffff\1\172\1\uffff\3\172\1\uffff"+
-        "\4\172\1\uffff\1\172\5\uffff\26\172\1\uffff\3\172\1\151\2\172\1"+
-        "\uffff\1\172\1\146\1\172\1\156\1\172\1\155\1\172\1\162\1\uffff\1"+
-        "\164\1\uffff\1\157\1\uffff\2\157\1\144\1\155\1\172\1\165\1\172\1"+
-        "\uffff\1\154\1\uffff\1\145\1\172\1\uffff";
+        "\1\ufffe\1\172\1\uffff\2\172\1\uffff\6\172\1\uffff\2\172\2\uffff"+
+        "\2\ufffe\1\57\2\uffff\2\172\2\uffff\3\172\1\uffff\7\172\1\uffff"+
+        "\1\172\5\uffff\7\172\1\uffff\11\172\1\uffff\12\172\1\uffff\2\172"+
+        "\1\151\4\172\1\uffff\1\172\1\146\1\156\3\172\1\155\1\172\1\162\1"+
+        "\164\2\uffff\1\172\1\157\1\uffff\2\157\1\155\1\144\1\155\1\172\1"+
+        "\157\1\165\1\172\1\uffff\1\144\1\154\1\uffff\1\165\1\145\1\154\1"+
+        "\172\1\145\1\uffff\1\163\1\172\1\uffff";
     static final String DFA14_acceptS =
-        "\2\uffff\1\2\2\uffff\1\5\4\uffff\1\13\2\uffff\1\14\1\16\3\uffff"+
-        "\1\22\1\23\1\uffff\1\14\1\uffff\1\2\3\uffff\1\5\4\uffff\1\13\1\uffff"+
-        "\1\16\1\17\1\21\1\20\1\22\26\uffff\1\10\6\uffff\1\7\10\uffff\1\12"+
-        "\1\uffff\1\4\1\uffff\1\11\7\uffff\1\3\1\uffff\1\1\2\uffff\1\6";
+        "\2\uffff\1\2\2\uffff\1\5\6\uffff\1\16\2\uffff\1\17\1\21\3\uffff"+
+        "\1\25\1\26\2\uffff\1\17\1\2\3\uffff\1\5\7\uffff\1\16\1\uffff\1\21"+
+        "\1\22\1\23\1\24\1\25\7\uffff\1\11\11\uffff\1\10\12\uffff\1\13\7"+
+        "\uffff\1\12\12\uffff\1\15\1\4\2\uffff\1\14\11\uffff\1\3\2\uffff"+
+        "\1\1\5\uffff\1\6\2\uffff\1\7";
     static final String DFA14_specialS =
-        "\137\uffff}>";
+        "\166\uffff}>";
     static final String[] DFA14_transitionS = {
-            "\11\23\2\22\2\23\1\22\22\23\1\22\1\23\1\17\4\23\1\20\4\23\1"+
-            "\5\1\15\1\12\1\21\12\16\1\23\1\2\5\23\32\14\3\23\1\13\1\14\1"+
-            "\23\2\14\1\6\1\14\1\3\1\10\2\14\1\11\2\14\1\7\1\4\4\14\1\1\10"+
-            "\14\uff84\23",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\24\25\26",
+            "\11\25\2\24\2\25\1\24\22\25\1\24\1\25\1\21\4\25\1\22\4\25\1"+
+            "\5\1\17\1\14\1\23\12\20\1\25\1\2\5\25\32\16\3\25\1\15\1\16\1"+
+            "\25\1\10\1\7\1\6\1\16\1\3\1\12\2\16\1\13\2\16\1\11\1\4\4\16"+
+            "\1\1\10\16\uff84\25",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\26\25\27",
             "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\14\26\1\31\12\26\1"+
-            "\30\2\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\16\26\1\32\13\26",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\14\27\1\32\12\27\1"+
+            "\33\2\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\16\27\1\34\13\27",
             "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\21\26\1\34\10\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\1\35\31\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\21\26\1\36\10\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\15\26\1\37\14\26",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\13\27\1\36\5\27\1"+
+            "\37\10\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\24\27\1\40\5\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\22\27\1\41\7\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\1\42\31\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\21\27\1\43\10\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\15\27\1\44\14\27",
             "",
-            "\1\25\23\uffff\32\41\4\uffff\1\41\1\uffff\32\41",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "",
-            "",
-            "\uffff\43",
-            "\uffff\43",
-            "\1\45\4\uffff\1\44",
+            "\1\30\23\uffff\32\46\4\uffff\1\46\1\uffff\32\46",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
             "",
             "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\14\26\1\47\15\26",
-            "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\2\26\1\50\27\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\1\26\1\51\30\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\3\26\1\52\26\26",
-            "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\53\25\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\30\26\1\54\1\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\16\26\1\55\13\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\2\26\1\56\27\26",
-            "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
+            "\uffff\50",
+            "\uffff\50",
+            "\1\51\4\uffff\1\52",
             "",
             "",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\14\27\1\54\15\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "",
+            "",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\1\27\1\55\30\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\2\27\1\56\27\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\3\27\1\57\26\27",
+            "",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\1\60\31\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\61\25\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\23\27\1\62\6\27",
+            "\1\30\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\30\27\1\64\1\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\16\27\1\65\13\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\2\27\1\66\27\27",
+            "",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
             "",
             "",
             "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\16\26\1\57\13\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\13\26\1\60\16\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\61\25\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\24\26\1\62\5\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\1\63\31\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\64\25\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\14\26\1\65\15\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\13\26\1\66\16\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\25\26\1\67\4\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\24\26\1\70\5\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\3\26\1\71\26\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\13\26\1\72\16\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\23\26\1\73\6\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\21\26\1\74\10\26",
-            "\1\25\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\24\26\1\76\5\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\77\25\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\3\26\1\100\26\26",
-            "\1\101\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\102\25\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\103\25\26",
-            "\1\25\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
             "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\3\26\1\105\26\26",
-            "\1\106\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\107\25\26",
-            "\1\110",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\22\26\1\111\7\26",
-            "\1\112\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
             "",
-            "\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\4\26\1\113\25\26",
-            "\1\114",
-            "\1\25\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "\1\116",
-            "\1\25\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "\1\120",
-            "\1\25\2\uffff\12\26\7\uffff\32\26\4\uffff\1\26\1\uffff\32\26",
-            "\1\122",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\16\27\1\67\13\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\70\25\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\13\27\1\71\16\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\24\27\1\72\5\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\22\27\1\73\7\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\1\74\31\27",
+            "\1\75\17\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
             "",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\76\25\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\14\27\1\77\15\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\13\27\1\100\16\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\25\27\1\101\4\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\3\27\1\102\26\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\24\27\1\103\5\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\13\27\1\104\16\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\22\27\1\105\7\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\23\27\1\106\6\27",
+            "",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\21\27\1\107\10\27",
+            "\1\30\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\24\27\1\111\5\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\112\25\27",
+            "\1\113\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\3\27\1\114\26\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\115\25\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\10\27\1\116\21\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\117\25\27",
+            "\1\30\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\3\27\1\121\26\27",
+            "\1\122\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
             "\1\123",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\124\25\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\22\27\1\125\7\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\5\27\1\126\24\27",
+            "\1\127\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
             "",
-            "\1\124",
-            "",
-            "\1\125",
-            "\1\126",
-            "\1\127",
-            "\1\130",
-            "\1\25\2\uffff\12\25\7\uffff\32\25\4\uffff\1\25\1\uffff\32\25",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\4\27\1\130\25\27",
+            "\1\131",
             "\1\132",
-            "\1\25\2\uffff\12\25\7\uffff\32\25\4\uffff\1\25\1\uffff\32\25",
+            "\1\30\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "\1\30\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\30\27\1\135\1\27",
+            "\1\136",
+            "\1\30\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "\1\140",
+            "\1\141",
             "",
-            "\1\134",
             "",
-            "\1\135",
-            "\1\25\2\uffff\12\25\7\uffff\32\25\4\uffff\1\25\1\uffff\32\25",
+            "\1\142\2\uffff\12\27\7\uffff\32\27\4\uffff\1\27\1\uffff\32\27",
+            "\1\143",
+            "",
+            "\1\144",
+            "\1\145",
+            "\1\146",
+            "\1\147",
+            "\1\150",
+            "\1\30\2\uffff\12\30\7\uffff\32\30\4\uffff\1\30\1\uffff\32\30",
+            "\1\152",
+            "\1\153",
+            "\1\30\2\uffff\12\30\7\uffff\32\30\4\uffff\1\30\1\uffff\32\30",
+            "",
+            "\1\155",
+            "\1\156",
+            "",
+            "\1\157",
+            "\1\160",
+            "\1\161",
+            "\1\30\2\uffff\12\30\7\uffff\32\30\4\uffff\1\30\1\uffff\32\30",
+            "\1\163",
+            "",
+            "\1\164",
+            "\1\30\2\uffff\12\30\7\uffff\32\30\4\uffff\1\30\1\uffff\32\30",
             ""
     };
 
@@ -1138,7 +1247,7 @@ public class InternalTransformationDslLexer extends Lexer {
             this.transition = DFA14_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | RULE_BMID | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER );";
+            return "1:1: Tokens : ( T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | T23 | T24 | T25 | RULE_BMID | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER );";
         }
     }
  

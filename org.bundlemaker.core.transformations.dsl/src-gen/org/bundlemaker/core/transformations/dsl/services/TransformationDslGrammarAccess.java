@@ -39,12 +39,13 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 		private final RuleCall cRemoveFromParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cEmbedIntoParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cCreateModuleParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cClassifyModulesParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		
 		//Transformation:
-		//	RemoveFrom | EmbedInto | CreateModule;
+		//	RemoveFrom | EmbedInto | CreateModule | ClassifyModules;
 		public ParserRule getRule() { return rule; }
 
-		//RemoveFrom | EmbedInto | CreateModule
+		//RemoveFrom | EmbedInto | CreateModule | ClassifyModules
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//RemoveFrom
@@ -55,6 +56,9 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 
 		//CreateModule
 		public RuleCall getCreateModuleParserRuleCall_2() { return cCreateModuleParserRuleCall_2; }
+
+		//ClassifyModules
+		public RuleCall getClassifyModulesParserRuleCall_3() { return cClassifyModulesParserRuleCall_3; }
 	}
 
 	public class RemoveFromElements extends AbstractParserRuleElementFinder {
@@ -183,6 +187,62 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 
 		//";"
 		public Keyword getSemicolonKeyword_4() { return cSemicolonKeyword_4; }
+	}
+
+	public class ClassifyModulesElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ClassifyModules");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cClassifyModulesKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cModulesAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cModulesSTRINGTerminalRuleCall_1_0 = (RuleCall)cModulesAssignment_1.eContents().get(0);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cButNotKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Assignment cExcludedModulesAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cExcludedModulesSTRINGTerminalRuleCall_2_1_0 = (RuleCall)cExcludedModulesAssignment_2_1.eContents().get(0);
+		private final Keyword cAsKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Assignment cClassificationAssignment_4 = (Assignment)cGroup.eContents().get(4);
+		private final RuleCall cClassificationSTRINGTerminalRuleCall_4_0 = (RuleCall)cClassificationAssignment_4.eContents().get(0);
+		private final Keyword cSemicolonKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		
+		//ClassifyModules:
+		//	"classify-modules" modules=STRING ("but not " excludedModules=STRING)? "as" classification=STRING ";";
+		public ParserRule getRule() { return rule; }
+
+		//"classify-modules" modules=STRING ("but not " excludedModules=STRING)? "as" classification=STRING ";"
+		public Group getGroup() { return cGroup; }
+
+		//"classify-modules"
+		public Keyword getClassifyModulesKeyword_0() { return cClassifyModulesKeyword_0; }
+
+		//modules=STRING
+		public Assignment getModulesAssignment_1() { return cModulesAssignment_1; }
+
+		//STRING
+		public RuleCall getModulesSTRINGTerminalRuleCall_1_0() { return cModulesSTRINGTerminalRuleCall_1_0; }
+
+		//("but not " excludedModules=STRING)?
+		public Group getGroup_2() { return cGroup_2; }
+
+		//"but not "
+		public Keyword getButNotKeyword_2_0() { return cButNotKeyword_2_0; }
+
+		//excludedModules=STRING
+		public Assignment getExcludedModulesAssignment_2_1() { return cExcludedModulesAssignment_2_1; }
+
+		//STRING
+		public RuleCall getExcludedModulesSTRINGTerminalRuleCall_2_1_0() { return cExcludedModulesSTRINGTerminalRuleCall_2_1_0; }
+
+		//"as"
+		public Keyword getAsKeyword_3() { return cAsKeyword_3; }
+
+		//classification=STRING
+		public Assignment getClassificationAssignment_4() { return cClassificationAssignment_4; }
+
+		//STRING
+		public RuleCall getClassificationSTRINGTerminalRuleCall_4_0() { return cClassificationSTRINGTerminalRuleCall_4_0; }
+
+		//";"
+		public Keyword getSemicolonKeyword_5() { return cSemicolonKeyword_5; }
 	}
 
 	public class LayerElements extends AbstractParserRuleElementFinder {
@@ -384,6 +444,7 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 	private RemoveFromElements pRemoveFrom;
 	private EmbedIntoElements pEmbedInto;
 	private CreateModuleElements pCreateModule;
+	private ClassifyModulesElements pClassifyModules;
 	private LayerElements pLayer;
 	private FromElements pFrom;
 	private ResourceSetElements pResourceSet;
@@ -424,7 +485,7 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 	}
 
 	//Transformation:
-	//	RemoveFrom | EmbedInto | CreateModule;
+	//	RemoveFrom | EmbedInto | CreateModule | ClassifyModules;
 	public TransformationElements getTransformationAccess() {
 		return (pTransformation != null) ? pTransformation : (pTransformation = new TransformationElements());
 	}
@@ -461,6 +522,16 @@ public class TransformationDslGrammarAccess extends AbstractGrammarElementFinder
 	
 	public ParserRule getCreateModuleRule() {
 		return getCreateModuleAccess().getRule();
+	}
+
+	//ClassifyModules:
+	//	"classify-modules" modules=STRING ("but not " excludedModules=STRING)? "as" classification=STRING ";";
+	public ClassifyModulesElements getClassifyModulesAccess() {
+		return (pClassifyModules != null) ? pClassifyModules : (pClassifyModules = new ClassifyModulesElements());
+	}
+	
+	public ParserRule getClassifyModulesRule() {
+		return getClassifyModulesAccess().getRule();
 	}
 
 	//Layer:

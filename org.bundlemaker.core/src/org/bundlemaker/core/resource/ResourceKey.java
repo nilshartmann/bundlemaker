@@ -38,22 +38,22 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceKey implements IResourceKey {
 
   /** the content id */
-  private FlyWeightString                 _contentId;
+  private FlyWeightString _contentId;
 
   /** the root of the resource */
-  private FlyWeightString                 _root;
+  private FlyWeightString _root;
 
   /** the path of the resource */
-  private String                          _path;
+  private String          _path;
 
   /** - */
-  private long                            _timestamp = -1;
+  private long            _timestamp = -1;
 
   /** - **/
-  private byte[]                          _hashvalue;
+  private byte[]          _hashvalue;
 
-//  /** - */
-//  private transient SoftReference<byte[]> _contentCache;
+  // /** - */
+  // private transient SoftReference<byte[]> _contentCache;
 
   /**
    * <p>
@@ -216,10 +216,10 @@ public class ResourceKey implements IResourceKey {
         // return the result
         return result;
 
-      } catch (Exception e) {
+      } catch (Exception ex) {
         // TODO Auto-generated catch block
-        e.printStackTrace();
-        throw new RuntimeException("");
+        ex.printStackTrace();
+        throw new RuntimeException("Error while parsing '" + getRoot() + "' with path '" + getPath() + "': " + ex, ex);
       }
     }
 
@@ -250,9 +250,9 @@ public class ResourceKey implements IResourceKey {
         //
         // _contentCache = new SoftReference<byte[]>(result);
         if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-        MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-        messagedigest.update(result);
-        _hashvalue = messagedigest.digest();
+          MessageDigest messagedigest = MessageDigest.getInstance("SHA");
+          messagedigest.update(result);
+          _hashvalue = messagedigest.digest();
         }
 
         //
