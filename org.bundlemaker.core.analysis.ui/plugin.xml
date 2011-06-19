@@ -36,7 +36,9 @@
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
 	       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
-	       <menu id="org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu"
+	       <menu
+	       		icon="icons/bundlemaker-icon-small.png" 
+	       		id="org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu"
               label="BundleMaker" >
             	<command commandId="org.bundlemaker.core.ui.commands.Demo"
               			 style="push">
