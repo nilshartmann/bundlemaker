@@ -123,7 +123,7 @@ public abstract class AbstractIntegrationTest {
 
     // apply the transformation
     log("Applying transformations...");
-    modularizedSystem.applyTransformations();
+    modularizedSystem.applyTransformations(null);
 
     //
     doPostProcessModularizedSystem(modularizedSystem);

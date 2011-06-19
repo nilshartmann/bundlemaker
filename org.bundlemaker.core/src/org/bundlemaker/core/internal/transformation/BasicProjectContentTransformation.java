@@ -16,11 +16,12 @@ import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BasicProjectContentTransformation implements ITransformation {
 
   @Override
-  public void apply(IModifiableModularizedSystem modularizedSystem) {
+  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
 
     // iterate over the file based content
     for (IFileBasedContent fileBasedContent : modularizedSystem.getProjectDescription().getFileBasedContent()) {

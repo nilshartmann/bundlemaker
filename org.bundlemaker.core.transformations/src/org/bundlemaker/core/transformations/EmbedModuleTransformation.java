@@ -19,6 +19,7 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 public class EmbedModuleTransformation implements ITransformation {
 
@@ -50,7 +51,7 @@ public class EmbedModuleTransformation implements ITransformation {
   }
 
   @Override
-  public void apply(IModifiableModularizedSystem modularizedSystem) {
+  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
 
     // step 1: define modules variables
     IResourceModule hostModule = null;

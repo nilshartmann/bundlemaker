@@ -25,6 +25,7 @@ import org.bundlemaker.core.transformations.dsl.transformationDsl.Transformation
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedModuleDefinition;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 
@@ -39,7 +40,7 @@ public class TransformationExecutor {
     _model = model;
   }
 
-  public void apply() {
+  public void apply(IProgressMonitor progressMonitor) {
     EList<Transformation> transformations = _model.getTransformations();
 
     for (Transformation transformation : transformations) {
@@ -57,7 +58,7 @@ public class TransformationExecutor {
       }
     }
 
-    _system.applyTransformations();
+    _system.applyTransformations(progressMonitor);
   }
 
   private void apply(CreateModule createModule) {

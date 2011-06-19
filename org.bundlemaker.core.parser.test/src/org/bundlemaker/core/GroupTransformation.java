@@ -4,6 +4,7 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -38,7 +39,7 @@ public class GroupTransformation implements ITransformation {
    * {@inheritDoc}
    */
   @Override
-  public void apply(IModifiableModularizedSystem modularizedSystem) {
+  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
     modularizedSystem.getModifiableResourceModule(_moduleIdentifier).setClassification(_group);
   }
 }

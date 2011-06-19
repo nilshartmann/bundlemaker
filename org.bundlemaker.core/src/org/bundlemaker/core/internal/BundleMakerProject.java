@@ -69,7 +69,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   /** the project description working copies */
   private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
 
-  private IDependencyModel _dependencyModel;
+  private IDependencyModel               _dependencyModel;
 
   /**
    * <p>
@@ -140,11 +140,10 @@ public class BundleMakerProject implements IBundleMakerProject {
     // create default working copy
     IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
         .getName()) : createModularizedSystemWorkingCopy(getProject().getName());
-    modularizedSystem.applyTransformations();
+    modularizedSystem.applyTransformations(progressMonitor);
 
     // TODO
-    _dependencyModel = ModelTransformer.getDependencyModel(this,
-        (IModifiableModularizedSystem) modularizedSystem);
+    _dependencyModel = ModelTransformer.getDependencyModel(this, (IModifiableModularizedSystem) modularizedSystem);
 
     //
     Activator.getContext().registerService(IDependencyModel.class.getName(), _dependencyModel, null);

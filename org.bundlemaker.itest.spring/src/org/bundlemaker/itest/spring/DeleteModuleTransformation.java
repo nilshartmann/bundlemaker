@@ -12,6 +12,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 public class DeleteModuleTransformation implements ITransformation {
 
@@ -46,7 +47,7 @@ public class DeleteModuleTransformation implements ITransformation {
   /**
    * {@inheritDoc}
    */
-  public void apply(IModifiableModularizedSystem modularizedSystem) {
+  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
 
     Set<IResource> sourceResources = modularizedSystem.getModifiableResourceModule(_moduleIdentifier).getResources(
         ContentType.SOURCE);
