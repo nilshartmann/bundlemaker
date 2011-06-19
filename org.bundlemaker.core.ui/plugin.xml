@@ -84,6 +84,8 @@
       <command id="org.bundlemaker.core.ui.commands.ReportExportHandler" name="Simple Report" /> 
    </extension>   
    <extension point="org.eclipse.ui.commands">
+      <command id="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler" name="Binary bundles" /> 
+   </extension>   <extension point="org.eclipse.ui.commands">
       <command
             id="org.bundlemaker.core.ui.commands.TransformHandler"
             name="Transform..." />
@@ -136,6 +138,22 @@
          </enabledWhen>
       </handler>
    </extension> 
+     <extension
+         point="org.eclipse.ui.handlers">
+      <handler class="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
+            commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler">
+         <activeWhen>
+         <reference
+               definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
+         </reference>
+         </activeWhen>
+         <enabledWhen>
+          <reference
+               definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
+               </reference>
+         </enabledWhen>
+      </handler>
+   </extension>
    <extension
          point="org.eclipse.ui.handlers">
       <handler class="org.bundlemaker.core.ui.commands.TransformHandler"
@@ -182,6 +200,8 @@
 	       <menu
               label="Export as..." >
             	<command commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+              			 style="push" />
+              <command commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
               			 style="push" />
               <command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
               			 style="push" />
