@@ -16,7 +16,6 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 
@@ -73,37 +72,34 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
   public final void export(IModularizedSystem modularizedSystem, IModuleExporterContext context,
       IProgressMonitor mainMonitor) throws Exception {
 
-    // Make sure we have an IProgressMonitor instance
-    if (mainMonitor == null) {
-      mainMonitor = new NullProgressMonitor();
-    }
-
     _currentModularizedSystem = modularizedSystem;
     _currentContext = context;
     _currentContext = preExportModules();
 
     // Create SubMonitor
     int modulesToExportCount = countModulesToExport();
-    SubMonitor progressMonitor = SubMonitor.convert(mainMonitor, modulesToExportCount * 10);
+    SubMonitor subMonitor = SubMonitor.convert(mainMonitor, "Exporting " + modularizedSystem.getName(),
+        modulesToExportCount);
 
     try {
       // simply call export() for each contained
+      int counter = 0;
       for (IResourceModule resourceModule : _currentModularizedSystem.getResourceModules()) {
 
         if (_moduleFilter == null || _moduleFilter.matches(resourceModule)) {
 
           //
           _currentModule = resourceModule;
+          counter++;
 
           //
           preExportModule();
 
           try {
-            mainMonitor.subTask("Exporting " + _currentModule.getModuleIdentifier());
             // export if possible
             if (_moduleExporter.canExport(_currentModularizedSystem, _currentModule, _currentContext)) {
-              _moduleExporter.export(_currentModularizedSystem, _currentModule, _currentContext,
-                  progressMonitor.newChild(10));
+              _moduleExporter
+                  .export(_currentModularizedSystem, _currentModule, _currentContext, subMonitor.newChild(1));
             } else {
               handleNonExportableModule();
             }
@@ -113,24 +109,23 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
           } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            new SimpleReportExporter().export(modularizedSystem, _currentModule, context, progressMonitor.newChild(10));
+            new SimpleReportExporter().export(modularizedSystem, _currentModule, context, subMonitor.newChild(1));
           }
-
           postExportModule();
 
-          progressMonitor.worked(1);
         }
       }
 
-      if (progressMonitor.isCanceled()) {
+      if (subMonitor.isCanceled()) {
         return;
       }
-
       postExportModules();
     } finally {
 
       // close the ProgressMonitor
-      progressMonitor.done();
+      if (mainMonitor != null) {
+        mainMonitor.done();
+      }
     }
   }
 

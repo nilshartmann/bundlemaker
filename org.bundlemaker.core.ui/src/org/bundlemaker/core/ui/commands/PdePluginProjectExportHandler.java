@@ -40,7 +40,7 @@ public class PdePluginProjectExportHandler extends AbstractExportHandler {
 
     System.out.println("exportAsProjects to " + destination);
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
-    pdeExporter.setUseClassifcationForExportDestination(true);
+    pdeExporter.setUseClassifcationForExportDestination(false);
 
     // do the export
     doExport(pdeExporter, modularizedSystem, exporterContext);

@@ -15,8 +15,8 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * <p>
@@ -90,32 +90,30 @@ public abstract class AbstractExporter implements IModuleExporter {
     Assert.isNotNull(module);
     Assert.isNotNull(context);
 
-    if (progressMonitor == null) {
-      progressMonitor = new NullProgressMonitor();
-    }
-
     // set attributes
     _currentModularizedSystem = modularizedSystem;
     _currentContext = context;
     _currentModule = module;
-
-    progressMonitor.beginTask("Exporting " + module.getModuleIdentifier().toString(), 100);
+    SubMonitor subMonitor = SubMonitor.convert(progressMonitor, "Exporting " + module.getModuleIdentifier().toString(),
+        100);
+    subMonitor.subTask("Exporting " + module.getModuleIdentifier());
 
     // pre export
     preExportModule();
-    progressMonitor.worked(10);
+    subMonitor.worked(10);
 
     // export
-    checkIfCanceled(progressMonitor);
-    doExport();
-    progressMonitor.worked(80);
+    checkIfCanceled(subMonitor);
+
+    doExport(subMonitor.newChild(80));
 
     // post export
-    checkIfCanceled(progressMonitor);
+    checkIfCanceled(subMonitor);
+    System.out.println("postExportModule");
     postExportModule();
-    progressMonitor.worked(10);
+    subMonitor.worked(10);
+    System.out.println("nach postExportModule");
 
-    progressMonitor.done();
   }
 
   /**
@@ -133,9 +131,11 @@ public abstract class AbstractExporter implements IModuleExporter {
    * <p>
    * </p>
    * 
+   * @param progressMonitor
+   *          A progress monitor or null. The caller is responsible for calling done on the progress monitor instance
    * @throws CoreException
    */
-  protected void doExport() throws CoreException {
+  protected void doExport(IProgressMonitor progressMonitor) throws CoreException {
     // empty implementation
   }
 

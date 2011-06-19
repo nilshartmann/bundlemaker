@@ -56,7 +56,8 @@ public interface IModuleExporter {
    * @param context
    *          the {@link IModuleExporterContext}
    * @param progressMonitor
-   *          the {@link IProgressMonitor} or null
+   *          the {@link IProgressMonitor} or null. This method does not invoke <tt>done</tt> on the progress monitor.
+   *          It's up to the caller of this method to invoke <tt>done</tt>
    * 
    * @throws CoreException
    */
