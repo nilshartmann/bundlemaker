@@ -103,6 +103,11 @@ public class TransformationDslAdapterFactory extends AdapterFactoryImpl
         return createCreateModuleAdapter();
       }
       @Override
+      public Adapter caseClassifyModules(ClassifyModules object)
+      {
+        return createClassifyModulesAdapter();
+      }
+      @Override
       public Adapter caseLayer(Layer object)
       {
         return createLayerAdapter();
@@ -220,6 +225,21 @@ public class TransformationDslAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createCreateModuleAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules <em>Classify Modules</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules
+   * @generated
+   */
+  public Adapter createClassifyModulesAdapter()
   {
     return null;
   }

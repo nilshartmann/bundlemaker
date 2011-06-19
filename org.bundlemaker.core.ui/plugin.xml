@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+<!--
    <extension
        point="org.eclipse.jdt.ui.javaElementFilters">
     <filter
@@ -12,6 +13,8 @@
           name="BundleMaker$JDT project filter">
     </filter>
  </extension>
+ 
+ -->
    <extension
          id="org.bundlemaker.core.ui.newWizards"
          name="Bundlemaker Wizards"
@@ -39,11 +42,12 @@
          name="Bundlemaker Editors"
          point="org.eclipse.ui.editors">
       <editor
+      	icon="icons/bundlemaker-icon-small.png"
             class="org.bundlemaker.core.ui.editor.ProjectDescriptionEditor"
             default="false"
             id="org.bundlemaker.core.ui.editor.projectdescription"
             name="Bundlemaker editor">
-         <contentTypeBinding
+         <contentTypeBinding 
                contentTypeId="org.bundlemaker.core.ui.contenttypes.projectdescription">
          </contentTypeBinding>
       </editor>
@@ -80,9 +84,24 @@
       <command id="org.bundlemaker.core.ui.commands.ReportExportHandler" name="Simple Report" /> 
    </extension>   
    <extension point="org.eclipse.ui.commands">
-      <command id="org.bundlemaker.core.ui.commands.TransformHandler" name="Transform..." /> 
+      <command
+            id="org.bundlemaker.core.ui.commands.TransformHandler"
+            name="Transform..." />
    </extension>   
-
+   <extension point="org.eclipse.ui.commands">
+      <command id="org.bundlemaker.core.ui.commands.RunTransformationScript" name="Execute transformation..." /> 
+   </extension> 
+   <!-- the expressions -->
+   <!-- An expression evaluating to true if a BMT-file has been selected -->
+	<extension point="org.eclipse.core.expressions.definitions">
+      <definition id="org.bundlemaker.core.ui.bmtFileSelected">
+         <iterate ifEmpty="false">
+         	<instanceof value="org.eclipse.core.resources.IFile" />
+           <test property="org.eclipse.core.resources.name" 
+                 value="*.bmt"/>
+         </iterate>
+      </definition>
+   </extension>
    
    <!-- the handlers -->
    <extension
@@ -117,7 +136,7 @@
          </enabledWhen>
       </handler>
    </extension> 
-    <extension
+   <extension
          point="org.eclipse.ui.handlers">
       <handler class="org.bundlemaker.core.ui.commands.TransformHandler"
             commandId="org.bundlemaker.core.ui.commands.TransformHandler">
@@ -128,12 +147,35 @@
          </activeWhen>
          <enabledWhen>
           <reference
-               definitionId="org.bundlemaker.core.analysis.ui.bmContentSelected">
+               definitionId="org.bundlemaker.core.analysis.ui.bmRootArtifactSelected">
                </reference>
          </enabledWhen>
       </handler>
    </extension>    
-       <!-- the pop up menus -->
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler class="org.bundlemaker.core.ui.commands.RunTransformationScriptHandler"
+            commandId="org.bundlemaker.core.ui.commands.RunTransformationScript">
+         <activeWhen>
+         	<or>
+          <reference
+               definitionId="org.bundlemaker.core.ui.bmtFileSelected" />
+               <reference
+                    definitionId="org.bundlemaker.core.transformations.dsl.TransformationDsl.Editor.opened"/>
+          	</or>
+         </activeWhen>
+         <enabledWhen>
+         	<or>
+          <reference
+               definitionId="org.bundlemaker.core.ui.bmtFileSelected" />
+               <reference
+                    definitionId="org.bundlemaker.core.transformations.dsl.TransformationDsl.Editor.opened"/>
+          	</or>
+         </enabledWhen>
+      </handler>
+   </extension>    
+
+   <!-- the pop up menus -->
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
 	       locationURI="popup:org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu">
@@ -143,19 +185,34 @@
               			 style="push" />
               <command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
               			 style="push" />
-           <visibleWhen
-                 checkEnabled="true" />
 	       </menu>
 	   </menuContribution> 
    </extension>
 
-       <!-- the pop up menus -->
+   <!-- the pop up menus -->
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
 	       locationURI="popup:org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu">
             	<command commandId="org.bundlemaker.core.ui.commands.TransformHandler"
               			 style="push" />
+              <command commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
+              			 style="push" />
 	   </menuContribution> 
-   </extension>   
+   </extension>
+   
+   <!-- Add RunTransformation to Editor Popup Menu -->
+      <extension point="org.eclipse.ui.menus">
+        <menuContribution
+            locationURI="popup:#TextEditorContext?after=additions">
+             <command icon="icons/bundlemaker-icon-small.png"
+                 commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
+                 style="push"
+                 tooltip="Execute this transformation on a selected BundleMaker project">
+            <visibleWhen checkEnabled="true" />
+         </command>  
+         </menuContribution>
+    </extension>
+  
+ 
 
 </plugin>

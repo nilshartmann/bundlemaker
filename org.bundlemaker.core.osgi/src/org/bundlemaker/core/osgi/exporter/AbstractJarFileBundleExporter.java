@@ -26,6 +26,7 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
@@ -45,7 +46,7 @@ public abstract class AbstractJarFileBundleExporter extends AbstractManifestAwar
    * @throws CoreException
    */
   @Override
-  protected void doExport() throws CoreException {
+  protected void doExport(IProgressMonitor progressMonitor) throws CoreException {
 
     // create new file if repackaging is required
     if (ModuleExporterUtils.hasAdditionalResources(getCurrentModuleTemplateDirectory())

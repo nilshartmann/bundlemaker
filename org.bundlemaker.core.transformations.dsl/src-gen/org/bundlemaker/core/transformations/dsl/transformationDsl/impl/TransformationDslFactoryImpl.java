@@ -72,6 +72,7 @@ public class TransformationDslFactoryImpl extends EFactoryImpl implements Transf
       case TransformationDslPackage.REMOVE_FROM: return createRemoveFrom();
       case TransformationDslPackage.EMBED_INTO: return createEmbedInto();
       case TransformationDslPackage.CREATE_MODULE: return createCreateModule();
+      case TransformationDslPackage.CLASSIFY_MODULES: return createClassifyModules();
       case TransformationDslPackage.LAYER: return createLayer();
       case TransformationDslPackage.FROM: return createFrom();
       case TransformationDslPackage.RESOURCE_SET: return createResourceSet();
@@ -135,6 +136,17 @@ public class TransformationDslFactoryImpl extends EFactoryImpl implements Transf
   {
     CreateModuleImpl createModule = new CreateModuleImpl();
     return createModule;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ClassifyModules createClassifyModules()
+  {
+    ClassifyModulesImpl classifyModules = new ClassifyModulesImpl();
+    return classifyModules;
   }
 
   /**

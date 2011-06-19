@@ -30,6 +30,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -102,7 +103,7 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
    * {@inheritDoc}
    */
   @Override
-  public void doExport() throws CoreException {
+  public void doExport(IProgressMonitor progressMonitor) throws CoreException {
 
     // step 1: get a non-existing project name
     String projectName = Helper.getUniqueProjectName(getCurrentModule().getModuleIdentifier().getName());

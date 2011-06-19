@@ -9,8 +9,10 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.transformations.ClassifyTransformation;
 import org.bundlemaker.core.transformations.EmbedModuleTransformation;
 import org.bundlemaker.core.transformations.RemoveResourcesTransformation;
+import org.bundlemaker.core.transformations.dsl.transformationDsl.ClassifyModules;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.CreateModule;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.EmbedInto;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.From;
@@ -49,6 +51,9 @@ public class TransformationExecutor {
       } else if (transformation instanceof CreateModule) {
         CreateModule createModule = (CreateModule) transformation;
         apply(createModule);
+      } else if (transformation instanceof ClassifyModules) {
+        ClassifyModules classifyModules = (ClassifyModules) transformation;
+        apply(classifyModules);
       }
     }
 
@@ -131,6 +136,16 @@ public class TransformationExecutor {
 
     removeTransformation.addResourceSet(wrapper.getModuleIdentifier(), wrapper.getIncludes(), wrapper.getExcludes());
     add(removeTransformation);
+  }
+
+  private void apply(ClassifyModules classifyModules) {
+    String modulePattern = classifyModules.getModules();
+    String classificationPattern = classifyModules.getClassification();
+    String exclude = classifyModules.getExcludedModules();
+    ClassifyTransformation classifyTransformation = new ClassifyTransformation(modulePattern, exclude,
+        classificationPattern);
+    add(classifyTransformation);
+
   }
 
   private void add(ITransformation transformation) {

@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler;
+import org.bundlemaker.core.analysis.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
@@ -35,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public abstract class AbstractExportHandler extends AbstractBundleMakerHandler {
+public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler {
 
   /*
    * (non-Javadoc)

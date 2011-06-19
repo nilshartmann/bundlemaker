@@ -133,6 +133,14 @@ public class TransformationDslSwitch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case TransformationDslPackage.CLASSIFY_MODULES:
+      {
+        ClassifyModules classifyModules = (ClassifyModules)theEObject;
+        T result = caseClassifyModules(classifyModules);
+        if (result == null) result = caseTransformation(classifyModules);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case TransformationDslPackage.LAYER:
       {
         Layer layer = (Layer)theEObject;
@@ -248,6 +256,22 @@ public class TransformationDslSwitch<T>
    * @generated
    */
   public T caseCreateModule(CreateModule object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Classify Modules</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Classify Modules</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseClassifyModules(ClassifyModules object)
   {
     return null;
   }

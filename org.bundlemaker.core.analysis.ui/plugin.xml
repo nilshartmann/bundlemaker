@@ -52,7 +52,55 @@
       <command id="org.bundlemaker.core.ui.commands.Demo" name="Demo" /> 
    </extension>
    
+   <!-- the IArtifact property tester -->
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester id="org.bundlemaker.core.analysis.ui.expressions.ArtifactPropertyTester"
+            class="org.bundlemaker.core.analysis.ui.expressions.ArtifactPropertyTester"
+            namespace="org.bundlemaker.core.analysis.ui.expressions.IArtifact"
+            properties="type"
+            type="org.bundlemaker.dependencyanalysis.base.model.IArtifact">
+      </propertyTester>
+   </extension>
+   
    <!-- the expression definitions -->
+   
+   <!-- org.bundlemaker.core.analysis.ui.bmContentSelected: evaluates
+        to true if all  of the selected elements are IArtifact -->
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.bundlemaker.core.analysis.ui.bmContentSelected">
+            <with
+                  variable="selection">
+                  <iterate ifEmpty="false" operator="and">
+                  <instanceof
+                        value="org.bundlemaker.dependencyanalysis.base.model.IArtifact">
+                  </instanceof>
+                  </iterate>
+            </with>
+      </definition>
+   </extension>
+
+   <!-- org.bundlemaker.core.analysis.ui.bmContentSelected: evaluates
+        to true if all selected elements are Root-IArtifacts (i.e. ModularizedSystems) -->
+    <extension
+       point="org.eclipse.core.expressions.definitions">
+    <definition
+          id="org.bundlemaker.core.analysis.ui.bmRootArtifactSelected">
+          <with
+                variable="selection">
+                <iterate ifEmpty="false" operator="and">
+                <instanceof
+                      value="org.bundlemaker.dependencyanalysis.base.model.IArtifact">
+                </instanceof>
+                <test property="org.bundlemaker.core.analysis.ui.expressions.IArtifact.type" value="Root" 
+                	forcePluginActivation="true"/>
+                </iterate>
+          </with>
+    </definition>
+   </extension> 
+
    <extension
          point="org.eclipse.core.expressions.definitions">
       <definition

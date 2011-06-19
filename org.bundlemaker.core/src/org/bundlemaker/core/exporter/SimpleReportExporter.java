@@ -28,8 +28,10 @@ import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * <p>
@@ -51,7 +53,10 @@ public class SimpleReportExporter extends AbstractExporter {
    * {@inheritDoc}
    */
   @Override
-  public void doExport() throws CoreException {
+  public void doExport(IProgressMonitor progressMonitor) throws CoreException {
+
+    SubMonitor subMonitor = SubMonitor.convert(progressMonitor, 10);
+    subMonitor.beginTask(null, 10);
 
     StringBuilder builder = new StringBuilder();
     builder.append(getCurrentModule().getModuleIdentifier().toString() + "\n");
@@ -74,6 +79,7 @@ public class SimpleReportExporter extends AbstractExporter {
         }
       }
     }
+    subMonitor.worked(1);
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
@@ -96,6 +102,7 @@ public class SimpleReportExporter extends AbstractExporter {
         }
       }
     }
+    subMonitor.worked(1);
 
     builder.append("\n");
     builder.append("Referenced Types: \n");
@@ -104,6 +111,7 @@ public class SimpleReportExporter extends AbstractExporter {
     for (String referencedType : asSortedList(referencedTypes)) {
       builder.append(referencedType + "\n");
     }
+    subMonitor.worked(2);
 
     builder.append("\n");
     builder.append("Indirectly referenced Types: \n");
@@ -114,6 +122,7 @@ public class SimpleReportExporter extends AbstractExporter {
         builder.append(referencedType + "\n");
       }
     }
+    subMonitor.worked(2);
 
     builder.append("\n");
     builder.append("Referenced Modules: \n");
@@ -123,6 +132,7 @@ public class SimpleReportExporter extends AbstractExporter {
     for (IModule referencedModule : queryResult.getReferencedModules()) {
       builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
     }
+    subMonitor.worked(1);
 
     // TODO
     builder.append("\n");
@@ -130,6 +140,7 @@ public class SimpleReportExporter extends AbstractExporter {
     for (IReference missingType : queryResult.getUnsatisfiedReferences()) {
       builder.append(missingType + "\n");
     }
+    subMonitor.worked(1);
 
     // builder.append("\n");
     // builder.append("Types with ambigious modules: \n");
@@ -154,6 +165,7 @@ public class SimpleReportExporter extends AbstractExporter {
       fileWriter.write(builder.toString());
       fileWriter.flush();
       fileWriter.close();
+      subMonitor.worked(2);
 
     } catch (IOException e) {
       // TODO

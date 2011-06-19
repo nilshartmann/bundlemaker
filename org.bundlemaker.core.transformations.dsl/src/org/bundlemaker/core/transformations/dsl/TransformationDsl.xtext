@@ -6,7 +6,7 @@ TransformationModel:
 	(transformations+=Transformation)*;
 	
 Transformation:
-	RemoveFrom | EmbedInto | CreateModule
+	RemoveFrom | EmbedInto | CreateModule | ClassifyModules
 ;
 
 RemoveFrom:
@@ -19,6 +19,10 @@ EmbedInto:
 
 CreateModule:
  'create-module' module=ModuleIdentifier (layer=Layer)? (from+=From)* ';'
+;
+
+ClassifyModules:
+ 'classify-modules' modules=STRING ('but not ' excludedModules=STRING)? 'as' classification=STRING ';'
 ;
 
 Layer:

@@ -71,6 +71,15 @@ public interface TransformationDslFactory extends EFactory
   CreateModule createCreateModule();
 
   /**
+   * Returns a new object of class '<em>Classify Modules</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Classify Modules</em>'.
+   * @generated
+   */
+  ClassifyModules createClassifyModules();
+
+  /**
    * Returns a new object of class '<em>Layer</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
