@@ -19,7 +19,9 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -69,11 +71,16 @@ public class ClassifyTransformation implements ITransformation {
    * @see org.bundlemaker.core.transformation.ITransformation#apply(org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem)
    */
   @Override
-  public void apply(IModifiableModularizedSystem modularizedSystem) {
+  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
     
     Set<Entry<IModuleIdentifier, IModifiableResourceModule>> modules = modularizedSystem.getModifiableResourceModulesMap().entrySet();
+    
+    SubMonitor subMonitor = SubMonitor.convert(monitor, modules.size());
+    subMonitor.subTask("Classify modules");
+    
     for (Entry<IModuleIdentifier, IModifiableResourceModule> entry : modules) {
       applyClassification(entry.getKey(), entry.getValue());
+      subMonitor.worked(1);
      }
   }
 

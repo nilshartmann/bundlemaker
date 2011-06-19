@@ -23,6 +23,7 @@ import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -80,8 +81,13 @@ public interface IModularizedSystem {
    * <p>
    * Applies the transformations.
    * </p>
+   * 
+   * @param monitor
+   *          the progress monitor to use for reporting progress to the user. It is the caller's responsibility to call
+   *          done() on the given monitor. Accepts <code>null</code>, indicating that no progress should be reported and
+   *          that the operation cannot be canceled.
    */
-  void applyTransformations();
+  void applyTransformations(IProgressMonitor monitor);
 
   /**
    * <p>

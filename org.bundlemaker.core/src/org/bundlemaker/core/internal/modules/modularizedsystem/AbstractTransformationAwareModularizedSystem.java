@@ -35,7 +35,8 @@ import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * <p>
@@ -63,7 +64,9 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * {@inheritDoc}
    */
   @Override
-  public final void applyTransformations() {
+  public final void applyTransformations(IProgressMonitor progressMonitor) {
+    SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
+    subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
 
     // step 1: clear prior results
     getModifiableResourceModulesMap().clear();
@@ -83,6 +86,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
+    // subMonitor.worked(10);
 
     // step 3: create the type modules
     for (IFileBasedContent fileBasedContent : getProjectDescription().getFileBasedContent()) {
@@ -103,15 +107,18 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
       }
     }
+    // subMonitor.worked(10);
 
     //
     initializeNonResourceModules();
 
     // step 4: transform modules
-    for (ITransformation transformation : getTransformations()) {
-
+    List<ITransformation> transformations = getTransformations();
+    SubMonitor transformationMonitor = subMonitor.newChild(70);
+    transformationMonitor.beginTask("Begin", transformations.size() * 4);
+    for (ITransformation transformation : transformations) {
       // step 4.1: apply transformation
-      transformation.apply((IModifiableModularizedSystem) this);
+      transformation.apply((IModifiableModularizedSystem) this, transformationMonitor.newChild(1));
 
       // step 4.2: clean up empty modules
       for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()
@@ -128,18 +135,22 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
           iterator.remove();
         }
       }
+      transformationMonitor.worked(1);
 
       // step 4.3: initialize
       for (IModifiableResourceModule module : getModifiableResourceModulesMap().values()) {
 
         ((ResourceModule) module).initializeContainedTypes();
       }
+      transformationMonitor.worked(1);
 
       //
       reinitializeCaches();
+      transformationMonitor.worked(1);
     }
 
     postApplyTransformations();
+    subMonitor.worked(10);
   }
 
   /**

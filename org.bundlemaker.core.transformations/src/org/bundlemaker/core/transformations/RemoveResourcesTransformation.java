@@ -22,6 +22,8 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.transformations.resourceset.ResourceSet;
 import org.bundlemaker.core.util.TransformationUtils;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * <p>
@@ -43,10 +45,14 @@ public class RemoveResourcesTransformation implements ITransformation {
   }
 
   @Override
-  public void apply(IModifiableModularizedSystem modularizedSystem) {
+  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
+
+    SubMonitor subMonitor = SubMonitor.convert(monitor, _resourcesToRemove.size());
 
     //
     for (ResourceSet resourceSet : _resourcesToRemove) {
+      // Notify user via subMonitor
+      subMonitor.subTask("Removing resources from " + resourceSet.getModuleIdentifier());
 
       //
       IModifiableResourceModule resourceModule = modularizedSystem.getModifiableResourceModule(resourceSet
@@ -59,7 +65,9 @@ public class RemoveResourcesTransformation implements ITransformation {
       resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.SOURCE);
 
       TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, ContentType.SOURCE);
-
+      
+      // increment the subMonitor
+      subMonitor.worked(1);
     }
   }
 

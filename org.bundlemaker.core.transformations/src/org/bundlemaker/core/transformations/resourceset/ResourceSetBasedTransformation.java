@@ -26,6 +26,8 @@ import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.util.TransformationUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
 
 public class ResourceSetBasedTransformation implements ITransformation {
 
@@ -51,13 +53,16 @@ public class ResourceSetBasedTransformation implements ITransformation {
    * {@inheritDoc}
    */
   @Override
-  public void apply(IModifiableModularizedSystem modularizedSystem) {
+  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
+    
+    SubMonitor subMonitor = SubMonitor.convert(progressMonitor, _moduleDefinitions.size());
 
     //
     for (ResourceSetBasedModuleDefinition moduleDefinition : _moduleDefinitions) {
-
       // get the target module
       IModuleIdentifier targetModuleIdentifier = moduleDefinition.getModuleIdentifier();
+
+      subMonitor.subTask("Creating module '" + targetModuleIdentifier.toString() + "'...");
 
       // log
       System.out.println("Creating module '" + targetModuleIdentifier.toString() + "'...");
@@ -116,6 +121,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
           processResources(originResourceModule, targetResourceModule, resourceSet);
         }
       }
+      subMonitor.worked(1);
     }
   }
 

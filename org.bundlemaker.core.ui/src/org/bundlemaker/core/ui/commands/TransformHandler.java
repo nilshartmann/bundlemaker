@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.commands;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
@@ -30,12 +31,15 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
@@ -90,14 +94,29 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
    * @param uri
    * @throws Exception
    */
-  static void transform(IBundleMakerProject bundleMakerProject, String moduleName, IFile scriptFile) throws Exception {
-    // Parse the transformation script
-    TransformationModel model = TransformationDslUtils.parse(scriptFile.getLocationURI().toString());
+  static void transform(final IBundleMakerProject bundleMakerProject, final String moduleName, final IFile scriptFile)
+      throws Exception {
 
-    // Execute the script and apply the contained transformation
-    TransformationExecutor executor = new TransformationExecutor(
-        createModularizedSystem(bundleMakerProject, moduleName), model);
-    executor.apply();
+    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+      public void run(final IProgressMonitor monitor) throws InvocationTargetException {
+        try {
+          // monitor.beginTask("Running " + scriptFile.getName(), 100);
+
+          // Parse the transformation script
+          TransformationModel model = TransformationDslUtils.parse(scriptFile.getLocationURI().toString());
+
+          // Execute the script and apply the contained transformation
+          final TransformationExecutor executor = new TransformationExecutor(createModularizedSystem(
+              bundleMakerProject, moduleName), model);
+
+          executor.apply(monitor);
+        } catch (Exception ex) {
+          throw new InvocationTargetException(ex);
+        } finally {
+          monitor.done();
+        }
+      }
+    });
 
     // Refresh the project explorer to make sure new project is visible
     BundleMakerUiUtils.refreshProjectExplorer(bundleMakerProject);

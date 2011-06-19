@@ -16,15 +16,11 @@ import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
-import org.bundlemaker.core.transformations.dsl.ui.utils.TransformationDslUtils;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedModuleDefinition;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
 import org.bundlemaker.core.ui.editor.transformation.Evaluator;
 import org.bundlemaker.core.ui.editor.transformation.NewModule;
-import org.bundlemaker.core.ui.editor.transformation.TransformationExecutor;
 import org.bundlemaker.core.ui.editor.transformation.Transformations;
-import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -164,14 +160,14 @@ public class TransformationPage extends FormPage {
 
   private void testParsing(String uri) {
 
-    try {
-      TransformationModel model = TransformationDslUtils.parse(uri);
-      TransformationExecutor executor = new TransformationExecutor(createModularizedSystem("eins"), model);
-      executor.apply();
-      BundleMakerUiUtils.refreshProjectExplorer(getBundleMakerProject());
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
+    // try {
+    // TransformationModel model = TransformationDslUtils.parse(uri);
+    // TransformationExecutor executor = new TransformationExecutor(createModularizedSystem("eins"), model);
+    // executor.apply();
+    // BundleMakerUiUtils.refreshProjectExplorer(getBundleMakerProject());
+    // } catch (Exception ex) {
+    // ex.printStackTrace();
+    // }
 
   }
 
@@ -245,7 +241,7 @@ public class TransformationPage extends FormPage {
       }
 
       system.getTransformations().add(transformation);
-      system.applyTransformations();
+      // system.applyTransformations();
 
       exportToSimpleReport(bundleMakerProject, system);
       exportAsPdeProjects(bundleMakerProject, system);

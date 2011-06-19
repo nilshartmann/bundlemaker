@@ -49,7 +49,7 @@ public abstract class AbstractModuleConverterTest extends AbstractBundleMakerPro
     _modularizedSystem.getTransformations().add(
         new GroupTransformation(new ModuleIdentifier(getTestProjectName(), "1.0.0"), new Path("bla/blub")));
 
-    _modularizedSystem.applyTransformations();
+    _modularizedSystem.applyTransformations(null);
 
     //
     IModule module = getModularizedSystem().getModule(getTestProjectName(), "1.0.0");

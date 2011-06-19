@@ -100,7 +100,7 @@ public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest 
     IModularizedSystem modularizedSystem = _bundleMakerProject.getModularizedSystemWorkingCopy(_testProjectName);
 
     // apply the transformation
-    modularizedSystem.applyTransformations();
+    modularizedSystem.applyTransformations(null);
 
     // get the resource module
     IResourceModule resourceModule = modularizedSystem.getResourceModule(_testProjectName, TEST_PROJECT_VERSION);
