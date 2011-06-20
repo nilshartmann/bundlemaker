@@ -197,7 +197,7 @@
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
 	       locationURI="popup:org.bundlemaker.core.analysis.ui.ProjectExplorerPopupMenu">
-	       <menu
+	       <menu id="org.bundlemaker.core.ui.menus.exportAsMenu"
               label="Export as..." >
             	<command commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
               			 style="push" />

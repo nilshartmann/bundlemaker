@@ -39,3 +39,4 @@ Import-Package: org.bundlemaker.core,
  org.bundlemaker.core.osgi.pde.exporter,
  org.bundlemaker.core.util
 Bundle-Activator: org.bundlemaker.core.ui.internal.Activator
+Export-Package: org.bundlemaker.core.ui.commands
