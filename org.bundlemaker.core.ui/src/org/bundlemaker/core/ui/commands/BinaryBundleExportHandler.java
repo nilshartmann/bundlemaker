@@ -10,11 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.commands;
 
-import java.io.File;
-
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
 
 /**
@@ -23,32 +19,8 @@ import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
  */
 public class BinaryBundleExportHandler extends AbstractExportHandler {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.core.ui.commands.AbstractExportHandler#export(org.bundlemaker.core.analysis.IAdvancedArtifact)
-   */
   @Override
-  protected void export(IAdvancedArtifact iArtifact) throws Exception {
-    IModularizedSystem modularizedSystem = iArtifact.getModularizedSystem();
-
-    File destination = getDestinationDirectory();
-    if (destination == null) {
-      return;
+  protected IModuleExporter createExporter() throws Exception {
+    return new BinaryBundleExporter();
     }
-
-    // create the exporter context
-    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
-        modularizedSystem.getBundleMakerProject(), destination, modularizedSystem);
-
-    System.out.println("exportAsBinaryBundles to " + destination);
-    BinaryBundleExporter exporter = new BinaryBundleExporter();
-
-    // do the export
-    doExport(exporter, modularizedSystem, exporterContext);
-
-    System.out.println("exportAsProjects done!");
-
-  }
-
 }

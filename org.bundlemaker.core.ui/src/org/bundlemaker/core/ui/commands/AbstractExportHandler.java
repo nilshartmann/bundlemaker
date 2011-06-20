@@ -12,15 +12,21 @@ package org.bundlemaker.core.ui.commands;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ui.commands.AbstractArtifactBasedHandler;
+import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.ui.internal.Activator;
+import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -36,6 +42,8 @@ import org.eclipse.ui.PlatformUI;
  * 
  */
 public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler {
+
+  private static final AllModuleQueryFilter theAllModuleQueryFilter = new AllModuleQueryFilter();
 
   /*
    * (non-Javadoc)
@@ -71,7 +79,59 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
    *          The artifact that should be exported. Never null
    * @throws Exception
    */
-  protected abstract void export(IAdvancedArtifact advancedArtifact) throws Exception;
+  protected void export(IAdvancedArtifact advancedArtifact) throws Exception {
+    IModularizedSystem modularizedSystem = advancedArtifact.getModularizedSystem();
+
+    File destination = getDestinationDirectory();
+    if (destination == null) {
+      return;
+    }
+
+    // create the exporter context
+    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
+        modularizedSystem.getBundleMakerProject(), destination, modularizedSystem);
+
+    // create the exporter
+    System.out.println("export to " + destination);
+    IModuleExporter moduleExporter = createExporter();
+
+    // create the adapter
+    final ModularizedSystemExporterAdapter adapter = new ModularizedSystemExporterAdapter(moduleExporter);
+    adapter.setModuleFilter(createModuleFilter(advancedArtifact));
+
+    // do the export
+    doExport(adapter, modularizedSystem, exporterContext);
+
+    System.out.println("export done!");
+  }
+
+  protected IQueryFilter<IModule> createModuleFilter(IAdvancedArtifact advancedArtifact) {
+    if (advancedArtifact.getType() == ArtifactType.Root) {
+      // export whole ModularizedSystem
+      return theAllModuleQueryFilter;
+    }
+
+    ListBasedModuleQueryFilter moduleFilter = new ListBasedModuleQueryFilter();
+    addModules(moduleFilter, advancedArtifact);
+
+    return moduleFilter;
+  }
+
+  private void addModules(ListBasedModuleQueryFilter moduleFilter, IAdvancedArtifact advancedArtifact) {
+    if (advancedArtifact.getType() == ArtifactType.Module) {
+      moduleFilter.add(advancedArtifact);
+      return;
+    }
+
+    Collection<IArtifact> children = advancedArtifact.getChildren();
+    for (IArtifact iArtifact : children) {
+      if (iArtifact instanceof IAdvancedArtifact) {
+        addModules(moduleFilter, (IAdvancedArtifact) iArtifact);
+      }
+    }
+  }
+
+  protected abstract IModuleExporter createExporter() throws Exception;
 
   /**
    * Executes the given exporter on a non-UI thread. The user gets feedback via ProgressMonitor
@@ -81,10 +141,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
    * @param exporterContext
    * @throws Exception
    */
-  protected void doExport(final IModuleExporter exporter, final IModularizedSystem modularizedSystem,
+  protected void doExport(final ModularizedSystemExporterAdapter adapter, final IModularizedSystem modularizedSystem,
       final IModuleExporterContext exporterContext) throws Exception {
-
-    final ModularizedSystemExporterAdapter adapter = new ModularizedSystemExporterAdapter(exporter);
 
     PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
       public void run(final IProgressMonitor monitor) throws InvocationTargetException {
@@ -99,10 +157,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
   protected File getDestinationDirectory() {
     DirectoryDialog dialog = new DirectoryDialog(new Shell());
-    dialog.setMessage("Select an external folder");
-    dialog.setText("External folder");
-    // Path currPath = new Path(_entryText.getText());
-    // dialog.setFilterPath(currPath.toOSString());
+    dialog.setMessage("Select the export destination folder");
+    dialog.setText("Export modules");
     String res = dialog.open();
 
     if (res != null) {
@@ -113,6 +169,30 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     }
 
     return null;
+
+  }
+
+  class ListBasedModuleQueryFilter implements IQueryFilter<IModule> {
+
+    private final HashSet<String> _moduleNames = new HashSet<String>();
+
+    @Override
+    public boolean matches(IModule content) {
+      // TODO versions ?
+      return _moduleNames.contains(content.getModuleIdentifier().getName());
+    }
+
+    void add(IAdvancedArtifact artifact) {
+      _moduleNames.add(artifact.getName());
+    }
+  }
+
+  static class AllModuleQueryFilter implements IQueryFilter<IModule> {
+
+    @Override
+    public boolean matches(IModule content) {
+      return true;
+    }
 
   }
 
