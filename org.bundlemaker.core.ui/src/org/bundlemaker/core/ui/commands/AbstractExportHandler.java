@@ -104,16 +104,28 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
     // create the exporter
     System.out.println("export to " + destination);
-    IModuleExporter moduleExporter = createExporter();
 
     // create the adapter
-    final ModularizedSystemExporterAdapter adapter = new ModularizedSystemExporterAdapter(moduleExporter);
-    adapter.setModuleFilter(createModuleFilter(selectedArtifacts));
+    ModularizedSystemExporterAdapter adapter = createModularizedSystemExporterAdapter(selectedArtifacts);
 
     // do the export
     doExport(adapter, modularizedSystem, exporterContext);
 
     System.out.println("export done!");
+  }
+
+  protected ModularizedSystemExporterAdapter createModularizedSystemExporterAdapter(List<IArtifact> selectedArtifacts)
+      throws Exception {
+    // create module exporter
+    IModuleExporter moduleExporter = createExporter();
+
+    // create the adapter
+    final ModularizedSystemExporterAdapter adapter = new ModularizedSystemExporterAdapter(moduleExporter);
+
+    // set the module filter that filters selected artifacts
+    adapter.setModuleFilter(createModuleFilter(selectedArtifacts));
+
+    return adapter;
   }
 
   protected IQueryFilter<IModule> createModuleFilter(List<IArtifact> artifacts) {
