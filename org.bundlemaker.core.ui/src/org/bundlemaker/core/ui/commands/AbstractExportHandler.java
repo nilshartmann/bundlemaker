@@ -43,8 +43,6 @@ import org.eclipse.ui.PlatformUI;
  */
 public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler {
 
-  private static final AllModuleQueryFilter theAllModuleQueryFilter = new AllModuleQueryFilter();
-
   /*
    * (non-Javadoc)
    * 
@@ -55,19 +53,30 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
   @Override
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
 
-    IArtifact currentArtifact = null;
+    IModularizedSystem modularizedSystem = null;
 
     try {
       for (IArtifact iArtifact : selectedArtifacts) {
-        currentArtifact = iArtifact;
         if (iArtifact instanceof IAdvancedArtifact) {
-          export((IAdvancedArtifact) iArtifact);
+          IAdvancedArtifact advancedArtifact = (IAdvancedArtifact) iArtifact;
+          if (modularizedSystem == null) {
+            modularizedSystem = advancedArtifact.getModularizedSystem();
+          } else if (!modularizedSystem.equals(advancedArtifact.getModularizedSystem())) {
+            MessageDialog.openError(new Shell(), "Exporter", "Only one modularized system can be exported at a time");
+            return;
+          }
         }
       }
+
+      if (modularizedSystem == null || selectedArtifacts.isEmpty()) {
+        return;
+      }
+
+      exportAll(modularizedSystem, selectedArtifacts);
+
     } catch (Exception ex) {
-      reportError(Activator.PLUGIN_ID, "Could not export " + currentArtifact.getName() + ": " + ex, ex);
-      MessageDialog
-          .openError(new Shell(), "Export failed", "Could not export " + currentArtifact.getName() + ": " + ex);
+      reportError(Activator.PLUGIN_ID, "Error during export: " + ex, ex);
+      MessageDialog.openError(new Shell(), "Export failed", "Error during export: " + ex);
     }
 
   }
@@ -75,12 +84,14 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
   /**
    * Export the given artifact
    * 
-   * @param advancedArtifact
-   *          The artifact that should be exported. Never null
+   * @param modularizedSystem
+   *          The Modularized system that is parent of the selectedArtifacts
+   * @param selectedArtifacts
+   *          The artifact that should be exported. Never null. All contained {@link IArtifact} objects must be long to
+   *          the given modularizedSystem
    * @throws Exception
    */
-  protected void export(IAdvancedArtifact advancedArtifact) throws Exception {
-    IModularizedSystem modularizedSystem = advancedArtifact.getModularizedSystem();
+  protected void exportAll(IModularizedSystem modularizedSystem, List<IArtifact> selectedArtifacts) throws Exception {
 
     File destination = getDestinationDirectory();
     if (destination == null) {
@@ -97,7 +108,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
     // create the adapter
     final ModularizedSystemExporterAdapter adapter = new ModularizedSystemExporterAdapter(moduleExporter);
-    adapter.setModuleFilter(createModuleFilter(advancedArtifact));
+    adapter.setModuleFilter(createModuleFilter(selectedArtifacts));
 
     // do the export
     doExport(adapter, modularizedSystem, exporterContext);
@@ -105,25 +116,22 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     System.out.println("export done!");
   }
 
-  protected IQueryFilter<IModule> createModuleFilter(IAdvancedArtifact advancedArtifact) {
-    if (advancedArtifact.getType() == ArtifactType.Root) {
-      // export whole ModularizedSystem
-      return theAllModuleQueryFilter;
-    }
-
+  protected IQueryFilter<IModule> createModuleFilter(List<IArtifact> artifacts) {
     ListBasedModuleQueryFilter moduleFilter = new ListBasedModuleQueryFilter();
-    addModules(moduleFilter, advancedArtifact);
 
+    for (IArtifact iArtifact : artifacts) {
+      addModules(moduleFilter, iArtifact);
+    }
     return moduleFilter;
   }
 
-  private void addModules(ListBasedModuleQueryFilter moduleFilter, IAdvancedArtifact advancedArtifact) {
-    if (advancedArtifact.getType() == ArtifactType.Module) {
-      moduleFilter.add(advancedArtifact);
+  private void addModules(ListBasedModuleQueryFilter moduleFilter, IArtifact artifact) {
+    if (artifact.getType() == ArtifactType.Module) {
+      moduleFilter.add(artifact);
       return;
     }
 
-    Collection<IArtifact> children = advancedArtifact.getChildren();
+    Collection<IArtifact> children = artifact.getChildren();
     for (IArtifact iArtifact : children) {
       if (iArtifact instanceof IAdvancedArtifact) {
         addModules(moduleFilter, (IAdvancedArtifact) iArtifact);
@@ -131,6 +139,12 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     }
   }
 
+  /**
+   * Returns the actual {@link IModuleExporter} that should be used to export the selected modules.
+   * 
+   * @return
+   * @throws Exception
+   */
   protected abstract IModuleExporter createExporter() throws Exception;
 
   /**
@@ -178,22 +192,14 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
     @Override
     public boolean matches(IModule content) {
-      // TODO versions ?
-      return _moduleNames.contains(content.getModuleIdentifier().getName());
+      String moduleName = content.getModuleIdentifier().getName() + "_" + content.getModuleIdentifier().getVersion();
+      boolean contains = _moduleNames.contains(moduleName);
+      return contains;
     }
 
-    void add(IAdvancedArtifact artifact) {
+    void add(IArtifact artifact) {
       _moduleNames.add(artifact.getName());
     }
-  }
-
-  static class AllModuleQueryFilter implements IQueryFilter<IModule> {
-
-    @Override
-    public boolean matches(IModule content) {
-      return true;
-    }
-
   }
 
 }
