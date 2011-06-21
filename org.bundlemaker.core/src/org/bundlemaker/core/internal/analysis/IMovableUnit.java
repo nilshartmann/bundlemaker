@@ -3,6 +3,7 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.List;
 
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -11,7 +12,16 @@ import org.bundlemaker.core.resource.IResource;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  * 
  */
-public interface IResourceHolder {
+public interface IMovableUnit {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  // TODO
+  List<IType> getAssociatedTypes();
 
   /**
    * <p>
@@ -27,5 +37,5 @@ public interface IResourceHolder {
    * 
    * @return
    */
-  List<IResource> getAssociatedSourceResources();
+  IResource getAssociatedSourceResource();
 }

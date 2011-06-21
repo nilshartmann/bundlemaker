@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.analysis.ITypeHolder;
-import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -60,7 +58,7 @@ public class AdapterUtils {
 
     //
     for (IArtifact moduleArtifact : getAllContainedResourceModules(artifact)) {
-      
+
       // TODO
       AdapterResourceModule2IArtifact artifact1 = (AdapterResourceModule2IArtifact) moduleArtifact;
       IModifiableResourceModule resourceModule = (IModifiableResourceModule) artifact1.getModule();
@@ -157,7 +155,7 @@ public class AdapterUtils {
     removeResourcesFromModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
         getAllContainedResourceHolder(package2Artifact));
     removeTypesFromModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
-        getAllContainedTypeHolder(package2Artifact));    
+        getAllContainedTypeHolder(package2Artifact));
   }
 
   /**
@@ -208,15 +206,15 @@ public class AdapterUtils {
     return result;
   }
 
-  private static List<IResourceHolder> getAllContainedResourceHolder(IArtifact artifact) {
+  private static List<IMovableUnit> getAllContainedResourceHolder(IArtifact artifact) {
 
     //
-    List<IResourceHolder> result = new LinkedList<IResourceHolder>();
+    List<IMovableUnit> result = new LinkedList<IMovableUnit>();
 
     //
-    if (artifact instanceof IResourceHolder) {
+    if (artifact instanceof IMovableUnit) {
 
-      result.add((IResourceHolder) artifact);
+      result.add((IMovableUnit) artifact);
 
       // DO NOT ADD THE CHILDREN OF 'IResourceHolder'
 
@@ -258,11 +256,10 @@ public class AdapterUtils {
    * @param resourceModule
    * @param resourceHolder
    */
-  private static void addResourcesToModule(IModifiableResourceModule resourceModule,
-      List<IResourceHolder> resourceHolders) {
+  private static void addResourcesToModule(IModifiableResourceModule resourceModule, List<IMovableUnit> resourceHolders) {
 
     //
-    for (IResourceHolder resourceHolder : resourceHolders) {
+    for (IMovableUnit resourceHolder : resourceHolders) {
 
       // add the binary resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.BINARY)
@@ -270,16 +267,16 @@ public class AdapterUtils {
 
       // add the source resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE)
-          .addAll(resourceHolder.getAssociatedSourceResources());
-      
-      }
+          .add(resourceHolder.getAssociatedSourceResource());
+
     }
+  }
 
   private static void addTypesToModule(IModifiableResourceModule resourceModule, List<ITypeHolder> typeHolders) {
     // Get the modifiable type container
     IModifiableTypeContainer modifiableSelfTypeContainer = resourceModule.getModifiableSelfResourceContainer();
     Map<String, IType> typesMap = modifiableSelfTypeContainer.getModifiableContainedTypesMap();
-    
+
     for (ITypeHolder typeHolder : typeHolders) {
       IType type = typeHolder.getAssociatedType();
       typesMap.put(type.getFullyQualifiedName(), type);
@@ -294,10 +291,10 @@ public class AdapterUtils {
    * @param resourceHolder
    */
   private static void removeResourcesFromModule(IModifiableResourceModule resourceModule,
-      List<IResourceHolder> resourceHolders) {
+      List<IMovableUnit> resourceHolders) {
 
     //
-    for (IResourceHolder resourceHolder : resourceHolders) {
+    for (IMovableUnit resourceHolder : resourceHolders) {
 
       // remove the binary resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.BINARY)
@@ -305,10 +302,10 @@ public class AdapterUtils {
 
       // remove the source resources
       resourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE)
-          .removeAll(resourceHolder.getAssociatedSourceResources());
-      
-      }      
+          .remove(resourceHolder.getAssociatedSourceResource());
+
     }
+  }
 
   private static void removeTypesFromModule(IModifiableResourceModule resourceModule, List<ITypeHolder> typeHolders) {
     // Get the modifiable type container

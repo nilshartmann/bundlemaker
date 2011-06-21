@@ -36,7 +36,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact implements IResourceHolder, IAdvancedArtifact, ITypeHolder {
+public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit, IAdvancedArtifact, ITypeHolder {
 
   /** the bundle maker type */
   private IType                       _type;
@@ -51,7 +51,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
   private boolean                     _aggregateInnerTypes;
 
   /** - */
-  private IResourceHolder             _resourceHolder;
+  private IMovableUnit                _resourceHolder;
 
   /**
    * <p>
@@ -79,7 +79,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
     _artifactCache = artifactCache;
 
     //
-    _resourceHolder = new ResourceHolder(type, _aggregateInnerTypes);
+    _resourceHolder = new MovableUnit(type, _aggregateInnerTypes);
   }
 
   /**
@@ -94,8 +94,16 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
    * {@inheritDoc}
    */
   @Override
-  public List<IResource> getAssociatedSourceResources() {
-    return _resourceHolder.getAssociatedSourceResources();
+  public IResource getAssociatedSourceResource() {
+    return _resourceHolder.getAssociatedSourceResource();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IType> getAssociatedTypes() {
+    return _resourceHolder.getAssociatedTypes();
   }
 
   /**
