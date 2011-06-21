@@ -192,7 +192,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
     // simply return null
     return null;
   }
-  
+
   @Override
   public IModularizedSystem getModularizedSystem() {
     return AdapterUtils.getModularizedSystem(this);
@@ -216,7 +216,15 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IResource
     if (_aggregateInnerTypes) {
 
       // TODO RESOURCES
+
       // TODO TOPLEVEL NON-MAIN TYPES
+      if (_type.hasSourceResource()) {
+        for (IType type : _type.getSourceResource().getContainedTypes()) {
+          if (!type.isPrimaryType()) {
+            initReferences(type.getReferences());
+          }
+        }
+      }
 
       if (_type.hasBinaryResource()) {
         for (IResource stickyResource : _type.getBinaryResource().getStickyResources()) {

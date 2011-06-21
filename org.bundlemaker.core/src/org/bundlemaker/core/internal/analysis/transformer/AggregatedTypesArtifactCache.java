@@ -70,7 +70,7 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
       for (IType type : typeModule.getContainedTypes()) {
 
         // filter local or anonymous type names
-        if (!type.isInnerType()) {
+        if (!type.isInnerType() && isPrimaryType(type)) {
 
           // create the artifact
           this.getTypeArtifact(type);
@@ -104,6 +104,16 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
 
     // return the root artifact
     return this.getRootArtifact();
+  }
+
+  private boolean isPrimaryType(IType type) {
+
+    if (!type.hasSourceResource()) {
+      return true;
+    }
+    IResource sourceResource = type.getSourceResource();
+
+    return sourceResource.isPrimaryType(type);
   }
 
   /**

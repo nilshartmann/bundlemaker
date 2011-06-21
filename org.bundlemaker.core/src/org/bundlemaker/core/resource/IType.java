@@ -145,4 +145,6 @@ public interface IType {
   boolean isLocalOrAnonymousType();
 
   boolean isInnerType();
+
+  boolean isPrimaryType();
 }

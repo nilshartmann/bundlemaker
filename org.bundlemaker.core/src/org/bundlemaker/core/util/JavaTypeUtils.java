@@ -89,8 +89,12 @@ public class JavaTypeUtils {
   }
 
   public static String convertToFullyQualifiedName(String classFilePath) {
+    return convertToFullyQualifiedName(classFilePath, ".class");
+  }
 
-    String fullyQualifiedName = classFilePath.substring(0, classFilePath.length() - ".class".length());
+  public static String convertToFullyQualifiedName(String classFilePath, String postfix) {
+
+    String fullyQualifiedName = classFilePath.substring(0, classFilePath.length() - postfix.length());
 
     if (fullyQualifiedName.startsWith("/")) {
       fullyQualifiedName = fullyQualifiedName.substring(1);

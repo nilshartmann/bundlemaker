@@ -80,6 +80,23 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IType getPrimaryType();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  boolean isPrimaryType(IType type);
+
+  /**
+   * <p>
    * Returns the {@link IResourceModule} that contains this {@link IResource}.
    * </p>
    * 

@@ -321,6 +321,18 @@ public class Type implements IType, IModifiableType {
     return _fullyQualifiedName.toString().matches(".*\\$.*");
   }
 
+  @Override
+  public boolean isPrimaryType() {
+
+    if (!hasSourceResource()) {
+      return true;
+    }
+
+    IResource sourceResource = getSourceResource();
+
+    return sourceResource.isPrimaryType(this);
+  }
+
   /**
    * {@inheritDoc}
    */

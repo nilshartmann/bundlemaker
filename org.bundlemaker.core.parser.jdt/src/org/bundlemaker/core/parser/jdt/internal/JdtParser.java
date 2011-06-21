@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
@@ -36,6 +37,7 @@ import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
 import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
+import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -185,11 +187,11 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     try {
 
       // TODO configurable
-//      @SuppressWarnings("rawtypes")
-//      Map options = new HashMap();
-//      options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-//      options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-//      options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      // @SuppressWarnings("rawtypes")
+      // Map options = new HashMap();
+      // options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+      // options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
+      // options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
 
       // _parser.setSource(iCompilationUnit);
       char[] content = new String(modifiableResource.getContent()).toCharArray();
@@ -200,12 +202,16 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
       _parser.setResolveBindings(true);
-      
 
       CompilationUnit compilationUnit = (CompilationUnit) _parser.createAST(null);
 
       List<IProblem> problems = analyzeCompilationUnit(modifiableResource, compilationUnit);
       getProblems().addAll(problems);
+
+      // set the primary type
+      String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(modifiableResource.getPath(), ".java");
+      IType primaryType = modifiableResource.getType(primaryTypeName);
+      modifiableResource.setPrimaryType((Type) primaryType);
 
       // step 3: compute the indirectly referenced types
       if (_parseIndirectReferences) {
@@ -280,6 +286,15 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     JdtAstVisitor visitor = new JdtAstVisitor(modifiableResource);
     compilationUnit.accept(visitor);
 
+    // org.eclipse.jdt.core.IType primaryType = compilationUnit.getTypeRoot().findPrimaryType();
+    // if (primaryType != null) {
+    // Type type = (Type) modifiableResource.getType(primaryType.getFullyQualifiedName());
+    // modifiableResource.setMainType(type);
+    // } else {
+    // // TODO
+    // throw new RuntimeException(compilationUnit.toString());
+    // }
+
     // step 2:
     callSourceParserHooks(modifiableResource, compilationUnit);
 
@@ -298,12 +313,12 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     // step 5: finally return
     return problems;
   }
-  
-  private class CompilerOptions extends Hashtable<Object, Object> {
-    
-    
 
-    /* (non-Javadoc)
+  private class CompilerOptions extends Hashtable<Object, Object> {
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Hashtable#isEmpty()
      */
     @Override
@@ -312,7 +327,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       return super.isEmpty();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Hashtable#elements()
      */
     @Override
@@ -321,7 +338,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       return super.elements();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Hashtable#keySet()
      */
     @Override
@@ -330,7 +349,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       return super.keySet();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Hashtable#entrySet()
      */
     @Override
@@ -339,7 +360,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       return super.entrySet();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Hashtable#values()
      */
     @Override
@@ -348,7 +371,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       return super.values();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Hashtable#containsKey(java.lang.Object)
      */
     @Override
@@ -357,7 +382,9 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       return super.containsKey(key);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Hashtable#get(java.lang.Object)
      */
     @Override
@@ -365,6 +392,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       // TODO Auto-generated method stub
       return super.get(key);
     }
-    
+
   }
 }

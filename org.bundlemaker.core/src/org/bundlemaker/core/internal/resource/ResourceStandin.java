@@ -137,6 +137,28 @@ public class ResourceStandin extends ResourceKey implements IResource {
   }
 
   @Override
+  public IType getPrimaryType() {
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
+
+    return _resource.getPrimaryType();
+  }
+
+  @Override
+  public boolean isPrimaryType(IType type) {
+    //
+    if (_resource == null) {
+      // TODO
+      throw new RuntimeException();
+    }
+
+    return _resource.isPrimaryType(type);
+  }
+
+  @Override
   public Set<? extends IResource> getStickyResources() {
 
     //

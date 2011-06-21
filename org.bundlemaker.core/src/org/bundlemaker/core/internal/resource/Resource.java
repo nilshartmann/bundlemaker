@@ -46,6 +46,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
   private Set<Type>                    _containedTypes;
 
   /** - */
+  private Type                         _primaryType;
+
+  /** - */
   private Set<IModifiableResource>     _stickyResources;
 
   /** - */
@@ -109,6 +112,35 @@ public class Resource extends ResourceKey implements IModifiableResource {
   @Override
   public Set<? extends IType> getContainedTypes() {
     return Collections.unmodifiableSet(containedTypes());
+  }
+
+  @Override
+  public IType getPrimaryType() {
+
+    //
+    if (_primaryType == null && _containedTypes.size() == 1) {
+      try {
+        return getContainedType();
+      } catch (CoreException e) {
+        // can not happen here...
+        throw new RuntimeException(e.getMessage(), e);
+      }
+    }
+
+    //
+    return _primaryType;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  @Override
+  public boolean isPrimaryType(IType type) {
+    return type != null && type.equals(_primaryType);
   }
 
   /**
@@ -244,6 +276,11 @@ public class Resource extends ResourceKey implements IModifiableResource {
     }
 
     return _resourceStandin.compareTo(arg0);
+  }
+
+  @Override
+  public void setPrimaryType(Type type) {
+    _primaryType = type;
   }
 
   /**

@@ -39,6 +39,14 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
    * <p>
    * </p>
    * 
+   * @param type
+   */
+  public void setPrimaryType(Type type);
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param fullyQualifiedName
    * @return
    */
