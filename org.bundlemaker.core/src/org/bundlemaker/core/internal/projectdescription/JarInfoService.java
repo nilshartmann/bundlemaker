@@ -73,20 +73,6 @@ public class JarInfoService {
     // try to extract the name from the root directory
     JarFile jarFile = new JarFile(file);
 
-    // try to read
-    Enumeration<JarEntry> entries = jarFile.entries();
-    while (entries.hasMoreElements()) {
-      JarEntry jarEntry = (JarEntry) entries.nextElement();
-      if (jarEntry.getName().endsWith("pom.properties")) {
-        Properties properties = new Properties();
-        properties.load(jarFile.getInputStream(jarEntry));
-        // version=0.9.26
-        // groupId=ch.qos.logback
-        // artifactId=logback-core
-        return properties.getProperty("groupId") + "." + properties.getProperty("artifactId");
-      }
-    }
-
     // Try to analyze the jar file
     Manifest manifest = jarFile.getManifest();
 
@@ -101,6 +87,20 @@ public class JarInfoService {
           result = result.substring(0, end);
         }
         return result;
+      }
+    }
+
+    // try to read maven properties
+    Enumeration<JarEntry> entries = jarFile.entries();
+    while (entries.hasMoreElements()) {
+      JarEntry jarEntry = (JarEntry) entries.nextElement();
+      if (jarEntry.getName().endsWith("pom.properties")) {
+        Properties properties = new Properties();
+        properties.load(jarFile.getInputStream(jarEntry));
+        // version=0.9.26
+        // groupId=ch.qos.logback
+        // artifactId=logback-core
+        return properties.getProperty("groupId") + "." + properties.getProperty("artifactId");
       }
     }
 
