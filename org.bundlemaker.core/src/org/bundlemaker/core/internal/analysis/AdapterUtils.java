@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.core.analysis.ITypeHolder;
 import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;

@@ -1,5 +1,6 @@
 package org.bundlemaker.core.analysis.ui.view.navigator;
 
+import org.bundlemaker.core.analysis.ITypeHolder;
 import org.bundlemaker.core.analysis.ui.Activator;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
@@ -38,6 +39,30 @@ public class ArtifactTreeLabelProvider implements ILabelProvider {
       case Resource:
         return Activator.getDefault().getIcon("navigator/file_obj.gif");
       case Type:
+
+        //
+        if (artifact instanceof ITypeHolder) {
+          ITypeHolder typeHolder = (ITypeHolder) artifact;
+
+          switch (typeHolder.getAssociatedType().getType()) {
+          case CLASS: {
+            return Activator.getDefault().getIcon("navigator/class_obj.gif");
+          }
+          case INTERFACE: {
+            return Activator.getDefault().getIcon("navigator/int_obj.gif");
+          }
+          case ENUM: {
+            return Activator.getDefault().getIcon("navigator/enum_obj.gif");
+          }
+          case ANNOTATION: {
+            return Activator.getDefault().getIcon("navigator/annotation_obj.gif");
+          }
+          default:
+            break;
+          }
+
+        }
+
         return Activator.getDefault().getIcon("navigator/class_obj.gif");
       default:
         break;

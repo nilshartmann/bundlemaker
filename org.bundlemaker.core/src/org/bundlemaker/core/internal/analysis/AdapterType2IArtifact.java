@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.ITypeHolder;
 import org.bundlemaker.core.internal.analysis.transformer.AbstractArtifactCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.resource.IReference;
