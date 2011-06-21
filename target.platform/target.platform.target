@@ -7,9 +7,10 @@
 <location path="${project_loc:target.platform}/bundlor-1.0.0.RELEASE" type="Directory"/>
 <location path="${project_loc:target.platform}/drools-5.1.1" type="Directory"/>
 <location path="${eclipse_home}" type="Profile"/>
-<location path="${project_loc:target.platform}/xtext-1.0.1" type="Directory"/>
 <location path="${project_loc:target.platform}/test/easymock-3.0" type="Directory"/>
 <location path="${project_loc:target.platform}/test/cglib" type="Directory"/>
+<location path="${project_loc:target.platform}/xtext-1.0.1" type="Directory"/>
+<location path="${project_loc:target.platform}/vaadin" type="Directory"/>
 </locations>
 <launcherArgs>
 <vmArgs>-Xms40m -Xmx256m</vmArgs>
