@@ -10,11 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.commands;
 
-import java.io.File;
-
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
 
 /**
@@ -23,30 +19,13 @@ import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
  */
 public class PdePluginProjectExportHandler extends AbstractExportHandler {
 
-  /**
-   * @param iArtifact
-   */
-  protected void export(IAdvancedArtifact iArtifact) throws Exception {
-    IModularizedSystem modularizedSystem = iArtifact.getModularizedSystem();
-
-    File destination = getDestinationDirectory();
-    if (destination == null) {
-      return;
-    }
-
-    // create the exporter context
-    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
-        modularizedSystem.getBundleMakerProject(), destination, modularizedSystem);
-
-    System.out.println("exportAsProjects to " + destination);
+  @Override
+  protected IModuleExporter createExporter() throws Exception {
+    // Create the exporter instance
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
     pdeExporter.setUseClassifcationForExportDestination(false);
 
-    // do the export
-    doExport(pdeExporter, modularizedSystem, exporterContext);
-
-    System.out.println("exportAsProjects done!");
+    return pdeExporter;
 
   }
-
 }

@@ -134,4 +134,6 @@ public interface IDependency {
    * Entfernt die bislang in der Abhängigkeit enthalten Regelverstöße
    */
   public void clearViolations();
+
+  public void addDependency(IDependency dependency);
 }

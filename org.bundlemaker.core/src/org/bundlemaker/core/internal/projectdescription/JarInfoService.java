@@ -96,6 +96,10 @@ public class JarInfoService {
       result = manifest.getMainAttributes().getValue(Constants.BUNDLE_SYMBOLICNAME);
 
       if (result != null) {
+        int end = result.indexOf(';');
+        if (end > 0) {
+          result = result.substring(0, end);
+        }
         return result;
       }
     }
