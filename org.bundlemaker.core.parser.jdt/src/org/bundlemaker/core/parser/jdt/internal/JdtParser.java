@@ -13,18 +13,15 @@ package org.bundlemaker.core.parser.jdt.internal;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
@@ -41,7 +38,6 @@ import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -211,7 +207,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       // set the primary type
       String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(modifiableResource.getPath(), ".java");
       IType primaryType = modifiableResource.getType(primaryTypeName);
-      modifiableResource.setPrimaryType((Type) primaryType);
+      modifiableResource.setPrimaryType(primaryType);
 
       // step 3: compute the indirectly referenced types
       if (_parseIndirectReferences) {

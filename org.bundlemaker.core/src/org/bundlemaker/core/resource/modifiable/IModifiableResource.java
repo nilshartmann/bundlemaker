@@ -12,6 +12,7 @@ package org.bundlemaker.core.resource.modifiable;
 
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.TypeEnum;
 
 /**
@@ -41,7 +42,7 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
    * 
    * @param type
    */
-  public void setPrimaryType(Type type);
+  public void setPrimaryType(IType type);
 
   /**
    * <p>

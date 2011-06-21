@@ -46,7 +46,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   private Set<Type>                    _containedTypes;
 
   /** - */
-  private Type                         _primaryType;
+  private IType                        _primaryType;
 
   /** - */
   private Set<IModifiableResource>     _stickyResources;
@@ -279,7 +279,7 @@ public class Resource extends ResourceKey implements IModifiableResource {
   }
 
   @Override
-  public void setPrimaryType(Type type) {
+  public void setPrimaryType(IType type) {
     _primaryType = type;
   }
 
