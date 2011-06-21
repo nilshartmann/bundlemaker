@@ -12,13 +12,13 @@
                         empty) project configuration file named <codeph>bundlemaker.xml</codeph>. To
                         edit the configuration, simply open the project configuration editor by
                         double-clicking on the configuation file.</p>
-                    <image href="./images/02/Empty-BM-Project.png" scale="80"/>
+                    <image href="./images/02/Empty-BM-Project.png" scale="60"/>
                 </info>
             </step>
             <step>
                 <cmd>Add content</cmd>
                 <info>
-                    <image href="./images/02/Configuration-Editor.png" scale="70"/>
+                    <image href="./images/02/Configuration-Editor.png" scale="50"/>
                 </info>
             </step>
         </steps>

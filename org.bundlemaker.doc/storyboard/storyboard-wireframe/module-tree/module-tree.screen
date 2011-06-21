@@ -77,8 +77,8 @@
   <widgets xsi:type="model:TextArea" x="304" y="134" width="571" height="252" measuredWidth="571" measuredHeight="252" verticalScrollbar="true">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Tabs" x="37" y="108" text="Package Explorer" measuredWidth="140" measuredHeight="37" selection="0">
-    <items x="1" y="0" width="138" height="37" text="Package Explorer"/>
+  <widgets xsi:type="model:Tabs" x="37" y="108" text="Project Explorer" measuredWidth="131" measuredHeight="37" selection="0">
+    <items x="1" y="0" width="129" height="37" text="Project Explorer"/>
     <font/>
   </widgets>
   <widgets xsi:type="model:HLine" x="280" y="389" width="611" measuredWidth="611" measuredHeight="6"/>

@@ -15,25 +15,41 @@
   <section><title>Resources and types</title>
    <p>It also must be possible to determine if resources and/or types are shown. At least the
     following selections must be available: <ul>
-     <li>Source resources with contained types <p>
-       <image href="./images/module-tree-source-res-with-types.png" scale="50"/>
+     <li><b>Source resources with contained types:</b> In this scenario the module tree contains all
+      source resources and the types that are contained in the source resources.<p>
+       <image href="./images/module-tree-source-res-with-types.png" scale="40"/>
       </p></li>
-     <li>Source resources without contained types<p>
-       <image href="./images/module-tree-source-res-without-types.png" scale="50"/>
+     <li><b>Source resources without contained types:</b> In this scenarion the module tree contains
+      all the source resources, but the contained types are not shown.<p>
+       <image href="./images/module-tree-source-res-without-types.png" scale="40"/>
       </p></li>
-     <li>Binary resources with contained types<p>
-       <image href="./images/module-tree-binary-res-with-types.png" scale="50"/>
+     <li><b>Binary resources with contained types:</b> In this scenario the module tree contains all
+      the binary resources and the types that are contained in the binary resources.<p>
+       <image href="./images/module-tree-binary-res-with-types.png" scale="40"/>
       </p></li>
-     <li>Binary resources without contained types<p>
-       <image href="./images/module-tree-binary-res-without-types.png" scale="50"/>
+     <li><b>Binary resources without contained types:</b> In this scenarion the module tree contains
+      all the binary resources, but the contained types are not shown.<p>
+       <image href="./images/module-tree-binary-res-without-types.png" scale="40"/>
       </p></li>
-     <li>Types only (no resources)<p>
-       <image href="./images/module-tree-types-only.png" scale="50"/>
+     <li><b>Types only (no resources):</b> In this scenarion all types (from source and binary
+      resources) are shown, but the resources are not shown.<p>
+       <image href="./images/module-tree-types-only.png" scale="40"/>
       </p></li>
     </ul>
    </p>
   </section>
-  <section><title>Choosing the module tree style</title><p></p>
+  <section><title>Choosing the module tree style</title><p>To choose the module tree style the user
+    can select several options from a "Module Presentation" submenu in the Project Explorer view.
+    The "Module Presentation" submenu contains the following options:
+   <ul>
+    <li>Flat / Hierarchical: The user can choose if groups and packages are shown flat or
+      hierarchical.</li>
+    <li>Show Resources / Show Types: The user can choose whether resources or types or both are
+      shown in the module tree. At least one option must be selected.</li>
+     <li>Source Resources / Binary Resources: If resources are shown in the module tree, the user
+      can select whether source resource or binary resources should be displayed.</li>
+   </ul>
+  </p>
    <image href="./images/module-tree-menu.png" scale="50"/>
   </section>
  </conbody>
