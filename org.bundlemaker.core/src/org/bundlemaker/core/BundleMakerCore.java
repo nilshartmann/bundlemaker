@@ -54,6 +54,8 @@ public final class BundleMakerCore {
    * Creates a bundle maker project for the given {@link IProject}. The specified project must have the bundle maker
    * nature.
    * </p>
+   * <p>
+   * You can use {@link #isBundleMakerProject(IProject)} to check if the project is BundleMaker project
    * 
    * @param project
    * @return
@@ -78,7 +80,8 @@ public final class BundleMakerCore {
     }
 
     // // try to get project from cache
-    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) Activator.getDefault().getBundleMakerProject(project);
+    IBundleMakerProject bundleMakerProject = (IBundleMakerProject) Activator.getDefault()
+        .getBundleMakerProject(project);
 
     // create project if necessary
     if (bundleMakerProject == null) {
@@ -161,5 +164,34 @@ public final class BundleMakerCore {
 
     // get the bundle maker project
     return BundleMakerCore.getBundleMakerProject(project, null);
+  }
+
+  /**
+   * Returns true if the specified {@link IProject} is a BundleMaker project.
+   * 
+   * 
+   * 
+   * @param project
+   *          the project to check. Might be null
+   * @return true if the project is a BundleMaker project. In that case it is save to invoke
+   *         {@link #getBundleMakerProject(IProject, IProgressMonitor)}
+   * @throws CoreException
+   */
+  public static boolean isBundleMakerProject(IProject project) throws CoreException {
+    if (project == null) {
+      return false;
+    }
+
+    // check if project exists
+    if (!project.exists()) {
+      return false;
+    }
+
+    // check if nature exists
+    if (!project.hasNature(NATURE_ID)) {
+      return false;
+    }
+
+    return true;
   }
 }
