@@ -21,7 +21,6 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
@@ -250,14 +249,15 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       String sourceRoot) {
 
     return addResourceContent(name, version, new String[] { binaryRoot },
-        sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, true);
+        sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, sourceRoot != null);
   }
 
   @Override
   public IModifiableFileBasedContent addResourceContent(String name, String version, List<String> binaryRoot,
       List<String> sourceRoot) {
 
-    return addResourceContent(name, version, binaryRoot.toArray(new String[0]), sourceRoot.toArray(new String[0]), true);
+    return addResourceContent(name, version, binaryRoot.toArray(new String[0]), sourceRoot.toArray(new String[0]),
+        sourceRoot != null);
   }
 
   @Override
@@ -269,7 +269,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
 
       //
       return addResourceContent(jarInfo.getName(), jarInfo.getVersion(), new String[] { binaryRoot },
-          sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, true);
+          sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, analyzeSource);
 
     } catch (CoreException e) {
       // TODO Auto-generated catch block
@@ -283,7 +283,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       String sourceRoot, boolean analyzeSource) {
 
     return addResourceContent(name, version, new String[] { binaryRoot },
-        sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, true);
+        sourceRoot != null ? new String[] { sourceRoot } : new String[] {}, analyzeSource);
   }
 
   @Override
@@ -291,7 +291,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       List<String> sourceRoots, boolean analyzeSource) {
 
     return addResourceContent(name, version, binaryRoots.toArray(new String[0]), sourceRoots.toArray(new String[0]),
-        true);
+        analyzeSource);
   }
 
   @Override
