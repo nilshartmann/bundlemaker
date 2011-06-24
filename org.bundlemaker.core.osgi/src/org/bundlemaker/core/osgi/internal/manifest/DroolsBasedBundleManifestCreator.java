@@ -96,7 +96,6 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     Assert.isNotNull(originalManifest);
     Assert.isNotNull(manifestPreferences);
 
-    System.out.println("createManifest - start  ");
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
 
@@ -131,8 +130,7 @@ public class DroolsBasedBundleManifestCreator implements IBundleManifestCreator 
     bundleManifestWrapper.finish();
 
     stopWatch.stop();
-    System.out.println("createManifest - done");
-    System.out.println(stopWatch.getElapsedTime());
+    System.out.println("createManifest - done in " + stopWatch.getElapsedTime() + "ms");
 
     // copy all 'per-entry' attributes from the manifest template to the final manifest
     ManifestContents manifestContents = ManifestUtils.toManifestContents(result);
