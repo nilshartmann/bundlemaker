@@ -36,7 +36,17 @@
             Create a Bundlemaker project
          </description>
       </wizard>
+      <wizard
+            canFinishEarly="true"
+            category="org.bundlemaker.core.ui.wizards.category"
+            class="org.bundlemaker.core.ui.wizards.NewTransformationScriptWizard"
+            hasPages="true"
+            id="org.bundlemaker.core.ui.wizards.NewTransformationScriptWizard"
+            name="Transformation script"
+            project="false">
+      </wizard>
    </extension>
+  
    <extension
          id="org.bundlemaker.core.ui.editors"
          name="Bundlemaker Editors"
