@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.core.itest
+Bundle-SymbolicName: org.bundlemaker.core.itest
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.bundlemaker.core.itestframework;bundle-version="1.0.0",
+ org.bundlemaker.dependencyanalysis.base;bundle-version="1.0.0"
