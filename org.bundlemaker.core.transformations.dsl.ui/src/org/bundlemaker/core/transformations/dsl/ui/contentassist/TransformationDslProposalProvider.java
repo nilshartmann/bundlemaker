@@ -245,12 +245,28 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
 
   public static IProject getOwningProject(EObject object) {
     URI uri = object.eResource().getURI();
+    return getOwningProject(uri);
+  }
+  
+  public static IProject getOwningProject(URI uri) {
     String platformString = uri.toPlatformString(false);
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IFile file = root.getFile(new Path(platformString));
     IProject project = file.getProject();
     return project;
   }
+  
+  public static IBundleMakerProject getBundleMakerProject(URI uri) {
+    try {
+      IProject project = getOwningProject(uri);
+      if (BundleMakerCore.isBundleMakerProject(project)) {
+        return BundleMakerCore.getBundleMakerProject(project, null);
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }  
 
   public static IBundleMakerProject getBundleMakerProject(EObject object) {
     try {

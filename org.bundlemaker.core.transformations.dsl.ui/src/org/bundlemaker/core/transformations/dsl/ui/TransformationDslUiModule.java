@@ -4,6 +4,7 @@
 package org.bundlemaker.core.transformations.dsl.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.ui.editor.validation.ValidatingEditorCallback;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -12,4 +13,9 @@ public class TransformationDslUiModule extends org.bundlemaker.core.transformati
 	public TransformationDslUiModule(AbstractUIPlugin plugin) {
 		super(plugin);
 	}
+	
+	 // contributed by org.eclipse.xtext.generator.builder.BuilderIntegrationFragment
+  public Class<? extends org.eclipse.xtext.ui.editor.IXtextEditorCallback> bindIXtextEditorCallback2() {
+    return ValidatingEditorCallback.class;
+  }
 }
