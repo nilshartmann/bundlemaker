@@ -109,11 +109,8 @@ public abstract class AbstractExporter implements IModuleExporter {
 
     // post export
     checkIfCanceled(subMonitor);
-    System.out.println("postExportModule");
     postExportModule();
     subMonitor.worked(10);
-    System.out.println("nach postExportModule");
-
   }
 
   /**
