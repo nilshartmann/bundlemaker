@@ -15,10 +15,10 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
 import org.bundlemaker.core.transformations.dsl.ui.utils.TransformationDslUtils;
+import org.bundlemaker.core.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.editor.transformation.TransformationExecutor;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
@@ -58,7 +58,7 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
    * (non-Javadoc)
    * 
    * @see
-   * org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
+   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
    * , java.util.List)
    */
   @Override

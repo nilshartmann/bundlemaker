@@ -1,4 +1,4 @@
-package org.bundlemaker.core.analysis.ui.view.navigator;
+package org.bundlemaker.core.ui.view.navigator;
 
 import java.util.ArrayList;
 import java.util.Collection;

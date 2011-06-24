@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
@@ -25,6 +24,7 @@ import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
+import org.bundlemaker.core.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
@@ -47,7 +47,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
    * (non-Javadoc)
    * 
    * @see
-   * org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
+   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
    * , java.util.List)
    */
   @Override

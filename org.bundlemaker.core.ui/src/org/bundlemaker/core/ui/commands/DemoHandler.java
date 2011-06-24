@@ -1,4 +1,4 @@
-package org.bundlemaker.core.analysis.ui.commands;
+package org.bundlemaker.core.ui.commands;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class DemoHandler extends AbstractArtifactBasedHandler implements IHandle
    * (non-Javadoc)
    * 
    * @see
-   * org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
+   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
    * , java.util.List)
    */
   @Override

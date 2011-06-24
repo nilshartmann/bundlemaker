@@ -15,7 +15,7 @@ import java.util.List;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler;
+import org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
@@ -49,7 +49,7 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
    * (non-Javadoc)
    * 
    * @see
-   * org.bundlemaker.core.analysis.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
+   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
    * , org.eclipse.jface.viewers.IStructuredSelection)
    */
   @Override
