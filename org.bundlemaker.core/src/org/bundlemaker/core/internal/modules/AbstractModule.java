@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.StringQueryFilters;
 import org.bundlemaker.core.modules.query.TypeQueryFilters;
@@ -63,19 +63,31 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    * </p>
    * 
    * @param moduleIdentifier
+   * @param modularizedSystem
+   *          TODO
    * @param selfContainer
    */
-  public AbstractModule(IModuleIdentifier moduleIdentifier, T selfContainer) {
+  public AbstractModule(IModuleIdentifier moduleIdentifier, IModularizedSystem modularizedSystem, T selfContainer) {
     Assert.isNotNull(moduleIdentifier);
+    Assert.isNotNull(modularizedSystem);
     Assert.isNotNull(selfContainer);
 
     // set the parameters
     _moduleIdentifier = moduleIdentifier;
     _selfContainer = selfContainer;
+    _modularizedSystem = modularizedSystem;
 
     // create the hash map
     _userAttributes = new HashMap<String, Object>();
     _embeddedContainers = new HashMap<String, T>();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModule getModule() {
+    return this;
   }
 
   /**
@@ -108,6 +120,14 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   @Override
   public IModularizedSystem getModularizedSystem() {
     return _modularizedSystem;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasModularizedSystem() {
+    return _modularizedSystem != null;
   }
 
   /**
@@ -286,15 +306,15 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
     _classification = classification;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
-   */
-  public final void setModularizedSystem(IModularizedSystem modularizedSystem) {
-    _modularizedSystem = modularizedSystem;
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param modularizedSystem
+  // */
+  // public final void setModularizedSystem(IModularizedSystem modularizedSystem) {
+  // _modularizedSystem = modularizedSystem;
+  // }
 
   /**
    * <p>

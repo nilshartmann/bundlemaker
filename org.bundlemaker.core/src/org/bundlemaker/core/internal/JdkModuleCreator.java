@@ -17,6 +17,7 @@ import java.util.List;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
@@ -32,7 +33,7 @@ public class JdkModuleCreator {
    * @return
    * @throws CoreException
    */
-  public static List<TypeModule> getJdkModules() throws CoreException {
+  public static List<TypeModule> getJdkModules(IModularizedSystem modularizedSystem) throws CoreException {
 
     // the vmInstalls
     List<IVMInstall> vmInstalls = new ArrayList<IVMInstall>();
@@ -45,7 +46,7 @@ public class JdkModuleCreator {
     try {
       // create virtual modules for the vms
       for (IVMInstall vmInstall : vmInstalls) {
-        TypeModule module = createModuleForVMInstall(vmInstall);
+        TypeModule module = createModuleForVMInstall(vmInstall, modularizedSystem);
         result.add(module);
       }
     } catch (IOException e) {
@@ -63,9 +64,11 @@ public class JdkModuleCreator {
    * @throws CoreException
    * @throws IOException
    */
-  private static TypeModule createModuleForVMInstall(IVMInstall vmInstall) throws CoreException, IOException {
+  private static TypeModule createModuleForVMInstall(IVMInstall vmInstall, IModularizedSystem modularizedSystem)
+      throws CoreException, IOException {
 
-    TypeModule virtualModule = new TypeModule(new ModuleIdentifier(vmInstall.getName(), vmInstall.getName()));
+    TypeModule virtualModule = new TypeModule(new ModuleIdentifier(vmInstall.getName(), vmInstall.getName()),
+        modularizedSystem);
 
     for (LibraryLocation libraryLocation : JavaRuntime.getLibraryLocations(vmInstall)) {
 
@@ -90,7 +93,7 @@ public class JdkModuleCreator {
           //
           // type.setTypeModule(virtualModule);
 
-          virtualModule.getModifiableSelfResourceContainer().getModifiableContainedTypesMap().put(typeName, type);
+          virtualModule.getModifiableSelfResourceContainer().add(type);
           // }
         }
       }

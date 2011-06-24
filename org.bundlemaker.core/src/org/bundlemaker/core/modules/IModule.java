@@ -54,6 +54,14 @@ public interface IModule extends ITypeContainer {
    * 
    * @return
    */
+  boolean hasModularizedSystem();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   boolean hasClassification();
 
   /**

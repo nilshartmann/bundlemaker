@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
@@ -29,8 +30,8 @@ public class TypeModule extends AbstractModule<ITypeContainer, TypeContainer> im
    * 
    * @param moduleIdentifier
    */
-  public TypeModule(IModuleIdentifier moduleIdentifier) {
-    super(moduleIdentifier, new TypeContainer());
+  public TypeModule(IModuleIdentifier moduleIdentifier, IModularizedSystem modularizedSystem) {
+    super(moduleIdentifier, modularizedSystem, new TypeContainer());
+    getModifiableSelfResourceContainer().setModule(this);
   }
-
 }

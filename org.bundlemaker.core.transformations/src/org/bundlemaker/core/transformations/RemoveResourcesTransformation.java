@@ -21,7 +21,6 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.transformations.resourceset.ResourceSet;
-import org.bundlemaker.core.util.TransformationUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 
@@ -60,12 +59,14 @@ public class RemoveResourcesTransformation implements ITransformation {
 
       List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.BINARY);
 
-      TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, ContentType.BINARY);
+      resourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.BINARY);
+      // TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, );
 
       resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.SOURCE);
 
-      TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, ContentType.SOURCE);
-      
+      resourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.SOURCE);
+      // TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, ContentType.SOURCE);
+
       // increment the subMonitor
       subMonitor.worked(1);
     }

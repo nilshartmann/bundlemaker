@@ -124,6 +124,8 @@ public class PatternBasedTypeSelector implements ITypeSelector {
    */
   public IType selectType(IResourceModule referencingModule, String fullyQualifiedName, Set<IType> types) {
 
+    Assert.isTrue(referencingModule.hasModularizedSystem());
+
     //
     if (!_sourceModuleIdentifier.isEmpty()
         && !_sourceModuleIdentifier.contains(referencingModule.getModuleIdentifier())) {

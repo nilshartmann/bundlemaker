@@ -394,17 +394,17 @@ public interface IModularizedSystem {
   @Deprecated
   Set<IType> getReferencingTypes(String fullyQualifiedName);
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  @Deprecated
-  Map<String, Set<IModule>> getAmbiguousPackages();
-
-  @Deprecated
-  Map<String, Set<IType>> getAmbiguousTypes();
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // @Deprecated
+  // Map<String, Set<IModule>> getAmbiguousPackages();
+  //
+  // @Deprecated
+  // Map<String, Set<IType>> getAmbiguousTypes();
 
   // TODO
   @Deprecated

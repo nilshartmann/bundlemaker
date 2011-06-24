@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.transformations;
 
+import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -25,14 +26,15 @@ import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
 public class ClassifyTransformation implements ITransformation {
-  
+
   /**
    * A pattern describing the modules this transformation should get applied to
    */
   private final String _includeModulePattern;
+
   /**
    * Might be null
    */
@@ -41,14 +43,16 @@ public class ClassifyTransformation implements ITransformation {
   /**
    * A template with the classification path
    * 
-   * <p>The following variables are supported:
+   * <p>
+   * The following variables are supported:
    * <li>
-   * <ul><b>%ModuleName%</b>: Replaced by the module name
-   * <ul><b>%MODULE_NAME%</b>: Replaced by the module name in uppercase
-   * </li>
+   * <ul>
+   * <b>%ModuleName%</b>: Replaced by the module name
+   * <ul>
+   * <b>%MODULE_NAME%</b>: Replaced by the module name in uppercase</li>
    */
   private final String _classificationTemplate;
-  
+
   /**
    * @param modulePattern
    * @param classificationTemplate
@@ -64,50 +68,46 @@ public class ClassifyTransformation implements ITransformation {
     _classificationTemplate = classificationTemplate;
   }
 
-
-
-
-  /* (non-Javadoc)
-   * @see org.bundlemaker.core.transformation.ITransformation#apply(org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.transformation.ITransformation#apply(org.bundlemaker.core.modules.modifiable.
+   * IModifiableModularizedSystem)
    */
   @Override
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
-    
-    Set<Entry<IModuleIdentifier, IModifiableResourceModule>> modules = modularizedSystem.getModifiableResourceModulesMap().entrySet();
-    
+
+    Collection<IModifiableResourceModule> modules = modularizedSystem.getModifiableResourceModules();
+
     SubMonitor subMonitor = SubMonitor.convert(monitor, modules.size());
     subMonitor.subTask("Classify modules");
-    
-    for (Entry<IModuleIdentifier, IModifiableResourceModule> entry : modules) {
-      applyClassification(entry.getKey(), entry.getValue());
+
+    for (IModifiableResourceModule module : modules) {
+      applyClassification(module);
       subMonitor.worked(1);
-     }
+    }
   }
 
-
-  public void applyClassification(IModuleIdentifier moduleIdentifier, IModifiableResourceModule targetModule) {
-    if (matches(moduleIdentifier)) {
+  public void applyClassification(IModifiableResourceModule targetModule) {
+    if (matches(targetModule.getModuleIdentifier())) {
       IPath classification = getClassification(targetModule);
       targetModule.setClassification(classification);
     }
 
   }
 
-
   /**
    * @param value
    * @return
    */
   private IPath getClassification(IModifiableResourceModule value) {
-    
-    String classification = _classificationTemplate.replaceAll("%MODULE_NAME%", value.getModuleIdentifier().getName().toUpperCase());
+
+    String classification = _classificationTemplate.replaceAll("%MODULE_NAME%", value.getModuleIdentifier().getName()
+        .toUpperCase());
     classification = classification.replaceAll("%ModuleName%", value.getModuleIdentifier().getName());
-    
+
     return new Path(classification);
   }
-
-
-
 
   /**
    * @param identifier
@@ -115,7 +115,7 @@ public class ClassifyTransformation implements ITransformation {
    */
   private boolean matches(IModuleIdentifier identifier) {
     String name = identifier.getName();
-    boolean isIncluded =  simpleMatch(_includeModulePattern, name);
+    boolean isIncluded = simpleMatch(_includeModulePattern, name);
     if (!isIncluded) {
       return false;
     }
@@ -123,13 +123,17 @@ public class ClassifyTransformation implements ITransformation {
   }
 
   /**
-   * Match a String against the given pattern, supporting the following simple
-   * pattern styles: "xxx*", "*xxx", "*xxx*" and "xxx*yyy" matches (with an
-   * arbitrary number of pattern parts), as well as direct equality.
+   * Match a String against the given pattern, supporting the following simple pattern styles: "xxx*", "*xxx", "*xxx*"
+   * and "xxx*yyy" matches (with an arbitrary number of pattern parts), as well as direct equality.
    * 
-   * <p>Taken from Springframework PatternMatchUtils class</p>
-   * @param pattern the pattern to match against
-   * @param str the String to match
+   * <p>
+   * Taken from Springframework PatternMatchUtils class
+   * </p>
+   * 
+   * @param pattern
+   *          the pattern to match against
+   * @param str
+   *          the String to match
    * @return whether the String matches the given pattern
    * @see org.springframework.util.PatternMatchUtils
    */
@@ -159,26 +163,25 @@ public class ClassifyTransformation implements ITransformation {
       }
       return false;
     }
-    return (str.length() >= firstIndex &&
-        pattern.substring(0, firstIndex).equals(str.substring(0, firstIndex)) &&
-        simpleMatch(pattern.substring(firstIndex), str.substring(firstIndex)));
+    return (str.length() >= firstIndex && pattern.substring(0, firstIndex).equals(str.substring(0, firstIndex)) && simpleMatch(
+        pattern.substring(firstIndex), str.substring(firstIndex)));
   }
-  
-//  public static void main(String[] args) {
-//    
-//    ClassifyTransformation transformation = new ClassifyTransformation("org.bm.*", "BUNDLEMAKER/%MODULE_NAME%");
-//    
-//    System.out.println(transformation.matches(new ModuleIdentifier("org.bm.a", "1")));
-//    System.out.println(transformation.matches(new ModuleIdentifier("org.bm.aa", "1")));
-//    System.out.println(transformation.matches(new ModuleIdentifier("org.bm", "1")));
-//    System.out.println(transformation.matches(new ModuleIdentifier("org.bm.c", "1")));
-//    System.out.println(transformation.matches(new ModuleIdentifier("org.ba.c", "1")));
-//    String classification = "A/%MODULE_NAME%/%ModuleName%/".replaceAll("%MODULE_NAME%", "MEINMODUL");
-//    classification = classification.replaceAll("%ModuleName%", "MeinModul")
-//    ;
-//    System.out.println("classification:" + classification);
-//
-////    transformation.applyClassification(new ModuleIdentifier("org.bm.a", "1"), new ResourceModule());
-//  }
+
+  // public static void main(String[] args) {
+  //
+  // ClassifyTransformation transformation = new ClassifyTransformation("org.bm.*", "BUNDLEMAKER/%MODULE_NAME%");
+  //
+  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm.a", "1")));
+  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm.aa", "1")));
+  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm", "1")));
+  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm.c", "1")));
+  // System.out.println(transformation.matches(new ModuleIdentifier("org.ba.c", "1")));
+  // String classification = "A/%MODULE_NAME%/%ModuleName%/".replaceAll("%MODULE_NAME%", "MEINMODUL");
+  // classification = classification.replaceAll("%ModuleName%", "MeinModul")
+  // ;
+  // System.out.println("classification:" + classification);
+  //
+  // // transformation.applyClassification(new ModuleIdentifier("org.bm.a", "1"), new ResourceModule());
+  // }
 
 }

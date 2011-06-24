@@ -129,7 +129,7 @@ public class DependencyModel implements IDependencyModel {
           splitted[0], splitted[1]));
 
       // 'Workaround' - we have to remove the module form the internal list as it not has been added yet
-      _modifiableModularizedSystem.getModifiableResourceModulesMap().remove(resourceModule.getModuleIdentifier());
+      _modifiableModularizedSystem.removeModule(resourceModule.getModuleIdentifier());
 
       // create new resource module adapter
       return new AdapterResourceModule2IArtifact(resourceModule, getRoot());

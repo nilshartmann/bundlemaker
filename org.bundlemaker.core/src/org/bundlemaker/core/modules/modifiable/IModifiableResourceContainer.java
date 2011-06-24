@@ -10,14 +10,56 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules.modifiable;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public interface IModifiableResourceContainer extends IResourceContainer, IModifiableTypeContainer {
 
-  Set<IResource> getModifiableResourcesSet(ContentType binary);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @param contentType
+   */
+  void add(IResource resource, ContentType contentType);
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @param contentType
+   */
+  void addAll(Collection<? extends IResource> resource, ContentType contentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @param contentType
+   */
+  void remove(IResource resource, ContentType contentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @param contentType
+   */
+  void removeAll(Collection<? extends IResource> resource, ContentType contentType);
+
+  // TODO: LONG-TERM-SOLUTION
+  // void addMovableUnit(IMovableUnit movableUnit);
 }

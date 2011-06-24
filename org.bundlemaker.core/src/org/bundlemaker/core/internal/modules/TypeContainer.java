@@ -17,7 +17,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.modules.ITypeContainer;
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem.ChangeAction;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.StringQueryFilters;
 import org.bundlemaker.core.resource.IType;
@@ -29,10 +32,13 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeContainer implements ITypeContainer {
+public class TypeContainer implements IModifiableTypeContainer {
 
   /** the contained type names */
   private Map<String, IType> _containedTypes;
+
+  /** back-reference: the containing module */
+  private IModule            _module;
 
   /**
    * <p>
@@ -43,6 +49,21 @@ public class TypeContainer implements ITypeContainer {
 
     // create the contained types sets
     _containedTypes = new HashMap<String, IType>();
+  }
+
+  public TypeContainer(IModule module) {
+
+    Assert.isNotNull(module);
+
+    _module = module;
+
+    // create the contained types sets
+    _containedTypes = new HashMap<String, IType>();
+  }
+
+  @Override
+  public IModule getModule() {
+    return _module;
   }
 
   /**
@@ -191,12 +212,33 @@ public class TypeContainer implements ITypeContainer {
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
+   * {@inheritDoc}
    */
-  public Map<String, IType> getModifiableContainedTypesMap() {
-    return _containedTypes;
+  @Override
+  public void add(IType type) {
+
+    //
+    _containedTypes.put(type.getFullyQualifiedName(), type);
+
+    // notify
+    if (getModule().hasModularizedSystem()) {
+      ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
+          ChangeAction.ADDED);
+    }
+  }
+
+  @Override
+  public void remove(IType type) {
+    _containedTypes.remove(type.getFullyQualifiedName());
+
+    // notify
+    if (getModule().hasModularizedSystem()) {
+      ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
+          ChangeAction.REMOVED);
+    }
+  }
+
+  public void setModule(IModule module) {
+    _module = module;
   }
 }

@@ -12,6 +12,8 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -34,6 +37,7 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -55,8 +59,6 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param projectDescription
    */
   public AbstractTransformationAwareModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
-
-    //
     super(name, projectDescription);
   }
 
@@ -65,36 +67,31 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    */
   @Override
   public final void applyTransformations(IProgressMonitor progressMonitor) {
+
     SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
     subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
 
     // step 1: clear prior results
     getModifiableResourceModulesMap().clear();
     getModifiableNonResourceModulesMap().clear();
-
     preApplyTransformations();
 
-    // step 2: set up the JRE
-    // TODO!!!!
+    // // step 2: set up the JRE
     try {
-
-      TypeModule jdkModule = JdkModuleCreator.getJdkModules().get(0);
-      getModifiableNonResourceModulesMap().put(jdkModule.getModuleIdentifier(), jdkModule);
+      TypeModule jdkModule = JdkModuleCreator.getJdkModules(this).get(0);
       setExecutionEnvironment(jdkModule);
-
+      getModifiableNonResourceModulesMap().put(getExecutionEnvironment().getModuleIdentifier(),
+          (TypeModule) getExecutionEnvironment());
     } catch (CoreException e1) {
-      // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-    // subMonitor.worked(10);
+
+    subMonitor.worked(10);
 
     // step 3: create the type modules
     for (IFileBasedContent fileBasedContent : getProjectDescription().getFileBasedContent()) {
-
       if (!fileBasedContent.isResourceContent()) {
-
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
-
         // TODO!!
         try {
           TypeModule typeModule = createTypeModule(fileBasedContent.getId(), identifier, new File[] { fileBasedContent
@@ -104,19 +101,17 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
           // TODO
           ex.printStackTrace();
         }
-
       }
     }
-    // subMonitor.worked(10);
-
-    //
-    initializeNonResourceModules();
+    subMonitor.worked(10);
 
     // step 4: transform modules
     List<ITransformation> transformations = getTransformations();
     SubMonitor transformationMonitor = subMonitor.newChild(70);
     transformationMonitor.beginTask("Begin", transformations.size() * 4);
+
     for (ITransformation transformation : transformations) {
+
       // step 4.1: apply transformation
       transformation.apply((IModifiableModularizedSystem) this, transformationMonitor.newChild(1));
 
@@ -136,21 +131,77 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         }
       }
       transformationMonitor.worked(1);
-
-      // step 4.3: initialize
-      for (IModifiableResourceModule module : getModifiableResourceModulesMap().values()) {
-
-        ((ResourceModule) module).initializeContainedTypes();
-      }
-      transformationMonitor.worked(1);
-
-      //
-      reinitializeCaches();
-      transformationMonitor.worked(1);
     }
 
     postApplyTransformations();
-    subMonitor.worked(10);
+    // subMonitor.worked(10);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModifiableResourceModule createResourceModule(IModuleIdentifier createModuleIdentifier) {
+
+    // create the result
+    ResourceModule result = new ResourceModule(createModuleIdentifier, this);
+
+    // add it to the internal hash map
+    getModifiableResourceModulesMap().put(result.getModuleIdentifier(), result);
+
+    // return the result
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addModifiableResourceModule(IModifiableResourceModule resourceModule) {
+    Assert.isNotNull(resourceModule);
+    Assert.isTrue(!getModifiableResourceModulesMap().containsKey(resourceModule.getModuleIdentifier()));
+
+    //
+    getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
+
+    // notify
+    resourceModuleAdded(resourceModule);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeModule(IModuleIdentifier identifier) {
+    Assert.isNotNull(identifier);
+    Assert.isTrue(getModifiableResourceModulesMap().containsKey(identifier));
+
+    // remove the entry
+    IModifiableResourceModule resourceModule = getModifiableResourceModulesMap().remove(identifier);
+
+    // notify
+    resourceModuleRemoved(resourceModule);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeModule(IModule module) {
+    Assert.isNotNull(module);
+
+    // remove the module
+    removeModule(module.getModuleIdentifier());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<IModifiableResourceModule> getModifiableResourceModules() {
+
+    // return an unmodifiable copy
+    return Collections.unmodifiableCollection(getModifiableResourceModulesMap().values());
   }
 
   /**
@@ -159,21 +210,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * 
    */
   protected void preApplyTransformations() {
-    //
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws Exception
-   */
-  protected void initializeNonResourceModules() {
-
-  }
-
-  public void reinitializeCaches() {
-
+    // do nothing...
   }
 
   /**
@@ -182,34 +219,27 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * 
    */
   protected void postApplyTransformations() {
-    //
-  }
-
-  @Override
-  public IModifiableResourceModule createResourceModule(IModuleIdentifier createModuleIdentifier) {
-
-    //
-    ResourceModule resourceModule = new ResourceModule(createModuleIdentifier);
-
-    resourceModule.setModularizedSystem(this);
-
-    //
-    getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
-
-    //
-    return resourceModule;
+    // do nothing...
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param identifier
-   * @param file
-   * @return
+   * @param resourceModule
    */
-  protected TypeModule createTypeModule(String contentId, IModuleIdentifier identifier, File file) {
-    return createTypeModule(contentId, identifier, new File[] { file });
+  protected void resourceModuleAdded(IModifiableResourceModule resourceModule) {
+    // do nothing...
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceModule
+   */
+  protected void resourceModuleRemoved(IModifiableResourceModule resourceModule) {
+    // do nothing...
   }
 
   /**
@@ -220,11 +250,10 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param files
    * @return
    */
-  protected TypeModule createTypeModule(String contentId, IModuleIdentifier identifier, File[] files) {
+  private TypeModule createTypeModule(String contentId, IModuleIdentifier identifier, File... files) {
 
     // create the type module
-    TypeModule typeModule = new TypeModule(identifier);
-    typeModule.setModularizedSystem(this);
+    TypeModule typeModule = new TypeModule(identifier, this);
 
     //
     for (int i = 0; i < files.length; i++) {
@@ -234,7 +263,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
         // TODO DIRECTORIES!!
         // TODO:PARSE!!
-        List<String> types = getContainedTypes(files[i]);
+        List<String> types = getContainedTypesFromJarFile(files[i]);
 
         for (String type : types) {
 
@@ -243,7 +272,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
           // type2.setTypeModule(typeModule);
 
-          typeModule.getModifiableSelfResourceContainer().getModifiableContainedTypesMap().put(type, type2);
+          typeModule.getModifiableSelfResourceContainer().add(type2);
         }
 
       } catch (IOException e) {
@@ -264,7 +293,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @return
    * @throws IOException
    */
-  private static List<String> getContainedTypes(File file) throws IOException {
+  private static List<String> getContainedTypesFromJarFile(File file) throws IOException {
 
     // create the result list
     List<String> result = new LinkedList<String>();

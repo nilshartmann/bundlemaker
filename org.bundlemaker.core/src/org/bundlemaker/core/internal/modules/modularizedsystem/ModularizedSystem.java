@@ -13,7 +13,6 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -44,7 +43,7 @@ import org.eclipse.core.runtime.Assert;
  */
 public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
-  /** - */
+  /** the referenced modules cache */
   private GenericCache<ModuleAndQueryFilterKey, IReferencedModulesQueryResult> _referencedModulesCache;
 
   /**
@@ -67,18 +66,6 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
         return internalGetReferencedModules(key.getResourceModule(), key.getQueryFilter());
       }
     };
-  }
-
-  @Override
-  public void reinitializeCaches() {
-    if (Boolean.getBoolean("dont-reinitialize")) {
-      return;
-    }
-    
-    System.out.println(" --> reinitializeCaches()");
-    
-    super.reinitializeCaches();
-    _referencedModulesCache.clear();
   }
 
   /**
@@ -271,54 +258,54 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     transitiveQueryResult.getModifiableUnsatisfiedReferences().addAll(queryResult.getUnsatisfiedReferences());
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Map<String, Set<IModule>> getAmbiguousPackages() {
-
-    // create the result map
-    Map<String, Set<IModule>> result = new HashMap<String, Set<IModule>>();
-
-    // create the temp map
-    Map<String, IModule> tempMap = new HashMap<String, IModule>();
-
-    // iterate over all modules
-    for (IModule typeModule : getAllModules()) {
-
-      // iterate over contained packages
-      for (String containedPackage : typeModule.getContainedPackageNames()) {
-
-        // add
-        if (result.containsKey(containedPackage)) {
-
-          result.get(containedPackage).add(typeModule);
-        }
-
-        //
-        else if (tempMap.containsKey(containedPackage)) {
-
-          //
-          Set<IModule> newSet = new HashSet<IModule>();
-
-          //
-          result.put(containedPackage, newSet);
-
-          // add module to module list
-          newSet.add(typeModule);
-          newSet.add(tempMap.remove(containedPackage));
-        }
-
-        // put in the temp map
-        else {
-          tempMap.put(containedPackage, typeModule);
-        }
-      }
-    }
-
-    // return the result
-    return result;
-  }
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public Map<String, Set<IModule>> getAmbiguousPackages() {
+  //
+  // // create the result map
+  // Map<String, Set<IModule>> result = new HashMap<String, Set<IModule>>();
+  //
+  // // create the temp map
+  // Map<String, IModule> tempMap = new HashMap<String, IModule>();
+  //
+  // // iterate over all modules
+  // for (IModule typeModule : getAllModules()) {
+  //
+  // // iterate over contained packages
+  // for (String containedPackage : typeModule.getContainedPackageNames()) {
+  //
+  // // add
+  // if (result.containsKey(containedPackage)) {
+  //
+  // result.get(containedPackage).add(typeModule);
+  // }
+  //
+  // //
+  // else if (tempMap.containsKey(containedPackage)) {
+  //
+  // //
+  // Set<IModule> newSet = new HashSet<IModule>();
+  //
+  // //
+  // result.put(containedPackage, newSet);
+  //
+  // // add module to module list
+  // newSet.add(typeModule);
+  // newSet.add(tempMap.remove(containedPackage));
+  // }
+  //
+  // // put in the temp map
+  // else {
+  // tempMap.put(containedPackage, typeModule);
+  // }
+  // }
+  // }
+  //
+  // // return the result
+  // return result;
+  // }
 
   // /**
   // * <p>

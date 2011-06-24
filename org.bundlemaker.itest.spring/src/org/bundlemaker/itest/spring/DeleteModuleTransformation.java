@@ -66,7 +66,7 @@ public class DeleteModuleTransformation implements ITransformation {
     }
 
     //
-    modularizedSystem.getModifiableResourceModulesMap().remove(_moduleIdentifier);
+    modularizedSystem.removeModule(_moduleIdentifier);
   }
 
   /**

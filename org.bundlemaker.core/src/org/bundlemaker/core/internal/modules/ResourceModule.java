@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -43,8 +44,8 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
    * 
    * @param moduleIdentifier
    */
-  public ResourceModule(IModuleIdentifier moduleIdentifier) {
-    super(moduleIdentifier, new ResourceContainer());
+  public ResourceModule(IModuleIdentifier moduleIdentifier, IModularizedSystem modularizedSystem) {
+    super(moduleIdentifier, modularizedSystem, new ResourceContainer());
     ((ResourceContainer) getSelfResourceContainer()).setResourceModule(this);
   }
 
@@ -107,11 +108,11 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
 
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
-    
+
     Set<IReference> references = getReferences(filter);
 
     System.out.println("getReferences: " + stopWatch.getElapsedTime());
-    
+
     Set<String> result = new HashSet<String>();
     for (IReference reference : references) {
 
@@ -124,7 +125,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     }
 
     System.out.println("copy to String: " + stopWatch.getElapsedTime());
-    
+
     return result;
   }
 
@@ -201,27 +202,29 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     return !getResources(ContentType.SOURCE).isEmpty();
   }
 
-  /**
-   * <p>
-   * </p>
-   */
-  public void initializeContainedTypes() {
-
-    // iterate over all containers and initialize the contained types
-    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
-
-      @Override
-      public boolean doWithContainer(ResourceContainer resourceContainer) {
-
-        // initialize the contained types of the resource container
-        resourceContainer.initialize();
-
-        // return false to indicate that all containers should be
-        // processed
-        return false;
-      }
-    });
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // */
+  // // TODO incremental updates
+  // @Deprecated
+  // public void initializeContainedTypes() {
+  //
+  // // iterate over all containers and initialize the contained types
+  // doWithAllContainers(new ContainerClosure<ResourceContainer>() {
+  //
+  // @Override
+  // public boolean doWithContainer(ResourceContainer resourceContainer) {
+  //
+  // // initialize the contained types of the resource container
+  // resourceContainer.initialize();
+  //
+  // // return false to indicate that all containers should be
+  // // processed
+  // return false;
+  // }
+  // });
+  // }
 
   // TODO
   public void validate() {

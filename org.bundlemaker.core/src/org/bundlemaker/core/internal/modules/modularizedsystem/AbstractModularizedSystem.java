@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.modules.TypeModule;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -34,6 +36,7 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
+ * Abstract base class for {@link IModularizedSystem IModularizedSystems}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -74,12 +77,15 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     Assert.isNotNull(name);
     Assert.isNotNull(projectDescription);
 
+    // set the name
     _name = name;
 
+    // set the project description
     _projectDescription = projectDescription;
 
+    // initialize fields
     _userAttributes = new HashMap<String, Object>();
-    _transformations = new LinkedList<ITransformation>();
+    _transformations = new ArrayList<ITransformation>();
     _resourceModules = new HashMap<IModuleIdentifier, IModifiableResourceModule>();
     _nonResourceModules = new HashMap<IModuleIdentifier, TypeModule>();
   }
@@ -154,10 +160,10 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   @Override
   public final IModule getModule(IModuleIdentifier identifier) {
 
-    //
+    // assert
     Assert.isNotNull(identifier);
 
-    //
+    // try to find the module
     if (_resourceModules.containsKey(identifier)) {
       return _resourceModules.get(identifier);
     } else {
@@ -171,27 +177,27 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   @Override
   public Collection<IModule> getModules(String name) {
 
-    //
+    // assert
     Assert.isNotNull(name);
 
-    //
+    // create result list
     Collection<IModule> result = new LinkedList<IModule>();
 
-    //
+    // search in resource modules
     for (IModule iModule : _resourceModules.values()) {
       if (name.equals(iModule.getModuleIdentifier().getName())) {
         result.add(iModule);
       }
     }
 
-    //
+    // search in non resource modules
     for (IModule iModule : _nonResourceModules.values()) {
       if (name.equals(iModule.getModuleIdentifier().getName())) {
         result.add(iModule);
       }
     }
 
-    //
+    // return result
     return result;
   }
 
@@ -201,15 +207,21 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   @Override
   public final Collection<IModule> getNonResourceModules() {
 
-    //
+    // return the (unmodifiable) result
     return Collections.unmodifiableCollection((Collection<? extends IModule>) _nonResourceModules.values());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IModule getModule(String name, String version) {
     return getModule(new ModuleIdentifier(name, version));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IResourceModule getResourceModule(String name, String version) {
     return getResourceModule(new ModuleIdentifier(name, version));
@@ -220,8 +232,6 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    */
   @Override
   public final IResourceModule getResourceModule(IModuleIdentifier identifier) {
-
-    //
     return getModifiableResourceModule(identifier);
   }
 
@@ -231,26 +241,12 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   @Override
   public final Collection<IResourceModule> getResourceModules() {
 
-    //
+    // return the unmodifiable collection
     return Collections.unmodifiableCollection((Collection<? extends IResourceModule>) _resourceModules.values());
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public final Map<IModuleIdentifier, IModifiableResourceModule> getModifiableResourceModulesMap() {
-    return _resourceModules;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param identifier
-   * @return
+   * {@inheritDoc}
    */
   public final IModifiableResourceModule getModifiableResourceModule(IModuleIdentifier identifier) {
 
@@ -260,6 +256,9 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     return _resourceModules.get(identifier);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Collection<IModule> getAllModules(IQueryFilter<IModule> filter) {
 
@@ -284,6 +283,9 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     return Collections.unmodifiableSet(result);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Collection<IModule> getNonResourceModules(IQueryFilter<IModule> filter) {
 
@@ -301,6 +303,9 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     return Collections.unmodifiableSet(result);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Collection<IResourceModule> getResourceModules(IQueryFilter<IResourceModule> filter) {
 
@@ -326,6 +331,16 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    */
   protected final Map<IModuleIdentifier, TypeModule> getModifiableNonResourceModulesMap() {
     return _nonResourceModules;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected final Map<IModuleIdentifier, IModifiableResourceModule> getModifiableResourceModulesMap() {
+    return _resourceModules;
   }
 
   /**

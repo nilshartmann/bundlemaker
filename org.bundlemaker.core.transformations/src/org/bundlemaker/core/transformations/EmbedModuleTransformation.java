@@ -59,7 +59,7 @@ public class EmbedModuleTransformation implements ITransformation {
     List<IResourceModule> embeddedModules = new LinkedList<IResourceModule>();
 
     // step 2: fetch host and embedded modules
-    for (IModifiableResourceModule embeddedModule : modularizedSystem.getModifiableResourceModulesMap().values()) {
+    for (IModifiableResourceModule embeddedModule : modularizedSystem.getModifiableResourceModules()) {
 
       // try to fetch host module
       if (embeddedModule.getModuleIdentifier().equals(_hostModuleIdentifier)) {
@@ -106,7 +106,7 @@ public class EmbedModuleTransformation implements ITransformation {
       // }
 
       // remove as top level module
-      modularizedSystem.getModifiableResourceModulesMap().remove(embeddedModule.getModuleIdentifier());
+      modularizedSystem.removeModule(embeddedModule.getModuleIdentifier());
     }
   }
 }

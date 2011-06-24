@@ -23,9 +23,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
-import org.bundlemaker.core.util.TransformationUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 
@@ -54,13 +52,17 @@ public class ResourceSetBasedTransformation implements ITransformation {
    */
   @Override
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
-    
+
     SubMonitor subMonitor = SubMonitor.convert(progressMonitor, _moduleDefinitions.size());
 
     //
     for (ResourceSetBasedModuleDefinition moduleDefinition : _moduleDefinitions) {
       // get the target module
       IModuleIdentifier targetModuleIdentifier = moduleDefinition.getModuleIdentifier();
+
+      if (targetModuleIdentifier.toString().equals("spring-jdbc_2.5.6")) {
+        System.out.println("spring-jdbc_2.5.6");
+      }
 
       subMonitor.subTask("Creating module '" + targetModuleIdentifier.toString() + "'...");
 
@@ -79,7 +81,6 @@ public class ResourceSetBasedTransformation implements ITransformation {
 
       // set classifications
       setClassification(moduleDefinition, targetResourceModule);
-     
 
       // set user attributes
       targetResourceModule.getUserAttributes().putAll(moduleDefinition.getUserAttributes());
@@ -128,19 +129,23 @@ public class ResourceSetBasedTransformation implements ITransformation {
   /**
    * Set the classification of the target module
    * 
-   * <p>This implementation sets the classification of the target module
-   * to the same as the of the module definition. Subclasses may change this behavior. 
-   * @param moduleDefinition The module definition that is used to build the new module
-   * @param targetResourceModule the new module that should be classified
+   * <p>
+   * This implementation sets the classification of the target module to the same as the of the module definition.
+   * Subclasses may change this behavior.
+   * 
+   * @param moduleDefinition
+   *          The module definition that is used to build the new module
+   * @param targetResourceModule
+   *          the new module that should be classified
    */
   protected void setClassification(ResourceSetBasedModuleDefinition moduleDefinition,
       IModifiableResourceModule targetResourceModule) {
-    
+
     // set classification if no classification has been set yet
     if (moduleDefinition.getClassification() != null) {
       targetResourceModule.setClassification(moduleDefinition.getClassification());
     }
-    
+
   }
 
   /**
@@ -200,19 +205,23 @@ public class ResourceSetBasedTransformation implements ITransformation {
 
     List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(originResourceModule, ContentType.BINARY);
 
-    TransformationUtils.addAll(
-        targetResourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.BINARY),
-        resourceStandinsToMove);
+    targetResourceModule.getModifiableSelfResourceContainer().addAll(resourceStandinsToMove, ContentType.BINARY);
+    // TransformationUtils.addAll(
+    // .getModifiableResourcesSet(),
+    // resourceStandinsToMove);
 
-    TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.BINARY);
+    originResourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.BINARY);
+    // TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.BINARY);
 
     resourceStandinsToMove = resourceSet.getMatchingResources(originResourceModule, ContentType.SOURCE);
 
-    TransformationUtils.addAll(
-        targetResourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE),
-        resourceStandinsToMove);
+    targetResourceModule.getModifiableSelfResourceContainer().addAll(resourceStandinsToMove, ContentType.SOURCE);
+    // TransformationUtils.addAll(
+    // targetResourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE),
+    // resourceStandinsToMove);
 
-    TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.SOURCE);
+    originResourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.SOURCE);
+    // TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.SOURCE);
   }
 
   public void setResourceSetProcessor(IResourceSetProcessor resourceSetProcessor) {

@@ -64,11 +64,10 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     // call the super method
     super.addArtifact(artifact);
     // TODO!!!
-    ((IModifiableArtifact)artifact).setParent(this);
+    ((IModifiableArtifact) artifact).setParent(this);
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.addResourceModuleToModularizedSystem(artifact);
-    AdapterUtils.getModularizedSystem(artifact).reinitializeCaches();
   }
 
   /**
@@ -83,10 +82,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
-    AdapterUtils.getModularizedSystem(this).reinitializeCaches();
 
     // TODO!!!
-    ((IModifiableArtifact)artifact).setParent(null);
+    ((IModifiableArtifact) artifact).setParent(null);
 
     //
     return result;

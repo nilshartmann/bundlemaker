@@ -3,6 +3,7 @@ package org.bundlemaker.itest.spring;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 import org.bundlemaker.itest.spring.experimental.PatternBasedTypeSelector;
@@ -24,7 +25,7 @@ public class IntegrationTest extends AbstractIntegrationTest {
    * </p>
    */
   public IntegrationTest() {
-    super("spring", false, false, true, false);
+    super("spring", true, true, true, false);
   }
 
   /**
@@ -124,6 +125,12 @@ public class IntegrationTest extends AbstractIntegrationTest {
 
     //
     Assert.assertNotNull(modularizedSystem.getExecutionEnvironment());
+
+    try {
+      Assert.assertNotNull(modularizedSystem.getType("org.springframework.jdbc.support.lob.PassThroughClob"));
+    } catch (AmbiguousElementException e) {
+      Assert.fail(e.getMessage());
+    }
 
     // //
     // IResourceModule resourceModule = modularizedSystem.getResourceModule("spring-orm", "2.5.6");

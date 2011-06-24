@@ -21,7 +21,19 @@ import org.eclipse.core.runtime.IPath;
  */
 public interface IModifiableResourceModule extends IResourceModule {
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param classification
+   */
   void setClassification(IPath classification);
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   IModifiableResourceContainer getModifiableSelfResourceContainer();
 }

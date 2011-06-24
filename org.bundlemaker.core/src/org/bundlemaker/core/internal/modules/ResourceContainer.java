@@ -10,20 +10,21 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem.ChangeAction;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
-import org.bundlemaker.core.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -35,13 +36,10 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceContainer extends TypeContainer implements IModifiableResourceContainer {
 
   /** the binary resources */
-  private Set<IResource>  _binaryResources;
+  private Set<IResource> _binaryResources;
 
   /** the source resources */
-  private Set<IResource>  _sourceResources;
-
-  /** the containing resource module */
-  private IResourceModule _resourceModule;
+  private Set<IResource> _sourceResources;
 
   /**
    * <p>
@@ -95,6 +93,9 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     return Collections.unmodifiableSet(result);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Set<IReference> getReferences(IQueryFilter<IReference> filter) {
 
@@ -134,36 +135,35 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter) {
 
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-
+    //
     Set<IReference> references = getReferences(filter);
 
-    System.out.println("getReferences: " + stopWatch.getElapsedTime());
-
+    //
     Set<String> result = new HashSet<String>();
     for (IReference reference : references) {
       result.add(reference.getFullyQualifiedName());
     }
 
-    System.out.println("copy to String: " + stopWatch.getElapsedTime());
-
+    //
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter) {
 
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-
+    //
     Set<IReference> references = getReferences(filter);
 
-    System.out.println("getReferences: " + stopWatch.getElapsedTime());
-
+    //
     Set<String> result = new HashSet<String>();
     for (IReference reference : references) {
 
@@ -175,232 +175,141 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       }
     }
 
-    System.out.println("copy to String: " + stopWatch.getElapsedTime());
-
+    //
     return result;
   }
 
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // @Deprecated
-  // public Set<String> getReferencedTypeNames(boolean hideContainedTypes, boolean includeSourceReferences,
-  // boolean includeIndirectReferences) {
-  //
-  // // return result
-  // return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, false);
-  // }
-  //
-  // @Override
-  // @Deprecated
-  // public Set<IReference> getAllReferences(boolean hideContainedTypes, boolean includeSourceReferences,
-  // boolean includeIndirectReferences) {
-  //
-  // // create the result
-  // Set<IReference> result = new HashSet<IReference>();
-  //
-  // //
-  // getReferences(_binaryResources, hideContainedTypes, includeIndirectReferences, result);
-  //
-  // //
-  // if (includeSourceReferences) {
-  // getReferences(_sourceResources, hideContainedTypes, includeIndirectReferences, result);
-  // }
-  //
-  // // return result
-  // return Collections.unmodifiableSet(result);
-  // }
-  //
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // @Deprecated
-  // public Set<String> getReferencedPackageNames(boolean hideContainedTypes, boolean includeSourceReferences,
-  // boolean includeIndirectReferences) {
-  //
-  // // return result
-  // return getReferences(hideContainedTypes, includeSourceReferences, true, includeIndirectReferences, true);
-  // }
-  //
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @return
-  // */
-  // @Deprecated
-  // public Set<String> getIndirectlyReferencedPackageNames() {
-  //
-  // // return result
-  // return getReferences(true, true, false, true, true);
-  // }
-
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IResourceModule getResourceModule() {
-    return _resourceModule;
+    return (IResourceModule) getModule();
   }
 
-  public void setResourceModule(IResourceModule resourceModule) {
-    _resourceModule = resourceModule;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void add(IResource resource, ContentType contentType) {
+
+    Assert.isNotNull(resource);
+    Assert.isNotNull(contentType);
+
+    // add the resource to the resource set...
+    getModifiableResourcesSet(contentType).add(resource);
+
+    // ... and add all contained types to the cache
+    for (IType type : resource.getContainedTypes()) {
+      add(type);
+    }
+
+    // notify
+    if (getResourceModule().hasModularizedSystem()) {
+      ((AbstractCachingModularizedSystem) getResourceModule().getModularizedSystem()).resourceChanged(resource,
+          getResourceModule(), ChangeAction.ADDED);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addAll(Collection<? extends IResource> resources, ContentType contentType) {
+
+    Assert.isNotNull(resources);
+    Assert.isNotNull(contentType);
+
+    // add the resource to the resource set...
+    getModifiableResourcesSet(contentType).addAll(resources);
+
+    // ... and add all contained types to the cache
+    for (IResource resource : resources) {
+      for (IType type : resource.getContainedTypes()) {
+        add(type);
+      }
+    }
+
+    // notify
+    if (getResourceModule().hasModularizedSystem()) {
+      ((AbstractCachingModularizedSystem) getResourceModule().getModularizedSystem()).resourcesChanged(resources,
+          getResourceModule(), ChangeAction.ADDED);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void remove(IResource resource, ContentType contentType) {
+
+    Assert.isNotNull(resource);
+    Assert.isNotNull(contentType);
+
+    // add the resource to the resource set...
+    getModifiableResourcesSet(contentType).remove(resource);
+
+    // ... and add all contained types to the cache
+    for (IType type : resource.getContainedTypes()) {
+      remove(type);
+    }
+
+    // notify
+    if (getResourceModule().hasModularizedSystem()) {
+      ((AbstractCachingModularizedSystem) getResourceModule().getModularizedSystem()).resourceChanged(resource,
+          getResourceModule(), ChangeAction.REMOVED);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeAll(Collection<? extends IResource> resources, ContentType contentType) {
+
+    Assert.isNotNull(resources);
+    Assert.isNotNull(contentType);
+
+    // add the resource to the resource set...
+    getModifiableResourcesSet(contentType).removeAll(resources);
+
+    // ... and add all contained types to the cache
+    for (IResource resource : resources) {
+      for (IType type : resource.getContainedTypes()) {
+        remove(type);
+      }
+    }
+
+    // notify
+    if (getResourceModule().hasModularizedSystem()) {
+      ((AbstractCachingModularizedSystem) getResourceModule().getModularizedSystem()).resourcesChanged(resources,
+          getResourceModule(), ChangeAction.REMOVED);
+    }
   }
 
   /**
    * <p>
-   * Initializes the contained types of this resource container.
+   * Set the containing {@link IResourceModule}.
    * </p>
+   * 
+   * @param resourceModule
+   *          the containing {@link IResourceModule}.
    */
-  public void initialize() {
-
-    getModifiableContainedTypesMap().clear();
-
-    // step 1: iterate over all binary resources...
-    for (IResource resource : _binaryResources) {
-
-      // ... and add all contained types
-      for (IType type : resource.getContainedTypes()) {
-
-        getModifiableContainedTypesMap().put(type.getFullyQualifiedName(), type);
-      }
-
-      // if (resource instanceof ResourceStandin) {
-      // // set the back-reference
-      // ((ResourceStandin) resource).setResourceModule(_resourceModule);
-      // } else {
-      // System.out.println(resource);
-      // }
-    }
-
-    // step 2: iterate over all source resources...
-    for (IResource resource : _sourceResources) {
-
-      // ... and add all contained types
-      for (IType type : resource.getContainedTypes()) {
-
-        // TODO
-        getModifiableContainedTypesMap().put(type.getFullyQualifiedName(), type);
-      }
-
-      // // set the back-reference
-      // ((ResourceStandin) resource).setResourceModule(_resourceModule);
-    }
+  public void setResourceModule(IResourceModule resourceModule) {
+    setModule(resourceModule);
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param resourceContainer
    * @param contentType
    * @return
    */
-  @Override
-  public Set<IResource> getModifiableResourcesSet(ContentType contentType) {
-
+  private Set<IResource> getModifiableResourcesSet(ContentType contentType) {
     Assert.isNotNull(contentType);
 
     // return the resource set
     return ContentType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
   }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param hideContainedTypes
-  // * @param includeSourceReferences
-  // * @param includeIndirectReferences
-  // * @param collectPackages
-  // * @return
-  // */
-  // private Set<String> getReferences(boolean hideContainedTypes, boolean includeSourceReferences,
-  // boolean includeDirectReferences, boolean includeIndirectReferences, boolean collectPackages) {
-  //
-  // // create the result
-  // Set<String> result = new HashSet<String>();
-  //
-  // //
-  // getReferences(_binaryResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
-  // collectPackages);
-  //
-  // //
-  // if (includeSourceReferences) {
-  // getReferences(_sourceResources, hideContainedTypes, includeDirectReferences, includeIndirectReferences, result,
-  // collectPackages);
-  // }
-  //
-  // // return result
-  // return Collections.unmodifiableSet(result);
-  // }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param resources
-  // * @param hideContainedTypes
-  // * @param includeIndirectReferences
-  // * TODO
-  // * @param result
-  // * @param containedTypes
-  // */
-  // private void getReferences(Set<? extends IResource> resources, boolean hideContainedTypes,
-  // boolean includeDirectReferences, boolean includeIndirectReferences, Set<String> result, boolean collectPackages) {
-  //
-  // // iterate over all resources
-  // for (IResource resource : resources) {
-  //
-  // // iterate over all resources
-  // for (IReference reference : resource.getReferences()) {
-  //
-  // addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
-  // collectPackages, result);
-  // }
-  //
-  // //
-  // for (IType type : resource.getContainedTypes()) {
-  //
-  // //
-  // for (IReference reference : type.getReferences()) {
-  //
-  // addReference(reference, hideContainedTypes, includeDirectReferences, includeIndirectReferences,
-  // collectPackages, result);
-  // }
-  // }
-  // }
-  // }
-
-  // private void addReference(IReference reference, boolean hideContainedTypes, boolean includeDirectReferences,
-  // boolean includeIndirectReferences, boolean collectPackages, Set<String> result) {
-  //
-  // if (reference.isDirectlyReferenced() && !includeDirectReferences) {
-  // return;
-  // }
-  //
-  // if (!reference.isDirectlyReferenced() && !includeIndirectReferences) {
-  // return;
-  // }
-  //
-  // if (!hideContainedTypes || !getContainedTypeNames().contains(reference.getFullyQualifiedName())) {
-  //
-  // String entry;
-  // if (collectPackages) {
-  //
-  // if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-  // entry = reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.'));
-  // } else {
-  // entry = "";
-  // }
-  //
-  // } else {
-  // entry = reference.getFullyQualifiedName();
-  // }
-  //
-  // if (!result.contains(entry)) {
-  // result.add(entry);
-  // }
-  //
-  // }
-  // }
 }

@@ -10,9 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules.modifiable;
 
-import java.util.Map;
+import java.util.Collection;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 
 /**
@@ -25,15 +26,47 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
 
   /**
    * <p>
-   * Returns a map with all contained {@link IModifiableResourceModule IModifiableResourceModules}.
+   * Creates a new IModifiableResourceModule and adds it to this {@link IModularizedSystem}.
    * </p>
    * 
+   * @param moduleIdentifier
+   *          the module identifier
    * @return
    */
-  Map<IModuleIdentifier, IModifiableResourceModule> getModifiableResourceModulesMap();
+  IModifiableResourceModule createResourceModule(IModuleIdentifier moduleIdentifier);
 
   /**
    * <p>
+   * Adds the given {@link IModifiableResourceModule} to this {@link IModularizedSystem}.
+   * </p>
+   * 
+   * @param identifier
+   * @param resourceModule
+   */
+  void addModifiableResourceModule(IModifiableResourceModule resourceModule);
+
+  /**
+   * <p>
+   * Removes the module with the given {@link IModuleIdentifier}.
+   * </p>
+   * 
+   * @param identifier
+   *          the {@link IModuleIdentifier}.
+   */
+  void removeModule(IModuleIdentifier identifier);
+
+  /**
+   * <p>
+   * Removes the given {@link IModule} from this {@link IModularizedSystem}.
+   * </p>
+   * 
+   * @param module
+   */
+  void removeModule(IModule module);
+
+  /**
+   * <p>
+   * Returns the {@link IModifiableResourceModule} with the given {@link IModuleIdentifier}.
    * </p>
    * 
    * @param moduleIdentifier
@@ -43,14 +76,10 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
 
   /**
    * <p>
+   * Returns all {@link IModifiableResourceModule IModifiableResourceModules} for this {@link IModularizedSystem}.
    * </p>
    * 
-   * @param moduleIdentifier
    * @return
    */
-  IModifiableResourceModule createResourceModule(IModuleIdentifier moduleIdentifier);
-
-  // TODO
-  void reinitializeCaches();
-
+  Collection<IModifiableResourceModule> getModifiableResourceModules();
 }

@@ -33,12 +33,10 @@ public class BasicProjectContentTransformation implements ITransformation {
             .getName(), fileBasedContent.getVersion()));
 
         // add all the binary content
-        module.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.BINARY)
-            .addAll(fileBasedContent.getBinaryResources());
+        module.getModifiableSelfResourceContainer().addAll(fileBasedContent.getBinaryResources(), ContentType.BINARY);
 
         // add all the source content
-        module.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE)
-            .addAll(fileBasedContent.getSourceResources());
+        module.getModifiableSelfResourceContainer().addAll(fileBasedContent.getSourceResources(), ContentType.SOURCE);
       }
     }
   }

@@ -2,8 +2,6 @@ package org.bundlemaker.core.internal.parser;
 
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;

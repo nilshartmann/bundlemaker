@@ -2,13 +2,11 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -65,6 +63,7 @@ public class DefaultTypeSelector implements ITypeSelector {
     //
     int currentIndex = Integer.MAX_VALUE;
     IType currentType = null;
+    IType jdkType = null;
 
     for (IType iType : types) {
 
@@ -72,7 +71,7 @@ public class DefaultTypeSelector implements ITypeSelector {
       String contentID = iType.getContentId();
 
       if (!contentID.equals(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
-        
+
         // get the file based content
         IFileBasedContent fileBasedContent = _bundleMakerProjectDescription.getFileBasedContent(contentID);
 
@@ -84,10 +83,12 @@ public class DefaultTypeSelector implements ITypeSelector {
           currentIndex = index;
           currentType = iType;
         }
+      } else {
+        jdkType = iType;
       }
     }
 
     // return null
-    return currentType;
+    return currentType != null ? currentType : jdkType;
   }
 }

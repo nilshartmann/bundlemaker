@@ -68,6 +68,9 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
     return builder.toString();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean canAdd(IArtifact artifact) {
     return artifact.getType().equals(ArtifactType.Group) || artifact.getType().equals(ArtifactType.Module);
@@ -90,7 +93,6 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.addResourceModuleToModularizedSystem(artifact);
-    AdapterUtils.getModularizedSystem(artifact).reinitializeCaches();
   }
 
   /**
@@ -105,7 +107,6 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
-    AdapterUtils.getModularizedSystem(this).reinitializeCaches();
 
     // TODO!!!
     ((IModifiableArtifact) artifact).setParent(null);
