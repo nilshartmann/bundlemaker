@@ -34,7 +34,8 @@ import org.bundlemaker.core.util.StopWatch;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceModule extends AbstractModule<IResourceContainer, ResourceContainer> implements
+public class ResourceModule extends
+		AbstractModule<IResourceContainer, ResourceContainer> implements
     IModifiableResourceModule {
 
   /**
@@ -44,9 +45,11 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
    * 
    * @param moduleIdentifier
    */
-  public ResourceModule(IModuleIdentifier moduleIdentifier, IModularizedSystem modularizedSystem) {
+	public ResourceModule(IModuleIdentifier moduleIdentifier,
+			IModularizedSystem modularizedSystem) {
     super(moduleIdentifier, modularizedSystem, new ResourceContainer());
-    ((ResourceContainer) getSelfResourceContainer()).setResourceModule(this);
+		((ResourceContainer) getSelfResourceContainer())
+				.setResourceModule(this);
   }
 
   /**
@@ -91,14 +94,14 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
 
     Set<IReference> references = getReferences(filter);
 
-    System.out.println("getReferences: " + stopWatch.getElapsedTime());
+		// System.out.println("getReferences: " + stopWatch.getElapsedTime());
 
     Set<String> result = new HashSet<String>();
     for (IReference reference : references) {
       result.add(reference.getFullyQualifiedName());
     }
 
-    System.out.println("copy to String: " + stopWatch.getElapsedTime());
+		// System.out.println("copy to String: " + stopWatch.getElapsedTime());
 
     return result;
   }
@@ -111,20 +114,21 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
 
     Set<IReference> references = getReferences(filter);
 
-    System.out.println("getReferences: " + stopWatch.getElapsedTime());
+		// System.out.println("getReferences: " + stopWatch.getElapsedTime());
 
     Set<String> result = new HashSet<String>();
     for (IReference reference : references) {
 
       if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-        result.add(reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.')));
+				result.add(reference.getFullyQualifiedName().substring(0,
+						reference.getFullyQualifiedName().lastIndexOf('.')));
       } else {
         // TODO: brauchen wir das ?
         // result.add("");
       }
     }
 
-    System.out.println("copy to String: " + stopWatch.getElapsedTime());
+		// System.out.println("copy to String: " + stopWatch.getElapsedTime());
 
     return result;
   }
@@ -133,7 +137,8 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
    * {@inheritDoc}
    */
   @Override
-  public IResource getResource(final String path, final ContentType contentType) {
+	public IResource getResource(final String path,
+			final ContentType contentType) {
 
     // create the result set
     final IResource[] result = new IResource[1];
@@ -260,12 +265,15 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
       if (entries.containsKey(resource.getPath())) {
 
         //
-        System.out.println("DUPLICATE ENTRY in " + getModuleIdentifier().toString() + " : "
-            + entries.get(resource.getPath()).getRoot() + " : " + entries.get(resource.getPath()).getPath());
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ entries.get(resource.getPath()).getRoot() + " : "
+						+ entries.get(resource.getPath()).getPath());
 
         //
-        System.out.println("DUPLICATE ENTRY in " + getModuleIdentifier().toString() + " : " + resource.getRoot()
-            + " : " + resource.getPath());
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ resource.getRoot() + " : " + resource.getPath());
       } else {
 
         //
@@ -280,12 +288,15 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
       if (entries.containsKey(resource.getPath())) {
 
         //
-        System.out.println("DUPLICATE ENTRY in " + getModuleIdentifier().toString() + " : "
-            + entries.get(resource.getPath()).getRoot() + " : " + entries.get(resource.getPath()).getPath());
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ entries.get(resource.getPath()).getRoot() + " : "
+						+ entries.get(resource.getPath()).getPath());
 
         //
-        System.out.println("DUPLICATE ENTRY in " + getModuleIdentifier().toString() + " : " + resource.getRoot()
-            + " : " + resource.getPath());
+				System.out.println("DUPLICATE ENTRY in "
+						+ getModuleIdentifier().toString() + " : "
+						+ resource.getRoot() + " : " + resource.getPath());
       } else {
 
         //
