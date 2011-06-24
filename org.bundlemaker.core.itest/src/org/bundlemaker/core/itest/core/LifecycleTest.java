@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest;
+package org.bundlemaker.core.itest.core;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,11 +16,6 @@ import org.junit.Test;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class LifecycleTest extends AbstractBundleMakerProjectTest {
-
-  /** - */
-  private static final String[] EXPECTED_HASHCODES = new String[] { "1671a00db46fae3167c1efe6234fa742fcfb9798",
-      "85b79c43c37429714e5601e76946c4bfa5340143", "8813bcbb4039329723ead794c9af3877e6d1bfa3",
-      "4e0a3e2816874c166b9efc1164d68cb3ed8f679a"  };
 
   /**
    * <p>
@@ -72,18 +67,6 @@ public class LifecycleTest extends AbstractBundleMakerProjectTest {
     // assert resource list
     assertEquals(2, getBundleMakerProject().getBinaryResources().size());
     assertEquals(2, getBundleMakerProject().getSourceResources().size());
-
-//    //
-//    Assert.assertEquals(EXPECTED_HASHCODES[0],
-//        ByteArrayUtil.getHexString(getBundleMakerProject().getBinaryResources().get(0).getHashvalue()));
-//    Assert.assertEquals(EXPECTED_HASHCODES[1],
-//        ByteArrayUtil.getHexString(getBundleMakerProject().getBinaryResources().get(1).getHashvalue()));
-//
-//    //
-//    Assert.assertEquals(EXPECTED_HASHCODES[2],
-//        ByteArrayUtil.getHexString(getBundleMakerProject().getSourceResources().get(0).getHashvalue()));
-//    Assert.assertEquals(EXPECTED_HASHCODES[3],
-//        ByteArrayUtil.getHexString(getBundleMakerProject().getSourceResources().get(1).getHashvalue()));
   }
 
   /**

@@ -9,7 +9,7 @@ import java.util.List;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.itest.framework.AbstractModuleConverterTest;
+import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -36,7 +36,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModuleConverterTest extends AbstractModuleConverterTest {
+public class ModuleConverterTest extends AbstractModularizedSystemTest {
 
   /**
    * <p>

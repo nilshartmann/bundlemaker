@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.framework;
+package org.bundlemaker.core.itest;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.framework;
+package org.bundlemaker.core.itest;
 
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;

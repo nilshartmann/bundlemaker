@@ -1,8 +1,7 @@
-package org.bundlemaker.core.parser.test;
+package org.bundlemaker.core.parser;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -10,15 +9,14 @@ import java.util.List;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
+import org.bundlemaker.core.itestframework.ExpectedReference;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;

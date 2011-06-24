@@ -9,8 +9,8 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.itest.framework.AbstractModuleConverterTest;
-import org.bundlemaker.core.itest.framework.ArtifactTransformationProcessor;
+import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itest.ArtifactTransformationProcessor;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -35,7 +35,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class InnerClassTest extends AbstractModuleConverterTest {
+public class InnerClassTest extends AbstractModularizedSystemTest {
 
   /**
    * <p>

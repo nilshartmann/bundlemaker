@@ -1,7 +1,7 @@
 package org.bundlemaker.core.itest.modules;
 
+import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.itest.analysis.ModuleConverterTest;
-import org.bundlemaker.core.itest.framework.AbstractModuleConverterTest;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -15,7 +15,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class CachesTest extends AbstractModuleConverterTest {
+public class CachesTest extends AbstractModularizedSystemTest {
 
   /**
    * <p>

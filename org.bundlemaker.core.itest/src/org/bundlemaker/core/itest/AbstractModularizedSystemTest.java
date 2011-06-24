@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.framework;
+package org.bundlemaker.core.itest;
 
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModule;
@@ -19,7 +19,7 @@ import org.junit.Before;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractModuleConverterTest extends AbstractBundleMakerProjectTest {
+public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerProjectTest {
 
   /** - */
   private IModifiableModularizedSystem _modularizedSystem;

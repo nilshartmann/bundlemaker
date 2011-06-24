@@ -2,14 +2,14 @@ package org.bundlemaker.core.itest.analysis;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.itest.framework.AbstractModuleConverterTest;
+import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
-public class DependencyModuleConverterTest extends AbstractModuleConverterTest {
+public class DependencyModuleConverterTest extends AbstractModularizedSystemTest {
 
   @Test
   public void testDependencies() throws CoreException {
