@@ -11,8 +11,8 @@ import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependency;
 
 /**
- * Abstrakte Oberklasse fuer die beiden unterschiedlichen Artefakte. Unterschieden wird zwischen gruppierenden
- * Artefakten und Primaerartefakten.
+ * Abstrakte Oberklasse fuer die beiden unterschiedlichen Artefakte.
+ * Unterschieden wird zwischen gruppierenden Artefakten und Primaerartefakten.
  * 
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
@@ -52,6 +52,11 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   public void setParent(IArtifact parent) {
     this.parent = parent;
   }
+
+	@Override
+	public void addArtifact(IArtifact artifact, boolean relinkParent) {
+		addArtifact(artifact, false);
+	}
 
   public IArtifact getParent(ArtifactType type) {
     IArtifact parent = this.getParent();
