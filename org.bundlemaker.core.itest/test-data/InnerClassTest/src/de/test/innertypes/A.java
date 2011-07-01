@@ -29,7 +29,6 @@ public class A {
     Serializable serializable = new Serializable() {
       @Override
       public String toString() {
-
         return new X2().toString();
       }
     };

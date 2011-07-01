@@ -58,6 +58,12 @@ public class CachesTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(1, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
   @Test
   public void testAddAndRemove() throws Exception {
 
@@ -93,6 +99,12 @@ public class CachesTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(0, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
   @Test
   public void testRemoveModule() throws Exception {
 
@@ -113,6 +125,8 @@ public class CachesTest extends AbstractModularizedSystemTest {
     getModularizedSystem().removeModule(resourceModule.getModuleIdentifier());
 
     // TEST 2: check contained types
+    Assert.assertFalse(resourceModule.hasModularizedSystem());
+    Assert.assertNull(resourceModule.getModularizedSystem());
     Assert.assertNull(getModularizedSystem().getType("de.test.Klasse"));
     Assert.assertNull(getModularizedSystem().getTypeContainingModule("de.test.Klasse"));
     Assert.assertEquals(0, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
@@ -121,6 +135,8 @@ public class CachesTest extends AbstractModularizedSystemTest {
     getModularizedSystem().addModifiableResourceModule(((IModifiableResourceModule) resourceModule));
 
     // TEST 3: check contained types
+    Assert.assertTrue(resourceModule.hasModularizedSystem());
+    Assert.assertNotNull(resourceModule.getModularizedSystem());
     Assert.assertEquals(2, modifiableResourceModule.getContainedTypes().size());
     Assert.assertNotNull(getModularizedSystem().getType("de.test.Klasse"));
     Assert.assertNotNull(getModularizedSystem().getTypeContainingModule("de.test.Klasse"));
