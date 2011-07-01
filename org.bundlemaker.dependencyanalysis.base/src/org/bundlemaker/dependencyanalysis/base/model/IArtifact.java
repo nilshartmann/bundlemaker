@@ -193,5 +193,7 @@ public interface IArtifact {
    * 
    * @return
    */
+  // replace with getChildren(ArtifactType)
+  @Deprecated
   public Collection<IArtifact> getLeafs();
 }
