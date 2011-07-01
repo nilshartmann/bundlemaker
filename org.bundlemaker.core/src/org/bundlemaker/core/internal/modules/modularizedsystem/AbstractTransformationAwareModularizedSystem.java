@@ -23,6 +23,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import org.bundlemaker.core.internal.JdkModuleCreator;
+import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
@@ -156,12 +157,14 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   /**
    * {@inheritDoc}
    */
+  @SuppressWarnings("rawtypes")
   @Override
   public void addModifiableResourceModule(IModifiableResourceModule resourceModule) {
     Assert.isNotNull(resourceModule);
     Assert.isTrue(!getModifiableResourceModulesMap().containsKey(resourceModule.getModuleIdentifier()));
 
     //
+    ((AbstractModule) resourceModule).attach(this);
     getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
 
     // notify
@@ -171,6 +174,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   /**
    * {@inheritDoc}
    */
+
+  @SuppressWarnings("rawtypes")
   @Override
   public void removeModule(IModuleIdentifier identifier) {
     Assert.isNotNull(identifier);
@@ -178,6 +183,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     // remove the entry
     IModifiableResourceModule resourceModule = getModifiableResourceModulesMap().remove(identifier);
+    ((AbstractModule) resourceModule).detach();
 
     // notify
     resourceModuleRemoved(resourceModule);

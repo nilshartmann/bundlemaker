@@ -19,6 +19,7 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingMo
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem.ChangeAction;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -285,6 +286,44 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       ((AbstractCachingModularizedSystem) getResourceModule().getModularizedSystem()).resourcesChanged(resources,
           getResourceModule(), ChangeAction.REMOVED);
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addMovableUnit(IMovableUnit movableUnit) {
+    Assert.isNotNull(movableUnit);
+
+    // add all types
+    for (IType type : movableUnit.getAssociatedTypes()) {
+      add(type);
+    }
+
+    // add binary resources
+    addAll(movableUnit.getAssociatedBinaryResources(), ContentType.BINARY);
+
+    // add source resources
+    add(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeMovableUnit(IMovableUnit movableUnit) {
+    Assert.isNotNull(movableUnit);
+
+    // add all types
+    for (IType type : movableUnit.getAssociatedTypes()) {
+      remove(type);
+    }
+
+    // add binary resources
+    removeAll(movableUnit.getAssociatedBinaryResources(), ContentType.BINARY);
+
+    // add source resources
+    remove(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
   }
 
   /**

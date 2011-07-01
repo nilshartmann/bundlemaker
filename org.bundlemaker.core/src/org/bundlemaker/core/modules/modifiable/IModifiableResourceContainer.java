@@ -60,6 +60,19 @@ public interface IModifiableResourceContainer extends IResourceContainer, IModif
    */
   void removeAll(Collection<? extends IResource> resource, ContentType contentType);
 
-  // TODO: LONG-TERM-SOLUTION
-  // void addMovableUnit(IMovableUnit movableUnit);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param movableUnit
+   */
+  void addMovableUnit(IMovableUnit movableUnit);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param movableUnit
+   */
+  void removeMovableUnit(IMovableUnit movableUnit);
 }

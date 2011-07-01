@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
@@ -12,7 +13,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractAdvancedContainer {
+public class AdapterModule2IArtifact extends AbstractAdvancedContainer implements IModuleArtifact {
 
   /** the resource module */
   private IModule _module;
@@ -36,6 +37,14 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer {
     // set parent/children dependency
     setParent(parent);
     ((AbstractArtifactContainer) parent).getChildren().add(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModule getAssociatedModule() {
+    return _module;
   }
 
   /**

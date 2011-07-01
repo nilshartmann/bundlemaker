@@ -217,13 +217,15 @@ public class TypeContainer implements IModifiableTypeContainer {
   @Override
   public void add(IType type) {
 
-    //
-    _containedTypes.put(type.getFullyQualifiedName(), type);
+    if (!type.isLocalOrAnonymousType()) {
 
-    // notify
-    if (getModule().hasModularizedSystem()) {
-      ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
-          ChangeAction.ADDED);
+      //
+      _containedTypes.put(type.getFullyQualifiedName(), type);
+      // notify
+      if (getModule().hasModularizedSystem()) {
+        ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
+            ChangeAction.ADDED);
+      }
     }
   }
 

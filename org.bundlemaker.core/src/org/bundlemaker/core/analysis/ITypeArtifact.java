@@ -9,9 +9,8 @@ import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
- * 
  */
-public interface ITypeHolder {
+public interface ITypeArtifact {
 
   /**
    * <p>

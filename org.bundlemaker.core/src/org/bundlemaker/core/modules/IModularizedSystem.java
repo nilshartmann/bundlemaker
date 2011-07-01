@@ -44,9 +44,10 @@ public interface IModularizedSystem {
 
   /**
    * <p>
+   * Returns the user attributes of this {@link IModularizedSystem}.
    * </p>
    * 
-   * @return
+   * @return the user attributes of this {@link IModularizedSystem}.
    */
   Map<String, Object> getUserAttributes();
 
@@ -161,10 +162,12 @@ public interface IModularizedSystem {
 
   /**
    * <p>
+   * Returns a collection with all modules that have the specified name.
    * </p>
    * 
    * @param name
-   * @return
+   *          the name
+   * @return a collection with all modules that have the specified name.
    */
   Collection<IModule> getModules(String name);
 

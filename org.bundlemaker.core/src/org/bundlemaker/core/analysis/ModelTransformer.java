@@ -15,7 +15,6 @@ import org.bundlemaker.core.internal.analysis.DependencyModel;
 import org.bundlemaker.core.internal.analysis.transformer.AggregatedTypesArtifactCache;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.runtime.CoreException;
 
@@ -47,8 +46,8 @@ public class ModelTransformer {
    * @return
    * @throws CoreException
    */
-  public static IArtifact transform(IModifiableModularizedSystem modularizedSystem) throws CoreException {
-    IArtifact root = new DefaultArtifactCache(modularizedSystem).transform();
+  public static IAdvancedArtifact transform(IModifiableModularizedSystem modularizedSystem) throws CoreException {
+    IAdvancedArtifact root = new DefaultArtifactCache(modularizedSystem).transform();
     return root;
   }
 
@@ -60,7 +59,7 @@ public class ModelTransformer {
    * @return
    * @throws CoreException
    */
-  public static IArtifact transformWithAggregatedTypes(IModifiableModularizedSystem modularizedSystem)
+  public static IAdvancedArtifact transformWithAggregatedTypes(IModifiableModularizedSystem modularizedSystem)
       throws CoreException {
     return new AggregatedTypesArtifactCache(modularizedSystem).transform();
   }

@@ -3,9 +3,10 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ITypeHolder;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
@@ -225,14 +226,14 @@ public class AdapterUtils {
     return result;
   }
 
-  private static List<ITypeHolder> getAllContainedTypeHolder(IArtifact artifact) {
+  private static List<ITypeArtifact> getAllContainedTypeHolder(IArtifact artifact) {
 
-    List<ITypeHolder> result = new LinkedList<ITypeHolder>();
+    List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
 
     //
-    if (artifact instanceof ITypeHolder) {
+    if (artifact instanceof ITypeArtifact) {
 
-      result.add((ITypeHolder) artifact);
+      result.add((ITypeArtifact) artifact);
 
       // DO NOT ADD THE CHILDREN OF 'IResourceHolder'
 

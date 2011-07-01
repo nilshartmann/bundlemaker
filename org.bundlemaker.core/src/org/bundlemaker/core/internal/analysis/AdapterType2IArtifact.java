@@ -17,9 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ITypeHolder;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.AbstractArtifactCache;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -36,7 +38,7 @@ import org.eclipse.core.runtime.Assert;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit, IAdvancedArtifact, ITypeHolder {
+public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit, IAdvancedArtifact, ITypeArtifact {
 
   /** the bundle maker type */
   private IType                       _type;
@@ -79,7 +81,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _artifactCache = artifactCache;
 
     //
-    _resourceHolder = new MovableUnit(type, _aggregateInnerTypes);
+    _resourceHolder = MovableUnit.createFromType(type);
   }
 
   /**

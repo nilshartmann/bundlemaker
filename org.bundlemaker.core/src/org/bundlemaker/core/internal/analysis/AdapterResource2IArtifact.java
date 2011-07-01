@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
@@ -21,7 +22,7 @@ import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContai
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterResource2IArtifact extends AbstractAdvancedContainer /* implements IResourceHolder */{
+public class AdapterResource2IArtifact extends AbstractAdvancedContainer implements IResourceArtifact {
 
   /** the bundle maker resource */
   private IResource _resource;
@@ -49,6 +50,12 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer /* impl
 
     //
     _isSourceResource = isSourceResource;
+  }
+
+  @Override
+  public IResource getAssociatedResource() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   @Override

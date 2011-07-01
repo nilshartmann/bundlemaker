@@ -42,33 +42,39 @@ public interface IModule extends ITypeContainer {
 
   /**
    * <p>
+   * Returns the {@link IModularizedSystem} this module belongs to or <code>null</code> if this module does not belong
+   * to an {@link IModularizedSystem}.
    * </p>
    * 
-   * @return
+   * @return the {@link IModularizedSystem}.
    */
   IModularizedSystem getModularizedSystem();
 
   /**
    * <p>
+   * Returns <code>true</code> if this module is attached to a {@link IModularizedSystem}, <code>false</code> otherwise.
    * </p>
    * 
-   * @return
+   * @return <code>true</code> if this module is attached to a {@link IModularizedSystem}, <code>false</code>
+   *         otherwise.S
    */
   boolean hasModularizedSystem();
 
   /**
    * <p>
+   * Returns <code>true</code> if a classification is set.
    * </p>
    * 
-   * @return
+   * @return <code>true</code> if a classification is set.
    */
   boolean hasClassification();
 
   /**
    * <p>
+   * Returns the user attributes of this module.
    * </p>
    * 
-   * @return
+   * @return the user attributes.
    */
   Map<String, Object> getUserAttributes();
 }

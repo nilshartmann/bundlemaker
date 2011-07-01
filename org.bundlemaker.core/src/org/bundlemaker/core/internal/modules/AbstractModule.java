@@ -54,8 +54,11 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   /** the embedded container */
   private Map<String, T>      _embeddedContainers;
 
-  /** - */
+  /** the modularized system the module belongs to */
   private IModularizedSystem  _modularizedSystem;
+
+  /** specified whether or not the module is attached to a modularized system */
+  private boolean             _isDetached;
 
   /**
    * <p>
@@ -119,7 +122,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    */
   @Override
   public IModularizedSystem getModularizedSystem() {
-    return _modularizedSystem;
+    return _isDetached ? null : _modularizedSystem;
   }
 
   /**
@@ -127,7 +130,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    */
   @Override
   public boolean hasModularizedSystem() {
-    return _modularizedSystem != null;
+    return !_isDetached;
   }
 
   /**
@@ -147,12 +150,9 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param typeNames
-   * @return
+   * {@inheritDoc}
    */
+  @Override
   public boolean containsAll(Set<String> typeNames) {
 
     try {
@@ -315,6 +315,30 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   // public final void setModularizedSystem(IModularizedSystem modularizedSystem) {
   // _modularizedSystem = modularizedSystem;
   // }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  public void detach() {
+    _isDetached = true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   */
+  public void attach(IModularizedSystem modularizedSystem) {
+    Assert.isNotNull(modularizedSystem);
+    Assert.isTrue(modularizedSystem.equals(_modularizedSystem),
+        "You can only add a module to the modularized system you specified when creating the module.");
+
+    //
+    _isDetached = false;
+  }
 
   /**
    * <p>

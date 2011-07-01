@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis.ui.view.navigator;
 
-import org.bundlemaker.core.analysis.ITypeHolder;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.ui.Activator;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
@@ -41,8 +41,8 @@ public class ArtifactTreeLabelProvider implements ILabelProvider {
       case Type:
 
         //
-        if (artifact instanceof ITypeHolder) {
-          ITypeHolder typeHolder = (ITypeHolder) artifact;
+        if (artifact instanceof ITypeArtifact) {
+          ITypeArtifact typeHolder = (ITypeArtifact) artifact;
 
           switch (typeHolder.getAssociatedType().getType()) {
           case CLASS: {
