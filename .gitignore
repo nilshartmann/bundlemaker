@@ -5,3 +5,4 @@ org.bundlemaker.drools.test/*
 org.eclipse.pde.api.tools/*
 org.eclipse.pde.api.tools.ui/*
 org.bundlemaker.itest.sherlog/*
+patch.mbox

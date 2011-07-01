@@ -10,7 +10,17 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.internal;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -35,6 +45,7 @@ public class Activator extends AbstractUIPlugin {
    * 
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
    */
+  @Override
   public void start(BundleContext context) throws Exception {
     super.start(context);
     plugin = this;
@@ -45,6 +56,7 @@ public class Activator extends AbstractUIPlugin {
    * 
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
    */
+  @Override
   public void stop(BundleContext context) throws Exception {
     plugin = null;
     super.stop(context);
@@ -57,6 +69,36 @@ public class Activator extends AbstractUIPlugin {
    */
   public static Activator getDefault() {
     return plugin;
+  }
+
+  public String getFile(String path) {
+    Bundle bundle = Platform.getBundle(PLUGIN_ID);
+    Object file = FileLocator.find(bundle, new Path(path), null);
+    if (file != null) {
+      return file.toString();
+    } else {
+      return null;
+    }
+  }
+
+  public Image getIcon(String icon) {
+    ImageRegistry registry = getImageRegistry();
+    Image image = registry.get(icon);
+
+    if (image != null) {
+      return image;
+    }
+    URL url = null;
+    try {
+      url = new URL(getFile("icons/" + icon));
+    } catch (MalformedURLException e) {
+    }
+
+    ImageDescriptor myImage = ImageDescriptor.createFromURL(url);
+    image = myImage.createImage();
+    getImageRegistry().put(icon, image);
+
+    return image;
   }
 
 }

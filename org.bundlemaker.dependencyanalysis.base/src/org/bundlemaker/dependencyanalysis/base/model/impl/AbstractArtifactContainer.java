@@ -15,7 +15,8 @@ import org.bundlemaker.dependencyanalysis.base.model.IDependency;
  * Implementiert eines gruppierenden Artefaktes
  * 
  * <p>
- * Gruppierende Artefakte koennen anderen gruppierenden Artefakte oder Primarartefakte beinhalten
+ * Gruppierende Artefakte koennen anderen gruppierenden Artefakte oder
+ * Primarartefakte beinhalten
  * 
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
@@ -105,7 +106,8 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
           leafs.add(child);
         } else {
           if (child instanceof AbstractArtifactContainer) {
-            leafs.addAll(((AbstractArtifactContainer) child).getLeafs());
+						leafs.addAll(((AbstractArtifactContainer) child)
+								.getLeafs());
           }
         }
       }

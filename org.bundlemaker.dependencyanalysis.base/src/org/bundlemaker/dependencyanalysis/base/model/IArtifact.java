@@ -113,6 +113,8 @@ public interface IArtifact {
    */
   public void addArtifact(IArtifact artifact);
 
+  public void addArtifact(IArtifact artifact, boolean relinkParent);
+
   /**
    * <p>
    * Removes the given artifact from this artifact.

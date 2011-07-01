@@ -53,7 +53,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * 
    * @param name
    */
-  public ModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+	public ModularizedSystem(String name,
+			IBundleMakerProjectDescription projectDescription) {
 
     //
     super(name, projectDescription);
@@ -61,9 +62,12 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     //
     _referencedModulesCache = new GenericCache<ModuleAndQueryFilterKey, IReferencedModulesQueryResult>() {
       @Override
-      protected IReferencedModulesQueryResult create(ModuleAndQueryFilterKey key) {
-        System.out.println("Create " + key.getResourceModule().getModuleIdentifier());
-        return internalGetReferencedModules(key.getResourceModule(), key.getQueryFilter());
+			protected IReferencedModulesQueryResult create(
+					ModuleAndQueryFilterKey key) {
+				// System.out.println("Create " +
+				// key.getResourceModule().getModuleIdentifier());
+				return internalGetReferencedModules(key.getResourceModule(),
+						key.getQueryFilter());
       }
     };
   }
@@ -80,7 +84,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     Map<String, Set<IType>> result = new HashMap<String, Set<IType>>();
 
     //
-    for (Entry<String, Set<IType>> entry : getTypeNameToTypeCache().getMap().entrySet()) {
+		for (Entry<String, Set<IType>> entry : getTypeNameToTypeCache()
+				.getMap().entrySet()) {
 
       if (entry.getValue().size() > 1) {
         result.put(entry.getKey(), entry.getValue());
@@ -95,9 +100,11 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * {@inheritDoc}
    */
   @Override
-  public Collection<IType> getTypeReferencesTransitiveClosure(String typeName, IQueryFilter<IType> filter) {
+	public Collection<IType> getTypeReferencesTransitiveClosure(
+			String typeName, IQueryFilter<IType> filter) {
 
-    TypeReferencesTransitiveClosure closure = new TypeReferencesTransitiveClosure(this);
+		TypeReferencesTransitiveClosure closure = new TypeReferencesTransitiveClosure(
+				this);
     closure.resolveType(typeName, filter);
     return closure.getTypes();
   }
@@ -106,19 +113,23 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * {@inheritDoc}
    */
   @Override
-  public Collection<IResource> getResourceReferencesTransitiveClosure(IResource resource, ContentType contentType,
+	public Collection<IResource> getResourceReferencesTransitiveClosure(
+			IResource resource, ContentType contentType,
       IQueryFilter<IType> queryFilter) {
 
-    ResourceReferencesTransitiveClosure closure = new ResourceReferencesTransitiveClosure(this);
+		ResourceReferencesTransitiveClosure closure = new ResourceReferencesTransitiveClosure(
+				this);
     closure.resolveResource(resource, contentType, queryFilter);
     return closure.getResources();
   }
 
   @Override
-  public Collection<IResource> getResourceIsReferencedTransitiveClosure(IResource resource, ContentType contentType,
+	public Collection<IResource> getResourceIsReferencedTransitiveClosure(
+			IResource resource, ContentType contentType,
       IQueryFilter<IResource> queryFilter) {
 
-    ResourceIsReferencedTransitiveClosure closure = new ResourceIsReferencedTransitiveClosure(this);
+		ResourceIsReferencedTransitiveClosure closure = new ResourceIsReferencedTransitiveClosure(
+				this);
     closure.resolveResource(resource, contentType, queryFilter);
     return closure.getResources();
   }
@@ -127,9 +138,11 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * {@inheritDoc}
    */
   @Override
-  public Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName, IQueryFilter<IType> filter) {
+	public Collection<IType> getTypeIsReferencedTransitiveClosure(
+			String typeName, IQueryFilter<IType> filter) {
 
-    TypeIsReferencedTransitiveClosure closure = new TypeIsReferencedTransitiveClosure(this);
+		TypeIsReferencedTransitiveClosure closure = new TypeIsReferencedTransitiveClosure(
+				this);
     closure.resolveType(typeName, filter);
     return closure.getTypes();
   }
@@ -137,7 +150,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
   @Override
   public Set<IType> getReferencingTypes(String fullyQualifiedName) {
 
-    Set<IType> result = getTypeNameToReferringCache().get(fullyQualifiedName);
+		Set<IType> result = getTypeNameToReferringCache().get(
+				fullyQualifiedName);
 
     //
     if (result == null) {
@@ -151,15 +165,17 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * {@inheritDoc}
    */
   @Override
-  public IReferencedModulesQueryResult getReferencedModules(IResourceModule resourceModule,
+	public IReferencedModulesQueryResult getReferencedModules(
+			IResourceModule resourceModule,
       IQueryFilter<IReference> referencesFilter) {
 
     // assert is not null
     Assert.isNotNull(resourceModule);
 
     // return the result
-    return _referencedModulesCache.getOrCreate(new ModuleAndQueryFilterKey(resourceModule,
-        referencesFilter != null ? referencesFilter : ReferenceQueryFilters.ALL_REFERENCES_QUERY_FILTER));
+		return _referencedModulesCache.getOrCreate(new ModuleAndQueryFilterKey(
+				resourceModule, referencesFilter != null ? referencesFilter
+						: ReferenceQueryFilters.ALL_REFERENCES_QUERY_FILTER));
   }
 
   /**
@@ -170,21 +186,25 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * @param referencesFilter
    * @return
    */
-  private IReferencedModulesQueryResult internalGetReferencedModules(IResourceModule resourceModule,
+	private IReferencedModulesQueryResult internalGetReferencedModules(
+			IResourceModule resourceModule,
       IQueryFilter<IReference> referencesFilter) {
 
     // assert is not null
     Assert.isNotNull(resourceModule);
 
     // create the result set
-    ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
+		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(
+				resourceModule);
 
     // iterate over all the references
-    for (IReference reference : resourceModule.getReferences(referencesFilter != null ? referencesFilter
+		for (IReference reference : resourceModule
+				.getReferences(referencesFilter != null ? referencesFilter
         : ReferenceQueryFilters.ALL_REFERENCES_QUERY_FILTER)) {
 
       // get the referenced module...
-      IModule referencedModule = getTypeContainingModule(reference.getFullyQualifiedName(), resourceModule);
+			IModule referencedModule = getTypeContainingModule(
+					reference.getFullyQualifiedName(), resourceModule);
 
       // ...add it to the result
       if (referencedModule != null) {
@@ -202,14 +222,16 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * {@inheritDoc}
    */
   @Override
-  public IReferencedModulesQueryResult getTransitiveReferencedModules(IResourceModule resourceModule,
+	public IReferencedModulesQueryResult getTransitiveReferencedModules(
+			IResourceModule resourceModule,
       IQueryFilter<IReference> referencesFilter) {
 
     // assert is not null
     Assert.isNotNull(resourceModule);
 
     // return the transitive closure
-    ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
+		ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(
+				resourceModule);
 
     // get the transitive referenced modules
     getTransitiveReferencedModules(resourceModule, referencesFilter, result);
@@ -227,7 +249,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * @param result
    */
   private void getTransitiveReferencedModules(IResourceModule resourceModule,
-      IQueryFilter<IReference> referencesFilter, ReferencedModulesQueryResult transitiveQueryResult) {
+			IQueryFilter<IReference> referencesFilter,
+			ReferencedModulesQueryResult transitiveQueryResult) {
 
     // assert is not null
     Assert.isNotNull(resourceModule);
@@ -235,27 +258,33 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     Assert.isNotNull(transitiveQueryResult);
 
     // get the referenced modules
-    IReferencedModulesQueryResult queryResult = getReferencedModules(resourceModule, referencesFilter);
+		IReferencedModulesQueryResult queryResult = getReferencedModules(
+				resourceModule, referencesFilter);
 
     //
     for (IModule referencedModule : queryResult.getReferencedModules()) {
 
       // cycle-check
-      if (!(transitiveQueryResult.getModifiableReferencedModules().contains(referencedModule) || referencedModule
+			if (!(transitiveQueryResult.getModifiableReferencedModules()
+					.contains(referencedModule) || referencedModule
           .equals(transitiveQueryResult.getOrigin()))) {
 
         // add to transitive closure
-        transitiveQueryResult.getModifiableReferencedModules().add(referencedModule);
+				transitiveQueryResult.getModifiableReferencedModules().add(
+						referencedModule);
 
         //
         if (referencedModule instanceof IResourceModule) {
-          getTransitiveReferencedModules((IResourceModule) referencedModule, referencesFilter, transitiveQueryResult);
+					getTransitiveReferencedModules(
+							(IResourceModule) referencedModule,
+							referencesFilter, transitiveQueryResult);
         }
       }
     }
 
     //
-    transitiveQueryResult.getModifiableUnsatisfiedReferences().addAll(queryResult.getUnsatisfiedReferences());
+		transitiveQueryResult.getModifiableUnsatisfiedReferences().addAll(
+				queryResult.getUnsatisfiedReferences());
   }
 
   // /**
@@ -316,13 +345,15 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
   // * @param fullyQualifiedType
   // */
   // @Deprecated
-  // private void _resolveReferencedModules(ReferencedModulesQueryResult result, IReference reference) {
+	// private void _resolveReferencedModules(ReferencedModulesQueryResult
+	// result, IReference reference) {
   //
   // Assert.isNotNull(result);
   // Assert.isNotNull(reference);
   //
   // //
-  // Set<IModule> containingModules = _getContainingModules(reference.getFullyQualifiedName());
+	// Set<IModule> containingModules =
+	// _getContainingModules(reference.getFullyQualifiedName());
   //
   // //
   // if (containingModules.isEmpty()) {
@@ -334,14 +365,16 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
   //
   // if (!result.getReferencesWithAmbiguousModules().containsKey(reference)) {
   //
-  // result.getReferencesWithAmbiguousModules().put(reference, new HashSet<IModule>());
+	// result.getReferencesWithAmbiguousModules().put(reference, new
+	// HashSet<IModule>());
   // }
   //
   // result.getReferencesWithAmbiguousModules().get(reference).addAll(containingModules);
   //
   // } else {
   //
-  // result.getReferencedModulesMap().put(reference, containingModules.toArray(new IModule[0])[0]);
+	// result.getReferencedModulesMap().put(reference,
+	// containingModules.toArray(new IModule[0])[0]);
   // }
   // }
 
@@ -390,7 +423,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
      * @param resourceModule
      * @param queryFilter
      */
-    public ModuleAndQueryFilterKey(IResourceModule resourceModule, IQueryFilter<IReference> queryFilter) {
+		public ModuleAndQueryFilterKey(IResourceModule resourceModule,
+				IQueryFilter<IReference> queryFilter) {
 
       Assert.isNotNull(resourceModule);
       Assert.isNotNull(queryFilter);
@@ -423,8 +457,12 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     public int hashCode() {
       final int prime = 31;
       int result = 1;
-      result = prime * result + ((_queryFilter == null) ? 0 : _queryFilter.hashCode());
-      result = prime * result + ((_resourceModule == null) ? 0 : _resourceModule.hashCode());
+			result = prime * result
+					+ ((_queryFilter == null) ? 0 : _queryFilter.hashCode());
+			result = prime
+					* result
+					+ ((_resourceModule == null) ? 0 : _resourceModule
+							.hashCode());
       return result;
     }
 

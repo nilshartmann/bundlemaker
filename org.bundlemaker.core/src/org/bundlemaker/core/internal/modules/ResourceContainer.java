@@ -91,7 +91,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
 
     //
     Set<? extends IResource> result = getModifiableResourcesSet(contentType);
-    return Collections.unmodifiableSet(result);
+    return Collections.unmodifiableSet(new HashSet<IResource>(result));
   }
 
   /**
