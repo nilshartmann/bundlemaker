@@ -8,5 +8,7 @@ Export-Package: org.bundlemaker.dependencyanalysis.base.algorithms,
  org.bundlemaker.dependencyanalysis.base.model,
  org.bundlemaker.dependencyanalysis.base.model.impl,
  org.bundlemaker.dependencyanalysis.base.rules,
- org.bundlemaker.dependencyanalysis.base.transformations
+ org.bundlemaker.dependencyanalysis.base.transformations,
+ org.bundlemaker.dependencyanalysis.rules,
+ org.bundlemaker.dependencyanalysis.rules.impl
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0"

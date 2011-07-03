@@ -13,12 +13,12 @@ package org.bundlemaker.core.ui.commands;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
 import org.bundlemaker.core.transformations.dsl.ui.utils.TransformationDslUtils;
-import org.bundlemaker.core.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.editor.transformation.TransformationExecutor;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;

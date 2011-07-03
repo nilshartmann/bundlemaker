@@ -306,10 +306,6 @@
    <extension point="org.eclipse.ui.commands">
       <command id="org.bundlemaker.core.ui.commands.RunTransformationScript" name="Execute transformation..." /> 
    </extension> 
-      <command commandId="org.bundlemaker.core.ui.commands.TransformHandler"
-   	 style="push" />
-   <command commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
-   	 style="push" />
 
    <!-- ======================================== -->
    <!-- the pop up menus -->

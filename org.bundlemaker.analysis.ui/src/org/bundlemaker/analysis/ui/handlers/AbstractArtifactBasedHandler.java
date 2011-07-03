@@ -8,11 +8,11 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.commands;
+package org.bundlemaker.analysis.ui.handlers;
 
 import java.util.List;
 
-import org.bundlemaker.core.ui.internal.Activator;
+import org.bundlemaker.analysis.ui.internal.Activator;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
