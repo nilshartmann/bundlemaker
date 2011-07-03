@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
@@ -24,7 +25,6 @@ import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.ui.commands.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;

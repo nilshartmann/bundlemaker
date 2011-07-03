@@ -12,10 +12,10 @@ package org.bundlemaker.core.ui.commands;
 
 import java.util.List;
 
+import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IFile;
