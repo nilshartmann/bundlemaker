@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+   <extension-point id="dependencyView"
+   	name="dependencyView"
+   	schema="schema/org.bundlemaker.analysis.ui.dependencyView.exsd"/>
+
+
+   <extension
+         point="org.eclipse.ui.views">
+           <category
+           id="org.bundlemaker.analysis.ui.views.category"
+           name="BundleMaker Dependency Analysis">
+      	   </category>
+          <view 
+                category="org.bundlemaker.analysis.ui.views.category"
+                class="org.bundlemaker.dependencyanalysis.ui.view.table.DependencyTreeTableView"
+                icon="icons/osgibundle.gif"
+                id="org.bundlemaker.dependencyanalysis.ui.view.table.DependencyTreeTableView"
+                name="TreeDependencyView"
+                restorable="true">
+          </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.bundlemaker.dependencyanalysis.ui.editor.GenericEditor"
+            default="false"
+            icon="icons/module.gif"
+            id="org.bundlemaker.dependencyanalysis.ui.editor.GenericEditor"
+            name="Dependency Analysis">
+      </editor>
+   </extension>
+   
+
+</plugin>

@@ -1,0 +1,19 @@
+package org.bundlemaker.dependencyanalysis.model.impl;
+
+import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.dependencyanalysis.base.model.impl.Dependency;
+import org.bundlemaker.dependencyanalysis.model.DependencyEdge;
+import org.sonar.graph.EdgeFactory;
+
+public class ArtifactEdgeFactory implements EdgeFactory<IArtifact, DependencyEdge> {
+	@Override
+	public DependencyEdge createEdge(IArtifact from, IArtifact to) {
+		return new DependencyEdge( new Dependency(from, to) );
+	}
+
+	@Override
+	public DependencyEdge createEdge(IArtifact from, IArtifact to, int weight) {
+		return new DependencyEdge( new Dependency(from, to, weight) );
+	}
+
+}
