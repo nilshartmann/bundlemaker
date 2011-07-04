@@ -10,4 +10,5 @@ Require-Bundle: org.bundlemaker.core;bundle-version="1.0.0";visibility:=reexport
  org.eclipse.core.runtime;bundle-version="3.6.0";visibility:=reexport,
  org.eclipse.jdt.launching;bundle-version="3.5.200";visibility:=reexport,
  org.eclipse.jdt.core;bundle-version="3.6.0"
-Export-Package: org.bundlemaker.core.itestframework
+Export-Package: org.bundlemaker.core.itestframework,
+ org.bundlemaker.core.itestframework.util

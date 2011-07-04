@@ -16,7 +16,7 @@ import org.junit.Before;
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractBundleMakerProjectTest {
@@ -93,7 +93,7 @@ public abstract class AbstractBundleMakerProjectTest {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @throws CoreException
    */
   protected void addProjectDescription() throws CoreException {
@@ -127,14 +127,26 @@ public abstract class AbstractBundleMakerProjectTest {
     projectDescription.setJre(getDefaultVmName());
 
     // step 3: add the source and classes
-    File classes = new File(directory, "classes");
-    Assert.assertTrue(classes.isDirectory());
+    File classes = null;
+    if (new File(directory, "classes").isDirectory()) {
+      classes = new File(directory, "classes");
+    } else if (new File(directory, "classes.zip").isFile()) {
+      classes = new File(directory, "classes.zip");
+    } else {
+      Assert.fail("No classes found!");
+    }
 
-    File source = new File(directory, "src");
-    Assert.assertTrue(source.isDirectory());
+    File sources = null;
+    if (new File(directory, "src").isDirectory()) {
+      sources = new File(directory, "src");
+    } else if (new File(directory, "src.zip").isFile()) {
+      sources = new File(directory, "src.zip");
+    } else {
+      Assert.fail("No classes found!");
+    }
 
     projectDescription.addResourceContent(_testProjectName, TEST_PROJECT_VERSION, classes.getAbsolutePath(),
-        source.getAbsolutePath());
+        sources.getAbsolutePath());
 
     // step 4: process the class path entries
     File libsDir = new File(directory, "libs");
@@ -160,13 +172,13 @@ public abstract class AbstractBundleMakerProjectTest {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   protected String computeTestProjectName() {
     return this.getClass().getSimpleName();
   }
-  
+
   /**
    * <p>
    * </p>
