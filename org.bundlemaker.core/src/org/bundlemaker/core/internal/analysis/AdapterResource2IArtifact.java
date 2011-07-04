@@ -14,7 +14,6 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 
 /**
  * <p>
@@ -43,7 +42,7 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractArtifactContainer) parent).getChildren().add(this);
+    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
 
     //
     _resource = resource;

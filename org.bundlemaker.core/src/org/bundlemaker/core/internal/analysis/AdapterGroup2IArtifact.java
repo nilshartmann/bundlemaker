@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.dependencyanalysis.base.model.impl.IModifiableArtifact;
 import org.eclipse.core.runtime.Assert;
 
@@ -31,7 +30,7 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractArtifactContainer) parent).getChildren().add(this);
+    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
   }
 
   /**

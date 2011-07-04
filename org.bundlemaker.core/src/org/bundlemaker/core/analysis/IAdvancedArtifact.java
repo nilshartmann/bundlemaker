@@ -45,10 +45,13 @@ public interface IAdvancedArtifact extends IArtifact {
    * @return
    */
   IArtifact getChild(String path);
-  
+
   /**
    * Returns the {@link IModularizedSystem} this artifact belongs to
+   * 
    * @return the modularized system, never null
    */
   public IModularizedSystem getModularizedSystem();
+
+  // public IArtifact findChild();
 }

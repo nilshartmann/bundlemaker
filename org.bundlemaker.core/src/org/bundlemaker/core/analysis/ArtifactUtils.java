@@ -1,5 +1,10 @@
 package org.bundlemaker.core.analysis;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 
 public class ArtifactUtils {
@@ -10,19 +15,31 @@ public class ArtifactUtils {
    * 
    * @param artifact
    * @param level
+   * @param stringBuilder
    */
-  private static void dumpArtifact(IArtifact artifact, int level) {
+  public static void dumpArtifact(IArtifact artifact, int level, StringBuilder stringBuilder) {
 
     //
-    StringBuilder builder = new StringBuilder();
     for (int i = 0; i < level; i++) {
-      builder.append("  ");
+      stringBuilder.append("  ");
     }
 
-    System.out.println(builder.toString() + artifact.getType() + " : " + artifact.getQualifiedName());
+    //
+    stringBuilder.append(artifact.getType());
+    stringBuilder.append(" : ");
+    stringBuilder.append(artifact.getQualifiedName());
+    stringBuilder.append("\n");
 
-    for (IArtifact child : artifact.getChildren()) {
-      dumpArtifact(child, level + 1);
+    List<IArtifact> sorted = new ArrayList<IArtifact>(artifact.getChildren());
+    Collections.sort(sorted, new Comparator<IArtifact>() {
+      @Override
+      public int compare(IArtifact o1, IArtifact o2) {
+        return o1.getName().compareTo(o2.getName());
+      }
+    });
+
+    for (IArtifact child : sorted) {
+      dumpArtifact(child, level + 1, stringBuilder);
     }
   }
 
@@ -33,7 +50,22 @@ public class ArtifactUtils {
    * @param artifact
    */
   public static void dumpArtifact(IArtifact artifact) {
-    dumpArtifact(artifact, 0);
+    StringBuilder builder = new StringBuilder();
+    dumpArtifact(artifact, 0, builder);
+    System.out.println(builder.toString());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  public static String artifactToString(IArtifact artifact) {
+    StringBuilder builder = new StringBuilder();
+    dumpArtifact(artifact, 0, builder);
+    return builder.toString();
   }
 
 }

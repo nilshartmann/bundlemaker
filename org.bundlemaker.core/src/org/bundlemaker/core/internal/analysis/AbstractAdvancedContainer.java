@@ -104,13 +104,13 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.bundlemaker.core.analysis.IAdvancedArtifact#getModularizedSystem()
    */
   @Override
   public IModularizedSystem getModularizedSystem() {
     return AdapterUtils.getModularizedSystem(this);
   }
-  
-  
 }

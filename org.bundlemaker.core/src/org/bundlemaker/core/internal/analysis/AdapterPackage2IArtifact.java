@@ -2,7 +2,6 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -33,7 +32,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer {
     // set parent/children dependency
     if (parent != null) {
       setParent(parent);
-      ((AbstractArtifactContainer) parent).getChildren().add(this);
+      ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
     }
 
     Assert.isNotNull(qualifiedName);

@@ -192,4 +192,16 @@ public class MovableUnit implements IMovableUnit {
       _binaryResources.addAll(binaryResource.getStickyResources());
     }
   }
+
+  @Override
+  public String toString() {
+
+    //
+    init();
+
+    //
+    return "MovableUnit [_sourceResource=" + _sourceResource + ", _binaryResources=" + _binaryResources
+        + ", _associatedTypes=" + _associatedTypes + "]";
+  }
+
 }

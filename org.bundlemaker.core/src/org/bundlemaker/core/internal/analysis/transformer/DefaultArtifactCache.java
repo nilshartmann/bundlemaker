@@ -24,6 +24,7 @@ import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.GenericCache;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -31,6 +32,9 @@ import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContai
  * </p>
  */
 public class DefaultArtifactCache extends AbstractBaseArtifactCache {
+
+  /** - */
+  private ContentType _contentType = ContentType.SOURCE;
 
   /**
    * <p>
@@ -53,6 +57,28 @@ public class DefaultArtifactCache extends AbstractBaseArtifactCache {
    */
   protected DefaultArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact artifact) {
     super(modularizedSystem, artifact);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public ContentType getContentType() {
+    return _contentType;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param contentType
+   */
+  public void setContentType(ContentType contentType) {
+    Assert.isNotNull(contentType);
+
+    _contentType = contentType;
   }
 
   /**
@@ -89,16 +115,8 @@ public class DefaultArtifactCache extends AbstractBaseArtifactCache {
         // get the resource module
         IResourceModule resourceModule = (IResourceModule) typeModule;
 
-        // // iterate over all contained source resources
-        // for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
-        // if (!resource.containsTypes()) {
-        // // create the artifact
-        // artifactCache.getResourceArtifact(resource);
-        // }
-        // }
-
         // iterate over all contained binary resources
-        for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
+        for (IResource resource : resourceModule.getResources(_contentType)) {
           if (!resource.containsTypes()) {
             // create the artifact
             this.getResourceArtifact(resource);
@@ -169,7 +187,8 @@ public class DefaultArtifactCache extends AbstractBaseArtifactCache {
       protected IArtifact create(IType type) {
 
         //
-        IResource resource = /*type.hasSourceResource() ? type.getSourceResource() : */ type.getBinaryResource();
+        IResource resource = _contentType.equals(ContentType.SOURCE) && type.hasSourceResource() ? type
+            .getSourceResource() : type.getBinaryResource();
 
         //
         IModule module = resource != null ? resource.getAssociatedResourceModule(getModularizedSystem()) : type

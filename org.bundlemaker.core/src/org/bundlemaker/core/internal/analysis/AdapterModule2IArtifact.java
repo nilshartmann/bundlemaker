@@ -36,7 +36,7 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractArtifactContainer) parent).getChildren().add(this);
+    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
   }
 
   /**

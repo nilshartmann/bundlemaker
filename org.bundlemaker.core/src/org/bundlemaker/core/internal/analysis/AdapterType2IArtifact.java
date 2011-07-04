@@ -31,7 +31,6 @@ import org.bundlemaker.dependencyanalysis.base.model.DependencyKind;
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.base.model.IDependency;
 import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.dependencyanalysis.base.model.impl.Dependency;
 import org.eclipse.core.runtime.Assert;
 
@@ -74,7 +73,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractArtifactContainer) parent).getChildren().add(this);
+    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
 
     _type = type;
 
