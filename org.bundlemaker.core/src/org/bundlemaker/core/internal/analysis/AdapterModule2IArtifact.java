@@ -1,10 +1,10 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**

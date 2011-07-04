@@ -1,8 +1,8 @@
 package org.bundlemaker.analysis.ui;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.internal.Activator;
 import org.bundlemaker.analysis.ui.internal.AnalysisContext;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.swt.graphics.Image;
 
 public class Analysis {

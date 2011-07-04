@@ -14,9 +14,9 @@ package org.bundlemaker.analysis.ui.dsmview;
 import java.util.Hashtable;
 import java.util.Map;
 
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;

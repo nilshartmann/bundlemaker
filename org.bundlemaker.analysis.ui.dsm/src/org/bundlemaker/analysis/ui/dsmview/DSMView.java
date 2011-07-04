@@ -11,7 +11,7 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.ui.dsmview;
 
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.model.DependencyEdge;
 import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
 import org.bundlemaker.dependencyanalysis.ui.editor.DependencyPart;

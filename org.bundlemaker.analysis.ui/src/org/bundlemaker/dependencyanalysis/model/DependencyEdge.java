@@ -1,8 +1,8 @@
 package org.bundlemaker.dependencyanalysis.model;
 
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
-import org.bundlemaker.dependencyanalysis.base.rules.Violation;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.rules.Violation;
 import org.sonar.graph.Edge;
 
 public class DependencyEdge implements Edge<IArtifact> {

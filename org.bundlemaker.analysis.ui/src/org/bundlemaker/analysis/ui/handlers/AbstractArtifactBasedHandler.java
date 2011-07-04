@@ -12,8 +12,8 @@ package org.bundlemaker.analysis.ui.handlers;
 
 import java.util.List;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.internal.Activator;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

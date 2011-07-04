@@ -1,13 +1,13 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

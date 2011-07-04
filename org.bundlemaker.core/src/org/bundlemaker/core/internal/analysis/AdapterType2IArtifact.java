@@ -16,6 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.DependencyKind;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.impl.AbstractArtifact;
+import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.AbstractArtifactCache;
@@ -26,12 +32,6 @@ import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.JavaTypeUtils;
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.DependencyKind;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.Dependency;
 import org.eclipse.core.runtime.Assert;
 
 /**

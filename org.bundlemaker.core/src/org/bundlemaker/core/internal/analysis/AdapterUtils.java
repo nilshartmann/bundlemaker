@@ -3,13 +3,13 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Path;
 

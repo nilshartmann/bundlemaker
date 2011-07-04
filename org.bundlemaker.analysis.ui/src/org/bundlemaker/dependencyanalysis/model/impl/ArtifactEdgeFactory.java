@@ -1,7 +1,7 @@
 package org.bundlemaker.dependencyanalysis.model.impl;
 
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.Dependency;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.dependencyanalysis.model.DependencyEdge;
 import org.sonar.graph.EdgeFactory;
 

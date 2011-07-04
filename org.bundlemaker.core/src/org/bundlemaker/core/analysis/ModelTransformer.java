@@ -10,13 +10,13 @@
  ******************************************************************************/
 package org.bundlemaker.core.analysis;
 
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.analysis.DependencyModel;
 import org.bundlemaker.core.internal.analysis.transformer.AggregatedTypesArtifactCache;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

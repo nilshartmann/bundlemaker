@@ -6,10 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
 import org.bundlemaker.dependencyanalysis.ui.editor.GenericEditor;
 import org.bundlemaker.dependencyanalysis.ui.view.table.JavaEditor;

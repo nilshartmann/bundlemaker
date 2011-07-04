@@ -1,7 +1,7 @@
 package org.bundlemaker.core.analysis;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 
 /**
  * <p>

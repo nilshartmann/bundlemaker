@@ -1,7 +1,7 @@
 package org.bundlemaker.analysis.ui.internal;
 
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.ui.IDependencyModelProvider;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 
 public class DependencyModelProvider implements IDependencyModelProvider {
 

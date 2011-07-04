@@ -17,9 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
 import org.bundlemaker.dependencyanalysis.model.DependencyEdge;
 import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
 import org.bundlemaker.dependencyanalysis.ui.editor.DependencyPart;

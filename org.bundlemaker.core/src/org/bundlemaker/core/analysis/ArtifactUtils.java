@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
+import org.bundlemaker.analysis.model.IArtifact;
 
 public class ArtifactUtils {
 

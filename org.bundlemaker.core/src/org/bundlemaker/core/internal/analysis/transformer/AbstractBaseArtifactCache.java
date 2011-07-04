@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.analysis.transformer;
 
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterGroup2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterModule2IArtifact;
@@ -9,8 +11,6 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.util.GenericCache;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.IPath;
 
 /**

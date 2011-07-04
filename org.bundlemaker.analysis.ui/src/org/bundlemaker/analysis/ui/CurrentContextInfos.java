@@ -3,7 +3,7 @@ package org.bundlemaker.analysis.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
+import org.bundlemaker.analysis.model.IDependency;
 
 public class CurrentContextInfos {
 	private static List<IDependency> contextDependencies = new ArrayList<IDependency>();

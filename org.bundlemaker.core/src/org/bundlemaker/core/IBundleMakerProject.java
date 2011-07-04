@@ -13,12 +13,12 @@ package org.bundlemaker.core;
 import java.util.Collection;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;

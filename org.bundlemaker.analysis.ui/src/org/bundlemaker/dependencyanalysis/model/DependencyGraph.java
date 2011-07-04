@@ -10,10 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
-import org.bundlemaker.dependencyanalysis.base.rules.Severity;
-import org.bundlemaker.dependencyanalysis.base.rules.Violation;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.rules.Severity;
+import org.bundlemaker.analysis.rules.Violation;
 import org.bundlemaker.dependencyanalysis.model.impl.ArtifactEdgeFactory;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;

@@ -4,10 +4,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;

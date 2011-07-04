@@ -4,7 +4,7 @@ package org.bundlemaker.dependencyanalysis.model;
 
 import java.util.Stack;
 
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
+import org.bundlemaker.analysis.model.IDependency;
 
 public class Cycle implements Cloneable {
 

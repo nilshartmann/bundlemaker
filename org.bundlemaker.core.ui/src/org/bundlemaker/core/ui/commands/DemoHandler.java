@@ -2,8 +2,8 @@ package org.bundlemaker.core.ui.commands;
 
 import java.util.List;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.MessageDialog;

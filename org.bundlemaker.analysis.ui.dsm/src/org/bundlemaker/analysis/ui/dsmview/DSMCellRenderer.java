@@ -11,9 +11,9 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.ui.dsmview;
 
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;

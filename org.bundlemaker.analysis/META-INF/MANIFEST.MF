@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.dependencyanalysis.base
+Bundle-SymbolicName: org.bundlemaker.analysis;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bundlemaker.analysis.model,
+ org.bundlemaker.analysis.model.impl,
+ org.bundlemaker.analysis.rules,
+ org.bundlemaker.analysis.rules.impl,
+ org.bundlemaker.analysis.transformations
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0"

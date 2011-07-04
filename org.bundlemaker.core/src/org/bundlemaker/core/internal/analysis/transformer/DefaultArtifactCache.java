@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.transformer;
 
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterPackage2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
@@ -22,8 +24,6 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.GenericCache;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.impl.AbstractArtifactContainer;
 import org.eclipse.core.runtime.Assert;
 
 /**

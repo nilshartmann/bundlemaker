@@ -4,9 +4,9 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashSet;
 
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
 import org.eclipse.core.runtime.Assert;
 

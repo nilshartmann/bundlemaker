@@ -2,7 +2,7 @@ package org.bundlemaker.analysis.ui;
 
 import java.beans.PropertyChangeListener;
 
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
 
 /**

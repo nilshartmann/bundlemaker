@@ -8,6 +8,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
@@ -16,9 +19,6 @@ import org.bundlemaker.core.transformations.dsl.transformationDsl.ModuleIdentifi
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceList;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceSet;
 import org.bundlemaker.core.transformations.dsl.ui.contentassist.AbstractTransformationDslProposalProvider;
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;

@@ -1,6 +1,6 @@
 package org.bundlemaker.analysis.ui;
 
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
+import org.bundlemaker.analysis.model.IDependencyModel;
 
 /**
  * Provides access to the one and only instance of the IDependencyModel in the workbench
