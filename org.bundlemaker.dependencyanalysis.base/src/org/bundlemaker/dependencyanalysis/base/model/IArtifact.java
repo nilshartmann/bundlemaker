@@ -85,10 +85,10 @@ public interface IArtifact {
 
   /**
    * <p>
-   * Returns a {@link Collection} with all children of this {@link IArtifact}.
+   * Returns an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
    * </p>
    * 
-   * @return a {@link Collection} with all children of this {@link IArtifact}.
+   * @return an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
    */
   public Collection<IArtifact> getChildren();
 
@@ -113,6 +113,8 @@ public interface IArtifact {
    */
   public void addArtifact(IArtifact artifact);
 
+  // TODO: REMOVE!
+  @Deprecated
   public void addArtifact(IArtifact artifact, boolean relinkParent);
 
   /**

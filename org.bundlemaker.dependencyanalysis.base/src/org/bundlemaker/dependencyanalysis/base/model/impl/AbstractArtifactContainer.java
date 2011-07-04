@@ -2,8 +2,10 @@ package org.bundlemaker.dependencyanalysis.base.model.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
@@ -15,13 +17,13 @@ import org.bundlemaker.dependencyanalysis.base.model.IDependency;
  * Implementiert eines gruppierenden Artefaktes
  * 
  * <p>
- * Gruppierende Artefakte koennen anderen gruppierenden Artefakte oder
- * Primarartefakte beinhalten
+ * Gruppierende Artefakte koennen anderen gruppierenden Artefakte oder Primarartefakte beinhalten
  * 
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
  */
 public abstract class AbstractArtifactContainer extends AbstractArtifact {
+
   private Collection<IArtifact>                 children;
 
   private Collection<IDependency>               dependencies;
@@ -106,8 +108,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
           leafs.add(child);
         } else {
           if (child instanceof AbstractArtifactContainer) {
-						leafs.addAll(((AbstractArtifactContainer) child)
-								.getLeafs());
+            leafs.addAll(((AbstractArtifactContainer) child).getLeafs());
           }
         }
       }
@@ -116,13 +117,29 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     return leafs;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Collection<IArtifact> getChildren() {
-    return children;
+    return Collections.unmodifiableCollection(new LinkedList<IArtifact>(children));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Integer size() {
     return getLeafs().size();
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  public Collection<IArtifact> getModifiableChildren() {
+    return children;
   }
 }
