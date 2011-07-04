@@ -6,16 +6,15 @@ import java.util.List;
 
 import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 
-public class OpenDsmViewHandler extends AbstractDsmViewHandler {
+public class OpenDsmViewForChildrenHandler extends AbstractDsmViewHandler {
 
   @Override
   protected HashSet<IArtifact> getArtifactsForDsmView(List<IArtifact> selectedArtifacts) {
     final HashSet<IArtifact> result = new HashSet<IArtifact>();
     Iterator<IArtifact> iterator = selectedArtifacts.iterator();
     while (iterator.hasNext()) {
-      result.add(iterator.next());
+      result.addAll(iterator.next().getChildren());
     }
     return result;
   }
-
 }

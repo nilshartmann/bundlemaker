@@ -11,14 +11,6 @@
            id="org.bundlemaker.analysis.ui.views.category"
            name="BundleMaker Dependency Analysis">
       	   </category>
-          <view 
-                category="org.bundlemaker.analysis.ui.views.category"
-                class="org.bundlemaker.dependencyanalysis.ui.view.table.DependencyTreeTableView"
-                icon="icons/osgibundle.gif"
-                id="org.bundlemaker.dependencyanalysis.ui.view.table.DependencyTreeTableView"
-                name="TreeDependencyView"
-                restorable="true">
-          </view>
    </extension>
    <extension
          point="org.eclipse.ui.editors">

@@ -91,7 +91,12 @@ public class Dependency implements IDependency {
 
   protected void ignoreDependencyNotification() {
     for (DependencyVisitor dependencyVisitor : dependencyVisitors) {
+    	try {
       dependencyVisitor.addIgnoreDependency(this);
+    	} catch (RuntimeException ex) {
+    		// TODO
+    		ex.printStackTrace();
+    	}
     }
   }
 

@@ -9,7 +9,6 @@ import org.bundlemaker.analysis.ui.IAnalysisContext;
 import org.bundlemaker.dependencyanalysis.base.model.IDependency;
 import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
-import org.bundlemaker.dependencyanalysis.ui.view.table.DependencyTreeTableView;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -110,14 +109,14 @@ public abstract class DependencyPart implements PropertyChangeListener {
   public void changeTable(List<IDependency> dependencies, String... columnNames) {
     IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    DependencyTreeTableView treeView = (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
-    treeView.changeTable(dependencies, columnNames);
+    // DependencyTreeTableView treeView = (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
+    // treeView.changeTable(dependencies, columnNames);
   }
 
   public void addDependencySelectionListener(ISelectionListener selectionListener) {
     IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    workbenchPage.addSelectionListener(DependencyTreeTableView.ID, (ISelectionListener) this);
+    // workbenchPage.addSelectionListener(DependencyTreeTableView.ID, (ISelectionListener) this);
   }
 
   public void setFocus() {

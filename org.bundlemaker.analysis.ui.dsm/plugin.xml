@@ -11,8 +11,15 @@
      <!-- the pop up menus --> 
    <extension point="org.eclipse.ui.commands"> 
       <command id="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand" 
-              name="Open DSM View..." /> 
+              name="Open for selected artifacts" /> 
    </extension> 
+
+   <extension point="org.eclipse.ui.commands"> 
+      <command id="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand" 
+              name="Open for children of selected artifacts" /> 
+   </extension>
+   
+   
         <extension 
          point="org.eclipse.ui.handlers"> 
       <handler class="org.bundlemaker.analysis.ui.dsmview.handlers.OpenDsmViewHandler" 
@@ -30,11 +37,34 @@
       </handler> 
    </extension> 
    
+   <extension 
+         point="org.eclipse.ui.handlers"> 
+      <handler class="org.bundlemaker.analysis.ui.dsmview.handlers.OpenDsmViewForChildrenHandler" 
+            commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand"> 
+         <activeWhen> 
+         <reference 
+               definitionId="org.bundlemaker.core.ui.bmContentSelected"> 
+         </reference> 
+         </activeWhen> 
+         <enabledWhen> 
+          <reference 
+               definitionId="org.bundlemaker.core.ui.bmContentSelected"> 
+               </reference> 
+         </enabledWhen> 
+      </handler> 
+   </extension> 
+   
+   <!-- DSM Submenu -->
    <extension point="org.eclipse.ui.menus"> 
            <menuContribution 
                locationURI="popup:org.bundlemaker.core.ui.ProjectExplorerPopupMenu"> 
+	       <menu id="org.bundlemaker.analysis.ui.dsmview.menus.dsmMenu"
+              label="DSM" >
+ 				<command commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand" 
+                	style="push" /> 
                     <command commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand" 
                                        style="push" /> 
+	       </menu>
            </menuContribution> 
    </extension> 
 </plugin>
