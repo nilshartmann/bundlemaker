@@ -13,9 +13,7 @@ package org.bundlemaker.core;
 import java.util.Collection;
 import java.util.List;
 
-import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
@@ -79,7 +77,7 @@ public interface IBundleMakerProject {
    * @precondition none
    */
   public IModifiableBundleMakerProjectDescription getModifiableProjectDescription();
-  
+
   public IBundleMakerProjectDescription getProjectDescription();
 
   /**
@@ -207,13 +205,14 @@ public interface IBundleMakerProject {
    * @precondition BundleMakerProjectState.OPENED
    */
   void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
-  
+
   /**
-   * Returns the {@link IDependencyModel} view of this project. 
+   * Returns the {@link IDependencyModel} view of this project.
    * <p>
    * </p>
-   *
+   * 
    * @precondition BundleMakerProjectState.OPENED
    */
+  @Deprecated
   public IDependencyModel getDependencyModel();
 }
