@@ -39,7 +39,7 @@
             class="org.bundlemaker.core.ui.expressions.ArtifactPropertyTester"
             namespace="org.bundlemaker.core.analysis.ui.expressions.IArtifact"
             properties="type"
-            type="org.bundlemaker.dependencyanalysis.base.model.IArtifact">
+            type="org.bundlemaker.analysis.model.IArtifact">
       </propertyTester>
    </extension>
    
@@ -55,7 +55,7 @@
                   variable="selection">
                   <iterate ifEmpty="false" operator="and">
                   <instanceof
-                        value="org.bundlemaker.dependencyanalysis.base.model.IArtifact">
+                        value="org.bundlemaker.analysis.model.IArtifact">
                   </instanceof>
                   </iterate>
             </with>
@@ -72,7 +72,7 @@
                 variable="selection">
                 <iterate ifEmpty="false" operator="and">
                 <instanceof
-                      value="org.bundlemaker.dependencyanalysis.base.model.IArtifact">
+                      value="org.bundlemaker.analysis.model.IArtifact">
                 </instanceof>
                 <test property="org.bundlemaker.core.analysis.ui.expressions.IArtifact.type" value="Root" 
                 	forcePluginActivation="true"/>
