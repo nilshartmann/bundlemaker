@@ -15,6 +15,11 @@
  <shortdesc/>
  <conbody>
   <p>The bundlemaker resource model:</p>
+  <p>The core entity in BundleMaker's resource model is <i>IResource</i>. A resource represent a
+   file that is part of the system that should be modularized. E.g. a resource can be a ".java", a
+   ".class" or an ".xml" file. Each resource belongs to project content entry that in the
+   Bundlemaker project description. A resource is uniquely identified by content id, a root path and
+   a relative path.</p>
   <image href="./diagrams/cd-resource-model.png" scale="40"/>
  </conbody>
 </concept>

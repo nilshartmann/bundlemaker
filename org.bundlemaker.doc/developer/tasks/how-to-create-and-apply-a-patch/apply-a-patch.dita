@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taskId">
+    <title>How to apply a patch</title>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>Receive the patch via email</cmd>
+                <info>
+                    <image href="./images/receive-mail.png" scale="50"/>
+                </info>
+            </step>
+            <step>
+                <cmd>Save the patches as an email</cmd>
+                <info>
+                    <image href="./images/save-mails-as-mbox.png" scale="50"/>
+                </info>
+            </step>
+            <step>
+                <cmd><codeph>git am --ignore-space-change --ignore-whitespace --signoff &lt;path-to-mbox-file&gt; </codeph></cmd>
+                <info>Apply all patches in the mailbox.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

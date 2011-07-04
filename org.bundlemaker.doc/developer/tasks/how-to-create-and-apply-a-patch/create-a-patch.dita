@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taskId">
+    <title>How to create a patch</title>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd><codeph>git pull origin master</codeph></cmd>
+                <info>Make sure that you pull the latest changes from GitHub before you create a
+                    patch for bundlemaker.</info>
+            </step>
+            <step>
+                <cmd><codeph>git checkout -b &lt;branchname&gt;</codeph></cmd>
+                <info>Create your local working branch.</info>
+            </step>
+            <step>
+                <cmd><codeph>git commit -a -m "..."</codeph></cmd>
+                <info>Make your changes and (local) commit your changes.</info>
+            </step>
+            <step>
+                <cmd><codeph>git format-patch -w -b master</codeph></cmd>
+                <info>Create the patch.</info>
+            </step>
+            <step>
+                <cmd><codeph>git send-email --to=git-patches@bundlemaker.org
+                    --smtp-server=&lt;your-smtp-server&gt; &lt;your-patch-file&gt;</codeph></cmd>
+                <info>Email the patch.</info>
+            </step>
+        </steps>
+    </taskbody>
+</task>
