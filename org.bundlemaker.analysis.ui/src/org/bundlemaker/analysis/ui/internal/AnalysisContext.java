@@ -6,8 +6,8 @@ import java.util.HashSet;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
-import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
 import org.eclipse.core.runtime.Assert;
 
 public class AnalysisContext implements IAnalysisContext {
