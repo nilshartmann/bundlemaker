@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 
 /**
  * <p>
@@ -58,6 +59,21 @@ public class Util {
     for (IArtifact child : artifact.getChildren()) {
       toString(child, builder, offset + 1);
     }
+    builder.append("\n");
+
+    for (IDependency dependency : artifact.getDependencies()) {
+      builder.append(dumpDependency(dependency));
+      builder.append("\n");
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public static String dumpDependency(IDependency iDependency) {
+    return iDependency.getFrom().getQualifiedName() + " -- " + iDependency.getDependencyKind() + " ["
+        + iDependency.getWeight() + "]" + " --> " + iDependency.getTo().getQualifiedName();
   }
 
   /**

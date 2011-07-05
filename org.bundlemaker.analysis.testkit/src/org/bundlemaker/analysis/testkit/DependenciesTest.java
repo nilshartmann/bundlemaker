@@ -56,10 +56,9 @@ public class DependenciesTest extends AbstractTestKitTest {
     dumpDependency(dependency);
 
     //
-    System.out.println(dependency.getDependencies().size());
-    for (IDependency iDependency : dependency.getDependencies()) {
-      dumpDependency(iDependency);
-    }
+    // for (IDependency iDependency : dependency.getDependencies()) {
+    // dumpDependency(iDependency);
+    // }
 
     //
     Assert.assertEquals(986, guiPackageArtifact.getDependencies().size());

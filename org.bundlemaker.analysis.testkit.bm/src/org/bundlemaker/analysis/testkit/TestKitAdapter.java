@@ -5,6 +5,7 @@ import java.io.File;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.testkit.framework.ITestKitAdapter;
+import org.bundlemaker.analysis.testkit.framework.Util;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
@@ -75,6 +76,8 @@ public class TestKitAdapter implements ITestKitAdapter {
 
     //
     _dependencyModel = ModelTransformer.getDependencyModel(_bundleMakerProject, _modularizedSystem);
+
+    System.out.println(Util.toString(_dependencyModel.getRoot()));
   }
 
   /**
