@@ -3,13 +3,13 @@ package org.bundlemaker.core.itest.analysis;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.itestframework.util.Util;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;

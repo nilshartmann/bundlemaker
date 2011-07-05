@@ -5,12 +5,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependencyModel;
+import org.bundlemaker.analysis.transformations.ArtifactTransformer;
+import org.bundlemaker.analysis.transformations.BundlePathName;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.ArtifactType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
-import org.bundlemaker.dependencyanalysis.base.transformations.ArtifactTransformer;
-import org.bundlemaker.dependencyanalysis.base.transformations.BundlePathName;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -144,7 +144,7 @@ public class ArtifactTransformationProcessor {
 
       qualifiedName.append(string);
 
-      IAdvancedArtifact child = (IAdvancedArtifact) currentArtifact.getChildByIdentifier(string);
+      IAdvancedArtifact child = (IAdvancedArtifact) currentArtifact.getChild(string);
       if (child == null) {
         System.out.printf("  Erzeuge neue Gruppe: '%s' (%s) an '%s' %n", string, qualifiedName.toString(),
             currentArtifact.getQualifiedName());
@@ -160,7 +160,7 @@ public class ArtifactTransformationProcessor {
     System.out.printf("  Ziel-Gruppe fuer Artifact '%s': '%s'%n", typeArtifact.getQualifiedName(),
         currentArtifact.getQualifiedName());
 
-    IAdvancedArtifact bundleArtifact = (IAdvancedArtifact) currentArtifact.getChildByIdentifier(newBundlePath
+    IAdvancedArtifact bundleArtifact = (IAdvancedArtifact) currentArtifact.getChild(newBundlePath
         .getBundleName());
     // TODO Sicherstellen, dass bundleArtifact entweder null (neues Bundle) oder vom Typ Module ist
     if (bundleArtifact == null) {
@@ -180,7 +180,7 @@ public class ArtifactTransformationProcessor {
     // In neues Modul schieben // PACKAGES ???
 
     IAdvancedArtifact packageArtifact = (IAdvancedArtifact) typeArtifact.getParent(ArtifactType.Package);
-    IArtifact newPackageArtifact = bundleArtifact.getChildByIdentifier(packageArtifact.getQualifiedName());
+    IArtifact newPackageArtifact = bundleArtifact.getChild(packageArtifact.getQualifiedName());
     if (newPackageArtifact == null) {
       System.out.printf("  Erzeuge Package '%s' in Bundle '%s'%n", packageArtifact.getQualifiedName(),
           bundleArtifact.getQualifiedName());
