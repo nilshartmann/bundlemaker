@@ -259,6 +259,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
         referenceName = resolvePrimaryType(referenceName, (IResourceModule) type.getModule(getModularizedSystem()));
       }
 
+      // skip self references
+      if (referenceName.equals(type.getFullyQualifiedName())) {
+        continue;
+      }
+
       //
       IArtifact artifact = _artifactCache.getTypeArtifact(referenceName, false);
 

@@ -164,7 +164,7 @@ public interface IArtifact {
 
   /**
    * <p>
-   * Returns the child of the this artifact that matches the given path (delimited by '/').
+   * Returns the child of the this artifact that matches the given path (delimited by '|').
    * </p>
    * <p>
    * For each segment of the given path a matching artifact will be chosen (relative to its parent) using the following
@@ -174,7 +174,7 @@ public interface IArtifact {
    * <li>If no child was chosen before and the segment equals the (simple) name of a child, this child will be chosen.</li>
    * </ol>
    * This algorithm allows it to use paths like
-   * <code>"myRoot/group1/group2/myModule/org.bundlemaker.core/MyType"<code> or <code>"myRoot/group1/group2/myModule/org.bundlemaker.core/MyType"
+   * <code>"myRoot|group1|group2|myModule|org.bundlemaker.core|MyType"<code> or <code>"myRoot|group1|group2|myModule|org.bundlemaker.core|org.bundlemaker.core.MyType"
    * </p>
    * 
    * @param path

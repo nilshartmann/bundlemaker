@@ -12,8 +12,6 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -52,27 +50,61 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     Assert.isNotNull(path);
 
     // create IPath instance
-    IPath iPath = new Path(path);
+    String[] splittedString = path.split("\\|");
+
+    //
+    return getChild(splittedString);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param splittedString
+   * @return
+   */
+  private IArtifact getChild(String[] splittedString) {
+
+    // assert not null
+    Assert.isNotNull(splittedString);
 
     // if segment count == 0 -> return null
-    if (iPath.segmentCount() == 0) {
+    if (splittedString.length == 0) {
       return null;
     }
 
     // if segment count = 1 -> return matching direct child
-    else if (iPath.segmentCount() == 1) {
-      return getDirectChild(iPath.lastSegment());
+    else if (splittedString.length == 1) {
+      return getDirectChild(splittedString[0]);
     }
 
     // else call recursive
     else {
 
       // get the direct child
-      IArtifact directChild = getDirectChild(iPath.segment(0));
+      IArtifact directChild = getDirectChild(splittedString[0]);
 
       // recurse
       if (directChild != null) {
-        return directChild.getChild(iPath.removeFirstSegments(1).toString());
+
+        //
+        if (directChild instanceof AbstractArtifactContainer) {
+          String[] newArray = new String[splittedString.length - 1];
+          System.arraycopy(splittedString, 1, newArray, 0, newArray.length);
+          return ((AbstractArtifactContainer) directChild).getChild(newArray);
+        }
+
+        // support for "non-AbstractArtifactContainer" IArtifacts
+        else {
+          StringBuilder builder = new StringBuilder();
+          for (int i = 1; i < splittedString.length; i++) {
+            builder.append(splittedString[i]);
+            if (i + 1 < splittedString.length) {
+              builder.append("|");
+            }
+          }
+          return directChild.getChild(builder.toString());
+        }
       }
     }
 
@@ -104,6 +136,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
   }
 
+  @Override
   public Collection<IDependency> getDependencies() {
     if (dependencies == null) {
       aggregateDependencies();
@@ -116,10 +149,10 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * </p>
    */
   private void aggregateDependencies() {
-    
+
     //
     dependencies = new ArrayList<IDependency>();
-    
+
     //
     for (IArtifact child : children) {
 
@@ -154,6 +187,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     return leafs.contains(artifact);
   }
 
+  @Override
   public Collection<IArtifact> getLeafs() {
     if (leafs == null || leafs.isEmpty()) {
       leafs = new HashSet<IArtifact>();

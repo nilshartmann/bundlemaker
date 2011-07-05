@@ -30,8 +30,8 @@ public class StaticTest extends AbstractTestKitTest {
 
     // assert 'getName'
     // assert 'getQualifiedName'
-    Assert.assertEquals("jedit", getRoot().getName());
-    Assert.assertEquals("jedit", getRoot().getQualifiedName());
+    Assert.assertEquals("Original", getRoot().getName());
+    Assert.assertEquals("Original", getRoot().getQualifiedName());
     Assert.assertEquals(getRoot().getName(), getRoot().getQualifiedName());
 
     // assert 'properties'
@@ -57,20 +57,20 @@ public class StaticTest extends AbstractTestKitTest {
 
     // assert 'getChild'
     Assert.assertNotNull(getRoot().getChild("group1"));
-    Assert.assertNotNull(getRoot().getChild("group1/group1|group2"));
-    Assert.assertNotNull(getRoot().getChild("group1/group2"));
-    Assert.assertNotNull(getRoot().getChild("group1/group2/jedit_1.0.0"));
+    // Assert.assertNotNull(getRoot().getChild("group1|group1/group2"));
+    Assert.assertNotNull(getRoot().getChild("group1|group2"));
+    Assert.assertNotNull(getRoot().getChild("group1|group2|jedit_1.0.0"));
     Assert.assertNotNull(getRoot().getChild(
-        "group1/group2/jedit_1.0.0/org.gjt.sp.jedit.icons.themes.classic.16x16.actions"));
+        "group1|group2|jedit_1.0.0|org.gjt.sp.jedit.icons.themes.classic.16x16.actions"));
     Assert.assertNotNull(getRoot().getChild(
-        "group1/group2/jedit_1.0.0/org.gjt.sp.jedit.icons.themes.classic.16x16.actions/edit-select-all.png"));
+        "group1|group2|jedit_1.0.0|org.gjt.sp.jedit.icons.themes.classic.16x16.actions|edit-select-all.png"));
     Assert
         .assertNotNull(getRoot()
             .getChild(
-                "group1/group2/jedit_1.0.0/org.gjt.sp.jedit.bsh.org.objectweb.asm/org.gjt.sp.jedit.bsh.org.objectweb.asm.ByteVector"));
+                "group1|group2|jedit_1.0.0|org.gjt.sp.jedit.bsh.org.objectweb.asm|org.gjt.sp.jedit.bsh.org.objectweb.asm.ByteVector"));
     Assert.assertNotNull(getRoot().getChild(
-        "group1/group2/jedit_1.0.0/org.gjt.sp.jedit.bsh.org.objectweb.asm/ByteVector"));
-    Assert.assertNotNull(getRoot().getChild("group1/group2/jedit_1.0.0/asm/ByteVector"));
+        "group1|group2|jedit_1.0.0|org.gjt.sp.jedit.bsh.org.objectweb.asm|ByteVector"));
+    Assert.assertNotNull(getRoot().getChild("group1|group2|jedit_1.0.0|asm|ByteVector"));
   }
 
   /**
@@ -84,11 +84,11 @@ public class StaticTest extends AbstractTestKitTest {
     IArtifact blaGroup_artifact = getRoot().getChild("group1");
     Assert.assertNotNull(blaGroup_artifact);
 
-    IArtifact blubGroup_artifact = getRoot().getChild("group1/group2");
+    IArtifact blubGroup_artifact = getRoot().getChild("group1|group2");
     Assert.assertNotNull(blaGroup_artifact);
 
     // get the 'jedit_1.0.0' artifact
-    IArtifact jeditModule_artifact = getRoot().getChild("group1/group2/jedit_1.0.0");
+    IArtifact jeditModule_artifact = getRoot().getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(jeditModule_artifact);
 
     // test parent relationship
@@ -110,15 +110,15 @@ public class StaticTest extends AbstractTestKitTest {
     // System.out.println(Util.toString(getRoot()));
 
     // get the 'jedit_1.0.0' artifact
-    IArtifact jeditModule_artifact = getRoot().getChild("group1/group2/jedit_1.0.0");
+    IArtifact jeditModule_artifact = getRoot().getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(jeditModule_artifact);
 
     // test 'getChildren'
     Assert.assertEquals(69, jeditModule_artifact.getChildren().size());
 
     // test 'getParent'
-    Assert.assertEquals(getRoot().getChild("group1/group2"), jeditModule_artifact.getParent());
-    Assert.assertEquals(getRoot().getChild("group1/group2"), jeditModule_artifact.getParent(ArtifactType.Group));
+    Assert.assertEquals(getRoot().getChild("group1|group2"), jeditModule_artifact.getParent());
+    Assert.assertEquals(getRoot().getChild("group1|group2"), jeditModule_artifact.getParent(ArtifactType.Group));
     Assert.assertEquals(getRoot(), jeditModule_artifact.getParent(ArtifactType.Root));
 
     // test 'getLeafs'

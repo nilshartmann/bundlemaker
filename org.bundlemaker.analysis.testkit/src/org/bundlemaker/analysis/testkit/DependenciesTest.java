@@ -25,13 +25,13 @@ public class DependenciesTest extends AbstractTestKitTest {
   public void testDependencies() {
 
     // get the 'jedit' module
-    IArtifact moduleArtifact = getRoot().getChild("group1/group2/jedit_1.0.0");
+    IArtifact moduleArtifact = getRoot().getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // get all the dependencies
     Collection<IDependency> dependencies = moduleArtifact.getDependencies();
     Assert.assertNotNull(dependencies);
-    Assert.assertEquals(4931, dependencies.size());
+    Assert.assertEquals(4873, dependencies.size());
 
     // assert dependency types
     for (IDependency iDependency : dependencies) {
@@ -42,14 +42,14 @@ public class DependenciesTest extends AbstractTestKitTest {
 
     }
 
-    IArtifact guiPackageArtifact = getRoot().getChild("group1/group2/jedit_1.0.0/org.gjt.sp.jedit.gui");
+    IArtifact guiPackageArtifact = getRoot().getChild("group1|group2|jedit_1.0.0|org.gjt.sp.jedit.gui");
     Assert.assertNotNull(guiPackageArtifact);
 
-    IArtifact jeditPackageArtifact = getRoot().getChild("group1/group2/jedit_1.0.0/org.gjt.sp.jedit");
+    IArtifact jeditPackageArtifact = getRoot().getChild("group1|group2|jedit_1.0.0|org.gjt.sp.jedit");
     Assert.assertNotNull(jeditPackageArtifact);
 
-    Assert.assertEquals(994, guiPackageArtifact.getDependencies().size());
-    Assert.assertEquals(661, jeditPackageArtifact.getDependencies().size());
+    Assert.assertEquals(986, guiPackageArtifact.getDependencies().size());
+    Assert.assertEquals(655, jeditPackageArtifact.getDependencies().size());
 
     //
     IDependency dependency = guiPackageArtifact.getDependency(jeditPackageArtifact);
@@ -62,8 +62,8 @@ public class DependenciesTest extends AbstractTestKitTest {
     }
 
     //
-    Assert.assertEquals(994, guiPackageArtifact.getDependencies().size());
-    Assert.assertEquals(661, jeditPackageArtifact.getDependencies().size());
+    Assert.assertEquals(986, guiPackageArtifact.getDependencies().size());
+    Assert.assertEquals(655, jeditPackageArtifact.getDependencies().size());
   }
 
   /**

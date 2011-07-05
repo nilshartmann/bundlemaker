@@ -64,7 +64,7 @@ public class TestKitAdapter implements ITestKitAdapter {
     _bundleMakerProject.parseAndOpen(new ProgressMonitor());
 
     _modularizedSystem = (IModifiableModularizedSystem) _bundleMakerProject
-        .getModularizedSystemWorkingCopy(getTestProjectName());
+        .createModularizedSystemWorkingCopy("Original");
 
     _modularizedSystem.getTransformations().add(
         new GroupTransformation(new ModuleIdentifier("jedit", "1.0.0"), new Path("group1/group2")));
