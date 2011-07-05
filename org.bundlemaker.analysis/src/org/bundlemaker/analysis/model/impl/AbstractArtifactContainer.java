@@ -11,6 +11,9 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -37,6 +40,44 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
     children = new ArrayList<IArtifact>();
     cachedDependencies = new HashMap<IArtifact, IDependency>();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IArtifact getChild(String path) {
+
+    // assert not null
+    Assert.isNotNull(path);
+
+    // create IPath instance
+    IPath iPath = new Path(path);
+
+    // if segment count == 0 -> return null
+    if (iPath.segmentCount() == 0) {
+      return null;
+    }
+
+    // if segment count = 1 -> return matching direct child
+    else if (iPath.segmentCount() == 1) {
+      return getDirectChild(iPath.lastSegment());
+    }
+
+    // else call recursive
+    else {
+
+      // get the direct child
+      IArtifact directChild = getDirectChild(iPath.segment(0));
+
+      // recurse
+      if (directChild != null) {
+        return directChild.getChild(iPath.removeFirstSegments(1).toString());
+      }
+    }
+
+    // return null
+    return null;
   }
 
   @Override
@@ -70,10 +111,23 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     return dependencies;
   }
 
+  /**
+   * <p>
+   * </p>
+   */
   private void aggregateDependencies() {
+    
+    //
     dependencies = new ArrayList<IDependency>();
+    
+    //
     for (IArtifact child : children) {
-      dependencies.addAll(child.getDependencies());
+
+      //
+      Collection<IDependency> childDependencies = child.getDependencies();
+
+      //
+      dependencies.addAll(childDependencies);
     }
 
   }
@@ -126,20 +180,76 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
+   * @return
    */
-  @Override
-  public Integer size() {
-    return getLeafs().size();
+  public Collection<IArtifact> getModifiableChildren() {
+    return children;
   }
 
   /**
    * <p>
    * </p>
-   *
+   * 
+   * @param identifier
    * @return
    */
-  public Collection<IArtifact> getModifiableChildren() {
-    return children;
+  private IArtifact getDirectChild(String identifier) {
+
+    // assert not null
+    Assert.isNotNull(identifier);
+
+    //
+    IArtifact result = null;
+
+    // step 1a: search for the qualified name
+    for (IArtifact artifact : getChildren()) {
+
+      // check the qualified name
+      if (identifier.equals(artifact.getQualifiedName())) {
+
+        // check if null...
+        if (result == null) {
+          result = artifact;
+        }
+
+        // ... else throw exception
+        else {
+          // TODO
+          throw new RuntimeException(String.format("Ambigous identifier '%s' [%s, %s]", result, result.toString(),
+              artifact.toString()));
+        }
+      }
+    }
+
+    // step 1b:
+    if (result != null) {
+      return result;
+    }
+
+    // step 2: search for the simple name
+    for (IArtifact artifact : getChildren()) {
+
+      // check the qualified name
+      if (identifier.equals(artifact.getName())) {
+
+        // check if null...
+        if (result == null) {
+          result = artifact;
+        }
+
+        // ... else throw exception
+        else {
+          // TODO
+          throw new RuntimeException(String.format("Ambigous identifier '%s' [%s, %s]", result, result.toString(),
+              artifact.toString()));
+        }
+      }
+    }
+
+    // return result
+    return result;
   }
 }

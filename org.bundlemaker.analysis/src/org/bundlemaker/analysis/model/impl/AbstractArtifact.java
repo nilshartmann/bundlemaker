@@ -9,10 +9,11 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.eclipse.core.runtime.Assert;
 
 /**
- * Abstrakte Oberklasse fuer die beiden unterschiedlichen Artefakte.
- * Unterschieden wird zwischen gruppierenden Artefakten und Primaerartefakten.
+ * Abstrakte Oberklasse fuer die beiden unterschiedlichen Artefakte. Unterschieden wird zwischen gruppierenden
+ * Artefakten und Primaerartefakten.
  * 
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
@@ -29,18 +30,22 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   private IArtifact           parent;
 
   // Meta-Daten
-  private Map<String, Object> properties;
+  private Map<Object, Object> properties;
 
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractArtifact}.
+   * </p>
+   * 
+   * @param type
+   * @param name
+   */
   public AbstractArtifact(ArtifactType type, String name) {
+    Assert.isNotNull(type);
+    Assert.isNotNull(name);
+
     this.type = type;
     this.name = name;
-  }
-
-  private Map<String, Object> getProperties() {
-    if (properties == null) {
-      properties = new HashMap<String, Object>();
-    }
-    return properties;
   }
 
   @Override
@@ -53,11 +58,15 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
     this.parent = parent;
   }
 
-	@Override
-	public void addArtifact(IArtifact artifact, boolean relinkParent) {
-		addArtifact(artifact, false);
-	}
+  @Override
+  public void addArtifact(IArtifact artifact, boolean relinkParent) {
+    addArtifact(artifact, false);
+  }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public IArtifact getParent(ArtifactType type) {
     IArtifact parent = this.getParent();
 
@@ -70,14 +79,26 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public ArtifactType getType() {
     return type;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public String getName() {
     return name;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public Integer getOrdinal() {
     if (ordinal != null) {
       return ordinal;
@@ -108,15 +129,28 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
     return dependencies;
   }
 
-  public void setProperty(String key, Object value) {
-    getProperties().put(key, value);
+  /**
+   * {@inheritDoc}
+   */
+  public void setProperty(Object key, Object value) {
+    Assert.isNotNull(key);
+    
+    properties().put(key, value);
   }
 
-  public <T> T getProperty(String key, Class<T> t) {
+  /**
+   * {@inheritDoc}
+   */
+  public <T> T getProperty(Object key, Class<T> t) {
+
+    // return null if the properties havn't been initialized yet
     if (properties == null) {
       return null;
-    } else {
-      T property = (T) getProperties().get(key);
+    } 
+    
+    // return the property (if exists)
+    else {
+      T property = (T) properties().get(key);
       if (property != null) {
         return property;
       } else if (this.getParent() != null) {
@@ -127,7 +161,29 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
     }
   }
 
-  public String getProperty(String key) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getProperty(Object key) {
     return getProperty(key, String.class);
+  }
+
+  /**
+   * <p>
+   * Internal method that lazily initializes the properties
+   * </p>
+   * 
+   * @return
+   */
+  private Map<Object, Object> properties() {
+
+    // lazy initialize the map
+    if (properties == null) {
+      properties = new HashMap<Object, Object>();
+    }
+
+    // return the result
+    return properties;
   }
 }
