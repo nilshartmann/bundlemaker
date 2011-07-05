@@ -49,6 +49,11 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   }
 
   @Override
+  public IArtifact getChild(String path) {
+    return null;
+  }
+
+  @Override
   public IArtifact getParent() {
     return parent;
   }
@@ -108,10 +113,12 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
     return null;
   }
 
+  @Override
   public void setOrdinal(Integer ordinal) {
     this.ordinal = ordinal;
   }
 
+  @Override
   public String toString() {
     return this.getName();
   }
@@ -132,6 +139,7 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   /**
    * {@inheritDoc}
    */
+  @Override
   public void setProperty(Object key, Object value) {
     Assert.isNotNull(key);
     
@@ -141,6 +149,7 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   /**
    * {@inheritDoc}
    */
+  @Override
   public <T> T getProperty(Object key, Class<T> t) {
 
     // return null if the properties havn't been initialized yet
