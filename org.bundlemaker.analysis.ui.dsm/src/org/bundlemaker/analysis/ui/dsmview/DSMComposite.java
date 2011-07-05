@@ -19,17 +19,19 @@ import java.util.Map;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.dependencyanalysis.model.DependencyEdge;
-import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
-import org.bundlemaker.dependencyanalysis.ui.editor.DependencyPart;
+import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Slider;
 import org.sonar.graph.Dsm;
 import org.sonar.graph.Edge;
@@ -108,6 +110,10 @@ public class DSMComposite<V, E extends Edge<V>> extends Composite {
     this.dsm = graph.getDsm();
     if (dsm != null) {
       generateMatrix();
+    } else {
+      MessageBox msgBox = new MessageBox(Display.getCurrent().getActiveShell());
+      msgBox.setMessage("Too many artifacts for DSM view.");
+      msgBox.open();
 
     }
   }

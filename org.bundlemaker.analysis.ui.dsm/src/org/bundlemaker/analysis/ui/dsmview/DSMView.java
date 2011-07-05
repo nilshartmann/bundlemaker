@@ -12,9 +12,9 @@
 package org.bundlemaker.analysis.ui.dsmview;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.model.DependencyEdge;
-import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
-import org.bundlemaker.dependencyanalysis.ui.editor.DependencyPart;
+import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.eclipse.swt.widgets.Composite;
 
 /**

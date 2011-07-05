@@ -3,7 +3,7 @@ package org.bundlemaker.analysis.ui;
 import java.beans.PropertyChangeListener;
 
 import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 
 /**
  * Repraesentiert den aktuellen Zustand der Auswahl, Modelle etc in der Workbench

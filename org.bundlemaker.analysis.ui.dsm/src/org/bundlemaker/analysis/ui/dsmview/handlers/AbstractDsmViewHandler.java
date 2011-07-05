@@ -8,11 +8,11 @@ import java.util.Set;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
+import org.bundlemaker.analysis.ui.editor.GenericEditor;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
-import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
-import org.bundlemaker.dependencyanalysis.ui.editor.GenericEditor;
-import org.bundlemaker.dependencyanalysis.ui.view.table.JavaEditor;
+import org.bundlemaker.analysis.ui.view.table.JavaEditor;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
