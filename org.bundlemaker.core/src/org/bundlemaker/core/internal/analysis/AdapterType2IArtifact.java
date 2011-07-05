@@ -25,7 +25,9 @@ import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.AbstractArtifactCache;
+import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.resource.IReference;
@@ -148,11 +150,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public Integer size() {
-    return 1;
-  }
-
-  @Override
   public Collection<IArtifact> getChildren() {
     return Collections.emptySet();
   }
@@ -212,6 +209,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 	 */
   private void initDependencies() {
 
+    //
     if (_cachedDependencies != null) {
       return;
     }
@@ -219,18 +217,16 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     //
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
-    initReferences(_type.getReferences());
+    //
+    initReferences(_type.getReferences(), _type);
 
     //
     if (_aggregateInnerTypes) {
 
-      // TODO RESOURCES
-
-      // TODO TOPLEVEL NON-MAIN TYPES
       if (_type.hasSourceResource()) {
         for (IType type : _type.getSourceResource().getContainedTypes()) {
           if (!type.isPrimaryType()) {
-            initReferences(type.getReferences());
+            initReferences(type.getReferences(), type);
           }
         }
       }
@@ -238,26 +234,33 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       if (_type.hasBinaryResource()) {
         for (IResource stickyResource : _type.getBinaryResource().getStickyResources()) {
           for (IType type : stickyResource.getContainedTypes()) {
-            initReferences(type.getReferences());
+            initReferences(type.getReferences(), type);
           }
         }
       }
     }
   }
 
-  private void initReferences(Collection<? extends IReference> references) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param references
+   */
+  private void initReferences(Collection<? extends IReference> references, IType type) {
 
     // iterate over all references
     for (IReference reference : references) {
 
       //
       String referenceName = reference.getFullyQualifiedName();
-      if (_aggregateInnerTypes && JavaTypeUtils.isInnerTypeName(referenceName)) {
-        referenceName = JavaTypeUtils.getEnclosingNonInnerTypeName(referenceName);
+
+      if (_aggregateInnerTypes) {
+        referenceName = resolvePrimaryType(referenceName, (IResourceModule) type.getModule(getModularizedSystem()));
       }
 
       //
-      IArtifact artifact = _artifactCache.getTypeArtifact(referenceName);
+      IArtifact artifact = _artifactCache.getTypeArtifact(referenceName, false);
 
       // TODO!!
       // STICKY-TYPES/AGGREGATED TYPES
@@ -279,6 +282,8 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
         dependency.setDependencyKind(dependencyKind);
 
         _cachedDependencies.put(artifact, dependency);
+      } else {
+        System.out.println("MISSING TYPE: " + referenceName);
       }
     }
   }
@@ -287,28 +292,54 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * <p>
    * </p>
    * 
-   * @param type
+   * @param referenceName
+   * @param resourceModule
    * @return
    */
-  private static final String getNullSafeFullyQualifiedName(IType type) {
-    Assert.isNotNull(type, "Parameter 'type' has to be set!");
+  private String resolvePrimaryType(String referenceName, IResourceModule resourceModule) {
 
-    return type.getFullyQualifiedName();
-  }
+    // step 1: inner type (e.g. 'de.example.Test$InnerClass')
+    if (JavaTypeUtils.isInnerTypeName(referenceName)) {
 
-  @Override
-  public String getIdentifier() {
-    return getName();
+      // get the reference name
+      referenceName = JavaTypeUtils.getEnclosingNonInnerTypeName(referenceName);
+
+      // recurse
+      return resolvePrimaryType(referenceName, resourceModule);
+    }
+
+    // step 2:
+    try {
+
+      //
+      IType iType = getModularizedSystem().getType(referenceName, resourceModule);
+
+      //
+      if (!iType.isPrimaryType()) {
+
+        //
+        IType primaryType = iType.getSourceResource().getPrimaryType();
+
+        //
+        referenceName = primaryType.getFullyQualifiedName();
+
+        // recurse
+        return resolvePrimaryType(referenceName, resourceModule);
+      }
+    }
+
+    //
+    catch (AmbiguousElementException e) {
+      throw new RuntimeException(e);
+    }
+
+    // return the reference name
+    return referenceName;
   }
 
   @Override
   public boolean canAdd(IArtifact artifact) {
     return false;
-  }
-
-  @Override
-  public IArtifact getChildByIdentifier(String identifier) {
-    return null;
   }
 
   @Override
@@ -320,5 +351,4 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   public IType getAssociatedType() {
     return _type;
   }
-
 }

@@ -15,36 +15,27 @@ public interface IAdvancedArtifact extends IArtifact {
    * <p>
    * </p>
    * 
-   * @return
-   */
-  String getIdentifier();
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param artifact
    * @return
    */
   boolean canAdd(IArtifact artifact);
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param identifier
-   * @return
-   */
-  IArtifact getChildByIdentifier(String identifier);
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param identifier
+  // * @return
+  // */
+  // IArtifact getChildByIdentifier(String identifier);
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param path
-   * @return
-   */
-  IArtifact getChild(String path);
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // String getIdentifier();
 
   /**
    * Returns the {@link IModularizedSystem} this artifact belongs to

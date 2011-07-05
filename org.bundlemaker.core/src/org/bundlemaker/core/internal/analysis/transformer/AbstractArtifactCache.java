@@ -167,12 +167,15 @@ public abstract class AbstractArtifactCache {
    * @param type
    * @return
    */
-  public IArtifact getTypeArtifact(IType type) {
+  public IArtifact getTypeArtifact(IType type, boolean createIfMissing) {
 
     try {
 
-      //
-      return _typeCache.getOrCreate(type);
+      if (createIfMissing) {
+        return _typeCache.getOrCreate(type);
+      } else {
+        return _typeCache.get(type);
+      }
 
     } catch (Exception e) {
       // TODO Auto-generated catch block
@@ -217,7 +220,7 @@ public abstract class AbstractArtifactCache {
    * @param fullyQualifiedName
    * @throws Exception
    */
-  public IArtifact getTypeArtifact(String fullyQualifiedName) {
+  public IArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
     try {
@@ -233,7 +236,7 @@ public abstract class AbstractArtifactCache {
       }
 
       //
-      return getTypeArtifact(targetType);
+      return getTypeArtifact(targetType, createIfMissing);
 
     } catch (AmbiguousElementException e) {
       System.err.println("AmbExc " + fullyQualifiedName);

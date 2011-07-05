@@ -73,7 +73,7 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
         if (!type.isInnerType() && isPrimaryType(type)) {
 
           // create the artifact
-          this.getTypeArtifact(type);
+          this.getTypeArtifact(type, true);
         }
       }
 

@@ -24,9 +24,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
    * @param modularizedSystem
    */
   public AdapterModularizedSystem2IArtifact(IModifiableModularizedSystem modularizedSystem) {
-    super(ArtifactType.Root, null);
-
-    Assert.isNotNull(modularizedSystem);
+    super(ArtifactType.Root, name(modularizedSystem));
 
     // set the resource module
     _modularizedSystem = modularizedSystem;
@@ -88,5 +86,17 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     //
     return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @return
+   */
+  private static String name(IModifiableModularizedSystem modularizedSystem) {
+    Assert.isNotNull(modularizedSystem);
+    return modularizedSystem.getName();
   }
 }

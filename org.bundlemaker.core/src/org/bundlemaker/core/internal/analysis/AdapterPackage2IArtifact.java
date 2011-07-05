@@ -55,11 +55,6 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer {
   }
 
   @Override
-  public String getIdentifier() {
-    return _isFlat ? getQualifiedName() : getName();
-  }
-
-  @Override
   public boolean canAdd(IArtifact artifact) {
     return artifact != null
         && (artifact.getType().equals(ArtifactType.Resource) || artifact.getType().equals(ArtifactType.Type));
