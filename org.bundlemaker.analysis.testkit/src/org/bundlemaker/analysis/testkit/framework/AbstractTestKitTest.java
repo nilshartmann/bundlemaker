@@ -31,6 +31,9 @@ public abstract class AbstractTestKitTest {
     if (_testKitAdapter == null) {
       _testKitAdapter = createTestKitAdapter();
       _testKitAdapter.init();
+      
+      // write dependency model to disc
+      Util.dumpToFile(_testKitAdapter.getRoot());
     }
   }
 

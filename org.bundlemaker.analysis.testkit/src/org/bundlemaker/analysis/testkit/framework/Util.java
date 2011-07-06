@@ -1,16 +1,21 @@
 package org.bundlemaker.analysis.testkit.framework;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
@@ -26,6 +31,27 @@ public class Util {
   /**
    * <p>
    * </p>
+   *
+   * @param artifact
+   */
+  public static void dumpToFile(IArtifact artifact) {
+    try {
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+      File file = new File(System.getProperty("user.dir"), "result" + File.separatorChar + "DependencyModel_"
+          + dateFormat.format(new Date()));
+      file.getParentFile().mkdirs();
+      FileWriter fileWriter = new FileWriter(file);
+      fileWriter.write(Util.toString(artifact));
+      fileWriter.flush();
+      fileWriter.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  /**
+   * <p>
+   * </p>
    * 
    * @param module
    * @return
@@ -34,6 +60,21 @@ public class Util {
 
     StringBuilder builder = new StringBuilder();
     toString(root, builder, 0);
+    
+    List<IDependency> dependencies = asSortedList(root.getDependencies(), new Comparator<IDependency>() {
+      @Override
+      public int compare(IDependency o1, IDependency o2) {
+        String dep1 = dumpDependency(o1);
+        String dep2 = dumpDependency(o2);
+        return dep1.compareTo(dep2);
+      }
+    });
+
+    for (IDependency dependency : dependencies) {
+      builder.append(dumpDependency(dependency));
+      builder.append("\n");
+    }
+    
     return builder.toString();
   }
 
@@ -52,18 +93,20 @@ public class Util {
     }
 
     //
+    builder.append(artifact.getType());
+    builder.append(" : ");
     builder.append(artifact.getQualifiedName());
     builder.append("\n");
 
     //
-    for (IArtifact child : artifact.getChildren()) {
+    List<IArtifact> children = asSortedList(artifact.getChildren(), new Comparator<IArtifact>() {
+      @Override
+      public int compare(IArtifact o1, IArtifact o2) {
+        return o1.getQualifiedName().compareTo(o2.getQualifiedName());
+      }
+    });
+    for (IArtifact child : children) {
       toString(child, builder, offset + 1);
-    }
-    builder.append("\n");
-
-    for (IDependency dependency : artifact.getDependencies()) {
-      builder.append(dumpDependency(dependency));
-      builder.append("\n");
     }
   }
 
@@ -81,16 +124,16 @@ public class Util {
    * </p>
    * 
    * @param <T>
-   * @param set
+   * @param collection
    * @return
    */
-  public static <T extends Comparable<T>> List<T> asSortedList(Set<T> set) {
+  public static <T> List<T> asSortedList(Collection<T> collection, Comparator<T> comparator) {
 
     //
-    List<T> arrayList = new ArrayList<T>(set);
+    List<T> arrayList = new ArrayList<T>(collection);
 
     //
-    Collections.sort(arrayList);
+    Collections.sort(arrayList, comparator);
 
     //
     return arrayList;
@@ -130,7 +173,6 @@ public class Util {
   }
 
   public static String toString(RingBuffer<Character> buffer) {
-
     StringBuilder builder = new StringBuilder();
     while (!buffer.isEmpty()) {
       builder.append(buffer.dequeue());

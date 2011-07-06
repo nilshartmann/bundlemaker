@@ -1,6 +1,9 @@
 package org.bundlemaker.analysis.testkit;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
@@ -70,14 +73,10 @@ public class TestKitAdapter implements ITestKitAdapter {
     _modularizedSystem.getTransformations().add(
         new GroupTransformation(new ModuleIdentifier("jedit", "1.0.0"), new Path("group1/group2")));
 
-    // _modularizedSystem.getTransformations().add(new DeleteTransformation(new ModuleIdentifier("jdk16", "jdk16")));
-
     _modularizedSystem.applyTransformations(null);
 
     //
     _dependencyModel = ModelTransformer.getDependencyModel(_bundleMakerProject, _modularizedSystem);
-
-    System.out.println(Util.toString(_dependencyModel.getRoot()));
   }
 
   /**
