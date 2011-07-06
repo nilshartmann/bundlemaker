@@ -32,6 +32,12 @@ import org.bundlemaker.core.util.GenericCache;
  */
 public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
 
+  /** - */
+  private static final boolean     INCLUDE_NON_TYPE_RESOURCES               = false;
+
+  /** - */
+  private static final ContentType INCLUDED_NON_TYPE_RESOURCES_CONTENT_TYPE = ContentType.BINARY;
+
   /**
    * <p>
    * Creates a new instance of type {@link AggregatedTypesArtifactCache}.
@@ -77,26 +83,29 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
         }
       }
 
-      // cast to 'IResourceModule'
-      if (typeModule instanceof IResourceModule) {
+      if (INCLUDE_NON_TYPE_RESOURCES) {
 
-        // get the resource module
-        IResourceModule resourceModule = (IResourceModule) typeModule;
+        // cast to 'IResourceModule'
+        if (typeModule instanceof IResourceModule) {
 
-        // // iterate over all contained source resources
-        // for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
-        // if (!resource.containsTypes()) {
-        // // create the artifact
-        // artifactCache.getResourceArtifact(resource);
-        // }
-        // }
+          // get the resource module
+          IResourceModule resourceModule = (IResourceModule) typeModule;
 
-        // iterate over all contained binary resources
-        for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
-          if (!resource.containsTypes()) {
+          // // iterate over all contained source resources
+          // for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+          // if (!resource.containsTypes()) {
+          // // create the artifact
+          // artifactCache.getResourceArtifact(resource);
+          // }
+          // }
 
-            // create the artifact
-            this.getResourceArtifact(resource);
+          // iterate over all contained resources
+          for (IResource resource : resourceModule.getResources(INCLUDED_NON_TYPE_RESOURCES_CONTENT_TYPE)) {
+            if (!resource.containsTypes()) {
+
+              // create the artifact
+              this.getResourceArtifact(resource);
+            }
           }
         }
       }

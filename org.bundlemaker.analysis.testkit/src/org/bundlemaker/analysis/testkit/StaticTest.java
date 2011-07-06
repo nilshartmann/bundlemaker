@@ -60,10 +60,7 @@ public class StaticTest extends AbstractTestKitTest {
     // Assert.assertNotNull(getRoot().getChild("group1|group1/group2"));
     Assert.assertNotNull(getRoot().getChild("group1|group2"));
     Assert.assertNotNull(getRoot().getChild("group1|group2|jedit_1.0.0"));
-    Assert.assertNotNull(getRoot().getChild(
-        "group1|group2|jedit_1.0.0|org.gjt.sp.jedit.icons.themes.classic.16x16.actions"));
-    Assert.assertNotNull(getRoot().getChild(
-        "group1|group2|jedit_1.0.0|org.gjt.sp.jedit.icons.themes.classic.16x16.actions|edit-select-all.png"));
+    Assert.assertNotNull(getRoot().getChild("group1|group2|jedit_1.0.0|org.gjt.sp.jedit.bsh.org.objectweb.asm"));
     Assert
         .assertNotNull(getRoot()
             .getChild(
@@ -114,7 +111,7 @@ public class StaticTest extends AbstractTestKitTest {
     Assert.assertNotNull(jeditModule_artifact);
 
     // test 'getChildren'
-    Assert.assertEquals(69, jeditModule_artifact.getChildren().size());
+    Assert.assertEquals(29, jeditModule_artifact.getChildren().size());
 
     // test 'getParent'
     Assert.assertEquals(getRoot().getChild("group1|group2"), jeditModule_artifact.getParent());
@@ -125,7 +122,7 @@ public class StaticTest extends AbstractTestKitTest {
     Collection<IArtifact> typesAndResources = jeditModule_artifact.getLeafs();
 
     // assert that only top level types are contained
-    Assert.assertEquals(831, typesAndResources.size());
+    Assert.assertEquals(504, typesAndResources.size());
     for (IArtifact iArtifact : typesAndResources) {
       Assert.assertEquals(-1, iArtifact.getName().indexOf('$'));
     }
