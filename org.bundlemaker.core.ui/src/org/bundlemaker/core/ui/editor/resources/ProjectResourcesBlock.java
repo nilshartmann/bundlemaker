@@ -12,8 +12,12 @@ package org.bundlemaker.core.ui.editor.resources;
 
 import static java.lang.String.format;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,9 +30,15 @@ import org.bundlemaker.core.ui.editor.BundleMakerProjectDescriptionWrapper;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
 import org.bundlemaker.core.ui.internal.VerticalFormButtonBar;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.wizards.BuildPathDialogAccess;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -171,7 +181,26 @@ public class ProjectResourcesBlock {
     buttonBar.newButton("Add...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        addContent(shell);
+        try {
+          addContent(shell);
+        } catch (Exception e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
+        // addContent(shell);
+      }
+
+    });
+
+    buttonBar.newButton("Add JDT projects...", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        try {
+          addEclipseProjects(shell);
+        } catch (Exception e1) {
+          // TODO Auto-generated catch block
+          e1.printStackTrace();
+        }
       }
 
     });
@@ -510,6 +539,84 @@ public class ProjectResourcesBlock {
     }
 
     projectDescriptionChanged();
+
+  }
+
+  private void addEclipseProjects(Shell shell) throws Exception {
+    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    IProject[] allProjects = workspaceRoot.getProjects();
+
+    Arrays.sort(allProjects, new Comparator<IProject>() {
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+       */
+      @Override
+      public int compare(IProject o1, IProject o2) {
+        return o1.getName().compareTo(o2.getName());
+      }
+
+    });
+
+    final HashSet<String> libraries = new HashSet<String>();
+
+    for (IProject iProject : allProjects) {
+      if (iProject.hasNature("org.eclipse.jdt.core.javanature")) {
+        addEclipseProject(shell, iProject, libraries);
+      }
+    }
+
+    for (String string : libraries) {
+      getBundleMakerProjectDescription().addResourceContent(string);
+    }
+
+    projectDescriptionChanged();
+  }
+
+  private void addEclipseProject(Shell shell, IProject eclipseProject, HashSet<String> libraries) throws Exception {
+    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    // IProject eclipseProject = workspaceRoot.getProject("test-project");
+    // TODO check it's a Java Project
+    IJavaProject javaProject = JavaCore.create(eclipseProject);
+    IClasspathEntry[] resolvedClasspath = javaProject.getResolvedClasspath(true);
+    HashSet<String> binaryFolders = new HashSet<String>();
+    HashSet<String> sourceFolders = new HashSet<String>();
+    for (IClasspathEntry classpathEntry : resolvedClasspath) {
+      IPath path = classpathEntry.getPath();
+      if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+
+        IPath outputLocation = classpathEntry.getOutputLocation();
+        if (outputLocation == null) {
+          outputLocation = javaProject.getOutputLocation();
+        }
+
+        if (workspaceRoot.findMember(outputLocation) != null) {
+          binaryFolders.add(String.format("${workspace_loc:%s}", outputLocation));
+        }
+
+        if (workspaceRoot.findMember(path) != null) {
+          sourceFolders.add(String.format("${workspace_loc:%s}", path));
+        }
+
+      } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+        System.out.printf("Library: '%s'%n", path);
+
+        File file = new File(path.toOSString());
+        if (file.exists()) {
+          libraries.add(path.toOSString());
+        } else {
+          libraries.add(String.format("${workspace_loc:%s}", path));
+        }
+
+        // String binaryRoot = classpathEntry.getPath().toOSString();
+        // getBundleMakerProjectDescription().addResourceContent(binaryRoot);
+      }
+    }
+
+    getBundleMakerProjectDescription().addResourceContent(eclipseProject.getName(), "1.0.0",
+        new LinkedList<String>(binaryFolders), new LinkedList<String>(sourceFolders));
 
   }
 
