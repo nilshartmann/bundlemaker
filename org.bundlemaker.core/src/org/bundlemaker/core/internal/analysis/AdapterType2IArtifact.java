@@ -303,6 +303,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   private String resolvePrimaryType(String referenceName, IResourceModule resourceModule) {
 
+    // TODO replace with containsType(referenceName)
+    if (getModularizedSystem().getTypes(referenceName, resourceModule).isEmpty()) {
+      return referenceName;
+    }
+
     // step 1: inner type (e.g. 'de.example.Test$InnerClass')
     if (JavaTypeUtils.isInnerTypeName(referenceName)) {
 
