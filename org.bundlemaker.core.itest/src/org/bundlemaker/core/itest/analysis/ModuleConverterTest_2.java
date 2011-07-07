@@ -37,7 +37,7 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    IArtifact artifact = rootArtifact.getChild("bla/blub/jedit_1.0.0");
+    IArtifact artifact = rootArtifact.getChild("bla|blub|jedit_1.0.0");
     Assert.assertNotNull(artifact);
 
     //
@@ -62,7 +62,7 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    IArtifact artifact = rootArtifact.getChild("bla/blub/jedit_1.0.0");
+    IArtifact artifact = rootArtifact.getChild("bla|blub|jedit_1.0.0");
     Assert.assertNotNull(artifact);
 
     //
@@ -74,7 +74,7 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
     // fileWriter.close();
 
     //
-    InputStream inputstream = getClass().getResourceAsStream("results/ModuleConverterTest_2-BinariesAndTypes.txt");
+    InputStream inputstream = getClass().getResourceAsStream("results|ModuleConverterTest_2-BinariesAndTypes.txt");
     Assert.assertTrue(Util.equalsIgnoreWhitespace(Util.convertStreamToString(inputstream), fresult));
   }
 
