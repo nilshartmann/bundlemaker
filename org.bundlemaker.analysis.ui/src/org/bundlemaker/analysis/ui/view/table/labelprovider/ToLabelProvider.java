@@ -1,4 +1,4 @@
-package org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider;
+package org.bundlemaker.analysis.ui.view.table.labelprovider;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.Analysis;

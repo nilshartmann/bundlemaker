@@ -1,4 +1,4 @@
-package org.bundlemaker.dependencyanalysis.ui.view.table;
+package org.bundlemaker.analysis.ui.view.table;
 
 import java.util.ArrayList;
 import java.util.Collections;

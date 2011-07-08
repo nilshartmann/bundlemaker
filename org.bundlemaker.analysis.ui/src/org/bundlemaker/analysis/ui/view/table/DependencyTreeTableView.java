@@ -1,4 +1,4 @@
-package org.bundlemaker.dependencyanalysis.ui.view.table;
+package org.bundlemaker.analysis.ui.view.table;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -12,12 +12,11 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
-import org.bundlemaker.analysis.ui.view.table.JavaEditor;
-import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.FromLabelProvider;
-import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.IgnoreTaggedLabelProvider;
-import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.ToLabelProvider;
-import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.ViolationLabelProvider;
-import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.WeightLabelProvider;
+import org.bundlemaker.analysis.ui.view.table.labelprovider.FromLabelProvider;
+import org.bundlemaker.analysis.ui.view.table.labelprovider.IgnoreTaggedLabelProvider;
+import org.bundlemaker.analysis.ui.view.table.labelprovider.ToLabelProvider;
+import org.bundlemaker.analysis.ui.view.table.labelprovider.ViolationLabelProvider;
+import org.bundlemaker.analysis.ui.view.table.labelprovider.WeightLabelProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;

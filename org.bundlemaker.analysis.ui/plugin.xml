@@ -13,9 +13,9 @@
       	   </category>
       	    <view
                 category="org.bundlemaker.analysis.ui.views.category"
-                class="org.bundlemaker.dependencyanalysis.ui.view.table.DependencyTreeTableView"
+                class="org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView"
                 icon="icons/osgibundle.gif"
-                id="org.bundlemaker.dependencyanalysis.ui.view.table.DependencyTreeTableView"
+                id="org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView"
                 name="Dependency View"
                 restorable="true">
 				</view>
