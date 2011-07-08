@@ -30,6 +30,9 @@ public abstract class AbstractTestKitTest {
   /** - */
   private static Throwable       _modelCheckFailedException = null;
 
+  /** - */
+  private static String          _timestamp;
+
   /**
    * <p>
    * </p>
@@ -39,17 +42,18 @@ public abstract class AbstractTestKitTest {
   @BeforeClass
   public static void init() throws Throwable {
 
+    // re-throw previous exception
     if (_modelCheckFailedException != null) {
       throw _modelCheckFailedException;
     }
 
+    //
+    _timestamp = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
+
+    //
     try {
 
       //
-      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-
-      String timestamp = dateFormat.format(new Date());
-
       if (_testKitAdapter == null) {
 
         //
@@ -57,27 +61,13 @@ public abstract class AbstractTestKitTest {
 
         //
         if (_testKitAdapter instanceof ITimeStampAwareTestKitAdapter) {
-          ((ITimeStampAwareTestKitAdapter) _testKitAdapter).setTimeStamp(timestamp);
+          ((ITimeStampAwareTestKitAdapter) _testKitAdapter).setTimeStamp(_timestamp);
         }
 
         //
         _testKitAdapter.init();
 
-        // actual
-        File actual = new File(System.getProperty("user.dir"), "result" + File.separatorChar + "ArtifactModel_"
-            + timestamp + ".txt");
-        BundleMakerTestUtils.writeToFile(ArtifactTestUtil.toString(_testKitAdapter.getRoot()), actual);
-
-        // expected
-        File expected = new File(System.getProperty("user.dir"), "test-data/ArtifactModel_Expected.txt");
-
-        // htmlReport
-        String name = actual.getAbsolutePath();
-        name = name.substring(0, name.length() - ".txt".length()) + ".html";
-        File htmlReport = new File(name);
-
-        // assert
-        FileDiffUtil.assertArtifactModel(expected, actual, htmlReport);
+        assertTestArtifactModel();
       }
 
     } catch (Throwable e) {
@@ -115,5 +105,39 @@ public abstract class AbstractTestKitTest {
       Assert.fail();
       return null;
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
+  private static void assertTestArtifactModel() throws Exception {
+
+    // actual
+    File actual = new File(System.getProperty("user.dir"), "result" + File.separatorChar + "ArtifactModel_"
+        + _timestamp + ".txt");
+
+    IArtifact group1 = _testKitAdapter.getRoot().getChild("group1");
+    IArtifact velocity_15 = _testKitAdapter.getRoot().getChild("velocity_1.5");
+
+    StringBuilder builder = new StringBuilder();
+    builder.append(ArtifactTestUtil.toString(group1));
+    builder.append("\n");
+    builder.append(ArtifactTestUtil.toString(velocity_15));
+
+    BundleMakerTestUtils.writeToFile(builder.toString(), actual);
+
+    // expected
+    File expected = new File(System.getProperty("user.dir"), "test-data/ArtifactModel_Expected.txt");
+
+    // htmlReport
+    String name = actual.getAbsolutePath();
+    name = name.substring(0, name.length() - ".txt".length()) + ".html";
+    File htmlReport = new File(name);
+
+    // assert
+    FileDiffUtil.assertArtifactModel(expected, actual, htmlReport);
   }
 }
