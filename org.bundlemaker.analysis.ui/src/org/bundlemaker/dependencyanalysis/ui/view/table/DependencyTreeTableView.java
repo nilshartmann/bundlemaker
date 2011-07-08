@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
-import org.bundlemaker.dependencyanalysis.model.DependencyGraph;
+import org.bundlemaker.analysis.ui.view.table.JavaEditor;
 import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.FromLabelProvider;
 import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.IgnoreTaggedLabelProvider;
 import org.bundlemaker.dependencyanalysis.ui.view.table.labelprovider.ToLabelProvider;
