@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.Assert;
  */
 public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
+  private static final char DELIMITER = '|';
+
   /**
    * <p>
    * Creates a new instance of type {@link AdapterGroup2IArtifact}.
@@ -59,7 +61,7 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
     for (Iterator<String> iterator = groupNames.iterator(); iterator.hasNext();) {
       builder.append(iterator.next());
       if (iterator.hasNext()) {
-        builder.append("/");
+        builder.append(DELIMITER);
       }
     }
 

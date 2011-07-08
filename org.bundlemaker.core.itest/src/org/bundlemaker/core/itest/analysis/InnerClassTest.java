@@ -2,6 +2,9 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.util.Collection;
 
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -9,9 +12,6 @@ import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.dependencyanalysis.base.model.IArtifact;
-import org.bundlemaker.dependencyanalysis.base.model.IDependency;
-import org.bundlemaker.dependencyanalysis.base.model.IDependencyModel;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -65,10 +65,10 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
         getModularizedSystem());
 
     IArtifact aArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-        .getChild("bla/blub/InnerClassTest_1.0.0/de.test.innertypes/A");
+        .getChild("bla|blub|InnerClassTest_1.0.0|de.test.innertypes|A");
     Assert.assertNotNull(aArtifact);
     IArtifact bArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-        .getChild("bla/blub/InnerClassTest_1.0.0/de.test.innertypes/B");
+        .getChild("bla|blub|InnerClassTest_1.0.0|de.test.innertypes|B");
     Assert.assertNull(bArtifact);
 
     Collection<IDependency> dependencies = aArtifact.getDependencies();

@@ -116,18 +116,6 @@ public class Resource extends ResourceKey implements IModifiableResource {
 
   @Override
   public IType getPrimaryType() {
-
-    //
-    if (_primaryType == null && _containedTypes.size() == 1) {
-      try {
-        return getContainedType();
-      } catch (CoreException e) {
-        // can not happen here...
-        throw new RuntimeException(e.getMessage(), e);
-      }
-    }
-
-    //
     return _primaryType;
   }
 
@@ -141,6 +129,11 @@ public class Resource extends ResourceKey implements IModifiableResource {
   @Override
   public boolean isPrimaryType(IType type) {
     return type != null && type.equals(_primaryType);
+  }
+
+  @Override
+  public boolean hasPrimaryType() {
+    return _primaryType != null;
   }
 
   /**

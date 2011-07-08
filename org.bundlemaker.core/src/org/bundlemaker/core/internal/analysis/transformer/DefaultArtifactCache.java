@@ -105,7 +105,7 @@ public class DefaultArtifactCache extends AbstractBaseArtifactCache {
         if (!type.isLocalOrAnonymousType()) {
 
           // create the artifact
-          this.getTypeArtifact(type);
+          this.getTypeArtifact(type, true);
         }
       }
 

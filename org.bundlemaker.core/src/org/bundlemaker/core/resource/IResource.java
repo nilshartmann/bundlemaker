@@ -80,6 +80,8 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
   /**
    * <p>
+   * Returns the primary type of this resource (that is, the type with the same name as the source resource, or the type
+   * of a class file), or <code>null<code> if no such a type exists.
    * </p>
    * 
    * @return
@@ -88,12 +90,25 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
 
   /**
    * <p>
+   * Returns <code>true</code> if the given type is the primary type of this {@link IResource}, <code>false</code>
+   * otherwise.
    * </p>
    * 
    * @param type
-   * @return
+   *          the type to test
+   * @return <code>true</code> if the given type is the primary type of this {@link IResource}, <code>false</code>
+   *         otherwise.
    */
   boolean isPrimaryType(IType type);
+
+  /**
+   * <p>
+   * Returns <code>true</code> if this {@link IResource} has a primary type, <code>false</code> otherwise.
+   * </p>
+   * 
+   * @return <code>true</code> if this {@link IResource} has a primary type, <code>false</code> otherwise.
+   */
+  boolean hasPrimaryType();
 
   /**
    * <p>

@@ -52,8 +52,10 @@ public class Dependency implements IDependency {
 
   static {
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+
+    if (extensionRegistry != null) {
     IExtensionPoint extensionPoint = extensionRegistry
-        .getExtensionPoint("org.bundlemaker.dependencyanalysis.dependencyVisitors");
+          .getExtensionPoint("org.bundlemaker.analysis.dependencyVisitors");
     if (extensionPoint != null) {
       for (IExtension extension : extensionPoint.getExtensions()) {
         for (IConfigurationElement element : extension.getConfigurationElements()) {
@@ -66,6 +68,7 @@ public class Dependency implements IDependency {
         }
       }
     }
+  }
   }
 
   public Dependency(IArtifact from, IArtifact to) {
@@ -83,6 +86,7 @@ public class Dependency implements IDependency {
     visitVisitors();
   }
 
+  @Override
   public void visitVisitors() {
     for (DependencyVisitor dependencyVisitor : dependencyVisitors) {
       dependencyVisitor.visit(this);
@@ -104,6 +108,7 @@ public class Dependency implements IDependency {
     this.dependencyKind = dependencyKind;
   }
 
+  @Override
   public DependencyKind getDependencyKind() {
     return dependencyKind;
   }
@@ -123,6 +128,7 @@ public class Dependency implements IDependency {
    * @param dependency
    *          Abhaengigkeit, die hinzugefuegt werden soll
    */
+  @Override
   public void addDependency(IDependency dependency) {
     if (dependencies == null) {
       dependencies = new ArrayList<IDependency>();
@@ -133,6 +139,7 @@ public class Dependency implements IDependency {
   /**
    * @return the weight
    */
+  @Override
   public int getWeight() {
     if (dependencies != null && !dependencies.isEmpty()) {
       return dependencies.size();
@@ -143,14 +150,17 @@ public class Dependency implements IDependency {
   /**
    * @return the from
    */
+  @Override
   public IArtifact getFrom() {
     return from;
   }
 
+  @Override
   public IArtifact getTo() {
     return to;
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
@@ -168,6 +178,7 @@ public class Dependency implements IDependency {
   /**
    * @return the tagged
    */
+  @Override
   public boolean isTaggedIgnore() {
     if (taggedIgnore) {
       return taggedIgnore;
@@ -184,7 +195,6 @@ public class Dependency implements IDependency {
     }
   }
 
-	
   public static void resetIgnored() {
     for (DependencyVisitor dependencyVisitor : dependencyVisitors) {
       dependencyVisitor.reload();
@@ -197,6 +207,7 @@ public class Dependency implements IDependency {
     allIgnoredDependencies.clear();
   }
 
+  @Override
   public int getTaggedIgnoreCount() {
     if (taggedIgnore) {
       Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
@@ -211,6 +222,7 @@ public class Dependency implements IDependency {
    * @param tagged
    *          the tagged to set
    */
+  @Override
   public void setTaggedIgnore(boolean taggedIgnore) {
     setTaggedIgnore(taggedIgnore, true);
   }
@@ -219,6 +231,7 @@ public class Dependency implements IDependency {
    * @param tagged
    *          the tagged to set
    */
+  @Override
   public void setTaggedIgnore(boolean taggedIgnore, boolean withNotifyDSL) {
     this.taggedIgnore = taggedIgnore;
     if (taggedIgnore) {
@@ -256,6 +269,7 @@ public class Dependency implements IDependency {
   // public IBaseArtifact getBaseFrom() {
   // return getFrom();
   // }
+  @Override
   public void getNewDependencies(Collection<IDependency> newDependencies) {
     Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
     getLeafDependencies(leafDependencies);
@@ -271,6 +285,7 @@ public class Dependency implements IDependency {
     }
   }
 
+  @Override
   public void getLeafDependencies(Collection<IDependency> leafDependencies) {
     if (isLeaf) {
       leafDependencies.add(this);
@@ -331,6 +346,7 @@ public class Dependency implements IDependency {
     return true;
   }
 
+  @Override
   public int getViolationWeight() {
     if ((violations != null) && (violations.size() > 0)) {
       return getWeight();
@@ -345,6 +361,7 @@ public class Dependency implements IDependency {
    * @param violation
    *          Die Violation
    */
+  @Override
   public void addViolation(Violation violation) {
     if (violations == null) {
       this.violations = new HashSet<Violation>();
@@ -357,6 +374,7 @@ public class Dependency implements IDependency {
    * 
    * @return <code>Collection</code> von Abhaengigkeiten
    */
+  @Override
   public Collection<Violation> getViolations() {
     return violations;
   }
@@ -364,6 +382,7 @@ public class Dependency implements IDependency {
   /**
    * Entfernt die bislang in der Abhängigkeit enthalten Regelverstöße
    */
+  @Override
   public void clearViolations() {
     violations.clear();
   }
@@ -373,6 +392,7 @@ public class Dependency implements IDependency {
    * 
    * @return <code>true</code>, bei Regelverstoß, ansonsten <code>false</code>
    */
+  @Override
   public boolean hasViolations() {
     return violations != null && !violations.isEmpty();
   }

@@ -5,8 +5,14 @@ Bundle-SymbolicName: org.bundlemaker.analysis;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.analysis.model,
+ org.bundlemaker.analysis.model.dependencies,
  org.bundlemaker.analysis.model.impl,
  org.bundlemaker.analysis.rules,
  org.bundlemaker.analysis.rules.impl,
- org.bundlemaker.analysis.transformations
+ org.bundlemaker.analysis.transformations,
+ org.sonar.graph
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0"
+Bundle-ClassPath: libs/google-collect-1.0.jar,
+ libs/org.apache.commons.lang_2.3.0.v200803061910.jar,
+ libs/sonar-graph-2.4.1.jar,
+ .

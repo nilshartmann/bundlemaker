@@ -32,6 +32,12 @@ import org.bundlemaker.core.util.GenericCache;
  */
 public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
 
+  /** - */
+  private static final boolean     INCLUDE_NON_TYPE_RESOURCES               = false;
+
+  /** - */
+  private static final ContentType INCLUDED_NON_TYPE_RESOURCES_CONTENT_TYPE = ContentType.BINARY;
+
   /**
    * <p>
    * Creates a new instance of type {@link AggregatedTypesArtifactCache}.
@@ -70,33 +76,36 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
       for (IType type : typeModule.getContainedTypes()) {
 
         // filter local or anonymous type names
-        if (!type.isInnerType() && isPrimaryType(type)) {
+        if (!type.isInnerType() && handleAsPrimaryType(type)) {
 
           // create the artifact
-          this.getTypeArtifact(type);
+          this.getTypeArtifact(type, true);
         }
       }
 
-      // cast to 'IResourceModule'
-      if (typeModule instanceof IResourceModule) {
+      if (INCLUDE_NON_TYPE_RESOURCES) {
 
-        // get the resource module
-        IResourceModule resourceModule = (IResourceModule) typeModule;
+        // cast to 'IResourceModule'
+        if (typeModule instanceof IResourceModule) {
 
-        // // iterate over all contained source resources
-        // for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
-        // if (!resource.containsTypes()) {
-        // // create the artifact
-        // artifactCache.getResourceArtifact(resource);
-        // }
-        // }
+          // get the resource module
+          IResourceModule resourceModule = (IResourceModule) typeModule;
 
-        // iterate over all contained binary resources
-        for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
-          if (!resource.containsTypes()) {
+          // // iterate over all contained source resources
+          // for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+          // if (!resource.containsTypes()) {
+          // // create the artifact
+          // artifactCache.getResourceArtifact(resource);
+          // }
+          // }
 
-            // create the artifact
-            this.getResourceArtifact(resource);
+          // iterate over all contained resources
+          for (IResource resource : resourceModule.getResources(INCLUDED_NON_TYPE_RESOURCES_CONTENT_TYPE)) {
+            if (!resource.containsTypes()) {
+
+              // create the artifact
+              this.getResourceArtifact(resource);
+            }
           }
         }
       }
@@ -106,13 +115,31 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
     return this.getRootArtifact();
   }
 
-  private boolean isPrimaryType(IType type) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  private boolean handleAsPrimaryType(IType type) {
 
+    // if the type does not has a source resource,
+    // handle the type as primary type
     if (!type.hasSourceResource()) {
       return true;
     }
+
+    //
     IResource sourceResource = type.getSourceResource();
 
+    // if the source resource does not contain a primary type,
+    // handle the non primary type as a primary type
+    if (!sourceResource.hasPrimaryType()) {
+      return true;
+    }
+
+    //
     return sourceResource.isPrimaryType(type);
   }
 
@@ -189,7 +216,6 @@ public class AggregatedTypesArtifactCache extends AbstractBaseArtifactCache {
         //
         AdapterType2IArtifact artifact = new AdapterType2IArtifact(type, AggregatedTypesArtifactCache.this, parent,
             true);
-        artifact.setAggregateInnerTypes(true);
 
         //
         return artifact;

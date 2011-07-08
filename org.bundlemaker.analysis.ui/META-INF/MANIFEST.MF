@@ -14,20 +14,14 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench.texteditor;bundle-version="3.6.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bundlemaker.analysis.ui,
- org.bundlemaker.analysis.ui.handlers,
- org.bundlemaker.dependencyanalysis.log,
- org.bundlemaker.dependencyanalysis.model,
- org.bundlemaker.dependencyanalysis.model.impl,
- org.bundlemaker.dependencyanalysis.ui.editor;
+Export-Package: org.bundlemaker.analysis.log,
+ org.bundlemaker.analysis.ui,
+ org.bundlemaker.analysis.ui.editor;
   uses:="org.bundlemaker.dependencyanalysis.model,
    org.eclipse.core.runtime,
    org.eclipse.ui,
    org.eclipse.ui.part,
    org.eclipse.swt.widgets",
- org.bundlemaker.dependencyanalysis.ui.view.table,
- org.sonar.graph
-Bundle-ClassPath: libs/google-collect-1.0.jar,
- libs/org.apache.commons.lang_2.3.0.v200803061910.jar,
- libs/sonar-graph-2.4.1.jar,
- .
+ org.bundlemaker.analysis.ui.handlers,
+ org.bundlemaker.analysis.ui.view.table
+Bundle-ClassPath: .

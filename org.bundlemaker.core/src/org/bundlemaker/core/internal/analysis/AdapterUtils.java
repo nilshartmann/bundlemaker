@@ -58,14 +58,21 @@ public class AdapterUtils {
     for (IArtifact moduleArtifact : getAllContainedResourceModules(artifact)) {
 
       // TODO
-      AdapterResourceModule2IArtifact artifact1 = (AdapterResourceModule2IArtifact) moduleArtifact;
-      IModifiableResourceModule resourceModule = (IModifiableResourceModule) artifact1.getModule();
+      AdapterResourceModule2IArtifact adapter = (AdapterResourceModule2IArtifact) moduleArtifact;
+      IModifiableResourceModule resourceModule = (IModifiableResourceModule) adapter.getModule();
       Assert.isNotNull(resourceModule);
 
-      if (artifact1.getParent().getType().equals(ArtifactType.Group)) {
-        resourceModule.setClassification(new Path(artifact1.getParent().getQualifiedName()));
+      if (adapter.getParent().getType().equals(ArtifactType.Group)) {
+
+        //
+        String path = adapter.getParent().getQualifiedName();
+        path = path.replace('|', '/');
+
+        // set the classification
+        resourceModule.setClassification(new Path(path));
       }
 
+      //
       modularizedSystem.addModifiableResourceModule(resourceModule);
     }
   }

@@ -23,10 +23,10 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="org.bundlemaker.dependencyanalysis.ui.editor.GenericEditor"
+            class="org.bundlemaker.analysis.ui.editor.GenericEditor"
             default="false"
             icon="icons/module.gif"
-            id="org.bundlemaker.dependencyanalysis.ui.editor.GenericEditor"
+            id="org.bundlemaker.analysis.ui.editor.GenericEditor"
             name="Dependency Analysis">
       </editor>
    </extension>

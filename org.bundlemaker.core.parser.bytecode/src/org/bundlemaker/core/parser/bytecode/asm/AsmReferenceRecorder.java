@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode.asm;
 
+import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
@@ -78,7 +79,8 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
       //
       if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
-        _resource.getOrCreateType(fullyQualifiedName, typeEnum);
+        IType type = _resource.getOrCreateType(fullyQualifiedName, typeEnum);
+        _resource.setPrimaryType(type);
 
         // we have to check for the existence of contained types:
         // in the rare case of an (erroneous) non-set type we fall back
