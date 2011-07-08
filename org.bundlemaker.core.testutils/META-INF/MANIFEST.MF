@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.core.testutils
+Bundle-SymbolicName: org.bundlemaker.core.testutils
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.junit;bundle-version="4.8.1"
+Export-Package: name.fraser.neil,
+ org.bundlemaker.core.testutils
