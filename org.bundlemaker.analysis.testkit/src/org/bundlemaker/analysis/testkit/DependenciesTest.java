@@ -31,7 +31,7 @@ public class DependenciesTest extends AbstractTestKitTest {
     // get all the dependencies
     Collection<IDependency> dependencies = moduleArtifact.getDependencies();
     Assert.assertNotNull(dependencies);
-    Assert.assertEquals(4873, dependencies.size());
+    Assert.assertEquals(4731, dependencies.size());
 
     // assert dependency types
     for (IDependency iDependency : dependencies) {
@@ -48,21 +48,16 @@ public class DependenciesTest extends AbstractTestKitTest {
     IArtifact jeditPackageArtifact = getRoot().getChild("group1|group2|jedit_1.0.0|org.gjt.sp.jedit");
     Assert.assertNotNull(jeditPackageArtifact);
 
-    Assert.assertEquals(986, guiPackageArtifact.getDependencies().size());
-    Assert.assertEquals(655, jeditPackageArtifact.getDependencies().size());
+    Assert.assertEquals(944, guiPackageArtifact.getDependencies().size());
+    Assert.assertEquals(637, jeditPackageArtifact.getDependencies().size());
 
     //
     IDependency dependency = guiPackageArtifact.getDependency(jeditPackageArtifact);
     dumpDependency(dependency);
 
     //
-    // for (IDependency iDependency : dependency.getDependencies()) {
-    // dumpDependency(iDependency);
-    // }
-
-    //
-    Assert.assertEquals(986, guiPackageArtifact.getDependencies().size());
-    Assert.assertEquals(655, jeditPackageArtifact.getDependencies().size());
+    Assert.assertEquals(944, guiPackageArtifact.getDependencies().size());
+    Assert.assertEquals(637, jeditPackageArtifact.getDependencies().size());
   }
 
   /**

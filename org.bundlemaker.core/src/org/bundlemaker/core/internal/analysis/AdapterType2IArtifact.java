@@ -208,7 +208,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
     //
-    initReferences(_type.getReferences(), _type, _aggregateNonPrimaryTypes);
+    initReferences(_type.getReferences(), _aggregateNonPrimaryTypes);
 
     //
     if (_aggregateNonPrimaryTypes) {
@@ -216,7 +216,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       if (_type.hasSourceResource()) {
         for (IType type : _type.getSourceResource().getContainedTypes()) {
           if (!treatAsPrimaryType(type)) {
-            initReferences(type.getReferences(), type, false);
+            initReferences(type.getReferences(), false);
           }
         }
       }
@@ -224,7 +224,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       if (_type.hasBinaryResource()) {
         for (IResource stickyResource : _type.getBinaryResource().getStickyResources()) {
           for (IType type : stickyResource.getContainedTypes()) {
-            initReferences(type.getReferences(), type, false);
+            initReferences(type.getReferences(), false);
           }
         }
       }
@@ -237,7 +237,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * 
    * @param references
    */
-  private void initReferences(Collection<? extends IReference> references, IType type, boolean isPrimaryType) {
+  private void initReferences(Collection<? extends IReference> references, boolean isPrimaryType) {
 
     // iterate over all references
     for (IReference reference : references) {
@@ -246,11 +246,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       String referenceName = reference.getFullyQualifiedName();
 
       if (_aggregateNonPrimaryTypes) {
-        referenceName = resolvePrimaryType(referenceName, (IResourceModule) type.getModule(getModularizedSystem()));
+        referenceName = resolvePrimaryType(referenceName, (IResourceModule) _type.getModule(getModularizedSystem()));
       }
 
       // skip self references
-      if (referenceName.equals(type.getFullyQualifiedName())) {
+      if (referenceName.equals(this.getQualifiedName())) {
         continue;
       }
 
@@ -282,6 +282,10 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
         // dependency.setDependencyKind(dependencyKind);
         // }
         // }
+
+        if (dependency.getFrom().getQualifiedName().equals(dependency.getTo().getQualifiedName())) {
+          throw new RuntimeException(dependency.getFrom().getQualifiedName().toString());
+        }
 
         //
         if (isPrimaryType || !_cachedDependencies.containsKey(artifact)) {
