@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Assert;
  */
 public class AdapterGroup2IArtifact extends AbstractAdvancedContainer {
 
-  private static final char DELIMITER = '|';
+  private static final char DELIMITER = '/';
 
   /**
    * <p>
