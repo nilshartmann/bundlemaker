@@ -1,20 +1,20 @@
 package org.bundlemaker.analysis.testkit;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.testkit.framework.ITestKitAdapter;
-import org.bundlemaker.analysis.testkit.framework.Util;
+import org.bundlemaker.analysis.testkit.framework.ITimeStampAwareTestKitAdapter;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.itestframework.util.ModularizedSystemTestUtils;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.testutils.BundleMakerTestUtils;
+import org.bundlemaker.core.testutils.FileDiffUtil;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
@@ -29,7 +29,7 @@ import org.junit.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TestKitAdapter implements ITestKitAdapter {
+public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAdapter {
 
   /** TEST_PROJECT_VERSION */
   private static final String          TEST_PROJECT_VERSION = "1.0.0";
@@ -42,6 +42,14 @@ public class TestKitAdapter implements ITestKitAdapter {
 
   /** - */
   private IDependencyModel             _dependencyModel;
+
+  /** - */
+  private String                       _timestamp;
+
+  @Override
+  public void setTimeStamp(String timestamp) {
+    _timestamp = timestamp;
+  }
 
   /**
    * {@inheritDoc}
@@ -77,6 +85,24 @@ public class TestKitAdapter implements ITestKitAdapter {
 
     //
     _dependencyModel = ModelTransformer.getDependencyModel(_bundleMakerProject, _modularizedSystem);
+
+    //
+    String content = ModularizedSystemTestUtils.dump(
+        _modularizedSystem.getResourceModule(new ModuleIdentifier("jedit", "1.0.0")), _modularizedSystem);
+    File actual = new File(System.getProperty("user.dir"), "result/JEditModule_" + _timestamp + ".txt");
+    BundleMakerTestUtils.writeToFile(content, actual);
+    
+    // Expected
+    File expected = new File(System.getProperty("user.dir"), "test-data/JEditModule_ExpectedResult.txt");
+
+    // htmlReport
+    String name = actual.getAbsolutePath();
+    name = name.substring(0, name.length() - ".txt".length()) + ".html";
+    File htmlReport = new File(name);
+
+    // assert
+    FileDiffUtil.assertArtifactModel(expected, actual, htmlReport);
+    
   }
 
   /**

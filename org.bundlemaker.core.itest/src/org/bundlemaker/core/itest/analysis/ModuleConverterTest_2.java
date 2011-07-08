@@ -8,8 +8,10 @@ import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.itestframework.util.Util;
+import org.bundlemaker.core.itestframework.util.ModularizedSystemTestUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.testutils.BundleMakerTestUtils;
+import org.bundlemaker.core.util.BundleMakerProjectUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,7 +45,8 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
     //
     InputStream inputstream = getClass().getResourceAsStream("results/ModuleConverterTest_2-SourceAndTypes.txt");
     String fresult = ArtifactUtils.artifactToString(artifact);
-    Util.equalsIgnoreWhitespace(Util.convertStreamToString(inputstream), fresult);
+    // ModularizedSystemTestUtils.equalsIgnoreWhitespace(BundleMakerTestUtils.convertStreamToString(inputstream),
+    // fresult);
   }
 
   /**
@@ -75,7 +78,8 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
 
     //
     InputStream inputstream = getClass().getResourceAsStream("results/ModuleConverterTest_2-BinariesAndTypes.txt");
-    Assert.assertTrue(Util.equalsIgnoreWhitespace(Util.convertStreamToString(inputstream), fresult));
+    Assert.assertTrue(ModularizedSystemTestUtils.equalsIgnoreWhitespace(
+        ModularizedSystemTestUtils.convertStreamToString(inputstream), fresult));
   }
 
   /**

@@ -130,4 +130,12 @@ public class StaticTest extends AbstractTestKitTest {
     // test
     // jeditModule_artifact.
   }
+  
+  @Test
+  public void testTypes() {
+    IArtifact nameSpaceType_artifact = getRoot().getChild("group1|group2|jedit_1.0.0|org.gjt.sp.jedit.bsh|NameSpace");
+    Assert.assertNotNull(nameSpaceType_artifact);
+    
+    nameSpaceType_artifact.getDependencies();
+  }
 }
