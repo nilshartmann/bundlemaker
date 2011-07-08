@@ -51,7 +51,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   private Map<IArtifact, IDependency> _cachedDependencies;
 
   /** - */
-  private boolean                     _aggregateInnerTypes;
+  private boolean                     _aggregateNonPrimaryTypes;
 
   /** - */
   private IMovableUnit                _resourceHolder;
@@ -64,7 +64,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @param classification
    */
   public AdapterType2IArtifact(IType type, AbstractArtifactCache artifactCache, IArtifact parent,
-      boolean aggregateInnerTypes) {
+      boolean aggregateNonPrimaryTypes) {
 
     super(ArtifactType.Type, type.getName());
 
@@ -72,7 +72,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     Assert.isNotNull(artifactCache);
     Assert.isNotNull(parent);
 
-    _aggregateInnerTypes = aggregateInnerTypes;
+    _aggregateNonPrimaryTypes = aggregateNonPrimaryTypes;
 
     // set parent/children dependency
     setParent(parent);
@@ -117,17 +117,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @return
    */
   public boolean isAggregateInnerTypes() {
-    return _aggregateInnerTypes;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param aggregateInnerTypes
-   */
-  public void setAggregateInnerTypes(boolean aggregateInnerTypes) {
-    _aggregateInnerTypes = aggregateInnerTypes;
+    return _aggregateNonPrimaryTypes;
   }
 
   /**
@@ -222,7 +212,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     initReferences(_type.getReferences(), _type, true);
 
     //
-    if (_aggregateInnerTypes) {
+    if (_aggregateNonPrimaryTypes) {
 
       if (_type.hasSourceResource()) {
         for (IType type : _type.getSourceResource().getContainedTypes()) {
@@ -256,7 +246,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       //
       String referenceName = reference.getFullyQualifiedName();
 
-      if (_aggregateInnerTypes) {
+      if (_aggregateNonPrimaryTypes) {
         referenceName = resolvePrimaryType(referenceName, (IResourceModule) type.getModule(getModularizedSystem()));
       }
 
@@ -313,6 +303,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @return
    */
   private String resolvePrimaryType(String referenceName, IResourceModule resourceModule) {
+    Assert.isNotNull(referenceName);
 
     // TODO replace with containsType(referenceName)
     if (getModularizedSystem().getTypes(referenceName, resourceModule).isEmpty()) {
@@ -332,20 +323,20 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     // step 2:
     try {
 
-      //
+      // the referenced type
       IType iType = getModularizedSystem().getType(referenceName, resourceModule);
 
       //
-      if (!iType.isPrimaryType()) {
+      if (!iType.isPrimaryType() && iType.hasSourceResource() && iType.getSourceResource().hasPrimaryType()) {
 
         //
         IType primaryType = iType.getSourceResource().getPrimaryType();
 
         //
-        referenceName = primaryType.getFullyQualifiedName();
+        String primaryTypeReferenceName = primaryType.getFullyQualifiedName();
 
         // recurse
-        return resolvePrimaryType(referenceName, resourceModule);
+        return resolvePrimaryType(primaryTypeReferenceName, resourceModule);
       }
     }
 

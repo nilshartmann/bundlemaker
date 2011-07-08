@@ -158,6 +158,10 @@ public class ResourceStandin extends ResourceKey implements IResource {
     return _resource.isPrimaryType(type);
   }
 
+  public boolean hasPrimaryType() {
+    return _resource.hasPrimaryType();
+  }
+
   @Override
   public Set<? extends IResource> getStickyResources() {
 
