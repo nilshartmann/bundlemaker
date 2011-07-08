@@ -4,6 +4,7 @@ Bundle-Name: org.bundlemaker.core.testutils
 Bundle-SymbolicName: org.bundlemaker.core.testutils
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.8.1"
+Require-Bundle: org.junit;bundle-version="4.8.1",
+ org.bundlemaker.analysis;bundle-version="1.0.0"
 Export-Package: name.fraser.neil,
  org.bundlemaker.core.testutils

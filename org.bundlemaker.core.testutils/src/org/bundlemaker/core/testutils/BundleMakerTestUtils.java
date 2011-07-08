@@ -33,8 +33,10 @@ public class BundleMakerTestUtils {
    * @param content
    * @param fileName
    */
-  public static void writeToFile(String content, String fileName) {
-    writeToFile(content, new File(System.getProperty("user.dir"), fileName));
+  public static File writeToFile(String content, String fileName) {
+    File result = new File(System.getProperty("user.dir"), fileName);
+    writeToFile(content, result);
+    return result;
   }
 
   /**

@@ -16,7 +16,7 @@ import org.bundlemaker.core.testutils.BundleMakerTestUtils;
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class FileDiffUtil {
@@ -24,7 +24,7 @@ public class FileDiffUtil {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param expected
    * @param actual
    * @param htmlResult
@@ -33,7 +33,7 @@ public class FileDiffUtil {
 
     String expectedString = null;
     String actualString = null;
-    
+
     try {
       expectedString = BundleMakerTestUtils.convertStreamToString(new FileInputStream(expected));
       actualString = BundleMakerTestUtils.convertStreamToString(new FileInputStream(actual));
@@ -46,25 +46,45 @@ public class FileDiffUtil {
 
     LinkedList<Diff> diffs = patch.diff_main(expectedString, actualString);
 
-    String html = diff_prettyHtml(diffs);
+    if (containsDiffs(diffs)) {
 
-    // patch.diff_cleanupSemantic(diffs);
+      String html = diff_prettyHtml(diffs);
 
-    // if (!diffs.isEmpty()) {
-    // for (Diff diff : diffs) {
-    // System.out.println(diff);
-    // }
-    // }
+      try {
+        FileWriter fileWriter = new FileWriter(htmlResult);
+        fileWriter.write(html);
+        fileWriter.flush();
+        fileWriter.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
 
-    try {
-      FileWriter fileWriter = new FileWriter(htmlResult);
-      fileWriter.write(html);
-      fileWriter.flush();
-      fileWriter.close();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      //
+      Assert.fail(String.format("Unexpected result in '%s'. See '%s'.", actual.getName(), htmlResult.getName()));
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param diffs
+   * @return
+   */
+  private static boolean containsDiffs(LinkedList<Diff> diffs) {
+
+    //
+    for (Diff aDiff : diffs) {
+
+      switch (aDiff.operation) {
+      case INSERT:
+        return true;
+      case DELETE:
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
