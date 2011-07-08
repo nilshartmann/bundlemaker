@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
@@ -209,14 +208,14 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
     //
-    initReferences(_type.getReferences(), _type, true);
+    initReferences(_type.getReferences(), _type, _aggregateNonPrimaryTypes);
 
     //
     if (_aggregateNonPrimaryTypes) {
 
       if (_type.hasSourceResource()) {
         for (IType type : _type.getSourceResource().getContainedTypes()) {
-          if (!type.isPrimaryType()) {
+          if (!treatAsPrimaryType(type)) {
             initReferences(type.getReferences(), type, false);
           }
         }
@@ -266,22 +265,23 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
         // map to dependency
         Dependency dependency = new Dependency(this, artifact);
 
-        if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
-
-          DependencyKind dependencyKind = DependencyKind.USES;
-          if (reference.isImplements()) {
-            dependencyKind = DependencyKind.IMPLEMENTS;
-          } else if (reference.isExtends()) {
-            dependencyKind = DependencyKind.EXTENDS;
-          } else if (reference.isClassAnnotation()) {
-            dependencyKind = DependencyKind.ANNOTATES;
-          }
-
-          //
-          if (dependency.getDependencyKind().equals(DependencyKind.USES) && !dependencyKind.equals(DependencyKind.USES)) {
-            dependency.setDependencyKind(dependencyKind);
-          }
-        }
+        // if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
+        //
+        // DependencyKind dependencyKind = DependencyKind.USES;
+        // if (reference.isImplements()) {
+        // dependencyKind = DependencyKind.IMPLEMENTS;
+        // } else if (reference.isExtends()) {
+        // dependencyKind = DependencyKind.EXTENDS;
+        // } else if (reference.isClassAnnotation()) {
+        // dependencyKind = DependencyKind.ANNOTATES;
+        // }
+        //
+        // //
+        // if (dependency.getDependencyKind().equals(DependencyKind.USES) &&
+        // !dependencyKind.equals(DependencyKind.USES)) {
+        // dependency.setDependencyKind(dependencyKind);
+        // }
+        // }
 
         //
         if (isPrimaryType || !_cachedDependencies.containsKey(artifact)) {
@@ -327,16 +327,16 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       IType iType = getModularizedSystem().getType(referenceName, resourceModule);
 
       //
-      if (!iType.isPrimaryType() && iType.hasSourceResource() && iType.getSourceResource().hasPrimaryType()) {
+      if (!treatAsPrimaryType(iType)) {
 
         //
         IType primaryType = iType.getSourceResource().getPrimaryType();
 
         //
-        String primaryTypeReferenceName = primaryType.getFullyQualifiedName();
+        String primaryTypeName = primaryType.getFullyQualifiedName();
 
         // recurse
-        return resolvePrimaryType(primaryTypeReferenceName, resourceModule);
+        return resolvePrimaryType(primaryTypeName, resourceModule);
       }
     }
 
@@ -347,6 +347,17 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     // return the reference name
     return referenceName;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param iType
+   * @return
+   */
+  private boolean treatAsPrimaryType(IType iType) {
+    return iType.isPrimaryType() || !iType.hasSourceResource() || !iType.getSourceResource().hasPrimaryType();
   }
 
   @Override

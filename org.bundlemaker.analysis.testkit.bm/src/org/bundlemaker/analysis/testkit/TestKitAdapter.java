@@ -9,12 +9,9 @@ import org.bundlemaker.analysis.testkit.framework.ITimeStampAwareTestKitAdapter;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.itestframework.util.ModularizedSystemTestUtils;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
-import org.bundlemaker.core.testutils.BundleMakerTestUtils;
-import org.bundlemaker.core.testutils.FileDiffUtil;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
@@ -46,6 +43,9 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
   /** - */
   private String                       _timestamp;
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setTimeStamp(String timestamp) {
     _timestamp = timestamp;
@@ -87,22 +87,8 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
     _dependencyModel = ModelTransformer.getDependencyModel(_bundleMakerProject, _modularizedSystem);
 
     //
-    String content = ModularizedSystemTestUtils.dump(
-        _modularizedSystem.getResourceModule(new ModuleIdentifier("jedit", "1.0.0")), _modularizedSystem);
-    File actual = new File(System.getProperty("user.dir"), "result/JEditModule_" + _timestamp + ".txt");
-    BundleMakerTestUtils.writeToFile(content, actual);
-    
-    // Expected
-    File expected = new File(System.getProperty("user.dir"), "test-data/JEditModule_ExpectedResult.txt");
+    ModularizedSystemChecker.check(_modularizedSystem, _timestamp);
 
-    // htmlReport
-    String name = actual.getAbsolutePath();
-    name = name.substring(0, name.length() - ".txt".length()) + ".html";
-    File htmlReport = new File(name);
-
-    // assert
-    FileDiffUtil.assertArtifactModel(expected, actual, htmlReport);
-    
   }
 
   /**
@@ -126,6 +112,9 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
     return _dependencyModel;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IArtifact getRoot() {
     return _dependencyModel.getRoot();
