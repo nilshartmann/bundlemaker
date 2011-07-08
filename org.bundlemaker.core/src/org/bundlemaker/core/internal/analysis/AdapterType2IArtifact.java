@@ -68,6 +68,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     super(ArtifactType.Type, type.getName());
 
+    Assert.isNotNull(type.isPrimaryType());
     Assert.isNotNull(artifactCache);
     Assert.isNotNull(parent);
 
@@ -218,7 +219,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
     //
-    initReferences(_type.getReferences(), _type);
+    initReferences(_type.getReferences(), _type, true);
 
     //
     if (_aggregateInnerTypes) {
@@ -226,7 +227,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       if (_type.hasSourceResource()) {
         for (IType type : _type.getSourceResource().getContainedTypes()) {
           if (!type.isPrimaryType()) {
-            initReferences(type.getReferences(), type);
+            initReferences(type.getReferences(), type, false);
           }
         }
       }
@@ -234,7 +235,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       if (_type.hasBinaryResource()) {
         for (IResource stickyResource : _type.getBinaryResource().getStickyResources()) {
           for (IType type : stickyResource.getContainedTypes()) {
-            initReferences(type.getReferences(), type);
+            initReferences(type.getReferences(), type, false);
           }
         }
       }
@@ -247,7 +248,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * 
    * @param references
    */
-  private void initReferences(Collection<? extends IReference> references, IType type) {
+  private void initReferences(Collection<? extends IReference> references, IType type, boolean isPrimaryType) {
 
     // iterate over all references
     for (IReference reference : references) {
@@ -275,18 +276,28 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
         // map to dependency
         Dependency dependency = new Dependency(this, artifact);
 
-        DependencyKind dependencyKind = DependencyKind.USES;
-        if (reference.isImplements()) {
-          dependencyKind = DependencyKind.IMPLEMENTS;
-        } else if (reference.isExtends()) {
-          dependencyKind = DependencyKind.EXTENDS;
-        } else if (reference.isClassAnnotation()) {
-          dependencyKind = DependencyKind.ANNOTATES;
+        if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
+
+          DependencyKind dependencyKind = DependencyKind.USES;
+          if (reference.isImplements()) {
+            dependencyKind = DependencyKind.IMPLEMENTS;
+          } else if (reference.isExtends()) {
+            dependencyKind = DependencyKind.EXTENDS;
+          } else if (reference.isClassAnnotation()) {
+            dependencyKind = DependencyKind.ANNOTATES;
+          }
+
+          //
+          if (dependency.getDependencyKind().equals(DependencyKind.USES) && !dependencyKind.equals(DependencyKind.USES)) {
+            dependency.setDependencyKind(dependencyKind);
+          }
         }
 
-        dependency.setDependencyKind(dependencyKind);
+        //
+        if (isPrimaryType || !_cachedDependencies.containsKey(artifact)) {
+          _cachedDependencies.put(artifact, dependency);
+        }
 
-        _cachedDependencies.put(artifact, dependency);
       } else {
         System.out.println("MISSING TYPE: " + referenceName);
       }
