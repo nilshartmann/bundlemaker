@@ -65,10 +65,10 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
         getModularizedSystem());
 
     IArtifact aArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-        .getChild("bla/blub/InnerClassTest_1.0.0/de.test.innertypes/A");
+        .getChild("bla|blub|InnerClassTest_1.0.0|de.test.innertypes|A");
     Assert.assertNotNull(aArtifact);
     IArtifact bArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-        .getChild("bla/blub/InnerClassTest_1.0.0/de.test.innertypes/B");
+        .getChild("bla|blub|InnerClassTest_1.0.0|de.test.innertypes|B");
     Assert.assertNull(bArtifact);
 
     Collection<IDependency> dependencies = aArtifact.getDependencies();

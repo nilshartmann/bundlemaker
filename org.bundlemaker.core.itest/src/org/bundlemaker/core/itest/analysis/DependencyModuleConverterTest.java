@@ -20,7 +20,7 @@ public class DependencyModuleConverterTest extends AbstractModularizedSystemTest
     // ArtifactUtils.dumpArtifact(dependencyModel.getRoot());
 
     IArtifact artifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-        .getChild("bla/blub/DependencyModuleConverterTest_1.0.0/de.test.inner2/Inner2");
+        .getChild("bla|blub|DependencyModuleConverterTest_1.0.0|de.test.inner2|Inner2");
 
     Assert.isNotNull(artifact);
 
