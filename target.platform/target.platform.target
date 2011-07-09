@@ -11,6 +11,7 @@
 <location path="${project_loc:target.platform}/test/cglib" type="Directory"/>
 <location path="${project_loc:target.platform}/xtext-1.0.1" type="Directory"/>
 <location path="${project_loc:target.platform}/vaadin" type="Directory"/>
+<location path="${project_loc:target.platform}/draw2d" type="Directory"/>
 </locations>
 <launcherArgs>
 <vmArgs>-Xms40m -Xmx256m</vmArgs>
