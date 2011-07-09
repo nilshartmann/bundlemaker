@@ -38,6 +38,7 @@
 		<location dir="${bundlemaker-workspace}/target.platform/drools-5.1.1" />
 		<location dir="${bundlemaker-workspace}/target.platform/slf4j-1.5.10" />
 		<location dir="${bundlemaker-workspace}/target.platform/xtext-1.0.1" />
+		<location dir="${bundlemaker-workspace}/target.platform/draw2d" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 
