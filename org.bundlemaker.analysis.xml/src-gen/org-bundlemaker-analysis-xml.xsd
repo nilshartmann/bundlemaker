@@ -1,0 +1,112 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<!-- the root node -->
+	<xsd:element name="dependencyModel" type="dependencyModelType"/>
+
+	<!-- the dependencyModel type-->
+	<xsd:complexType name="dependencyModelType">
+		<xsd:sequence>
+			<xsd:element name="modules" type="modulesType" maxOccurs="1" minOccurs="1"/>
+			<xsd:element name="dependencies" type="dependenciesType" maxOccurs="1" minOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- the abstract artifact type -->
+	<xsd:complexType name="abstractArtifactType">
+		<xsd:attribute name="id" type="xsd:string" use="required"/>
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:anyAttribute/>
+	</xsd:complexType>
+
+	<!-- the modules type-->
+	<xsd:complexType name="modulesType">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="group" type="groupType"/>
+			<xsd:element name="module" type="moduleType"/>
+		</xsd:choice>
+		<xsd:attribute name="packageLayout" type="packageLayoutType" default="flat"/>
+	</xsd:complexType>
+
+	<!-- the package layout type-->
+	<xsd:simpleType name="packageLayoutType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="flat"/>
+			<xsd:enumeration value="hierachical"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<!-- the group type-->
+	<xsd:complexType name="groupType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractArtifactType">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="group" type="groupType"/>
+					<xsd:element name="module" type="moduleType"/>
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- the module type-->
+	<xsd:complexType name="moduleType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractArtifactType">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="package" type="packageType"/>
+					<xsd:element name="resource" type="resourceType"/>
+					<xsd:element name="type" type="typeType"/>
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- the package type-->
+	<xsd:complexType name="packageType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractArtifactType">
+				<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="package" type="packageType"/>
+						<xsd:element name="resource" type="resourceType"/>
+						<xsd:element name="type" type="typeType"/>
+					</xsd:choice>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- the resource type-->
+	<xsd:complexType name="resourceType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractArtifactType">
+				<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="type" type="typeType"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- the type type-->
+	<xsd:complexType name="typeType">
+		<xsd:complexContent>
+			<xsd:extension base="abstractArtifactType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- the dependencies type-->
+	<xsd:complexType name="dependenciesType">
+		<xsd:sequence>
+			<xsd:element name="dependency" type="dependencyType" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- the dependency type-->
+	<xsd:complexType name="dependencyType">
+		<xsd:attribute name="from" type="xsd:string" use="required"/>
+		<xsd:attribute name="to" type="xsd:string" use="required"/>
+		<xsd:attribute name="extends" type="xsd:boolean" use="optional"/>
+		<xsd:attribute name="implements" type="xsd:boolean" use="optional"/>
+		<xsd:attribute name="classAnnotation" type="xsd:boolean" use="optional"/>
+	</xsd:complexType>
+
+</xsd:schema>

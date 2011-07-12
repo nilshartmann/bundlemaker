@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dependencyModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="./org-bundlemaker-analysis-xml.xsd">
+
+    <!-- -->
+    <modules packageLayout="flat">
+        <module name="test" id="1"/>
+        <group name="bla" id="2">
+            <group name="blub" id="3">
+                <module name="jedit" id="4">
+                    <package name="de.otto.noa" id="5">
+                        <resource name="Test.class" id="7">
+                            <type name="Test" id="8"/>
+                        </resource>
+                        <resource name="Hurz.class" id="9">
+                            <type name="Hurz" id="10"/>
+                        </resource>
+                    </package>
+                </module>
+            </group>
+        </group>
+    </modules>
+
+    <!-- -->
+    <dependencies>
+        <dependency from="8" to="10"/>
+    </dependencies>
+
+</dependencyModel>

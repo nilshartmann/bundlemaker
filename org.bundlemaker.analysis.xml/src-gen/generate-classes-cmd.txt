@@ -1,0 +1,1 @@
+R:\software\jdk\jdk16\bin\xjc.exe -p org.bundlemaker.analysis.xml.internal org-bundlemaker-analysis-xml.xsd
