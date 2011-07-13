@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.xml.bind.JAXBException;
+
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.xml.IArtifactMarshaller;
 import org.bundlemaker.analysis.xml.internal.AbstractArtifactType;
@@ -46,9 +48,10 @@ public class ArtifactMarshaller implements IArtifactMarshaller {
 
   /**
    * {@inheritDoc}
+   * @throws JAXBException 
    */
   @Override
-  public void marshall(IArtifact artifact, OutputStream outputStream) {
+  public void marshal(IArtifact artifact, OutputStream outputStream) throws JAXBException {
 
     //
     DependencyModelType dependencyModel = _objectFactory.createDependencyModelType();
@@ -62,7 +65,7 @@ public class ArtifactMarshaller implements IArtifactMarshaller {
     }
 
     //
-    Utils.marshall(dependencyModel, outputStream);
+    ArtifactMarshallerUnmarshallerUtils.marshall(dependencyModel, outputStream);
   }
 
   /**

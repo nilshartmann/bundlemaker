@@ -25,33 +25,27 @@ import org.bundlemaker.analysis.xml.internal.TypeType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Utils {
+public class ArtifactMarshallerUnmarshallerUtils {
 
   /**
    * <p>
    * </p>
+   * @throws JAXBException 
    */
-  public static void marshall(DependencyModelType dependencyModel, OutputStream outputStream) {
+  public static void marshall(DependencyModelType dependencyModel, OutputStream outputStream) throws JAXBException {
 
-    //
-    try {
+    // get the jaxb context
+    JAXBContext jc = JAXBContext.newInstance(AbstractArtifactType.class, DependenciesType.class,
+        DependencyModelType.class, DependencyType.class, GroupType.class, ModulesType.class, ModuleType.class,
+        ObjectFactory.class, PackageLayoutType.class, PackageType.class, ResourceType.class, TypeType.class);
 
-      // get the jaxb context
-      JAXBContext jc = JAXBContext.newInstance(AbstractArtifactType.class, DependenciesType.class,
-          DependencyModelType.class, DependencyType.class, GroupType.class, ModulesType.class, ModuleType.class,
-          ObjectFactory.class, PackageLayoutType.class, PackageType.class, ResourceType.class, TypeType.class);
+    // create the marshaller
+    Marshaller marshaller = jc.createMarshaller();
 
-      // create the marshaller
-      Marshaller marshaller = jc.createMarshaller();
+    // set formatted output
+    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-      // set formatted output
-      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
-      // marshal the result
-      marshaller.marshal(new ObjectFactory().createDependencyModel(dependencyModel), outputStream);
-
-    } catch (JAXBException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+    // marshal the result
+    marshaller.marshal(new ObjectFactory().createDependencyModel(dependencyModel), outputStream);
   }
 }
