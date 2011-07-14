@@ -9,6 +9,7 @@ import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -38,7 +39,25 @@ public abstract class DependencyPart implements PropertyChangeListener {
 
   private TabItem   tabItem;
 
+  private ISelectionProvider _selectionProvider;
+
   public DependencyPart() {
+  }
+
+  public ISelectionProvider getSelectionProvider() {
+    return _selectionProvider;
+  }
+
+  /**
+   * Sets the {@link ISelectionProvider} that can be used by this {@link DependencyPart} to propagate selection changes
+   * 
+   * <p>
+   * This method will be invoked <b>before</b> {@link #init(Composite)} is invoked.
+   * 
+   * @param selectionProvider
+   */
+  public void setSelectionProvider(ISelectionProvider selectionProvider) {
+    _selectionProvider = selectionProvider;
   }
 
   public void setTabFolder(TabFolder tabFolder) {
