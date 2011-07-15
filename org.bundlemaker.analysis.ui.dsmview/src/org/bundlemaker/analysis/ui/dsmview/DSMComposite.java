@@ -22,6 +22,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
+import org.bundlemaker.analysis.ui.DependencySelection;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -71,11 +72,7 @@ public class DSMComposite<V, E extends Edge<V>> extends Composite {
   private Slider          _zoomSlider;
 
   public DSMComposite(Composite parent, DependencyPart dependencyPart) {
-    this(parent, SWT.CENTER | SWT.BORDER | SWT.FILL, dependencyPart);
-  }
-
-  public DSMComposite(Composite parent, int style, DependencyPart dependencyPart) {
-    super(parent, style);
+    super(parent, SWT.CENTER | SWT.BORDER | SWT.FILL);
 
     this.dependencyPart = dependencyPart;
     setLayout(new GridLayout(1, true));
@@ -207,9 +204,10 @@ public class DSMComposite<V, E extends Edge<V>> extends Composite {
           for (IArtifact from : fromArtifacts) {
             dependencies.addAll(from.getDependencies(toArtifacts));
           }
-          String[] columnNames = { "From: " + dependency.getFrom().getName(), "To: " + dependency.getTo().getName(),
-              "Weight: " + dependency.getWeight() };
-          dependencyPart.changeTable(dependencies, columnNames);
+          DependencySelection selection = new DependencySelection(dependency.getFrom().getName(), dependency.getTo()
+              .getName(), dependency.getWeight(), dependencies);
+
+          dependencyPart.getSelectionProvider().setSelection(selection);
         }
       }
 
