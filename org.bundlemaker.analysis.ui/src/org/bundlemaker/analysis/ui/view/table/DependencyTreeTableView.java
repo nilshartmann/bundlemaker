@@ -27,10 +27,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.part.ViewPart;
 
 /**
@@ -208,9 +211,23 @@ public class DependencyTreeTableView extends ViewPart implements PropertyChangeL
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     DependencyGraph graph = (DependencyGraph) evt.getNewValue();
-    List<IDependency> dependencies = new ArrayList<IDependency>(graph.getDependencies());
+    final List<IDependency> dependencies = new ArrayList<IDependency>(graph.getDependencies());
 
-    this.changeTable(dependencies);
+    // Update table
+    IWorkbenchPartSite site = getSite();
+    if (site != null) {
+      Shell shell = site.getShell();
+      if (shell != null) {
+        Display display = shell.getDisplay();
+        display.syncExec(new Runnable() {
+
+          @Override
+          public void run() {
+            changeTable(dependencies);
+          }
+        });
+      }
+    }
 
   }
 
