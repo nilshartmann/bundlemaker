@@ -6,6 +6,7 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.testkit.framework.AbstractTestKitTest;
+import org.bundlemaker.core.testutils.ArtifactTestUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -58,6 +59,27 @@ public class DependenciesTest extends AbstractTestKitTest {
     //
     Assert.assertEquals(944, guiPackageArtifact.getDependencies().size());
     Assert.assertEquals(637, jeditPackageArtifact.getDependencies().size());
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  @Test
+  public void testDependencyNavigation() {
+
+    // get the 'jedit' module
+    IArtifact moduleArtifact = getRoot().getChild("group1|group2|jedit_1.0.0");
+    Assert.assertNotNull(moduleArtifact);
+
+    System.out.println(ArtifactTestUtil.toString(moduleArtifact));
+    
+    IArtifact asmPackage = moduleArtifact.getChild("org.gjt.sp.jedit.bsh.org.objectweb.asm");
+    Collection<IDependency> dependencies = asmPackage.getDependencies();
+    for (IDependency iDependency : dependencies) {
+      System.out.println(iDependency.getFrom().getQualifiedName());
+      System.out.println(iDependency.getTo().getQualifiedName());
+    }
   }
 
   /**

@@ -76,10 +76,32 @@ public abstract class AbstractTestKitTest {
     }
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public static String getTimestamp() {
+    return _timestamp;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public IDependencyModel getDependencyModel() {
     return _testKitAdapter.getDependencyModel();
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public IArtifact getRoot() {
     return _testKitAdapter.getRoot();
   }
