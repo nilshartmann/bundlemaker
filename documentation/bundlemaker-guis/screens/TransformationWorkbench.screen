@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Window" x="25" y="25" width="878" height="479" text="Plug-in Development - spring/transformations/spring-mvc.bmt - Eclipse - R:\bundlemaker\workspace" measuredWidth="878" measuredHeight="479"/>
+  <widgets xsi:type="model:Menu" x="25" y="44" width="878" text="File,Edit,Source,Refactor,Navigate,Search,Project,Run,Window,Help" measuredWidth="878" measuredHeight="27">
+    <items x="5" y="0" width="28" height="27" text="File"/>
+    <items x="33" y="0" width="30" height="27" text="Edit"/>
+    <items x="63" y="0" width="46" height="27" text="Source"/>
+    <items x="109" y="0" width="54" height="27" text="Refactor"/>
+    <items x="163" y="0" width="57" height="27" text="Navigate"/>
+    <items x="220" y="0" width="45" height="27" text="Search"/>
+    <items x="265" y="0" width="47" height="27" text="Project"/>
+    <items x="312" y="0" width="31" height="27" text="Run"/>
+    <items x="343" y="0" width="54" height="27" text="Window"/>
+    <items x="397" y="0" width="35" height="27" text="Help"/>
+  </widgets>
+  <widgets xsi:type="model:VLine" x="35" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="157" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="210" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="339" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="415" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="514" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:VLine" x="575" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:Icon" x="52" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="68" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="90" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="113" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="136" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="592" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="608" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="630" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="646" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="668" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="691" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="707" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="729" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="745" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="174" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="190" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="227" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="243" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="265" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="281" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="303" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="319" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="432" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="455" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="478" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="494" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="356" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="379" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="395" y="87" measuredWidth="16" measuredHeight="16" icon="empty-arrow-down (small)"/>
+  <widgets xsi:type="model:Icon" x="531" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="554" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:VLine" x="841" y="81" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:Icon" x="849" y="87" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="109" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="131" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="153" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="175" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Icon" x="849" y="197" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Label" x="108" y="468" text="spring-mvc.bmt - spring/transformations" measuredWidth="224" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Icon" x="52" y="474" measuredWidth="16" measuredHeight="16" icon="image (small)"/>
+  <widgets xsi:type="model:Tree" x="40" y="134" width="234" height="329" text="spring&#xA;-transformations&#xA;--spring-mvc.bmt&#xA;--spring-to-osgi.bmt&#xA;-.project&#xA;-bundlemaker.xml&#xA;" measuredWidth="234" measuredHeight="329">
+    <items x="0" y="5" width="234" height="21" text="spring"/>
+    <items x="0" y="26" width="234" height="21" text="-transformations"/>
+    <items x="0" y="47" width="234" height="21" text="--spring-mvc.bmt"/>
+    <items x="0" y="68" width="234" height="21" text="--spring-to-osgi.bmt"/>
+    <items x="0" y="89" width="234" height="21" text="-.project"/>
+    <items x="0" y="110" width="234" height="21" text="-bundlemaker.xml"/>
+  </widgets>
+  <widgets xsi:type="model:Panel" x="283" y="134" width="605" height="252" measuredWidth="605" measuredHeight="252"/>
+  <widgets xsi:type="model:TextArea" x="304" y="134" width="571" height="252" text="// Create one module for mvc part of spring&#xD;&#xA;module org.springframework.mvc 1.0.0&#xD;&#xA;  from spring 2.5.6&#xD;&#xA;  include org/springframework/mvc/**&#xD;&#xA;&#xD;&#xA;// Create one module for spring exculding the mvc parts&#xD;&#xA;module org.springframework 1.0.0&#xD;&#xA;  from spring 2.5.6&#xD;&#xA;  include **&#xD;&#xA;  exclude org/springframework/mvc/**&#xD;&#xA;&#xD;&#xA;" measuredWidth="571" measuredHeight="252" verticalScrollbar="true">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tabs" x="280" y="108" text="spring-mvc.bmt" measuredWidth="108" measuredHeight="27" selection="0">
+    <items x="1" y="0" width="106" height="27" text="spring-mvc.bmt"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tabs" x="37" y="108" text="Package Explorer" measuredWidth="111" measuredHeight="27" selection="0">
+    <items x="1" y="0" width="109" height="27" text="Package Explorer"/>
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:HLine" x="280" y="389" width="611" measuredWidth="611" measuredHeight="6"/>
+  <widgets xsi:type="model:VLine" x="277" y="108" height="358" measuredWidth="6" measuredHeight="358"/>
+  <widgets xsi:type="model:VLine" x="35" y="468" height="22" measuredWidth="6" measuredHeight="22"/>
+  <widgets xsi:type="model:Note" x="575" y="146" text="Editor for transformation scripts (based on xtext?)&#xD;&#xA; .bmt => bundlemaker transformation ;-) with&#xD;&#xA; Code completion for Module-Names, Versions, ..." measuredWidth="274" measuredHeight="55">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:WidgetGroup" x="569" y="280" measuredWidth="283" measuredHeight="153">
+    <widgets xsi:type="model:Popup" text="{undo} &amp;Undo, Ctrl+Z&#xA;{redo} &amp;Redo, Ctrl+Y&#xA;---&#xA;Copy&#xA;...&#xA;---&#xA;Export to, >&#xA;" measuredWidth="132" measuredHeight="141">
+      <items x="0" y="2" width="132" height="23" text="{undo} &amp;Undo, Ctrl+Z"/>
+      <items x="0" y="25" width="132" height="23" text="{redo} &amp;Redo, Ctrl+Y"/>
+      <items x="0" y="48" width="132" height="11" text="---"/>
+      <items x="0" y="59" width="132" height="23" text="Copy"/>
+      <items x="0" y="82" width="132" height="23" text="..."/>
+      <items x="0" y="105" width="132" height="11" text="---"/>
+      <items x="0" y="116" width="132" height="23" text="Export to, >"/>
+    </widgets>
+    <widgets xsi:type="model:Popup" x="137" y="80" text="Text file...&#xD;&#xA;PDE Plug-in projects...&#xD;&#xA;Structure 101..." measuredWidth="146" measuredHeight="73">
+      <items x="0" y="2" width="146" height="23" text="Text file..."/>
+      <items x="0" y="25" width="146" height="23" text="PDE Plug-in projects..."/>
+      <items x="0" y="48" width="146" height="23" text="Structure 101..."/>
+    </widgets>
+  </widgets>
+  <widgets xsi:type="model:Note" x="595" y="432" width="283" height="81" text="Context menu providing default editing features (copy, paste, delete, ...) and exporting&#xD;&#xA;the specified moduled.&#xD;&#xA;Export context menu should be available from the Package Explorer as well" measuredWidth="283" measuredHeight="81">
+    <font/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

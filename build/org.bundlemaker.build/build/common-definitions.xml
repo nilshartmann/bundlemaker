@@ -1,0 +1,75 @@
+<project name="taskdefs"
+         basedir="."
+         xmlns:ant4eclipse="antlib:org.ant4eclipse"
+         xmlns:antcontrib="antlib:net.sf.antcontrib">
+
+	<!-- Ant4Eclipse (http://www.ant4eclipse.org) -->
+	<taskdef uri="antlib:org.ant4eclipse" resource="org/ant4eclipse/antlib.xml">
+		<classpath>
+			<fileset dir="${basedir}/../libs/ant4eclipse">
+				<include name="org.ant4eclipse_*.jar" />
+			</fileset>
+			<fileset dir="${basedir}/../libs/ant4eclipse/libs">
+				<include name="org.eclipse.osgi_*.jar" />
+				<include name="ecj-*.jar" />
+				<include name="asm-*.jar" />
+			</fileset>
+		</classpath>
+	</taskdef>
+
+	<!-- AntContrib (http://ant-contrib.sourceforge.net/) -->
+	<typedef resource="net/sf/antcontrib/antlib.xml"
+	         uri="antlib:net.sf.antcontrib"
+	         classpath="${basedir}/../libs/ant4eclipse/libs/ant-contrib-1.0b3.jar" />
+
+	<!-- import a4e-pde-macros.xml -->
+	<import file="${basedir}/../libs/ant4eclipse/macros/a4e-pde-macros.xml" />
+	<import file="${basedir}/../libs/ant4eclipse/macros/a4e-pde-test-macros.xml" />
+
+	<!-- set properties -->
+	<property file="${basedir}/build.properties" />
+
+	<!-- define some helper propertiess -->
+	<property name="bundlemaker-workspace" value="${basedir}/../../.." />
+	<property name="targetplatform-subdir"
+	          value="${bundlemaker-workspace}/targetplatform" />
+	<property name="bundlemaker-deploy-dir" value="${basedir}/../destination" />
+
+	<!-- define the ant4eclipse target platform -->
+	<ant4eclipse:targetPlatform id="target.platform">
+		<location dir="${targetplatform-subdir}/target.platform/bundlor-1.0.0.RELEASE" />
+		<location dir="${targetplatform-subdir}/target.platform/drools-5.1.1" />
+		<location dir="${targetplatform-subdir}/target.platform/slf4j-1.5.10" />
+		<location dir="${targetplatform-subdir}/target.platform/xtext-1.0.1" />
+		<location dir="${targetplatform-subdir}/target.platform/draw2d" />
+		<location dir="${targetplatform-subdir}/target.platform/test/pde.test.utils" />
+		<location dir="${eclipse.install.dir}" />
+	</ant4eclipse:targetPlatform>
+
+	<!-- -->
+	<ant4eclipse:workspaceDefinition id="bundleMakerWorkspace">
+		<dirset dir="${bundlemaker-workspace}">
+			<include name="main/*" />
+			<include name="build/*" />
+			<include name="targetplatform/*" />
+			<exclude name="build/org.bundlemaker.build" />
+		</dirset>
+	</ant4eclipse:workspaceDefinition>
+	
+	<!-- -->
+	<ant4eclipse:workspaceDefinition id="bundleMakerWorkspaceWithTests">
+		<dirset dir="${bundlemaker-workspace}">
+			<include name="main/*" />
+			<include name="build/*" />
+			<include name="unittests/*" />
+			<include name="targetplatform/*" />
+			<exclude name="build/org.bundlemaker.build" />
+		</dirset>
+	</ant4eclipse:workspaceDefinition>
+
+	<ant4eclipse:platformConfiguration id="win32.win32.x86"
+	                                   windowingSystem="win32"
+	                                   operatingSystem="win32"
+	                                   architecture="x86" />
+
+</project>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Tree" x="24" y="16" width="249" height="361" text="JEdit-BundleMaker&#xA;-bundlemaker.xml&#xA;-[>] JEdit-BundleMaker&#xA;--[>]  JDK16&#xA;--[>]  JEdit_4.4.pre1&#xA;---[>] org&#xA;----[>] gjt&#xA;-----[>] sp&#xA;------[>] jedit&#xA;-------[>] browser&#xA;-------[>] bsh&#xA;--------[>] classpath&#xA;" measuredWidth="249" measuredHeight="361">
+    <items x="0" y="5" width="249" height="29" text="JEdit-BundleMaker"/>
+    <items x="0" y="34" width="249" height="29" text="-bundlemaker.xml"/>
+    <items x="0" y="63" width="249" height="29" text="-[>] JEdit-BundleMaker"/>
+    <items x="0" y="92" width="249" height="29" text="--[>]  JDK16"/>
+    <items x="0" y="121" width="249" height="29" text="--[>]  JEdit_4.4.pre1"/>
+    <items x="0" y="150" width="249" height="29" text="---[>] org"/>
+    <items x="0" y="179" width="249" height="29" text="----[>] gjt"/>
+    <items x="0" y="208" width="249" height="29" text="-----[>] sp"/>
+    <items x="0" y="237" width="249" height="29" text="------[>] jedit"/>
+    <items x="0" y="266" width="249" height="29" text="-------[>] browser"/>
+    <items x="0" y="295" width="249" height="29" text="-------[>] bsh"/>
+    <items x="0" y="324" width="249" height="29" text="--------[>] classpath"/>
+  </widgets>
+  <widgets xsi:type="model:Tree" x="448" y="31" width="234" height="329" text="JEdit-BundleMaker&#xA;-bundlemaker.xml&#xA;-[>] JEdit-BundleMaker&#xA;--[>]  JDK16&#xA;--[>]  JEdit_4.4.pre1&#xA;---[>]  org.gjt.sp.jedit&#xA;---[>]  org.gjt.sp.jedit.browser&#xA;---[>]  org.gjt.sp.jedit.bsh&#xA;---[>]  org.gjt.sp.jedit.bsh.classpath&#xA;---[>]  org.gjt.sp.jedit.bsh.collection&#xA;---[>]  org.gjt.sp.jedit.bsh.commands&#xA;---[>]  org.gjt.sp.jedit.bsh.org.objectweb.asm" measuredWidth="234" measuredHeight="329">
+    <items x="0" y="5" width="234" height="29" text="JEdit-BundleMaker"/>
+    <items x="0" y="34" width="234" height="29" text="-bundlemaker.xml"/>
+    <items x="0" y="63" width="234" height="29" text="-[>] JEdit-BundleMaker"/>
+    <items x="0" y="92" width="234" height="29" text="--[>]  JDK16"/>
+    <items x="0" y="121" width="234" height="29" text="--[>]  JEdit_4.4.pre1"/>
+    <items x="0" y="150" width="234" height="29" text="---[>]  org.gjt.sp.jedit"/>
+    <items x="0" y="179" width="234" height="29" text="---[>]  org.gjt.sp.jedit.browser"/>
+    <items x="0" y="208" width="234" height="29" text="---[>]  org.gjt.sp.jedit.bsh"/>
+    <items x="0" y="237" width="234" height="29" text="---[>]  org.gjt.sp.jedit.bsh.classpath"/>
+    <items x="0" y="266" width="234" height="29" text="---[>]  org.gjt.sp.jedit.bsh.collection"/>
+    <items x="0" y="295" width="234" height="29" text="---[>]  org.gjt.sp.jedit.bsh.commands"/>
+    <items x="0" y="324" width="234" height="29" text="---[>]  org.gjt.sp.jedit.bsh.org.objectweb.asm"/>
+  </widgets>
+  <widgets xsi:type="model:Label" x="352" y="184" text="vs." measuredWidth="29" measuredHeight="38">
+    <font size="14"/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>

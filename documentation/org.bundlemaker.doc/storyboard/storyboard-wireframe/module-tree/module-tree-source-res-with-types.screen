@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Tree" x="24" y="16" width="313" height="369" text="JEdit-BundleMaker&#xA;-bundlemaker.xml&#xA;-[>] JEdit-BundleMaker&#xA;--[>]  JDK16&#xA;--[>]  JEdit_4.4.pre1&#xA;---[>] org&#xA;----[>] gjt&#xA;-----[>] sp&#xA;------[>] jedit&#xA;-------[>] browser&#xA;--------v BrowserView.java&#xA;--------- BrowserView" measuredWidth="313" measuredHeight="369">
+    <items x="0" y="5" width="313" height="29" text="JEdit-BundleMaker"/>
+    <items x="0" y="34" width="313" height="29" text="-bundlemaker.xml"/>
+    <items x="0" y="63" width="313" height="29" text="-[>] JEdit-BundleMaker"/>
+    <items x="0" y="92" width="313" height="29" text="--[>]  JDK16"/>
+    <items x="0" y="121" width="313" height="29" text="--[>]  JEdit_4.4.pre1"/>
+    <items x="0" y="150" width="313" height="29" text="---[>] org"/>
+    <items x="0" y="179" width="313" height="29" text="----[>] gjt"/>
+    <items x="0" y="208" width="313" height="29" text="-----[>] sp"/>
+    <items x="0" y="237" width="313" height="29" text="------[>] jedit"/>
+    <items x="0" y="266" width="313" height="29" text="-------[>] browser"/>
+    <items x="0" y="295" width="313" height="29" text="--------v BrowserView.java"/>
+    <items x="0" y="324" width="313" height="29" text="--------- BrowserView"/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font/>
+</model:Screen>
