@@ -13,6 +13,7 @@
 			<fileset dir="${basedir}/../libs/ant4eclipse/libs">
 				<include name="org.eclipse.osgi_*.jar" />
 				<include name="ecj-*.jar" />
+				<include name="asm-*.jar" />
 			</fileset>
 		</classpath>
 	</taskdef>
@@ -24,6 +25,7 @@
 
 	<!-- import a4e-pde-macros.xml -->
 	<import file="${basedir}/../libs/ant4eclipse/macros/a4e-pde-macros.xml" />
+	<import file="${basedir}/../libs/ant4eclipse/macros/a4e-pde-test-macros.xml" />
 
 	<!-- set properties -->
 	<property file="${basedir}/build.properties" />
@@ -39,6 +41,7 @@
 		<location dir="${bundlemaker-workspace}/target.platform/slf4j-1.5.10" />
 		<location dir="${bundlemaker-workspace}/target.platform/xtext-1.0.1" />
 		<location dir="${bundlemaker-workspace}/target.platform/draw2d" />
+		<location dir="${bundlemaker-workspace}/target.platform/test/pde.test.utils" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 
@@ -53,6 +56,47 @@
 	                                   windowingSystem="win32"
 	                                   operatingSystem="win32"
 	                                   architecture="x86" />
+
+
+	<!-- ================================= 
+          target: test              
+         ================================= -->
+	<target name="test">
+
+
+		<delete dir="${basedir}/../destination/tests" quiet="true" />
+		<mkdir dir="${basedir}/../destination/tests" />
+		
+		<!-- iterate over all projects in the workspace -->
+		<ant4eclipse:executeProjectSet workspaceId="myWorkspace"
+		                               allWorkspaceProjects="true"
+		                               resolveBuildOrder="false">
+
+			<!-- execute the contained build steps for all plug-in projects -->
+			<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
+
+				<antcontrib:if>
+					<available file="${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch" type="file"/>
+					<antcontrib:then>
+						
+						<!-- -->
+						<echo>Launching "${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"</echo>
+						
+						<!-- -->
+						<executePdeJunitLauncher workspaceId="myWorkspace"
+						                         targetPlatformId="target.platform"
+						                         projectName="${executeProjectSet.project.name}"
+						                         launchConfigurationFile="${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"
+						                         targetDirectory="${basedir}/../destination/tests"
+						                         tempDir="${basedir}/temp" />
+					</antcontrib:then>
+				</antcontrib:if>
+
+			</ant4eclipse:forEachProject>
+
+		</ant4eclipse:executeProjectSet>
+
+	</target>
 
 	<!-- ================================= 
           target: deploy-bundlemaker              
