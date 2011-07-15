@@ -22,7 +22,7 @@ import org.junit.Before;
 public abstract class AbstractBundleMakerProjectTest {
 
   /** TEST_PROJECT_VERSION */
-  private static final String TEST_PROJECT_VERSION = "1.0.0";
+  public static final String TEST_PROJECT_VERSION = "1.0.0";
 
   /** - */
   private String              _testProjectName;

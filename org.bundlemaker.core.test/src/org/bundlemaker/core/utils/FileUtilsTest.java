@@ -30,7 +30,8 @@ public class FileUtilsTest {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
 
-    List<String> children = FileUtils.getAllChildren(new File(System.getProperty("user.dir"), "test-environment"));
+    File file = new File(System.getProperty("user.dir"), "test-environment");
+    List<String> children = FileUtils.getAllChildren(file);
 
     stopWatch.stop();
     System.out.println(stopWatch.getElapsedTime());
