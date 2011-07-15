@@ -12,7 +12,7 @@
                 <info>
                     <p>Add the BundleMaker update site: http://www.bundlemaker.org/updates/ </p>
                     <p>
-                        <image href="./images/installing-bundlemaker-step_2.png"/>
+                        <image href="./images/installing-bundlemaker-step_2.png" scale="95"/>
                     </p>
                 </info>
             </step>
@@ -20,7 +20,7 @@
                 <cmd>Assure that that the Helios update site is enabled.</cmd>
                 <info>
                     <p>
-                        <image href="./images/installing-bundlemaker-step_3.png" />
+                        <image href="./images/installing-bundlemaker-step_3.png" scale="100"/>
                     </p>
                 </info>
             </step>
@@ -28,7 +28,7 @@
                 <cmd>Select the BundleMaker feature 'org.bundlemaker.core.feature'</cmd>
                 <info>
                     <p>
-                        <image href="./images/installing-bundlemaker-step_4.png" />
+                        <image href="./images/installing-bundlemaker-step_4.png" scale="90"/>
                     </p>
                 </info>
             </step>
