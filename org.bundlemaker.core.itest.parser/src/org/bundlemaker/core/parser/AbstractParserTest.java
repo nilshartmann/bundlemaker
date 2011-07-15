@@ -7,8 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.itestframework.ExpectedReference;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -17,65 +15,13 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest {
-
-  private static final String TEST_PROJECT_VERSION = "1.0.0";
-
-  /** - */
-  public String               _testProjectName;
-
-  /** - */
-  private IBundleMakerProject _bundleMakerProject;
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws CoreException
-   */
-  @Before
-  public void before() throws CoreException {
-
-    //
-    _testProjectName = this.getClass().getSimpleName();
-
-    // delete the project
-    log("Deleting existing project...");
-    EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
-
-    // create simple project
-    log("Creating new bundlemaker project...");
-    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(_testProjectName);
-
-    // get the BM project
-    _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws CoreException
-   */
-  @After
-  public void after() throws CoreException {
-
-    // dispose the project
-    _bundleMakerProject.dispose();
-
-    // delete the project
-    EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
-  }
 
   /**
    * <p>
@@ -88,20 +34,20 @@ public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest 
 
     // initialize the project
     log("Initializing project...");
-    _bundleMakerProject.initialize(null);
+    getBundleMakerProject().initialize(null);
 
     // parse the project
     log("Parsing project...");
-    _bundleMakerProject.parseAndOpen(new ProgressMonitor());
+    getBundleMakerProject().parseAndOpen(new ProgressMonitor());
 
     //
-    IModularizedSystem modularizedSystem = _bundleMakerProject.getModularizedSystemWorkingCopy(_testProjectName);
+    IModularizedSystem modularizedSystem = getBundleMakerProject().getModularizedSystemWorkingCopy(getTestProjectName());
 
     // apply the transformation
     modularizedSystem.applyTransformations(null);
 
     // get the resource module
-    IResourceModule resourceModule = modularizedSystem.getResourceModule(_testProjectName, TEST_PROJECT_VERSION);
+    IResourceModule resourceModule = modularizedSystem.getResourceModule(getTestProjectName(), TEST_PROJECT_VERSION);
 
     //
     testResult(modularizedSystem, resourceModule);
@@ -208,7 +154,7 @@ public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest 
     assertNotNull(resource);
 
     IType type = resource.getContainedType();
-    assertNotNull(type);
+    assertNotNull(String.format("Resource '%s' does not contain a type!", resource.getPath()), type);
 
     assertAllReferences(type, expectedReferences);
   }
