@@ -152,7 +152,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     //
-    return result;
+    return Collections.unmodifiableSet(result);
   }
 
   /**
