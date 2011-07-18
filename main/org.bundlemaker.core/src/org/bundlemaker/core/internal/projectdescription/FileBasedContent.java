@@ -17,7 +17,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
@@ -121,19 +120,21 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   public Set<IRootPath> getModifiableBinaryPaths() {
     return _binaryPaths;
   }
-  
+
   public Set<IRootPath> getModifiableSourcePaths() {
     return _resourceContent != null ? _resourceContent.getModifiableSourcePaths() : EMPTY_PATH_SET;
   }
-  
-  /* (non-Javadoc)
-   * @see org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent#setBinaryPaths(java.lang.String[])
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent#setBinaryPaths(java.lang.String[])
    */
   @Override
   public void setBinaryPaths(String[] binaryRootPaths) {
     Assert.isNotNull(binaryRootPaths);
-    
-    
+
     Set<IRootPath> binaryPaths = getModifiableBinaryPaths();
     binaryPaths.clear();
 
@@ -142,8 +143,11 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     }
   }
 
-  /* (non-Javadoc)
-   * @see org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent#setSourcePaths(java.lang.String[])
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent#setSourcePaths(java.lang.String[])
    */
   @Override
   public void setSourcePaths(String[] sourceRootPaths) {
@@ -152,10 +156,10 @@ public class FileBasedContent implements IModifiableFileBasedContent {
       System.err.println("Warning! Attemt to set source paths on binary resource! Ignore.");
       return;
     }
-    
+
     Set<IRootPath> modifiableSourcePaths = _resourceContent.getModifiableSourcePaths();
     modifiableSourcePaths.clear();
-    
+
     for (String path : sourceRootPaths) {
       modifiableSourcePaths.add(new RootPath(path));
     }
@@ -219,7 +223,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   public void setVersion(String version) {
     _version = version;
   }
-  
+
   @Override
   public void setResourceContent(boolean resourceContent) {
     if (resourceContent == false) {
@@ -229,7 +233,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
         setResourceContent(new ResourceContent());
       }
     }
-    
+
   }
 
   public void setResourceContent(ResourceContent resourceContent) {
@@ -251,6 +255,9 @@ public class FileBasedContent implements IModifiableFileBasedContent {
    * @throws CoreException
    */
   public void initialize(BundleMakerProjectDescription projectDescription) throws CoreException {
+
+    //
+    Assert.isNotNull(projectDescription);
 
     // return if content already is initialized
     if (_isInitialized) {
