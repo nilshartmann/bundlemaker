@@ -40,23 +40,21 @@ public class FlyWeightCacheTest {
    * <p>
    * </p>
    */
-  @Test(timeout = TIMEOUT)
+  @Test
   public void testGetReferenceAttributes() {
 
     //
     FlyWeightCache cache = new FlyWeightCache();
 
     //
-    for (int i = 0; i < 100000; i++) {
-
-      //
-      ReferenceAttributes attributes = cache.getReferenceAttributes(new ReferenceAttributes(
-          i % 11 == 0 ? ReferenceType.TYPE_REFERENCE : ReferenceType.PACKAGE_REFERENCE, i % 2 == 0, i % 3 == 0,
-          i % 5 == 0, i % 7 == 0, i % 11 == 0, i % 13 == 0, i % 17 == 0));
+    for (int i = 1; i <= 1000; i++) {
+      cache.getReference("fullyQualifiedName" + i, new ReferenceAttributes(mask(i, 1) ? ReferenceType.TYPE_REFERENCE
+          : ReferenceType.PACKAGE_REFERENCE, mask(i, 2), mask(i, 4), mask(i, 8), mask(i, 16), mask(i, 32), mask(i, 64),
+          mask(i, 128)));
     }
 
     //
-    Assert.assertEquals(32, cache._referenceAttributesCache.size());
+    Assert.assertEquals(256, cache._referenceAttributesCache.size());
   }
 
   @Test(timeout = 9000)
@@ -66,19 +64,28 @@ public class FlyWeightCacheTest {
     FlyWeightCache cache = new FlyWeightCache();
 
     //
-    for (int i = 0; i < 1000000; i++) {
+    for (int i = 0; i < 1000; i++) {
 
       //
-      Reference reference = cache.getReference("fullyQualifiedName" + i, new ReferenceAttributes(
-          i % 11 == 0 ? ReferenceType.TYPE_REFERENCE : ReferenceType.PACKAGE_REFERENCE, i % 2 == 0, i % 3 == 0,
-          i % 5 == 0, i % 7 == 0, i % 11 == 0, i % 13 == 0, i % 17 == 0));
+      cache.getReference("fullyQualifiedName" + i, new ReferenceAttributes(mask(i, 1) ? ReferenceType.TYPE_REFERENCE
+          : ReferenceType.PACKAGE_REFERENCE, mask(i, 2), mask(i, 4), mask(i, 8), mask(i, 16), mask(i, 32), mask(i, 64),
+          mask(i, 128)));
 
-      reference = cache.getReference("fullyQualifiedName", new ReferenceAttributes(
-          i % 11 == 0 ? ReferenceType.TYPE_REFERENCE : ReferenceType.PACKAGE_REFERENCE, i % 2 == 0, i % 3 == 0,
-          i % 5 == 0, i % 7 == 0, i % 11 == 0, i % 13 == 0, i % 17 == 0));
+      cache.getReference("fullyQualifiedName" + i, new ReferenceAttributes(mask(i, 1) ? ReferenceType.TYPE_REFERENCE
+          : ReferenceType.PACKAGE_REFERENCE, mask(i, 2), mask(i, 4), mask(i, 8), mask(i, 16), mask(i, 32), mask(i, 64),
+          mask(i, 128)));
     }
 
     //
-    Assert.assertEquals(1000032, cache._referenceCache.size());
+    Assert.assertEquals(1000, cache._referenceCache.size());
+  }
+
+  /**
+   * @param value
+   * @param mask
+   * @return
+   */
+  private static boolean mask(int value, int mask) {
+    return (value & mask) == mask;
   }
 }

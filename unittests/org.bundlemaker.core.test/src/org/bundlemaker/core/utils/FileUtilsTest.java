@@ -36,6 +36,6 @@ public class FileUtilsTest {
     stopWatch.stop();
     System.out.println(stopWatch.getElapsedTime());
 
-    Assert.assertEquals(4749, children.size());
+    Assert.assertEquals(177, children.size());
   }
 }
