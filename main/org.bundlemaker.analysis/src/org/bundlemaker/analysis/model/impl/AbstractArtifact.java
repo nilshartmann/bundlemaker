@@ -65,7 +65,7 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
 
   @Override
   public void addArtifact(IArtifact artifact, boolean relinkParent) {
-    addArtifact(artifact, false);
+    addArtifact(artifact);
   }
 
   /**
