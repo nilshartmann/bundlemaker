@@ -10,6 +10,7 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
+import org.bundlemaker.analysis.ui.dsmview.DSMView;
 import org.bundlemaker.analysis.ui.editor.GenericEditor;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.analysis.ui.view.table.JavaEditor;
@@ -69,8 +70,13 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
 
   private void openEditorAndViews(ExecutionEvent event) {
     try {
+      // Open the 'GenericEditor'
       IWorkbenchPage page = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
       page.openEditor(nullInputEditor, GenericEditor.ID);
+
+      // Make sure, DSMView is visible on GenericEditor
+      DSMView.showTab();
+
       // TODO ###REFACTORING
       // page.showView(DependencyTreeTableView.ID);
     } catch (PartInitException e) {

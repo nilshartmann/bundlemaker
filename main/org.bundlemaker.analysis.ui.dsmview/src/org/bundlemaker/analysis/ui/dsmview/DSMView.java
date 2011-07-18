@@ -31,10 +31,13 @@ import org.eclipse.swt.widgets.Composite;
 public class DSMView extends DependencyPart {
   public static String                            ID = "org.bundlemaker.analysis.ui.dsmview.DSMView";
 
+  private static DSMView                          _instance;
+
   private DSMComposite<IArtifact, DependencyEdge> dsmComposite;
 
   @Override
   public void doInit(Composite parent) {
+    _instance = this;
     dsmComposite = new DSMComposite<IArtifact, DependencyEdge>(parent, this);
   }
 
@@ -45,6 +48,13 @@ public class DSMView extends DependencyPart {
 
   @Override
   public void doDispose() {
+  }
+
+  public static void showTab() {
+    if (_instance != null) {
+      _instance.selectViewTab();
+    }
+
   }
 
 }
