@@ -1,4 +1,5 @@
 destination/*
 
 build/build.properties
+build/.clover/*
 destination
