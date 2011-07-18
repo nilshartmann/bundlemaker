@@ -6,7 +6,7 @@
    <extension point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent activeByDefault="true"
          contentProvider="org.bundlemaker.core.ui.view.navigator.ArtifactTreeContentProvider"
-         icon="icons/navigator/root.gif" id="org.bundlemaker.core.analysis.ui.navigatorContent1"
+         icon="icons/navigator/root.gif" id="org.bundlemaker.analysis.ui.navigatorContent1"
          labelProvider="org.bundlemaker.core.ui.view.navigator.ArtifactTreeLabelProvider"
          name="artifactContent" priority="lowest">
          <triggerPoints>
@@ -27,60 +27,11 @@
       <viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
          <includes>
             <contentExtension isRoot="false"
-               pattern="org.bundlemaker.core.analysis.ui.navigatorContent1"> </contentExtension>
+               pattern="org.bundlemaker.analysis.ui.navigatorContent1"> </contentExtension>
          </includes>
       </viewerContentBinding>
    </extension>
 
-   <!-- the IArtifact property tester -->
-   <extension
-         point="org.eclipse.core.expressions.propertyTesters">
-      <propertyTester id="org.bundlemaker.core.analysis.ui.expressions.ArtifactPropertyTester"
-            class="org.bundlemaker.core.ui.expressions.ArtifactPropertyTester"
-            namespace="org.bundlemaker.core.analysis.ui.expressions.IArtifact"
-            properties="type"
-            type="org.bundlemaker.analysis.model.IArtifact">
-      </propertyTester>
-   </extension>
-   
-   <!-- the expression definitions -->
-   
-   <!-- org.bundlemaker.core.analysis.ui.bmContentSelected: evaluates
-        to true if all  of the selected elements are IArtifact -->
-   <extension
-         point="org.eclipse.core.expressions.definitions">
-      <definition
-            id="org.bundlemaker.core.ui.bmContentSelected">
-            <with
-                  variable="selection">
-                  <iterate ifEmpty="false" operator="and">
-                  <instanceof
-                        value="org.bundlemaker.analysis.model.IArtifact">
-                  </instanceof>
-                  </iterate>
-            </with>
-      </definition>
-   </extension>
-
-   <!-- org.bundlemaker.core.analysis.ui.bmContentSelected: evaluates
-        to true if all selected elements are Root-IArtifacts (i.e. ModularizedSystems) -->
-    <extension
-       point="org.eclipse.core.expressions.definitions">
-    <definition
-          id="org.bundlemaker.core.ui.bmRootArtifactSelected">
-          <with
-                variable="selection">
-                <iterate ifEmpty="false" operator="and">
-                <instanceof
-                      value="org.bundlemaker.analysis.model.IArtifact">
-                </instanceof>
-                <test property="org.bundlemaker.core.analysis.ui.expressions.IArtifact.type" value="Root" 
-                	forcePluginActivation="true"/>
-                </iterate>
-          </with>
-    </definition>
-   </extension> 
-   
    <!-- An expression evaluating to true if a BMT-file has been selected -->
 	<extension point="org.eclipse.core.expressions.definitions">
       <definition id="org.bundlemaker.core.ui.bmtFileSelected">
@@ -101,12 +52,12 @@
             commandId="org.bundlemaker.core.ui.commands.Demo">
          <activeWhen>
          <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
          </reference>
          </activeWhen>
          <enabledWhen>
           <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
                </reference>
          </enabledWhen>
       </handler>
@@ -117,12 +68,12 @@
             commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler">
          <activeWhen>
          <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
          </reference>
          </activeWhen>
          <enabledWhen>
           <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
                </reference>
          </enabledWhen>
       </handler>
@@ -133,12 +84,12 @@
             commandId="org.bundlemaker.core.ui.commands.ReportExportHandler">
          <activeWhen>
          <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
          </reference>
          </activeWhen>
          <enabledWhen>
           <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
                </reference>
          </enabledWhen>
       </handler>
@@ -149,12 +100,12 @@
             commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler">
          <activeWhen>
          <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
          </reference>
          </activeWhen>
          <enabledWhen>
           <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
                </reference>
          </enabledWhen>
       </handler>
@@ -165,12 +116,12 @@
             commandId="org.bundlemaker.core.ui.commands.TransformHandler">
          <activeWhen>
          <reference
-               definitionId="org.bundlemaker.core.ui.bmContentSelected">
+               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
          </reference>
          </activeWhen>
          <enabledWhen>
           <reference
-               definitionId="org.bundlemaker.core.ui.bmRootArtifactSelected">
+               definitionId="org.bundlemaker.analysis.ui.rootArtifactContentSelected">
                </reference>
          </enabledWhen>
       </handler>
@@ -311,27 +262,18 @@
    <!-- ======================================== -->
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
-	       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
-	       <menu
-	       		icon="icons/bundlemaker-icon-small.png" 
-	       		id="org.bundlemaker.core.ui.ProjectExplorerPopupMenu"
-              label="BundleMaker" >
-            	<command commandId="org.bundlemaker.core.ui.commands.Demo"
-              			 style="push">
-           <visibleWhen
-                 checkEnabled="true" />
-	       </command>
+               locationURI="popup:org.bundlemaker.analysis.ui.ProjectExplorerPopupMenu"> 
          <command commandId="org.bundlemaker.core.ui.commands.TransformHandler"
           			 style="push" />
          <command commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
               			 style="push" />	       
-	       </menu>
 	   </menuContribution> 
    </extension>
+      
    <!-- the "Export as" pop up menu -->
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
-	       locationURI="popup:org.bundlemaker.core.ui.ProjectExplorerPopupMenu">
+	       locationURI="popup:org.bundlemaker.analysis.ui.ProjectExplorerPopupMenu">
 	       <menu id="org.bundlemaker.core.ui.menus.exportAsMenu"
               label="Export as..." >
             	<command commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"

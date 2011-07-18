@@ -4,6 +4,54 @@
    	name="dependencyView"
    	schema="schema/org.bundlemaker.analysis.ui.dependencyView.exsd"/>
 
+   <!-- the IArtifact property tester -->
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester id="org.bundlemaker.analysis.ui.expressions.ArtifactPropertyTester"
+            class="org.bundlemaker.analysis.ui.expressions.ArtifactPropertyTester"
+            namespace="org.bundlemaker.analysis.ui.expressions.IArtifact"
+            properties="type"
+            type="org.bundlemaker.analysis.model.IArtifact">
+      </propertyTester>
+   </extension>
+   
+   <!-- the expression definitions -->
+   
+   <!-- org.bundlemaker.analysis.ui.bmContentSelected: evaluates
+        to true if all  of the selected elements are IArtifact -->
+   <extension
+         point="org.eclipse.core.expressions.definitions">
+      <definition
+            id="org.bundlemaker.analysis.ui.artifactContentSelected">
+            <with
+                  variable="selection">
+                  <iterate ifEmpty="false" operator="and">
+                  <instanceof
+                        value="org.bundlemaker.analysis.model.IArtifact">
+                  </instanceof>
+                  </iterate>
+            </with>
+      </definition>
+   </extension>
+
+   <!-- org.bundlemaker.analysis.ui.bmContentSelected: evaluates
+        to true if all selected elements are Root-IArtifacts (i.e. ModularizedSystems) -->
+    <extension
+       point="org.eclipse.core.expressions.definitions">
+    <definition
+          id="org.bundlemaker.analysis.ui.rootArtifactContentSelected">
+          <with
+                variable="selection">
+                <iterate ifEmpty="false" operator="and">
+                <instanceof
+                      value="org.bundlemaker.analysis.model.IArtifact">
+                </instanceof>
+                <test property="org.bundlemaker.analysis.ui.expressions.IArtifact.type" value="Root" 
+                	forcePluginActivation="true"/>
+                </iterate>
+          </with>
+    </definition>
+   </extension> 
 
    <extension
          point="org.eclipse.ui.views">
@@ -30,6 +78,20 @@
             name="Dependency Analysis">
       </editor>
    </extension>
+   
+      <extension point="org.eclipse.ui.menus">
+	   <menuContribution
+	       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+	       <menu
+	       		icon="icons/bundlemaker-icon-small.png" 
+	       		id="org.bundlemaker.analysis.ui.ProjectExplorerPopupMenu"
+              label="BundleMaker" >
+           <visibleWhen
+                 checkEnabled="true" />
+	       </menu>
+	   </menuContribution> 
+   </extension>
+   
    
 
 </plugin>
