@@ -2,7 +2,8 @@
          basedir="."
          default="test-bundlemaker"
          xmlns:ant4eclipse="antlib:org.ant4eclipse"
-         xmlns:antcontrib="antlib:net.sf.antcontrib">
+         xmlns:antcontrib="antlib:net.sf.antcontrib"
+         xmlns:clover="antlib:com.cenqua.clover">
 
 	<!-- -->
 	<import file="${basedir}/common-definitions.xml" />
@@ -12,42 +13,158 @@
          ================================= -->
 	<target name="test-bundlemaker">
 
-
+		<!-- -->
 		<delete dir="${basedir}/../destination/tests" quiet="true" />
 		<mkdir dir="${basedir}/../destination/tests" />
+		<delete dir="${basedir}/../destination/coverage" quiet="true" />
 
-		<!-- iterate over all projects in the workspace -->
-		<ant4eclipse:executeProjectSet workspaceId="bundleMakerWorkspaceWithTests"
-		                               allWorkspaceProjects="true"
-		                               resolveBuildOrder="false">
+		<!-- -->
+		<buildWorkspace />
 
-			<!-- execute the contained build steps for all plug-in projects -->
-			<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
-				
-				<echo>${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] </echo>
+		<!-- -->
+		<executeTests />
 
-				<antcontrib:if>
-					<available file="${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"
-					           type="file" />
-					<antcontrib:then>
+		<!-- -->
+		<clover:clover-html-report outdir="${basedir}/../destination/coverage"
+		                           title="MyProject Coverage" />
 
-						<!-- -->
-						<echo>Launching "${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"</echo>
-
-						<!-- -->
-						<executePdeJunitLauncher workspaceId="bundleMakerWorkspaceWithTests"
-						                         targetPlatformId="target.platform"
-						                         projectName="${executeProjectSet.project.name}"
-						                         launchConfigurationFile="${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"
-						                         targetDirectory="${basedir}/../destination/tests"
-						                         tempDir="${basedir}/temp" />
-					</antcontrib:then>
-				</antcontrib:if>
-
-			</ant4eclipse:forEachProject>
-
-		</ant4eclipse:executeProjectSet>
+		<!-- -->
+		<cleanUp />
 
 	</target>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: buildWorkspace          
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="buildWorkspace">
+		<sequential>
+
+			<!-- iterate over all projects in the workspace -->
+			<ant4eclipse:executeProjectSet workspaceId="bundleMakerWorkspaceWithTests"
+			                               allWorkspaceProjects="true"
+			                               resolveBuildOrder="true">
+
+				<!-- execute the contained build steps for all plug-in projects -->
+				<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
+
+					<!-- STEP 1: clean all output directories -->
+					<ant4eclipse:executeJdtProject workspaceId="bundleMakerWorkspaceWithTests"
+					                               projectName="${executeProjectSet.project.name}"
+					                               prefix="buildPlugin"
+					                               targetPlatformId="target.platform">
+
+						<ant4eclipse:forEachOutputDirectory>
+							<delete dir="${buildPlugin.output.directory}"
+							        quiet="true" />
+							<mkdir dir="${buildPlugin.output.directory}" />
+						</ant4eclipse:forEachOutputDirectory>
+
+					</ant4eclipse:executeJdtProject>
+				</ant4eclipse:forEachProject>
+
+				<!-- STEP 2: call the build plug-in project -->
+				<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
+
+
+					<antcontrib:if>
+						<matches pattern=".*[\\/]main[\\/].*"
+						         string="${executeProjectSet.project.directory}" />
+						<antcontrib:then>
+							<ant4eclipse:cloverInstr workspaceId="bundleMakerWorkspaceWithTests"
+							                         projectName="${executeProjectSet.project.name}" />
+						</antcontrib:then>
+					</antcontrib:if>
+
+					<buildPlugin workspaceId="bundleMakerWorkspaceWithTests"
+					             projectname="${executeProjectSet.project.name}"
+					             targetPlatformId="target.platform"
+					             destination="${basedir}/destination"
+					             platformConfigurationId="win32.win32.x86"
+					             debug="false"
+					             skipPackage="true" />
+
+				</ant4eclipse:forEachProject>
+
+			</ant4eclipse:executeProjectSet>
+		</sequential>
+	</macrodef>
+
+	<!-- -->
+	<macrodef name="executeTests">
+		<sequential>
+
+			<path id="clover.path">
+				<pathelement location="${basedir}/../libs/clover-ant/clover.jar" />
+			</path>
+
+			<!-- iterate over all projects in the workspace -->
+			<ant4eclipse:executeProjectSet workspaceId="bundleMakerWorkspaceWithTests"
+			                               allWorkspaceProjects="true"
+			                               resolveBuildOrder="false">
+
+				<!-- execute the contained build steps for all plug-in projects -->
+				<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
+
+					<echo>${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] </echo>
+
+					<antcontrib:if>
+						<available file="${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"
+						           type="file" />
+						<antcontrib:then>
+
+							<!-- -->
+							<echo>Launching "${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"</echo>
+
+							<!-- -->
+							<executePdeJunitLauncher workspaceId="bundleMakerWorkspaceWithTests"
+							                         targetPlatformId="target.platform"
+							                         projectName="${executeProjectSet.project.name}"
+							                         launchConfigurationFile="${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"
+							                         targetDirectory="${basedir}/../destination/tests"
+							                         tempDir="${basedir}/temp"
+							                         additionalClassPathRefId="clover.path" />
+
+						</antcontrib:then>
+					</antcontrib:if>
+
+				</ant4eclipse:forEachProject>
+
+			</ant4eclipse:executeProjectSet>
+
+		</sequential>
+	</macrodef>
+
+	<macrodef name="cleanUp">
+		<sequential>
+
+			<!-- iterate over all projects in the workspace -->
+			<ant4eclipse:executeProjectSet workspaceId="bundleMakerWorkspaceWithTests"
+			                               allWorkspaceProjects="true"
+			                               resolveBuildOrder="false">
+
+				<!-- execute the contained build steps for all plug-in projects -->
+				<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
+
+					<ant4eclipse:cloverCleanUp workspaceId="bundleMakerWorkspaceWithTests"
+					                           projectName="${executeProjectSet.project.name}" />
+
+					<!-- STEP 1: clean all output directories -->
+					<ant4eclipse:executeJdtProject workspaceId="bundleMakerWorkspaceWithTests"
+					                               projectName="${executeProjectSet.project.name}"
+					                               prefix="cleanUp"
+					                               targetPlatformId="target.platform">
+
+						<ant4eclipse:forEachOutputDirectory>
+							<delete dir="${cleanUp.output.directory}"
+							        quiet="true" />
+							<mkdir dir="${cleanUp.output.directory}" />
+						</ant4eclipse:forEachOutputDirectory>
+
+					</ant4eclipse:executeJdtProject>
+				</ant4eclipse:forEachProject>
+
+			</ant4eclipse:executeProjectSet>
+		</sequential>
+	</macrodef>
 
 </project>
