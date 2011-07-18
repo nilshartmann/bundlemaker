@@ -1,7 +1,8 @@
 <project name="taskdefs"
          basedir="."
          xmlns:ant4eclipse="antlib:org.ant4eclipse"
-         xmlns:antcontrib="antlib:net.sf.antcontrib">
+         xmlns:antcontrib="antlib:net.sf.antcontrib"
+         xmlns:clover="antlib:com.cenqua.clover">
 
 	<!-- Ant4Eclipse (http://www.ant4eclipse.org) -->
 	<taskdef uri="antlib:org.ant4eclipse" resource="org/ant4eclipse/antlib.xml">
@@ -14,6 +15,10 @@
 				<include name="ecj-*.jar" />
 				<include name="asm-*.jar" />
 			</fileset>
+			<fileset dir="${basedir}/../libs/clover-ant">
+				<include name="clover.jar" />
+				<include name="org.ant4eclipse.ant.clover.jar" />
+			</fileset>
 		</classpath>
 	</taskdef>
 
@@ -21,6 +26,11 @@
 	<typedef resource="net/sf/antcontrib/antlib.xml"
 	         uri="antlib:net.sf.antcontrib"
 	         classpath="${basedir}/../libs/ant4eclipse/libs/ant-contrib-1.0b3.jar" />
+
+	<!-- Clover  -->
+	<typedef resource="cloverlib.xml"
+	         uri="antlib:com.cenqua.clover"
+	         classpath="${basedir}/../libs/clover-ant/clover.jar" />
 
 	<!-- import a4e-pde-macros.xml -->
 	<import file="${basedir}/../libs/ant4eclipse/macros/a4e-pde-macros.xml" />
@@ -55,7 +65,7 @@
 			<exclude name="build/org.bundlemaker.build" />
 		</dirset>
 	</ant4eclipse:workspaceDefinition>
-	
+
 	<!-- -->
 	<ant4eclipse:workspaceDefinition id="bundleMakerWorkspaceWithTests">
 		<dirset dir="${bundlemaker-workspace}">
