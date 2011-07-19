@@ -77,11 +77,11 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
       // Make sure, DSMView is visible on GenericEditor
       DSMView.showTab();
 
-      // TODO ###REFACTORING
-      // page.showView(DependencyTreeTableView.ID);
+      // Open the DependencyTreeTableView
+      Analysis.instance().openDependencyTreeTableView();
+
     } catch (PartInitException e) {
       e.printStackTrace();
     }
   }
-
 }

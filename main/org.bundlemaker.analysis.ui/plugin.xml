@@ -4,6 +4,10 @@
    	name="dependencyView"
    	schema="schema/org.bundlemaker.analysis.ui.dependencyView.exsd"/>
 
+   <extension-point id="dependencyTreeTableListener"
+   	name="dependencyTreeTableListener"
+   	schema="schema/org.bundlemaker.analysis.ui.dependencyTreeTableListener.exsd"/>
+
    <!-- the IArtifact property tester -->
    <extension
          point="org.eclipse.core.expressions.propertyTesters">
