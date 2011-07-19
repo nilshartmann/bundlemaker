@@ -200,20 +200,19 @@
    
 <!-- ======================================== -->
 
-<!--
+<!-- -->
    <extension
        point="org.eclipse.jdt.ui.javaElementFilters">
     <filter
           class="org.bundlemaker.core.ui.internal.JavaElementFilter"
           description="Filters any bundlemaker JDT project."
           enabled="true"
-          pattern="*$JDT"
           id="org.bundlemaker.core.ui.internal.JavaElementFilter"
           name="BundleMaker$JDT project filter">
     </filter>
  </extension>
  
- -->
+
    <!-- ======================================== -->
    <!-- wizards -->
    <!-- ======================================== -->
