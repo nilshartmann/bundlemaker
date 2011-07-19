@@ -72,9 +72,6 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   public BundleMakerProjectDescription(IBundleMakerProject bundleMakerProject) {
 
     //
-    Assert.isNotNull(bundleMakerProject);
-
-    //
     _fileBasedContent = new ArrayList<FileBasedContent>();
     _sourceResources = new ArrayList<ResourceStandin>();
     _binaryResources = new ArrayList<ResourceStandin>();
