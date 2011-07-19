@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
@@ -207,7 +208,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     //
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
-    //
+    // TODO: WRONG!
     initReferences(_type.getReferences(), _aggregateNonPrimaryTypes);
 
     //
@@ -239,12 +240,18 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   private void initReferences(Collection<? extends IReference> references, boolean isPrimaryType) {
 
+    //
+    if (this.getName().equals("CollectionManagerImpl")) {
+      System.out.println(references);
+    }
+
     // iterate over all references
     for (IReference reference : references) {
 
-      //
+      // get the reference name
       String referenceName = reference.getFullyQualifiedName();
 
+      // resolve the top level type
       if (_aggregateNonPrimaryTypes) {
         referenceName = resolvePrimaryType(referenceName, (IResourceModule) _type.getModule(getModularizedSystem()));
       }
@@ -257,45 +264,56 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       //
       IArtifact artifact = _artifactCache.getTypeArtifact(referenceName, false);
 
-      // TODO!!
-      // STICKY-TYPES/AGGREGATED TYPES
-
+      // does the artifact exist?
       if (artifact != null) {
 
-        // map to dependency
-        Dependency dependency = new Dependency(this, artifact);
+        // get the cached instance
+        if (_cachedDependencies.containsKey(artifact)) {
 
-        // if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
-        //
-        // DependencyKind dependencyKind = DependencyKind.USES;
-        // if (reference.isImplements()) {
-        // dependencyKind = DependencyKind.IMPLEMENTS;
-        // } else if (reference.isExtends()) {
-        // dependencyKind = DependencyKind.EXTENDS;
-        // } else if (reference.isClassAnnotation()) {
-        // dependencyKind = DependencyKind.ANNOTATES;
-        // }
-        //
-        // //
-        // if (dependency.getDependencyKind().equals(DependencyKind.USES) &&
-        // !dependencyKind.equals(DependencyKind.USES)) {
-        // dependency.setDependencyKind(dependencyKind);
-        // }
-        // }
+          //
+          if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
 
-        if (dependency.getFrom().getQualifiedName().equals(dependency.getTo().getQualifiedName())) {
-          throw new RuntimeException(dependency.getFrom().getQualifiedName().toString());
-        }
+            // set the dependency kind
+            ((Dependency) _cachedDependencies.get(artifact)).setDependencyKind(getDependencyKind(reference));
+          }
 
-        //
-        if (isPrimaryType || !_cachedDependencies.containsKey(artifact)) {
+        } else {
+
+          // map to dependency
+          Dependency dependency = new Dependency(this, artifact);
+
+          // top level primary types only
+          if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
+            dependency.setDependencyKind(getDependencyKind(reference));
+          }
+
+          //
+          if (dependency.getFrom().getQualifiedName().equals(dependency.getTo().getQualifiedName())) {
+            throw new RuntimeException(dependency.getFrom().getQualifiedName().toString());
+          }
+
+          //
           _cachedDependencies.put(artifact, dependency);
         }
+      }
 
-      } else {
+      //
+      else {
         System.out.println("MISSING TYPE: " + referenceName);
       }
     }
+  }
+
+  private DependencyKind getDependencyKind(IReference reference) {
+    DependencyKind dependencyKind = DependencyKind.USES;
+    if (reference.isImplements()) {
+      dependencyKind = DependencyKind.IMPLEMENTS;
+    } else if (reference.isExtends()) {
+      dependencyKind = DependencyKind.EXTENDS;
+    } else if (reference.isClassAnnotation()) {
+      dependencyKind = DependencyKind.ANNOTATES;
+    }
+    return dependencyKind;
   }
 
   /**
