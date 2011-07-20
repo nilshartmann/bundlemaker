@@ -19,5 +19,6 @@ public class BundleMakerPerspectiveFactory implements IPerspectiveFactory {
 
     IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.66f, editorArea);
     bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
+    bottom.addView("org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView");
   }
 }
