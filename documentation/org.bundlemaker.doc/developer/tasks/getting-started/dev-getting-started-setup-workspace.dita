@@ -26,22 +26,23 @@
                 <cmd>Clone the bundlemaker repository:
                         <codeph>git://github.com/wuetherich/bundlemaker.git</codeph>.</cmd>
                 <info>In the <uicontrol>Git Repositories</uicontrol> View, you can clone the bundle
-                    maker repository that is located at
-                        <codeph>git://github.com/wuetherich/bundlemaker.git</codeph>.</info>
+                    maker repository by clicking the <uicontrol>Clone a Git Repositories</uicontrol>
+                    icon. Enter the repository URL in <uicontrol>Clone Git Repositories
+                        Wizard</uicontrol>.<p><image
+                            href="./images/dev-getting-started-setup-workspace/import-git-repository-1.png"
+                            scale="80"/></p></info>
 
             </step>
             <step>
-                <cmd>Start your eclipse IDE and switch the workspace directory to
-                        <codeph>C:/dev/bundlemaker</codeph>.</cmd>
-            </step>
-            <step>
-                <cmd>Import <b><i>all</i></b> projects into your workspace using <codeph>File ->
-                        Import...</codeph>, <codeph>General -> Existing Projects Into
-                        Workspace</codeph>.</cmd>
-                <stepresult>After importing the projects into the workspace your workspace should
-                    look like the one shown in the picture below. <p><image
-                            href="./images/getting-started-workspace-after-import.png" scale="80"
-                        /></p></stepresult>
+                <cmd>Import the required BundleMaker projects into your workspace</cmd>
+                <info>Once the repository is cloned, you can import all required BundleMaker
+                    projects into your workspace. <p><image
+                            href="./images/dev-getting-started-setup-workspace/import-git-repository-2.png"
+                            scale="80"/></p>At least you have to import all the projects that are
+                    contained in the <codeph>main</codeph> directory as well as the projects in the
+                        <codeph>targetplatform</codeph> directory.<p><image
+                            href="./images/dev-getting-started-setup-workspace/import-git-repository-3.png"
+                            scale="80"/></p></info>
             </step>
             <step>
                 <cmd>Set the target platform</cmd>
@@ -49,12 +50,16 @@
                     <substep>
                         <cmd>Open the file
                             <codeph>/target.platform/target.platform.target</codeph></cmd>
+                        <info><image
+                                href="./images/dev-getting-started-setup-workspace/import-git-repository-4.png"
+                                scale="80"/></info>
                     </substep>
                     <substep>
                         <cmd>Click the <codeph>Set As Target Platform</codeph> in the upper right
                             corner</cmd>
-                        <info><image href="./images/getting-started-set-as-target.png" scale="80"
-                            /></info>
+                        <info><image
+                                href="./images/dev-getting-started-setup-workspace/import-git-repository-5.png"
+                                scale="80"/></info>
                     </substep>
                 </substeps>
                 <stepresult>After setting the target platform your workspace should not contain any
@@ -65,30 +70,24 @@
                 <substeps>
                     <substep>
                         <cmd>Open the <i>Organize Favorites...</i> dialog</cmd>
-                        <info><image href="./images/dev-getting-started-Organize-Favorites.png"
-                            /></info>
+                        <info><image
+                                href="./images/dev-getting-started-setup-workspace/Running-BundleMaker-1.png"
+                                scale="80"/></info>
                     </substep>
                     <substep>
                         <cmd>Select <i>Add...</i> and add all available launch configurations to the
                             favorites list.</cmd>
+                        <info><image
+                                href="./images/dev-getting-started-setup-workspace/Running-BundleMaker-2.png"
+                                scale="80"/></info>
                     </substep>
                 </substeps>
             </step>
             <step>
-                <cmd>Organize the external tool configurations</cmd>
-                <substeps>
-                    <substep>
-                        <cmd>Open the <i>Organize Favorites...</i> dialog for the external tool
-                            configurations</cmd>
-                        <info><image
-                                href="./images/dev-getting-started-Organize-External-Tools-Favorites.png"
-                            /></info>
-                    </substep>
-                    <substep>
-                        <cmd>Select <i>Add...</i> and add all available launch configurations to the
-                            favorites list.</cmd>
-                    </substep>
-                </substeps>
+                <cmd>Execute the <codeph>BundleMaker UI</codeph> launch configuration</cmd>
+                <info><p><image
+                            href="./images/dev-getting-started-setup-workspace/Running-BundleMaker-3.png"
+                            scale="80"/></p></info>
             </step>
         </steps>
     </taskbody>

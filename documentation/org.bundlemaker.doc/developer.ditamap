@@ -24,10 +24,6 @@
     <topicref href="./developer/tasks/getting-started/dev-getting-started-overview.dita">
         <topicref href="./developer/tasks/getting-started/dev-getting-started-setup-workspace.dita"
         />
-        <topicref href="./developer/tasks/getting-started/dev-getting-started-running-the-spring-integration-test.dita"
-        />
-        <topicref href="./developer/tasks/getting-started/dev-getting-started-developing-an-integrationtest-from-the-scratch.dita"
-        />
     </topicref>
 
     <topicref href="./developer/concepts/core/concept-core-overview.dita" type="concept">
