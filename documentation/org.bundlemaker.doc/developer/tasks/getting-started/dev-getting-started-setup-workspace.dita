@@ -13,14 +13,36 @@
 <task id="taskId">
     <title>Setting up the workspace</title>
     <shortdesc>Before you can start with the bundlemaker development, you have to checkout all the
-        bundlemaker projects and set up your development workspace.</shortdesc>
+        bundlemaker projects from our Git repository and import them into your eclipse
+        workspace.</shortdesc>
     <taskbody>
-        <prereq>Please make sure that you have installed Java 6, Eclipse 3.6.x or 3.7.x Classic
-            (including JDT and PDE tooling) and EGIT on your machine.</prereq>
+        <prereq>Before you start, please make sure that you have installed Java 6, Eclipse 3.6.x or
+            3.7.x Classic (including JDT and PDE tooling) and EGIT on your machine. You can download
+            the necessary tools here: <ul id="ul_vvd_wzo_ad">
+                <li>
+                    <xref
+                        href="http://www.eclipse.org/downloads/packages/eclipse-classic-37/indigor"
+                        format="html" scope="external">
+                        http://www.eclipse.org/downloads/packages/eclipse-classic-37/indigor</xref>
+                </li>
+                <li>
+                    <xref
+                        href="http://www.eclipse.org/downloads/packages/eclipse-classic-362/heliossr2"
+                        format="html" scope="external">
+                        http://www.eclipse.org/downloads/packages/eclipse-classic-362/heliossr2</xref>
+                </li>
+                <li>
+                    <xref href="http://www.jgit.org/updates/" format="html" scope="external">
+                        http://www.jgit.org/updates/</xref>
+                </li>
+            </ul> If you already have installed the eclipse IDE and EGIT, you can proceed with
+            cloning the repository and setting up the development workspace:</prereq>
         <steps>
             <step>
-                <cmd>Open the <uicontrol>Git Repositories</uicontrol> View (<uicontrol>Window ->
-                        Show View -> Other..., Git -> Git Repositories</uicontrol>).</cmd>
+                <cmd>Open the <uicontrol>Git Repositories</uicontrol> View</cmd>
+                <info>If the <uicontrol>Git Repositories</uicontrol> View is not open yet, please
+                    open it by choosing <uicontrol>Window -> Show View -> Other..., Git -> Git
+                        Repositories</uicontrol> from the eclipse menu.</info>
             </step>
             <step>
                 <cmd>Clone the bundlemaker repository:
@@ -50,44 +72,23 @@
                     <substep>
                         <cmd>Open the file
                             <codeph>/target.platform/target.platform.target</codeph></cmd>
-                        <info><image
-                                href="./images/dev-getting-started-setup-workspace/import-git-repository-4.png"
-                                scale="80"/></info>
+                        <info>To set the target platfrom, please open the file
+                                <codeph>/target.platform/target.platform.target</codeph>. <p><image
+                                    href="./images/dev-getting-started-setup-workspace/import-git-repository-4.png"
+                                    scale="80"/></p></info>
                     </substep>
                     <substep>
                         <cmd>Click the <codeph>Set As Target Platform</codeph> in the upper right
                             corner</cmd>
-                        <info><image
+                        <info>You can easily set the target platform by clicking the <codeph>Set as
+                                Target Platform</codeph> link in the upper right corner of the
+                            configuration editor.<image
                                 href="./images/dev-getting-started-setup-workspace/import-git-repository-5.png"
                                 scale="80"/></info>
                     </substep>
                 </substeps>
                 <stepresult>After setting the target platform your workspace should not contain any
                     compile errors anymore.</stepresult>
-            </step>
-            <step>
-                <cmd>Organize the run configurations</cmd>
-                <substeps>
-                    <substep>
-                        <cmd>Open the <i>Organize Favorites...</i> dialog</cmd>
-                        <info><image
-                                href="./images/dev-getting-started-setup-workspace/Running-BundleMaker-1.png"
-                                scale="80"/></info>
-                    </substep>
-                    <substep>
-                        <cmd>Select <i>Add...</i> and add all available launch configurations to the
-                            favorites list.</cmd>
-                        <info><image
-                                href="./images/dev-getting-started-setup-workspace/Running-BundleMaker-2.png"
-                                scale="80"/></info>
-                    </substep>
-                </substeps>
-            </step>
-            <step>
-                <cmd>Execute the <codeph>BundleMaker UI</codeph> launch configuration</cmd>
-                <info><p><image
-                            href="./images/dev-getting-started-setup-workspace/Running-BundleMaker-3.png"
-                            scale="80"/></p></info>
             </step>
         </steps>
     </taskbody>

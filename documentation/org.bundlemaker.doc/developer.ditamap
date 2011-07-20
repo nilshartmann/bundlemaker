@@ -24,6 +24,8 @@
     <topicref href="./developer/tasks/getting-started/dev-getting-started-overview.dita">
         <topicref href="./developer/tasks/getting-started/dev-getting-started-setup-workspace.dita"
         />
+        <topicref href="./developer/tasks/getting-started/dev-getting-started-starting-bundlemaker.dita"
+        />
     </topicref>
 
     <topicref href="./developer/concepts/core/concept-core-overview.dita" type="concept">
