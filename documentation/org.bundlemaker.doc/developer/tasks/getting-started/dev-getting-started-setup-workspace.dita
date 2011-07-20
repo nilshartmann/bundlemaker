@@ -15,16 +15,20 @@
     <shortdesc>Before you can start with the bundlemaker development, you have to checkout all the
         bundlemaker projects and set up your development workspace.</shortdesc>
     <taskbody>
-        <prereq>Please make sure that you have installed Java
-                6, Eclipse 3.6.x (including JDT and PDE tooling) and GIT on your machine.</prereq>
+        <prereq>Please make sure that you have installed Java 6, Eclipse 3.6.x or 3.7.x Classic
+            (including JDT and PDE tooling) and EGIT on your machine.</prereq>
         <steps>
             <step>
-                <cmd>Create a new directory that will contain the bundlemaker repository, e.g.
-                        <codeph>C:/dev/bundlemaker</codeph>.</cmd>
+                <cmd>Open the <uicontrol>Git Repositories</uicontrol> View (<uicontrol>Window ->
+                        Show View -> Other..., Git -> Git Repositories</uicontrol>).</cmd>
             </step>
             <step>
                 <cmd>Clone the bundlemaker repository:
                         <codeph>git://github.com/wuetherich/bundlemaker.git</codeph>.</cmd>
+                <info>In the <uicontrol>Git Repositories</uicontrol> View, you can clone the bundle
+                    maker repository that is located at
+                        <codeph>git://github.com/wuetherich/bundlemaker.git</codeph>.</info>
+
             </step>
             <step>
                 <cmd>Start your eclipse IDE and switch the workspace directory to
@@ -76,7 +80,8 @@
                     <substep>
                         <cmd>Open the <i>Organize Favorites...</i> dialog for the external tool
                             configurations</cmd>
-                        <info><image href="./images/dev-getting-started-Organize-External-Tools-Favorites.png"
+                        <info><image
+                                href="./images/dev-getting-started-Organize-External-Tools-Favorites.png"
                             /></info>
                     </substep>
                     <substep>
