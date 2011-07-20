@@ -12,8 +12,11 @@ package org.bundlemaker.core.osgi.exporter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
@@ -140,8 +143,12 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
     // check the manifest
     try {
-      StateObjectFactory.defaultFactory.createBundleDescription(null,
-          ManifestUtils.convertManifest(ManifestUtils.toManifest(_manifestContents)), "internal", 1);
+      Dictionary<String, String> dictionary = new Hashtable<String, String>();
+      Properties properties = ManifestUtils.convertManifest(ManifestUtils.toManifest(_manifestContents));
+      for (String propertyName : properties.stringPropertyNames()) {
+        dictionary.put(propertyName, properties.getProperty(propertyName));
+      }
+      StateObjectFactory.defaultFactory.createBundleDescription(null, dictionary, "internal", 1);
     } catch (BundleException e) {
       // TODO
       e.printStackTrace();
