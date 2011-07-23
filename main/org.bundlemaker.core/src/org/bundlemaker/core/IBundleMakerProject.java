@@ -139,7 +139,7 @@ public interface IBundleMakerProject {
    *          the {@link IProgressMonitor} to track the progress.
    * @throws CoreException
    * 
-   * @precondition BundleMakerProjectState.INITIALIZED | BundleMakerProjectState.PARSED | BundleMakerProjectState.OPENED
+   * @precondition BundleMakerProjectState.INITIALIZED | BundleMakerProjectState.READY
    */
   void parseAndOpen(IProgressMonitor progressMonitor) throws CoreException;
 

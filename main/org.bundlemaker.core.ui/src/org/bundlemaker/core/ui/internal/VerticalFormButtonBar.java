@@ -43,8 +43,10 @@ public class VerticalFormButtonBar {
     _buttonBar = toolkit.createComposite(parentComposite);
     _buttonBar.setLayout(new GridLayout(1, false));
     GridData gd = new GridData();
-    gd.verticalAlignment = GridData.BEGINNING;
+    gd.verticalAlignment = GridData.FILL;
     gd.horizontalAlignment = GridData.FILL;
+    gd.grabExcessVerticalSpace = true;
+    gd.horizontalIndent = 0;
     _buttonBar.setLayoutData(gd);
   }
 
@@ -57,11 +59,20 @@ public class VerticalFormButtonBar {
    * @return the button that has been created
    */
   public Button newButton(String text, SelectionListener selectionListener) {
+    // Create the button
     final Button button = _formToolkit.createButton(_buttonBar, text, SWT.PUSH);
-    button.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+    // Set Layout data
+    GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+    layoutData.horizontalIndent = 0;
+    button.setLayoutData(layoutData);
+
+    // add selection listener if specified
     if (selectionListener != null) {
       button.addSelectionListener(selectionListener);
     }
+
+    // return the button
     return button;
   }
 

@@ -25,6 +25,8 @@ import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedCo
 import org.bundlemaker.core.ui.editor.BundleMakerProjectDescriptionWrapper;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
+import org.bundlemaker.core.ui.editor.ParseBundleMakerProjectRunnable;
+import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.ui.internal.VerticalFormButtonBar;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
@@ -96,6 +98,8 @@ public class ProjectResourcesBlock {
   private Button                           _moveDownButton;
 
   private Button                           _moveUpButton;
+
+  private Button                           _parseProjectButton;
 
   /**
    * @param editResources
@@ -208,6 +212,20 @@ public class ProjectResourcesBlock {
         moveDown();
       }
     });
+
+    _parseProjectButton = buttonBar.newButton("Parse project", new SelectionAdapter() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        ParseBundleMakerProjectRunnable.parseProject(_bundleMakerProjectProvider.getBundleMakerProject());
+      }
+
+    });
+    GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
+    layoutData.grabExcessVerticalSpace = true;
+    layoutData.verticalAlignment = SWT.BOTTOM;
+    _parseProjectButton.setImage(UIImages.REFRESH.getImage());
+    _parseProjectButton.setLayoutData(layoutData);
 
     _treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
