@@ -40,19 +40,19 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     BundleMakerAdapterFactory.register();
 
     FormToolkit toolkit = mform.getToolkit();
-    final ScrolledForm form = mform.getForm();
-    _form = form;
-    toolkit.decorateFormHeading(form.getForm());
-    form.setImage(UIImages.BUNDLEMAKER_ICON_SMALL.getImage());
-    form.setText("Bundlemaker project");
-    form.getBody().setLayout(FormLayoutUtils.createFormGridLayout(true, 1));
+    _form = mform.getForm();
+    toolkit.decorateFormHeading(_form.getForm());
+    _form.setImage(UIImages.BUNDLEMAKER_ICON_SMALL.getImage());
+    _form.setText("Bundlemaker project");
+    _form.getBody().setLayout(FormLayoutUtils.createFormGridLayout(true, 1));
 
     createResourcesSection(mform, "Resources:",
         "A <b>resource</b> is part of a project that can be parsed, transformed and exported by BundleMaker.", true);
 
-    IToolBarManager toolBarManager = form.getToolBarManager();
+    // Add actions to toolbar
+    IToolBarManager toolBarManager = _form.getToolBarManager();
     toolBarManager.add(new ParseAction());
-    form.updateToolBar();
+    _form.updateToolBar();
 
     refreshFormTitle();
   }
