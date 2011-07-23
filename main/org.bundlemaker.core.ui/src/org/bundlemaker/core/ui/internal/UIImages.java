@@ -27,6 +27,10 @@ public enum UIImages {
    */
   BUNDLEMAKER_ICON("icons/bundlemaker-icon.png"),
   /**
+   * the small BundleMaker logo
+   */
+  BUNDLEMAKER_ICON_SMALL("icons/bundlemaker-icon-small.png"),
+  /**
    * Represents a Resource Content
    */
   RESOURCE_CONTENT("icons/resource_content.gif"),
