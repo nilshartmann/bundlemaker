@@ -20,8 +20,11 @@ import java.util.Map;
 
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
@@ -55,21 +58,25 @@ import org.eclipse.core.runtime.Status;
 public class BundleMakerProject implements IBundleMakerProject {
 
   /** the associated eclipse project (the bundle make project) */
-  private IProject                       _project;
+  private IProject                                 _project;
 
   /** the bundle maker project description */
-  private BundleMakerProjectDescription  _projectDescription;
+  private BundleMakerProjectDescription            _projectDescription;
+
+  /** - */
+  private List<IBundleMakerProjectChangedListener> _projectChangedListeners;
 
   /** the associated info store */
-  private IDependencyStore               _additionalInfoStore;
+  private IDependencyStore                         _additionalInfoStore;
 
   /** the state the project is in */
-  private BundleMakerProjectState        _projectState;
+  private BundleMakerProjectState                  _projectState;
 
   /** the project description working copies */
-  private Map<String, ModularizedSystem> _modifiableModualizedSystemWorkingCopies;
+  private Map<String, ModularizedSystem>           _modifiableModualizedSystemWorkingCopies;
 
-  private IDependencyModel               _dependencyModel;
+  /** - */
+  private IDependencyModel                         _dependencyModel;
 
   /**
    * <p>
@@ -94,6 +101,9 @@ public class BundleMakerProject implements IBundleMakerProject {
     _modifiableModualizedSystemWorkingCopies = new HashMap<String, ModularizedSystem>();
 
     //
+    _projectChangedListeners = new LinkedList<IBundleMakerProjectChangedListener>();
+
+    //
     _projectState = BundleMakerProjectState.CREATED;
   }
 
@@ -103,6 +113,30 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public BundleMakerProjectState getState() {
     return _projectState;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addBundleMakerProjectChangedListener(IBundleMakerProjectChangedListener listener) {
+
+    //
+    if (!_projectChangedListeners.contains(listener)) {
+      _projectChangedListeners.add(listener);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeBundleMakerProjectChangedListener(IBundleMakerProjectChangedListener listener) {
+
+    //
+    if (_projectChangedListeners.contains(listener)) {
+      _projectChangedListeners.remove(listener);
+    }
   }
 
   /**
@@ -121,6 +155,9 @@ public class BundleMakerProject implements IBundleMakerProject {
     for (IParserFactory parserFactory : Activator.getDefault().getParserFactoryRegistry().getParserFactories()) {
       parserFactory.initialize(this);
     }
+
+    // notify listeners
+    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
   }
 
   @Override
@@ -147,6 +184,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     //
     Activator.getContext().registerService(IDependencyModel.class.getName(), _dependencyModel, null);
+
+    // notify listeners
+    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
   }
 
   /**
@@ -175,6 +215,9 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // set the project state
     _projectState = BundleMakerProjectState.DISPOSED;
+
+    // notify listeners
+    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
   }
 
   /**
@@ -389,6 +432,25 @@ public class BundleMakerProject implements IBundleMakerProject {
     } else if (!_project.equals(other._project))
       return false;
     return true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  public void notifyListeners(BundleMakerProjectChangedEvent event) {
+    Assert.isNotNull(event);
+
+    // clone
+    IBundleMakerProjectChangedListener[] listeners = _projectChangedListeners
+        .toArray(new IBundleMakerProjectChangedListener[0]);
+
+    //
+    for (IBundleMakerProjectChangedListener listener : listeners) {
+      listener.bundleMakerProjectChanged(event);
+    }
   }
 
   /**

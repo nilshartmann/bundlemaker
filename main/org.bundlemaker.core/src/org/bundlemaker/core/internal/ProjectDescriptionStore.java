@@ -28,8 +28,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 
 public class ProjectDescriptionStore {
 
@@ -100,8 +98,7 @@ public class ProjectDescriptionStore {
   public static BundleMakerProjectDescription loadProjectDescription(IBundleMakerProject project) throws CoreException {
 
     //
-    IFile iFile = project.getProject().getFile(
-        BundleMakerCore.PROJECT_DESCRIPTION_PATH);
+    IFile iFile = project.getProject().getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
 
     // refresh
     iFile.refreshLocal(IFile.DEPTH_INFINITE, null);
@@ -116,7 +113,7 @@ public class ProjectDescriptionStore {
       e.printStackTrace();
     }
 
-    BundleMakerProjectDescription result = new BundleMakerProjectDescription(project);
+    BundleMakerProjectDescription result = new BundleMakerProjectDescription((BundleMakerProject) project);
     result.setCurrentId(xmlProjectDescription.getCurrentId());
     result.setJre(xmlProjectDescription.getJre());
 
