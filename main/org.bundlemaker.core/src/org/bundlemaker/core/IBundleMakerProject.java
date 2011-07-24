@@ -78,6 +78,12 @@ public interface IBundleMakerProject {
    */
   public IModifiableBundleMakerProjectDescription getModifiableProjectDescription();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public IBundleMakerProjectDescription getProjectDescription();
 
   /**
@@ -90,6 +96,26 @@ public interface IBundleMakerProject {
    * @precondition none
    */
   BundleMakerProjectState getState();
+
+  /**
+   * <p>
+   * Adds the specified {@link IBundleMakerProjectChangedListener} to the {@link IBundleMakerProject}.
+   * </p>
+   * 
+   * @param listener
+   *          the {@link IBundleMakerProjectChangedListener}
+   */
+  void addBundleMakerProjectChangedListener(IBundleMakerProjectChangedListener listener);
+
+  /**
+   * <p>
+   * Removes the specified {@link IBundleMakerProjectChangedListener} from the {@link IBundleMakerProject}.
+   * </p>
+   * 
+   * @param listener
+   *          the {@link IBundleMakerProjectChangedListener}
+   */
+  void removeBundleMakerProjectChangedListener(IBundleMakerProjectChangedListener listener);
 
   /**
    * <p>

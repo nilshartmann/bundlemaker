@@ -18,7 +18,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bundlemaker.core.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -60,7 +63,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   private int                    _currentId = 0;
 
   /** - */
-  private IBundleMakerProject    _bundleMakerProject;
+  private BundleMakerProject     _bundleMakerProject;
 
   /**
    * <p>
@@ -69,7 +72,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * 
    * @param bundleMakerProject
    */
-  public BundleMakerProjectDescription(IBundleMakerProject bundleMakerProject) {
+  public BundleMakerProjectDescription(BundleMakerProject bundleMakerProject) {
 
     //
     _fileBasedContent = new ArrayList<FileBasedContent>();
@@ -504,5 +507,8 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   @Override
   public void save() throws CoreException {
     ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
+
+    // notify listener
+    _bundleMakerProject.notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED));
   }
 }
