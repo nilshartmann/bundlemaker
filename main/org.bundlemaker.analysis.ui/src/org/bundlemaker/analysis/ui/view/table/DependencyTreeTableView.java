@@ -263,7 +263,7 @@ public class DependencyTreeTableView extends ViewPart implements PropertyChangeL
 
   @Override
   public void setFocus() {
-
+    treeViewer.getTree().setFocus();
   }
 
   @Override

@@ -238,51 +238,58 @@
    <!-- the commands -->
    <extension point="org.eclipse.ui.commands">
       <command id="org.bundlemaker.core.ui.commands.Demo" name="Demo" /> 
-   </extension>
-   <extension point="org.eclipse.ui.commands">
-      <command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler" name="PDE Plug-in Projects" /> 
-   </extension>  
-   <extension point="org.eclipse.ui.commands">
-      <command id="org.bundlemaker.core.ui.commands.ReportExportHandler" name="Simple Report" /> 
-   </extension>   
-   <extension point="org.eclipse.ui.commands">
-      <command id="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler" name="Binary bundles" /> 
-   </extension>
-   <extension point="org.eclipse.ui.commands">
+      <command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler" name="Export PDE Plug-in Projects" /> 
+      <command id="org.bundlemaker.core.ui.commands.ReportExportHandler" name="Export Simple Report" /> 
+      <command id="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler" name="Export Binary bundles" /> 
       <command
             id="org.bundlemaker.core.ui.commands.TransformHandler"
             name="Transform..." />
-   </extension>   
-   <extension point="org.eclipse.ui.commands">
       <command id="org.bundlemaker.core.ui.commands.RunTransformationScript" name="Execute transformation..." /> 
    </extension> 
 
    <!-- ======================================== -->
    <!-- the pop up menus -->
    <!-- ======================================== -->
-   <extension point="org.eclipse.ui.menus">
+   <extension
+         point="org.eclipse.ui.menus">
 	   <menuContribution
-               locationURI="popup:org.bundlemaker.analysis.ui.ProjectExplorerPopupMenu"> 
+               locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions"> 
+			<separator
+				name="org.bundlemaker.core.ui.separator.transformer"
+				visible="true" />
          <command commandId="org.bundlemaker.core.ui.commands.TransformHandler"
-          			 style="push" />
+				style="push">
+				<visibleWhen checkEnabled="true" />
+			</command>           			 
          <command commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
-              			 style="push" />	       
+				icon="icons/bundlemaker-icon-small.png" style="push">
+				<visibleWhen checkEnabled="true" />
+			</command> 			
+		<!-- The Exporter -->
+         <separator
+               name="org.bundlemaker.core.ui.separator.exporter"
+               visible="true">
+         </separator>	       
+            <command commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+              			 style="push">
+				<visibleWhen checkEnabled="true" />
+			</command>              			
+			<command commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
+				style="push" >
+				<visibleWhen checkEnabled="true" />
+			</command>              			
+			<command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
+				style="push" >
+				<visibleWhen checkEnabled="true" />
+			</command>              			
+
 	   </menuContribution> 
    </extension>
       
    <!-- the "Export as" pop up menu -->
    <extension point="org.eclipse.ui.menus">
 	   <menuContribution
-	       locationURI="popup:org.bundlemaker.analysis.ui.ProjectExplorerPopupMenu">
-	       <menu id="org.bundlemaker.core.ui.menus.exportAsMenu"
-              label="Export as..." >
-            	<command commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
-              			 style="push" />
-              <command commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
-              			 style="push" />
-              <command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
-              			 style="push" />
-	       </menu>
+	       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
 	   </menuContribution> 
    </extension>
 

@@ -11,14 +11,10 @@
      <!-- the pop up menus --> 
    <extension point="org.eclipse.ui.commands"> 
       <command id="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand" 
-              name="Open for selected artifacts" /> 
-   </extension> 
-
-   <extension point="org.eclipse.ui.commands"> 
+              name="DSM view with selected artifacts" /> 
       <command id="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand" 
-              name="Open for children of selected artifacts" /> 
+              name="DSM view for children of selected artifacts" />
    </extension>
-   
    
         <extension 
          point="org.eclipse.ui.handlers"> 
@@ -35,10 +31,6 @@
                </reference> 
          </enabledWhen> 
       </handler> 
-   </extension> 
-   
-   <extension 
-         point="org.eclipse.ui.handlers"> 
       <handler class="org.bundlemaker.analysis.ui.dsmview.handlers.OpenDsmViewForChildrenHandler" 
             commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand"> 
          <activeWhen> 
@@ -54,17 +46,25 @@
       </handler> 
    </extension> 
    
+   
    <!-- DSM Submenu -->
    <extension point="org.eclipse.ui.menus"> 
            <menuContribution 
-               locationURI="popup:org.bundlemaker.analysis.ui.ProjectExplorerPopupMenu"> 
-	       <menu id="org.bundlemaker.analysis.ui.dsmview.menus.dsmMenu"
-              label="DSM" >
- 				<command commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand" 
-                	style="push" /> 
-                    <command commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand" 
-                                       style="push" /> 
-	       </menu>
+    	locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions"> 
+		<separator
+			name="org.bundlemaker.analysis.ui.dsmview.separator"
+		    visible="true">
+		</separator>
+	 	<command
+	    	commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand"
+	        style="push">
+	        <visibleWhen checkEnabled="true" />
+	     </command> 
+		<command
+			commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand"
+	        style="push">
+	        <visibleWhen checkEnabled="true" />
+		</command> 
            </menuContribution> 
    </extension> 
 </plugin>

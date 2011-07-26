@@ -11,14 +11,10 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.dsmview.DSMView;
-import org.bundlemaker.analysis.ui.editor.GenericEditor;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.analysis.ui.view.table.JavaEditor;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.internal.part.NullEditorInput;
 
 @SuppressWarnings("restriction")
@@ -69,19 +65,13 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
   }
 
   private void openEditorAndViews(ExecutionEvent event) {
-    try {
       // Open the 'GenericEditor'
-      IWorkbenchPage page = HandlerUtil.getActiveWorkbenchWindow(event).getActivePage();
-      page.openEditor(nullInputEditor, GenericEditor.ID);
+    Analysis.instance().openGenericEditor();
 
       // Make sure, DSMView is visible on GenericEditor
       DSMView.showTab();
 
       // Open the DependencyTreeTableView
       Analysis.instance().openDependencyTreeTableView();
-
-    } catch (PartInitException e) {
-      e.printStackTrace();
-    }
   }
 }
