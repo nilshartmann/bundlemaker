@@ -139,7 +139,7 @@ public abstract class DependencyPart implements PropertyChangeListener {
   }
 
   public void setFocus() {
-
+    composite.setFocus();
   }
 
   /**

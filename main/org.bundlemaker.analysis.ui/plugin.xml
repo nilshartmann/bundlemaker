@@ -83,6 +83,7 @@
       </editor>
    </extension>
    
+   <!--
       <extension point="org.eclipse.ui.menus">
 	   <menuContribution
 	       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
@@ -95,7 +96,7 @@
 	       </menu>
 	   </menuContribution> 
    </extension>
-   
+   -->
    
 
 </plugin>

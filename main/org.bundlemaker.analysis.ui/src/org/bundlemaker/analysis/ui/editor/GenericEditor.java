@@ -131,6 +131,7 @@ public class GenericEditor extends EditorPart {
   @Override
   public void setFocus() {
     int selectedItemIndex = tabFolder.getSelectionIndex();
+    System.out.printf("Setze focus aus index: %d%n", selectedItemIndex);
     this.setTabItemFocus(selectedItemIndex);
   }
 
