@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taskId">
+    <title>Creating a BundleMaker project</title>
+    <shortdesc/>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>Open the <uicontrol>New BundleMaker Project Wizard</uicontrol></cmd>
+                <info>
+                    <p>To create a new BundleMaker project, please open the <uicontrol>New
+                            BundleMaker Project Wizard</uicontrol> (<uicontrol>File -> New ->
+                            Other...</uicontrol>, <uicontrol>BundleMaker -> BundleMaker
+                            project</uicontrol> ).</p>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-create-new-project/user-getting-started-create-new-project-1.png"
+                            scale="95"/>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Specify name and JRE</cmd>
+                <info>
+                    <p>On the wizard page, specify a name and a JRE that you want to use and click
+                            <uicontrol>Finish</uicontrol>.</p>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-create-new-project/user-getting-started-create-new-project-2.png"
+                            scale="95"/>
+                    </p>
+                </info>
+            </step>
+        </steps>
+        <result>
+            <p>After clicking the <uicontrol>Finish</uicontrol> button a new project with the
+                speficied name will be created in the workspace.</p>
+            <p>
+                <image
+                    href="./images/user-getting-started-create-new-project/user-getting-started-create-new-project-3.png"
+                    scale="95"/>
+            </p>
+        </result>
+    </taskbody>
+</task>

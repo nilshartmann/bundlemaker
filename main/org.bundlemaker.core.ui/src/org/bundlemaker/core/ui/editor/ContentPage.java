@@ -47,7 +47,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     _form = form;
     toolkit.decorateFormHeading(form.getForm());
     form.setImage(UIImages.BUNDLEMAKER_ICON_SMALL.getImage());
-    form.setText("Bundlemaker project");
+    form.setText("Content");
     form.getBody().setLayout(FormLayoutUtils.createFormGridLayout(true, 1));
 
     createResourcesSection(mform, "Resources:",
@@ -111,7 +111,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
     String state = (projectState == null ? "unknown" : projectState.toString());
 
-    _form.setText(String.format("Edit BundleMaker project [%s]", state));
+    // _form.setText(String.format("Edit BundleMaker project [%s]", state));
 
   }
 
