@@ -8,6 +8,9 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.ui.editor.resources.ProjectResourcesBlock;
 import org.bundlemaker.core.ui.internal.UIImages;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -123,11 +126,17 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
     @Override
     public void run() {
+
+      // Bug-Fix: Refresh the workspace to prevent eclipse from showing hidden projects
+      try {
+        ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+      } catch (CoreException e) {
+        // silently ignore...
+      }
+
       // Parse the project
       ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
       refreshFormTitle();
     }
-
   }
-
 }
