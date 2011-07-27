@@ -15,6 +15,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -115,6 +117,27 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
   }
 
+  @Override
+  public void parseProject() {
+
+    // Bug-Fix: Refresh the workspace to prevent eclipse from showing hidden projects
+    try {
+      ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+    } catch (CoreException e) {
+      // silently ignore...
+    }
+
+    // allow user to save the project if project is dirty
+    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    if (!page.saveEditor(getEditor(), true)) {
+      // user canceled operation
+      return;
+    }
+
+    // Parse the project
+    ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
+  }
+
   /**
    * An {@link Action} that (re-)parses the BundleMaker project
    */
@@ -126,17 +149,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
     @Override
     public void run() {
-
-      // Bug-Fix: Refresh the workspace to prevent eclipse from showing hidden projects
-      try {
-        ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-      } catch (CoreException e) {
-        // silently ignore...
-      }
-
-      // Parse the project
-      ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
-      refreshFormTitle();
+      parseProject();
     }
   }
 }

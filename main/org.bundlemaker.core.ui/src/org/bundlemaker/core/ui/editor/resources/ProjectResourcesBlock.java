@@ -25,7 +25,6 @@ import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedCo
 import org.bundlemaker.core.ui.editor.BundleMakerProjectDescriptionWrapper;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
-import org.bundlemaker.core.ui.editor.ParseBundleMakerProjectRunnable;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.ui.internal.VerticalFormButtonBar;
 import org.eclipse.core.runtime.IPath;
@@ -217,7 +216,7 @@ public class ProjectResourcesBlock {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
-        ParseBundleMakerProjectRunnable.parseProject(_bundleMakerProjectProvider.getBundleMakerProject());
+        _bundleMakerProjectProvider.parseProject();
       }
 
     });
