@@ -88,8 +88,6 @@ public class ProjectDescriptionEditor extends FormEditor {
     // Open the BundleMaker project
     IProject project = adapter.getFile().getProject();
 
-    System.out.println("init - file: " + adapter.getFile());
-
     setPartName(project.getName());
     try {
       // TODO use ProgressMonitor
