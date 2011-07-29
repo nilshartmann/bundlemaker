@@ -122,7 +122,7 @@ public class DsmViewWidget implements Observer {
     _horizontalListFigure = new HorizontalSideMarker(_model);
     _zoomableScrollpaneHorizontalBar = new ZoomableScrollPane(_horizontalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 
-    _matrixFigure.addMatrixLIstener(new IMatrixListener() {
+    _matrixFigure.addMatrixListener(new IMatrixListener() {
 
       @Override
       public void toolTip(MatrixEvent event) {
@@ -131,12 +131,12 @@ public class DsmViewWidget implements Observer {
 
       @Override
       public void singleClick(MatrixEvent event) {
-        System.out.println("singleClick " + event);
+        // do nothing
       }
 
       @Override
       public void doubleClick(MatrixEvent event) {
-        System.out.println("doubleClick " + event);
+        // do nothing
       }
 
       @Override
@@ -196,7 +196,7 @@ public class DsmViewWidget implements Observer {
   }
 
   protected void drawToolTip(int x, int y) {
-    System.out.println("drawToolTip");
+    // System.out.println("drawToolTip");
   }
 
   /**
@@ -315,5 +315,13 @@ public class DsmViewWidget implements Observer {
     _mainFigure.repaint();
 
     _zoomScrollBar.setValue(40);
+  }
+
+  public void addMatrixListener(IMatrixListener listener) {
+    _matrixFigure.addMatrixListener(listener);
+  }
+
+  public void removeMatrixLIstener(IMatrixListener listener) {
+    _matrixFigure.removeMatrixLIstener(listener);
   }
 }
