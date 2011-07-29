@@ -107,6 +107,7 @@ public class ContentListBlock {
       @Override
       public void widgetSelected(SelectionEvent e) {
         _contentList.remove(_contentList.getSelectionIndices());
+        refreshEnablement();
       }
 
     });
