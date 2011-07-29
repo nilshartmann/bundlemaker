@@ -21,15 +21,15 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
   // var. 4 = #FFEAB2 = rgb(255,234,178)
   // var. 5 = #FFF3D3 = rgb(255,243,211)
 
-  private final Color VAR_5_LIGHT        = getColor("FFF3D3");
-
-  private final Color VAR_4_LIGHT_MEDIUM = getColor("FFEAB2");
-
   private final Color VAR_1_MEDIUM       = getColor("FFDE8A");
 
   private final Color VAR_2_DARK_MEDIUM  = getColor("DEC585");
 
   private final Color VAR_3_DARK         = getColor("D1AE54");
+
+  private final Color VAR_4_LIGHT_MEDIUM = getColor("FFEAB2");
+
+  private final Color VAR_5_LIGHT        = getColor("FFF3D3");
 
   private int         _horizontalBoxSize = 20;
 

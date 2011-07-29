@@ -66,7 +66,7 @@ public class Matrix extends Figure {
    * 
    * @param listener
    */
-  public void addMatrixLIstener(IMatrixListener listener) {
+  public void addMatrixListener(IMatrixListener listener) {
     if (!_matrixListeners.contains(listener)) {
       _matrixListeners.add(listener);
     }
