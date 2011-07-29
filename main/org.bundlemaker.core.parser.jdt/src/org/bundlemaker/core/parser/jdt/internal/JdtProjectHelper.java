@@ -72,9 +72,15 @@ public class JdtProjectHelper {
     // step 3.2: add the binary paths
     for (IFileBasedContent projectContent : project.getProjectDescription().getFileBasedContent()) {
 
+      // TODO!!
+      IPath sourceRoot = null;
+      if (!projectContent.getSourceRootPaths().isEmpty()) {
+        sourceRoot = projectContent.getSourceRootPaths().toArray(new IRootPath[0])[0].getResolvedPath();
+      }
+
       // add binary paths
       for (IRootPath iClasspathEntry : projectContent.getBinaryRootPaths()) {
-        classpathEntry = JavaCore.newLibraryEntry(iClasspathEntry.getResolvedPath(), null, null);
+        classpathEntry = JavaCore.newLibraryEntry(iClasspathEntry.getResolvedPath(), sourceRoot, null);
         entries.add(classpathEntry);
       }
     }
