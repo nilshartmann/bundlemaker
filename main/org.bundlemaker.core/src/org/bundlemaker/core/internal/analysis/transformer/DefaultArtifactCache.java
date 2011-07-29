@@ -34,7 +34,10 @@ import org.eclipse.core.runtime.Assert;
 public class DefaultArtifactCache extends AbstractBaseArtifactCache {
 
   /** - */
-  private ContentType _contentType = ContentType.SOURCE;
+  private ContentType _contentType  = ContentType.SOURCE;
+
+  /** - */
+  private boolean     _hierarchical = false;
 
   /**
    * <p>
@@ -79,6 +82,26 @@ public class DefaultArtifactCache extends AbstractBaseArtifactCache {
     Assert.isNotNull(contentType);
 
     _contentType = contentType;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean isHierarchical() {
+    return _hierarchical;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param hierarchical
+   */
+  public void setHierarchical(boolean hierarchical) {
+    _hierarchical = hierarchical;
   }
 
   /**
@@ -140,8 +163,16 @@ public class DefaultArtifactCache extends AbstractBaseArtifactCache {
       @Override
       protected AbstractArtifactContainer create(ModulePackageKey modulePackageKey) {
 
-        // get the parent
-        IArtifact parent = getModuleCache().getOrCreate(modulePackageKey.getModule());
+        String packageName = modulePackageKey.getPackageName();
+
+        IArtifact parent = null;
+
+        if (_hierarchical && packageName.contains(".")) {
+          String parentPackage = packageName.substring(0, packageName.lastIndexOf("."));
+          parent = getPackageCache().getOrCreate(new ModulePackageKey(modulePackageKey.getModule(), parentPackage));
+        } else {
+          parent = getModuleCache().getOrCreate(modulePackageKey.getModule());
+        }
 
         //
         return new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent);

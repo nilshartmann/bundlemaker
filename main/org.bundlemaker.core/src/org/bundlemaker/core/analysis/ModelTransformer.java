@@ -41,7 +41,7 @@ public class ModelTransformer {
   }
 
   public static IAdvancedArtifact transform(IModifiableModularizedSystem modularizedSystem) throws CoreException {
-    return transform(modularizedSystem, ContentType.BINARY);
+    return transform(modularizedSystem, ContentType.SOURCE, true);
   }
 
   /**
@@ -52,13 +52,14 @@ public class ModelTransformer {
    * @return
    * @throws CoreException
    */
-  public static IAdvancedArtifact transform(IModifiableModularizedSystem modularizedSystem, ContentType contentType)
-      throws CoreException {
+  public static IAdvancedArtifact transform(IModifiableModularizedSystem modularizedSystem, ContentType contentType,
+      boolean hierarchical) throws CoreException {
     Assert.isNotNull(modularizedSystem);
     Assert.isNotNull(contentType);
 
     DefaultArtifactCache artifactCache = new DefaultArtifactCache(modularizedSystem);
     artifactCache.setContentType(contentType);
+    artifactCache.setHierarchical(hierarchical);
     IAdvancedArtifact root = artifactCache.transform();
     return root;
   }
