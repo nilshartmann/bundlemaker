@@ -11,13 +11,18 @@
                 <cmd>Add the BundleMaker repository</cmd>
                 <info>
                     <p>Add one of the following BundleMaker update sites:<ul>
-                            <li><b>Released versions:</b>http://www.bundlemaker.org/updates/</li>
-                            <li><b>Latest development
-                                version:</b>http://www.bundlemaker.org/development/</li>
+                            <li><b>Released versions:</b>
+                                <xref href="http://www.bundlemaker.org/updates/"
+                                    >http://www.bundlemaker.org/updates/</xref></li>
+                            <li><b>Latest development version:</b>
+                                <xref href="http://www.bundlemaker.org/development/"
+                                    >http://www.bundlemaker.org/development/</xref></li>
                         </ul>
                     </p>
                     <p>
-                        <image href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_2.png" scale="95"/>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_2.png"
+                        />
                     </p>
                 </info>
             </step>
@@ -26,7 +31,8 @@
                 <info>
                     <p>If you you use Eclipse 3.6.x, please assure that the Helios update site is
                         enabled. If you use Eclipse 3.7.x, enable the Indigo update site. <image
-                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_3.png" scale="100"/>
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_3.png"
+                        />
                     </p>
                 </info>
             </step>
@@ -35,7 +41,9 @@
                 <info>
                     <p> You don't have to select the BundleMaker dependencies explicitly as they are
                         automatically included when the BundleMaker feature has been selected.
-                        <image href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_4.png" scale="90"/>
+                            <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_4.png"
+                            scale="90"/>
                     </p>
                 </info>
             </step>
@@ -46,7 +54,9 @@
                 <cmd>Review licenses</cmd>
                 <info>
                     <p>
-                        <image href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_6.png"/>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_6.png"
+                        />
                     </p>
                 </info>
             </step>
@@ -54,7 +64,9 @@
                 <cmd>Accept unsigned content</cmd>
                 <info>
                     <p>
-                        <image href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_7.png"/>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_7.png"
+                        />
                     </p>
                 </info>
             </step>
@@ -62,7 +74,9 @@
                 <cmd>Restart your Eclipse SDK</cmd>
                 <info>
                     <p>
-                        <image href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_8.png"/>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_8.png"
+                        />
                     </p>
                 </info>
             </step>

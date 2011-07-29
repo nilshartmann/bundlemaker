@@ -20,7 +20,7 @@
                     <p>
                         <image
                             href="./images/user-getting-started-open-bm-perspective/user-getting-started-open-bm-perspective-1.png"
-                            scale="95"/>
+                        />
                     </p>
                 </info>
             </step>
@@ -31,7 +31,7 @@
             <p>
                 <image
                     href="./images/user-getting-started-open-bm-perspective/user-getting-started-open-bm-perspective-2.png"
-                    scale="85"/>
+                />
             </p>
         </result>
     </taskbody>

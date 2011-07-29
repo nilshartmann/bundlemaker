@@ -18,5 +18,8 @@
         <topicref
             href="./user/task/getting-started/user-getting-started-create-new-project.dita"
             type="task"/>
+        <topicref
+            href="./user/task/getting-started/user-getting-started-create-project-description.dita"
+            type="task"/>
     </topicref>
 </map>

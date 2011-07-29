@@ -15,7 +15,7 @@
                     <p>
                         <image
                             href="./images/user-getting-started-create-new-project/user-getting-started-create-new-project-1.png"
-                            scale="95"/>
+                        />
                     </p>
                 </info>
             </step>
@@ -27,7 +27,7 @@
                     <p>
                         <image
                             href="./images/user-getting-started-create-new-project/user-getting-started-create-new-project-2.png"
-                            scale="95"/>
+                        />
                     </p>
                 </info>
             </step>
@@ -38,7 +38,7 @@
             <p>
                 <image
                     href="./images/user-getting-started-create-new-project/user-getting-started-create-new-project-3.png"
-                    scale="95"/>
+                />
             </p>
         </result>
     </taskbody>
