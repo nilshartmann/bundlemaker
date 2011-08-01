@@ -58,7 +58,7 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem(),
-        ContentType.BINARY);
+        ContentType.BINARY, false);
     Assert.assertNotNull(rootArtifact);
 
     //

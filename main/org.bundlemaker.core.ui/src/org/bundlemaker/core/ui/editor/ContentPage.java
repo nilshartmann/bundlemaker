@@ -8,10 +8,15 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.ui.editor.resources.ProjectResourcesBlock;
 import org.bundlemaker.core.ui.internal.UIImages;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -40,11 +45,12 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     BundleMakerAdapterFactory.register();
 
     FormToolkit toolkit = mform.getToolkit();
-    _form = mform.getForm();
-    toolkit.decorateFormHeading(_form.getForm());
-    _form.setImage(UIImages.BUNDLEMAKER_ICON_SMALL.getImage());
-    _form.setText("Bundlemaker project");
-    _form.getBody().setLayout(FormLayoutUtils.createFormGridLayout(true, 1));
+    final ScrolledForm form = mform.getForm();
+    _form = form;
+    toolkit.decorateFormHeading(form.getForm());
+    form.setImage(UIImages.BUNDLEMAKER_ICON_SMALL.getImage());
+    form.setText("Content");
+    form.getBody().setLayout(FormLayoutUtils.createFormGridLayout(true, 1));
 
     createResourcesSection(mform, "Resources:",
         "A <b>resource</b> is part of a project that can be parsed, transformed and exported by BundleMaker.", true);
@@ -108,8 +114,29 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
     String state = (projectState == null ? "unknown" : projectState.toString());
 
-    _form.setText(String.format("Edit BundleMaker project [%s]", state));
+    // _form.setText(String.format("Edit BundleMaker project [%s]", state));
 
+  }
+
+  @Override
+  public void parseProject() {
+
+    // Bug-Fix: Refresh the workspace to prevent eclipse from showing hidden projects
+    try {
+      ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+    } catch (CoreException e) {
+      // silently ignore...
+    }
+
+    // allow user to save the project if project is dirty
+    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    if (!page.saveEditor(getEditor(), true)) {
+      // user canceled operation
+      return;
+    }
+
+    // Parse the project
+    ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
   }
 
   /**
@@ -123,11 +150,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
     @Override
     public void run() {
-      // Parse the project
-      ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
-      refreshFormTitle();
+      parseProject();
     }
-
   }
-
 }

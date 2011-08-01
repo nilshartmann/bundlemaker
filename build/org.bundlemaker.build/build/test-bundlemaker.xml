@@ -5,7 +5,7 @@
          xmlns:antcontrib="antlib:net.sf.antcontrib"
          xmlns:clover="antlib:com.cenqua.clover">
 
-	<!-- -->
+	<!-- import common build definitions -->
 	<import file="${basedir}/common-definitions.xml" />
 
 	<!-- ================================= 
@@ -13,30 +13,41 @@
          ================================= -->
 	<target name="test-bundlemaker">
 
-		<!-- -->
+		<!-- clean the clover coverage database -->
+		<clover:clover-clean />
+
+		<!-- clean the 'tests' directory -->
 		<delete dir="${basedir}/../destination/tests" quiet="true" />
 		<mkdir dir="${basedir}/../destination/tests" />
+
+		<!-- clean the 'coverage' directory -->
 		<delete dir="${basedir}/../destination/coverage" quiet="true" />
+		<mkdir dir="${basedir}/../destination/coverage" />
 
-		<!-- -->
-		<buildWorkspace />
+		<!-- instrument and build the workspace -->
+		<instrumentAndBuildWorkspace />
 
-		<!-- -->
+		<!-- execute the tests -->
 		<executeTests />
 
-		<!-- -->
+		<!-- create the html-report -->
 		<clover:clover-html-report outdir="${basedir}/../destination/coverage"
-		                           title="MyProject Coverage" />
+		                           title="BundleMaker Coverage Report" />
 
-		<!-- -->
+		<!-- create the html-report -->
+		<clover:clover-pdf-report outfile="${basedir}/../destination/coverage.pdf"
+		                          title="BundleMaker Coverage Report" />
+
+
+		<!-- clean up the instrumented tasks -->
 		<cleanUp />
 
 	</target>
 
 	<!-- = = = = = = = = = = = = = = = = =
-          macrodef: buildWorkspace          
+          macrodef: instrumentAndBuildWorkspace          
          = = = = = = = = = = = = = = = = = -->
-	<macrodef name="buildWorkspace">
+	<macrodef name="instrumentAndBuildWorkspace">
 		<sequential>
 
 			<!-- iterate over all projects in the workspace -->
@@ -47,7 +58,7 @@
 				<!-- execute the contained build steps for all plug-in projects -->
 				<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
 
-					<!-- STEP 1: clean all output directories -->
+					<!-- Step 1: clean all output directories -->
 					<ant4eclipse:executeJdtProject workspaceId="bundleMakerWorkspaceWithTests"
 					                               projectName="${executeProjectSet.project.name}"
 					                               prefix="buildPlugin"
@@ -62,10 +73,10 @@
 					</ant4eclipse:executeJdtProject>
 				</ant4eclipse:forEachProject>
 
-				<!-- STEP 2: call the build plug-in project -->
+				<!-- Step 2: call the build plug-in project -->
 				<ant4eclipse:forEachProject filter="(executeProjectSet.org.eclipse.pde.PluginNature=*)">
 
-
+					<!-- Step 2.1: instrument the 'main' projects -->
 					<antcontrib:if>
 						<matches pattern=".*[\\/]main[\\/].*"
 						         string="${executeProjectSet.project.directory}" />
@@ -75,6 +86,7 @@
 						</antcontrib:then>
 					</antcontrib:if>
 
+					<!-- Step 2.2: build the projects -->
 					<buildPlugin workspaceId="bundleMakerWorkspaceWithTests"
 					             projectname="${executeProjectSet.project.name}"
 					             targetPlatformId="target.platform"
@@ -88,10 +100,13 @@
 		</sequential>
 	</macrodef>
 
-	<!-- -->
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: executeTests          
+         = = = = = = = = = = = = = = = = = -->
 	<macrodef name="executeTests">
 		<sequential>
 
+			<!-- define the clover path -->
 			<path id="clover.path">
 				<pathelement location="${basedir}/../libs/clover-ant/clover.jar" />
 			</path>
@@ -111,10 +126,10 @@
 						           type="file" />
 						<antcontrib:then>
 
-							<!-- -->
+							<!-- echo -->
 							<echo>Launching "${executeProjectSet.project.directory}/[${executeProjectSet.project.name}] Test All.launch"</echo>
 
-							<!-- -->
+							<!-- execute the PdeJunitLauncher -->
 							<executePdeJunitLauncher workspaceId="bundleMakerWorkspaceWithTests"
 							                         targetPlatformId="target.platform"
 							                         projectName="${executeProjectSet.project.name}"

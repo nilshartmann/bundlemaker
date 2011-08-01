@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taskId">
+    <title>The BundleMaker Perspective</title>
+    <taskbody>
+        <context>
+            <p>BundleMaker provides a bunch of views, editor and actions that allows you to parse,
+                analyze and transform a given Java based system. To make work with BundleMaker as
+                comfortable as possible, BundleMaker also defines a custom perspective.</p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Open the <uicontrol>Open Perspective</uicontrol> dialog</cmd>
+                <info>
+                    <p> You can open the BundleMaker perspective by opening the <uicontrol>Open
+                            Perspective</uicontrol> dialog (Window -> Open Perspective -> Other...).
+                        In the <uicontrol>Open Perspective</uicontrol> dialog, you can select the
+                            <uicontrol>BundleMaker</uicontrol> perspective. Click
+                            <uicontrol>OK</uicontrol>.</p>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-open-bm-perspective/user-getting-started-open-bm-perspective-1.png"
+                        />
+                    </p>
+                </info>
+            </step>
+        </steps>
+        <result>
+            <p>The BundleMaker perspective defines the initial set and layout of releted views in
+                the Workbench window.</p>
+            <p>
+                <image
+                    href="./images/user-getting-started-open-bm-perspective/user-getting-started-open-bm-perspective-2.png"
+                />
+            </p>
+        </result>
+    </taskbody>
+</task>

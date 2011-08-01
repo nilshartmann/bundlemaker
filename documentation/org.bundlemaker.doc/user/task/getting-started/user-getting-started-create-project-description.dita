@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "task.dtd">
+<task id="taskId">
+    <title>Adding content</title>
+    <shortdesc/>
+    <taskbody>
+        <context>
+            <p>Once you have created a BundleMaker project, you can specify the system that you want
+                to analyze and transform. A <i>system</i> contains one or more artifacts (e.g. JARs
+                and source archives) and is defined in the BundleMaker project description
+                    (<codeph>bundlemaker.xml</codeph>).</p>
+        </context>
+        <steps>
+            <step>
+                <cmd>Opening the <uicontrol>BundleMaker Project Description Editor</uicontrol></cmd>
+                <info>
+                    <p> To add artifacts to the project description, you must open the
+                            <uicontrol>BundleMaker Project Description Editor</uicontrol> by double
+                        clicking on the project desciption. </p>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-create-project-description/create-project-description_1.png"
+                        />
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Adding content entries</cmd>
+                <info>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-create-project-description/create-project-description_2.png"
+                        />
+                    </p>
+                    <p>
+                        <table>
+                            <tgroup cols="2">
+                                <tbody>
+                                    <row>
+                                        <entry>1</entry>
+                                        <entry>Adds a single entry to the project
+                                            description.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>2</entry>
+                                        <entry>Adds a set of workspace-relative (binary) archives to
+                                            the project description. Each selected archive will be
+                                            represented through its own entry in the project
+                                            description. Name and version of the archive are set
+                                            automatically. </entry>
+                                    </row>
+                                    <row>
+                                        <entry>3</entry>
+                                        <entry>Adds a set of external (binary) archives to the
+                                            project description. Each selected archive will be
+                                            represented through its own entry in the project
+                                            description. Name and version of the archive are set
+                                            automatically. </entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Specifying a content entry</cmd>
+                <info>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-create-project-description/create-project-description_3.png"
+                        />
+                    </p>
+                    <p>
+                        <table>
+                            <tgroup cols="2">
+                                <tbody>
+                                    <row>
+                                        <entry>1</entry>
+                                        <entry>The name of the entry (e.g.
+                                            <codeph>JEdit</codeph>).</entry>
+                                    </row>
+                                    <row>
+                                        <entry>2</entry>
+                                        <entry>The version number of the entry (e.g.
+                                                <codeph>4.2.1</codeph>).</entry>
+                                    </row>
+                                    <row>
+                                        <entry>3</entry>
+                                        <entry>List of archives and directories that contain classes
+                                            that belong to this entry. Note that you <b>must</b>
+                                            specifiy binary content.</entry>
+                                    </row>
+                                    <row>
+                                        <entry>4</entry>
+                                        <entry>List of archives and directories that contain sources
+                                            that belong to this entry.</entry>
+                                    </row>
+                                </tbody>
+                            </tgroup>
+                        </table>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Specifying a content entry</cmd>
+                <info>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-create-project-description/create-project-description_4.png"
+                        />
+                    </p>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

@@ -20,4 +20,9 @@ public interface BundleMakerProjectProvider {
 
   public IBundleMakerProject getBundleMakerProject();
 
+  /**
+   * TODO
+   */
+  public void parseProject();
+
 }

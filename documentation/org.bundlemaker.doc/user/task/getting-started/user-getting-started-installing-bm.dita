@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE task PUBLIC "-//OASIS//DTD DITA Task//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/task.dtd">
+<task id="taskId">
+    <title>Installing</title>
+    <taskbody>
+        <steps>
+            <step>
+                <cmd>Open the <uicontrol>Help -> Install New Software...</uicontrol> dialog</cmd>
+            </step>
+            <step>
+                <cmd>Add the BundleMaker repository</cmd>
+                <info>
+                    <p>Add one of the following BundleMaker update sites:<ul>
+                            <li><b>Released versions:</b>
+                                <xref href="http://www.bundlemaker.org/updates/"
+                                    >http://www.bundlemaker.org/updates/</xref></li>
+                            <li><b>Latest development version:</b>
+                                <xref href="http://www.bundlemaker.org/development/"
+                                    >http://www.bundlemaker.org/development/</xref></li>
+                        </ul>
+                    </p>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_2.png"
+                        />
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Assure that that the current eclipse release update site is enabled.</cmd>
+                <info>
+                    <p>If you you use Eclipse 3.6.x, please assure that the Helios update site is
+                        enabled. If you use Eclipse 3.7.x, enable the Indigo update site. <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_3.png"
+                        />
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Select the BundleMaker feature 'org.bundlemaker.core.feature'</cmd>
+                <info>
+                    <p> You don't have to select the BundleMaker dependencies explicitly as they are
+                        automatically included when the BundleMaker feature has been selected.
+                            <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_4.png"
+                            scale="90"/>
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Install details</cmd>
+            </step>
+            <step>
+                <cmd>Review licenses</cmd>
+                <info>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_6.png"
+                        />
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Accept unsigned content</cmd>
+                <info>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_7.png"
+                        />
+                    </p>
+                </info>
+            </step>
+            <step>
+                <cmd>Restart your Eclipse SDK</cmd>
+                <info>
+                    <p>
+                        <image
+                            href="./images/user-getting-started-installing-bm/installing-bundlemaker-step_8.png"
+                        />
+                    </p>
+                </info>
+            </step>
+        </steps>
+    </taskbody>
+</task>

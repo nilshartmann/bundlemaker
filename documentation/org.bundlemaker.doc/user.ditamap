@@ -11,8 +11,15 @@
 -->
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "http://docs.oasis-open.org/dita/v1.1/OS/dtd/map.dtd">
 <map title="Bundlemaker concepts" rev="0.1">
+    <topicref href="./user/task/getting-started/user-getting-started-installing-bm.dita" type="task"/>
     <topicref href="./user/task/getting-started/user-getting-started-overview.dita" type="concept">
-        <topicref href="./user/task/getting-started/user-getting-started-installing-bm-helios.dita"
+        <topicref href="./user/task/getting-started/user-getting-started-select-bm-perspective.dita"
+            type="task"/>
+        <topicref
+            href="./user/task/getting-started/user-getting-started-create-new-project.dita"
+            type="task"/>
+        <topicref
+            href="./user/task/getting-started/user-getting-started-create-project-description.dita"
             type="task"/>
     </topicref>
 </map>
