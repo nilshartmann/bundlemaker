@@ -36,6 +36,11 @@ public class Activator implements BundleActivator {
    * @return
    */
   public static BundleContext getContext() {
+    
+    if (_context == null) {
+      throw new RuntimeException("Bundle 'org.bundlemaker.core.osgi' has to be started.");
+    }
+    
     return _context;
   }
 
