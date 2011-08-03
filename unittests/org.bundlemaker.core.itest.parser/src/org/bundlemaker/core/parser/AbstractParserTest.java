@@ -31,7 +31,7 @@ public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest 
   public void testParser() throws CoreException {
 
     addProjectDescription();
-
+    
     // initialize the project
     log("Initializing project...");
     getBundleMakerProject().initialize(null);
