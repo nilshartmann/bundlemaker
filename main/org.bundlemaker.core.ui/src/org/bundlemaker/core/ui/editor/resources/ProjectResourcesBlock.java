@@ -22,7 +22,6 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
-import org.bundlemaker.core.ui.editor.BundleMakerProjectDescriptionWrapper;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
 import org.bundlemaker.core.ui.internal.UIImages;
@@ -153,11 +152,7 @@ public class ProjectResourcesBlock {
     _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
     createColumns();
 
-    IModifiableBundleMakerProjectDescription bundleMakerProjectDescription = getBundleMakerProjectDescription();
-    System.out.println("Init treeviewer mit projectdescription " + bundleMakerProjectDescription);
-    BundleMakerProjectDescriptionWrapper wrapper = new BundleMakerProjectDescriptionWrapper(
-        bundleMakerProjectDescription);
-    _treeViewer.setInput(wrapper);
+    _treeViewer.setInput(_bundleMakerProjectProvider.getBundleMakerProject());
 
     // Create the buttonbar
     final VerticalFormButtonBar buttonBar = new VerticalFormButtonBar(client, toolkit);

@@ -55,9 +55,10 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     createResourcesSection(mform, "Resources:",
         "A <b>resource</b> is part of a project that can be parsed, transformed and exported by BundleMaker.", true);
 
-    IToolBarManager toolBarManager = form.getToolBarManager();
+    // Add actions to toolbar
+    IToolBarManager toolBarManager = _form.getToolBarManager();
     toolBarManager.add(new ParseAction());
-    form.updateToolBar();
+    _form.updateToolBar();
 
     refreshFormTitle();
   }
