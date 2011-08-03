@@ -29,9 +29,9 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ModifyProjectContentDialog extends TitleAreaDialog {
 
-  private Text                   _nameTextField;
+  private Text                    _nameTextField;
 
-  private Text                   _versionTextField;
+  private Text                    _versionTextField;
 
   private Button                  _analyzeButton;
 
@@ -42,17 +42,17 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
    */
   private final IFileBasedContent _originalContent;
 
-  private ContentListBlock       _binariesContentList;
+  private ContentListBlock        _binariesContentList;
 
-  private ContentListBlock       _sourcesContentList;
+  private ContentListBlock        _sourcesContentList;
 
-  private String                 _name;
+  private String                  _name;
 
-  private String                 _version;
+  private String                  _version;
 
-  private java.util.List<String> _binaryRoots;
+  private java.util.List<String>  _binaryRoots;
 
-  private java.util.List<String> _sourceRoots;
+  private java.util.List<String>  _sourceRoots;
 
   boolean                         _analyze        = true;
 
@@ -127,9 +127,9 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     GridLayout gridLayout = FormLayoutUtils.createFormGridLayout(false, 2);
     dialogComposite.setLayout(gridLayout);
 
-    addNameAndVersionRow(dialogComposite);
+    createHeadSection(dialogComposite);
     _binariesContentList = addContentList(dialogComposite, "Binaries");
-      _sourcesContentList = addContentList(dialogComposite, "Sources");
+    _sourcesContentList = addContentList(dialogComposite, "Sources");
 
     prepopulateForm();
     refreshEnablement();
@@ -163,13 +163,17 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _analyzeSourcesButton.setSelection(_originalContent.isAnalyzeSourceResources());
   }
 
-  private void addNameAndVersionRow(Composite dialogComposite) {
+  private void createHeadSection(Composite dialogComposite) {
 
-    _analyzeButton = new Button(dialogComposite, SWT.CHECK);
-    _analyzeButton.setText("Analyze");
+    Composite buttonRow = new Composite(dialogComposite, SWT.NONE);
+    buttonRow.setLayout(new GridLayout(2, true));
     GridData gridData = new GridData();
     gridData.horizontalSpan = 2;
-    _analyzeButton.setLayoutData(gridData);
+    buttonRow.setLayoutData(gridData);
+
+    _analyzeButton = new Button(buttonRow, SWT.CHECK);
+    _analyzeButton.setText("Analyze");
+
     _analyzeButton.addSelectionListener(new SelectionAdapter() {
 
       @Override
@@ -179,11 +183,8 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
     });
 
-    _analyzeSourcesButton = new Button(dialogComposite, SWT.CHECK);
+    _analyzeSourcesButton = new Button(buttonRow, SWT.CHECK);
     _analyzeSourcesButton.setText("Analyze sources");
-    gridData = new GridData();
-    gridData.horizontalSpan = 2;
-    _analyzeSourcesButton.setLayoutData(gridData);
     _analyzeSourcesButton.addSelectionListener(new SelectionAdapter() {
 
       @Override
@@ -264,7 +265,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _name = _nameTextField.getText();
     _version = _versionTextField.getText();
     _binaryRoots = _binariesContentList.getItems();
-      _sourceRoots = _sourcesContentList.getItems();
+    _sourceRoots = _sourcesContentList.getItems();
 
     _analyze = _analyzeButton.getSelection();
     _analyzeSources = _analyzeSourcesButton.getSelection();
