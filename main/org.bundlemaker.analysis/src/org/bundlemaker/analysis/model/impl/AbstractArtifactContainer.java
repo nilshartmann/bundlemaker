@@ -167,11 +167,18 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
   @Override
   public void addArtifact(IArtifact artifact) {
+    addArtifact(artifact, true);
+  }
+
+  @Override
+  public void addArtifact(IArtifact artifact, boolean registerParent) {
     if (!children.contains(artifact)) {
       children.add(artifact);
     }
+    if (registerParent) {
     IModifiableArtifact modifiableArtifact = (IModifiableArtifact) artifact;
     modifiableArtifact.setParent(this);
+  }
   }
 
   @Override
