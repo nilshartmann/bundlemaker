@@ -37,7 +37,7 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    IArtifact moduleArtifact = rootArtifact.getChild("bla|blub|NoPrimaryTypeTest_1.0.0");
+    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|NoPrimaryTypeTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     //

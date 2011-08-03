@@ -24,9 +24,9 @@ import org.junit.Test;
 
 /**
  * <pre>
- * Group : bla
- *   Group : blub
- *     Module : bla/blub/ModuleConverterTest_1.0.0
+ * Group : group1
+ *   Group : group2
+ *     Module : group1/group2/ModuleConverterTest_1.0.0
  *       Package : de.test
  *         Resource : Test.class
  *           Type : de.test.Test
@@ -61,17 +61,17 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
       Assert.assertEquals(rootArtifact, child.getParent());
     }
     assertNode(children.get(0), ArtifactType.Module, "jdk16_jdk16", getModularizedSystem().getName());
-    assertNode(children.get(1), ArtifactType.Group, "bla", getModularizedSystem().getName());
+    assertNode(children.get(1), ArtifactType.Group, "group1", getModularizedSystem().getName());
 
-    // Step 3: test 'bla' with children
+    // Step 3: test 'group1' with children
     children = new LinkedList<IArtifact>(children.get(1).getChildren());
     Assert.assertEquals(1, children.size());
-    assertNode(children.get(0), ArtifactType.Group, "blub", "bla");
+    assertNode(children.get(0), ArtifactType.Group, "group2", "group1");
 
-    // Step 4: test 'blub' with children
+    // Step 4: test 'group2' with children
     children = new LinkedList<IArtifact>(children.get(0).getChildren());
     Assert.assertEquals(1, children.size());
-    assertNode(children.get(0), ArtifactType.Module, "ModuleConverterTest_1.0.0", "blub");
+    assertNode(children.get(0), ArtifactType.Module, "ModuleConverterTest_1.0.0", "group2");
 
     // Step 5: test 'ModuleConverterTest_1.0.0' with children
     children = new LinkedList<IArtifact>(children.get(0).getChildren());
@@ -106,10 +106,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
 
     // get the module artifact
-    IArtifact moduleArtifact = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0");
+    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
-    IArtifact groupArtifact = rootArtifact.getChild("bla|blub");
+    IArtifact groupArtifact = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(groupArtifact);
 
     // TEST 1: REMOVE
@@ -120,7 +120,7 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     groupArtifact.addArtifact(moduleArtifact);
     Assert.assertNotNull(getModularizedSystem().getModule("ModuleConverterTest", "1.0.0"));
     Assert.assertEquals(getModularizedSystem().getModule("ModuleConverterTest", "1.0.0").getClassification(), new Path(
-        "bla/blub"));
+        "group1/group2"));
   }
 
   /**
@@ -136,10 +136,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
 
     // get the module artifact
-    IArtifact moduleArtifact = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0");
+    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
-    IArtifact groupArtifact = rootArtifact.getChild("bla|blub");
+    IArtifact groupArtifact = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(groupArtifact);
 
     // TEST 3: REMOVE AND ADD TO PARENT
@@ -148,7 +148,7 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
 
     groupArtifact.getParent().addArtifact(moduleArtifact);
     Assert.assertNotNull(getModularizedSystem().getModule("ModuleConverterTest", "1.0.0"));
-    Assert.assertEquals(new Path("bla"), getModularizedSystem().getModule("ModuleConverterTest", "1.0.0")
+    Assert.assertEquals(new Path("group1"), getModularizedSystem().getModule("ModuleConverterTest", "1.0.0")
         .getClassification());
   }
 
@@ -164,22 +164,22 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     // transform the model
     IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
 
-    // get blub group
-    IArtifact blubGroup = rootArtifact.getChild("bla|blub");
-    Assert.assertNotNull(blubGroup);
+    // get group2 group
+    IArtifact group2Group = rootArtifact.getChild("group1|group2");
+    Assert.assertNotNull(group2Group);
 
-    // get bla group
-    IArtifact blaGroup = rootArtifact.getChild("bla");
-    Assert.assertNotNull(blubGroup);
+    // get group1 group
+    IArtifact group1Group = rootArtifact.getChild("group1");
+    Assert.assertNotNull(group2Group);
 
     // TEST 3: REMOVE AND ADD TO PARENT
-    blaGroup.removeArtifact(blubGroup);
+    group1Group.removeArtifact(group2Group);
     Assert.assertNull(getModularizedSystem().getModule("ModuleConverterTest", "1.0.0"));
 
-    rootArtifact.addArtifact(blubGroup);
+    rootArtifact.addArtifact(group2Group);
     ArtifactUtils.dumpArtifact(rootArtifact);
     Assert.assertNotNull(getModularizedSystem().getModule("ModuleConverterTest", "1.0.0"));
-    Assert.assertEquals(new Path("blub"), getModularizedSystem().getModule("ModuleConverterTest", "1.0.0")
+    Assert.assertEquals(new Path("group2"), getModularizedSystem().getModule("ModuleConverterTest", "1.0.0")
         .getClassification());
   }
 
@@ -190,27 +190,27 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
 
     // get the module
-    IArtifact moduleArtifact = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0");
+    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // get package group
-    IArtifact packageDeTest = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0|de.test");
+    IArtifact packageDeTest = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0|de.test");
     Assert.assertNotNull(packageDeTest);
 
     // Test 1: assert resources
     IResourceModule resourceModule = getModularizedSystem().getResourceModule("ModuleConverterTest", "1.0.0");
-    Assert.assertNotNull(resourceModule.getResource("de|test|Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de|test|Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
 
     // Test 2: remove resources
     moduleArtifact.removeArtifact(packageDeTest);
-    Assert.assertNull(resourceModule.getResource("de|test|Test.class", ContentType.BINARY));
-    Assert.assertNull(resourceModule.getResource("de|test|Klasse.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
 
     // Test 3: add resources
     moduleArtifact.addArtifact(packageDeTest);
-    Assert.assertNotNull(resourceModule.getResource("de|test|Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de|test|Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
   }
 
   @Test
@@ -220,31 +220,32 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
 
     // get package
-    IArtifact packageDeTest = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0|de.test");
+    IArtifact packageDeTest = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0|de.test");
     Assert.assertNotNull(packageDeTest);
 
     // get resources
-    IArtifact resourceKlasseClass = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0|de.test|Klasse.class");
+    IArtifact resourceKlasseClass = rootArtifact
+        .getChild("group1|group2|ModuleConverterTest_1.0.0|de.test|Klasse.class");
     Assert.assertNotNull(resourceKlasseClass);
-    IArtifact resourceTestClass = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0|de.test|Test.class");
+    IArtifact resourceTestClass = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0|de.test|Test.class");
     Assert.assertNotNull(resourceTestClass);
 
     // Test 1: assert resources
     IResourceModule resourceModule = getModularizedSystem().getResourceModule("ModuleConverterTest", "1.0.0");
-    Assert.assertNotNull(resourceModule.getResource("de|test|Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de|test|Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
 
     // Test 2: remove resources
     packageDeTest.removeArtifact(resourceKlasseClass);
     packageDeTest.removeArtifact(resourceTestClass);
-    Assert.assertNull(resourceModule.getResource("de|test|Test.class", ContentType.BINARY));
-    Assert.assertNull(resourceModule.getResource("de|test|Klasse.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
 
     // Test 2: add resources
     packageDeTest.addArtifact(resourceKlasseClass);
     packageDeTest.addArtifact(resourceTestClass);
-    Assert.assertNotNull(resourceModule.getResource("de|test|Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de|test|Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
   }
 
   /**
@@ -258,7 +259,7 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
 
     //
     IModule module = getModularizedSystem().getModule("jdk16", "jdk16");
-    //Assert.assertEquals(18247, module.getContainedTypes().size());
+    // Assert.assertEquals(18247, module.getContainedTypes().size());
     Assert.assertEquals(16217, module.getContainedTypes().size());
     Assert.assertNotNull(module.getType("javax.activation.DataHandler"));
 
@@ -271,10 +272,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     // transform the model
     IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
 
-    IArtifact module1 = rootArtifact.getChild("bla|blub|ModuleConverterTest_1.0.0");
+    IArtifact module1 = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
     Assert.assertNotNull(module1);
 
-    // get bla group
+    // get group1 group
     IArtifact jreModule = rootArtifact.getChild("jdk16_jdk16");
     Assert.assertNotNull(jreModule);
 

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.analysis;
+package org.bundlemaker.core.itest.analysis.complex;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +36,7 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    IArtifact artifact = rootArtifact.getChild("bla|blub|jedit_1.0.0");
+    IArtifact artifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(artifact);
 
     //
@@ -62,7 +62,7 @@ public class ModuleConverterTest_2 extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    IArtifact artifact = rootArtifact.getChild("bla|blub|jedit_1.0.0");
+    IArtifact artifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(artifact);
 
     //

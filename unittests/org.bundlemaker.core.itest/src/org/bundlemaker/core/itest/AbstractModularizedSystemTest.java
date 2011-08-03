@@ -47,7 +47,7 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(getTestProjectName());
 
     _modularizedSystem.getTransformations().add(
-        new GroupTransformation(new ModuleIdentifier(getTestProjectName(), "1.0.0"), new Path("bla/blub")));
+        new GroupTransformation(new ModuleIdentifier(getTestProjectName(), "1.0.0"), new Path("group1/group2")));
 
     _modularizedSystem.applyTransformations(null);
 

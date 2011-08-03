@@ -65,14 +65,14 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
         getModularizedSystem());
 
     IArtifact aArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-        .getChild("bla|blub|InnerClassTest_1.0.0|de.test.innertypes|A");
+        .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
     Assert.assertNotNull(aArtifact);
     IArtifact bArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-        .getChild("bla|blub|InnerClassTest_1.0.0|de.test.innertypes|B");
+        .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B");
     Assert.assertNull(bArtifact);
 
     Collection<IDependency> dependencies = aArtifact.getDependencies();
-    Assert.assertEquals(8, dependencies.size());
+    Assert.assertEquals(6, dependencies.size());
     for (IDependency iDependency : dependencies) {
       System.out.println(iDependency);
     }
@@ -85,7 +85,7 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
 
     // // Test 1: assert module artifact != null
     // IArtifact anonymousInnerClassTestModuleArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-    // .getChild("bla/blub/AnonymousInnerClassTest_1.0.0");
+    // .getChild("group1/group2/AnonymousInnerClassTest_1.0.0");
     // Assert.assertNotNull(anonymousInnerClassTestModuleArtifact);
     // ArtifactUtils.dumpArtifact(anonymousInnerClassTestModuleArtifact);
     //
