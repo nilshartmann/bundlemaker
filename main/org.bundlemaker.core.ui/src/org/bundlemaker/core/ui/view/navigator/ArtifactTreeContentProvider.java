@@ -39,7 +39,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
   @Override
   public Object[] getChildren(Object parent) {
-    
+
     if (parent instanceof IProject) {
 
       IProject project = (IProject) parent;
@@ -59,7 +59,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
           for (IModularizedSystem modularizedSystem : modularizedSystems) {
 
             //
-//            modularizedSystem.applyTransformations();
+            // modularizedSystem.applyTransformations();
 
             try {
               IArtifact artifact = ModelTransformer.transform((IModifiableModularizedSystem) modularizedSystem);
