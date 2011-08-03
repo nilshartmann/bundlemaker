@@ -88,11 +88,23 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     // asserts
     Assert.isNotNull(artifact);
 
-    // get the result
-    boolean result = super.removeArtifact(artifact);
+    boolean result = false;
 
-    // TODO: TYPE CHECK??
-    AdapterUtils.removePackageFromModule(artifact, this);
+    // package type
+    if (artifact.getType().equals(ArtifactType.Package)) {
+
+      //
+      if (getChildren().contains(artifact)) {
+        result = super.removeArtifact(artifact);
+        AdapterUtils.removePackageFromModule(artifact, this);
+      }
+    }
+
+    // package type
+    else if (artifact.getType().equals(ArtifactType.Type)) {
+      IArtifact packageArtifact = artifact.getParent();
+      packageArtifact.removeArtifact(packageArtifact);
+    }
 
     // return the result
     return result;
@@ -100,7 +112,8 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
 
   @Override
   public boolean canAdd(IArtifact artifact) {
-    return artifact != null && artifact.getType().equals(ArtifactType.Package);
+    return artifact != null
+        && (artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type));
   }
 
   /**

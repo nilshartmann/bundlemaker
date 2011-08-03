@@ -41,7 +41,7 @@ public class ModelTransformer {
   }
 
   public static IAdvancedArtifact transform(IModifiableModularizedSystem modularizedSystem) throws CoreException {
-    return transform(modularizedSystem, ContentType.SOURCE, true);
+    return transform(modularizedSystem, ContentType.BINARY, false);
   }
 
   /**

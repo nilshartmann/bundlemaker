@@ -29,11 +29,10 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -46,9 +45,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
-   * , java.util.List)
+   * @see org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent ,
+   * java.util.List)
    */
   @Override
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
@@ -146,7 +144,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     Collection<IArtifact> children = artifact.getChildren();
     for (IArtifact iArtifact : children) {
       if (iArtifact instanceof IAdvancedArtifact) {
-        addModules(moduleFilter, (IAdvancedArtifact) iArtifact);
+        addModules(moduleFilter, iArtifact);
       }
     }
   }
@@ -171,6 +169,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
       final IModuleExporterContext exporterContext) throws Exception {
 
     PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+      @Override
       public void run(final IProgressMonitor monitor) throws InvocationTargetException {
         try {
           adapter.export(modularizedSystem, exporterContext, monitor);
@@ -182,20 +181,21 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
   }
 
   protected File getDestinationDirectory() {
-    DirectoryDialog dialog = new DirectoryDialog(new Shell());
-    dialog.setMessage("Select the export destination folder");
-    dialog.setText("Export modules");
-    String res = dialog.open();
+    // DirectoryDialog dialog = new DirectoryDialog(new Shell());
+    // dialog.setMessage("Select the export destination folder");
+    // dialog.setText("Export modules");
+    // String res = dialog.open();
+    //
+    // if (res != null) {
+    // File destination = Path.fromOSString(res).makeAbsolute().toFile();
+    // destination.mkdirs();
+    //
+    // return destination;
+    // }
+    //
+    // return null;
 
-    if (res != null) {
-      File destination = Path.fromOSString(res).makeAbsolute().toFile();
-      destination.mkdirs();
-
-      return destination;
-    }
-
-    return null;
-
+    return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().toFile();
   }
 
   class ListBasedModuleQueryFilter implements IQueryFilter<IModule> {

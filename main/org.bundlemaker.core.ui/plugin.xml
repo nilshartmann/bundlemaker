@@ -18,6 +18,23 @@
                </adapt>
             </and>
          </triggerPoints>
+          <!--commonSorter
+                class="org.eclipse.egit.ui.internal.repository.tree.RepositoriesViewSorter">
+          </commonSorter -->
+         <dropAssistant 
+               class="org.bundlemaker.core.ui.view.navigator.CommonDropAdapterAssistant1"
+               id="org.bundlemaker.core.ui.dropAssistant1">
+            <possibleDropTargets>
+               <instanceof
+                     value="org.bundlemaker.analysis.model.IArtifact">
+               </instanceof>
+            </possibleDropTargets>
+         </dropAssistant>
+                <possibleChildren>
+              <instanceof 
+                    value="org.bundlemaker.analysis.model.IArtifact" /> 
+     </possibleChildren>
+
       </navigatorContent>
    </extension>
 

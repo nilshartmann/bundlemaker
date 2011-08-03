@@ -191,6 +191,8 @@ public interface IArtifact {
    *          artifact
    * @return
    */
+  @Deprecated
+  // must not check for leafs
   public boolean contains(IArtifact artifact);
 
   /**
@@ -227,27 +229,25 @@ public interface IArtifact {
   public Collection<IDependency> getDependencies();
 
   /**
-   * Gibt die Abhaengigkeit zu dem uebergebenen Artefakt zurueck
-   * 
-   * @param artifact
-   *          das uebergebene Artefakt
-   * @return Die Abhaengigkeit
-   */
-  /**
    * <p>
+   * Returns the dependency to the given Artifact.
    * </p>
    * 
    * @param artifact
-   * @return
+   *          the artifact
+   * 
+   * @return the dependency to the given Artifact.
    */
   public IDependency getDependency(IArtifact artifact);
 
   /**
-   * Gibt alle Abhaengigkeiten zu den uebergebenen Artefakten zurueck
+   * <p>
+   * Returns all the dependencies to the given collection of artifacts.
+   * </p>
    * 
    * @param artifacts
-   *          Eine Liste von Artefakten
-   * @return Eine Liste von Abhaengigkeiten
+   *          the atifacts
+   * @return all the dependencies to the given collection of artifacts.
    */
   public Collection<IDependency> getDependencies(Collection<IArtifact> artifacts);
 
@@ -256,17 +256,29 @@ public interface IArtifact {
    * 
    * @param ordinal
    */
+  /**
+   * <p>
+   * Sets the ordinal number of this artifact.
+   * </p>
+   * 
+   * @param ordinal
+   *          the ordinal number of this artifact
+   */
   public void setOrdinal(Integer ordinal);
 
   /**
-   * Gibt die Ordinalzahl zurueck
+   * <p>
+   * Returns the ordinal number of this artifact.
+   * </p>
    * 
-   * @return
+   * @return the ordinal number of this artifact.
    */
   public Integer getOrdinal();
 
   /**
-   * Gibt alle Primaerartefakte zurueck
+   * <p>
+   * Returns all leafs of this artifact.
+   * </p>
    * 
    * @return
    */
