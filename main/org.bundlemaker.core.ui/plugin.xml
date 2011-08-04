@@ -48,6 +48,20 @@
          </includes>
       </viewerContentBinding>
    </extension>
+  
+  <!-- additional menus in the project navigator view -->
+   <extension
+         id="org.bundlemaker.core.ui.view.navigator.menus"
+         point="org.eclipse.ui.menus">
+      <menuContribution
+         locationURI="menu:org.eclipse.ui.navigator.ProjectExplorer">
+        <command
+              commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
+              style="push">
+        </command> 
+      </menuContribution>
+   </extension>
+   
 
    <!-- An expression evaluating to true if a BMT-file has been selected -->
 	<extension point="org.eclipse.core.expressions.definitions">
@@ -164,9 +178,11 @@
           	</or>
          </enabledWhen>
       </handler>
+      <handler
+            commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
+            class="org.bundlemaker.core.ui.view.navigator.CustomizeDependencyTreeHandler">
+      </handler>
    </extension>    
-   
-<!-- ======================================== -->
 
 <!-- -->
    <extension
@@ -261,7 +277,11 @@
       <command
             id="org.bundlemaker.core.ui.commands.TransformHandler"
             name="Transform..." />
-      <command id="org.bundlemaker.core.ui.commands.RunTransformationScript" name="Execute transformation..." /> 
+      <command id="org.bundlemaker.core.ui.commands.RunTransformationScript" name="Execute transformation..." />
+      <command
+            id="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
+            name="Customize Dependency Tree...">
+      </command> 
    </extension> 
 
    <!-- ======================================== -->
