@@ -18,9 +18,11 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.ITypeSelector;
+import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -177,6 +179,26 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
     } else {
       return Collections.emptySet();
     }
+  }
+
+  @Override
+  public Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule) {
+
+    //
+    Set<IReference> result = new HashSet<IReference>();
+
+    //
+    Set<IReference> references = resourceModule
+        .getReferences(ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
+
+    for (IReference iReference : references) {
+      if (getType(iReference.getFullyQualifiedName(), resourceModule) == null) {
+        result.add(iReference);
+      }
+    }
+
+    //
+    return result;
   }
 
   /******************************************************/

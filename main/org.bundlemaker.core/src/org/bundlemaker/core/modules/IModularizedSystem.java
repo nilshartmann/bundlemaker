@@ -426,4 +426,6 @@ public interface IModularizedSystem {
   @Deprecated
   Collection<IResource> getResourceIsReferencedTransitiveClosure(IResource resource, ContentType contentType,
       IQueryFilter<IResource> queryFilter);
+
+  Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule);
 }
