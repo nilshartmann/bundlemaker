@@ -3,6 +3,8 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.IModifiableArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
@@ -65,7 +67,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     ((IModifiableArtifact) artifact).setParent(this);
 
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.addResourceModuleToModularizedSystem(artifact);
+    if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
+      AdapterUtils.addResourceModuleToModularizedSystem(artifact);
+    }
   }
 
   /**
