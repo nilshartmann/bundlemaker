@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -62,7 +63,7 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
 
     // transform the model
     IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getBundleMakerProject(),
-        getModularizedSystem());
+        getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
     IArtifact aArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
         .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");

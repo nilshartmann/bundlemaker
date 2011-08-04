@@ -1,11 +1,20 @@
 package org.bundlemaker.core.itest;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.testutils.ArtifactTestUtil;
+import org.bundlemaker.core.testutils.BundleMakerTestUtils;
+import org.bundlemaker.core.testutils.FileDiffUtil;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -44,7 +53,8 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     getBundleMakerProject().initialize(new ProgressMonitor());
     getBundleMakerProject().parseAndOpen(new ProgressMonitor());
 
-    _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(getTestProjectName());
+    _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
+        getTestProjectName());
 
     _modularizedSystem.getTransformations().add(
         new GroupTransformation(new ModuleIdentifier(getTestProjectName(), "1.0.0"), new Path("group1/group2")));
@@ -77,5 +87,45 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     Assert.assertEquals(nodeName, node.getName());
     Assert.assertNotNull(node.getParent());
     Assert.assertEquals(parentName, node.getParent().getName());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modularizedSystem
+   * @param resourceModule
+   * @param expectedResult
+   * @throws Exception
+   */
+  protected static void assertResult(String dumpedModel, InputStream expected, String resultFileName) {
+
+    Assert.assertNotNull(dumpedModel);
+    Assert.assertNotNull(expected);
+    Assert.assertNotNull(resultFileName);
+
+    // actual
+    File actual = new File(System.getProperty("user.dir"), "result" + File.separatorChar + resultFileName + ".txt");
+    StringBuilder builder = new StringBuilder();
+    builder.append(dumpedModel);
+    BundleMakerTestUtils.writeToFile(builder.toString(), actual);
+
+    // htmlReport
+    String name = actual.getAbsolutePath();
+    name = name.substring(0, name.length() - ".txt".length()) + ".html";
+    File htmlReport = new File(name);
+
+    // assert
+    FileDiffUtil.assertArtifactModel(expected, new ByteArrayInputStream(dumpedModel.getBytes()), htmlReport);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected static String getCurrentTimeStamp() {
+    return new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(new Date());
   }
 }

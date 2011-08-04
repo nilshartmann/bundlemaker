@@ -1,60 +1,4 @@
 Module : group1/group2/jedit_1.0.0
-  Package : org.gjt.sp.jedit.icons.themes.classic.16x16.actions
-    Resource : edit-select-all.png
-    Resource : group-collapse.png
-    Resource : group-expand.png
-    Resource : view-reload.png
-  Package : org.gjt.sp.jedit.icons.themes.classic.22x22.actions
-    Resource : application-run-again.png
-    Resource : application-run.png
-    Resource : copy-to-buffer.png
-    Resource : document-close.png
-    Resource : document-new.png
-    Resource : document-open.png
-    Resource : document-print.png
-    Resource : document-properties.png
-    Resource : document-reload2.png
-    Resource : document-save-all.png
-    Resource : document-save-as.png
-    Resource : document-save.png
-    Resource : edit-clear.png
-    Resource : edit-copy.png
-    Resource : edit-cut.png
-    Resource : edit-delete.png
-    Resource : edit-find-highlight-match.png
-    Resource : edit-find-in-folder.png
-    Resource : edit-find-multiple.png
-    Resource : edit-find-next.png
-    Resource : edit-find-normal-match.png
-    Resource : edit-find-single.png
-    Resource : edit-find.png
-    Resource : edit-paste.png
-    Resource : edit-redo.png
-    Resource : edit-undo.png
-    Resource : folder-new.png
-    Resource : go-down.png
-    Resource : go-first.png
-    Resource : go-home.png
-    Resource : go-last.png
-    Resource : go-next.png
-    Resource : go-parent.png
-    Resource : go-previous.png
-    Resource : go-up.png
-    Resource : list-add.png
-    Resource : list-remove.png
-    Resource : media-playback-pause.png
-    Resource : media-playback-start.png
-    Resource : printer-setup.png
-    Resource : process-stop.png
-    Resource : resize-horisontal.png
-    Resource : run-to-buffer.png
-    Resource : view-refresh.png
-    Resource : window-new.png
-    Resource : window-split-horizontal.png
-    Resource : window-split-vertical.png
-    Resource : window-unsplit.png
-    Resource : zoom-in.png
-    Resource : zoom-out.png
   Package : org.gjt.sp.jedit.icons.themes.tango.22x22.actions
     Resource : application-run-again.png
     Resource : application-run.png
@@ -152,6 +96,62 @@ Module : group1/group2/jedit_1.0.0
     Resource : process-stop.png
     Resource : view-refresh.png
     Resource : window-new.png
+  Package : org.gjt.sp.jedit.icons.themes.classic.22x22.actions
+    Resource : application-run-again.png
+    Resource : application-run.png
+    Resource : copy-to-buffer.png
+    Resource : document-close.png
+    Resource : document-new.png
+    Resource : document-open.png
+    Resource : document-print.png
+    Resource : document-properties.png
+    Resource : document-reload2.png
+    Resource : document-save-all.png
+    Resource : document-save-as.png
+    Resource : document-save.png
+    Resource : edit-clear.png
+    Resource : edit-copy.png
+    Resource : edit-cut.png
+    Resource : edit-delete.png
+    Resource : edit-find-highlight-match.png
+    Resource : edit-find-in-folder.png
+    Resource : edit-find-multiple.png
+    Resource : edit-find-next.png
+    Resource : edit-find-normal-match.png
+    Resource : edit-find-single.png
+    Resource : edit-find.png
+    Resource : edit-paste.png
+    Resource : edit-redo.png
+    Resource : edit-undo.png
+    Resource : folder-new.png
+    Resource : go-down.png
+    Resource : go-first.png
+    Resource : go-home.png
+    Resource : go-last.png
+    Resource : go-next.png
+    Resource : go-parent.png
+    Resource : go-previous.png
+    Resource : go-up.png
+    Resource : list-add.png
+    Resource : list-remove.png
+    Resource : media-playback-pause.png
+    Resource : media-playback-start.png
+    Resource : printer-setup.png
+    Resource : process-stop.png
+    Resource : resize-horisontal.png
+    Resource : run-to-buffer.png
+    Resource : view-refresh.png
+    Resource : window-new.png
+    Resource : window-split-horizontal.png
+    Resource : window-split-vertical.png
+    Resource : window-unsplit.png
+    Resource : zoom-in.png
+    Resource : zoom-out.png
+  Package : org.gjt.sp.jedit.icons.themes.classic.16x16.actions
+    Resource : edit-select-all.png
+    Resource : group-collapse.png
+    Resource : group-expand.png
+    Resource : view-reload.png
   Package : org.gjt.sp.jedit.icons.themes.classic.10x10.actions
     Resource : close.png
   Package : org.gjt.sp.jedit.icons.themes.tango.10x10.actions
@@ -166,15 +166,15 @@ Module : group1/group2/jedit_1.0.0
     Resource : system-file-manager.png
     Resource : system-installer.png
     Resource : utilities-terminal.png
-  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.apps
-    Resource : jedit.png
-    Resource : system-file-manager.png
   Package : org.gjt.sp.jedit.icons.themes.classic.22x22.apps
     Resource : help-browser.png
     Resource : system-installer.png
-  Package : org.gjt.sp.jedit.icons.themes.tango.32x32.apps
-    Resource : jedit.png
   Package : org.gjt.sp.jedit.icons.themes.classic.32x32.apps
+    Resource : jedit.png
+  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.apps
+    Resource : jedit.png
+    Resource : system-file-manager.png
+  Package : org.gjt.sp.jedit.icons.themes.tango.32x32.apps
     Resource : jedit.png
   Package : org.gjt.sp.jedit.bsh.org.objectweb.asm
     Resource : ByteVector.class
@@ -570,17 +570,17 @@ Module : group1/group2/jedit_1.0.0
       Type : org.gjt.sp.jedit.bufferset.BufferSetListener
     Resource : BufferSetManager.class
       Type : org.gjt.sp.jedit.bufferset.BufferSetManager
-  Package : org.gjt.sp.jedit.icons.themes.classic.22x22.categories
-    Resource : preferences-system.png
-  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.categories
-    Resource : applications-system.png
-    Resource : preferences-system.png
   Package : org.gjt.sp.jedit.icons.themes.tango.22x22.categories
     Resource : applications-system.png
     Resource : preferences-desktop.png
     Resource : preferences-system.png
+  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.categories
+    Resource : applications-system.png
+    Resource : preferences-system.png
+  Package : org.gjt.sp.jedit.icons.themes.classic.22x22.categories
+    Resource : preferences-system.png
   Package : org.gjt.sp.jedit.icons.themes.classic
-    Resource : group1nk24.gif
+    Resource : Blank24.gif
     Resource : ToolbarMenu.gif
     Resource : about.png
     Resource : arrow-asc.png
@@ -705,9 +705,9 @@ Module : group1/group2/jedit_1.0.0
     Resource : drive-harddisk.png
     Resource : media-floppy.png
     Resource : printer.png
-  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.devices
-    Resource : drive-harddisk.png
   Package : org.gjt.sp.jedit.icons.themes.classic.16x16.devices
+    Resource : drive-harddisk.png
+  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.devices
     Resource : drive-harddisk.png
   Package : org.gjt.sp.jedit.icons.themes.classic.10x10.emblem
     Resource : emblem-readonly.png
@@ -1749,17 +1749,17 @@ Module : group1/group2/jedit_1.0.0
     Resource : WindowTableModel.class
       Type : org.gjt.sp.jedit.options.WindowTableModel
     Resource : mirrors.dtd
-  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.places
-    Resource : folder.png
-  Package : org.gjt.sp.jedit.icons.themes.classic.16x16.places
-    Resource : folder.png
   Package : org.gjt.sp.jedit.icons.themes.tango.22x22.places
     Resource : folder-saved-search.png
     Resource : folder.png
     Resource : plugins.png
     Resource : user-home.png
+  Package : org.gjt.sp.jedit.icons.themes.tango.16x16.places
+    Resource : folder.png
   Package : org.gjt.sp.jedit.icons.themes.classic.22x22.places
     Resource : plugins.png
+  Package : org.gjt.sp.jedit.icons.themes.classic.16x16.places
+    Resource : folder.png
   Package : org.gjt.sp.jedit.pluginmgr
     Resource : InstallPanel$ChoosePluginSet.class
       Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$ChoosePluginSet
@@ -1991,13 +1991,6 @@ Module : group1/group2/jedit_1.0.0
       Type : org.gjt.sp.jedit.search.SearchMatcher$Match
     Resource : SearchMatcher.class
       Type : org.gjt.sp.jedit.search.SearchMatcher
-  Package : org.gjt.sp.jedit.icons.themes.tango.10x10.status
-    Resource : document-modified.png
-    Resource : document-new.png
-    Resource : document-unmodified.png
-  Package : org.gjt.sp.jedit.icons.themes.classic.22x22.status
-    Resource : folder-visiting.png
-    Resource : image-missing.png
   Package : org.gjt.sp.jedit.icons.themes.tango.16x16.status
     Resource : dialog-error.png
     Resource : dialog-information.png
@@ -2009,8 +2002,17 @@ Module : group1/group2/jedit_1.0.0
     Resource : folder-visiting.png
     Resource : image-loading.png
     Resource : image-missing.png
-  Package : org.gjt.sp.jedit.icons.themes.classic.16x16.status
-    Resource : folder-open.png
+  Package : org.gjt.sp.jedit.icons.themes.classic.22x22.status
+    Resource : folder-visiting.png
+    Resource : image-missing.png
+  Package : org.gjt.sp.jedit.icons.themes.classic.10x10.status
+    Resource : document-modified.png
+    Resource : document-new.png
+    Resource : document-unmodified.png
+  Package : org.gjt.sp.jedit.icons.themes.tango.10x10.status
+    Resource : document-modified.png
+    Resource : document-new.png
+    Resource : document-unmodified.png
   Package : org.gjt.sp.jedit.icons.themes.tango.22x22.status
     Resource : dialog-error.png
     Resource : dialog-information.png
@@ -2020,10 +2022,8 @@ Module : group1/group2/jedit_1.0.0
     Resource : folder-visiting.png
     Resource : image-loading.png
     Resource : image-missing.png
-  Package : org.gjt.sp.jedit.icons.themes.classic.10x10.status
-    Resource : document-modified.png
-    Resource : document-new.png
-    Resource : document-unmodified.png
+  Package : org.gjt.sp.jedit.icons.themes.classic.16x16.status
+    Resource : folder-open.png
   Package : org.gjt.sp.jedit.gui.statusbar
     Resource : BufferSetWidgetFactory$BufferSetWidget.class
       Type : org.gjt.sp.jedit.gui.statusbar.BufferSetWidgetFactory$BufferSetWidget
@@ -2136,7 +2136,7 @@ Module : group1/group2/jedit_1.0.0
       Type : org.gjt.sp.jedit.syntax.XModeHandler
     Resource : xmode.dtd
   Package : org.gjt.sp.jedit.icons.themes.tango
-    Resource : group1nk24.gif
+    Resource : Blank24.gif
     Resource : ToolbarMenu.gif
     Resource : about.png
     Resource : arrow-asc.png

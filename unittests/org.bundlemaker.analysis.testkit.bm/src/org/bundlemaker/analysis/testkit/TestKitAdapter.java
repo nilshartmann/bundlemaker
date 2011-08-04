@@ -8,6 +8,7 @@ import org.bundlemaker.analysis.testkit.framework.ITestKitAdapter;
 import org.bundlemaker.analysis.testkit.framework.ITimeStampAwareTestKitAdapter;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -84,7 +85,8 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
     _modularizedSystem.applyTransformations(null);
 
     //
-    _dependencyModel = ModelTransformer.getDependencyModel(_bundleMakerProject, _modularizedSystem);
+    _dependencyModel = ModelTransformer.getDependencyModel(_bundleMakerProject, _modularizedSystem,
+        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
     //
     ModularizedSystemChecker.check(_modularizedSystem, _timestamp);
