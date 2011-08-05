@@ -66,7 +66,10 @@ public class Activator extends AbstractUIPlugin {
   public void stop(BundleContext context) throws Exception {
     plugin = null;
     if (_projectExplorerSelectionForwarder != null) {
-      getSelectionService().removeSelectionListener(_projectExplorerSelectionForwarder);
+      ISelectionService selectionService = getSelectionService();
+      if (selectionService != null) {
+        selectionService.removeSelectionListener(_projectExplorerSelectionForwarder);
+      }
     }
     super.stop(context);
   }
@@ -110,10 +113,15 @@ public class Activator extends AbstractUIPlugin {
     return image;
   }
 
+  /**
+   * @return the {@link ISelectionService} or null
+   */
   private ISelectionService getSelectionService() {
     IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    ISelectionService selectionService = workbenchWindow.getSelectionService();
-    return selectionService;
+    if (workbenchWindow != null) {
+      return workbenchWindow.getSelectionService();
+    }
+    return null;
   }
 
   public void addSelectionProjectExplorerListener(BundleContext context) {
