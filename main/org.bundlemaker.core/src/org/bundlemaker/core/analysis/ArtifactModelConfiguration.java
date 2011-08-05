@@ -36,28 +36,28 @@ public class ArtifactModelConfiguration {
                                                                                                       false,
                                                                                                       ResourcePresentation.NO_RESOURCE,
                                                                                                       ContentType.BINARY,
-                                                                                                      true);
+                                                                                                      true, false);
 
   /** default configuration AGGREGATE_INNER_TYPES_CONFIGURATION */
   public static final ArtifactModelConfiguration AGGREGATE_INNER_TYPES_CONFIGURATION              = new ArtifactModelConfiguration(
                                                                                                       false,
                                                                                                       ResourcePresentation.ONLY_NON_TYPE_RESOURCES,
                                                                                                       ContentType.BINARY,
-                                                                                                      true);
+                                                                                                      true, true);
 
   /** default configuration SOURCE_RESOURCES_CONFIGURATION */
   public static final ArtifactModelConfiguration SOURCE_RESOURCES_CONFIGURATION                   = new ArtifactModelConfiguration(
                                                                                                       false,
                                                                                                       ResourcePresentation.ALL_RESOURCES,
                                                                                                       ContentType.BINARY,
-                                                                                                      false);
+                                                                                                      false, true);
 
   /** default configuration BINARY_RESOURCES_CONFIGURATION */
   public static final ArtifactModelConfiguration BINARY_RESOURCES_CONFIGURATION                   = new ArtifactModelConfiguration(
                                                                                                       false,
                                                                                                       ResourcePresentation.ALL_RESOURCES,
                                                                                                       ContentType.BINARY,
-                                                                                                      false);
+                                                                                                      false, true);
 
   /** the content type to show */
   private ContentType                            _contentType                                     = ContentType.SOURCE;
@@ -70,6 +70,9 @@ public class ArtifactModelConfiguration {
 
   /** whether to aggregate inner types or not */
   private boolean                                _aggregateInnerTypes                             = false;
+
+  /** whether to include missing types or not */
+  private boolean                                _includeVirtualModuleForMissingTypes             = false;
 
   /**
    * <p>
@@ -169,6 +172,26 @@ public class ArtifactModelConfiguration {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final boolean isIncludeVirtualModuleForMissingTypes() {
+    return _includeVirtualModuleForMissingTypes;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param includeVirtualModuleForMissingTypes
+   */
+  public final void setIncludeVirtualModuleForMissingTypes(boolean includeVirtualModuleForMissingTypes) {
+    _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
+  }
+
+  /**
+   * <p>
    * Creates a new instance of type {@link ArtifactModelConfiguration}.
    * </p>
    * 
@@ -178,7 +201,7 @@ public class ArtifactModelConfiguration {
    * @param aggregateInnerTypes
    */
   private ArtifactModelConfiguration(boolean hierarchical, ResourcePresentation resourcePresentation,
-      ContentType contentType, boolean aggregateInnerTypes) {
+      ContentType contentType, boolean aggregateInnerTypes, boolean includeVirtualModuleForMissingTypes) {
 
     Assert.isNotNull(resourcePresentation);
     Assert.isNotNull(contentType);
@@ -187,5 +210,6 @@ public class ArtifactModelConfiguration {
     _contentType = contentType;
     _resourcePresentation = resourcePresentation;
     _aggregateInnerTypes = aggregateInnerTypes;
+    _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
   }
 }

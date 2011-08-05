@@ -75,15 +75,16 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
    */
   protected IAdvancedArtifact transform(IModule[] modules) {
 
-    // missing types
-    for (IModule module : modules) {
-      if (module instanceof IResourceModule) {
-        for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
-          getMissingTypeCache().getOrCreate(iReference.getFullyQualifiedName());
+    // create virtual module for missing types
+    if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
+      for (IModule module : modules) {
+        if (module instanceof IResourceModule) {
+          for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
+            getMissingTypeCache().getOrCreate(iReference.getFullyQualifiedName());
+          }
         }
       }
     }
-
     // iterate over all the type modules
     for (IModule module : modules) {
 
