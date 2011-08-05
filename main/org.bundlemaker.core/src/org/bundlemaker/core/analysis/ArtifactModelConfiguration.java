@@ -32,34 +32,44 @@ public class ArtifactModelConfiguration {
   }
 
   /** default configuration AGGREGATE_INNER_TYPES_CONFIGURATION */
-  public static final ArtifactModelConfiguration AGGREGATE_INNER_TYPES_CONFIGURATION = new ArtifactModelConfiguration(
-                                                                                         false,
-                                                                                         ResourcePresentation.ONLY_NON_TYPE_RESOURCES,
-                                                                                         ContentType.BINARY, true);
+  public static final ArtifactModelConfiguration AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION = new ArtifactModelConfiguration(
+                                                                                                      false,
+                                                                                                      ResourcePresentation.NO_RESOURCE,
+                                                                                                      ContentType.BINARY,
+                                                                                                      true);
+
+  /** default configuration AGGREGATE_INNER_TYPES_CONFIGURATION */
+  public static final ArtifactModelConfiguration AGGREGATE_INNER_TYPES_CONFIGURATION              = new ArtifactModelConfiguration(
+                                                                                                      false,
+                                                                                                      ResourcePresentation.ONLY_NON_TYPE_RESOURCES,
+                                                                                                      ContentType.BINARY,
+                                                                                                      true);
 
   /** default configuration SOURCE_RESOURCES_CONFIGURATION */
-  public static final ArtifactModelConfiguration SOURCE_RESOURCES_CONFIGURATION      = new ArtifactModelConfiguration(
-                                                                                         false,
-                                                                                         ResourcePresentation.ALL_RESOURCES,
-                                                                                         ContentType.BINARY, false);
+  public static final ArtifactModelConfiguration SOURCE_RESOURCES_CONFIGURATION                   = new ArtifactModelConfiguration(
+                                                                                                      false,
+                                                                                                      ResourcePresentation.ALL_RESOURCES,
+                                                                                                      ContentType.BINARY,
+                                                                                                      false);
 
   /** default configuration BINARY_RESOURCES_CONFIGURATION */
-  public static final ArtifactModelConfiguration BINARY_RESOURCES_CONFIGURATION      = new ArtifactModelConfiguration(
-                                                                                         false,
-                                                                                         ResourcePresentation.ALL_RESOURCES,
-                                                                                         ContentType.BINARY, false);
+  public static final ArtifactModelConfiguration BINARY_RESOURCES_CONFIGURATION                   = new ArtifactModelConfiguration(
+                                                                                                      false,
+                                                                                                      ResourcePresentation.ALL_RESOURCES,
+                                                                                                      ContentType.BINARY,
+                                                                                                      false);
 
   /** the content type to show */
-  private ContentType                            _contentType                        = ContentType.SOURCE;
+  private ContentType                            _contentType                                     = ContentType.SOURCE;
 
   /** the resource presentation style */
-  private ResourcePresentation                   _resourcePresentation               = ResourcePresentation.ALL_RESOURCES;
+  private ResourcePresentation                   _resourcePresentation                            = ResourcePresentation.ALL_RESOURCES;
 
   /** whether the packages should be hierarchical or flat */
-  private boolean                                _hierarchicalPackages               = false;
+  private boolean                                _hierarchicalPackages                            = false;
 
   /** whether to aggregate inner types or not */
-  private boolean                                _aggregateInnerTypes                = false;
+  private boolean                                _aggregateInnerTypes                             = false;
 
   /**
    * <p>
