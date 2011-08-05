@@ -80,7 +80,13 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
     _packageCache = createPackageCache();
     _resourceCache = createResourceCache();
     _typeCache = createTypeCache();
+  }
 
+  /**
+   * <p>
+   * </p>
+   */
+  public void initializeMissingTypesCaches() {
     // initialize the 'missing types' caches
     _missingTypesVirtualModule = new VirtualArtifact(ArtifactType.Module, MISSING_TYPES, getRootArtifact());
     _missingTypeCache = createMissingTypeCache();

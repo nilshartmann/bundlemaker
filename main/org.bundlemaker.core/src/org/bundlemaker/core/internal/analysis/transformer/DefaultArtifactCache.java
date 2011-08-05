@@ -77,6 +77,9 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
 
     // create virtual module for missing types
     if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
+
+      initializeMissingTypesCaches();
+
       for (IModule module : modules) {
         if (module instanceof IResourceModule) {
           for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
@@ -85,6 +88,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
         }
       }
     }
+
     // iterate over all the type modules
     for (IModule module : modules) {
 
