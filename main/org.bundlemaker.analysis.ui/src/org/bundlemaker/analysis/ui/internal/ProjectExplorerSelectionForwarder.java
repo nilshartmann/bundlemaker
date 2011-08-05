@@ -29,11 +29,11 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
 
   @Override
   public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-
-    System.out.printf("Forwarding event from '%s' with selection '%s'%n", part.getSite().getId(), selection);
-
     // Get selected artifacts
     List<IArtifact> artifacts = getSelectedObject(selection, IArtifact.class);
+
+    // System.out.printf("Forwarding event from '%s' with selection '%s'. Artifacts: %s%n", part.getSite().getId(),
+    // selection, artifacts);
 
     // notify selection service
     _artifactSelectionService.setSelection(Analysis.PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID, artifacts);
