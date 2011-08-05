@@ -25,6 +25,16 @@ import org.eclipse.ui.internal.part.NullEditorInput;
 @SuppressWarnings("restriction")
 public class Analysis {
 
+  /**
+   * The id for the Project-Explorer Artifact selection provider
+   */
+  public static final String              PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID = "org.bundlemaker.ui.navigator.selectionprovider";
+
+  /**
+   * The id of the Eclipse project explorer
+   */
+  public static final String              PROJECT_EXPLORER_VIEW_ID                        = "org.eclipse.ui.navigator.ProjectExplorer";
+
   private static Analysis        _instance;
 
   private final IAnalysisContext _analysisContext;

@@ -12,6 +12,7 @@ import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.dsmview.DSMView;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.analysis.ui.view.table.JavaEditor;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
@@ -45,6 +46,10 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
 
     // make sure the editor and views are visible
     openEditorAndViews(event);
+  }
+
+  private IArtifactSelectionService getArtifactSelectionService() {
+    return Analysis.instance().getArtifactSelectionService();
   }
 
   /**
