@@ -49,9 +49,8 @@ public class ModelTransformer {
 
       //
       DefaultArtifactCache artifactCache = new DefaultArtifactCache(modifiableModularizedSystem, configuration);
-
       //
-      return new DependencyModel(bundleMakerProject, modifiableModularizedSystem, artifactCache.transform());
+      return new DependencyModel(modifiableModularizedSystem, artifactCache.transform());
 
     } catch (CoreException e) {
       System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);

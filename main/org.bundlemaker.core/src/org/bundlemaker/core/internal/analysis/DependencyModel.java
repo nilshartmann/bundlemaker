@@ -34,14 +34,14 @@ public class DependencyModel implements IDependencyModel {
    * @param bundleMakerProject
    * @param modifiableModularizedSystem
    */
-  public DependencyModel(IBundleMakerProject bundleMakerProject,
-      IModifiableModularizedSystem modifiableModularizedSystem, IArtifact artifactModel) {
+  public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem, IArtifact artifactModel) {
 
-    Assert.isNotNull(bundleMakerProject);
     Assert.isNotNull(modifiableModularizedSystem);
     Assert.isNotNull(artifactModel);
 
-    _bundleMakerProject = bundleMakerProject;
+    ((AdapterModularizedSystem2IArtifact) artifactModel).setDependencyModel(this);
+
+    _bundleMakerProject = modifiableModularizedSystem.getBundleMakerProject();
     _modifiableModularizedSystem = modifiableModularizedSystem;
     _artifactModel = artifactModel;
   }

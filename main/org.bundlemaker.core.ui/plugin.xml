@@ -22,7 +22,7 @@
                 class="org.eclipse.egit.ui.internal.repository.tree.RepositoriesViewSorter">
           </commonSorter -->
          <dropAssistant 
-               class="org.bundlemaker.core.ui.view.navigator.CommonDropAdapterAssistant1"
+               class="org.bundlemaker.core.ui.view.navigator.ArtifactTreeDropAdapterAssistant"
                id="org.bundlemaker.core.ui.dropAssistant1">
             <possibleDropTargets>
                <instanceof
@@ -92,9 +92,6 @@
                </reference>
          </enabledWhen>
       </handler>
-   </extension> 
-      <extension
-         point="org.eclipse.ui.handlers">
       <handler class="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
             commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler">
          <activeWhen>
@@ -108,9 +105,6 @@
                </reference>
          </enabledWhen>
       </handler>
-   </extension> 
-    <extension
-         point="org.eclipse.ui.handlers">
       <handler class="org.bundlemaker.core.ui.commands.ReportExportHandler"
             commandId="org.bundlemaker.core.ui.commands.ReportExportHandler">
          <activeWhen>
@@ -124,9 +118,6 @@
                </reference>
          </enabledWhen>
       </handler>
-   </extension> 
-     <extension
-         point="org.eclipse.ui.handlers">
       <handler class="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
             commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler">
          <activeWhen>
@@ -140,9 +131,6 @@
                </reference>
          </enabledWhen>
       </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
       <handler class="org.bundlemaker.core.ui.commands.TransformHandler"
             commandId="org.bundlemaker.core.ui.commands.TransformHandler">
          <activeWhen>
@@ -156,9 +144,6 @@
                </reference>
          </enabledWhen>
       </handler>
-   </extension>    
-   <extension
-         point="org.eclipse.ui.handlers">
       <handler class="org.bundlemaker.core.ui.commands.RunTransformationScriptHandler"
             commandId="org.bundlemaker.core.ui.commands.RunTransformationScript">
          <activeWhen>
@@ -180,7 +165,11 @@
       </handler>
       <handler
             commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
-            class="org.bundlemaker.core.ui.view.navigator.CustomizeDependencyTreeHandler">
+            class="org.bundlemaker.core.ui.commands.CustomizeDependencyTreeHandler">
+      </handler>
+      <handler
+            commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
+            class="org.bundlemaker.core.ui.commands.CreateNewGroupHandler">
       </handler>
    </extension>    
 
@@ -280,8 +269,8 @@
       <command id="org.bundlemaker.core.ui.commands.RunTransformationScript" name="Execute transformation..." />
       <command
             id="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
-            name="Customize Dependency Tree...">
-      </command> 
+            name="Customize Dependency Tree..." />
+      <command id="org.bundlemaker.core.ui.commands.CreateNewGroupCommand" name="Create New Group..." /> 
    </extension> 
 
    <!-- ======================================== -->
@@ -289,6 +278,7 @@
    <!-- ======================================== -->
    <extension
          point="org.eclipse.ui.menus">
+	  
 	   <menuContribution
                locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions"> 
 			<separator
@@ -301,7 +291,13 @@
          <command commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
 				icon="icons/bundlemaker-icon-small.png" style="push">
 				<visibleWhen checkEnabled="true" />
-			</command> 			
+			</command> 	
+			<command
+         commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
+         label="Create New Group..."
+         style="push">
+				<visibleWhen checkEnabled="true" />
+			</command> 		
 		<!-- The Exporter -->
          <separator
                name="org.bundlemaker.core.ui.separator.exporter"
@@ -318,20 +314,14 @@
 			<command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
 				style="push" >
 				<visibleWhen checkEnabled="true" />
-			</command>              			
+			</command> 
 
 	   </menuContribution> 
-   </extension>
-      
-   <!-- the "Export as" pop up menu -->
-   <extension point="org.eclipse.ui.menus">
+
 	   <menuContribution
 	       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
 	   </menuContribution> 
-   </extension>
 
-   <!-- Add RunTransformation to Editor Popup Menu -->
-      <extension point="org.eclipse.ui.menus">
         <menuContribution
             locationURI="popup:#TextEditorContext?after=additions">
              <command icon="icons/bundlemaker-icon-small.png"
@@ -342,6 +332,8 @@
          </command>  
          </menuContribution>
     </extension>
+    
+    
       <extension
             point="org.eclipse.ui.perspectives">
          <perspective

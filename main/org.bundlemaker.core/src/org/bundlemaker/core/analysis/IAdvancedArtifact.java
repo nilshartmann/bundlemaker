@@ -1,6 +1,7 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.modules.IModularizedSystem;
 
 /**
@@ -43,6 +44,14 @@ public interface IAdvancedArtifact extends IArtifact {
    * @return the modularized system, never null
    */
   public IModularizedSystem getModularizedSystem();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IDependencyModel getDependencyModel();
 
   // public IArtifact findChild();
 }

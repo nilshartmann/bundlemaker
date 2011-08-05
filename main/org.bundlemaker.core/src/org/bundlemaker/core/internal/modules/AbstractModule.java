@@ -306,16 +306,6 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
     _classification = classification;
   }
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param modularizedSystem
-  // */
-  // public final void setModularizedSystem(IModularizedSystem modularizedSystem) {
-  // _modularizedSystem = modularizedSystem;
-  // }
-
   /**
    * <p>
    * </p>

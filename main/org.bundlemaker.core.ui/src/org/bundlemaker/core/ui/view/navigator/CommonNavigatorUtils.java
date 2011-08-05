@@ -1,8 +1,6 @@
 package org.bundlemaker.core.ui.view.navigator;
 
-import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.viewers.ISelection;
+import org.bundlemaker.analysis.model.IArtifact;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -14,19 +12,27 @@ import org.eclipse.ui.navigator.CommonNavigator;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class CustomizeDependencyTreeHandler extends AbstractBundleMakerHandler {
+public class CommonNavigatorUtils {
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
+   * @param identifier
    */
-  @Override
-  protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
-
-    // TODO: open dialog
-    //
-
-    CommonNavigator commonNavigator = findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
+  public static void update(String identifier) {
+    CommonNavigator commonNavigator = findCommonNavigator(identifier);
     commonNavigator.getNavigatorContentService().update();
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public static void refresh(String identifier, IArtifact artifact) {
+
+    CommonNavigator commonNavigator = findCommonNavigator(identifier);
+    commonNavigator.getCommonViewer().refresh(artifact);
   }
 
   /**
@@ -36,7 +42,7 @@ public class CustomizeDependencyTreeHandler extends AbstractBundleMakerHandler {
    * @param navigatorViewId
    * @return
    */
-  public static CommonNavigator findCommonNavigator(String navigatorViewId) {
+  private static CommonNavigator findCommonNavigator(String navigatorViewId) {
     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     if (page != null) {
       IViewPart view = page.findView(navigatorViewId);

@@ -94,7 +94,7 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     ((IModifiableArtifact) artifact).setParent(this);
 
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.addResourceModuleToModularizedSystem(artifact);
+    AdapterUtils.addModuleToModularizedSystem(artifact);
   }
 
   /**

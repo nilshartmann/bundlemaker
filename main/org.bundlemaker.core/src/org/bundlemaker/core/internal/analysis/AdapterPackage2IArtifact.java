@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -10,7 +11,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterPackage2IArtifact extends AbstractAdvancedContainer {
+public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implements IGroupArtifact {
 
   /** - */
   private String  _qualifiedName;
