@@ -55,4 +55,11 @@ public interface IArtifactSelectionService {
 
   public void addArtifactSelectionListener(IArtifactSelectionListener listener);
 
+  /**
+   * Removes the specified listener
+   * 
+   * @param listener
+   */
+  public void removeArtifactSelectionListener(IArtifactSelectionListener listener);
+
 }

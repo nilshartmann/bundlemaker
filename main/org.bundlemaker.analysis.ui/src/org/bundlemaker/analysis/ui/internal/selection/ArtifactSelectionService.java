@@ -66,6 +66,19 @@ public class ArtifactSelectionService implements IArtifactSelectionService {
     addArtifactSelectionListener(null, listener);
   }
 
+  @Override
+  public void removeArtifactSelectionListener(IArtifactSelectionListener listener) {
+    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
+
+    for (SelectionListenerWrapper wrapper : _listenerList) {
+      if (listener.equals(wrapper.getListener())) {
+        // Remove from listener list
+        _listenerList.remove(wrapper);
+        break;
+      }
+    }
+  }
+
   private void fireArtifactSelectionChanged(IArtifactSelection artifactSelection) {
     // get the provider of the selection
     final String providerId = artifactSelection.getProviderId();
