@@ -81,7 +81,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
       // initialize the types caches
       initializeMissingTypesCaches();
 
-      // add the types
+      // add the 
       for (IModule module : modules) {
         if (module instanceof IResourceModule) {
           for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
