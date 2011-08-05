@@ -24,5 +24,6 @@ Export-Package: org.bundlemaker.analysis.log,
    org.eclipse.ui.part,
    org.eclipse.swt.widgets",
  org.bundlemaker.analysis.ui.handlers,
+ org.bundlemaker.analysis.ui.selection,
  org.bundlemaker.analysis.ui.view.table
 Bundle-ClassPath: .
