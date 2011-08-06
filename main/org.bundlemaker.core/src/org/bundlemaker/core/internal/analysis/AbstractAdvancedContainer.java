@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -51,5 +52,16 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
   @Override
   public IModularizedSystem getModularizedSystem() {
     return AdapterUtils.getModularizedSystem(this);
+  }
+
+  @Override
+  public IDependencyModel getDependencyModel() {
+    return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
+  }
+
+  @Override
+  public void addArtifact(IArtifact artifact, boolean registerParent) {
+    artifact.getParent().removeArtifact(artifact);
+    super.addArtifact(artifact, registerParent);
   }
 }

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -313,6 +314,23 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
       for (IType type : resource.getContainedTypes()) {
         typeChanged(type, resourceModule, ChangeAction.REMOVED);
       }
+    }
+  }
+
+  @Override
+  protected void typeModuleAdded(TypeModule module) {
+    Assert.isNotNull(module);
+
+    //
+    for (IType type : module.getContainedTypes()) {
+      typeChanged(type, module, ChangeAction.ADDED);
+    }
+  }
+
+  @Override
+  protected void typeModuleRemoved(TypeModule module) {
+    for (IType type : module.getContainedTypes()) {
+      typeChanged(type, module, ChangeAction.REMOVED);
     }
   }
 

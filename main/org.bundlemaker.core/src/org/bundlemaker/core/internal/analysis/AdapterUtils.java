@@ -6,6 +6,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
@@ -49,7 +50,7 @@ public class AdapterUtils {
    * 
    * @param artifact
    */
-  public static void addResourceModuleToModularizedSystem(IArtifact artifact) {
+  public static void addModuleToModularizedSystem(IArtifact artifact) {
 
     //
     IModifiableModularizedSystem modularizedSystem = AdapterUtils.getModularizedSystem(artifact);
@@ -58,9 +59,9 @@ public class AdapterUtils {
     for (IArtifact moduleArtifact : getAllContainedResourceModules(artifact)) {
 
       // TODO
-      AdapterResourceModule2IArtifact adapter = (AdapterResourceModule2IArtifact) moduleArtifact;
-      IModifiableResourceModule resourceModule = (IModifiableResourceModule) adapter.getModule();
-      Assert.isNotNull(resourceModule);
+      AdapterModule2IArtifact adapter = (AdapterModule2IArtifact) moduleArtifact;
+      AbstractModule<?, ?> abstractModule = (AbstractModule<?, ?>) adapter.getModule();
+      Assert.isNotNull(abstractModule);
 
       if (adapter.getParent().getType().equals(ArtifactType.Group)) {
 
@@ -69,11 +70,11 @@ public class AdapterUtils {
         path = path.replace('|', '/');
 
         // set the classification
-        resourceModule.setClassification(new Path(path));
+        abstractModule.setClassification(new Path(path));
       }
 
       //
-      modularizedSystem.addModifiableResourceModule(resourceModule);
+      modularizedSystem.addModule(abstractModule);
     }
   }
 
@@ -91,7 +92,7 @@ public class AdapterUtils {
     //
     for (IArtifact moduleArtifact : getAllContainedResourceModules(artifact)) {
       // TODO
-      AdapterResourceModule2IArtifact module2IArtifact = (AdapterResourceModule2IArtifact) ((AdapterResourceModule2IArtifact) moduleArtifact);
+      AdapterModule2IArtifact module2IArtifact = ((AdapterModule2IArtifact) moduleArtifact);
       modularizedSystem.removeModule(module2IArtifact.getModule().getModuleIdentifier());
     }
   }

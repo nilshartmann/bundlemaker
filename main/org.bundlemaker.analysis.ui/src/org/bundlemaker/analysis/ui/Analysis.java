@@ -5,6 +5,8 @@ import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.bundlemaker.analysis.ui.editor.GenericEditor;
 import org.bundlemaker.analysis.ui.internal.Activator;
 import org.bundlemaker.analysis.ui.internal.AnalysisContext;
+import org.bundlemaker.analysis.ui.internal.selection.ArtifactSelectionService;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -20,20 +22,32 @@ import org.eclipse.ui.internal.part.NullEditorInput;
  * @author Nils Hartmann
  * 
  */
+@SuppressWarnings("restriction")
 public class Analysis {
+
+  /**
+   * The id for the Project-Explorer Artifact selection provider
+   */
+  public static final String              PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID = "org.bundlemaker.ui.navigator.selectionprovider";
+
+  /**
+   * The id of the Eclipse project explorer
+   */
+  public static final String              PROJECT_EXPLORER_VIEW_ID                        = "org.eclipse.ui.navigator.ProjectExplorer";
 
   private static Analysis        _instance;
 
   private final IAnalysisContext _analysisContext;
 
-  @SuppressWarnings("restriction")
+  private final IArtifactSelectionService _artifactSelectionService;
+
   private IEditorInput           nullInputEditor = new NullEditorInput();
 
   /**
-   * Returns the singleton instnace of analysis.
+   * Returns the singleton instance of analysis.
    * 
    * <p>
-   * There is exactly one Analysis instance per Eclispe instance
+   * There is exactly one Analysis instance per Eclipse instance
    * 
    * @return
    */
@@ -50,6 +64,7 @@ public class Analysis {
    */
   private Analysis() {
     _analysisContext = new AnalysisContext();
+    _artifactSelectionService = new ArtifactSelectionService();
   }
 
   /**
@@ -59,6 +74,15 @@ public class Analysis {
    */
   public IAnalysisContext getContext() {
     return _analysisContext;
+  }
+
+  /**
+   * Return the {@link IArtifactSelectionService} instance.
+   * 
+   * @return the {@link IArtifactSelectionService}. Never null
+   */
+  public IArtifactSelectionService getArtifactSelectionService() {
+    return _artifactSelectionService;
   }
 
   /**

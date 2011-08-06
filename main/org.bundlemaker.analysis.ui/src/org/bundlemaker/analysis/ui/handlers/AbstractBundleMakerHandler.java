@@ -95,7 +95,7 @@ public abstract class AbstractBundleMakerHandler extends AbstractHandler impleme
    * @return
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  protected static <T> List<T> getSelectedObject(ISelection selection, Class<T> type) {
+  public static <T> List<T> getSelectedObject(ISelection selection, Class<T> type) {
     final List<T> result = new LinkedList<T>();
     if (selection instanceof IStructuredSelection) {
       IStructuredSelection structuredSelection = (IStructuredSelection) selection;

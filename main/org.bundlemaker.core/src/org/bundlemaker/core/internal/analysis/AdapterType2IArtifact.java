@@ -20,11 +20,12 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.internal.analysis.transformer.AbstractArtifactCache;
+import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -45,13 +46,13 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   private IType                       _type;
 
   /** - */
-  private AbstractArtifactCache       _artifactCache;
+  private DefaultArtifactCache        _artifactCache;
 
   /** - */
   private Map<IArtifact, IDependency> _cachedDependencies;
 
-  /** - */
-  private boolean                     _aggregateNonPrimaryTypes;
+  // /** - */
+  // private boolean _aggregateNonPrimaryTypes;
 
   /** - */
   private IMovableUnit                _resourceHolder;
@@ -63,16 +64,13 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @param type
    * @param classification
    */
-  public AdapterType2IArtifact(IType type, AbstractArtifactCache artifactCache, IArtifact parent,
-      boolean aggregateNonPrimaryTypes) {
+  public AdapterType2IArtifact(IType type, DefaultArtifactCache defaultArtifactCache, IArtifact parent) {
 
     super(ArtifactType.Type, type.getName());
 
     Assert.isNotNull(type.isPrimaryType());
-    Assert.isNotNull(artifactCache);
+    Assert.isNotNull(defaultArtifactCache);
     Assert.isNotNull(parent);
-
-    _aggregateNonPrimaryTypes = aggregateNonPrimaryTypes;
 
     // set parent/children dependency
     setParent(parent);
@@ -80,7 +78,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     _type = type;
 
-    _artifactCache = artifactCache;
+    _artifactCache = defaultArtifactCache;
 
     //
     _resourceHolder = MovableUnit.createFromType(type);
@@ -108,16 +106,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public List<IType> getAssociatedTypes() {
     return _resourceHolder.getAssociatedTypes();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public boolean isAggregateInnerTypes() {
-    return _aggregateNonPrimaryTypes;
   }
 
   /**
@@ -195,6 +183,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return AdapterUtils.getModularizedSystem(this);
   }
 
+  @Override
+  public IDependencyModel getDependencyModel() {
+    return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
+  }
+
   /**
 	 * 
 	 */
@@ -209,10 +202,10 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _cachedDependencies = new HashMap<IArtifact, IDependency>();
 
     // TODO: WRONG!
-    initReferences(_type.getReferences(), _aggregateNonPrimaryTypes);
+    initReferences(_type.getReferences(), _artifactCache.getConfiguration().isAggregateInnerTypes());
 
     //
-    if (_aggregateNonPrimaryTypes) {
+    if (_artifactCache.getConfiguration().isAggregateInnerTypes()) {
 
       if (_type.hasSourceResource()) {
         for (IType type : _type.getSourceResource().getContainedTypes()) {
@@ -240,11 +233,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   private void initReferences(Collection<? extends IReference> references, boolean isPrimaryType) {
 
-    //
-    if (this.getName().equals("CollectionManagerImpl")) {
-      System.out.println(references);
-    }
-
     // iterate over all references
     for (IReference reference : references) {
 
@@ -252,7 +240,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       String referenceName = reference.getFullyQualifiedName();
 
       // resolve the top level type
-      if (_aggregateNonPrimaryTypes) {
+      if (_artifactCache.getConfiguration().isAggregateInnerTypes()) {
         referenceName = resolvePrimaryType(referenceName, (IResourceModule) _type.getModule(getModularizedSystem()));
       }
 

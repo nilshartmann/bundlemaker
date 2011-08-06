@@ -10,6 +10,7 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
@@ -50,21 +51,22 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
   public void testTransformedModel() throws CoreException {
 
     // Step 1: transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
     ArtifactUtils.dumpArtifact(rootArtifact);
 
     // Step 2: test 'root' with children
     List<IArtifact> children = new LinkedList<IArtifact>(rootArtifact.getChildren());
-    Assert.assertEquals(2, children.size());
+    Assert.assertEquals(3, children.size());
     for (IArtifact child : children) {
       Assert.assertEquals(rootArtifact, child.getParent());
     }
-    assertNode(children.get(0), ArtifactType.Module, "jdk16_jdk16", getModularizedSystem().getName());
-    assertNode(children.get(1), ArtifactType.Group, "group1", getModularizedSystem().getName());
+    assertNode(children.get(1), ArtifactType.Module, "jdk16_jdk16", getModularizedSystem().getName());
+    assertNode(children.get(2), ArtifactType.Group, "group1", getModularizedSystem().getName());
 
     // Step 3: test 'group1' with children
-    children = new LinkedList<IArtifact>(children.get(1).getChildren());
+    children = new LinkedList<IArtifact>(children.get(2).getChildren());
     Assert.assertEquals(1, children.size());
     assertNode(children.get(0), ArtifactType.Group, "group2", "group1");
 
@@ -102,8 +104,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
   @Test
   public void testGroup_SimpleRemoveAddModule() throws CoreException {
 
-    // transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
+    // Step 1: transform the model
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    Assert.assertNotNull(rootArtifact);
 
     // get the module artifact
     IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
@@ -132,8 +136,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
   @Test
   public void testGroup_RemoveModuleAndAddToOtherGroup() throws CoreException {
 
-    // transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
+    // Step 1: transform the model
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    Assert.assertNotNull(rootArtifact);
 
     // get the module artifact
     IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
@@ -161,8 +167,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
   @Test
   public void testGroup_RemoveGroupAndAddToOtherGroup() throws CoreException {
 
-    // transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
+    // Step 1: transform the model
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    Assert.assertNotNull(rootArtifact);
 
     // get group2 group
     IArtifact group2Group = rootArtifact.getChild("group1|group2");
@@ -186,8 +194,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
   @Test
   public void testPackage_SimpleRemoveAndAdd() throws CoreException {
 
-    // transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
+    // Step 1: transform the model
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    Assert.assertNotNull(rootArtifact);
 
     // get the module
     IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
@@ -216,8 +226,10 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
   @Test
   public void testResource_SimpleRemoveAndAdd() throws CoreException {
 
-    // transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
+    // Step 1: transform the model
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    Assert.assertNotNull(rootArtifact);
 
     // get package
     IArtifact packageDeTest = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0|de.test");
@@ -270,7 +282,9 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
     Assert.assertSame(typeContainingModule, module);
 
     // transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.transform(getModularizedSystem());
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    Assert.assertNotNull(rootArtifact);
 
     IArtifact module1 = rootArtifact.getChild("group1|group2|ModuleConverterTest_1.0.0");
     Assert.assertNotNull(module1);
@@ -305,17 +319,9 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
   public void testAggregated() throws CoreException {
 
     // transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer
-        .transformWithAggregatedTypes(getModularizedSystem());
-    ArtifactUtils.dumpArtifact(rootArtifact);
-  }
-
-  @Test
-  public void testDependencyModel() throws CoreException {
-
     // transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getBundleMakerProject(),
-        getModularizedSystem());
-    ArtifactUtils.dumpArtifact(dependencyModel.getRoot());
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION).getRoot();
+    ArtifactUtils.dumpArtifact(rootArtifact);
   }
 }

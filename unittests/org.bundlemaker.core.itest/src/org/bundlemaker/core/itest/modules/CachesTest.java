@@ -132,7 +132,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(0, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
 
     // ADD THE MODULE
-    getModularizedSystem().addModifiableResourceModule(((IModifiableResourceModule) resourceModule));
+    getModularizedSystem().addModule(((IModifiableResourceModule) resourceModule));
 
     // TEST 3: check contained types
     Assert.assertTrue(resourceModule.hasModularizedSystem());

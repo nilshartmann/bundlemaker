@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 
 import junit.framework.Assert;
@@ -24,23 +25,35 @@ public class FileDiffUtil {
   /**
    * <p>
    * </p>
-   * 
+   *
    * @param expected
    * @param actual
    * @param htmlResult
    */
   public static void assertArtifactModel(File expected, File actual, File htmlResult) {
+    try {
+      assertArtifactModel(new FileInputStream(expected), new FileInputStream(actual), htmlResult);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      Assert.fail(e.getMessage());
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param expected
+   * @param actual
+   * @param htmlResult
+   */
+  public static void assertArtifactModel(InputStream expected, InputStream actual, File htmlResult) {
 
     String expectedString = null;
     String actualString = null;
 
-    try {
-      expectedString = BundleMakerTestUtils.convertStreamToString(new FileInputStream(expected));
-      actualString = BundleMakerTestUtils.convertStreamToString(new FileInputStream(actual));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      Assert.fail();
-    }
+      expectedString = BundleMakerTestUtils.convertStreamToString(expected);
+      actualString = BundleMakerTestUtils.convertStreamToString(actual);
 
     diff_match_patch patch = new diff_match_patch();
 
@@ -60,7 +73,7 @@ public class FileDiffUtil {
       }
 
       //
-      Assert.fail(String.format("Unexpected result in '%s'. See '%s'.", actual.getName(), htmlResult.getName()));
+      Assert.fail(String.format("Unexpected result. See '%s'.", htmlResult.getName()));
     }
   }
 

@@ -26,7 +26,6 @@ import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
@@ -35,7 +34,6 @@ import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
@@ -166,6 +164,10 @@ public class BundleMakerProject implements IBundleMakerProject {
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.READY);
 
+    // clear the modularized system working copies
+    // TODO
+    _modifiableModualizedSystemWorkingCopies.clear();
+
     // get the dependency store
     ModelSetup modelSetup = new ModelSetup(this);
     modelSetup.setup(_projectDescription.getModifiableFileBasedContent(),
@@ -179,11 +181,11 @@ public class BundleMakerProject implements IBundleMakerProject {
         .getName()) : createModularizedSystemWorkingCopy(getProject().getName());
     modularizedSystem.applyTransformations(progressMonitor);
 
-    // TODO
-    _dependencyModel = ModelTransformer.getDependencyModel(this, (IModifiableModularizedSystem) modularizedSystem);
-
+    // // TODO
+    // _dependencyModel = ModelTransformer.getDependencyModel(this, (IModifiableModularizedSystem) modularizedSystem);
     //
-    Activator.getContext().registerService(IDependencyModel.class.getName(), _dependencyModel, null);
+    // //
+    // Activator.getContext().registerService(IDependencyModel.class.getName(), _dependencyModel, null);
 
     // notify listeners
     notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));

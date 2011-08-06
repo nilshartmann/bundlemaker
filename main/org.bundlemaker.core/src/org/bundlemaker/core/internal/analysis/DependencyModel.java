@@ -4,12 +4,10 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -36,53 +34,41 @@ public class DependencyModel implements IDependencyModel {
    * @param bundleMakerProject
    * @param modifiableModularizedSystem
    */
-  public DependencyModel(IBundleMakerProject bundleMakerProject,
-      IModifiableModularizedSystem modifiableModularizedSystem) {
+  public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem, IArtifact artifactModel) {
 
-    Assert.isNotNull(bundleMakerProject);
     Assert.isNotNull(modifiableModularizedSystem);
+    Assert.isNotNull(artifactModel);
 
-    _bundleMakerProject = bundleMakerProject;
+    ((AdapterModularizedSystem2IArtifact) artifactModel).setDependencyModel(this);
+
+    _bundleMakerProject = modifiableModularizedSystem.getBundleMakerProject();
     _modifiableModularizedSystem = modifiableModularizedSystem;
-
-    try {
-      //
-      _artifactModel = ModelTransformer.transformWithAggregatedTypes(_modifiableModularizedSystem);
-    } catch (CoreException e) {
-      // TODO Auto-generated catch block
-      System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);
-      e.printStackTrace();
-      throw new RuntimeException("Error in ModelTransformer.transformWithAggregatedTypes: " + e.getMessage(), e);
-    }
+    _artifactModel = artifactModel;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getName() {
     return _modifiableModularizedSystem.getName();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IArtifact getRoot() {
     return _artifactModel;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IDependencyModel createDependencyModel(String name) {
-
-    //
-    try {
-      IModifiableModularizedSystem modularizedSystem = (IModifiableModularizedSystem) _bundleMakerProject
-          .createModularizedSystemWorkingCopy(name);
-
-      IDependencyModel result = new DependencyModel(_bundleMakerProject, modularizedSystem);
-
-      return result;
-
-    } catch (CoreException e) {
-      // TODO
-      e.printStackTrace();
-      throw new RuntimeException(e.getMessage(), e);
-    }
+    throw new UnsupportedOperationException(
+        "Unsupported method 'public IDependencyModel createDependencyModel(String name)'");
   }
 
   @Override

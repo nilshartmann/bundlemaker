@@ -13,10 +13,8 @@ package org.bundlemaker.core.analysis;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.analysis.DependencyModel;
-import org.bundlemaker.core.internal.analysis.transformer.AggregatedTypesArtifactCache;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -35,45 +33,29 @@ public class ModelTransformer {
    * @return
    */
   public static IDependencyModel getDependencyModel(IBundleMakerProject bundleMakerProject,
-      IModifiableModularizedSystem modifiableModularizedSystem) {
-    //
-    return new DependencyModel(bundleMakerProject, modifiableModularizedSystem);
-  }
+      IModifiableModularizedSystem modifiableModularizedSystem, ArtifactModelConfiguration configuration) {
 
-  public static IAdvancedArtifact transform(IModifiableModularizedSystem modularizedSystem) throws CoreException {
-    return transform(modularizedSystem, ContentType.BINARY, false);
-  }
+    Assert.isNotNull(bundleMakerProject);
+    Assert.isNotNull(modifiableModularizedSystem);
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @return
-   * @throws CoreException
-   */
-  public static IAdvancedArtifact transform(IModifiableModularizedSystem modularizedSystem, ContentType contentType,
-      boolean hierarchical) throws CoreException {
-    Assert.isNotNull(modularizedSystem);
-    Assert.isNotNull(contentType);
+    // default
+    configuration = configuration == null ? new ArtifactModelConfiguration() : configuration;
 
-    DefaultArtifactCache artifactCache = new DefaultArtifactCache(modularizedSystem);
-    artifactCache.setContentType(contentType);
-    artifactCache.setHierarchical(hierarchical);
-    IAdvancedArtifact root = artifactCache.transform();
-    return root;
-  }
+    try {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @return
-   * @throws CoreException
-   */
-  public static IAdvancedArtifact transformWithAggregatedTypes(IModifiableModularizedSystem modularizedSystem)
-      throws CoreException {
-    return new AggregatedTypesArtifactCache(modularizedSystem).transform();
+      //
+      Assert.isNotNull(modifiableModularizedSystem);
+      Assert.isNotNull(configuration);
+
+      //
+      DefaultArtifactCache artifactCache = new DefaultArtifactCache(modifiableModularizedSystem, configuration);
+      //
+      return new DependencyModel(modifiableModularizedSystem, artifactCache.transform());
+
+    } catch (CoreException e) {
+      System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);
+      e.printStackTrace();
+      throw new RuntimeException("Error in ModelTransformer.transformWithAggregatedTypes: " + e.getMessage(), e);
+    }
   }
 }

@@ -2,7 +2,11 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.IModifiableArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
@@ -12,9 +16,11 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContainer {
+public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContainer implements IRootArtifact {
 
   private IModifiableModularizedSystem _modularizedSystem;
+
+  private DependencyModel              _dependencyModel;
 
   /**
    * <p>
@@ -65,7 +71,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     ((IModifiableArtifact) artifact).setParent(this);
 
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.addResourceModuleToModularizedSystem(artifact);
+    if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
+      AdapterUtils.addModuleToModularizedSystem(artifact);
+    }
   }
 
   /**
@@ -86,6 +94,15 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     //
     return result;
+  }
+
+  @Override
+  public IDependencyModel getDependencyModel() {
+    return _dependencyModel;
+  }
+
+  void setDependencyModel(DependencyModel dependencyModel) {
+    _dependencyModel = dependencyModel;
   }
 
   /**

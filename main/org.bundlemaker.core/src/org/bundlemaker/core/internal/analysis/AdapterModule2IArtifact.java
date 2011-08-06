@@ -62,58 +62,9 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     return classification + _module.getModuleIdentifier().toString();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void addArtifact(IArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-    assertCanAdd(artifact);
-
-    //
-    super.addArtifact(artifact);
-
-    // TODO: TYPE CHECK??
-    AdapterUtils.addPackageToModule(artifact, this);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean removeArtifact(IArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-
-    boolean result = false;
-
-    // package type
-    if (artifact.getType().equals(ArtifactType.Package)) {
-
-      //
-      if (getChildren().contains(artifact)) {
-        result = super.removeArtifact(artifact);
-        AdapterUtils.removePackageFromModule(artifact, this);
-      }
-    }
-
-    // package type
-    else if (artifact.getType().equals(ArtifactType.Type)) {
-      IArtifact packageArtifact = artifact.getParent();
-      packageArtifact.removeArtifact(packageArtifact);
-    }
-
-    // return the result
-    return result;
-  }
-
   @Override
   public boolean canAdd(IArtifact artifact) {
-    return artifact != null
-        && (artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type));
+    return false;
   }
 
   /**

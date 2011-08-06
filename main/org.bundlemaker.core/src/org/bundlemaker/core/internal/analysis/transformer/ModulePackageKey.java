@@ -11,39 +11,64 @@
 package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.modules.IModule;
+import org.eclipse.core.runtime.Assert;
 
 /**
- *
+ * <p>
+ * Encapsulates a package within a module.
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ModulePackageKey {
 
-  /** - */
+  /** the resource module */
   private IModule _resourceModule;
 
-  /** - */
+  /** the package name */
   private String  _packageName;
 
   /**
    * <p>
+   * Creates a new instance of type {@link ModulePackageKey}.
    * </p>
    * 
    * @param resourceModule
    * @param packageName
    */
   public ModulePackageKey(IModule resourceModule, String packageName) {
+    Assert.isNotNull(resourceModule);
+    Assert.isNotNull(packageName);
 
     _resourceModule = resourceModule;
     _packageName = packageName;
   }
 
+  /**
+   * <p>
+   * Returns the module.
+   * </p>
+   * 
+   * @return
+   */
   public IModule getModule() {
     return _resourceModule;
   }
 
+  /**
+   * <p>
+   * Returns the name of the package.
+   * </p>
+   * 
+   * @return the name of the package.
+   */
   public String getPackageName() {
     return _packageName;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -53,6 +78,9 @@ public class ModulePackageKey {
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

@@ -159,16 +159,39 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    */
   @SuppressWarnings("rawtypes")
   @Override
-  public void addModifiableResourceModule(IModifiableResourceModule resourceModule) {
-    Assert.isNotNull(resourceModule);
-    Assert.isTrue(!getModifiableResourceModulesMap().containsKey(resourceModule.getModuleIdentifier()));
+  public void addModule(IModule module) {
+    Assert.isNotNull(module);
 
-    //
-    ((AbstractModule) resourceModule).attach(this);
-    getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
+    if (module instanceof IModifiableResourceModule) {
 
-    // notify
-    resourceModuleAdded(resourceModule);
+      //
+      Assert.isTrue(!getModifiableResourceModulesMap().containsKey(module.getModuleIdentifier()));
+
+      //
+      IModifiableResourceModule resourceModule = (IModifiableResourceModule) module;
+
+      //
+      ((AbstractModule) resourceModule).attach(this);
+      getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
+
+      // notify
+      resourceModuleAdded(resourceModule);
+
+    } else if (module instanceof TypeModule) {
+
+      //
+      Assert.isTrue(!getModifiableNonResourceModulesMap().containsKey(module.getModuleIdentifier()));
+
+      //
+      TypeModule typeModule = (TypeModule) module;
+
+      //
+      ((AbstractModule) typeModule).attach(this);
+      getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
+
+      // notify
+      typeModuleAdded(typeModule);
+    }
   }
 
   /**
@@ -179,14 +202,27 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   @Override
   public void removeModule(IModuleIdentifier identifier) {
     Assert.isNotNull(identifier);
-    Assert.isTrue(getModifiableResourceModulesMap().containsKey(identifier));
 
-    // remove the entry
-    IModifiableResourceModule resourceModule = getModifiableResourceModulesMap().remove(identifier);
-    ((AbstractModule) resourceModule).detach();
+    if (getModifiableResourceModulesMap().containsKey(identifier)) {
 
-    // notify
-    resourceModuleRemoved(resourceModule);
+      Assert.isTrue(getModifiableResourceModulesMap().containsKey(identifier));
+
+      // remove the entry
+      IModifiableResourceModule resourceModule = getModifiableResourceModulesMap().remove(identifier);
+      ((AbstractModule) resourceModule).detach();
+
+      // notify
+      resourceModuleRemoved(resourceModule);
+
+    } else if (getModifiableNonResourceModulesMap().containsKey(identifier)) {
+
+      // remove the entry
+      TypeModule module = getModifiableNonResourceModulesMap().remove(identifier);
+      ((AbstractModule) module).detach();
+
+      // notify
+      typeModuleRemoved(module);
+    }
   }
 
   /**
@@ -245,6 +281,26 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param resourceModule
    */
   protected void resourceModuleRemoved(IModifiableResourceModule resourceModule) {
+    // do nothing...
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   */
+  protected void typeModuleAdded(TypeModule module) {
+    // do nothing
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   */
+  protected void typeModuleRemoved(TypeModule module) {
     // do nothing...
   }
 

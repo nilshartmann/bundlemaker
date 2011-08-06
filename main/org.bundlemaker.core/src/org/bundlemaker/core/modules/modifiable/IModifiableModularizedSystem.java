@@ -43,7 +43,7 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @param identifier
    * @param resourceModule
    */
-  void addModifiableResourceModule(IModifiableResourceModule resourceModule);
+  void addModule(IModule resourceModule);
 
   /**
    * <p>

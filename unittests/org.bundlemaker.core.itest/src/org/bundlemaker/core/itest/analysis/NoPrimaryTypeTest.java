@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -32,8 +33,8 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
   public void testNoPrimaryType_aggregatedTypes() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer
-        .transformWithAggregatedTypes(getModularizedSystem());
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
+        getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     //
