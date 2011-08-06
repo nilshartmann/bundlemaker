@@ -293,10 +293,9 @@ public class ProjectResourcesBlock {
     content.setName(dialog.getName());
     content.setVersion(dialog.getVersion());
     content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
-
-    if (content.isResourceContent()) {
       content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
-    }
+    content.setResourceContent(dialog.isAnalyze());
+    content.setAnalyzeSourceResources(dialog.isAnalyzeSources());
 
     projectDescriptionChanged();
   }
@@ -381,17 +380,17 @@ public class ProjectResourcesBlock {
    * @param shell
    */
   private void addContent(Shell shell) {
-    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, true);
+    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell);
     if (dialog.open() != Window.OK) {
       return;
     }
-    // if (_editResources) {
+
+    if (dialog.isAnalyze()) {
     getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
-        dialog.getBinaryPaths(), dialog.getSourcePaths());
-    // } else {
-    // getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(),
-    // dialog.getBinaryPaths());
-    // }
+          dialog.getBinaryPaths(), dialog.getSourcePaths(), dialog.isAnalyzeSources());
+    } else {
+      getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths());
+    }
 
     projectDescriptionChanged();
 

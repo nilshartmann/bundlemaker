@@ -1,12 +1,15 @@
 package org.bundlemaker.analysis.ui;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.bundlemaker.analysis.ui.editor.GenericEditor;
 import org.bundlemaker.analysis.ui.internal.Activator;
 import org.bundlemaker.analysis.ui.internal.AnalysisContext;
 import org.bundlemaker.analysis.ui.internal.selection.ArtifactSelectionService;
+import org.bundlemaker.analysis.ui.internal.selection.DependencySelectionService;
 import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.analysis.ui.selection.IDependencySelectionService;
 import org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
@@ -28,20 +31,25 @@ public class Analysis {
   /**
    * The id for the Project-Explorer Artifact selection provider
    */
-  public static final String              PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID = "org.bundlemaker.ui.navigator.selectionprovider";
+  public static final String                PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID = "org.bundlemaker.ui.navigator.selectionprovider";
 
   /**
    * The id of the Eclipse project explorer
    */
-  public static final String              PROJECT_EXPLORER_VIEW_ID                        = "org.eclipse.ui.navigator.ProjectExplorer";
+  public static final String                PROJECT_EXPLORER_VIEW_ID                        = "org.eclipse.ui.navigator.ProjectExplorer";
 
-  private static Analysis        _instance;
+  private static Analysis                   _instance;
 
-  private final IAnalysisContext _analysisContext;
+  private final IAnalysisContext            _analysisContext;
 
-  private final IArtifactSelectionService _artifactSelectionService;
+  private final IArtifactSelectionService   _artifactSelectionService;
 
-  private IEditorInput           nullInputEditor = new NullEditorInput();
+  /**
+   * The {@link IDependencySelectionService} that manages selections of {@link IDependency} objects in the IDE
+   */
+  private final IDependencySelectionService _dependencySelectionService;
+
+  private IEditorInput                      nullInputEditor                                 = new NullEditorInput();
 
   /**
    * Returns the singleton instance of analysis.
@@ -64,7 +72,12 @@ public class Analysis {
    */
   private Analysis() {
     _analysisContext = new AnalysisContext();
+
+    // Create the ArtifactSelectionService
     _artifactSelectionService = new ArtifactSelectionService();
+
+    // Create the DependencySelectionService
+    _dependencySelectionService = new DependencySelectionService();
   }
 
   /**
@@ -83,6 +96,15 @@ public class Analysis {
    */
   public IArtifactSelectionService getArtifactSelectionService() {
     return _artifactSelectionService;
+  }
+
+  /**
+   * Returns the single {@link IDependencySelectionService} instance
+   * 
+   * @return {@link IDependencySelectionService}. Never null.
+   */
+  public IDependencySelectionService getDependencySelectionService() {
+    return _dependencySelectionService;
   }
 
   /**
@@ -110,9 +132,9 @@ public class Analysis {
   public DependencyTreeTableView getDependencyTreeTableView() {
     IWorkbenchPage workbenchPage = getActiveWorkbenchPage();
 
-      if (workbenchPage != null) {
-        return (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
-      }
+    if (workbenchPage != null) {
+      return (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
+    }
 
     return null;
   }
@@ -122,13 +144,13 @@ public class Analysis {
    */
   public void openDependencyTreeTableView() {
     IWorkbenchPage workbenchPage = getActiveWorkbenchPage();
-        if (workbenchPage != null) {
+    if (workbenchPage != null) {
       try {
-          workbenchPage.showView(DependencyTreeTableView.ID);
+        workbenchPage.showView(DependencyTreeTableView.ID);
       } catch (PartInitException e) {
         e.printStackTrace();
-        }
       }
+    }
   }
 
   /**
@@ -139,10 +161,10 @@ public class Analysis {
     if (page != null) {
       try {
         page.openEditor(nullInputEditor, GenericEditor.ID);
-    } catch (PartInitException e) {
-      e.printStackTrace();
+      } catch (PartInitException e) {
+        e.printStackTrace();
+      }
     }
-  }
   }
 
   /**

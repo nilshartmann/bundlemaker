@@ -13,6 +13,7 @@ package org.bundlemaker.core.ui.editor;
 import static java.lang.String.format;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -58,8 +59,15 @@ public class ContentListBlock {
 
   private Button _editButton;
 
+  private boolean                      _enabled      = true;
+
+  private Composite                    _composite;
+
+  private final java.util.List<Button> _otherButtons = new LinkedList<Button>();
+
   public void createContent(Composite parent) {
     Composite contentListComposite = new Composite(parent, SWT.NONE);
+    _composite = contentListComposite;
     final Shell shell = contentListComposite.getShell();
     GridData layoutData = new GridData(GridData.FILL_BOTH);
     contentListComposite.setLayoutData(layoutData);
@@ -112,46 +120,46 @@ public class ContentListBlock {
 
     });
 
-    newTextButton(buttonBar, "Add Archives...", new SelectionAdapter() {
+    _otherButtons.add(newTextButton(buttonBar, "Add Archives...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         addArchives(shell);
       }
 
-    });
+    }));
 
-    newTextButton(buttonBar, "Add external archives...", new SelectionAdapter() {
+    _otherButtons.add(newTextButton(buttonBar, "Add external archives...", new SelectionAdapter() {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
         addExternalArchives(shell, "Select archives to add...");
       }
 
-    });
+    }));
 
-    newTextButton(buttonBar, "Add Folders...", new SelectionAdapter() {
+    _otherButtons.add(newTextButton(buttonBar, "Add Folders...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         addFolders(shell);
       }
 
-    });
+    }));
 
-    newTextButton(buttonBar, "Add external folders...", new SelectionAdapter() {
+    _otherButtons.add(newTextButton(buttonBar, "Add external folders...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         addExternalFolders(shell);
       }
 
-    });
+    }));
 
-    newTextButton(buttonBar, "Add variable...", new SelectionAdapter() {
+    _otherButtons.add(newTextButton(buttonBar, "Add variable...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
         addVariable(shell);
       }
 
-    });
+    }));
 
     // refresh initial enablement
     refreshEnablement();
@@ -162,10 +170,17 @@ public class ContentListBlock {
    * Refresh the button enablement state according to the selection in the list
    */
   private void refreshEnablement() {
+
+    for (Button button : _otherButtons) {
+      button.setEnabled(_enabled);
+    }
+
+    _contentList.setEnabled(_enabled);
+
     int itemsSelected = _contentList.getSelectionCount();
 
-    _editButton.setEnabled(itemsSelected == 1);
-    _removeButton.setEnabled(itemsSelected > 0);
+    _editButton.setEnabled(_enabled && itemsSelected == 1);
+    _removeButton.setEnabled(_enabled && itemsSelected > 0);
   }
 
   /**
@@ -303,6 +318,13 @@ public class ContentListBlock {
    */
   public void setItems(String[] items) {
     _contentList.setItems(items);
+  }
+
+  public void setEnabled(boolean enabled) {
+    _enabled = enabled;
+
+    refreshEnablement();
+
   }
 
 }

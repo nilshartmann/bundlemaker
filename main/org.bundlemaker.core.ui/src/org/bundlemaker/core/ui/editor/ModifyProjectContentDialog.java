@@ -10,54 +10,71 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+/**
+ * Allows the creation and modification on IFilebasedContent
+ * 
+ * @author Nils Hartmann
+ * 
+ */
 public class ModifyProjectContentDialog extends TitleAreaDialog {
 
-  private final boolean          _editResources;
+  private Text                    _nameTextField;
 
-  private final boolean          _newContent;
+  private Text                    _versionTextField;
 
-  private Text                   _nameTextField;
+  private Button                  _analyzeButton;
 
-  private Text                   _versionTextField;
+  private Button                  _analyzeSourcesButton;
 
-  private ContentListBlock       _binariesContentList;
+  /**
+   * The original content or null if a new content is created with this dialog
+   */
+  private final IFileBasedContent _originalContent;
 
-  private ContentListBlock       _sourcesContentList;
+  private ContentListBlock        _binariesContentList;
 
-  private String                 _name;
+  private ContentListBlock        _sourcesContentList;
 
-  private String                 _version;
+  private String                  _name;
 
-  private java.util.List<String> _binaryRoots;
+  private String                  _version;
 
-  private java.util.List<String> _sourceRoots;
+  private java.util.List<String>  _binaryRoots;
+
+  private java.util.List<String>  _sourceRoots;
+
+  boolean                         _analyze        = true;
+
+  boolean                         _analyzeSources = false;
 
   public ModifyProjectContentDialog(Shell parentShell, IFileBasedContent existingContent) {
     super(parentShell);
     Assert.isNotNull(existingContent);
-    _newContent = false;
-    _editResources = existingContent.isResourceContent();
+    _originalContent = existingContent;
     _name = existingContent.getName();
     _version = existingContent.getVersion();
     _binaryRoots = stringList(existingContent.getBinaryRootPaths());
     _sourceRoots = stringList(existingContent.getSourceRootPaths());
+    _analyze = existingContent.isResourceContent();
+    _analyzeSources = existingContent.isAnalyzeSourceResources();
 
     configureDialog();
   }
 
-  public ModifyProjectContentDialog(Shell parentShell, boolean editResources) {
+  public ModifyProjectContentDialog(Shell parentShell) {
     super(parentShell);
-
-    _editResources = editResources;
-    _newContent = true;
+    _originalContent = null;
     configureDialog();
   }
 
@@ -81,16 +98,26 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
   @Override
   protected void configureShell(Shell newShell) {
     super.configureShell(newShell);
-    String text = (_newContent ? "Add" : "Edit");
+    String text = (isNewContent() ? "Add" : "Edit");
 
-    text += (_editResources ? " resource" : " type");
+    text += " content";
 
     newShell.setText(text);
   }
 
+  /**
+   * Returns true if this dialog instance edits <b>new</b> content (rather then modifying an already existing
+   * IFileBasedContent)
+   * 
+   * @return
+   */
+  protected boolean isNewContent() {
+    return (_originalContent == null);
+  }
+
   @Override
   protected Control createDialogArea(Composite parent) {
-    setTitle("Define " + (_editResources ? "Resource" : "Type") + " Content");
+    setTitle("Define content");
     setMessage("Enter the content description");
 
     final Composite areaComposite = (Composite) super.createDialogArea(parent);
@@ -100,13 +127,12 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     GridLayout gridLayout = FormLayoutUtils.createFormGridLayout(false, 2);
     dialogComposite.setLayout(gridLayout);
 
-    addNameAndVersionRow(dialogComposite);
+    createHeadSection(dialogComposite);
     _binariesContentList = addContentList(dialogComposite, "Binaries");
-    if (_editResources) {
-      _sourcesContentList = addContentList(dialogComposite, "Sources");
-    }
+    _sourcesContentList = addContentList(dialogComposite, "Sources");
 
     prepopulateForm();
+    refreshEnablement();
 
     Dialog.applyDialogFont(areaComposite);
 
@@ -115,7 +141,13 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
   }
 
   private void prepopulateForm() {
-    if (_newContent) {
+    if (isNewContent()) {
+
+      // Set default values
+      _analyzeButton.setSelection(_analyze);
+      _analyzeSourcesButton.setSelection(_analyzeSources);
+
+      // nothing else to pre-populate
       return;
     }
 
@@ -126,9 +158,42 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     if (_sourcesContentList != null) {
       _sourcesContentList.setItems(_sourceRoots.toArray(new String[0]));
     }
+
+    _analyzeButton.setSelection(_originalContent.isResourceContent());
+    _analyzeSourcesButton.setSelection(_originalContent.isAnalyzeSourceResources());
   }
 
-  private void addNameAndVersionRow(Composite dialogComposite) {
+  private void createHeadSection(Composite dialogComposite) {
+
+    Composite buttonRow = new Composite(dialogComposite, SWT.NONE);
+    buttonRow.setLayout(new GridLayout(2, true));
+    GridData gridData = new GridData();
+    gridData.horizontalSpan = 2;
+    buttonRow.setLayoutData(gridData);
+
+    _analyzeButton = new Button(buttonRow, SWT.CHECK);
+    _analyzeButton.setText("Analyze");
+
+    _analyzeButton.addSelectionListener(new SelectionAdapter() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        refreshEnablement();
+      }
+
+    });
+
+    _analyzeSourcesButton = new Button(buttonRow, SWT.CHECK);
+    _analyzeSourcesButton.setText("Analyze sources");
+    _analyzeSourcesButton.addSelectionListener(new SelectionAdapter() {
+
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        refreshEnablement();
+      }
+
+    });
+
     addLabel(dialogComposite, "Name:");
     _nameTextField = addText(dialogComposite);
 
@@ -142,6 +207,12 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     ContentListBlock contentListBlock = new ContentListBlock();
     contentListBlock.createContent(dialogComposite);
     return contentListBlock;
+  }
+
+  private void refreshEnablement() {
+    boolean analyze = _analyzeButton.getSelection();
+    _analyzeSourcesButton.setEnabled(analyze);
+    _sourcesContentList.setEnabled(analyze);
   }
 
   private Text addText(Composite parent) {
@@ -181,15 +252,24 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     return _sourceRoots;
   }
 
+  public boolean isAnalyze() {
+    return _analyze;
+  }
+
+  public boolean isAnalyzeSources() {
+    return _analyzeSources;
+  }
+
   @Override
   protected void okPressed() {
     _name = _nameTextField.getText();
     _version = _versionTextField.getText();
     _binaryRoots = _binariesContentList.getItems();
+    _sourceRoots = _sourcesContentList.getItems();
 
-    if (_sourcesContentList != null) {
-      _sourceRoots = _sourcesContentList.getItems();
-    }
+    _analyze = _analyzeButton.getSelection();
+    _analyzeSources = _analyzeSourcesButton.getSelection();
+
     super.okPressed();
   }
 

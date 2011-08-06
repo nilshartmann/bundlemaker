@@ -40,6 +40,9 @@ public class DSMView extends DependencyPart {
   //
   private static final boolean                    FEATURE_USE_NEW_DSM = Boolean.getBoolean("bm.useNewDsm");
 
+  /**
+   * This is used as the DSMView's providerId for the xxxSelectionServices
+   */
   public static String                            ID                  = "org.bundlemaker.analysis.ui.dsmview.DSMView";
 
   private static DSMView                          _instance;

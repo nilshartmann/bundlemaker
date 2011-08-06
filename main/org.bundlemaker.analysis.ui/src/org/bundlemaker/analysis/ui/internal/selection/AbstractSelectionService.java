@@ -1,5 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2011 Bundlemaker project team.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Bundlemaker project team - initial API and implementation
+ ******************************************************************************/
 package org.bundlemaker.analysis.ui.internal.selection;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.eclipse.core.runtime.Assert;
@@ -8,19 +19,75 @@ import org.eclipse.core.runtime.Assert;
  * Abstract base class for selection services
  * 
  * @author Nils Hartmann
- * 
+ * @param <SELECTION>
+ *          The type of the selection-object
  * @param <LISTENER>
  *          The SelectionListener-Type
  * @param <EVENT>
  *          The SelectionEvent-Type
  */
-public abstract class AbstractSelectionService<LISTENER, EVENT> {
+public abstract class AbstractSelectionService<SELECTION, LISTENER, EVENT> {
 
   /**
    * A set containing the registered listeners
    */
-  private final CopyOnWriteArraySet<SelectionListenerWrapper<LISTENER>> _listenerList = new CopyOnWriteArraySet<SelectionListenerWrapper<LISTENER>>();
+  private final CopyOnWriteArraySet<SelectionListenerWrapper<LISTENER>> _listenerList      = new CopyOnWriteArraySet<SelectionListenerWrapper<LISTENER>>();
 
+  /**
+   * A map containing all current selections
+   */
+  private final ConcurrentHashMap<String, SELECTION>                    _currentSelections = new ConcurrentHashMap<String, SELECTION>();
+
+  public SELECTION getSelection(String selectionProviderId) {
+    Assert.isNotNull(selectionProviderId, "The parameter 'selectionProviderId' must not be null");
+
+    return _currentSelections.get(selectionProviderId);
+  }
+
+  protected void setSelection(String providerId, SELECTION newSelection) {
+    // add selection
+    _currentSelections.put(providerId, newSelection);
+
+    // create event
+    EVENT event = createSelectionChangedEvent(newSelection);
+    Assert.isNotNull(event, "createSelectionChangedEvent() must not return null");
+
+    // notify listeners
+    fireSelectionChanged(providerId, event);
+  }
+
+  /**
+   * Creates a new xxxSelectionChangedEvent instance for the given selection
+   * 
+   * <p>
+   * Subclasses must implement this method to instantiate their appropriate event type
+   * 
+   * @param newSelection
+   *          the selection that the event should be created for
+   * @return the EVENT for this selection. Never null
+   */
+  protected abstract EVENT createSelectionChangedEvent(SELECTION newSelection);
+
+  /**
+   * Invoke the specified listener with the given event
+   * 
+   * <p>
+   * Subclasses must implement this method to call the appropriate method on the LISTENER class
+   * 
+   * @param listener
+   *          the listener to be invoked
+   * @param event
+   *          the event that should be passed to the listener method
+   */
+  protected abstract void invokeListener(LISTENER listener, EVENT event);
+
+  /**
+   * Add the specified listener to the list of listeners.
+   * 
+   * @param providerId
+   *          the provider or null, if this listener should react on changes from all providers
+   * @param listener
+   */
   protected void addSelectionListener(String providerId, LISTENER listener) {
     Assert.isNotNull(listener, "The parameter 'listener' must not be null");
 
@@ -54,8 +121,6 @@ public abstract class AbstractSelectionService<LISTENER, EVENT> {
 
     }
   }
-
-  protected abstract void invokeListener(LISTENER listener, EVENT event);
 
   private static class SelectionListenerWrapper<LISTENER> {
     private final String   _providerId;
