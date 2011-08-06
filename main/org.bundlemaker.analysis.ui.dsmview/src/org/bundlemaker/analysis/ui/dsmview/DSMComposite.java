@@ -14,7 +14,6 @@ package org.bundlemaker.analysis.ui.dsmview;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.IArtifact;
@@ -22,7 +21,6 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.DependencySelection;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -191,31 +189,12 @@ public class DSMComposite<V, E extends Edge<V>> extends Composite {
 
       @Override
       public void cellSelected(int col, int row, int statemask) {
+        // Get selected dependency
         IDependency dependency = dependencies[col - 1][row - 1];
 
         if (dependency != null) {
-          List<IDependency> dependencies = new ArrayList<IDependency>();
-          List<IArtifact> fromArtifacts = new ArrayList<IArtifact>();
-          List<IArtifact> toArtifacts = new ArrayList<IArtifact>();
-
-          addArtifacts(dependency.getFrom(), fromArtifacts);
-          addArtifacts(dependency.getTo(), toArtifacts);
-
-          for (IArtifact from : fromArtifacts) {
-            dependencies.addAll(from.getDependencies(toArtifacts));
-          }
-          DependencySelection selection = new DependencySelection(dependency.getFrom().getName(), dependency.getTo()
-              .getName(), dependency.getWeight(), dependencies);
-
-          dependencyPart.getSelectionProvider().setSelection(selection);
-        }
-      }
-
-      private void addArtifacts(IArtifact artifact, List<IArtifact> artifacts) {
-        if (artifact.getChildren().isEmpty()) {
-          artifacts.add(artifact);
-        } else {
-          artifacts.addAll(artifact.getChildren());
+          // Notify listeners about new selection
+          Analysis.instance().getDependencySelectionService().setSelection(DSMView.ID, dependency);
         }
       }
 

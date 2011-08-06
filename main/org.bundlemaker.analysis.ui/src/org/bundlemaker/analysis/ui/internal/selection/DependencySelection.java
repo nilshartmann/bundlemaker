@@ -54,4 +54,30 @@ public class DependencySelection implements IDependencySelection {
     return _selectedDependencies;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.analysis.ui.selection.IDependencySelection#getFirstDependency()
+   */
+  @Override
+  public IDependency getFirstDependency() {
+    if (!hasDependencies()) {
+      // empty selection
+      return null;
+    }
+
+    // Return first element
+    return _selectedDependencies.get(0);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.analysis.ui.selection.IDependencySelection#hasDependencies()
+   */
+  @Override
+  public boolean hasDependencies() {
+    return !_selectedDependencies.isEmpty();
+  }
+
 }
