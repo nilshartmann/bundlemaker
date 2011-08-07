@@ -16,10 +16,10 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
  * Provides access to the global {@link ArtifactModelConfiguration} that is used to configure the artifact tree display
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
- * 
+ * @noimplement This interface must not be implemented by clients
  */
 public interface IArtifactModelConfigurationProvider {
 
-  public ArtifactModelConfiguration getCurrentArtifactModelConfiguration();
+  public ArtifactModelConfiguration getArtifactModelConfiguration();
 
 }

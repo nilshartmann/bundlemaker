@@ -13,6 +13,8 @@ package org.bundlemaker.core.ui.internal;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.bundlemaker.core.ui.view.navigator.ArtifactModelConfigurationProvider;
+import org.bundlemaker.core.ui.view.navigator.IArtifactModelConfigurationProvider;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -29,10 +31,12 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
+  public static final String                  PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
 
   // The shared instance
-  private static Activator   plugin;
+  private static Activator                    plugin;
+
+  private IArtifactModelConfigurationProvider _artifactModelConfigurationProvider;
 
   /**
    * The constructor
@@ -49,6 +53,9 @@ public class Activator extends AbstractUIPlugin {
   public void start(BundleContext context) throws Exception {
     super.start(context);
     plugin = this;
+
+    _artifactModelConfigurationProvider = new ArtifactModelConfigurationProvider(getPreferenceStore());
+
   }
 
   /*
@@ -99,6 +106,13 @@ public class Activator extends AbstractUIPlugin {
     getImageRegistry().put(icon, image);
 
     return image;
+  }
+
+  /**
+   * @return the {@link IArtifactModelConfigurationProvider}. Never null
+   */
+  public IArtifactModelConfigurationProvider getArtifactModelConfigurationProvider() {
+    return _artifactModelConfigurationProvider;
   }
 
 }
