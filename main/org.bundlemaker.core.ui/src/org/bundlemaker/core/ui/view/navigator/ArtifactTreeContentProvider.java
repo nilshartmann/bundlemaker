@@ -13,6 +13,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -59,12 +60,12 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
             //
             // modularizedSystem.applyTransformations();
-            IArtifactModelConfigurationProvider artifactModelConfigurationProvider = ArtifactModelConfigurationProvider
-                .instance();
+            IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
+                .getArtifactModelConfigurationProvider();
 
             IArtifact artifact = ModelTransformer.getDependencyModel(bundleMakerProject,
                 (IModifiableModularizedSystem) modularizedSystem,
-                artifactModelConfigurationProvider.getCurrentArtifactModelConfiguration()).getRoot();
+                artifactModelConfigurationProvider.getArtifactModelConfiguration()).getRoot();
             // ModelTransformer.dumpArtifact(artifact);
             result.add(artifact);
           }
