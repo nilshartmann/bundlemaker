@@ -211,8 +211,7 @@ public class DependencyTreeTableView extends ViewPart implements IDependencySele
     }
 
     // Register DependencySelectionListener to get updates on selected dependencies
-    Analysis.instance().getDependencySelectionService()
-        .addDependencySelectionListener("org.bundlemaker.analysis.ui.dsmview.DSMView", this);
+    Analysis.instance().getDependencySelectionService().addDependencySelectionListener(this);
 
     // Register ArtifactSelectionListener
     Analysis.instance().getArtifactSelectionService()
