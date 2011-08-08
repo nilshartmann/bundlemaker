@@ -8,12 +8,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.widgets.Composite;
@@ -78,10 +73,6 @@ public class GenericEditor extends EditorPart {
 
     tabFolder = new TabFolder(parent, SWT.NONE);
 
-    DependencySelectionProvider selectionProvider = new DependencySelectionProvider();
-
-    getSite().setSelectionProvider(selectionProvider);
-
     if (extensionPoint != null) {
 
       for (IExtension extension : extensionPoint.getExtensions()) {
@@ -95,9 +86,6 @@ public class GenericEditor extends EditorPart {
 
             // add it to internal list of parts
             dependencyParts.add(dependencyPart);
-
-            // set the selection provider
-            dependencyPart.setSelectionProvider(selectionProvider);
 
             // initialize(i.e. create gui components)
             dependencyPart.init(tabFolder);
@@ -147,38 +135,4 @@ public class GenericEditor extends EditorPart {
     }
 
   }
-
-  class DependencySelectionProvider implements ISelectionProvider {
-
-    private ISelection _currentSelection;
-
-    ListenerList       listeners = new ListenerList();
-
-    @Override
-    public void addSelectionChangedListener(ISelectionChangedListener listener) {
-      listeners.add(listener);
-    }
-
-    @Override
-    public ISelection getSelection() {
-      return _currentSelection;
-    }
-
-    @Override
-    public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-      listeners.remove(listener);
-    }
-
-    @Override
-    public void setSelection(ISelection select) {
-
-      _currentSelection = select;
-
-      Object[] list = listeners.getListeners();
-      for (int i = 0; i < list.length; i++) {
-        ((ISelectionChangedListener) list[i]).selectionChanged(new SelectionChangedEvent(this, _currentSelection));
-      }
-    }
-  }
-
 }

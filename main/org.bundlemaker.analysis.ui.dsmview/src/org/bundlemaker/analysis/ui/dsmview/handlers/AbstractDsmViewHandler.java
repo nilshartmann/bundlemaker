@@ -1,18 +1,13 @@
 package org.bundlemaker.analysis.ui.dsmview.handlers;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.dsmview.DSMView;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.analysis.ui.view.table.JavaEditor;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
@@ -30,26 +25,18 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
     if (isSingleClassArtifactSelected(selectedArtifacts)) {
       IArtifact singleClassArtifact = selectedArtifacts.get(0);
       JavaEditor.openTypeInEditor(singleClassArtifact.getQualifiedName());
-      Collection<IArtifact> artifacts = new ArrayList<IArtifact>();
+      List<IArtifact> artifacts = new ArrayList<IArtifact>();
       artifacts.add(singleClassArtifact);
       artifacts.add(singleClassArtifact.getParent(ArtifactType.Root));
-      setNewDependencyGraph(artifacts);
-      openEditorAndViews(event);
+      openEditorAndViews(artifacts);
       return;
     }
 
     // get the artifacts that should be displayed in DSM View
-    Set<IArtifact> artifactsForDsmView = getArtifactsForDsmView(selectedArtifacts);
-
-    // Create and set the dependencyGraph for the selected artifacts
-    setNewDependencyGraph(new HashSet<IArtifact>(artifactsForDsmView));
+    List<IArtifact> artifactsForDsmView = getArtifactsForDsmView(selectedArtifacts);
 
     // make sure the editor and views are visible
-    openEditorAndViews(event);
-  }
-
-  private IArtifactSelectionService getArtifactSelectionService() {
-    return Analysis.instance().getArtifactSelectionService();
+    openEditorAndViews(artifactsForDsmView);
   }
 
   /**
@@ -58,23 +45,18 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
    * @param selectedArtifacts
    * @return
    */
-  protected abstract Set<IArtifact> getArtifactsForDsmView(List<IArtifact> selectedArtifacts);
-
-  private void setNewDependencyGraph(Collection<IArtifact> artifacts) {
-    DependencyGraph dependencyGraph = DependencyGraph.calculateDependencyGraph(artifacts);
-    Analysis.instance().getContext().setDependencyGraph(dependencyGraph);
-  }
+  protected abstract List<IArtifact> getArtifactsForDsmView(List<IArtifact> selectedArtifacts);
 
   private boolean isSingleClassArtifactSelected(List<IArtifact> selectedArtifacts) {
     return (selectedArtifacts.size() == 1 && selectedArtifacts.get(0).getType().equals(ArtifactType.Type));
   }
 
-  private void openEditorAndViews(ExecutionEvent event) {
+  private void openEditorAndViews(List<IArtifact> selectedArtifacts) {
       // Open the 'GenericEditor'
     Analysis.instance().openGenericEditor();
 
       // Make sure, DSMView is visible on GenericEditor
-      DSMView.showTab();
+    DSMView.updateAndShow(selectedArtifacts);
 
       // Open the DependencyTreeTableView
       Analysis.instance().openDependencyTreeTableView();

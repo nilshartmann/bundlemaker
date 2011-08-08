@@ -3,8 +3,6 @@ package org.bundlemaker.analysis.ui.view.table;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -17,6 +15,8 @@ import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.CurrentContextInfos;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.analysis.ui.selection.IDependencySelection;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionListener;
@@ -54,7 +54,8 @@ import org.eclipse.ui.part.ViewPart;
  * @author Kai Lehmann
  * 
  */
-public class DependencyTreeTableView extends ViewPart implements PropertyChangeListener {
+public class DependencyTreeTableView extends ViewPart implements IDependencySelectionListener,
+    IArtifactSelectionListener {
 
   public static String                       ID = "org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView";
 
@@ -203,7 +204,6 @@ public class DependencyTreeTableView extends ViewPart implements PropertyChangeL
     });
 
     ColumnViewerToolTipSupport.enableFor(treeViewer);
-    getAnalysisContext().addPropertyChangeListener(this);
     DependencyGraph dependencyGraph = getAnalysisContext().getDependencyGraph();
     if (!dependencyGraph.getArtifacts().isEmpty()) {
       List<IDependency> dependencies = new ArrayList<IDependency>(dependencyGraph.getDependencies());
@@ -211,24 +211,35 @@ public class DependencyTreeTableView extends ViewPart implements PropertyChangeL
     }
 
     // Register DependencySelectionListener to get updates on selected dependencies
-    Analysis
-        .instance()
-        .getDependencySelectionService()
-        .addDependencySelectionListener("org.bundlemaker.analysis.ui.dsmview.DSMView",
-            new DependencySelectionChangeListener());
+    Analysis.instance().getDependencySelectionService()
+        .addDependencySelectionListener("org.bundlemaker.analysis.ui.dsmview.DSMView", this);
+
+    // Register ArtifactSelectionListener
+    Analysis.instance().getArtifactSelectionService()
+        .addArtifactSelectionListener("org.bundlemaker.analysis.ui.dsmview.DSMView", this);
   }
 
-  /**
-   * A {@link IDependencySelectionListener} that updates the DependencyTreeTable with the selected {@link IDependency}
-   * 
-   */
-  class DependencySelectionChangeListener implements IDependencySelectionListener {
+  @Override
+  public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+
+    List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
+    DependencyGraph graph = Analysis.instance().getDependencyGraphService().getDependencyGraph(selectedArtifacts);
+
+    final List<IDependency> dependencies = new ArrayList<IDependency>(graph.getDependencies());
+    getSite().getShell().getDisplay().syncExec(new Runnable() {
+
+      @Override
+      public void run() {
+        // set new table contents
+        changeTable(dependencies);
+      }
+    });
+  }
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.bundlemaker.analysis.ui.selection.IDependencySelectionListener#dependencySelectionChanged(org.bundlemaker
+   * @see org.bundlemaker.analysis.ui.selection.IDependencySelectionListener#dependencySelectionChanged(org.bundlemaker
      * .analysis.ui.selection.IDependencySelectionChangedEvent)
      */
     @Override
@@ -255,14 +266,13 @@ public class DependencyTreeTableView extends ViewPart implements PropertyChangeL
       }
     }
 
-    private void addArtifacts(IArtifact artifact, List<IArtifact> artifacts) {
+  private static void addArtifacts(IArtifact artifact, List<IArtifact> artifacts) {
       if (artifact.getChildren().isEmpty()) {
         artifacts.add(artifact);
       } else {
         artifacts.addAll(artifact.getChildren());
       }
     }
-  }
 
   private IAnalysisContext getAnalysisContext() {
     return Analysis.instance().getContext();
@@ -301,22 +311,6 @@ public class DependencyTreeTableView extends ViewPart implements PropertyChangeL
   @Override
   public void setFocus() {
     treeViewer.getTree().setFocus();
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    if (IAnalysisContext.GRAPH_CHANGED_PROPERTY_NAME.equals(evt.getPropertyName())) {
-      DependencyGraph graph = (DependencyGraph) evt.getNewValue();
-      final List<IDependency> dependencies = new ArrayList<IDependency>(graph.getDependencies());
-      getSite().getShell().getDisplay().syncExec(new Runnable() {
-
-        @Override
-        public void run() {
-          // set new table contents
-          changeTable(dependencies);
-        }
-      });
-    }
   }
 
   /**
@@ -373,7 +367,8 @@ public class DependencyTreeTableView extends ViewPart implements PropertyChangeL
     super.dispose();
 
     // remove listener
-    getAnalysisContext().removePropertyChangeListener(this);
+    Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
+    Analysis.instance().getDependencySelectionService().removeDependencySelectionListener(this);
 
     // Dispose the tree
     tree.dispose();

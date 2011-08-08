@@ -2,6 +2,9 @@ package org.bundlemaker.analysis.ui;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
+import org.bundlemaker.analysis.ui.dependencies.internal.DependencyGraphService;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.bundlemaker.analysis.ui.editor.GenericEditor;
 import org.bundlemaker.analysis.ui.internal.Activator;
@@ -49,6 +52,11 @@ public class Analysis {
    */
   private final IDependencySelectionService _dependencySelectionService;
 
+  /**
+   * The {@link IDependencyGraphService} instance for getting {@link DependencyGraph}-instances
+   */
+  private final IDependencyGraphService     _dependencyGraphService;
+
   private IEditorInput                      nullInputEditor                                 = new NullEditorInput();
 
   /**
@@ -78,6 +86,9 @@ public class Analysis {
 
     // Create the DependencySelectionService
     _dependencySelectionService = new DependencySelectionService();
+
+    // Create the DependencyGraphService
+    _dependencyGraphService = new DependencyGraphService();
   }
 
   /**
@@ -105,6 +116,17 @@ public class Analysis {
    */
   public IDependencySelectionService getDependencySelectionService() {
     return _dependencySelectionService;
+  }
+
+  /**
+   * <p>
+   * Returns the single {@link IDependencyGraphService} instance
+   * </p>
+   * 
+   * @return The {@link IDependencyGraphService}. Never null.
+   */
+  public IDependencyGraphService getDependencyGraphService() {
+    return this._dependencyGraphService;
   }
 
   /**
@@ -166,6 +188,26 @@ public class Analysis {
       }
     }
   }
+
+  // public DependencyPart getGenericPart() {
+  // IWorkbenchPage page = getActiveWorkbenchPage();
+  // if (page != null) {
+  // try {
+  // IEditorReference[] editorReferences = page.findEditors(null, GenericEditor.ID, IWorkbenchPage.MATCH_ID);
+  // if (editorReferences.length>0) {
+  // IEditorReference reference = editorReferences[0];
+  // return reference.getEditor(false)
+  // }
+  // return editorReferences
+  // )
+  // page.openEditor(nullInputEditor, GenericEditor.ID);
+  // } catch (PartInitException e) {
+  // e.printStackTrace();
+  // }
+  // }
+  //
+  // return null;
+  // }
 
   /**
    * Gets the active {@link IWorkbenchPage}.

@@ -173,8 +173,10 @@ public class DSMComposite<V, E extends Edge<V>> extends Composite {
         artifacts.addAll(from.getChildren());
         artifacts.addAll(to.getChildren());
 
-        DependencyGraph dependencyGraph = DependencyGraph.calculateDependencyGraph(artifacts);
-        Analysis.instance().getContext().setDependencyGraph(dependencyGraph);
+        Analysis.instance().getArtifactSelectionService().setSelection(DSMView.ID, artifacts);
+
+        // DependencyGraph dependencyGraph = DependencyGraph.calculateDependencyGraph(artifacts);
+        // Analysis.instance().getContext().setDependencyGraph(dependencyGraph);
 
       }
     });

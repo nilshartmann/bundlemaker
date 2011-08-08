@@ -12,6 +12,7 @@
 package org.bundlemaker.analysis.ui.dsmview;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.IArtifact;
@@ -19,6 +20,8 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -53,6 +56,13 @@ public class DSMView extends DependencyPart {
   public void doDispose() {
   }
 
+  public static void updateAndShow(List<IArtifact> artifacts) {
+    if (_instance != null) {
+      _instance.useArtifacts(artifacts);
+      _instance.selectViewTab();
+    }
+  }
+
   public static void showTab() {
     if (_instance != null) {
       _instance.selectViewTab();
@@ -69,7 +79,14 @@ public class DSMView extends DependencyPart {
   }
 
   @Override
+  protected void useArtifacts(List<IArtifact> artifacts) {
+    getArtifactSelectionService().setSelection(ID, artifacts);
+    DependencyGraph graph = getDependencyGraph(artifacts);
+    useDependencyGraph(graph);
+  }
+
   protected void useDependencyGraph(DependencyGraph graph) {
+
     if (FEATURE_USE_NEW_DSM) {
       useDependencyGraphNew(graph);
     } else {
@@ -81,11 +98,23 @@ public class DSMView extends DependencyPart {
 
   public void doInitOld(Composite parent) {
     _instance = this;
+    getArtifactSelectionService().addArtifactSelectionListener(DSMView.ID, new DsmViewSelectionListener());
     dsmComposite = new DSMComposite<IArtifact, DependencyEdge>(parent, this);
   }
 
   public void useDependencyGraphOld(DependencyGraph graph) {
     dsmComposite.setDependencyGraph(graph);
+  }
+
+  class DsmViewSelectionListener implements IArtifactSelectionListener {
+
+    @Override
+    public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+      List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
+      DependencyGraph graph = getDependencyGraph(selectedArtifacts);
+      useDependencyGraph(graph);
+    }
+
   }
 
   /************ STOP - OLD DsmView ***************************/

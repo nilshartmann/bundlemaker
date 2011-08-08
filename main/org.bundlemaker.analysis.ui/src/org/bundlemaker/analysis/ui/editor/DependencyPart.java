@@ -1,14 +1,16 @@
 package org.bundlemaker.analysis.ui.editor;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
+import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -31,7 +33,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Kai Lehmann
  * 
  */
-public abstract class DependencyPart implements PropertyChangeListener {
+public abstract class DependencyPart {
 
   private Composite composite;
 
@@ -97,10 +99,12 @@ public abstract class DependencyPart implements PropertyChangeListener {
 
     doInit(composite);
 
-    getAnalysisContext().addPropertyChangeListener(this);
-    DependencyGraph graph = getAnalysisContext().getDependencyGraph();
-    if (!graph.getArtifacts().isEmpty()) {
-      this.useDependencyGraph(graph);
+    // initialize view with current selection from Artifact tree
+    IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(
+        Analysis.PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID);
+
+    if (currentArtifactSelection != null) {
+      useArtifacts(currentArtifactSelection.getSelectedArtifacts());
     }
   }
 
@@ -108,12 +112,28 @@ public abstract class DependencyPart implements PropertyChangeListener {
     return Analysis.instance().getContext();
   }
 
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    if (IAnalysisContext.GRAPH_CHANGED_PROPERTY_NAME.equals(evt.getPropertyName())) {
-      DependencyGraph graph = (DependencyGraph) evt.getNewValue();
-      this.useDependencyGraph(graph);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the IArtifactSelectionService
+   */
+  protected IArtifactSelectionService getArtifactSelectionService() {
+    return Analysis.instance().getArtifactSelectionService();
     }
+
+  /**
+   * Returns the calculated {@link DependencyGraph} for the specified artifacts
+   * <p>
+   * </p>
+   * 
+   * @param artifacts
+   * @return
+   */
+  protected DependencyGraph getDependencyGraph(List<IArtifact> artifacts) {
+    IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
+
+    return dependencyGraphService.getDependencyGraph(artifacts);
   }
 
   public Composite getComposite() {
@@ -121,7 +141,6 @@ public abstract class DependencyPart implements PropertyChangeListener {
   }
 
   public void dispose() {
-    getAnalysisContext().removePropertyChangeListener(this);
     this.doDispose();
   }
 
@@ -150,13 +169,14 @@ public abstract class DependencyPart implements PropertyChangeListener {
   protected abstract void doInit(Composite composite);
 
   /**
-   * Diese Methode wird immer dann aufgerufen, wenn sich der Abhaengigkeitsgraph geaendert hat. Die Aenderung erfolgt
-   * durch das Dependency Model
+   * This method is invoked when the artifacts that should be visualized change
+   * <p>
+   * </p>
    * 
-   * @param graph
-   *          Der aktuelle Abhaengigkeitsgraph
+   * @param artifacts
+   *          The new artifacts. Must not be null but might be empty
    */
-  protected abstract void useDependencyGraph(DependencyGraph graph);
+  protected abstract void useArtifacts(List<IArtifact> artifacts);
 
   /**
    * Konkrete Implentierung das Dispose, wenn das Fenster geschlossen wird
@@ -171,4 +191,5 @@ public abstract class DependencyPart implements PropertyChangeListener {
   protected IDependencyModel getDependencyModel() {
     return getAnalysisContext().getDependencyModel();
   }
+
 }
