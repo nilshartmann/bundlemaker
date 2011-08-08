@@ -410,4 +410,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
       return modules.toArray(new IModule[0])[0];
     }
   }
+
+  protected final GenericCache<IType, Set<IModule>> getTypeToModuleCache() {
+    return _typeToModuleCache;
+  }
 }

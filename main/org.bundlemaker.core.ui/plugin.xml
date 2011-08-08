@@ -171,7 +171,19 @@
             commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
             class="org.bundlemaker.core.ui.commands.CreateNewGroupHandler">
       </handler>
+      <handler
+            commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
+            class="org.bundlemaker.core.ui.commands.CreateNewModuleHandler">
+      </handler>      
    </extension>    
+
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            sequence="F2"
+            commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+   </extension>             
 
 <!-- -->
    <extension
@@ -271,6 +283,7 @@
             id="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
             name="Customize Dependency Tree..." />
       <command id="org.bundlemaker.core.ui.commands.CreateNewGroupCommand" name="Create New Group..." /> 
+      <command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand" name="Create New Module..." /> 
    </extension> 
 
    <!-- ======================================== -->
@@ -295,6 +308,12 @@
 			<command
          commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
          label="Create New Group..."
+         style="push">
+				<visibleWhen checkEnabled="true" />
+			</command> 	
+					<command
+         commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
+         label="Create New Module..."
          style="push">
 				<visibleWhen checkEnabled="true" />
 			</command> 		

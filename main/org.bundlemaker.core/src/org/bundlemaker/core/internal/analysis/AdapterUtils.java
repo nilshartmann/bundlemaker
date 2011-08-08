@@ -271,9 +271,13 @@ public class AdapterUtils {
       resourceModule.getModifiableSelfResourceContainer().addAll(resourceHolder.getAssociatedBinaryResources(),
           ContentType.BINARY);
 
-      // add the source resources
-      resourceModule.getModifiableSelfResourceContainer().add(resourceHolder.getAssociatedSourceResource(),
-          ContentType.SOURCE);
+      //
+      if (resourceHolder.getAssociatedSourceResource() != null) {
+
+        // add the source resources
+        resourceModule.getModifiableSelfResourceContainer().add(resourceHolder.getAssociatedSourceResource(),
+            ContentType.SOURCE);
+      }
     }
   }
 
@@ -305,9 +309,13 @@ public class AdapterUtils {
       resourceModule.getModifiableSelfResourceContainer().removeAll(resourceHolder.getAssociatedBinaryResources(),
           ContentType.BINARY);
 
-      // remove the source resources
-      resourceModule.getModifiableSelfResourceContainer().remove(resourceHolder.getAssociatedSourceResource(),
-          ContentType.SOURCE);
+      //
+      if (resourceHolder.getAssociatedSourceResource() != null) {
+
+        // remove the source resources
+        resourceModule.getModifiableSelfResourceContainer().remove(resourceHolder.getAssociatedSourceResource(),
+            ContentType.SOURCE);
+      }
     }
   }
 

@@ -254,6 +254,14 @@ public interface IModularizedSystem {
    * <p>
    * </p>
    * 
+   * @return
+   */
+  Set<IType> getTypes();
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param fullyQualifiedName
    * @return
    */

@@ -6,6 +6,7 @@ import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -59,9 +60,21 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addArtifact(IArtifact artifact, boolean registerParent) {
-    artifact.getParent().removeArtifact(artifact);
+
+    //
+    Assert.isNotNull(artifact);
+
+    //
+    if (artifact.getParent() != null) {
+      artifact.getParent().removeArtifact(artifact);
+    }
+
+    //
     super.addArtifact(artifact, registerParent);
   }
 }

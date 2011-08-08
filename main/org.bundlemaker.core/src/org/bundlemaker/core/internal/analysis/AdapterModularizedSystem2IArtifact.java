@@ -52,7 +52,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
   @Override
   public boolean canAdd(IArtifact artifact) {
-    return artifact.getType().equals(ArtifactType.Group) || artifact.getType().equals(ArtifactType.Module);
+    return artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact;
   }
 
   /**

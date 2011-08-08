@@ -73,7 +73,8 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   @Override
   public boolean canAdd(IArtifact artifact) {
     return artifact != null
-        && (artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type));
+        && (artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type) || artifact
+            .getType().equals(ArtifactType.Resource));
   }
 
   /**

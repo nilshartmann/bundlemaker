@@ -112,6 +112,11 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
     return types.toArray(new IType[0])[0];
   }
 
+  @Override
+  public Set<IType> getTypes() {
+    return Collections.unmodifiableSet(getTypeToModuleCache().getMap().keySet());
+  }
+
   /**
    * {@inheritDoc}
    */

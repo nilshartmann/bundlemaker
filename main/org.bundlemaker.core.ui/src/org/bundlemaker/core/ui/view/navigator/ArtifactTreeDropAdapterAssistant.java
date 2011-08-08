@@ -2,6 +2,7 @@ package org.bundlemaker.core.ui.view.navigator;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -15,10 +16,20 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
   @Override
   public IStatus validateDrop(Object target, int operation, TransferData transferData) {
-    // System.out.println(target);
-    // System.out.println(operation);
-    // System.out.println();
-    return Status.OK_STATUS;
+
+    TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
+
+    if (treeSelection.getFirstElement() instanceof IAdvancedArtifact && target instanceof IAdvancedArtifact) {
+
+      IAdvancedArtifact sourceArtifact = (IAdvancedArtifact) treeSelection.getFirstElement();
+      IAdvancedArtifact targetArtifact = (IAdvancedArtifact) target;
+
+      if (targetArtifact.canAdd(sourceArtifact)) {
+        return Status.OK_STATUS;
+      }
+    }
+
+    return Status.CANCEL_STATUS;
   }
 
   @Override
@@ -43,6 +54,7 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
   @Override
   public boolean isSupportedType(TransferData transferData) {
+    System.out.println(transferData.getClass());
     return true;
   }
 }

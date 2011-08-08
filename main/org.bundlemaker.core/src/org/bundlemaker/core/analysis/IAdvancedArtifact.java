@@ -21,25 +21,10 @@ public interface IAdvancedArtifact extends IArtifact {
    */
   boolean canAdd(IArtifact artifact);
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param identifier
-  // * @return
-  // */
-  // IArtifact getChildByIdentifier(String identifier);
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @return
-  // */
-  // String getIdentifier();
-
   /**
-   * Returns the {@link IModularizedSystem} this artifact belongs to
+   * <p>
+   * Returns the {@link IModularizedSystem} this artifact belongs to.
+   * </p>
    * 
    * @return the modularized system, never null
    */
@@ -47,11 +32,10 @@ public interface IAdvancedArtifact extends IArtifact {
 
   /**
    * <p>
+   * Returns the associated {@link IDependencyModel}.
    * </p>
    * 
-   * @return
+   * @return the associated {@link IDependencyModel}.
    */
   public IDependencyModel getDependencyModel();
-
-  // public IArtifact findChild();
 }
