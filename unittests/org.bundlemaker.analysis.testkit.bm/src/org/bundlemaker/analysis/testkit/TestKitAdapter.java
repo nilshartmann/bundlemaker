@@ -85,7 +85,7 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
     _modularizedSystem.applyTransformations(null);
 
     //
-    _dependencyModel = ModelTransformer.getDependencyModel(_bundleMakerProject, _modularizedSystem,
+    _dependencyModel = ModelTransformer.getDependencyModel(_modularizedSystem,
         ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
     //

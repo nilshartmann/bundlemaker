@@ -34,8 +34,8 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testSourceNonHierarchical() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
-        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
+        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...
@@ -60,8 +60,8 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testBinaryNonHierarchical() throws CoreException, IOException {
 
     // transform the model...
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
-        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...
@@ -79,8 +79,8 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testMoveModule() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getBundleMakerProject(),
-        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
+        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...

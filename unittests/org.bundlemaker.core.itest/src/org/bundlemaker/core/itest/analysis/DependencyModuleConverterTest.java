@@ -17,7 +17,7 @@ public class DependencyModuleConverterTest extends AbstractModularizedSystemTest
   public void testDependencies() throws CoreException {
 
     // transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getBundleMakerProject(),
+    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
         getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
     ArtifactUtils.dumpArtifact(dependencyModel.getRoot());
 

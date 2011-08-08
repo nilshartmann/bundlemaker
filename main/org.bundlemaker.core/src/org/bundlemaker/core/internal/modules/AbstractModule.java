@@ -149,6 +149,12 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
     return getContainedTypeNames(StringQueryFilters.TRUE_QUERY_FILTER);
   }
 
+  public final void setModuleIdentifier(IModuleIdentifier moduleIdentifier) {
+    Assert.isNotNull(moduleIdentifier);
+
+    _moduleIdentifier = moduleIdentifier;
+  }
+
   /**
    * {@inheritDoc}
    */

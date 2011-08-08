@@ -24,6 +24,7 @@ import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.AmbiguousElementException;
@@ -114,6 +115,14 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public String getQualifiedName() {
     return _type.getFullyQualifiedName();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IRootArtifact getRoot() {
+    return (IRootArtifact) getParent(ArtifactType.Root);
   }
 
   @Override

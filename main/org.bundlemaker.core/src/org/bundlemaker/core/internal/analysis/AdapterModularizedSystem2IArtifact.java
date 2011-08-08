@@ -1,9 +1,14 @@
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.IModifiableArtifact;
+import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
+import org.bundlemaker.core.analysis.IArtifactTreeChangedListener;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -18,9 +23,14 @@ import org.eclipse.core.runtime.Assert;
  */
 public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContainer implements IRootArtifact {
 
-  private IModifiableModularizedSystem _modularizedSystem;
+  /** - */
+  private IModifiableModularizedSystem       _modularizedSystem;
 
-  private DependencyModel              _dependencyModel;
+  /** - */
+  private DependencyModel                    _dependencyModel;
+
+  /** - */
+  private List<IArtifactTreeChangedListener> _artifactTreeChangedListeners;
 
   /**
    * <p>
@@ -34,6 +44,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     // set the resource module
     _modularizedSystem = modularizedSystem;
+
+    //
+    _artifactTreeChangedListeners = new LinkedList<IArtifactTreeChangedListener>();
   }
 
   @Override
@@ -53,6 +66,11 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
   @Override
   public boolean canAdd(IArtifact artifact) {
     return artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact;
+  }
+
+  @Override
+  public IRootArtifact getRoot() {
+    return this;
   }
 
   /**
@@ -96,11 +114,58 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IDependencyModel getDependencyModel() {
     return _dependencyModel;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addArtifactTreeChangedListener(IArtifactTreeChangedListener listener) {
+    if (!_artifactTreeChangedListeners.contains(listener)) {
+      _artifactTreeChangedListeners.add(listener);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeArtifactTreeChangedListener(IArtifactTreeChangedListener listener) {
+    if (_artifactTreeChangedListeners.contains(listener)) {
+      _artifactTreeChangedListeners.remove(listener);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  public void fireArtifactTreeChangedEvent(ArtifactTreeChangedEvent event) {
+
+    //
+    IArtifactTreeChangedListener[] listeners = _artifactTreeChangedListeners
+        .toArray(new IArtifactTreeChangedListener[0]);
+
+    //
+    for (IArtifactTreeChangedListener changedListener : listeners) {
+      changedListener.artifactTreeChanged(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param dependencyModel
+   */
   void setDependencyModel(DependencyModel dependencyModel) {
     _dependencyModel = dependencyModel;
   }

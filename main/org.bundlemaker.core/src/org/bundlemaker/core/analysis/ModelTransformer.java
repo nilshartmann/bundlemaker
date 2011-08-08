@@ -11,7 +11,6 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.analysis.DependencyModel;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -20,36 +19,35 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
+ * Helper class to transform {@link IModifiableModularizedSystem IModifiableModularizedSystems}.
  * </p>
  */
 public class ModelTransformer {
 
   /**
    * <p>
+   * Transforms the given {@link IModifiableModularizedSystem} in a {@link IDependencyModel}.
    * </p>
    * 
-   * @param bundleMakerProject
    * @param modifiableModularizedSystem
-   * @return
+   *          the modularized system
+   * @return the {@link IDependencyModel}
    */
-  public static IDependencyModel getDependencyModel(IBundleMakerProject bundleMakerProject,
-      IModifiableModularizedSystem modifiableModularizedSystem, ArtifactModelConfiguration configuration) {
+  public static IDependencyModel getDependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
+      ArtifactModelConfiguration configuration) {
 
-    Assert.isNotNull(bundleMakerProject);
+    // assert not null
     Assert.isNotNull(modifiableModularizedSystem);
 
-    // default
+    // set the default configuration if no configuration is set
     configuration = configuration == null ? new ArtifactModelConfiguration() : configuration;
 
     try {
 
-      //
-      Assert.isNotNull(modifiableModularizedSystem);
-      Assert.isNotNull(configuration);
-
-      //
+      // create the artifact cache
       DefaultArtifactCache artifactCache = new DefaultArtifactCache(modifiableModularizedSystem, configuration);
-      //
+
+      // create the dependency model
       return new DependencyModel(modifiableModularizedSystem, artifactCache.transform());
 
     } catch (CoreException e) {

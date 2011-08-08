@@ -31,7 +31,7 @@ public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
     assertTypeCount(1438);
 
     // Step 1: transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getBundleMakerProject(),
+    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
         getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(dependencyModel);
 
@@ -79,7 +79,7 @@ public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
     assertTypeCount(1438);
 
     // Step 1: transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getBundleMakerProject(),
+    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
         getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(dependencyModel);
 

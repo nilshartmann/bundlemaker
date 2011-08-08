@@ -5,6 +5,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
@@ -45,19 +46,28 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.core.analysis.IAdvancedArtifact#getModularizedSystem()
+  /**
+   * {@inheritDoc}
    */
   @Override
   public IModularizedSystem getModularizedSystem() {
     return AdapterUtils.getModularizedSystem(this);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IDependencyModel getDependencyModel() {
     return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IRootArtifact getRoot() {
+    return (IRootArtifact) getParent(ArtifactType.Root);
   }
 
   /**
