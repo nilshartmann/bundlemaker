@@ -62,7 +62,7 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     Assert.assertSame(aSourceResource, bSourceResource);
 
     // transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getBundleMakerProject(),
+    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
         getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
     IArtifact aArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())

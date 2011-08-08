@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.eclipse.core.runtime.Assert;
 
@@ -42,9 +43,14 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
     _qualifiedName = qualifiedName;
   }
 
-  public static String _getName(String qualifiedName) {
-    return qualifiedName.indexOf('.') != -1 ? qualifiedName.substring(qualifiedName.lastIndexOf('.') + 1)
-        : qualifiedName;
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setName(String name) {
+    super.setName(name);
+
+    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**
@@ -95,6 +101,18 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
 
     // return the result
     return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param qualifiedName
+   * @return
+   */
+  public static String _getName(String qualifiedName) {
+    return qualifiedName.indexOf('.') != -1 ? qualifiedName.substring(qualifiedName.lastIndexOf('.') + 1)
+        : qualifiedName;
   }
 
   // /**

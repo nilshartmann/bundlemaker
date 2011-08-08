@@ -8,6 +8,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.IModifiableArtifact;
+import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.eclipse.core.runtime.Assert;
 
@@ -34,6 +35,15 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     // set parent/children dependency
     setParent(parent);
     ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setName(String name) {
+    super.setName(name);
+
+    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**

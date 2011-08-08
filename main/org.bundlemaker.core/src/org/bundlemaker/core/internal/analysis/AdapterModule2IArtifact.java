@@ -3,8 +3,11 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -37,6 +40,16 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     // set parent/children dependency
     setParent(parent);
     ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+  }
+
+  @Override
+  public void setNameAndVersion(String name, String version) {
+
+    ((AbstractModule<?, ?>) _module).setModuleIdentifier(new ModuleIdentifier(name, version));
+
+    super.setName(name);
+
+    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**

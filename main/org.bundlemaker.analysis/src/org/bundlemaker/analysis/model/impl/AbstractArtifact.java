@@ -12,8 +12,9 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.eclipse.core.runtime.Assert;
 
 /**
- * Abstrakte Oberklasse fuer die beiden unterschiedlichen Artefakte. Unterschieden wird zwischen gruppierenden
- * Artefakten und Primaerartefakten.
+ * <p>
+ * Abstract base class for all artifacts.
+ * </p>
  * 
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
@@ -23,7 +24,7 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   // Ordnungs Eigenschaften
   private final ArtifactType  type;
 
-  private final String        name;
+  private String              name;
 
   private Integer             ordinal;
 
@@ -142,7 +143,7 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   @Override
   public void setProperty(Object key, Object value) {
     Assert.isNotNull(key);
-    
+
     properties().put(key, value);
   }
 
@@ -155,8 +156,8 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
     // return null if the properties havn't been initialized yet
     if (properties == null) {
       return null;
-    } 
-    
+    }
+
     // return the property (if exists)
     else {
       T property = (T) properties().get(key);
@@ -176,6 +177,10 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   @Override
   public String getProperty(Object key) {
     return getProperty(key, String.class);
+  }
+
+  protected void setName(String name) {
+    this.name = name;
   }
 
   /**

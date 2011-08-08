@@ -6,6 +6,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 
 /**
  * <p>
+ * Abstract interface for artifacts with additional methods.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -20,6 +21,15 @@ public interface IAdvancedArtifact extends IArtifact {
    * @return
    */
   boolean canAdd(IArtifact artifact);
+
+  /**
+   * <p>
+   * Returns the root artifact.
+   * </p>
+   * 
+   * @return the root artifact.
+   */
+  IRootArtifact getRoot();
 
   /**
    * <p>

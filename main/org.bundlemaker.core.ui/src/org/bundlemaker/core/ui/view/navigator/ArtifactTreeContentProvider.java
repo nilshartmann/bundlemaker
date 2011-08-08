@@ -63,8 +63,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
             IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
                 .getArtifactModelConfigurationProvider();
 
-            IArtifact artifact = ModelTransformer.getDependencyModel(bundleMakerProject,
-                (IModifiableModularizedSystem) modularizedSystem,
+            IArtifact artifact = ModelTransformer.getDependencyModel((IModifiableModularizedSystem) modularizedSystem,
                 artifactModelConfigurationProvider.getArtifactModelConfiguration()).getRoot();
             // ModelTransformer.dumpArtifact(artifact);
             result.add(artifact);

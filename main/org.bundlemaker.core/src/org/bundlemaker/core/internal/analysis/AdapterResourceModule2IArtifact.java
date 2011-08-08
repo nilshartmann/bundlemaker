@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 
@@ -20,6 +21,15 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    */
   public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IArtifact parent) {
     super(resourceModule, parent);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setName(String name) {
+    super.setName(name);
+
+    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**

@@ -174,7 +174,11 @@
       <handler
             commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
             class="org.bundlemaker.core.ui.commands.CreateNewModuleHandler">
-      </handler>      
+      </handler>
+      <handler
+            commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
+            class="org.bundlemaker.core.ui.commands.RenameArtifactHandler">
+      </handler>        
    </extension>    
 
    <extension
@@ -284,6 +288,10 @@
             name="Customize Dependency Tree..." />
       <command id="org.bundlemaker.core.ui.commands.CreateNewGroupCommand" name="Create New Group..." /> 
       <command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand" name="Create New Module..." /> 
+      <command
+            id="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
+            name="Rename...">
+      </command>
    </extension> 
 
    <!-- ======================================== -->
@@ -316,7 +324,13 @@
          label="Create New Module..."
          style="push">
 				<visibleWhen checkEnabled="true" />
-			</command> 		
+			</command> 	
+		<command
+         commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
+         label="Rename..."
+         style="push">
+				<visibleWhen checkEnabled="true" />
+		</command> 					
 		<!-- The Exporter -->
          <separator
                name="org.bundlemaker.core.ui.separator.exporter"
