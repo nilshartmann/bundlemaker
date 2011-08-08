@@ -115,7 +115,7 @@ public class DependencySelectionService extends
    */
   @Override
   public void removeDependencySelectionListener(IDependencySelectionListener listener) {
-    removeDependencySelectionListener(listener);
+    removeSelectionListener(listener);
   }
 
   /*
