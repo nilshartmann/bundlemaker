@@ -8,7 +8,8 @@
          contentProvider="org.bundlemaker.core.ui.view.navigator.ArtifactTreeContentProvider"
          icon="icons/navigator/root.gif" id="org.bundlemaker.analysis.ui.navigatorContent1"
          labelProvider="org.bundlemaker.core.ui.view.navigator.ArtifactTreeLabelProvider"
-         name="artifactContent" priority="lowest">
+         name="artifactContent" 
+         priority="lowest">
          <triggerPoints>
             <and>
                <instanceof value="org.eclipse.core.resources.IProject"> </instanceof>
@@ -34,6 +35,9 @@
               <instanceof 
                     value="org.bundlemaker.analysis.model.IArtifact" /> 
      </possibleChildren>
+                <commonSorter
+                      class="org.bundlemaker.core.ui.view.navigator.ArtifactTreeViewerSorter">
+                </commonSorter>
 
       </navigatorContent>
    </extension>

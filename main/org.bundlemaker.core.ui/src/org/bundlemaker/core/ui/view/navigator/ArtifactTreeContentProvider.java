@@ -2,8 +2,6 @@ package org.bundlemaker.core.ui.view.navigator;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,14 +26,7 @@ import org.eclipse.jface.viewers.Viewer;
 public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
   /** EMPTY_OBJECT_ARRAY */
-  private static final Object[] EMPTY_OBJECT_ARRAY   = new Object[0];
-
-  private Comparator<IArtifact> alphabeticComparator = new Comparator<IArtifact>() {
-                                                       @Override
-                                                       public int compare(IArtifact o1, IArtifact o2) {
-                                                         return o1.getName().compareTo(o2.getName());
-                                                       }
-                                                     };
+  private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
   @Override
   public Object[] getChildren(Object parent) {
@@ -79,18 +70,10 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
       //
       return EMPTY_OBJECT_ARRAY;
-    }
-    // if (parent instanceof List<?>) {
-    // List<IArtifact> artifacts = (List<IArtifact>) parent;
-    //
-    // Collections.sort(artifacts, alphabeticComparator);
-    // return artifacts.toArray();
-    // }
-    else if (parent instanceof IArtifact) {
+    } else if (parent instanceof IArtifact) {
       IArtifact parentArtifact = (IArtifact) parent;
       List<IArtifact> artifacts = new ArrayList<IArtifact>();
       artifacts.addAll(parentArtifact.getChildren());
-      Collections.sort(artifacts, alphabeticComparator);
 
       return artifacts.toArray();
     }
