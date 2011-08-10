@@ -13,13 +13,27 @@ package org.bundlemaker.core.ui.view.navigator;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 
 /**
- * Provides access to the global {@link ArtifactModelConfiguration} that is used to configure the artifact tree display
+ * <p>
+ * Provides access to the global {@link ArtifactModelConfiguration} that is used to configure the artifact tree view.
+ * </p>
+ * <p>
+ * To retrieve the global instance of this class, you have to call <code><pre>
+ * IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
+        .getArtifactModelConfigurationProvider();
+ * </pre></code>
+ * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * @noimplement This interface must not be implemented by clients
  */
 public interface IArtifactModelConfigurationProvider {
 
+  /**
+   * <p>
+   * Returns the current {@link ArtifactModelConfiguration}.
+   * </p>
+   * 
+   * @return the current {@link ArtifactModelConfiguration}.
+   */
   public ArtifactModelConfiguration getArtifactModelConfiguration();
-
 }

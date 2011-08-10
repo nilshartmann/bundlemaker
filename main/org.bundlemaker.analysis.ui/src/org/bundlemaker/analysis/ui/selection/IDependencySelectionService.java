@@ -47,7 +47,7 @@ public interface IDependencySelectionService {
   public void setSelection(String selectionProviderId, IDependency dependency);
 
   /**
-   * Registeres an {@link IDependencySelectionListener} for the specified providerId.
+   * Registers an {@link IDependencySelectionListener} for the specified providerId.
    * 
    * <p>
    * The listener is invoked if the provider's selection changes. If the providerId is null, the listener is invoked for

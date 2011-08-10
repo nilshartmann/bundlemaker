@@ -108,12 +108,13 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
   }
 
   /**
+   * <p>
    * Writes the current configuraton to the preference store
+   * </p>
    * 
    * <p>
    * This method is not part of the API and should not be invoked by clients
-   * 
-   * @param configuration
+   * </p>
    */
   public void store() {
     _store.setValue(PREF_AGGREGATE_INNER_TYPES, _configuration.isAggregateInnerTypes());
@@ -122,5 +123,4 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
     _store.setValue(PREF_VIRTUAL_MODULE, _configuration.isIncludeVirtualModuleForMissingTypes());
     _store.setValue(PREF_HIERARCHICAL_PACKAGES, _configuration.isHierarchicalPackages());
   }
-
 }
