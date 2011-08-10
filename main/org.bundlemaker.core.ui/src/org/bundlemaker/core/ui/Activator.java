@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.internal;
+package org.bundlemaker.core.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,7 +55,6 @@ public class Activator extends AbstractUIPlugin {
     plugin = this;
 
     _artifactModelConfigurationProvider = new ArtifactModelConfigurationProvider(getPreferenceStore());
-
   }
 
   /*
