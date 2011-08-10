@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.ui.internal.Activator;
+import org.bundlemaker.core.ui.Activator;
 import org.bundlemaker.core.ui.view.navigator.ArtifactModelConfigurationDialog;
 import org.bundlemaker.core.ui.view.navigator.ArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.view.navigator.CommonNavigatorUtils;

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.internal;
 
+import org.bundlemaker.core.ui.Activator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
