@@ -25,27 +25,21 @@ import org.junit.Test;
  */
 public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
 
+  /** - */
+  private IAdvancedArtifact _rootArtifact;
+
   @Test
   public void testMoveModuleToNewGroup() throws CoreException, IOException {
-
-    assertTypeCount(1438);
-
-    // Step 1: transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
-        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
-    Assert.assertNotNull(dependencyModel);
-
-    //
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) dependencyModel.getRoot();
-    Assert.assertNotNull(rootArtifact);
+    
+    // prepare the model
+    prepareModel();
 
     // get the 'jedit' artifact...
-    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
-    Assert.assertNotNull(moduleArtifact);
-
+    IArtifact moduleArtifact = getArtifact(_rootArtifact, "group1|group2|jedit_1.0.0");
+    
     //
-    IArtifact testGroup = dependencyModel.createArtifactContainer("testGroup", "testGroup", ArtifactType.Group);
-    rootArtifact.addArtifact(testGroup);
+    IArtifact testGroup = _rootArtifact.getDependencyModel().createArtifactContainer("testGroup", "testGroup", ArtifactType.Group);
+    _rootArtifact.addArtifact(testGroup);
 
     //
     moduleArtifact.getParent().removeArtifact(moduleArtifact);
@@ -57,8 +51,7 @@ public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
     testGroup.addArtifact(moduleArtifact);
 
     // get the 'group2Artifact' artifact...
-    IArtifact group2Artifact = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(group2Artifact);
+    IArtifact group2Artifact = getArtifact(_rootArtifact, "group1|group2");
     Assert.assertEquals(0, group2Artifact.getChildren().size());
 
     // assert the result
@@ -76,30 +69,21 @@ public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
   @Test
   public void testMoveGroupAndDelete() throws CoreException, IOException {
 
-    assertTypeCount(1438);
+    prepareModel();
 
-    // Step 1: transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
-        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
-    Assert.assertNotNull(dependencyModel);
-
-    //
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) dependencyModel.getRoot();
-    Assert.assertNotNull(rootArtifact);
-
-    ArtifactUtils.dumpArtifact(rootArtifact);
+    ArtifactUtils.dumpArtifact(_rootArtifact);
 
     // get the 'jeditModuleArtifact' artifact...
-    IArtifact jeditModuleArtifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
+    IArtifact jeditModuleArtifact = _rootArtifact.getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(jeditModuleArtifact);
 
     // get the 'velocityModuleArtifact' artifact...
-    IArtifact velocityModuleArtifact = rootArtifact.getChild("velocity_1.5");
+    IArtifact velocityModuleArtifact = _rootArtifact.getChild("velocity_1.5");
     Assert.assertNotNull(velocityModuleArtifact);
 
     //
-    IArtifact testGroup = dependencyModel.createArtifactContainer("testGroup", "testGroup", ArtifactType.Group);
-    rootArtifact.addArtifact(testGroup);
+    IArtifact testGroup = _rootArtifact.getDependencyModel().createArtifactContainer("testGroup", "testGroup", ArtifactType.Group);
+    _rootArtifact.addArtifact(testGroup);
 
     //
     testGroup.addArtifact(jeditModuleArtifact);
@@ -107,7 +91,7 @@ public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
     assertTypeCount(1438);
 
     //
-    rootArtifact.removeArtifact(testGroup);
+    _rootArtifact.removeArtifact(testGroup);
 
     //
     assertTypeCount(0);
@@ -151,6 +135,32 @@ public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
         + typeCountWithoutJdkTypes, getModularizedSystem().getTypes().size());
   }
 
+  private void prepareModel() {
+    
+    assertTypeCount(1438);
+    
+    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
+        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
+    Assert.assertNotNull(dependencyModel);
+
+    _rootArtifact = (IAdvancedArtifact) dependencyModel.getRoot();
+    Assert.assertNotNull(_rootArtifact);
+  }
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @param root
+   * @param path
+   * @return
+   */
+  private IArtifact getArtifact(IArtifact root, String path) {
+    IArtifact artifact = _rootArtifact.getChild(path);
+    Assert.assertNotNull(artifact);
+    return artifact;
+  }
+  
   /**
    * {@inheritDoc}
    */
