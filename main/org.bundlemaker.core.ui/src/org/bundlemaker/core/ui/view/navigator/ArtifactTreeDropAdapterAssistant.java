@@ -3,6 +3,7 @@ package org.bundlemaker.core.ui.view.navigator;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -60,9 +61,9 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
     CommonNavigator commonNavigator = CommonNavigatorUtils
         .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
-    commonNavigator.getCommonViewer().refresh(((IAdvancedArtifact) sourceArtifact).getRoot(), true);
-    commonNavigator.getCommonViewer().refresh(sourceArtifact, true);
-
+    IRootArtifact root = ((IAdvancedArtifact) sourceArtifact).getRoot();
+    commonNavigator.getCommonViewer().refresh(root, true);
+    commonNavigator.getCommonViewer().refresh(targetArtifact, true);
     return Status.OK_STATUS;
   }
 

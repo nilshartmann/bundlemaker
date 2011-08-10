@@ -78,7 +78,10 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
 
     if (parent == null) {
       return null;
+    } else if (parent == this) {
+      return null;
     } else if (type.equals(parent.getType())) {
+
       return this.getParent();
     } else {
       return parent.getParent(type);
