@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.dsmview.figures.HorizontalSideMarker;
 import org.bundlemaker.analysis.ui.dsmview.figures.IMatrixListener;
 import org.bundlemaker.analysis.ui.dsmview.figures.Matrix;
@@ -131,7 +132,8 @@ public class DsmViewWidget implements Observer {
 
       @Override
       public void singleClick(MatrixEvent event) {
-        // do nothing
+        Analysis.instance().getDependencySelectionService()
+            .setSelection(DSMView.ID, _model.getDependency(event.getX(), event.getY()));
       }
 
       @Override
