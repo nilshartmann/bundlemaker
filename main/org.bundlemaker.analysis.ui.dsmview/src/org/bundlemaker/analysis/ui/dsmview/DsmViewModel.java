@@ -49,6 +49,23 @@ public class DsmViewModel extends AbstractDsmViewModel {
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IDependency getDependency(int x, int y) {
+
+    // return null if dependency does not exist
+    if (x >= _dependencies.length || y >= _dependencies[x].length) {
+      return null;
+    }
+
+    // return dependency
+    return _dependencies[x][y];
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
