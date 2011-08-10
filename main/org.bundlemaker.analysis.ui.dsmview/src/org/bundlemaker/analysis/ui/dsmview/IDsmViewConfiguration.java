@@ -4,50 +4,31 @@ import org.eclipse.swt.graphics.Color;
 
 public interface IDsmViewConfiguration {
 
-	int getVerticalBoxSize();
+  int getVerticalBoxSize();
 
-	int getHorizontalBoxSize();
+  int getHorizontalBoxSize();
 
-	void setHorizontalBoxSize(int size);
+  void setHorizontalBoxSize(int size);
 
-	Color getSideMarkerBackgroundColor();
+  Color getSideMarkerBackgroundColor();
 
-	Color getSideMarkerEvenColor();
+  Color getSideMarkerEvenColor();
 
-	Color getSideMarkerMarkedColor();
+  Color getSideMarkerMarkedColor();
 
-	Color getSideMarkerSeparatorColor();
+  Color getSideMarkerSeparatorColor();
 
-	Color getSideMarkerTextColor();
+  Color getSideMarkerTextColor();
 
-	Color getMatrixSeparatorColor();
+  Color getMatrixSeparatorColor();
 
-	Color getMatrixBackgroundColor();
+  Color getMatrixBackgroundColor();
 
-	Color getMatrixTextColor();
+  Color getMatrixTextColor();
 
-	Color getMatrixDiagonalColor();
+  Color getMatrixDiagonalColor();
 
-	Color getMatrixMarkedColumnRowColor();
+  Color getMatrixMarkedColumnRowColor();
 
-	Color getMatrixMarkedCellColor();
-
-	// final Font DSM_FONT = new Font(Display.getCurrent(), "ARIAL", 15,
-	// SWT.NONE);
-	//
-	// Color COLOR_VIOLATION =
-	// Display.getDefault().getSystemColor(SWT.COLOR_RED);
-	//
-	// Color COLOR_IGNORED = Display.getDefault()
-	// .getSystemColor(SWT.COLOR_MAGENTA);
-	//
-	// Color COLOR_TEXT = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
-	//
-	// Color COLOR_HEADER = Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
-	//
-	// Color COLOR_BACKGROUND = Display.getDefault().getSystemColor(
-	// SWT.COLOR_WHITE);
-	//
-	// Color COLOR_DEPENDENCY = Display.getDefault().getSystemColor(
-	// SWT.COLOR_GREEN);
+  Color getMatrixMarkedCellColor();
 }
