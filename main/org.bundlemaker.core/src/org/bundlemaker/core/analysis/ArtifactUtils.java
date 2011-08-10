@@ -39,7 +39,10 @@ public class ArtifactUtils {
     });
 
     for (IArtifact child : sorted) {
+      // if (child.getType().equals(ArtifactType.Root) || child.getType().equals(ArtifactType.Group)
+      // || child.getType().equals(ArtifactType.Module)) {
       dumpArtifact(child, level + 1, stringBuilder);
+      // }
     }
   }
 

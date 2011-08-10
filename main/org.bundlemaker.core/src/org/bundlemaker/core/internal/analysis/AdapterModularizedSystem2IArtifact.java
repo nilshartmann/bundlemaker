@@ -6,7 +6,6 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.analysis.model.impl.IModifiableArtifact;
 import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IArtifactTreeChangedListener;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -85,8 +84,6 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     // call the super method
     super.addArtifact(artifact);
-    // TODO!!!
-    ((IModifiableArtifact) artifact).setParent(this);
 
     // CHANGE THE UNDERLYING MODEL
     if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
@@ -102,16 +99,10 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     Assert.isNotNull(artifact);
 
-    boolean result = super.removeArtifact(artifact);
-
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
 
-    // TODO!!!
-    ((IModifiableArtifact) artifact).setParent(null);
-
-    //
-    return result;
+    return super.removeArtifact(artifact);
   }
 
   /**

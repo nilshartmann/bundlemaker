@@ -2,170 +2,205 @@ package org.bundlemaker.core.itest.analysis.complex;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
  * <p>
+ * Example: group1/group2/jedit_1.0.0 velocity_1.5 jdk16_jdk16 << Missing Types >>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DnDArtifactTreeTest extends AbstractModularizedSystemTest {
+public class DnDArtifactTreeTest extends AbstractComplexTest {
 
-  /** - */
-  private IAdvancedArtifact _rootArtifact;
-
+  /**
+   * <p>
+   * </p>
+   */
   @Test
-  public void testMoveModuleToNewGroup() throws CoreException, IOException {
-    
-    // prepare the model
-    prepareModel();
+  public void testAddWithoutRemove() {
 
-    // get the 'jedit' artifact...
-    IArtifact moduleArtifact = getArtifact(_rootArtifact, "group1|group2|jedit_1.0.0");
-    
-    //
-    IArtifact testGroup = _rootArtifact.getDependencyModel().createArtifactContainer("testGroup", "testGroup", ArtifactType.Group);
-    _rootArtifact.addArtifact(testGroup);
+    // create test group and add the 'jedit' artifact
+    IArtifact testGroup = createNewGroup(getRootArtifact(), "testGroup");
+    testGroup.addArtifact(getJeditModuleArtifact());
 
-    //
-    moduleArtifact.getParent().removeArtifact(moduleArtifact);
+    // assert children
+    assertArtifactChildrenCount(getRootArtifact(), 5);
+    assertArtifactChildrenCount(getGroup2Artifact(), 0);
+    assertArtifactChildrenCount(testGroup, 1);
 
-    // asserts
-    assertTypeCount(246);
+    // assert parent
+    assertArtifactHasParent(testGroup, getRootArtifact());
+    assertArtifactHasParent(getJeditModuleArtifact(), testGroup);
 
-    //
-    testGroup.addArtifact(moduleArtifact);
+    // assert dependencies
+    assertDependencyWeight(testGroup, getJdkArtifact(), 1904);
+    assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
+    assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
+  }
 
-    // get the 'group2Artifact' artifact...
-    IArtifact group2Artifact = getArtifact(_rootArtifact, "group1|group2");
-    Assert.assertEquals(0, group2Artifact.getChildren().size());
+  /**
+   * <p>
+   * </p>
+   */
+  @Test
+  public void testDuplicateAdd() {
 
-    // assert the result
-    InputStream inputstream = getClass().getResourceAsStream("results/DnDArtifactTreeTest_MoveModuleToNewGroup.txt");
-    assertResult(ArtifactUtils.artifactToString(moduleArtifact), inputstream,
-        "DnDArtifactTreeTest_MoveModuleToNewGroup_" + getCurrentTimeStamp());
+    // create test group and add the 'jedit' artifact
+    IArtifact testGroup = createNewGroup(getRootArtifact(), "testGroup");
+    testGroup.addArtifact(getJeditModuleArtifact());
 
-    // assert
-    IModule module = getModularizedSystem().getModule("jedit", "1.0.0");
-    Assert.assertEquals(new Path("testGroup"), module.getClassification());
+    // assert children
+    assertArtifactChildrenCount(getRootArtifact(), 5);
+    assertArtifactChildrenCount(getGroup2Artifact(), 0);
+    assertArtifactChildrenCount(testGroup, 1);
 
-    assertTypeCount(1438);
+    // assert parent
+    assertArtifactHasParent(testGroup, getRootArtifact());
+    assertArtifactHasParent(getJeditModuleArtifact(), testGroup);
+
+    // assert dependencies
+    assertDependencyWeight(testGroup, getJdkArtifact(), 1904);
+    assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
+    assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
+
+    // create test group and add the 'jedit' artifact
+    IArtifact testGroup2 = createNewGroup(getRootArtifact(), "testGroup");
+    testGroup2.addArtifact(getJeditModuleArtifact());
+
+    // assert children
+    assertArtifactChildrenCount(getRootArtifact(), 6);
+    assertArtifactChildrenCount(getGroup2Artifact(), 0);
+    assertArtifactChildrenCount(testGroup, 0);
+    assertArtifactChildrenCount(testGroup2, 1);
+
+    // assert parent
+    assertArtifactHasParent(testGroup, getRootArtifact());
+    assertArtifactHasParent(testGroup2, getRootArtifact());
+    assertArtifactHasParent(getJeditModuleArtifact(), testGroup2);
+
+    // assert dependencies
+    assertDependencyWeight(testGroup2, getJdkArtifact(), 1904);
+    assertDependencyWeight(testGroup, getJdkArtifact(), 0);
+    assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
+    assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
   }
 
   @Test
-  public void testMoveGroupAndDelete() throws CoreException, IOException {
+  public void testAddToRoot() {
 
-    prepareModel();
-
-    ArtifactUtils.dumpArtifact(_rootArtifact);
-
-    // get the 'jeditModuleArtifact' artifact...
-    IArtifact jeditModuleArtifact = _rootArtifact.getChild("group1|group2|jedit_1.0.0");
-    Assert.assertNotNull(jeditModuleArtifact);
-
-    // get the 'velocityModuleArtifact' artifact...
-    IArtifact velocityModuleArtifact = _rootArtifact.getChild("velocity_1.5");
-    Assert.assertNotNull(velocityModuleArtifact);
+    // create test group and add the 'jedit' artifact
+    IArtifact testGroup = createNewGroup(getRootArtifact(), "testGroup");
+    testGroup.addArtifact(getJeditModuleArtifact());
+    testGroup.addArtifact(getJdkArtifact());
+    testGroup.addArtifact(getVelocityModuleArtifact());
 
     //
-    IArtifact testGroup = _rootArtifact.getDependencyModel().createArtifactContainer("testGroup", "testGroup", ArtifactType.Group);
-    _rootArtifact.addArtifact(testGroup);
+    IModule jeditModule = getModularizedSystem().getModule("jedit", "1.0.0");
+    IModule velocityModule = getModularizedSystem().getModule("velocity", "1.5");
+    IModule eeModule = getModularizedSystem().getExecutionEnvironment();
+    
+    assertEquals(new Path("testGroup"), jeditModule.getClassification());
+    assertEquals(new Path("testGroup"), velocityModule.getClassification());
+    assertEquals(new Path("testGroup"), eeModule.getClassification());
+
+    // assert children
+    assertArtifactChildrenCount(getRootArtifact(), 3);
+    assertArtifactChildrenCount(getGroup2Artifact(), 0);
+    assertArtifactChildrenCount(testGroup, 3);
+
+    // assert parent
+    assertArtifactHasParent(testGroup, getRootArtifact());
+    assertArtifactHasParent(getJeditModuleArtifact(), testGroup);
+    assertArtifactHasParent(getJdkArtifact(), testGroup);
+    assertArtifactHasParent(getVelocityModuleArtifact(), testGroup);
 
     //
-    testGroup.addArtifact(jeditModuleArtifact);
-    testGroup.addArtifact(velocityModuleArtifact);
+    getRootArtifact().addArtifact(getJeditModuleArtifact());
+    getRootArtifact().addArtifact(getJdkArtifact());
+    getRootArtifact().addArtifact(getVelocityModuleArtifact());
+    
+    assertEquals(new Path(""), jeditModule.getClassification());
+    assertEquals(new Path(""), velocityModule.getClassification());
+    assertEquals(new Path(""), eeModule.getClassification());
+
     assertTypeCount(1438);
 
-    //
-    _rootArtifact.removeArtifact(testGroup);
-
-    //
-    assertTypeCount(0);
-
-    //
-    Assert.assertEquals(0, getModularizedSystem().getResourceModules().size());
-
-    // //
-    // moduleArtifact.getParent().removeArtifact(moduleArtifact);
-    //
-    // // asserts
-    // Assert.assertEquals(getModularizedSystem().getExecutionEnvironment().getContainedTypes().size() + 246,
-    // getModularizedSystem().getTypes().size());
-    //
-    // //
-    // testGroup.addArtifact(moduleArtifact);
-    //
-    // // get the 'group2Artifact' artifact...
-    // IArtifact group2Artifact = rootArtifact.getChild("group1|group2");
-    // Assert.assertNotNull(group2Artifact);
-    // Assert.assertEquals(0, group2Artifact.getChildren().size());
-    //
-    // // assert the result
-    // InputStream inputstream = getClass().getResourceAsStream("results/DnDArtifactTreeTest_MoveModuleToNewGroup.txt");
-    // assertResult(ArtifactUtils.artifactToString(moduleArtifact), inputstream,
-    // "DnDArtifactTreeTest_MoveModuleToNewGroup_" + getCurrentTimeStamp());
-    //
-    // // assert
-    // IModule module = getModularizedSystem().getModule("jedit", "1.0.0");
-    // Assert.assertEquals(new Path("testGroup"), module.getClassification());
+    // // assert dependencies
+    // assertDependencyWeight(testGroup, getJdkArtifact(), 0);
+    // assertDependencyWeight(testGroup, getVelocityModuleArtifact(), 0);
+    // assertDependencyWeight(testGroup, getJeditModuleArtifact(), 0);
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param typeCountWithoutJdkTypes
+   * @throws CoreException
+   * @throws IOException
    */
-  private void assertTypeCount(int typeCountWithoutJdkTypes) {
-    Assert.assertEquals(getModularizedSystem().getExecutionEnvironment().getContainedTypes().size()
-        + typeCountWithoutJdkTypes, getModularizedSystem().getTypes().size());
-  }
+  @Test
+  public void testMoveModuleToNewGroup() {
 
-  private void prepareModel() {
-    
+    // remove 'jedit' module
+    getJeditModuleArtifact().getParent().removeArtifact(getJeditModuleArtifact());
+
+    // assert
+    assertTypeCount(246);
+
+    //
+    IArtifact testGroup = createNewGroup(getRootArtifact(), "testGroup");
+    testGroup.addArtifact(getJeditModuleArtifact());
+
+    // get the 'group2Artifact' artifact...
+    IArtifact group2Artifact = getArtifact(getRootArtifact(), "group1|group2");
+    assertEquals(0, group2Artifact.getChildren().size());
+
+    // assert the result
+    InputStream inputstream = getClass().getResourceAsStream("results/DnDArtifactTreeTest_MoveModuleToNewGroup.txt");
+    assertResult(ArtifactUtils.artifactToString(getJeditModuleArtifact()), inputstream,
+        "DnDArtifactTreeTest_MoveModuleToNewGroup_" + getCurrentTimeStamp());
+
+    // assert
+    IModule module = getModularizedSystem().getModule("jedit", "1.0.0");
+    assertEquals(new Path("testGroup"), module.getClassification());
+
     assertTypeCount(1438);
-    
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
-        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
-    Assert.assertNotNull(dependencyModel);
+  }
 
-    _rootArtifact = (IAdvancedArtifact) dependencyModel.getRoot();
-    Assert.assertNotNull(_rootArtifact);
-  }
-  
-  /**
-   * <p>
-   * </p>
-   *
-   * @param root
-   * @param path
-   * @return
-   */
-  private IArtifact getArtifact(IArtifact root, String path) {
-    IArtifact artifact = _rootArtifact.getChild(path);
-    Assert.assertNotNull(artifact);
-    return artifact;
-  }
-  
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected String computeTestProjectName() {
-    return "jedit";
-  }
+  // @Test
+  // public void testMoveGroup() throws CoreException, IOException {
+  //
+  // //
+  // IArtifact testGroup_1 = getRootArtifact().getDependencyModel().createArtifactContainer("testGroup_1",
+  // "testGroup_1", ArtifactType.Group);
+  // getRootArtifact().addArtifact(testGroup_1);
+  //
+  // //
+  // IArtifact testGroup_2 = getRootArtifact().getDependencyModel().createArtifactContainer("testGroup_2",
+  // "testGroup_2", ArtifactType.Group);
+  // getRootArtifact().addArtifact(testGroup_2);
+  //
+  // //
+  // testGroup_1.addArtifact(getJeditModuleArtifact());
+  // testGroup_1.addArtifact(getVelocityModuleArtifact());
+  // testGroup_2.addArtifact(getVelocityModuleArtifact());
+  //
+  // assertTypeCount(1438);
+  //
+  // //
+  // assertTypeCount(0);
+  //
+  // //
+  // Assert.assertEquals(0, getModularizedSystem().getResourceModules().size());
+  // }
+
 }

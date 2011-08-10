@@ -29,10 +29,15 @@ public class CommonNavigatorUtils {
    * <p>
    * </p>
    */
-  public static void refresh(String identifier, IArtifact artifact) {
+  public static void refresh(String identifier, IArtifact... artifacts) {
 
+    //
     CommonNavigator commonNavigator = findCommonNavigator(identifier);
-    commonNavigator.getCommonViewer().refresh(artifact);
+
+    //
+    for (IArtifact iArtifact : artifacts) {
+      commonNavigator.getCommonViewer().refresh(iArtifact);
+    }
   }
 
   /**
@@ -42,7 +47,7 @@ public class CommonNavigatorUtils {
    * @param navigatorViewId
    * @return
    */
-  private static CommonNavigator findCommonNavigator(String navigatorViewId) {
+  public static CommonNavigator findCommonNavigator(String navigatorViewId) {
     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     if (page != null) {
       IViewPart view = page.findView(navigatorViewId);

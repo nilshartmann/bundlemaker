@@ -10,7 +10,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IRootArtifact {
+public interface IRootArtifact extends IAdvancedArtifact {
 
   /**
    * <p>

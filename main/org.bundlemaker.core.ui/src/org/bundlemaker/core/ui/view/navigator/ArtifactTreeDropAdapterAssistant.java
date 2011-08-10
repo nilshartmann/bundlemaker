@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.view.navigator;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -11,9 +11,19 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
+import org.eclipse.ui.navigator.CommonNavigator;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IStatus validateDrop(Object target, int operation, TransferData transferData) {
 
@@ -32,22 +42,26 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     return Status.CANCEL_STATUS;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IStatus handleDrop(CommonDropAdapter aDropAdapter, DropTargetEvent aDropTargetEvent, Object aTarget) {
 
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(
         aDropAdapter.getCurrentTransfer());
 
-    IArtifact sourceArtifact = (IArtifact) treeSelection.getFirstElement();
+    final IArtifact sourceArtifact = (IArtifact) treeSelection.getFirstElement();
     IArtifact targetArtifact = (IArtifact) aTarget;
 
     targetArtifact.addArtifact(sourceArtifact);
 
-    // TODO
-    CommonNavigatorUtils.refresh(
-        "org.eclipse.ui.navigator.ProjectExplorer",
-        targetArtifact.getType().equals(ArtifactType.Root) ? targetArtifact : targetArtifact
-            .getParent(ArtifactType.Root));
+    ArtifactUtils.dumpArtifact(((IAdvancedArtifact) sourceArtifact).getRoot());
+
+    CommonNavigator commonNavigator = CommonNavigatorUtils
+        .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
+    commonNavigator.getCommonViewer().refresh(((IAdvancedArtifact) sourceArtifact).getRoot(), true);
+    commonNavigator.getCommonViewer().refresh(sourceArtifact, true);
 
     return Status.OK_STATUS;
   }

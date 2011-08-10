@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.impl.IModifiableArtifact;
 import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.eclipse.core.runtime.Assert;
@@ -100,8 +99,6 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
 
     // call the super method
     super.addArtifact(artifact);
-    // TODO!!!
-    ((IModifiableArtifact) artifact).setParent(this);
 
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.addModuleToModularizedSystem(artifact);
@@ -115,15 +112,9 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
 
     Assert.isNotNull(artifact);
 
-    boolean result = super.removeArtifact(artifact);
-
     // CHANGE THE UNDERLYING MODEL
     AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
 
-    // TODO!!!
-    ((IModifiableArtifact) artifact).setParent(null);
-
-    //
-    return result;
+    return super.removeArtifact(artifact);
   }
 }

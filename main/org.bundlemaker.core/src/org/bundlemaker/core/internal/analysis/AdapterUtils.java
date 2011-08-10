@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -36,7 +37,7 @@ public class AdapterUtils {
 
     IArtifact root = (artifact.getType() == ArtifactType.Root ? artifact : artifact.getParent(ArtifactType.Root));
 
-    Assert.isNotNull(root);
+    Assert.isNotNull(root, "No root for :" + ArtifactUtils.artifactToString(artifact));
     Assert.isTrue(root instanceof AdapterModularizedSystem2IArtifact);
 
     AdapterModularizedSystem2IArtifact modularizedSystem2IArtifact = (AdapterModularizedSystem2IArtifact) root;
@@ -71,6 +72,8 @@ public class AdapterUtils {
 
         // set the classification
         abstractModule.setClassification(new Path(path));
+      } else {
+        abstractModule.setClassification(null);
       }
 
       //

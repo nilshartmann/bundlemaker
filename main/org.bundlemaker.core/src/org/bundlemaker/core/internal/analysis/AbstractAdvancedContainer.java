@@ -3,6 +3,7 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
+import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -76,15 +77,39 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
   @Override
   public void addArtifact(IArtifact artifact, boolean registerParent) {
 
-    //
+    // assert not null
     Assert.isNotNull(artifact);
 
-    //
+    // if the artifact has a parent, it has to be removed
     if (artifact.getParent() != null) {
       artifact.getParent().removeArtifact(artifact);
     }
 
     //
+    invalidateDependencyCache();
+
+    // call super
     super.addArtifact(artifact, registerParent);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean removeArtifact(IArtifact artifact) {
+
+    // assert not null
+    Assert.isNotNull(artifact);
+
+    // set parent to null
+    if (artifact.getParent() != null) {
+      ((AbstractArtifact) artifact).setParent(null);
+    }
+
+    //
+    invalidateDependencyCache();
+
+    // call super
+    return super.removeArtifact(artifact);
   }
 }

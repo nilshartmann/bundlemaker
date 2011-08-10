@@ -165,6 +165,27 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
   }
 
+  /**
+   * <p>
+   * </p>
+   */
+  protected void invalidateDependencyCache() {
+    //
+    if (dependencies != null) {
+      dependencies.clear();
+    }
+
+    //
+    if (cachedDependencies != null) {
+      cachedDependencies.clear();
+    }
+
+    //
+    if (getParent() != null) {
+      ((AbstractArtifactContainer) getParent()).invalidateDependencyCache();
+    }
+  }
+
   @Override
   public void addArtifact(IArtifact artifact) {
     addArtifact(artifact, true);
@@ -176,9 +197,9 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
       children.add(artifact);
     }
     if (registerParent) {
-    IModifiableArtifact modifiableArtifact = (IModifiableArtifact) artifact;
-    modifiableArtifact.setParent(this);
-  }
+      IModifiableArtifact modifiableArtifact = (IModifiableArtifact) artifact;
+      modifiableArtifact.setParent(this);
+    }
   }
 
   @Override
