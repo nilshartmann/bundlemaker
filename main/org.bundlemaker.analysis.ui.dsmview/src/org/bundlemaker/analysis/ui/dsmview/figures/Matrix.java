@@ -27,10 +27,16 @@ public class Matrix extends Figure {
   protected DsmViewModel        _model;
 
   /** - */
-  int                           _x = -1;
+  int                           _x          = -1;
 
   /** - */
-  int                           _y = -1;
+  int                           _y          = -1;
+
+  /** - */
+  int                           _selected_x = -1;
+
+  /** - */
+  int                           _selected_y = -1;
 
   /** - */
   private List<IMatrixListener> _matrixListeners;
@@ -315,8 +321,20 @@ public class Matrix extends Figure {
 
     @Override
     public synchronized void mouseReleased(MouseEvent me) {
+
       synchronized (lock) {
         if (_clickCount == 0) {
+
+          //
+          Point location = me.getLocation();
+          final int x = (location.x / _model.getConfiguration().getHorizontalBoxSize());
+          final int y = (location.y / _model.getConfiguration().getVerticalBoxSize());
+
+          //
+          _selected_x = x;
+          _selected_y = y;
+
+          //
           Display.getCurrent().timerExec(250, new Runnable() {
             @Override
             public void run() {
@@ -324,6 +342,7 @@ public class Matrix extends Figure {
             }
           });
         }
+
         _clickCount++;
       }
     }
@@ -334,7 +353,7 @@ public class Matrix extends Figure {
         if (_clickCount == 1) {
 
           // notify listener
-          MatrixEvent event = new MatrixEvent(_x, _y);
+          MatrixEvent event = new MatrixEvent(_selected_x, _selected_y);
           for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
             listener.singleClick(event);
           }
@@ -342,12 +361,13 @@ public class Matrix extends Figure {
         } else {
 
           // notify listener
-          MatrixEvent event = new MatrixEvent(_x, _y);
+          MatrixEvent event = new MatrixEvent(_selected_x, _selected_y);
           for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
             listener.doubleClick(event);
           }
         }
 
+        //
         _clickCount = 0;
       }
     }
