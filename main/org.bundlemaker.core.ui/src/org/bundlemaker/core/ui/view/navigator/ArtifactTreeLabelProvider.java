@@ -1,11 +1,12 @@
 package org.bundlemaker.core.ui.view.navigator;
 
+import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.ArtifactImages;
 import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.ui.internal.Activator;
+import org.bundlemaker.core.ui.Activator;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -26,7 +27,7 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
 
     if (obj instanceof String || obj instanceof IModularizedSystem) {
       return Activator.getDefault().getIcon("navigator/root.gif");
-          }
+    }
 
     // All other types are handled by the superclass
     return super.getImage(obj);
@@ -42,6 +43,9 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
       return (String) obj;
     } else if (obj instanceof IModularizedSystem) {
       return ((IModularizedSystem) obj).getName();
+    } else if (obj instanceof IArtifact && ((IArtifact) obj).getType().equals(ArtifactType.Package)
+        && isHierarchicalPackageLayout()) {
+      return ((IArtifact) obj).getName();
     }
 
     // All other cases are handled by the superclass
@@ -70,10 +74,20 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
       default:
         break;
       }
-  }
+    }
 
     // default: let superclass determine image
     return super.getImageForTypeArtifact(artifact);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private boolean isHierarchicalPackageLayout() {
+    return Activator.getDefault().getArtifactModelConfigurationProvider().getArtifactModelConfiguration()
+        .isHierarchicalPackages();
+  }
 }
