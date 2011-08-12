@@ -1,6 +1,7 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.resource.IType;
 
 /**
@@ -10,7 +11,7 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  */
-public interface ITypeArtifact {
+public interface ITypeArtifact extends IAdvancedArtifact, IMovableUnit {
 
   /**
    * <p>

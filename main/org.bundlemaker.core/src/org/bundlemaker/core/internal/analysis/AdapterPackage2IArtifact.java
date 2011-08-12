@@ -2,8 +2,9 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
-import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -12,13 +13,16 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implements IGroupArtifact {
+public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implements IPackageArtifact {
 
   /** - */
   private String  _qualifiedName;
 
   /** - */
   private boolean _isFlat = true;
+
+  /** - */
+  private boolean _isVirtual;
 
   /**
    * <p>
@@ -28,7 +32,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
    * @param qualifiedName
    * @param parent
    */
-  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent) {
+  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent, boolean isVirtual) {
     super(ArtifactType.Package, _getName(qualifiedName));
 
     // set parent/children dependency
@@ -41,16 +45,16 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
 
     // set the qualified name
     _qualifiedName = qualifiedName;
+
+    _isVirtual = isVirtual;
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void setName(String name) {
-    super.setName(name);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
+  public boolean isVirtual() {
+    return _isVirtual;
   }
 
   /**
@@ -101,6 +105,21 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
 
     // return the result
     return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void accept(IArtifactTreeVisitor visitor) {
+
+    //
+    if (visitor.visit(this)) {
+      //
+      for (IArtifact artifact : getChildren()) {
+        ((IAdvancedArtifact) artifact).accept(visitor);
+      }
+    }
   }
 
   /**

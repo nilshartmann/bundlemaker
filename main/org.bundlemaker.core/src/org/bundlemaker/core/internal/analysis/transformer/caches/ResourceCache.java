@@ -5,6 +5,7 @@ import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.transformer.ModuleResourceKey;
+import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
 
 /**
  * <p>
@@ -32,7 +33,7 @@ public class ResourceCache extends AbstractArtifactCacheAwareGenericCache<Module
     String packageName = key.getResource().getPackageName();
 
     // get the module package
-    ModulePackageKey modulePackageKey = new ModulePackageKey(key.getResourceModule(), packageName);
+    ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(key.getResourceModule()), packageName);
 
     // get the parent
     AbstractArtifactContainer parent = getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);

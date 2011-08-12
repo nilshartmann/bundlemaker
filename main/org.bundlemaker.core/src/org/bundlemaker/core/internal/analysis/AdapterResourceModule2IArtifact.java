@@ -3,6 +3,8 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 
@@ -96,4 +98,20 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   public IResourceModule getResourceModule() {
     return (IResourceModule) getModule();
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void accept(IArtifactTreeVisitor visitor) {
+
+    //
+    if (visitor.visit(this)) {
+      //
+      for (IArtifact artifact : getChildren()) {
+        ((IAdvancedArtifact) artifact).accept(visitor);
+      }
+    }
+  }
+
 }

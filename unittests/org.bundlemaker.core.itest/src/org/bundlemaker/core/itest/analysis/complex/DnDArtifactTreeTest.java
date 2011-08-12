@@ -55,43 +55,73 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
   public void testDuplicateAdd() {
 
     // create test group and add the 'jedit' artifact
-    IArtifact testGroup = createNewGroup(getRootArtifact(), "testGroup");
-    testGroup.addArtifact(getJeditModuleArtifact());
+    IArtifact GROUPgroup = createNewGroup(getRootArtifact(), "GROUP");
+    GROUPgroup.addArtifact(getJeditModuleArtifact());
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 5);
     assertArtifactChildrenCount(getGroup2Artifact(), 0);
-    assertArtifactChildrenCount(testGroup, 1);
+    assertArtifactChildrenCount(GROUPgroup, 1);
 
     // assert parent
-    assertArtifactHasParent(testGroup, getRootArtifact());
-    assertArtifactHasParent(getJeditModuleArtifact(), testGroup);
+    assertArtifactHasParent(GROUPgroup, getRootArtifact());
+    assertArtifactHasParent(getJeditModuleArtifact(), GROUPgroup);
 
     // assert dependencies
-    assertDependencyWeight(testGroup, getJdkArtifact(), 1904);
+    assertDependencyWeight(GROUPgroup, getJdkArtifact(), 1904);
     assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
     assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
 
     // create test group and add the 'jedit' artifact
-    IArtifact testGroup2 = createNewGroup(getRootArtifact(), "testGroup");
-    testGroup2.addArtifact(getJeditModuleArtifact());
+    IArtifact GROUP2Group = createNewGroup(getRootArtifact(), "GROUP2");
+    GROUP2Group.addArtifact(getJeditModuleArtifact());
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 6);
     assertArtifactChildrenCount(getGroup2Artifact(), 0);
-    assertArtifactChildrenCount(testGroup, 0);
-    assertArtifactChildrenCount(testGroup2, 1);
+    assertArtifactChildrenCount(GROUPgroup, 0);
+    assertArtifactChildrenCount(GROUP2Group, 1);
 
     // assert parent
-    assertArtifactHasParent(testGroup, getRootArtifact());
-    assertArtifactHasParent(testGroup2, getRootArtifact());
-    assertArtifactHasParent(getJeditModuleArtifact(), testGroup2);
+    assertArtifactHasParent(GROUPgroup, getRootArtifact());
+    assertArtifactHasParent(GROUP2Group, getRootArtifact());
+    assertArtifactHasParent(getJeditModuleArtifact(), GROUP2Group);
 
     // assert dependencies
-    assertDependencyWeight(testGroup2, getJdkArtifact(), 1904);
-    assertDependencyWeight(testGroup, getJdkArtifact(), 0);
+    assertDependencyWeight(GROUP2Group, getJdkArtifact(), 1904);
+    assertDependencyWeight(GROUPgroup, getJdkArtifact(), 0);
     assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
     assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
+  }
+
+  @Test
+  public void testChangedDependencies() {
+
+    // create test group and add the 'jedit' artifact
+    IArtifact GROUPgroup = createNewGroup(getRootArtifact(), "GROUP");
+    IArtifact GROUP2group = createNewGroup(getRootArtifact(), "GROUP2");
+
+    GROUPgroup.addArtifact(getJeditModuleArtifact());
+    GROUP2group.addArtifact(getJdkArtifact());
+
+    assertDependencyWeight(GROUPgroup, GROUP2group, 1904);
+    
+    GROUPgroup.addArtifact(getVelocityModuleArtifact());
+
+    assertDependencyWeight(GROUPgroup, GROUP2group, 1908);
+    assertArtifactHasParent(getJdkArtifact(), GROUP2group);
+    
+    getRootArtifact().addArtifact(getJdkArtifact());
+    
+    assertArtifactChildrenCount(GROUP2group, 0);
+    assertArtifactHasParent(getJdkArtifact(), getRootArtifact());
+    
+    ArtifactUtils.dumpArtifact(GROUPgroup);
+    System.out.println("********************************************");
+    ArtifactUtils.dumpArtifact(GROUP2group);
+    
+    assertDependencyWeight(GROUPgroup, GROUP2group, 0);
+    assertDependencyWeight(GROUPgroup, getJdkArtifact(), 1908);
   }
 
   @Test
@@ -107,7 +137,7 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
     IModule jeditModule = getModularizedSystem().getModule("jedit", "1.0.0");
     IModule velocityModule = getModularizedSystem().getModule("velocity", "1.5");
     IModule eeModule = getModularizedSystem().getExecutionEnvironment();
-    
+
     assertEquals(new Path("testGroup"), jeditModule.getClassification());
     assertEquals(new Path("testGroup"), velocityModule.getClassification());
     assertEquals(new Path("testGroup"), eeModule.getClassification());
@@ -127,10 +157,10 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
     getRootArtifact().addArtifact(getJeditModuleArtifact());
     getRootArtifact().addArtifact(getJdkArtifact());
     getRootArtifact().addArtifact(getVelocityModuleArtifact());
-    
-    assertEquals(new Path(""), jeditModule.getClassification());
-    assertEquals(new Path(""), velocityModule.getClassification());
-    assertEquals(new Path(""), eeModule.getClassification());
+
+    assertEquals(null, jeditModule.getClassification());
+    assertEquals(null, velocityModule.getClassification());
+    assertEquals(null, eeModule.getClassification());
 
     assertTypeCount(1438);
 

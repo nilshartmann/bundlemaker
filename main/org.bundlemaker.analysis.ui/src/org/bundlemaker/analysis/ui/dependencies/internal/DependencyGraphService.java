@@ -42,9 +42,9 @@ public class DependencyGraphService implements IDependencyGraphService {
     Assert.isNotNull(artifacts, "Parameter 'artifacts' must not be null");
 
     // Check if Graph can returned from 'cache'
-    if (artifacts.equals(_lastRecentlyUsedArtifacts)) {
-      return _lastRecentlyUsedGraph;
-    }
+    // if (artifacts.equals(_lastRecentlyUsedArtifacts)) {
+    // return _lastRecentlyUsedGraph;
+    // }
 
     // Calcuate new Graph
     _lastRecentlyUsedArtifacts = artifacts;

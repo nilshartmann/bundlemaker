@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
@@ -83,6 +85,22 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     _resourceHolder = MovableUnit.createFromType(type);
+  }
+
+  @Override
+  public boolean isVirtual() {
+    return false;
+  }
+
+  @Override
+  public List<IArtifact> invalidateDependencyCache() {
+    _cachedDependencies = null;
+    return Arrays.asList(new IArtifact[] { this });
+  }
+
+  @Override
+  public Map<IArtifact, IDependency> getCachedDependencies() {
+    return _cachedDependencies;
   }
 
   /**
@@ -392,5 +410,14 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public IType getAssociatedType() {
     return _type;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void accept(IArtifactTreeVisitor visitor) {
+    //
+    visitor.visit(this);
   }
 }

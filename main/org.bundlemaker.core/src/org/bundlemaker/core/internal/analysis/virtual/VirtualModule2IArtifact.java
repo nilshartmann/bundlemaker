@@ -1,16 +1,14 @@
-package org.bundlemaker.core.internal.analysis;
+package org.bundlemaker.core.internal.analysis.virtual;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.internal.modules.AbstractModule;
+import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
+import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -18,26 +16,24 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractAdvancedContainer implements IModuleArtifact {
+public class VirtualModule2IArtifact extends AbstractAdvancedContainer implements IModuleArtifact {
 
-  /** the resource module */
-  private IModule _module;
+  /** - */
+  private String _fullyQualifiedName;
 
   /**
    * <p>
-   * Creates a new instance of type {@link AdapterModule2IArtifact}.
+   * Creates a new instance of type {@link VirtualModule2IArtifact}.
    * </p>
    * 
-   * @param modularizedSystem
+   * @param name
+   * @param fullyQualifiedName
+   * @param parent
    */
-  public AdapterModule2IArtifact(IModule module, IArtifact parent) {
-    super(ArtifactType.Module, module.getModuleIdentifier().toString());
+  public VirtualModule2IArtifact(String name, String fullyQualifiedName, IArtifact parent) {
+    super(ArtifactType.Module, name);
 
-    Assert.isNotNull(module);
-    Assert.isTrue(parent instanceof AbstractArtifactContainer);
-
-    // set the resource module
-    _module = module;
+    _fullyQualifiedName = fullyQualifiedName;
 
     // set parent/children dependency
     setParent(parent);
@@ -46,14 +42,11 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
 
   @Override
   public boolean isVirtual() {
-    return false;
+    return true;
   }
 
   @Override
   public void setNameAndVersion(String name, String version) {
-
-    ((AbstractModule<?, ?>) _module).setModuleIdentifier(new ModuleIdentifier(name, version));
-
     super.setName(name);
 
     ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
@@ -64,7 +57,7 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
    */
   @Override
   public IModule getAssociatedModule() {
-    return _module;
+    return null;
   }
 
   /**
@@ -72,14 +65,7 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
    */
   @Override
   public final String getQualifiedName() {
-
-    String classification = "";
-
-    if (_module.hasClassification()) {
-      classification = _module.getClassification().toString() + "/";
-    }
-
-    return classification + _module.getModuleIdentifier().toString();
+    return _fullyQualifiedName;
   }
 
   @Override
@@ -100,16 +86,5 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
         ((IAdvancedArtifact) artifact).accept(visitor);
       }
     }
-  }
-
-  /**
-   * <p>
-   * Returns the module.
-   * </p>
-   * 
-   * @return the module.
-   */
-  protected IModule getModule() {
-    return _module;
   }
 }

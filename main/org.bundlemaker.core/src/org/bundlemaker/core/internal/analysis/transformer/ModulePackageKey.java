@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.transformer;
 
-import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -22,37 +22,37 @@ import org.eclipse.core.runtime.Assert;
  */
 public class ModulePackageKey {
 
-  /** the resource module */
-  private IModule _resourceModule;
+  /** the module key */
+  private ModuleKey _moduleKey;
 
   /** the package name */
-  private String  _packageName;
+  private String    _packageName;
 
   /**
    * <p>
    * Creates a new instance of type {@link ModulePackageKey}.
    * </p>
    * 
-   * @param resourceModule
+   * @param moduleKey
    * @param packageName
    */
-  public ModulePackageKey(IModule resourceModule, String packageName) {
-    Assert.isNotNull(resourceModule);
+  public ModulePackageKey(ModuleKey moduleKey, String packageName) {
+    Assert.isNotNull(moduleKey);
     Assert.isNotNull(packageName);
 
-    _resourceModule = resourceModule;
+    _moduleKey = moduleKey;
     _packageName = packageName;
   }
 
   /**
    * <p>
-   * Returns the module.
+   * Returns the module key.
    * </p>
    * 
    * @return
    */
-  public IModule getModule() {
-    return _resourceModule;
+  public ModuleKey getModuleKey() {
+    return _moduleKey;
   }
 
   /**
@@ -74,7 +74,7 @@ public class ModulePackageKey {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((_packageName == null) ? 0 : _packageName.hashCode());
-    result = prime * result + ((_resourceModule == null) ? 0 : _resourceModule.hashCode());
+    result = prime * result + ((_moduleKey == null) ? 0 : _moduleKey.hashCode());
     return result;
   }
 
@@ -95,10 +95,10 @@ public class ModulePackageKey {
         return false;
     } else if (!_packageName.equals(other._packageName))
       return false;
-    if (_resourceModule == null) {
-      if (other._resourceModule != null)
+    if (_moduleKey == null) {
+      if (other._moduleKey != null)
         return false;
-    } else if (!_resourceModule.equals(other._resourceModule))
+    } else if (!_moduleKey.equals(other._moduleKey))
       return false;
     return true;
   }

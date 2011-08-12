@@ -10,7 +10,7 @@ import org.bundlemaker.core.modules.IModule;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModuleArtifact {
+public interface IModuleArtifact extends IAdvancedArtifact {
 
   /**
    * <p>

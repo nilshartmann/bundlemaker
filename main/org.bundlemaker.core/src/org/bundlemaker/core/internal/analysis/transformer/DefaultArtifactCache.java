@@ -16,8 +16,6 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.caches.GroupCache;
-import org.bundlemaker.core.internal.analysis.transformer.caches.MissingTypeCache;
-import org.bundlemaker.core.internal.analysis.transformer.caches.MissingTypePackageCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.PackageCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ResourceCache;
@@ -78,14 +76,14 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
     // create virtual module for missing types
     if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
 
-      // initialize the types caches
-      initializeMissingTypesCaches();
+      // // initialize the types caches
+      // initializeMissingTypesCaches();
 
-      // add the 
+      // add the
       for (IModule module : modules) {
         if (module instanceof IResourceModule) {
           for (IReference iReference : getModularizedSystem().getUnsatisfiedReferences((IResourceModule) module)) {
-            getMissingTypeCache().getOrCreate(iReference.getFullyQualifiedName());
+            getTypeCache().getOrCreate(new TypeKey(iReference.getFullyQualifiedName()));
           }
         }
       }
@@ -138,7 +136,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
    * {@inheritDoc}
    */
   @Override
-  protected GenericCache<ModulePackageKey, AbstractArtifactContainer> createPackageCache() {
+  protected PackageCache createPackageCache() {
     return new PackageCache(this);
   }
 
@@ -154,7 +152,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
    * {@inheritDoc}
    */
   @Override
-  protected GenericCache<IType, IArtifact> createTypeCache() {
+  protected GenericCache<TypeKey, IArtifact> createTypeCache() {
     return new TypeCache(this);
   }
 
@@ -168,23 +166,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
   /**
    * {@inheritDoc}
    */
-  protected GenericCache<IModule, AbstractArtifactContainer> createModuleCache() {
+  protected ModuleCache createModuleCache() {
     return new ModuleCache(this);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected GenericCache<String, AbstractArtifactContainer> createMissingTypePackageCache() {
-    return new MissingTypePackageCache(this);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected GenericCache<String, AbstractArtifactContainer> createMissingTypeCache() {
-    return new MissingTypeCache(this);
   }
 }

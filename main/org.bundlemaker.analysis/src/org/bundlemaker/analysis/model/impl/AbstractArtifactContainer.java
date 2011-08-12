@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.ArtifactType;
@@ -169,11 +170,13 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * <p>
    * </p>
    */
-  protected void invalidateDependencyCache() {
+  public List<IArtifact> invalidateDependencyCache() {
+
+    List<IArtifact> result = new LinkedList<IArtifact>();
+    result.add(this);
+
     //
-    if (dependencies != null) {
-      dependencies.clear();
-    }
+    dependencies = null;
 
     //
     if (cachedDependencies != null) {
@@ -182,8 +185,17 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
     //
     if (getParent() != null) {
-      ((AbstractArtifactContainer) getParent()).invalidateDependencyCache();
+      result.addAll(((AbstractArtifactContainer) getParent()).invalidateDependencyCache());
     }
+
+    //
+    leafs = null;
+
+    return result;
+  }
+
+  public final Map<IArtifact, IDependency> getCachedDependencies() {
+    return cachedDependencies;
   }
 
   @Override

@@ -1,6 +1,10 @@
 package org.bundlemaker.core.analysis;
 
+import java.util.List;
+import java.util.Map;
+
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.modules.IModularizedSystem;
 
@@ -12,6 +16,14 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IAdvancedArtifact extends IArtifact {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isVirtual();
 
   /**
    * <p>
@@ -38,7 +50,7 @@ public interface IAdvancedArtifact extends IArtifact {
    * 
    * @return the modularized system, never null
    */
-  public IModularizedSystem getModularizedSystem();
+  IModularizedSystem getModularizedSystem();
 
   /**
    * <p>
@@ -47,5 +59,28 @@ public interface IAdvancedArtifact extends IArtifact {
    * 
    * @return the associated {@link IDependencyModel}.
    */
-  public IDependencyModel getDependencyModel();
+  IDependencyModel getDependencyModel();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param visitor
+   */
+  void accept(IArtifactTreeVisitor visitor);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  List<IArtifact> invalidateDependencyCache();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Map<IArtifact, IDependency> getCachedDependencies();
 }

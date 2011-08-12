@@ -7,7 +7,9 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeChangedListener;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -46,6 +48,11 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     //
     _artifactTreeChangedListeners = new LinkedList<IArtifactTreeChangedListener>();
+  }
+
+  @Override
+  public boolean isVirtual() {
+    return false;
   }
 
   @Override
@@ -148,6 +155,22 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     //
     for (IArtifactTreeChangedListener changedListener : listeners) {
       changedListener.artifactTreeChanged(event);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void accept(IArtifactTreeVisitor visitor) {
+
+    //
+    if (visitor.visit(this)) {
+
+      //
+      for (IArtifact artifact : getChildren()) {
+        ((IAdvancedArtifact) artifact).accept(visitor);
+      }
     }
   }
 

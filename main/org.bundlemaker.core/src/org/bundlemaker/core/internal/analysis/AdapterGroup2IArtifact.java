@@ -8,6 +8,8 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.eclipse.core.runtime.Assert;
 
@@ -34,6 +36,14 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     // set parent/children dependency
     setParent(parent);
     ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isVirtual() {
+    return false;
   }
 
   /**
@@ -116,5 +126,20 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
 
     return super.removeArtifact(artifact);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void accept(IArtifactTreeVisitor visitor) {
+
+    //
+    if (visitor.visit(this)) {
+      //
+      for (IArtifact artifact : getChildren()) {
+        ((IAdvancedArtifact) artifact).accept(visitor);
+      }
+    }
   }
 }

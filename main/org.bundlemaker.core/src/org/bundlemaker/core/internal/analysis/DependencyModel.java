@@ -123,7 +123,7 @@ public class DependencyModel implements IDependencyModel {
 
       //
     case Package: {
-      return new AdapterPackage2IArtifact(qualifiedName, getRoot());
+      return new AdapterPackage2IArtifact(qualifiedName, getRoot(), false);
     }
 
       //

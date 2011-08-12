@@ -4,9 +4,12 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
+import org.bundlemaker.core.internal.analysis.transformer.AbstractCacheAwareArtifactCache.TypeKey;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.transformer.ModuleResourceKey;
+import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -19,7 +22,7 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeCache extends AbstractArtifactCacheAwareGenericCache<IType, IArtifact> {
+public class TypeCache extends AbstractArtifactCacheAwareGenericCache<TypeKey, IArtifact> {
 
   /**
    * <p>
@@ -33,7 +36,56 @@ public class TypeCache extends AbstractArtifactCacheAwareGenericCache<IType, IAr
   }
 
   @Override
-  protected IArtifact create(IType type) {
+  protected IArtifact create(TypeKey type) {
+
+    if (type.hasType()) {
+      return createTypeArtifactFromType(type.getType());
+    } else {
+      return createTypeArtifactFromTypeName(type.getTypeName());
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param typeName
+   * @return
+   */
+  private IArtifact createTypeArtifactFromTypeName(String typeName) {
+
+    //
+    IArtifact parent = null;
+
+    //
+    int index = typeName.lastIndexOf('.');
+
+    //
+    if (index != -1) {
+
+      // get the module package
+      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey("<< Missing Types >>"),
+          typeName.substring(0, index));
+
+      // get the parent
+      parent = getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
+
+    } else {
+      parent = getArtifactCache().getModuleCache().getOrCreate(new ModuleKey("<< Missing Types >>"));
+    }
+
+    //
+    return new VirtualType2IArtifact(typeName.substring(index), typeName, parent);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  private IArtifact createTypeArtifactFromType(IType type) {
 
     // get the associated resources
     IResource resource = null;
@@ -65,16 +117,13 @@ public class TypeCache extends AbstractArtifactCacheAwareGenericCache<IType, IAr
     } else {
 
       // get the module package
-      ModulePackageKey modulePackageKey = new ModulePackageKey(module, type.getPackageName());
+      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(module), type.getPackageName());
 
       // get the parent
       parent = getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
     }
 
     //
-    IArtifact artifact = new AdapterType2IArtifact(type, getArtifactCache(), parent);
-
-    //
-    return artifact;
+    return new AdapterType2IArtifact(type, getArtifactCache(), parent);
   }
 }

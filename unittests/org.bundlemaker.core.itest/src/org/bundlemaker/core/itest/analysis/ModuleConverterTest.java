@@ -58,15 +58,15 @@ public class ModuleConverterTest extends AbstractModularizedSystemTest {
 
     // Step 2: test 'root' with children
     List<IArtifact> children = new LinkedList<IArtifact>(rootArtifact.getChildren());
-    Assert.assertEquals(3, children.size());
+    Assert.assertEquals(2, children.size());
     for (IArtifact child : children) {
       Assert.assertEquals(rootArtifact, child.getParent());
     }
-    assertNode(children.get(1), ArtifactType.Module, "jdk16_jdk16", getModularizedSystem().getName());
-    assertNode(children.get(2), ArtifactType.Group, "group1", getModularizedSystem().getName());
+    assertNode(children.get(0), ArtifactType.Module, "jdk16_jdk16", getModularizedSystem().getName());
+    assertNode(children.get(1), ArtifactType.Group, "group1", getModularizedSystem().getName());
 
     // Step 3: test 'group1' with children
-    children = new LinkedList<IArtifact>(children.get(2).getChildren());
+    children = new LinkedList<IArtifact>(children.get(1).getChildren());
     Assert.assertEquals(1, children.size());
     assertNode(children.get(0), ArtifactType.Group, "group2", "group1");
 

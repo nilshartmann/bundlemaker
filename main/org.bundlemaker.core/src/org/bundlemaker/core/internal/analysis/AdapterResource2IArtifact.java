@@ -12,6 +12,8 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.resource.IResource;
 
@@ -52,9 +54,13 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
   }
 
   @Override
+  public boolean isVirtual() {
+    return false;
+  }
+
+  @Override
   public IResource getAssociatedResource() {
-    // TODO Auto-generated method stub
-    return null;
+    return _resource;
   }
 
   @Override
@@ -79,4 +85,20 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
   public boolean isSourceResource() {
     return _isSourceResource;
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void accept(IArtifactTreeVisitor visitor) {
+
+    //
+    if (visitor.visit(this)) {
+      //
+      for (IArtifact artifact : getChildren()) {
+        ((IAdvancedArtifact) artifact).accept(visitor);
+      }
+    }
+  }
+
 }

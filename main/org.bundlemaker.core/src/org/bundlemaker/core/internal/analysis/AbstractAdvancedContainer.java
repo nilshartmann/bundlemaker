@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.List;
+
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
@@ -75,21 +77,26 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
    * {@inheritDoc}
    */
   @Override
-  public void addArtifact(IArtifact artifact, boolean registerParent) {
+  public void addArtifact(IArtifact artifact) {
 
     // assert not null
     Assert.isNotNull(artifact);
+
+    //
+    List<IArtifact> artifacts = ((AbstractArtifactContainer) artifact).invalidateDependencyCache();
+    getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
 
     // if the artifact has a parent, it has to be removed
     if (artifact.getParent() != null) {
       artifact.getParent().removeArtifact(artifact);
     }
 
-    //
-    invalidateDependencyCache();
-
     // call super
-    super.addArtifact(artifact, registerParent);
+    super.addArtifact(artifact);
+
+    //
+    artifacts = invalidateDependencyCache();
+    getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
   }
 
   /**
@@ -101,13 +108,17 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     // assert not null
     Assert.isNotNull(artifact);
 
+    //
+    List<IArtifact> artifacts = invalidateDependencyCache();
+    for (IArtifact iArtifact : artifacts) {
+      System.out.println(iArtifact);
+    }
+    getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
+
     // set parent to null
     if (artifact.getParent() != null) {
       ((AbstractArtifact) artifact).setParent(null);
     }
-
-    //
-    invalidateDependencyCache();
 
     // call super
     return super.removeArtifact(artifact);
