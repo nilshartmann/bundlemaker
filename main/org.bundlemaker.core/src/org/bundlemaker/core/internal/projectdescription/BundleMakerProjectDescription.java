@@ -391,8 +391,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     }
 
     //
-    ResourceContent resourceContent = new ResourceContent();
-    fileBasedContent.setResourceContent(resourceContent);
+    ResourceContent resourceContent = fileBasedContent.getModifiableResourceContent();
 
     // add the source roots
     for (String string : sourceRoot) {

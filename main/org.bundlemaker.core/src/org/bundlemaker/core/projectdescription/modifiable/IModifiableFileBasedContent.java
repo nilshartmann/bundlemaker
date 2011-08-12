@@ -14,8 +14,8 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 
 /**
  * <p>
- * Describes a modifiable file based content entry in an {@link IModifiableBundleMakerProjectDescription}. A file base content
- * entry can contain one or many directories or archive files (*.zip or *.jar).
+ * Describes a modifiable file based content entry in an {@link IModifiableBundleMakerProjectDescription}. A file base
+ * content entry can contain one or many directories or archive files (*.zip or *.jar).
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -72,7 +72,16 @@ public interface IModifiableFileBasedContent extends IFileBasedContent {
    * </p>
    * 
    * @param value
+   * @deprecated use {@link #setAnalyze(boolean)}
    */
   public void setResourceContent(boolean value);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param analyze
+   */
+  public void setAnalyze(boolean analyze);
 
 }

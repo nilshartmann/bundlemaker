@@ -73,17 +73,26 @@ public interface IFileBasedContent {
    * 
    * @return <code>true</code> if this content entry is a resource entry that should be parsed and analyzed,
    *         <code>false</code> otherwise.
+   * @deprecated use #isAnalyze() instead
    */
+  @Deprecated
   boolean isResourceContent();
+
+  /**
+   * <p>
+   * Return <code>true</code> if this content entry is a resource entry that should be parsed and analyzed,
+   * <code>false</code> otherwise.
+   * </p>
+   * 
+   * @return <code>true</code> if this content entry is a resource entry that should be parsed and analyzed,
+   *         <code>false</code> otherwise.
+   */
+  boolean isAnalyze();
 
   /**
    * <p>
    * Returns the set of all defined source paths for this content entry. The result set is never <code>null</code>, but
    * maybe empty.
-   * </p>
-   * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>), an
-   * empty set will be returned.
    * </p>
    * 
    * @return the set of all defined source paths for this content entry.
@@ -96,7 +105,7 @@ public interface IFileBasedContent {
    * eclipse-specific source bundle for a given source archive, you set this value to <code>false</code>.
    * </p>
    * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>),
+   * If this content entry should not be analyzed ( <code>isAnalyze()</code> returns <code>false</code>),
    * <code>false</code> will be returned.
    * </p>
    * 
@@ -109,7 +118,7 @@ public interface IFileBasedContent {
    * Returns the {@link IResource} for the specified path and type
    * </p>
    * <p>
-   * If this content entry is not a resource content (<code>isResourceContent()</code> returns <code>false</code>),
+   * If this content entry is not a resource content (<code>isAnalyze()</code> returns <code>false</code>),
    * <code>null</code> will be returned.
    * </p>
    * 
@@ -126,8 +135,8 @@ public interface IFileBasedContent {
    * Returns a {@link Set} of all resources of the specified type
    * </p>
    * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>), an
-   * empty set will be returned.
+   * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
+   * set will be returned.
    * </p>
    * 
    * @param type
@@ -140,7 +149,7 @@ public interface IFileBasedContent {
    * Returns the binary {@link IResource resource} for the specified path
    * </p>
    * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>),
+   * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>),
    * <code>null</code> will be returned.
    * </p>
    * 
@@ -157,8 +166,8 @@ public interface IFileBasedContent {
    * This is a convenience method for {@link #getResources(ContentType) getResources(ContentType.BINARY)}
    * </p>
    * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>), an
-   * empty set will be returned.
+   * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
+   * set will be returned.
    * </p>
    * 
    * @return a Set of resources, never null.
@@ -170,7 +179,7 @@ public interface IFileBasedContent {
    * Returns the {@link IResource Resource} for the specified path
    * </p>
    * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>),
+   * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>),
    * <code>null</code> will be returned.
    * </p>
    * 
@@ -185,8 +194,8 @@ public interface IFileBasedContent {
    * This is a convenience method for {@link #getResources(ContentType) getResources(ContentType.SOURCE)}
    * </p>
    * <p>
-   * If this content entry is not a resource content ( <code>isResourceContent()</code> returns <code>false</code>), an
-   * empty set will be returned.
+   * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
+   * set will be returned.
    * </p>
    * 
    * @return a Set of resources, never null.

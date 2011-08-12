@@ -34,10 +34,6 @@ import org.eclipse.core.runtime.IPath;
 public class FileBasedContent implements IModifiableFileBasedContent {
 
   /** - */
-  private static final Set<IRootPath>           EMPTY_PATH_SET     = Collections
-                                                                       .unmodifiableSet(new HashSet<IRootPath>());
-
-  /** - */
   private static final Set<? extends IResource> EMPTY_RESOURCE_SET = Collections
                                                                        .unmodifiableSet(new HashSet<IResource>());
 
@@ -56,6 +52,8 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   /** - */
   private Set<IRootPath>                        _binaryPaths;
 
+  private boolean                               _analyze;
+
   /** - */
   private ResourceContent                       _resourceContent;
 
@@ -71,6 +69,8 @@ public class FileBasedContent implements IModifiableFileBasedContent {
 
     //
     _binaryPaths = new HashSet<IRootPath>();
+
+    _resourceContent = new ResourceContent();
   }
 
   /**
@@ -102,9 +102,16 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     return Collections.unmodifiableSet(_binaryPaths);
   }
 
+  /**
+   * TODO rename in: isAnalyze() or something similiar
+   */
   @Override
   public boolean isResourceContent() {
-    return _resourceContent != null;
+    return _analyze;
+  }
+
+  public boolean isAnalyze() {
+    return _analyze;
   }
 
   public ResourceContent getModifiableResourceContent() {
@@ -122,7 +129,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   }
 
   public Set<IRootPath> getModifiableSourcePaths() {
-    return _resourceContent != null ? _resourceContent.getModifiableSourcePaths() : EMPTY_PATH_SET;
+    return _resourceContent.getModifiableSourcePaths();
   }
 
   /*
@@ -168,42 +175,42 @@ public class FileBasedContent implements IModifiableFileBasedContent {
 
   @Override
   public Set<IRootPath> getSourceRootPaths() {
-    return _resourceContent != null ? _resourceContent.getSourcePaths() : EMPTY_PATH_SET;
+    return _resourceContent.getSourcePaths();
   }
 
   @Override
   public boolean isAnalyzeSourceResources() {
-    return _resourceContent != null ? _resourceContent.isAnalyzeSourceResources() : false;
+    return _analyze && _resourceContent.isAnalyzeSourceResources();
   }
 
   @Override
   public IResource getResource(IPath path, ContentType type) {
-    return _resourceContent != null ? _resourceContent.getResource(path, type) : null;
+    return isAnalyze() ? _resourceContent.getResource(path, type) : null;
   }
 
   @Override
   public Set<? extends IResource> getResources(ContentType type) {
-    return _resourceContent != null ? _resourceContent.getResources(type) : EMPTY_RESOURCE_SET;
+    return isAnalyze() ? _resourceContent.getResources(type) : EMPTY_RESOURCE_SET;
   }
 
   @Override
   public IResource getBinaryResource(IPath path) {
-    return _resourceContent != null ? _resourceContent.getBinaryResource(path) : null;
+    return isAnalyze() ? _resourceContent.getBinaryResource(path) : null;
   }
 
   @Override
   public Set<? extends IResource> getBinaryResources() {
-    return _resourceContent != null ? _resourceContent.getBinaryResources() : EMPTY_RESOURCE_SET;
+    return isAnalyze() ? _resourceContent.getBinaryResources() : EMPTY_RESOURCE_SET;
   }
 
   @Override
   public IResource getSourceResource(IPath path) {
-    return _resourceContent != null ? _resourceContent.getSourceResource(path) : null;
+    return isAnalyze() ? _resourceContent.getSourceResource(path) : null;
   }
 
   @Override
   public Set<? extends IResource> getSourceResources() {
-    return _resourceContent != null ? _resourceContent.getSourceResources() : EMPTY_RESOURCE_SET;
+    return isAnalyze() ? _resourceContent.getSourceResources() : EMPTY_RESOURCE_SET;
   }
 
   /**
@@ -224,20 +231,14 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     _version = version;
   }
 
-  @Override
-  public void setResourceContent(boolean resourceContent) {
-    if (resourceContent == false) {
-      _resourceContent = null;
-    } else {
-      if (_resourceContent == null) {
-        setResourceContent(new ResourceContent());
-      }
+  public void setAnalyze(boolean analyze) {
+    _analyze = analyze;
     }
 
-  }
-
-  public void setResourceContent(ResourceContent resourceContent) {
-    _resourceContent = resourceContent;
+  @Deprecated
+  @Override
+  public void setResourceContent(boolean resourceContent) {
+    setAnalyze(resourceContent);
   }
 
   public void setAnalyzeSourceResources(boolean flag) {
@@ -264,7 +265,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
       return;
     }
 
-    if (isResourceContent()) {
+    if (isAnalyze()) {
 
       // add the binary resources
       for (IRootPath root : _binaryPaths) {

@@ -24,12 +24,15 @@
   <!-- the xml resource content -->
   <xsd:complexType name="XmlFileBasedContentType">
     <xsd:sequence>
-      <xsd:element maxOccurs="unbounded" minOccurs="0" name="binaryPathNames" nillable="true" type="xsd:string"/>
-      <xsd:element minOccurs="0" name="resourceContent" type="XmlResourceContentType"/>
+  		<xsd:element maxOccurs="unbounded" minOccurs="0"
+  			name="binaryPathNames" nillable="true" type="xsd:string" />
+  		<xsd:element minOccurs="1" name="resourceContent"
+  			type="XmlResourceContentType" maxOccurs="1" />
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:string"/>
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="version" type="xsd:string"/>
+  	<xsd:attribute name="analyze" type="xsd:boolean"></xsd:attribute>
   </xsd:complexType>
   
   <!-- the xml resource content -->

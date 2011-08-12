@@ -56,12 +56,11 @@ public class ProjectDescriptionStore {
       xmlFileBasedContent.setId(content.getId());
       xmlFileBasedContent.setName(content.getName());
       xmlFileBasedContent.setVersion(content.getVersion());
+      xmlFileBasedContent.setAnalyze(content.isAnalyze());
 
       for (IRootPath path : content.getBinaryRootPaths()) {
         xmlFileBasedContent.getBinaryPathNames().add(path.getUnresolvedPath().toString());
       }
-
-      if (content.isResourceContent()) {
 
         XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
         xmlFileBasedContent.setResourceContent(xmlResourceContent);
@@ -71,7 +70,6 @@ public class ProjectDescriptionStore {
         for (IRootPath path : content.getSourceRootPaths()) {
           xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
         }
-      }
 
     }
 
@@ -125,15 +123,13 @@ public class ProjectDescriptionStore {
       fileBasedContent.setId(eFileBasedContent.getId());
       fileBasedContent.setName(eFileBasedContent.getName());
       fileBasedContent.setVersion(eFileBasedContent.getVersion());
+      fileBasedContent.setAnalyze(eFileBasedContent.isAnalyze());
 
       for (String path : eFileBasedContent.getBinaryPathNames()) {
         fileBasedContent.getModifiableBinaryPaths().add(new RootPath(path));
       }
 
-      if (eFileBasedContent.getResourceContent() != null) {
-
-        ResourceContent resourceContent = new ResourceContent();
-        fileBasedContent.setResourceContent(resourceContent);
+      ResourceContent resourceContent = fileBasedContent.getModifiableResourceContent();
 
         boolean analyse = eFileBasedContent.getResourceContent().isAnalyzeSourceResources() != null
             && eFileBasedContent.getResourceContent().isAnalyzeSourceResources();
@@ -145,7 +141,6 @@ public class ProjectDescriptionStore {
           resourceContent.getModifiableSourcePaths().add(new RootPath(path));
         }
       }
-    }
 
     return result;
   }
