@@ -119,7 +119,6 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
   @Override
   protected Control createDialogArea(Composite parent) {
     setTitle("Define content");
-    setMessage("Enter the content description");
 
     final Composite areaComposite = (Composite) super.createDialogArea(parent);
 
@@ -241,7 +240,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     }
 
     // no warnings
-    setMessage(null);
+    setMessage("Enter the content description");
 
   }
 
