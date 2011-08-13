@@ -114,6 +114,11 @@ public interface IFileBasedContent {
   boolean isAnalyzeSourceResources();
 
   /**
+   * @return the {@link AnalyzeMode} for this content
+   */
+  public AnalyzeMode getAnalyzeMode();
+
+  /**
    * <p>
    * Returns the {@link IResource} for the specified path and type
    * </p>
@@ -201,5 +206,5 @@ public interface IFileBasedContent {
    * @return a Set of resources, never null.
    */
   Set<? extends IResource> getSourceResources();
-  
+
 }

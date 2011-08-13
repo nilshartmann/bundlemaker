@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal;
 
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.junit.Test;
 
 public class XmlProjectDescriptionExporterUtilsTest {
@@ -13,7 +14,7 @@ public class XmlProjectDescriptionExporterUtilsTest {
 		type.setJre("jdk-16");
 		type.setCurrentId(1);
 		XmlFileBasedContentType xmlFileBasedContent= new XmlFileBasedContentType();
-		xmlFileBasedContent.setAnalyze(true);
+		xmlFileBasedContent.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES.toString());
 		xmlFileBasedContent.setId("content-1");
 		xmlFileBasedContent.setName("name");
 		xmlFileBasedContent.getBinaryPathNames().add("path-1");

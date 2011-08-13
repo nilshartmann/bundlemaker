@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
@@ -52,7 +53,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   /** - */
   private Set<IRootPath>                        _binaryPaths;
 
-  private boolean                               _analyze;
+  private AnalyzeMode                           _analyze;
 
   /** - */
   private ResourceContent                       _resourceContent;
@@ -66,6 +67,8 @@ public class FileBasedContent implements IModifiableFileBasedContent {
 
     //
     _isInitialized = false;
+
+    _analyze = AnalyzeMode.BINARIES_ONLY;
 
     //
     _binaryPaths = new HashSet<IRootPath>();
@@ -102,16 +105,13 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     return Collections.unmodifiableSet(_binaryPaths);
   }
 
-  /**
-   * TODO rename in: isAnalyze() or something similiar
-   */
   @Override
   public boolean isResourceContent() {
-    return _analyze;
+    return isAnalyze();
   }
 
   public boolean isAnalyze() {
-    return _analyze;
+    return _analyze.isAnalyze();
   }
 
   public ResourceContent getModifiableResourceContent() {
@@ -180,7 +180,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
 
   @Override
   public boolean isAnalyzeSourceResources() {
-    return _analyze && _resourceContent.isAnalyzeSourceResources();
+    return _analyze == AnalyzeMode.BINARIES_AND_SOURCES;
   }
 
   @Override
@@ -231,20 +231,19 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     _version = version;
   }
 
-  public void setAnalyze(boolean analyze) {
-    _analyze = analyze;
-    }
-
-  @Deprecated
-  @Override
-  public void setResourceContent(boolean resourceContent) {
-    setAnalyze(resourceContent);
+  public void setAnalyzeMode(AnalyzeMode analyzeMode) {
+    Assert.isNotNull(analyzeMode, "Paramter 'analyzeMode' must not be null");
+    _analyze = analyzeMode;
   }
 
-  public void setAnalyzeSourceResources(boolean flag) {
-    if (_resourceContent != null) {
-      _resourceContent.setAnalyzeSourceResources(flag);
-    }
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.projectdescription.IFileBasedContent#getAnalyzeMode()
+   */
+  @Override
+  public AnalyzeMode getAnalyzeMode() {
+    return _analyze;
   }
 
   /**

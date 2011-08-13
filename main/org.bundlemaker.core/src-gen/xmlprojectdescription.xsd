@@ -11,35 +11,40 @@
 -->
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:element name="XmlProjectDescription" type="XmlProjectDescriptionType"/>
-    
+
   <!-- the xml resource content -->
   <xsd:complexType name="XmlProjectDescriptionType">
     <xsd:sequence>
-      <xsd:element maxOccurs="unbounded" minOccurs="0" name="fileBasedContent" type="XmlFileBasedContentType"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="fileBasedContent"
+        type="XmlFileBasedContentType"/>
     </xsd:sequence>
     <xsd:attribute name="currentId" type="xsd:int" use="required"/>
     <xsd:attribute name="jre" type="xsd:string" use="required"/>
   </xsd:complexType>
-  
+
   <!-- the xml resource content -->
   <xsd:complexType name="XmlFileBasedContentType">
     <xsd:sequence>
-  		<xsd:element maxOccurs="unbounded" minOccurs="0"
-  			name="binaryPathNames" nillable="true" type="xsd:string" />
-  		<xsd:element minOccurs="1" name="resourceContent"
-  			type="XmlResourceContentType" maxOccurs="1" />
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="binaryPathNames" nillable="true"
+        type="xsd:string"/>
+      <xsd:element minOccurs="1" name="resourceContent" type="XmlResourceContentType" maxOccurs="1"
+      />
     </xsd:sequence>
     <xsd:attribute name="id" type="xsd:string"/>
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="version" type="xsd:string"/>
-  	<xsd:attribute name="analyze" type="xsd:boolean"></xsd:attribute>
+    <xsd:attribute name="analyzeMode">
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string"/>
+      </xsd:simpleType>
+    </xsd:attribute>
   </xsd:complexType>
-  
+
   <!-- the xml resource content -->
   <xsd:complexType name="XmlResourceContentType">
     <xsd:sequence>
-      <xsd:element maxOccurs="unbounded" minOccurs="0" name="sourcePathNames" nillable="true" type="xsd:string"/>
+      <xsd:element maxOccurs="unbounded" minOccurs="0" name="sourcePathNames" nillable="true"
+        type="xsd:string"/>
     </xsd:sequence>
-    <xsd:attribute name="analyzeSourceResources" type="xsd:boolean"/>
   </xsd:complexType>
 </xsd:schema>

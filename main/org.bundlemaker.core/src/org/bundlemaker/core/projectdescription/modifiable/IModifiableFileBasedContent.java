@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.projectdescription.modifiable;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 
 /**
@@ -24,14 +25,6 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IModifiableFileBasedContent extends IFileBasedContent {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param flag
-   */
-  public void setAnalyzeSourceResources(boolean flag);
 
   /**
    * <p>
@@ -71,17 +64,8 @@ public interface IModifiableFileBasedContent extends IFileBasedContent {
    * <p>
    * </p>
    * 
-   * @param value
-   * @deprecated use {@link #setAnalyze(boolean)}
-   */
-  public void setResourceContent(boolean value);
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param analyze
    */
-  public void setAnalyze(boolean analyze);
+  public void setAnalyzeMode(AnalyzeMode analyzeMode);
 
 }

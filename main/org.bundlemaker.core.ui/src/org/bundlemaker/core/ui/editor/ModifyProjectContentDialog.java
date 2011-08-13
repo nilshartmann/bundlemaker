@@ -66,7 +66,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _version = existingContent.getVersion();
     _binaryRoots = stringList(existingContent.getBinaryRootPaths());
     _sourceRoots = stringList(existingContent.getSourceRootPaths());
-    _analyze = existingContent.isResourceContent();
+    _analyze = existingContent.isAnalyze();
     _analyzeSources = existingContent.isAnalyzeSourceResources();
 
     configureDialog();
@@ -159,7 +159,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
       _sourcesContentList.setItems(_sourceRoots.toArray(new String[0]));
     }
 
-    _analyzeButton.setSelection(_originalContent.isResourceContent());
+    _analyzeButton.setSelection(_originalContent.isAnalyze());
     _analyzeSourcesButton.setSelection(_originalContent.isAnalyzeSourceResources());
   }
 
