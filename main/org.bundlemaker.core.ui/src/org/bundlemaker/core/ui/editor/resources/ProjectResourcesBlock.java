@@ -35,9 +35,12 @@ import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
@@ -153,11 +156,23 @@ public class ProjectResourcesBlock {
     _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
     createColumns();
 
+    final Shell shell = client.getShell();
+
     _treeViewer.setInput(_bundleMakerProjectProvider.getBundleMakerProject());
+    _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+      @Override
+      public void doubleClick(DoubleClickEvent event) {
+        TreeSelection ts = (TreeSelection) event.getSelection();
+        if (!ts.isEmpty()) {
+          editContent(null);
+        }
+      }
+    });
 
     // Create the buttonbar
     final VerticalFormButtonBar buttonBar = new VerticalFormButtonBar(client, toolkit);
-    final Shell shell = client.getShell();
+
     _editButton = buttonBar.newButton("Edit...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
