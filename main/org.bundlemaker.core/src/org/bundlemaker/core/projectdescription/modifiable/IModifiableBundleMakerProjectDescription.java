@@ -84,7 +84,9 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * @param version
    * @param binaryRoot
    * @param sourceRoot
+   * @deprecated use {@link #addContent(String, String, List, List, AnalyzeMode)} instead
    */
+  @Deprecated
   IModifiableFileBasedContent addResourceContent(String name, String version, String binaryRoot, String sourceRoot);
 
   /**

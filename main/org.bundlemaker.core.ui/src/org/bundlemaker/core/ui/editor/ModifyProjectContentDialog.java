@@ -7,6 +7,7 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.layout.PixelConverter;
 import org.eclipse.swt.SWT;
@@ -132,7 +133,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _sourcesContentList = addContentList(dialogComposite, "Sources");
 
     prepopulateForm();
-    refreshEnablement();
+    refresh();
 
     Dialog.applyDialogFont(areaComposite);
 
@@ -178,7 +179,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
-        refreshEnablement();
+        refresh();
       }
 
     });
@@ -189,7 +190,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
-        refreshEnablement();
+        refresh();
       }
 
     });
@@ -204,15 +205,52 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
   private ContentListBlock addContentList(Composite dialogComposite, String title) {
     addLabel(dialogComposite, title);
 
-    ContentListBlock contentListBlock = new ContentListBlock();
+    ContentListBlock contentListBlock = new ContentListBlock() {
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.bundlemaker.core.ui.editor.ContentListBlock#contentListChanged()
+       */
+      @Override
+      protected void contentListChanged() {
+        refresh();
+      }
+
+    };
     contentListBlock.createContent(dialogComposite);
     return contentListBlock;
   }
 
-  private void refreshEnablement() {
+  private void refreshMessages() {
+    if (_analyzeSourcesButton.isEnabled() && _analyzeSourcesButton.getSelection() == true
+        && _sourcesContentList.isEmpty()) {
+      setMessage("You have selected to analyze source but haven't added any sources", IMessageProvider.WARNING);
+      return;
+    }
+
+    if (_sourcesContentList.hasItems()) {
+      if (_analyzeButton.getSelection() == false) {
+        setMessage("You have added source entries but have not enabled analyze content", IMessageProvider.WARNING);
+        return;
+      }
+      if (_analyzeSourcesButton.getSelection() == false) {
+        setMessage("You have added source entries but have not enabled to analyze them", IMessageProvider.WARNING);
+        return;
+      }
+    }
+
+    // no warnings
+    setMessage(null);
+
+  }
+
+  private void refresh() {
     boolean analyze = _analyzeButton.getSelection();
     _analyzeSourcesButton.setEnabled(analyze);
     _sourcesContentList.setEnabled(analyze);
+
+    refreshMessages();
   }
 
   private Text addText(Composite parent) {

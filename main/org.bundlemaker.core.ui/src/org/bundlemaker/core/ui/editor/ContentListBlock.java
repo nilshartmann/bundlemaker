@@ -53,21 +53,18 @@ public class ContentListBlock {
   /**
    * The list containing the currently selected entries
    */
-  private List   _contentList;
+  private List                         _contentList;
 
-  private Button _removeButton;
+  private Button                       _removeButton;
 
-  private Button _editButton;
+  private Button                       _editButton;
 
   private boolean                      _enabled      = true;
-
-  private Composite                    _composite;
 
   private final java.util.List<Button> _otherButtons = new LinkedList<Button>();
 
   public void createContent(Composite parent) {
     Composite contentListComposite = new Composite(parent, SWT.NONE);
-    _composite = contentListComposite;
     final Shell shell = contentListComposite.getShell();
     GridData layoutData = new GridData(GridData.FILL_BOTH);
     contentListComposite.setLayoutData(layoutData);
@@ -96,29 +93,6 @@ public class ContentListBlock {
     gd.horizontalAlignment = GridData.FILL;
     gd.verticalIndent = 0;
     buttonBar.setLayoutData(gd);
-
-    // Add the buttons
-    _editButton = newTextButton(buttonBar, "Edit entry...", new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        String selection = _contentList.getSelection()[0];
-        EditEntryDialog dialog = new EditEntryDialog(shell, selection);
-        if (dialog.open() == Window.OK) {
-          String modifiedEntry = dialog.getEntry();
-          _contentList.setItem(_contentList.getSelectionIndex(), modifiedEntry);
-        }
-      }
-
-    });
-
-    _removeButton = newTextButton(buttonBar, "Remove Entry", new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        _contentList.remove(_contentList.getSelectionIndices());
-        refreshEnablement();
-      }
-
-    });
 
     _otherButtons.add(newTextButton(buttonBar, "Add Archives...", new SelectionAdapter() {
       @Override
@@ -161,8 +135,36 @@ public class ContentListBlock {
 
     }));
 
+    // Add the buttons
+    _editButton = newTextButton(buttonBar, "Edit entry...", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        String selection = _contentList.getSelection()[0];
+        EditEntryDialog dialog = new EditEntryDialog(shell, selection);
+        if (dialog.open() == Window.OK) {
+          String modifiedEntry = dialog.getEntry();
+          _contentList.setItem(_contentList.getSelectionIndex(), modifiedEntry);
+        }
+      }
+
+    });
+
+    _removeButton = newTextButton(buttonBar, "Remove Entry", new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        _contentList.remove(_contentList.getSelectionIndices());
+        contentListChanged();
+        refreshEnablement();
+      }
+
+    });
+
     // refresh initial enablement
     refreshEnablement();
+
+  }
+
+  protected void contentListChanged() {
 
   }
 
@@ -175,12 +177,26 @@ public class ContentListBlock {
       button.setEnabled(_enabled);
     }
 
-    _contentList.setEnabled(_enabled);
+    // _contentList.setEnabled(_enabled);
 
     int itemsSelected = _contentList.getSelectionCount();
 
     _editButton.setEnabled(_enabled && itemsSelected == 1);
     _removeButton.setEnabled(_enabled && itemsSelected > 0);
+  }
+
+  /**
+   * @return true if this ContentListBlock contains no entries
+   */
+  public boolean isEmpty() {
+    return _contentList.getItemCount() < 1;
+  }
+
+  /**
+   * @return if this ContentListBlock currenty contains at least one entry
+   */
+  public boolean hasItems() {
+    return _contentList.getItemCount() > 0;
   }
 
   /**
@@ -194,6 +210,8 @@ public class ContentListBlock {
     String folder = dialog.open();
     if (folder != null) {
       _contentList.add(folder);
+      contentListChanged();
+
     }
   }
 
@@ -215,8 +233,8 @@ public class ContentListBlock {
       for (int i = 0; i < fileNames.length; i++) {
         IPath path = new Path(fileDialog.getFilterPath()).append(fileNames[i]);
         _contentList.add(path.toOSString());
-
       }
+      contentListChanged();
     }
   }
 
@@ -237,6 +255,7 @@ public class ContentListBlock {
       String workspacePath = format("${workspace_loc:%s}", selected[i].toString());
       _contentList.add(workspacePath);
     }
+    contentListChanged();
 
   }
 
@@ -258,6 +277,7 @@ public class ContentListBlock {
         IResource elem = (IResource) elements[i];
         String workspaceFolder = format("${workspace_loc:%s}", elem.getFullPath());
         _contentList.add(workspaceFolder);
+        contentListChanged();
       }
 
     }
@@ -298,6 +318,7 @@ public class ContentListBlock {
     String variableExpression = dialog.getVariableExpression();
     if (variableExpression != null) {
       _contentList.add(variableExpression);
+      contentListChanged();
     }
 
   }
