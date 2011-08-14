@@ -67,6 +67,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * A block (represented by a Form Section) that can be used to edit either the resources or the types of the bundlemaker
@@ -156,8 +157,10 @@ public class ProjectResourcesBlock {
     projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);
-
-    // _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    // _treeViewer.setLabelProvider(new DecoratingLabelProvider(new WorkbenchLabelProvider(),
+    // new ProjectDescriptionLabelDecorator()));
+    // new WorkbenchLabelProvider());
     _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
     createColumns();
 

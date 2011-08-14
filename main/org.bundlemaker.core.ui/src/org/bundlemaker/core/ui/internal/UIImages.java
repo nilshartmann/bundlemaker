@@ -67,7 +67,12 @@ public enum UIImages {
   /**
    * Representing an object of an unknown type
    */
-  UNKNOWN_OBJECT("icons/unknown_obj.gif") //
+  UNKNOWN_OBJECT("icons/unknown_obj.gif"), //
+
+  /**
+   * Decorator used for error icons
+   */
+  ERROR_DECORATOR("icons/decorator/error_decorator.gif") //
   ;
 
   /**
