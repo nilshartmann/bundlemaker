@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -58,8 +59,8 @@ public class IntegrationTest extends AbstractIntegrationTest {
     for (File file : jarFiles) {
       classes.add(file.getAbsolutePath());
     }
-    bundleMakerProject.getModifiableProjectDescription().addResourceContent("eclipse", "3.6.1", classes,
-        Arrays.asList(new String[] { sourceDirectory.getAbsolutePath() }));
+    bundleMakerProject.getModifiableProjectDescription().addContent("eclipse", "3.6.1", classes,
+        Arrays.asList(new String[] { sourceDirectory.getAbsolutePath() }), AnalyzeMode.BINARIES_AND_SOURCES);
 
     // step 4: process the class path entries
     File libsDir = new File(System.getProperty("user.dir"), "eclipse/libs");

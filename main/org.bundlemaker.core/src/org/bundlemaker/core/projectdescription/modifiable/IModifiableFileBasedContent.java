@@ -10,12 +10,16 @@
  ******************************************************************************/
 package org.bundlemaker.core.projectdescription.modifiable;
 
+import java.util.Set;
+
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 
 /**
  * <p>
- * Describes a modifiable file based content entry in an {@link IModifiableBundleMakerProjectDescription}. A file base content
- * entry can contain one or many directories or archive files (*.zip or *.jar).
+ * Describes a modifiable file based content entry in an {@link IModifiableBundleMakerProjectDescription}. A file base
+ * content entry can contain one or many directories or archive files (*.zip or *.jar).
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -24,14 +28,6 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IModifiableFileBasedContent extends IFileBasedContent {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param flag
-   */
-  public void setAnalyzeSourceResources(boolean flag);
 
   /**
    * <p>
@@ -71,8 +67,18 @@ public interface IModifiableFileBasedContent extends IFileBasedContent {
    * <p>
    * </p>
    * 
-   * @param value
+   * @param analyze
    */
-  public void setResourceContent(boolean value);
+  public void setAnalyzeMode(AnalyzeMode analyzeMode);
+
+  /**
+   * @return
+   */
+  public Set<IRootPath> getModifiableBinaryPaths();
+
+  /**
+   * @return
+   */
+  public Set<IRootPath> getModifiableSourcePaths();
 
 }

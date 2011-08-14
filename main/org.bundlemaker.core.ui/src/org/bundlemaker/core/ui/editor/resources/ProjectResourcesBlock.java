@@ -17,13 +17,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
+import org.bundlemaker.core.ui.editor.EditEntryDialog;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
+import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.ui.internal.VerticalFormButtonBar;
 import org.eclipse.core.runtime.IPath;
@@ -34,9 +39,13 @@ import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
@@ -58,6 +67,7 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * A block (represented by a Form Section) that can be used to edit either the resources or the types of the bundlemaker
@@ -147,16 +157,30 @@ public class ProjectResourcesBlock {
     projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);
-
-    // _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    // _treeViewer.setLabelProvider(new DecoratingLabelProvider(new WorkbenchLabelProvider(),
+    // new ProjectDescriptionLabelDecorator()));
+    // new WorkbenchLabelProvider());
     _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
     createColumns();
 
+    final Shell shell = client.getShell();
+
     _treeViewer.setInput(_bundleMakerProjectProvider.getBundleMakerProject());
+    _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+      @Override
+      public void doubleClick(DoubleClickEvent event) {
+        TreeSelection ts = (TreeSelection) event.getSelection();
+        if (!ts.isEmpty()) {
+          editContent(shell);
+        }
+      }
+    });
 
     // Create the buttonbar
     final VerticalFormButtonBar buttonBar = new VerticalFormButtonBar(client, toolkit);
-    final Shell shell = client.getShell();
+
     _editButton = buttonBar.newButton("Edit...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
@@ -278,26 +302,100 @@ public class ProjectResourcesBlock {
    * @param shell
    */
   private void editContent(Shell shell) {
-    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-    if (selectedContents.size() != 1) {
+
+    ITreeSelection selection = getSelection();
+
+    if (selection.size() != 1) {
       return;
     }
 
-    IModifiableFileBasedContent content = selectedContents.iterator().next();
+    boolean projectDescriptionHasChanged = false;
+
+    TreePath path = selection.getPaths()[0];
+    Object selectedObject = path.getLastSegment();
+    if (selectedObject instanceof IModifiableFileBasedContent) {
+      IModifiableFileBasedContent content = (IModifiableFileBasedContent) selectedObject;
+      projectDescriptionHasChanged = editFileBasedContent(shell, content);
+    }
+
+    if (selectedObject instanceof IRootPath) {
+      IRootPath rootPath = (IRootPath) selectedObject;
+
+      // open edit dialog
+      String currentPath = RootPathHelper.getLabel(rootPath);
+      EditEntryDialog editEntryDialog = new EditEntryDialog(shell, currentPath);
+      if (editEntryDialog.open() != Window.OK) {
+        return;
+      }
+
+      String newPath = editEntryDialog.getEntry();
+      if (currentPath.equals(newPath)) {
+        // no changes
+        return;
+      }
+
+      // Get existing root paths from owning FileBasedContent
+      IModifiableFileBasedContent content = RootPathHelper.getOwningFileBasedContent(path);
+      Set<IRootPath> existingPaths;
+      if (rootPath.isBinaryPath()) {
+        existingPaths = content.getBinaryRootPaths();
+      } else {
+        existingPaths = content.getSourceRootPaths();
+      }
+
+      // Create new set of root paths, replacing the old path with the new, edited, root path
+      List<String> newRootPaths = new LinkedList<String>();
+      for (IRootPath iRootPath : existingPaths) {
+        String existingPath = RootPathHelper.getLabel(iRootPath);
+        if (!existingPath.equals(currentPath)) {
+          newRootPaths.add(existingPath);
+        } else {
+          newRootPaths.add(newPath);
+        }
+      }
+
+      // Set new array of root paths to FileBasedContent
+      if (rootPath.isBinaryPath()) {
+        content.setBinaryPaths(newRootPaths.toArray(new String[0]));
+      } else {
+        content.setSourcePaths(newRootPaths.toArray(new String[0]));
+      }
+
+      projectDescriptionHasChanged = true;
+
+    }
+
+    if (projectDescriptionHasChanged) {
+      projectDescriptionChanged();
+    }
+  }
+
+  private boolean editFileBasedContent(Shell shell, IModifiableFileBasedContent content) {
     ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, content);
     if (dialog.open() != Window.OK) {
-      return;
+      return false;
     }
 
     // Update the content
     content.setName(dialog.getName());
     content.setVersion(dialog.getVersion());
     content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
-      content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
-    content.setResourceContent(dialog.isAnalyze());
-    content.setAnalyzeSourceResources(dialog.isAnalyzeSources());
+    content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
+    content.setAnalyzeMode(getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
 
-    projectDescriptionChanged();
+    return true;
+  }
+
+  private AnalyzeMode getAnalyzeMode(boolean analyze, boolean analyzeSources) {
+    if (analyzeSources) {
+      return AnalyzeMode.BINARIES_AND_SOURCES;
+    }
+
+    if (analyze) {
+      return AnalyzeMode.BINARIES_ONLY;
+    }
+
+    return AnalyzeMode.DO_NOT_ANALYZE;
   }
 
   private void moveUp() {
@@ -385,12 +483,9 @@ public class ProjectResourcesBlock {
       return;
     }
 
-    if (dialog.isAnalyze()) {
-    getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
-          dialog.getBinaryPaths(), dialog.getSourcePaths(), dialog.isAnalyzeSources());
-    } else {
-      getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths());
-    }
+    // add the new content to the project description
+    getBundleMakerProjectDescription().addContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths(),
+        dialog.getSourcePaths(), getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
 
     projectDescriptionChanged();
 
@@ -400,14 +495,39 @@ public class ProjectResourcesBlock {
    * Remove the selected content from the project
    */
   private void removeContent() {
-    Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(IFileBasedContent.class);
-    if (!selectedContents.isEmpty()) {
-      for (IFileBasedContent content : selectedContents) {
-        String id = content.getId();
-        getBundleMakerProjectDescription().removeContent(id);
-      }
-      projectDescriptionChanged();
+
+    ITreeSelection selection = getSelection();
+    if (selection.isEmpty()) {
+      return;
     }
+
+    TreePath[] paths = selection.getPaths();
+
+    for (TreePath treePath : paths) {
+      Object element = treePath.getLastSegment();
+      if (element instanceof IFileBasedContent) {
+        IFileBasedContent content = (IFileBasedContent) element;
+        getBundleMakerProjectDescription().removeContent(content.getId());
+      }
+      if (element instanceof IRootPath) {
+        IRootPath rootPath = (IRootPath) element;
+        IModifiableFileBasedContent fileBasedContent = RootPathHelper.getOwningFileBasedContent(treePath);
+        if (rootPath.isBinaryPath()) {
+          fileBasedContent.getModifiableBinaryPaths().remove(rootPath);
+        } else {
+          fileBasedContent.getModifiableSourcePaths().remove(rootPath);
+        }
+      }
+
+    }
+
+    projectDescriptionChanged();
+
+  }
+
+  protected ITreeSelection getSelection() {
+    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
+    return selection;
   }
 
   /**
@@ -420,7 +540,7 @@ public class ProjectResourcesBlock {
   private <T> Collection<T> getSelectedElementsOfType(Class<T> type) {
     java.util.List<T> result = new LinkedList<T>();
 
-    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
+    ITreeSelection selection = getSelection();
 
     Iterator<?> iterator = selection.iterator();
     while (iterator.hasNext()) {
@@ -495,7 +615,7 @@ public class ProjectResourcesBlock {
     for (String string : fileNames) {
       IPath path = new Path(fileDialog.getFilterPath()).append(string);
       String binaryRoot = path.toOSString();
-      getBundleMakerProjectDescription().addResourceContent(binaryRoot);
+      getBundleMakerProjectDescription().addContent(binaryRoot, null, AnalyzeMode.BINARIES_AND_SOURCES);
     }
 
     projectDescriptionChanged();
@@ -517,7 +637,7 @@ public class ProjectResourcesBlock {
 
     for (IPath iPath : selected) {
       String workspacePath = format("${workspace_loc:%s}", iPath.toString());
-      getBundleMakerProjectDescription().addResourceContent(workspacePath);
+      getBundleMakerProjectDescription().addContent(workspacePath, null, AnalyzeMode.BINARIES_ONLY);
     }
 
     projectDescriptionChanged();
@@ -544,19 +664,12 @@ public class ProjectResourcesBlock {
    * sets the enabled state of the buttons according to the selection in the tree viewer
    */
   private void refreshEnablement() {
-    Collection<IFileBasedContent> selectedFileBasedContents = getSelectedElementsOfType(IFileBasedContent.class);
     ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
     int selectedElements = selection.size();
-    if (selectedElements < 1 // nothing seleceted
-        || selectedElements != selectedFileBasedContents.size() // selection contains other elements than
-                                                                // IFileBasedContent
-    ) {
-      _removeButton.setEnabled(false);
-      _editButton.setEnabled(false);
-    } else {
-      _editButton.setEnabled(selectedFileBasedContents.size() == 1);
-      _removeButton.setEnabled(true);
-    }
+
+    _removeButton.setEnabled(selectedElements > 0);
+    _editButton.setEnabled(selectedElements == 1);
+
     TreeItem[] selectedItems = _treeViewer.getTree().getSelection();
     System.out.println("selecteditems: " + selectedItems.length);
     if (selectedItems.length > 0) {

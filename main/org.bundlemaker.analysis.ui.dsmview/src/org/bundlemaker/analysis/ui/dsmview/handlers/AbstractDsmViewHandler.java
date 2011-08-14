@@ -1,6 +1,5 @@
 package org.bundlemaker.analysis.ui.dsmview.handlers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
@@ -8,29 +7,23 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.dsmview.DSMView;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
-import org.bundlemaker.analysis.ui.view.table.JavaEditor;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.internal.part.NullEditorInput;
 
-@SuppressWarnings("restriction")
 public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandler {
-
-  private IEditorInput nullInputEditor = new NullEditorInput();
 
   @Override
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
 
-    // Special handling if a single artifact of type class is selected
-    if (isSingleClassArtifactSelected(selectedArtifacts)) {
-      IArtifact singleClassArtifact = selectedArtifacts.get(0);
-      JavaEditor.openTypeInEditor(singleClassArtifact.getQualifiedName());
-      List<IArtifact> artifacts = new ArrayList<IArtifact>();
-      artifacts.add(singleClassArtifact);
-      artifacts.add(singleClassArtifact.getParent(ArtifactType.Root));
-      openEditorAndViews(artifacts);
-      return;
-    }
+    // // Special handling if a single artifact of type class is selected
+    // if (isSingleClassArtifactSelected(selectedArtifacts)) {
+    // IArtifact singleClassArtifact = selectedArtifacts.get(0);
+    // JavaEditor.openTypeInEditor(singleClassArtifact.getQualifiedName());
+    // List<IArtifact> artifacts = new ArrayList<IArtifact>();
+    // artifacts.add(singleClassArtifact);
+    // artifacts.add(singleClassArtifact.getParent(ArtifactType.Root));
+    // openEditorAndViews(artifacts);
+    // return;
+    // }
 
     // get the artifacts that should be displayed in DSM View
     List<IArtifact> artifactsForDsmView = getArtifactsForDsmView(selectedArtifacts);
@@ -52,13 +45,13 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
   }
 
   private void openEditorAndViews(List<IArtifact> selectedArtifacts) {
-      // Open the 'GenericEditor'
+    // Open the 'GenericEditor'
     Analysis.instance().openGenericEditor();
 
-      // Make sure, DSMView is visible on GenericEditor
+    // Make sure, DSMView is visible on GenericEditor
     DSMView.updateAndShow(selectedArtifacts);
 
-      // Open the DependencyTreeTableView
-      Analysis.instance().openDependencyTreeTableView();
+    // Open the DependencyTreeTableView
+    Analysis.instance().openDependencyTreeTableView();
   }
 }

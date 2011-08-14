@@ -11,8 +11,8 @@
 package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.ui.editor.BundleMakerPath;
-import org.bundlemaker.core.ui.internal.UIImages;
+import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -24,37 +24,21 @@ class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
   @Override
   public Image getImage(Object element) {
 
-    if (element instanceof BundleMakerPath) {
-      return getImageForBundleMakerPath((BundleMakerPath) element);
+    if (element instanceof IRootPath) {
+      return RootPathHelper.getImageForPath((IRootPath) element);
     }
 
     return null;
   }
 
-  /**
-   * @param element
-   * @return
-   */
-  private Image getImageForBundleMakerPath(BundleMakerPath path) {
-    if (path.isFolder()) {
-      if (path.isBinary()) {
-        return UIImages.BINARY_FOLDER.getImage();
-      }
-      return UIImages.SOURCE_FOLDER.getImage();
-    }
-    if (path.isBinary()) {
-      return UIImages.BINARY_ARCHIVE.getImage();
-    }
-    return UIImages.SOURCE_ARCHIVE.getImage();
-  }
-
+  @Override
   public String getText(Object element) {
     if (element instanceof IFileBasedContent) {
       IFileBasedContent content = (IFileBasedContent) element;
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
-    BundleMakerPath path = (BundleMakerPath) element;
-    return path.getLabel();
+    IRootPath path = (IRootPath) element;
+    return RootPathHelper.getLabel(path);
   }
 }

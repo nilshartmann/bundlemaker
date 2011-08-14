@@ -13,7 +13,6 @@ import org.bundlemaker.analysis.ui.internal.selection.ArtifactSelectionService;
 import org.bundlemaker.analysis.ui.internal.selection.DependencySelectionService;
 import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionService;
-import org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
@@ -146,21 +145,21 @@ public class Analysis {
     return Activator.getDefault().getIcon(artifact.getType().getKuerzel());
   }
 
-  /**
-   * Returns the {@link DependencyTreeTableView} or null if it does not exists (yet)
-   * 
-   * @return
-   */
-  public DependencyTreeTableView getDependencyTreeTableView() {
-    IWorkbenchPage workbenchPage = getActiveWorkbenchPage();
-
-    if (workbenchPage != null) {
-      return (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
-    }
-
-    return null;
-  }
-
+  // /**
+  // * Returns the {@link DependencyTreeTableView} or null if it does not exists (yet)
+  // *
+  // * @return
+  // */
+  // public DependencyTreeTableView getDependencyTreeTableView() {
+  // IWorkbenchPage workbenchPage = getActiveWorkbenchPage();
+  //
+  // if (workbenchPage != null) {
+  // return (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
+  // }
+  //
+  // return null;
+  // }
+  //
   /**
    * Opens the {@link DependencyTreeTableView}
    */
@@ -168,7 +167,7 @@ public class Analysis {
     IWorkbenchPage workbenchPage = getActiveWorkbenchPage();
     if (workbenchPage != null) {
       try {
-        workbenchPage.showView(DependencyTreeTableView.ID);
+        workbenchPage.showView("org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView");
       } catch (PartInitException e) {
         e.printStackTrace();
       }

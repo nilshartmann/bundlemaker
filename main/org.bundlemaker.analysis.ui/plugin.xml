@@ -4,9 +4,6 @@
    	name="dependencyView"
    	schema="schema/org.bundlemaker.analysis.ui.dependencyView.exsd"/>
 
-   <extension-point id="dependencyTreeTableListener"
-   	name="dependencyTreeTableListener"
-   	schema="schema/org.bundlemaker.analysis.ui.dependencyTreeTableListener.exsd"/>
 
    <!-- the IArtifact property tester -->
    <extension
@@ -63,15 +60,7 @@
            id="org.bundlemaker.analysis.ui.views.category"
            name="BundleMaker Dependency Analysis">
       	   </category>
-      	    <view
-                category="org.bundlemaker.analysis.ui.views.category"
-                class="org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView"
-                icon="icons/osgibundle.gif"
-                id="org.bundlemaker.analysis.ui.view.table.DependencyTreeTableView"
-                name="Dependency View"
-                restorable="true">
-				</view>
-   </extension>
+    </extension>
    <extension
          point="org.eclipse.ui.editors">
       <editor

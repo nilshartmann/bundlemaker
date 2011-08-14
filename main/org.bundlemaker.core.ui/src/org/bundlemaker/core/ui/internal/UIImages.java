@@ -63,6 +63,16 @@ public enum UIImages {
    * A checked box visualizing the checked state of a checkbox
    */
   CHECKED("icons/checked.gif"), //
+
+  /**
+   * Representing an object of an unknown type
+   */
+  UNKNOWN_OBJECT("icons/unknown_obj.gif"), //
+
+  /**
+   * Decorator used for error icons
+   */
+  ERROR_DECORATOR("icons/decorator/error_decorator.gif") //
   ;
 
   /**
