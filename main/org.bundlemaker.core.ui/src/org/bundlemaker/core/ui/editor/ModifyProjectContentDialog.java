@@ -90,7 +90,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     java.util.List<String> strings = new LinkedList<String>();
     if (paths != null) {
       for (IRootPath path : paths) {
-        strings.add(path.getUnresolvedPath().toString());
+        strings.add(RootPathHelper.getLabel(path));
       }
     }
     return strings;

@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
@@ -25,7 +26,9 @@ import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
+import org.bundlemaker.core.ui.editor.EditEntryDialog;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
+import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.ui.internal.VerticalFormButtonBar;
 import org.eclipse.core.runtime.IPath;
@@ -296,15 +299,78 @@ public class ProjectResourcesBlock {
    * @param shell
    */
   private void editContent(Shell shell) {
-    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-    if (selectedContents.size() != 1) {
+
+    ITreeSelection selection = getSelection();
+
+    if (selection.size() != 1) {
       return;
     }
 
-    IModifiableFileBasedContent content = selectedContents.iterator().next();
+    boolean projectDescriptionHasChanged = false;
+
+    TreePath path = selection.getPaths()[0];
+    Object selectedObject = path.getLastSegment();
+    if (selectedObject instanceof IModifiableFileBasedContent) {
+      IModifiableFileBasedContent content = (IModifiableFileBasedContent) selectedObject;
+      projectDescriptionHasChanged = editFileBasedContent(shell, content);
+    }
+
+    if (selectedObject instanceof IRootPath) {
+      IRootPath rootPath = (IRootPath) selectedObject;
+
+      // open edit dialog
+      String currentPath = RootPathHelper.getLabel(rootPath);
+      EditEntryDialog editEntryDialog = new EditEntryDialog(shell, currentPath);
+      if (editEntryDialog.open() != Window.OK) {
+        return;
+      }
+
+      String newPath = editEntryDialog.getEntry();
+      if (currentPath.equals(newPath)) {
+        // no changes
+        return;
+      }
+
+      // Get existing root paths from owning FileBasedContent
+      IModifiableFileBasedContent content = RootPathHelper.getOwningFileBasedContent(path);
+      Set<IRootPath> existingPaths;
+      if (rootPath.isBinaryPath()) {
+        existingPaths = content.getBinaryRootPaths();
+      } else {
+        existingPaths = content.getSourceRootPaths();
+      }
+
+      // Create new set of root paths, replacing the old path with the new, edited, root path
+      List<String> newRootPaths = new LinkedList<String>();
+      for (IRootPath iRootPath : existingPaths) {
+        String existingPath = RootPathHelper.getLabel(iRootPath);
+        if (!existingPath.equals(currentPath)) {
+          newRootPaths.add(existingPath);
+        } else {
+          newRootPaths.add(newPath);
+        }
+      }
+
+      // Set new array of root paths to FileBasedContent
+      if (rootPath.isBinaryPath()) {
+        content.setBinaryPaths(newRootPaths.toArray(new String[0]));
+      } else {
+        content.setSourcePaths(newRootPaths.toArray(new String[0]));
+      }
+
+      projectDescriptionHasChanged = true;
+
+    }
+
+    if (projectDescriptionHasChanged) {
+      projectDescriptionChanged();
+    }
+  }
+
+  private boolean editFileBasedContent(Shell shell, IModifiableFileBasedContent content) {
     ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, content);
     if (dialog.open() != Window.OK) {
-      return;
+      return false;
     }
 
     // Update the content
@@ -314,7 +380,7 @@ public class ProjectResourcesBlock {
     content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
     content.setAnalyzeMode(getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
 
-    projectDescriptionChanged();
+    return true;
   }
 
   private AnalyzeMode getAnalyzeMode(boolean analyze, boolean analyzeSources) {
@@ -442,12 +508,11 @@ public class ProjectResourcesBlock {
       }
       if (element instanceof IRootPath) {
         IRootPath rootPath = (IRootPath) element;
-        IModifiableFileBasedContent lastSegment = (IModifiableFileBasedContent) treePath.getParentPath()
-            .getLastSegment();
+        IModifiableFileBasedContent fileBasedContent = RootPathHelper.getOwningFileBasedContent(treePath);
         if (rootPath.isBinaryPath()) {
-          lastSegment.getModifiableBinaryPaths().remove(rootPath);
+          fileBasedContent.getModifiableBinaryPaths().remove(rootPath);
         } else {
-          lastSegment.getModifiableSourcePaths().remove(rootPath);
+          fileBasedContent.getModifiableSourcePaths().remove(rootPath);
         }
       }
 
