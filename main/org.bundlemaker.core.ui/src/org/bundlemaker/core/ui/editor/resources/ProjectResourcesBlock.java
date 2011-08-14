@@ -165,7 +165,7 @@ public class ProjectResourcesBlock {
       public void doubleClick(DoubleClickEvent event) {
         TreeSelection ts = (TreeSelection) event.getSelection();
         if (!ts.isEmpty()) {
-          editContent(null);
+          editContent(shell);
         }
       }
     });
