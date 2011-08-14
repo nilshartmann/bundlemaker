@@ -22,62 +22,61 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Frank Schlueter
  */
 public class ArtifactTreeContentProvider implements ITreeContentProvider {
-	  private final Object[]                EMPTY_ARRAY         = new Object[0];
+  private final Object[] EMPTY_ARRAY = new Object[0];
 
-	  @Override
-	  public void dispose() {
-	  }
+  @Override
+  public void dispose() {
+  }
 
-	  @Override
-	  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	  }
+  @Override
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+  }
 
-	  @Override
-	  @SuppressWarnings("unchecked")
-	  public Object[] getElements(Object inputElement) {
-	    if (inputElement instanceof IArtifact) {
-	    	IArtifact artifact = (IArtifact)inputElement;
-	    	Object[] childs = new Object[artifact.getChildren().size()];
-	    	artifact.getChildren().toArray(childs);
-	    	return childs;
-//	    	return new IArtifact[] { artifact };
-	    } else if(inputElement instanceof Collection ) {
-	    	Collection collection = (Collection)inputElement;
-	    	Object[] elements = new Object[collection.size()];
-	    	collection.toArray(elements);
-	    	
-	    	return elements;
-	    }
-	    return null;
-	  }
+  @Override
+  @SuppressWarnings("unchecked")
+  public Object[] getElements(Object inputElement) {
+    if (inputElement instanceof IArtifact) {
+      IArtifact artifact = (IArtifact) inputElement;
+      Object[] childs = new Object[artifact.getChildren().size()];
+      artifact.getChildren().toArray(childs);
+      return childs;
+    } else if (inputElement instanceof Collection) {
+      @SuppressWarnings("rawtypes")
+      Collection collection = (Collection) inputElement;
+      Object[] elements = new Object[collection.size()];
+      collection.toArray(elements);
 
-	  @Override
-	  public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof IArtifact) {
-		   	IArtifact artifact = (IArtifact)parentElement;
-		   	Object[] elements = new Object[artifact.getChildren().size()];
-		   	artifact.getChildren().toArray(elements);
-		    	
-		   	return elements;
-		}
-	    return EMPTY_ARRAY;
-	  }
+      return elements;
+    }
+    return null;
+  }
 
-	  @Override
-	  public Object getParent(Object element) {
-		  if (element instanceof IArtifact) {
-			   	IArtifact artifact = (IArtifact)element;
-			   	return ((IArtifact) element).getParent();
-		  }
-		  return null;
-	  }
+  @Override
+  public Object[] getChildren(Object parentElement) {
+    if (parentElement instanceof IArtifact) {
+      IArtifact artifact = (IArtifact) parentElement;
+      Object[] elements = new Object[artifact.getChildren().size()];
+      artifact.getChildren().toArray(elements);
 
-	  @Override
-	  public boolean hasChildren(Object element) {
-			if (element instanceof IArtifact) {
-			   	IArtifact artifact = (IArtifact)element;
-			   	return artifact.getChildren().size() > 0;
-			}
-			return false;
-	  }
+      return elements;
+    }
+    return EMPTY_ARRAY;
+  }
+
+  @Override
+  public Object getParent(Object element) {
+    if (element instanceof IArtifact) {
+      return ((IArtifact) element).getParent();
+    }
+    return null;
+  }
+
+  @Override
+  public boolean hasChildren(Object element) {
+    if (element instanceof IArtifact) {
+      IArtifact artifact = (IArtifact) element;
+      return artifact.getChildren().size() > 0;
+    }
+    return false;
+  }
 }

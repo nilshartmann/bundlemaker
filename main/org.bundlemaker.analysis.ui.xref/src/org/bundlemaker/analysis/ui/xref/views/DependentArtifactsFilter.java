@@ -19,33 +19,33 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
- * Filter for IArtifact trees. This filter gets a whitelist of IArtifacts given in the constructor. 
- * Only these artifacts and their parent nodes are displayed in the tree, everything else is hidden. 
+ * Filter for IArtifact trees. This filter gets a whitelist of IArtifacts given in the constructor. Only these artifacts
+ * and their parent nodes are displayed in the tree, everything else is hidden.
  * 
  * @author Frank Schlueter
  */
 public class DependentArtifactsFilter extends ViewerFilter {
-	
-	private Set<IArtifact> dependencies = new HashSet<IArtifact>();
-	
-	public DependentArtifactsFilter( List<IArtifact> dependencies ) {
-		this.dependencies.addAll( dependencies );
-		for( IArtifact dependency: dependencies) {
-			IArtifact parent = dependency.getParent();
-			while( parent != null ) {
-				this.dependencies.add(parent);
-				parent = parent.getParent();
-			}
-		}
-	}
 
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		if( dependencies.contains(element)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+  private Set<IArtifact> dependencies = new HashSet<IArtifact>();
+
+  public DependentArtifactsFilter(List<IArtifact> dependencies) {
+    this.dependencies.addAll(dependencies);
+    for (IArtifact dependency : dependencies) {
+      IArtifact parent = dependency.getParent();
+      while (parent != null) {
+        this.dependencies.add(parent);
+        parent = parent.getParent();
+      }
+    }
+  }
+
+  @Override
+  public boolean select(Viewer viewer, Object parentElement, Object element) {
+    if (dependencies.contains(element)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 }

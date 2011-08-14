@@ -48,31 +48,45 @@ import org.eclipse.swt.widgets.Composite;
  * @see org.bundlemaker.analysis.ui.Analysis
  * @author Frank Schlueter
  */
-public class BundlemakerXRefView extends DependencyPart implements IArtifactSelectionListener {
+public class XRefView extends DependencyPart implements IArtifactSelectionListener {
 
   /**
    * The ID of the view as specified by the extension.
    */
-  public static final String ID                   = "org.bundlemaker.analysis.ui.xref.views.BundlemakerXRefView";
+  public static final String         ID                   = "org.bundlemaker.analysis.ui.xref.views.BundlemakerXRefView";
 
-  private TreeViewer         leftTree;
+  private TreeViewer                 leftTree;
 
-  private TreeViewer         middleTree;
+  private TreeViewer                 middleTree;
 
-  private TreeViewer         rightTree;
+  private TreeViewer                 rightTree;
 
-  private IArtifact          rootArtifact;
+  private IArtifact                  rootArtifact;
 
-  private List<IArtifact>    middleSelectedArtifacts;
+  private List<IArtifact>            middleSelectedArtifacts;
 
-  private List<IArtifact>    dependentSelectedArtifacts;
+  private List<IArtifact>            dependentSelectedArtifacts;
 
-  private boolean            showUsedDependencies = true;
+  private boolean                    showUsedDependencies = true;
+
+  private static XRefView _instance;
+
+  /**
+   * Brings the XRefView to foreground and fills it with the specified artifacts
+   * 
+   * @param artifacts
+   */
+  public static void updateAndShow(List<IArtifact> artifacts) {
+    if (_instance != null) {
+      _instance.useArtifactsInternal(artifacts);
+      _instance.selectViewTab();
+    }
+  }
 
   /**
    * The constructor.
    */
-  public BundlemakerXRefView() {
+  public XRefView() {
   }
 
   /**
@@ -120,6 +134,9 @@ public class BundlemakerXRefView extends DependencyPart implements IArtifactSele
         selectRightTree(treeSelection.toList());
       }
     });
+
+    _instance = this;
+
     Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
   }
 
@@ -199,15 +216,21 @@ public class BundlemakerXRefView extends DependencyPart implements IArtifactSele
 
   @Override
   public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
-    middleSelectedArtifacts = null;
-    dependentSelectedArtifacts = null;
-    middleTree.setInput(event.getSelection().getSelectedArtifacts());
-    rootArtifact = event.getSelection().getSelectedArtifacts().get(0).getParent(ArtifactType.Root);
-    leftTree.setInput(rootArtifact);
-    rightTree.setInput(rootArtifact);
+    List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
+    useArtifactsInternal(selectedArtifacts);
   }
 
   @Override
   protected void useArtifacts(List<IArtifact> artifacts) {
+  }
+
+  protected void useArtifactsInternal(List<IArtifact> artifacts) {
+    middleSelectedArtifacts = null;
+    dependentSelectedArtifacts = null;
+    middleTree.setInput(artifacts);
+    rootArtifact = artifacts.get(0).getParent(ArtifactType.Root);
+    leftTree.setInput(rootArtifact);
+    rightTree.setInput(rootArtifact);
+
   }
 }
