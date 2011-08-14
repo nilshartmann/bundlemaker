@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
@@ -34,9 +35,12 @@ import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
@@ -152,11 +156,23 @@ public class ProjectResourcesBlock {
     _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
     createColumns();
 
+    final Shell shell = client.getShell();
+
     _treeViewer.setInput(_bundleMakerProjectProvider.getBundleMakerProject());
+    _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+      @Override
+      public void doubleClick(DoubleClickEvent event) {
+        TreeSelection ts = (TreeSelection) event.getSelection();
+        if (!ts.isEmpty()) {
+          editContent(null);
+        }
+      }
+    });
 
     // Create the buttonbar
     final VerticalFormButtonBar buttonBar = new VerticalFormButtonBar(client, toolkit);
-    final Shell shell = client.getShell();
+
     _editButton = buttonBar.newButton("Edit...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
@@ -293,11 +309,22 @@ public class ProjectResourcesBlock {
     content.setName(dialog.getName());
     content.setVersion(dialog.getVersion());
     content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
-      content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
-    content.setResourceContent(dialog.isAnalyze());
-    content.setAnalyzeSourceResources(dialog.isAnalyzeSources());
+    content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
+    content.setAnalyzeMode(getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
 
     projectDescriptionChanged();
+  }
+
+  private AnalyzeMode getAnalyzeMode(boolean analyze, boolean analyzeSources) {
+    if (analyzeSources) {
+      return AnalyzeMode.BINARIES_AND_SOURCES;
+    }
+
+    if (analyze) {
+      return AnalyzeMode.BINARIES_ONLY;
+    }
+
+    return AnalyzeMode.DO_NOT_ANALYZE;
   }
 
   private void moveUp() {
@@ -385,12 +412,9 @@ public class ProjectResourcesBlock {
       return;
     }
 
-    if (dialog.isAnalyze()) {
-    getBundleMakerProjectDescription().addResourceContent(dialog.getName(), dialog.getVersion(),
-          dialog.getBinaryPaths(), dialog.getSourcePaths(), dialog.isAnalyzeSources());
-    } else {
-      getBundleMakerProjectDescription().addTypeContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths());
-    }
+    // add the new content to the project description
+    getBundleMakerProjectDescription().addContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths(),
+        dialog.getSourcePaths(), getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
 
     projectDescriptionChanged();
 
@@ -517,7 +541,7 @@ public class ProjectResourcesBlock {
 
     for (IPath iPath : selected) {
       String workspacePath = format("${workspace_loc:%s}", iPath.toString());
-      getBundleMakerProjectDescription().addResourceContent(workspacePath);
+      getBundleMakerProjectDescription().addContent(workspacePath, null, AnalyzeMode.BINARIES_ONLY);
     }
 
     projectDescriptionChanged();

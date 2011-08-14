@@ -13,6 +13,7 @@ package org.bundlemaker.core.projectdescription.modifiable;
 import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 
@@ -59,45 +60,6 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
 
   /**
    * <p>
-   * Adds a new type content entry with the specified binary root. The name and the version of the content entry are
-   * automatically extracted from the binary root.
-   * </p>
-   * 
-   * @param binaryRoot
-   *          the binary root.
-   */
-  IModifiableFileBasedContent addTypeContent(String binaryRoot);
-
-  /**
-   * <p>
-   * Adds a new type content entry with the specified name, version and binary root.
-   * </p>
-   * 
-   * @param name
-   *          the name of the content entry
-   * @param version
-   *          the version of the content entry
-   * @param binaryRoot
-   *          the binary root
-   */
-  IModifiableFileBasedContent addTypeContent(String name, String version, String binaryRoot);
-
-  /**
-   * <p>
-   * Adds a new type content entry with the specified name, version and binary roots.
-   * </p>
-   * 
-   * @param name
-   *          the name of the content entry
-   * @param version
-   *          the version of the content entry
-   * @param binaryRoots
-   *          the binary roots
-   */
-  IModifiableFileBasedContent addTypeContent(String name, String version, List<String> binaryRoots);
-
-  /**
-   * <p>
    * Adds a new resource content entry with the specified binary. The name and the version of the content entry are
    * automatically extracted from the binary root.
    * </p>
@@ -108,34 +70,10 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * </p>
    * 
    * @param binaryRoot
+   * @deprecated Use {@link #addContent(String, String, AnalyzeMode)} instead
    */
+  @Deprecated
   IModifiableFileBasedContent addResourceContent(String binaryRoot);
-
-  /**
-   * <p>
-   * Adds a new resource content entry with the specified binary and source root. The name and the version of the
-   * content entry are automatically extracted from the binary root.
-   * </p>
-   * 
-   * @param binaryRoot
-   * @param sourceRoot
-   */
-  IModifiableFileBasedContent addResourceContent(String binaryRoot, String sourceRoot);
-
-  IModifiableFileBasedContent addResourceContent(String binaryRoot, String sourceRoot, boolean analyzeSource);
-
-  /**
-   * <p>
-   * Adds a new resource content entry with the specified name, version, binary root.
-   * </p>
-   * 
-   * @param name
-   *          the name of the content entry
-   * @param version
-   *          the version of the content entry
-   * @param binaryRoot
-   */
-  IModifiableFileBasedContent addResourceContent(String name, String version, String binaryRoot);
 
   /**
    * <p>
@@ -146,27 +84,31 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * @param version
    * @param binaryRoot
    * @param sourceRoot
+   * @deprecated use {@link #addContent(String, String, List, List, AnalyzeMode)} instead
    */
+  @Deprecated
   IModifiableFileBasedContent addResourceContent(String name, String version, String binaryRoot, String sourceRoot);
 
-  IModifiableFileBasedContent addResourceContent(String name, String version, String binaryRoot, String sourceRoot,
-      boolean analyzeSource);
-
   /**
-   * <p>
-   * Adds a new resource content entry with the specified name, version, binary and source roots.
-   * </p>
+   * Adds a new content with the specified binary and source roots.
    * 
-   * @param name
-   * @param version
-   * @param binaryRoots
-   * @param sourceRoots
+   * <p>
+   * The source root might be null.
+   * <p>
+   * The name and version of the content are determined automatically by the binaryRoot
+   * 
+   * @param binaryRoot
+   *          the binary root. Must not be null
+   * @param sourceRoot
+   *          the source root path. might be null
+   * @param analyzeMode
+   *          the analyze mode. not null
+   * @return
    */
-  IModifiableFileBasedContent addResourceContent(String name, String version, List<String> binaryRoots,
-      List<String> sourceRoots);
+  IModifiableFileBasedContent addContent(String binaryRoot, String sourceRoot, AnalyzeMode analyzeMode);
 
-  IModifiableFileBasedContent addResourceContent(String name, String version, List<String> binaryRoots,
-      List<String> sourceRoots, boolean analyzeSource);
+  IModifiableFileBasedContent addContent(String name, String version, List<String> binaryRoots,
+      List<String> sourceRoots, AnalyzeMode analyzeMode);
 
   /**
    * <p>

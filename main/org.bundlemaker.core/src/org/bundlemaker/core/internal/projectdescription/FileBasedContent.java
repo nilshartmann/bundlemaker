@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
@@ -32,10 +33,6 @@ import org.eclipse.core.runtime.IPath;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class FileBasedContent implements IModifiableFileBasedContent {
-
-  /** - */
-  private static final Set<IRootPath>           EMPTY_PATH_SET     = Collections
-                                                                       .unmodifiableSet(new HashSet<IRootPath>());
 
   /** - */
   private static final Set<? extends IResource> EMPTY_RESOURCE_SET = Collections
@@ -56,6 +53,8 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   /** - */
   private Set<IRootPath>                        _binaryPaths;
 
+  private AnalyzeMode                           _analyze;
+
   /** - */
   private ResourceContent                       _resourceContent;
 
@@ -69,8 +68,12 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     //
     _isInitialized = false;
 
+    _analyze = AnalyzeMode.BINARIES_ONLY;
+
     //
     _binaryPaths = new HashSet<IRootPath>();
+
+    _resourceContent = new ResourceContent();
   }
 
   /**
@@ -104,7 +107,11 @@ public class FileBasedContent implements IModifiableFileBasedContent {
 
   @Override
   public boolean isResourceContent() {
-    return _resourceContent != null;
+    return isAnalyze();
+  }
+
+  public boolean isAnalyze() {
+    return _analyze.isAnalyze();
   }
 
   public ResourceContent getModifiableResourceContent() {
@@ -122,7 +129,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   }
 
   public Set<IRootPath> getModifiableSourcePaths() {
-    return _resourceContent != null ? _resourceContent.getModifiableSourcePaths() : EMPTY_PATH_SET;
+    return _resourceContent.getModifiableSourcePaths();
   }
 
   /*
@@ -168,42 +175,42 @@ public class FileBasedContent implements IModifiableFileBasedContent {
 
   @Override
   public Set<IRootPath> getSourceRootPaths() {
-    return _resourceContent != null ? _resourceContent.getSourcePaths() : EMPTY_PATH_SET;
+    return _resourceContent.getSourcePaths();
   }
 
   @Override
   public boolean isAnalyzeSourceResources() {
-    return _resourceContent != null ? _resourceContent.isAnalyzeSourceResources() : false;
+    return _analyze == AnalyzeMode.BINARIES_AND_SOURCES;
   }
 
   @Override
   public IResource getResource(IPath path, ContentType type) {
-    return _resourceContent != null ? _resourceContent.getResource(path, type) : null;
+    return isAnalyze() ? _resourceContent.getResource(path, type) : null;
   }
 
   @Override
   public Set<? extends IResource> getResources(ContentType type) {
-    return _resourceContent != null ? _resourceContent.getResources(type) : EMPTY_RESOURCE_SET;
+    return isAnalyze() ? _resourceContent.getResources(type) : EMPTY_RESOURCE_SET;
   }
 
   @Override
   public IResource getBinaryResource(IPath path) {
-    return _resourceContent != null ? _resourceContent.getBinaryResource(path) : null;
+    return isAnalyze() ? _resourceContent.getBinaryResource(path) : null;
   }
 
   @Override
   public Set<? extends IResource> getBinaryResources() {
-    return _resourceContent != null ? _resourceContent.getBinaryResources() : EMPTY_RESOURCE_SET;
+    return isAnalyze() ? _resourceContent.getBinaryResources() : EMPTY_RESOURCE_SET;
   }
 
   @Override
   public IResource getSourceResource(IPath path) {
-    return _resourceContent != null ? _resourceContent.getSourceResource(path) : null;
+    return isAnalyze() ? _resourceContent.getSourceResource(path) : null;
   }
 
   @Override
   public Set<? extends IResource> getSourceResources() {
-    return _resourceContent != null ? _resourceContent.getSourceResources() : EMPTY_RESOURCE_SET;
+    return isAnalyze() ? _resourceContent.getSourceResources() : EMPTY_RESOURCE_SET;
   }
 
   /**
@@ -224,26 +231,19 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     _version = version;
   }
 
+  public void setAnalyzeMode(AnalyzeMode analyzeMode) {
+    Assert.isNotNull(analyzeMode, "Paramter 'analyzeMode' must not be null");
+    _analyze = analyzeMode;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.projectdescription.IFileBasedContent#getAnalyzeMode()
+   */
   @Override
-  public void setResourceContent(boolean resourceContent) {
-    if (resourceContent == false) {
-      _resourceContent = null;
-    } else {
-      if (_resourceContent == null) {
-        setResourceContent(new ResourceContent());
-      }
-    }
-
-  }
-
-  public void setResourceContent(ResourceContent resourceContent) {
-    _resourceContent = resourceContent;
-  }
-
-  public void setAnalyzeSourceResources(boolean flag) {
-    if (_resourceContent != null) {
-      _resourceContent.setAnalyzeSourceResources(flag);
-    }
+  public AnalyzeMode getAnalyzeMode() {
+    return _analyze;
   }
 
   /**
@@ -264,7 +264,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
       return;
     }
 
-    if (isResourceContent()) {
+    if (isAnalyze()) {
 
       // add the binary resources
       for (IRootPath root : _binaryPaths) {

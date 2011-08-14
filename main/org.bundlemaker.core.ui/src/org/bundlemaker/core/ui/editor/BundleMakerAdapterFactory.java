@@ -13,7 +13,6 @@ package org.bundlemaker.core.ui.editor;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
@@ -78,21 +77,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       List<Object> children = new LinkedList<Object>();
       IFileBasedContent content = (IFileBasedContent) o;
       children.addAll(asBundleMakerPaths(content.getBinaryRootPaths(), true));
-      if (content.isResourceContent()) {
-        children.addAll(asBundleMakerPaths(content.getSourceRootPaths(), false));
-        // children.addAll(getChildren(content));
-      }
+      children.addAll(asBundleMakerPaths(content.getSourceRootPaths(), false));
       return children.toArray();
-    }
-
-    private Collection<Object> getChildren(IFileBasedContent content) throws CoreException {
-      List<Object> children = new LinkedList<Object>();
-      Set<IRootPath> sourcePaths = content.getSourceRootPaths();
-      for (IRootPath iPath : sourcePaths) {
-
-        children.add(new BundleMakerPath(iPath.getUnresolvedPath(), false, iPath.getAsFile().isDirectory()));
-      }
-      return children;
     }
 
     @Override

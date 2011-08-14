@@ -3,8 +3,11 @@
  */
 package org.bundlemaker.core.ui.editor;
 
+import org.bundlemaker.core.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.ui.editor.resources.ProjectResourcesBlock;
 import org.bundlemaker.core.ui.internal.UIImages;
@@ -15,6 +18,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
@@ -33,6 +37,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 public class ContentPage extends FormPage implements BundleMakerProjectProvider {
 
   private ScrolledForm _form;
+
+  private boolean      _needsReparsing = true;
 
   public ContentPage(ProjectDescriptionEditor editor) {
     super(editor, "Content", "Content");
@@ -60,6 +66,24 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     toolBarManager.add(new ParseAction());
     _form.updateToolBar();
 
+    getBundleMakerProject().addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener() {
+
+      @Override
+      public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
+
+        if (event.getType() == Type.PROJECT_STATE_CHANGED) {
+          _needsReparsing = getBundleMakerProject().getState() != BundleMakerProjectState.READY;
+          Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+              refreshFormTitle();
+            }
+          });
+        }
+
+      }
+    });
+
     refreshFormTitle();
   }
 
@@ -79,6 +103,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
       @Override
       public void propertyChange(PropertyChangeEvent event) {
+        _needsReparsing = true;
         refreshFormTitle();
       }
     });
@@ -110,11 +135,13 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
   private void refreshFormTitle() {
 
-    BundleMakerProjectState projectState = getBundleMakerProjectDescription().getBundleMakerProject().getState();
+    String title = "Content";
 
-    String state = (projectState == null ? "unknown" : projectState.toString());
+    if (_needsReparsing) {
+      title += " [Needs reparsing]";
+    }
 
-    // _form.setText(String.format("Edit BundleMaker project [%s]", state));
+    _form.setText(title);
 
   }
 

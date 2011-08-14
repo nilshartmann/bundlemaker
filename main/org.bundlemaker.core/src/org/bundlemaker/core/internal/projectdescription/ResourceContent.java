@@ -31,16 +31,13 @@ import org.eclipse.core.runtime.Path;
 public class ResourceContent {
 
   /** - */
-  private Set<IRootPath>           _sourcePaths;
+  private Set<IRootPath>       _sourcePaths;
 
   /** - */
   private Set<ResourceStandin> _binaryResources;
 
   /** - */
   private Set<ResourceStandin> _sourceResources;
-
-  /** - */
-  private boolean              _analyzeSourceResources;
 
   /**
    * <p>
@@ -60,16 +57,6 @@ public class ResourceContent {
    */
   public Set<IRootPath> getSourcePaths() {
     return Collections.unmodifiableSet(_sourcePaths);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isAnalyzeSourceResources() {
-    return _analyzeSourceResources;
   }
 
   /**
@@ -176,12 +163,6 @@ public class ResourceContent {
 
   public Set<IRootPath> getModifiableSourcePaths() {
     return _sourcePaths;
-  }
-  
-  
-
-  public void setAnalyzeSourceResources(boolean analyzeSourceResources) {
-    _analyzeSourceResources = analyzeSourceResources;
   }
 
 }

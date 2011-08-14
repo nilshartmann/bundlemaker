@@ -23,6 +23,7 @@ import org.bundlemaker.core.internal.projectdescription.RootPath;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -56,21 +57,17 @@ public class ProjectDescriptionStore {
       xmlFileBasedContent.setId(content.getId());
       xmlFileBasedContent.setName(content.getName());
       xmlFileBasedContent.setVersion(content.getVersion());
+      xmlFileBasedContent.setAnalyzeMode(content.getAnalyzeMode().toString());
 
       for (IRootPath path : content.getBinaryRootPaths()) {
         xmlFileBasedContent.getBinaryPathNames().add(path.getUnresolvedPath().toString());
       }
 
-      if (content.isResourceContent()) {
+      XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
+      xmlFileBasedContent.setResourceContent(xmlResourceContent);
 
-        XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
-        xmlFileBasedContent.setResourceContent(xmlResourceContent);
-
-        xmlResourceContent.setAnalyzeSourceResources(content.isAnalyzeSourceResources());
-
-        for (IRootPath path : content.getSourceRootPaths()) {
-          xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
-        }
+      for (IRootPath path : content.getSourceRootPaths()) {
+        xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
       }
 
     }
@@ -125,25 +122,17 @@ public class ProjectDescriptionStore {
       fileBasedContent.setId(eFileBasedContent.getId());
       fileBasedContent.setName(eFileBasedContent.getName());
       fileBasedContent.setVersion(eFileBasedContent.getVersion());
+      fileBasedContent.setAnalyzeMode(AnalyzeMode.valueOf(eFileBasedContent.getAnalyzeMode()));
 
       for (String path : eFileBasedContent.getBinaryPathNames()) {
         fileBasedContent.getModifiableBinaryPaths().add(new RootPath(path));
       }
 
-      if (eFileBasedContent.getResourceContent() != null) {
+      ResourceContent resourceContent = fileBasedContent.getModifiableResourceContent();
 
-        ResourceContent resourceContent = new ResourceContent();
-        fileBasedContent.setResourceContent(resourceContent);
+      for (String path : eFileBasedContent.getResourceContent().getSourcePathNames()) {
 
-        boolean analyse = eFileBasedContent.getResourceContent().isAnalyzeSourceResources() != null
-            && eFileBasedContent.getResourceContent().isAnalyzeSourceResources();
-
-        resourceContent.setAnalyzeSourceResources(analyse);
-
-        for (String path : eFileBasedContent.getResourceContent().getSourcePathNames()) {
-
-          resourceContent.getModifiableSourcePaths().add(new RootPath(path));
-        }
+        resourceContent.getModifiableSourcePaths().add(new RootPath(path));
       }
     }
 

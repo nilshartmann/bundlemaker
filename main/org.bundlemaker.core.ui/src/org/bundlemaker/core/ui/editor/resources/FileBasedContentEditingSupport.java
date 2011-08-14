@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.resources;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -114,14 +115,19 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
 
     @Override
     protected void setValueInternal(IModifiableFileBasedContent content, boolean value) {
-      content.setResourceContent(value);
+      if (value) {
+        content.setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);
+      } else {
+        content.setAnalyzeMode(AnalyzeMode.DO_NOT_ANALYZE);
+      }
     }
 
     @Override
     protected boolean getValueInternal(IModifiableFileBasedContent content) {
-      return content.isResourceContent();
+      return content.getAnalyzeMode().isAnalyze();
     }
 
+    @Override
     protected boolean canEditInternal(IModifiableFileBasedContent content) {
       return true;
     }
@@ -140,16 +146,24 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
 
     @Override
     protected void setValueInternal(IModifiableFileBasedContent content, boolean value) {
-      content.setAnalyzeSourceResources(value);
+      if (value) {
+        content.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES);
+      } else {
+        if (content.getAnalyzeMode() != AnalyzeMode.DO_NOT_ANALYZE) {
+          content.setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);
+        }
+      }
+
     }
 
     @Override
     protected boolean getValueInternal(IModifiableFileBasedContent content) {
-      return content.isAnalyzeSourceResources();
+      return content.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
     }
 
+    @Override
     protected boolean canEditInternal(IModifiableFileBasedContent content) {
-      return content.isResourceContent();
+      return content.getAnalyzeMode().isAnalyze();
     }
 
   }
