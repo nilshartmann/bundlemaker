@@ -146,7 +146,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     binaryPaths.clear();
 
     for (String path : binaryRootPaths) {
-      binaryPaths.add(new RootPath(path));
+      binaryPaths.add(new RootPath(path, true));
     }
   }
 
@@ -168,7 +168,7 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     modifiableSourcePaths.clear();
 
     for (String path : sourceRootPaths) {
-      modifiableSourcePaths.add(new RootPath(path));
+      modifiableSourcePaths.add(new RootPath(path, false));
     }
 
   }

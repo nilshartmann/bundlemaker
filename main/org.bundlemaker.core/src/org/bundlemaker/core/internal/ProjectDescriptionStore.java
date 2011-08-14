@@ -125,14 +125,14 @@ public class ProjectDescriptionStore {
       fileBasedContent.setAnalyzeMode(AnalyzeMode.valueOf(eFileBasedContent.getAnalyzeMode()));
 
       for (String path : eFileBasedContent.getBinaryPathNames()) {
-        fileBasedContent.getModifiableBinaryPaths().add(new RootPath(path));
+        fileBasedContent.getModifiableBinaryPaths().add(new RootPath(path, true));
       }
 
       ResourceContent resourceContent = fileBasedContent.getModifiableResourceContent();
 
       for (String path : eFileBasedContent.getResourceContent().getSourcePathNames()) {
 
-        resourceContent.getModifiableSourcePaths().add(new RootPath(path));
+        resourceContent.getModifiableSourcePaths().add(new RootPath(path, false));
       }
     }
 
