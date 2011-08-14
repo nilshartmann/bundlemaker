@@ -31,6 +31,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 /**
  * View for analysing IArtifact usedBy and uses dependencies. This view consists of three trees. In the middle tree the
@@ -53,23 +54,23 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
   /**
    * The ID of the view as specified by the extension.
    */
-  public static final String         ID                   = "org.bundlemaker.analysis.ui.xref.views.BundlemakerXRefView";
+  public static final String ID                   = "org.bundlemaker.analysis.ui.xref.views.BundlemakerXRefView";
 
-  private TreeViewer                 leftTree;
+  private TreeViewer         leftTree;
 
-  private TreeViewer                 middleTree;
+  private TreeViewer         middleTree;
 
-  private TreeViewer                 rightTree;
+  private TreeViewer         rightTree;
 
-  private IArtifact                  rootArtifact;
+  private IArtifact          rootArtifact;
 
-  private List<IArtifact>            middleSelectedArtifacts;
+  private List<IArtifact>    middleSelectedArtifacts;
 
-  private List<IArtifact>            dependentSelectedArtifacts;
+  private List<IArtifact>    dependentSelectedArtifacts;
 
-  private boolean                    showUsedDependencies = true;
+  private boolean            showUsedDependencies = true;
 
-  private static XRefView _instance;
+  private static XRefView    _instance;
 
   /**
    * Brings the XRefView to foreground and fills it with the specified artifacts
@@ -102,7 +103,7 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
     Composite panel = new Composite(composite, SWT.NONE);
     panel.setLayout(new GridLayout(3, true));
 
-    leftTree = createTreeViewer(panel);
+    leftTree = createTreeViewer(panel, "Using");
     leftTree.addSelectionChangedListener(new ISelectionChangedListener() {
 
       @SuppressWarnings("unchecked")
@@ -113,7 +114,7 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
       }
     });
 
-    middleTree = createTreeViewer(panel);
+    middleTree = createTreeViewer(panel, null);
     middleTree.addSelectionChangedListener(new ISelectionChangedListener() {
 
       @SuppressWarnings("unchecked")
@@ -124,7 +125,7 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
       }
     });
 
-    rightTree = createTreeViewer(panel);
+    rightTree = createTreeViewer(panel, "Used by");
     rightTree.addSelectionChangedListener(new ISelectionChangedListener() {
 
       @SuppressWarnings("unchecked")
@@ -140,8 +141,18 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
     Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
   }
 
-  private TreeViewer createTreeViewer(Composite parent) {
-    TreeViewer treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+  private TreeViewer createTreeViewer(Composite parent, String title) {
+
+    Composite treeViewerComposite = new Composite(parent, SWT.NONE);
+    treeViewerComposite.setLayout(new GridLayout(1, true));
+    GridData layoutData = new GridData(GridData.FILL_BOTH);
+    treeViewerComposite.setLayoutData(layoutData);
+
+    Label titleLabel = new Label(treeViewerComposite, SWT.NONE);
+    if (title != null) {
+      titleLabel.setText(title);
+    }
+    TreeViewer treeViewer = new TreeViewer(treeViewerComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
     DefaultArtifactLabelProvider artifactLabelProvider = new DefaultArtifactLabelProvider();
     treeViewer.setContentProvider(new ArtifactTreeContentProvider());
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
@@ -228,7 +239,10 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
     middleSelectedArtifacts = null;
     dependentSelectedArtifacts = null;
     middleTree.setInput(artifacts);
-    rootArtifact = artifacts.get(0).getParent(ArtifactType.Root);
+    rootArtifact = artifacts.get(0);
+    if (rootArtifact.getType() != ArtifactType.Root) {
+      rootArtifact = rootArtifact.getParent(ArtifactType.Root);
+    }
     leftTree.setInput(rootArtifact);
     rightTree.setInput(rootArtifact);
 
