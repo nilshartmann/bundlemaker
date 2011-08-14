@@ -404,7 +404,7 @@ public class DependencyTreeTableView extends ViewPart implements IDependencySele
   private List<DependencyTreeTableListener> getDependencyTreeTableViewListeners() {
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
     IExtensionPoint extensionPoint = extensionRegistry
-        .getExtensionPoint("org.bundlemaker.analysis.ui.dependencyTreeTableListener");
+        .getExtensionPoint("org.bundlemaker.analysis.ui.dependencytree.dependencyTreeTableListener");
 
     List<DependencyTreeTableListener> result = new LinkedList<DependencyTreeTableListener>();
 
