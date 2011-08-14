@@ -26,6 +26,7 @@ import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
@@ -90,6 +91,25 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public boolean isVirtual() {
     return false;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isMovable() {
+
+    //
+    IArtifact artifact = getParent(ArtifactType.Module);
+
+    //
+    if (!(artifact instanceof IModuleArtifact)
+        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule) {
+      return false;
+    }
+
+    //
+    return true;
   }
 
   @Override

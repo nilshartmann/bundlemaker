@@ -29,6 +29,14 @@ public interface IAdvancedArtifact extends IArtifact {
    * <p>
    * </p>
    * 
+   * @return
+   */
+  boolean isMovable();
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param artifact
    * @return
    */

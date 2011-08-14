@@ -41,8 +41,8 @@ public class ModuleCache extends AbstractArtifactCacheAwareGenericCache<ModuleKe
       IArtifact parent = module.hasClassification() ? getArtifactCache().getGroupCache().getOrCreate(
           module.getClassification()) : getArtifactCache().getRootArtifact();
       //
-      return module instanceof IResourceModule ? new AdapterResourceModule2IArtifact((IResourceModule) module, parent)
-          : new AdapterModule2IArtifact(module, parent);
+      return module instanceof IResourceModule ? new AdapterResourceModule2IArtifact((IResourceModule) module, parent,
+          getArtifactCache()) : new AdapterModule2IArtifact(module, parent);
 
     } else {
 

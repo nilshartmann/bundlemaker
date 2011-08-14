@@ -55,6 +55,14 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     return false;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isMovable() {
+    return false;
+  }
+
   @Override
   public final String getName() {
     return _modularizedSystem.getName();
@@ -70,7 +78,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
   }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
+  public boolean handleCanAdd(IArtifact artifact) {
     return artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact;
   }
 

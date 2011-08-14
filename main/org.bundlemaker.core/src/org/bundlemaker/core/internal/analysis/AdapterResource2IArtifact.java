@@ -14,7 +14,9 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IResource;
 
 /**
@@ -58,14 +60,27 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
     return false;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isMovable() {
+    //
+    IArtifact artifact = getParent(ArtifactType.Module);
+
+    //
+    return artifact instanceof IModuleArtifact
+        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule;
+  }
+
   @Override
   public IResource getAssociatedResource() {
     return _resource;
   }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
-    return true;
+  public boolean handleCanAdd(IArtifact artifact) {
+    return false;
   }
 
   @Override

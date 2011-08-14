@@ -5,6 +5,11 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
+import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 
@@ -16,13 +21,19 @@ import org.eclipse.core.runtime.Assert;
  */
 public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
+  /** - */
+  private DefaultArtifactCache _artifactCache;
+
   /**
    * <p>
    * Creates a new instance of type {@link AdapterResourceModule2IArtifact}.
    * </p>
    */
-  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IArtifact parent) {
+  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IArtifact parent,
+      DefaultArtifactCache artifactCache) {
     super(resourceModule, parent);
+
+    _artifactCache = artifactCache;
   }
 
   /**
@@ -44,11 +55,31 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     Assert.isNotNull(artifact);
     assertCanAdd(artifact);
 
-    //
-    super.addArtifact(artifact);
+    System.out.println("Name " + artifact.getName());
+    System.out.println("Qualified Name " + artifact.getQualifiedName());
 
-    // TODO: TYPE CHECK??
-    AdapterUtils.addPackageToModule(artifact, this);
+    if (artifact.getType().equals(ArtifactType.Package)) {
+
+      //
+      IModule module = getAssociatedModule();
+      String packageName = artifact.getQualifiedName();
+      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(module), packageName);
+      IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
+          modulePackageKey);
+      //
+      if (packageArtifact.getParent() != null) {
+
+        // move the children to the new package artifact
+        for (IArtifact child : artifact.getChildren()) {
+          packageArtifact.addArtifact(child);
+        }
+
+      } else {
+        super.addArtifact(packageArtifact);
+        // TODO: TYPE CHECK??
+        AdapterUtils.addPackageToModule(artifact, this);
+      }
+    }
   }
 
   /**
@@ -83,7 +114,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
+  public boolean handleCanAdd(IArtifact artifact) {
     return artifact != null
         && (artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type) || artifact
             .getType().equals(ArtifactType.Resource));

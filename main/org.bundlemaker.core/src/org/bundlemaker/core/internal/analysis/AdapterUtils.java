@@ -119,6 +119,7 @@ public class AdapterUtils {
     //
     addResourcesToModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
         getAllContainedResourceHolder(artifact));
+
     // addTypesToModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
     // getAllContainedTypeHolder(artifact));
   }
@@ -136,11 +137,15 @@ public class AdapterUtils {
     AdapterResourceModule2IArtifact resourceModule2Artifact = (AdapterResourceModule2IArtifact) adapterPackage2IArtifact
         .getParent(ArtifactType.Module);
 
-    //
-    removeResourcesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
-        getAllContainedResourceHolder(artifact));
-    // removeTypesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
-    // getAllContainedTypeHolder(artifact));
+    if (resourceModule2Artifact != null) {
+
+      //
+      removeResourcesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
+          getAllContainedResourceHolder(artifact));
+
+      // removeTypesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
+      // getAllContainedTypeHolder(artifact));
+    }
 
   }
 

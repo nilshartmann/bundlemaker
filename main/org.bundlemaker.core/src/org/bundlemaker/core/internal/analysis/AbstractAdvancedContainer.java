@@ -53,6 +53,34 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
    * {@inheritDoc}
    */
   @Override
+  public final boolean canAdd(IArtifact artifact) {
+
+    if (artifact == null) {
+      return false;
+    }
+
+    // if (artifact instanceof IAdvancedArtifact && !((IAdvancedArtifact) artifact).isMovable()) {
+    // return false;
+    // }
+
+    return handleCanAdd(artifact);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  protected boolean handleCanAdd(IArtifact artifact) {
+    return false;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public IModularizedSystem getModularizedSystem() {
     return AdapterUtils.getModularizedSystem(this);
   }
@@ -83,9 +111,10 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     Assert.isNotNull(artifact);
 
     //
-    List<IArtifact> artifacts = ((AbstractArtifactContainer) artifact).invalidateDependencyCache();
-    getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
-
+    List<IArtifact> artifacts = ((IAdvancedArtifact) artifact).invalidateDependencyCache();
+    if (getRoot() != null) {
+      getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
+    }
     // if the artifact has a parent, it has to be removed
     if (artifact.getParent() != null) {
       artifact.getParent().removeArtifact(artifact);
@@ -96,7 +125,9 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
 
     //
     artifacts = invalidateDependencyCache();
-    getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
+    if (getRoot() != null) {
+      getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
+    }
   }
 
   /**
@@ -113,8 +144,9 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     for (IArtifact iArtifact : artifacts) {
       System.out.println(iArtifact);
     }
-    getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
-
+    if (getRoot() != null) {
+      getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
+    }
     // set parent to null
     if (artifact.getParent() != null) {
       ((AbstractArtifact) artifact).setParent(null);

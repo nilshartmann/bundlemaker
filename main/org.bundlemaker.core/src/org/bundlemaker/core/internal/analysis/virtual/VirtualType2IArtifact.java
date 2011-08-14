@@ -60,6 +60,14 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     _fullyQualifiedName = fullyQualifiedName;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isMovable() {
+    return false;
+  }
+
   @Override
   public List<IArtifact> invalidateDependencyCache() {
     return Arrays.asList(new IArtifact[] { this });

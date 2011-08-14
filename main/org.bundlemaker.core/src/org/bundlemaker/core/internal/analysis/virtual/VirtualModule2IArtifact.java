@@ -52,6 +52,11 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
     ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
+  @Override
+  public boolean isMovable() {
+    return true;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -69,7 +74,7 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
   }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
+  public boolean handleCanAdd(IArtifact artifact) {
     return false;
   }
 
