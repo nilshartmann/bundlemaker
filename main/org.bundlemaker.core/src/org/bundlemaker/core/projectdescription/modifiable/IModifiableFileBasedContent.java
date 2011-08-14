@@ -10,8 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.projectdescription.modifiable;
 
+import java.util.Set;
+
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 
 /**
  * <p>
@@ -67,5 +70,15 @@ public interface IModifiableFileBasedContent extends IFileBasedContent {
    * @param analyze
    */
   public void setAnalyzeMode(AnalyzeMode analyzeMode);
+
+  /**
+   * @return
+   */
+  public Set<IRootPath> getModifiableBinaryPaths();
+
+  /**
+   * @return
+   */
+  public Set<IRootPath> getModifiableSourcePaths();
 
 }

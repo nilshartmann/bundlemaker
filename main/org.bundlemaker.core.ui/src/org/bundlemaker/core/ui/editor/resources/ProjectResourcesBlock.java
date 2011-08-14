@@ -21,6 +21,7 @@ import java.util.List;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
@@ -40,6 +41,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -424,14 +426,44 @@ public class ProjectResourcesBlock {
    * Remove the selected content from the project
    */
   private void removeContent() {
-    Collection<IFileBasedContent> selectedContents = getSelectedElementsOfType(IFileBasedContent.class);
-    if (!selectedContents.isEmpty()) {
-      for (IFileBasedContent content : selectedContents) {
-        String id = content.getId();
-        getBundleMakerProjectDescription().removeContent(id);
-      }
-      projectDescriptionChanged();
+
+    ITreeSelection selection = getSelection();
+    if (selection.isEmpty()) {
+      return;
     }
+
+    List<String> fileBasedContentsToRemove = new LinkedList<String>();
+
+    TreePath[] paths = selection.getPaths();
+
+    for (TreePath treePath : paths) {
+      Object element = treePath.getLastSegment();
+      System.out.printf("element lastsegment: %s%n", element);
+      if (element instanceof IFileBasedContent) {
+        // Remember IFileBaseContents that should be removed
+        IFileBasedContent content = (IFileBasedContent) element;
+        getBundleMakerProjectDescription().removeContent(content.getId());
+      }
+      if (element instanceof IRootPath) {
+        IRootPath rootPath = (IRootPath) element;
+        IModifiableFileBasedContent lastSegment = (IModifiableFileBasedContent) treePath.getParentPath()
+            .getLastSegment();
+        if (rootPath.isBinaryPath()) {
+          lastSegment.getModifiableBinaryPaths().remove(rootPath);
+        } else {
+          lastSegment.getModifiableSourcePaths().remove(rootPath);
+        }
+      }
+
+    }
+
+    projectDescriptionChanged();
+
+  }
+
+  protected ITreeSelection getSelection() {
+    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
+    return selection;
   }
 
   /**
@@ -444,7 +476,7 @@ public class ProjectResourcesBlock {
   private <T> Collection<T> getSelectedElementsOfType(Class<T> type) {
     java.util.List<T> result = new LinkedList<T>();
 
-    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
+    ITreeSelection selection = getSelection();
 
     Iterator<?> iterator = selection.iterator();
     while (iterator.hasNext()) {
@@ -579,8 +611,9 @@ public class ProjectResourcesBlock {
       _editButton.setEnabled(false);
     } else {
       _editButton.setEnabled(selectedFileBasedContents.size() == 1);
-      _removeButton.setEnabled(true);
+      // _removeButton.setEnabled(true);
     }
+    _removeButton.setEnabled(true);
     TreeItem[] selectedItems = _treeViewer.getTree().getSelection();
     System.out.println("selecteditems: " + selectedItems.length);
     if (selectedItems.length > 0) {
