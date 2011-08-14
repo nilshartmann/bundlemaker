@@ -16,6 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Display;
@@ -135,14 +136,12 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
   private void refreshFormTitle() {
 
-    String title = "Content";
-
+    _form.setText("Content");
     if (_needsReparsing) {
-      title += " [Needs reparsing]";
+      _form.setMessage("Needs reparsing", IMessageProvider.INFORMATION);
+    } else {
+      _form.setMessage(null, IMessageProvider.NONE);
     }
-
-    _form.setText(title);
-
   }
 
   @Override
