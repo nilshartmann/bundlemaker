@@ -10,13 +10,9 @@ import org.bundlemaker.analysis.ui.dsmview.DSMView;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.analysis.ui.view.table.JavaEditor;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.internal.part.NullEditorInput;
 
 @SuppressWarnings("restriction")
 public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandler {
-
-  private IEditorInput nullInputEditor = new NullEditorInput();
 
   @Override
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
@@ -52,13 +48,13 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
   }
 
   private void openEditorAndViews(List<IArtifact> selectedArtifacts) {
-      // Open the 'GenericEditor'
+    // Open the 'GenericEditor'
     Analysis.instance().openGenericEditor();
 
-      // Make sure, DSMView is visible on GenericEditor
+    // Make sure, DSMView is visible on GenericEditor
     DSMView.updateAndShow(selectedArtifacts);
 
-      // Open the DependencyTreeTableView
-      Analysis.instance().openDependencyTreeTableView();
+    // Open the DependencyTreeTableView
+    Analysis.instance().openDependencyTreeTableView();
   }
 }
