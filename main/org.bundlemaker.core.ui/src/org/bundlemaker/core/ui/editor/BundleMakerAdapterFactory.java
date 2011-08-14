@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,7 +37,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 public class BundleMakerAdapterFactory implements IAdapterFactory {
   private final FileBasedContentAdapter   _fileBasedContentAdapter   = new FileBasedContentAdapter();
 
-  private final BundleMakerPathAdapter    _bundleMakerPathAdapter    = new BundleMakerPathAdapter();
+  private final RootPathAdapter           _rootPathAdapter           = new RootPathAdapter();
 
   private final BundleMakerProjectAdapter _bundleMakerProjectAdapter = new BundleMakerProjectAdapter();
 
@@ -76,8 +75,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
       List<Object> children = new LinkedList<Object>();
       IFileBasedContent content = (IFileBasedContent) o;
-      children.addAll(asBundleMakerPaths(content.getBinaryRootPaths(), true));
-      children.addAll(asBundleMakerPaths(content.getSourceRootPaths(), false));
+      children.addAll(content.getBinaryRootPaths());
+      children.addAll(content.getSourceRootPaths());
       return children.toArray();
     }
 
@@ -89,27 +88,13 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     @Override
     public String getLabel(Object o) {
       IFileBasedContent content = (IFileBasedContent) o;
-      return String.format("%s [%s]", content.getName(), content.getVersion(), content.isResourceContent());
+      return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
     @Override
     public Object getParent(Object o) {
-      IFileBasedContent content = (IFileBasedContent) o;
       return null;
     }
-  }
-
-  static Collection<BundleMakerPath> asBundleMakerPaths(Collection<IRootPath> paths, boolean binary) {
-    List<BundleMakerPath> bundleMakerPaths = new LinkedList<BundleMakerPath>();
-    for (IRootPath path : paths) {
-      try {
-        bundleMakerPaths.add(new BundleMakerPath(path.getUnresolvedPath(), binary, path.getAsFile().isDirectory()));
-      } catch (CoreException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-    return bundleMakerPaths;
   }
 
   /**
@@ -119,7 +104,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
    * 
    * 
    */
-  class BundleMakerPathAdapter implements IWorkbenchAdapter {
+  class RootPathAdapter implements IWorkbenchAdapter {
 
     @Override
     public Object[] getChildren(Object o) {
@@ -128,14 +113,22 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public ImageDescriptor getImageDescriptor(Object object) {
-      BundleMakerPath path = (BundleMakerPath) object;
-      if (path.isFolder()) {
-        if (path.isBinary()) {
+      IRootPath path = (IRootPath) object;
+
+      boolean isFolder;
+      try {
+        isFolder = path.getAsFile().isDirectory();
+      } catch (CoreException ex) {
+        return UIImages.UNKNOWN_OBJECT.getImageDescriptor();
+      }
+
+      if (isFolder) {
+        if (path.isBinaryPath()) {
           return UIImages.BINARY_FOLDER.getImageDescriptor();
         }
         return UIImages.SOURCE_FOLDER.getImageDescriptor();
       }
-      if (path.isBinary()) {
+      if (path.isBinaryPath()) {
         return UIImages.BINARY_ARCHIVE.getImageDescriptor();
       }
       return UIImages.SOURCE_ARCHIVE.getImageDescriptor();
@@ -143,8 +136,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public String getLabel(Object o) {
-      BundleMakerPath path = (BundleMakerPath) o;
-      return path.getLabel();
+      IRootPath path = (IRootPath) o;
+      return String.valueOf(path.getUnresolvedPath());
     }
 
     @Override
@@ -172,8 +165,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       return _fileBasedContentAdapter;
     }
 
-    if (adaptableObject instanceof BundleMakerPath) {
-      return _bundleMakerPathAdapter;
+    if (adaptableObject instanceof IRootPath) {
+      return _rootPathAdapter;
     }
 
     return null;
@@ -193,7 +186,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProject.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProjectDescription.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IFileBasedContent.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, BundleMakerPath.class);
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IRootPath.class);
 
   }
 

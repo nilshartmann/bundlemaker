@@ -11,8 +11,9 @@
 package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.ui.editor.BundleMakerPath;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.ui.internal.UIImages;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -24,8 +25,8 @@ class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
   @Override
   public Image getImage(Object element) {
 
-    if (element instanceof BundleMakerPath) {
-      return getImageForBundleMakerPath((BundleMakerPath) element);
+    if (element instanceof IRootPath) {
+      return getImageForBundleMakerPath((IRootPath) element);
     }
 
     return null;
@@ -35,26 +36,35 @@ class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
    * @param element
    * @return
    */
-  private Image getImageForBundleMakerPath(BundleMakerPath path) {
-    if (path.isFolder()) {
-      if (path.isBinary()) {
+  private Image getImageForBundleMakerPath(IRootPath path) {
+    boolean isFolder;
+    try {
+      isFolder = path.getAsFile().isDirectory();
+    } catch (CoreException ex) {
+      return UIImages.UNKNOWN_OBJECT.getImage();
+    }
+
+    if (isFolder) {
+      if (path.isBinaryPath()) {
         return UIImages.BINARY_FOLDER.getImage();
       }
       return UIImages.SOURCE_FOLDER.getImage();
     }
-    if (path.isBinary()) {
+    if (path.isBinaryPath()) {
       return UIImages.BINARY_ARCHIVE.getImage();
     }
     return UIImages.SOURCE_ARCHIVE.getImage();
+
   }
 
+  @Override
   public String getText(Object element) {
     if (element instanceof IFileBasedContent) {
       IFileBasedContent content = (IFileBasedContent) element;
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
-    BundleMakerPath path = (BundleMakerPath) element;
-    return path.getLabel();
+    IRootPath path = (IRootPath) element;
+    return String.valueOf(path.getUnresolvedPath());
   }
 }

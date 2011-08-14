@@ -293,7 +293,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
 
     // add the binary roots
     for (String string : binaryRoots) {
-      fileBasedContent.getModifiableBinaryPaths().add(new RootPath(string));
+      fileBasedContent.getModifiableBinaryPaths().add(new RootPath(string, true));
     }
 
     //
@@ -302,7 +302,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     if (sourceRoots != null) {
       // add the source roots
       for (String string : sourceRoots) {
-        resourceContent.getModifiableSourcePaths().add(new RootPath(string));
+        resourceContent.getModifiableSourcePaths().add(new RootPath(string, false));
       }
     }
     // add the analyze flag
