@@ -20,7 +20,6 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.internal.UIImages;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -115,29 +114,13 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     public ImageDescriptor getImageDescriptor(Object object) {
       IRootPath path = (IRootPath) object;
 
-      boolean isFolder;
-      try {
-        isFolder = path.getAsFile().isDirectory();
-      } catch (CoreException ex) {
-        return UIImages.UNKNOWN_OBJECT.getImageDescriptor();
-      }
-
-      if (isFolder) {
-        if (path.isBinaryPath()) {
-          return UIImages.BINARY_FOLDER.getImageDescriptor();
-        }
-        return UIImages.SOURCE_FOLDER.getImageDescriptor();
-      }
-      if (path.isBinaryPath()) {
-        return UIImages.BINARY_ARCHIVE.getImageDescriptor();
-      }
-      return UIImages.SOURCE_ARCHIVE.getImageDescriptor();
+      return RootPathHelper.getImageDescriptorForPath(path);
     }
 
     @Override
     public String getLabel(Object o) {
       IRootPath path = (IRootPath) o;
-      return String.valueOf(path.getUnresolvedPath());
+      return RootPathHelper.getLabel(path);
     }
 
     @Override

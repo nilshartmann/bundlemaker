@@ -10,11 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.resources;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.internal.CenterImageLabelProvider;
 import org.bundlemaker.core.ui.internal.UIImages;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -53,23 +54,8 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       return null;
     }
 
-    boolean isFolder;
-    try {
-      isFolder = path.getAsFile().isDirectory();
-    } catch (CoreException ex) {
-      return UIImages.UNKNOWN_OBJECT.getImage();
-    }
+    return RootPathHelper.getImageForPath(path);
 
-    if (isFolder) {
-      if (path.isBinaryPath()) {
-        return UIImages.BINARY_FOLDER.getImage();
-      }
-      return UIImages.SOURCE_FOLDER.getImage();
-    }
-    if (path.isBinaryPath()) {
-      return UIImages.BINARY_ARCHIVE.getImage();
-    }
-    return UIImages.SOURCE_ARCHIVE.getImage();
   }
 
   /**
@@ -88,12 +74,11 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       }
       break;
     case 2:
-      if (content.isResourceContent()) {
-        if (content.isAnalyzeSourceResources()) {
-          image = UIImages.CHECKED.getImage();
-        } else {
-          image = UIImages.UNCHECKED.getImage();
-        }
+      AnalyzeMode analyzeMode = content.getAnalyzeMode();
+      if (analyzeMode == AnalyzeMode.BINARIES_AND_SOURCES) {
+        image = UIImages.CHECKED.getImage();
+      } else if (analyzeMode == AnalyzeMode.BINARIES_ONLY) {
+        image = UIImages.UNCHECKED.getImage();
       }
       break;
     default:
@@ -115,6 +100,6 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
     }
 
     IRootPath path = (IRootPath) element;
-    return String.valueOf(path.getUnresolvedPath());
+    return RootPathHelper.getLabel(path);
   }
 }
