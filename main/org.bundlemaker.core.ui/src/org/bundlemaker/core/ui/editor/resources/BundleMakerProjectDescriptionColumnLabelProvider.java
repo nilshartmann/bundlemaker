@@ -11,9 +11,10 @@
 package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.ui.editor.BundleMakerPath;
+import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.ui.internal.CenterImageLabelProvider;
 import org.bundlemaker.core.ui.internal.UIImages;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -35,8 +36,8 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       return getImageForFileBasedContent((IFileBasedContent) element);
     }
 
-    if (element instanceof BundleMakerPath) {
-      return getImageForBundleMakerPath((BundleMakerPath) element);
+    if (element instanceof IRootPath) {
+      return getImageForBundleMakerPath((IRootPath) element);
     }
 
     return null;
@@ -46,19 +47,26 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
    * @param element
    * @return
    */
-  private Image getImageForBundleMakerPath(BundleMakerPath path) {
+  private Image getImageForBundleMakerPath(IRootPath path) {
     if (_column != 0) {
       // Icons are shown in the left column only
       return null;
     }
 
-    if (path.isFolder()) {
-      if (path.isBinary()) {
+    boolean isFolder;
+    try {
+      isFolder = path.getAsFile().isDirectory();
+    } catch (CoreException ex) {
+      return UIImages.UNKNOWN_OBJECT.getImage();
+    }
+
+    if (isFolder) {
+      if (path.isBinaryPath()) {
         return UIImages.BINARY_FOLDER.getImage();
       }
       return UIImages.SOURCE_FOLDER.getImage();
     }
-    if (path.isBinary()) {
+    if (path.isBinaryPath()) {
       return UIImages.BINARY_ARCHIVE.getImage();
     }
     return UIImages.SOURCE_ARCHIVE.getImage();
@@ -73,7 +81,7 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
 
     switch (_column) {
     case 1:
-      if (content.isResourceContent()) {
+      if (content.getAnalyzeMode().isAnalyze()) {
         image = UIImages.CHECKED.getImage();
       } else {
         image = UIImages.UNCHECKED.getImage();
@@ -95,6 +103,7 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
     return image;
   }
 
+  @Override
   public String getText(Object element) {
     if (_column > 0) {
       return null;
@@ -105,7 +114,7 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
-    BundleMakerPath path = (BundleMakerPath) element;
-    return path.getLabel();
+    IRootPath path = (IRootPath) element;
+    return String.valueOf(path.getUnresolvedPath());
   }
 }
