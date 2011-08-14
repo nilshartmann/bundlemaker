@@ -432,15 +432,11 @@ public class ProjectResourcesBlock {
       return;
     }
 
-    List<String> fileBasedContentsToRemove = new LinkedList<String>();
-
     TreePath[] paths = selection.getPaths();
 
     for (TreePath treePath : paths) {
       Object element = treePath.getLastSegment();
-      System.out.printf("element lastsegment: %s%n", element);
       if (element instanceof IFileBasedContent) {
-        // Remember IFileBaseContents that should be removed
         IFileBasedContent content = (IFileBasedContent) element;
         getBundleMakerProjectDescription().removeContent(content.getId());
       }
@@ -551,7 +547,7 @@ public class ProjectResourcesBlock {
     for (String string : fileNames) {
       IPath path = new Path(fileDialog.getFilterPath()).append(string);
       String binaryRoot = path.toOSString();
-      getBundleMakerProjectDescription().addResourceContent(binaryRoot);
+      getBundleMakerProjectDescription().addContent(binaryRoot, null, AnalyzeMode.BINARIES_AND_SOURCES);
     }
 
     projectDescriptionChanged();
@@ -600,20 +596,12 @@ public class ProjectResourcesBlock {
    * sets the enabled state of the buttons according to the selection in the tree viewer
    */
   private void refreshEnablement() {
-    Collection<IFileBasedContent> selectedFileBasedContents = getSelectedElementsOfType(IFileBasedContent.class);
     ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
     int selectedElements = selection.size();
-    if (selectedElements < 1 // nothing seleceted
-        || selectedElements != selectedFileBasedContents.size() // selection contains other elements than
-                                                                // IFileBasedContent
-    ) {
-      _removeButton.setEnabled(false);
-      _editButton.setEnabled(false);
-    } else {
-      _editButton.setEnabled(selectedFileBasedContents.size() == 1);
-      // _removeButton.setEnabled(true);
-    }
-    _removeButton.setEnabled(true);
+
+    _removeButton.setEnabled(selectedElements > 0);
+    _editButton.setEnabled(selectedElements == 1);
+
     TreeItem[] selectedItems = _treeViewer.getTree().getSelection();
     System.out.println("selecteditems: " + selectedItems.length);
     if (selectedItems.length > 0) {
