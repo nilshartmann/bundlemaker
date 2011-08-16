@@ -16,7 +16,6 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionListener;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -66,12 +65,18 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
   private void createColumns(Composite parent, TableViewer viewer) {
 
-    createTableViewerColumn(viewer, "From", 120, new DelegatingDependencyColumnLabelProvider() {
+    createTableViewerColumn(viewer, "From", 120, new DependencyColumnLabelProvider() {
 
       @Override
-      public Object getArtifactElement(IDependency element) {
+      protected IArtifact getArtifactElement(IDependency element) {
         return element.getFrom();
       }
+
+      @Override
+      protected String getArtifactLabel(IArtifact artifact) {
+        return ArtifactHelper.getArtifactPath(_currentDependency.getFrom(), artifact);
+      }
+
     });
     createTableViewerColumn(viewer, "Usage", 30, new ColumnLabelProvider() {
 
@@ -90,10 +95,14 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       }
 
     });
-    createTableViewerColumn(viewer, "To", 120, new DelegatingDependencyColumnLabelProvider() {
+    createTableViewerColumn(viewer, "To", 120, new DependencyColumnLabelProvider() {
+      @Override
+      protected String getArtifactLabel(IArtifact artifact) {
+        return ArtifactHelper.getArtifactPath(_currentDependency.getTo(), artifact);
+      }
 
       @Override
-      public Object getArtifactElement(IDependency element) {
+      public IArtifact getArtifactElement(IDependency element) {
         return element.getTo();
       }
     });
@@ -127,6 +136,8 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
   }
 
+  private IDependency _currentDependency;
+
   /*
    * (non-Javadoc)
    * 
@@ -142,11 +153,15 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       return;
     }
 
+    _currentDependency = dependency;
+
     StringBuilder builder = new StringBuilder();
     dumpDependencies(builder, 0, dependency);
 
-    String fromColumnTitle = _columnTitleLabelProvider.getText(dependency.getFrom());
-    String toColumnTitle = _columnTitleLabelProvider.getText(dependency.getTo());
+    String fromColumnTitle = "From "
+        + ArtifactHelper.getArtifactPath(dependency.getFrom().getParent(ArtifactType.Root), dependency.getFrom());
+    String toColumnTitle = "To "
+        + ArtifactHelper.getArtifactPath(dependency.getTo().getParent(ArtifactType.Root), dependency.getTo());
 
     setColumnTitles(fromColumnTitle, toColumnTitle);
     _viewer.setInput(dependency.getDependencies());
@@ -160,8 +175,6 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
     table.getColumn(2).setText(toColumnTitle);
   }
 
-  private final DefaultArtifactLabelProvider _columnTitleLabelProvider = new DefaultArtifactLabelProvider();
-
   private void dumpDependencies(StringBuilder builder, int level, IDependency iDependency) {
     for (int i = 0; i < level; i++) {
       builder.append("  ");
@@ -174,51 +187,6 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
         dumpDependencies(builder, level + 1, iDependency2);
       }
     }
-  }
-
-  abstract class DelegatingDependencyColumnLabelProvider extends DelegatingArtifactColumnLabelProvider {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.bundlemaker.analysis.ui.dependencyview.DelegatingArtifactColumnLabelProvider#getText(java.lang.Object)
-     */
-    @Override
-    public String getText(Object element) {
-      element = preprocessElement(element);
-      if (element instanceof IArtifact) {
-        String absoluteName = "";
-        IArtifact artifact = (IArtifact) element;
-        while (artifact != null && artifact.getType() != ArtifactType.Root) {
-          absoluteName = artifact.getName() + "/" + absoluteName;
-          artifact = artifact.getParent();
-        }
-        return absoluteName;
-      }
-      return super.getText(element);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.bundlemaker.analysis.ui.dependencyview.DelegatingArtifactColumnLabelProvider#preprocessElement(java.lang.
-     * Object)
-     */
-    @Override
-    protected Object preprocessElement(Object element) {
-      if (element instanceof IDependency) {
-        return getArtifactElement((IDependency) element);
-      }
-      return super.preprocessElement(element);
-    }
-
-    /**
-     * @param element
-     * @return
-     */
-    public abstract Object getArtifactElement(IDependency element);
-
   }
 
 }

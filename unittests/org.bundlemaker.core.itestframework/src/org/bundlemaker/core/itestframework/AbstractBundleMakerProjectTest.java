@@ -1,5 +1,7 @@
 package org.bundlemaker.core.itestframework;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 
 import org.bundlemaker.core.BundleMakerCore;
@@ -8,6 +10,7 @@ import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMaker
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.After;
 import org.junit.Assert;
@@ -186,6 +189,8 @@ public abstract class AbstractBundleMakerProjectTest {
    * @return
    */
   protected static String getDefaultVmName() {
-    return JavaRuntime.getDefaultVMInstall().getName();
+    IVMInstall defaultVMInstall = JavaRuntime.getDefaultVMInstall();
+    assertNotNull("No default VM available", defaultVMInstall);
+    return defaultVMInstall.getName();
   }
 }
