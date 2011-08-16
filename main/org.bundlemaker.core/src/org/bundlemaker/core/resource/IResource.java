@@ -48,7 +48,7 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * 
    * @return all {@link IReference IReferences} that are originated in this resource.
    */
-  Set<? extends IReference> getReferences();
+  Set<IReference> getReferences();
 
   /**
    * <p>
@@ -59,7 +59,7 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * @return all the contained types in this resource. If the resource does not contain any type, an empty list will be
    *         returned instead.
    */
-  Set<? extends IType> getContainedTypes();
+  Set<IType> getContainedTypes();
 
   /**
    * <p>
@@ -126,5 +126,5 @@ public interface IResource extends IResourceKey, Comparable<IResource> {
    * 
    * @return
    */
-  Set<? extends IResource> getStickyResources();
+  Set<IResource> getStickyResources();
 }

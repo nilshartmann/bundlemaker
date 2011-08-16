@@ -49,6 +49,14 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
   /**
    * {@inheritDoc}
    */
+  @Override
+  public boolean isMovable() {
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public void setName(String name) {
     super.setName(name);
 
@@ -93,7 +101,7 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
    * {@inheritDoc}
    */
   @Override
-  public boolean canAdd(IArtifact artifact) {
+  public boolean handleCanAdd(IArtifact artifact) {
     return artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact;
   }
 

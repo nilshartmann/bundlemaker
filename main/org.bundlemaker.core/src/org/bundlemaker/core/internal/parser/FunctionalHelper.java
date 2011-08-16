@@ -4,9 +4,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.resource.Reference;
@@ -24,10 +27,14 @@ import org.eclipse.core.runtime.OperationCanceledException;
 
 public class FunctionalHelper {
 
-  static void parseNewOrModifiedResources(FileBasedContent fileBasedContent, Collection<ResourceStandin> resources,
-      ResourceCache resourceCache, ParserType parserType, IParser[] parsers, IProgressMonitor monitor)
-      throws CoreException {
+  static List<IProblem> parseNewOrModifiedResources(FileBasedContent fileBasedContent,
+      Collection<ResourceStandin> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
+      IProgressMonitor monitor) throws CoreException {
 
+    //
+    List<IProblem> result = new LinkedList<IProblem>();
+
+    //
     for (int i = 0; i < parsers.length; i++) {
 
       IParser parser = parsers[i];
@@ -42,12 +49,16 @@ public class FunctionalHelper {
           //
           if (parser.canParse(resourceStandin)) {
             parser.parseResource(fileBasedContent, resourceStandin, resourceCache);
+            result.addAll(parser.getProblems());
           }
 
           monitor.worked(1);
         }
       }
     }
+
+    //
+    return result;
   }
 
   /**
@@ -219,7 +230,7 @@ public class FunctionalHelper {
           return true;
         }
       }
-      
+
       //
       else {
         return true;

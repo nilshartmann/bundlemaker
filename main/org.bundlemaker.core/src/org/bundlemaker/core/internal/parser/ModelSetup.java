@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.FutureTask;
 
+import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
@@ -75,11 +76,14 @@ public class ModelSetup {
    * @param modifiableFileBasedContent
    * @param dependencyStore
    */
-  public void setup(final List<FileBasedContent> fileBasedContents, final IPersistentDependencyStore dependencyStore,
-      IProgressMonitor mainMonitor) throws OperationCanceledException, CoreException {
+  public List<IProblem> setup(final List<FileBasedContent> fileBasedContents,
+      final IPersistentDependencyStore dependencyStore, IProgressMonitor mainMonitor)
+      throws OperationCanceledException, CoreException {
 
     Assert.isNotNull(fileBasedContents);
     Assert.isNotNull(dependencyStore);
+
+    final List[] result = new List[1];
 
     // create new null monitor if necessary
     if (mainMonitor == null) {
@@ -122,7 +126,8 @@ public class ModelSetup {
       StaticLog.log(LOG, "Compare and update...", new LoggableAction<Void>() {
         @Override
         public Void execute() {
-          compareAndUpdate(fileBasedContents, storedResourcesMap, resourceCache, progressMonitor.newChild(60));
+          result[0] = compareAndUpdate(fileBasedContents, storedResourcesMap, resourceCache,
+              progressMonitor.newChild(60));
           return null;
         }
       });
@@ -164,6 +169,9 @@ public class ModelSetup {
 
     //
     notifyParseStop();
+
+    //
+    return result[0];
   }
 
   /**
@@ -175,8 +183,11 @@ public class ModelSetup {
    * @param resourceCache
    * @param mainMonitor
    */
-  private void compareAndUpdate(List<FileBasedContent> fileBasedContents,
+  private List<IProblem> compareAndUpdate(List<FileBasedContent> fileBasedContents,
       Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
+
+    //
+    List<IProblem> result = Collections.emptyList();
 
     //
     StopWatch stopWatch = null;
@@ -239,8 +250,9 @@ public class ModelSetup {
 
           resourceContentMonitor.setWorkRemaining(remaining);
 
-          multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources, newAndModifiedBinaryResources,
-              resourceCache, fileBasedContent, resourceContentMonitor.newChild(remaining));
+          result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
+              newAndModifiedBinaryResources, resourceCache, fileBasedContent,
+              resourceContentMonitor.newChild(remaining));
 
         }
 
@@ -250,11 +262,15 @@ public class ModelSetup {
     } finally {
       subMonitor.done();
     }
+
+    return result;
   }
 
-  private void multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
+  private List<IProblem> multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
       Collection<ResourceStandin> sourceResources, Collection<ResourceStandin> binaryResources,
       ResourceCache resourceCache, FileBasedContent fileBasedContent, IProgressMonitor monitor) {
+
+    List<IProblem> result = new LinkedList<IProblem>();
 
     //
     monitor.beginTask("PARSE ", sourceResources.size() + binaryResources.size());
@@ -302,16 +318,16 @@ public class ModelSetup {
       }
 
       // create the future tasks
-      FutureTask<Void>[] futureTasks = new FutureTask[THREAD_COUNT];
+      FutureTask<List<IProblem>>[] futureTasks = new FutureTask[THREAD_COUNT];
       for (int i = 0; i < futureTasks.length; i++) {
-        futureTasks[i] = new FutureTask<Void>(callables[i]);
+        futureTasks[i] = new FutureTask<List<IProblem>>(callables[i]);
         new Thread(futureTasks[i]).start();
       }
 
       // collect the result
       for (int i = 0; i < futureTasks.length; i++) {
         try {
-          futureTasks[i].get();
+          result.addAll(futureTasks[i].get());
         } catch (Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
@@ -321,6 +337,8 @@ public class ModelSetup {
     } finally {
       monitor.done();
     }
+
+    return result;
   }
 
   /**

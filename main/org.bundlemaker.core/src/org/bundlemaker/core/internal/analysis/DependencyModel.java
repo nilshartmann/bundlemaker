@@ -3,11 +3,12 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -21,10 +22,10 @@ public class DependencyModel implements IDependencyModel {
   private IModifiableModularizedSystem _modifiableModularizedSystem;
 
   /** - */
-  private IBundleMakerProject          _bundleMakerProject;
+  private IArtifact                    _artifactModel;
 
   /** - */
-  private IArtifact                    _artifactModel;
+  private DefaultArtifactCache         _artifactCache;
 
   /**
    * <p>
@@ -33,17 +34,20 @@ public class DependencyModel implements IDependencyModel {
    * 
    * @param bundleMakerProject
    * @param modifiableModularizedSystem
+   * @throws CoreException
    */
-  public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem, IArtifact artifactModel) {
+  public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
+      DefaultArtifactCache defaultArtifactCache) throws CoreException {
 
     Assert.isNotNull(modifiableModularizedSystem);
-    Assert.isNotNull(artifactModel);
+    Assert.isNotNull(defaultArtifactCache);
 
-    ((AdapterModularizedSystem2IArtifact) artifactModel).setDependencyModel(this);
+    _artifactCache = defaultArtifactCache;
+    _artifactModel = defaultArtifactCache.transform();
 
-    _bundleMakerProject = modifiableModularizedSystem.getBundleMakerProject();
+    ((AdapterModularizedSystem2IArtifact) _artifactModel).setDependencyModel(this);
+
     _modifiableModularizedSystem = modifiableModularizedSystem;
-    _artifactModel = artifactModel;
   }
 
   /**
@@ -117,8 +121,7 @@ public class DependencyModel implements IDependencyModel {
       // 'Workaround' - we have to remove the module form the internal list as it not has been added yet
       _modifiableModularizedSystem.removeModule(resourceModule.getModuleIdentifier());
 
-      // create new resource module adapter
-      return new AdapterResourceModule2IArtifact(resourceModule, getRoot());
+      return _artifactCache.getModuleArtifact(resourceModule);
     }
 
       //

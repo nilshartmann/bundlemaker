@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -49,44 +50,47 @@ public class JdtProjectHelper {
    */
   public static void setupAssociatedJavaProject(IBundleMakerProject project) throws CoreException {
 
-    // step 1: get the associated JDT project
-    IJavaProject javaProject = getAssociatedJavaProject(project);
+    try {
+      System.out.println("setupAssociatedJavaProject(" + project + ")");
 
-    // step 2: delete linked resources (should not be necessary anymore)
-    IResource[] children = javaProject.getProject().members();
-    for (IResource iResource : children) {
-      if (iResource.isLinked()) {
-        iResource.delete(true, null);
+      // step 1: get the associated JDT project
+      IJavaProject javaProject = getAssociatedJavaProject(project);
+
+      // step 2: 'unset' the class path
+      javaProject.setRawClasspath(null, null);
+      
+      // step 3: create the entries list
+      List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
+
+      // step 3.1: add the vm path
+      IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+      IPath path = JavaRuntime.newJREContainerPath(vmInstall);
+      IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
+      entries.add(classpathEntry);
+
+      // step 3.2: add the binary paths
+      for (IFileBasedContent projectContent : project.getProjectDescription().getFileBasedContent()) {
+
+        // TODO!!
+        IPath sourceRoot = null;
+        if (!projectContent.getSourceRootPaths().isEmpty()) {
+          sourceRoot = projectContent.getSourceRootPaths().toArray(new IRootPath[0])[0].getResolvedPath();
+        }
+
+        // add binary paths
+        for (IRootPath iClasspathEntry : projectContent.getBinaryRootPaths()) {
+          classpathEntry = JavaCore.newLibraryEntry(iClasspathEntry.getResolvedPath(), sourceRoot, null);
+          entries.add(classpathEntry);
+        }
       }
+
+      // set the classpath
+      javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
-
-    // step 3: create the entries list
-    List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
-
-    // step 3.1: add the vm path
-    IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-    IPath path = JavaRuntime.newJREContainerPath(vmInstall);
-    IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
-    entries.add(classpathEntry);
-
-    // step 3.2: add the binary paths
-    for (IFileBasedContent projectContent : project.getProjectDescription().getFileBasedContent()) {
-
-      // TODO!!
-      IPath sourceRoot = null;
-      if (!projectContent.getSourceRootPaths().isEmpty()) {
-        sourceRoot = projectContent.getSourceRootPaths().toArray(new IRootPath[0])[0].getResolvedPath();
-      }
-
-      // add binary paths
-      for (IRootPath iClasspathEntry : projectContent.getBinaryRootPaths()) {
-        classpathEntry = JavaCore.newLibraryEntry(iClasspathEntry.getResolvedPath(), sourceRoot, null);
-        entries.add(classpathEntry);
-      }
-    }
-
-    // set the classpath
-    javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
   }
 
   public static boolean hasAssociatedJavaProject(IBundleMakerProject bundleMakerProject) {

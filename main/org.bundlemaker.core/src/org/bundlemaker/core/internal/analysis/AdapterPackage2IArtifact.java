@@ -4,7 +4,11 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -61,14 +65,51 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
    * {@inheritDoc}
    */
   @Override
+  public boolean isMovable() {
+
+    //
+    IArtifact artifact = getParent(ArtifactType.Module);
+
+    //
+    return artifact instanceof IModuleArtifact
+        && ((IModuleArtifact) artifact).getAssociatedModule() instanceof IResourceModule;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public String getQualifiedName() {
     return _qualifiedName;
   }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
-    return artifact != null
-        && (artifact.getType().equals(ArtifactType.Resource) || artifact.getType().equals(ArtifactType.Type));
+  public boolean handleCanAdd(IArtifact artifact) {
+
+    if (artifact == null) {
+      return false;
+    }
+
+    if (artifact.getType().equals(ArtifactType.Resource)) {
+
+      String packageName = ((IResourceArtifact) artifact).getAssociatedResource().getPackageName();
+      return packageName.equals(this.getQualifiedName());
+    }
+
+    if (artifact.getType().equals(ArtifactType.Type)) {
+      String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
+      return packageName.equals(this.getQualifiedName());
+    }
+
+    if (artifact.getType().equals(ArtifactType.Package)) {
+      IPackageArtifact packageArtifact = ((IPackageArtifact) artifact);
+      int index = packageArtifact.getQualifiedName().lastIndexOf(".");
+      String parentPackageName = index != -1 ? packageArtifact.getQualifiedName().substring(0, index) : packageArtifact
+          .getQualifiedName();
+      return parentPackageName.equals(this.getQualifiedName());
+    }
+
+    return false;
   }
 
   /**

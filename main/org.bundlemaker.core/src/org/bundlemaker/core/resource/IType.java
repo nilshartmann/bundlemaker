@@ -26,7 +26,7 @@ import org.bundlemaker.core.modules.IModule;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IType {
+public interface IType extends Comparable<IType> {
 
   /**
    * <p>
@@ -80,7 +80,7 @@ public interface IType {
    * 
    * @return a set with all {@link IReference IReferences} of this type.
    */
-  Set<? extends IReference> getReferences();
+  Set<IReference> getReferences();
 
   /**
    * <p>

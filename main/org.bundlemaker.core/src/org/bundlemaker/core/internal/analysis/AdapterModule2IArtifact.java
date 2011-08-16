@@ -49,6 +49,14 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     return false;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isMovable() {
+    return true;
+  }
+
   @Override
   public void setNameAndVersion(String name, String version) {
 
@@ -83,7 +91,7 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
   }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
+  public boolean handleCanAdd(IArtifact artifact) {
     return false;
   }
 

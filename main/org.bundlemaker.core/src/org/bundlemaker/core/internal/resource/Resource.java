@@ -102,16 +102,18 @@ public class Resource extends ResourceKey implements IModifiableResource {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IReference> getReferences() {
-    return Collections.unmodifiableSet(references());
+  public Set<IReference> getReferences() {
+    Set<? extends IReference> result = references();
+    return Collections.unmodifiableSet(result);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IType> getContainedTypes() {
-    return Collections.unmodifiableSet(containedTypes());
+  public Set<IType> getContainedTypes() {
+    Set<? extends IType> types = containedTypes();
+    return Collections.unmodifiableSet(types);
   }
 
   @Override
@@ -161,8 +163,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IResource> getStickyResources() {
-    return Collections.unmodifiableSet(stickyResources());
+  public Set<IResource> getStickyResources() {
+    Set<? extends IResource> result = stickyResources();
+    return Collections.unmodifiableSet(result);
   }
 
   /**
