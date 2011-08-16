@@ -10,12 +10,52 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.ui.dependencyview;
 
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
-public class DependencyColumnLabelProvider extends ColumnLabelProvider {
+public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider {
+  private static final DefaultArtifactLabelProvider _defaultArtifactLabelProvider = new DefaultArtifactLabelProvider();
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getImage(java.lang.Object)
+   */
+  @Override
+  public Image getImage(Object element) {
+    if (element instanceof IDependency) {
+      element = getArtifactElement((IDependency) element);
+    }
+    return _defaultArtifactLabelProvider.getImage(element);
+  }
+
+  /**
+   * @param element
+   * @return
+   */
+  protected abstract IArtifact getArtifactElement(IDependency element);
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
+   */
+  @Override
+  public String getText(Object element) {
+    if (element instanceof IDependency) {
+      IArtifact artifact = getArtifactElement((IDependency) element);
+      return getArtifactLabel(artifact);
+    }
+    return _defaultArtifactLabelProvider.getText(element);
+  }
+
+  protected abstract String getArtifactLabel(IArtifact artifact);
 
 }
