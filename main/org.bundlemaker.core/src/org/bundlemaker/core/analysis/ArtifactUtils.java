@@ -34,7 +34,7 @@ public class ArtifactUtils {
     Collections.sort(sorted, new Comparator<IArtifact>() {
       @Override
       public int compare(IArtifact o1, IArtifact o2) {
-        return o1.getName().compareTo(o2.getName());
+        return o1.getQualifiedName().compareTo(o2.getQualifiedName());
       }
     });
 
