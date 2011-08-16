@@ -10,29 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.jdt.internal;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
-import org.bundlemaker.core.parser.jdt.internal.ecj.IndirectlyReferencesAnalyzer;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.resource.ReferenceType;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
-import org.bundlemaker.core.resource.modifiable.ReferenceAttributes;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
@@ -52,16 +38,10 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 public class JdtParser extends AbstractHookAwareJdtParser {
 
   /** the AST parser */
-  private ASTParser                    _parser;
+  private ASTParser    _parser;
 
   /** the associated java project */
-  private IJavaProject                 _javaProject;
-
-  /** the indirectly references analyzer **/
-  private IndirectlyReferencesAnalyzer _indirectlyReferencesAnalyzer;
-
-  /** - */
-  private boolean                      _parseIndirectReferences;
+  private IJavaProject _javaProject;
 
   /**
    * <p>
@@ -82,13 +62,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
     // the associated java project
     _javaProject = JdtProjectHelper.getAssociatedJavaProject(bundleMakerProject);
-
-    //
-    _indirectlyReferencesAnalyzer = new IndirectlyReferencesAnalyzer(_javaProject,
-        bundleMakerProject.getProjectDescription());
-
-    //
-    _parseIndirectReferences = parseIndirectReferences;
   }
 
   /**
@@ -103,7 +76,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  public void parseResource(IFileBasedContent fileBasedContent, IResourceKey resourceKey, IResourceCache cache) {
+  public synchronized void parseResource(IFileBasedContent fileBasedContent, IResourceKey resourceKey,
+      IResourceCache cache) {
 
     //
     if (!canParse(resourceKey)) {
@@ -115,18 +89,10 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
     try {
 
-      // TODO configurable
-      // @SuppressWarnings("rawtypes")
-      // Map options = new HashMap();
-      // options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
-      // options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_6);
-      // options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
-
       // _parser.setSource(iCompilationUnit);
       char[] content = new String(modifiableResource.getContent()).toCharArray();
       _parser.setProject(_javaProject);
       _parser.setSource(content);
-
       // TODO
       _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
       _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
@@ -134,20 +100,31 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       CompilationUnit compilationUnit = (CompilationUnit) _parser.createAST(null);
 
-      List<IProblem> problems = analyzeCompilationUnit(modifiableResource, compilationUnit);
-      getProblems().addAll(problems);
+      // for (org.eclipse.jdt.core.compiler.IProblem problem : compilationUnit.getProblems()) {
+      // if (problem.isError()) {
+      //
+      //
+      // // _parser.setSource(iCompilationUnit);
+      // content = new String(modifiableResource.getContent()).toCharArray();
+      // _parser.setProject(_javaProject);
+      // _parser.setSource(content);
+      // // TODO
+      // _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());
+      // _parser.setCompilerOptions(CoreParserJdt.getCompilerOptionsWithComplianceLevel(null));
+      // _parser.setResolveBindings(true);
+      // CompilationUnit cu = (CompilationUnit) _parser.createAST(null);
+      // cu.getProblems();
+      // }
+      // }
+
+      analyzeCompilationUnit(modifiableResource, compilationUnit);
 
       // set the primary type
       String primaryTypeName = JavaTypeUtils.convertToFullyQualifiedName(modifiableResource.getPath(), ".java");
       IType primaryType = modifiableResource.getType(primaryTypeName);
       modifiableResource.setPrimaryType(primaryType);
 
-      // step 3: compute the indirectly referenced types
-      if (_parseIndirectReferences) {
-        computeIndirectlyReferencedTypes(modifiableResource, content);
-      }
     } catch (Exception e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -161,46 +138,6 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * <p>
    * </p>
    * 
-   * @param modifiableResource
-   * @param content
-   * @throws IOException
-   */
-  private void computeIndirectlyReferencedTypes(IModifiableResource modifiableResource, char[] content)
-      throws IOException {
-
-    // get all the referenced types (directly and indirectly)
-    Set<String> directlyAndIndirectlyReferencedTypes = _indirectlyReferencesAnalyzer.getAllReferencedTypes(
-        modifiableResource, content);
-
-    // get all directly referenced types
-    Set<String> directlyReferenced = new HashSet<String>();
-    for (IReference reference : modifiableResource.getReferences()) {
-      if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
-        directlyReferenced.add(reference.getFullyQualifiedName());
-      }
-    }
-    for (IType type : modifiableResource.getContainedTypes()) {
-      for (IReference reference : type.getReferences()) {
-        if (reference.getReferenceType().equals(ReferenceType.TYPE_REFERENCE)) {
-          directlyReferenced.add(reference.getFullyQualifiedName());
-        }
-      }
-    }
-
-    // add only the indirectly referenced types
-    for (String type : directlyAndIndirectlyReferencedTypes) {
-
-      if (!directlyReferenced.contains(type)) {
-        modifiableResource.recordReference(type, new ReferenceAttributes(ReferenceType.TYPE_REFERENCE, false, false,
-            false, true, false, false, true));
-      }
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param rootMap
    * @param progressMonitor
    * 
@@ -208,7 +145,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param content
    * @throws JavaModelException
    */
-  private List<IProblem> analyzeCompilationUnit(IModifiableResource modifiableResource, CompilationUnit compilationUnit)
+  private void analyzeCompilationUnit(IModifiableResource modifiableResource, CompilationUnit compilationUnit)
       throws CoreException {
 
     // step 1: set the directly referenced types
@@ -227,100 +164,15 @@ public class JdtParser extends AbstractHookAwareJdtParser {
     // step 2:
     callSourceParserHooks(modifiableResource, compilationUnit);
 
-    List<IProblem> problems = new LinkedList<IProblem>();
-
     // step 4: add the errors to the error list
     for (IProblem problem : visitor.getProblems()) {
 
       // add errors
       if (problem.isError()) {
-        System.out.println(problem.getMessage());
-        problems.add(problem);
+        System.out.println("DERBER FEHLER " + problem.getMessage());
+        System.out.println(_javaProject);
+        getProblems().add(problem);
       }
     }
-
-    // step 5: finally return
-    return problems;
-  }
-
-  private class CompilerOptions extends Hashtable<Object, Object> {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Hashtable#isEmpty()
-     */
-    @Override
-    public synchronized boolean isEmpty() {
-      // TODO Auto-generated method stub
-      return super.isEmpty();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Hashtable#elements()
-     */
-    @Override
-    public synchronized Enumeration<Object> elements() {
-      // TODO Auto-generated method stub
-      return super.elements();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Hashtable#keySet()
-     */
-    @Override
-    public Set<Object> keySet() {
-      // TODO Auto-generated method stub
-      return super.keySet();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Hashtable#entrySet()
-     */
-    @Override
-    public Set<Entry<Object, Object>> entrySet() {
-      // TODO Auto-generated method stub
-      return super.entrySet();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Hashtable#values()
-     */
-    @Override
-    public Collection<Object> values() {
-      // TODO Auto-generated method stub
-      return super.values();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Hashtable#containsKey(java.lang.Object)
-     */
-    @Override
-    public synchronized boolean containsKey(Object key) {
-      // TODO Auto-generated method stub
-      return super.containsKey(key);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Hashtable#get(java.lang.Object)
-     */
-    @Override
-    public synchronized Object get(Object key) {
-      // TODO Auto-generated method stub
-      return super.get(key);
-    }
-
   }
 }

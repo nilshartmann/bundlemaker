@@ -76,6 +76,8 @@ public class BundleMakerProject implements IBundleMakerProject {
   /** - */
   private IDependencyModel                         _dependencyModel;
 
+  private List<IProblem>                           _problems;
+
   /**
    * <p>
    * Creates a new instance of type {@link BundleMakerProject}.
@@ -170,7 +172,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // get the dependency store
     ModelSetup modelSetup = new ModelSetup(this);
-    modelSetup.setup(_projectDescription.getModifiableFileBasedContent(),
+    _problems = modelSetup.setup(_projectDescription.getModifiableFileBasedContent(),
         ((IPersistentDependencyStore) getDependencyStore(null)), progressMonitor);
 
     // set 'READY' state
@@ -227,8 +229,7 @@ public class BundleMakerProject implements IBundleMakerProject {
    */
   @Override
   public List<IProblem> getProblems() {
-    // TODO Auto-generated method stub
-    return new LinkedList<IProblem>();
+    return _problems;
   }
 
   /**
