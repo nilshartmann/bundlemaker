@@ -244,4 +244,9 @@ public class Reference implements IReference {
     return "Reference [_fullyQualifiedName=" + _fullyQualifiedName + ", _referenceAttributes=" + _referenceAttributes
         + "]";
   }
+
+  @Override
+  public int compareTo(IReference o) {
+    return this.getFullyQualifiedName().compareTo(o.getFullyQualifiedName());
+  }
 }

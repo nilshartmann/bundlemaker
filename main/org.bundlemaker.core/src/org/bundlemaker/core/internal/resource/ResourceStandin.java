@@ -89,7 +89,7 @@ public class ResourceStandin extends ResourceKey implements IResource {
   }
 
   @Override
-  public Set<? extends IReference> getReferences() {
+  public Set<IReference> getReferences() {
 
     //
     if (_resource == null) {
@@ -101,7 +101,7 @@ public class ResourceStandin extends ResourceKey implements IResource {
   }
 
   @Override
-  public Set<? extends IType> getContainedTypes() {
+  public Set<IType> getContainedTypes() {
 
     //
     if (_resource == null) {
@@ -163,7 +163,7 @@ public class ResourceStandin extends ResourceKey implements IResource {
   }
 
   @Override
-  public Set<? extends IResource> getStickyResources() {
+  public Set<IResource> getStickyResources() {
 
     //
     if (_resource == null) {

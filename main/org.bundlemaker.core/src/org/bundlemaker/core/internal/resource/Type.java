@@ -161,8 +161,9 @@ public class Type implements IType, IModifiableType {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IReference> getReferences() {
-    return Collections.unmodifiableSet(references());
+  public Set<IReference> getReferences() {
+    Set<? extends IReference> result = references();
+    return Collections.unmodifiableSet(result);
   }
 
   /**
@@ -355,6 +356,11 @@ public class Type implements IType, IModifiableType {
         return references();
       }
     };
+  }
+
+  @Override
+  public int compareTo(IType o) {
+    return this.getFullyQualifiedName().compareTo(o.getFullyQualifiedName());
   }
 
   /**

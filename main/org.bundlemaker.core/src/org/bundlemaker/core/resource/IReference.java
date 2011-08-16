@@ -20,7 +20,7 @@ package org.bundlemaker.core.resource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IReference {
+public interface IReference extends Comparable<IReference> {
 
   /**
    * <p>
