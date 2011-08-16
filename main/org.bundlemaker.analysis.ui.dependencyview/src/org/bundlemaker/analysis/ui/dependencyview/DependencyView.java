@@ -189,8 +189,17 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       if (element instanceof IArtifact) {
         String absoluteName = "";
         IArtifact artifact = (IArtifact) element;
+        boolean inPackage = false;
         while (artifact != null && artifact.getType() != ArtifactType.Root) {
-          absoluteName = artifact.getName() + "/" + absoluteName;
+          if (artifact.getType() == ArtifactType.Package) {
+            if (!inPackage) {
+              inPackage = true;
+              absoluteName = artifact.getQualifiedName() + "/" + absoluteName;
+            }
+          } else {
+            absoluteName = artifact.getName() + "/" + absoluteName;
+            inPackage = false;
+          }
           artifact = artifact.getParent();
         }
         return absoluteName;
