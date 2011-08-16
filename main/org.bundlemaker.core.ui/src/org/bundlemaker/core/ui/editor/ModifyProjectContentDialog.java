@@ -274,6 +274,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
   }
 
   public String getName() {
+    System.out.printf("getName(), _name: %s%n", _name);
     return _name;
   }
 
@@ -300,6 +301,8 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
   @Override
   protected void okPressed() {
     _name = _nameTextField.getText();
+    System.out.printf("ModifyProjectContentDialog, _name: %s%n", _name);
+    System.out.printf("ModifyProjectContentDialog, _nameTextField: %s%n", _nameTextField.getText());
     _version = _versionTextField.getText();
     _binaryRoots = _binariesContentList.getItems();
     _sourceRoots = _sourcesContentList.getItems();
