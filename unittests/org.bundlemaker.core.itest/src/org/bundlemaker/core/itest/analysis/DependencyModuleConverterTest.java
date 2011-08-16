@@ -17,15 +17,12 @@ public class DependencyModuleConverterTest extends AbstractModularizedSystemTest
   public void testDependencies() throws CoreException {
 
     // transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
-        getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
-    ArtifactUtils.dumpArtifact(dependencyModel.getRoot());
+    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getModularizedSystem(),
+        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
     IArtifact artifact = ((IAdvancedArtifact) dependencyModel.getRoot())
         .getChild("group1|group2|DependencyModuleConverterTest_1.0.0|de.test.inner2|Inner2");
 
     Assert.isNotNull(artifact);
-
-    System.out.println(artifact.getDependencies());
   }
 }
