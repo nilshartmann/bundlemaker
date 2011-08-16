@@ -49,9 +49,14 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     //
     addProjectDescription();
 
-    //
+    // 
     getBundleMakerProject().initialize(new ProgressMonitor());
+    
+    // parse and open the project
     getBundleMakerProject().parseAndOpen(new ProgressMonitor());
+
+    // assert no parse errors
+    Assert.assertEquals(0, getBundleMakerProject().getProblems().size());
 
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
         getTestProjectName());
