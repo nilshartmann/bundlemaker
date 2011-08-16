@@ -18,9 +18,12 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionListener;
+import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnLayoutData;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
@@ -53,19 +56,22 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
     Analysis.instance().getDependencySelectionService().addDependencySelectionListener(this);
 
-    _viewer = new TableViewer(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+    Composite tableComposite = new Composite(parent, SWT.NONE);
+    tableComposite.setLayout(new TableColumnLayout());
+
+    _viewer = new TableViewer(tableComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
     final Table table = _viewer.getTable();
     table.setHeaderVisible(true);
     table.setLinesVisible(true);
     _viewer.setContentProvider(ArrayContentProvider.getInstance());
     _viewer.setLabelProvider(new DependencyTableLabelProvider());
-    createColumns(parent, _viewer);
+    createColumns(tableComposite, _viewer);
 
   }
 
   private void createColumns(Composite parent, TableViewer viewer) {
 
-    createTableViewerColumn(viewer, "From", 120, new DependencyColumnLabelProvider() {
+    createTableViewerColumn(parent, viewer, "From", 45, new DependencyColumnLabelProvider() {
 
       @Override
       protected IArtifact getArtifactElement(IDependency element) {
@@ -78,7 +84,7 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       }
 
     });
-    createTableViewerColumn(viewer, "Usage", 30, new ColumnLabelProvider() {
+    createTableViewerColumn(parent, viewer, "Usage", 10, new ColumnLabelProvider() {
 
       /*
        * (non-Javadoc)
@@ -89,13 +95,13 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       public String getText(Object element) {
         if (element instanceof IDependency) {
           IDependency dependency = (IDependency) element;
-          return String.valueOf(dependency.getDependencyKind());
+          return String.valueOf(dependency.getDependencyKind()).toLowerCase();
         }
         return super.getText(element);
       }
 
     });
-    createTableViewerColumn(viewer, "To", 120, new DependencyColumnLabelProvider() {
+    createTableViewerColumn(parent, viewer, "To", 120, new DependencyColumnLabelProvider() {
       @Override
       protected String getArtifactLabel(IArtifact artifact) {
         return ArtifactHelper.getArtifactPath(_currentDependency.getTo(), artifact);
@@ -109,15 +115,18 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
   }
 
-  private TableViewerColumn createTableViewerColumn(TableViewer viewer, String title, int width,
-      CellLabelProvider labelProvider) {
+  private TableViewerColumn createTableViewerColumn(Composite tableComposite, TableViewer viewer, String title,
+      int width, CellLabelProvider labelProvider) {
     final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
     final TableColumn column = viewerColumn.getColumn();
     column.setText(title);
-    column.setWidth(width);
+    // column.setWidth(width);
     column.setResizable(true);
     column.setMoveable(true);
 
+    TableColumnLayout tableLayout = (TableColumnLayout) tableComposite.getLayout();
+    ColumnLayoutData columnLayoutData = new ColumnWeightData(width, true);
+    tableLayout.setColumnData(column, columnLayoutData);
     if (labelProvider != null) {
       viewerColumn.setLabelProvider(labelProvider);
     }
@@ -165,6 +174,7 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
     setColumnTitles(fromColumnTitle, toColumnTitle);
     _viewer.setInput(dependency.getDependencies());
+    _viewer.getTable().redraw();
 
   }
 
