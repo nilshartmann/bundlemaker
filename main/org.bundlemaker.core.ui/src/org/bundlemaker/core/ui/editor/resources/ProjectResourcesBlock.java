@@ -19,6 +19,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
+import org.bundlemaker.core.BundleMakerProjectState;
+import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
@@ -56,6 +60,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
@@ -77,7 +82,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ProjectResourcesBlock {
+public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener {
 
   /**
    * Name of the property, that will be fired when the project content has been changed by this block
@@ -258,6 +263,25 @@ public class ProjectResourcesBlock {
 
     // paint the borders
     toolkit.paintBordersFor(client);
+
+    _bundleMakerProjectProvider.getBundleMakerProject().addBundleMakerProjectChangedListener(this);
+  }
+
+  @Override
+  public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
+    if (event.getType() == Type.PROJECT_STATE_CHANGED) {
+      if (_bundleMakerProjectProvider.getBundleMakerProject().getState() == BundleMakerProjectState.INITIALIZED) {
+        // in state INITIALIZED project description is re-creates, so we have to refresh the references
+        // to it
+        Display.getDefault().syncExec(new Runnable() {
+          @Override
+          public void run() {
+            _treeViewer.refresh();
+          }
+        });
+
+      }
+    }
   }
 
   /**
@@ -316,6 +340,9 @@ public class ProjectResourcesBlock {
     if (selectedObject instanceof IModifiableFileBasedContent) {
       IModifiableFileBasedContent content = (IModifiableFileBasedContent) selectedObject;
       projectDescriptionHasChanged = editFileBasedContent(shell, content);
+      projectDescriptionChanged();
+      System.out.printf("content after projectDescriptionChanged: %s  name: %s%n", content, content.getName());
+      return;
     }
 
     if (selectedObject instanceof IRootPath) {
@@ -371,6 +398,9 @@ public class ProjectResourcesBlock {
   }
 
   private boolean editFileBasedContent(Shell shell, IModifiableFileBasedContent content) {
+
+    System.out.printf("content before opening: %s  name: %s%n", content, content.getName());
+
     ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, content);
     if (dialog.open() != Window.OK) {
       return false;
@@ -378,10 +408,12 @@ public class ProjectResourcesBlock {
 
     // Update the content
     content.setName(dialog.getName());
+    System.out.printf("dialog.getName(): %s%n", dialog.getName());
     content.setVersion(dialog.getVersion());
     content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
     content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
     content.setAnalyzeMode(getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
+    System.out.printf("content after opening: %s  name: %s%n", content, content.getName());
 
     return true;
   }
@@ -682,5 +714,13 @@ public class ProjectResourcesBlock {
       _moveDownButton.setEnabled(false);
       _moveUpButton.setEnabled(false);
     }
+  }
+
+  /**
+   * 
+   */
+  public void dispose() {
+    _bundleMakerProjectProvider.getBundleMakerProject().removeBundleMakerProjectChangedListener(this);
+
   }
 }

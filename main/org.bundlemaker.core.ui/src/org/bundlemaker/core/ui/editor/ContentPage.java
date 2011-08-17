@@ -37,9 +37,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  */
 public class ContentPage extends FormPage implements BundleMakerProjectProvider {
 
-  private ScrolledForm _form;
+  private ScrolledForm          _form;
 
-  private boolean      _needsReparsing = true;
+  private boolean               _needsReparsing = true;
+
+  private ProjectResourcesBlock _projectResourcesBlock;
 
   public ContentPage(ProjectDescriptionEditor editor) {
     super(editor, "Content", "Content");
@@ -99,8 +101,8 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
   private void createResourcesSection(final IManagedForm mform, String title, String description,
       final boolean resources) {
 
-    ProjectResourcesBlock block = new ProjectResourcesBlock(title, description, this);
-    block.addPropertyChangeListener(new IPropertyChangeListener() {
+    _projectResourcesBlock = new ProjectResourcesBlock(title, description, this);
+    _projectResourcesBlock.addPropertyChangeListener(new IPropertyChangeListener() {
 
       @Override
       public void propertyChange(PropertyChangeEvent event) {
@@ -108,7 +110,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
         refreshFormTitle();
       }
     });
-    block.createControl(mform);
+    _projectResourcesBlock.createControl(mform);
   }
 
   /*
@@ -179,4 +181,24 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
       parseProject();
     }
   }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.ui.forms.editor.FormPage#dispose()
+   */
+  @Override
+  public void dispose() {
+    if (_projectResourcesBlock != null) {
+      try {
+        _projectResourcesBlock.dispose();
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      }
+    }
+
+    super.dispose();
+
+  }
+
 }

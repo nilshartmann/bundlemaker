@@ -101,7 +101,7 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       }
 
     });
-    createTableViewerColumn(parent, viewer, "To", 120, new DependencyColumnLabelProvider() {
+    createTableViewerColumn(parent, viewer, "To", 45, new DependencyColumnLabelProvider() {
       @Override
       protected String getArtifactLabel(IArtifact artifact) {
         return ArtifactHelper.getArtifactPath(_currentDependency.getTo(), artifact);
@@ -116,16 +116,15 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
   }
 
   private TableViewerColumn createTableViewerColumn(Composite tableComposite, TableViewer viewer, String title,
-      int width, CellLabelProvider labelProvider) {
+      int weight, CellLabelProvider labelProvider) {
     final TableViewerColumn viewerColumn = new TableViewerColumn(viewer, SWT.NONE);
     final TableColumn column = viewerColumn.getColumn();
     column.setText(title);
-    // column.setWidth(width);
     column.setResizable(true);
-    column.setMoveable(true);
+    column.setMoveable(false);
 
     TableColumnLayout tableLayout = (TableColumnLayout) tableComposite.getLayout();
-    ColumnLayoutData columnLayoutData = new ColumnWeightData(width, true);
+    ColumnLayoutData columnLayoutData = new ColumnWeightData(weight);
     tableLayout.setColumnData(column, columnLayoutData);
     if (labelProvider != null) {
       viewerColumn.setLabelProvider(labelProvider);
