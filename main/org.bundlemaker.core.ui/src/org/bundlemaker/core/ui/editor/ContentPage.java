@@ -137,12 +137,14 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
   }
 
   private void refreshFormTitle() {
-
-    _form.setText("Content");
-    if (_needsReparsing) {
-      _form.setMessage("Needs reparsing", IMessageProvider.INFORMATION);
-    } else {
-      _form.setMessage(null, IMessageProvider.NONE);
+    // TODO
+    if (!_form.isDisposed()) {
+      _form.setText("Content");
+      if (_needsReparsing) {
+        _form.setMessage("Needs reparsing", IMessageProvider.INFORMATION);
+      } else {
+        _form.setMessage(null, IMessageProvider.NONE);
+      }
     }
   }
 
