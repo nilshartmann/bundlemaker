@@ -61,4 +61,43 @@ public interface IArtifactTreeVisitor {
    * @return
    */
   boolean visit(IPackageArtifact packageArtifact);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public class Adapter implements IArtifactTreeVisitor {
+
+    @Override
+    public boolean visit(IRootArtifact rootArtifact) {
+      return true;
+    }
+
+    @Override
+    public boolean visit(IGroupArtifact rootArtifact) {
+      return true;
+    }
+
+    @Override
+    public boolean visit(IModuleArtifact moduleArtifact) {
+      return true;
+    }
+
+    @Override
+    public boolean visit(IResourceArtifact resourceArtifact) {
+      return true;
+    }
+
+    @Override
+    public boolean visit(ITypeArtifact typeArtifact) {
+      return true;
+    }
+
+    @Override
+    public boolean visit(IPackageArtifact packageArtifact) {
+      return true;
+    }
+  }
 }
