@@ -7,6 +7,7 @@ import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.transformer.caches.PackageCache;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -35,7 +36,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
   private ModuleCache                                                _moduleCache;
 
   /** - */
-  private GenericCache<ModulePackageKey, AbstractArtifactContainer>  _packageCache;
+  private PackageCache                                               _packageCache;
 
   /** - */
   private GenericCache<ModuleResourceKey, AbstractArtifactContainer> _resourceCache;
@@ -242,7 +243,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * 
    * @return
    */
-  public final GenericCache<ModulePackageKey, AbstractArtifactContainer> getPackageCache() {
+  public final PackageCache getPackageCache() {
     return _packageCache;
   }
 
@@ -304,7 +305,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * 
    * @return
    */
-  protected abstract GenericCache<ModulePackageKey, AbstractArtifactContainer> createPackageCache();
+  protected abstract PackageCache createPackageCache();
 
   /**
    * <p>

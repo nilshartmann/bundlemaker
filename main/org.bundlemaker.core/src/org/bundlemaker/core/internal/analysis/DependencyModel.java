@@ -126,7 +126,7 @@ public class DependencyModel implements IDependencyModel {
 
       //
     case Package: {
-      return new AdapterPackage2IArtifact(qualifiedName, getRoot(), false);
+      return new AdapterPackage2IArtifact(qualifiedName, getRoot(), false, null, _artifactCache);
     }
 
       //

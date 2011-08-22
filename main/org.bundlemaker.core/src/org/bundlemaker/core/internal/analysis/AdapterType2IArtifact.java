@@ -59,7 +59,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   // private boolean _aggregateNonPrimaryTypes;
 
   /** - */
-  private IMovableUnit                _resourceHolder;
+  private IMovableUnit                _movableUnit;
 
   /**
    * <p>
@@ -85,7 +85,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _artifactCache = defaultArtifactCache;
 
     //
-    _resourceHolder = MovableUnit.createFromType(type);
+    _movableUnit = MovableUnit.createFromType(type);
+  }
+
+  @Override
+  public boolean containsTypesOrResources() {
+    return true;
   }
 
   @Override
@@ -128,7 +133,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   @Override
   public List<IResource> getAssociatedBinaryResources() {
-    return _resourceHolder.getAssociatedBinaryResources();
+    return _movableUnit.getAssociatedBinaryResources();
   }
 
   /**
@@ -136,7 +141,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   @Override
   public IResource getAssociatedSourceResource() {
-    return _resourceHolder.getAssociatedSourceResource();
+    return _movableUnit.getAssociatedSourceResource();
   }
 
   /**
@@ -144,7 +149,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   @Override
   public List<IType> getAssociatedTypes() {
-    return _resourceHolder.getAssociatedTypes();
+    return _movableUnit.getAssociatedTypes();
   }
 
   /**
@@ -165,12 +170,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
   @Override
   public boolean removeArtifact(IArtifact artifact) {
-    // throw new unsupported operation exception
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addArtifact(IArtifact artifact) {
     // throw new unsupported operation exception
     throw new UnsupportedOperationException();
   }
@@ -439,5 +438,10 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   public void accept(IArtifactTreeVisitor visitor) {
     //
     visitor.visit(this);
+  }
+
+  @Override
+  public void addArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException();
   }
 }

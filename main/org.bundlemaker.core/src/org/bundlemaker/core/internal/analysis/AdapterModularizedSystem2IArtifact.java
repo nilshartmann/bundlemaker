@@ -50,6 +50,18 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     _artifactTreeChangedListeners = new LinkedList<IArtifactTreeChangedListener>();
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public void invalidateAll() {
+    if (getRoot() != null) {
+      getRoot().accept(new InvalidateAggregatedDependencies());
+    }
+  }
+
   @Override
   public boolean isVirtual() {
     return false;
@@ -78,8 +90,15 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
   }
 
   @Override
-  public boolean handleCanAdd(IArtifact artifact) {
-    return artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact;
+  public String handleCanAdd(IArtifact artifact) {
+
+    //
+    if (!(artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact)) {
+      return "Only groups and modules are addable to root";
+    }
+
+    //
+    return null;
   }
 
   @Override

@@ -10,14 +10,20 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.List;
+
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -25,13 +31,16 @@ import org.bundlemaker.core.resource.IResource;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterResource2IArtifact extends AbstractAdvancedContainer implements IResourceArtifact {
+public class AdapterResource2IArtifact extends AbstractAdvancedContainer implements IResourceArtifact, IMovableUnit {
 
   /** the bundle maker resource */
-  private IResource _resource;
+  private IResource    _resource;
 
   /** - */
-  private boolean   _isSourceResource;
+  private boolean      _isSourceResource;
+
+  /** - */
+  private IMovableUnit _movableUnit;
 
   /**
    * <p>
@@ -41,7 +50,8 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
    * @param type
    * @param parent
    */
-  public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IArtifact parent) {
+  public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IArtifact parent,
+      DefaultArtifactCache artifactCache) {
     super(ArtifactType.Resource, resource.getName());
 
     // set parent/children dependency
@@ -53,6 +63,21 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
 
     //
     _isSourceResource = isSourceResource;
+
+    //
+    _movableUnit = MovableUnit.createFromResource(resource, artifactCache.getModularizedSystem());
+  }
+
+  public List<IType> getAssociatedTypes() {
+    return _movableUnit.getAssociatedTypes();
+  }
+
+  public List<IResource> getAssociatedBinaryResources() {
+    return _movableUnit.getAssociatedBinaryResources();
+  }
+
+  public IResource getAssociatedSourceResource() {
+    return _movableUnit.getAssociatedSourceResource();
   }
 
   @Override
@@ -79,8 +104,8 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
   }
 
   @Override
-  public boolean handleCanAdd(IArtifact artifact) {
-    return false;
+  public String handleCanAdd(IArtifact artifact) {
+    return "Can not add artifacts to resource";
   }
 
   @Override

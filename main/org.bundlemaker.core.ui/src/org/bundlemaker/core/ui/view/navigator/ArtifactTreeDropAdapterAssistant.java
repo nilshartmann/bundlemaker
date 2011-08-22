@@ -1,11 +1,13 @@
 package org.bundlemaker.core.ui.view.navigator;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
@@ -56,19 +58,38 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
     targetArtifact.addArtifact(sourceArtifact);
 
-    // ArtifactUtils.dumpArtifact(((IAdvancedArtifact) sourceArtifact).getRoot());
+    ArtifactUtils.dumpArtifact(((IAdvancedArtifact) sourceArtifact).getRoot());
 
+    //
     CommonNavigator commonNavigator = CommonNavigatorUtils
         .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
-    IRootArtifact root = ((IAdvancedArtifact) sourceArtifact).getRoot();
-    commonNavigator.getCommonViewer().refresh(root, true);
-    commonNavigator.getCommonViewer().refresh(targetArtifact, true);
+
+    //
+    IRootArtifact root = ((IAdvancedArtifact) targetArtifact).getRoot();
+
+    root.invalidateDependencyCache();
+    TreePath[] expanedTreePath = commonNavigator.getCommonViewer().getExpandedTreePaths();
+    commonNavigator.getCommonViewer().refresh();
+    commonNavigator.getCommonViewer().setExpandedTreePaths(expanedTreePath);
+
     return Status.OK_STATUS;
   }
 
   @Override
   public boolean isSupportedType(TransferData transferData) {
     System.out.println(transferData.getClass());
+    return true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  private boolean canHandle(IArtifact artifact) {
+
     return true;
   }
 }

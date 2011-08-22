@@ -275,10 +275,15 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     getModifiableResourcesSet(contentType).removeAll(resources);
 
     // ... and add all contained types to the cache
-    for (IResource resource : resources) {
-      for (IType type : resource.getContainedTypes()) {
-        remove(type);
+    try {
+      for (IResource resource : resources) {
+        for (IType type : resource.getContainedTypes()) {
+          remove(type);
+        }
       }
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
 
     // notify

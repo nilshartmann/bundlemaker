@@ -49,7 +49,7 @@ public class ArtifactModelConfiguration {
   public static final ArtifactModelConfiguration SOURCE_RESOURCES_CONFIGURATION                   = new ArtifactModelConfiguration(
                                                                                                       false,
                                                                                                       ResourcePresentation.ALL_RESOURCES,
-                                                                                                      ContentType.BINARY,
+                                                                                                      ContentType.SOURCE,
                                                                                                       false, true);
 
   /** default configuration BINARY_RESOURCES_CONFIGURATION */
@@ -57,6 +57,18 @@ public class ArtifactModelConfiguration {
                                                                                                       false,
                                                                                                       ResourcePresentation.ALL_RESOURCES,
                                                                                                       ContentType.BINARY,
+                                                                                                      false, true);
+
+  public static final ArtifactModelConfiguration HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION      = new ArtifactModelConfiguration(
+                                                                                                      true,
+                                                                                                      ResourcePresentation.ALL_RESOURCES,
+                                                                                                      ContentType.BINARY,
+                                                                                                      false, true);
+
+  public static final ArtifactModelConfiguration HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION      = new ArtifactModelConfiguration(
+                                                                                                      true,
+                                                                                                      ResourcePresentation.ALL_RESOURCES,
+                                                                                                      ContentType.SOURCE,
                                                                                                       false, true);
 
   /** the content type to show */
@@ -211,5 +223,16 @@ public class ArtifactModelConfiguration {
     _resourcePresentation = resourcePresentation;
     _aggregateInnerTypes = aggregateInnerTypes;
     _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
+  }
+
+  @Override
+  public String toString() {
+    return _contentType + "_" + _resourcePresentation + "_" + prefix(_hierarchicalPackages, "Hierarchical") + "_"
+        + prefix(_aggregateInnerTypes, "AggregateTypes") + "_"
+        + prefix(_includeVirtualModuleForMissingTypes, "MissingTypes");
+  }
+
+  private String prefix(boolean value, String string) {
+    return value ? string : "Non" + string;
   }
 }

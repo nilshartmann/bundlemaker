@@ -40,12 +40,17 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
    */
   protected void assertCanAdd(IArtifact artifact) {
 
+    //
     if (artifact == null) {
       throw new RuntimeException("Can not add 'null' to " + this);
     }
 
-    if (!canAdd(artifact)) {
-      throw new RuntimeException("Can not add " + artifact + " to " + this);
+    //
+    String canAddMessage = handleCanAdd(artifact);
+
+    //
+    if (canAddMessage != null) {
+      throw new RuntimeException("Can not add " + artifact + " to " + this + ":\n" + canAddMessage);
     }
   }
 
@@ -59,11 +64,7 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
       return false;
     }
 
-    // if (artifact instanceof IAdvancedArtifact && !((IAdvancedArtifact) artifact).isMovable()) {
-    // return false;
-    // }
-
-    return handleCanAdd(artifact);
+    return handleCanAdd(artifact) == null;
   }
 
   /**
@@ -73,8 +74,8 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
    * @param artifact
    * @return
    */
-  protected boolean handleCanAdd(IArtifact artifact) {
-    return false;
+  protected String handleCanAdd(IArtifact artifact) {
+    return null;
   }
 
   /**
@@ -110,11 +111,6 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     // assert not null
     Assert.isNotNull(artifact);
 
-    //
-    List<IArtifact> artifacts = ((IAdvancedArtifact) artifact).invalidateDependencyCache();
-    if (getRoot() != null) {
-      getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
-    }
     // if the artifact has a parent, it has to be removed
     if (artifact.getParent() != null) {
       artifact.getParent().removeArtifact(artifact);
@@ -122,12 +118,6 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
 
     // call super
     super.addArtifact(artifact);
-
-    //
-    artifacts = invalidateDependencyCache();
-    if (getRoot() != null) {
-      getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
-    }
   }
 
   /**
@@ -139,14 +129,6 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     // assert not null
     Assert.isNotNull(artifact);
 
-    //
-    List<IArtifact> artifacts = invalidateDependencyCache();
-    for (IArtifact iArtifact : artifacts) {
-      System.out.println(iArtifact);
-    }
-    if (getRoot() != null) {
-      getRoot().accept(new InvalidateAggregatedDependencies(artifacts));
-    }
     // set parent to null
     if (artifact.getParent() != null) {
       ((AbstractArtifact) artifact).setParent(null);
@@ -154,5 +136,26 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
 
     // call super
     return super.removeArtifact(artifact);
+  }
+
+  @Override
+  public boolean containsTypesOrResources() {
+
+    //
+    for (IArtifact artifact : getChildren()) {
+      if (((IAdvancedArtifact) artifact).containsTypesOrResources()) {
+        return true;
+      }
+    }
+
+    //
+    return false;
+  }
+
+  @Override
+  public List<IArtifact> invalidateDependencyCache() {
+
+    //
+    return super.invalidateDependencyCache();
   }
 }

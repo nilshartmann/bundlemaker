@@ -41,6 +41,10 @@ public class PackageCache extends AbstractArtifactCacheAwareGenericCache<ModuleP
     }
 
     //
-    return new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, false);
+    AdapterPackage2IArtifact result = new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, false,
+        modulePackageKey.getModuleKey().getModule(), getArtifactCache());
+
+    //
+    return result;
   }
 }

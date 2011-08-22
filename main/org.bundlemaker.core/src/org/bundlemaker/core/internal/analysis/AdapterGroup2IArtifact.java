@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.Assert;
  */
 public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements IGroupArtifact {
 
+  // the group qualified name delimiter
   private static final char DELIMITER = '/';
 
   /**
@@ -101,8 +102,15 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
    * {@inheritDoc}
    */
   @Override
-  public boolean handleCanAdd(IArtifact artifact) {
-    return artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact;
+  public String handleCanAdd(IArtifact artifact) {
+
+    //
+    if (!(artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact)) {
+      return "Only groups and modules are addable to groups";
+    }
+
+    //
+    return null;
   }
 
   /**

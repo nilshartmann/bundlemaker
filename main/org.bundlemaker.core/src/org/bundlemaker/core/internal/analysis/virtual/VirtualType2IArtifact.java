@@ -64,6 +64,14 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
+  public boolean containsTypesOrResources() {
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public boolean isMovable() {
     return false;
   }

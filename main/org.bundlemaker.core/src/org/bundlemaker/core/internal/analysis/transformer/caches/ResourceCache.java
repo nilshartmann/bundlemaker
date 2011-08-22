@@ -39,6 +39,6 @@ public class ResourceCache extends AbstractArtifactCacheAwareGenericCache<Module
     AbstractArtifactContainer parent = getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
 
     //
-    return new AdapterResource2IArtifact(key.getResource(), false, parent);
+    return new AdapterResource2IArtifact(key.getResource(), false, parent, getArtifactCache());
   }
 }

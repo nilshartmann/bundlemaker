@@ -184,7 +184,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     }
 
     //
-    if (getParent() != null) {
+    if (getParent() != null && !getParent().equals(this)) {
       result.addAll(((AbstractArtifactContainer) getParent()).invalidateDependencyCache());
     }
 

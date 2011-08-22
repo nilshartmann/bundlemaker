@@ -74,8 +74,8 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
   }
 
   @Override
-  public boolean handleCanAdd(IArtifact artifact) {
-    return false;
+  public String handleCanAdd(IArtifact artifact) {
+    return "Can not artifacts to virtual modules.";
   }
 
   /**

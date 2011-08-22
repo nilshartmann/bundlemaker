@@ -5,9 +5,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -71,9 +73,23 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
       //
       return EMPTY_OBJECT_ARRAY;
     } else if (parent instanceof IArtifact) {
+
       IArtifact parentArtifact = (IArtifact) parent;
+
       List<IArtifact> artifacts = new ArrayList<IArtifact>();
-      artifacts.addAll(parentArtifact.getChildren());
+
+      for (IArtifact iArtifact : parentArtifact.getChildren()) {
+        if (iArtifact.getType().equals(ArtifactType.Package)) {
+          if (((IAdvancedArtifact) iArtifact).containsTypesOrResources()) {
+            System.out.println("ADDING " + iArtifact + " : " + iArtifact.getChildren());
+            artifacts.add(iArtifact);
+          } else {
+            System.out.println("SKIPPING " + iArtifact);
+          }
+        } else {
+          artifacts.add(iArtifact);
+        }
+      }
 
       return artifacts.toArray();
     }

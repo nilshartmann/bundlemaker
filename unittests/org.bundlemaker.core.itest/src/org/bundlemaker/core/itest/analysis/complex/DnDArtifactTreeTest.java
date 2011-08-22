@@ -23,10 +23,12 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
 
   /**
    * <p>
+   * Creates a new group 'testGroup' (below root) and adds the 'Jedit' module to it without removing it from its parent.
+   * It must be automatically removed from its former parent.
    * </p>
    */
   @Test
-  public void testAddWithoutRemove() {
+  public void testAddModuleWithoutRemove() {
 
     // create test group and add the 'jedit' artifact
     IArtifact testGroup = createNewGroup(getRootArtifact(), "testGroup");
@@ -49,6 +51,12 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
 
   /**
    * <p>
+   * Creates a new group 'GROUP' and adds the 'Jedit' module to it. Than a second group 'GROUP2' is created and the
+   * 'Jedit' module is added to it.
+   * </p>
+   * <p>
+   * All parent / child relationships have to be set correctly. Cached dependencies have to be invalidated and
+   * re-computed.
    * </p>
    */
   @Test
@@ -105,21 +113,21 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
     GROUP2group.addArtifact(getJdkArtifact());
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 1904);
-    
+
     GROUPgroup.addArtifact(getVelocityModuleArtifact());
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 1908);
     assertArtifactHasParent(getJdkArtifact(), GROUP2group);
-    
+
     getRootArtifact().addArtifact(getJdkArtifact());
-    
+
     assertArtifactChildrenCount(GROUP2group, 0);
     assertArtifactHasParent(getJdkArtifact(), getRootArtifact());
-    
+
     ArtifactUtils.dumpArtifact(GROUPgroup);
     System.out.println("********************************************");
     ArtifactUtils.dumpArtifact(GROUP2group);
-    
+
     assertDependencyWeight(GROUPgroup, GROUP2group, 0);
     assertDependencyWeight(GROUPgroup, getJdkArtifact(), 1908);
   }
@@ -205,32 +213,4 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
 
     assertTypeCount(1438);
   }
-
-  // @Test
-  // public void testMoveGroup() throws CoreException, IOException {
-  //
-  // //
-  // IArtifact testGroup_1 = getRootArtifact().getDependencyModel().createArtifactContainer("testGroup_1",
-  // "testGroup_1", ArtifactType.Group);
-  // getRootArtifact().addArtifact(testGroup_1);
-  //
-  // //
-  // IArtifact testGroup_2 = getRootArtifact().getDependencyModel().createArtifactContainer("testGroup_2",
-  // "testGroup_2", ArtifactType.Group);
-  // getRootArtifact().addArtifact(testGroup_2);
-  //
-  // //
-  // testGroup_1.addArtifact(getJeditModuleArtifact());
-  // testGroup_1.addArtifact(getVelocityModuleArtifact());
-  // testGroup_2.addArtifact(getVelocityModuleArtifact());
-  //
-  // assertTypeCount(1438);
-  //
-  // //
-  // assertTypeCount(0);
-  //
-  // //
-  // Assert.assertEquals(0, getModularizedSystem().getResourceModules().size());
-  // }
-
 }

@@ -113,12 +113,11 @@ public class AdapterUtils {
     Assert.isNotNull(artifact);
 
     //
-    AdapterResourceModule2IArtifact resourceModule2Artifact = (AdapterResourceModule2IArtifact) adapterPackage2IArtifact
-        .getParent(ArtifactType.Module);
+    IModifiableResourceModule resourceModule = (IModifiableResourceModule) adapterPackage2IArtifact
+        .getContainingModule();
 
     //
-    addResourcesToModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
-        getAllContainedResourceHolder(artifact));
+    addResourcesToModule(resourceModule, getAllContainedResourceHolder(artifact));
 
     // addTypesToModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
     // getAllContainedTypeHolder(artifact));
@@ -270,20 +269,20 @@ public class AdapterUtils {
    * @param resourceModule
    * @param resourceHolder
    */
-  private static void addResourcesToModule(IModifiableResourceModule resourceModule, List<IMovableUnit> resourceHolders) {
+  private static void addResourcesToModule(IModifiableResourceModule resourceModule, List<IMovableUnit> movableUnits) {
 
     //
-    for (IMovableUnit resourceHolder : resourceHolders) {
+    for (IMovableUnit movableUnit : movableUnits) {
 
       // add the binary resources
-      resourceModule.getModifiableSelfResourceContainer().addAll(resourceHolder.getAssociatedBinaryResources(),
+      resourceModule.getModifiableSelfResourceContainer().addAll(movableUnit.getAssociatedBinaryResources(),
           ContentType.BINARY);
 
       //
-      if (resourceHolder.getAssociatedSourceResource() != null) {
+      if (movableUnit.getAssociatedSourceResource() != null) {
 
         // add the source resources
-        resourceModule.getModifiableSelfResourceContainer().add(resourceHolder.getAssociatedSourceResource(),
+        resourceModule.getModifiableSelfResourceContainer().add(movableUnit.getAssociatedSourceResource(),
             ContentType.SOURCE);
       }
     }
@@ -314,8 +313,12 @@ public class AdapterUtils {
     for (IMovableUnit resourceHolder : resourceHolders) {
 
       // remove the binary resources
-      resourceModule.getModifiableSelfResourceContainer().removeAll(resourceHolder.getAssociatedBinaryResources(),
-          ContentType.BINARY);
+      if (resourceHolder.getAssociatedBinaryResources() != null) {
+
+        // remove the binary resources
+        resourceModule.getModifiableSelfResourceContainer().removeAll(resourceHolder.getAssociatedBinaryResources(),
+            ContentType.BINARY);
+      }
 
       //
       if (resourceHolder.getAssociatedSourceResource() != null) {

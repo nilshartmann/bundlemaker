@@ -55,16 +55,18 @@ public abstract class AbstractComplexTest extends AbstractModularizedSystemTest 
 
     //
     IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getModularizedSystem(),
-        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
+        getArtifactModelConfiguration());
     Assert.assertNotNull(dependencyModel);
 
     _rootArtifact = (IAdvancedArtifact) dependencyModel.getRoot();
     Assert.assertNotNull(_rootArtifact);
 
     // assert the input
-    inputstream = getClass().getResourceAsStream("results/AbstractComplexTest_Input.txt");
-    assertResult(ArtifactUtils.artifactToString(_rootArtifact), inputstream, "AbstractComplexTest_Input"
-        + getCurrentTimeStamp());
+    String expectedResultName = "AbstractComplexTest_Input_" + getArtifactModelConfiguration();
+    String resourceName = "results/" + expectedResultName + ".txt";
+    inputstream = getClass().getResourceAsStream(resourceName);
+    Assert.assertNotNull(String.format("Resource '%s' not found.", resourceName), inputstream);
+    assertResult(ArtifactUtils.artifactToString(_rootArtifact), inputstream, expectedResultName + getCurrentTimeStamp());
 
     Assert.assertEquals(8275, _rootArtifact.getDependencies().size());
 
@@ -77,6 +79,10 @@ public abstract class AbstractComplexTest extends AbstractModularizedSystemTest 
 
     assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 1904);
     assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
+  }
+
+  public ArtifactModelConfiguration getArtifactModelConfiguration() {
+    return ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
   }
 
   /**
@@ -203,6 +209,21 @@ public abstract class AbstractComplexTest extends AbstractModularizedSystemTest 
     //
     IArtifact testGroup = getRootArtifact().getDependencyModel()
         .createArtifactContainer(name, name, ArtifactType.Group);
+    artifact.addArtifact(testGroup);
+    return testGroup;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  protected IArtifact createNewModule(IArtifact artifact, String name) {
+    //
+    IArtifact testGroup = getRootArtifact().getDependencyModel().createArtifactContainer(name, name,
+        ArtifactType.Module);
     artifact.addArtifact(testGroup);
     return testGroup;
   }

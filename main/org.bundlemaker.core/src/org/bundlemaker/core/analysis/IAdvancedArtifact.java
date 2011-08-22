@@ -91,4 +91,12 @@ public interface IAdvancedArtifact extends IArtifact {
    * @return
    */
   Map<IArtifact, IDependency> getCachedDependencies();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsTypesOrResources();
 }

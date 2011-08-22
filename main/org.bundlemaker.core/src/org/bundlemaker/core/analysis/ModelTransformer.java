@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.analysis;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.internal.analysis.DependencyModel;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
@@ -23,6 +26,9 @@ import org.eclipse.core.runtime.CoreException;
  * </p>
  */
 public class ModelTransformer {
+
+  //
+  private static Map<IModifiableModularizedSystem, IDependencyModel> _cache = new HashMap<IModifiableModularizedSystem, IDependencyModel>();
 
   /**
    * <p>
@@ -39,6 +45,11 @@ public class ModelTransformer {
     // assert not null
     Assert.isNotNull(modifiableModularizedSystem);
 
+    //
+    if (_cache.containsKey(modifiableModularizedSystem)) {
+      return _cache.get(modifiableModularizedSystem);
+    }
+
     // set the default configuration if no configuration is set
     configuration = configuration == null ? new ArtifactModelConfiguration() : configuration;
 
@@ -48,7 +59,9 @@ public class ModelTransformer {
       DefaultArtifactCache artifactCache = new DefaultArtifactCache(modifiableModularizedSystem, configuration);
 
       // create the dependency model
-      return new DependencyModel(modifiableModularizedSystem, artifactCache);
+      DependencyModel model = new DependencyModel(modifiableModularizedSystem, artifactCache);
+      _cache.put(modifiableModularizedSystem, model);
+      return model;
 
     } catch (CoreException e) {
       System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);

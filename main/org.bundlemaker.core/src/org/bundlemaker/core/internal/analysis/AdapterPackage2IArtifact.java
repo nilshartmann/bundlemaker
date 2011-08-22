@@ -8,6 +8,10 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
+import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 
@@ -20,13 +24,19 @@ import org.eclipse.core.runtime.Assert;
 public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implements IPackageArtifact {
 
   /** - */
-  private String  _qualifiedName;
+  private String               _qualifiedName;
 
   /** - */
-  private boolean _isFlat = true;
+  private boolean              _isFlat = true;
 
   /** - */
-  private boolean _isVirtual;
+  private boolean              _isVirtual;
+
+  /** - */
+  private DefaultArtifactCache _artifactCache;
+
+  /** - */
+  private IModule              _containingModule;
 
   /**
    * <p>
@@ -36,7 +46,8 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
    * @param qualifiedName
    * @param parent
    */
-  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent, boolean isVirtual) {
+  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent, boolean isVirtual, IModule containingModule,
+      DefaultArtifactCache artifactCache) {
     super(ArtifactType.Package, _getName(qualifiedName));
 
     // set parent/children dependency
@@ -51,6 +62,10 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
     _qualifiedName = qualifiedName;
 
     _isVirtual = isVirtual;
+
+    _artifactCache = artifactCache;
+
+    _containingModule = containingModule;
   }
 
   /**
@@ -84,21 +99,21 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
   }
 
   @Override
-  public boolean handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IArtifact artifact) {
 
-    if (artifact == null) {
-      return false;
-    }
-
+    //
     if (artifact.getType().equals(ArtifactType.Resource)) {
-
       String packageName = ((IResourceArtifact) artifact).getAssociatedResource().getPackageName();
-      return packageName.equals(this.getQualifiedName());
+      if (!packageName.equals(this.getQualifiedName())) {
+        return String.format("Can not add resource '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
+      }
     }
 
     if (artifact.getType().equals(ArtifactType.Type)) {
       String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
-      return packageName.equals(this.getQualifiedName());
+      if (!packageName.equals(this.getQualifiedName())) {
+        return String.format("Can not add type '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
+      }
     }
 
     if (artifact.getType().equals(ArtifactType.Package)) {
@@ -106,10 +121,23 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
       int index = packageArtifact.getQualifiedName().lastIndexOf(".");
       String parentPackageName = index != -1 ? packageArtifact.getQualifiedName().substring(0, index) : packageArtifact
           .getQualifiedName();
-      return parentPackageName.equals(this.getQualifiedName());
+      if (!parentPackageName.equals(this.getQualifiedName())) {
+        return String.format("Can not add package '%s' to package '%s'.", artifact.getQualifiedName(),
+            this.getQualifiedName());
+      }
     }
 
-    return false;
+    return String.format("Can not handle artifact '%s'.", artifact.getQualifiedName());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final IModule getContainingModule() {
+    return _containingModule;
   }
 
   /**
@@ -122,11 +150,41 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
     Assert.isNotNull(artifact);
     assertCanAdd(artifact);
 
-    //
-    super.addArtifact(artifact);
+    // handle package
+    if (artifact.getType().equals(ArtifactType.Package)) {
+      handlePackage(artifact);
+    } else {
+      //
+      super.addArtifact(artifact);
+      // TODO: TYPE CHECK??
+      AdapterUtils.addArtifactToPackage(this, artifact);
+    }
+  }
 
-    // TODO: TYPE CHECK??
-    AdapterUtils.addArtifactToPackage(this, artifact);
+  public void handlePackage(IArtifact artifact) {
+
+    //
+    ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(_containingModule),
+        artifact.getQualifiedName());
+
+    IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache()
+        .getOrCreate(modulePackageKey);
+
+    // //
+    // if (packageArtifact.getParent() != null) {
+
+    // move the children to the new package artifact
+    for (IArtifact child : artifact.getChildren()) {
+      packageArtifact.addArtifact(child);
+    }
+
+    super.addArtifact(packageArtifact);
+
+    // } else {
+    // super.addArtifact(packageArtifact);
+    // // TODO: TYPE CHECK??
+    // AdapterUtils.addPackageToModule(artifact, this);
+    // }
   }
 
   /**
@@ -143,6 +201,12 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
 
     // TODO: TYPE CHECK??
     AdapterUtils.removeArtifactFromPackage(artifact, this);
+
+    // // support for empty packages
+    // if (this.getChildren().isEmpty()) {
+    // getParent().removeArtifact(this);
+    // _artifactCache.getPackageCache();
+    // }
 
     // return the result
     return result;
@@ -174,70 +238,4 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
     return qualifiedName.indexOf('.') != -1 ? qualifiedName.substring(qualifiedName.lastIndexOf('.') + 1)
         : qualifiedName;
   }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-  // *
-  // */
-  // public static class PackageKey {
-  //
-  // private IModule _resourceModule;
-  //
-  // private String _packageName;
-  //
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param resourceModule
-  // * @param packageName
-  // */
-  // public PackageKey(IModule resourceModule, String packageName) {
-  //
-  // _resourceModule = resourceModule;
-  // _packageName = packageName;
-  // }
-  //
-  // public IModule getModule() {
-  // return _resourceModule;
-  // }
-  //
-  // public String getPackageName() {
-  // return _packageName;
-  // }
-  //
-  // @Override
-  // public int hashCode() {
-  // final int prime = 31;
-  // int result = 1;
-  // result = prime * result + ((_packageName == null) ? 0 : _packageName.hashCode());
-  // result = prime * result + ((_resourceModule == null) ? 0 : _resourceModule.hashCode());
-  // return result;
-  // }
-  //
-  // @Override
-  // public boolean equals(Object obj) {
-  // if (this == obj)
-  // return true;
-  // if (obj == null)
-  // return false;
-  // if (getClass() != obj.getClass())
-  // return false;
-  // PackageKey other = (PackageKey) obj;
-  // if (_packageName == null) {
-  // if (other._packageName != null)
-  // return false;
-  // } else if (!_packageName.equals(other._packageName))
-  // return false;
-  // if (_resourceModule == null) {
-  // if (other._resourceModule != null)
-  // return false;
-  // } else if (!_resourceModule.equals(other._resourceModule))
-  // return false;
-  // return true;
-  // }
-  // }
 }

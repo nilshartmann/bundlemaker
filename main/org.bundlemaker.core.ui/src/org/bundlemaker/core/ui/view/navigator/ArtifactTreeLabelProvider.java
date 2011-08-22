@@ -58,21 +58,25 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
     if (artifact instanceof ITypeArtifact) {
       ITypeArtifact typeHolder = (ITypeArtifact) artifact;
 
-      switch (typeHolder.getAssociatedType().getType()) {
-      case CLASS: {
+      if (typeHolder.getAssociatedType() != null) {
+        switch (typeHolder.getAssociatedType().getType()) {
+        case CLASS: {
+          return ArtifactImages.CLASS_TYPE_ARTIFACT_ICON.getImage();
+        }
+        case INTERFACE: {
+          return ArtifactImages.INTERFACE_TYPE_ARTIFACT_ICON.getImage();
+        }
+        case ENUM: {
+          return ArtifactImages.ENUM_TYPE_ARTIFACT_ICON.getImage();
+        }
+        case ANNOTATION: {
+          return ArtifactImages.ANNOTATION_TYPE_ARTIFACT_ICON.getImage();
+        }
+        default:
+          break;
+        }
+      } else {
         return ArtifactImages.CLASS_TYPE_ARTIFACT_ICON.getImage();
-      }
-      case INTERFACE: {
-        return ArtifactImages.INTERFACE_TYPE_ARTIFACT_ICON.getImage();
-      }
-      case ENUM: {
-        return ArtifactImages.ENUM_TYPE_ARTIFACT_ICON.getImage();
-      }
-      case ANNOTATION: {
-        return ArtifactImages.ANNOTATION_TYPE_ARTIFACT_ICON.getImage();
-      }
-      default:
-        break;
       }
     }
 

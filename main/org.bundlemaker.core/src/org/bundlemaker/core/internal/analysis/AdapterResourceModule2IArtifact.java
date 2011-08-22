@@ -9,7 +9,6 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
 
@@ -33,6 +32,10 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
       DefaultArtifactCache artifactCache) {
     super(resourceModule, parent);
 
+    //
+    Assert.isNotNull(artifactCache);
+
+    // set the default artifact cache
     _artifactCache = artifactCache;
   }
 
@@ -41,8 +44,12 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    */
   public void setName(String name) {
     super.setName(name);
-
     ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
+  }
+
+  @Override
+  public boolean containsTypesOrResources() {
+    return true;
   }
 
   /**
@@ -55,31 +62,36 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     Assert.isNotNull(artifact);
     assertCanAdd(artifact);
 
-    System.out.println("Name " + artifact.getName());
-    System.out.println("Qualified Name " + artifact.getQualifiedName());
-
+    // handle package
     if (artifact.getType().equals(ArtifactType.Package)) {
+      handleAddPackage(artifact);
+    }
+  }
 
-      //
-      IModule module = getAssociatedModule();
-      String packageName = artifact.getQualifiedName();
-      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(module), packageName);
-      IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
-          modulePackageKey);
-      //
-      if (packageArtifact.getParent() != null) {
+  private void handleAddPackage(IArtifact artifact) {
 
-        // move the children to the new package artifact
-        for (IArtifact child : artifact.getChildren()) {
-          packageArtifact.addArtifact(child);
-        }
+    //
+    ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(getAssociatedModule()),
+        artifact.getQualifiedName());
 
-      } else {
-        super.addArtifact(packageArtifact);
-        // TODO: TYPE CHECK??
-        AdapterUtils.addPackageToModule(artifact, this);
+    //
+    IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache()
+        .getOrCreate(modulePackageKey);
+
+    // move the children to the new package artifact
+    for (IArtifact child : artifact.getChildren()) {
+      if (child.getType().equals(ArtifactType.Resource) || child.getType().equals(ArtifactType.Type)) {
+        packageArtifact.addArtifact(child);
+      } else if (child.getType().equals(ArtifactType.Package)) {
+        handleAddPackage(child);
       }
     }
+
+    // else {
+    // super.addArtifact(packageArtifact);
+    // // TODO: TYPE CHECK??
+    // AdapterUtils.addPackageToModule(artifact, this);
+    // }
   }
 
   /**
@@ -113,11 +125,20 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public boolean handleCanAdd(IArtifact artifact) {
-    return artifact != null
-        && (artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type) || artifact
-            .getType().equals(ArtifactType.Resource));
+  public String handleCanAdd(IArtifact artifact) {
+
+    // a resource module artifact can contain packages, types and resources
+    if (!(artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type) || artifact
+        .getType().equals(ArtifactType.Resource))) {
+
+      return "Only packages, types or resources can be added to a resource module.";
+    }
+
+    return null;
   }
 
   /**
