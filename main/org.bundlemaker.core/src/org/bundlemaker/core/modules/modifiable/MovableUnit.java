@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
@@ -28,6 +31,9 @@ public class MovableUnit implements IMovableUnit {
 
   /** the main resource */
   private IResource                    _mainResource;
+
+  /** the modularized system */
+  private IModularizedSystem           _modularizedSystem;
 
   /** the associated types */
   private List<IType>                  _associatedTypes;
@@ -64,7 +70,7 @@ public class MovableUnit implements IMovableUnit {
    * @param resource
    * @return
    */
-  public static IMovableUnit createFromResource(IResource resource) {
+  public static IMovableUnit createFromResource(IResource resource, IModularizedSystem modularizedSystem) {
     Assert.isNotNull(resource);
 
     //
@@ -77,6 +83,7 @@ public class MovableUnit implements IMovableUnit {
     //
     MovableUnit movableUnit = new MovableUnit();
     movableUnit._mainResource = resource;
+    movableUnit._modularizedSystem = modularizedSystem;
 
     //
     return movableUnit;
@@ -153,6 +160,19 @@ public class MovableUnit implements IMovableUnit {
           for (IType type : _sourceResource.getContainedTypes()) {
             handleType(type);
           }
+        }
+      } else {
+
+        //
+        IResourceModule resourceModule = _mainResource.getAssociatedResourceModule(_modularizedSystem);
+
+        //
+        _sourceResource = resourceModule.getResource(_mainResource.getPath(), ContentType.SOURCE);
+
+        //
+        IResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ContentType.BINARY);
+        if (binaryResource != null) {
+          _binaryResources.add(binaryResource);
         }
       }
     }
