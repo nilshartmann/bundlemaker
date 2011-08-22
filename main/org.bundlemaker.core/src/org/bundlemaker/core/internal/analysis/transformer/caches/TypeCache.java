@@ -75,7 +75,7 @@ public class TypeCache extends AbstractArtifactCacheAwareGenericCache<TypeKey, I
     }
 
     //
-    return new VirtualType2IArtifact(typeName.substring(index), typeName, parent);
+    return new VirtualType2IArtifact(typeName.substring(index + 1), typeName, parent);
   }
 
   /**
