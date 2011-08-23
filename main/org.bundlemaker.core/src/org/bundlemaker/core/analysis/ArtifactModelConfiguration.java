@@ -232,6 +232,40 @@ public class ArtifactModelConfiguration {
         + prefix(_includeVirtualModuleForMissingTypes, "MissingTypes");
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + (_aggregateInnerTypes ? 1231 : 1237);
+    result = prime * result + ((_contentType == null) ? 0 : _contentType.hashCode());
+    result = prime * result + (_hierarchicalPackages ? 1231 : 1237);
+    result = prime * result + (_includeVirtualModuleForMissingTypes ? 1231 : 1237);
+    result = prime * result + ((_resourcePresentation == null) ? 0 : _resourcePresentation.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    ArtifactModelConfiguration other = (ArtifactModelConfiguration) obj;
+    if (_aggregateInnerTypes != other._aggregateInnerTypes)
+      return false;
+    if (_contentType != other._contentType)
+      return false;
+    if (_hierarchicalPackages != other._hierarchicalPackages)
+      return false;
+    if (_includeVirtualModuleForMissingTypes != other._includeVirtualModuleForMissingTypes)
+      return false;
+    if (_resourcePresentation != other._resourcePresentation)
+      return false;
+    return true;
+  }
+
   private String prefix(boolean value, String string) {
     return value ? string : "Non" + string;
   }

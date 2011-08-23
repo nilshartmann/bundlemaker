@@ -28,7 +28,15 @@ import org.eclipse.core.runtime.CoreException;
 public class ModelTransformer {
 
   //
-  private static Map<IModifiableModularizedSystem, IDependencyModel> _cache = new HashMap<IModifiableModularizedSystem, IDependencyModel>();
+  private static Map<CacheKey, IDependencyModel> _cache = new HashMap<CacheKey, IDependencyModel>();
+
+  /**
+   * <p>
+   * </p>
+   */
+  public static void invalidateCache() {
+    _cache.clear();
+  }
 
   /**
    * <p>
@@ -45,13 +53,16 @@ public class ModelTransformer {
     // assert not null
     Assert.isNotNull(modifiableModularizedSystem);
 
-    //
-    if (_cache.containsKey(modifiableModularizedSystem)) {
-      return _cache.get(modifiableModularizedSystem);
-    }
-
     // set the default configuration if no configuration is set
     configuration = configuration == null ? new ArtifactModelConfiguration() : configuration;
+
+    //
+    CacheKey cacheKey = new CacheKey(modifiableModularizedSystem, configuration);
+
+    //
+    if (_cache.containsKey(cacheKey)) {
+      return _cache.get(cacheKey);
+    }
 
     try {
 
@@ -60,13 +71,102 @@ public class ModelTransformer {
 
       // create the dependency model
       DependencyModel model = new DependencyModel(modifiableModularizedSystem, artifactCache);
-      _cache.put(modifiableModularizedSystem, model);
+      _cache.put(cacheKey, model);
       return model;
 
     } catch (CoreException e) {
       System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);
       e.printStackTrace();
       throw new RuntimeException("Error in ModelTransformer.transformWithAggregatedTypes: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  private static class CacheKey {
+
+    /* - */
+    private IModifiableModularizedSystem _modifiableModularizedSystem;
+
+    /* - */
+    private ArtifactModelConfiguration   _configuration;
+
+    /**
+     * <p>
+     * Creates a new instance of type {@link CacheKey}.
+     * </p>
+     * 
+     * @param modifiableModularizedSystem
+     * @param configuration
+     */
+    public CacheKey(IModifiableModularizedSystem modifiableModularizedSystem, ArtifactModelConfiguration configuration) {
+
+      Assert.isNotNull(modifiableModularizedSystem);
+      Assert.isNotNull(configuration);
+
+      this._modifiableModularizedSystem = modifiableModularizedSystem;
+      this._configuration = configuration;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public final IModifiableModularizedSystem getModifiableModularizedSystem() {
+      return _modifiableModularizedSystem;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public final ArtifactModelConfiguration getConfiguration() {
+      return _configuration;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((_configuration == null) ? 0 : _configuration.hashCode());
+      result = prime * result + ((_modifiableModularizedSystem == null) ? 0 : _modifiableModularizedSystem.hashCode());
+      return result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      CacheKey other = (CacheKey) obj;
+      if (_configuration == null) {
+        if (other._configuration != null)
+          return false;
+      } else if (!_configuration.equals(other._configuration))
+        return false;
+      if (_modifiableModularizedSystem == null) {
+        if (other._modifiableModularizedSystem != null)
+          return false;
+      } else if (!_modifiableModularizedSystem.equals(other._modifiableModularizedSystem))
+        return false;
+      return true;
     }
   }
 }
