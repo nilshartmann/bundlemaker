@@ -19,7 +19,7 @@ public class InvalidateAggregatedDependencies implements IArtifactTreeVisitor {
 
   @Override
   public boolean visit(IRootArtifact artifact) {
-    invalidate(artifact);
+    // invalidate(artifact);
     return true;
   }
 

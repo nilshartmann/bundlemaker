@@ -1,15 +1,15 @@
 package org.bundlemaker.core.itest.analysis.complex;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -33,6 +33,9 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
     // create test group and add the 'jedit' artifact
     IArtifact testGroup = createNewGroup(getRootArtifact(), "testGroup");
     testGroup.addArtifact(getJeditModuleArtifact());
+    
+    // TODO 
+    getRootArtifact().invalidateDependencyCache();
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 5);
@@ -65,6 +68,9 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
     // create test group and add the 'jedit' artifact
     IArtifact GROUPgroup = createNewGroup(getRootArtifact(), "GROUP");
     GROUPgroup.addArtifact(getJeditModuleArtifact());
+    
+    // TODO 
+    getRootArtifact().invalidateDependencyCache();
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 5);
@@ -83,6 +89,9 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
     // create test group and add the 'jedit' artifact
     IArtifact GROUP2Group = createNewGroup(getRootArtifact(), "GROUP2");
     GROUP2Group.addArtifact(getJeditModuleArtifact());
+    
+    // TODO 
+    getRootArtifact().invalidateDependencyCache();
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 6);
@@ -112,14 +121,23 @@ public class DnDArtifactTreeTest extends AbstractComplexTest {
     GROUPgroup.addArtifact(getJeditModuleArtifact());
     GROUP2group.addArtifact(getJdkArtifact());
 
+    // TODO 
+    getRootArtifact().invalidateDependencyCache();
+    
     assertDependencyWeight(GROUPgroup, GROUP2group, 1904);
 
     GROUPgroup.addArtifact(getVelocityModuleArtifact());
+    
+    // TODO 
+    getRootArtifact().invalidateDependencyCache();
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 1908);
     assertArtifactHasParent(getJdkArtifact(), GROUP2group);
 
     getRootArtifact().addArtifact(getJdkArtifact());
+    
+    // TODO 
+    getRootArtifact().invalidateDependencyCache();
 
     assertArtifactChildrenCount(GROUP2group, 0);
     assertArtifactHasParent(getJdkArtifact(), getRootArtifact());

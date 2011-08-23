@@ -1,7 +1,5 @@
 package org.bundlemaker.core.internal.analysis;
 
-import java.util.List;
-
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
@@ -150,12 +148,5 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
 
     //
     return false;
-  }
-
-  @Override
-  public List<IArtifact> invalidateDependencyCache() {
-
-    //
-    return super.invalidateDependencyCache();
   }
 }

@@ -184,13 +184,9 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     }
 
     //
-    if (getParent() != null && !getParent().equals(this)) {
-      result.addAll(((AbstractArtifactContainer) getParent()).invalidateDependencyCache());
-    }
-
-    //
     leafs = null;
 
+    //
     return result;
   }
 

@@ -50,16 +50,11 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     _artifactTreeChangedListeners = new LinkedList<IArtifactTreeChangedListener>();
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public void invalidateAll() {
-    if (getRoot() != null) {
-      getRoot().accept(new InvalidateAggregatedDependencies());
-    }
+  @Override
+  public List<IArtifact> invalidateDependencyCache() {
+    super.invalidateDependencyCache();
+    accept(new InvalidateAggregatedDependencies());
+    return null;
   }
 
   @Override

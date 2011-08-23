@@ -6,6 +6,7 @@ import java.io.File;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
@@ -25,7 +26,7 @@ import org.junit.Before;
 public abstract class AbstractBundleMakerProjectTest {
 
   /** TEST_PROJECT_VERSION */
-  public static final String TEST_PROJECT_VERSION = "1.0.0";
+  public static final String  TEST_PROJECT_VERSION = "1.0.0";
 
   /** - */
   private String              _testProjectName;
@@ -75,6 +76,9 @@ public abstract class AbstractBundleMakerProjectTest {
 
     // get the BM project
     _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
+
+    //
+    ModelTransformer.invalidateCache();
   }
 
   /**
