@@ -106,6 +106,8 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
       String packageName = ((IResourceArtifact) artifact).getAssociatedResource().getPackageName();
       if (!packageName.equals(this.getQualifiedName())) {
         return String.format("Can not add resource '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
+      } else {
+        return null;
       }
     }
 
@@ -113,6 +115,8 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
       String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
       if (!packageName.equals(this.getQualifiedName())) {
         return String.format("Can not add type '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
+      } else {
+        return null;
       }
     }
 
@@ -124,6 +128,8 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
       if (!parentPackageName.equals(this.getQualifiedName())) {
         return String.format("Can not add package '%s' to package '%s'.", artifact.getQualifiedName(),
             this.getQualifiedName());
+      } else {
+        return null;
       }
     }
 
