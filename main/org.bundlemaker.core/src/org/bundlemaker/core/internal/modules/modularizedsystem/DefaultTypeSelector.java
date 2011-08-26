@@ -2,7 +2,6 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Set;
 
-import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
@@ -24,6 +23,9 @@ public class DefaultTypeSelector implements ITypeSelector {
   /** - */
   private IBundleMakerProjectDescription _bundleMakerProjectDescription;
 
+  /** - */
+  private boolean                        _preferJdkTypes;
+
   /**
    * <p>
    * Creates a new instance of type {@link DefaultTypeSelector}.
@@ -39,19 +41,23 @@ public class DefaultTypeSelector implements ITypeSelector {
   }
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
+   * @return
    */
-  @Override
-  public boolean matchesAllModules() {
-    return true;
+  public final boolean isPreferJdkTypes() {
+    return _preferJdkTypes;
   }
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
+   * @param preferJdkTypes
    */
-  @Override
-  public Set<IModuleIdentifier> getSourceModules() {
-    return null;
+  public final void setPreferJdkTypes(boolean preferJdkTypes) {
+    _preferJdkTypes = preferJdkTypes;
   }
 
   /**
@@ -88,7 +94,10 @@ public class DefaultTypeSelector implements ITypeSelector {
       }
     }
 
-    // return null
-    return currentType != null ? currentType : jdkType;
+    if (_preferJdkTypes) {
+      return jdkType != null ? jdkType : currentType;
+    } else {
+      return currentType != null ? currentType : jdkType;
+    }
   }
 }

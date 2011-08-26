@@ -38,7 +38,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   private List<ITypeSelector> _moduleSelectors;
 
   /** - */
-  private ITypeSelector       _defaultTypeSelector;
+  private DefaultTypeSelector _defaultTypeSelector;
 
   /**
    * <p>
@@ -56,6 +56,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
 
     //
     _defaultTypeSelector = new DefaultTypeSelector(projectDescription);
+    // _defaultTypeSelector.setPreferJdkTypes(true);
   }
 
   /**
