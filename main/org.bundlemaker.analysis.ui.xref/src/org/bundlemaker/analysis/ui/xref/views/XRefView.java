@@ -138,6 +138,7 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
 
     _instance = this;
 
+    // TODO!!
     Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
   }
 
@@ -223,6 +224,8 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
 
   @Override
   protected void doDispose() {
+    // TODO!!
+    Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
   }
 
   @Override
@@ -239,12 +242,16 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
     middleSelectedArtifacts = null;
     dependentSelectedArtifacts = null;
     middleTree.setInput(artifacts);
-    rootArtifact = artifacts.get(0);
-    if (rootArtifact.getType() != ArtifactType.Root) {
-      rootArtifact = rootArtifact.getParent(ArtifactType.Root);
+    if (artifacts.size() > 0) {
+      rootArtifact = artifacts.get(0);
+      if (rootArtifact.getType() != ArtifactType.Root) {
+        rootArtifact = rootArtifact.getParent(ArtifactType.Root);
+      }
+      leftTree.setInput(rootArtifact);
+      rightTree.setInput(rootArtifact);
+    } else {
+      leftTree.setInput(null);
+      rightTree.setInput(null);
     }
-    leftTree.setInput(rootArtifact);
-    rightTree.setInput(rootArtifact);
-
   }
 }

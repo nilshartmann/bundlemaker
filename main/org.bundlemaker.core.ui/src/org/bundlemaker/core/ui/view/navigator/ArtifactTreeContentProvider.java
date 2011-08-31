@@ -81,10 +81,10 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
       for (IArtifact iArtifact : parentArtifact.getChildren()) {
         if (iArtifact.getType().equals(ArtifactType.Package)) {
           if (((IAdvancedArtifact) iArtifact).containsTypesOrResources()) {
-            System.out.println("ADDING " + iArtifact + " : " + iArtifact.getChildren());
+            // System.out.println("ADDING " + iArtifact + " : " + iArtifact.getChildren());
             artifacts.add(iArtifact);
           } else {
-            System.out.println("SKIPPING " + iArtifact);
+            // System.out.println("SKIPPING " + iArtifact);
           }
         } else {
           artifacts.add(iArtifact);

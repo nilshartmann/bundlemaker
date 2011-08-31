@@ -52,6 +52,6 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
     DSMView.updateAndShow(selectedArtifacts);
 
     // Open the DependencyTreeTableView
-    Analysis.instance().openDependencyTreeTableView();
+    // Analysis.instance().openDependencyTreeTableView();
   }
 }

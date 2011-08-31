@@ -11,7 +11,6 @@
 package org.bundlemaker.core.internal;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bundlemaker.core.internal.modules.TypeModule;
@@ -22,6 +21,7 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.LibraryLocation;
@@ -33,29 +33,23 @@ public class JdkModuleCreator {
    * @return
    * @throws CoreException
    */
-  public static List<TypeModule> getJdkModules(IModularizedSystem modularizedSystem) throws CoreException {
-
-    // the vmInstalls
-    List<IVMInstall> vmInstalls = new ArrayList<IVMInstall>();
-
-    vmInstalls.add(JavaRuntime.getDefaultVMInstall());
-
-    // create the result set
-    List<TypeModule> result = new ArrayList<TypeModule>();
+  public static TypeModule getJdkModules(IModularizedSystem modularizedSystem) throws CoreException {
 
     try {
-      // create virtual modules for the vms
-      for (IVMInstall vmInstall : vmInstalls) {
-        TypeModule module = createModuleForVMInstall(vmInstall, modularizedSystem);
-        result.add(module);
-      }
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
 
-    // return the result
-    return result;
+      //
+      String jre = modularizedSystem.getBundleMakerProject().getProjectDescription().getJRE();
+
+      // get the vm install (has to exist exist)
+      IVMInstall vmInstall = JavaRuntime.getVMInstall(new Path(jre));
+
+      // create virtual modules for the vms
+      return createModuleForVMInstall(vmInstall, modularizedSystem);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException(e.getMessage(), e);
+    }
   }
 
   /**

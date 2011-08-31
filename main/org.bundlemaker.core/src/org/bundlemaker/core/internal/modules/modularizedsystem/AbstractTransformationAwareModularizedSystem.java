@@ -79,7 +79,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     // // step 2: set up the JRE
     try {
-      TypeModule jdkModule = JdkModuleCreator.getJdkModules(this).get(0);
+      TypeModule jdkModule = JdkModuleCreator.getJdkModules(this);
       setExecutionEnvironment(jdkModule);
       getModifiableNonResourceModulesMap().put(getExecutionEnvironment().getModuleIdentifier(),
           (TypeModule) getExecutionEnvironment());

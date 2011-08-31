@@ -261,18 +261,23 @@ public class DsmViewWidget implements Observer {
     //
     int textExtend = getTextExtend(_matrixFigure, _zoomableScrollpane);
 
-    //
-    _zoomableScrollpane.setLocation(new Point(textExtend, 21.0 + textExtend));
-    _zoomableScrollpane.setSize(_mainFigure.getSize().width - textExtend,
-        (int) (_mainFigure.getSize().height - (21.0 + textExtend)));
+    int horizontalBarHeight = textExtend;
+    // int horizontalBarHeight = 200;
 
     //
-    _zoomableScrollpaneVerticalBar.setLocation(new Point(0, (21.0 + textExtend)));
-    _zoomableScrollpaneVerticalBar.setSize(textExtend, (_mainFigure.getSize().height - (21 + textExtend + 17)));
+    _zoomableScrollpane.setLocation(new Point(textExtend, 21.0 + horizontalBarHeight));
+    _zoomableScrollpane.setSize(_mainFigure.getSize().width - textExtend,
+        (int) (_mainFigure.getSize().height - (21.0 + horizontalBarHeight)));
+
+    //
+    _zoomableScrollpaneVerticalBar.setLocation(new Point(0, (21.0 + horizontalBarHeight)));
+    _zoomableScrollpaneVerticalBar
+        .setSize(textExtend, (_mainFigure.getSize().height - (21 + horizontalBarHeight + 17)));
 
     //
     _zoomableScrollpaneHorizontalBar.setLocation(new Point(textExtend, 21.0));
-    _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (textExtend + 17)), textExtend);
+    // _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (textExtend + 17)), textExtend);
+    _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (textExtend + 17)), horizontalBarHeight);
   }
 
   private int computeSize() {
