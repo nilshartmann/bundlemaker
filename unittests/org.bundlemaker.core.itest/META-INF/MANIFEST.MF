@@ -7,3 +7,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.bundlemaker.core.itestframework;bundle-version="1.0.0",
  org.bundlemaker.analysis;bundle-version="1.0.0",
  org.bundlemaker.core.testutils;bundle-version="1.0.0"
+Export-Package: org.bundlemaker.core.itest

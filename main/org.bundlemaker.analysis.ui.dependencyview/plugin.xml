@@ -7,7 +7,7 @@
                 category="org.bundlemaker.analysis.ui.views.category"
                 class="org.bundlemaker.analysis.ui.dependencyview.DependencyView"
                 id="org.bundlemaker.analysis.ui.dependencyview.DependencyView"
-                name="Dependency View (Simple)"
+                name="Type/Resource Dependencies"
                 restorable="true">
 				</view>
    </extension>

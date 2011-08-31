@@ -12,7 +12,6 @@ package org.bundlemaker.analysis.ui.dependencyview;
 
 import java.util.Collection;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.Analysis;
@@ -41,6 +40,8 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
   private TableViewer _viewer;
 
+  private IDependency _currentDependency;
+
   /*
    * (non-Javadoc)
    * 
@@ -64,33 +65,21 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
     table.setHeaderVisible(true);
     table.setLinesVisible(true);
     _viewer.setContentProvider(ArrayContentProvider.getInstance());
-    _viewer.setLabelProvider(new DependencyTableLabelProvider());
     createColumns(tableComposite, _viewer);
 
   }
 
   private void createColumns(Composite parent, TableViewer viewer) {
 
-    createTableViewerColumn(parent, viewer, "From", 45, new DependencyColumnLabelProvider() {
-
+    createTableViewerColumn(parent, viewer, "From", 45, new DependencyColumnLabelProvider(_fromLabelGenerator) {
       @Override
       protected IArtifact getArtifactElement(IDependency element) {
         return element.getFrom();
       }
-
-      @Override
-      protected String getArtifactLabel(IArtifact artifact) {
-        return ArtifactHelper.getArtifactPath(_currentDependency.getFrom(), artifact);
-      }
-
     });
-    createTableViewerColumn(parent, viewer, "Usage", 10, new ColumnLabelProvider() {
 
-      /*
-       * (non-Javadoc)
-       * 
-       * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-       */
+    //
+    createTableViewerColumn(parent, viewer, "Usage", 10, new ColumnLabelProvider() {
       @Override
       public String getText(Object element) {
         if (element instanceof IDependency) {
@@ -101,11 +90,7 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       }
 
     });
-    createTableViewerColumn(parent, viewer, "To", 45, new DependencyColumnLabelProvider() {
-      @Override
-      protected String getArtifactLabel(IArtifact artifact) {
-        return ArtifactHelper.getArtifactPath(_currentDependency.getTo(), artifact);
-      }
+    createTableViewerColumn(parent, viewer, "To", 45, new DependencyColumnLabelProvider(_toLabelGenerator) {
 
       @Override
       public IArtifact getArtifactElement(IDependency element) {
@@ -144,8 +129,6 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
   }
 
-  private IDependency _currentDependency;
-
   /*
    * (non-Javadoc)
    * 
@@ -163,15 +146,17 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
 
     _currentDependency = dependency;
 
+    _fromLabelGenerator.setBaseArtifact(_currentDependency.getFrom());
+    _toLabelGenerator.setBaseArtifact(_currentDependency.getTo());
+
     StringBuilder builder = new StringBuilder();
     dumpDependencies(builder, 0, dependency);
 
-    String fromColumnTitle = "From "
-        + ArtifactHelper.getArtifactPath(dependency.getFrom().getParent(ArtifactType.Root), dependency.getFrom());
-    String toColumnTitle = "To "
-        + ArtifactHelper.getArtifactPath(dependency.getTo().getParent(ArtifactType.Root), dependency.getTo());
+    String fromColumnTitle = "From " + _fromLabelGenerator.getTitle();
+    String toColumnTitle = "To " + _toLabelGenerator.getTitle();
 
     setColumnTitles(fromColumnTitle, toColumnTitle);
+
     _viewer.setInput(dependency.getDependencies());
     _viewer.getTable().redraw();
 
@@ -197,5 +182,9 @@ public class DependencyView extends ViewPart implements IDependencySelectionList
       }
     }
   }
+
+  private ArtifactPathLabelGenerator _fromLabelGenerator = new ArtifactPathLabelGenerator();
+
+  private ArtifactPathLabelGenerator _toLabelGenerator   = new ArtifactPathLabelGenerator();
 
 }

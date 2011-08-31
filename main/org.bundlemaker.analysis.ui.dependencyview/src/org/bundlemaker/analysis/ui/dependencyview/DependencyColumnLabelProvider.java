@@ -23,6 +23,16 @@ import org.eclipse.swt.graphics.Image;
 public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider {
   private static final DefaultArtifactLabelProvider _defaultArtifactLabelProvider = new DefaultArtifactLabelProvider();
 
+  private final ArtifactPathLabelGenerator          _labelGenerator;
+
+  /**
+   * @param labelGenerator
+   */
+  public DependencyColumnLabelProvider(ArtifactPathLabelGenerator labelGenerator) {
+    super();
+    _labelGenerator = labelGenerator;
+  }
+
   /*
    * (non-Javadoc)
    * 
@@ -34,6 +44,23 @@ public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider 
       element = getArtifactElement((IDependency) element);
     }
     return _defaultArtifactLabelProvider.getImage(element);
+  }
+
+  /**
+   * Sets the 'base artifact' that is the IArtifact from the IDependency (either from- or to-side)
+   * 
+   * @param baseArtifact
+   *          the baseArtifact to set
+   */
+  public void setBaseArtifact(IArtifact baseArtifact) {
+    getLabelGenerator().setBaseArtifact(baseArtifact);
+  }
+
+  /**
+   * @return
+   */
+  protected ArtifactPathLabelGenerator getLabelGenerator() {
+    return _labelGenerator;
   }
 
   /**
@@ -56,6 +83,8 @@ public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider 
     return _defaultArtifactLabelProvider.getText(element);
   }
 
-  protected abstract String getArtifactLabel(IArtifact artifact);
+  protected String getArtifactLabel(IArtifact artifact) {
+    return _labelGenerator.getLabel(artifact);
+  }
 
 }

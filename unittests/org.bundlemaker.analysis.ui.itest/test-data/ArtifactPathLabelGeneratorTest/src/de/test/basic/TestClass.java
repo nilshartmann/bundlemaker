@@ -8,27 +8,16 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.dependencyview;
-
-import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
+package de.test.basic;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  *
  */
-public class DependencyTableLabelProvider extends DefaultArtifactLabelProvider {
-
-  /* (non-Javadoc)
-   * @see org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider#getText(java.lang.Object)
-   */
-  @Override
-  public String getText(Object element) {
-    if (element instanceof String) {
-      return (String)element;
-    }
-    return super.getText(element);
+public class TestClass {
+  
+  public static void main(String[] args) {
+    System.out.println("Hello, World!");
   }
-  
-  
 
 }
