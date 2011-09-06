@@ -12,26 +12,22 @@ package org.bundlemaker.analysis.ui.xref.views;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * View for analysing IArtifact usedBy and uses dependencies. This view consists of three trees. In the middle tree the
@@ -49,18 +45,18 @@ import org.eclipse.swt.widgets.Label;
  * @see org.bundlemaker.analysis.ui.Analysis
  * @author Frank Schlueter
  */
-public class XRefView extends DependencyPart implements IArtifactSelectionListener {
+public class XRefView extends DependencyPart {
 
   /**
    * The ID of the view as specified by the extension.
    */
   public static final String ID                   = "org.bundlemaker.analysis.ui.xref.views.BundlemakerXRefView";
 
-  private TreeViewer         leftTree;
+  private TreeViewerPanel    leftTree;
 
-  private TreeViewer         middleTree;
+  private TreeViewerPanel    middleTree;
 
-  private TreeViewer         rightTree;
+  private TreeViewerPanel    rightTree;
 
   private IArtifact          rootArtifact;
 
@@ -69,20 +65,6 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
   private List<IArtifact>    dependentSelectedArtifacts;
 
   private boolean            showUsedDependencies = true;
-
-  private static XRefView    _instance;
-
-  /**
-   * Brings the XRefView to foreground and fills it with the specified artifacts
-   * 
-   * @param artifacts
-   */
-  public static void updateAndShow(List<IArtifact> artifacts) {
-    if (_instance != null) {
-      _instance.useArtifactsInternal(artifacts);
-      _instance.selectViewTab();
-    }
-  }
 
   /**
    * The constructor.
@@ -95,7 +77,7 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
    */
   @Override
   public void setFocus() {
-    middleTree.getControl().setFocus();
+    middleTree.getTreeViewer().getControl().setFocus();
   }
 
   @Override
@@ -103,8 +85,8 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
     Composite panel = new Composite(composite, SWT.NONE);
     panel.setLayout(new GridLayout(3, true));
 
-    leftTree = createTreeViewer(panel, "Using");
-    leftTree.addSelectionChangedListener(new ISelectionChangedListener() {
+    leftTree = new TreeViewerPanel(panel, "Using");
+    leftTree.getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
       @SuppressWarnings("unchecked")
       @Override
@@ -114,8 +96,8 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
       }
     });
 
-    middleTree = createTreeViewer(panel, null);
-    middleTree.addSelectionChangedListener(new ISelectionChangedListener() {
+    middleTree = new TreeViewerPanel(panel, null);
+    middleTree.getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
       @SuppressWarnings("unchecked")
       @Override
@@ -125,8 +107,8 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
       }
     });
 
-    rightTree = createTreeViewer(panel, "Used by");
-    rightTree.addSelectionChangedListener(new ISelectionChangedListener() {
+    rightTree = new TreeViewerPanel(panel, "Used by");
+    rightTree.getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
       @SuppressWarnings("unchecked")
       @Override
@@ -135,46 +117,36 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
         selectRightTree(treeSelection.toList());
       }
     });
-
-    _instance = this;
-
-    // TODO!!
-    Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
-  }
-
-  private TreeViewer createTreeViewer(Composite parent, String title) {
-
-    Composite treeViewerComposite = new Composite(parent, SWT.NONE);
-    treeViewerComposite.setLayout(new GridLayout(1, true));
-    GridData layoutData = new GridData(GridData.FILL_BOTH);
-    treeViewerComposite.setLayoutData(layoutData);
-
-    Label titleLabel = new Label(treeViewerComposite, SWT.NONE);
-    if (title != null) {
-      titleLabel.setText(title);
-    }
-    TreeViewer treeViewer = new TreeViewer(treeViewerComposite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    DefaultArtifactLabelProvider artifactLabelProvider = new DefaultArtifactLabelProvider();
-    treeViewer.setContentProvider(new ArtifactTreeContentProvider());
-    treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-    treeViewer.setLabelProvider(artifactLabelProvider);
-
-    return treeViewer;
   }
 
   private void selectLeftTree(List<IArtifact> selectedArtifacts) {
     dependentSelectedArtifacts = selectedArtifacts;
     showUsedDependencies = true;
-    rightTree.getTree().deselectAll();
+    rightTree.getTreeViewer().getTree().deselectAll();
     showDependencyDetails(selectedArtifacts, middleSelectedArtifacts);
+  }
+
+  private int getTypeCount(List<IArtifact> artifacts) {
+    Set<IArtifact> types = new HashSet<IArtifact>();
+    for (IArtifact artifact : artifacts) {
+      if (artifact.getType().isContainer()) {
+        types.addAll(artifact.getLeafs());
+      } else {
+        types.add(artifact);
+      }
+    }
+    return types.size();
   }
 
   private void selectMiddleTree(List<IArtifact> selectedArtifacts) {
     middleSelectedArtifacts = selectedArtifacts;
     List<IArtifact> dependentArtifacts = getDependencies(selectedArtifacts);
     List<IArtifact> usedByArtifacts = getUsedByArtifacts(selectedArtifacts);
-    leftTree.setFilters(new ViewerFilter[] { new DependentArtifactsFilter(usedByArtifacts) });
-    rightTree.setFilters(new ViewerFilter[] { new DependentArtifactsFilter(dependentArtifacts) });
+    leftTree.setTitle("Used By: " + getTypeCount(usedByArtifacts));
+    middleTree.setTitle("Artifacts: " + getTypeCount(selectedArtifacts));
+    rightTree.setTitle("Using: " + getTypeCount(dependentArtifacts));
+    leftTree.getTreeViewer().setFilters(new ViewerFilter[] { new DependentArtifactsFilter(usedByArtifacts) });
+    rightTree.getTreeViewer().setFilters(new ViewerFilter[] { new DependentArtifactsFilter(dependentArtifacts) });
     if (showUsedDependencies) {
       showDependencyDetails(middleSelectedArtifacts, dependentSelectedArtifacts);
     } else {
@@ -184,7 +156,7 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
 
   private void selectRightTree(List<IArtifact> selectedArtifacts) {
     showUsedDependencies = false;
-    leftTree.getTree().deselectAll();
+    leftTree.getTreeViewer().getTree().deselectAll();
     showDependencyDetails(middleSelectedArtifacts, selectedArtifacts);
   }
 
@@ -224,34 +196,22 @@ public class XRefView extends DependencyPart implements IArtifactSelectionListen
 
   @Override
   protected void doDispose() {
-    // TODO!!
-    Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
-  }
-
-  @Override
-  public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
-    List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
-    useArtifactsInternal(selectedArtifacts);
+    leftTree.getTreeViewer().getTree().dispose();
+    middleTree.getTreeViewer().getTree().dispose();
+    rightTree.getTreeViewer().getTree().dispose();
   }
 
   @Override
   protected void useArtifacts(List<IArtifact> artifacts) {
-  }
-
-  protected void useArtifactsInternal(List<IArtifact> artifacts) {
     middleSelectedArtifacts = null;
     dependentSelectedArtifacts = null;
-    middleTree.setInput(artifacts);
-    if (artifacts.size() > 0) {
+    middleTree.getTreeViewer().setInput(artifacts);
       rootArtifact = artifacts.get(0);
       if (rootArtifact.getType() != ArtifactType.Root) {
         rootArtifact = rootArtifact.getParent(ArtifactType.Root);
       }
-      leftTree.setInput(rootArtifact);
-      rightTree.setInput(rootArtifact);
-    } else {
-      leftTree.setInput(null);
-      rightTree.setInput(null);
-    }
+    leftTree.getTreeViewer().setInput(rootArtifact);
+    rightTree.getTreeViewer().setInput(rootArtifact);
+    selectMiddleTree(artifacts);
   }
 }
