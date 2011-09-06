@@ -20,8 +20,6 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
@@ -54,6 +52,14 @@ public class DSMView extends DependencyPart {
 
   @Override
   public void doDispose() {
+    if (FEATURE_USE_NEW_DSM) {
+      /**
+       * @todo dispose _dsmViewWidget
+       * 
+       */
+    } else {
+      dsmComposite.dispose();
+    }
   }
 
   public static void updateAndShow(List<IArtifact> artifacts) {
@@ -80,7 +86,7 @@ public class DSMView extends DependencyPart {
 
   @Override
   protected void useArtifacts(List<IArtifact> artifacts) {
-    getArtifactSelectionService().setSelection(ID, artifacts);
+    // getArtifactSelectionService().setSelection(ID, artifacts);
     DependencyGraph graph = getDependencyGraph(artifacts);
     useDependencyGraph(graph);
   }
@@ -98,23 +104,11 @@ public class DSMView extends DependencyPart {
 
   public void doInitOld(Composite parent) {
     _instance = this;
-    getArtifactSelectionService().addArtifactSelectionListener(DSMView.ID, new DsmViewSelectionListener());
     dsmComposite = new DSMComposite<IArtifact, DependencyEdge>(parent, this);
   }
 
   public void useDependencyGraphOld(DependencyGraph graph) {
     dsmComposite.setDependencyGraph(graph);
-  }
-
-  class DsmViewSelectionListener implements IArtifactSelectionListener {
-
-    @Override
-    public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
-      List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
-      DependencyGraph graph = getDependencyGraph(selectedArtifacts);
-      useDependencyGraph(graph);
-    }
-
   }
 
   /************ STOP - OLD DsmView ***************************/

@@ -117,6 +117,8 @@ public abstract class AbstractSelectionService<SELECTION, LISTENER, EVENT> {
 
         // invoke!
         invokeListener(wrapper.getListener(), event);
+      } else {
+        System.out.println("SelectionListenerWrapper does not match: " + wrapper._providerId + " != " + providerId);
       }
 
     }

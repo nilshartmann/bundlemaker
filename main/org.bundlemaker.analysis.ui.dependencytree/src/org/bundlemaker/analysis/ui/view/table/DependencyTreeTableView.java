@@ -214,8 +214,8 @@ public class DependencyTreeTableView extends ViewPart implements IDependencySele
     Analysis.instance().getDependencySelectionService().addDependencySelectionListener(this);
 
     // Register ArtifactSelectionListener
-    Analysis.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener("org.bundlemaker.analysis.ui.dsmview.DSMView", this);
+    // FS Diese Anbindung an den ArtifactTree ist extrem Teuer. Das geht so gar nicht. Was soll das üerhaupt?
+    // Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
   }
 
   @Override

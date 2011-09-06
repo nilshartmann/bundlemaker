@@ -10,6 +10,8 @@ import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
 import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
 import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
@@ -33,7 +35,7 @@ import org.eclipse.ui.PlatformUI;
  * @author Kai Lehmann
  * 
  */
-public abstract class DependencyPart {
+public abstract class DependencyPart implements IArtifactSelectionListener {
 
   private Composite composite;
 
@@ -82,6 +84,12 @@ public abstract class DependencyPart {
     return tabItem;
   }
 
+  @Override
+  public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+    List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
+    useArtifacts(selectedArtifacts);
+  }
+
   /**
    * <p>
    * Initialisiert die Dependency View.
@@ -98,6 +106,8 @@ public abstract class DependencyPart {
     composite.setLayout(new FillLayout());
 
     doInit(composite);
+
+    Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
 
     // initialize view with current selection from Artifact tree
     IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(
@@ -141,6 +151,7 @@ public abstract class DependencyPart {
   }
 
   public void dispose() {
+    Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
     this.doDispose();
   }
 
