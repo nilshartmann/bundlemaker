@@ -46,8 +46,6 @@ public class DSMView extends DependencyPart {
    */
   public static String                            ID                  = "org.bundlemaker.analysis.ui.dsmview.DSMView";
 
-  private static DSMView                          _instance;
-
   private DSMComposite<IArtifact, DependencyEdge> dsmComposite;
 
   @Override
@@ -62,19 +60,6 @@ public class DSMView extends DependencyPart {
     }
   }
 
-  public static void updateAndShow(List<IArtifact> artifacts) {
-    if (_instance != null) {
-      _instance.useArtifacts(artifacts);
-      _instance.selectViewTab();
-    }
-  }
-
-  public static void showTab() {
-    if (_instance != null) {
-      _instance.selectViewTab();
-    }
-  }
-
   @Override
   protected void doInit(Composite composite) {
     if (FEATURE_USE_NEW_DSM) {
@@ -86,10 +71,24 @@ public class DSMView extends DependencyPart {
 
   @Override
   protected void useArtifacts(List<IArtifact> artifacts) {
-    // getArtifactSelectionService().setSelection(ID, artifacts);
-    DependencyGraph graph = getDependencyGraph(artifacts);
-    useDependencyGraph(graph);
+    super.useArtifacts(artifacts);
+    useDependencyGraph(getDependencyGraphForCurrentArtifacts());
   }
+
+  // /**
+  // * <p>
+  // * Will be invoked when this DependencyPart is going to be opened
+  // * </p>
+  // *
+  // * <p>
+  // * Subclasses can implemented this method to update their displays
+  // *
+  // */
+  // @Override
+  // public void onShow() {
+  // System.out.println("DSMView - on show");
+  // useDependencyGraph(getDependencyGraphForCurrentArtifacts());
+  // }
 
   protected void useDependencyGraph(DependencyGraph graph) {
 
@@ -103,7 +102,6 @@ public class DSMView extends DependencyPart {
   /************ START - OLD DsmView ***************************/
 
   public void doInitOld(Composite parent) {
-    _instance = this;
     dsmComposite = new DSMComposite<IArtifact, DependencyEdge>(parent, this);
   }
 
@@ -124,7 +122,6 @@ public class DSMView extends DependencyPart {
   private IDependency[][] _dependencies;
 
   public void doInitNew(Composite parent) {
-    _instance = this;
     _dsmViewWidget = new DsmViewWidget(new DsmViewModel(), parent);
   }
 

@@ -1,5 +1,7 @@
 package org.bundlemaker.analysis.ui;
 
+import java.util.List;
+
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
@@ -15,6 +17,7 @@ import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.analysis.ui.selection.IDependencySelectionService;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -182,6 +185,26 @@ public class Analysis {
     if (page != null) {
       try {
         page.openEditor(nullInputEditor, GenericEditor.ID);
+      } catch (PartInitException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void showInGenericEditor(String dependencyPartId, List<IArtifact> artifacts) {
+    IWorkbenchPage page = getActiveWorkbenchPage();
+    if (page != null) {
+      try {
+        IEditorPart editorPart = page.openEditor(nullInputEditor, GenericEditor.ID);
+        if (!(editorPart instanceof GenericEditor)) {
+          System.err.println("EditorPart " + editorPart + " is not a GenericEditor?");
+          return;
+        }
+
+        GenericEditor genericEditor = (GenericEditor) editorPart;
+        genericEditor.useArtifacts(artifacts);
+        genericEditor.openDependencyPart(dependencyPartId);
+
       } catch (PartInitException e) {
         e.printStackTrace();
       }

@@ -33,11 +33,7 @@ public class OpenXRefViewHandler extends AbstractArtifactBasedHandler {
    */
   @Override
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
-    // Open the 'GenericEditor'
-    Analysis.instance().openGenericEditor();
-
-    // Make sure, DSMView is visible on GenericEditor
-    XRefView.updateAndShow(selectedArtifacts);
+    Analysis.instance().showInGenericEditor(XRefView.class.getName(), selectedArtifacts);
   }
 
 }

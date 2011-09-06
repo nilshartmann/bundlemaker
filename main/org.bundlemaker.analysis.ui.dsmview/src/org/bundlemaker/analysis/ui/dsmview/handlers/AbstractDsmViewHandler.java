@@ -45,12 +45,7 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
   }
 
   private void openEditorAndViews(List<IArtifact> selectedArtifacts) {
-    // Open the 'GenericEditor'
-    Analysis.instance().openGenericEditor();
-
-    // Make sure, DSMView is visible on GenericEditor
-    DSMView.updateAndShow(selectedArtifacts);
-
+    Analysis.instance().showInGenericEditor(DSMView.class.getName(), selectedArtifacts);
     // Open the DependencyTreeTableView
     // Analysis.instance().openDependencyTreeTableView();
   }

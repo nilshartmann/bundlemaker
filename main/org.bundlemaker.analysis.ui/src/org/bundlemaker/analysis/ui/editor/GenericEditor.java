@@ -3,6 +3,7 @@ package org.bundlemaker.analysis.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -27,7 +28,7 @@ public class GenericEditor extends EditorPart {
 
   private final String         CLAZZ = "class";
 
-  private List<DependencyPart> dependencyParts;
+  private List<DependencyTabHolder> dependencyParts;
 
   private TabFolder            tabFolder;
 
@@ -66,7 +67,7 @@ public class GenericEditor extends EditorPart {
 
   @Override
   public void createPartControl(Composite parent) {
-    dependencyParts = new ArrayList<DependencyPart>();
+    dependencyParts = new ArrayList<DependencyTabHolder>();
 
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
     IExtensionPoint extensionPoint = extensionRegistry.getExtensionPoint("org.bundlemaker.analysis.ui.dependencyView");
@@ -85,14 +86,12 @@ public class GenericEditor extends EditorPart {
             DependencyPart dependencyPart = (DependencyPart) element.createExecutableExtension(CLAZZ);
 
             // add it to internal list of parts
-            dependencyParts.add(dependencyPart);
+            DependencyTabHolder holder = new DependencyTabHolder(dependencyPart, tabItem);
+            dependencyParts.add(holder);
 
             // initialize(i.e. create gui components)
             dependencyPart.init(tabFolder);
 
-            // connect it to tab folder
-            dependencyPart.setTabItem(tabItem);
-            dependencyPart.setTabFolder(tabFolder);
             tabItem.setText(title);
             tabItem.setControl(dependencyPart.getComposite());
           } catch (Exception e) {
@@ -100,6 +99,7 @@ public class GenericEditor extends EditorPart {
           }
         }
       }
+      System.out.printf(" * * * %d DependencyParts created%n", dependencyParts.size());
     }
 
     registerListener();
@@ -110,6 +110,7 @@ public class GenericEditor extends EditorPart {
     tabFolder.addSelectionListener(new SelectionAdapter() {
       @Override
       public void widgetSelected(org.eclipse.swt.events.SelectionEvent event) {
+        System.out.println("TabFolder SelectionEdvent - index: " + tabFolder.getSelectionIndex());
         setTabItemFocus(tabFolder.getSelectionIndex());
       }
     });
@@ -119,19 +120,71 @@ public class GenericEditor extends EditorPart {
   @Override
   public void setFocus() {
     int selectedItemIndex = tabFolder.getSelectionIndex();
-    System.out.printf("Setze focus aus index: %d%n", selectedItemIndex);
     this.setTabItemFocus(selectedItemIndex);
   }
 
   public void setTabItemFocus(int index) {
-    dependencyParts.get(index).setFocus();
+    DependencyTabHolder dependencyTabHolder = dependencyParts.get(index);
+    if (dependencyTabHolder != null) {
+      System.out.println("setTabItemFocus to " + dependencyTabHolder.getDependencyPart());
+      dependencyTabHolder.getDependencyPart().setFocus();
+    }
   }
 
   @Override
   public void dispose() {
     super.dispose();
-    for (DependencyPart dependencyPart : dependencyParts) {
-      dependencyPart.dispose();
+    for (DependencyTabHolder dependencyPart : dependencyParts) {
+      dependencyPart.getDependencyPart().dispose();
+    }
+
+  }
+
+  public void useArtifacts(List<IArtifact> artifacts) {
+    // Notify dependency parts of new artifacts
+    for (DependencyTabHolder dependencyPart : dependencyParts) {
+      dependencyPart.getDependencyPart().useArtifacts(artifacts);
+    }
+  }
+
+  /**
+   * <p>
+   * Opens the specified DependencyPart
+   * </p>
+   * <p>
+   * If there is no DependencyPart with the specified Id nothing happens
+   * 
+   * @param dependencyPartId
+   */
+  public void openDependencyPart(String dependencyPartId) {
+    for (DependencyTabHolder dependencyTabHolder : dependencyParts) {
+      // TODO identify via some Id?
+      if (dependencyPartId.equals(dependencyTabHolder.getDependencyPart().getClass().getName())) {
+        tabFolder.setSelection(dependencyTabHolder.getTabItem());
+        dependencyTabHolder.getDependencyPart().setFocus();
+        break;
+      }
+    }
+
+  }
+
+  class DependencyTabHolder {
+    private final DependencyPart _dependencyPart;
+
+    private final TabItem        _tabItem;
+
+    public DependencyTabHolder(DependencyPart dependencyPart, TabItem tabItem) {
+      super();
+      _dependencyPart = dependencyPart;
+      _tabItem = tabItem;
+    }
+
+    public DependencyPart getDependencyPart() {
+      return _dependencyPart;
+    }
+
+    public TabItem getTabItem() {
+      return _tabItem;
     }
 
   }

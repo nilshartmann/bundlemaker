@@ -1,28 +1,18 @@
 package org.bundlemaker.analysis.ui.editor;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
 import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * <p>
@@ -35,17 +25,19 @@ import org.eclipse.ui.PlatformUI;
  * @author Kai Lehmann
  * 
  */
-public abstract class DependencyPart implements IArtifactSelectionListener {
+public abstract class DependencyPart {
 
   private Composite composite;
 
-  private TabFolder tabFolder;
-
-  private TabItem   tabItem;
-
   private ISelectionProvider _selectionProvider;
 
+  /**
+   * The current artifacts (contents) of this dependency part
+   */
+  private List<IArtifact>    _currentArtifacts;
+
   public DependencyPart() {
+    _currentArtifacts = Collections.emptyList();
   }
 
   public ISelectionProvider getSelectionProvider() {
@@ -64,32 +56,6 @@ public abstract class DependencyPart implements IArtifactSelectionListener {
     _selectionProvider = selectionProvider;
   }
 
-  public void setTabFolder(TabFolder tabFolder) {
-    this.tabFolder = tabFolder;
-  }
-
-  public TabFolder getTabFolder() {
-    return tabFolder;
-  }
-
-  public void selectViewTab() {
-    tabFolder.setSelection(tabItem);
-  }
-
-  public void setTabItem(TabItem tabItem) {
-    this.tabItem = tabItem;
-  }
-
-  public TabItem getTabItem() {
-    return tabItem;
-  }
-
-  @Override
-  public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
-    List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
-    useArtifacts(selectedArtifacts);
-  }
-
   /**
    * <p>
    * Initialisiert die Dependency View.
@@ -98,38 +64,29 @@ public abstract class DependencyPart implements IArtifactSelectionListener {
    * Dies beinhaltet die Anmeldung als PropertyChangeListener am DependencyModeln sowie der Initialisierung der
    * graphischen Oberflaeche der konkreten Unterklasse
    * 
+   * <p>
+   * Clients should implement {@link #doInit(Composite)} to create their widgets
+   * 
    * @param parent
    *          Das Composite, welcher die komponenten hinzugefuegt werden
    */
-  public void init(Composite parent) {
+  void init(Composite parent) {
     composite = new Composite(parent, SWT.None);
     composite.setLayout(new FillLayout());
 
     doInit(composite);
 
-    Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
-
-    // initialize view with current selection from Artifact tree
-    IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(
-        Analysis.PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID);
-
-    if (currentArtifactSelection != null) {
-      useArtifacts(currentArtifactSelection.getSelectedArtifacts());
-    }
   }
 
   protected IAnalysisContext getAnalysisContext() {
     return Analysis.instance().getContext();
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the IArtifactSelectionService
-   */
-  protected IArtifactSelectionService getArtifactSelectionService() {
-    return Analysis.instance().getArtifactSelectionService();
+  protected DependencyGraph getDependencyGraphForCurrentArtifacts() {
+    IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
+
+    return dependencyGraphService.getDependencyGraph(getCurrentArtifacts());
+
     }
 
   /**
@@ -150,27 +107,25 @@ public abstract class DependencyPart implements IArtifactSelectionListener {
     return composite;
   }
 
-  public void dispose() {
-    Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
+  void dispose() {
     this.doDispose();
-  }
-
-  public void changeTable(List<IDependency> dependencies, String... columnNames) {
-    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    // DependencyTreeTableView treeView = (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
-    // treeView.changeTable(dependencies, columnNames);
-  }
-
-  public void addDependencySelectionListener(ISelectionListener selectionListener) {
-    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    // workbenchPage.addSelectionListener(DependencyTreeTableView.ID, (ISelectionListener) this);
   }
 
   public void setFocus() {
     composite.setFocus();
   }
+
+  // /**
+  // * <p>
+  // * Will be invoked when this DependencyPart is going to be opened
+  // * </p>
+  // *
+  // * <p>
+  // * Subclasses can implemented this method to update their displays
+  // *
+  // */
+  // public void onShow() {
+  // }
 
   /**
    * Explizite Initialisierung der konkreten Dependency View
@@ -180,14 +135,28 @@ public abstract class DependencyPart implements IArtifactSelectionListener {
   protected abstract void doInit(Composite composite);
 
   /**
-   * This method is invoked when the artifacts that should be visualized change
+   * This method is invoked to set the artifacts that should be visualized when this editor is visible
    * <p>
    * </p>
    * 
    * @param artifacts
    *          The new artifacts. Must not be null but might be empty
    */
-  protected abstract void useArtifacts(List<IArtifact> artifacts);
+  protected void useArtifacts(List<IArtifact> artifacts) {
+    _currentArtifacts = artifacts;
+  }
+
+  /**
+   * <p>
+   * Returns the {@link IArtifact} instances that should be visualized
+   * </p>
+   * 
+   * @return
+   */
+  public List<IArtifact> getCurrentArtifacts() {
+    return _currentArtifacts;
+
+  }
 
   /**
    * Konkrete Implentierung das Dispose, wenn das Fenster geschlossen wird
