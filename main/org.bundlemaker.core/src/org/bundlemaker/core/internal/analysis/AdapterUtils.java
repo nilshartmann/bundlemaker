@@ -117,7 +117,7 @@ public class AdapterUtils {
         .getContainingModule();
 
     //
-    addResourcesToModule(resourceModule, getAllContainedResourceHolder(artifact));
+    addResourcesToModule(resourceModule, getAllMovableUnits(artifact));
 
     // addTypesToModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
     // getAllContainedTypeHolder(artifact));
@@ -140,7 +140,7 @@ public class AdapterUtils {
 
       //
       removeResourcesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
-          getAllContainedResourceHolder(artifact));
+          getAllMovableUnits(artifact));
 
       // removeTypesFromModule((IModifiableResourceModule) resourceModule2Artifact.getModule(),
       // getAllContainedTypeHolder(artifact));
@@ -166,7 +166,7 @@ public class AdapterUtils {
 
     //
     removeResourcesFromModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
-        getAllContainedResourceHolder(package2Artifact));
+        getAllMovableUnits(package2Artifact));
     // removeTypesFromModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
     // getAllContainedTypeHolder(package2Artifact));
   }
@@ -189,7 +189,7 @@ public class AdapterUtils {
 
     //
     addResourcesToModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
-        getAllContainedResourceHolder(package2Artifact));
+        getAllMovableUnits(package2Artifact));
     // addTypesToModule((IModifiableResourceModule) adapterResourceModule2IArtifact.getModule(),
     // getAllContainedTypeHolder(package2Artifact));
   }
@@ -219,7 +219,7 @@ public class AdapterUtils {
     return result;
   }
 
-  private static List<IMovableUnit> getAllContainedResourceHolder(IArtifact artifact) {
+  private static List<IMovableUnit> getAllMovableUnits(IArtifact artifact) {
 
     //
     List<IMovableUnit> result = new LinkedList<IMovableUnit>();
@@ -233,7 +233,7 @@ public class AdapterUtils {
 
     } else {
       for (IArtifact child : artifact.getChildren()) {
-        result.addAll(getAllContainedResourceHolder(child));
+        result.addAll(getAllMovableUnits(child));
       }
     }
 

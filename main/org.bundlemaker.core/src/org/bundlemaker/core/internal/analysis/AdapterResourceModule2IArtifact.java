@@ -65,7 +65,53 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     // handle package
     if (artifact.getType().equals(ArtifactType.Package)) {
       handleAddPackage(artifact);
+    } else if (artifact.getType().equals(ArtifactType.Resource)) {
+      handleAddResource(artifact);
+    } else if (artifact.getType().equals(ArtifactType.Type)) {
+      handleAddType(artifact);
     }
+  }
+
+  private void handleAddType(IArtifact artifact) {
+
+    //
+    if (artifact.getParent().getType().equals(ArtifactType.Resource)) {
+
+      handleAddResource(artifact.getParent());
+
+    } else {
+
+      // step 1: get the containing package artifact
+      IPackageArtifact oldPackageArtifact = (IPackageArtifact) artifact.getParent(ArtifactType.Package);
+
+      //
+      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(getAssociatedModule()),
+          oldPackageArtifact.getQualifiedName());
+
+      //
+      IPackageArtifact newPackageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
+          modulePackageKey);
+
+      //
+      newPackageArtifact.addArtifact(artifact);
+    }
+  }
+
+  private void handleAddResource(IArtifact artifact) {
+
+    // step 1: get the containing package artifact
+    IPackageArtifact oldPackageArtifact = (IPackageArtifact) artifact.getParent(ArtifactType.Package);
+
+    //
+    ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(getAssociatedModule()),
+        oldPackageArtifact.getQualifiedName());
+
+    //
+    IPackageArtifact newPackageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
+        modulePackageKey);
+
+    //
+    newPackageArtifact.addArtifact(artifact);
   }
 
   private void handleAddPackage(IArtifact artifact) {
