@@ -9,7 +9,7 @@ import org.bundlemaker.analysis.model.IArtifact;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IGroupArtifact extends IAdvancedArtifact {
+public interface IGroupArtifact extends IAdvancedArtifact, IGroupAndModuleContainer {
 
   /**
    * <p>

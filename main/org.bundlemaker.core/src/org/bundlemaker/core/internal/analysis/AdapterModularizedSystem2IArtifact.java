@@ -25,13 +25,16 @@ import org.eclipse.core.runtime.Assert;
 public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContainer implements IRootArtifact {
 
   /** - */
-  private IModifiableModularizedSystem       _modularizedSystem;
+  private IModifiableModularizedSystem          _modularizedSystem;
 
   /** - */
-  private DependencyModel                    _dependencyModel;
+  private DependencyModel                       _dependencyModel;
 
   /** - */
-  private List<IArtifactTreeChangedListener> _artifactTreeChangedListeners;
+  private List<IArtifactTreeChangedListener>    _artifactTreeChangedListeners;
+
+  /** - */
+  private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
 
   /**
    * <p>
@@ -48,6 +51,23 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     //
     _artifactTreeChangedListeners = new LinkedList<IArtifactTreeChangedListener>();
+
+    //
+    _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public IModuleArtifact getOrCreateModule(String qualifiedModuleName, String moduleVersion) {
+    return _groupAndModuleContainerDelegate.getOrCreateModule(qualifiedModuleName, moduleVersion);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public IGroupArtifact getOrCreateGroup(String path) {
+    return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
   }
 
   @Override

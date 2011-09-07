@@ -11,6 +11,7 @@ import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -22,7 +23,10 @@ import org.eclipse.core.runtime.Assert;
 public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements IGroupArtifact {
 
   // the group qualified name delimiter
-  private static final char DELIMITER = '/';
+  private static final char                     DELIMITER = '/';
+
+  /** - */
+  private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
 
   /**
    * <p>
@@ -37,6 +41,23 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     // set parent/children dependency
     setParent(parent);
     ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+
+    //
+    _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public IModuleArtifact getOrCreateModule(String qualifiedModuleName, String moduleVersion) {
+    return _groupAndModuleContainerDelegate.getOrCreateModule(qualifiedModuleName, moduleVersion);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public IGroupArtifact getOrCreateGroup(String path) {
+    return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
   }
 
   /**
