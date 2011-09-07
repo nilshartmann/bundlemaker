@@ -25,7 +25,10 @@ public enum ArtifactType {
   Package("package", true),
 
   /** - */
-  Type("class"), Resource("resource");
+  Type("class"),
+
+  /** - */
+  Resource("resource");
 
   /** - */
   private String  _abbreviation;
