@@ -169,8 +169,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       // add errors
       if (problem.isError()) {
-        System.out.println("DERBER FEHLER " + problem.getMessage());
-        System.out.println(_javaProject);
+        System.out.println("JDT Parser Error: " + problem.getMessage());
         getProblems().add(problem);
       }
     }
