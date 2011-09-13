@@ -36,8 +36,24 @@ public interface IParser {
    */
   public ParserType getParserType();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceKey
+   * @return
+   */
   boolean canParse(IResourceKey resourceKey);
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param content
+   * @param resource
+   * @param cache
+   * @throws CoreException
+   */
   public void parseResource(IFileBasedContent content, IResourceKey resource, IResourceCache cache)
       throws CoreException;
 
@@ -57,6 +73,12 @@ public interface IParser {
    */
   public void parseBundleMakerProjectStop(IBundleMakerProject bundleMakerProject);
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public List<IProblem> getProblems();
 
   /**
