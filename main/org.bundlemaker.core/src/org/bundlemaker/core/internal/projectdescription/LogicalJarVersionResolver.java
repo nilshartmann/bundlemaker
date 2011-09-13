@@ -30,6 +30,22 @@ public class LogicalJarVersionResolver {
 
   /**
    * <p>
+   * Returns the version from the Bundle-Version manifest attribute if (correctly) set
+   * </p>
+   * 
+   * @param manifest
+   * @return
+   */
+  public static String extractNameFromBundleVersion(Manifest manifest) {
+    // get the 'Implementation-Title' attribute
+    String result = manifest.getMainAttributes().getValue("Bundle-Version");
+
+    //
+    return returnIfValid(result);
+  }
+
+  /**
+   * <p>
    * </p>
    * 
    * @param manifest

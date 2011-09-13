@@ -146,6 +146,29 @@ public class JarInfoService {
     // get the manifest file
     JarFile jarFile = new JarFile(file);
 
+    // Try to analyze the manifest file
+
+    // get the manifest file
+    Manifest manifest = jarFile.getManifest();
+
+    if (manifest != null) {
+
+      // Try Bundle-Version
+      version = LogicalJarVersionResolver.extractNameFromBundleVersion(manifest);
+
+      // Try Implementation-Version
+      if (version == null) {
+        version = LogicalJarVersionResolver.extractNameFromImplementationVersion(manifest);
+      }
+
+      // Try Specification
+      if (version == null) {
+        version = LogicalJarVersionResolver.extractNameFromSpecificationVersion(manifest);
+      }
+    }
+
+    // Still no version found, try maven pom properties
+    if (version == null) {
     // try to read maven pom.properties
     Enumeration<JarEntry> entries = jarFile.entries();
     while (entries.hasMoreElements()) {
@@ -157,28 +180,13 @@ public class JarInfoService {
         break;
       }
     }
+    }
 
     File fileToParse = file;
     while (version == null && fileToParse != null) {
       version = LogicalJarVersionResolver.extractVersionFromName(fileToParse.getName());
       if (version == null) {
         fileToParse = fileToParse.getParentFile();
-      }
-    }
-
-    // Try to analyze the manifest file
-    if (version == null) {
-
-      // get the manifest file
-      Manifest manifest = jarFile.getManifest();
-
-      if (manifest != null) {
-
-        version = LogicalJarVersionResolver.extractNameFromImplementationVersion(manifest);
-
-        if (version == null) {
-          version = LogicalJarVersionResolver.extractNameFromSpecificationVersion(manifest);
-        }
       }
     }
 
