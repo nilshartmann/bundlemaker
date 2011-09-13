@@ -28,7 +28,7 @@ import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCrea
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.util.GenericCache;
+import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;

@@ -30,7 +30,7 @@ public class ArtifactTreeVisitorTest extends AbstractComplexTest {
 
     final int[] resultCount = new int[7];
 
-    getRootArtifact().accept(new IArtifactTreeVisitor() {
+    getRootArtifact().accept(new IArtifactTreeVisitor.Adapter() {
 
       @Override
       public boolean visit(IRootArtifact rootArtifact) {

@@ -24,7 +24,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.GenericCache;
+import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -158,7 +158,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
       if (resourceModules != null) {
         resourceModules.remove(resourceModule);
         if (resourceModules.isEmpty()) {
-          _resourceToResourceModuleCache.getMap().remove(resource);
+          _resourceToResourceModuleCache.remove(resource);
         }
       }
       break;
@@ -220,7 +220,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
       if (typeModules != null) {
         typeModules.remove(module);
         if (typeModules.isEmpty()) {
-          _typeToModuleCache.getMap().remove(type);
+          _typeToModuleCache.remove(type);
 
           // step 2b: type name -> type
           Set<IType> types = _typeNameToTypeCache.get(type.getFullyQualifiedName());
@@ -231,7 +231,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
             // remove types if empty
             if (types.isEmpty()) {
-              _typeNameToTypeCache.getMap().remove(type.getFullyQualifiedName());
+              _typeNameToTypeCache.remove(type.getFullyQualifiedName());
             }
           }
 
@@ -243,7 +243,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
               referredTypes.remove(type);
               // remove referred types if empty
               if (referredTypes.isEmpty()) {
-                _typeNameToReferringCache.getMap().remove(reference.getFullyQualifiedName());
+                _typeNameToReferringCache.remove(reference.getFullyQualifiedName());
               }
             }
           }
@@ -374,7 +374,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    Set<IResourceModule> resourceModules = _resourceToResourceModuleCache.getMap().get(resource);
+    Set<IResourceModule> resourceModules = _resourceToResourceModuleCache.get(resource);
 
     //
     if (resourceModules == null || resourceModules.isEmpty()) {
@@ -399,7 +399,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(type);
 
     //
-    Set<IModule> modules = _typeToModuleCache.getMap().get(type);
+    Set<IModule> modules = _typeToModuleCache.get(type);
 
     //
     if (modules == null || modules.isEmpty()) {

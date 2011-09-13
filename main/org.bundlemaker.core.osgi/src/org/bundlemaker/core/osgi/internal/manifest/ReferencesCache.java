@@ -20,8 +20,8 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
-import org.bundlemaker.core.util.GenericCache;
 import org.bundlemaker.core.util.StopWatch;
+import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 
 /**

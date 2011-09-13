@@ -1,7 +1,8 @@
 package org.bundlemaker.core.internal.analysis.transformer.caches;
 
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
-import org.bundlemaker.core.util.GenericCache;
+import org.bundlemaker.core.util.collections.GenericCache;
+import org.bundlemaker.core.util.collections.SymetricGenericCache;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -14,7 +15,7 @@ import org.eclipse.core.runtime.Assert;
  * @param <K>
  * @param <V>
  */
-public abstract class AbstractArtifactCacheAwareGenericCache<K, V> extends GenericCache<K, V> {
+public abstract class AbstractArtifactCacheAwareGenericCache<K, V> extends SymetricGenericCache<K, V> {
 
   /** the default artifact cache */
   private final DefaultArtifactCache _artifactCache;

@@ -32,7 +32,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.GenericCache;
+import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -81,7 +81,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     Map<String, Set<IType>> result = new HashMap<String, Set<IType>>();
 
     //
-    for (Entry<String, Set<IType>> entry : getTypeNameToTypeCache().getMap().entrySet()) {
+    for (Entry<String, Set<IType>> entry : getTypeNameToTypeCache().entrySet()) {
 
       if (entry.getValue().size() > 1) {
         result.put(entry.getKey(), entry.getValue());
