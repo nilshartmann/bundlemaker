@@ -75,7 +75,10 @@ public interface IModularizedSystem {
    * </p>
    * 
    * @return the (modifiable) transformation list.
+   * 
+   * @deprecated use applyTransformations(List<ITransformation>, IProgressMonitor monitor) instead
    */
+  @Deprecated
   List<ITransformation> getTransformations();
 
   /**
@@ -87,8 +90,29 @@ public interface IModularizedSystem {
    *          the progress monitor to use for reporting progress to the user. It is the caller's responsibility to call
    *          done() on the given monitor. Accepts <code>null</code>, indicating that no progress should be reported and
    *          that the operation cannot be canceled.
+   * 
+   * @deprecated use applyTransformations(IProgressMonitor monitor, List<ITransformation> transformations) instead
    */
+  @Deprecated
   void applyTransformations(IProgressMonitor monitor);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param monitor
+   * @param transformations
+   */
+  void applyTransformations(IProgressMonitor monitor, List<ITransformation> transformations);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param monitor
+   * @param transformation
+   */
+  void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
 
   /**
    * <p>

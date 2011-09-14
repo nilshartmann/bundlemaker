@@ -71,38 +71,103 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     // call the super constructor
     super(name, projectDescription);
+  }
 
-    // create _typeNameToTypeCache
-    _typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
-      @Override
-      protected Set<IType> create(String key) {
-        return new HashSet<IType>();
-      }
-    };
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected final GenericCache<IResource, Set<IResourceModule>> getResourceToResourceModuleCache() {
 
-    // create _typeNameToReferringCache
-    _typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
-      @Override
-      protected Set<IType> create(String key) {
-        return new HashSet<IType>();
-      }
-    };
+    //
+    if (_resourceToResourceModuleCache == null) {
 
-    // create _resourceToResourceModuleCache
-    _resourceToResourceModuleCache = new GenericCache<IResource, Set<IResourceModule>>() {
-      @Override
-      protected Set<IResourceModule> create(IResource resource) {
-        return new HashSet<IResourceModule>();
-      }
-    };
+      // create _resourceToResourceModuleCache
+      _resourceToResourceModuleCache = new GenericCache<IResource, Set<IResourceModule>>() {
+        @Override
+        protected Set<IResourceModule> create(IResource resource) {
+          return new HashSet<IResourceModule>();
+        }
+      };
+    }
 
-    // create _typeToModuleCache
-    _typeToModuleCache = new GenericCache<IType, Set<IModule>>() {
-      @Override
-      protected Set<IModule> create(IType type) {
-        return new HashSet<IModule>();
-      }
-    };
+    //
+    return _resourceToResourceModuleCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  // TODO set to protected
+  public final GenericCache<String, Set<IType>> getTypeNameToTypeCache() {
+
+    //
+    if (_typeNameToTypeCache == null) {
+
+      // create _typeNameToTypeCache
+      _typeNameToTypeCache = new GenericCache<String, Set<IType>>() {
+        @Override
+        protected Set<IType> create(String key) {
+          return new HashSet<IType>();
+        }
+      };
+    }
+
+    //
+    return _typeNameToTypeCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  // TODO: incremental updates - replace with API
+  public GenericCache<String, Set<IType>> getTypeNameToReferringCache() {
+
+    //
+    if (_typeNameToReferringCache == null) {
+
+      // create _typeNameToReferringCache
+      _typeNameToReferringCache = new GenericCache<String, Set<IType>>() {
+        @Override
+        protected Set<IType> create(String key) {
+          return new HashSet<IType>();
+        }
+      };
+    }
+
+    //
+    return _typeNameToReferringCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected final GenericCache<IType, Set<IModule>> getTypeToModuleCache() {
+
+    //
+    if (_typeToModuleCache == null) {
+
+      // create _typeToModuleCache
+      _typeToModuleCache = new GenericCache<IType, Set<IModule>>() {
+        @Override
+        protected Set<IModule> create(IType type) {
+          return new HashSet<IModule>();
+        }
+      };
+    }
+
+    return _typeToModuleCache;
   }
 
   /**
@@ -112,10 +177,10 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   protected void preApplyTransformations() {
 
     // clear all the caches
-    _typeNameToTypeCache.clear();
-    _typeNameToReferringCache.clear();
-    _resourceToResourceModuleCache.clear();
-    _typeToModuleCache.clear();
+    getTypeNameToTypeCache().clear();
+    getTypeNameToReferringCache().clear();
+    getResourceToResourceModuleCache().clear();
+    getTypeToModuleCache().clear();
   }
 
   /**
@@ -338,30 +403,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * <p>
    * </p>
    * 
-   * @return
-   */
-  // TODO: incremental updates - replace with API
-  @Deprecated
-  public GenericCache<String, Set<IType>> getTypeNameToTypeCache() {
-    return _typeNameToTypeCache;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  // TODO: incremental updates - replace with API
-  @Deprecated
-  public GenericCache<String, Set<IType>> getTypeNameToReferringCache() {
-    return _typeNameToReferringCache;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param resource
    * @return
    */
@@ -409,9 +450,5 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     } else {
       return modules.toArray(new IModule[0])[0];
     }
-  }
-
-  protected final GenericCache<IType, Set<IModule>> getTypeToModuleCache() {
-    return _typeToModuleCache;
   }
 }

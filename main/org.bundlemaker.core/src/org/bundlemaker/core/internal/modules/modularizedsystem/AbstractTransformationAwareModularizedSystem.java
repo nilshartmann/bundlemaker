@@ -41,6 +41,7 @@ import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 
 /**
@@ -68,6 +69,56 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    */
   @Override
   public final void applyTransformations(IProgressMonitor progressMonitor) {
+
+    //
+    if (progressMonitor == null) {
+      progressMonitor = new NullProgressMonitor();
+    }
+
+    initialize(progressMonitor);
+    SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
+    subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
+    _applyTransformations(subMonitor, getTransformations().toArray(new ITransformation[0]));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void applyTransformations(IProgressMonitor progressMonitor, List<ITransformation> transformations) {
+
+    //
+    if (progressMonitor == null) {
+      progressMonitor = new NullProgressMonitor();
+    }
+
+    SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
+    subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
+    _applyTransformations(subMonitor, getTransformations().toArray(new ITransformation[0]));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void applyTransformations(IProgressMonitor progressMonitor, ITransformation... transformations) {
+
+    //
+    if (progressMonitor == null) {
+      progressMonitor = new NullProgressMonitor();
+    }
+
+    SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
+    subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
+    _applyTransformations(subMonitor, transformations);
+  }
+
+  private void initialize(IProgressMonitor progressMonitor) {
+
+    //
+    if (progressMonitor == null) {
+      progressMonitor = new NullProgressMonitor();
+    }
 
     SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
     subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
@@ -106,10 +157,20 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     }
     subMonitor.worked(10);
 
+    postApplyTransformations();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param subMonitor
+   */
+  private void _applyTransformations(SubMonitor subMonitor, ITransformation... transformations) {
+
     // step 4: transform modules
-    List<ITransformation> transformations = getTransformations();
     SubMonitor transformationMonitor = subMonitor.newChild(70);
-    transformationMonitor.beginTask("Begin", transformations.size() * 4);
+    transformationMonitor.beginTask("Begin", transformations.length * 4);
 
     for (ITransformation transformation : transformations) {
 
@@ -131,11 +192,9 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
           iterator.remove();
         }
       }
+
       transformationMonitor.worked(1);
     }
-
-    postApplyTransformations();
-    // subMonitor.worked(10);
   }
 
   /**
