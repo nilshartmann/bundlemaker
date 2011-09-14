@@ -140,6 +140,14 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
+  public boolean hasAssociatedSourceResource() {
+    return _movableUnit.hasAssociatedSourceResource();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public IResource getAssociatedSourceResource() {
     return _movableUnit.getAssociatedSourceResource();
   }

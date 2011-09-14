@@ -98,6 +98,14 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
+  public boolean hasAssociatedSourceResource() {
+    return false;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public IResource getAssociatedSourceResource() {
     return null;
   }

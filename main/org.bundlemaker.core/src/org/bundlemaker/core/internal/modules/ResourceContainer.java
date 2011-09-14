@@ -309,7 +309,9 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     addAll(movableUnit.getAssociatedBinaryResources(), ContentType.BINARY);
 
     // add source resources
-    add(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
+    if (movableUnit.hasAssociatedSourceResource()) {
+      add(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
+    }
   }
 
   /**
@@ -328,7 +330,9 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     removeAll(movableUnit.getAssociatedBinaryResources(), ContentType.BINARY);
 
     // add source resources
-    remove(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
+    if (movableUnit.hasAssociatedSourceResource()) {
+      remove(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
+    }
   }
 
   /**

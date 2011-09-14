@@ -105,6 +105,17 @@ public class MovableUnit implements IMovableUnit {
    * {@inheritDoc}
    */
   @Override
+  public boolean hasAssociatedSourceResource() {
+
+    init();
+
+    return _sourceResource != null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public IResource getAssociatedSourceResource() {
 
     init();

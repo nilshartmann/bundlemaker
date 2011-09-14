@@ -41,4 +41,12 @@ public interface IMovableUnit {
    * @return the source resource that is associated with this movable type.
    */
   IResource getAssociatedSourceResource();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedSourceResource();
 }
