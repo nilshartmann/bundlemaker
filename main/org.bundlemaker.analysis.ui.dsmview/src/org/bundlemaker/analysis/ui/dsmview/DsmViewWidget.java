@@ -213,7 +213,9 @@ public class DsmViewWidget implements Observer {
   private int getTextExtend(final Matrix matrixFigure, final ZoomableScrollPane zoomableScrollpane) {
 
     //
-    int testExtend = FigureUtilities.getTextWidth(getLongestString(_model.getLabels()), _matrixFigure.getFont()) + 25;
+    int testExtend = FigureUtilities.getTextWidth(
+        getLongestString(_model.getConfiguration().isUseShortendLabels() ? _model.getShortendLabels() : _model
+            .getLabels()), _matrixFigure.getFont()) + 25;
     return (int) (testExtend * zoomableScrollpane.getZoom());
   }
 

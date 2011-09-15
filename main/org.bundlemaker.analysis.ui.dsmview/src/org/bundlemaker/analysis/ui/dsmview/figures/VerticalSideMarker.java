@@ -61,6 +61,8 @@ public class VerticalSideMarker extends AbstractSideMarker implements ISideMarke
 
     int offset = (getModel().getConfiguration().getVerticalBoxSize() - getFontHeight()) / 2;
 
+    boolean useShortendLabels = getModel().getConfiguration().isUseShortendLabels();
+
     // draw the rows/columns
     for (int i = 0; i < getModel().getItemCount(); i++) {
 
@@ -86,8 +88,8 @@ public class VerticalSideMarker extends AbstractSideMarker implements ISideMarke
 
       // draw text
       graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
-      graphics.drawString(getModel().getLabels()[i], new Point(10,
-          (getModel().getConfiguration().getVerticalBoxSize() * i) + offset));
+      graphics.drawString(useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i], new Point(
+          10, (getModel().getConfiguration().getVerticalBoxSize() * i) + offset));
 
       // draw
       graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerSeparatorColor());
