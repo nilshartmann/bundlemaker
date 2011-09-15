@@ -149,7 +149,7 @@ public class DsmViewWidget implements Observer {
     });
 
     _zoomScrollBar = new ScrollBar();
-    final Label zoomLabel = new Label("«Zoom»");
+    final Label zoomLabel = new Label("Zoom");
     zoomLabel.setBorder(new SchemeBorder(ButtonBorder.SCHEMES.BUTTON_SCROLLBAR));
     _zoomScrollBar.setThumb(zoomLabel);
     _zoomScrollBar.setHorizontal(true);
@@ -241,7 +241,7 @@ public class DsmViewWidget implements Observer {
     }
 
     // return the result
-    return result;
+    return (result == null ? "" : result);
   }
 
   private void layoutF(IFigure figure) {
