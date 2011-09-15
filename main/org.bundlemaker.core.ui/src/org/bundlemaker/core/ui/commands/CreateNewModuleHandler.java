@@ -29,7 +29,7 @@ public class CreateNewModuleHandler extends AbstractBundleMakerHandler {
     if (artifact instanceof IRootArtifact || artifact instanceof IGroupArtifact) {
 
       // JFace Input Dialog
-      InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter Group Name", "GROUP",
+      InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter Module Name", "module",
           new LengthValidator());
 
       if (dlg.open() == Window.OK) {

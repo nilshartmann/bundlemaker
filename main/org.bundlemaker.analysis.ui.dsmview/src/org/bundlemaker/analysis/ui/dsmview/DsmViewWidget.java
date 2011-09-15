@@ -149,7 +149,7 @@ public class DsmViewWidget implements Observer {
     });
 
     _zoomScrollBar = new ScrollBar();
-    final Label zoomLabel = new Label("«Zoom»");
+    final Label zoomLabel = new Label("Zoom");
     zoomLabel.setBorder(new SchemeBorder(ButtonBorder.SCHEMES.BUTTON_SCROLLBAR));
     _zoomScrollBar.setThumb(zoomLabel);
     _zoomScrollBar.setHorizontal(true);
@@ -213,7 +213,9 @@ public class DsmViewWidget implements Observer {
   private int getTextExtend(final Matrix matrixFigure, final ZoomableScrollPane zoomableScrollpane) {
 
     //
-    int testExtend = FigureUtilities.getTextWidth(getLongestString(_model.getLabels()), _matrixFigure.getFont()) + 25;
+    int testExtend = FigureUtilities.getTextWidth(
+        getLongestString(_model.getConfiguration().isUseShortendLabels() ? _model.getShortendLabels() : _model
+            .getLabels()), _matrixFigure.getFont()) + 25;
     return (int) (testExtend * zoomableScrollpane.getZoom());
   }
 
@@ -241,7 +243,7 @@ public class DsmViewWidget implements Observer {
     }
 
     // return the result
-    return result;
+    return (result == null ? "" : result);
   }
 
   private void layoutF(IFigure figure) {

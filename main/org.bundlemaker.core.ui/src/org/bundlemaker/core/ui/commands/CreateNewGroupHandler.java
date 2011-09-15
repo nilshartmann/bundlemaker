@@ -30,7 +30,7 @@ public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
     if (artifact instanceof IRootArtifact || artifact instanceof IGroupArtifact) {
 
       // JFace Input Dialog
-      InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter 5-8 characters", "GROUP",
+      InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter group name", "GROUP",
           new LengthValidator());
 
       if (dlg.open() == Window.OK) {

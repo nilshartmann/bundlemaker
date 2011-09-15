@@ -75,12 +75,15 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
     // compute the text offset (to make the text centered)
     int offset = (getModel().getConfiguration().getHorizontalBoxSize() - getFontHeight()) / 2;
 
+    boolean useShortendLabels = getModel().getConfiguration().isUseShortendLabels();
+
     for (int i = 0; i < getModel().getItemCount(); i++) {
 
       graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
 
-      graphics.drawString(getModel().getLabels()[i], new Point(10, (((getModel().getItemCount() - (i)) * getModel()
-          .getConfiguration().getHorizontalBoxSize()) - 22) - offset));
+      graphics.drawString(useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i], new Point(
+          10, (((getModel().getItemCount() - (i)) * getModel().getConfiguration().getHorizontalBoxSize()) - 22)
+              - offset));
     }
 
     // restore the state
