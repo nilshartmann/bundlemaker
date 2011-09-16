@@ -191,6 +191,18 @@ public class Analysis {
     }
   }
 
+  /**
+   * <p>
+   * show the selected specified artifacts in the generic editor
+   * </p>
+   * <p>
+   * If a dependencyPartId is specified, this dependency part will be brought to top
+   * 
+   * @param dependencyPartId
+   *          the dependency part that should be openend or null
+   * @param artifacts
+   *          the artifacts to show. must not be null.
+   */
   public void showInGenericEditor(String dependencyPartId, List<IArtifact> artifacts) {
     IWorkbenchPage page = getActiveWorkbenchPage();
     if (page != null) {
@@ -203,7 +215,10 @@ public class Analysis {
 
         GenericEditor genericEditor = (GenericEditor) editorPart;
         genericEditor.useArtifacts(artifacts);
-        genericEditor.openDependencyPart(dependencyPartId);
+
+        if (dependencyPartId != null) {
+          genericEditor.openDependencyPart(dependencyPartId);
+        }
 
       } catch (PartInitException e) {
         e.printStackTrace();
