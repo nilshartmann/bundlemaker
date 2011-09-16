@@ -35,8 +35,8 @@ import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.GenericCache;
 import org.bundlemaker.core.util.StopWatch;
+import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -504,7 +504,7 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
     }
 
     // return the package list
-    return packageCache.getMap();
+    return packageCache;
   }
 
   /**
@@ -540,7 +540,7 @@ public class Structure101Exporter implements IModularizedSystemExporter, Structu
     }
 
     // return the package list
-    return packageCache.getMap();
+    return packageCache;
   }
 
   /**
