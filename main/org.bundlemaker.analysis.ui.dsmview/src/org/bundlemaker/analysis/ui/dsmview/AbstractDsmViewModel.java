@@ -18,6 +18,8 @@ public abstract class AbstractDsmViewModel extends Observable {
 
   private String[]              _shortendLabels;
 
+  private boolean               _useShortendLabels;
+
   /**
    * <p>
    * </p>
@@ -62,13 +64,24 @@ public abstract class AbstractDsmViewModel extends Observable {
     return _shortendLabels;
   }
 
+  public void setUseShortendLabels(boolean useShortendLabels) {
+    if (useShortendLabels != _useShortendLabels) {
+      _useShortendLabels = useShortendLabels;
+      notifyObservers();
+    }
+  }
+
+  public boolean isUseShortendLabels() {
+    return _useShortendLabels;
+  }
+
   /**
    * Returns the shortend version of a label
    * 
    * @param label
    * @return
    */
-  private String getShortendLabel(String label) {
+  protected String getShortendLabel(String label) {
     if (label == null || label.trim().isEmpty()) {
       return "";
     }
@@ -79,18 +92,37 @@ public abstract class AbstractDsmViewModel extends Observable {
       return label;
     }
 
-    String[] parts = label.split("\\.");
-    StringBuilder builder = new StringBuilder();
-    for (int i = 0; i < parts.length - 1; i++) {
-      builder.append(parts[i].charAt(0)).append('.');
-    }
+    boolean lastPart = true;
 
-    if (parts.length > 1) {
-      builder.append(parts[parts.length - 1]);
-    } else {
-      builder.append(parts[0]);
+    String shortendLabel = "";
+    label = "." + label;
+    char previousChar = label.charAt(label.length() - 1);
+    for (int i = label.length() - 1; i >= 0; i--) {
+      char c = label.charAt(i);
+      if (c == '.' || c == '/') {
+        if (!lastPart) {
+          shortendLabel = previousChar + shortendLabel;
+        }
+        if (i > 0) {
+          shortendLabel = c + shortendLabel;
+        }
+        lastPart = false;
+      } else {
+        if (lastPart) {
+          shortendLabel = c + shortendLabel;
+        }
+
+      }
+
+      previousChar = c;
     }
-    return builder.toString();
+    return shortendLabel;
+    // if (label.indexOf(".") > 0) {
+    // separator = "\\.";
+    // } else {
+    // separator = "/";
+    // }
+
   }
 
   /**
@@ -160,4 +192,13 @@ public abstract class AbstractDsmViewModel extends Observable {
    * @return
    */
   public abstract String getToolTip(int x, int y);
+
+  // public static void main(String[] args) {
+  // DsmViewModel model = new DsmViewModel();
+  // System.out.printf("a.b.c -> '%s%n", model.getShortendLabel("a.b.c"));
+  // System.out.printf(" -> '%s%n", model.getShortendLabel("abc.bdef.ghi"));
+  // System.out.printf(" -> '%s%n", model.getShortendLabel("GR/H2/F/abc.def"));
+  // System.out.printf(" -> '%s%n", model.getShortendLabel("X1/G2"));
+  // System.out.printf(" -> '%s%n", model.getShortendLabel("GGG/HHH/aaa"));
+  // }
 }

@@ -9,18 +9,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -28,10 +24,10 @@ import org.osgi.util.tracker.ServiceTracker;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.bundlemaker.analysis.ui"; //$NON-NLS-1$
+  public static final String                PLUGIN_ID = "org.bundlemaker.analysis.ui"; //$NON-NLS-1$
 
   // The shared instance
-  private static Activator   plugin;
+  private static Activator                  plugin;
 
   private ProjectExplorerSelectionForwarder _projectExplorerSelectionForwarder;
 
@@ -51,10 +47,26 @@ public class Activator extends AbstractUIPlugin {
     super.start(context);
     plugin = this;
 
-    _projectExplorerSelectionForwarder = new ProjectExplorerSelectionForwarder(Analysis.instance()
-        .getArtifactSelectionService());
+    registerProjectExplorerSelectionForwarder();
+    PlatformUI.getWorkbench().addWindowListener(new WindowListener());
 
-    getSelectionService().addSelectionListener(Analysis.PROJECT_EXPLORER_VIEW_ID, _projectExplorerSelectionForwarder);
+  }
+
+  private void registerProjectExplorerSelectionForwarder() {
+    if (_projectExplorerSelectionForwarder != null) {
+      // already registered
+      return;
+    }
+
+    // Try to get selection service
+    ISelectionService selectionService = getSelectionService();
+    if (selectionService != null) {
+      System.out.println("Register ProjectExplorerSelectionForwarder");
+      // register forwarder
+      _projectExplorerSelectionForwarder = new ProjectExplorerSelectionForwarder(Analysis.instance()
+          .getArtifactSelectionService());
+      selectionService.addSelectionListener(Analysis.PROJECT_EXPLORER_VIEW_ID, _projectExplorerSelectionForwarder);
+    }
   }
 
   /*
@@ -117,6 +129,7 @@ public class Activator extends AbstractUIPlugin {
    * @return the {@link ISelectionService} or null
    */
   private ISelectionService getSelectionService() {
+
     IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     if (workbenchWindow != null) {
       return workbenchWindow.getSelectionService();
@@ -124,29 +137,25 @@ public class Activator extends AbstractUIPlugin {
     return null;
   }
 
-  public void addSelectionProjectExplorerListener(BundleContext context) {
+  class WindowListener implements IWindowListener {
 
-    ServiceTracker t = new ServiceTracker(context, ISelectionService.class.getName(), null) {
+    @Override
+    public void windowActivated(IWorkbenchWindow window) {
+      registerProjectExplorerSelectionForwarder();
+    }
 
-      @Override
-      public Object addingService(ServiceReference reference) {
-        ISelectionService selectionService = (ISelectionService) super.addingService(reference);
-        System.out.println("adding selection listener!!!");
-        selectionService.addSelectionListener(new ISelectionListener() {
+    @Override
+    public void windowDeactivated(IWorkbenchWindow window) {
+    }
 
-          @Override
-          public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-            System.out.println("changed, part: " + part.getSite().getId());
-            System.out.println("changed, selection: " + selection);
+    @Override
+    public void windowClosed(IWorkbenchWindow window) {
+    }
 
-          }
-        });
-
-        return selectionService;
-      }
-
-    };
-    t.open();
+    @Override
+    public void windowOpened(IWorkbenchWindow window) {
+      registerProjectExplorerSelectionForwarder();
+    }
 
   }
 

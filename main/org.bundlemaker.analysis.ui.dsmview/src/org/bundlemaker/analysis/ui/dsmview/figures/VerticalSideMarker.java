@@ -61,7 +61,7 @@ public class VerticalSideMarker extends AbstractSideMarker implements ISideMarke
 
     int offset = (getModel().getConfiguration().getVerticalBoxSize() - getFontHeight()) / 2;
 
-    boolean useShortendLabels = getModel().getConfiguration().isUseShortendLabels();
+    boolean useShortendLabels = getModel().isUseShortendLabels();
 
     // draw the rows/columns
     for (int i = 0; i < getModel().getItemCount(); i++) {
