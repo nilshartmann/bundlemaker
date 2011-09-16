@@ -104,16 +104,6 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
   }
 
   /**
-   * TODO make configurable via UI
-   * 
-   * @return
-   */
-  @Override
-  public boolean isUseShortendLabels() {
-    return Boolean.getBoolean("dsmview.useShortendLabels");
-  }
-
-  /**
    * <p>
    * </p>
    * 

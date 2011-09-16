@@ -75,7 +75,7 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
     // compute the text offset (to make the text centered)
     int offset = (getModel().getConfiguration().getHorizontalBoxSize() - getFontHeight()) / 2;
 
-    boolean useShortendLabels = getModel().getConfiguration().isUseShortendLabels();
+    boolean useShortendLabels = getModel().isUseShortendLabels();
 
     for (int i = 0; i < getModel().getItemCount(); i++) {
 

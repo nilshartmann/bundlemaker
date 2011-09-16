@@ -14,6 +14,9 @@ import org.bundlemaker.analysis.ui.dsmview.figures.VerticalSideMarker;
 import org.bundlemaker.analysis.ui.dsmview.figures.ZoomableScrollPane;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.ButtonBorder;
+import org.eclipse.draw2d.ChangeEvent;
+import org.eclipse.draw2d.ChangeListener;
+import org.eclipse.draw2d.CheckBox;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
@@ -55,6 +58,8 @@ public class DsmViewWidget implements Observer {
   private ZoomableScrollPane   _zoomableScrollpaneHorizontalBar;
 
   private ScrollBar            _zoomScrollBar;
+
+  private CheckBox             _useShortendLabelsCheckBox;
 
   /** - */
   private Matrix               _matrixFigure;
@@ -166,6 +171,19 @@ public class DsmViewWidget implements Observer {
       }
     });
 
+    _useShortendLabelsCheckBox = new CheckBox("Shorten labels");
+    _useShortendLabelsCheckBox.getModel().addChangeListener(new ChangeListener() {
+
+      @Override
+      public void handleStateChanged(ChangeEvent event) {
+        if ("selected".equals(event.getPropertyName())) {
+          _model.setUseShortendLabels(_useShortendLabelsCheckBox.isSelected());
+          _mainFigure.revalidate();
+          _mainFigure.repaint();
+        }
+      }
+    });
+
     _zoomableScrollpane.getViewport().addPropertyChangeListener(new PropertyChangeListener() {
       @Override
       public void propertyChange(PropertyChangeEvent evt) {
@@ -183,6 +201,7 @@ public class DsmViewWidget implements Observer {
     });
 
     _mainFigure.add(_zoomScrollBar);
+    _mainFigure.add(_useShortendLabelsCheckBox);
     _mainFigure.add(_zoomableScrollpane);
     _mainFigure.add(_zoomableScrollpaneVerticalBar);
     _mainFigure.add(_zoomableScrollpaneHorizontalBar);
@@ -214,8 +233,8 @@ public class DsmViewWidget implements Observer {
 
     //
     int testExtend = FigureUtilities.getTextWidth(
-        getLongestString(_model.getConfiguration().isUseShortendLabels() ? _model.getShortendLabels() : _model
-            .getLabels()), _matrixFigure.getFont()) + 25;
+        getLongestString(_model.isUseShortendLabels() ? _model.getShortendLabels() : _model.getLabels()),
+        _matrixFigure.getFont()) + 25;
     return (int) (testExtend * zoomableScrollpane.getZoom());
   }
 
@@ -258,8 +277,11 @@ public class DsmViewWidget implements Observer {
 
     // fix sized
     _zoomScrollBar.setLocation(new Point(0.0, 0.0));
-    _zoomScrollBar.setSize(_mainFigure.getSize().width, 20);
+    int mainFigureHalfWidth = _mainFigure.getSize().width / 2;
+    _zoomScrollBar.setSize(mainFigureHalfWidth, 20);
 
+    _useShortendLabelsCheckBox.setLocation(new Point(mainFigureHalfWidth + 1, 0.0));
+    _useShortendLabelsCheckBox.setSize(mainFigureHalfWidth, 20);
     //
     int textExtend = getTextExtend(_matrixFigure, _zoomableScrollpane);
 
@@ -324,6 +346,7 @@ public class DsmViewWidget implements Observer {
     _mainFigure.repaint();
 
     _zoomScrollBar.setValue(40);
+    _useShortendLabelsCheckBox.setSelected(_model.isUseShortendLabels());
   }
 
   public void addMatrixListener(IMatrixListener listener) {

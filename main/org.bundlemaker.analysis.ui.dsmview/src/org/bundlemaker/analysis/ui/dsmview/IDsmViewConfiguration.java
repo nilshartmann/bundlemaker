@@ -32,5 +32,4 @@ public interface IDsmViewConfiguration {
 
   Color getMatrixMarkedCellColor();
 
-  boolean isUseShortendLabels();
 }
