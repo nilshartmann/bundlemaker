@@ -134,6 +134,16 @@ public class SimpleReportExporter extends AbstractExporter {
     }
     subMonitor.worked(1);
 
+    builder.append("\n");
+    builder.append("Transitive referenced modules: \n");
+    Set<IModule> referencedModules = getCurrentModularizedSystem().getTransitiveReferencedModules(getCurrentModule(),
+        ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER).getReferencedModules();
+
+    for (IModule referencedModule : referencedModules) {
+      builder.append("  " + referencedModule.getModuleIdentifier().toString() + "\n");
+    }
+    subMonitor.worked(1);
+
     // TODO
     builder.append("\n");
     builder.append("Missing Types: \n");
