@@ -209,11 +209,20 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     // assert is not null
     Assert.isNotNull(resourceModule);
 
+    boolean debug = ("comp.versicherter".equals(resourceModule.getModuleIdentifier().getName()));
+
+    if (debug) {
+      System.out.printf(" * * * getTransitiveReferencedModules for %s%n", resourceModule.getModuleIdentifier()
+          .getName());
+    }
     // return the transitive closure
     ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
 
     // get the transitive referenced modules
-    getTransitiveReferencedModules(resourceModule, referencesFilter, result);
+    getTransitiveReferencedModules(resourceModule, referencesFilter, result, (debug ? 1 : -1));
+
+    System.out.printf(" * * * ENDE getTransitiveReferencedModules for %s%n", resourceModule.getModuleIdentifier()
+        .getName());
 
     // return the result
     return result;
@@ -228,7 +237,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * @param result
    */
   private void getTransitiveReferencedModules(IResourceModule resourceModule,
-      IQueryFilter<IReference> referencesFilter, ReferencedModulesQueryResult transitiveQueryResult) {
+      IQueryFilter<IReference> referencesFilter, ReferencedModulesQueryResult transitiveQueryResult, int dbglevel) {
 
     // assert is not null
     Assert.isNotNull(resourceModule);
@@ -238,9 +247,20 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     // get the referenced modules
     IReferencedModulesQueryResult queryResult = getReferencedModules(resourceModule, referencesFilter);
 
+    String s = null;
+    if (dbglevel > 0) {
+      s = "";
+      for (int i = 0; i < dbglevel; i++) {
+        s += " ";
+      }
+    }
     //
     for (IModule referencedModule : queryResult.getReferencedModules()) {
 
+      if (dbglevel > 0) {
+        System.out.printf("%s'%s' references '%s'%n", s, resourceModule.getModuleIdentifier(),
+            referencedModule.getModuleIdentifier());
+      }
       // cycle-check
       if (!(transitiveQueryResult.getModifiableReferencedModules().contains(referencedModule) || referencedModule
           .equals(transitiveQueryResult.getOrigin()))) {
@@ -250,7 +270,16 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
         //
         if (referencedModule instanceof IResourceModule) {
-          getTransitiveReferencedModules((IResourceModule) referencedModule, referencesFilter, transitiveQueryResult);
+          getTransitiveReferencedModules((IResourceModule) referencedModule, referencesFilter, transitiveQueryResult,
+              (dbglevel > 0 ? dbglevel + 1 : -1));
+        } else {
+          if (dbglevel > 0) {
+            System.out.printf("%s'%s' ist kein Resource-Modul%n", s, referencedModule.getModuleIdentifier());
+          }
+        }
+      } else {
+        if (dbglevel > 0) {
+          System.out.printf("%s'%s' bereits in QueryResult vorhanden%n", s, referencedModule.getModuleIdentifier());
         }
       }
     }
