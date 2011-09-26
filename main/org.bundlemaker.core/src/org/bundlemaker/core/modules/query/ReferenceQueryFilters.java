@@ -197,5 +197,15 @@ public class ReferenceQueryFilters {
         return false;
       return true;
     }
+
+    @Override
+    public String toString() {
+      return "ReferenceFilter [resourceModule=" + resourceModule + ", exludeContainedTypes=" + exludeContainedTypes
+          + ", includeSourceReferences=" + includeSourceReferences + ", includeBinaryReferences="
+          + includeBinaryReferences + ", includeIndirectReferences=" + includeIndirectReferences
+          + ", includeDirectReferences=" + includeDirectReferences + ", _containedTypeNames=" + _containedTypeNames
+          + "]";
+    }
+
   }
 }
