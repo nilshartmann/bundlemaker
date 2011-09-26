@@ -83,7 +83,7 @@ public class ModuleUtils {
 
     builder.append("\n");
     builder.append("Referenced Modules: \n");
-    IReferencedModulesQueryResult queryResult = modularizedSystem.getReferencedModules(module, null);
+    IReferencedModulesQueryResult queryResult = modularizedSystem.getReferencedModules(module);
 
     for (IModule referencedModule : queryResult.getReferencedModules()) {
       builder.append(referencedModule.getModuleIdentifier().toString() + "\n");

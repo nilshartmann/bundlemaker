@@ -15,12 +15,23 @@ import org.bundlemaker.core.resource.IReference;
 public class ReferenceQueryFilters {
 
   /** TRUE_QUERY_FILTER */
-  public static IQueryFilter<IReference> ALL_REFERENCES_QUERY_FILTER                 = createReferenceFilter(false,
-                                                                                         true, true, true, true);
+  public static IQueryFilter<IReference>       ALL_REFERENCES_QUERY_FILTER                 = createReferenceFilter(
+                                                                                               false, true, true, true,
+                                                                                               true);
 
   /** ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER */
-  public static IQueryFilter<IReference> ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER = createReferenceFilter(true,
-                                                                                         true, true, true, false);
+  public static IQueryFilter<IReference>       ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER = createReferenceFilter(
+                                                                                               true, true, true, true,
+                                                                                               false);
+
+  public final static IQueryFilter<IReference> TRUE_QUERY_FILTER                           = new IQueryFilter<IReference>() {
+
+                                                                                             @Override
+                                                                                             public boolean matches(
+                                                                                                 IReference content) {
+                                                                                               return true;
+                                                                                             }
+                                                                                           };
 
   /**
    * <p>
