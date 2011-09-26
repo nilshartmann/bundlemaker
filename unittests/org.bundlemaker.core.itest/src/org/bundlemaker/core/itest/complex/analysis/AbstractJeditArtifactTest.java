@@ -10,7 +10,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.util.ModuleUtils;
@@ -21,7 +21,7 @@ import org.junit.Before;
 public abstract class AbstractJeditArtifactTest extends AbstractModularizedSystemTest {
 
   /** - */
-  private IAdvancedArtifact _rootArtifact;
+  private IBundleMakerArtifact _rootArtifact;
 
   /** - */
   private IArtifact         _jeditModuleArtifact;
@@ -58,7 +58,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
         getArtifactModelConfiguration());
     Assert.assertNotNull(dependencyModel);
 
-    _rootArtifact = (IAdvancedArtifact) dependencyModel.getRoot();
+    _rootArtifact = (IBundleMakerArtifact) dependencyModel.getRoot();
     Assert.assertNotNull(_rootArtifact);
 
     // assert the input
@@ -91,7 +91,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * 
    * @return
    */
-  protected final IAdvancedArtifact getRootArtifact() {
+  protected final IBundleMakerArtifact getRootArtifact() {
     return _rootArtifact;
   }
 

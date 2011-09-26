@@ -11,7 +11,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IRootArtifact extends IAdvancedArtifact, IGroupAndModuleContainer {
+public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleContainer {
 
   /**
    * {@inheritDoc}

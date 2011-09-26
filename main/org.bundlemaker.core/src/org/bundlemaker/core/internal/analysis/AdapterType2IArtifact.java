@@ -24,8 +24,8 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
@@ -44,7 +44,8 @@ import org.eclipse.core.runtime.Assert;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit, IAdvancedArtifact, ITypeArtifact {
+public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit, IBundleMakerArtifact,
+    ITypeArtifact {
 
   /** the bundle maker type */
   private IType                       _type;
@@ -96,6 +97,10 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public boolean isVirtual() {
     return false;
+  }
+
+  public IResourceModule getContainingResourceModule() {
+    return _movableUnit.getContainingResourceModule();
   }
 
   /**
@@ -442,7 +447,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public IAdvancedArtifact getChild(String path) {
+  public IBundleMakerArtifact getChild(String path) {
     return null;
   }
 

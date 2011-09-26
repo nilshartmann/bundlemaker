@@ -104,13 +104,12 @@ public class SimpleArtifactTest extends AbstractModularizedSystemTest {
 
     //
     moduleArtifact.removeArtifact(resource);
-    newModuleArtifact.addArtifact(resource);
-
     resource = moduleArtifact.getChild("de|test|innertypes|A$AA.class");
     Assert.assertNull(resource);
-
+    
+    newModuleArtifact.addArtifact(resource);
     resource = newModuleArtifact.getChild("de|test|innertypes|A$AA.class");
-    Assert.assertNull(resource);
+    Assert.assertNotNull(resource);
   }
 
   /**

@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.view.navigator;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -31,10 +31,10 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
 
-    if (treeSelection.getFirstElement() instanceof IAdvancedArtifact && target instanceof IAdvancedArtifact) {
+    if (treeSelection.getFirstElement() instanceof IBundleMakerArtifact && target instanceof IBundleMakerArtifact) {
 
-      IAdvancedArtifact sourceArtifact = (IAdvancedArtifact) treeSelection.getFirstElement();
-      IAdvancedArtifact targetArtifact = (IAdvancedArtifact) target;
+      IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) treeSelection.getFirstElement();
+      IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) target;
 
       if (targetArtifact.canAdd(sourceArtifact) && sourceArtifact.isMovable()) {
         return Status.OK_STATUS;
@@ -65,7 +65,7 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
         .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
 
     //
-    IRootArtifact root = ((IAdvancedArtifact) targetArtifact).getRoot();
+    IRootArtifact root = ((IBundleMakerArtifact) targetArtifact).getRoot();
 
     //
     ArtifactUtils.dumpArtifact(root);

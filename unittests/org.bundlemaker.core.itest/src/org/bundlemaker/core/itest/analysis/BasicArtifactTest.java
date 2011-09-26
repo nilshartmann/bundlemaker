@@ -14,9 +14,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.junit.Assert;
@@ -30,7 +30,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
   
   @Test
   public void qualifiedNameWithFlatPackages() throws Exception {
-    IAdvancedArtifact rootArtifact = getRootArtifact(false);
+    IBundleMakerArtifact rootArtifact = getRootArtifact(false);
 
     IArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de.test.basic");
 
@@ -41,7 +41,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
   
   @Test
   public void qualifiedNameWithHierarchicalPackages() throws Exception {
-    IAdvancedArtifact rootArtifact = getRootArtifact(true);
+    IBundleMakerArtifact rootArtifact = getRootArtifact(true);
 
     IArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de|test|basic");
 
@@ -50,7 +50,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
     assertEquals("de.test.basic", artifact.getQualifiedName());
   }
 
-  protected IAdvancedArtifact getRootArtifact(boolean hierarchical) {
+  protected IBundleMakerArtifact getRootArtifact(boolean hierarchical) {
     
     ArtifactModelConfiguration artifactModelConfiguration = new ArtifactModelConfiguration();
     artifactModelConfiguration.setHierarchicalPackages(hierarchical);
@@ -60,7 +60,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
     artifactModelConfiguration.setAggregateInnerTypes(false);
     artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);
     
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
         artifactModelConfiguration).getRoot();
     
     Assert.assertNotNull(rootArtifact);

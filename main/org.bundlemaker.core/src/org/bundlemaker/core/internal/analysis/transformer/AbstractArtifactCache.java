@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.transformer;
 
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -95,7 +95,7 @@ public abstract class AbstractArtifactCache {
    * @return
    * @throws CoreException
    */
-  public final IAdvancedArtifact transform() throws CoreException {
+  public final IBundleMakerArtifact transform() throws CoreException {
     return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]));
   }
 
@@ -134,5 +134,5 @@ public abstract class AbstractArtifactCache {
    * @param modules
    * @return
    */
-  protected abstract IAdvancedArtifact transform(IModule[] modules);
+  protected abstract IBundleMakerArtifact transform(IModule[] modules);
 }

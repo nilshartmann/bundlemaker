@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
@@ -96,6 +96,10 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
     return _movableUnit.getAssociatedSourceResource();
   }
 
+  public IResourceModule getContainingResourceModule() {
+    return _movableUnit.getContainingResourceModule();
+  }
+
   @Override
   public boolean isVirtual() {
     return false;
@@ -152,7 +156,7 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
     if (visitor.visit(this)) {
       //
       for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+        ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }

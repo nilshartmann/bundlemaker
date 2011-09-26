@@ -6,7 +6,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.AmbiguousElementException;
@@ -65,10 +65,10 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
         getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
-    IArtifact aArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
+    IArtifact aArtifact = ((IBundleMakerArtifact) dependencyModel.getRoot())
         .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
     Assert.assertNotNull(aArtifact);
-    IArtifact bArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
+    IArtifact bArtifact = ((IBundleMakerArtifact) dependencyModel.getRoot())
         .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B");
     Assert.assertNull(bArtifact);
 

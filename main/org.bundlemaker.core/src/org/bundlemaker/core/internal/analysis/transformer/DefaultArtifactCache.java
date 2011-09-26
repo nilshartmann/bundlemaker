@@ -12,7 +12,7 @@ package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.transformer.caches.GroupCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache;
@@ -68,7 +68,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
    * @return
    * @throws Exception
    */
-  protected IAdvancedArtifact transform(IModule[] modules) {
+  protected IBundleMakerArtifact transform(IModule[] modules) {
 
     // create virtual module for missing types
     if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {

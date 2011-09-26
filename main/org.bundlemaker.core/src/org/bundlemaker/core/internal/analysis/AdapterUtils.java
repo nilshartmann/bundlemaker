@@ -289,6 +289,11 @@ public class AdapterUtils {
 
     //
     for (IMovableUnit movableUnit : movableUnits) {
+
+      //
+      ((IModifiableResourceModule) movableUnit.getContainingResourceModule()).getModifiableSelfResourceContainer()
+          .removeMovableUnit(movableUnit);
+
       // add the binary resources
       resourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
     }

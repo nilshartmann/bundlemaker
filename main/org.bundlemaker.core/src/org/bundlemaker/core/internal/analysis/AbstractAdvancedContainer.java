@@ -5,7 +5,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractAdvancedContainer extends AbstractArtifactContainer implements IAdvancedArtifact {
+public abstract class AbstractAdvancedContainer extends AbstractArtifactContainer implements IBundleMakerArtifact {
 
   /**
    * <p>
@@ -92,8 +92,8 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
   }
 
-  public IAdvancedArtifact getChild(String path) {
-    return (IAdvancedArtifact) super.getChild(path);
+  public IBundleMakerArtifact getChild(String path) {
+    return (IBundleMakerArtifact) super.getChild(path);
   }
 
   /**
@@ -165,7 +165,7 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
 
     //
     for (IArtifact artifact : getChildren()) {
-      if (((IAdvancedArtifact) artifact).containsTypesOrResources()) {
+      if (((IBundleMakerArtifact) artifact).containsTypesOrResources()) {
         return true;
       }
     }

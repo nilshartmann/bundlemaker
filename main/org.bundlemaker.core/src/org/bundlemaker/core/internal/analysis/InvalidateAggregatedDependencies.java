@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -59,7 +59,7 @@ public class InvalidateAggregatedDependencies implements IArtifactTreeVisitor {
    * 
    * @param artifact
    */
-  private void invalidate(IAdvancedArtifact artifact) {
+  private void invalidate(IBundleMakerArtifact artifact) {
     artifact.invalidateDependencyCache();
   }
 }

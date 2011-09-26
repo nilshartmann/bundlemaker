@@ -15,15 +15,37 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IAdvancedArtifact extends IArtifact {
+public interface IBundleMakerArtifact extends IArtifact {
 
   /**
    * {@inheritDoc}
    */
-  IAdvancedArtifact getChild(String path);
+  IBundleMakerArtifact getChild(String path);
+
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // public IBundleMakerArtifact getParent();
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // public IBundleMakerArtifact getParent(ArtifactType type);
+  //
+  // /**
+  // * <p>
+  // * Returns an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
+  // * </p>
+  // *
+  // * @return an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
+  // */
+  // public Collection<IBundleMakerArtifact> getChildrenAsBundleMakerArtifacts();
 
   /**
    * <p>
+   * Returns <code>true</code>, if this artifact node is <i>virtual</i>. A virtual artifact node has no associated
+   * resource element.
    * </p>
    * 
    * @return

@@ -10,7 +10,7 @@ import org.bundlemaker.core.resource.IResource;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IResourceArtifact extends IAdvancedArtifact {
+public interface IResourceArtifact extends IBundleMakerArtifact {
 
   /**
    * <p>

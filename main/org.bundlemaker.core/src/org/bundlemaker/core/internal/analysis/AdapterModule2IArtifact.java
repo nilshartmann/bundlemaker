@@ -3,7 +3,7 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.modules.AbstractModule;
@@ -102,7 +102,7 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     if (visitor.visit(this)) {
       //
       for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+        ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }

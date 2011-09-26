@@ -2,6 +2,7 @@ package org.bundlemaker.core.modules.modifiable;
 
 import java.util.List;
 
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 
@@ -65,4 +66,6 @@ public interface IMovableUnit {
    * @return the source resource that is associated with this movable type.
    */
   IResource getAssociatedSourceResource();
+
+  IResourceModule getContainingResourceModule();
 }

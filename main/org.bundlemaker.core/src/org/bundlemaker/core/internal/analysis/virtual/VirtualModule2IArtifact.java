@@ -2,7 +2,7 @@ package org.bundlemaker.core.internal.analysis.virtual;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
@@ -84,7 +84,7 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
     if (visitor.visit(this)) {
       //
       for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+        ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }

@@ -16,7 +16,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
 import org.bundlemaker.core.transformations.dsl.ui.utils.TransformationDslUtils;
@@ -64,7 +64,7 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
   @Override
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
     for (IArtifact iArtifact : selectedArtifacts) {
-      IAdvancedArtifact advancedArtifact = (IAdvancedArtifact) iArtifact;
+      IBundleMakerArtifact advancedArtifact = (IBundleMakerArtifact) iArtifact;
       IModularizedSystem modularizedSystem = advancedArtifact.getModularizedSystem();
 
       // Ask the user for the script that should be run

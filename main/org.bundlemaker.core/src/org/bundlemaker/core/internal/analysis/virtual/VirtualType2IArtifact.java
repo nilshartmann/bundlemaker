@@ -21,13 +21,14 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -75,6 +76,11 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public boolean isMovable() {
     return false;
+  }
+
+  @Override
+  public IResourceModule getContainingResourceModule() {
+    return null;
   }
 
   @Override
@@ -197,7 +203,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public IAdvancedArtifact getChild(String path) {
+  public IBundleMakerArtifact getChild(String path) {
     return null;
   }
 

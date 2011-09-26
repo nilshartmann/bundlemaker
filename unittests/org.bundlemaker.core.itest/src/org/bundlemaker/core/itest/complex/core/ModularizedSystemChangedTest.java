@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
@@ -91,7 +91,7 @@ public class ModularizedSystemChangedTest extends AbstractJeditTest {
         ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
-    IAdvancedArtifact artifact = rootArtifact
+    IBundleMakerArtifact artifact = rootArtifact
         .getChild("group1|group2|jedit_1.0.0|org|gjt|sp|jedit|browser|VFSFileChooserDialog$WorkThreadHandler.class");
     Assert.assertNotNull(artifact);
 

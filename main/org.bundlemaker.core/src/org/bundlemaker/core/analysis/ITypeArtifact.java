@@ -11,7 +11,7 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  */
-public interface ITypeArtifact extends IAdvancedArtifact, IMovableUnit {
+public interface ITypeArtifact extends IBundleMakerArtifact, IMovableUnit {
 
   /**
    * <p>

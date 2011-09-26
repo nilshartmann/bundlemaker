@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -31,7 +31,7 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
    */
   public GroupAndModuleContainerDelegate(IGroupAndModuleContainer groupAndModuleContainer) {
     Assert.isNotNull(groupAndModuleContainer);
-    Assert.isTrue(groupAndModuleContainer instanceof IAdvancedArtifact);
+    Assert.isTrue(groupAndModuleContainer instanceof IBundleMakerArtifact);
 
     _groupAndModuleContainer = groupAndModuleContainer;
   }
@@ -55,7 +55,7 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
     qualifiedModuleName = qualifiedModuleName.replace('\\', '/');
 
     // step 2: check if absolute
-    IAdvancedArtifact rootContainer = getAdvancedArtifact();
+    IBundleMakerArtifact rootContainer = getAdvancedArtifact();
     if (qualifiedModuleName.startsWith("/")) {
       qualifiedModuleName = qualifiedModuleName.substring(1);
       rootContainer = rootContainer.getRoot();
