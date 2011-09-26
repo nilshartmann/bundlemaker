@@ -10,9 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -166,53 +163,6 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
         referencesFilter != null ? referencesFilter : ReferenceQueryFilters.ALL_REFERENCES_QUERY_FILTER));
   }
 
-  static class DumpLog {
-    private final PrintWriter _writer;
-
-    private static boolean shouldLog(String moduleName) {
-      return "comp.versicherter".equals(moduleName) || "comp.kundenbindung".equals(moduleName);
-    }
-
-    private static PrintWriter openWriter(String moduleName) {
-      try {
-        File logDir = new File("C:/SPU/_bmco/working/result/report");
-        if (!logDir.exists()) {
-          logDir.mkdirs();
-        }
-        File logFile = new File(logDir, moduleName + "_dump.txt");
-        PrintWriter writer = new PrintWriter(new FileWriter(logFile, true));
-        writer.println("========================================================== ");
-        return writer;
-      } catch (Exception ex) {
-        System.err.println("Konnte Logfile fuer " + moduleName + " nicht oeffnen: " + ex);
-        ex.printStackTrace();
-      }
-      return null;
-    }
-
-    public DumpLog(String moduleName) {
-      if (shouldLog(moduleName)) {
-        _writer = openWriter(moduleName);
-      } else {
-        _writer = null;
-      }
-    }
-
-    public void log(String msg, Object... args) {
-      if (_writer == null) {
-        return;
-      }
-
-      try {
-        _writer.printf(msg, args);
-        _writer.flush();
-      } catch (Exception ex) {
-        System.err.println("Could not log: " + ex);
-      }
-
-    }
-  }
-
   /**
    * <p>
    * </p>
@@ -227,10 +177,6 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     // assert is not null
     Assert.isNotNull(resourceModule);
 
-    DumpLog dumpLog = new DumpLog(resourceModule.getModuleIdentifier().getName());
-    dumpLog.log("internalGetReferencedModules - filter: '%s' hash: '%s'%n", referencesFilter,
-        System.identityHashCode(referencesFilter));
-
     // create the result set
     ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
 
@@ -240,8 +186,6 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
       // get the referenced module...
       IModule referencedModule = getTypeContainingModule(reference.getFullyQualifiedName(), resourceModule);
-      dumpLog.log(" Reference '%s' -> '%s'%n", reference.getFullyQualifiedName(),
-          (referencedModule == null ? "Not found" : referencedModule.getModuleIdentifier().toString()));
 
       // ...add it to the result
       if (referencedModule != null) {
@@ -265,21 +209,11 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     // assert is not null
     Assert.isNotNull(resourceModule);
 
-    boolean debug = ("comp.versicherter".equals(resourceModule.getModuleIdentifier().getName()));
-
-    if (debug) {
-      System.out.printf(" * * * getTransitiveReferencedModules for %s%n", resourceModule.getModuleIdentifier()
-          .getName());
-    }
     // return the transitive closure
     ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
 
     // get the transitive referenced modules
-    getTransitiveReferencedModules(resourceModule, referencesFilter, result, (debug ? 1 : -1));
-    if (debug) {
-    System.out.printf(" * * * ENDE getTransitiveReferencedModules for %s%n", resourceModule.getModuleIdentifier()
-        .getName());
-    }
+    getTransitiveReferencedModules(resourceModule, referencesFilter, result);
 
     // return the result
     return result;
@@ -294,7 +228,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * @param result
    */
   private void getTransitiveReferencedModules(IResourceModule resourceModule,
-      IQueryFilter<IReference> referencesFilter, ReferencedModulesQueryResult transitiveQueryResult, int dbglevel) {
+      IQueryFilter<IReference> referencesFilter, ReferencedModulesQueryResult transitiveQueryResult) {
 
     // assert is not null
     Assert.isNotNull(resourceModule);
@@ -304,20 +238,9 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     // get the referenced modules
     IReferencedModulesQueryResult queryResult = getReferencedModules(resourceModule, referencesFilter);
 
-    String s = null;
-    if (dbglevel > 0) {
-      s = "";
-      for (int i = 0; i < dbglevel; i++) {
-        s += " ";
-      }
-    }
     //
     for (IModule referencedModule : queryResult.getReferencedModules()) {
 
-      if (dbglevel > 0) {
-        System.out.printf("%s'%s' references '%s'%n", s, resourceModule.getModuleIdentifier(),
-            referencedModule.getModuleIdentifier());
-      }
       // cycle-check
       if (!(transitiveQueryResult.getModifiableReferencedModules().contains(referencedModule) || referencedModule
           .equals(transitiveQueryResult.getOrigin()))) {
@@ -327,16 +250,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
         //
         if (referencedModule instanceof IResourceModule) {
-          getTransitiveReferencedModules((IResourceModule) referencedModule, referencesFilter, transitiveQueryResult,
-              (dbglevel > 0 ? dbglevel + 1 : -1));
-        } else {
-          if (dbglevel > 0) {
-            System.out.printf("%s'%s' ist kein Resource-Modul%n", s, referencedModule.getModuleIdentifier());
-          }
-        }
-      } else {
-        if (dbglevel > 0) {
-          System.out.printf("%s'%s' bereits in QueryResult vorhanden%n", s, referencedModule.getModuleIdentifier());
+          getTransitiveReferencedModules((IResourceModule) referencedModule, referencesFilter, transitiveQueryResult);
         }
       }
     }
