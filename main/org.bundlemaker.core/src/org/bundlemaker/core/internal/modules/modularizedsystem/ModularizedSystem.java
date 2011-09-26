@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -163,6 +166,53 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
         referencesFilter != null ? referencesFilter : ReferenceQueryFilters.ALL_REFERENCES_QUERY_FILTER));
   }
 
+  static class DumpLog {
+    private final PrintWriter _writer;
+
+    private static boolean shouldLog(String moduleName) {
+      return "comp.versicherter".equals(moduleName) || "comp.kundenbindung".equals(moduleName);
+    }
+
+    private static PrintWriter openWriter(String moduleName) {
+      try {
+        File logDir = new File("C:/SPU/_bmco/working/result/report");
+        if (!logDir.exists()) {
+          logDir.mkdirs();
+        }
+        File logFile = new File(logDir, moduleName + "_dump.txt");
+        PrintWriter writer = new PrintWriter(new FileWriter(logFile, true));
+        writer.println("========================================================== ");
+        return writer;
+      } catch (Exception ex) {
+        System.err.println("Konnte Logfile fuer " + moduleName + " nicht oeffnen: " + ex);
+        ex.printStackTrace();
+      }
+      return null;
+    }
+
+    public DumpLog(String moduleName) {
+      if (shouldLog(moduleName)) {
+        _writer = openWriter(moduleName);
+      } else {
+        _writer = null;
+      }
+    }
+
+    public void log(String msg, Object... args) {
+      if (_writer == null) {
+        return;
+      }
+
+      try {
+        _writer.printf(msg, args);
+        _writer.flush();
+      } catch (Exception ex) {
+        System.err.println("Could not log: " + ex);
+      }
+
+    }
+  }
+
   /**
    * <p>
    * </p>
@@ -177,6 +227,10 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
     // assert is not null
     Assert.isNotNull(resourceModule);
 
+    DumpLog dumpLog = new DumpLog(resourceModule.getModuleIdentifier().getName());
+    dumpLog.log("internalGetReferencedModules - filter: '%s' hash: '%s'%n", referencesFilter,
+        System.identityHashCode(referencesFilter));
+
     // create the result set
     ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
 
@@ -186,6 +240,8 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
       // get the referenced module...
       IModule referencedModule = getTypeContainingModule(reference.getFullyQualifiedName(), resourceModule);
+      dumpLog.log(" Reference '%s' -> '%s'%n", reference.getFullyQualifiedName(),
+          (referencedModule == null ? "Not found" : referencedModule.getModuleIdentifier().toString()));
 
       // ...add it to the result
       if (referencedModule != null) {
@@ -220,9 +276,10 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
     // get the transitive referenced modules
     getTransitiveReferencedModules(resourceModule, referencesFilter, result, (debug ? 1 : -1));
-
+    if (debug) {
     System.out.printf(" * * * ENDE getTransitiveReferencedModules for %s%n", resourceModule.getModuleIdentifier()
         .getName());
+    }
 
     // return the result
     return result;
