@@ -17,7 +17,9 @@ import org.bundlemaker.core.resource.IType;
 
 public class ModuleUtils {
 
-  public static final String dump(IResourceModule module, IModularizedSystem modularizedSystem) {
+  public static final String dump(IResourceModule module) {
+
+    IModularizedSystem modularizedSystem = module.getModularizedSystem();
 
     StringBuilder builder = new StringBuilder();
     builder.append(module.getModuleIdentifier().toString() + "\n");

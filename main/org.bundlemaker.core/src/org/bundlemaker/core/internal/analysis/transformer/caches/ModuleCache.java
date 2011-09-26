@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.analysis.transformer.caches;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.AdapterModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
@@ -38,8 +39,8 @@ public class ModuleCache extends AbstractArtifactCacheAwareGenericCache<ModuleKe
       IModule module = moduleKey.getModule();
 
       // get the parent
-      IArtifact parent = module.hasClassification() ? getArtifactCache().getGroupCache().getOrCreate(
-          module.getClassification()) : getArtifactCache().getRootArtifact();
+      IArtifact parent = getParent(module);
+
       //
       return module instanceof IResourceModule ? new AdapterResourceModule2IArtifact((IResourceModule) module, parent,
           getArtifactCache()) : new AdapterModule2IArtifact(module, parent);
@@ -50,6 +51,19 @@ public class ModuleCache extends AbstractArtifactCacheAwareGenericCache<ModuleKe
       return new VirtualModule2IArtifact(moduleKey.getModuleName(), moduleKey.getModuleName(), getArtifactCache()
           .getRootArtifact());
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   * @return
+   */
+  public AbstractAdvancedContainer getParent(IModule module) {
+    AbstractAdvancedContainer parent = module.hasClassification() ? getArtifactCache().getGroupCache().getOrCreate(
+        module.getClassification()) : getArtifactCache().getRootArtifact();
+    return parent;
   }
 
   /**

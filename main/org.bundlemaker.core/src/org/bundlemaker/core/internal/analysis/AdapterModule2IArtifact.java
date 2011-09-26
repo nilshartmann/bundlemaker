@@ -3,7 +3,6 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -63,8 +62,6 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     ((AbstractModule<?, ?>) _module).setModuleIdentifier(new ModuleIdentifier(name, version));
 
     super.setName(name);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**

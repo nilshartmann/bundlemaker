@@ -28,6 +28,18 @@ public class PackageCache extends AbstractArtifactCacheAwareGenericCache<ModuleP
   @Override
   protected AbstractArtifactContainer create(ModulePackageKey modulePackageKey) {
 
+    //
+    IArtifact parent = getParent(modulePackageKey);
+
+    //
+    AdapterPackage2IArtifact result = new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, false,
+        modulePackageKey.getModuleKey().getModule(), getArtifactCache());
+
+    //
+    return result;
+  }
+
+  public IArtifact getParent(ModulePackageKey modulePackageKey) {
     String packageName = modulePackageKey.getPackageName();
 
     IArtifact parent = null;
@@ -39,12 +51,6 @@ public class PackageCache extends AbstractArtifactCacheAwareGenericCache<ModuleP
     } else {
       parent = getArtifactCache().getModuleCache().getOrCreate(modulePackageKey.getModuleKey());
     }
-
-    //
-    AdapterPackage2IArtifact result = new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, false,
-        modulePackageKey.getModuleKey().getModule(), getArtifactCache());
-
-    //
-    return result;
+    return parent;
   }
 }

@@ -128,6 +128,18 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return _cachedDependencies;
   }
 
+  @Override
+  public boolean hasAssociatedTypes() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean hasAssociatedBinaryResources() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -430,7 +442,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public IArtifact getChild(String path) {
+  public IAdvancedArtifact getChild(String path) {
     return null;
   }
 

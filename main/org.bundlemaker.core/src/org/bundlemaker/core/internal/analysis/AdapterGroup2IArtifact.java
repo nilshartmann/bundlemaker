@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -37,6 +36,10 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
    */
   public AdapterGroup2IArtifact(String name, IArtifact parent) {
     super(ArtifactType.Group, name);
+
+    System.out.println("AdapterGroup2IArtifact " + name + " : " + parent);
+
+    Assert.isNotNull(parent);
 
     // set parent/children dependency
     setParent(parent);
@@ -81,8 +84,6 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
    */
   public void setName(String name) {
     super.setName(name);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**
@@ -144,11 +145,12 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     Assert.isNotNull(artifact);
     assertCanAdd(artifact);
 
-    // call the super method
-    super.addArtifact(artifact);
-
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.addModuleToModularizedSystem(artifact);
+    if (!AdapterUtils.addModuleToModularizedSystem(artifact, getQualifiedName().replace('|', '/'))) {
+
+      // we have to support the case that an empty group is added
+      internalAddArtifact(artifact);
+    }
   }
 
   /**
@@ -160,9 +162,11 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     Assert.isNotNull(artifact);
 
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
+    if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
+      internalRemoveArtifact(artifact);
+    }
 
-    return super.removeArtifact(artifact);
+    return true;
   }
 
   /**

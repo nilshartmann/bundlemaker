@@ -10,11 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.transformer;
 
-import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.transformer.caches.GroupCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.PackageCache;
@@ -27,8 +26,6 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.collections.GenericCache;
-import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -59,7 +56,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
    * @param rootArtifact
    * @param modelConfiguration
    */
-  public DefaultArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact rootArtifact,
+  public DefaultArtifactCache(IModularizedSystem modularizedSystem, AbstractAdvancedContainer rootArtifact,
       ArtifactModelConfiguration modelConfiguration) {
     super(modularizedSystem, rootArtifact, modelConfiguration);
   }
@@ -144,7 +141,7 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
    * {@inheritDoc}
    */
   @Override
-  protected GenericCache<ModuleResourceKey, AbstractArtifactContainer> createResourceCache() {
+  protected ResourceCache createResourceCache() {
     return new ResourceCache(this);
   }
 
@@ -152,14 +149,14 @@ public class DefaultArtifactCache extends AbstractConfigurableArtifactCache {
    * {@inheritDoc}
    */
   @Override
-  protected GenericCache<TypeKey, IArtifact> createTypeCache() {
+  protected TypeCache createTypeCache() {
     return new TypeCache(this);
   }
 
   /**
    * {@inheritDoc}
    */
-  protected GenericCache<IPath, AbstractArtifactContainer> createGroupCache() {
+  protected GroupCache createGroupCache() {
     return new GroupCache(this);
   }
 

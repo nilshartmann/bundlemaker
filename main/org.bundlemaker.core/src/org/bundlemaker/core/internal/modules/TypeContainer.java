@@ -18,9 +18,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem.ChangeAction;
+import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableTypeContainer;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.StringQueryFilters;
 import org.bundlemaker.core.resource.IType;
@@ -71,9 +72,16 @@ public class TypeContainer implements IModifiableTypeContainer {
    */
   @Override
   public IType getType(String fullyQualifiedName) {
-
     //
     return _containedTypes.get(fullyQualifiedName);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean containsType(String fullyQualifiedName) {
+    return _containedTypes.containsKey(fullyQualifiedName);
   }
 
   /**
@@ -214,13 +222,13 @@ public class TypeContainer implements IModifiableTypeContainer {
   /**
    * {@inheritDoc}
    */
-  @Override
   public void add(IType type) {
 
     if (!type.isLocalOrAnonymousType()) {
 
       //
       _containedTypes.put(type.getFullyQualifiedName(), type);
+
       // notify
       if (getModule().hasModularizedSystem()) {
         ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
@@ -229,15 +237,32 @@ public class TypeContainer implements IModifiableTypeContainer {
     }
   }
 
-  @Override
   public void remove(IType type) {
-    _containedTypes.remove(type.getFullyQualifiedName());
 
-    // notify
-    if (getModule().hasModularizedSystem()) {
-      ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
-          ChangeAction.REMOVED);
+    //
+    if (_containedTypes.containsKey(type.getFullyQualifiedName())) {
+
+      //
+      _containedTypes.remove(type.getFullyQualifiedName());
+
+      // notify
+      if (getModule().hasModularizedSystem()) {
+        ((AbstractCachingModularizedSystem) getModule().getModularizedSystem()).typeChanged(type, getModule(),
+            ChangeAction.REMOVED);
+      }
     }
+  }
+
+  @Override
+  public void addMovableUnit(IMovableUnit movableUnit) {
+    // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void removeMovableUnit(IMovableUnit movableUnit) {
+    // TODO Auto-generated method stub
+
   }
 
   public void setModule(IModule module) {

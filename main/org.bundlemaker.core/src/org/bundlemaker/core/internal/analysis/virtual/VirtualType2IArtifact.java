@@ -21,6 +21,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
@@ -118,6 +119,16 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return Collections.emptyList();
   }
 
+  @Override
+  public boolean hasAssociatedTypes() {
+    return false;
+  }
+
+  @Override
+  public boolean hasAssociatedBinaryResources() {
+    return false;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -186,7 +197,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public IArtifact getChild(String path) {
+  public IAdvancedArtifact getChild(String path) {
     return null;
   }
 

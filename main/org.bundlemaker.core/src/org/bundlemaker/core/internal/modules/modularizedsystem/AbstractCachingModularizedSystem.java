@@ -12,13 +12,20 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.modules.ChangeAction;
+import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.resource.IReference;
@@ -36,17 +43,6 @@ import org.eclipse.core.runtime.Assert;
  */
 public abstract class AbstractCachingModularizedSystem extends AbstractTransformationAwareModularizedSystem {
 
-  /**
-   * <p>
-   * Determines if a resource or type was added or removed from a module.
-   * </p>
-   * 
-   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-   */
-  public enum ChangeAction {
-    ADDED, REMOVED;
-  }
-
   /** type name -> type */
   private GenericCache<String, Set<IType>>              _typeNameToTypeCache;
 
@@ -58,6 +54,9 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
   /** type -> module */
   private GenericCache<IType, Set<IModule>>             _typeToModuleCache;
+
+  /** - */
+  private List<IModularizedSystemChangedListener>       _changedListeners;
 
   /**
    * <p>
@@ -71,6 +70,33 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     // call the super constructor
     super(name, projectDescription);
+
+    //
+    _changedListeners = new CopyOnWriteArrayList<IModularizedSystemChangedListener>();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addModularizedSystemChangedListener(IModularizedSystemChangedListener listener) {
+
+    //
+    if (listener != null && !_changedListeners.contains(listener)) {
+      _changedListeners.add(listener);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeModularizedSystemChangedListener(IModularizedSystemChangedListener listener) {
+
+    //
+    if (_changedListeners.contains(listener)) {
+      _changedListeners.remove(listener);
+    }
   }
 
   /**
@@ -198,7 +224,25 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     for (IResource resource : resources) {
 
       // ... and handle them
-      resourceChanged(resource, resourceModule, action);
+      internalResourceChanged(resource, resourceModule, action);
+    }
+
+    //
+    // fireEvent(resources, resourceModule, action);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param types
+   * @param module
+   * @param action
+   */
+  protected void typesChanged(Collection<IType> types, IModule module, ChangeAction action) {
+    //
+    for (IType type : types) {
+      internalTypeChanged(type, module, action);
     }
   }
 
@@ -211,6 +255,218 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param action
    */
   public void resourceChanged(IResource resource, IResourceModule resourceModule, ChangeAction action) {
+    internalResourceChanged(resource, resourceModule, action);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @param module
+   * @param action
+   */
+  public void typeChanged(IType type, IModule module, ChangeAction action) {
+
+    //
+    internalTypeChanged(type, module, action);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void resourceModuleAdded(IModifiableResourceModule resourceModule) {
+
+    Assert.isNotNull(resourceModule);
+
+    //
+    for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+      internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
+
+      //
+      for (IType type : resource.getContainedTypes()) {
+        internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
+      }
+    }
+
+    //
+    for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
+      internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
+
+      //
+      for (IType type : resource.getContainedTypes()) {
+        internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
+      }
+    }
+
+    //
+    // fireEvent();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void resourceModuleRemoved(IModifiableResourceModule resourceModule) {
+
+    Assert.isNotNull(resourceModule);
+
+    //
+    for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+      internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
+
+      //
+      for (IType type : resource.getContainedTypes()) {
+        internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
+      }
+    }
+
+    //
+    for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
+      internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
+
+      //
+      for (IType type : resource.getContainedTypes()) {
+        internalTypeChanged(type, resourceModule, ChangeAction.REMOVED);
+      }
+    }
+
+    //
+    // fireEvent();
+  }
+
+  @Override
+  protected void typeModuleAdded(TypeModule module) {
+    Assert.isNotNull(module);
+
+    //
+    for (IType type : module.getContainedTypes()) {
+      internalTypeChanged(type, module, ChangeAction.ADDED);
+    }
+
+    //
+    // fireEvent();
+  }
+
+  @Override
+  protected void typeModuleRemoved(TypeModule module) {
+
+    //
+    for (IType type : module.getContainedTypes()) {
+      internalTypeChanged(type, module, ChangeAction.REMOVED);
+    }
+
+    //
+    // fireEvent();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @return
+   */
+  public IResourceModule getAssociatedResourceModule(IResource resource) {
+
+    Assert.isNotNull(resource);
+
+    if (resource instanceof Resource) {
+      resource = ((Resource) resource).getResourceStandin();
+    }
+
+    //
+    Set<IResourceModule> resourceModules = _resourceToResourceModuleCache.get(resource);
+
+    //
+    if (resourceModules == null || resourceModules.isEmpty()) {
+      return null;
+    } else if (resourceModules.size() > 1) {
+      throw new RuntimeException("Resource is contained in multiple ResourceModules.");
+    } else {
+      return resourceModules.toArray(new IResourceModule[0])[0];
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  public IModule getAssociatedModule(IType type) {
+
+    //
+    Assert.isNotNull(type);
+
+    //
+    Set<IModule> modules = _typeToModuleCache.get(type);
+
+    //
+    if (modules == null || modules.isEmpty()) {
+      return null;
+    } else if (modules.size() > 1) {
+      throw new RuntimeException("Type is contained in multiple modules.");
+    } else {
+      return modules.toArray(new IModule[0])[0];
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param itemChanged
+   * @param module
+   * @param changeAction
+   */
+  public void fireMovableUnitEvent(IMovableUnit movableUnit, IModule module, ChangeAction changeAction) {
+
+    MovableUnitMovedEvent event = new MovableUnitMovedEvent(movableUnit, module, changeAction);
+
+    //
+    for (IModularizedSystemChangedListener listener : _changedListeners) {
+
+      switch (changeAction) {
+      case ADDED:
+        listener.movableUnitAdded(event);
+        break;
+      case REMOVED:
+        listener.movableUnitRemoved(event);
+        break;
+      default:
+        break;
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void fireModuleChanged() {
+
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  public void fireModuleClassificationChanged(IModule module) {
+
+    //
+    ModuleClassificationChangedEvent event = new ModuleClassificationChangedEvent(module);
+
+    //
+    for (IModularizedSystemChangedListener listener : _changedListeners) {
+      listener.moduleClassificationChanged(event);
+    }
+  }
+
+  private void internalResourceChanged(IResource resource, IResourceModule resourceModule, ChangeAction action) {
 
     // step 1: add/remove to resource map
     switch (action) {
@@ -237,30 +493,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     typesChanged(resource.getContainedTypes(), resourceModule, action);
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param types
-   * @param module
-   * @param action
-   */
-  public void typesChanged(Collection<? extends IType> types, IModule module, ChangeAction action) {
-    for (IType type : types) {
-      typeChanged(type, module, action);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   * @param module
-   * @param action
-   */
-  public void typeChanged(IType type, IModule module, ChangeAction action) {
-
+  private void internalTypeChanged(IType type, IModule module, ChangeAction action) {
     switch (action) {
     case ADDED: {
 
@@ -321,134 +554,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     default: {
       throw new RuntimeException(String.format("Unkown ChangeAction '%s'!", action));
     }
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void resourceModuleAdded(IModifiableResourceModule resourceModule) {
-
-    Assert.isNotNull(resourceModule);
-
-    //
-    for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
-      resourceChanged(resource, resourceModule, ChangeAction.ADDED);
-
-      //
-      for (IType type : resource.getContainedTypes()) {
-        typeChanged(type, resourceModule, ChangeAction.ADDED);
-      }
-    }
-
-    //
-    for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
-      resourceChanged(resource, resourceModule, ChangeAction.ADDED);
-
-      //
-      for (IType type : resource.getContainedTypes()) {
-        typeChanged(type, resourceModule, ChangeAction.ADDED);
-      }
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void resourceModuleRemoved(IModifiableResourceModule resourceModule) {
-
-    Assert.isNotNull(resourceModule);
-
-    //
-    for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
-      resourceChanged(resource, resourceModule, ChangeAction.REMOVED);
-
-      //
-      for (IType type : resource.getContainedTypes()) {
-        typeChanged(type, resourceModule, ChangeAction.REMOVED);
-      }
-    }
-
-    //
-    for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
-      resourceChanged(resource, resourceModule, ChangeAction.REMOVED);
-
-      //
-      for (IType type : resource.getContainedTypes()) {
-        typeChanged(type, resourceModule, ChangeAction.REMOVED);
-      }
-    }
-  }
-
-  @Override
-  protected void typeModuleAdded(TypeModule module) {
-    Assert.isNotNull(module);
-
-    //
-    for (IType type : module.getContainedTypes()) {
-      typeChanged(type, module, ChangeAction.ADDED);
-    }
-  }
-
-  @Override
-  protected void typeModuleRemoved(TypeModule module) {
-    for (IType type : module.getContainedTypes()) {
-      typeChanged(type, module, ChangeAction.REMOVED);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   * @return
-   */
-  public IResourceModule getAssociatedResourceModule(IResource resource) {
-
-    Assert.isNotNull(resource);
-
-    if (resource instanceof Resource) {
-      resource = ((Resource) resource).getResourceStandin();
-    }
-
-    //
-    Set<IResourceModule> resourceModules = _resourceToResourceModuleCache.get(resource);
-
-    //
-    if (resourceModules == null || resourceModules.isEmpty()) {
-      return null;
-    } else if (resourceModules.size() > 1) {
-      throw new RuntimeException("Resource is contained in multiple ResourceModules.");
-    } else {
-      return resourceModules.toArray(new IResourceModule[0])[0];
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   * @return
-   */
-  public IModule getAssociatedModule(IType type) {
-
-    //
-    Assert.isNotNull(type);
-
-    //
-    Set<IModule> modules = _typeToModuleCache.get(type);
-
-    //
-    if (modules == null || modules.isEmpty()) {
-      return null;
-    } else if (modules.size() > 1) {
-      throw new RuntimeException("Type is contained in multiple modules.");
-    } else {
-      return modules.toArray(new IModule[0])[0];
     }
   }
 }

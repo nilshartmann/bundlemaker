@@ -87,6 +87,14 @@ public class TypeCache extends AbstractArtifactCacheAwareGenericCache<TypeKey, I
    */
   private IArtifact createTypeArtifactFromType(IType type) {
 
+    AbstractArtifactContainer parent = getParent(type);
+
+    //
+    return new AdapterType2IArtifact(type, getArtifactCache(), parent);
+  }
+
+  public AbstractArtifactContainer getParent(IType type) {
+
     // get the associated resources
     IResource resource = null;
     if (getArtifactCache().getConfiguration().getResourcePresentation().equals(ResourcePresentation.ALL_RESOURCES)) {
@@ -122,8 +130,6 @@ public class TypeCache extends AbstractArtifactCacheAwareGenericCache<TypeKey, I
       // get the parent
       parent = getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
     }
-
-    //
-    return new AdapterType2IArtifact(type, getArtifactCache(), parent);
+    return parent;
   }
 }

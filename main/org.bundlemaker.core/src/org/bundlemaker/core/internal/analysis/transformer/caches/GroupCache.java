@@ -1,6 +1,7 @@
 package org.bundlemaker.core.internal.analysis.transformer.caches;
 
-import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.AdapterGroup2IArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.eclipse.core.runtime.IPath;
@@ -11,7 +12,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class GroupCache extends AbstractArtifactCacheAwareGenericCache<IPath, AbstractArtifactContainer> {
+public class GroupCache extends AbstractArtifactCacheAwareGenericCache<IPath, AbstractAdvancedContainer> {
 
   /**
    * <p>
@@ -28,15 +29,27 @@ public class GroupCache extends AbstractArtifactCacheAwareGenericCache<IPath, Ab
    * {@inheritDoc}
    */
   @Override
-  protected AbstractArtifactContainer create(IPath classification) {
+  protected AbstractAdvancedContainer create(IPath classification) {
+
+    System.out.println("Create " + classification);
 
     //
     if (classification == null || classification.isEmpty()) {
-      return (AbstractArtifactContainer) getArtifactCache().getRootArtifact();
+      return (AbstractAdvancedContainer) getArtifactCache().getRootArtifact();
     }
 
+    IArtifact parent = getParent(classification);
+
     //
-    return new AdapterGroup2IArtifact(classification.lastSegment(), getArtifactCache().getGroupCache().getOrCreate(
-        classification.removeLastSegments(1)));
+    return new AdapterGroup2IArtifact(classification.lastSegment(), parent);
+  }
+
+  public AbstractAdvancedContainer getOrCreate(IPath key) {
+    return super.getOrCreate(key);
+  }
+
+  public IArtifact getParent(IPath classification) {
+    IArtifact parent = getArtifactCache().getGroupCache().getOrCreate(classification.removeLastSegments(1));
+    return parent;
   }
 }

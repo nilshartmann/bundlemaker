@@ -1,13 +1,15 @@
 package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
+import org.bundlemaker.core.internal.analysis.transformer.caches.GroupCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.transformer.caches.PackageCache;
+import org.bundlemaker.core.internal.analysis.transformer.caches.ResourceCache;
+import org.bundlemaker.core.internal.analysis.transformer.caches.TypeCache;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -27,22 +29,22 @@ import org.eclipse.core.runtime.IPath;
 public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCache {
 
   /** - */
-  private static final String                                        MISSING_TYPES = "<< Missing Types >>";
+  private static final String MISSING_TYPES = "<< Missing Types >>";
 
   /** - */
-  private GenericCache<IPath, AbstractArtifactContainer>             _groupCache;
+  private GroupCache          _groupCache;
 
   /** - */
-  private ModuleCache                                                _moduleCache;
+  private ModuleCache         _moduleCache;
 
   /** - */
-  private PackageCache                                               _packageCache;
+  private PackageCache        _packageCache;
 
   /** - */
-  private GenericCache<ModuleResourceKey, AbstractArtifactContainer> _resourceCache;
+  private ResourceCache       _resourceCache;
 
   /** - */
-  private GenericCache<TypeKey, IArtifact>                           _typeCache;
+  private TypeCache           _typeCache;
 
   // /** - */
   // private VirtualArtifact _missingTypesVirtualModule;
@@ -72,7 +74,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * @param modularizedSystem
    * @param rootArtifact
    */
-  protected AbstractCacheAwareArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact rootArtifact) {
+  protected AbstractCacheAwareArtifactCache(IModularizedSystem modularizedSystem, AbstractAdvancedContainer rootArtifact) {
     super(modularizedSystem, rootArtifact);
 
     // initialize the caches
@@ -223,7 +225,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * 
    * @return
    */
-  public final GenericCache<IPath, AbstractArtifactContainer> getGroupCache() {
+  public final GenericCache<IPath, AbstractAdvancedContainer> getGroupCache() {
     return _groupCache;
   }
 
@@ -253,7 +255,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * 
    * @return
    */
-  public final GenericCache<ModuleResourceKey, AbstractArtifactContainer> getResourceCache() {
+  public final ResourceCache getResourceCache() {
     return _resourceCache;
   }
 
@@ -281,7 +283,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * 
    * @return
    */
-  protected abstract GenericCache<IPath, AbstractArtifactContainer> createGroupCache();
+  protected abstract GroupCache createGroupCache();
 
   /**
    * <p>
@@ -289,7 +291,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * 
    * @return
    */
-  protected abstract GenericCache<TypeKey, IArtifact> createTypeCache();
+  protected abstract TypeCache createTypeCache();
 
   /**
    * <p>
@@ -297,7 +299,7 @@ public abstract class AbstractCacheAwareArtifactCache extends AbstractArtifactCa
    * 
    * @return
    */
-  protected abstract GenericCache<ModuleResourceKey, AbstractArtifactContainer> createResourceCache();
+  protected abstract ResourceCache createResourceCache();
 
   /**
    * <p>

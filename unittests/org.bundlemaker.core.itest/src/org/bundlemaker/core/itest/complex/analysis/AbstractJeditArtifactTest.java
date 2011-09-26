@@ -50,8 +50,8 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
 
     // assert the input
     InputStream inputstream = getClass().getResourceAsStream("results/" + getTestProjectName() + ".txt");
-    assertResult(ModuleUtils.dump(getModularizedSystem().getResourceModule(getTestProjectName(), "1.0.0"),
-        getModularizedSystem()), inputstream, getTestProjectName() + getCurrentTimeStamp());
+    assertResult(ModuleUtils.dump(getModularizedSystem().getResourceModule(getTestProjectName(), "1.0.0")),
+        inputstream, getTestProjectName() + getCurrentTimeStamp());
 
     //
     IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getModularizedSystem(),

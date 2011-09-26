@@ -1,7 +1,6 @@
 package org.bundlemaker.core.modules.modifiable;
 
 import org.bundlemaker.core.modules.ITypeContainer;
-import org.bundlemaker.core.resource.IType;
 
 /**
  * <p>
@@ -12,19 +11,37 @@ import org.bundlemaker.core.resource.IType;
  */
 public interface IModifiableTypeContainer extends ITypeContainer {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   */
-  void add(IType type);
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param type
+  // */
+  // @Deprecated
+  // void add(IType type);
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param type
+  // */
+  // @Deprecated
+  // void remove(IType type);
 
   /**
    * <p>
    * </p>
    * 
-   * @param type
+   * @param movableUnit
    */
-  void remove(IType type);
+  void addMovableUnit(IMovableUnit movableUnit);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param movableUnit
+   */
+  void removeMovableUnit(IMovableUnit movableUnit);
 }

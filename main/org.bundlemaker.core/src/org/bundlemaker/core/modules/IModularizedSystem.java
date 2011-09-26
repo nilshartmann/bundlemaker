@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
@@ -68,6 +70,30 @@ public interface IModularizedSystem {
    * @return the {@link IBundleMakerProjectDescription}
    */
   IBundleMakerProjectDescription getProjectDescription();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IRootArtifact getArtifactModel(ArtifactModelConfiguration configuration);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  void addModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  void removeModularizedSystemChangedListener(IModularizedSystemChangedListener listener);
 
   /**
    * <p>
@@ -365,6 +391,8 @@ public interface IModularizedSystem {
   IModule getTypeContainingModule(String fullyQualifiedName, IResourceModule referencingModule)
       throws AmbiguousElementException;
 
+  /******************************************************************************/
+
   /**
    * <p>
    * </p>
@@ -386,8 +414,6 @@ public interface IModularizedSystem {
    */
   IReferencedModulesQueryResult getTransitiveReferencedModules(IResourceModule resourceModule,
       IQueryFilter<IReference> referencesFilter);
-
-  /******************************************************************************/
 
   /**
    * <p>

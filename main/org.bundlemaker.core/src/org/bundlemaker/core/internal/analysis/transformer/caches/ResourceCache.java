@@ -29,6 +29,13 @@ public class ResourceCache extends AbstractArtifactCacheAwareGenericCache<Module
   @Override
   protected AbstractArtifactContainer create(ModuleResourceKey key) {
 
+    AbstractArtifactContainer parent = getParent(key);
+
+    //
+    return new AdapterResource2IArtifact(key.getResource(), false, parent, getArtifactCache());
+  }
+
+  public AbstractArtifactContainer getParent(ModuleResourceKey key) {
     // compute the package name
     String packageName = key.getResource().getPackageName();
 
@@ -37,8 +44,6 @@ public class ResourceCache extends AbstractArtifactCacheAwareGenericCache<Module
 
     // get the parent
     AbstractArtifactContainer parent = getArtifactCache().getPackageCache().getOrCreate(modulePackageKey);
-
-    //
-    return new AdapterResource2IArtifact(key.getResource(), false, parent, getArtifactCache());
+    return parent;
   }
 }

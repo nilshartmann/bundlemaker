@@ -2,6 +2,7 @@ package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 
 /**
  * <p>
@@ -13,22 +14,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 public interface IRootArtifact extends IAdvancedArtifact, IGroupAndModuleContainer {
 
   /**
-   * <p>
-   * Adds the specified {@link IArtifactTreeChangedListener} to the listener list.
-   * </p>
-   * 
-   * @param listener
-   *          the {@link IArtifactTreeChangedListener}.
+   * {@inheritDoc}
    */
-  void addArtifactTreeChangedListener(IArtifactTreeChangedListener listener);
-
-  /**
-   * <p>
-   * Removes the specified {@link IArtifactTreeChangedListener} from the listener list.
-   * </p>
-   * 
-   * @param listener
-   *          the {@link IArtifactTreeChangedListener}.
-   */
-  void removeArtifactTreeChangedListener(IArtifactTreeChangedListener listener);
+  public IModifiableModularizedSystem getModularizedSystem();
 }

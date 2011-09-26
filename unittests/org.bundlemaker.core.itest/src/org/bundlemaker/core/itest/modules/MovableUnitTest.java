@@ -84,16 +84,10 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
         _resourceModule.getResource("de/test/innertypes/B.class", ContentType.BINARY), getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
         _resourceModule.getResource("de/test/innertypes/B$BB.class", ContentType.BINARY), getModularizedSystem()));
-
-    // try {
-    // assertMovableUnit(MovableUnit.createFromResource(_resourceModule.getResource("de/test/innertypes/B$1.class",
-    // ContentType.BINARY)));
-    // } catch (Exception e) {
-    // //
-    // }
-    //
-    // assertMovableUnit(MovableUnit.createFromResource(_resourceModule.getResource("de/test/innertypes/A$1.class",
-    // ContentType.BINARY)));
+    assertMovableUnit(MovableUnit.createFromResource(
+        _resourceModule.getResource("de/test/innertypes/B$1.class", ContentType.BINARY), getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromResource(
+        _resourceModule.getResource("de/test/innertypes/A$1.class", ContentType.BINARY), getModularizedSystem()));
   }
 
   /**

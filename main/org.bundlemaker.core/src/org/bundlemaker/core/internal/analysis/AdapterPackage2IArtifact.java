@@ -161,7 +161,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
       handlePackage(artifact);
     } else {
       //
-      super.addArtifact(artifact);
+      // super.addArtifact(artifact);
       // TODO: TYPE CHECK??
       AdapterUtils.addArtifactToPackage(this, artifact);
     }
@@ -184,7 +184,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
       packageArtifact.addArtifact(child);
     }
 
-    super.addArtifact(packageArtifact);
+    // super.addArtifact(packageArtifact);
 
     // } else {
     // super.addArtifact(packageArtifact);
@@ -202,11 +202,11 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
     // asserts
     Assert.isNotNull(artifact);
 
-    // get the result
-    boolean result = super.removeArtifact(artifact);
+    // // get the result
+    // boolean result = super.removeArtifact(artifact);
 
     // TODO: TYPE CHECK??
-    AdapterUtils.removeArtifactFromPackage(artifact, this);
+    AdapterUtils.removeArtifact(artifact, this);
 
     // // support for empty packages
     // if (this.getChildren().isEmpty()) {
@@ -215,7 +215,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
     // }
 
     // return the result
-    return result;
+    return true;
   }
 
   /**

@@ -2,14 +2,15 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
 import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
 import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -44,7 +45,6 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    */
   public void setName(String name) {
     super.setName(name);
-    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   @Override
@@ -66,7 +66,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     if (artifact.getType().equals(ArtifactType.Package)) {
       handleAddPackage(artifact);
     } else if (artifact.getType().equals(ArtifactType.Resource)) {
-      handleAddResource(artifact);
+      handleAddResource((IResourceArtifact) artifact);
     } else if (artifact.getType().equals(ArtifactType.Type)) {
       handleAddType(artifact);
     }
@@ -77,7 +77,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     //
     if (artifact.getParent().getType().equals(ArtifactType.Resource)) {
 
-      handleAddResource(artifact.getParent());
+      handleAddResource((IResourceArtifact) artifact.getParent());
 
     } else {
 
@@ -97,14 +97,20 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     }
   }
 
-  private void handleAddResource(IArtifact artifact) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  private void handleAddResource(IResourceArtifact artifact) {
 
     // step 1: get the containing package artifact
-    IPackageArtifact oldPackageArtifact = (IPackageArtifact) artifact.getParent(ArtifactType.Package);
+    IResource resource = artifact.getAssociatedResource();
 
     //
     ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(getAssociatedModule()),
-        oldPackageArtifact.getQualifiedName());
+        resource.getPackageName());
 
     //
     IPackageArtifact newPackageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
@@ -114,6 +120,12 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     newPackageArtifact.addArtifact(artifact);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
   private void handleAddPackage(IArtifact artifact) {
 
     //
@@ -149,26 +161,11 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     // asserts
     Assert.isNotNull(artifact);
 
-    boolean result = false;
-
-    // package type
-    if (artifact.getType().equals(ArtifactType.Package)) {
-
-      //
-      if (getChildren().contains(artifact)) {
-        result = super.removeArtifact(artifact);
-        AdapterUtils.removePackageFromModule(artifact, this);
-      }
-    }
-
-    // package type
-    else if (artifact.getType().equals(ArtifactType.Type)) {
-      IArtifact packageArtifact = artifact.getParent();
-      packageArtifact.removeArtifact(packageArtifact);
-    }
+    //
+    AdapterUtils.removeArtifact(artifact, this);
 
     // return the result
-    return result;
+    return true;
   }
 
   /**

@@ -25,6 +25,7 @@ import java.util.jar.JarFile;
 import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.internal.modules.ResourceModule;
+import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.modules.IModule;
@@ -393,7 +394,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
           // type2.setTypeModule(typeModule);
 
-          typeModule.getModifiableSelfResourceContainer().add(type2);
+          ((TypeContainer) typeModule.getModifiableSelfResourceContainer()).add(type2);
         }
 
       } catch (IOException e) {

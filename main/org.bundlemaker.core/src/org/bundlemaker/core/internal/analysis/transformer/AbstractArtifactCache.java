@@ -11,6 +11,7 @@
 package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -28,10 +29,10 @@ import org.eclipse.core.runtime.CoreException;
 public abstract class AbstractArtifactCache {
 
   /** the root artifact */
-  private IAdvancedArtifact  _rootArtifact;
+  private AbstractAdvancedContainer _rootArtifact;
 
   /** the modularized system */
-  private IModularizedSystem _modularizedSystem;
+  private IModularizedSystem        _modularizedSystem;
 
   /**
    * <p>
@@ -55,7 +56,7 @@ public abstract class AbstractArtifactCache {
    * @param rootArtifact
    *          the root artifact
    */
-  protected AbstractArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact rootArtifact) {
+  protected AbstractArtifactCache(IModularizedSystem modularizedSystem, AbstractAdvancedContainer rootArtifact) {
 
     Assert.isNotNull(modularizedSystem);
     Assert.isNotNull(rootArtifact);
@@ -73,7 +74,7 @@ public abstract class AbstractArtifactCache {
    * 
    * @return
    */
-  public final IAdvancedArtifact getRootArtifact() {
+  public final AbstractAdvancedContainer getRootArtifact() {
     return _rootArtifact;
   }
 

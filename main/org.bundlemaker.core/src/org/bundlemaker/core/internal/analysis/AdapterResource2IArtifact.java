@@ -76,6 +76,14 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
     return _movableUnit.getAssociatedBinaryResources();
   }
 
+  public boolean hasAssociatedTypes() {
+    return _movableUnit.hasAssociatedTypes();
+  }
+
+  public boolean hasAssociatedBinaryResources() {
+    return _movableUnit.hasAssociatedBinaryResources();
+  }
+
   /**
    * {@inheritDoc}
    */

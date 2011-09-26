@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis.transformer;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
@@ -42,8 +42,8 @@ public abstract class AbstractConfigurableArtifactCache extends AbstractCacheAwa
    * @param modularizedSystem
    * @param rootArtifact
    */
-  public AbstractConfigurableArtifactCache(IModularizedSystem modularizedSystem, IAdvancedArtifact rootArtifact,
-      ArtifactModelConfiguration modelConfiguration) {
+  public AbstractConfigurableArtifactCache(IModularizedSystem modularizedSystem,
+      AbstractAdvancedContainer rootArtifact, ArtifactModelConfiguration modelConfiguration) {
     super(modularizedSystem, rootArtifact);
 
     Assert.isNotNull(modelConfiguration);

@@ -79,7 +79,7 @@ public abstract class GenericCache<K, V> extends HashMap<K, V> {
    * @param key
    * @return
    */
-  public final V getOrCreate(K key) {
+  public V getOrCreate(K key) {
 
     //
     Assert.isNotNull(key);

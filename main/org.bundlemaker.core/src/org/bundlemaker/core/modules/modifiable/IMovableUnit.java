@@ -17,12 +17,28 @@ public interface IMovableUnit {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedTypes();
+
+  /**
+   * <p>
    * Returns the list of types that are associated with this movable unit.
    * </p>
    * 
    * @return the list of types that are associated with this movable unit.
    */
   List<IType> getAssociatedTypes();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedBinaryResources();
 
   /**
    * <p>
@@ -35,18 +51,18 @@ public interface IMovableUnit {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedSourceResource();
+
+  /**
+   * <p>
    * Returns the source resource that is associated with this movable type.
    * </p>
    * 
    * @return the source resource that is associated with this movable type.
    */
   IResource getAssociatedSourceResource();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasAssociatedSourceResource();
 }

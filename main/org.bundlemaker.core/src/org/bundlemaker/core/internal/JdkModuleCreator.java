@@ -13,6 +13,7 @@ package org.bundlemaker.core.internal;
 import java.io.IOException;
 import java.util.List;
 
+import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelector;
 import org.bundlemaker.core.internal.resource.Type;
@@ -87,7 +88,7 @@ public class JdkModuleCreator {
           //
           // type.setTypeModule(virtualModule);
 
-          virtualModule.getModifiableSelfResourceContainer().add(type);
+          ((TypeContainer) virtualModule.getModifiableSelfResourceContainer()).add(type);
           // }
         }
       }

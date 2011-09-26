@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.view.navigator;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.core.runtime.IStatus;
@@ -65,6 +66,9 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
     //
     IRootArtifact root = ((IAdvancedArtifact) targetArtifact).getRoot();
+
+    //
+    ArtifactUtils.dumpArtifact(root);
 
     root.invalidateDependencyCache();
     TreePath[] expanedTreePath = commonNavigator.getCommonViewer().getExpandedTreePaths();

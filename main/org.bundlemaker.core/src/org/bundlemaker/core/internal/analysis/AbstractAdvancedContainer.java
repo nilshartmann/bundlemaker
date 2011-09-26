@@ -92,6 +92,10 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
   }
 
+  public IAdvancedArtifact getChild(String path) {
+    return (IAdvancedArtifact) super.getChild(path);
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -105,17 +109,7 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
    */
   @Override
   public void addArtifact(IArtifact artifact) {
-
-    // assert not null
-    Assert.isNotNull(artifact);
-
-    // if the artifact has a parent, it has to be removed
-    if (artifact.getParent() != null) {
-      artifact.getParent().removeArtifact(artifact);
-    }
-
-    // call super
-    super.addArtifact(artifact);
+    throw new UnsupportedOperationException("");
   }
 
   /**
@@ -123,6 +117,36 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
    */
   @Override
   public boolean removeArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("");
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  public final void internalAddArtifact(IArtifact artifact) {
+
+    // assert not null
+    Assert.isNotNull(artifact);
+
+    // if the artifact has a parent, it has to be removed
+    if (artifact.getParent() != null) {
+      ((AbstractAdvancedContainer) artifact.getParent()).internalRemoveArtifact(artifact);
+    }
+
+    // call super
+    super.addArtifact(artifact);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  public final void internalRemoveArtifact(IArtifact artifact) {
 
     // assert not null
     Assert.isNotNull(artifact);
@@ -133,7 +157,7 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     }
 
     // call super
-    return super.removeArtifact(artifact);
+    super.removeArtifact(artifact);
   }
 
   @Override

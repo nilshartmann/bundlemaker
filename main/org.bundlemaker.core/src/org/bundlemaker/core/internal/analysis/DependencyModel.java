@@ -9,6 +9,7 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -101,7 +102,8 @@ public class DependencyModel implements IDependencyModel {
 
       //
     case Group: {
-      return new AdapterGroup2IArtifact(name, getRoot());
+      // new AdapterGroup2IArtifact(name, getRoot())
+      return _artifactCache.getGroupCache().getOrCreate(new Path(qualifiedName));
     }
 
       //
@@ -126,7 +128,7 @@ public class DependencyModel implements IDependencyModel {
 
       //
     case Package: {
-      return new AdapterPackage2IArtifact(qualifiedName, getRoot(), false, null, _artifactCache);
+      throw new RuntimeException("Can not create IArtifact of type 'ArtifactType.Resource'.");
     }
 
       //
@@ -146,5 +148,9 @@ public class DependencyModel implements IDependencyModel {
     }
 
     return null;
+  }
+
+  public DefaultArtifactCache getArtifactCache() {
+    return _artifactCache;
   }
 }

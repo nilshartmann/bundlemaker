@@ -18,6 +18,11 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 public interface IAdvancedArtifact extends IArtifact {
 
   /**
+   * {@inheritDoc}
+   */
+  IAdvancedArtifact getChild(String path);
+
+  /**
    * <p>
    * </p>
    * 

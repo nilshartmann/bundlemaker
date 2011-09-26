@@ -9,7 +9,9 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -74,9 +76,24 @@ public class MovableUnit implements IMovableUnit {
     Assert.isNotNull(resource);
 
     //
-    if (resource.containsTypes()) {
-      for (IType type : resource.getContainedTypes()) {
-        Assert.isTrue(!type.isLocalOrAnonymousType());
+    if (resource.getName().endsWith(".class") && resource.containsTypes()) {
+
+      try {
+        IType type = resource.getContainedType();
+        if (type.isLocalOrAnonymousType()) {
+          String typeName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(type.getFullyQualifiedName());
+
+          // TODO!!
+          IResourceModule resourceModule = resource.getAssociatedResourceModule(modularizedSystem);
+          IResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
+              ContentType.BINARY);
+
+          if (nonAnonymousResource != null) {
+            resource = nonAnonymousResource;
+          }
+        }
+      } catch (CoreException e) {
+        //
       }
     }
 
@@ -87,6 +104,18 @@ public class MovableUnit implements IMovableUnit {
 
     //
     return movableUnit;
+  }
+
+  @Override
+  public boolean hasAssociatedTypes() {
+    init();
+    return _associatedTypes != null && !_associatedTypes.isEmpty();
+  }
+
+  @Override
+  public boolean hasAssociatedBinaryResources() {
+    init();
+    return _binaryResources != null && !_binaryResources.isEmpty();
   }
 
   /**
