@@ -29,7 +29,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -51,13 +51,10 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   private IType                       _type;
 
   /** - */
-  private DefaultArtifactCache        _artifactCache;
+  private ArtifactCache               _artifactCache;
 
   /** - */
   private Map<IArtifact, IDependency> _cachedDependencies;
-
-  // /** - */
-  // private boolean _aggregateNonPrimaryTypes;
 
   /** - */
   private IMovableUnit                _movableUnit;
@@ -69,7 +66,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @param type
    * @param classification
    */
-  public AdapterType2IArtifact(IType type, DefaultArtifactCache defaultArtifactCache, IArtifact parent) {
+  public AdapterType2IArtifact(IType type, ArtifactCache defaultArtifactCache, IArtifact parent) {
 
     super(ArtifactType.Type, type.getName());
 
@@ -79,7 +76,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
 
     _type = type;
 
@@ -95,12 +92,26 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
+  public boolean containsTypes() {
+    return true;
+  }
+
+  @Override
+  public boolean containsResources() {
+    return false;
+  }
+
+  @Override
   public boolean isVirtual() {
     return false;
   }
 
   public IResourceModule getContainingResourceModule() {
     return _movableUnit.getContainingResourceModule();
+  }
+
+  public boolean hasContainingResourceModule() {
+    return _movableUnit.hasContainingResourceModule();
   }
 
   /**
@@ -256,7 +267,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
   @Override
   public IDependencyModel getDependencyModel() {
-    return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
+    return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
   }
 
   /**

@@ -6,18 +6,16 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.analysis.transformer.AbstractCacheAwareArtifactCache.TypeKey;
-import org.bundlemaker.core.internal.analysis.transformer.ModuleResourceKey;
-import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache;
-import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.cache.TypeKey;
+import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.modules.ModuleMovedEvent;
 import org.bundlemaker.core.modules.MovableUnitMovedEvent;
@@ -34,7 +32,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContainer implements IRootArtifact,
+public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtifactContainer implements IRootArtifact,
     IModularizedSystemChangedListener {
 
   /** - */
@@ -198,6 +196,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     System.out.println("------------------------------------");
     System.out.println(event.getMovableUnit());
+
     // TODO: RICHTIGE BEHANDLUNG _ SOURCE/BINARY/TYPES etc. abhängig von ModelConfiguration
     IMovableUnit movableUnit = event.getMovableUnit();
 
@@ -205,13 +204,17 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
       for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
 
-        ModuleResourceKey moduleResourceKey = new ModuleResourceKey((IResourceModule) event.getModule(), resource);
-
-        IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().getOrCreate(moduleResourceKey);
-
-        if (artifact != null && artifact.getParent() != null) {
-          ((AdapterPackage2IArtifact) artifact.getParent()).internalAddArtifact(artifact);
+        //
+        if (resource.hasPrimaryType() && resource.getPrimaryType().isLocalOrAnonymousType()) {
+          continue;
         }
+
+        // get the resource
+        IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().getOrCreate(resource);
+        AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getResourceCache()
+            .getOrCreateParent(resource);
+
+        parentArtifact.internalAddArtifact(artifact);
       }
     }
 
@@ -223,10 +226,10 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
         TypeKey typeKey = new TypeKey(type);
 
         IArtifact artifact = _dependencyModel.getArtifactCache().getTypeCache().getOrCreate(typeKey);
+        AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getTypeCache()
+            .getTypeParent(typeKey.getType());
 
-        if (artifact != null && artifact.getParent() != null) {
-          ((AbstractAdvancedContainer) artifact.getParent()).internalAddArtifact(artifact);
-        }
+        parentArtifact.internalAddArtifact(artifact);
       }
     }
 
@@ -252,9 +255,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
       for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
 
-        ModuleResourceKey moduleResourceKey = new ModuleResourceKey((IResourceModule) event.getModule(), resource);
-
-        IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(moduleResourceKey);
+        IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
 
         if (artifact != null && artifact.getParent() != null) {
           ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
@@ -277,7 +278,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
   public void moduleAdded(ModuleMovedEvent event) {
 
     //
-    ModuleCache moduleCache = _dependencyModel.getArtifactCache().getModuleCache();
+    ModuleSubCache moduleCache = _dependencyModel.getArtifactCache().getModuleCache();
 
     //
     AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) moduleCache.getOrCreate(new ModuleKey(event
@@ -285,7 +286,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     //
     if (moduleArtifact.getParent() == null) {
-      AbstractAdvancedContainer parent = moduleCache.getParent(event.getModule());
+      AbstractBundleMakerArtifactContainer parent = moduleCache.getModuleParent(event.getModule());
       parent.internalAddArtifact(moduleArtifact);
     }
   }
@@ -299,7 +300,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
 
     //
     if (moduleArtifact != null) {
-      ((AbstractAdvancedContainer) moduleArtifact.getParent()).setParent(null);
+      ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
     }
   }
 
@@ -320,7 +321,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     if (classification != null) {
 
       //
-      AbstractAdvancedContainer groupArtifact = _dependencyModel.getArtifactCache().getGroupCache()
+      AbstractBundleMakerArtifactContainer groupArtifact = _dependencyModel.getArtifactCache().getGroupCache()
           .getOrCreate(classification);
       //
       groupArtifact.internalAddArtifact(moduleArtifact);

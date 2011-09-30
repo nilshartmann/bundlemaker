@@ -4,6 +4,7 @@ import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.itest.analysis.ModuleConverterTest;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IType;
 import org.junit.Assert;
@@ -38,8 +39,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
 
     // REMOVE THE TYPE
     IType type = resourceModule.getType("de.test.Klasse");
-    modifiableResourceModule.getModifiableSelfResourceContainer().remove(type.getBinaryResource(), ContentType.BINARY);
-    modifiableResourceModule.getModifiableSelfResourceContainer().remove(type.getSourceResource(), ContentType.SOURCE);
+    modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(MovableUnit.createFromType(type));
 
     // TEST 2: remove resource 'de.test.Klasse' and check contained types
     Assert.assertEquals(1, modifiableResourceModule.getContainedTypes().size());
@@ -48,8 +48,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(0, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
 
     // ADD THE TYPE
-    modifiableResourceModule.getModifiableSelfResourceContainer().add(type.getBinaryResource(), ContentType.BINARY);
-    modifiableResourceModule.getModifiableSelfResourceContainer().add(type.getSourceResource(), ContentType.SOURCE);
+    modifiableResourceModule.getModifiableSelfResourceContainer().addMovableUnit(MovableUnit.createFromType(type));
 
     // TEST 3: check contained types
     Assert.assertEquals(2, modifiableResourceModule.getContainedTypes().size());
@@ -79,8 +78,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
 
     // ADD THE TYPE
     IType type = resourceModule.getType("de.test.Klasse");
-    modifiableResourceModule.getModifiableSelfResourceContainer().add(type.getBinaryResource(), ContentType.BINARY);
-    modifiableResourceModule.getModifiableSelfResourceContainer().add(type.getSourceResource(), ContentType.SOURCE);
+    modifiableResourceModule.getModifiableSelfResourceContainer().addMovableUnit(MovableUnit.createFromType(type));
 
     // TEST 2: check contained types
     Assert.assertEquals(2, modifiableResourceModule.getContainedTypes().size());
@@ -89,8 +87,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(1, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
 
     // REMOVE THE TYPE
-    modifiableResourceModule.getModifiableSelfResourceContainer().remove(type.getBinaryResource(), ContentType.BINARY);
-    modifiableResourceModule.getModifiableSelfResourceContainer().remove(type.getSourceResource(), ContentType.SOURCE);
+    modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(MovableUnit.createFromType(type));
 
     // TEST 3: check contained types
     Assert.assertEquals(1, modifiableResourceModule.getContainedTypes().size());

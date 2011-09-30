@@ -21,11 +21,11 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
+import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -57,7 +57,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
 
     _fullyQualifiedName = fullyQualifiedName;
   }
@@ -68,6 +68,16 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public boolean containsTypesOrResources() {
     return true;
+  }
+
+  @Override
+  public boolean containsTypes() {
+    return true;
+  }
+
+  @Override
+  public boolean containsResources() {
+    return false;
   }
 
   /**
@@ -135,6 +145,10 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return false;
   }
 
+  public boolean hasContainingResourceModule() {
+    return false;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -194,7 +208,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
 
   @Override
   public IDependencyModel getDependencyModel() {
-    return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
+    return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
   }
 
   @Override

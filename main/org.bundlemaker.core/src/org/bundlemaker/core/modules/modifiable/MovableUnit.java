@@ -49,7 +49,7 @@ public class MovableUnit implements IMovableUnit {
   /** - */
   private boolean                      _isInitialized      = false;
 
-  private IResourceModule              _resourceModule;
+  // private IResourceModule _resourceModule;
 
   /**
    * <p>
@@ -174,8 +174,24 @@ public class MovableUnit implements IMovableUnit {
 
     init();
 
+    IResourceModule resourceModule = null;
+
     //
-    return _resourceModule;
+    if (!_associatedTypes.isEmpty()) {
+      resourceModule = (IResourceModule) _associatedTypes.get(0).getModule(_modularizedSystem);
+    } else if (!_binaryResources.isEmpty()) {
+      resourceModule = (IResourceModule) _binaryResources.get(0).getAssociatedResourceModule(_modularizedSystem);
+    } else {
+      resourceModule = _sourceResource.getAssociatedResourceModule(_modularizedSystem);
+    }
+
+    //
+    return resourceModule;
+  }
+
+  public boolean hasContainingResourceModule() {
+    //
+    return getContainingResourceModule() != null;
   }
 
   /**
@@ -232,17 +248,6 @@ public class MovableUnit implements IMovableUnit {
         }
       }
     }
-
-    //
-    if (!_associatedTypes.isEmpty()) {
-      _resourceModule = (IResourceModule) _associatedTypes.get(0).getModule(_modularizedSystem);
-    } else if (!_binaryResources.isEmpty()) {
-      _resourceModule = (IResourceModule) _binaryResources.get(0).getAssociatedResourceModule(_modularizedSystem);
-    } else {
-      _resourceModule = _sourceResource.getAssociatedResourceModule(_modularizedSystem);
-    }
-
-    Assert.isNotNull(_resourceModule);
 
     // set initialized
     _isInitialized = true;

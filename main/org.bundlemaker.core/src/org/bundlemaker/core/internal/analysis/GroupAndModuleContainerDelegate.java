@@ -63,7 +63,7 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
 
     //
     String moduleName = qualifiedModuleName;
-    AbstractAdvancedContainer parent = (AbstractAdvancedContainer) rootContainer;
+    AbstractBundleMakerArtifactContainer parent = (AbstractBundleMakerArtifactContainer) rootContainer;
 
     //
     int index = qualifiedModuleName.lastIndexOf('/');
@@ -72,7 +72,7 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
     if (index != -1) {
 
       // create the group
-      parent = (AbstractAdvancedContainer) ((IGroupAndModuleContainer) rootContainer)
+      parent = (AbstractBundleMakerArtifactContainer) ((IGroupAndModuleContainer) rootContainer)
           .getOrCreateGroup(qualifiedModuleName.substring(0, index));
 
       moduleName = qualifiedModuleName.substring(index + 1);
@@ -120,20 +120,20 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
     // String[] segments = path.split("/");
 
     // add children
-    AbstractAdvancedContainer currentArtifact = getAdvancedArtifact();
+    AbstractBundleMakerArtifactContainer currentArtifact = getAdvancedArtifact();
 
     IPath iPath = new Path(path);
 
     for (int i = 0; i < iPath.segmentCount(); i++) {
 
       // try to get the child
-      AbstractAdvancedContainer newArtifact = (AbstractAdvancedContainer) currentArtifact.getChild(iPath.segment(i));
+      AbstractBundleMakerArtifactContainer newArtifact = (AbstractBundleMakerArtifactContainer) currentArtifact.getChild(iPath.segment(i));
 
       //
       if (newArtifact == null) {
 
         // create new
-        newArtifact = (AbstractAdvancedContainer) getAdvancedArtifact().getDependencyModel().createArtifactContainer(
+        newArtifact = (AbstractBundleMakerArtifactContainer) getAdvancedArtifact().getDependencyModel().createArtifactContainer(
             iPath.segment(i), iPath.removeLastSegments(iPath.segmentCount() - (i + 1)).toString(), ArtifactType.Group);
 
         // add to parent
@@ -154,7 +154,7 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
    * 
    * @return
    */
-  public AbstractAdvancedContainer getAdvancedArtifact() {
-    return (AbstractAdvancedContainer) _groupAndModuleContainer;
+  public AbstractBundleMakerArtifactContainer getAdvancedArtifact() {
+    return (AbstractBundleMakerArtifactContainer) _groupAndModuleContainer;
   }
 }

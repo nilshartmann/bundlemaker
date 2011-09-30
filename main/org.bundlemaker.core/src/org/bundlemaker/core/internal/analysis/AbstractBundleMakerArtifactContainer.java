@@ -16,40 +16,63 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractAdvancedContainer extends AbstractArtifactContainer implements IBundleMakerArtifact {
+public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtifactContainer implements
+    IBundleMakerArtifact {
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractAdvancedContainer}.
+   * Creates a new instance of type {@link AbstractBundleMakerArtifactContainer}.
    * </p>
    * 
    * @param type
    * @param name
    */
-  public AbstractAdvancedContainer(ArtifactType type, String name) {
+  public AbstractBundleMakerArtifactContainer(ArtifactType type, String name) {
     super(type, name);
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
+   * {@inheritDoc}
    */
-  protected void assertCanAdd(IArtifact artifact) {
+  @Override
+  public final boolean containsTypesOrResources() {
 
-    //
-    if (artifact == null) {
-      throw new RuntimeException("Can not add 'null' to " + this);
+    // return result
+    return containsTypes() || containsResources();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean containsTypes() {
+
+    // return 'true' if any child contains (or is) a type
+    for (IArtifact artifact : getChildren()) {
+      if (((IBundleMakerArtifact) artifact).containsTypes()) {
+        return true;
+      }
     }
 
-    //
-    String canAddMessage = handleCanAdd(artifact);
+    // otherwise return false
+    return false;
+  }
 
-    //
-    if (canAddMessage != null) {
-      throw new RuntimeException("Can not add " + artifact + " to " + this + ":\n" + canAddMessage);
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean containsResources() {
+
+    // return 'true' if any child contains (or is) a resource
+    for (IArtifact artifact : getChildren()) {
+      if (((IBundleMakerArtifact) artifact).containsResources()) {
+        return true;
+      }
     }
+
+    // otherwise return false
+    return false;
   }
 
   /**
@@ -66,17 +89,6 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @return
-   */
-  protected String handleCanAdd(IArtifact artifact) {
-    return null;
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override
@@ -89,9 +101,12 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
    */
   @Override
   public IDependencyModel getDependencyModel() {
-    return ((AbstractAdvancedContainer) getParent(ArtifactType.Root)).getDependencyModel();
+    return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public IBundleMakerArtifact getChild(String path) {
     return (IBundleMakerArtifact) super.getChild(path);
   }
@@ -133,7 +148,7 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
 
     // if the artifact has a parent, it has to be removed
     if (artifact.getParent() != null) {
-      ((AbstractAdvancedContainer) artifact.getParent()).internalRemoveArtifact(artifact);
+      ((AbstractBundleMakerArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
     }
 
     // call super
@@ -160,17 +175,36 @@ public abstract class AbstractAdvancedContainer extends AbstractArtifactContaine
     super.removeArtifact(artifact);
   }
 
-  @Override
-  public boolean containsTypesOrResources() {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  protected String handleCanAdd(IArtifact artifact) {
+    return null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  protected void assertCanAdd(IArtifact artifact) {
 
     //
-    for (IArtifact artifact : getChildren()) {
-      if (((IBundleMakerArtifact) artifact).containsTypesOrResources()) {
-        return true;
-      }
+    if (artifact == null) {
+      throw new RuntimeException("Can not add 'null' to " + this);
     }
 
     //
-    return false;
+    String canAddMessage = handleCanAdd(artifact);
+
+    //
+    if (canAddMessage != null) {
+      throw new RuntimeException("Can not add " + artifact + " to " + this + ":\n" + canAddMessage);
+    }
   }
 }

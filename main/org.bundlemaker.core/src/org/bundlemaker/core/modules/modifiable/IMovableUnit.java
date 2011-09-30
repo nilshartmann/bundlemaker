@@ -68,4 +68,6 @@ public interface IMovableUnit {
   IResource getAssociatedSourceResource();
 
   IResourceModule getContainingResourceModule();
+
+  public boolean hasContainingResourceModule();
 }

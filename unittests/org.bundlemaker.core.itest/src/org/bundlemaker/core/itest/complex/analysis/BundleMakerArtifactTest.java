@@ -30,7 +30,6 @@ public class BundleMakerArtifactTest extends AbstractJeditArtifactTest {
     Assert.assertSame(getRootArtifact(), getRootArtifact().getChild("group1").getRoot());
     Assert.assertSame(getRootArtifact(), getRootArtifact().getChild("group1|group2").getRoot());
     Assert.assertSame(getRootArtifact(), getRootArtifact().getChild("group1|group2|jedit_1.0.0").getRoot());
-    Assert.assertSame(getRootArtifact(), getRootArtifact().getChild("group1|group2|jedit_1.0.0|org").getRoot());
   }
 
   /**

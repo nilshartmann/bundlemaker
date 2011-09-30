@@ -8,9 +8,8 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.analysis.transformer;
+package org.bundlemaker.core.internal.analysis.cache;
 
-import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -101,5 +100,13 @@ public class ModulePackageKey {
     } else if (!_moduleKey.equals(other._moduleKey))
       return false;
     return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+    return "ModulePackageKey [_moduleKey=" + _moduleKey + ", _packageName=" + _packageName + "]";
   }
 }

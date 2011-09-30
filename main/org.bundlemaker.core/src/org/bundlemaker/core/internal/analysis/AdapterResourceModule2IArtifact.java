@@ -2,15 +2,15 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
-import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
-import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -22,15 +22,14 @@ import org.eclipse.core.runtime.Assert;
 public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
   /** - */
-  private DefaultArtifactCache _artifactCache;
+  private ArtifactCache _artifactCache;
 
   /**
    * <p>
    * Creates a new instance of type {@link AdapterResourceModule2IArtifact}.
    * </p>
    */
-  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IArtifact parent,
-      DefaultArtifactCache artifactCache) {
+  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IArtifact parent, ArtifactCache artifactCache) {
     super(resourceModule, parent);
 
     //
@@ -45,11 +44,6 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    */
   public void setName(String name) {
     super.setName(name);
-  }
-
-  @Override
-  public boolean containsTypesOrResources() {
-    return true;
   }
 
   /**
@@ -105,19 +99,8 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    */
   private void handleAddResource(IResourceArtifact artifact) {
 
-    // step 1: get the containing package artifact
-    IResource resource = artifact.getAssociatedResource();
-
     //
-    ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(getAssociatedModule()),
-        resource.getPackageName());
-
-    //
-    IPackageArtifact newPackageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
-        modulePackageKey);
-
-    //
-    newPackageArtifact.addArtifact(artifact);
+    AdapterUtils.addResourcesToModule(getResourceModule(), AdapterUtils.getAllMovableUnits(artifact));
   }
 
   /**
@@ -129,27 +112,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   private void handleAddPackage(IArtifact artifact) {
 
     //
-    ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(getAssociatedModule()),
-        artifact.getQualifiedName());
-
-    //
-    IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache()
-        .getOrCreate(modulePackageKey);
-
-    // move the children to the new package artifact
-    for (IArtifact child : artifact.getChildren()) {
-      if (child.getType().equals(ArtifactType.Resource) || child.getType().equals(ArtifactType.Type)) {
-        packageArtifact.addArtifact(child);
-      } else if (child.getType().equals(ArtifactType.Package)) {
-        handleAddPackage(child);
-      }
-    }
-
-    // else {
-    // super.addArtifact(packageArtifact);
-    // // TODO: TYPE CHECK??
-    // AdapterUtils.addPackageToModule(artifact, this);
-    // }
+    AdapterUtils.addResourcesToModule(getResourceModule(), AdapterUtils.getAllMovableUnits(artifact));
   }
 
   /**
@@ -190,8 +153,8 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    * 
    * @return
    */
-  public IResourceModule getResourceModule() {
-    return (IResourceModule) getModule();
+  public IModifiableResourceModule getResourceModule() {
+    return (IModifiableResourceModule) getModule();
   }
 
   /**

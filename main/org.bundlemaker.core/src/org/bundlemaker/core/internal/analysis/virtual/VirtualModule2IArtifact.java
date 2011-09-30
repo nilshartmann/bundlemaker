@@ -5,7 +5,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
+import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.modules.IModule;
 
 /**
@@ -14,7 +14,7 @@ import org.bundlemaker.core.modules.IModule;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class VirtualModule2IArtifact extends AbstractAdvancedContainer implements IModuleArtifact {
+public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContainer implements IModuleArtifact {
 
   /** - */
   private String _fullyQualifiedName;
@@ -35,7 +35,7 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
   }
 
   @Override

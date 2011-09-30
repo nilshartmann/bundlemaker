@@ -383,7 +383,8 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     if (resourceModules == null || resourceModules.isEmpty()) {
       return null;
     } else if (resourceModules.size() > 1) {
-      throw new RuntimeException("Resource is contained in multiple ResourceModules.");
+      throw new RuntimeException(String.format("Resource '%s' is contained in multiple ResourceModules: %s.", resource,
+          resourceModules));
     } else {
       return resourceModules.toArray(new IResourceModule[0])[0];
     }

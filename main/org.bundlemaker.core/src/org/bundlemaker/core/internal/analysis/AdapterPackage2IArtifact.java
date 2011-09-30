@@ -8,9 +8,9 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
-import org.bundlemaker.core.internal.analysis.transformer.ModulePackageKey;
-import org.bundlemaker.core.internal.analysis.transformer.caches.ModuleCache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implements IPackageArtifact {
+public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContainer implements IPackageArtifact {
 
   /** - */
   private String               _qualifiedName;
@@ -33,7 +33,7 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
   private boolean              _isVirtual;
 
   /** - */
-  private DefaultArtifactCache _artifactCache;
+  private ArtifactCache _artifactCache;
 
   /** - */
   private IModule              _containingModule;
@@ -47,13 +47,13 @@ public class AdapterPackage2IArtifact extends AbstractAdvancedContainer implemen
    * @param parent
    */
   public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent, boolean isVirtual, IModule containingModule,
-      DefaultArtifactCache artifactCache) {
+      ArtifactCache artifactCache) {
     super(ArtifactType.Package, _getName(qualifiedName));
 
     // set parent/children dependency
     if (parent != null) {
       setParent(parent);
-      ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+      ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
     }
 
     Assert.isNotNull(qualifiedName);

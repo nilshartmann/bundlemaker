@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.internal.analysis.DependencyModel;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -67,7 +67,7 @@ public class ModelTransformer {
     try {
 
       // create the artifact cache
-      DefaultArtifactCache artifactCache = new DefaultArtifactCache(modifiableModularizedSystem, configuration);
+      ArtifactCache artifactCache = new ArtifactCache(modifiableModularizedSystem, configuration);
 
       // create the dependency model
       DependencyModel model = new DependencyModel(modifiableModularizedSystem, artifactCache);

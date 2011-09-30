@@ -3,7 +3,7 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -26,7 +26,7 @@ public class DependencyModel implements IDependencyModel {
   private IArtifact                    _artifactModel;
 
   /** - */
-  private DefaultArtifactCache         _artifactCache;
+  private ArtifactCache         _artifactCache;
 
   /**
    * <p>
@@ -38,7 +38,7 @@ public class DependencyModel implements IDependencyModel {
    * @throws CoreException
    */
   public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
-      DefaultArtifactCache defaultArtifactCache) throws CoreException {
+      ArtifactCache defaultArtifactCache) throws CoreException {
 
     Assert.isNotNull(modifiableModularizedSystem);
     Assert.isNotNull(defaultArtifactCache);
@@ -150,7 +150,7 @@ public class DependencyModel implements IDependencyModel {
     return null;
   }
 
-  public DefaultArtifactCache getArtifactCache() {
+  public ArtifactCache getArtifactCache() {
     return _artifactCache;
   }
 }

@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractAdvancedContainer implements IModuleArtifact {
+public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContainer implements IModuleArtifact {
 
   /** the resource module */
   private IModule _module;
@@ -40,7 +40,7 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
   }
 
   @Override

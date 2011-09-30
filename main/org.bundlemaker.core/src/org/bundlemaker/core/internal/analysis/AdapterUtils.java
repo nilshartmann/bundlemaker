@@ -36,14 +36,15 @@ public class AdapterUtils {
    */
   public static IModifiableModularizedSystem getModularizedSystem(IArtifact artifact) {
 
+    //
     IArtifact root = (artifact.getType() == ArtifactType.Root ? artifact : artifact.getParent(ArtifactType.Root));
 
+    //
     Assert.isNotNull(root, "No root for :" + ArtifactUtils.artifactToString(artifact));
     Assert.isTrue(root instanceof AdapterModularizedSystem2IArtifact);
 
-    AdapterModularizedSystem2IArtifact modularizedSystem2IArtifact = (AdapterModularizedSystem2IArtifact) root;
-
-    return modularizedSystem2IArtifact.getModularizedSystem();
+    //
+    return ((AdapterModularizedSystem2IArtifact) root).getModularizedSystem();
   }
 
   /**
@@ -235,7 +236,7 @@ public class AdapterUtils {
     return result;
   }
 
-  private static List<IMovableUnit> getAllMovableUnits(IArtifact artifact) {
+  public static List<IMovableUnit> getAllMovableUnits(IArtifact artifact) {
 
     //
     List<IMovableUnit> result = new LinkedList<IMovableUnit>();
@@ -285,30 +286,35 @@ public class AdapterUtils {
    * @param resourceModule
    * @param resourceHolder
    */
-  private static void addResourcesToModule(IModifiableResourceModule resourceModule, List<IMovableUnit> movableUnits) {
+  public static void addResourcesToModule(IModifiableResourceModule resourceModule, List<IMovableUnit> movableUnits) {
 
     //
     for (IMovableUnit movableUnit : movableUnits) {
 
-      //
-      ((IModifiableResourceModule) movableUnit.getContainingResourceModule()).getModifiableSelfResourceContainer()
-          .removeMovableUnit(movableUnit);
-
-      // add the binary resources
-      resourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
+      addResourceToModule(resourceModule, movableUnit);
     }
   }
 
-  // private static void addTypesToModule(IModifiableResourceModule resourceModule, List<ITypeHolder> typeHolders) {
-  // // Get the modifiable type container
-  // IModifiableTypeContainer modifiableSelfTypeContainer = resourceModule.getModifiableSelfResourceContainer();
-  // Map<String, IType> typesMap = modifiableSelfTypeContainer.getModifiableContainedTypesMap();
-  //
-  // for (ITypeHolder typeHolder : typeHolders) {
-  // IType type = typeHolder.getAssociatedType();
-  // typesMap.put(type.getFullyQualifiedName(), type);
-  // }
-  // }
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resourceModule
+   * @param movableUnit
+   */
+  public static void addResourceToModule(IModifiableResourceModule resourceModule, IMovableUnit movableUnit) {
+
+    //
+    IModifiableResourceModule module = (IModifiableResourceModule) movableUnit.getContainingResourceModule();
+
+    System.out.println(module);
+
+    if (module != null) {
+      module.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);
+    }
+    // add the binary resources
+    resourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
+  }
 
   /**
    * <p>

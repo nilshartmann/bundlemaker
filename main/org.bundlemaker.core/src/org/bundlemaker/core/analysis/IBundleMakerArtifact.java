@@ -126,4 +126,20 @@ public interface IBundleMakerArtifact extends IArtifact {
    * @return
    */
   boolean containsTypesOrResources();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsTypes();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsResources();
 }
