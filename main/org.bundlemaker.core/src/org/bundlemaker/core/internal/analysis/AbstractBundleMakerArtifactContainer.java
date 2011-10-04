@@ -45,6 +45,23 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   /**
    * {@inheritDoc}
    */
+  public void removeFromParent() {
+    if (this.getParent() != null) {
+      this.getParent().removeArtifact(this);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasParent() {
+    return getParent() != null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public final boolean containsTypesOrResources() {
 

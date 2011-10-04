@@ -168,9 +168,9 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
 
   @Override
   public String toString() {
-    return _contentType + "_" + _resourcePresentation + "_" + prefix(_hierarchicalPackages, "Hierarchical") + "_"
-        + prefix(_aggregateInnerTypes, "AggregateTypes") + "_"
-        + prefix(_includeVirtualModuleForMissingTypes, "MissingTypes");
+    return _contentType.getShortDescription() + "_" + _resourcePresentation.getShortDescription() + "_"
+        + prefix(_hierarchicalPackages, "Hi") + "_" + prefix(_aggregateInnerTypes, "AgTy") + "_"
+        + prefix(_includeVirtualModuleForMissingTypes, "MiTy");
   }
 
   @Override

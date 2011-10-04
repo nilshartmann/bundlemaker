@@ -66,10 +66,14 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
   public void testMovableUnit() {
 
     //
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A")));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A$AA")));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B")));
-    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B$BB")));
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"),
+        getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A$AA"),
+        getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B"),
+        getModularizedSystem()));
+    assertMovableUnit(MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B$BB"),
+        getModularizedSystem()));
 
     //
     assertMovableUnit(MovableUnit.createFromResource(

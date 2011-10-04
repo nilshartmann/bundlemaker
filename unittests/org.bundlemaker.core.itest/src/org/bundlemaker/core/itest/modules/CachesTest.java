@@ -39,7 +39,8 @@ public class CachesTest extends AbstractModularizedSystemTest {
 
     // REMOVE THE TYPE
     IType type = resourceModule.getType("de.test.Klasse");
-    modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(MovableUnit.createFromType(type));
+    modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(
+        MovableUnit.createFromType(type, getModularizedSystem()));
 
     // TEST 2: remove resource 'de.test.Klasse' and check contained types
     Assert.assertEquals(1, modifiableResourceModule.getContainedTypes().size());
@@ -48,7 +49,8 @@ public class CachesTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(0, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
 
     // ADD THE TYPE
-    modifiableResourceModule.getModifiableSelfResourceContainer().addMovableUnit(MovableUnit.createFromType(type));
+    modifiableResourceModule.getModifiableSelfResourceContainer().addMovableUnit(
+        MovableUnit.createFromType(type, getModularizedSystem()));
 
     // TEST 3: check contained types
     Assert.assertEquals(2, modifiableResourceModule.getContainedTypes().size());
@@ -78,7 +80,8 @@ public class CachesTest extends AbstractModularizedSystemTest {
 
     // ADD THE TYPE
     IType type = resourceModule.getType("de.test.Klasse");
-    modifiableResourceModule.getModifiableSelfResourceContainer().addMovableUnit(MovableUnit.createFromType(type));
+    modifiableResourceModule.getModifiableSelfResourceContainer().addMovableUnit(
+        MovableUnit.createFromType(type, getModularizedSystem()));
 
     // TEST 2: check contained types
     Assert.assertEquals(2, modifiableResourceModule.getContainedTypes().size());
@@ -87,7 +90,8 @@ public class CachesTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(1, getModularizedSystem().getTypeContainingModules("de.test.Klasse").size());
 
     // REMOVE THE TYPE
-    modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(MovableUnit.createFromType(type));
+    modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(
+        MovableUnit.createFromType(type, getModularizedSystem()));
 
     // TEST 3: check contained types
     Assert.assertEquals(1, modifiableResourceModule.getContainedTypes().size());

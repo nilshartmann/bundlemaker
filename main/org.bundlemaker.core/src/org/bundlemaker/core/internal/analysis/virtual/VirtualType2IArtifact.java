@@ -74,6 +74,23 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   /**
    * {@inheritDoc}
    */
+  public void removeFromParent() {
+    if (this.getParent() != null) {
+      this.getParent().removeArtifact(this);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasParent() {
+    return getParent() != null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean containsTypesOrResources() {
     return true;

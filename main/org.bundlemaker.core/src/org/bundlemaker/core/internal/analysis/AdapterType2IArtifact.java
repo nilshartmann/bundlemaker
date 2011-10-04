@@ -84,7 +84,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     _artifactCache = defaultArtifactCache;
 
     //
-    _movableUnit = MovableUnit.createFromType(type);
+    _movableUnit = MovableUnit.createFromType(type, defaultArtifactCache.getModularizedSystem());
   }
 
   /**
@@ -93,6 +93,23 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public IArtifactModelConfiguration getArtifactModelConfiguration() {
     return getRoot().getArtifactModelConfiguration();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void removeFromParent() {
+    if (this.getParent() != null) {
+      this.getParent().removeArtifact(this);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasParent() {
+    return getParent() != null;
   }
 
   @Override

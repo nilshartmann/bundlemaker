@@ -24,4 +24,21 @@ public enum ContentType {
 
   /** binary content */
   BINARY;
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public String getShortDescription() {
+    switch (this) {
+    case SOURCE:
+      return "S";
+    case BINARY:
+      return "B";
+    default:
+      throw new RuntimeException(String.format("Unknown ContentType '%s'.", this));
+    }
+  }
 }

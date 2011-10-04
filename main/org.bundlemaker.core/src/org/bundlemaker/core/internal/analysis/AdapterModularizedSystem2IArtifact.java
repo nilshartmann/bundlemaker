@@ -95,6 +95,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<IArtifact> invalidateDependencyCache() {
     super.invalidateDependencyCache();
@@ -213,7 +216,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void movableUnitAdded(MovableUnitMovedEvent event) {
 
-    System.out.println("------------------------------------");
+    System.out.println("------movableUnitAdded------------");
     System.out.println(event.getMovableUnit());
 
     // TODO: RICHTIGE BEHANDLUNG _ SOURCE/BINARY/TYPES etc. abhängig von ModelConfiguration
@@ -265,7 +268,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void movableUnitRemoved(MovableUnitMovedEvent event) {
 
-    System.out.println("***********************************");
+    System.out.println("*******movableUnitRemoved*********");
     System.out.println(event.getMovableUnit());
 
     IMovableUnit movableUnit = event.getMovableUnit();

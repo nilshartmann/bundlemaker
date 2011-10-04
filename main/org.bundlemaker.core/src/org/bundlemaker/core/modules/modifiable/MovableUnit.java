@@ -58,11 +58,12 @@ public class MovableUnit implements IMovableUnit {
    * @param type
    * @return
    */
-  public static IMovableUnit createFromType(IType type) {
+  public static IMovableUnit createFromType(IType type, IModularizedSystem modularizedSystem) {
     Assert.isNotNull(type);
 
     MovableUnit movableUnit = new MovableUnit();
     movableUnit._mainType = type;
+    movableUnit._modularizedSystem = modularizedSystem;
 
     return movableUnit;
   }

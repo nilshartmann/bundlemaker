@@ -28,6 +28,25 @@ public interface IArtifactModelConfiguration {
 
     /** show no resources */
     NO_RESOURCE;
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public String getShortDescription() {
+      switch (this) {
+      case ALL_RESOURCES:
+        return "AlRe";
+      case ONLY_NON_TYPE_RESOURCES:
+        return "OnNoTyRe";
+      case NO_RESOURCE:
+        return "NoRe";
+      default:
+        throw new RuntimeException(String.format("Unknown ResourcePresentation '%s'.", this));
+      }
+    }
   }
 
   /** default configuration AGGREGATE_INNER_TYPES_CONFIGURATION */

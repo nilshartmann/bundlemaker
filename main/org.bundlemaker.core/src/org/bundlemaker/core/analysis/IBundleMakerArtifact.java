@@ -41,6 +41,20 @@ public interface IBundleMakerArtifact extends IArtifact {
 
   /**
    * <p>
+   * </p>
+   */
+  public void removeFromParent();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean hasParent();
+
+  /**
+   * <p>
    * Returns the root artifact for this artifact node.
    * </p>
    * 
