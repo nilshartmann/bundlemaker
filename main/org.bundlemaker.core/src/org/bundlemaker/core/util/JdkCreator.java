@@ -26,6 +26,26 @@ public class JdkCreator {
    * <p>
    * </p>
    * 
+   * @param name
+   * @return
+   * @throws CoreException
+   */
+  public static final IVMInstall getIVMInstall(String name) throws CoreException {
+
+    // asserts
+    Assert.isNotNull(name);
+
+    // get the VMInstallType
+    IVMInstallType type = JavaRuntime.getVMInstallType(ID_STANDARD_VM_TYPE);
+
+    //
+    return type.findVMInstallByName(name);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param directoryName
    * @return
    * @throws CoreException
