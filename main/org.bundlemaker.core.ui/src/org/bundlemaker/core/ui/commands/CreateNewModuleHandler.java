@@ -7,9 +7,9 @@ import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
 import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.commands.validators.NonEmptyStringValidator;
 import org.bundlemaker.core.ui.view.navigator.CommonNavigatorUtils;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -30,7 +30,7 @@ public class CreateNewModuleHandler extends AbstractBundleMakerHandler {
 
       // JFace Input Dialog
       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter Module Name", "module",
-          new LengthValidator());
+          NonEmptyStringValidator.instance());
 
       if (dlg.open() == Window.OK) {
         System.out.println(dlg.getValue());
@@ -50,22 +50,4 @@ public class CreateNewModuleHandler extends AbstractBundleMakerHandler {
     }
   }
 
-  /**
-   * This class validates a String. It makes sure that the String is between 5 and 8 characters
-   */
-  class LengthValidator implements IInputValidator {
-    /**
-     * Validates the String. Returns null for no error, or an error message
-     * 
-     * @param newText
-     *          the String to validate
-     * @return String
-     */
-    @Override
-    public String isValid(String newText) {
-
-      // Input must be OK
-      return null;
-    }
-  }
 }
