@@ -6,6 +6,7 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -44,6 +45,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   /** - */
   private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
 
+  /** - */
+  private final IArtifactModelConfiguration     _artifactModelConfiguration;
+
   /**
    * <p>
    * Creates a new instance of type {@link AdapterModule2IArtifact}.
@@ -51,15 +55,30 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
    * 
    * @param modularizedSystem
    */
-  public AdapterModularizedSystem2IArtifact(IModifiableModularizedSystem modularizedSystem) {
+  public AdapterModularizedSystem2IArtifact(IModifiableModularizedSystem modularizedSystem,
+      IArtifactModelConfiguration modelConfiguration) {
     super(ArtifactType.Root, name(modularizedSystem));
+
+    //
+    Assert.isNotNull(modelConfiguration);
 
     // set the resource module
     _modularizedSystem = modularizedSystem;
     _modularizedSystem.addModularizedSystemChangedListener(this);
 
     //
+    _artifactModelConfiguration = modelConfiguration;
+
+    //
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+    return _artifactModelConfiguration;
   }
 
   /**

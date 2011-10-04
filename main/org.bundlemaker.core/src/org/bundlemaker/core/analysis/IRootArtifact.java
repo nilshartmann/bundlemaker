@@ -2,7 +2,6 @@ package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 
 /**
  * <p>
@@ -13,8 +12,5 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
  */
 public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleContainer {
 
-  /**
-   * {@inheritDoc}
-   */
-  public IModifiableModularizedSystem getModularizedSystem();
+  // empty tag interface
 }

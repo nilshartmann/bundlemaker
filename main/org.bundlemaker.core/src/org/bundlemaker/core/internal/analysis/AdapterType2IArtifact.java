@@ -24,6 +24,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -84,6 +85,14 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     _movableUnit = MovableUnit.createFromType(type);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+    return getRoot().getArtifactModelConfiguration();
   }
 
   @Override
@@ -201,7 +210,15 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   @Override
   public IRootArtifact getRoot() {
-    return (IRootArtifact) getParent(ArtifactType.Root);
+    return (IRootArtifact) super.getParent(ArtifactType.Root);
+  }
+
+  public IBundleMakerArtifact getParent() {
+    return (IBundleMakerArtifact) super.getParent();
+  }
+
+  public IBundleMakerArtifact getParent(ArtifactType type) {
+    return (IBundleMakerArtifact) super.getParent(type);
   }
 
   @Override
@@ -211,7 +228,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public Collection<IArtifact> getChildren() {
+  public Collection<IBundleMakerArtifact> getChildren() {
     return Collections.emptySet();
   }
 

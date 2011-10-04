@@ -2,7 +2,7 @@ package org.bundlemaker.core.internal.analysis.cache.impl;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;

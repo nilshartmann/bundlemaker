@@ -10,81 +10,22 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ArtifactModelConfiguration {
-
-  /**
-   * <p>
-   * The resource presentation style.
-   * </p>
-   * 
-   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-   */
-  public enum ResourcePresentation {
-
-    /** show all resources */
-    ALL_RESOURCES,
-
-    /** show only resources that contain no types */
-    ONLY_NON_TYPE_RESOURCES,
-
-    /** show no resources */
-    NO_RESOURCE;
-  }
-
-  /** default configuration AGGREGATE_INNER_TYPES_CONFIGURATION */
-  public static final ArtifactModelConfiguration AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION = new ArtifactModelConfiguration(
-                                                                                                      false,
-                                                                                                      ResourcePresentation.NO_RESOURCE,
-                                                                                                      ContentType.BINARY,
-                                                                                                      true, false);
-
-  /** default configuration AGGREGATE_INNER_TYPES_CONFIGURATION */
-  public static final ArtifactModelConfiguration AGGREGATE_INNER_TYPES_CONFIGURATION              = new ArtifactModelConfiguration(
-                                                                                                      false,
-                                                                                                      ResourcePresentation.ONLY_NON_TYPE_RESOURCES,
-                                                                                                      ContentType.BINARY,
-                                                                                                      true, true);
-
-  /** default configuration SOURCE_RESOURCES_CONFIGURATION */
-  public static final ArtifactModelConfiguration SOURCE_RESOURCES_CONFIGURATION                   = new ArtifactModelConfiguration(
-                                                                                                      false,
-                                                                                                      ResourcePresentation.ALL_RESOURCES,
-                                                                                                      ContentType.SOURCE,
-                                                                                                      false, true);
-
-  /** default configuration BINARY_RESOURCES_CONFIGURATION */
-  public static final ArtifactModelConfiguration BINARY_RESOURCES_CONFIGURATION                   = new ArtifactModelConfiguration(
-                                                                                                      false,
-                                                                                                      ResourcePresentation.ALL_RESOURCES,
-                                                                                                      ContentType.BINARY,
-                                                                                                      false, true);
-
-  public static final ArtifactModelConfiguration HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION      = new ArtifactModelConfiguration(
-                                                                                                      true,
-                                                                                                      ResourcePresentation.ALL_RESOURCES,
-                                                                                                      ContentType.BINARY,
-                                                                                                      false, true);
-
-  public static final ArtifactModelConfiguration HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION      = new ArtifactModelConfiguration(
-                                                                                                      true,
-                                                                                                      ResourcePresentation.ALL_RESOURCES,
-                                                                                                      ContentType.SOURCE,
-                                                                                                      false, true);
+public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
 
   /** the content type to show */
-  private ContentType                            _contentType                                     = ContentType.SOURCE;
+  private ContentType          _contentType                         = ContentType.SOURCE;
 
   /** the resource presentation style */
-  private ResourcePresentation                   _resourcePresentation                            = ResourcePresentation.ALL_RESOURCES;
+  private ResourcePresentation _resourcePresentation                = ResourcePresentation.ALL_RESOURCES;
 
   /** whether the packages should be hierarchical or flat */
-  private boolean                                _hierarchicalPackages                            = false;
+  private boolean              _hierarchicalPackages                = false;
 
   /** whether to aggregate inner types or not */
-  private boolean                                _aggregateInnerTypes                             = false;
+  private boolean              _aggregateInnerTypes                 = false;
 
   /** whether to include missing types or not */
-  private boolean                                _includeVirtualModuleForMissingTypes             = false;
+  private boolean              _includeVirtualModuleForMissingTypes = false;
 
   /**
    * <p>
@@ -212,7 +153,7 @@ public class ArtifactModelConfiguration {
    * @param contentType
    * @param aggregateInnerTypes
    */
-  private ArtifactModelConfiguration(boolean hierarchical, ResourcePresentation resourcePresentation,
+  public ArtifactModelConfiguration(boolean hierarchical, ResourcePresentation resourcePresentation,
       ContentType contentType, boolean aggregateInnerTypes, boolean includeVirtualModuleForMissingTypes) {
 
     Assert.isNotNull(resourcePresentation);

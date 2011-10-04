@@ -234,5 +234,3 @@ public class DependencyGraph implements Serializable {
   }
 
 }
-
-/*--- Formatiert nach TK Code Konventionen vom 05.03.2002 ---*/

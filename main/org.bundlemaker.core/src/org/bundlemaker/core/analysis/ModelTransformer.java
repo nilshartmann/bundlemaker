@@ -48,7 +48,7 @@ public class ModelTransformer {
    * @return the {@link IDependencyModel}
    */
   public static IDependencyModel getDependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
-      ArtifactModelConfiguration configuration) {
+      IArtifactModelConfiguration configuration) {
 
     // assert not null
     Assert.isNotNull(modifiableModularizedSystem);
@@ -93,7 +93,7 @@ public class ModelTransformer {
     private IModifiableModularizedSystem _modifiableModularizedSystem;
 
     /* - */
-    private ArtifactModelConfiguration   _configuration;
+    private IArtifactModelConfiguration  _configuration;
 
     /**
      * <p>
@@ -103,7 +103,7 @@ public class ModelTransformer {
      * @param modifiableModularizedSystem
      * @param configuration
      */
-    public CacheKey(IModifiableModularizedSystem modifiableModularizedSystem, ArtifactModelConfiguration configuration) {
+    public CacheKey(IModifiableModularizedSystem modifiableModularizedSystem, IArtifactModelConfiguration configuration) {
 
       Assert.isNotNull(modifiableModularizedSystem);
       Assert.isNotNull(configuration);
@@ -128,7 +128,7 @@ public class ModelTransformer {
      * 
      * @return
      */
-    public final ArtifactModelConfiguration getConfiguration() {
+    public final IArtifactModelConfiguration getConfiguration() {
       return _configuration;
     }
 

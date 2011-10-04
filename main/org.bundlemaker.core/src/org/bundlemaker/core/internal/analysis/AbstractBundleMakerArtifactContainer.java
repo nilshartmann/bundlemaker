@@ -1,10 +1,13 @@
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.Collection;
+
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -29,6 +32,14 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    */
   public AbstractBundleMakerArtifactContainer(ArtifactType type, String name) {
     super(type, name);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+    return getRoot().getArtifactModelConfiguration();
   }
 
   /**
@@ -114,9 +125,25 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   /**
    * {@inheritDoc}
    */
+  @SuppressWarnings("unchecked")
+  public Collection<IBundleMakerArtifact> getChildren() {
+    return (Collection<IBundleMakerArtifact>) super.getChildren();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public IRootArtifact getRoot() {
-    return (IRootArtifact) getParent(ArtifactType.Root);
+    return (IRootArtifact) super.getParent(ArtifactType.Root);
+  }
+
+  public IBundleMakerArtifact getParent() {
+    return (IBundleMakerArtifact) super.getParent();
+  }
+
+  public IBundleMakerArtifact getParent(ArtifactType type) {
+    return (IBundleMakerArtifact) super.getParent(type);
   }
 
   /**

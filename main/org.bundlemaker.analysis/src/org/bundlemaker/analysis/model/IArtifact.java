@@ -5,19 +5,10 @@ import java.util.Collection;
 /**
  * <p>
  * Defines the common interface of an <i>artifact</i>. An artifact describes a part of a software system, e.g. a
- * <i>group</i>, a <i>module</i>, a <i>resource</i> or a <i>type</i>. An artifact has a type that determines which kind
- * of artifact (e.g. module, package, type) the artifact represents. It also has a name that can be displayed in a GUI.
+ * <i>group</i>, a <i>module</i>, a <i>package</i>, a <i>resource</i> or a <i>type</i>. An artifact has a type (
+ * {@link ArtifactType}) that determines which kind of artifact (e.g. module, package, type) the artifact represents. It
+ * also has a name that can be displayed in a GUI.
  * </p>
- * 
- * <p>
- * Prinzipiell wird zwischen zwei Arten von Artefakten unterschieden. Zum einen zwischen gruppierenden Artefakten, die
- * andere Artefakte als Kinder haben können sowie Primärartefakten, welche die kleinste Einheit in einem Softwaresystem
- * beschreiben.
- * 
- * <p>
- * Artefakte besitzen Abhaengigkeiten zu anderen Artefakten. Bei gruppierenden Artefakten ergeben sich die
- * Abhaengigkeiten aus den aggregierten Abhaengigkeiten ihrer Kinder. Bei Primaerartefakten werden die Abhaengigkeiten
- * direkt hinterlegt
  * 
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
@@ -160,7 +151,7 @@ public interface IArtifact {
    * 
    * @return an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
    */
-  public Collection<IArtifact> getChildren();
+  public Collection<? extends IArtifact> getChildren();
 
   /**
    * <p>
@@ -204,10 +195,6 @@ public interface IArtifact {
    *          the given artifact to this artifact.
    */
   public void addArtifact(IArtifact artifact);
-
-  // TODO: REMOVE!
-  @Deprecated
-  public void addArtifact(IArtifact artifact, boolean relinkParent);
 
   /**
    * <p>
@@ -285,4 +272,8 @@ public interface IArtifact {
   // replace with getChildren(ArtifactType)
   @Deprecated
   public Collection<IArtifact> getLeafs();
+
+  // TODO: REMOVE!
+  @Deprecated
+  public void addArtifact(IArtifact artifact, boolean relinkParent);
 }

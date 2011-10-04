@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -77,7 +77,7 @@ public interface IModularizedSystem {
    * 
    * @return
    */
-  IRootArtifact getArtifactModel(ArtifactModelConfiguration configuration);
+  IRootArtifact getArtifactModel(IArtifactModelConfiguration configuration);
 
   /**
    * <p>

@@ -11,8 +11,8 @@
 package org.bundlemaker.core.internal.analysis.cache;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
@@ -65,7 +65,7 @@ public class ArtifactCache {
   protected TypeSubCache                       _typeCache;
 
   /** - */
-  protected ArtifactModelConfiguration         _modelConfiguration;
+  protected IArtifactModelConfiguration        _modelConfiguration;
 
   /**
    * <p>
@@ -74,8 +74,8 @@ public class ArtifactCache {
    * 
    * @param modularizedSystem
    */
-  public ArtifactCache(IModifiableModularizedSystem modularizedSystem, ArtifactModelConfiguration configuration) {
-    this(modularizedSystem, new AdapterModularizedSystem2IArtifact(modularizedSystem), configuration);
+  public ArtifactCache(IModifiableModularizedSystem modularizedSystem, IArtifactModelConfiguration configuration) {
+    this(modularizedSystem, new AdapterModularizedSystem2IArtifact(modularizedSystem, configuration), configuration);
   }
 
   /**
@@ -88,7 +88,7 @@ public class ArtifactCache {
    * @param configuration
    */
   protected ArtifactCache(IModularizedSystem modularizedSystem, AbstractBundleMakerArtifactContainer rootArtifact,
-      ArtifactModelConfiguration configuration) {
+      IArtifactModelConfiguration configuration) {
 
     // assert not null
     Assert.isNotNull(modularizedSystem);
@@ -329,7 +329,7 @@ public class ArtifactCache {
    * 
    * @return
    */
-  public final ArtifactModelConfiguration getConfiguration() {
+  public final IArtifactModelConfiguration getConfiguration() {
     return _modelConfiguration;
   }
 

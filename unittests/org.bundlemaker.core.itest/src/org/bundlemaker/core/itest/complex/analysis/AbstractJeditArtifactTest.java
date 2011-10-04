@@ -10,6 +10,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -81,8 +82,8 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
   }
 
-  public ArtifactModelConfiguration getArtifactModelConfiguration() {
-    return ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
+  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+    return IArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
   }
 
   /**

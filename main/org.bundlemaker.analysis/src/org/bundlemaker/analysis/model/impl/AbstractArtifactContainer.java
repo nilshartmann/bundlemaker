@@ -246,7 +246,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Collection<IArtifact> getChildren() {
+  public Collection<? extends IArtifact> getChildren() {
     return Collections.unmodifiableCollection(new LinkedList<IArtifact>(children));
   }
 

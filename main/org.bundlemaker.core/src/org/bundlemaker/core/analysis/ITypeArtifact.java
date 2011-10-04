@@ -15,10 +15,10 @@ public interface ITypeArtifact extends IBundleMakerArtifact, IMovableUnit {
 
   /**
    * <p>
-   * Returns the IType that is hold by this {@link ITypeArtifact}.
+   * Returns the {@link IType} that is hold by this {@link ITypeArtifact}.
    * </p>
    * 
-   * @return the IType that is hold by this {@link ITypeArtifact}.
+   * @return the {@link IType} that is hold by this {@link ITypeArtifact}.
    */
   IType getAssociatedType();
 }

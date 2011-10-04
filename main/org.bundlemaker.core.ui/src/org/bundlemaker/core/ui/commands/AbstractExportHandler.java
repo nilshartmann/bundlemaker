@@ -12,7 +12,6 @@ package org.bundlemaker.core.ui.commands;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -141,8 +140,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
       return;
     }
 
-    Collection<IArtifact> children = artifact.getChildren();
-    for (IArtifact iArtifact : children) {
+    for (IArtifact iArtifact : artifact.getChildren()) {
       if (iArtifact instanceof IBundleMakerArtifact) {
         addModules(moduleFilter, iArtifact);
       }

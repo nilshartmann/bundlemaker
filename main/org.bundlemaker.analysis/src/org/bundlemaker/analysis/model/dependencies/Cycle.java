@@ -109,5 +109,3 @@ public class Cycle implements Cloneable {
   }
 
 }
-
-/*--- Formatiert nach TK Code Konventionen vom 05.03.2002 ---*/

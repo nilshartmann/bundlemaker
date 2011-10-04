@@ -21,6 +21,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -60,6 +61,14 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
 
     _fullyQualifiedName = fullyQualifiedName;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+    return getRoot().getArtifactModelConfiguration();
   }
 
   /**
@@ -176,8 +185,16 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public Collection<IArtifact> getChildren() {
+  public Collection<IBundleMakerArtifact> getChildren() {
     return Collections.emptySet();
+  }
+
+  public IBundleMakerArtifact getParent() {
+    return (IBundleMakerArtifact) getParent();
+  }
+
+  public IBundleMakerArtifact getParent(ArtifactType type) {
+    return (IBundleMakerArtifact) getParent(type);
   }
 
   @Override

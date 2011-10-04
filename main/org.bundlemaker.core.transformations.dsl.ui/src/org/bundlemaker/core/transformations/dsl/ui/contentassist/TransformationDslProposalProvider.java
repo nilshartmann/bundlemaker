@@ -180,8 +180,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
       }
     }
 
-    Collection<IArtifact> children = root.getChildren();
-    for (IArtifact iArtifact : children) {
+    for (IArtifact iArtifact : root.getChildren()) {
       addPackageProposals(iArtifact, ignoredResources, context, acceptor);
     }
   }
@@ -232,8 +231,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
       return null;
     }
 
-    Collection<IArtifact> children = root.getChildren();
-    for (IArtifact iArtifact : children) {
+    for (IArtifact iArtifact : root.getChildren()) {
       IArtifact moduleArtifact = getModuleArtifact(iArtifact, qualifedModuleName);
       if (moduleArtifact != null) {
         return moduleArtifact;

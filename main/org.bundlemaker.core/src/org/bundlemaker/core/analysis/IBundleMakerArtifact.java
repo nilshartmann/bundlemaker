@@ -1,8 +1,10 @@
 package org.bundlemaker.core.analysis;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
@@ -10,7 +12,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 
 /**
  * <p>
- * Abstract interface for artifacts with additional methods.
+ * Common interface for all nodes in a BundleMaker artifact tree.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -22,25 +24,46 @@ public interface IBundleMakerArtifact extends IArtifact {
    */
   IBundleMakerArtifact getChild(String path);
 
-  //
-  // /**
-  // * {@inheritDoc}
-  // */
-  // public IBundleMakerArtifact getParent();
-  //
-  // /**
-  // * {@inheritDoc}
-  // */
-  // public IBundleMakerArtifact getParent(ArtifactType type);
-  //
-  // /**
-  // * <p>
-  // * Returns an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
-  // * </p>
-  // *
-  // * @return an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
-  // */
-  // public Collection<IBundleMakerArtifact> getChildrenAsBundleMakerArtifacts();
+  /**
+   * {@inheritDoc}
+   */
+  public Collection<IBundleMakerArtifact> getChildren();
+
+  /**
+   * {@inheritDoc}
+   */
+  public IBundleMakerArtifact getParent();
+
+  /**
+   * {@inheritDoc}
+   */
+  public IBundleMakerArtifact getParent(ArtifactType type);
+
+  /**
+   * <p>
+   * Returns the root artifact for this artifact node.
+   * </p>
+   * 
+   * @return the root artifact.
+   */
+  IRootArtifact getRoot();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IArtifactModelConfiguration getArtifactModelConfiguration();
+
+  /**
+   * <p>
+   * Returns the {@link IModularizedSystem} this artifact belongs to.
+   * </p>
+   * 
+   * @return the modularized system, never null
+   */
+  IModularizedSystem getModularizedSystem();
 
   /**
    * <p>
@@ -71,21 +94,27 @@ public interface IBundleMakerArtifact extends IArtifact {
 
   /**
    * <p>
-   * Returns the root artifact.
    * </p>
    * 
-   * @return the root artifact.
+   * @return
    */
-  IRootArtifact getRoot();
+  boolean containsTypesOrResources();
 
   /**
    * <p>
-   * Returns the {@link IModularizedSystem} this artifact belongs to.
    * </p>
    * 
-   * @return the modularized system, never null
+   * @return
    */
-  IModularizedSystem getModularizedSystem();
+  boolean containsTypes();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsResources();
 
   /**
    * <p>
@@ -118,28 +147,4 @@ public interface IBundleMakerArtifact extends IArtifact {
    * @return
    */
   Map<IArtifact, IDependency> getCachedDependencies();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean containsTypesOrResources();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean containsTypes();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean containsResources();
 }
