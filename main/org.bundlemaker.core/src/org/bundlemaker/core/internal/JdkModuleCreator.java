@@ -20,8 +20,8 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
+import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.LibraryLocation;
@@ -41,7 +41,7 @@ public class JdkModuleCreator {
       String jre = modularizedSystem.getBundleMakerProject().getProjectDescription().getJRE();
 
       // get the vm install (has to exist exist)
-      IVMInstall vmInstall = JavaRuntime.getVMInstall(new Path(jre));
+      IVMInstall vmInstall = JdkCreator.getIVMInstall(jre);
 
       // create virtual modules for the vms
       return createModuleForVMInstall(vmInstall, modularizedSystem);

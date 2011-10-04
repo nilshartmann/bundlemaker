@@ -96,12 +96,10 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
     if (types.size() > 1) {
 
       //
-      if (referencingModule != null) {
-        for (ITypeSelector moduleSelector : _moduleSelectors) {
-          IType type = moduleSelector.selectType(referencingModule, fullyQualifiedName, types);
-          if (type != null) {
-            return type;
-          }
+      for (ITypeSelector moduleSelector : _moduleSelectors) {
+        IType type = moduleSelector.selectType(referencingModule, fullyQualifiedName, types);
+        if (type != null) {
+          return type;
         }
       }
 
