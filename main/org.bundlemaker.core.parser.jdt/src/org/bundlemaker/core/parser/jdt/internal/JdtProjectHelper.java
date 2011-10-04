@@ -17,6 +17,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -63,7 +64,7 @@ public class JdtProjectHelper {
       List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
 
       // step 3.1: add the vm path
-      IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+      IVMInstall vmInstall = JdkCreator.getIVMInstall(project.getProjectDescription().getJRE());
       IPath path = JavaRuntime.newJREContainerPath(vmInstall);
       IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
       entries.add(classpathEntry);

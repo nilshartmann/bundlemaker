@@ -401,8 +401,7 @@ public interface IModularizedSystem {
    * @param referencesFilter
    * @return
    */
-  IReferencedModulesQueryResult getReferencedModules(IResourceModule resourceModule,
-      IQueryFilter<IReference> referencesFilter);
+  IReferencedModulesQueryResult getReferencedModules(IResourceModule resourceModule);
 
   /**
    * <p>
@@ -412,8 +411,7 @@ public interface IModularizedSystem {
    * @param referencesFilter
    * @return
    */
-  IReferencedModulesQueryResult getTransitiveReferencedModules(IResourceModule resourceModule,
-      IQueryFilter<IReference> referencesFilter);
+  IReferencedModulesQueryResult getTransitiveReferencedModules(IResourceModule resourceModule);
 
   /**
    * <p>

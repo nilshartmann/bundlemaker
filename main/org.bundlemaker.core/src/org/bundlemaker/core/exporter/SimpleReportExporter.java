@@ -126,11 +126,20 @@ public class SimpleReportExporter extends AbstractExporter {
 
     builder.append("\n");
     builder.append("Referenced Modules: \n");
-    IReferencedModulesQueryResult queryResult = getCurrentModularizedSystem().getReferencedModules(getCurrentModule(),
-        null);
+    IReferencedModulesQueryResult queryResult = getCurrentModularizedSystem().getReferencedModules(getCurrentModule());
 
     for (IModule referencedModule : queryResult.getReferencedModules()) {
       builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
+    }
+    subMonitor.worked(1);
+
+    builder.append("\n");
+    builder.append("Transitive referenced modules: \n");
+    Set<IModule> referencedModules = getCurrentModularizedSystem().getTransitiveReferencedModules(getCurrentModule())
+        .getReferencedModules();
+
+    for (IModule referencedModule : referencedModules) {
+      builder.append("  " + referencedModule.getModuleIdentifier().toString() + "\n");
     }
     subMonitor.worked(1);
 
