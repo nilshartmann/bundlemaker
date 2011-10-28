@@ -22,6 +22,9 @@ import org.eclipse.core.runtime.Assert;
 public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtifactContainer implements
     IBundleMakerArtifact {
 
+  /** - */
+  private IRootArtifact _root;
+
   /**
    * <p>
    * Creates a new instance of type {@link AbstractBundleMakerArtifactContainer}.
@@ -57,6 +60,27 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   @Override
   public boolean hasParent() {
     return getParent() != null;
+  }
+
+  @Override
+  public void setParent(IArtifact parent) {
+    super.setParent(parent);
+    getRoot();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IRootArtifact getRoot() {
+
+    //
+    if (_root == null) {
+      _root = (IRootArtifact) getParent(ArtifactType.Root);
+    }
+
+    //
+    return _root;
   }
 
   /**
@@ -145,14 +169,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   @SuppressWarnings("unchecked")
   public Collection<IBundleMakerArtifact> getChildren() {
     return (Collection<IBundleMakerArtifact>) super.getChildren();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IRootArtifact getRoot() {
-    return (IRootArtifact) super.getParent(ArtifactType.Root);
   }
 
   public IBundleMakerArtifact getParent() {

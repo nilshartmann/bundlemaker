@@ -42,12 +42,6 @@ public interface IBundleMakerArtifact extends IArtifact {
   /**
    * <p>
    * </p>
-   */
-  public void removeFromParent();
-
-  /**
-   * <p>
-   * </p>
    * 
    * @return
    */

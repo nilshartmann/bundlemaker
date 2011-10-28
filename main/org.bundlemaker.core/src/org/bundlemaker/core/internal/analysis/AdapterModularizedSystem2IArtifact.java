@@ -15,6 +15,7 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
+import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
@@ -47,6 +48,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
 
   /** - */
   private final IArtifactModelConfiguration     _artifactModelConfiguration;
+
+  /** - */
+  private CurrentAction                         _currentAction = null;
 
   /**
    * <p>
@@ -179,8 +183,15 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
 
     Assert.isNotNull(artifact);
 
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
+        (IBundleMakerArtifact) artifact, ChangeAction.REMOVED));
+
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
+    if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
+      internalRemoveArtifact(artifact);
+    }
+
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);
 
     // return super.removeArtifact(artifact);
     return true;
@@ -299,6 +310,8 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void moduleAdded(ModuleMovedEvent event) {
 
+    System.out.println("moduleAdded" + event.getModule());
+
     //
     ModuleSubCache moduleCache = _dependencyModel.getArtifactCache().getModuleCache();
 
@@ -313,16 +326,30 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void moduleRemoved(ModuleMovedEvent event) {
 
     //
-    AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _dependencyModel.getArtifactCache()
-        .getModuleCache().get(new ModuleKey(event.getModule()));
+    if (hasCurrentAction() && getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
+        && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
 
-    //
-    if (moduleArtifact != null) {
-      ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
+      //
+      ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalRemoveArtifact(getCurrentAction()
+          .getChild());
+
+    } else {
+
+      //
+      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _dependencyModel.getArtifactCache()
+          .getModuleCache().get(new ModuleKey(event.getModule()));
+
+      //
+      if (moduleArtifact != null) {
+        ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
+      }
     }
   }
 
@@ -351,6 +378,36 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     } else {
       internalAddArtifact(moduleArtifact);
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public CurrentAction getCurrentAction() {
+    return _currentAction;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param currentAction
+   */
+  public void setCurrentAction(CurrentAction currentAction) {
+    _currentAction = currentAction;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param currentAction
+   */
+  public boolean hasCurrentAction() {
+    return _currentAction != null;
   }
 
   /**

@@ -60,6 +60,8 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   /** - */
   private IMovableUnit                _movableUnit;
 
+  private IRootArtifact               _root;
+
   /**
    * <p>
    * </p>
@@ -222,12 +224,29 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return _type.getFullyQualifiedName();
   }
 
+  @Override
+  public void setParent(IArtifact parent) {
+
+    //
+    super.setParent(parent);
+
+    //
+    getRoot();
+  }
+
   /**
    * {@inheritDoc}
    */
   @Override
   public IRootArtifact getRoot() {
-    return (IRootArtifact) super.getParent(ArtifactType.Root);
+
+    //
+    if (_root == null) {
+      _root = (IRootArtifact) getParent(ArtifactType.Root);
+    }
+
+    //
+    return _root;
   }
 
   public IBundleMakerArtifact getParent() {

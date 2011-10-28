@@ -41,7 +41,10 @@ import org.eclipse.core.runtime.Assert;
 public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact {
 
   /** - */
-  private String _fullyQualifiedName;
+  private String        _fullyQualifiedName;
+
+  /** - */
+  private IRootArtifact _root;
 
   /**
    * <p>
@@ -183,12 +186,29 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return _fullyQualifiedName;
   }
 
+  @Override
+  public void setParent(IArtifact parent) {
+
+    //
+    super.setParent(parent);
+
+    //
+    getRoot();
+  }
+
   /**
    * {@inheritDoc}
    */
   @Override
   public IRootArtifact getRoot() {
-    return (IRootArtifact) getParent(ArtifactType.Root);
+
+    //
+    if (_root == null) {
+      _root = (IRootArtifact) getParent(ArtifactType.Root);
+    }
+
+    //
+    return _root;
   }
 
   @Override
@@ -207,11 +227,11 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   public IBundleMakerArtifact getParent() {
-    return (IBundleMakerArtifact) getParent();
+    return (IBundleMakerArtifact) super.getParent();
   }
 
   public IBundleMakerArtifact getParent(ArtifactType type) {
-    return (IBundleMakerArtifact) getParent(type);
+    return (IBundleMakerArtifact) super.getParent(type);
   }
 
   @Override

@@ -23,6 +23,7 @@ import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.ModuleMovedEvent;
 import org.bundlemaker.core.modules.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
@@ -333,7 +334,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    // fireEvent();
+    fireModuleChanged(resourceModule, ChangeAction.REMOVED);
   }
 
   @Override
@@ -447,8 +448,20 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * <p>
    * </p>
    */
-  public void fireModuleChanged() {
+  public void fireModuleChanged(IModule module, ChangeAction changeAction) {
 
+    //
+    ModuleMovedEvent event = new ModuleMovedEvent(module, changeAction);
+
+    //
+    for (IModularizedSystemChangedListener listener : _changedListeners) {
+
+      if (ChangeAction.ADDED.equals(changeAction)) {
+        listener.moduleAdded(event);
+      } else if (ChangeAction.REMOVED.equals(changeAction)) {
+        listener.moduleRemoved(event);
+      }
+    }
   }
 
   /**

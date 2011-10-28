@@ -11,6 +11,7 @@ import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.modules.ChangeAction;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -159,10 +160,15 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
 
     Assert.isNotNull(artifact);
 
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
+        (IBundleMakerArtifact) artifact, ChangeAction.REMOVED));
+
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
       internalRemoveArtifact(artifact);
     }
+
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);
 
     return true;
   }

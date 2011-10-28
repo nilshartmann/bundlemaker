@@ -44,6 +44,10 @@ public class JdkModuleCreator {
       // get the vm install (has to exist exist)
       IVMInstall vmInstall = JdkCreator.getIVMInstall(jre);
 
+      if (vmInstall == null) {
+        vmInstall = JavaRuntime.getDefaultVMInstall();
+      }
+
       // create virtual modules for the vms
       return createModuleForVMInstall(vmInstall, modularizedSystem);
 

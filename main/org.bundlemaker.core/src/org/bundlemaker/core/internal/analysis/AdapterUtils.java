@@ -6,6 +6,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
@@ -37,7 +38,7 @@ public class AdapterUtils {
   public static IModifiableModularizedSystem getModularizedSystem(IArtifact artifact) {
 
     //
-    IArtifact root = (artifact.getType() == ArtifactType.Root ? artifact : artifact.getParent(ArtifactType.Root));
+    IArtifact root = ((IBundleMakerArtifact) artifact).getRoot();
 
     //
     Assert.isNotNull(root, "No root for :" + ArtifactUtils.artifactToString(artifact));
