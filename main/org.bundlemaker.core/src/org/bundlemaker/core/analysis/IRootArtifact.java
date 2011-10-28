@@ -5,7 +5,8 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 
 /**
  * <p>
- * Defines an {@link IArtifact IArtifacts} that holds an {@link IModularizedSystem} instance.
+ * Defines the root {@link IArtifact IArtifacts} that holds the {@link IModularizedSystem} instance. The root artifact
+ * can contain group and modules ad therefore extends the interface {@link IGroupAndModuleContainer}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
