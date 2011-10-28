@@ -35,7 +35,13 @@ import org.junit.Test;
 public abstract class AbstractModularizedSystemChangedTest extends AbstractJeditTest {
 
   /** - */
-  private List _events;
+  private List                        _events;
+
+  /** - */
+  protected IRootArtifact             _rootArtifact;
+
+  /** - */
+  protected IModifiableResourceModule _resourceModule;
 
   /**
    * <p>
@@ -84,6 +90,35 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
 
     // prepare
     _events = new LinkedList();
+
+    //
+    _rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+    Assert.assertNotNull(_rootArtifact);
+
+    //
+    _resourceModule = getModularizedSystem().getModifiableResourceModule(new ModuleIdentifier("jedit", "1.0.0"));
+    Assert.assertNotNull(_resourceModule);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IRootArtifact getRootArtifact() {
+    return _rootArtifact;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IModifiableResourceModule getResourceModule() {
+    return _resourceModule;
   }
 
   /**

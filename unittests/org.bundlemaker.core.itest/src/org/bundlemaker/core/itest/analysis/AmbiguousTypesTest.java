@@ -6,8 +6,7 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.junit.Assert;
@@ -29,8 +28,8 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     getModularizedSystem().getTypeSelectors().add(selector);
 
     // get the root artifact
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
-        ArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION).getRoot();
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
     // get the 'test' artifact
