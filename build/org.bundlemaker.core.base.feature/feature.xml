@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="org.bundlemaker.core.feature"
-      label="org.bundlemaker.core.feature"
+      id="org.bundlemaker.core.base.feature"
+      label="org.bundlemaker.core.base.feature"
       version="1.0.0.qualifier"
       provider-name="BundleMaker project team">
 
@@ -212,25 +212,8 @@ Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
 
-   <url>
-      <discovery label="XText-Update-Site" url="http://download.eclipse.org//modeling/tmf/xtext/updates"/>
-      <discovery label="EMF-Update-Site" url="http://download.eclipse.org//modeling/emf/updates/releases/"/>
-   </url>
-
-   <includes
-         id="org.bundlemaker.org.drools.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.bundlemaker.org.springsource.bundlor.feature"
-         version="0.0.0"/>
-
    <includes
          id="org.bundlemaker.com.db4o.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.bundlemaker.core.base.feature"
          version="0.0.0"/>
 
    <requires>
@@ -242,35 +225,28 @@ litigation.
    </requires>
 
    <plugin
-         id="org.bundlemaker.core.osgi"
+         id="org.bundlemaker.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.transformations.dsl"
+         id="org.bundlemaker.core.parser.bytecode"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.transformations.dsl.ui"
+         id="org.bundlemaker.core.parser.jdt"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.com.springsource.util.osgi.internal"
+         id="org.bundlemaker.core.store.db4o"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -278,29 +254,14 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="com.springsource.slf4j.api"
+         id="org.bundlemaker.core.transformations"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="com.springsource.slf4j.simple"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.analysis.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.analysis.ui.dsmview"
+         id="org.bundlemaker.analysis"
          download-size="0"
          install-size="0"
          version="0.0.0"

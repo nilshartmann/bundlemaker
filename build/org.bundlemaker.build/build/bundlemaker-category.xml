@@ -3,6 +3,9 @@
    <feature url="features/org.bundlemaker.core.feature_1.0.0.qualifier.jar" id="org.bundlemaker.core.feature" version="1.0.0.qualifier">
       <category name="BundleMaker"/>
    </feature>
+   <feature url="features/org.bundlemaker.core.base.feature_1.0.0.qualifier.jar" id="org.bundlemaker.core.feature.base" version="1.0.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>
    <feature url="features/org.bundlemaker.org.drools.feature_5.1.1.jar" id="org.bundlemaker.org.drools.feature" version="5.1.1">
       <category name="BundleMaker Dependencies"/>
    </feature>
