@@ -25,6 +25,16 @@
 		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences"
 		              debug="true" />
 
+		<!-- Javadoc -->
+		<javadoc destdir="${bundlemaker-deploy-dir}/javadoc" executable="${jdk16.dir}/bin/javadoc" useexternalfile="true">
+			<fileset dir="${bundlemaker-workspace}/main/">
+				<include name="*/src/**/*.java" />
+				
+				<!-- transformations.dsl.ui make javadoc fail -->
+				<exclude name="org.bundlemaker.core.transformations.dsl.ui/src/**/*.java" />
+			</fileset>
+		</javadoc>
+		
 		<!-- -->
 		<createP2Repo eclipseDir="${eclipse.install.dir}"
 		              sourceDir="${bundlemaker-deploy-dir}/bundlemaker"
