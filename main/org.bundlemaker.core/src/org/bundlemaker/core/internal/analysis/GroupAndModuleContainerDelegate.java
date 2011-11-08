@@ -1,13 +1,15 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -29,7 +31,7 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
    */
   public GroupAndModuleContainerDelegate(IGroupAndModuleContainer groupAndModuleContainer) {
     Assert.isNotNull(groupAndModuleContainer);
-    Assert.isTrue(groupAndModuleContainer instanceof IAdvancedArtifact);
+    Assert.isTrue(groupAndModuleContainer instanceof IBundleMakerArtifact);
 
     _groupAndModuleContainer = groupAndModuleContainer;
   }
@@ -49,11 +51,11 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
     // /m1
     // m1
 
-    // normalize
+    // step 1: normalize the qualified module name
     qualifiedModuleName = qualifiedModuleName.replace('\\', '/');
 
-    // check if absolute
-    IAdvancedArtifact rootContainer = getAdvancedArtifact();
+    // step 2: check if absolute
+    IBundleMakerArtifact rootContainer = getAdvancedArtifact();
     if (qualifiedModuleName.startsWith("/")) {
       qualifiedModuleName = qualifiedModuleName.substring(1);
       rootContainer = rootContainer.getRoot();
@@ -61,15 +63,18 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
 
     //
     String moduleName = qualifiedModuleName;
-    IAdvancedArtifact parent = rootContainer;
+    AbstractBundleMakerArtifactContainer parent = (AbstractBundleMakerArtifactContainer) rootContainer;
 
     //
     int index = qualifiedModuleName.lastIndexOf('/');
 
     //
     if (index != -1) {
+
       // create the group
-      parent = ((IGroupAndModuleContainer) rootContainer).getOrCreateGroup(qualifiedModuleName.substring(0, index));
+      parent = (AbstractBundleMakerArtifactContainer) ((IGroupAndModuleContainer) rootContainer)
+          .getOrCreateGroup(qualifiedModuleName.substring(0, index));
+
       moduleName = qualifiedModuleName.substring(index + 1);
     }
 
@@ -84,9 +89,15 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
       moduleArtifact = (IModuleArtifact) getAdvancedArtifact().getDependencyModel().createArtifactContainer(
           moduleIdentifier.toString(), moduleIdentifier.toString(), ArtifactType.Module);
 
+      // TEST
+      rootContainer.getRoot().getChild("groupTest1");
+
       //
       parent.addArtifact(moduleArtifact);
     }
+
+    // TEST
+    rootContainer.getRoot().getChild("groupTest1");
 
     //
     return moduleArtifact;
@@ -100,29 +111,35 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
 
     Assert.isNotNull(path);
 
+    System.out.println("getOrCreateGroup " + path);
+
     // normalize
     path = path.replace('\\', '/');
 
-    // split
-    String[] segments = path.split("/");
+    // // split
+    // String[] segments = path.split("/");
 
     // add children
-    IAdvancedArtifact currentArtifact = getAdvancedArtifact();
+    AbstractBundleMakerArtifactContainer currentArtifact = getAdvancedArtifact();
 
-    //
-    for (String segment : segments) {
+    IPath iPath = new Path(path);
+
+    for (int i = 0; i < iPath.segmentCount(); i++) {
 
       // try to get the child
-      IAdvancedArtifact newArtifact = (IAdvancedArtifact) currentArtifact.getChild(segment);
+      AbstractBundleMakerArtifactContainer newArtifact = (AbstractBundleMakerArtifactContainer) currentArtifact.getChild(iPath.segment(i));
 
+      //
       if (newArtifact == null) {
 
         // create new
-        newArtifact = (IAdvancedArtifact) getAdvancedArtifact().getDependencyModel().createArtifactContainer(segment,
-            "", ArtifactType.Group);
+        newArtifact = (AbstractBundleMakerArtifactContainer) getAdvancedArtifact().getDependencyModel().createArtifactContainer(
+            iPath.segment(i), iPath.removeLastSegments(iPath.segmentCount() - (i + 1)).toString(), ArtifactType.Group);
 
         // add to parent
-        currentArtifact.addArtifact(newArtifact);
+        if (newArtifact.getParent() != currentArtifact) {
+          currentArtifact.addArtifact(newArtifact);
+        }
       }
 
       currentArtifact = newArtifact;
@@ -131,7 +148,13 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
     return (IGroupArtifact) currentArtifact;
   }
 
-  public IAdvancedArtifact getAdvancedArtifact() {
-    return (IAdvancedArtifact) _groupAndModuleContainer;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public AbstractBundleMakerArtifactContainer getAdvancedArtifact() {
+    return (AbstractBundleMakerArtifactContainer) _groupAndModuleContainer;
   }
 }

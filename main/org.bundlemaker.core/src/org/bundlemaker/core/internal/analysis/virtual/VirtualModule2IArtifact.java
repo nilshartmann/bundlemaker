@@ -2,12 +2,10 @@ package org.bundlemaker.core.internal.analysis.virtual;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractAdvancedContainer;
-import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.modules.IModule;
 
 /**
@@ -16,7 +14,7 @@ import org.bundlemaker.core.modules.IModule;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class VirtualModule2IArtifact extends AbstractAdvancedContainer implements IModuleArtifact {
+public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContainer implements IModuleArtifact {
 
   /** - */
   private String _fullyQualifiedName;
@@ -37,7 +35,7 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
   }
 
   @Override
@@ -48,8 +46,6 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
   @Override
   public void setNameAndVersion(String name, String version) {
     super.setName(name);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   @Override
@@ -78,6 +74,17 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
     return "Can not artifacts to virtual modules.";
   }
 
+  @Override
+  protected void onRemoveArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onRemoveArtifact");
+
+  }
+
+  @Override
+  protected void onAddArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onAddArtifact");
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -88,7 +95,7 @@ public class VirtualModule2IArtifact extends AbstractAdvancedContainer implement
     if (visitor.visit(this)) {
       //
       for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+        ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }

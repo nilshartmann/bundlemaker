@@ -2,9 +2,8 @@ package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.commands.validators.NonEmptyStringValidator;
@@ -37,12 +36,9 @@ public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
         System.out.println(dlg.getValue());
       }
 
-      System.out.println(artifact);
-
-      IAdvancedArtifact advancedArtifact = ((IAdvancedArtifact) artifact);
-      IDependencyModel dependencyModel = advancedArtifact.getDependencyModel();
-      IArtifact newGroup = dependencyModel.createArtifactContainer(dlg.getValue(), dlg.getValue(), ArtifactType.Group);
-      advancedArtifact.addArtifact(newGroup);
+	  // we have to use "getOrCreateGroup" to prevent duplicate groups	
+      IGroupAndModuleContainer advancedArtifact = ((IGroupAndModuleContainer) artifact);
+      advancedArtifact.getOrCreateGroup(dlg.getValue());
 
       // update navigator
       // TODO

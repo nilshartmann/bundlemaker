@@ -3,9 +3,8 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.IModule;
@@ -18,7 +17,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractAdvancedContainer implements IModuleArtifact {
+public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContainer implements IModuleArtifact {
 
   /** the resource module */
   private IModule _module;
@@ -41,7 +40,18 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+  }
+
+  @Override
+  protected void onRemoveArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onRemoveArtifact");
+
+  }
+
+  @Override
+  protected void onAddArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onAddArtifact");
   }
 
   @Override
@@ -63,8 +73,6 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     ((AbstractModule<?, ?>) _module).setModuleIdentifier(new ModuleIdentifier(name, version));
 
     super.setName(name);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**
@@ -105,7 +113,7 @@ public class AdapterModule2IArtifact extends AbstractAdvancedContainer implement
     if (visitor.visit(this)) {
       //
       for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+        ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }

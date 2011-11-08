@@ -25,12 +25,6 @@ import org.junit.Test;
  */
 public class GroupAndModuleContainerTest extends AbstractJeditArtifactTest {
 
-  /**
-   * <p>
-   * Creates a new group 'testGroup' (below root) and adds the 'Jedit' module to it without removing it from its parent.
-   * It must be automatically removed from its former parent.
-   * </p>
-   */
   @Test
   public void testAddModuleWithoutRemove() {
 
@@ -38,8 +32,15 @@ public class GroupAndModuleContainerTest extends AbstractJeditArtifactTest {
     IRootArtifact rootArtifact = (IRootArtifact) getRootArtifact();
 
     //
+    assertNull("Group 'groupTest1' does not exist!", rootArtifact.getChild("groupTest1"));
     IModuleArtifact moduleArtifact = rootArtifact.getOrCreateModule("groupTest1/groupTest2/MyModule", "1.0.0");
     assertNotNull(moduleArtifact);
+    assertNotNull("Group 'groupTest1' does not exist!", rootArtifact.getChild("groupTest1"));
+    assertNotNull("Group 'groupTest1|groupTest2' does not exist!", rootArtifact.getChild("groupTest1|groupTest2"));
+    assertNotNull("Group 'groupTest1|groupTest2|MyModule_1.0.0' does not exist!", rootArtifact.getChild("groupTest1|groupTest2|MyModule_1.0.0"));
+    
+    assertNotNull(moduleArtifact.getParent());
+    assertEquals("groupTest2", moduleArtifact.getParent().getName());
     assertEquals("groupTest1/groupTest2/MyModule_1.0.0", moduleArtifact.getQualifiedName());
     
     IModuleArtifact module2Artifact = rootArtifact.getOrCreateModule("groupTest1/groupTest2/MyModule", "1.0.0");

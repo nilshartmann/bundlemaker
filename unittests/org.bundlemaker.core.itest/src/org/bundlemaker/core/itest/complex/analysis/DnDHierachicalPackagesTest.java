@@ -1,9 +1,8 @@
 package org.bundlemaker.core.itest.complex.analysis;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -48,7 +47,7 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
     //
     // Assert.assertEquals(jeditOriginalContent, ArtifactUtils.artifactToString(getJeditModuleArtifact()));
   }
-  
+
   @Test
   public void testMovePackageWithTypesAndResources() {
 
@@ -60,16 +59,16 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
     Assert.assertNotNull(testModule);
 
     String packagePath = "org|gjt|sp|util";
-    
+
     //
     Assert.assertNotNull(getJeditModuleArtifact().getChild(packagePath));
     Assert.assertNull(testModule.getChild(packagePath));
     testModule.addArtifact(getJeditModuleArtifact().getChild(packagePath));
     // Assert.assertNull(getJeditModuleArtifact().getChild("org|gjt|sp|jedit"));
     // Assert.assertNotNull(testModule.getChild("org|gjt|sp|jedit"));
-//    getJeditModuleArtifact().addArtifact(testModule.getChild(packagePath));
+    // getJeditModuleArtifact().addArtifact(testModule.getChild(packagePath));
     ArtifactUtils.dumpArtifact(testModule);
-//    ArtifactUtils.dumpArtifact(getJeditModuleArtifact());
+    // ArtifactUtils.dumpArtifact(getJeditModuleArtifact());
     // Assert.assertNotNull(getJeditModuleArtifact().getChild("org|gjt|sp|jedit"));
     // Assert.assertNull(testModule.getChild("org|gjt|sp|jedit"));
 
@@ -81,7 +80,7 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
   }
 
   @Override
-  public ArtifactModelConfiguration getArtifactModelConfiguration() {
-    return ArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION;
+  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+    return IArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION;
   }
 }

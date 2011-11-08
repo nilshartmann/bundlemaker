@@ -3,12 +3,13 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -25,7 +26,7 @@ public class DependencyModel implements IDependencyModel {
   private IArtifact                    _artifactModel;
 
   /** - */
-  private DefaultArtifactCache         _artifactCache;
+  private ArtifactCache         _artifactCache;
 
   /**
    * <p>
@@ -37,7 +38,7 @@ public class DependencyModel implements IDependencyModel {
    * @throws CoreException
    */
   public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
-      DefaultArtifactCache defaultArtifactCache) throws CoreException {
+      ArtifactCache defaultArtifactCache) throws CoreException {
 
     Assert.isNotNull(modifiableModularizedSystem);
     Assert.isNotNull(defaultArtifactCache);
@@ -101,7 +102,8 @@ public class DependencyModel implements IDependencyModel {
 
       //
     case Group: {
-      return new AdapterGroup2IArtifact(name, getRoot());
+      // new AdapterGroup2IArtifact(name, getRoot())
+      return _artifactCache.getGroupCache().getOrCreate(new Path(qualifiedName));
     }
 
       //
@@ -126,7 +128,7 @@ public class DependencyModel implements IDependencyModel {
 
       //
     case Package: {
-      return new AdapterPackage2IArtifact(qualifiedName, getRoot(), false, null, _artifactCache);
+      throw new RuntimeException("Can not create IArtifact of type 'ArtifactType.Resource'.");
     }
 
       //
@@ -146,5 +148,9 @@ public class DependencyModel implements IDependencyModel {
     }
 
     return null;
+  }
+
+  public ArtifactCache getArtifactCache() {
+    return _artifactCache;
   }
 }

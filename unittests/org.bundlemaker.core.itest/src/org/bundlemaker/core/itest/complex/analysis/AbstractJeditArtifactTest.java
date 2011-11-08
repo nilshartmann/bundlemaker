@@ -10,7 +10,8 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.util.ModuleUtils;
@@ -21,7 +22,7 @@ import org.junit.Before;
 public abstract class AbstractJeditArtifactTest extends AbstractModularizedSystemTest {
 
   /** - */
-  private IAdvancedArtifact _rootArtifact;
+  private IBundleMakerArtifact _rootArtifact;
 
   /** - */
   private IArtifact         _jeditModuleArtifact;
@@ -50,15 +51,15 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
 
     // assert the input
     InputStream inputstream = getClass().getResourceAsStream("results/" + getTestProjectName() + ".txt");
-    assertResult(ModuleUtils.dump(getModularizedSystem().getResourceModule(getTestProjectName(), "1.0.0"),
-        getModularizedSystem()), inputstream, getTestProjectName() + getCurrentTimeStamp());
+    assertResult(ModuleUtils.dump(getModularizedSystem().getResourceModule(getTestProjectName(), "1.0.0")),
+        inputstream, getTestProjectName() + getCurrentTimeStamp());
 
     //
     IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getModularizedSystem(),
         getArtifactModelConfiguration());
     Assert.assertNotNull(dependencyModel);
 
-    _rootArtifact = (IAdvancedArtifact) dependencyModel.getRoot();
+    _rootArtifact = (IBundleMakerArtifact) dependencyModel.getRoot();
     Assert.assertNotNull(_rootArtifact);
 
     // assert the input
@@ -81,8 +82,8 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
   }
 
-  public ArtifactModelConfiguration getArtifactModelConfiguration() {
-    return ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
+  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+    return IArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
   }
 
   /**
@@ -91,7 +92,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * 
    * @return
    */
-  protected final IAdvancedArtifact getRootArtifact() {
+  protected final IBundleMakerArtifact getRootArtifact() {
     return _rootArtifact;
   }
 

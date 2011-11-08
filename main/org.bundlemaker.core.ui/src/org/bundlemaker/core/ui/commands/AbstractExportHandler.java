@@ -12,14 +12,13 @@ package org.bundlemaker.core.ui.commands;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
@@ -55,8 +54,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
     try {
       for (IArtifact iArtifact : selectedArtifacts) {
-        if (iArtifact instanceof IAdvancedArtifact) {
-          IAdvancedArtifact advancedArtifact = (IAdvancedArtifact) iArtifact;
+        if (iArtifact instanceof IBundleMakerArtifact) {
+          IBundleMakerArtifact advancedArtifact = (IBundleMakerArtifact) iArtifact;
           if (modularizedSystem == null) {
             modularizedSystem = advancedArtifact.getModularizedSystem();
           } else if (!modularizedSystem.equals(advancedArtifact.getModularizedSystem())) {
@@ -141,9 +140,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
       return;
     }
 
-    Collection<IArtifact> children = artifact.getChildren();
-    for (IArtifact iArtifact : children) {
-      if (iArtifact instanceof IAdvancedArtifact) {
+    for (IArtifact iArtifact : artifact.getChildren()) {
+      if (iArtifact instanceof IBundleMakerArtifact) {
         addModules(moduleFilter, iArtifact);
       }
     }

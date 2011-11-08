@@ -17,6 +17,7 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -59,13 +60,10 @@ public class RemoveResourcesTransformation implements ITransformation {
 
       List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.BINARY);
 
-      resourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.BINARY);
-      // TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, );
-
-      resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.SOURCE);
-
-      resourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.SOURCE);
-      // TransformationUtils.removeAll(resourceModule, resourceStandinsToMove, ContentType.SOURCE);
+      for (IResource resource : resourceStandinsToMove) {
+        resourceModule.getModifiableSelfResourceContainer().removeMovableUnit(
+            MovableUnit.createFromResource(resource, modularizedSystem));
+      }
 
       // increment the subMonitor
       subMonitor.worked(1);

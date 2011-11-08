@@ -7,9 +7,8 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.eclipse.core.runtime.Assert;
@@ -20,7 +19,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements IGroupArtifact {
+public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactContainer implements IGroupArtifact {
 
   // the group qualified name delimiter
   private static final char                     DELIMITER = '/';
@@ -38,9 +37,11 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
   public AdapterGroup2IArtifact(String name, IArtifact parent) {
     super(ArtifactType.Group, name);
 
+    Assert.isNotNull(parent);
+
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
 
     //
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
@@ -81,8 +82,6 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
    */
   public void setName(String name) {
     super.setName(name);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).fireArtifactTreeChangedEvent(new ArtifactTreeChangedEvent());
   }
 
   /**
@@ -130,39 +129,34 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
       return "Only groups and modules are addable to groups";
     }
 
+    // prevent entries with duplicate names entries
+    if (getChild(artifact.getName()) != null) {
+      return String.format("The group '%s' already contains a child with the name '%s'.", this.getQualifiedName(),
+          artifact.getName());
+    }
+
     //
     return null;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void addArtifact(IArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-    assertCanAdd(artifact);
-
-    // call the super method
-    super.addArtifact(artifact);
+  protected void onAddArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.addModuleToModularizedSystem(artifact);
+    if (!AdapterUtils.addModuleToModularizedSystem(artifact, getQualifiedName().replace('|', '/'))) {
+
+      // we have to support the case that an empty group is added
+      internalAddArtifact(artifact);
+    }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
-
-    Assert.isNotNull(artifact);
+  protected void onRemoveArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
-
-    return super.removeArtifact(artifact);
+    if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
+      internalRemoveArtifact(artifact);
+    }
   }
 
   /**
@@ -175,7 +169,7 @@ public class AdapterGroup2IArtifact extends AbstractAdvancedContainer implements
     if (visitor.visit(this)) {
       //
       for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+        ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }

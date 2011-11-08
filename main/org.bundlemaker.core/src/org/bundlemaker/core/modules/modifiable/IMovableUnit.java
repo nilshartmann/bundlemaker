@@ -2,6 +2,7 @@ package org.bundlemaker.core.modules.modifiable;
 
 import java.util.List;
 
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 
@@ -17,12 +18,28 @@ public interface IMovableUnit {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedTypes();
+
+  /**
+   * <p>
    * Returns the list of types that are associated with this movable unit.
    * </p>
    * 
    * @return the list of types that are associated with this movable unit.
    */
   List<IType> getAssociatedTypes();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedBinaryResources();
 
   /**
    * <p>
@@ -35,6 +52,14 @@ public interface IMovableUnit {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasAssociatedSourceResource();
+
+  /**
+   * <p>
    * Returns the source resource that is associated with this movable type.
    * </p>
    * 
@@ -42,11 +67,7 @@ public interface IMovableUnit {
    */
   IResource getAssociatedSourceResource();
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasAssociatedSourceResource();
+  IResourceModule getContainingResourceModule();
+
+  public boolean hasContainingResourceModule();
 }

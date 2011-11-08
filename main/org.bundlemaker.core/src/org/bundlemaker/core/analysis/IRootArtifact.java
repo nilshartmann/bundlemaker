@@ -5,30 +5,13 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 
 /**
  * <p>
- * Defines an {@link IArtifact IArtifacts} that holds an {@link IModularizedSystem} instance.
+ * Defines the root {@link IArtifact IArtifacts} that holds the {@link IModularizedSystem} instance. The root artifact
+ * can contain group and modules ad therefore extends the interface {@link IGroupAndModuleContainer}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IRootArtifact extends IAdvancedArtifact, IGroupAndModuleContainer {
+public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleContainer {
 
-  /**
-   * <p>
-   * Adds the specified {@link IArtifactTreeChangedListener} to the listener list.
-   * </p>
-   * 
-   * @param listener
-   *          the {@link IArtifactTreeChangedListener}.
-   */
-  void addArtifactTreeChangedListener(IArtifactTreeChangedListener listener);
-
-  /**
-   * <p>
-   * Removes the specified {@link IArtifactTreeChangedListener} from the listener list.
-   * </p>
-   * 
-   * @param listener
-   *          the {@link IArtifactTreeChangedListener}.
-   */
-  void removeArtifactTreeChangedListener(IArtifactTreeChangedListener listener);
+  // empty tag interface
 }

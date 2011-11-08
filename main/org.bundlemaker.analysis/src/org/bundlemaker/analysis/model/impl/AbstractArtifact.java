@@ -55,6 +55,11 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   }
 
   @Override
+  public boolean hasChild(String path) {
+    return false;
+  }
+
+  @Override
   public IArtifact getParent() {
     return parent;
   }

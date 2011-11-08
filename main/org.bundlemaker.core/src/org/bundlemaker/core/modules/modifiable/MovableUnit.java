@@ -9,7 +9,9 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
+import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
@@ -47,6 +49,8 @@ public class MovableUnit implements IMovableUnit {
   /** - */
   private boolean                      _isInitialized      = false;
 
+  // private IResourceModule _resourceModule;
+
   /**
    * <p>
    * </p>
@@ -54,11 +58,12 @@ public class MovableUnit implements IMovableUnit {
    * @param type
    * @return
    */
-  public static IMovableUnit createFromType(IType type) {
+  public static IMovableUnit createFromType(IType type, IModularizedSystem modularizedSystem) {
     Assert.isNotNull(type);
 
     MovableUnit movableUnit = new MovableUnit();
     movableUnit._mainType = type;
+    movableUnit._modularizedSystem = modularizedSystem;
 
     return movableUnit;
   }
@@ -74,9 +79,24 @@ public class MovableUnit implements IMovableUnit {
     Assert.isNotNull(resource);
 
     //
-    if (resource.containsTypes()) {
-      for (IType type : resource.getContainedTypes()) {
-        Assert.isTrue(!type.isLocalOrAnonymousType());
+    if (resource.getName().endsWith(".class") && resource.containsTypes()) {
+
+      try {
+        IType type = resource.getContainedType();
+        if (type.isLocalOrAnonymousType()) {
+          String typeName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(type.getFullyQualifiedName());
+
+          // TODO!!
+          IResourceModule resourceModule = resource.getAssociatedResourceModule(modularizedSystem);
+          IResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
+              ContentType.BINARY);
+
+          if (nonAnonymousResource != null) {
+            resource = nonAnonymousResource;
+          }
+        }
+      } catch (CoreException e) {
+        //
       }
     }
 
@@ -87,6 +107,18 @@ public class MovableUnit implements IMovableUnit {
 
     //
     return movableUnit;
+  }
+
+  @Override
+  public boolean hasAssociatedTypes() {
+    init();
+    return _associatedTypes != null && !_associatedTypes.isEmpty();
+  }
+
+  @Override
+  public boolean hasAssociatedBinaryResources() {
+    init();
+    return _binaryResources != null && !_binaryResources.isEmpty();
   }
 
   /**
@@ -131,6 +163,36 @@ public class MovableUnit implements IMovableUnit {
 
     //
     return _associatedTypes != null ? _associatedTypes : EMPTY_TYPE_LIST;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IResourceModule getContainingResourceModule() {
+
+    init();
+
+    IResourceModule resourceModule = null;
+
+    //
+    if (!_associatedTypes.isEmpty()) {
+      resourceModule = (IResourceModule) _associatedTypes.get(0).getModule(_modularizedSystem);
+    } else if (!_binaryResources.isEmpty()) {
+      resourceModule = (IResourceModule) _binaryResources.get(0).getAssociatedResourceModule(_modularizedSystem);
+    } else {
+      resourceModule = _sourceResource.getAssociatedResourceModule(_modularizedSystem);
+    }
+
+    //
+    return resourceModule;
+  }
+
+  public boolean hasContainingResourceModule() {
+    //
+    return getContainingResourceModule() != null;
   }
 
   /**

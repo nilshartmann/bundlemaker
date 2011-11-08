@@ -53,7 +53,9 @@ public class FileDiffUtil {
     String actualString = null;
 
       expectedString = BundleMakerTestUtils.convertStreamToString(expected);
+      expectedString = expectedString.replace("\r\n", "\n");
       actualString = BundleMakerTestUtils.convertStreamToString(actual);
+      actualString = actualString.replace("\r\n", "\n");
 
     diff_match_patch patch = new diff_match_patch();
 

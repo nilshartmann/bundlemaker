@@ -48,6 +48,15 @@ public interface ITypeContainer {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @param fullyQualifiedName
+   * @return
+   */
+  boolean containsType(String fullyQualifiedName);
+
+  /**
+   * <p>
    * Returns a collection with all contained {@link IType ITypes}.
    * </p>
    * 

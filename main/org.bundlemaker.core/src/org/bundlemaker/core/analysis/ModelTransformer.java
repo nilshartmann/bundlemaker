@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.internal.analysis.DependencyModel;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -48,7 +48,7 @@ public class ModelTransformer {
    * @return the {@link IDependencyModel}
    */
   public static IDependencyModel getDependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
-      ArtifactModelConfiguration configuration) {
+      IArtifactModelConfiguration configuration) {
 
     // assert not null
     Assert.isNotNull(modifiableModularizedSystem);
@@ -67,7 +67,7 @@ public class ModelTransformer {
     try {
 
       // create the artifact cache
-      DefaultArtifactCache artifactCache = new DefaultArtifactCache(modifiableModularizedSystem, configuration);
+      ArtifactCache artifactCache = new ArtifactCache(modifiableModularizedSystem, configuration);
 
       // create the dependency model
       DependencyModel model = new DependencyModel(modifiableModularizedSystem, artifactCache);
@@ -93,7 +93,7 @@ public class ModelTransformer {
     private IModifiableModularizedSystem _modifiableModularizedSystem;
 
     /* - */
-    private ArtifactModelConfiguration   _configuration;
+    private IArtifactModelConfiguration  _configuration;
 
     /**
      * <p>
@@ -103,7 +103,7 @@ public class ModelTransformer {
      * @param modifiableModularizedSystem
      * @param configuration
      */
-    public CacheKey(IModifiableModularizedSystem modifiableModularizedSystem, ArtifactModelConfiguration configuration) {
+    public CacheKey(IModifiableModularizedSystem modifiableModularizedSystem, IArtifactModelConfiguration configuration) {
 
       Assert.isNotNull(modifiableModularizedSystem);
       Assert.isNotNull(configuration);
@@ -128,7 +128,7 @@ public class ModelTransformer {
      * 
      * @return
      */
-    public final ArtifactModelConfiguration getConfiguration() {
+    public final IArtifactModelConfiguration getConfiguration() {
       return _configuration;
     }
 

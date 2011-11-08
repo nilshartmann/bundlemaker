@@ -16,7 +16,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
-import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem.ChangeAction;
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
+import org.bundlemaker.core.modules.ChangeAction;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
@@ -37,23 +39,40 @@ import org.eclipse.core.runtime.Assert;
 public class ResourceContainer extends TypeContainer implements IModifiableResourceContainer {
 
   /** the binary resources */
-  private Set<IResource> _binaryResources;
+  private Set<IResource>     _binaryResources;
 
   /** the source resources */
-  private Set<IResource> _sourceResources;
+  private Set<IResource>     _sourceResources;
+
+  /** - */
+  private IModularizedSystem _modularizedSystem;
 
   /**
    * <p>
    * Creates a new instance of type {@link ResourceContainer}.
    * </p>
    */
-  public ResourceContainer() {
+  public ResourceContainer(IModularizedSystem modularizedSystem) {
+
+    //
+    Assert.isNotNull(modularizedSystem);
 
     // create the resource sets
     _binaryResources = new HashSet<IResource>();
-
-    // TODO: LAZY
     _sourceResources = new HashSet<IResource>();
+
+    //
+    _modularizedSystem = modularizedSystem;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IModularizedSystem getModularizedSystem() {
+    return _modularizedSystem;
   }
 
   /**
@@ -191,8 +210,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
   /**
    * {@inheritDoc}
    */
-  @Override
-  public void add(IResource resource, ContentType contentType) {
+  private void add(IResource resource, ContentType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
@@ -215,7 +233,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
   /**
    * {@inheritDoc}
    */
-  @Override
+  @Deprecated
   public void addAll(Collection<? extends IResource> resources, ContentType contentType) {
 
     Assert.isNotNull(resources);
@@ -241,32 +259,29 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
   /**
    * {@inheritDoc}
    */
-  @Override
-  public void remove(IResource resource, ContentType contentType) {
+  private void remove(IResource resource, ContentType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
 
-    // add the resource to the resource set...
-    getModifiableResourcesSet(contentType).remove(resource);
+    //
+    if (getModifiableResourcesSet(contentType).contains(resource)) {
 
-    // ... and add all contained types to the cache
-    for (IType type : resource.getContainedTypes()) {
-      remove(type);
-    }
+      // add the resource to the resource set...
+      getModifiableResourcesSet(contentType).remove(resource);
 
-    // notify
-    if (getResourceModule().hasModularizedSystem()) {
-      ((AbstractCachingModularizedSystem) getResourceModule().getModularizedSystem()).resourceChanged(resource,
-          getResourceModule(), ChangeAction.REMOVED);
+      // notify
+      if (getResourceModule().hasModularizedSystem()) {
+        ((AbstractCachingModularizedSystem) getResourceModule().getModularizedSystem()).resourceChanged(resource,
+            getResourceModule(), ChangeAction.REMOVED);
+      }
     }
   }
 
   /**
    * {@inheritDoc}
    */
-  @Override
-  public void removeAll(Collection<? extends IResource> resources, ContentType contentType) {
+  private void removeAll(Collection<? extends IResource> resources, ContentType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -274,17 +289,17 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     // add the resource to the resource set...
     getModifiableResourcesSet(contentType).removeAll(resources);
 
-    // ... and add all contained types to the cache
-    try {
-      for (IResource resource : resources) {
-        for (IType type : resource.getContainedTypes()) {
-          remove(type);
-        }
-      }
-    } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    // // ... and add all contained types to the cache
+    // try {
+    // for (IResource resource : resources) {
+    // for (IType type : resource.getContainedTypes()) {
+    // remove(type);
+    // }
+    // }
+    // } catch (Exception e) {
+    // // TODO Auto-generated catch block
+    // e.printStackTrace();
+    // }
 
     // notify
     if (getResourceModule().hasModularizedSystem()) {
@@ -312,6 +327,9 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     if (movableUnit.hasAssociatedSourceResource()) {
       add(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
     }
+
+    //
+    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, getModule(), ChangeAction.ADDED);
   }
 
   /**
@@ -333,6 +351,9 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     if (movableUnit.hasAssociatedSourceResource()) {
       remove(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
     }
+
+    //
+    ((ModularizedSystem) getModularizedSystem()).fireMovableUnitEvent(movableUnit, getModule(), ChangeAction.REMOVED);
   }
 
   /**

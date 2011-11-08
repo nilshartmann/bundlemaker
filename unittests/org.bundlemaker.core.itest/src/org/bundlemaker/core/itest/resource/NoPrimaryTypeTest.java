@@ -3,7 +3,7 @@ package org.bundlemaker.core.itest.resource;
 import java.io.IOException;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IResourceModule;

@@ -210,7 +210,7 @@ public class ArtifactMarshaller implements IArtifactMarshaller {
    * @param children
    * @return
    */
-  private List<IArtifact> sort(Collection<IArtifact> children) {
+  private List<? extends IArtifact> sort(Collection<? extends IArtifact> children) {
 
     //
     List<IArtifact> sorted = new ArrayList<IArtifact>(children);

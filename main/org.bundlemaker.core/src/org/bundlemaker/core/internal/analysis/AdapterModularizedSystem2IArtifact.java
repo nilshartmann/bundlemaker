@@ -1,20 +1,33 @@
 package org.bundlemaker.core.internal.analysis;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.core.analysis.ArtifactTreeChangedEvent;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.IArtifactTreeChangedListener;
+import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
+import org.bundlemaker.core.internal.analysis.cache.TypeKey;
+import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
+import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
+import org.bundlemaker.core.modules.ChangeAction;
+import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.ModuleMovedEvent;
+import org.bundlemaker.core.modules.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -22,7 +35,8 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContainer implements IRootArtifact {
+public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtifactContainer implements IRootArtifact,
+    IModularizedSystemChangedListener {
 
   /** - */
   private IModifiableModularizedSystem          _modularizedSystem;
@@ -31,10 +45,13 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
   private DependencyModel                       _dependencyModel;
 
   /** - */
-  private List<IArtifactTreeChangedListener>    _artifactTreeChangedListeners;
+  private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
 
   /** - */
-  private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
+  private final IArtifactModelConfiguration     _artifactModelConfiguration;
+
+  /** - */
+  private CurrentAction                         _currentAction = null;
 
   /**
    * <p>
@@ -43,17 +60,30 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
    * 
    * @param modularizedSystem
    */
-  public AdapterModularizedSystem2IArtifact(IModifiableModularizedSystem modularizedSystem) {
+  public AdapterModularizedSystem2IArtifact(IModifiableModularizedSystem modularizedSystem,
+      IArtifactModelConfiguration modelConfiguration) {
     super(ArtifactType.Root, name(modularizedSystem));
+
+    //
+    Assert.isNotNull(modelConfiguration);
 
     // set the resource module
     _modularizedSystem = modularizedSystem;
+    _modularizedSystem.addModularizedSystemChangedListener(this);
 
     //
-    _artifactTreeChangedListeners = new LinkedList<IArtifactTreeChangedListener>();
+    _artifactModelConfiguration = modelConfiguration;
 
     //
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IArtifactModelConfiguration getConfiguration() {
+    return _artifactModelConfiguration;
   }
 
   /**
@@ -70,6 +100,9 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<IArtifact> invalidateDependencyCache() {
     super.invalidateDependencyCache();
@@ -100,6 +133,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     return getName();
   }
 
+  @Override
   public IModifiableModularizedSystem getModularizedSystem() {
     return _modularizedSystem;
   }
@@ -121,37 +155,24 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
     return this;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void addArtifact(IArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-    assertCanAdd(artifact);
-
-    // call the super method
-    super.addArtifact(artifact);
+  protected void onAddArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
-      AdapterUtils.addModuleToModularizedSystem(artifact);
+      if (!AdapterUtils.addModuleToModularizedSystem(artifact, null)) {
+        internalAddArtifact(artifact);
+      }
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
-
-    Assert.isNotNull(artifact);
+  protected void onRemoveArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
-    AdapterUtils.removeResourceModuleFromModularizedSystem(artifact);
-
-    return super.removeArtifact(artifact);
+    if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
+      internalRemoveArtifact(artifact);
+    }
   }
 
   /**
@@ -166,9 +187,15 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
    * {@inheritDoc}
    */
   @Override
-  public void addArtifactTreeChangedListener(IArtifactTreeChangedListener listener) {
-    if (!_artifactTreeChangedListeners.contains(listener)) {
-      _artifactTreeChangedListeners.add(listener);
+  public void accept(IArtifactTreeVisitor visitor) {
+
+    //
+    if (visitor.visit(this)) {
+
+      //
+      for (IArtifact artifact : getChildren()) {
+        ((IBundleMakerArtifact) artifact).accept(visitor);
+      }
     }
   }
 
@@ -176,9 +203,92 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
    * {@inheritDoc}
    */
   @Override
-  public void removeArtifactTreeChangedListener(IArtifactTreeChangedListener listener) {
-    if (_artifactTreeChangedListeners.contains(listener)) {
-      _artifactTreeChangedListeners.remove(listener);
+  public void movableUnitAdded(MovableUnitMovedEvent event) {
+
+    // get the movable unit
+    IMovableUnit movableUnit = event.getMovableUnit();
+    IArtifactModelConfiguration configuration = getConfiguration();
+
+    // Step 1: Handle resources
+    if (!configuration.containsNoResources()) {
+
+      // Step 1a: Handle BinaryContent
+      if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()) {
+
+        // iterate over the associated binary resources
+        for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+          _addResource(resource);
+        }
+      }
+      // Step 1b: Handle SourceContent
+      else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()) {
+
+        // iterate over the associated binary resources
+        _addResource(movableUnit.getAssociatedSourceResource());
+      }
+    }
+
+    // TODO
+    if (movableUnit.hasAssociatedTypes()) {
+
+      for (IType type : movableUnit.getAssociatedTypes()) {
+
+        TypeKey typeKey = new TypeKey(type);
+
+        IArtifact artifact = _dependencyModel.getArtifactCache().getTypeCache().getOrCreate(typeKey);
+        AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getTypeCache()
+            .getTypeParent(typeKey.getType());
+
+        parentArtifact.internalAddArtifact(artifact);
+      }
+    }
+  }
+
+  private void _addResource(IResource resource) {
+
+    // skip type resources if necessary
+    if (resource.containsTypes() && getConfiguration().containsOnlyNonTypeResources()) {
+      return;
+    }
+
+    // skip local or anonymous types (no 'Bla$1.class' resources)
+    if (resource.hasPrimaryType() && resource.getPrimaryType().isLocalOrAnonymousType()) {
+      return;
+    }
+
+    // add the resource
+    IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().getOrCreate(resource);
+    AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getResourceCache()
+        .getOrCreateParent(resource);
+    parentArtifact.internalAddArtifact(artifact);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void movableUnitRemoved(MovableUnitMovedEvent event) {
+
+    //
+    if (hasCurrentAction()) {
+
+      if (!getCurrentAction().getChild().hasParent()) {
+        return;
+      }
+
+      if (getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
+          && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+
+        //
+        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
+            .internalRemoveArtifact(getCurrentAction().getChild());
+
+      } else {
+        removeMovableUnitArtifacts(event);
+      }
+
+    } else {
+      removeMovableUnitArtifacts(event);
     }
   }
 
@@ -188,15 +298,41 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
    * 
    * @param event
    */
-  public void fireArtifactTreeChangedEvent(ArtifactTreeChangedEvent event) {
+  private void removeMovableUnitArtifacts(MovableUnitMovedEvent event) {
 
     //
-    IArtifactTreeChangedListener[] listeners = _artifactTreeChangedListeners
-        .toArray(new IArtifactTreeChangedListener[0]);
+    IMovableUnit movableUnit = event.getMovableUnit();
+    IArtifactModelConfiguration configuration = getConfiguration();
 
-    //
-    for (IArtifactTreeChangedListener changedListener : listeners) {
-      changedListener.artifactTreeChanged(event);
+    if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
+        && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
+      for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+        IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
+
+        if (artifact != null && artifact.getParent() != null) {
+          ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
+        }
+      }
+    } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
+        && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
+      IResource resource = movableUnit.getAssociatedSourceResource();
+      IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
+
+      if (artifact != null && artifact.getParent() != null) {
+        ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
+      }
+    } else if (movableUnit.hasAssociatedTypes()) {
+      for (IType type : movableUnit.getAssociatedTypes()) {
+
+        //
+        TypeSubCache typeCache = _dependencyModel.getArtifactCache().getTypeCache();
+
+        //
+        IArtifact artifact = typeCache.get(new TypeKey(type));
+        if (artifact != null && artifact.getParent() != null) {
+          ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
+        }
+      }
     }
   }
 
@@ -204,16 +340,144 @@ public class AdapterModularizedSystem2IArtifact extends AbstractAdvancedContaine
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void moduleAdded(ModuleMovedEvent event) {
 
-    //
-    if (visitor.visit(this)) {
+    Assert.isTrue(hasCurrentAction());
+
+    // initiated by an artifact tree action?
+    if (hasCurrentAction()) {
 
       //
-      for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+      ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
+          .getChild());
+
+    } else {
+
+      //
+      ModuleSubCache moduleCache = _dependencyModel.getArtifactCache().getModuleCache();
+
+      //
+      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) moduleCache.getOrCreate(new ModuleKey(event
+          .getModule()));
+
+      //
+      if (moduleArtifact.getParent() == null) {
+        AbstractBundleMakerArtifactContainer parent = moduleCache.getModuleParent(event.getModule());
+        parent.internalAddArtifact(moduleArtifact);
       }
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void moduleRemoved(ModuleMovedEvent event) {
+
+    if (hasCurrentAction()) {
+
+      ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalRemoveArtifact(getCurrentAction()
+          .getChild());
+
+    } else {
+
+      //
+      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _dependencyModel.getArtifactCache()
+          .getModuleCache().get(new ModuleKey(event.getModule()));
+
+      //
+      if (moduleArtifact != null) {
+        ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
+      }
+    }
+
+    // //
+    // if (hasCurrentAction() && getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
+    // && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+    //
+    // //
+    // ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalRemoveArtifact(getCurrentAction()
+    // .getChild());
+    //
+    // }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void moduleClassificationChanged(ModuleClassificationChangedEvent event) {
+
+    if (hasCurrentAction()) {
+
+      //
+      if (getCurrentAction().getChangeAction().equals(ChangeAction.ADDED)) {
+
+        //
+        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
+            .getChild());
+      }
+
+      //
+      else if (getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+
+        //
+        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
+            .internalRemoveArtifact(getCurrentAction().getChild());
+      }
+
+    } else {
+
+      //
+      IModule module = event.getModule();
+      AbstractArtifactContainer moduleArtifact = _dependencyModel.getArtifactCache().getModuleCache()
+          .getOrCreate(new ModuleKey(module));
+
+      //
+      IPath classification = module.getClassification();
+
+      if (classification != null) {
+
+        //
+        AbstractBundleMakerArtifactContainer groupArtifact = _dependencyModel.getArtifactCache().getGroupCache()
+            .getOrCreate(classification);
+        //
+        groupArtifact.internalAddArtifact(moduleArtifact);
+
+      } else {
+        internalAddArtifact(moduleArtifact);
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public CurrentAction getCurrentAction() {
+    return _currentAction;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param currentAction
+   */
+  public void setCurrentAction(CurrentAction currentAction) {
+    _currentAction = currentAction;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param currentAction
+   */
+  public boolean hasCurrentAction() {
+    return _currentAction != null;
   }
 
   /**

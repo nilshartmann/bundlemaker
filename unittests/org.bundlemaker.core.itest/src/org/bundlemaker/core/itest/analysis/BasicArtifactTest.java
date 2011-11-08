@@ -14,59 +14,56 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class BasicArtifactTest extends AbstractModularizedSystemTest {
-  
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
   @Test
   public void qualifiedNameWithFlatPackages() throws Exception {
-    IAdvancedArtifact rootArtifact = getRootArtifact(false);
 
+    // step 1: get the rootArtifact
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+
+    // step 2: get the package child 
     IArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de.test.basic");
-
     Assert.assertNotNull(artifact);
-    
+
+    // step 3: assert result
     assertEquals("de.test.basic", artifact.getQualifiedName());
   }
-  
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @throws Exception
+   */
   @Test
   public void qualifiedNameWithHierarchicalPackages() throws Exception {
-    IAdvancedArtifact rootArtifact = getRootArtifact(true);
 
+    // step 1: get the rootArtifact
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+
+    // step 2: get the package child 
     IArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de|test|basic");
-
     Assert.assertNotNull(artifact);
-    
+
+    // step 3: assert result
     assertEquals("de.test.basic", artifact.getQualifiedName());
   }
-
-  protected IAdvancedArtifact getRootArtifact(boolean hierarchical) {
-    
-    ArtifactModelConfiguration artifactModelConfiguration = new ArtifactModelConfiguration();
-    artifactModelConfiguration.setHierarchicalPackages(hierarchical);
-    artifactModelConfiguration.setResourcePresentation(
-        ResourcePresentation.ALL_RESOURCES);
-    artifactModelConfiguration.setContentType(ContentType.BINARY);
-    artifactModelConfiguration.setAggregateInnerTypes(false);
-    artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);
-    
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
-        artifactModelConfiguration).getRoot();
-    
-    Assert.assertNotNull(rootArtifact);
-    
-    return rootArtifact;
-    
-  }
-
 }

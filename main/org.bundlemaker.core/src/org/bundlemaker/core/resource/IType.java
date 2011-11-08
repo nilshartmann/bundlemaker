@@ -144,7 +144,19 @@ public interface IType extends Comparable<IType> {
    */
   boolean isLocalOrAnonymousType();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   boolean isInnerType();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   boolean isPrimaryType();
 }

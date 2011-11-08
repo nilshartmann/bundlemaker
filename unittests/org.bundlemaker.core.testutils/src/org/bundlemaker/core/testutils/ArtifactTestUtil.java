@@ -65,7 +65,7 @@ public class ArtifactTestUtil {
     builder.append("\n");
 
     //
-    List<IArtifact> children = BundleMakerTestUtils.asSortedList(artifact.getChildren(), new Comparator<IArtifact>() {
+    List<? extends IArtifact> children = BundleMakerTestUtils.asSortedList((List<IArtifact>)artifact.getChildren(), new Comparator<IArtifact>() {
       @Override
       public int compare(IArtifact o1, IArtifact o2) {
         return o1.getQualifiedName().compareTo(o2.getQualifiedName());

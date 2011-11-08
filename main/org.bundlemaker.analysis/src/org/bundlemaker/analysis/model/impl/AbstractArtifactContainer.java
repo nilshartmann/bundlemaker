@@ -50,11 +50,16 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     // assert not null
     Assert.isNotNull(path);
 
-    // create IPath instance
+    //
     String[] splittedString = path.split("\\|");
 
     //
     return getChild(splittedString);
+  }
+
+  @Override
+  public boolean hasChild(String path) {
+    return getChild(path) != null;
   }
 
   /**
@@ -200,6 +205,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   @Override
+  @Deprecated
   public void addArtifact(IArtifact artifact, boolean registerParent) {
     if (!children.contains(artifact)) {
       children.add(artifact);
@@ -245,7 +251,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Collection<IArtifact> getChildren() {
+  public Collection<? extends IArtifact> getChildren() {
     return Collections.unmodifiableCollection(new LinkedList<IArtifact>(children));
   }
 
@@ -287,9 +293,8 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
         // ... else throw exception
         else {
-          // TODO
-          throw new RuntimeException(String.format("Ambigous identifier '%s' [%s, %s]", result, result.toString(),
-              artifact.toString()));
+          throw new RuntimeException(String.format("Ambigous identifier '%s' [%s, %s]", result, getQualifiedName(),
+              getChildren()));
         }
       }
     }

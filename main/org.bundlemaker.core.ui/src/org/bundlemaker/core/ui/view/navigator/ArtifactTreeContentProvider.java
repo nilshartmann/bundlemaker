@@ -9,10 +9,8 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.ui.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -56,9 +54,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
             IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
                 .getArtifactModelConfigurationProvider();
 
-            IArtifact artifact = ModelTransformer.getDependencyModel((IModifiableModularizedSystem) modularizedSystem,
-                artifactModelConfigurationProvider.getArtifactModelConfiguration()).getRoot();
+            IArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
+                .getArtifactModelConfiguration());
+
             // ModelTransformer.dumpArtifact(artifact);
+
             result.add(artifact);
           }
 
@@ -80,11 +80,10 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
       for (IArtifact iArtifact : parentArtifact.getChildren()) {
         if (iArtifact.getType().equals(ArtifactType.Package)) {
-          if (((IAdvancedArtifact) iArtifact).containsTypesOrResources()) {
-            // System.out.println("ADDING " + iArtifact + " : " + iArtifact.getChildren());
+          if (((IBundleMakerArtifact) iArtifact).containsTypesOrResources()) {
             artifacts.add(iArtifact);
           } else {
-            // System.out.println("SKIPPING " + iArtifact);
+            //
           }
         } else {
           artifacts.add(iArtifact);

@@ -15,11 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -119,7 +122,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
 
         //
         else {
-          processResources(originResourceModule, targetResourceModule, resourceSet);
+          processResources(originResourceModule, targetResourceModule, resourceSet, modularizedSystem);
         }
       }
       subMonitor.worked(1);
@@ -201,27 +204,16 @@ public class ResourceSetBasedTransformation implements ITransformation {
    * @param resourceSet
    */
   private void processResources(IModifiableResourceModule originResourceModule,
-      IModifiableResourceModule targetResourceModule, ResourceSet resourceSet) {
+      IModifiableResourceModule targetResourceModule, ResourceSet resourceSet, IModularizedSystem modularizedSystem) {
 
     List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(originResourceModule, ContentType.BINARY);
 
-    targetResourceModule.getModifiableSelfResourceContainer().addAll(resourceStandinsToMove, ContentType.BINARY);
-    // TransformationUtils.addAll(
-    // .getModifiableResourcesSet(),
-    // resourceStandinsToMove);
+    for (IResource iResource : resourceStandinsToMove) {
 
-    originResourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.BINARY);
-    // TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.BINARY);
-
-    resourceStandinsToMove = resourceSet.getMatchingResources(originResourceModule, ContentType.SOURCE);
-
-    targetResourceModule.getModifiableSelfResourceContainer().addAll(resourceStandinsToMove, ContentType.SOURCE);
-    // TransformationUtils.addAll(
-    // targetResourceModule.getModifiableSelfResourceContainer().getModifiableResourcesSet(ContentType.SOURCE),
-    // resourceStandinsToMove);
-
-    originResourceModule.getModifiableSelfResourceContainer().removeAll(resourceStandinsToMove, ContentType.SOURCE);
-    // TransformationUtils.removeAll(originResourceModule, resourceStandinsToMove, ContentType.SOURCE);
+      IMovableUnit movableUnit = MovableUnit.createFromResource(iResource, modularizedSystem);
+      targetResourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
+      originResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);
+    }
   }
 
   public void setResourceSetProcessor(IResourceSetProcessor resourceSetProcessor) {

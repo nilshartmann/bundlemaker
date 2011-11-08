@@ -10,11 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules.modifiable;
 
-import java.util.Collection;
-
 import org.bundlemaker.core.modules.IResourceContainer;
-import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -24,55 +20,51 @@ import org.bundlemaker.core.resource.IResource;
  */
 public interface IModifiableResourceContainer extends IResourceContainer, IModifiableTypeContainer {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   * @param contentType
-   */
-  void add(IResource resource, ContentType contentType);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   * @param contentType
-   */
-  void addAll(Collection<? extends IResource> resource, ContentType contentType);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   * @param contentType
-   */
-  void remove(IResource resource, ContentType contentType);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resource
-   * @param contentType
-   */
-  void removeAll(Collection<? extends IResource> resource, ContentType contentType);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param movableUnit
-   */
-  void addMovableUnit(IMovableUnit movableUnit);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param movableUnit
-   */
-  void removeMovableUnit(IMovableUnit movableUnit);
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param resource
+  // * @param contentType
+  // *
+  // * @deprecated Use addMovableUnit instead.
+  // */
+  // @Deprecated
+  // void add(IResource resource, ContentType contentType);
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param resource
+  // * @param contentType
+  // *
+  // * @deprecated Use addMovableUnit instead.
+  // */
+  // @Deprecated
+  // void addAll(Collection<? extends IResource> resource, ContentType contentType);
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param resource
+  // * @param contentType
+  // *
+  // * @deprecated Use removeMovableUnit instead.
+  // */
+  // @Deprecated
+  // void remove(IResource resource, ContentType contentType);
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param resource
+  // * @param contentType
+  // *
+  // * @deprecated Use removeMovableUnit instead.
+  // */
+  // @Deprecated
+  // void removeAll(Collection<? extends IResource> resource, ContentType contentType);
 }

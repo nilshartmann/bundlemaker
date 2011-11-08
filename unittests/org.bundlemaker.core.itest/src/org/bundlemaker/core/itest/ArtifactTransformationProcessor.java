@@ -10,7 +10,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.transformations.ArtifactTransformer;
 import org.bundlemaker.analysis.transformations.BundlePathName;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -133,7 +133,7 @@ public class ArtifactTransformationProcessor {
       final IDependencyModel model) {
 
     List<String> classificationPath = newBundlePath.getClassificationPath();
-    IAdvancedArtifact currentArtifact = (IAdvancedArtifact) model.getRoot();
+    IBundleMakerArtifact currentArtifact = (IBundleMakerArtifact) model.getRoot();
 
     StringBuilder qualifiedName = new StringBuilder();
 
@@ -144,11 +144,11 @@ public class ArtifactTransformationProcessor {
 
       qualifiedName.append(string);
 
-      IAdvancedArtifact child = (IAdvancedArtifact) currentArtifact.getChild(string);
+      IBundleMakerArtifact child = (IBundleMakerArtifact) currentArtifact.getChild(string);
       if (child == null) {
         System.out.printf("  Erzeuge neue Gruppe: '%s' (%s) an '%s' %n", string, qualifiedName.toString(),
             currentArtifact.getQualifiedName());
-        child = (IAdvancedArtifact) model.createArtifactContainer(string, qualifiedName.toString(), ArtifactType.Group);
+        child = (IBundleMakerArtifact) model.createArtifactContainer(string, qualifiedName.toString(), ArtifactType.Group);
         // TODO
         model.getRoot().removeArtifact(child);
         currentArtifact.addArtifact(child);
@@ -160,12 +160,12 @@ public class ArtifactTransformationProcessor {
     System.out.printf("  Ziel-Gruppe fuer Artifact '%s': '%s'%n", typeArtifact.getQualifiedName(),
         currentArtifact.getQualifiedName());
 
-    IAdvancedArtifact bundleArtifact = (IAdvancedArtifact) currentArtifact.getChild(newBundlePath
+    IBundleMakerArtifact bundleArtifact = (IBundleMakerArtifact) currentArtifact.getChild(newBundlePath
         .getBundleName());
     // TODO Sicherstellen, dass bundleArtifact entweder null (neues Bundle) oder vom Typ Module ist
     if (bundleArtifact == null) {
       System.out.printf("  Erzeuge neues Bundle '%s' %n", newBundlePath.getBundleName());
-      bundleArtifact = (IAdvancedArtifact) model.createArtifactContainer(newBundlePath.getBundleName(),
+      bundleArtifact = (IBundleMakerArtifact) model.createArtifactContainer(newBundlePath.getBundleName(),
           newBundlePath.getBundleName(), ArtifactType.Module);
       // TODO
       model.getRoot().removeArtifact(bundleArtifact);
@@ -179,13 +179,13 @@ public class ArtifactTransformationProcessor {
 
     // In neues Modul schieben // PACKAGES ???
 
-    IAdvancedArtifact packageArtifact = (IAdvancedArtifact) typeArtifact.getParent(ArtifactType.Package);
+    IBundleMakerArtifact packageArtifact = (IBundleMakerArtifact) typeArtifact.getParent(ArtifactType.Package);
     IArtifact newPackageArtifact = bundleArtifact.getChild(packageArtifact.getQualifiedName());
     if (newPackageArtifact == null) {
       System.out.printf("  Erzeuge Package '%s' in Bundle '%s'%n", packageArtifact.getQualifiedName(),
           bundleArtifact.getQualifiedName());
 
-      newPackageArtifact = (IAdvancedArtifact) model.createArtifactContainer(packageArtifact.getName(),
+      newPackageArtifact = (IBundleMakerArtifact) model.createArtifactContainer(packageArtifact.getName(),
           packageArtifact.getQualifiedName(), ArtifactType.Package);
       // TODO
       model.getRoot().removeArtifact(newPackageArtifact);

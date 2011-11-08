@@ -14,11 +14,11 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.internal.analysis.transformer.DefaultArtifactCache;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
@@ -31,7 +31,8 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterResource2IArtifact extends AbstractAdvancedContainer implements IResourceArtifact, IMovableUnit {
+public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContainer implements IResourceArtifact,
+    IMovableUnit {
 
   /** the bundle maker resource */
   private IResource    _resource;
@@ -51,12 +52,12 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
    * @param parent
    */
   public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IArtifact parent,
-      DefaultArtifactCache artifactCache) {
+      ArtifactCache artifactCache) {
     super(ArtifactType.Resource, resource.getName());
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractAdvancedContainer) parent).getModifiableChildren().add(this);
+    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
 
     //
     _resource = resource;
@@ -76,6 +77,14 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
     return _movableUnit.getAssociatedBinaryResources();
   }
 
+  public boolean hasAssociatedTypes() {
+    return _movableUnit.hasAssociatedTypes();
+  }
+
+  public boolean hasAssociatedBinaryResources() {
+    return _movableUnit.hasAssociatedBinaryResources();
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -86,6 +95,14 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
 
   public IResource getAssociatedSourceResource() {
     return _movableUnit.getAssociatedSourceResource();
+  }
+
+  public IResourceModule getContainingResourceModule() {
+    return _movableUnit.getContainingResourceModule();
+  }
+
+  public boolean hasContainingResourceModule() {
+    return _movableUnit.hasContainingResourceModule();
   }
 
   @Override
@@ -117,6 +134,17 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
   }
 
   @Override
+  protected void onRemoveArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onRemoveArtifact");
+
+  }
+
+  @Override
+  protected void onAddArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onAddArtifact");
+  }
+
+  @Override
   public String getName() {
     return _resource.getName();
   }
@@ -144,9 +172,18 @@ public class AdapterResource2IArtifact extends AbstractAdvancedContainer impleme
     if (visitor.visit(this)) {
       //
       for (IArtifact artifact : getChildren()) {
-        ((IAdvancedArtifact) artifact).accept(visitor);
+        ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }
 
+  @Override
+  public boolean containsTypes() {
+    return hasAssociatedTypes();
+  }
+
+  @Override
+  public boolean containsResources() {
+    return true;
+  }
 }

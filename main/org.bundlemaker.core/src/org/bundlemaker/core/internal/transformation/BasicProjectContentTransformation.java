@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.transformation;
 
+import org.bundlemaker.core.internal.modules.ResourceContainer;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
@@ -33,10 +34,12 @@ public class BasicProjectContentTransformation implements ITransformation {
             .getName(), fileBasedContent.getVersion()));
 
         // add all the binary content
-        module.getModifiableSelfResourceContainer().addAll(fileBasedContent.getBinaryResources(), ContentType.BINARY);
+        ((ResourceContainer) module.getModifiableSelfResourceContainer()).addAll(fileBasedContent.getBinaryResources(),
+            ContentType.BINARY);
 
         // add all the source content
-        module.getModifiableSelfResourceContainer().addAll(fileBasedContent.getSourceResources(), ContentType.SOURCE);
+        ((ResourceContainer) module.getModifiableSelfResourceContainer()).addAll(fileBasedContent.getSourceResources(),
+            ContentType.SOURCE);
       }
     }
   }

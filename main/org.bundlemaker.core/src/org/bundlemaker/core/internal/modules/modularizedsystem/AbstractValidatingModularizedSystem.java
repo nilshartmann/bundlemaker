@@ -16,7 +16,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 
 /**
  */
-public abstract class AbstractValidatingModularizedSystem extends AbstractQueryableModularizedSystem {
+public abstract class AbstractValidatingModularizedSystem extends AbstractArtifactModelAwareModularizedSystem {
 
   /**
    * <p>

@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
@@ -226,6 +227,31 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    * {@inheritDoc}
    */
   @Override
+  public boolean containsType(final String fullyQualifiedName) {
+
+    //
+    final boolean[] result = new boolean[] { false };
+
+    //
+    doWithAllContainers(new ContainerClosure<T>() {
+      @Override
+      public boolean doWithContainer(T resourceContainer) {
+        if (resourceContainer.containsType(fullyQualifiedName)) {
+          result[0] = true;
+          return false;
+        }
+        return true;
+      }
+    });
+
+    //
+    return result[0];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public Set<IType> getContainedTypes() {
     return getContainedTypes(TypeQueryFilters.TRUE_QUERY_FILTER);
   }
@@ -310,6 +336,10 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    */
   public void setClassification(IPath classification) {
     _classification = classification;
+
+    if (hasModularizedSystem()) {
+      ((ModularizedSystem) getModularizedSystem()).fireModuleClassificationChanged(this);
+    }
   }
 
   /**
