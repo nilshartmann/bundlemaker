@@ -134,6 +134,46 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final boolean containsAllResources() {
+    return _resourcePresentation.equals(ResourcePresentation.ALL_RESOURCES);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final boolean containsOnlyNonTypeResources() {
+    return _resourcePresentation.equals(ResourcePresentation.ONLY_NON_TYPE_RESOURCES);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final boolean containsNoResources() {
+    return _resourcePresentation.equals(ResourcePresentation.NO_RESOURCE);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final boolean isSourceContent() {
+    return _contentType.equals(ContentType.SOURCE);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final boolean isBinaryContent() {
+    return _contentType.equals(ContentType.BINARY);
+  }
+
+  /**
    * <p>
    * </p>
    * 

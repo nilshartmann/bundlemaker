@@ -1,5 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -67,6 +69,16 @@ public class AdapterUtils {
     //
     for (IArtifact moduleArtifact : artifacts) {
 
+      //
+      if (moduleArtifact.getParent() != null && !artifact.getType().equals(ArtifactType.Module)) {
+
+        //
+        String newPath = computeRelativeClassification(artifact, moduleArtifact);
+
+        //
+        path = path != null ? path + "|" + newPath : newPath;
+      }
+
       // TODO
       AdapterModule2IArtifact adapter = (AdapterModule2IArtifact) moduleArtifact;
       AbstractModule<?, ?> abstractModule = (AbstractModule<?, ?>) adapter.getModule();
@@ -87,6 +99,35 @@ public class AdapterUtils {
     }
 
     return !artifacts.isEmpty();
+  }
+
+  public static String computeRelativeClassification(IArtifact artifact, IArtifact moduleArtifact) {
+
+    //
+    List<IArtifact> groups = new LinkedList<IArtifact>();
+
+    //
+    IArtifact currentArtifact = moduleArtifact;
+    while (currentArtifact.getParent() != null && currentArtifact.getParent().getType().equals(ArtifactType.Group)) {
+      currentArtifact = currentArtifact.getParent();
+      groups.add(currentArtifact);
+    }
+
+    //
+    Collections.reverse(groups);
+
+    //
+    StringBuilder builder = new StringBuilder();
+    for (Iterator<IArtifact> iterator = groups.iterator(); iterator.hasNext();) {
+      IArtifact iArtifact = iterator.next();
+      builder.append(iArtifact.getName());
+      if (iterator.hasNext()) {
+        builder.append("|");
+      }
+    }
+
+    //
+    return builder.toString();
   }
 
   /**

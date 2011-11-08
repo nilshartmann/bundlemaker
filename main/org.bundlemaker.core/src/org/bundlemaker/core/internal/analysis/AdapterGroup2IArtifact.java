@@ -11,7 +11,6 @@ import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.modules.ChangeAction;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -130,19 +129,18 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
       return "Only groups and modules are addable to groups";
     }
 
+    // prevent entries with duplicate names entries
+    if (getChild(artifact.getName()) != null) {
+      return String.format("The group '%s' already contains a child with the name '%s'.", this.getQualifiedName(),
+          artifact.getName());
+    }
+
     //
     return null;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void addArtifact(IArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-    assertCanAdd(artifact);
+  protected void onAddArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.addModuleToModularizedSystem(artifact, getQualifiedName().replace('|', '/'))) {
@@ -152,25 +150,13 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
-
-    Assert.isNotNull(artifact);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
-        (IBundleMakerArtifact) artifact, ChangeAction.REMOVED));
+  protected void onRemoveArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
       internalRemoveArtifact(artifact);
     }
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);
-
-    return true;
   }
 
   /**

@@ -70,8 +70,8 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
-  public IArtifactModelConfiguration getArtifactModelConfiguration() {
-    return getRoot().getArtifactModelConfiguration();
+  public IArtifactModelConfiguration getConfiguration() {
+    return getRoot().getConfiguration();
   }
 
   /**

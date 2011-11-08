@@ -57,6 +57,11 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     return getChild(splittedString);
   }
 
+  @Override
+  public boolean hasChild(String path) {
+    return getChild(path) != null;
+  }
+
   /**
    * <p>
    * </p>

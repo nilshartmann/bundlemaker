@@ -62,7 +62,7 @@ public interface IBundleMakerArtifact extends IArtifact {
    * 
    * @return
    */
-  IArtifactModelConfiguration getArtifactModelConfiguration();
+  IArtifactModelConfiguration getConfiguration();
 
   /**
    * <p>

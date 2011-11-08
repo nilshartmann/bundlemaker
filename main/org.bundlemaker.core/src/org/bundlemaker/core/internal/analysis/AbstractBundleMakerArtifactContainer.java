@@ -10,6 +10,7 @@ import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
@@ -38,11 +39,27 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  protected abstract void onRemoveArtifact(IArtifact artifact);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  protected abstract void onAddArtifact(IArtifact artifact);
+
+  /**
    * {@inheritDoc}
    */
   @Override
-  public IArtifactModelConfiguration getArtifactModelConfiguration() {
-    return getRoot().getArtifactModelConfiguration();
+  public IArtifactModelConfiguration getConfiguration() {
+    return getRoot().getConfiguration();
   }
 
   /**
@@ -183,16 +200,40 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * {@inheritDoc}
    */
   @Override
-  public void addArtifact(IArtifact artifact) {
-    throw new UnsupportedOperationException("");
+  public final void addArtifact(IArtifact artifact) {
+
+    // asserts
+    Assert.isNotNull(artifact);
+    assertCanAdd(artifact);
+
+    // set the change action
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
+        (IBundleMakerArtifact) artifact, ChangeAction.ADDED));
+
+    onAddArtifact(artifact);
+
+    // set change action to null
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
-    throw new UnsupportedOperationException("");
+  public final boolean removeArtifact(IArtifact artifact) {
+    Assert.isNotNull(artifact);
+
+    // set the change action
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
+        (IBundleMakerArtifact) artifact, ChangeAction.REMOVED));
+
+    onRemoveArtifact(artifact);
+
+    // set change action to null
+    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);
+
+    //
+    return true;
   }
 
   /**

@@ -112,6 +112,46 @@ public interface IArtifactModelConfiguration {
    * 
    * @return
    */
+  boolean containsAllResources();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsOnlyNonTypeResources();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean containsNoResources();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isSourceContent();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isBinaryContent();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   boolean isHierarchicalPackages();
 
   /**

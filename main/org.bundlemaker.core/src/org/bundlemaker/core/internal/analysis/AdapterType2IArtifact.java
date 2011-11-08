@@ -93,8 +93,8 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * {@inheritDoc}
    */
   @Override
-  public IArtifactModelConfiguration getArtifactModelConfiguration() {
-    return getRoot().getArtifactModelConfiguration();
+  public IArtifactModelConfiguration getConfiguration() {
+    return getRoot().getConfiguration();
   }
 
   /**
@@ -174,14 +174,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
   @Override
   public boolean hasAssociatedTypes() {
-    // TODO Auto-generated method stub
-    return false;
+    return _movableUnit.hasAssociatedTypes();
   }
 
   @Override
   public boolean hasAssociatedBinaryResources() {
-    // TODO Auto-generated method stub
-    return false;
+    return _movableUnit.hasAssociatedBinaryResources();
   }
 
   /**

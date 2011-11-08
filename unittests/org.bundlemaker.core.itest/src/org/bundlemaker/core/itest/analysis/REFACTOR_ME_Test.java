@@ -1,25 +1,13 @@
 package org.bundlemaker.core.itest.analysis;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,10 +18,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class SimpleArtifactTest extends AbstractModularizedSystemTest {
-
-  // the resource module
-  private IResourceModule _resourceModule;
+public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
 
   //
   private IRootArtifact   _rootArtifact;
@@ -48,7 +33,6 @@ public class SimpleArtifactTest extends AbstractModularizedSystemTest {
   public void initResourceModule() throws CoreException {
 
     //
-    _resourceModule = getModularizedSystem().getResourceModule("InnerClassTest", "1.0.0");
     _rootArtifact = getModularizedSystem().getArtifactModel(
         ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
   }

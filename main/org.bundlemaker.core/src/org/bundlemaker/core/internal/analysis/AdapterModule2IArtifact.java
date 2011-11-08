@@ -3,8 +3,8 @@ package org.bundlemaker.core.internal.analysis;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.IModule;
@@ -41,6 +41,17 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
     // set parent/children dependency
     setParent(parent);
     ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+  }
+
+  @Override
+  protected void onRemoveArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onRemoveArtifact");
+
+  }
+
+  @Override
+  protected void onAddArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onAddArtifact");
   }
 
   @Override

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.itest.modules;
 
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.itest.analysis.ModuleConverterTest;
+import org.bundlemaker.core.itest.analysis.SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
@@ -28,7 +28,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
   public void testRemoveAndAdd() throws Exception {
 
     //
-    IResourceModule resourceModule = getModularizedSystem().getResourceModule("ModuleConverterTest", "1.0.0");
+    IResourceModule resourceModule = getModularizedSystem().getResourceModule("SimpleArtifactModelTest", "1.0.0");
     Assert.assertNotNull(resourceModule);
 
     Assert.assertTrue(resourceModule instanceof IModifiableResourceModule);
@@ -69,7 +69,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
   public void testAddAndRemove() throws Exception {
 
     //
-    IResourceModule resourceModule = getModularizedSystem().getResourceModule("ModuleConverterTest", "1.0.0");
+    IResourceModule resourceModule = getModularizedSystem().getResourceModule("SimpleArtifactModelTest", "1.0.0");
     Assert.assertNotNull(resourceModule);
 
     Assert.assertTrue(resourceModule instanceof IModifiableResourceModule);
@@ -110,7 +110,7 @@ public class CachesTest extends AbstractModularizedSystemTest {
   public void testRemoveModule() throws Exception {
 
     //
-    IResourceModule resourceModule = getModularizedSystem().getResourceModule("ModuleConverterTest", "1.0.0");
+    IResourceModule resourceModule = getModularizedSystem().getResourceModule("SimpleArtifactModelTest", "1.0.0");
     Assert.assertNotNull(resourceModule);
 
     Assert.assertTrue(resourceModule instanceof IModifiableResourceModule);
@@ -149,6 +149,6 @@ public class CachesTest extends AbstractModularizedSystemTest {
    */
   @Override
   protected String computeTestProjectName() {
-    return ModuleConverterTest.class.getSimpleName();
+    return "SimpleArtifactModelTest";
   }
 }

@@ -175,6 +175,12 @@ public interface IArtifact {
 
   /**
    * <p>
+   * </p>
+   */
+  boolean hasChild(String path);
+
+  /**
+   * <p>
    * Returns <code>true</code> if this artifact contains the specified artifact, <code>false</code> otherwise.
    * </p>
    * 

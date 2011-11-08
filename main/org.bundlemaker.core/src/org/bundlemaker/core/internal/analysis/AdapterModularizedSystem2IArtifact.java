@@ -15,6 +15,7 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
+import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
@@ -81,7 +82,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
    * {@inheritDoc}
    */
   @Override
-  public IArtifactModelConfiguration getArtifactModelConfiguration() {
+  public IArtifactModelConfiguration getConfiguration() {
     return _artifactModelConfiguration;
   }
 
@@ -154,18 +155,8 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     return this;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void addArtifact(IArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-    assertCanAdd(artifact);
-
-    // // call the super method
-    // super.addArtifact(artifact);
+  protected void onAddArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
@@ -175,26 +166,13 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
-
-    Assert.isNotNull(artifact);
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
-        (IBundleMakerArtifact) artifact, ChangeAction.REMOVED));
+  protected void onRemoveArtifact(IArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
       internalRemoveArtifact(artifact);
     }
-
-    ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);
-
-    // return super.removeArtifact(artifact);
-    return true;
   }
 
   /**
@@ -227,31 +205,30 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void movableUnitAdded(MovableUnitMovedEvent event) {
 
-    System.out.println("------movableUnitAdded------------");
-    System.out.println(event.getMovableUnit());
-
-    // TODO: RICHTIGE BEHANDLUNG _ SOURCE/BINARY/TYPES etc. abhängig von ModelConfiguration
+    // get the movable unit
     IMovableUnit movableUnit = event.getMovableUnit();
+    IArtifactModelConfiguration configuration = getConfiguration();
 
-    if (movableUnit.hasAssociatedBinaryResources()) {
+    // Step 1: Handle resources
+    if (!configuration.containsNoResources()) {
 
-      for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+      // Step 1a: Handle BinaryContent
+      if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()) {
 
-        //
-        if (resource.hasPrimaryType() && resource.getPrimaryType().isLocalOrAnonymousType()) {
-          continue;
+        // iterate over the associated binary resources
+        for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+          _addResource(resource);
         }
+      }
+      // Step 1b: Handle SourceContent
+      else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()) {
 
-        // get the resource
-        IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().getOrCreate(resource);
-        AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getResourceCache()
-            .getOrCreateParent(resource);
-
-        parentArtifact.internalAddArtifact(artifact);
+        // iterate over the associated binary resources
+        _addResource(movableUnit.getAssociatedSourceResource());
       }
     }
 
-    //
+    // TODO
     if (movableUnit.hasAssociatedTypes()) {
 
       for (IType type : movableUnit.getAssociatedTypes()) {
@@ -265,12 +242,25 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
         parentArtifact.internalAddArtifact(artifact);
       }
     }
+  }
 
-    // for (IType type : movableUnit.getAssociatedTypes()) {
-    // _dependencyModel.getArtifactCache().getTypeArtifact(type, false);
-    // }
+  private void _addResource(IResource resource) {
 
-    System.out.println("------------------------------------");
+    // skip type resources if necessary
+    if (resource.containsTypes() && getConfiguration().containsOnlyNonTypeResources()) {
+      return;
+    }
+
+    // skip local or anonymous types (no 'Bla$1.class' resources)
+    if (resource.hasPrimaryType() && resource.getPrimaryType().isLocalOrAnonymousType()) {
+      return;
+    }
+
+    // add the resource
+    IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().getOrCreate(resource);
+    AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getResourceCache()
+        .getOrCreateParent(resource);
+    parentArtifact.internalAddArtifact(artifact);
   }
 
   /**
@@ -279,29 +269,71 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void movableUnitRemoved(MovableUnitMovedEvent event) {
 
-    System.out.println("*******movableUnitRemoved*********");
-    System.out.println(event.getMovableUnit());
+    //
+    if (hasCurrentAction()) {
 
+      if (!getCurrentAction().getChild().hasParent()) {
+        return;
+      }
+
+      if (getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
+          && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+
+        //
+        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
+            .internalRemoveArtifact(getCurrentAction().getChild());
+
+      } else {
+        removeMovableUnitArtifacts(event);
+      }
+
+    } else {
+      removeMovableUnitArtifacts(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  private void removeMovableUnitArtifacts(MovableUnitMovedEvent event) {
+
+    //
     IMovableUnit movableUnit = event.getMovableUnit();
+    IArtifactModelConfiguration configuration = getConfiguration();
 
-    if (movableUnit.hasAssociatedBinaryResources()) {
-
+    if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
+        && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
       for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
-
         IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
 
         if (artifact != null && artifact.getParent() != null) {
           ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
         }
       }
+    } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
+        && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
+      IResource resource = movableUnit.getAssociatedSourceResource();
+      IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
+
+      if (artifact != null && artifact.getParent() != null) {
+        ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
+      }
+    } else if (movableUnit.hasAssociatedTypes()) {
+      for (IType type : movableUnit.getAssociatedTypes()) {
+
+        //
+        TypeSubCache typeCache = _dependencyModel.getArtifactCache().getTypeCache();
+
+        //
+        IArtifact artifact = typeCache.get(new TypeKey(type));
+        if (artifact != null && artifact.getParent() != null) {
+          ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
+        }
+      }
     }
-
-    // for (IType type : movableUnit.getAssociatedTypes()) {
-    // _dependencyModel.getArtifactCache().getTypeArtifact(type, false);
-    // }
-
-    System.out.println("***********************************");
-    // _dependencyModel.getArtifactCache().getResourceArtifact(resource);
   }
 
   /**
@@ -310,19 +342,29 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void moduleAdded(ModuleMovedEvent event) {
 
-    System.out.println("moduleAdded" + event.getModule());
+    Assert.isTrue(hasCurrentAction());
 
-    //
-    ModuleSubCache moduleCache = _dependencyModel.getArtifactCache().getModuleCache();
+    // initiated by an artifact tree action?
+    if (hasCurrentAction()) {
 
-    //
-    AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) moduleCache.getOrCreate(new ModuleKey(event
-        .getModule()));
+      //
+      ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
+          .getChild());
 
-    //
-    if (moduleArtifact.getParent() == null) {
-      AbstractBundleMakerArtifactContainer parent = moduleCache.getModuleParent(event.getModule());
-      parent.internalAddArtifact(moduleArtifact);
+    } else {
+
+      //
+      ModuleSubCache moduleCache = _dependencyModel.getArtifactCache().getModuleCache();
+
+      //
+      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) moduleCache.getOrCreate(new ModuleKey(event
+          .getModule()));
+
+      //
+      if (moduleArtifact.getParent() == null) {
+        AbstractBundleMakerArtifactContainer parent = moduleCache.getModuleParent(event.getModule());
+        parent.internalAddArtifact(moduleArtifact);
+      }
     }
   }
 
@@ -332,11 +374,8 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void moduleRemoved(ModuleMovedEvent event) {
 
-    //
-    if (hasCurrentAction() && getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
-        && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+    if (hasCurrentAction()) {
 
-      //
       ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalRemoveArtifact(getCurrentAction()
           .getChild());
 
@@ -351,6 +390,16 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
         ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
       }
     }
+
+    // //
+    // if (hasCurrentAction() && getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
+    // && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+    //
+    // //
+    // ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalRemoveArtifact(getCurrentAction()
+    // .getChild());
+    //
+    // }
   }
 
   /**
@@ -359,24 +408,45 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   @Override
   public void moduleClassificationChanged(ModuleClassificationChangedEvent event) {
 
-    //
-    IModule module = event.getModule();
-    AbstractArtifactContainer moduleArtifact = _dependencyModel.getArtifactCache().getModuleCache()
-        .get(new ModuleKey(module));
-
-    //
-    IPath classification = module.getClassification();
-
-    if (classification != null) {
+    if (hasCurrentAction()) {
 
       //
-      AbstractBundleMakerArtifactContainer groupArtifact = _dependencyModel.getArtifactCache().getGroupCache()
-          .getOrCreate(classification);
+      if (getCurrentAction().getChangeAction().equals(ChangeAction.ADDED)) {
+
+        //
+        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
+            .getChild());
+      }
+
       //
-      groupArtifact.internalAddArtifact(moduleArtifact);
+      else if (getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+
+        //
+        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
+            .internalRemoveArtifact(getCurrentAction().getChild());
+      }
 
     } else {
-      internalAddArtifact(moduleArtifact);
+
+      //
+      IModule module = event.getModule();
+      AbstractArtifactContainer moduleArtifact = _dependencyModel.getArtifactCache().getModuleCache()
+          .getOrCreate(new ModuleKey(module));
+
+      //
+      IPath classification = module.getClassification();
+
+      if (classification != null) {
+
+        //
+        AbstractBundleMakerArtifactContainer groupArtifact = _dependencyModel.getArtifactCache().getGroupCache()
+            .getOrCreate(classification);
+        //
+        groupArtifact.internalAddArtifact(moduleArtifact);
+
+      } else {
+        internalAddArtifact(moduleArtifact);
+      }
     }
   }
 

@@ -2,8 +2,8 @@ package org.bundlemaker.core.internal.analysis.virtual;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.modules.IModule;
@@ -72,6 +72,17 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
   @Override
   public String handleCanAdd(IArtifact artifact) {
     return "Can not artifacts to virtual modules.";
+  }
+
+  @Override
+  protected void onRemoveArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onRemoveArtifact");
+
+  }
+
+  @Override
+  protected void onAddArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onAddArtifact");
   }
 
   /**

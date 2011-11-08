@@ -2,8 +2,8 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
@@ -24,19 +24,19 @@ import org.eclipse.core.runtime.Assert;
 public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContainer implements IPackageArtifact {
 
   /** - */
-  private String               _qualifiedName;
+  private String        _qualifiedName;
 
   /** - */
-  private boolean              _isFlat = true;
+  private boolean       _isFlat = true;
 
   /** - */
-  private boolean              _isVirtual;
+  private boolean       _isVirtual;
 
   /** - */
   private ArtifactCache _artifactCache;
 
   /** - */
-  private IModule              _containingModule;
+  private IModule       _containingModule;
 
   /**
    * <p>
@@ -150,7 +150,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
    * {@inheritDoc}
    */
   @Override
-  public void addArtifact(IArtifact artifact) {
+  protected void onAddArtifact(IArtifact artifact) {
 
     // asserts
     Assert.isNotNull(artifact);
@@ -158,64 +158,28 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
 
     // handle package
     if (artifact.getType().equals(ArtifactType.Package)) {
-      handlePackage(artifact);
-    } else {
+
       //
-      // super.addArtifact(artifact);
-      // TODO: TYPE CHECK??
+      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(_containingModule),
+          artifact.getQualifiedName());
+
+      IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
+          modulePackageKey);
+
+      // move the children to the new package artifact
+      for (IArtifact child : artifact.getChildren()) {
+        packageArtifact.addArtifact(child);
+      }
+    } else {
       AdapterUtils.addArtifactToPackage(this, artifact);
     }
   }
 
-  public void handlePackage(IArtifact artifact) {
-
-    //
-    ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(_containingModule),
-        artifact.getQualifiedName());
-
-    IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache()
-        .getOrCreate(modulePackageKey);
-
-    // //
-    // if (packageArtifact.getParent() != null) {
-
-    // move the children to the new package artifact
-    for (IArtifact child : artifact.getChildren()) {
-      packageArtifact.addArtifact(child);
-    }
-
-    // super.addArtifact(packageArtifact);
-
-    // } else {
-    // super.addArtifact(packageArtifact);
-    // // TODO: TYPE CHECK??
-    // AdapterUtils.addPackageToModule(artifact, this);
-    // }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-
-    // // get the result
-    // boolean result = super.removeArtifact(artifact);
+  protected void onRemoveArtifact(IArtifact artifact) {
 
     // TODO: TYPE CHECK??
     AdapterUtils.removeArtifact(artifact, this);
-
-    // // support for empty packages
-    // if (this.getChildren().isEmpty()) {
-    // getParent().removeArtifact(this);
-    // _artifactCache.getPackageCache();
-    // }
-
-    // return the result
-    return true;
   }
 
   /**

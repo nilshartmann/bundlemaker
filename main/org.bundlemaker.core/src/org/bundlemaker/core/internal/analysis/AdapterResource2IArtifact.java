@@ -134,6 +134,17 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
   }
 
   @Override
+  protected void onRemoveArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onRemoveArtifact");
+
+  }
+
+  @Override
+  protected void onAddArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException("onAddArtifact");
+  }
+
+  @Override
   public String getName() {
     return _resource.getName();
   }
