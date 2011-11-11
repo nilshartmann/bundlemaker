@@ -233,13 +233,15 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
 
       for (IType type : movableUnit.getAssociatedTypes()) {
 
-        TypeKey typeKey = new TypeKey(type);
-
-        IArtifact artifact = _dependencyModel.getArtifactCache().getTypeCache().getOrCreate(typeKey);
-        AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getTypeCache()
-            .getTypeParent(typeKey.getType());
-
-        parentArtifact.internalAddArtifact(artifact);
+        // filter local or anonymous type names
+        if ((!getConfiguration().isAggregateInnerTypes() && !type.isLocalOrAnonymousType())
+            || (getConfiguration().isAggregateInnerTypes() && !type.isInnerType() && type.handleAsPrimaryType())) {
+          TypeKey typeKey = new TypeKey(type);
+          IArtifact artifact = _dependencyModel.getArtifactCache().getTypeCache().getOrCreate(typeKey);
+          AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getTypeCache()
+              .getTypeParent(typeKey.getType());
+          parentArtifact.internalAddArtifact(artifact);
+        }
       }
     }
   }
@@ -330,7 +332,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
         //
         IArtifact artifact = typeCache.get(new TypeKey(type));
         if (artifact != null && artifact.getParent() != null) {
-          ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
+          ((AbstractBundleMakerArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
         }
       }
     }
