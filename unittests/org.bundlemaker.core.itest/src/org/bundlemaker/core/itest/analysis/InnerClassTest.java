@@ -4,10 +4,10 @@ import java.util.Collection;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -62,14 +62,12 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     Assert.assertSame(aSourceResource, bSourceResource);
 
     // transform the model
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(
-        getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
+    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
-    IArtifact aArtifact = ((IBundleMakerArtifact) dependencyModel.getRoot())
-        .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
+    IArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
     Assert.assertNotNull(aArtifact);
-    IArtifact bArtifact = ((IBundleMakerArtifact) dependencyModel.getRoot())
-        .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B");
+    IArtifact bArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B");
     Assert.assertNull(bArtifact);
 
     Collection<IDependency> dependencies = aArtifact.getDependencies();
@@ -77,40 +75,36 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     for (IDependency iDependency : dependencies) {
       System.out.println(iDependency);
     }
+  }
 
-    // //
-    //
-    //
-    // //
-    // ArtifactTransformationProcessor.moveArtifact(artifact, new BundlePathName("hunz"), dependencyModel);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   * @throws AmbiguousElementException
+   */
+  @Test
+  public void testMoveOuterClass() throws CoreException, AmbiguousElementException {
 
-    // // Test 1: assert module artifact != null
-    // IArtifact anonymousInnerClassTestModuleArtifact = ((IAdvancedArtifact) dependencyModel.getRoot())
-    // .getChild("group1/group2/AnonymousInnerClassTest_1.0.0");
-    // Assert.assertNotNull(anonymousInnerClassTestModuleArtifact);
-    // ArtifactUtils.dumpArtifact(anonymousInnerClassTestModuleArtifact);
+    // transform the model
+    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
+    ArtifactUtils.dumpArtifact(rootArtifact);
+    
     //
-    // IArtifact hunzModuleArtifact = ((IAdvancedArtifact) dependencyModel.getRoot()).getChild("hunz_0.0.0");
-    // Assert.assertNotNull(hunzModuleArtifact);
-    // ArtifactUtils.dumpArtifact(hunzModuleArtifact);
+    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
+    Assert.assertNotNull(aArtifact);
+    IBundleMakerArtifact packageArtifact = rootArtifact
+        .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes");
+    Assert.assertNotNull(packageArtifact);
+    // TODO: is this the intended behavior?
+    Assert.assertEquals(packageArtifact.getChildren().size(), 1);
+    
     //
-    // // Test 2: assert resources
-    // IResourceModule anonymousResourceModule = getModularizedSystem().getResourceModule("AnonymousInnerClassTest",
-    // "1.0.0");
-    // dump(anonymousResourceModule, getModularizedSystem());
-    // Assert.assertNull(anonymousResourceModule.getResource("de/test/anonymous/Test.class", ContentType.BINARY));
-    // Assert.assertNull(anonymousResourceModule.getResource("de/test/anonymous/Test$1.class", ContentType.BINARY));
-    // Assert.assertNull(anonymousResourceModule.getResource("de/test/anonymous/Test.java", ContentType.SOURCE));
-    //
-    // IResourceModule hunzResourceModule = getModularizedSystem().getResourceModule("hunz", "0.0.0");
-    // dump(hunzResourceModule, getModularizedSystem());
-    // Assert.assertNotNull(hunzResourceModule.getResource("de/test/anonymous/Test.class", ContentType.BINARY));
-    // Assert.assertNotNull(hunzResourceModule.getResource("de/test/anonymous/Test$1.class", ContentType.BINARY));
-    // Assert.assertNotNull(hunzResourceModule.getResource("de/test/anonymous/Test.java", ContentType.SOURCE));
-    //
-    // // Test 3:
-    // IType type = getModularizedSystem().getType("de.test.anonymous.Test");
-    // Assert.assertNotNull(type);
-    // System.out.println(type.getModule(getModularizedSystem()));
+    packageArtifact.removeArtifact(aArtifact);
+    Assert.assertEquals(packageArtifact.getChildren().size(), 0);
+    packageArtifact.addArtifact(aArtifact);
+    Assert.assertEquals(packageArtifact.getChildren().size(), 1);
   }
 }
