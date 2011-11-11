@@ -229,6 +229,35 @@ public class Type implements IType, IModifiableType {
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  @Override
+  public final boolean handleAsPrimaryType() {
+
+    // if the type does not has a source resource,
+    // handle the type as primary type
+    if (!this.hasSourceResource()) {
+      return true;
+    }
+
+    //
+    IResource sourceResource = this.getSourceResource();
+
+    // if the source resource does not contain a primary type,
+    // handle the non primary type as a primary type
+    if (!sourceResource.hasPrimaryType()) {
+      return true;
+    }
+
+    //
+    return sourceResource.isPrimaryType(this);
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override

@@ -161,34 +161,6 @@ public class ArtifactCache {
    * <p>
    * </p>
    * 
-   * @param type
-   * @return
-   */
-  public final boolean handleAsPrimaryType(IType type) {
-
-    // if the type does not has a source resource,
-    // handle the type as primary type
-    if (!type.hasSourceResource()) {
-      return true;
-    }
-
-    //
-    IResource sourceResource = type.getSourceResource();
-
-    // if the source resource does not contain a primary type,
-    // handle the non primary type as a primary type
-    if (!sourceResource.hasPrimaryType()) {
-      return true;
-    }
-
-    //
-    return sourceResource.isPrimaryType(type);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param resourceModule
    * @return
    */
@@ -369,7 +341,7 @@ public class ArtifactCache {
 
         // filter local or anonymous type names
         if ((!getConfiguration().isAggregateInnerTypes() && !type.isLocalOrAnonymousType())
-            || (getConfiguration().isAggregateInnerTypes() && !type.isInnerType() && handleAsPrimaryType(type))) {
+            || (getConfiguration().isAggregateInnerTypes() && !type.isInnerType() && type.handleAsPrimaryType())) {
 
           // create the artifact
           this.getTypeArtifact(type, true);

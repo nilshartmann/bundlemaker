@@ -159,4 +159,12 @@ public interface IType extends Comparable<IType> {
    * @return
    */
   boolean isPrimaryType();
+  
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean handleAsPrimaryType();
 }
