@@ -11,11 +11,8 @@
 package org.bundlemaker.core.transformations;
 
 import java.util.Collection;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -166,22 +163,4 @@ public class ClassifyTransformation implements ITransformation {
     return (str.length() >= firstIndex && pattern.substring(0, firstIndex).equals(str.substring(0, firstIndex)) && simpleMatch(
         pattern.substring(firstIndex), str.substring(firstIndex)));
   }
-
-  // public static void main(String[] args) {
-  //
-  // ClassifyTransformation transformation = new ClassifyTransformation("org.bm.*", "BUNDLEMAKER/%MODULE_NAME%");
-  //
-  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm.a", "1")));
-  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm.aa", "1")));
-  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm", "1")));
-  // System.out.println(transformation.matches(new ModuleIdentifier("org.bm.c", "1")));
-  // System.out.println(transformation.matches(new ModuleIdentifier("org.ba.c", "1")));
-  // String classification = "A/%MODULE_NAME%/%ModuleName%/".replaceAll("%MODULE_NAME%", "MEINMODUL");
-  // classification = classification.replaceAll("%ModuleName%", "MeinModul")
-  // ;
-  // System.out.println("classification:" + classification);
-  //
-  // // transformation.applyClassification(new ModuleIdentifier("org.bm.a", "1"), new ResourceModule());
-  // }
-
 }
