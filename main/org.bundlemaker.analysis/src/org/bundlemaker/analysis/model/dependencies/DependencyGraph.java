@@ -63,14 +63,14 @@ public class DependencyGraph implements Serializable {
    * 
    * @param artifacts
    */
-  public static DependencyGraph calculateDependencyGraph(Collection<IArtifact> artifacts) {
+  public static DependencyGraph calculateDependencyGraph(Collection<? extends IArtifact> artifacts) {
     DependencyGraph newGraph = new DependencyGraph(artifacts);
     newGraph.calculateDependencies();
 
     return newGraph;
   }
 
-  public DependencyGraph(Collection<IArtifact> artifacts) {
+  public DependencyGraph(Collection<? extends IArtifact> artifacts) {
     artifactsMap = new HashMap<IArtifact, Collection<IDependency>>();
     cycles = new HashSet<Cycle>();
 
