@@ -17,7 +17,12 @@ public class ArtifactUtils {
    * @param level
    * @param stringBuilder
    */
-  public static void dumpArtifact(IArtifact artifact, int level, StringBuilder stringBuilder) {
+  private static void dumpArtifact(IArtifact artifact, int level, StringBuilder stringBuilder, int limit) {
+
+    // limit
+    if (limit != -1 && level >= limit) {
+      return;
+    }
 
     //
     for (int i = 0; i < level; i++) {
@@ -41,7 +46,7 @@ public class ArtifactUtils {
     for (IArtifact child : sorted) {
       // if (child.getType().equals(ArtifactType.Root) || child.getType().equals(ArtifactType.Group)
       // || child.getType().equals(ArtifactType.Module)) {
-      dumpArtifact(child, level + 1, stringBuilder);
+      dumpArtifact(child, level + 1, stringBuilder, limit);
       // }
     }
   }
@@ -54,7 +59,19 @@ public class ArtifactUtils {
    */
   public static void dumpArtifact(IArtifact artifact) {
     StringBuilder builder = new StringBuilder();
-    dumpArtifact(artifact, 0, builder);
+    dumpArtifact(artifact, 0, builder, -1);
+    System.out.println(builder.toString());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  public static void dumpArtifact(IArtifact artifact, int limit) {
+    StringBuilder builder = new StringBuilder();
+    dumpArtifact(artifact, 0, builder, limit);
     System.out.println(builder.toString());
   }
 
@@ -67,7 +84,7 @@ public class ArtifactUtils {
    */
   public static String artifactToString(IArtifact artifact) {
     StringBuilder builder = new StringBuilder();
-    dumpArtifact(artifact, 0, builder);
+    dumpArtifact(artifact, 0, builder, -1);
     return builder.toString();
   }
 
