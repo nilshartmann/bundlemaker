@@ -12,6 +12,7 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.util.ModuleUtils;
@@ -22,25 +23,25 @@ import org.junit.Before;
 public abstract class AbstractJeditArtifactTest extends AbstractModularizedSystemTest {
 
   /** - */
-  private IBundleMakerArtifact _rootArtifact;
+  private IRootArtifact _rootArtifact;
 
   /** - */
-  private IArtifact         _jeditModuleArtifact;
+  private IArtifact     _jeditModuleArtifact;
 
   /** - */
-  private IArtifact         _velocityModuleArtifact;
+  private IArtifact     _velocityModuleArtifact;
 
   /** - */
-  private IArtifact         _jdk16Artifact;
+  private IArtifact     _jdk16Artifact;
 
   /** - */
-  private IArtifact         _group1Artifact;
+  private IArtifact     _group1Artifact;
 
   /** - */
-  private IArtifact         _group2Artifact;
+  private IArtifact     _group2Artifact;
 
   /** - */
-  private IArtifact         _missingTypesArtifact;
+  private IArtifact     _missingTypesArtifact;
 
   @Before
   public void init() throws CoreException {
@@ -59,7 +60,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
         getArtifactModelConfiguration());
     Assert.assertNotNull(dependencyModel);
 
-    _rootArtifact = (IBundleMakerArtifact) dependencyModel.getRoot();
+    _rootArtifact = (IRootArtifact) dependencyModel.getRoot();
     Assert.assertNotNull(_rootArtifact);
 
     // assert the input
@@ -69,14 +70,20 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     Assert.assertNotNull(String.format("Resource '%s' not found.", resourceName), inputstream);
     assertResult(ArtifactUtils.artifactToString(_rootArtifact), inputstream, expectedResultName + getCurrentTimeStamp());
 
-    Assert.assertEquals(8275, _rootArtifact.getDependencies().size());
+    if (_rootArtifact.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
+      Assert.assertEquals(8275, _rootArtifact.getDependencies().size());
+    } else {
+      Assert.assertEquals(8158, _rootArtifact.getDependencies().size());
+    }
 
     _group1Artifact = getArtifact(_rootArtifact, "group1");
     _group2Artifact = getArtifact(_rootArtifact, "group1|group2");
     _jeditModuleArtifact = getArtifact(_rootArtifact, "group1|group2|jedit_1.0.0");
     _velocityModuleArtifact = getArtifact(_rootArtifact, "velocity_1.5");
     _jdk16Artifact = getArtifact(_rootArtifact, "jdk16_jdk16");
-    _missingTypesArtifact = getArtifact(_rootArtifact, "<< Missing Types >>");
+    if (_rootArtifact.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
+      _missingTypesArtifact = getArtifact(_rootArtifact, "<< Missing Types >>");
+    }
 
     assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 1904);
     assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
@@ -92,7 +99,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * 
    * @return
    */
-  protected final IBundleMakerArtifact getRootArtifact() {
+  protected final IRootArtifact getRootArtifact() {
     return _rootArtifact;
   }
 
