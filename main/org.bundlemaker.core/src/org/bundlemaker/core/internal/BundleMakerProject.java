@@ -351,6 +351,14 @@ public class BundleMakerProject implements IBundleMakerProject {
 
   /**
    * {@inheritDoc}
+   */
+  @Override
+  public IModularizedSystem getModularizedSystemWorkingCopy() throws CoreException {
+    return getModularizedSystemWorkingCopy(getProject().getName());
+  }
+
+  /**
+   * {@inheritDoc}
    * 
    * @throws CoreException
    */

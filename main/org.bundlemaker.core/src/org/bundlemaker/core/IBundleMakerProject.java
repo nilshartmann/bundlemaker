@@ -222,6 +222,18 @@ public interface IBundleMakerProject {
 
   /**
    * <p>
+   * Returns the default working copy of type {@link IModularizedSystem}.
+   * </p>
+   * 
+   * @return the default working copy of type {@link IModularizedSystem}.
+   * @throws CoreException
+   * 
+   * @precondition BundleMakerProjectState.OPENED
+   */
+  IModularizedSystem getModularizedSystemWorkingCopy() throws CoreException;
+
+  /**
+   * <p>
    * Deletes the working copy of type {@link IModularizedSystem} with the given name.
    * </p>
    * 
