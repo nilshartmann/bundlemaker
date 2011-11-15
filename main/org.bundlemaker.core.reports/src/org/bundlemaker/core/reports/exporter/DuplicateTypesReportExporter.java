@@ -20,7 +20,6 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.exporter.IModularizedSystemExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
-import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.reports.visitors.DuplicatePackagesVisitor;
 import org.bundlemaker.core.reports.visitors.DuplicateTypesVisitor;
@@ -51,8 +50,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     //
     DuplicateTypesVisitor duplicateTypesVisitor = new DuplicateTypesVisitor();
     DuplicatePackagesVisitor duplicatePackagesVisitor = new DuplicatePackagesVisitor();
-    DispatchingArtifactTreeVisitor visitor = new DispatchingArtifactTreeVisitor(duplicateTypesVisitor, duplicatePackagesVisitor);
-    rootArtifact.accept(visitor);
+    rootArtifact.accept(duplicateTypesVisitor, duplicatePackagesVisitor);
 
     context.getDestinationDirectory().mkdirs();
     File resultFile = new File(context.getDestinationDirectory(), "report.txt");
