@@ -28,6 +28,7 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
+import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
@@ -287,6 +288,11 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   public void accept(IArtifactTreeVisitor visitor) {
     //
     visitor.visit(this);
+  }
+
+  public void accept(IArtifactTreeVisitor... visitors) {
+    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
+    accept(artifactTreeVisitor);
   }
 
   @Override

@@ -173,4 +173,9 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
       }
     }
   }
+
+  public void accept(IArtifactTreeVisitor... visitors) {
+    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
+    accept(artifactTreeVisitor);
+  }
 }

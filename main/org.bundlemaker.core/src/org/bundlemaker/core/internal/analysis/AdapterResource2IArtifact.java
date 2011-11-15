@@ -177,6 +177,11 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
     }
   }
 
+  public void accept(IArtifactTreeVisitor... visitors) {
+    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
+    accept(artifactTreeVisitor);
+  }
+
   @Override
   public boolean containsTypes() {
     return hasAssociatedTypes();

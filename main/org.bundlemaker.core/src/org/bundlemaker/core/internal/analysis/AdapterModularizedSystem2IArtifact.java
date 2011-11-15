@@ -199,6 +199,11 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     }
   }
 
+  public void accept(IArtifactTreeVisitor... visitors) {
+    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
+    accept(artifactTreeVisitor);
+  }
+
   /**
    * {@inheritDoc}
    */

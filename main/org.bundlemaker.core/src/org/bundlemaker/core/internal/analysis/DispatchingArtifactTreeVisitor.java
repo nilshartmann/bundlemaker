@@ -1,4 +1,4 @@
-package org.bundlemaker.core.reports.visitors;
+package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;

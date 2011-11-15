@@ -197,6 +197,11 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
     }
   }
 
+  public void accept(IArtifactTreeVisitor... visitors) {
+    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
+    accept(artifactTreeVisitor);
+  }
+
   /**
    * <p>
    * </p>

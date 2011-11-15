@@ -118,6 +118,11 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
     }
   }
 
+  public void accept(IArtifactTreeVisitor... visitors) {
+    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
+    accept(artifactTreeVisitor);
+  }
+
   /**
    * <p>
    * Returns the module.

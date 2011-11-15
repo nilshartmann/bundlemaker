@@ -145,6 +145,14 @@ public interface IBundleMakerArtifact extends IArtifact {
    * <p>
    * </p>
    * 
+   * @param visitors
+   */
+  void accept(IArtifactTreeVisitor... visitors);
+
+  /**
+   * <p>
+   * </p>
+   * 
    */
   List<IArtifact> invalidateDependencyCache();
 

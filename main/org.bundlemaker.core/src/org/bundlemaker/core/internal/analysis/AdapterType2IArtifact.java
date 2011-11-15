@@ -527,6 +527,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     visitor.visit(this);
   }
 
+  public void accept(IArtifactTreeVisitor... visitors) {
+    DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
+    accept(artifactTreeVisitor);
+  }
+
   @Override
   public void addArtifact(IArtifact artifact) {
     throw new UnsupportedOperationException();
