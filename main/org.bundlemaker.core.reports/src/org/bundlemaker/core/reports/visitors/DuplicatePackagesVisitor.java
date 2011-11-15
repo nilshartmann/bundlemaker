@@ -88,6 +88,11 @@ public class DuplicatePackagesVisitor extends IArtifactTreeVisitor.Adapter {
       return false;
     }
 
+    // return if package is the default package
+    if (packageArtifact.getQualifiedName().isEmpty()) {
+      return true;
+    }
+
     //
     if (_packages.containsKey(packageArtifact.getQualifiedName())) {
 
