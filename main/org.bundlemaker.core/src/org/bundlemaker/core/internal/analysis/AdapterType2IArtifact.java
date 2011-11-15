@@ -420,7 +420,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
       //
       else {
-        System.out.println("MISSING TYPE: " + referenceName);
+        // System.out.println("MISSING TYPE: " + referenceName);
       }
     }
   }
