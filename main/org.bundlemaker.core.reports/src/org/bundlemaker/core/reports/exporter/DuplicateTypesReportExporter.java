@@ -34,7 +34,20 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class DuplicateTypesReportExporter implements IModularizedSystemExporter {
 
   /** - */
+  private File       _resultFile;
+
+  /** - */
   private FileWriter _fileWriter;
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resultFile
+   */
+  public void setResultFile(File resultFile) {
+    _resultFile = resultFile;
+  }
 
   /**
    * {@inheritDoc}
@@ -53,8 +66,10 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     rootArtifact.accept(duplicateTypesVisitor, duplicatePackagesVisitor);
 
     context.getDestinationDirectory().mkdirs();
-    File resultFile = new File(context.getDestinationDirectory(), "report.txt");
-    _fileWriter = new FileWriter(resultFile);
+    if (_resultFile == null) {
+      _resultFile = new File(context.getDestinationDirectory(), "report.txt");
+    }
+    _fileWriter = new FileWriter(_resultFile);
 
     //
     _fileWriter.append("Report\n");

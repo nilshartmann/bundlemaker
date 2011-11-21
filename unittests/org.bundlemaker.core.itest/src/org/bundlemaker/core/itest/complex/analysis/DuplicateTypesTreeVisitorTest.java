@@ -1,6 +1,8 @@
 package org.bundlemaker.core.itest.complex.analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 
 import junit.framework.Assert;
 
@@ -12,6 +14,7 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.reports.exporter.DuplicateTypesReportExporter;
+import org.bundlemaker.core.testutils.BundleMakerTestUtils;
 import org.junit.Test;
 
 /**
@@ -42,22 +45,22 @@ public class DuplicateTypesTreeVisitorTest extends AbstractJeditArtifactTest {
     moduleArtifact.addArtifact(typeArtifact);
 
     //
-    DuplicateTypesReportExporter exporter = new DuplicateTypesReportExporter();
-    exporter.export(getModularizedSystem(), new DefaultModuleExporterContext(getBundleMakerProject(), new File(
-        "d:/temp"), getModularizedSystem()), null);
+    File file = File.createTempFile(this.getClass().getName(), "txt");
+    file.getParentFile().mkdirs();
+    file.deleteOnExit();
 
-    // StopWatch stopWatch = new StopWatch();
-    // stopWatch.start();
-    // DuplicateTypesVisitor visitor = new DuplicateTypesVisitor();
-    // getRootArtifact().accept(visitor);
-    // stopWatch.stop();
-    // System.out.println(stopWatch.getElapsedTime());
+    DuplicateTypesReportExporter exporter = new DuplicateTypesReportExporter();
+    exporter.setResultFile(file);
+    exporter.export(getModularizedSystem(), new DefaultModuleExporterContext(getBundleMakerProject(), file.getParentFile(),
+        getModularizedSystem()), null);
+
     //
-    // System.out.println(visitor.getDuplicateTypes());
-    // // System.out.println(visitor.getSingleTypes());
-    //
-    // System.out.println(visitor.getDuplicatePackages());
-    // // System.out.println(visitor.getSinglePackages());
+    String actualContent = readFileAsString(file);
+    actualContent = actualContent.replace("\r\n", "\n");
+    String expectedContent = BundleMakerTestUtils.convertStreamToString(this.getClass().getResourceAsStream(
+        "results/Report_DuplicateTypesTreeVisitorTest.txt"));
+    expectedContent = expectedContent.replace("\r\n", "\n");
+    Assert.assertEquals(expectedContent, actualContent);
   }
 
   /**
@@ -71,5 +74,27 @@ public class DuplicateTypesTreeVisitorTest extends AbstractJeditArtifactTest {
 
     //
     return configuration;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param file
+   * @return
+   * @throws java.io.IOException
+   */
+  private static String readFileAsString(File file) throws java.io.IOException {
+    StringBuffer fileData = new StringBuffer(1000);
+    BufferedReader reader = new BufferedReader(new FileReader(file));
+    char[] buf = new char[1024];
+    int numRead = 0;
+    while ((numRead = reader.read(buf)) != -1) {
+      String readData = String.valueOf(buf, 0, numRead);
+      fileData.append(readData);
+      buf = new char[1024];
+    }
+    reader.close();
+    return fileData.toString();
   }
 }
