@@ -22,7 +22,6 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -104,24 +103,24 @@ public class SimpleReportExporter extends AbstractExporter {
     }
     subMonitor.worked(1);
 
-    builder.append("\n");
-    builder.append("Referenced Types: \n");
-    Set<String> referencedTypes = getCurrentModule().getReferencedTypeNames(
-        ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
-    for (String referencedType : asSortedList(referencedTypes)) {
-      builder.append(referencedType + "\n");
-    }
+    // builder.append("\n");
+    // builder.append("Referenced Types: \n");
+    // Set<String> referencedTypes = getCurrentModule().getReferencedTypeNames(
+    // ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
+    // for (String referencedType : asSortedList(referencedTypes)) {
+    // builder.append(referencedType + "\n");
+    // }
     subMonitor.worked(2);
 
-    builder.append("\n");
-    builder.append("Indirectly referenced Types: \n");
-    Set<String> indirectlyReferencedTypes = getCurrentModule().getReferencedTypeNames(
-        ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
-    for (String referencedType : asSortedList(indirectlyReferencedTypes)) {
-      if (!referencedTypes.contains(referencedType)) {
-        builder.append(referencedType + "\n");
-      }
-    }
+    // builder.append("\n");
+    // builder.append("Indirectly referenced Types: \n");
+    // Set<String> indirectlyReferencedTypes = getCurrentModule().getReferencedTypeNames(
+    // ReferenceQueryFilters.ALL_DIRECT_EXTERNAL_REFERENCES_QUERY_FILTER);
+    // for (String referencedType : asSortedList(indirectlyReferencedTypes)) {
+    // if (!referencedTypes.contains(referencedType)) {
+    // builder.append(referencedType + "\n");
+    // }
+    // }
     subMonitor.worked(2);
 
     builder.append("\n");
