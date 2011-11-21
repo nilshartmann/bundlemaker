@@ -96,6 +96,23 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
 
   /**
    * <p>
+   * </p>
+   * 
+   */
+  @Test
+  public void testAssertEquals() {
+
+    Assert.assertEquals(
+        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"), getModularizedSystem()),
+        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A$AA"), getModularizedSystem()));
+    
+    Assert.assertEquals(
+        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"), getModularizedSystem()),
+        MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B"), getModularizedSystem()));
+  }
+
+  /**
+   * <p>
    * Helper method that checks the specified {@link IMovableUnit}.
    * </p>
    * 

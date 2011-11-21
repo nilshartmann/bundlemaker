@@ -250,6 +250,10 @@ public class MovableUnit implements IMovableUnit {
       }
     }
 
+    //
+    Collections.sort(_binaryResources);
+    Collections.sort(_associatedTypes);
+
     // set initialized
     _isInitialized = true;
   }
@@ -295,6 +299,61 @@ public class MovableUnit implements IMovableUnit {
     //
     return "MovableUnit [_sourceResource=" + _sourceResource + ", _binaryResources=" + _binaryResources
         + ", _associatedTypes=" + _associatedTypes + "]";
+  }
+
+  @Override
+  public int hashCode() {
+
+    //
+    init();
+
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_associatedTypes == null) ? 0 : _associatedTypes.hashCode());
+    result = prime * result + ((_binaryResources == null) ? 0 : _binaryResources.hashCode());
+    result = prime * result + ((_modularizedSystem == null) ? 0 : _modularizedSystem.hashCode());
+    result = prime * result + ((_sourceResource == null) ? 0 : _sourceResource.hashCode());
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+
+    //
+    init();
+
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    MovableUnit other = (MovableUnit) obj;
+    other.init();
+    if (_associatedTypes == null) {
+      if (other._associatedTypes != null)
+        return false;
+    } else if (!_associatedTypes.equals(other._associatedTypes))
+      return false;
+    if (_binaryResources == null) {
+      if (other._binaryResources != null)
+        return false;
+    } else if (!_binaryResources.equals(other._binaryResources))
+      return false;
+    if (_modularizedSystem == null) {
+      if (other._modularizedSystem != null)
+        return false;
+    } else if (!_modularizedSystem.equals(other._modularizedSystem))
+      return false;
+    if (_sourceResource == null) {
+      if (other._sourceResource != null)
+        return false;
+    } else if (!_sourceResource.equals(other._sourceResource))
+      return false;
+    return true;
   }
 
 }
