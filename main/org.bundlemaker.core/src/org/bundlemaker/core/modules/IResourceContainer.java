@@ -12,6 +12,7 @@ package org.bundlemaker.core.modules;
 
 import java.util.Set;
 
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
@@ -63,6 +64,14 @@ public interface IResourceContainer extends ITypeContainer {
    * @return
    */
   Set<IResource> getResources(ContentType conentType);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<IMovableUnit> getMovableUnits();
 
   /**
    * <p>

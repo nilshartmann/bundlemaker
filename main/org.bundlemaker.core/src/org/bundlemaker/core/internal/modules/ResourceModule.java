@@ -21,6 +21,7 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceContainer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -55,6 +56,25 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
   @Override
   public boolean containsResource(String path, ContentType contentType) {
     return getResource(path, contentType) != null;
+  }
+
+  @Override
+  public Set<IMovableUnit> getMovableUnits() {
+
+    // create the result set
+    final Set<IMovableUnit> result = new HashSet<IMovableUnit>();
+
+    //
+    doWithAllContainers(new ContainerClosure<ResourceContainer>() {
+      @Override
+      public boolean doWithContainer(ResourceContainer resourceContainer) {
+        result.addAll(resourceContainer.getMovableUnits());
+        return false;
+      }
+    });
+
+    // return the result
+    return Collections.unmodifiableSet(result);
   }
 
   /**

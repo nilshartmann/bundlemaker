@@ -22,6 +22,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceContainer;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -152,6 +153,59 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     // return result
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Set<IMovableUnit> getMovableUnits() {
+
+    // the result
+    Set<IMovableUnit> result = new HashSet<IMovableUnit>();
+
+    // iterate over all types
+    for (IType type : getContainedTypes()) {
+
+      //
+      IMovableUnit movableUnit = MovableUnit.createFromType(type, getModularizedSystem());
+
+      //
+      if (!result.contains(movableUnit)) {
+        result.add(movableUnit);
+      }
+    }
+
+    // iterate over all resources
+    for (IResource resource : getResources(ContentType.BINARY)) {
+      if (!resource.containsTypes()) {
+
+        //
+        IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());
+
+        //
+        if (!result.contains(movableUnit)) {
+          result.add(movableUnit);
+        }
+      }
+    }
+
+    // iterate over all resources
+    for (IResource resource : getResources(ContentType.SOURCE)) {
+      if (!resource.containsTypes()) {
+
+        //
+        IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());
+
+        //
+        if (!result.contains(movableUnit)) {
+          result.add(movableUnit);
+        }
+      }
+    }
+
+    // return the result
     return result;
   }
 
