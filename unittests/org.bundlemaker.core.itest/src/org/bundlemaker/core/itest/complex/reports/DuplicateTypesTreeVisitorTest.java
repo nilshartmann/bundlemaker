@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.complex.analysis;
+package org.bundlemaker.core.itest.complex.reports;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,7 @@ import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresent
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
+import org.bundlemaker.core.itest.complex.analysis.AbstractJeditArtifactTest;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.reports.exporter.DuplicateTypesReportExporter;
 import org.bundlemaker.core.testutils.BundleMakerTestUtils;
@@ -51,8 +52,8 @@ public class DuplicateTypesTreeVisitorTest extends AbstractJeditArtifactTest {
 
     DuplicateTypesReportExporter exporter = new DuplicateTypesReportExporter();
     exporter.setResultFile(file);
-    exporter.export(getModularizedSystem(), new DefaultModuleExporterContext(getBundleMakerProject(), file.getParentFile(),
-        getModularizedSystem()), null);
+    exporter.export(getModularizedSystem(),
+        new DefaultModuleExporterContext(getBundleMakerProject(), file.getParentFile(), getModularizedSystem()), null);
 
     //
     String actualContent = readFileAsString(file);

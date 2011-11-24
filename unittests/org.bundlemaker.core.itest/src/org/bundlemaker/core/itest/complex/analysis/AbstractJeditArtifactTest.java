@@ -51,7 +51,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     assertTypeCount(1438);
 
     // assert the input
-    InputStream inputstream = getClass().getResourceAsStream("results/" + getTestProjectName() + ".txt");
+    InputStream inputstream = AbstractJeditArtifactTest.class.getResourceAsStream("results/" + getTestProjectName() + ".txt");
     assertResult(ModuleUtils.dump(getModularizedSystem().getResourceModule(getTestProjectName(), "1.0.0")),
         inputstream, getTestProjectName() + getCurrentTimeStamp());
 
@@ -66,7 +66,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     // assert the input
     String expectedResultName = "AbstractComplexTest_Input_" + getArtifactModelConfiguration();
     String resourceName = "results/" + expectedResultName + ".txt";
-    inputstream = getClass().getResourceAsStream(resourceName);
+    inputstream = AbstractJeditArtifactTest.class.getResourceAsStream(resourceName);
     Assert.assertNotNull(String.format("Resource '%s' not found.", resourceName), inputstream);
     assertResult(ArtifactUtils.artifactToString(_rootArtifact), inputstream, expectedResultName + getCurrentTimeStamp());
 
