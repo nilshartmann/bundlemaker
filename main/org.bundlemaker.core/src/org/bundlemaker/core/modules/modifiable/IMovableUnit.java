@@ -22,6 +22,22 @@ public interface IMovableUnit {
    * 
    * @return
    */
+  IResourceModule getContainingResourceModule();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean hasContainingResourceModule();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   boolean hasAssociatedTypes();
 
   /**
@@ -66,8 +82,4 @@ public interface IMovableUnit {
    * @return the source resource that is associated with this movable type.
    */
   IResource getAssociatedSourceResource();
-
-  IResourceModule getContainingResourceModule();
-
-  public boolean hasContainingResourceModule();
 }

@@ -8,6 +8,7 @@ import org.bundlemaker.core.util.FileUtils;
 
 /**
  * <p>
+ * Absstract base class for all pattern based selectors.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -27,7 +28,7 @@ public abstract class AbstractPatternBasedSelector {
    */
   public AbstractPatternBasedSelector() {
 
-    //
+    // creates the lists
     _includes = new LinkedList<String>();
     _excludes = new LinkedList<String>();
   }
@@ -56,10 +57,12 @@ public abstract class AbstractPatternBasedSelector {
 
   /**
    * <p>
+   * Returns <code>true</code>, if the given path is included, <code>false</code> otherwise.
    * </p>
    * 
-   * @param resourceModule
-   * @return
+   * @param path
+   *          the path to test
+   * @return <code>true</code>, if the given path is included, <code>false</code> otherwise.
    */
   public boolean isIncluded(String path) {
 
