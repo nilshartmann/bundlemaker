@@ -64,13 +64,13 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
         ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
 
     //
-    DuplicateTypesVisitor duplicateTypesVisitor = new DuplicateTypesVisitor();
-    DuplicatePackagesVisitor duplicatePackagesVisitor = new DuplicatePackagesVisitor();
+    DuplicateTypesVisitor duplicateTypesVisitor = createDuplicateTypesVisitor();
+    DuplicatePackagesVisitor duplicatePackagesVisitor = createDuplicatePackagesVisitor();
     rootArtifact.accept(duplicateTypesVisitor, duplicatePackagesVisitor);
 
     context.getDestinationDirectory().mkdirs();
     if (_resultFile == null) {
-      _resultFile = new File(context.getDestinationDirectory(), "report.txt");
+      _resultFile = createResultFile(context);
     }
     _fileWriter = new FileWriter(_resultFile);
 
@@ -89,6 +89,37 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     //
     _fileWriter.flush();
     _fileWriter.close();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param context
+   * @return
+   */
+  protected File createResultFile(IModuleExporterContext context) {
+    return new File(context.getDestinationDirectory(), "report.txt");
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected DuplicatePackagesVisitor createDuplicatePackagesVisitor() {
+    return new DuplicatePackagesVisitor();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected DuplicateTypesVisitor createDuplicateTypesVisitor() {
+    return new DuplicateTypesVisitor();
   }
 
   /**
