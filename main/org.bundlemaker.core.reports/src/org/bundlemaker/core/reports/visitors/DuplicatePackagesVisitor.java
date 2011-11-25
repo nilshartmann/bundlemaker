@@ -92,6 +92,11 @@ public class DuplicatePackagesVisitor extends IArtifactTreeVisitor.Adapter {
     if (packageArtifact.getQualifiedName().isEmpty()) {
       return true;
     }
+    
+    // return if package is the META-INF
+    if (!packageArtifact.containsTypes()) {
+      return true;
+    }
 
     //
     if (_packages.containsKey(packageArtifact.getQualifiedName())) {
