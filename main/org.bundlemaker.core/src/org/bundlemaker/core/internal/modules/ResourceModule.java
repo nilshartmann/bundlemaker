@@ -76,7 +76,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     });
 
     // return the result
-    return Collections.unmodifiableSet(result);
+    return Collections.unmodifiableList(result);
   }
 
   /**
