@@ -13,6 +13,8 @@ package org.bundlemaker.core.internal.modules;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -59,10 +61,10 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
   }
 
   @Override
-  public Set<IMovableUnit> getMovableUnits() {
+  public List<IMovableUnit> getMovableUnits() {
 
     // create the result set
-    final Set<IMovableUnit> result = new HashSet<IMovableUnit>();
+    final List<IMovableUnit> result = new LinkedList<IMovableUnit>();
 
     //
     doWithAllContainers(new ContainerClosure<ResourceContainer>() {

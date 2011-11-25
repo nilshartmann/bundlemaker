@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules;
 
+import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
@@ -71,7 +72,7 @@ public interface IResourceContainer extends ITypeContainer {
    * 
    * @return
    */
-  Set<IMovableUnit> getMovableUnits();
+  List<IMovableUnit> getMovableUnits();
 
   /**
    * <p>

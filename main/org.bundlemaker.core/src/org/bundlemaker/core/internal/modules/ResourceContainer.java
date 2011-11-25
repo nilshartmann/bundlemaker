@@ -13,6 +13,8 @@ package org.bundlemaker.core.internal.modules;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
@@ -160,10 +162,10 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * {@inheritDoc}
    */
   @Override
-  public Set<IMovableUnit> getMovableUnits() {
+  public List<IMovableUnit> getMovableUnits() {
 
     // the result
-    Set<IMovableUnit> result = new HashSet<IMovableUnit>();
+    List<IMovableUnit> result = new LinkedList<IMovableUnit>();
 
     // iterate over all types
     for (IType type : getContainedTypes()) {
@@ -206,7 +208,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     // return the result
-    return result;
+    return Collections.unmodifiableList(result);
   }
 
   /**
