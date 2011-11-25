@@ -1,0 +1,86 @@
+Report
+------------------------------------------------------
+
+Duplicate packages:
+
+ -**- META-INF [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : MANIFEST.MF 
+
+ -**- org.apache.velocity [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : Template.class 
+
+ -**- org.apache.velocity.anakia [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : AnakiaElement.class AnakiaJDOMFactory.class Escape.class NodeList.class XPathCache.class 
+
+ -**- org.apache.velocity.app [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : FieldMethodizer.class Velocity.class 
+
+ -**- org.apache.velocity.app.event [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : EventHandlerMethodExecutor.class EventHandlerUtil.class InvalidReferenceEventHandler$InvalidGetMethodExecutor.class InvalidReferenceEventHandler$InvalidMethodExecutor.class MethodExceptionEventHandler$MethodExceptionExecutor.class ReferenceInsertionEventHandler$referenceInsertExecutor.class 
+
+ -**- org.apache.velocity.app.event.implement [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : PrintExceptions.class ReportInvalidReferences.class 
+
+ -**- org.apache.velocity.app.tools [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : VelocityFormatter.class 
+
+ -**- org.apache.velocity.context [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : AbstractContext.class Context.class InternalContextAdapter.class InternalContextAdapterImpl.class InternalEventContext.class InternalHousekeepingContext.class InternalWrapperContext.class VMContext.class 
+
+ -**- org.apache.velocity.convert [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+Identical
+
+ -**- org.apache.velocity.exception [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : ExtendedParseException.class ResourceNotFoundException.class 
+
+ -**- org.apache.velocity.io [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : UnicodeInputStream.class VelocityWriter.class 
+
+ -**- org.apache.velocity.runtime [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : ParserPool.class ParserPoolImpl.class Runtime.class RuntimeConstants.class RuntimeLogger.class RuntimeServices.class VelocimacroManager$MacroEntry.class VelocimacroManager.class 
+
+ -**- org.apache.velocity.runtime.defaults [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : velocity.properties 
+
+ -**- org.apache.velocity.runtime.directive [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : Directive.class Foreach.class Include.class Literal.class Macro.class Parse.class VMProxyArg.class VelocimacroProxy.class 
+
+ -**- org.apache.velocity.runtime.log [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : AvalonLogChute.class Log4JLogChute.class LogChute.class LogDisplayWrapper.class LogSystem.class NullLogChute.class NullLogSystem.class PrimordialLogSystem.class RuntimeLoggerLog.class VelocityFormatter.class 
+
+ -**- org.apache.velocity.runtime.parser [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : JJTParserState.class Parser$JJCalls.class Parser$LookaheadSuccess.class ParserConstants.class ParserTreeConstants.class ParserVisitor.class TemplateParseException.class TokenMgrError.class 
+
+ -**- org.apache.velocity.runtime.parser.node [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : ASTAssignment.class ASTBlock.class ASTComment.class ASTEQNode.class ASTEscape.class ASTEscapedDirective.class ASTFalse.class ASTGTNode.class ASTIfStatement.class ASTIntegerLiteral.class ASTLENode.class ASTMap.class ASTMethod$MethodCacheKey.class ASTModNode.class ASTMulNode.class ASTOrNode.class ASTReference.class ASTStringLiteral.class ASTSubtractNode.class ASTVariable.class ASTWord.class ASTprocess.class GetExecutor.class MapGetExecutor.class MapSetExecutor.class MathUtils.class NodeUtils.class SetExecutor.class SetPropertyExecutor.class 
+
+ -**- org.apache.velocity.runtime.resource [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : ContentResource.class ResourceCacheImpl.class ResourceManager.class 
+
+ -**- org.apache.velocity.runtime.resource.loader [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : FileResourceLoader.class JarResourceLoader.class StringResourceLoader.class 
+
+ -**- org.apache.velocity.runtime.resource.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+Identical
+
+ -**- org.apache.velocity.runtime.visitor [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : BaseVisitor.class VMReferenceMungeVisitor.class 
+
+ -**- org.apache.velocity.servlet [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+Identical
+
+ -**- org.apache.velocity.texen [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+Identical
+
+ -**- org.apache.velocity.texen.ant [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+Identical
+
+ -**- org.apache.velocity.texen.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : FileUtil.class 
+
+ -**- org.apache.velocity.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : ArrayIterator.class ClassUtils.class RuntimeServicesAware.class SimplePool.class 
+
+ -**- org.apache.velocity.util.introspection [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
+      - Only in velocity_1.5 : ClassMap$MethodCache.class ClassMap.class Info.class Introspector.class IntrospectorBase.class MethodMap$AmbiguousException.class SecureIntrospectorControl.class SecureIntrospectorImpl.class SecureUberspector.class UberspectImpl$VelGetterImpl.class UberspectImpl$VelSetterImpl.class UberspectImpl.class VelPropertyGet.class VelPropertySet.class 
+
