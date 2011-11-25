@@ -28,7 +28,7 @@ Duplicate packages:
       - Only in velocity_1.5 : AbstractContext.class Context.class InternalContextAdapter.class InternalContextAdapterImpl.class InternalEventContext.class InternalHousekeepingContext.class InternalWrapperContext.class VMContext.class 
 
  -**- org.apache.velocity.convert [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.exception [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       - Only in velocity_1.5 : ExtendedParseException.class ResourceNotFoundException.class 
@@ -61,19 +61,19 @@ Identical
       - Only in velocity_1.5 : FileResourceLoader.class JarResourceLoader.class StringResourceLoader.class 
 
  -**- org.apache.velocity.runtime.resource.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.visitor [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       - Only in velocity_1.5 : BaseVisitor.class VMReferenceMungeVisitor.class 
 
  -**- org.apache.velocity.servlet [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.texen [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.texen.ant [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.texen.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       - Only in velocity_1.5 : FileUtil.class 

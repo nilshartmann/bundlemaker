@@ -4,86 +4,86 @@ Report
 Duplicate packages:
 
  -**- META-INF [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.anakia [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.app [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.app.event [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.app.event.implement [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.app.tools [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.context [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.convert [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.exception [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.io [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.defaults [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.directive [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.log [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.parser [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.parser.node [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.resource [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.resource.loader [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.resource.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.runtime.visitor [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.servlet [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.texen [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.texen.ant [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.texen.defaults [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.texen.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
  -**- org.apache.velocity.util.introspection [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-Identical
+      Identical
 
