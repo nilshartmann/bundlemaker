@@ -149,11 +149,11 @@ public abstract class AbstractBundleMakerProjectTest {
     } else if (new File(directory, "src.zip").isFile()) {
       sources = new File(directory, "src.zip");
     } else {
-      Assert.fail("No classes found!");
+      // Assert.fail("No classes found!");
     }
 
     projectDescription.addResourceContent(_testProjectName, TEST_PROJECT_VERSION, classes.getAbsolutePath(),
-        sources.getAbsolutePath());
+        sources != null ? sources.getAbsolutePath() : null);
 
     // step 4: process the class path entries
     File libsDir = new File(directory, "libs");
