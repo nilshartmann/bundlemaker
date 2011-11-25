@@ -536,4 +536,19 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   public void addArtifact(IArtifact artifact) {
     throw new UnsupportedOperationException();
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int compareTo(IBundleMakerArtifact o) {
+
+    //
+    if (o == null) {
+      return Integer.MIN_VALUE;
+    }
+
+    // compare the qualified name
+    return this.getQualifiedName().compareTo(o.getQualifiedName());
+  }
 }

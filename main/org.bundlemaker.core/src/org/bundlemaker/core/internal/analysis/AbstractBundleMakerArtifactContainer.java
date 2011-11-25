@@ -277,6 +277,21 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int compareTo(IBundleMakerArtifact o) {
+
+    //
+    if (o == null) {
+      return Integer.MIN_VALUE;
+    }
+
+    // compare the qualified name
+    return this.getQualifiedName().compareTo(o.getQualifiedName());
+  }
+
+  /**
    * <p>
    * </p>
    * 

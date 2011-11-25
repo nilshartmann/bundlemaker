@@ -17,7 +17,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IBundleMakerArtifact extends IArtifact {
+public interface IBundleMakerArtifact extends IArtifact, Comparable<IBundleMakerArtifact> {
 
   /**
    * {@inheritDoc}

@@ -299,4 +299,19 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   public boolean isVirtual() {
     return true;
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int compareTo(IBundleMakerArtifact o) {
+
+    //
+    if (o == null) {
+      return Integer.MIN_VALUE;
+    }
+
+    // compare the qualified name
+    return this.getQualifiedName().compareTo(o.getQualifiedName());
+  }
 }
