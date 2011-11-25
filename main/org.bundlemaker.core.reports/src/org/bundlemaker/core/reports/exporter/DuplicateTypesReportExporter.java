@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
@@ -81,9 +79,17 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
 
     //
     _fileWriter.append("Duplicate packages:\n");
-    for (Entry<String, Collection<IPackageArtifact>> entry : duplicatePackagesVisitor.getDuplicatePackages().entrySet()) {
-      dumpDuplicatePackages(_fileWriter, entry);
+
+    //
+    List<String> keys = new LinkedList<String>(duplicatePackagesVisitor.getDuplicatePackages().keySet());
+    Collections.sort(keys);
+
+    //
+    for (String key : keys) {
+      dumpDuplicatePackages(_fileWriter, key, duplicatePackagesVisitor.getDuplicatePackages().get(key));
     }
+
+    //
     _fileWriter.append("\n");
 
     //
@@ -130,12 +136,14 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
    * @param entry
    * @throws IOException
    */
-  protected void dumpDuplicatePackages(FileWriter fileWriter, Entry<String, Collection<IPackageArtifact>> entry)
-      throws IOException {
+  protected void dumpDuplicatePackages(FileWriter fileWriter, String packageName,
+      Collection<IPackageArtifact> packageArtifacts) throws IOException {
+
+    _fileWriter.append("\n");
 
     // step 1: dump the package and the module names (e.g. com.example.mypackage [test_1.2.3, test2_1.0.0])
-    _fileWriter.append(String.format(" -**- %s [", entry.getKey()));
-    for (Iterator<IPackageArtifact> iterator = entry.getValue().iterator(); iterator.hasNext();) {
+    _fileWriter.append(String.format(" -**- %s [", packageName));
+    for (Iterator<IPackageArtifact> iterator = packageArtifacts.iterator(); iterator.hasNext();) {
       IPackageArtifact packageArtifact = iterator.next();
       IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(ArtifactType.Module);
       _fileWriter.append(moduleArtifact.getName());
@@ -143,15 +151,15 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
         _fileWriter.append(", ");
       }
     }
-    _fileWriter.append(String.format("]\n", entry.getKey()));
+    _fileWriter.append("]\n");
+
+    boolean identical = true;
 
     // step 2: dump "exclusive"
-    for (IPackageArtifact packageArtifact : entry.getValue()) {
+    for (IPackageArtifact packageArtifact : packageArtifacts) {
 
       IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(ArtifactType.Module);
-      Set<IResourceArtifact> exclusiveResources = new HashSet<IResourceArtifact>();
-
-      boolean identical = false;
+      List<IResourceArtifact> exclusiveResources = new LinkedList<IResourceArtifact>();
 
       //
       for (IBundleMakerArtifact child : packageArtifact.getChildren()) {
@@ -161,7 +169,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
           IResourceArtifact resourceArtifact = (IResourceArtifact) child;
 
           //
-          if (!containedInAllPackages(resourceArtifact, entry.getValue())) {
+          if (!containedInAllPackages(resourceArtifact, packageArtifacts)) {
             exclusiveResources.add(resourceArtifact);
           }
         }
@@ -172,17 +180,19 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
 
         identical = false;
 
-        _fileWriter.append("   - Only in " + moduleArtifact.getQualifiedName() + " : ");
+        Collections.sort(exclusiveResources);
+
+        _fileWriter.append("      - Only in " + moduleArtifact.getQualifiedName() + " : ");
         for (IResourceArtifact exclusiveResource : exclusiveResources) {
           _fileWriter.append(exclusiveResource + " ");
         }
         _fileWriter.append("\n");
       }
+    }
 
-      //
-      if (identical) {
-        _fileWriter.append("Identical\n");
-      }
+    //
+    if (identical) {
+      _fileWriter.append("      Identical\n");
     }
   }
 
@@ -200,6 +210,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     //
     for (IPackageArtifact packageArtifact : packageArtifacts) {
       if (!packageArtifact.hasChild(resourceArtifact.getName())) {
+        System.out.println(resourceArtifact.getName());
         return false;
       }
     }
