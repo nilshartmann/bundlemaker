@@ -16,6 +16,12 @@ import org.eclipse.core.runtime.CoreException;
 
 import com.springsource.util.parser.manifest.ManifestContents;
 
+/**
+ * <p>
+ * </p>
+ *
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class DirectoryBasedTemplateProvider implements ITemplateProvider {
 
   /** the root directory for all templates */
