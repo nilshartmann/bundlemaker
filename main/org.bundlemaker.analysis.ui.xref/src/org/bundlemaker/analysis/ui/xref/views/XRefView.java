@@ -182,7 +182,7 @@ public class XRefView extends DependencyPart {
   }
 
   private List<IArtifact> getUsedByArtifacts(List<IArtifact> selectedArtifacts) {
-    Collection<IDependency> usedByDependencies = rootArtifact.getDependencies(selectedArtifacts);
+    Collection<? extends IDependency> usedByDependencies = rootArtifact.getDependencies(selectedArtifacts);
     List<IArtifact> dependentArtifacts = new ArrayList<IArtifact>();
     for (IDependency dependency : usedByDependencies) {
       Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
@@ -206,10 +206,10 @@ public class XRefView extends DependencyPart {
     middleSelectedArtifacts = null;
     dependentSelectedArtifacts = null;
     middleTree.getTreeViewer().setInput(artifacts);
-      rootArtifact = artifacts.get(0);
-      if (rootArtifact.getType() != ArtifactType.Root) {
-        rootArtifact = rootArtifact.getParent(ArtifactType.Root);
-      }
+    rootArtifact = artifacts.get(0);
+    if (rootArtifact.getType() != ArtifactType.Root) {
+      rootArtifact = rootArtifact.getParent(ArtifactType.Root);
+    }
     leftTree.getTreeViewer().setInput(rootArtifact);
     rightTree.getTreeViewer().setInput(rootArtifact);
     selectMiddleTree(artifacts);

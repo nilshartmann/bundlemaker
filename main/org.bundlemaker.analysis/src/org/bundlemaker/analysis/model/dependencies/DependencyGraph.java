@@ -35,25 +35,25 @@ public class DependencyGraph implements Serializable {
   /**
    * 
    */
-  private static final long                           serialVersionUID          = 1L;
+  private static final long                                     serialVersionUID          = 1L;
 
-  private static final int                            MAX_DSM_ARTIFACTS         = 300;
+  private static final int                                      MAX_DSM_ARTIFACTS         = 300;
 
   // Map Artifact -> Collection of Dependencies to Artifacts
-  private HashMap<IArtifact, Collection<IDependency>> artifactsMap;
+  private HashMap<IArtifact, Collection<? extends IDependency>> artifactsMap;
 
-  private Set<Cycle>                                  cycles                    = new HashSet<Cycle>();
+  private Set<Cycle>                                            cycles                    = new HashSet<Cycle>();
 
-  private Dsm<IArtifact>                              dsm;
+  private Dsm<IArtifact>                                        dsm;
 
-  private List<IDependency>                           ignoredDependencies;
+  private List<IDependency>                                     ignoredDependencies;
 
-  private boolean                                     isInvalid                 = false;
+  private boolean                                               isInvalid                 = false;
 
-  private boolean                                     hasTooMuchArtifactsForDSM = false;
+  private boolean                                               hasTooMuchArtifactsForDSM = false;
 
   // Rules
-  private Violation                                   cycleViolation;
+  private Violation                                             cycleViolation;
 
   /**
    * Methode, die aus den uebergebenen Artefakten ein Abhaengigkeitsgraph erzeugt. Es erfolgt eine Partitionierung des
@@ -71,7 +71,7 @@ public class DependencyGraph implements Serializable {
   }
 
   public DependencyGraph(Collection<? extends IArtifact> artifacts) {
-    artifactsMap = new HashMap<IArtifact, Collection<IDependency>>();
+    artifactsMap = new HashMap<IArtifact, Collection<? extends IDependency>>();
     cycles = new HashSet<Cycle>();
 
     for (IArtifact artifact : artifacts) {
@@ -155,9 +155,9 @@ public class DependencyGraph implements Serializable {
   /**
    * Gibt die Menge der Abhaengigkeiten zurueck
    */
-  public Collection<IDependency> getDependencies() {
+  public Collection<? extends IDependency> getDependencies() {
     Collection<IDependency> dependenciesSet = new HashSet<IDependency>();
-    for (Collection<IDependency> dependencies : artifactsMap.values()) {
+    for (Collection<? extends IDependency> dependencies : artifactsMap.values()) {
       dependenciesSet.addAll(dependencies);
     }
 

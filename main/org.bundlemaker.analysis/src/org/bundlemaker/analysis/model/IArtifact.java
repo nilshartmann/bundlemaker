@@ -242,7 +242,7 @@ public interface IArtifact {
    *          the atifacts
    * @return all the dependencies to the given collection of artifacts.
    */
-  public Collection<IDependency> getDependencies(Collection<IArtifact> artifacts);
+  public Collection<? extends IDependency> getDependencies(Collection<? extends IArtifact> artifacts);
 
   /**
    * Setzt die Ordinalzahl des Artefaktes. Ueber die Ordinalzahl wird die Rangfolge von Artefakten bestimmt

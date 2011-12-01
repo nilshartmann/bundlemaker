@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.osgi.exporter;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -20,14 +20,17 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
+import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.osgi.exporter.helper.ManifestCreatorHelper;
-import org.bundlemaker.core.osgi.internal.manifest.DroolsBasedBundleManifestCreator;
+import org.bundlemaker.core.osgi.internal.exporter.ManifestCreatorAdapter;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.ManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
+import org.bundlemaker.core.resource.IContentProvider;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -57,8 +60,8 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
   /** - */
   private IBundleManifestCreator             _creator;
 
-  /** the root directory for all templates */
-  private File                               _templateRootDirectory;
+  /** - */
+  private ITemplateProvider                  _templateProvider;
 
   /** - */
   private IManifestPreferences               _manifestPreferences;
@@ -71,10 +74,17 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
    * Creates a new instance of type {@link AbstractManifestAwareExporter}.
    * </p>
    */
-  public AbstractManifestAwareExporter() {
+  protected AbstractManifestAwareExporter(ITemplateProvider templateProvider,
+      IBundleManifestCreator bundleManifestCreator, IManifestPreferences manifestPreferences) {
 
-    // TODO
-    _creator = new DroolsBasedBundleManifestCreator();
+    //
+    _templateProvider = templateProvider != null ? templateProvider : new NullTemplateProvider();
+
+    //
+    _creator = bundleManifestCreator != null ? bundleManifestCreator : new DefaultManifestCreator();
+
+    //
+    _manifestPreferences = manifestPreferences != null ? manifestPreferences : new ManifestPreferences(false);
 
     //
     _manifestCache = new CycleAwareGenericCache();
@@ -89,21 +99,18 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
    * 
    * @return
    */
-  public final List<IManifestContentsInterceptor> getInterceptors() {
-    return _interceptors;
+  public final ITemplateProvider getTemplateProvider() {
+    return _templateProvider;
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param templateRootDirectory
+   * @return
    */
-  public final void setTemplateRootDirectory(File templateRootDirectory) {
-    Assert.isNotNull(templateRootDirectory);
-    Assert.isTrue(templateRootDirectory.isDirectory());
-
-    _templateRootDirectory = templateRootDirectory;
+  public final List<IManifestContentsInterceptor> getInterceptors() {
+    return _interceptors;
   }
 
   /**
@@ -142,8 +149,9 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
     _manifestContents = _manifestCache.getOrCreate(getCurrentModule());
 
     // check the manifest
+    Dictionary<String, String> dictionary = null;
     try {
-      Dictionary<String, String> dictionary = new Hashtable<String, String>();
+      dictionary = new Hashtable<String, String>();
       Properties properties = ManifestUtils.convertManifest(ManifestUtils.toManifest(_manifestContents));
       for (String propertyName : properties.stringPropertyNames()) {
         dictionary.put(propertyName, properties.getProperty(propertyName));
@@ -151,6 +159,7 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
       StateObjectFactory.defaultFactory.createBundleDescription(null, dictionary, "internal", 1);
     } catch (BundleException e) {
       // TODO
+      System.out.println(dictionary);
       e.printStackTrace();
       throw new CoreException(new Status(IStatus.ERROR, "", ""));
     }
@@ -158,103 +167,128 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
   /**
    * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected File getCurrentModuleTemplateDirectory() {
-
-    // TODO
-    ManifestCreatorHelper helper = new ManifestCreatorHelper(getCurrentModularizedSystem(), getCurrentModule(),
-        getCurrentContext(), _templateRootDirectory, null, _creator, _manifestPreferences);
-
-    return helper.getModuleTemplateDirectory() != null ? helper.getModuleTemplateDirectory() : null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected boolean hasCurrentModuleTemplateDirectory() {
-
-    // TODO
-    ManifestCreatorHelper helper = new ManifestCreatorHelper(getCurrentModularizedSystem(), getCurrentModule(),
-        getCurrentContext(), _templateRootDirectory, null, _creator, _manifestPreferences);
-
-    return helper.getModuleTemplateDirectory() != null && helper.getModuleTemplateDirectory().exists();
-  }
-
-  /**
-   * <p>
+   * Executes all registered interceptors for the given manifest contents
    * </p>
    * 
    * @param manifestContents
+   *          the manifest contents
+   * @param modularizedSystem
+   *          the {@link IModularizedSystem}
+   * @param module
+   *          the {@link IModule}
    */
-  private void executeInterceptors(ManifestContents manifestContents, IModularizedSystem modularizedSystem,
+  private final void executeInterceptors(ManifestContents manifestContents, IModularizedSystem modularizedSystem,
       IModule module) {
 
-    //
+    // iterate over all the interceptors
     for (IManifestContentsInterceptor interceptor : _interceptors) {
 
-      //
-      interceptor.manipulateManifestContents(manifestContents, modularizedSystem, module);
+      // assert not null
+      if (interceptor != null) {
+
+        // call manipulateManifestContents
+        interceptor.manipulateManifestContents(manifestContents, modularizedSystem, module);
+      }
     }
   }
 
   /**
-   * @author P200329
+   * <p>
+   * Cache that creates manifests for a given resource module. If the module is a fragment module, the host module will
+   * be resolved first as the host manifest is needed to create the fragment manifest.
+   * </p>
    * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
   private final class CycleAwareGenericCache extends GenericCache<IResourceModule, ManifestContents> {
-    //
-    private Set<IResourceModule> _hostModules = new HashSet<IResourceModule>();
 
-    public void clearCycleSet() {
-      _hostModules.clear();
-    }
+    /** default serialVersionUID */
+    private static final long    serialVersionUID = 1L;
 
+    /** the host modules */
+    private Set<IResourceModule> _hostModules     = new HashSet<IResourceModule>();
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected ManifestContents create(IResourceModule resourceModule) {
 
-      //
+      // define the host manifest contents (as it is needed to create a fragments manifest correctly)
       ManifestContents hostManifestContents = null;
 
+      // test if the resource module is a fragment
       if (ManifestUtils.isFragment(resourceModule)) {
 
-        //
+        // find the host module
         IResourceModule hostModule = (IResourceModule) ManifestUtils.getFragmentHost(resourceModule);
 
+        // check (should not be false here)
         if (!hostModule.equals(resourceModule)) {
 
-          //
+          // check if the module has already been handled to prevent loops
           if (_hostModules.contains(hostModule)) {
-            // TODO
+            // throw RuntimeException
             throw new RuntimeException("CycleException " + _hostModules);
           } else {
+
+            // add to handled modules list
             _hostModules.add(hostModule);
+
+            // get the host manifest contents
             hostManifestContents = this.getOrCreate(hostModule);
           }
         }
       }
 
-      //
-      ManifestCreatorHelper helper = new ManifestCreatorHelper(getCurrentModularizedSystem(), resourceModule,
-          getCurrentContext(), _templateRootDirectory, hostManifestContents, _creator, _manifestPreferences);
+      // create the adapter
+      ManifestCreatorAdapter adapter = new ManifestCreatorAdapter(getCurrentModularizedSystem(), resourceModule,
+          getCurrentContext(), _templateProvider, hostManifestContents, _creator, _manifestPreferences);
 
-      //
-      ManifestContents manifestContents = helper.createManifest();
-
-      //
-      executeInterceptors(manifestContents, getCurrentModularizedSystem(), resourceModule);
+      // create the manifest contents
+      ManifestContents manifestContents = adapter.createManifest();
 
       //
       Assert.isNotNull(manifestContents,
-          String.format("The method create(IModule) of class " + "'%s' returned 'null'.", helper.getClass().getName()));
+          String.format("The method createManifest() of class '%s' returned 'null'.", adapter.getClass().getName()));
+
+      // execute the interceptors
+      executeInterceptors(manifestContents, getCurrentModularizedSystem(), resourceModule);
+
+      // return the manifest contents
+      return manifestContents;
+    }
+
+    /**
+     * <p>
+     * Clears the cycle set.
+     * </p>
+     */
+    public void clearCycleSet() {
+      _hostModules.clear();
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  class NullTemplateProvider implements ITemplateProvider {
+
+    @Override
+    public ManifestContents getManifestTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+        IModuleExporterContext context) {
+      return null;
+    }
+
+    @Override
+    public Set<IContentProvider> getAdditionalResources(IResourceModule currentModule,
+        IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {
 
       //
-      return manifestContents;
+      return Collections.emptySet();
     }
   }
 }

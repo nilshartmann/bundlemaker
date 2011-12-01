@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.core.exporter.IModuleExporter;
-import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

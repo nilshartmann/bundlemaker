@@ -3,9 +3,6 @@ Report
 
 Duplicate packages:
 
- -**- META-INF [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-      Identical
-
  -**- org.apache.velocity [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       Identical
 
@@ -39,9 +36,6 @@ Duplicate packages:
  -**- org.apache.velocity.runtime [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       Identical
 
- -**- org.apache.velocity.runtime.defaults [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-      Identical
-
  -**- org.apache.velocity.runtime.directive [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       Identical
 
@@ -73,9 +67,6 @@ Duplicate packages:
       Identical
 
  -**- org.apache.velocity.texen.ant [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-      Identical
-
- -**- org.apache.velocity.texen.defaults [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       Identical
 
  -**- org.apache.velocity.texen.util [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]

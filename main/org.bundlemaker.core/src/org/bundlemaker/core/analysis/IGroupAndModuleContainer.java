@@ -6,7 +6,7 @@ package org.bundlemaker.core.analysis;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IGroupAndModuleContainer {
+public interface IGroupAndModuleContainer extends IBundleMakerArtifact {
 
   /**
    * <p>

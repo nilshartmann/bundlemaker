@@ -17,7 +17,8 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer {
+public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleContainer **/
+{
 
   /** - */
   private final IGroupAndModuleContainer _groupAndModuleContainer;
@@ -39,7 +40,6 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
   /**
    * {@inheritDoc}
    */
-  @Override
   public IModuleArtifact getOrCreateModule(String qualifiedModuleName, String moduleVersion) {
 
     // not null assert
@@ -106,7 +106,6 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
   /**
    * {@inheritDoc}
    */
-  @Override
   public IGroupArtifact getOrCreateGroup(String path) {
 
     Assert.isNotNull(path);
@@ -127,14 +126,16 @@ public class GroupAndModuleContainerDelegate implements IGroupAndModuleContainer
     for (int i = 0; i < iPath.segmentCount(); i++) {
 
       // try to get the child
-      AbstractBundleMakerArtifactContainer newArtifact = (AbstractBundleMakerArtifactContainer) currentArtifact.getChild(iPath.segment(i));
+      AbstractBundleMakerArtifactContainer newArtifact = (AbstractBundleMakerArtifactContainer) currentArtifact
+          .getChild(iPath.segment(i));
 
       //
       if (newArtifact == null) {
 
         // create new
-        newArtifact = (AbstractBundleMakerArtifactContainer) getAdvancedArtifact().getDependencyModel().createArtifactContainer(
-            iPath.segment(i), iPath.removeLastSegments(iPath.segmentCount() - (i + 1)).toString(), ArtifactType.Group);
+        newArtifact = (AbstractBundleMakerArtifactContainer) getAdvancedArtifact().getDependencyModel()
+            .createArtifactContainer(iPath.segment(i),
+                iPath.removeLastSegments(iPath.segmentCount() - (i + 1)).toString(), ArtifactType.Group);
 
         // add to parent
         if (newArtifact.getParent() != currentArtifact) {

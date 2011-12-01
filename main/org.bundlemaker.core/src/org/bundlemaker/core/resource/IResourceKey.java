@@ -23,7 +23,7 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IResourceKey {
+public interface IResourceKey extends IContentProvider {
 
   /**
    * <p>
@@ -43,15 +43,6 @@ public interface IResourceKey {
    * @return the root directory or archive file that contains the resource.
    */
   String getRoot();
-
-  /**
-   * <p>
-   * Returns the path of the resource. Note that resource paths are always slash-delimited ('/').
-   * </p>
-   * 
-   * @return the path of the resource.
-   */
-  String getPath();
 
   /**
    * <p>
@@ -76,44 +67,4 @@ public interface IResourceKey {
    * @return
    */
   boolean hasHashvalue();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  String getDirectory();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean isValidJavaPackage();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  String getPackageName();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  String getName();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  byte[] getContent();
 }

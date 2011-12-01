@@ -22,8 +22,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
+import org.bundlemaker.core.resource.IContentProvider;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.ResourceKey;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -49,7 +49,7 @@ public final class JarFileUtils {
    *          the archive file to create
    */
   public static void createJarArchive(Set<IResource> resources, Manifest manifest,
-      Set<ResourceKey> additionalResources, OutputStream outputStream) {
+      Set<IContentProvider> additionalContent, OutputStream outputStream) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(manifest);
@@ -87,14 +87,14 @@ public final class JarFileUtils {
       }
 
       // add all additional files
-      for (ResourceKey resource : additionalResources) {
+      for (IContentProvider contentProvider : additionalContent) {
 
         // add archive entry
-        JarEntry newEntry = new JarEntry(resource.getPath());
+        JarEntry newEntry = new JarEntry(contentProvider.getPath());
         jarOutputStream.putNextEntry(newEntry);
 
         // copy
-        inputStream = new ByteArrayInputStream(resource.getContent());
+        inputStream = new ByteArrayInputStream(contentProvider.getContent());
         copy(inputStream, jarOutputStream);
 
         inputStream.close();

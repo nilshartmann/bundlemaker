@@ -41,20 +41,36 @@ public interface IBundleMakerArtifact extends IArtifact, Comparable<IBundleMaker
 
   /**
    * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public boolean hasParent();
-
-  /**
-   * <p>
    * Returns the root artifact for this artifact node.
    * </p>
    * 
    * @return the root artifact.
    */
   IRootArtifact getRoot();
+
+  // public IGroupArtifact getParentGroup();
+  //
+  // public boolean hasParentGroup();
+  //
+  // public IModuleArtifact getParentModule();
+  //
+  // public boolean hasParentModule();
+  //
+  // public IPackageArtifact getParentPackage();
+  //
+  // public boolean hasParentPackage();
+  //
+  // public IResourceArtifact getParentResource();
+  //
+  // public boolean hasParentResource();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean hasParent();
 
   /**
    * <p>

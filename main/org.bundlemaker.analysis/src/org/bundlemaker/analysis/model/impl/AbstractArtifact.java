@@ -133,7 +133,7 @@ public abstract class AbstractArtifact implements IModifiableArtifact {
   }
 
   @Override
-  public List<IDependency> getDependencies(Collection<IArtifact> artifacts) {
+  public List<? extends IDependency> getDependencies(Collection<? extends IArtifact> artifacts) {
     List<IDependency> dependencies = new ArrayList<IDependency>();
 
     for (IArtifact artifact : artifacts) {

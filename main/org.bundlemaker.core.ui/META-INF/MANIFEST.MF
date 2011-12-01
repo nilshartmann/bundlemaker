@@ -30,13 +30,9 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.core.ui;bundle-version="1.0.0",
  org.bundlemaker.analysis;bundle-version="1.0.0",
  org.eclipse.jface.text;bundle-version="3.6.0",
- org.bundlemaker.analysis.ui;bundle-version="1.0.0"
+ org.bundlemaker.analysis.ui;bundle-version="1.0.0",
+ org.bundlemaker.core.osgi;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: BundleMaker Team
-Import-Package: org.bundlemaker.core,
- org.bundlemaker.core.osgi.exporter,
- org.bundlemaker.core.osgi.pde.exporter,
- org.bundlemaker.core.util
 Bundle-Activator: org.bundlemaker.core.ui.Activator
 Export-Package: org.bundlemaker.core.ui.commands

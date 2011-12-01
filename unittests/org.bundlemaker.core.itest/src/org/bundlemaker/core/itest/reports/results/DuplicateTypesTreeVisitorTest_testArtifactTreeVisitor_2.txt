@@ -3,9 +3,6 @@ Report
 
 Duplicate packages:
 
- -**- META-INF [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-      - Only in velocity_1.5 : MANIFEST.MF 
-
  -**- org.apache.velocity [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       - Only in velocity_1.5 : Template.class 
 
@@ -38,9 +35,6 @@ Duplicate packages:
 
  -**- org.apache.velocity.runtime [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       - Only in velocity_1.5 : ParserPool.class ParserPoolImpl.class Runtime.class RuntimeConstants.class RuntimeLogger.class RuntimeServices.class VelocimacroManager$MacroEntry.class VelocimacroManager.class 
-
- -**- org.apache.velocity.runtime.defaults [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
-      - Only in velocity_1.5 : velocity.properties 
 
  -**- org.apache.velocity.runtime.directive [velocity_1.5, DuplicateTypesTreeVisitorTest_1.0.0]
       - Only in velocity_1.5 : Directive.class Foreach.class Include.class Literal.class Macro.class Parse.class VMProxyArg.class VelocimacroProxy.class 

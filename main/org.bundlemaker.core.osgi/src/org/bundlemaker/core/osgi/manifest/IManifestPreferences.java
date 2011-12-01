@@ -1,18 +1,22 @@
 package org.bundlemaker.core.osgi.manifest;
 
-import java.util.Set;
-
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public interface IManifestPreferences {
 
   /**
    * <p>
-   * E.g. boot delegated packages.
    * </p>
-   * 
-   * @return
+   *
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  @Deprecated
-  Set<String> importsToIgnore();
+  public static enum DependencyStyle {
+    STRICT_IMPORT_PACKAGE, STRICT_REQUIRE_BUNDLE, PREFER_IMPORT_PACKAGE
+  }
 
   /**
    * <p>
@@ -52,14 +56,6 @@ public interface IManifestPreferences {
    * 
    * @return
    */
-  boolean isConsiderIndirectReferences();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   boolean isReexportRequiredBundles();
 
   /**
@@ -69,14 +65,6 @@ public interface IManifestPreferences {
    * @param reexportRequiredBundles
    */
   void setReexportRequiredBundles(boolean reexportRequiredBundles);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param considerIndirectReferences
-   */
-  void setConsiderIndirectReferences(boolean considerIndirectReferences);
 
   /**
    * <p>

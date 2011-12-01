@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +31,7 @@ import java.util.zip.ZipEntry;
 
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.osgi.exporter.ManifestConstants;
+import org.bundlemaker.core.osgi.manifest.IManifestConstants;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Constants;
@@ -58,34 +59,30 @@ public class ManifestUtils {
    * <p>
    * </p>
    * 
-   * @param templateManifest
-   * @param bundleSymbolicName
    * @return
    */
-  public static boolean isExcludedRequiredBundle(BundleManifest templateManifest, String bundleSymbolicName) {
+  public static List<String> getHeaders(BundleManifest bundleManifest) {
 
-    if (templateManifest == null) {
-      return false;
+    // create the result list
+    List<String> result = new LinkedList<String>();
+
+    // get the enumeration
+    Enumeration<String> enumeration = bundleManifest.toDictionary().keys();
+
+    // fill the result list
+    while (enumeration.hasMoreElements()) {
+      result.add((String) enumeration.nextElement());
     }
-
-    // get the import package template
-    String templateHeader = templateManifest.getHeader(ManifestConstants.HEADER_EXCLUDED_REQUIRED_BUNDLES_TEMPLATE);
-
-    if (templateHeader == null) {
-      return false;
-    }
-
-    //
-    List<HeaderDeclaration> excludedRequiredBundleTemplates = ManifestUtils.parseManifestValue(templateHeader);
-
-    // get the template
-    HeaderDeclaration declaration = ManifestUtils.findMostSpecificDeclaration(excludedRequiredBundleTemplates,
-        bundleSymbolicName);
 
     // return the result
-    return declaration != null;
+    return result;
   }
 
+  public static boolean isHostForResourceModule(IModule exportingHostModule, IResourceModule resourceModule) {
+    return (ManifestUtils.isFragment(resourceModule) && ManifestUtils.getFragmentHost(resourceModule).equals(
+        exportingHostModule));
+  }
+  
   /**
    * <p>
    * </p>
@@ -109,7 +106,7 @@ public class ManifestUtils {
   public static IModule getFragmentHost(IModule module) {
 
     //
-    IModule hostModule = (IModule) module.getUserAttributes().get(ManifestConstants.OSGI_FRAGMENT_HOST);
+    IModule hostModule = (IModule) module.getUserAttributes().get(IManifestConstants.OSGI_FRAGMENT_HOST);
 
     //
     return hostModule != null ? hostModule : module;

@@ -218,10 +218,6 @@ litigation.
    </url>
 
    <includes
-         id="org.bundlemaker.org.drools.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.bundlemaker.org.springsource.bundlor.feature"
          version="0.0.0"/>
 

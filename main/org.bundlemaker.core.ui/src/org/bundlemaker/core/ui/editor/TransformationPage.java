@@ -12,9 +12,9 @@ import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
-import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
-import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
+import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
+import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.osgi.exporter.pde.TargetPlatformProjectExporter;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedModuleDefinition;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
@@ -54,6 +54,7 @@ public class TransformationPage extends FormPage {
     _stateLabel.setText("Project state: " + getBundleMakerProject().getState());
   }
 
+  @Override
   protected void createFormContent(IManagedForm mform) {
 
     super.createFormContent(mform);
@@ -204,6 +205,7 @@ public class TransformationPage extends FormPage {
   private void openBundleMakerProject() {
     try {
       PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+        @Override
         public void run(final IProgressMonitor monitor) {
           try {
             IBundleMakerProject project = getBundleMakerProject();
@@ -299,7 +301,7 @@ public class TransformationPage extends FormPage {
 
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
-    BinaryBundleExporter exporter = new BinaryBundleExporter();
+    JarFileBundleExporter exporter = new JarFileBundleExporter(null, null, null);
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Dauer " + stopWatch.getElapsedTime());
