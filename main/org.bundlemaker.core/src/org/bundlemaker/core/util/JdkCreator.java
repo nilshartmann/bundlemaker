@@ -38,8 +38,33 @@ public class JdkCreator {
     // get the VMInstallType
     IVMInstallType type = JavaRuntime.getVMInstallType(ID_STANDARD_VM_TYPE);
 
+    if (type == null) {
+      return getDefaultVMInstall(name);
+    }
+
     //
-    return type.findVMInstallByName(name);
+    IVMInstall result = type.findVMInstallByName(name);
+
+    if (result == null) {
+      return getDefaultVMInstall(name);
+    }
+
+    return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public static IVMInstall getDefaultVMInstall(String requestedVmInstall) {
+
+    System.out.println("*****************************************************************************");
+    System.out.println(String.format("*  Specified VM '%s' does not exist. Using default VM.", requestedVmInstall));
+    System.out.println("*****************************************************************************");
+
+    return JavaRuntime.getDefaultVMInstall();
   }
 
   /**
@@ -58,6 +83,10 @@ public class JdkCreator {
 
     // get the VMInstallType
     IVMInstallType type = JavaRuntime.getVMInstallType(ID_STANDARD_VM_TYPE);
+
+    if (type == null) {
+      return getDefaultVMInstall(name);
+    }
 
     //
     IVMInstall result = type.findVMInstallByName(name);
