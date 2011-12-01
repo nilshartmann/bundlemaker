@@ -8,7 +8,7 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
-import org.bundlemaker.core.osgi.manifest.ManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
@@ -88,7 +88,7 @@ public class ManifestCreatorAdapter {
     Assert.isNotNull(bundleManifestCreator);
 
     //
-    _manifestPreferences = manifestPreferences != null ? manifestPreferences : new ManifestPreferences(false);
+    _manifestPreferences = manifestPreferences != null ? manifestPreferences : new DefaultManifestPreferences(false);
 
     //
     _manifestCreator = bundleManifestCreator;

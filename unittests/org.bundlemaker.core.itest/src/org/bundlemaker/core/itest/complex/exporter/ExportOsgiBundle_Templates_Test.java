@@ -8,7 +8,7 @@ import junit.framework.Assert;
 import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
 import org.bundlemaker.core.osgi.manifest.IManifestConstants;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences.DependencyStyle;
-import org.bundlemaker.core.osgi.manifest.ManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
@@ -44,7 +44,7 @@ public class ExportOsgiBundle_Templates_Test extends AbstractExportOsgiBundleTes
     template.getMainAttributes().put(IManifestConstants.HEADER_REQUIRE_BUNDLE, "com.wuetherich.bundle");
 
     //
-    new JarFileBundleExporter(new TestTemplateProvider(template), null, new ManifestPreferences(false,
+    new JarFileBundleExporter(new TestTemplateProvider(template), null, new DefaultManifestPreferences(false,
         DependencyStyle.PREFER_IMPORT_PACKAGE)).export(getModularizedSystem(), getJeditmodule(), getExporterContext(),
         null);
 

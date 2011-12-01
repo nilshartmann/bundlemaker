@@ -10,7 +10,7 @@ import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences.DependencyStyle;
-import org.bundlemaker.core.osgi.manifest.ManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ public class ExportOsgiBundleTest extends AbstractExportOsgiBundleTest {
   public void testExportWithImportPackage() throws CoreException, IOException {
 
     //
-    JarFileBundleExporter binaryBundleExporter = new JarFileBundleExporter(null, null, new ManifestPreferences(false,
+    JarFileBundleExporter binaryBundleExporter = new JarFileBundleExporter(null, null, new DefaultManifestPreferences(false,
         DependencyStyle.PREFER_IMPORT_PACKAGE));
 
     //
@@ -69,7 +69,7 @@ public class ExportOsgiBundleTest extends AbstractExportOsgiBundleTest {
   public void testExportWithRequiredBundle() throws CoreException, IOException {
 
     //
-    JarFileBundleExporter binaryBundleExporter = new JarFileBundleExporter(null, null, new ManifestPreferences(false,
+    JarFileBundleExporter binaryBundleExporter = new JarFileBundleExporter(null, null, new DefaultManifestPreferences(false,
         DependencyStyle.STRICT_REQUIRE_BUNDLE));
 
     //
@@ -121,7 +121,7 @@ public class ExportOsgiBundleTest extends AbstractExportOsgiBundleTest {
 
     //
     JarFileBundleExporter binaryBundleExporter = new JarFileBundleExporter(null, manifestCreator,
-        new ManifestPreferences(false, DependencyStyle.STRICT_REQUIRE_BUNDLE));
+        new DefaultManifestPreferences(false, DependencyStyle.STRICT_REQUIRE_BUNDLE));
 
     //
     binaryBundleExporter.export(getModularizedSystem(), getJeditmodule(), getExporterContext(), null);

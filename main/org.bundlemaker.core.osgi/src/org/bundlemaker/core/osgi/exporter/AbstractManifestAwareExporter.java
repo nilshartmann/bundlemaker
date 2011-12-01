@@ -27,7 +27,7 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.internal.exporter.ManifestCreatorAdapter;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
-import org.bundlemaker.core.osgi.manifest.ManifestPreferences;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.resource.IContentProvider;
@@ -43,61 +43,59 @@ import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
  * <p>
+ * Abstract base class for all OSGi manifest aware exporter.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- * 
- * @noextend This class is not intended to be subclassed by clients.
  */
 public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
-  /** - */
-  private CycleAwareGenericCache             _manifestCache;
-
-  /** - */
+  /** the current manifest contents */
   private ManifestContents                   _manifestContents;
 
-  /** - */
+  /** the bundle manifest creator */
   private IBundleManifestCreator             _creator;
 
-  /** - */
+  /** the template provider */
   private ITemplateProvider                  _templateProvider;
 
-  /** - */
+  /** the manifest preferences */
   private IManifestPreferences               _manifestPreferences;
 
-  /** - */
+  /** the list of interceptors */
   private List<IManifestContentsInterceptor> _interceptors;
+
+  /** the internal manifest cache */
+  private CycleAwareGenericCache             _manifestCache;
 
   /**
    * <p>
    * Creates a new instance of type {@link AbstractManifestAwareExporter}.
    * </p>
+   * 
+   * @param templateProvider
+   * @param bundleManifestCreator
+   * @param manifestPreferences
    */
   protected AbstractManifestAwareExporter(ITemplateProvider templateProvider,
       IBundleManifestCreator bundleManifestCreator, IManifestPreferences manifestPreferences) {
 
-    //
+    // null-safe initialize
     _templateProvider = templateProvider != null ? templateProvider : new NullTemplateProvider();
-
-    //
     _creator = bundleManifestCreator != null ? bundleManifestCreator : new DefaultManifestCreator();
-
-    //
-    _manifestPreferences = manifestPreferences != null ? manifestPreferences : new ManifestPreferences(false);
+    _manifestPreferences = manifestPreferences != null ? manifestPreferences : new DefaultManifestPreferences(false);
 
     //
     _manifestCache = new CycleAwareGenericCache();
-
-    //
     _interceptors = new ArrayList<IManifestContentsInterceptor>();
   }
 
   /**
    * <p>
+   * Returns the {@link ITemplateProvider} for this exporter.
    * </p>
    * 
-   * @return
+   * @return the {@link ITemplateProvider} for this exporter.
    */
   public final ITemplateProvider getTemplateProvider() {
     return _templateProvider;
@@ -105,9 +103,10 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
   /**
    * <p>
+   * Returns the list of interceptors.
    * </p>
    * 
-   * @return
+   * @return the list of interceptors.
    */
   public final List<IManifestContentsInterceptor> getInterceptors() {
     return _interceptors;
@@ -115,9 +114,11 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
   /**
    * <p>
+   * Sets the manifest preferences.
    * </p>
    * 
    * @param manifestPreferences
+   *          the manifest preferences.
    */
   public void setManifestPreferences(IManifestPreferences manifestPreferences) {
     Assert.isNotNull(manifestPreferences);
@@ -127,9 +128,10 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
   /**
    * <p>
+   * Returns the current manifest contents.
    * </p>
    * 
-   * @return
+   * @return the current manifest contents.
    */
   public ManifestContents getManifestContents() {
     return _manifestContents;
@@ -271,18 +273,25 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
 
   /**
    * <p>
+   * Default implementation of an {@link ITemplateProvider} that returns no templates.
    * </p>
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
   class NullTemplateProvider implements ITemplateProvider {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ManifestContents getManifestTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
         IModuleExporterContext context) {
       return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<IContentProvider> getAdditionalResources(IResourceModule currentModule,
         IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {

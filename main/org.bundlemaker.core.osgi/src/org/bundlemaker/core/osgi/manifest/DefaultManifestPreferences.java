@@ -2,7 +2,7 @@ package org.bundlemaker.core.osgi.manifest;
 
 import org.eclipse.core.runtime.Assert;
 
-public class ManifestPreferences implements IManifestPreferences {
+public class DefaultManifestPreferences implements IManifestPreferences {
 
   /** - */
   private boolean         _sourceManifest;
@@ -11,33 +11,33 @@ public class ManifestPreferences implements IManifestPreferences {
   private boolean         _reexportRequiredBundles;
 
   /** - */
-  private DependencyStyle _dependencyStyle = DependencyStyle.STRICT_REQUIRE_BUNDLE; ;
+  private DependencyStyle _dependencyStyle = DependencyStyle.PREFER_IMPORT_PACKAGE;
 
   /**
    * <p>
-   * Creates a new instance of type {@link ManifestPreferences}.
+   * Creates a new instance of type {@link DefaultManifestPreferences}.
    * </p>
    * 
    * @param sourceManifest
    */
-  public ManifestPreferences(boolean sourceManifest) {
+  public DefaultManifestPreferences(boolean sourceManifest) {
 
     //
     _sourceManifest = sourceManifest;
   }
-  
+
   /**
    * <p>
-   * Creates a new instance of type {@link ManifestPreferences}.
+   * Creates a new instance of type {@link DefaultManifestPreferences}.
    * </p>
-   *
+   * 
    * @param sourceManifest
    * @param style
    */
-  public ManifestPreferences(boolean sourceManifest, DependencyStyle style) {
+  public DefaultManifestPreferences(boolean sourceManifest, DependencyStyle style) {
 
     Assert.isNotNull(style);
-    
+
     //
     _sourceManifest = sourceManifest;
     _dependencyStyle = style;
