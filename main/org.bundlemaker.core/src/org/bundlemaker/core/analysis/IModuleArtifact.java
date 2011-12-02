@@ -23,6 +23,22 @@ public interface IModuleArtifact extends IBundleMakerArtifact {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  String getModuleName();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  String getModuleVersion();
+
+  /**
+   * <p>
    * Sets the name and the version of this {@link IModuleArtifact}.
    * </p>
    * 

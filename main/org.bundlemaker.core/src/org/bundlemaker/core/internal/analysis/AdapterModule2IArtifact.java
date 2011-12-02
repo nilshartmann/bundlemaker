@@ -99,6 +99,16 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
   }
 
   @Override
+  public String getModuleName() {
+    return _module.getModuleIdentifier().getName();
+  }
+
+  @Override
+  public String getModuleVersion() {
+    return _module.getModuleIdentifier().getVersion();
+  }
+
+  @Override
   public String handleCanAdd(IArtifact artifact) {
     return "Can not add artifacts to non-resource modules.";
   }

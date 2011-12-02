@@ -71,6 +71,16 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
   }
 
   @Override
+  public String getModuleName() {
+    return _fullyQualifiedName;
+  }
+
+  @Override
+  public String getModuleVersion() {
+    return "0.0.0";
+  }
+
+  @Override
   public String handleCanAdd(IArtifact artifact) {
     return "Can not artifacts to virtual modules.";
   }
