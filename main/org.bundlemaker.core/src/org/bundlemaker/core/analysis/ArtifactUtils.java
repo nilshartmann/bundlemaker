@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
-
 public class ArtifactUtils {
 
   /**
@@ -17,7 +15,7 @@ public class ArtifactUtils {
    * @param level
    * @param stringBuilder
    */
-  private static void dumpArtifact(IArtifact artifact, int level, StringBuilder stringBuilder, int limit) {
+  private static void dumpArtifact(IBundleMakerArtifact artifact, int level, StringBuilder stringBuilder, int limit) {
 
     // limit
     if (limit != -1 && level >= limit) {
@@ -32,18 +30,18 @@ public class ArtifactUtils {
     //
     stringBuilder.append(artifact.getType());
     stringBuilder.append(" : ");
-    stringBuilder.append(artifact.getQualifiedName());
+    stringBuilder.append(artifact.getUniquePathIdentifier());
     stringBuilder.append("\n");
 
-    List<IArtifact> sorted = new ArrayList<IArtifact>(artifact.getChildren());
-    Collections.sort(sorted, new Comparator<IArtifact>() {
+    List<IBundleMakerArtifact> sorted = new ArrayList<IBundleMakerArtifact>(artifact.getChildren());
+    Collections.sort(sorted, new Comparator<IBundleMakerArtifact>() {
       @Override
-      public int compare(IArtifact o1, IArtifact o2) {
-        return o1.getQualifiedName().compareTo(o2.getQualifiedName());
+      public int compare(IBundleMakerArtifact o1, IBundleMakerArtifact o2) {
+        return o1.getUniquePathIdentifier().compareTo(o2.getUniquePathIdentifier());
       }
     });
 
-    for (IArtifact child : sorted) {
+    for (IBundleMakerArtifact child : sorted) {
       // if (child.getType().equals(ArtifactType.Root) || child.getType().equals(ArtifactType.Group)
       // || child.getType().equals(ArtifactType.Module)) {
       dumpArtifact(child, level + 1, stringBuilder, limit);
@@ -57,7 +55,7 @@ public class ArtifactUtils {
    * 
    * @param artifact
    */
-  public static void dumpArtifact(IArtifact artifact) {
+  public static void dumpArtifact(IBundleMakerArtifact artifact) {
     StringBuilder builder = new StringBuilder();
     dumpArtifact(artifact, 0, builder, -1);
     System.out.println(builder.toString());
@@ -69,7 +67,7 @@ public class ArtifactUtils {
    * 
    * @param artifact
    */
-  public static void dumpArtifact(IArtifact artifact, int limit) {
+  public static void dumpArtifact(IBundleMakerArtifact artifact, int limit) {
     StringBuilder builder = new StringBuilder();
     dumpArtifact(artifact, 0, builder, limit);
     System.out.println(builder.toString());
@@ -82,7 +80,7 @@ public class ArtifactUtils {
    * @param artifact
    * @return
    */
-  public static String artifactToString(IArtifact artifact) {
+  public static String artifactToString(IBundleMakerArtifact artifact) {
     StringBuilder builder = new StringBuilder();
     dumpArtifact(artifact, 0, builder, -1);
     return builder.toString();

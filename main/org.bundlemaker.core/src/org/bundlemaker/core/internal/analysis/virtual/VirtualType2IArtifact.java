@@ -35,6 +35,8 @@ import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * 
@@ -65,6 +67,62 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
 
     _fullyQualifiedName = fullyQualifiedName;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts) {
+    return Collections.emptyList();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getUniquePathIdentifier() {
+    return getName();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPath getFullPath() {
+
+    //
+    if (hasParent()) {
+
+      //
+      IPath path = getParent().getFullPath();
+      path.append(getUniquePathIdentifier());
+      return path;
+
+    } else {
+
+      //
+      return new Path(getUniquePathIdentifier());
+    }
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
+    return null;
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
+    return null;
   }
 
   /**

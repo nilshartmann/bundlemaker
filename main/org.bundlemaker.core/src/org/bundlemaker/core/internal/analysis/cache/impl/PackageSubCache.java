@@ -14,8 +14,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PackageSubCache extends
-    AbstractSubCache<ModulePackageKey, AbstractBundleMakerArtifactContainer> {
+public class PackageSubCache extends AbstractSubCache<ModulePackageKey, AbstractBundleMakerArtifactContainer> {
 
   /** serialVersionUID */
   private static final long serialVersionUID = 1L;
@@ -43,8 +42,8 @@ public class PackageSubCache extends
     IArtifact parent = getPackageParent(modulePackageKey);
 
     // return the package artifact
-    return new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, false, modulePackageKey
-        .getModuleKey().getModule(), getArtifactCache());
+    return new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, false, getArtifactCache()
+        .getConfiguration().isHierarchicalPackages(), modulePackageKey.getModuleKey().getModule(), getArtifactCache());
   }
 
   /**

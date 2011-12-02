@@ -140,7 +140,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   }
 
   @Override
-  protected void onAddArtifact(IArtifact artifact) {
+  protected void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.addModuleToModularizedSystem(artifact, getQualifiedName().replace('|', '/'))) {
@@ -151,7 +151,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   }
 
   @Override
-  protected void onRemoveArtifact(IArtifact artifact) {
+  protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {

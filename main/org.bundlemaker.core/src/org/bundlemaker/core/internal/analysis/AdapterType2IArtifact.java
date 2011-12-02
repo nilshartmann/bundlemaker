@@ -41,6 +41,8 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * 
@@ -87,6 +89,59 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     _movableUnit = MovableUnit.createFromType(type, defaultArtifactCache.getModularizedSystem());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts) {
+    return Collections.emptyList();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getUniquePathIdentifier() {
+    return getName();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPath getFullPath() {
+
+    //
+    if (hasParent()) {
+      IPath path = getParent().getFullPath();
+      return path.append(getUniquePathIdentifier());
+
+    } else {
+
+      //
+      return new Path(getUniquePathIdentifier());
+    }
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
+    return null;
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
+    return null;
   }
 
   /**
@@ -253,12 +308,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
   public IBundleMakerArtifact getParent(ArtifactType type) {
     return (IBundleMakerArtifact) super.getParent(type);
-  }
-
-  @Override
-  public boolean removeArtifact(IArtifact artifact) {
-    // throw new unsupported operation exception
-    throw new UnsupportedOperationException();
   }
 
   @Override
@@ -534,6 +583,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
   @Override
   public void addArtifact(IArtifact artifact) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public boolean removeArtifact(IArtifact artifact) {
     throw new UnsupportedOperationException();
   }
 

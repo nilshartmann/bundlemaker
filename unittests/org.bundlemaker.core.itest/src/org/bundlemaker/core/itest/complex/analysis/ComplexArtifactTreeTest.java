@@ -34,12 +34,12 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testSourceNonHierarchical() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
-        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...
-    IArtifact artifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
+    IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(artifact);
 
     // assert the result
@@ -60,12 +60,12 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testBinaryNonHierarchical() throws CoreException, IOException {
 
     // transform the model...
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...
-    IArtifact artifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
+    IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(artifact);
 
     // assert the result
@@ -79,12 +79,12 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testMoveModule() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
-        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...
-    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
+    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|jedit_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // get the 'group1Artifact' artifact...

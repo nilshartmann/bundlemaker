@@ -48,7 +48,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   }
 
   @Override
-  protected void onAddArtifact(IArtifact artifact) {
+  protected void onAddArtifact(IBundleMakerArtifact artifact) {
     // handle package
     if (artifact.getType().equals(ArtifactType.Package)) {
       handleAddPackage(artifact);
@@ -60,7 +60,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   }
 
   @Override
-  protected void onRemoveArtifact(IArtifact artifact) {
+  protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
     //
     AdapterUtils.removeArtifact(artifact, this);
   }

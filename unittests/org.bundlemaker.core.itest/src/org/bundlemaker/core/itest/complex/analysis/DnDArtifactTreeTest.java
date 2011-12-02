@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -116,8 +117,8 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
   public void testChangedDependencies() {
 
     // create test group and add the 'jedit' artifact
-    IArtifact GROUPgroup = createNewGroup(getRootArtifact(), "GROUP");
-    IArtifact GROUP2group = createNewGroup(getRootArtifact(), "GROUP2");
+    IBundleMakerArtifact GROUPgroup = createNewGroup(getRootArtifact(), "GROUP");
+    IBundleMakerArtifact GROUP2group = createNewGroup(getRootArtifact(), "GROUP2");
 
     GROUPgroup.addArtifact(getJeditModuleArtifact());
     GROUP2group.addArtifact(getJdkArtifact());

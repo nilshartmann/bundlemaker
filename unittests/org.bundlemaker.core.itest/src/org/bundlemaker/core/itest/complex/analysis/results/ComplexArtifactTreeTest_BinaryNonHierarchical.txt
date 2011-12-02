@@ -1,205 +1,205 @@
-Module : group1/group2/jedit_1.0.0
+Module : jedit_1.0.0
   Package : org.gjt.sp.jedit
     Resource : Abbrevs$Expansion.class
-      Type : org.gjt.sp.jedit.Abbrevs$Expansion
+      Type : Abbrevs$Expansion
     Resource : Abbrevs.class
-      Type : org.gjt.sp.jedit.Abbrevs
+      Type : Abbrevs
     Resource : AbstractOptionPane.class
-      Type : org.gjt.sp.jedit.AbstractOptionPane
+      Type : AbstractOptionPane
     Resource : ActionContext.class
-      Type : org.gjt.sp.jedit.ActionContext
+      Type : ActionContext
     Resource : ActionListHandler.class
-      Type : org.gjt.sp.jedit.ActionListHandler
+      Type : ActionListHandler
     Resource : ActionSet.class
-      Type : org.gjt.sp.jedit.ActionSet
+      Type : ActionSet
     Resource : Autosave.class
-      Type : org.gjt.sp.jedit.Autosave
+      Type : Autosave
     Resource : BeanShell$MyBeanShellFacade.class
-      Type : org.gjt.sp.jedit.BeanShell$MyBeanShellFacade
+      Type : BeanShell$MyBeanShellFacade
     Resource : BeanShell.class
-      Type : org.gjt.sp.jedit.BeanShell
+      Type : BeanShell
     Resource : BeanShellAction$CachedBshMethod.class
-      Type : org.gjt.sp.jedit.BeanShellAction$CachedBshMethod
+      Type : BeanShellAction$CachedBshMethod
     Resource : BeanShellAction.class
-      Type : org.gjt.sp.jedit.BeanShellAction
+      Type : BeanShellAction
     Resource : BeanShellFacade.class
-      Type : org.gjt.sp.jedit.BeanShellFacade
+      Type : BeanShellFacade
     Resource : Buffer$TokenList.class
-      Type : org.gjt.sp.jedit.Buffer$TokenList
+      Type : Buffer$TokenList
     Resource : Buffer.class
-      Type : org.gjt.sp.jedit.Buffer
+      Type : Buffer
     Resource : BufferHistory$Entry.class
-      Type : org.gjt.sp.jedit.BufferHistory$Entry
+      Type : BufferHistory$Entry
     Resource : BufferHistory$RecentHandler.class
-      Type : org.gjt.sp.jedit.BufferHistory$RecentHandler
+      Type : BufferHistory$RecentHandler
     Resource : BufferHistory.class
-      Type : org.gjt.sp.jedit.BufferHistory
+      Type : BufferHistory
     Resource : Debug.class
-      Type : org.gjt.sp.jedit.Debug
+      Type : Debug
     Resource : EBComponent.class
-      Type : org.gjt.sp.jedit.EBComponent
+      Type : EBComponent
     Resource : EBMessage.class
-      Type : org.gjt.sp.jedit.EBMessage
+      Type : EBMessage
     Resource : EBPlugin.class
-      Type : org.gjt.sp.jedit.EBPlugin
+      Type : EBPlugin
     Resource : EditAction$Wrapper.class
-      Type : org.gjt.sp.jedit.EditAction$Wrapper
+      Type : EditAction$Wrapper
     Resource : EditAction.class
-      Type : org.gjt.sp.jedit.EditAction
+      Type : EditAction
     Resource : EditBus$EBHandler.class
-      Type : org.gjt.sp.jedit.EditBus$EBHandler
+      Type : EditBus$EBHandler
     Resource : EditBus$EBMessageHandler.class
-      Type : org.gjt.sp.jedit.EditBus$EBMessageHandler
+      Type : EditBus$EBMessageHandler
     Resource : EditBus$HandlerList.class
-      Type : org.gjt.sp.jedit.EditBus$HandlerList
+      Type : EditBus$HandlerList
     Resource : EditBus$SendMessage.class
-      Type : org.gjt.sp.jedit.EditBus$SendMessage
+      Type : EditBus$SendMessage
     Resource : EditBus.class
-      Type : org.gjt.sp.jedit.EditBus
+      Type : EditBus
     Resource : EditPane$CaretInfo.class
-      Type : org.gjt.sp.jedit.EditPane$CaretInfo
+      Type : EditPane$CaretInfo
     Resource : EditPane$MarkerHighlight.class
-      Type : org.gjt.sp.jedit.EditPane$MarkerHighlight
+      Type : EditPane$MarkerHighlight
     Resource : EditPane$StatusHandler.class
-      Type : org.gjt.sp.jedit.EditPane$StatusHandler
+      Type : EditPane$StatusHandler
     Resource : EditPane.class
-      Type : org.gjt.sp.jedit.EditPane
+      Type : EditPane
     Resource : EditPlugin$Broken.class
-      Type : org.gjt.sp.jedit.EditPlugin$Broken
+      Type : EditPlugin$Broken
     Resource : EditPlugin$Deferred.class
-      Type : org.gjt.sp.jedit.EditPlugin$Deferred
+      Type : EditPlugin$Deferred
     Resource : EditPlugin.class
-      Type : org.gjt.sp.jedit.EditPlugin
+      Type : EditPlugin
     Resource : EditServer.class
-      Type : org.gjt.sp.jedit.EditServer
+      Type : EditServer
     Resource : GUIUtilities$SizeSaver.class
-      Type : org.gjt.sp.jedit.GUIUtilities$SizeSaver
+      Type : GUIUtilities$SizeSaver
     Resource : GUIUtilities$UnixWorkaround$ComponentHandler.class
-      Type : org.gjt.sp.jedit.GUIUtilities$UnixWorkaround$ComponentHandler
+      Type : GUIUtilities$UnixWorkaround$ComponentHandler
     Resource : GUIUtilities$UnixWorkaround$WindowHandler.class
-      Type : org.gjt.sp.jedit.GUIUtilities$UnixWorkaround$WindowHandler
+      Type : GUIUtilities$UnixWorkaround$WindowHandler
     Resource : GUIUtilities$UnixWorkaround.class
-      Type : org.gjt.sp.jedit.GUIUtilities$UnixWorkaround
+      Type : GUIUtilities$UnixWorkaround
     Resource : GUIUtilities.class
-      Type : org.gjt.sp.jedit.GUIUtilities
+      Type : GUIUtilities
     Resource : IPropertyManager.class
-      Type : org.gjt.sp.jedit.IPropertyManager
+      Type : IPropertyManager
     Resource : JARClassLoader.class
-      Type : org.gjt.sp.jedit.JARClassLoader
+      Type : JARClassLoader
     Resource : JEditAbstractEditAction.class
-      Type : org.gjt.sp.jedit.JEditAbstractEditAction
+      Type : JEditAbstractEditAction
     Resource : JEditActionContext.class
-      Type : org.gjt.sp.jedit.JEditActionContext
+      Type : JEditActionContext
     Resource : JEditActionSet.class
-      Type : org.gjt.sp.jedit.JEditActionSet
+      Type : JEditActionSet
     Resource : JEditBeanShellAction$MyBeanShellFacade.class
-      Type : org.gjt.sp.jedit.JEditBeanShellAction$MyBeanShellFacade
+      Type : JEditBeanShellAction$MyBeanShellFacade
     Resource : JEditBeanShellAction.class
-      Type : org.gjt.sp.jedit.JEditBeanShellAction
+      Type : JEditBeanShellAction
     Resource : JEditKillRing$KillRingHandler.class
-      Type : org.gjt.sp.jedit.JEditKillRing$KillRingHandler
+      Type : JEditKillRing$KillRingHandler
     Resource : JEditKillRing.class
-      Type : org.gjt.sp.jedit.JEditKillRing
+      Type : JEditKillRing
     Resource : JEditMode.class
-      Type : org.gjt.sp.jedit.JEditMode
+      Type : JEditMode
     Resource : JEditRegisterSaver$RegistersHandler.class
-      Type : org.gjt.sp.jedit.JEditRegisterSaver$RegistersHandler
+      Type : JEditRegisterSaver$RegistersHandler
     Resource : JEditRegisterSaver.class
-      Type : org.gjt.sp.jedit.JEditRegisterSaver
+      Type : JEditRegisterSaver
     Resource : JEditRegistersListener.class
-      Type : org.gjt.sp.jedit.JEditRegistersListener
+      Type : JEditRegistersListener
     Resource : Macros$BeanShellHandler.class
-      Type : org.gjt.sp.jedit.Macros$BeanShellHandler
+      Type : Macros$BeanShellHandler
     Resource : Macros$Handler.class
-      Type : org.gjt.sp.jedit.Macros$Handler
+      Type : Macros$Handler
     Resource : Macros$Macro.class
-      Type : org.gjt.sp.jedit.Macros$Macro
+      Type : Macros$Macro
     Resource : Macros$Recorder.class
-      Type : org.gjt.sp.jedit.Macros$Recorder
+      Type : Macros$Recorder
     Resource : Macros.class
-      Type : org.gjt.sp.jedit.Macros
+      Type : Macros
     Resource : Marker.class
-      Type : org.gjt.sp.jedit.Marker
+      Type : Marker
     Resource : MiscUtilities$Compare.class
-      Type : org.gjt.sp.jedit.MiscUtilities$Compare
+      Type : MiscUtilities$Compare
     Resource : MiscUtilities$MenuItemCompare.class
-      Type : org.gjt.sp.jedit.MiscUtilities$MenuItemCompare
+      Type : MiscUtilities$MenuItemCompare
     Resource : MiscUtilities$StringCompare.class
-      Type : org.gjt.sp.jedit.MiscUtilities$StringCompare
+      Type : MiscUtilities$StringCompare
     Resource : MiscUtilities$StringICaseCompare.class
-      Type : org.gjt.sp.jedit.MiscUtilities$StringICaseCompare
+      Type : MiscUtilities$StringICaseCompare
     Resource : MiscUtilities$VarCompressor.class
-      Type : org.gjt.sp.jedit.MiscUtilities$VarCompressor
+      Type : MiscUtilities$VarCompressor
     Resource : MiscUtilities.class
-      Type : org.gjt.sp.jedit.MiscUtilities
+      Type : MiscUtilities
     Resource : Mode.class
-      Type : org.gjt.sp.jedit.Mode
+      Type : Mode
     Resource : ModeCatalogHandler.class
-      Type : org.gjt.sp.jedit.ModeCatalogHandler
+      Type : ModeCatalogHandler
     Resource : OperatingSystem.class
-      Type : org.gjt.sp.jedit.OperatingSystem
+      Type : OperatingSystem
     Resource : OptionGroup.class
-      Type : org.gjt.sp.jedit.OptionGroup
+      Type : OptionGroup
     Resource : OptionPane.class
-      Type : org.gjt.sp.jedit.OptionPane
+      Type : OptionPane
     Resource : PerspectiveManager$PerspectiveHandler.class
-      Type : org.gjt.sp.jedit.PerspectiveManager$PerspectiveHandler
+      Type : PerspectiveManager$PerspectiveHandler
     Resource : PerspectiveManager.class
-      Type : org.gjt.sp.jedit.PerspectiveManager
+      Type : PerspectiveManager
     Resource : PluginJAR$PluginCacheEntry.class
-      Type : org.gjt.sp.jedit.PluginJAR$PluginCacheEntry
+      Type : PluginJAR$PluginCacheEntry
     Resource : PluginJAR$PluginDepends.class
-      Type : org.gjt.sp.jedit.PluginJAR$PluginDepends
+      Type : PluginJAR$PluginDepends
     Resource : PluginJAR.class
-      Type : org.gjt.sp.jedit.PluginJAR
+      Type : PluginJAR
     Resource : PropertyManager.class
-      Type : org.gjt.sp.jedit.PropertyManager
+      Type : PropertyManager
     Resource : RegisterSaver.class
-      Type : org.gjt.sp.jedit.RegisterSaver
+      Type : RegisterSaver
     Resource : Registers$ClipboardRegister.class
-      Type : org.gjt.sp.jedit.Registers$ClipboardRegister
+      Type : Registers$ClipboardRegister
     Resource : Registers$DefaultRegister.class
-      Type : org.gjt.sp.jedit.Registers$DefaultRegister
+      Type : Registers$DefaultRegister
     Resource : Registers$Register.class
-      Type : org.gjt.sp.jedit.Registers$Register
+      Type : Registers$Register
     Resource : Registers$StringRegister.class
-      Type : org.gjt.sp.jedit.Registers$StringRegister
+      Type : Registers$StringRegister
     Resource : Registers.class
-      Type : org.gjt.sp.jedit.Registers
+      Type : Registers
     Resource : RegistersListener.class
-      Type : org.gjt.sp.jedit.RegistersListener
+      Type : RegistersListener
     Resource : ServiceListHandler.class
-      Type : org.gjt.sp.jedit.ServiceListHandler
+      Type : ServiceListHandler
     Resource : ServiceManager$Descriptor.class
-      Type : org.gjt.sp.jedit.ServiceManager$Descriptor
+      Type : ServiceManager$Descriptor
     Resource : ServiceManager$ServiceFoldHandlerProvider.class
-      Type : org.gjt.sp.jedit.ServiceManager$ServiceFoldHandlerProvider
+      Type : ServiceManager$ServiceFoldHandlerProvider
     Resource : ServiceManager.class
-      Type : org.gjt.sp.jedit.ServiceManager
+      Type : ServiceManager
     Resource : SettingsReloader.class
-      Type : org.gjt.sp.jedit.SettingsReloader
+      Type : SettingsReloader
     Resource : SettingsXML$Saver.class
-      Type : org.gjt.sp.jedit.SettingsXML$Saver
+      Type : SettingsXML$Saver
     Resource : SettingsXML.class
-      Type : org.gjt.sp.jedit.SettingsXML
+      Type : SettingsXML
     Resource : TextUtilities.class
-      Type : org.gjt.sp.jedit.TextUtilities
+      Type : TextUtilities
     Resource : View$CaretHandler.class
-      Type : org.gjt.sp.jedit.View$CaretHandler
+      Type : View$CaretHandler
     Resource : View$FocusHandler.class
-      Type : org.gjt.sp.jedit.View$FocusHandler
+      Type : View$FocusHandler
     Resource : View$MyFocusTraversalPolicy.class
-      Type : org.gjt.sp.jedit.View$MyFocusTraversalPolicy
+      Type : View$MyFocusTraversalPolicy
     Resource : View$ScrollHandler.class
-      Type : org.gjt.sp.jedit.View$ScrollHandler
+      Type : View$ScrollHandler
     Resource : View$SetCursorVisitor.class
-      Type : org.gjt.sp.jedit.View$SetCursorVisitor
+      Type : View$SetCursorVisitor
     Resource : View$ViewConfig.class
-      Type : org.gjt.sp.jedit.View$ViewConfig
+      Type : View$ViewConfig
     Resource : View$WindowHandler.class
-      Type : org.gjt.sp.jedit.View$WindowHandler
+      Type : View$WindowHandler
     Resource : View.class
-      Type : org.gjt.sp.jedit.View
+      Type : View
     Resource : actions.dtd
     Resource : actions.xml
     Resource : browser.actions.xml
@@ -208,15 +208,15 @@ Module : group1/group2/jedit_1.0.0
     Resource : dockables.dtd
     Resource : dockables.xml
     Resource : jEdit$DockingLayoutSetter.class
-      Type : org.gjt.sp.jedit.jEdit$DockingLayoutSetter
+      Type : jEdit$DockingLayoutSetter
     Resource : jEdit$FirewallAuthenticator.class
-      Type : org.gjt.sp.jedit.jEdit$FirewallAuthenticator
+      Type : jEdit$FirewallAuthenticator
     Resource : jEdit$JEditPropertyManager.class
-      Type : org.gjt.sp.jedit.jEdit$JEditPropertyManager
+      Type : jEdit$JEditPropertyManager
     Resource : jEdit$MyFocusManager.class
-      Type : org.gjt.sp.jedit.jEdit$MyFocusManager
+      Type : jEdit$MyFocusManager
     Resource : jEdit.class
-      Type : org.gjt.sp.jedit.jEdit
+      Type : jEdit
     Resource : jedit.props
     Resource : jedit_gui.props
     Resource : jedit_keys.props
@@ -228,324 +228,324 @@ Module : group1/group2/jedit_1.0.0
     Resource : services.xml
   Package : org.gjt.sp.jedit.browser
     Resource : AbstractBrowserTask$MyTaskListener.class
-      Type : org.gjt.sp.jedit.browser.AbstractBrowserTask$MyTaskListener
+      Type : AbstractBrowserTask$MyTaskListener
     Resource : AbstractBrowserTask.class
-      Type : org.gjt.sp.jedit.browser.AbstractBrowserTask
+      Type : AbstractBrowserTask
     Resource : BrowserCommandsMenu$ActionHandler.class
-      Type : org.gjt.sp.jedit.browser.BrowserCommandsMenu$ActionHandler
+      Type : BrowserCommandsMenu$ActionHandler
     Resource : BrowserCommandsMenu.class
-      Type : org.gjt.sp.jedit.browser.BrowserCommandsMenu
+      Type : BrowserCommandsMenu
     Resource : BrowserIORequest.class
-      Type : org.gjt.sp.jedit.browser.BrowserIORequest
+      Type : BrowserIORequest
     Resource : BrowserListener.class
-      Type : org.gjt.sp.jedit.browser.BrowserListener
+      Type : BrowserListener
     Resource : BrowserView$LoadingPlaceholder.class
-      Type : org.gjt.sp.jedit.browser.BrowserView$LoadingPlaceholder
+      Type : BrowserView$LoadingPlaceholder
     Resource : BrowserView$ParentDirectoryList.class
-      Type : org.gjt.sp.jedit.browser.BrowserView$ParentDirectoryList
+      Type : BrowserView$ParentDirectoryList
     Resource : BrowserView$ParentDirectoryRenderer.class
-      Type : org.gjt.sp.jedit.browser.BrowserView$ParentDirectoryRenderer
+      Type : BrowserView$ParentDirectoryRenderer
     Resource : BrowserView$ParentMouseHandler.class
-      Type : org.gjt.sp.jedit.browser.BrowserView$ParentMouseHandler
+      Type : BrowserView$ParentMouseHandler
     Resource : BrowserView$TableMouseHandler.class
-      Type : org.gjt.sp.jedit.browser.BrowserView$TableMouseHandler
+      Type : BrowserView$TableMouseHandler
     Resource : BrowserView.class
-      Type : org.gjt.sp.jedit.browser.BrowserView
+      Type : BrowserView
     Resource : FileCellRenderer$ExpansionToggleBorder.class
-      Type : org.gjt.sp.jedit.browser.FileCellRenderer$ExpansionToggleBorder
+      Type : FileCellRenderer$ExpansionToggleBorder
     Resource : FileCellRenderer.class
-      Type : org.gjt.sp.jedit.browser.FileCellRenderer
+      Type : FileCellRenderer
     Resource : ListDirectoryBrowserTask.class
-      Type : org.gjt.sp.jedit.browser.ListDirectoryBrowserTask
+      Type : ListDirectoryBrowserTask
     Resource : VFSBrowser$ActionHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$ActionHandler
+      Type : VFSBrowser$ActionHandler
     Resource : VFSBrowser$BrowserActionContext.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$BrowserActionContext
+      Type : VFSBrowser$BrowserActionContext
     Resource : VFSBrowser$CommandsMenuButton$MouseHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$CommandsMenuButton$MouseHandler
+      Type : VFSBrowser$CommandsMenuButton$MouseHandler
     Resource : VFSBrowser$CommandsMenuButton.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$CommandsMenuButton
+      Type : VFSBrowser$CommandsMenuButton
     Resource : VFSBrowser$DirectoriesOnlyFilter.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$DirectoriesOnlyFilter
+      Type : VFSBrowser$DirectoriesOnlyFilter
     Resource : VFSBrowser$FavoritesMenuButton$ActionHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$FavoritesMenuButton$ActionHandler
+      Type : VFSBrowser$FavoritesMenuButton$ActionHandler
     Resource : VFSBrowser$FavoritesMenuButton$MouseHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$FavoritesMenuButton$MouseHandler
+      Type : VFSBrowser$FavoritesMenuButton$MouseHandler
     Resource : VFSBrowser$FavoritesMenuButton.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$FavoritesMenuButton
+      Type : VFSBrowser$FavoritesMenuButton
     Resource : VFSBrowser$HistoryComboBoxEditor.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$HistoryComboBoxEditor
+      Type : VFSBrowser$HistoryComboBoxEditor
     Resource : VFSBrowser$PluginsMenuButton$MouseHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$PluginsMenuButton$MouseHandler
+      Type : VFSBrowser$PluginsMenuButton$MouseHandler
     Resource : VFSBrowser$PluginsMenuButton.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$PluginsMenuButton
+      Type : VFSBrowser$PluginsMenuButton
     Resource : VFSBrowser$VFSFileFilterRenderer.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser$VFSFileFilterRenderer
+      Type : VFSBrowser$VFSFileFilterRenderer
     Resource : VFSBrowser.class
-      Type : org.gjt.sp.jedit.browser.VFSBrowser
+      Type : VFSBrowser
     Resource : VFSDirectoryEntryTable$ClearTypeSelect.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTable$ClearTypeSelect
+      Type : VFSDirectoryEntryTable$ClearTypeSelect
     Resource : VFSDirectoryEntryTable$ColumnHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTable$ColumnHandler
+      Type : VFSDirectoryEntryTable$ColumnHandler
     Resource : VFSDirectoryEntryTable$HeaderRenderer.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTable$HeaderRenderer
+      Type : VFSDirectoryEntryTable$HeaderRenderer
     Resource : VFSDirectoryEntryTable$MainMouseHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTable$MainMouseHandler
+      Type : VFSDirectoryEntryTable$MainMouseHandler
     Resource : VFSDirectoryEntryTable$MouseHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTable$MouseHandler
+      Type : VFSDirectoryEntryTable$MouseHandler
     Resource : VFSDirectoryEntryTable.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTable
+      Type : VFSDirectoryEntryTable
     Resource : VFSDirectoryEntryTableModel$Entry.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTableModel$Entry
+      Type : VFSDirectoryEntryTableModel$Entry
     Resource : VFSDirectoryEntryTableModel$EntryCompare.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTableModel$EntryCompare
+      Type : VFSDirectoryEntryTableModel$EntryCompare
     Resource : VFSDirectoryEntryTableModel$ExtendedAttribute.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTableModel$ExtendedAttribute
+      Type : VFSDirectoryEntryTableModel$ExtendedAttribute
     Resource : VFSDirectoryEntryTableModel.class
-      Type : org.gjt.sp.jedit.browser.VFSDirectoryEntryTableModel
+      Type : VFSDirectoryEntryTableModel
     Resource : VFSFileChooserDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSFileChooserDialog$ActionHandler
+      Type : VFSFileChooserDialog$ActionHandler
     Resource : VFSFileChooserDialog$BrowserHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSFileChooserDialog$BrowserHandler
+      Type : VFSFileChooserDialog$BrowserHandler
     Resource : VFSFileChooserDialog$GetFileTypeRequest.class
-      Type : org.gjt.sp.jedit.browser.VFSFileChooserDialog$GetFileTypeRequest
+      Type : VFSFileChooserDialog$GetFileTypeRequest
     Resource : VFSFileChooserDialog$WorkThreadHandler.class
-      Type : org.gjt.sp.jedit.browser.VFSFileChooserDialog$WorkThreadHandler
+      Type : VFSFileChooserDialog$WorkThreadHandler
     Resource : VFSFileChooserDialog.class
-      Type : org.gjt.sp.jedit.browser.VFSFileChooserDialog
+      Type : VFSFileChooserDialog
     Resource : VFSFileNameField.class
-      Type : org.gjt.sp.jedit.browser.VFSFileNameField
+      Type : VFSFileNameField
   Package : org.gjt.sp.jedit.bsh
     Resource : BSHAllocationExpression.class
-      Type : org.gjt.sp.jedit.bsh.BSHAllocationExpression
+      Type : BSHAllocationExpression
     Resource : BSHAmbiguousName.class
-      Type : org.gjt.sp.jedit.bsh.BSHAmbiguousName
+      Type : BSHAmbiguousName
     Resource : BSHArguments.class
-      Type : org.gjt.sp.jedit.bsh.BSHArguments
+      Type : BSHArguments
     Resource : BSHArrayDimensions.class
-      Type : org.gjt.sp.jedit.bsh.BSHArrayDimensions
+      Type : BSHArrayDimensions
     Resource : BSHArrayInitializer.class
-      Type : org.gjt.sp.jedit.bsh.BSHArrayInitializer
+      Type : BSHArrayInitializer
     Resource : BSHAssignment.class
-      Type : org.gjt.sp.jedit.bsh.BSHAssignment
+      Type : BSHAssignment
     Resource : BSHBinaryExpression.class
-      Type : org.gjt.sp.jedit.bsh.BSHBinaryExpression
+      Type : BSHBinaryExpression
     Resource : BSHBlock$NodeFilter.class
-      Type : org.gjt.sp.jedit.bsh.BSHBlock$NodeFilter
+      Type : BSHBlock$NodeFilter
     Resource : BSHBlock.class
-      Type : org.gjt.sp.jedit.bsh.BSHBlock
+      Type : BSHBlock
     Resource : BSHCastExpression.class
-      Type : org.gjt.sp.jedit.bsh.BSHCastExpression
+      Type : BSHCastExpression
     Resource : BSHClassDeclaration.class
-      Type : org.gjt.sp.jedit.bsh.BSHClassDeclaration
+      Type : BSHClassDeclaration
     Resource : BSHEnhancedForStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHEnhancedForStatement
+      Type : BSHEnhancedForStatement
     Resource : BSHForStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHForStatement
+      Type : BSHForStatement
     Resource : BSHFormalComment.class
-      Type : org.gjt.sp.jedit.bsh.BSHFormalComment
+      Type : BSHFormalComment
     Resource : BSHFormalParameter.class
-      Type : org.gjt.sp.jedit.bsh.BSHFormalParameter
+      Type : BSHFormalParameter
     Resource : BSHFormalParameters.class
-      Type : org.gjt.sp.jedit.bsh.BSHFormalParameters
+      Type : BSHFormalParameters
     Resource : BSHIfStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHIfStatement
+      Type : BSHIfStatement
     Resource : BSHImportDeclaration.class
-      Type : org.gjt.sp.jedit.bsh.BSHImportDeclaration
+      Type : BSHImportDeclaration
     Resource : BSHLiteral.class
-      Type : org.gjt.sp.jedit.bsh.BSHLiteral
+      Type : BSHLiteral
     Resource : BSHMethodDeclaration.class
-      Type : org.gjt.sp.jedit.bsh.BSHMethodDeclaration
+      Type : BSHMethodDeclaration
     Resource : BSHMethodInvocation.class
-      Type : org.gjt.sp.jedit.bsh.BSHMethodInvocation
+      Type : BSHMethodInvocation
     Resource : BSHPackageDeclaration.class
-      Type : org.gjt.sp.jedit.bsh.BSHPackageDeclaration
+      Type : BSHPackageDeclaration
     Resource : BSHPrimaryExpression.class
-      Type : org.gjt.sp.jedit.bsh.BSHPrimaryExpression
+      Type : BSHPrimaryExpression
     Resource : BSHPrimarySuffix.class
-      Type : org.gjt.sp.jedit.bsh.BSHPrimarySuffix
+      Type : BSHPrimarySuffix
     Resource : BSHPrimitiveType.class
-      Type : org.gjt.sp.jedit.bsh.BSHPrimitiveType
+      Type : BSHPrimitiveType
     Resource : BSHReturnStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHReturnStatement
+      Type : BSHReturnStatement
     Resource : BSHReturnType.class
-      Type : org.gjt.sp.jedit.bsh.BSHReturnType
+      Type : BSHReturnType
     Resource : BSHStatementExpressionList.class
-      Type : org.gjt.sp.jedit.bsh.BSHStatementExpressionList
+      Type : BSHStatementExpressionList
     Resource : BSHSwitchLabel.class
-      Type : org.gjt.sp.jedit.bsh.BSHSwitchLabel
+      Type : BSHSwitchLabel
     Resource : BSHSwitchStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHSwitchStatement
+      Type : BSHSwitchStatement
     Resource : BSHTernaryExpression.class
-      Type : org.gjt.sp.jedit.bsh.BSHTernaryExpression
+      Type : BSHTernaryExpression
     Resource : BSHThrowStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHThrowStatement
+      Type : BSHThrowStatement
     Resource : BSHTryStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHTryStatement
+      Type : BSHTryStatement
     Resource : BSHType.class
-      Type : org.gjt.sp.jedit.bsh.BSHType
+      Type : BSHType
     Resource : BSHTypedVariableDeclaration.class
-      Type : org.gjt.sp.jedit.bsh.BSHTypedVariableDeclaration
+      Type : BSHTypedVariableDeclaration
     Resource : BSHUnaryExpression.class
-      Type : org.gjt.sp.jedit.bsh.BSHUnaryExpression
+      Type : BSHUnaryExpression
     Resource : BSHVariableDeclarator.class
-      Type : org.gjt.sp.jedit.bsh.BSHVariableDeclarator
+      Type : BSHVariableDeclarator
     Resource : BSHWhileStatement.class
-      Type : org.gjt.sp.jedit.bsh.BSHWhileStatement
+      Type : BSHWhileStatement
     Resource : BlockNameSpace.class
-      Type : org.gjt.sp.jedit.bsh.BlockNameSpace
+      Type : BlockNameSpace
     Resource : BshClassManager$Listener.class
-      Type : org.gjt.sp.jedit.bsh.BshClassManager$Listener
+      Type : BshClassManager$Listener
     Resource : BshClassManager$SignatureKey.class
-      Type : org.gjt.sp.jedit.bsh.BshClassManager$SignatureKey
+      Type : BshClassManager$SignatureKey
     Resource : BshClassManager.class
-      Type : org.gjt.sp.jedit.bsh.BshClassManager
+      Type : BshClassManager
     Resource : BshIterator.class
-      Type : org.gjt.sp.jedit.bsh.BshIterator
+      Type : BshIterator
     Resource : BshMethod.class
-      Type : org.gjt.sp.jedit.bsh.BshMethod
+      Type : BshMethod
     Resource : CallStack.class
-      Type : org.gjt.sp.jedit.bsh.CallStack
+      Type : CallStack
     Resource : Capabilities$Unavailable.class
-      Type : org.gjt.sp.jedit.bsh.Capabilities$Unavailable
+      Type : Capabilities$Unavailable
     Resource : Capabilities.class
-      Type : org.gjt.sp.jedit.bsh.Capabilities
+      Type : Capabilities
     Resource : ClassGenerator.class
-      Type : org.gjt.sp.jedit.bsh.ClassGenerator
+      Type : ClassGenerator
     Resource : ClassGeneratorImpl$ClassNodeFilter.class
-      Type : org.gjt.sp.jedit.bsh.ClassGeneratorImpl$ClassNodeFilter
+      Type : ClassGeneratorImpl$ClassNodeFilter
     Resource : ClassGeneratorImpl.class
-      Type : org.gjt.sp.jedit.bsh.ClassGeneratorImpl
+      Type : ClassGeneratorImpl
     Resource : ClassGeneratorUtil$ConstructorArgs.class
-      Type : org.gjt.sp.jedit.bsh.ClassGeneratorUtil$ConstructorArgs
+      Type : ClassGeneratorUtil$ConstructorArgs
     Resource : ClassGeneratorUtil.class
-      Type : org.gjt.sp.jedit.bsh.ClassGeneratorUtil
+      Type : ClassGeneratorUtil
     Resource : ClassIdentifier.class
-      Type : org.gjt.sp.jedit.bsh.ClassIdentifier
+      Type : ClassIdentifier
     Resource : ClassPathException.class
-      Type : org.gjt.sp.jedit.bsh.ClassPathException
+      Type : ClassPathException
     Resource : CollectionManager$BasicBshIterator.class
-      Type : org.gjt.sp.jedit.bsh.CollectionManager$BasicBshIterator
+      Type : CollectionManager$BasicBshIterator
     Resource : CollectionManager.class
-      Type : org.gjt.sp.jedit.bsh.CollectionManager
+      Type : CollectionManager
     Resource : CommandLineReader.class
-      Type : org.gjt.sp.jedit.bsh.CommandLineReader
+      Type : CommandLineReader
     Resource : ConsoleInterface.class
-      Type : org.gjt.sp.jedit.bsh.ConsoleInterface
+      Type : ConsoleInterface
     Resource : DelayedEvalBshMethod.class
-      Type : org.gjt.sp.jedit.bsh.DelayedEvalBshMethod
+      Type : DelayedEvalBshMethod
     Resource : EvalError.class
-      Type : org.gjt.sp.jedit.bsh.EvalError
+      Type : EvalError
     Resource : ExternalNameSpace.class
-      Type : org.gjt.sp.jedit.bsh.ExternalNameSpace
+      Type : ExternalNameSpace
     Resource : Interpreter.class
-      Type : org.gjt.sp.jedit.bsh.Interpreter
+      Type : Interpreter
     Resource : InterpreterError.class
-      Type : org.gjt.sp.jedit.bsh.InterpreterError
+      Type : InterpreterError
     Resource : JJTParserState.class
-      Type : org.gjt.sp.jedit.bsh.JJTParserState
+      Type : JJTParserState
     Resource : JThis.class
-      Type : org.gjt.sp.jedit.bsh.JThis
+      Type : JThis
     Resource : JavaCharStream.class
-      Type : org.gjt.sp.jedit.bsh.JavaCharStream
+      Type : JavaCharStream
     Resource : LHS.class
-      Type : org.gjt.sp.jedit.bsh.LHS
+      Type : LHS
     Resource : Modifiers.class
-      Type : org.gjt.sp.jedit.bsh.Modifiers
+      Type : Modifiers
     Resource : Name.class
-      Type : org.gjt.sp.jedit.bsh.Name
+      Type : Name
     Resource : NameSource$Listener.class
-      Type : org.gjt.sp.jedit.bsh.NameSource$Listener
+      Type : NameSource$Listener
     Resource : NameSource.class
-      Type : org.gjt.sp.jedit.bsh.NameSource
+      Type : NameSource
     Resource : NameSpace$CommandPathEntry.class
-      Type : org.gjt.sp.jedit.bsh.NameSpace$CommandPathEntry
+      Type : NameSpace$CommandPathEntry
     Resource : NameSpace.class
-      Type : org.gjt.sp.jedit.bsh.NameSpace
+      Type : NameSpace
     Resource : Node.class
-      Type : org.gjt.sp.jedit.bsh.Node
+      Type : Node
     Resource : ParseException.class
-      Type : org.gjt.sp.jedit.bsh.ParseException
+      Type : ParseException
     Resource : Parser$LookaheadSuccess.class
-      Type : org.gjt.sp.jedit.bsh.Parser$LookaheadSuccess
+      Type : Parser$LookaheadSuccess
     Resource : Parser.class
-      Type : org.gjt.sp.jedit.bsh.Parser
+      Type : Parser
     Resource : ParserConstants.class
-      Type : org.gjt.sp.jedit.bsh.ParserConstants
+      Type : ParserConstants
     Resource : ParserTokenManager.class
-      Type : org.gjt.sp.jedit.bsh.ParserTokenManager
+      Type : ParserTokenManager
     Resource : ParserTreeConstants.class
-      Type : org.gjt.sp.jedit.bsh.ParserTreeConstants
+      Type : ParserTreeConstants
     Resource : Primitive$Special.class
-      Type : org.gjt.sp.jedit.bsh.Primitive$Special
+      Type : Primitive$Special
     Resource : Primitive.class
-      Type : org.gjt.sp.jedit.bsh.Primitive
+      Type : Primitive
     Resource : Reflect.class
-      Type : org.gjt.sp.jedit.bsh.Reflect
+      Type : Reflect
     Resource : ReflectError.class
-      Type : org.gjt.sp.jedit.bsh.ReflectError
+      Type : ReflectError
     Resource : ReflectManager.class
-      Type : org.gjt.sp.jedit.bsh.ReflectManager
+      Type : ReflectManager
     Resource : Remote.class
-      Type : org.gjt.sp.jedit.bsh.Remote
+      Type : Remote
     Resource : ReturnControl.class
-      Type : org.gjt.sp.jedit.bsh.ReturnControl
+      Type : ReturnControl
     Resource : SimpleNode.class
-      Type : org.gjt.sp.jedit.bsh.SimpleNode
+      Type : SimpleNode
     Resource : StringUtil.class
-      Type : org.gjt.sp.jedit.bsh.StringUtil
+      Type : StringUtil
     Resource : TargetError.class
-      Type : org.gjt.sp.jedit.bsh.TargetError
+      Type : TargetError
     Resource : This.class
-      Type : org.gjt.sp.jedit.bsh.This
+      Type : This
     Resource : Token.class
-      Type : org.gjt.sp.jedit.bsh.Token
+      Type : Token
     Resource : TokenMgrError.class
-      Type : org.gjt.sp.jedit.bsh.TokenMgrError
+      Type : TokenMgrError
     Resource : Types.class
-      Type : org.gjt.sp.jedit.bsh.Types
+      Type : Types
     Resource : UtilEvalError.class
-      Type : org.gjt.sp.jedit.bsh.UtilEvalError
+      Type : UtilEvalError
     Resource : UtilTargetError.class
-      Type : org.gjt.sp.jedit.bsh.UtilTargetError
+      Type : UtilTargetError
     Resource : Variable.class
-      Type : org.gjt.sp.jedit.bsh.Variable
+      Type : Variable
     Resource : XThis$Handler.class
-      Type : org.gjt.sp.jedit.bsh.XThis$Handler
+      Type : XThis$Handler
     Resource : XThis.class
-      Type : org.gjt.sp.jedit.bsh.XThis
+      Type : XThis
   Package : org.gjt.sp.jedit.bsh.classpath
     Resource : BshClassLoader.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassLoader
+      Type : BshClassLoader
     Resource : BshClassPath$AmbiguousName.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath$AmbiguousName
+      Type : BshClassPath$AmbiguousName
     Resource : BshClassPath$ClassSource.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath$ClassSource
+      Type : BshClassPath$ClassSource
     Resource : BshClassPath$DirClassSource.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath$DirClassSource
+      Type : BshClassPath$DirClassSource
     Resource : BshClassPath$GeneratedClassSource.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath$GeneratedClassSource
+      Type : BshClassPath$GeneratedClassSource
     Resource : BshClassPath$JarClassSource.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath$JarClassSource
+      Type : BshClassPath$JarClassSource
     Resource : BshClassPath$MappingFeedback.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath$MappingFeedback
+      Type : BshClassPath$MappingFeedback
     Resource : BshClassPath$UnqualifiedNameTable.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath$UnqualifiedNameTable
+      Type : BshClassPath$UnqualifiedNameTable
     Resource : BshClassPath.class
-      Type : org.gjt.sp.jedit.bsh.classpath.BshClassPath
+      Type : BshClassPath
     Resource : ClassManagerImpl.class
-      Type : org.gjt.sp.jedit.bsh.classpath.ClassManagerImpl
+      Type : ClassManagerImpl
     Resource : ClassPathListener.class
-      Type : org.gjt.sp.jedit.bsh.classpath.ClassPathListener
+      Type : ClassPathListener
     Resource : DiscreteFilesClassLoader$ClassSourceMap.class
-      Type : org.gjt.sp.jedit.bsh.classpath.DiscreteFilesClassLoader$ClassSourceMap
+      Type : DiscreteFilesClassLoader$ClassSourceMap
     Resource : DiscreteFilesClassLoader.class
-      Type : org.gjt.sp.jedit.bsh.classpath.DiscreteFilesClassLoader
+      Type : DiscreteFilesClassLoader
   Package : org.gjt.sp.jedit.bsh.collection
     Resource : CollectionIterator.class
-      Type : org.gjt.sp.jedit.bsh.collection.CollectionIterator
+      Type : CollectionIterator
     Resource : CollectionManagerImpl.class
-      Type : org.gjt.sp.jedit.bsh.collection.CollectionManagerImpl
+      Type : CollectionManagerImpl
   Package : org.gjt.sp.jedit.bsh.commands
     Resource : addClassPath.bsh
     Resource : bg.bsh
@@ -559,7 +559,7 @@ Module : group1/group2/jedit_1.0.0
     Resource : debug.bsh
     Resource : desktop.bsh
     Resource : dir.class
-      Type : org.gjt.sp.jedit.bsh.commands.dir
+      Type : dir
     Resource : dirname.bsh
     Resource : editor.bsh
     Resource : error.bsh
@@ -605,641 +605,641 @@ Module : group1/group2/jedit_1.0.0
     Resource : workspaceEditor.bsh
   Package : org.gjt.sp.jedit.bsh.org.objectweb.asm
     Resource : ByteVector.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.ByteVector
+      Type : ByteVector
     Resource : ClassVisitor.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.ClassVisitor
+      Type : ClassVisitor
     Resource : ClassWriter.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.ClassWriter
+      Type : ClassWriter
     Resource : CodeVisitor.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.CodeVisitor
+      Type : CodeVisitor
     Resource : CodeWriter.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.CodeWriter
+      Type : CodeWriter
     Resource : Constants.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.Constants
+      Type : Constants
     Resource : Edge.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.Edge
+      Type : Edge
     Resource : Item.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.Item
+      Type : Item
     Resource : Label.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.Label
+      Type : Label
     Resource : Type.class
-      Type : org.gjt.sp.jedit.bsh.org.objectweb.asm.Type
+      Type : Type
   Package : org.gjt.sp.jedit.bsh.reflect
     Resource : ReflectManagerImpl.class
-      Type : org.gjt.sp.jedit.bsh.reflect.ReflectManagerImpl
+      Type : ReflectManagerImpl
   Package : org.gjt.sp.jedit.buffer
     Resource : BufferAdapter.class
-      Type : org.gjt.sp.jedit.buffer.BufferAdapter
+      Type : BufferAdapter
     Resource : BufferChangeAdapter.class
-      Type : org.gjt.sp.jedit.buffer.BufferChangeAdapter
+      Type : BufferChangeAdapter
     Resource : BufferChangeListener$Adapter.class
-      Type : org.gjt.sp.jedit.buffer.BufferChangeListener$Adapter
+      Type : BufferChangeListener$Adapter
     Resource : BufferChangeListener.class
-      Type : org.gjt.sp.jedit.buffer.BufferChangeListener
+      Type : BufferChangeListener
     Resource : BufferListener.class
-      Type : org.gjt.sp.jedit.buffer.BufferListener
+      Type : BufferListener
     Resource : BufferSegment.class
-      Type : org.gjt.sp.jedit.buffer.BufferSegment
+      Type : BufferSegment
     Resource : BufferUndoListener.class
-      Type : org.gjt.sp.jedit.buffer.BufferUndoListener
+      Type : BufferUndoListener
     Resource : ContentManager.class
-      Type : org.gjt.sp.jedit.buffer.ContentManager
+      Type : ContentManager
     Resource : DefaultFoldHandlerProvider.class
-      Type : org.gjt.sp.jedit.buffer.DefaultFoldHandlerProvider
+      Type : DefaultFoldHandlerProvider
     Resource : DummyFoldHandler.class
-      Type : org.gjt.sp.jedit.buffer.DummyFoldHandler
+      Type : DummyFoldHandler
     Resource : ExplicitFoldHandler.class
-      Type : org.gjt.sp.jedit.buffer.ExplicitFoldHandler
+      Type : ExplicitFoldHandler
     Resource : FoldHandler.class
-      Type : org.gjt.sp.jedit.buffer.FoldHandler
+      Type : FoldHandler
     Resource : FoldHandlerProvider.class
-      Type : org.gjt.sp.jedit.buffer.FoldHandlerProvider
+      Type : FoldHandlerProvider
     Resource : IndentFoldHandler.class
-      Type : org.gjt.sp.jedit.buffer.IndentFoldHandler
+      Type : IndentFoldHandler
     Resource : JEditBuffer$Listener.class
-      Type : org.gjt.sp.jedit.buffer.JEditBuffer$Listener
+      Type : JEditBuffer$Listener
     Resource : JEditBuffer$PropValue.class
-      Type : org.gjt.sp.jedit.buffer.JEditBuffer$PropValue
+      Type : JEditBuffer$PropValue
     Resource : JEditBuffer.class
-      Type : org.gjt.sp.jedit.buffer.JEditBuffer
+      Type : JEditBuffer
     Resource : KillRing.class
-      Type : org.gjt.sp.jedit.buffer.KillRing
+      Type : KillRing
     Resource : LineManager.class
-      Type : org.gjt.sp.jedit.buffer.LineManager
+      Type : LineManager
     Resource : PositionManager$PosBottomHalf.class
-      Type : org.gjt.sp.jedit.buffer.PositionManager$PosBottomHalf
+      Type : PositionManager$PosBottomHalf
     Resource : PositionManager$PosTopHalf.class
-      Type : org.gjt.sp.jedit.buffer.PositionManager$PosTopHalf
+      Type : PositionManager$PosTopHalf
     Resource : PositionManager.class
-      Type : org.gjt.sp.jedit.buffer.PositionManager
+      Type : PositionManager
     Resource : UndoManager$CompoundEdit.class
-      Type : org.gjt.sp.jedit.buffer.UndoManager$CompoundEdit
+      Type : UndoManager$CompoundEdit
     Resource : UndoManager$Edit.class
-      Type : org.gjt.sp.jedit.buffer.UndoManager$Edit
+      Type : UndoManager$Edit
     Resource : UndoManager$Insert.class
-      Type : org.gjt.sp.jedit.buffer.UndoManager$Insert
+      Type : UndoManager$Insert
     Resource : UndoManager$Remove.class
-      Type : org.gjt.sp.jedit.buffer.UndoManager$Remove
+      Type : UndoManager$Remove
     Resource : UndoManager$RemovedContent.class
-      Type : org.gjt.sp.jedit.buffer.UndoManager$RemovedContent
+      Type : UndoManager$RemovedContent
     Resource : UndoManager.class
-      Type : org.gjt.sp.jedit.buffer.UndoManager
+      Type : UndoManager
   Package : org.gjt.sp.jedit.bufferio
     Resource : BufferAutosaveRequest.class
-      Type : org.gjt.sp.jedit.bufferio.BufferAutosaveRequest
+      Type : BufferAutosaveRequest
     Resource : BufferIORequest.class
-      Type : org.gjt.sp.jedit.bufferio.BufferIORequest
+      Type : BufferIORequest
     Resource : BufferInsertRequest.class
-      Type : org.gjt.sp.jedit.bufferio.BufferInsertRequest
+      Type : BufferInsertRequest
     Resource : BufferLoadRequest.class
-      Type : org.gjt.sp.jedit.bufferio.BufferLoadRequest
+      Type : BufferLoadRequest
     Resource : BufferSaveRequest.class
-      Type : org.gjt.sp.jedit.bufferio.BufferSaveRequest
+      Type : BufferSaveRequest
     Resource : MarkersSaveRequest.class
-      Type : org.gjt.sp.jedit.bufferio.MarkersSaveRequest
+      Type : MarkersSaveRequest
   Package : org.gjt.sp.jedit.bufferset
     Resource : BufferSet$NameSorter.class
-      Type : org.gjt.sp.jedit.bufferset.BufferSet$NameSorter
+      Type : BufferSet$NameSorter
     Resource : BufferSet$PathSorter.class
-      Type : org.gjt.sp.jedit.bufferset.BufferSet$PathSorter
+      Type : BufferSet$PathSorter
     Resource : BufferSet$Scope.class
-      Type : org.gjt.sp.jedit.bufferset.BufferSet$Scope
+      Type : BufferSet$Scope
     Resource : BufferSet.class
-      Type : org.gjt.sp.jedit.bufferset.BufferSet
+      Type : BufferSet
     Resource : BufferSetAdapter.class
-      Type : org.gjt.sp.jedit.bufferset.BufferSetAdapter
+      Type : BufferSetAdapter
     Resource : BufferSetListener.class
-      Type : org.gjt.sp.jedit.bufferset.BufferSetListener
+      Type : BufferSetListener
     Resource : BufferSetManager.class
-      Type : org.gjt.sp.jedit.bufferset.BufferSetManager
+      Type : BufferSetManager
   Package : org.gjt.sp.jedit.datatransfer
     Resource : JEditDataFlavor.class
-      Type : org.gjt.sp.jedit.datatransfer.JEditDataFlavor
+      Type : JEditDataFlavor
     Resource : JEditRichText.class
-      Type : org.gjt.sp.jedit.datatransfer.JEditRichText
+      Type : JEditRichText
     Resource : JEditTransferable.class
-      Type : org.gjt.sp.jedit.datatransfer.JEditTransferable
+      Type : JEditTransferable
     Resource : JEditTransferableService.class
-      Type : org.gjt.sp.jedit.datatransfer.JEditTransferableService
+      Type : JEditTransferableService
     Resource : ListVFSFileTransferable.class
-      Type : org.gjt.sp.jedit.datatransfer.ListVFSFileTransferable
+      Type : ListVFSFileTransferable
     Resource : RichJEditTextTransferableService.class
-      Type : org.gjt.sp.jedit.datatransfer.RichJEditTextTransferableService
+      Type : RichJEditTextTransferableService
     Resource : RichTextTransferable.class
-      Type : org.gjt.sp.jedit.datatransfer.RichTextTransferable
+      Type : RichTextTransferable
     Resource : StringTransferableService.class
-      Type : org.gjt.sp.jedit.datatransfer.StringTransferableService
+      Type : StringTransferableService
     Resource : TransferHandler.class
-      Type : org.gjt.sp.jedit.datatransfer.TransferHandler
+      Type : TransferHandler
   Package : org.gjt.sp.jedit.gui
     Resource : AbbrevEditor.class
-      Type : org.gjt.sp.jedit.gui.AbbrevEditor
+      Type : AbbrevEditor
     Resource : AboutDialog$AboutPanel.class
-      Type : org.gjt.sp.jedit.gui.AboutDialog$AboutPanel
+      Type : AboutDialog$AboutPanel
     Resource : AboutDialog.class
-      Type : org.gjt.sp.jedit.gui.AboutDialog
+      Type : AboutDialog
     Resource : AbstractContextOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.AbstractContextOptionPane$ActionHandler
+      Type : AbstractContextOptionPane$ActionHandler
     Resource : AbstractContextOptionPane$ListHandler.class
-      Type : org.gjt.sp.jedit.gui.AbstractContextOptionPane$ListHandler
+      Type : AbstractContextOptionPane$ListHandler
     Resource : AbstractContextOptionPane$MenuItem.class
-      Type : org.gjt.sp.jedit.gui.AbstractContextOptionPane$MenuItem
+      Type : AbstractContextOptionPane$MenuItem
     Resource : AbstractContextOptionPane$MenuItemCompare.class
-      Type : org.gjt.sp.jedit.gui.AbstractContextOptionPane$MenuItemCompare
+      Type : AbstractContextOptionPane$MenuItemCompare
     Resource : AbstractContextOptionPane.class
-      Type : org.gjt.sp.jedit.gui.AbstractContextOptionPane
+      Type : AbstractContextOptionPane
     Resource : ActionBar$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.ActionBar$ActionHandler
+      Type : ActionBar$ActionHandler
     Resource : ActionBar$ActionTextField.class
-      Type : org.gjt.sp.jedit.gui.ActionBar$ActionTextField
+      Type : ActionBar$ActionTextField
     Resource : ActionBar$CompletionPopup$CompletionList.class
-      Type : org.gjt.sp.jedit.gui.ActionBar$CompletionPopup$CompletionList
+      Type : ActionBar$CompletionPopup$CompletionList
     Resource : ActionBar$CompletionPopup$KeyHandler.class
-      Type : org.gjt.sp.jedit.gui.ActionBar$CompletionPopup$KeyHandler
+      Type : ActionBar$CompletionPopup$KeyHandler
     Resource : ActionBar$CompletionPopup$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.ActionBar$CompletionPopup$MouseHandler
+      Type : ActionBar$CompletionPopup$MouseHandler
     Resource : ActionBar$CompletionPopup.class
-      Type : org.gjt.sp.jedit.gui.ActionBar$CompletionPopup
+      Type : ActionBar$CompletionPopup
     Resource : ActionBar$DocumentHandler.class
-      Type : org.gjt.sp.jedit.gui.ActionBar$DocumentHandler
+      Type : ActionBar$DocumentHandler
     Resource : ActionBar.class
-      Type : org.gjt.sp.jedit.gui.ActionBar
+      Type : ActionBar
     Resource : AddAbbrevDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.AddAbbrevDialog$ActionHandler
+      Type : AddAbbrevDialog$ActionHandler
     Resource : AddAbbrevDialog$KeyHandler.class
-      Type : org.gjt.sp.jedit.gui.AddAbbrevDialog$KeyHandler
+      Type : AddAbbrevDialog$KeyHandler
     Resource : AddAbbrevDialog.class
-      Type : org.gjt.sp.jedit.gui.AddAbbrevDialog
+      Type : AddAbbrevDialog
     Resource : AnimatedIcon$Animator.class
-      Type : org.gjt.sp.jedit.gui.AnimatedIcon$Animator
+      Type : AnimatedIcon$Animator
     Resource : AnimatedIcon.class
-      Type : org.gjt.sp.jedit.gui.AnimatedIcon
+      Type : AnimatedIcon
     Resource : BeanShellErrorDialog.class
-      Type : org.gjt.sp.jedit.gui.BeanShellErrorDialog
+      Type : BeanShellErrorDialog
     Resource : BufferOptions$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.BufferOptions$ActionHandler
+      Type : BufferOptions$ActionHandler
     Resource : BufferOptions.class
-      Type : org.gjt.sp.jedit.gui.BufferOptions
+      Type : BufferOptions
     Resource : BufferSwitcher$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.BufferSwitcher$ActionHandler
+      Type : BufferSwitcher$ActionHandler
     Resource : BufferSwitcher$BufferCellRenderer.class
-      Type : org.gjt.sp.jedit.gui.BufferSwitcher$BufferCellRenderer
+      Type : BufferSwitcher$BufferCellRenderer
     Resource : BufferSwitcher.class
-      Type : org.gjt.sp.jedit.gui.BufferSwitcher
+      Type : BufferSwitcher
     Resource : CheckBoxListModel.class
-      Type : org.gjt.sp.jedit.gui.CheckBoxListModel
+      Type : CheckBoxListModel
     Resource : CloseDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.CloseDialog$ActionHandler
+      Type : CloseDialog$ActionHandler
     Resource : CloseDialog$ListHandler.class
-      Type : org.gjt.sp.jedit.gui.CloseDialog$ListHandler
+      Type : CloseDialog$ListHandler
     Resource : CloseDialog.class
-      Type : org.gjt.sp.jedit.gui.CloseDialog
+      Type : CloseDialog
     Resource : ColorWellButton$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.ColorWellButton$ActionHandler
+      Type : ColorWellButton$ActionHandler
     Resource : ColorWellButton$ColorPickerDialog.class
-      Type : org.gjt.sp.jedit.gui.ColorWellButton$ColorPickerDialog
+      Type : ColorWellButton$ColorPickerDialog
     Resource : ColorWellButton$ColorWell.class
-      Type : org.gjt.sp.jedit.gui.ColorWellButton$ColorWell
+      Type : ColorWellButton$ColorWell
     Resource : ColorWellButton.class
-      Type : org.gjt.sp.jedit.gui.ColorWellButton
+      Type : ColorWellButton
     Resource : CompleteWord$Completion.class
-      Type : org.gjt.sp.jedit.gui.CompleteWord$Completion
+      Type : CompleteWord$Completion
     Resource : CompleteWord$Words.class
-      Type : org.gjt.sp.jedit.gui.CompleteWord$Words
+      Type : CompleteWord$Words
     Resource : CompleteWord.class
-      Type : org.gjt.sp.jedit.gui.CompleteWord
+      Type : CompleteWord
     Resource : CompletionPopup$CandidateListModel.class
-      Type : org.gjt.sp.jedit.gui.CompletionPopup$CandidateListModel
+      Type : CompletionPopup$CandidateListModel
     Resource : CompletionPopup$Candidates.class
-      Type : org.gjt.sp.jedit.gui.CompletionPopup$Candidates
+      Type : CompletionPopup$Candidates
     Resource : CompletionPopup$CellRenderer.class
-      Type : org.gjt.sp.jedit.gui.CompletionPopup$CellRenderer
+      Type : CompletionPopup$CellRenderer
     Resource : CompletionPopup$KeyHandler.class
-      Type : org.gjt.sp.jedit.gui.CompletionPopup$KeyHandler
+      Type : CompletionPopup$KeyHandler
     Resource : CompletionPopup$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.CompletionPopup$MouseHandler
+      Type : CompletionPopup$MouseHandler
     Resource : CompletionPopup$WindowFocusHandler.class
-      Type : org.gjt.sp.jedit.gui.CompletionPopup$WindowFocusHandler
+      Type : CompletionPopup$WindowFocusHandler
     Resource : CompletionPopup.class
-      Type : org.gjt.sp.jedit.gui.CompletionPopup
+      Type : CompletionPopup
     Resource : ContextAddDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.ContextAddDialog$ActionHandler
+      Type : ContextAddDialog$ActionHandler
     Resource : ContextAddDialog.class
-      Type : org.gjt.sp.jedit.gui.ContextAddDialog
+      Type : ContextAddDialog
     Resource : DefaultFocusComponent.class
-      Type : org.gjt.sp.jedit.gui.DefaultFocusComponent
+      Type : DefaultFocusComponent
     Resource : DefaultInputHandler.class
-      Type : org.gjt.sp.jedit.gui.DefaultInputHandler
+      Type : DefaultInputHandler
     Resource : DockableLayout.class
-      Type : org.gjt.sp.jedit.gui.DockableLayout
+      Type : DockableLayout
     Resource : DockablePanel$ResizeMouseHandler.class
-      Type : org.gjt.sp.jedit.gui.DockablePanel$ResizeMouseHandler
+      Type : DockablePanel$ResizeMouseHandler
     Resource : DockablePanel.class
-      Type : org.gjt.sp.jedit.gui.DockablePanel
+      Type : DockablePanel
     Resource : DockableWindow.class
-      Type : org.gjt.sp.jedit.gui.DockableWindow
+      Type : DockableWindow
     Resource : DockableWindowContainer.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowContainer
+      Type : DockableWindowContainer
     Resource : DockableWindowFactory$DockableListHandler.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowFactory$DockableListHandler
+      Type : DockableWindowFactory$DockableListHandler
     Resource : DockableWindowFactory$Window$FloatAction.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowFactory$Window$FloatAction
+      Type : DockableWindowFactory$Window$FloatAction
     Resource : DockableWindowFactory$Window$OpenAction.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowFactory$Window$OpenAction
+      Type : DockableWindowFactory$Window$OpenAction
     Resource : DockableWindowFactory$Window$ToggleAction.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowFactory$Window$ToggleAction
+      Type : DockableWindowFactory$Window$ToggleAction
     Resource : DockableWindowFactory$Window.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowFactory$Window
+      Type : DockableWindowFactory$Window
     Resource : DockableWindowFactory.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowFactory
+      Type : DockableWindowFactory
     Resource : DockableWindowManager$DockingArea.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManager$DockingArea
+      Type : DockableWindowManager$DockingArea
     Resource : DockableWindowManager$DockingLayout.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManager$DockingLayout
+      Type : DockableWindowManager$DockingLayout
     Resource : DockableWindowManager$KeyHandler.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManager$KeyHandler
+      Type : DockableWindowManager$KeyHandler
     Resource : DockableWindowManager.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManager
+      Type : DockableWindowManager
     Resource : DockableWindowManagerImpl$DockableWindowConfig$PerspectiveHandler.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManagerImpl$DockableWindowConfig$PerspectiveHandler
+      Type : DockableWindowManagerImpl$DockableWindowConfig$PerspectiveHandler
     Resource : DockableWindowManagerImpl$DockableWindowConfig.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManagerImpl$DockableWindowConfig
+      Type : DockableWindowManagerImpl$DockableWindowConfig
     Resource : DockableWindowManagerImpl$Entry.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManagerImpl$Entry
+      Type : DockableWindowManagerImpl$Entry
     Resource : DockableWindowManagerImpl.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManagerImpl
+      Type : DockableWindowManagerImpl
     Resource : DockableWindowManagerProvider.class
-      Type : org.gjt.sp.jedit.gui.DockableWindowManagerProvider
+      Type : DockableWindowManagerProvider
     Resource : DockingFrameworkProvider.class
-      Type : org.gjt.sp.jedit.gui.DockingFrameworkProvider
+      Type : DockingFrameworkProvider
     Resource : DockingLayoutManager$LoadPerspectiveAction.class
-      Type : org.gjt.sp.jedit.gui.DockingLayoutManager$LoadPerspectiveAction
+      Type : DockingLayoutManager$LoadPerspectiveAction
     Resource : DockingLayoutManager.class
-      Type : org.gjt.sp.jedit.gui.DockingLayoutManager
+      Type : DockingLayoutManager
     Resource : DynamicContextMenuService.class
-      Type : org.gjt.sp.jedit.gui.DynamicContextMenuService
+      Type : DynamicContextMenuService
     Resource : EditAbbrevDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.EditAbbrevDialog$ActionHandler
+      Type : EditAbbrevDialog$ActionHandler
     Resource : EditAbbrevDialog$KeyHandler.class
-      Type : org.gjt.sp.jedit.gui.EditAbbrevDialog$KeyHandler
+      Type : EditAbbrevDialog$KeyHandler
     Resource : EditAbbrevDialog.class
-      Type : org.gjt.sp.jedit.gui.EditAbbrevDialog
+      Type : EditAbbrevDialog
     Resource : EnhancedButton$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.EnhancedButton$MouseHandler
+      Type : EnhancedButton$MouseHandler
     Resource : EnhancedButton.class
-      Type : org.gjt.sp.jedit.gui.EnhancedButton
+      Type : EnhancedButton
     Resource : EnhancedDialog$ContainerHandler.class
-      Type : org.gjt.sp.jedit.gui.EnhancedDialog$ContainerHandler
+      Type : EnhancedDialog$ContainerHandler
     Resource : EnhancedDialog$KeyHandler.class
-      Type : org.gjt.sp.jedit.gui.EnhancedDialog$KeyHandler
+      Type : EnhancedDialog$KeyHandler
     Resource : EnhancedDialog$WindowHandler.class
-      Type : org.gjt.sp.jedit.gui.EnhancedDialog$WindowHandler
+      Type : EnhancedDialog$WindowHandler
     Resource : EnhancedDialog.class
-      Type : org.gjt.sp.jedit.gui.EnhancedDialog
+      Type : EnhancedDialog
     Resource : ErrorListDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.ErrorListDialog$ActionHandler
+      Type : ErrorListDialog$ActionHandler
     Resource : ErrorListDialog$ErrorEntry.class
-      Type : org.gjt.sp.jedit.gui.ErrorListDialog$ErrorEntry
+      Type : ErrorListDialog$ErrorEntry
     Resource : ErrorListDialog.class
-      Type : org.gjt.sp.jedit.gui.ErrorListDialog
+      Type : ErrorListDialog
     Resource : ExtendedGridLayout$LayoutSize.class
-      Type : org.gjt.sp.jedit.gui.ExtendedGridLayout$LayoutSize
+      Type : ExtendedGridLayout$LayoutSize
     Resource : ExtendedGridLayout.class
-      Type : org.gjt.sp.jedit.gui.ExtendedGridLayout
+      Type : ExtendedGridLayout
     Resource : ExtendedGridLayoutConstraints.class
-      Type : org.gjt.sp.jedit.gui.ExtendedGridLayoutConstraints
+      Type : ExtendedGridLayoutConstraints
     Resource : FilePropertiesDialog$ButtonActionHandler.class
-      Type : org.gjt.sp.jedit.gui.FilePropertiesDialog$ButtonActionHandler
+      Type : FilePropertiesDialog$ButtonActionHandler
     Resource : FilePropertiesDialog.class
-      Type : org.gjt.sp.jedit.gui.FilePropertiesDialog
+      Type : FilePropertiesDialog
     Resource : FilesChangedDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.FilesChangedDialog$ActionHandler
+      Type : FilesChangedDialog$ActionHandler
     Resource : FilesChangedDialog$Renderer.class
-      Type : org.gjt.sp.jedit.gui.FilesChangedDialog$Renderer
+      Type : FilesChangedDialog$Renderer
     Resource : FilesChangedDialog$TreeHandler.class
-      Type : org.gjt.sp.jedit.gui.FilesChangedDialog$TreeHandler
+      Type : FilesChangedDialog$TreeHandler
     Resource : FilesChangedDialog.class
-      Type : org.gjt.sp.jedit.gui.FilesChangedDialog
+      Type : FilesChangedDialog
     Resource : FilteredListModel.class
-      Type : org.gjt.sp.jedit.gui.FilteredListModel
+      Type : FilteredListModel
     Resource : FilteredTableModel.class
-      Type : org.gjt.sp.jedit.gui.FilteredTableModel
+      Type : FilteredTableModel
     Resource : FloatingWindowContainer$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.FloatingWindowContainer$MouseHandler
+      Type : FloatingWindowContainer$MouseHandler
     Resource : FloatingWindowContainer.class
-      Type : org.gjt.sp.jedit.gui.FloatingWindowContainer
+      Type : FloatingWindowContainer
     Resource : FontSelector$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.FontSelector$ActionHandler
+      Type : FontSelector$ActionHandler
     Resource : FontSelector.class
-      Type : org.gjt.sp.jedit.gui.FontSelector
+      Type : FontSelector
     Resource : FontSelectorDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.FontSelectorDialog$ActionHandler
+      Type : FontSelectorDialog$ActionHandler
     Resource : FontSelectorDialog$ListHandler.class
-      Type : org.gjt.sp.jedit.gui.FontSelectorDialog$ListHandler
+      Type : FontSelectorDialog$ListHandler
     Resource : FontSelectorDialog.class
-      Type : org.gjt.sp.jedit.gui.FontSelectorDialog
+      Type : FontSelectorDialog
     Resource : GrabKeyDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.GrabKeyDialog$ActionHandler
+      Type : GrabKeyDialog$ActionHandler
     Resource : GrabKeyDialog$InputPane.class
-      Type : org.gjt.sp.jedit.gui.GrabKeyDialog$InputPane
+      Type : GrabKeyDialog$InputPane
     Resource : GrabKeyDialog$KeyBinding.class
-      Type : org.gjt.sp.jedit.gui.GrabKeyDialog$KeyBinding
+      Type : GrabKeyDialog$KeyBinding
     Resource : GrabKeyDialog.class
-      Type : org.gjt.sp.jedit.gui.GrabKeyDialog
+      Type : GrabKeyDialog
     Resource : HistoryModel.class
-      Type : org.gjt.sp.jedit.gui.HistoryModel
+      Type : HistoryModel
     Resource : HistoryModelSaver.class
-      Type : org.gjt.sp.jedit.gui.HistoryModelSaver
+      Type : HistoryModelSaver
     Resource : HistoryText$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.HistoryText$ActionHandler
+      Type : HistoryText$ActionHandler
     Resource : HistoryText.class
-      Type : org.gjt.sp.jedit.gui.HistoryText
+      Type : HistoryText
     Resource : HistoryTextArea.class
-      Type : org.gjt.sp.jedit.gui.HistoryTextArea
+      Type : HistoryTextArea
     Resource : HistoryTextField$HistoryBorder.class
-      Type : org.gjt.sp.jedit.gui.HistoryTextField$HistoryBorder
+      Type : HistoryTextField$HistoryBorder
     Resource : HistoryTextField$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.HistoryTextField$MouseHandler
+      Type : HistoryTextField$MouseHandler
     Resource : HistoryTextField.class
-      Type : org.gjt.sp.jedit.gui.HistoryTextField
+      Type : HistoryTextField
     Resource : IOProgressMonitor$ThreadProgress$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.IOProgressMonitor$ThreadProgress$ActionHandler
+      Type : IOProgressMonitor$ThreadProgress$ActionHandler
     Resource : IOProgressMonitor$ThreadProgress.class
-      Type : org.gjt.sp.jedit.gui.IOProgressMonitor$ThreadProgress
+      Type : IOProgressMonitor$ThreadProgress
     Resource : IOProgressMonitor$WorkThreadHandler.class
-      Type : org.gjt.sp.jedit.gui.IOProgressMonitor$WorkThreadHandler
+      Type : IOProgressMonitor$WorkThreadHandler
     Resource : IOProgressMonitor.class
-      Type : org.gjt.sp.jedit.gui.IOProgressMonitor
+      Type : IOProgressMonitor
     Resource : InputHandler.class
-      Type : org.gjt.sp.jedit.gui.InputHandler
+      Type : InputHandler
     Resource : JCheckBoxList$DummyRenderer.class
-      Type : org.gjt.sp.jedit.gui.JCheckBoxList$DummyRenderer
+      Type : JCheckBoxList$DummyRenderer
     Resource : JCheckBoxList$Entry.class
-      Type : org.gjt.sp.jedit.gui.JCheckBoxList$Entry
+      Type : JCheckBoxList$Entry
     Resource : JCheckBoxList$LabelRenderer.class
-      Type : org.gjt.sp.jedit.gui.JCheckBoxList$LabelRenderer
+      Type : JCheckBoxList$LabelRenderer
     Resource : JCheckBoxList.class
-      Type : org.gjt.sp.jedit.gui.JCheckBoxList
+      Type : JCheckBoxList
     Resource : JEditHistoryModelSaver.class
-      Type : org.gjt.sp.jedit.gui.JEditHistoryModelSaver
+      Type : JEditHistoryModelSaver
     Resource : KeyEventTranslator$Key.class
-      Type : org.gjt.sp.jedit.gui.KeyEventTranslator$Key
+      Type : KeyEventTranslator$Key
     Resource : KeyEventTranslator.class
-      Type : org.gjt.sp.jedit.gui.KeyEventTranslator
+      Type : KeyEventTranslator
     Resource : KeyEventWorkaround.class
-      Type : org.gjt.sp.jedit.gui.KeyEventWorkaround
+      Type : KeyEventWorkaround
     Resource : ListModelEditor.class
-      Type : org.gjt.sp.jedit.gui.ListModelEditor
+      Type : ListModelEditor
     Resource : LogViewer$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.LogViewer$ActionHandler
+      Type : LogViewer$ActionHandler
     Resource : LogViewer$ColorizerCellRenderer.class
-      Type : org.gjt.sp.jedit.gui.LogViewer$ColorizerCellRenderer
+      Type : LogViewer$ColorizerCellRenderer
     Resource : LogViewer$ListHandler.class
-      Type : org.gjt.sp.jedit.gui.LogViewer$ListHandler
+      Type : LogViewer$ListHandler
     Resource : LogViewer$LogList.class
-      Type : org.gjt.sp.jedit.gui.LogViewer$LogList
+      Type : LogViewer$LogList
     Resource : LogViewer$LogSettings.class
-      Type : org.gjt.sp.jedit.gui.LogViewer$LogSettings
+      Type : LogViewer$LogSettings
     Resource : LogViewer$MyFilteredListModel.class
-      Type : org.gjt.sp.jedit.gui.LogViewer$MyFilteredListModel
+      Type : LogViewer$MyFilteredListModel
     Resource : LogViewer.class
-      Type : org.gjt.sp.jedit.gui.LogViewer
+      Type : LogViewer
     Resource : MarkerViewer$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.MarkerViewer$MouseHandler
+      Type : MarkerViewer$MouseHandler
     Resource : MarkerViewer$Renderer.class
-      Type : org.gjt.sp.jedit.gui.MarkerViewer$Renderer
+      Type : MarkerViewer$Renderer
     Resource : MarkerViewer.class
-      Type : org.gjt.sp.jedit.gui.MarkerViewer
+      Type : MarkerViewer
     Resource : MutableListModel.class
-      Type : org.gjt.sp.jedit.gui.MutableListModel
+      Type : MutableListModel
     Resource : NumericTextField.class
-      Type : org.gjt.sp.jedit.gui.NumericTextField
+      Type : NumericTextField
     Resource : OptionsDialog$OptionTreeModel.class
-      Type : org.gjt.sp.jedit.gui.OptionsDialog$OptionTreeModel
+      Type : OptionsDialog$OptionTreeModel
     Resource : OptionsDialog$PaneNameRenderer.class
-      Type : org.gjt.sp.jedit.gui.OptionsDialog$PaneNameRenderer
+      Type : OptionsDialog$PaneNameRenderer
     Resource : OptionsDialog.class
-      Type : org.gjt.sp.jedit.gui.OptionsDialog
+      Type : OptionsDialog
     Resource : PanelWindowContainer$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.PanelWindowContainer$ActionHandler
+      Type : PanelWindowContainer$ActionHandler
     Resource : PanelWindowContainer$ButtonLayout.class
-      Type : org.gjt.sp.jedit.gui.PanelWindowContainer$ButtonLayout
+      Type : PanelWindowContainer$ButtonLayout
     Resource : PanelWindowContainer$DockBorder.class
-      Type : org.gjt.sp.jedit.gui.PanelWindowContainer$DockBorder
+      Type : PanelWindowContainer$DockBorder
     Resource : PanelWindowContainer$DockableWindowCompare.class
-      Type : org.gjt.sp.jedit.gui.PanelWindowContainer$DockableWindowCompare
+      Type : PanelWindowContainer$DockableWindowCompare
     Resource : PanelWindowContainer$MenuMouseHandler.class
-      Type : org.gjt.sp.jedit.gui.PanelWindowContainer$MenuMouseHandler
+      Type : PanelWindowContainer$MenuMouseHandler
     Resource : PanelWindowContainer$RotatedTextIcon.class
-      Type : org.gjt.sp.jedit.gui.PanelWindowContainer$RotatedTextIcon
+      Type : PanelWindowContainer$RotatedTextIcon
     Resource : PanelWindowContainer.class
-      Type : org.gjt.sp.jedit.gui.PanelWindowContainer
+      Type : PanelWindowContainer
     Resource : PasteFromListDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.PasteFromListDialog$ActionHandler
+      Type : PasteFromListDialog$ActionHandler
     Resource : PasteFromListDialog$ListHandler.class
-      Type : org.gjt.sp.jedit.gui.PasteFromListDialog$ListHandler
+      Type : PasteFromListDialog$ListHandler
     Resource : PasteFromListDialog$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.PasteFromListDialog$MouseHandler
+      Type : PasteFromListDialog$MouseHandler
     Resource : PasteFromListDialog$Renderer.class
-      Type : org.gjt.sp.jedit.gui.PasteFromListDialog$Renderer
+      Type : PasteFromListDialog$Renderer
     Resource : PasteFromListDialog.class
-      Type : org.gjt.sp.jedit.gui.PasteFromListDialog
+      Type : PasteFromListDialog
     Resource : PasteSpecialDialog.class
-      Type : org.gjt.sp.jedit.gui.PasteSpecialDialog
+      Type : PasteSpecialDialog
     Resource : PingPongList$MyListModel.class
-      Type : org.gjt.sp.jedit.gui.PingPongList$MyListModel
+      Type : PingPongList$MyListModel
     Resource : PingPongList$MyTransferHandler.class
-      Type : org.gjt.sp.jedit.gui.PingPongList$MyTransferHandler
+      Type : PingPongList$MyTransferHandler
     Resource : PingPongList$MyTransferable.class
-      Type : org.gjt.sp.jedit.gui.PingPongList$MyTransferable
+      Type : PingPongList$MyTransferable
     Resource : PingPongList.class
-      Type : org.gjt.sp.jedit.gui.PingPongList
+      Type : PingPongList
     Resource : RegisterViewer$DocumentHandler.class
-      Type : org.gjt.sp.jedit.gui.RegisterViewer$DocumentHandler
+      Type : RegisterViewer$DocumentHandler
     Resource : RegisterViewer$FocusHandler.class
-      Type : org.gjt.sp.jedit.gui.RegisterViewer$FocusHandler
+      Type : RegisterViewer$FocusHandler
     Resource : RegisterViewer$ListHandler.class
-      Type : org.gjt.sp.jedit.gui.RegisterViewer$ListHandler
+      Type : RegisterViewer$ListHandler
     Resource : RegisterViewer$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.RegisterViewer$MouseHandler
+      Type : RegisterViewer$MouseHandler
     Resource : RegisterViewer$Renderer.class
-      Type : org.gjt.sp.jedit.gui.RegisterViewer$Renderer
+      Type : RegisterViewer$Renderer
     Resource : RegisterViewer.class
-      Type : org.gjt.sp.jedit.gui.RegisterViewer
+      Type : RegisterViewer
     Resource : RolloverButton$MouseOverHandler.class
-      Type : org.gjt.sp.jedit.gui.RolloverButton$MouseOverHandler
+      Type : RolloverButton$MouseOverHandler
     Resource : RolloverButton.class
-      Type : org.gjt.sp.jedit.gui.RolloverButton
+      Type : RolloverButton
     Resource : SelectLineRange.class
-      Type : org.gjt.sp.jedit.gui.SelectLineRange
+      Type : SelectLineRange
     Resource : ShortcutPrefixActiveEvent.class
-      Type : org.gjt.sp.jedit.gui.ShortcutPrefixActiveEvent
+      Type : ShortcutPrefixActiveEvent
     Resource : SplashScreen.class
-      Type : org.gjt.sp.jedit.gui.SplashScreen
+      Type : SplashScreen
     Resource : StatusBar$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.StatusBar$MouseHandler
+      Type : StatusBar$MouseHandler
     Resource : StatusBar.class
-      Type : org.gjt.sp.jedit.gui.StatusBar
+      Type : StatusBar
     Resource : StyleEditor.class
-      Type : org.gjt.sp.jedit.gui.StyleEditor
+      Type : StyleEditor
     Resource : TaskMonitor$TaskCellRenderer.class
-      Type : org.gjt.sp.jedit.gui.TaskMonitor$TaskCellRenderer
+      Type : TaskMonitor$TaskCellRenderer
     Resource : TaskMonitor$TaskTableEditor.class
-      Type : org.gjt.sp.jedit.gui.TaskMonitor$TaskTableEditor
+      Type : TaskMonitor$TaskTableEditor
     Resource : TaskMonitor$TaskTableModel.class
-      Type : org.gjt.sp.jedit.gui.TaskMonitor$TaskTableModel
+      Type : TaskMonitor$TaskTableModel
     Resource : TaskMonitor.class
-      Type : org.gjt.sp.jedit.gui.TaskMonitor
+      Type : TaskMonitor
     Resource : TextAreaDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.TextAreaDialog$ActionHandler
+      Type : TextAreaDialog$ActionHandler
     Resource : TextAreaDialog.class
-      Type : org.gjt.sp.jedit.gui.TextAreaDialog
+      Type : TextAreaDialog
     Resource : TipOfTheDay$ActionHandler.class
-      Type : org.gjt.sp.jedit.gui.TipOfTheDay$ActionHandler
+      Type : TipOfTheDay$ActionHandler
     Resource : TipOfTheDay.class
-      Type : org.gjt.sp.jedit.gui.TipOfTheDay
+      Type : TipOfTheDay
     Resource : ToolBarManager$Entry.class
-      Type : org.gjt.sp.jedit.gui.ToolBarManager$Entry
+      Type : ToolBarManager$Entry
     Resource : ToolBarManager.class
-      Type : org.gjt.sp.jedit.gui.ToolBarManager
+      Type : ToolBarManager
     Resource : VariableGridLayout$LayoutSize.class
-      Type : org.gjt.sp.jedit.gui.VariableGridLayout$LayoutSize
+      Type : VariableGridLayout$LayoutSize
     Resource : VariableGridLayout.class
-      Type : org.gjt.sp.jedit.gui.VariableGridLayout
+      Type : VariableGridLayout
   Package : org.gjt.sp.jedit.gui.statusbar
     Resource : BufferSetWidgetFactory$BufferSetWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.BufferSetWidgetFactory$BufferSetWidget
+      Type : BufferSetWidgetFactory$BufferSetWidget
     Resource : BufferSetWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.BufferSetWidgetFactory
+      Type : BufferSetWidgetFactory
     Resource : ClockWidgetFactory$Clock.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ClockWidgetFactory$Clock
+      Type : ClockWidgetFactory$Clock
     Resource : ClockWidgetFactory$ClockWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ClockWidgetFactory$ClockWidget
+      Type : ClockWidgetFactory$ClockWidget
     Resource : ClockWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ClockWidgetFactory
+      Type : ClockWidgetFactory
     Resource : EncodingWidgetFactory$EncodingWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.EncodingWidgetFactory$EncodingWidget
+      Type : EncodingWidgetFactory$EncodingWidget
     Resource : EncodingWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.EncodingWidgetFactory
+      Type : EncodingWidgetFactory
     Resource : ErrorsWidgetFactory$ErrorDialog$MyActionListener.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ErrorsWidgetFactory$ErrorDialog$MyActionListener
+      Type : ErrorsWidgetFactory$ErrorDialog$MyActionListener
     Resource : ErrorsWidgetFactory$ErrorDialog.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ErrorsWidgetFactory$ErrorDialog
+      Type : ErrorsWidgetFactory$ErrorDialog
     Resource : ErrorsWidgetFactory$ErrorHighlight$MyMouseAdapter.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ErrorsWidgetFactory$ErrorHighlight$MyMouseAdapter
+      Type : ErrorsWidgetFactory$ErrorHighlight$MyMouseAdapter
     Resource : ErrorsWidgetFactory$ErrorHighlight.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ErrorsWidgetFactory$ErrorHighlight
+      Type : ErrorsWidgetFactory$ErrorHighlight
     Resource : ErrorsWidgetFactory$ErrorWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ErrorsWidgetFactory$ErrorWidget
+      Type : ErrorsWidgetFactory$ErrorWidget
     Resource : ErrorsWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ErrorsWidgetFactory
+      Type : ErrorsWidgetFactory
     Resource : FoldWidgetFactory$FoldWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.FoldWidgetFactory$FoldWidget
+      Type : FoldWidgetFactory$FoldWidget
     Resource : FoldWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.FoldWidgetFactory
+      Type : FoldWidgetFactory
     Resource : LineSepWidgetFactory$LineSepWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.LineSepWidgetFactory$LineSepWidget
+      Type : LineSepWidgetFactory$LineSepWidget
     Resource : LineSepWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.LineSepWidgetFactory
+      Type : LineSepWidgetFactory
     Resource : MemoryStatusWidgetFactory$MemoryStatus$MouseHandler.class
-      Type : org.gjt.sp.jedit.gui.statusbar.MemoryStatusWidgetFactory$MemoryStatus$MouseHandler
+      Type : MemoryStatusWidgetFactory$MemoryStatus$MouseHandler
     Resource : MemoryStatusWidgetFactory$MemoryStatus.class
-      Type : org.gjt.sp.jedit.gui.statusbar.MemoryStatusWidgetFactory$MemoryStatus
+      Type : MemoryStatusWidgetFactory$MemoryStatus
     Resource : MemoryStatusWidgetFactory$MemoryStatusWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.MemoryStatusWidgetFactory$MemoryStatusWidget
+      Type : MemoryStatusWidgetFactory$MemoryStatusWidget
     Resource : MemoryStatusWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.MemoryStatusWidgetFactory
+      Type : MemoryStatusWidgetFactory
     Resource : ModeWidgetFactory$ModeWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ModeWidgetFactory$ModeWidget
+      Type : ModeWidgetFactory$ModeWidget
     Resource : ModeWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ModeWidgetFactory
+      Type : ModeWidgetFactory
     Resource : MultiSelectWidgetFactory$MultiSelectWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.MultiSelectWidgetFactory$MultiSelectWidget
+      Type : MultiSelectWidgetFactory$MultiSelectWidget
     Resource : MultiSelectWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.MultiSelectWidgetFactory
+      Type : MultiSelectWidgetFactory
     Resource : OverwriteWidgetFactory$OverwriteWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.OverwriteWidgetFactory$OverwriteWidget
+      Type : OverwriteWidgetFactory$OverwriteWidget
     Resource : OverwriteWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.OverwriteWidgetFactory
+      Type : OverwriteWidgetFactory
     Resource : RectSelectWidgetFactory$RectSelectWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.RectSelectWidgetFactory$RectSelectWidget
+      Type : RectSelectWidgetFactory$RectSelectWidget
     Resource : RectSelectWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.RectSelectWidgetFactory
+      Type : RectSelectWidgetFactory
     Resource : SelectionLengthWidgetFactory$SelectionLengthWidget$SelectionLength.class
-      Type : org.gjt.sp.jedit.gui.statusbar.SelectionLengthWidgetFactory$SelectionLengthWidget$SelectionLength
+      Type : SelectionLengthWidgetFactory$SelectionLengthWidget$SelectionLength
     Resource : SelectionLengthWidgetFactory$SelectionLengthWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.SelectionLengthWidgetFactory$SelectionLengthWidget
+      Type : SelectionLengthWidgetFactory$SelectionLengthWidget
     Resource : SelectionLengthWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.SelectionLengthWidgetFactory
+      Type : SelectionLengthWidgetFactory
     Resource : StatusWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.StatusWidgetFactory
+      Type : StatusWidgetFactory
     Resource : ToolTipLabel.class
-      Type : org.gjt.sp.jedit.gui.statusbar.ToolTipLabel
+      Type : ToolTipLabel
     Resource : Widget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.Widget
+      Type : Widget
     Resource : WrapWidgetFactory$WrapWidget.class
-      Type : org.gjt.sp.jedit.gui.statusbar.WrapWidgetFactory$WrapWidget
+      Type : WrapWidgetFactory$WrapWidget
     Resource : WrapWidgetFactory.class
-      Type : org.gjt.sp.jedit.gui.statusbar.WrapWidgetFactory
+      Type : WrapWidgetFactory
   Package : org.gjt.sp.jedit.help
     Resource : HelpHistoryModel$HistoryEntry.class
-      Type : org.gjt.sp.jedit.help.HelpHistoryModel$HistoryEntry
+      Type : HelpHistoryModel$HistoryEntry
     Resource : HelpHistoryModel.class
-      Type : org.gjt.sp.jedit.help.HelpHistoryModel
+      Type : HelpHistoryModel
     Resource : HelpHistoryModelListener.class
-      Type : org.gjt.sp.jedit.help.HelpHistoryModelListener
+      Type : HelpHistoryModelListener
     Resource : HelpIndex$HelpFile.class
-      Type : org.gjt.sp.jedit.help.HelpIndex$HelpFile
+      Type : HelpIndex$HelpFile
     Resource : HelpIndex$Word$Occurrence.class
-      Type : org.gjt.sp.jedit.help.HelpIndex$Word$Occurrence
+      Type : HelpIndex$Word$Occurrence
     Resource : HelpIndex$Word.class
-      Type : org.gjt.sp.jedit.help.HelpIndex$Word
+      Type : HelpIndex$Word
     Resource : HelpIndex.class
-      Type : org.gjt.sp.jedit.help.HelpIndex
+      Type : HelpIndex
     Resource : HelpSearchPanel$ActionHandler.class
-      Type : org.gjt.sp.jedit.help.HelpSearchPanel$ActionHandler
+      Type : HelpSearchPanel$ActionHandler
     Resource : HelpSearchPanel$MouseHandler.class
-      Type : org.gjt.sp.jedit.help.HelpSearchPanel$MouseHandler
+      Type : HelpSearchPanel$MouseHandler
     Resource : HelpSearchPanel$Result.class
-      Type : org.gjt.sp.jedit.help.HelpSearchPanel$Result
+      Type : HelpSearchPanel$Result
     Resource : HelpSearchPanel$ResultCompare.class
-      Type : org.gjt.sp.jedit.help.HelpSearchPanel$ResultCompare
+      Type : HelpSearchPanel$ResultCompare
     Resource : HelpSearchPanel$ResultIcon.class
-      Type : org.gjt.sp.jedit.help.HelpSearchPanel$ResultIcon
+      Type : HelpSearchPanel$ResultIcon
     Resource : HelpSearchPanel$ResultRenderer.class
-      Type : org.gjt.sp.jedit.help.HelpSearchPanel$ResultRenderer
+      Type : HelpSearchPanel$ResultRenderer
     Resource : HelpSearchPanel.class
-      Type : org.gjt.sp.jedit.help.HelpSearchPanel
+      Type : HelpSearchPanel
     Resource : HelpTOCPanel$HelpNode.class
-      Type : org.gjt.sp.jedit.help.HelpTOCPanel$HelpNode
+      Type : HelpTOCPanel$HelpNode
     Resource : HelpTOCPanel$PluginCompare.class
-      Type : org.gjt.sp.jedit.help.HelpTOCPanel$PluginCompare
+      Type : HelpTOCPanel$PluginCompare
     Resource : HelpTOCPanel$TOCCellRenderer.class
-      Type : org.gjt.sp.jedit.help.HelpTOCPanel$TOCCellRenderer
+      Type : HelpTOCPanel$TOCCellRenderer
     Resource : HelpTOCPanel$TOCHandler.class
-      Type : org.gjt.sp.jedit.help.HelpTOCPanel$TOCHandler
+      Type : HelpTOCPanel$TOCHandler
     Resource : HelpTOCPanel$TOCTree.class
-      Type : org.gjt.sp.jedit.help.HelpTOCPanel$TOCTree
+      Type : HelpTOCPanel$TOCTree
     Resource : HelpTOCPanel.class
-      Type : org.gjt.sp.jedit.help.HelpTOCPanel
+      Type : HelpTOCPanel
     Resource : HelpViewer$ActionHandler.class
-      Type : org.gjt.sp.jedit.help.HelpViewer$ActionHandler
+      Type : HelpViewer$ActionHandler
     Resource : HelpViewer$KeyHandler.class
-      Type : org.gjt.sp.jedit.help.HelpViewer$KeyHandler
+      Type : HelpViewer$KeyHandler
     Resource : HelpViewer$LinkHandler.class
-      Type : org.gjt.sp.jedit.help.HelpViewer$LinkHandler
+      Type : HelpViewer$LinkHandler
     Resource : HelpViewer$PropertyChangeHandler.class
-      Type : org.gjt.sp.jedit.help.HelpViewer$PropertyChangeHandler
+      Type : HelpViewer$PropertyChangeHandler
     Resource : HelpViewer.class
-      Type : org.gjt.sp.jedit.help.HelpViewer
+      Type : HelpViewer
     Resource : HelpViewerInterface.class
-      Type : org.gjt.sp.jedit.help.HelpViewerInterface
+      Type : HelpViewerInterface
     Resource : HistoryButton$DropActionHandler.class
-      Type : org.gjt.sp.jedit.help.HistoryButton$DropActionHandler
+      Type : HistoryButton$DropActionHandler
     Resource : HistoryButton$HistoryListActionHandler.class
-      Type : org.gjt.sp.jedit.help.HistoryButton$HistoryListActionHandler
+      Type : HistoryButton$HistoryListActionHandler
     Resource : HistoryButton.class
-      Type : org.gjt.sp.jedit.help.HistoryButton
+      Type : HistoryButton
   Package : org.gjt.sp.jedit.icons
     Resource : splash.png
   Package : org.gjt.sp.jedit.icons.themes.classic
@@ -1535,813 +1535,813 @@ Module : group1/group2/jedit_1.0.0
     Resource : jedit.png
   Package : org.gjt.sp.jedit.indent
     Resource : BracketIndentRule$Brackets.class
-      Type : org.gjt.sp.jedit.indent.BracketIndentRule$Brackets
+      Type : BracketIndentRule$Brackets
     Resource : BracketIndentRule$LineScanner.class
-      Type : org.gjt.sp.jedit.indent.BracketIndentRule$LineScanner
+      Type : BracketIndentRule$LineScanner
     Resource : BracketIndentRule.class
-      Type : org.gjt.sp.jedit.indent.BracketIndentRule
+      Type : BracketIndentRule
     Resource : CloseBracketIndentRule$AlignBracket.class
-      Type : org.gjt.sp.jedit.indent.CloseBracketIndentRule$AlignBracket
+      Type : CloseBracketIndentRule$AlignBracket
     Resource : CloseBracketIndentRule.class
-      Type : org.gjt.sp.jedit.indent.CloseBracketIndentRule
+      Type : CloseBracketIndentRule
     Resource : DeepIndentRule$Parens.class
-      Type : org.gjt.sp.jedit.indent.DeepIndentRule$Parens
+      Type : DeepIndentRule$Parens
     Resource : DeepIndentRule.class
-      Type : org.gjt.sp.jedit.indent.DeepIndentRule
+      Type : DeepIndentRule
     Resource : IndentAction$AlignOffset.class
-      Type : org.gjt.sp.jedit.indent.IndentAction$AlignOffset
+      Type : IndentAction$AlignOffset
     Resource : IndentAction$AlignParameter.class
-      Type : org.gjt.sp.jedit.indent.IndentAction$AlignParameter
+      Type : IndentAction$AlignParameter
     Resource : IndentAction$Collapse.class
-      Type : org.gjt.sp.jedit.indent.IndentAction$Collapse
+      Type : IndentAction$Collapse
     Resource : IndentAction$Decrease.class
-      Type : org.gjt.sp.jedit.indent.IndentAction$Decrease
+      Type : IndentAction$Decrease
     Resource : IndentAction$Increase.class
-      Type : org.gjt.sp.jedit.indent.IndentAction$Increase
+      Type : IndentAction$Increase
     Resource : IndentAction$NoIncrease.class
-      Type : org.gjt.sp.jedit.indent.IndentAction$NoIncrease
+      Type : IndentAction$NoIncrease
     Resource : IndentAction$Reset.class
-      Type : org.gjt.sp.jedit.indent.IndentAction$Reset
+      Type : IndentAction$Reset
     Resource : IndentAction.class
-      Type : org.gjt.sp.jedit.indent.IndentAction
+      Type : IndentAction
     Resource : IndentRule.class
-      Type : org.gjt.sp.jedit.indent.IndentRule
+      Type : IndentRule
     Resource : IndentRuleFactory.class
-      Type : org.gjt.sp.jedit.indent.IndentRuleFactory
+      Type : IndentRuleFactory
     Resource : OpenBracketIndentRule.class
-      Type : org.gjt.sp.jedit.indent.OpenBracketIndentRule
+      Type : OpenBracketIndentRule
     Resource : RegexpIndentRule$TokenFilter.class
-      Type : org.gjt.sp.jedit.indent.RegexpIndentRule$TokenFilter
+      Type : RegexpIndentRule$TokenFilter
     Resource : RegexpIndentRule.class
-      Type : org.gjt.sp.jedit.indent.RegexpIndentRule
+      Type : RegexpIndentRule
     Resource : WhitespaceRule.class
-      Type : org.gjt.sp.jedit.indent.WhitespaceRule
+      Type : WhitespaceRule
   Package : org.gjt.sp.jedit.input
     Resource : AbstractInputHandler.class
-      Type : org.gjt.sp.jedit.input.AbstractInputHandler
+      Type : AbstractInputHandler
     Resource : DefaultInputHandlerProvider.class
-      Type : org.gjt.sp.jedit.input.DefaultInputHandlerProvider
+      Type : DefaultInputHandlerProvider
     Resource : InputHandlerProvider.class
-      Type : org.gjt.sp.jedit.input.InputHandlerProvider
+      Type : InputHandlerProvider
     Resource : TextAreaInputHandler.class
-      Type : org.gjt.sp.jedit.input.TextAreaInputHandler
+      Type : TextAreaInputHandler
   Package : org.gjt.sp.jedit.io
     Resource : AutoDetection$Result.class
-      Type : org.gjt.sp.jedit.io.AutoDetection$Result
+      Type : AutoDetection$Result
     Resource : AutoDetection.class
-      Type : org.gjt.sp.jedit.io.AutoDetection
+      Type : AutoDetection
     Resource : CharsetEncoding.class
-      Type : org.gjt.sp.jedit.io.CharsetEncoding
+      Type : CharsetEncoding
     Resource : CopyFileWorker.class
-      Type : org.gjt.sp.jedit.io.CopyFileWorker
+      Type : CopyFileWorker
     Resource : Encoding.class
-      Type : org.gjt.sp.jedit.io.Encoding
+      Type : Encoding
     Resource : EncodingDetector.class
-      Type : org.gjt.sp.jedit.io.EncodingDetector
+      Type : EncodingDetector
     Resource : EncodingServer.class
-      Type : org.gjt.sp.jedit.io.EncodingServer
+      Type : EncodingServer
     Resource : EncodingWithBOM$Detector.class
-      Type : org.gjt.sp.jedit.io.EncodingWithBOM$Detector
+      Type : EncodingWithBOM$Detector
     Resource : EncodingWithBOM.class
-      Type : org.gjt.sp.jedit.io.EncodingWithBOM
+      Type : EncodingWithBOM
     Resource : FavoritesVFS$Favorite.class
-      Type : org.gjt.sp.jedit.io.FavoritesVFS$Favorite
+      Type : FavoritesVFS$Favorite
     Resource : FavoritesVFS.class
-      Type : org.gjt.sp.jedit.io.FavoritesVFS
+      Type : FavoritesVFS
     Resource : FileRootsVFS$Root.class
-      Type : org.gjt.sp.jedit.io.FileRootsVFS$Root
+      Type : FileRootsVFS$Root
     Resource : FileRootsVFS.class
-      Type : org.gjt.sp.jedit.io.FileRootsVFS
+      Type : FileRootsVFS
     Resource : FileVFS$LocalFile.class
-      Type : org.gjt.sp.jedit.io.FileVFS$LocalFile
+      Type : FileVFS$LocalFile
     Resource : FileVFS.class
-      Type : org.gjt.sp.jedit.io.FileVFS
+      Type : FileVFS
     Resource : GlobVFSFileFilter.class
-      Type : org.gjt.sp.jedit.io.GlobVFSFileFilter
+      Type : GlobVFSFileFilter
     Resource : RegexEncodingDetector.class
-      Type : org.gjt.sp.jedit.io.RegexEncodingDetector
+      Type : RegexEncodingDetector
     Resource : UrlVFS.class
-      Type : org.gjt.sp.jedit.io.UrlVFS
+      Type : UrlVFS
     Resource : VFS$ColorEntry.class
-      Type : org.gjt.sp.jedit.io.VFS$ColorEntry
+      Type : VFS$ColorEntry
     Resource : VFS$DirectoryEntry.class
-      Type : org.gjt.sp.jedit.io.VFS$DirectoryEntry
+      Type : VFS$DirectoryEntry
     Resource : VFS$DirectoryEntryCompare.class
-      Type : org.gjt.sp.jedit.io.VFS$DirectoryEntryCompare
+      Type : VFS$DirectoryEntryCompare
     Resource : VFS.class
-      Type : org.gjt.sp.jedit.io.VFS
+      Type : VFS
     Resource : VFSFile.class
-      Type : org.gjt.sp.jedit.io.VFSFile
+      Type : VFSFile
     Resource : VFSFileFilter.class
-      Type : org.gjt.sp.jedit.io.VFSFileFilter
+      Type : VFSFileFilter
     Resource : VFSManager$SendVFSUpdatesSafely.class
-      Type : org.gjt.sp.jedit.io.VFSManager$SendVFSUpdatesSafely
+      Type : VFSManager$SendVFSUpdatesSafely
     Resource : VFSManager.class
-      Type : org.gjt.sp.jedit.io.VFSManager
+      Type : VFSManager
     Resource : XMLEncodingDetector.class
-      Type : org.gjt.sp.jedit.io.XMLEncodingDetector
+      Type : XMLEncodingDetector
   Package : org.gjt.sp.jedit.menu
     Resource : DirectoryProvider.class
-      Type : org.gjt.sp.jedit.menu.DirectoryProvider
+      Type : DirectoryProvider
     Resource : DynamicMenuProvider.class
-      Type : org.gjt.sp.jedit.menu.DynamicMenuProvider
+      Type : DynamicMenuProvider
     Resource : EnhancedCheckBoxMenuItem$Model.class
-      Type : org.gjt.sp.jedit.menu.EnhancedCheckBoxMenuItem$Model
+      Type : EnhancedCheckBoxMenuItem$Model
     Resource : EnhancedCheckBoxMenuItem$MouseHandler.class
-      Type : org.gjt.sp.jedit.menu.EnhancedCheckBoxMenuItem$MouseHandler
+      Type : EnhancedCheckBoxMenuItem$MouseHandler
     Resource : EnhancedCheckBoxMenuItem.class
-      Type : org.gjt.sp.jedit.menu.EnhancedCheckBoxMenuItem
+      Type : EnhancedCheckBoxMenuItem
     Resource : EnhancedMenu$EditBusStub.class
-      Type : org.gjt.sp.jedit.menu.EnhancedMenu$EditBusStub
+      Type : EnhancedMenu$EditBusStub
     Resource : EnhancedMenu.class
-      Type : org.gjt.sp.jedit.menu.EnhancedMenu
+      Type : EnhancedMenu
     Resource : EnhancedMenuItem$MouseHandler.class
-      Type : org.gjt.sp.jedit.menu.EnhancedMenuItem$MouseHandler
+      Type : EnhancedMenuItem$MouseHandler
     Resource : EnhancedMenuItem.class
-      Type : org.gjt.sp.jedit.menu.EnhancedMenuItem
+      Type : EnhancedMenuItem
     Resource : FavoritesProvider.class
-      Type : org.gjt.sp.jedit.menu.FavoritesProvider
+      Type : FavoritesProvider
     Resource : MacrosProvider.class
-      Type : org.gjt.sp.jedit.menu.MacrosProvider
+      Type : MacrosProvider
     Resource : MarkersProvider$MarkersMenuItem.class
-      Type : org.gjt.sp.jedit.menu.MarkersProvider$MarkersMenuItem
+      Type : MarkersProvider$MarkersMenuItem
     Resource : MarkersProvider.class
-      Type : org.gjt.sp.jedit.menu.MarkersProvider
+      Type : MarkersProvider
     Resource : MenuItemTextComparator.class
-      Type : org.gjt.sp.jedit.menu.MenuItemTextComparator
+      Type : MenuItemTextComparator
     Resource : PluginsProvider.class
-      Type : org.gjt.sp.jedit.menu.PluginsProvider
+      Type : PluginsProvider
     Resource : RecentDirectoriesProvider.class
-      Type : org.gjt.sp.jedit.menu.RecentDirectoriesProvider
+      Type : RecentDirectoriesProvider
     Resource : RecentFilesProvider.class
-      Type : org.gjt.sp.jedit.menu.RecentFilesProvider
+      Type : RecentFilesProvider
     Resource : ReloadWithEncodingProvider.class
-      Type : org.gjt.sp.jedit.menu.ReloadWithEncodingProvider
+      Type : ReloadWithEncodingProvider
   Package : org.gjt.sp.jedit.msg
     Resource : BufferChanging.class
-      Type : org.gjt.sp.jedit.msg.BufferChanging
+      Type : BufferChanging
     Resource : BufferUpdate.class
-      Type : org.gjt.sp.jedit.msg.BufferUpdate
+      Type : BufferUpdate
     Resource : DockableWindowUpdate.class
-      Type : org.gjt.sp.jedit.msg.DockableWindowUpdate
+      Type : DockableWindowUpdate
     Resource : DynamicMenuChanged.class
-      Type : org.gjt.sp.jedit.msg.DynamicMenuChanged
+      Type : DynamicMenuChanged
     Resource : EditPaneUpdate.class
-      Type : org.gjt.sp.jedit.msg.EditPaneUpdate
+      Type : EditPaneUpdate
     Resource : EditorExitRequested.class
-      Type : org.gjt.sp.jedit.msg.EditorExitRequested
+      Type : EditorExitRequested
     Resource : EditorExiting.class
-      Type : org.gjt.sp.jedit.msg.EditorExiting
+      Type : EditorExiting
     Resource : EditorStarted.class
-      Type : org.gjt.sp.jedit.msg.EditorStarted
+      Type : EditorStarted
     Resource : PluginUpdate.class
-      Type : org.gjt.sp.jedit.msg.PluginUpdate
+      Type : PluginUpdate
     Resource : PositionChanging.class
-      Type : org.gjt.sp.jedit.msg.PositionChanging
+      Type : PositionChanging
     Resource : PropertiesChanged.class
-      Type : org.gjt.sp.jedit.msg.PropertiesChanged
+      Type : PropertiesChanged
     Resource : PropertiesChanging$State.class
-      Type : org.gjt.sp.jedit.msg.PropertiesChanging$State
+      Type : PropertiesChanging$State
     Resource : PropertiesChanging.class
-      Type : org.gjt.sp.jedit.msg.PropertiesChanging
+      Type : PropertiesChanging
     Resource : RegisterChanged.class
-      Type : org.gjt.sp.jedit.msg.RegisterChanged
+      Type : RegisterChanged
     Resource : SearchSettingsChanged.class
-      Type : org.gjt.sp.jedit.msg.SearchSettingsChanged
+      Type : SearchSettingsChanged
     Resource : VFSPathSelected.class
-      Type : org.gjt.sp.jedit.msg.VFSPathSelected
+      Type : VFSPathSelected
     Resource : VFSUpdate.class
-      Type : org.gjt.sp.jedit.msg.VFSUpdate
+      Type : VFSUpdate
     Resource : ViewUpdate.class
-      Type : org.gjt.sp.jedit.msg.ViewUpdate
+      Type : ViewUpdate
   Package : org.gjt.sp.jedit.options
     Resource : AbbrevsOptionPane$AbbrevsModel$Abbrev.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$AbbrevsModel$Abbrev
+      Type : AbbrevsOptionPane$AbbrevsModel$Abbrev
     Resource : AbbrevsOptionPane$AbbrevsModel$AbbrevCompare.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$AbbrevsModel$AbbrevCompare
+      Type : AbbrevsOptionPane$AbbrevsModel$AbbrevCompare
     Resource : AbbrevsOptionPane$AbbrevsModel.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$AbbrevsModel
+      Type : AbbrevsOptionPane$AbbrevsModel
     Resource : AbbrevsOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$ActionHandler
+      Type : AbbrevsOptionPane$ActionHandler
     Resource : AbbrevsOptionPane$HeaderMouseHandler.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$HeaderMouseHandler
+      Type : AbbrevsOptionPane$HeaderMouseHandler
     Resource : AbbrevsOptionPane$Renderer.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$Renderer
+      Type : AbbrevsOptionPane$Renderer
     Resource : AbbrevsOptionPane$SelectionHandler.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$SelectionHandler
+      Type : AbbrevsOptionPane$SelectionHandler
     Resource : AbbrevsOptionPane$TableMouseHandler.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane$TableMouseHandler
+      Type : AbbrevsOptionPane$TableMouseHandler
     Resource : AbbrevsOptionPane.class
-      Type : org.gjt.sp.jedit.options.AbbrevsOptionPane
+      Type : AbbrevsOptionPane
     Resource : AppearanceOptionPane.class
-      Type : org.gjt.sp.jedit.options.AppearanceOptionPane
+      Type : AppearanceOptionPane
     Resource : BrowserColorsModel$ColorRenderer.class
-      Type : org.gjt.sp.jedit.options.BrowserColorsModel$ColorRenderer
+      Type : BrowserColorsModel$ColorRenderer
     Resource : BrowserColorsModel$Entry.class
-      Type : org.gjt.sp.jedit.options.BrowserColorsModel$Entry
+      Type : BrowserColorsModel$Entry
     Resource : BrowserColorsModel.class
-      Type : org.gjt.sp.jedit.options.BrowserColorsModel
+      Type : BrowserColorsModel
     Resource : BrowserColorsOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.BrowserColorsOptionPane$ActionHandler
+      Type : BrowserColorsOptionPane$ActionHandler
     Resource : BrowserColorsOptionPane$MouseHandler.class
-      Type : org.gjt.sp.jedit.options.BrowserColorsOptionPane$MouseHandler
+      Type : BrowserColorsOptionPane$MouseHandler
     Resource : BrowserColorsOptionPane$SelectionHandler.class
-      Type : org.gjt.sp.jedit.options.BrowserColorsOptionPane$SelectionHandler
+      Type : BrowserColorsOptionPane$SelectionHandler
     Resource : BrowserColorsOptionPane.class
-      Type : org.gjt.sp.jedit.options.BrowserColorsOptionPane
+      Type : BrowserColorsOptionPane
     Resource : BrowserOptionPane.class
-      Type : org.gjt.sp.jedit.options.BrowserOptionPane
+      Type : BrowserOptionPane
     Resource : BufferOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.BufferOptionPane$ActionHandler
+      Type : BufferOptionPane$ActionHandler
     Resource : BufferOptionPane.class
-      Type : org.gjt.sp.jedit.options.BufferOptionPane
+      Type : BufferOptionPane
     Resource : ContextOptionPane.class
-      Type : org.gjt.sp.jedit.options.ContextOptionPane
+      Type : ContextOptionPane
     Resource : DockingOptionPane$DockPositionCellRenderer.class
-      Type : org.gjt.sp.jedit.options.DockingOptionPane$DockPositionCellRenderer
+      Type : DockingOptionPane$DockPositionCellRenderer
     Resource : DockingOptionPane.class
-      Type : org.gjt.sp.jedit.options.DockingOptionPane
+      Type : DockingOptionPane
     Resource : EditingOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.EditingOptionPane$ActionHandler
+      Type : EditingOptionPane$ActionHandler
     Resource : EditingOptionPane$ModeProperties.class
-      Type : org.gjt.sp.jedit.options.EditingOptionPane$ModeProperties
+      Type : EditingOptionPane$ModeProperties
     Resource : EditingOptionPane.class
-      Type : org.gjt.sp.jedit.options.EditingOptionPane
+      Type : EditingOptionPane
     Resource : EncodingsOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.EncodingsOptionPane$ActionHandler
+      Type : EncodingsOptionPane$ActionHandler
     Resource : EncodingsOptionPane.class
-      Type : org.gjt.sp.jedit.options.EncodingsOptionPane
+      Type : EncodingsOptionPane
     Resource : FirewallOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.FirewallOptionPane$ActionHandler
+      Type : FirewallOptionPane$ActionHandler
     Resource : FirewallOptionPane.class
-      Type : org.gjt.sp.jedit.options.FirewallOptionPane
+      Type : FirewallOptionPane
     Resource : GeneralOptionPane.class
-      Type : org.gjt.sp.jedit.options.GeneralOptionPane
+      Type : GeneralOptionPane
     Resource : GlobalOptions.class
-      Type : org.gjt.sp.jedit.options.GlobalOptions
+      Type : GlobalOptions
     Resource : GutterOptionPane.class
-      Type : org.gjt.sp.jedit.options.GutterOptionPane
+      Type : GutterOptionPane
     Resource : IconTheme.class
-      Type : org.gjt.sp.jedit.options.IconTheme
+      Type : IconTheme
     Resource : MouseOptionPane.class
-      Type : org.gjt.sp.jedit.options.MouseOptionPane
+      Type : MouseOptionPane
     Resource : PluginManagerOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.PluginManagerOptionPane$ActionHandler
+      Type : PluginManagerOptionPane$ActionHandler
     Resource : PluginManagerOptionPane$MirrorModel.class
-      Type : org.gjt.sp.jedit.options.PluginManagerOptionPane$MirrorModel
+      Type : PluginManagerOptionPane$MirrorModel
     Resource : PluginManagerOptionPane$SingleSelectionModel.class
-      Type : org.gjt.sp.jedit.options.PluginManagerOptionPane$SingleSelectionModel
+      Type : PluginManagerOptionPane$SingleSelectionModel
     Resource : PluginManagerOptionPane$UpdateMirrorsThread.class
-      Type : org.gjt.sp.jedit.options.PluginManagerOptionPane$UpdateMirrorsThread
+      Type : PluginManagerOptionPane$UpdateMirrorsThread
     Resource : PluginManagerOptionPane.class
-      Type : org.gjt.sp.jedit.options.PluginManagerOptionPane
+      Type : PluginManagerOptionPane
     Resource : PluginOptions$NoPluginsPane.class
-      Type : org.gjt.sp.jedit.options.PluginOptions$NoPluginsPane
+      Type : PluginOptions$NoPluginsPane
     Resource : PluginOptions.class
-      Type : org.gjt.sp.jedit.options.PluginOptions
+      Type : PluginOptions
     Resource : PrintOptionPane.class
-      Type : org.gjt.sp.jedit.options.PrintOptionPane
+      Type : PrintOptionPane
     Resource : SaveBackupOptionPane$MyActionListener.class
-      Type : org.gjt.sp.jedit.options.SaveBackupOptionPane$MyActionListener
+      Type : SaveBackupOptionPane$MyActionListener
     Resource : SaveBackupOptionPane.class
-      Type : org.gjt.sp.jedit.options.SaveBackupOptionPane
+      Type : SaveBackupOptionPane
     Resource : ShortcutsOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.ShortcutsOptionPane$ActionHandler
+      Type : ShortcutsOptionPane$ActionHandler
     Resource : ShortcutsOptionPane$HeaderMouseHandler.class
-      Type : org.gjt.sp.jedit.options.ShortcutsOptionPane$HeaderMouseHandler
+      Type : ShortcutsOptionPane$HeaderMouseHandler
     Resource : ShortcutsOptionPane$ShortcutsModel$KeyCompare.class
-      Type : org.gjt.sp.jedit.options.ShortcutsOptionPane$ShortcutsModel$KeyCompare
+      Type : ShortcutsOptionPane$ShortcutsModel$KeyCompare
     Resource : ShortcutsOptionPane$ShortcutsModel.class
-      Type : org.gjt.sp.jedit.options.ShortcutsOptionPane$ShortcutsModel
+      Type : ShortcutsOptionPane$ShortcutsModel
     Resource : ShortcutsOptionPane$TableMouseHandler.class
-      Type : org.gjt.sp.jedit.options.ShortcutsOptionPane$TableMouseHandler
+      Type : ShortcutsOptionPane$TableMouseHandler
     Resource : ShortcutsOptionPane.class
-      Type : org.gjt.sp.jedit.options.ShortcutsOptionPane
+      Type : ShortcutsOptionPane
     Resource : StatusBarOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.StatusBarOptionPane$ActionHandler
+      Type : StatusBarOptionPane$ActionHandler
     Resource : StatusBarOptionPane$ListHandler.class
-      Type : org.gjt.sp.jedit.options.StatusBarOptionPane$ListHandler
+      Type : StatusBarOptionPane$ListHandler
     Resource : StatusBarOptionPane$WidgetSelectionDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.StatusBarOptionPane$WidgetSelectionDialog$ActionHandler
+      Type : StatusBarOptionPane$WidgetSelectionDialog$ActionHandler
     Resource : StatusBarOptionPane$WidgetSelectionDialog.class
-      Type : org.gjt.sp.jedit.options.StatusBarOptionPane$WidgetSelectionDialog
+      Type : StatusBarOptionPane$WidgetSelectionDialog
     Resource : StatusBarOptionPane.class
-      Type : org.gjt.sp.jedit.options.StatusBarOptionPane
+      Type : StatusBarOptionPane
     Resource : SyntaxHiliteOptionPane$MouseHandler.class
-      Type : org.gjt.sp.jedit.options.SyntaxHiliteOptionPane$MouseHandler
+      Type : SyntaxHiliteOptionPane$MouseHandler
     Resource : SyntaxHiliteOptionPane$StyleTableModel$StyleChoice.class
-      Type : org.gjt.sp.jedit.options.SyntaxHiliteOptionPane$StyleTableModel$StyleChoice
+      Type : SyntaxHiliteOptionPane$StyleTableModel$StyleChoice
     Resource : SyntaxHiliteOptionPane$StyleTableModel$StyleRenderer.class
-      Type : org.gjt.sp.jedit.options.SyntaxHiliteOptionPane$StyleTableModel$StyleRenderer
+      Type : SyntaxHiliteOptionPane$StyleTableModel$StyleRenderer
     Resource : SyntaxHiliteOptionPane$StyleTableModel.class
-      Type : org.gjt.sp.jedit.options.SyntaxHiliteOptionPane$StyleTableModel
+      Type : SyntaxHiliteOptionPane$StyleTableModel
     Resource : SyntaxHiliteOptionPane.class
-      Type : org.gjt.sp.jedit.options.SyntaxHiliteOptionPane
+      Type : SyntaxHiliteOptionPane
     Resource : TextAreaOptionPane$FontList$FontItemRenderer.class
-      Type : org.gjt.sp.jedit.options.TextAreaOptionPane$FontList$FontItemRenderer
+      Type : TextAreaOptionPane$FontList$FontItemRenderer
     Resource : TextAreaOptionPane$FontList.class
-      Type : org.gjt.sp.jedit.options.TextAreaOptionPane$FontList
+      Type : TextAreaOptionPane$FontList
     Resource : TextAreaOptionPane.class
-      Type : org.gjt.sp.jedit.options.TextAreaOptionPane
+      Type : TextAreaOptionPane
     Resource : ToolBarEditDialog$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.ToolBarEditDialog$ActionHandler
+      Type : ToolBarEditDialog$ActionHandler
     Resource : ToolBarEditDialog$ActionSetCompare.class
-      Type : org.gjt.sp.jedit.options.ToolBarEditDialog$ActionSetCompare
+      Type : ToolBarEditDialog$ActionSetCompare
     Resource : ToolBarEditDialog.class
-      Type : org.gjt.sp.jedit.options.ToolBarEditDialog
+      Type : ToolBarEditDialog
     Resource : ToolBarOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane$ActionHandler
+      Type : ToolBarOptionPane$ActionHandler
     Resource : ToolBarOptionPane$Button.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane$Button
+      Type : ToolBarOptionPane$Button
     Resource : ToolBarOptionPane$ButtonCellRenderer.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane$ButtonCellRenderer
+      Type : ToolBarOptionPane$ButtonCellRenderer
     Resource : ToolBarOptionPane$ButtonCompare.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane$ButtonCompare
+      Type : ToolBarOptionPane$ButtonCompare
     Resource : ToolBarOptionPane$IconCellRenderer.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane$IconCellRenderer
+      Type : ToolBarOptionPane$IconCellRenderer
     Resource : ToolBarOptionPane$IconListEntry.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane$IconListEntry
+      Type : ToolBarOptionPane$IconListEntry
     Resource : ToolBarOptionPane$ListHandler.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane$ListHandler
+      Type : ToolBarOptionPane$ListHandler
     Resource : ToolBarOptionPane.class
-      Type : org.gjt.sp.jedit.options.ToolBarOptionPane
+      Type : ToolBarOptionPane
     Resource : ViewOptionPane$ActionHandler.class
-      Type : org.gjt.sp.jedit.options.ViewOptionPane$ActionHandler
+      Type : ViewOptionPane$ActionHandler
     Resource : ViewOptionPane.class
-      Type : org.gjt.sp.jedit.options.ViewOptionPane
+      Type : ViewOptionPane
     Resource : WindowTableModel$Entry.class
-      Type : org.gjt.sp.jedit.options.WindowTableModel$Entry
+      Type : WindowTableModel$Entry
     Resource : WindowTableModel$WindowCompare.class
-      Type : org.gjt.sp.jedit.options.WindowTableModel$WindowCompare
+      Type : WindowTableModel$WindowCompare
     Resource : WindowTableModel.class
-      Type : org.gjt.sp.jedit.options.WindowTableModel
+      Type : WindowTableModel
     Resource : mirrors.dtd
   Package : org.gjt.sp.jedit.pluginmgr
     Resource : InstallPanel$ChoosePluginSet.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$ChoosePluginSet
+      Type : InstallPanel$ChoosePluginSet
     Resource : InstallPanel$ClearPluginSet.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$ClearPluginSet
+      Type : InstallPanel$ClearPluginSet
     Resource : InstallPanel$Entry.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$Entry
+      Type : InstallPanel$Entry
     Resource : InstallPanel$EntryCompare.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$EntryCompare
+      Type : InstallPanel$EntryCompare
     Resource : InstallPanel$HeaderMouseHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$HeaderMouseHandler
+      Type : InstallPanel$HeaderMouseHandler
     Resource : InstallPanel$HeaderRenderer.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$HeaderRenderer
+      Type : InstallPanel$HeaderRenderer
     Resource : InstallPanel$InstallButton.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$InstallButton
+      Type : InstallPanel$InstallButton
     Resource : InstallPanel$KeyboardAction.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$KeyboardAction
+      Type : InstallPanel$KeyboardAction
     Resource : InstallPanel$PluginInfoBox.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$PluginInfoBox
+      Type : InstallPanel$PluginInfoBox
     Resource : InstallPanel$PluginTableModel.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$PluginTableModel
+      Type : InstallPanel$PluginTableModel
     Resource : InstallPanel$SelectallButton.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$SelectallButton
+      Type : InstallPanel$SelectallButton
     Resource : InstallPanel$SizeLabel.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$SizeLabel
+      Type : InstallPanel$SizeLabel
     Resource : InstallPanel$StringMapHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$StringMapHandler
+      Type : InstallPanel$StringMapHandler
     Resource : InstallPanel$TableFocusHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$TableFocusHandler
+      Type : InstallPanel$TableFocusHandler
     Resource : InstallPanel$TextRenderer.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel$TextRenderer
+      Type : InstallPanel$TextRenderer
     Resource : InstallPanel.class
-      Type : org.gjt.sp.jedit.pluginmgr.InstallPanel
+      Type : InstallPanel
     Resource : KeyboardCommand.class
-      Type : org.gjt.sp.jedit.pluginmgr.KeyboardCommand
+      Type : KeyboardCommand
     Resource : ManagePanel$Entry.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$Entry
+      Type : ManagePanel$Entry
     Resource : ManagePanel$EntryCompare.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$EntryCompare
+      Type : ManagePanel$EntryCompare
     Resource : ManagePanel$FindOrphan.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$FindOrphan
+      Type : ManagePanel$FindOrphan
     Resource : ManagePanel$HeaderMouseHandler$CleanupActionListener.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$HeaderMouseHandler$CleanupActionListener
+      Type : ManagePanel$HeaderMouseHandler$CleanupActionListener
     Resource : ManagePanel$HeaderMouseHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$HeaderMouseHandler
+      Type : ManagePanel$HeaderMouseHandler
     Resource : ManagePanel$HelpButton.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$HelpButton
+      Type : ManagePanel$HelpButton
     Resource : ManagePanel$HideLibrariesButton.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$HideLibrariesButton
+      Type : ManagePanel$HideLibrariesButton
     Resource : ManagePanel$KeyboardAction.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$KeyboardAction
+      Type : ManagePanel$KeyboardAction
     Resource : ManagePanel$ManagePanelRestoreHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$ManagePanelRestoreHandler
+      Type : ManagePanel$ManagePanelRestoreHandler
     Resource : ManagePanel$PluginTableModel.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$PluginTableModel
+      Type : ManagePanel$PluginTableModel
     Resource : ManagePanel$RemoveButton.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$RemoveButton
+      Type : ManagePanel$RemoveButton
     Resource : ManagePanel$RestoreButton.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$RestoreButton
+      Type : ManagePanel$RestoreButton
     Resource : ManagePanel$SaveButton.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$SaveButton
+      Type : ManagePanel$SaveButton
     Resource : ManagePanel$TableFocusHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$TableFocusHandler
+      Type : ManagePanel$TableFocusHandler
     Resource : ManagePanel$TableSelectionListener.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$TableSelectionListener
+      Type : ManagePanel$TableSelectionListener
     Resource : ManagePanel$TextRenderer.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel$TextRenderer
+      Type : ManagePanel$TextRenderer
     Resource : ManagePanel.class
-      Type : org.gjt.sp.jedit.pluginmgr.ManagePanel
+      Type : ManagePanel
     Resource : MirrorList$Mirror.class
-      Type : org.gjt.sp.jedit.pluginmgr.MirrorList$Mirror
+      Type : MirrorList$Mirror
     Resource : MirrorList$MirrorCompare.class
-      Type : org.gjt.sp.jedit.pluginmgr.MirrorList$MirrorCompare
+      Type : MirrorList$MirrorCompare
     Resource : MirrorList.class
-      Type : org.gjt.sp.jedit.pluginmgr.MirrorList
+      Type : MirrorList
     Resource : MirrorListHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.MirrorListHandler
+      Type : MirrorListHandler
     Resource : PluginDetailPanel.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginDetailPanel
+      Type : PluginDetailPanel
     Resource : PluginList$Branch.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginList$Branch
+      Type : PluginList$Branch
     Resource : PluginList$Dependency.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginList$Dependency
+      Type : PluginList$Dependency
     Resource : PluginList$Plugin.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginList$Plugin
+      Type : PluginList$Plugin
     Resource : PluginList$PluginSet.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginList$PluginSet
+      Type : PluginList$PluginSet
     Resource : PluginList.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginList
+      Type : PluginList
     Resource : PluginListHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginListHandler
+      Type : PluginListHandler
     Resource : PluginManager$ActionHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginManager$ActionHandler
+      Type : PluginManager$ActionHandler
     Resource : PluginManager$ListUpdater.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginManager$ListUpdater
+      Type : PluginManager$ListUpdater
     Resource : PluginManager.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginManager
+      Type : PluginManager
     Resource : PluginManagerProgress$ActionHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginManagerProgress$ActionHandler
+      Type : PluginManagerProgress$ActionHandler
     Resource : PluginManagerProgress$RosterThread.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginManagerProgress$RosterThread
+      Type : PluginManagerProgress$RosterThread
     Resource : PluginManagerProgress$WindowHandler.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginManagerProgress$WindowHandler
+      Type : PluginManagerProgress$WindowHandler
     Resource : PluginManagerProgress.class
-      Type : org.gjt.sp.jedit.pluginmgr.PluginManagerProgress
+      Type : PluginManagerProgress
     Resource : Roster$Install.class
-      Type : org.gjt.sp.jedit.pluginmgr.Roster$Install
+      Type : Roster$Install
     Resource : Roster$Operation.class
-      Type : org.gjt.sp.jedit.pluginmgr.Roster$Operation
+      Type : Roster$Operation
     Resource : Roster$Remove.class
-      Type : org.gjt.sp.jedit.pluginmgr.Roster$Remove
+      Type : Roster$Remove
     Resource : Roster.class
-      Type : org.gjt.sp.jedit.pluginmgr.Roster
+      Type : Roster
     Resource : plugins.dtd
   Package : org.gjt.sp.jedit.print
     Resource : BufferPrintable$PrintTabExpander.class
-      Type : org.gjt.sp.jedit.print.BufferPrintable$PrintTabExpander
+      Type : BufferPrintable$PrintTabExpander
     Resource : BufferPrintable.class
-      Type : org.gjt.sp.jedit.print.BufferPrintable
+      Type : BufferPrintable
     Resource : BufferPrinter1_3.class
-      Type : org.gjt.sp.jedit.print.BufferPrinter1_3
+      Type : BufferPrinter1_3
     Resource : BufferPrinter1_4.class
-      Type : org.gjt.sp.jedit.print.BufferPrinter1_4
+      Type : BufferPrinter1_4
   Package : org.gjt.sp.jedit.proto.jeditresource
     Resource : Handler.class
-      Type : org.gjt.sp.jedit.proto.jeditresource.Handler
+      Type : Handler
     Resource : PluginResURLConnection.class
-      Type : org.gjt.sp.jedit.proto.jeditresource.PluginResURLConnection
+      Type : PluginResURLConnection
   Package : org.gjt.sp.jedit.search
     Resource : AllBufferSet.class
-      Type : org.gjt.sp.jedit.search.AllBufferSet
+      Type : AllBufferSet
     Resource : BoyerMooreSearchMatcher.class
-      Type : org.gjt.sp.jedit.search.BoyerMooreSearchMatcher
+      Type : BoyerMooreSearchMatcher
     Resource : BufferListSet.class
-      Type : org.gjt.sp.jedit.search.BufferListSet
+      Type : BufferListSet
     Resource : CurrentBufferSet.class
-      Type : org.gjt.sp.jedit.search.CurrentBufferSet
+      Type : CurrentBufferSet
     Resource : DirectoryListSet.class
-      Type : org.gjt.sp.jedit.search.DirectoryListSet
+      Type : DirectoryListSet
     Resource : HyperSearchFileNode.class
-      Type : org.gjt.sp.jedit.search.HyperSearchFileNode
+      Type : HyperSearchFileNode
     Resource : HyperSearchFolderNode.class
-      Type : org.gjt.sp.jedit.search.HyperSearchFolderNode
+      Type : HyperSearchFolderNode
     Resource : HyperSearchNode.class
-      Type : org.gjt.sp.jedit.search.HyperSearchNode
+      Type : HyperSearchNode
     Resource : HyperSearchOperationNode.class
-      Type : org.gjt.sp.jedit.search.HyperSearchOperationNode
+      Type : HyperSearchOperationNode
     Resource : HyperSearchRequest.class
-      Type : org.gjt.sp.jedit.search.HyperSearchRequest
+      Type : HyperSearchRequest
     Resource : HyperSearchResult$GotoDelayed.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResult$GotoDelayed
+      Type : HyperSearchResult$GotoDelayed
     Resource : HyperSearchResult$Occur.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResult$Occur
+      Type : HyperSearchResult$Occur
     Resource : HyperSearchResult.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResult
+      Type : HyperSearchResult
     Resource : HyperSearchResults$ActionHandler.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$ActionHandler
+      Type : HyperSearchResults$ActionHandler
     Resource : HyperSearchResults$BufferClosedVisitor.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$BufferClosedVisitor
+      Type : HyperSearchResults$BufferClosedVisitor
     Resource : HyperSearchResults$BufferLoadedVisitor.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$BufferLoadedVisitor
+      Type : HyperSearchResults$BufferLoadedVisitor
     Resource : HyperSearchResults$CollapseChildTreeNodesAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$CollapseChildTreeNodesAction
+      Type : HyperSearchResults$CollapseChildTreeNodesAction
     Resource : HyperSearchResults$CopyToClipboardAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$CopyToClipboardAction
+      Type : HyperSearchResults$CopyToClipboardAction
     Resource : HyperSearchResults$ExpandChildTreeNodesAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$ExpandChildTreeNodesAction
+      Type : HyperSearchResults$ExpandChildTreeNodesAction
     Resource : HyperSearchResults$GoToNodeAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$GoToNodeAction
+      Type : HyperSearchResults$GoToNodeAction
     Resource : HyperSearchResults$HighlightingTree.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$HighlightingTree
+      Type : HyperSearchResults$HighlightingTree
     Resource : HyperSearchResults$KeyHandler.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$KeyHandler
+      Type : HyperSearchResults$KeyHandler
     Resource : HyperSearchResults$MouseHandler.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$MouseHandler
+      Type : HyperSearchResults$MouseHandler
     Resource : HyperSearchResults$NewSearchAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$NewSearchAction
+      Type : HyperSearchResults$NewSearchAction
     Resource : HyperSearchResults$RedoSearchAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$RedoSearchAction
+      Type : HyperSearchResults$RedoSearchAction
     Resource : HyperSearchResults$RemoveAllTreeNodesAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$RemoveAllTreeNodesAction
+      Type : HyperSearchResults$RemoveAllTreeNodesAction
     Resource : HyperSearchResults$RemoveTreeNodeAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$RemoveTreeNodeAction
+      Type : HyperSearchResults$RemoveTreeNodeAction
     Resource : HyperSearchResults$ResultCellRenderer$CountNodes.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$ResultCellRenderer$CountNodes
+      Type : HyperSearchResults$ResultCellRenderer$CountNodes
     Resource : HyperSearchResults$ResultCellRenderer.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$ResultCellRenderer
+      Type : HyperSearchResults$ResultCellRenderer
     Resource : HyperSearchResults$ResultTreeTransferHandler.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$ResultTreeTransferHandler
+      Type : HyperSearchResults$ResultTreeTransferHandler
     Resource : HyperSearchResults$ResultVisitor.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$ResultVisitor
+      Type : HyperSearchResults$ResultVisitor
     Resource : HyperSearchResults$ToStringNodes.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$ToStringNodes
+      Type : HyperSearchResults$ToStringNodes
     Resource : HyperSearchResults$TreeDisplayAction.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$TreeDisplayAction
+      Type : HyperSearchResults$TreeDisplayAction
     Resource : HyperSearchResults$TreeNodeCallbackAdapter.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults$TreeNodeCallbackAdapter
+      Type : HyperSearchResults$TreeNodeCallbackAdapter
     Resource : HyperSearchResults.class
-      Type : org.gjt.sp.jedit.search.HyperSearchResults
+      Type : HyperSearchResults
     Resource : HyperSearchTreeNodeCallback.class
-      Type : org.gjt.sp.jedit.search.HyperSearchTreeNodeCallback
+      Type : HyperSearchTreeNodeCallback
     Resource : PatternSearchMatcher.class
-      Type : org.gjt.sp.jedit.search.PatternSearchMatcher
+      Type : PatternSearchMatcher
     Resource : SearchAndReplace.class
-      Type : org.gjt.sp.jedit.search.SearchAndReplace
+      Type : SearchAndReplace
     Resource : SearchBar$ActionHandler.class
-      Type : org.gjt.sp.jedit.search.SearchBar$ActionHandler
+      Type : SearchBar$ActionHandler
     Resource : SearchBar$DocumentHandler.class
-      Type : org.gjt.sp.jedit.search.SearchBar$DocumentHandler
+      Type : SearchBar$DocumentHandler
     Resource : SearchBar$FocusHandler.class
-      Type : org.gjt.sp.jedit.search.SearchBar$FocusHandler
+      Type : SearchBar$FocusHandler
     Resource : SearchBar$KeyHandler.class
-      Type : org.gjt.sp.jedit.search.SearchBar$KeyHandler
+      Type : SearchBar$KeyHandler
     Resource : SearchBar.class
-      Type : org.gjt.sp.jedit.search.SearchBar
+      Type : SearchBar
     Resource : SearchDialog$ButtonActionHandler.class
-      Type : org.gjt.sp.jedit.search.SearchDialog$ButtonActionHandler
+      Type : SearchDialog$ButtonActionHandler
     Resource : SearchDialog$MultiFileActionHandler.class
-      Type : org.gjt.sp.jedit.search.SearchDialog$MultiFileActionHandler
+      Type : SearchDialog$MultiFileActionHandler
     Resource : SearchDialog$MyJRadioButton.class
-      Type : org.gjt.sp.jedit.search.SearchDialog$MyJRadioButton
+      Type : SearchDialog$MyJRadioButton
     Resource : SearchDialog$ReplaceActionHandler.class
-      Type : org.gjt.sp.jedit.search.SearchDialog$ReplaceActionHandler
+      Type : SearchDialog$ReplaceActionHandler
     Resource : SearchDialog$SettingsActionHandler.class
-      Type : org.gjt.sp.jedit.search.SearchDialog$SettingsActionHandler
+      Type : SearchDialog$SettingsActionHandler
     Resource : SearchDialog.class
-      Type : org.gjt.sp.jedit.search.SearchDialog
+      Type : SearchDialog
     Resource : SearchFileSet.class
-      Type : org.gjt.sp.jedit.search.SearchFileSet
+      Type : SearchFileSet
     Resource : SearchMatcher$Match.class
-      Type : org.gjt.sp.jedit.search.SearchMatcher$Match
+      Type : SearchMatcher$Match
     Resource : SearchMatcher.class
-      Type : org.gjt.sp.jedit.search.SearchMatcher
+      Type : SearchMatcher
   Package : org.gjt.sp.jedit.syntax
     Resource : Chunk.class
-      Type : org.gjt.sp.jedit.syntax.Chunk
+      Type : Chunk
     Resource : DefaultTokenHandler.class
-      Type : org.gjt.sp.jedit.syntax.DefaultTokenHandler
+      Type : DefaultTokenHandler
     Resource : DisplayTokenHandler.class
-      Type : org.gjt.sp.jedit.syntax.DisplayTokenHandler
+      Type : DisplayTokenHandler
     Resource : DummyTokenHandler.class
-      Type : org.gjt.sp.jedit.syntax.DummyTokenHandler
+      Type : DummyTokenHandler
     Resource : KeywordMap$Keyword.class
-      Type : org.gjt.sp.jedit.syntax.KeywordMap$Keyword
+      Type : KeywordMap$Keyword
     Resource : KeywordMap.class
-      Type : org.gjt.sp.jedit.syntax.KeywordMap
+      Type : KeywordMap
     Resource : ModeProvider.class
-      Type : org.gjt.sp.jedit.syntax.ModeProvider
+      Type : ModeProvider
     Resource : ParserRule.class
-      Type : org.gjt.sp.jedit.syntax.ParserRule
+      Type : ParserRule
     Resource : ParserRuleSet.class
-      Type : org.gjt.sp.jedit.syntax.ParserRuleSet
+      Type : ParserRuleSet
     Resource : SyntaxStyle.class
-      Type : org.gjt.sp.jedit.syntax.SyntaxStyle
+      Type : SyntaxStyle
     Resource : SyntaxUtilities.class
-      Type : org.gjt.sp.jedit.syntax.SyntaxUtilities
+      Type : SyntaxUtilities
     Resource : Token.class
-      Type : org.gjt.sp.jedit.syntax.Token
+      Type : Token
     Resource : TokenHandler.class
-      Type : org.gjt.sp.jedit.syntax.TokenHandler
+      Type : TokenHandler
     Resource : TokenMarker$LineContext.class
-      Type : org.gjt.sp.jedit.syntax.TokenMarker$LineContext
+      Type : TokenMarker$LineContext
     Resource : TokenMarker.class
-      Type : org.gjt.sp.jedit.syntax.TokenMarker
+      Type : TokenMarker
     Resource : XModeHandler$TagDecl.class
-      Type : org.gjt.sp.jedit.syntax.XModeHandler$TagDecl
+      Type : XModeHandler$TagDecl
     Resource : XModeHandler.class
-      Type : org.gjt.sp.jedit.syntax.XModeHandler
+      Type : XModeHandler
     Resource : xmode.dtd
   Package : org.gjt.sp.jedit.textarea
     Resource : Anchor.class
-      Type : org.gjt.sp.jedit.textarea.Anchor
+      Type : Anchor
     Resource : AntiAlias.class
-      Type : org.gjt.sp.jedit.textarea.AntiAlias
+      Type : AntiAlias
     Resource : BufferHandler.class
-      Type : org.gjt.sp.jedit.textarea.BufferHandler
+      Type : BufferHandler
     Resource : ChunkCache$LineInfo.class
-      Type : org.gjt.sp.jedit.textarea.ChunkCache$LineInfo
+      Type : ChunkCache$LineInfo
     Resource : ChunkCache.class
-      Type : org.gjt.sp.jedit.textarea.ChunkCache
+      Type : ChunkCache
     Resource : CircleFoldPainter.class
-      Type : org.gjt.sp.jedit.textarea.CircleFoldPainter
+      Type : CircleFoldPainter
     Resource : DisplayManager.class
-      Type : org.gjt.sp.jedit.textarea.DisplayManager
+      Type : DisplayManager
     Resource : ExtensionManager$Entry.class
-      Type : org.gjt.sp.jedit.textarea.ExtensionManager$Entry
+      Type : ExtensionManager$Entry
     Resource : ExtensionManager.class
-      Type : org.gjt.sp.jedit.textarea.ExtensionManager
+      Type : ExtensionManager
     Resource : FirstLine.class
-      Type : org.gjt.sp.jedit.textarea.FirstLine
+      Type : FirstLine
     Resource : FoldPainter.class
-      Type : org.gjt.sp.jedit.textarea.FoldPainter
+      Type : FoldPainter
     Resource : Gutter$MouseHandler.class
-      Type : org.gjt.sp.jedit.textarea.Gutter$MouseHandler
+      Type : Gutter$MouseHandler
     Resource : Gutter.class
-      Type : org.gjt.sp.jedit.textarea.Gutter
+      Type : Gutter
     Resource : GutterPopupHandler.class
-      Type : org.gjt.sp.jedit.textarea.GutterPopupHandler
+      Type : GutterPopupHandler
     Resource : InputMethodSupport.class
-      Type : org.gjt.sp.jedit.textarea.InputMethodSupport
+      Type : InputMethodSupport
     Resource : JEditEmbeddedTextArea.class
-      Type : org.gjt.sp.jedit.textarea.JEditEmbeddedTextArea
+      Type : JEditEmbeddedTextArea
     Resource : JEditTextArea.class
-      Type : org.gjt.sp.jedit.textarea.JEditTextArea
+      Type : JEditTextArea
     Resource : MouseActions.class
-      Type : org.gjt.sp.jedit.textarea.MouseActions
+      Type : MouseActions
     Resource : MouseActionsProvider.class
-      Type : org.gjt.sp.jedit.textarea.MouseActionsProvider
+      Type : MouseActionsProvider
     Resource : MouseHandler.class
-      Type : org.gjt.sp.jedit.textarea.MouseHandler
+      Type : MouseHandler
     Resource : RangeMap.class
-      Type : org.gjt.sp.jedit.textarea.RangeMap
+      Type : RangeMap
     Resource : ScreenLineManager.class
-      Type : org.gjt.sp.jedit.textarea.ScreenLineManager
+      Type : ScreenLineManager
     Resource : ScrollLayout.class
-      Type : org.gjt.sp.jedit.textarea.ScrollLayout
+      Type : ScrollLayout
     Resource : ScrollLineCount.class
-      Type : org.gjt.sp.jedit.textarea.ScrollLineCount
+      Type : ScrollLineCount
     Resource : ScrollListener.class
-      Type : org.gjt.sp.jedit.textarea.ScrollListener
+      Type : ScrollListener
     Resource : Selection$Range.class
-      Type : org.gjt.sp.jedit.textarea.Selection$Range
+      Type : Selection$Range
     Resource : Selection$Rect.class
-      Type : org.gjt.sp.jedit.textarea.Selection$Rect
+      Type : Selection$Rect
     Resource : Selection.class
-      Type : org.gjt.sp.jedit.textarea.Selection
+      Type : Selection
     Resource : SelectionManager.class
-      Type : org.gjt.sp.jedit.textarea.SelectionManager
+      Type : SelectionManager
     Resource : ShapedFoldPainter.class
-      Type : org.gjt.sp.jedit.textarea.ShapedFoldPainter
+      Type : ShapedFoldPainter
     Resource : SquareFoldPainter.class
-      Type : org.gjt.sp.jedit.textarea.SquareFoldPainter
+      Type : SquareFoldPainter
     Resource : StandaloneTextArea$StandaloneActionSet.class
-      Type : org.gjt.sp.jedit.textarea.StandaloneTextArea$StandaloneActionSet
+      Type : StandaloneTextArea$StandaloneActionSet
     Resource : StandaloneTextArea.class
-      Type : org.gjt.sp.jedit.textarea.StandaloneTextArea
+      Type : StandaloneTextArea
     Resource : StatusListener.class
-      Type : org.gjt.sp.jedit.textarea.StatusListener
+      Type : StatusListener
     Resource : StructureMatcher$BracketMatcher.class
-      Type : org.gjt.sp.jedit.textarea.StructureMatcher$BracketMatcher
+      Type : StructureMatcher$BracketMatcher
     Resource : StructureMatcher$Highlight.class
-      Type : org.gjt.sp.jedit.textarea.StructureMatcher$Highlight
+      Type : StructureMatcher$Highlight
     Resource : StructureMatcher$Match.class
-      Type : org.gjt.sp.jedit.textarea.StructureMatcher$Match
+      Type : StructureMatcher$Match
     Resource : StructureMatcher.class
-      Type : org.gjt.sp.jedit.textarea.StructureMatcher
+      Type : StructureMatcher
     Resource : TextArea$AdjustHandler.class
-      Type : org.gjt.sp.jedit.textarea.TextArea$AdjustHandler
+      Type : TextArea$AdjustHandler
     Resource : TextArea$CaretBlinker.class
-      Type : org.gjt.sp.jedit.textarea.TextArea$CaretBlinker
+      Type : TextArea$CaretBlinker
     Resource : TextArea$FocusHandler.class
-      Type : org.gjt.sp.jedit.textarea.TextArea$FocusHandler
+      Type : TextArea$FocusHandler
     Resource : TextArea$MouseWheelHandler.class
-      Type : org.gjt.sp.jedit.textarea.TextArea$MouseWheelHandler
+      Type : TextArea$MouseWheelHandler
     Resource : TextArea$MutableCaretEvent.class
-      Type : org.gjt.sp.jedit.textarea.TextArea$MutableCaretEvent
+      Type : TextArea$MutableCaretEvent
     Resource : TextArea$RectParams.class
-      Type : org.gjt.sp.jedit.textarea.TextArea$RectParams
+      Type : TextArea$RectParams
     Resource : TextArea.class
-      Type : org.gjt.sp.jedit.textarea.TextArea
+      Type : TextArea
     Resource : TextAreaBorder.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaBorder
+      Type : TextAreaBorder
     Resource : TextAreaDropHandler.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaDropHandler
+      Type : TextAreaDropHandler
     Resource : TextAreaException.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaException
+      Type : TextAreaException
     Resource : TextAreaExtension.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaExtension
+      Type : TextAreaExtension
     Resource : TextAreaMouseHandler.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaMouseHandler
+      Type : TextAreaMouseHandler
     Resource : TextAreaPainter$PaintCaret.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaPainter$PaintCaret
+      Type : TextAreaPainter$PaintCaret
     Resource : TextAreaPainter$PaintLineBackground.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaPainter$PaintLineBackground
+      Type : TextAreaPainter$PaintLineBackground
     Resource : TextAreaPainter$PaintSelection.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaPainter$PaintSelection
+      Type : TextAreaPainter$PaintSelection
     Resource : TextAreaPainter$PaintSelectionText.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaPainter$PaintSelectionText
+      Type : TextAreaPainter$PaintSelectionText
     Resource : TextAreaPainter$PaintText.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaPainter$PaintText
+      Type : TextAreaPainter$PaintText
     Resource : TextAreaPainter$PaintWrapGuide.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaPainter$PaintWrapGuide
+      Type : TextAreaPainter$PaintWrapGuide
     Resource : TextAreaPainter.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaPainter
+      Type : TextAreaPainter
     Resource : TextAreaTransferHandler$DraggedURLLoader.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaTransferHandler$DraggedURLLoader
+      Type : TextAreaTransferHandler$DraggedURLLoader
     Resource : TextAreaTransferHandler$TextAreaSelection.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaTransferHandler$TextAreaSelection
+      Type : TextAreaTransferHandler$TextAreaSelection
     Resource : TextAreaTransferHandler.class
-      Type : org.gjt.sp.jedit.textarea.TextAreaTransferHandler
+      Type : TextAreaTransferHandler
     Resource : TriangleFoldPainter.class
-      Type : org.gjt.sp.jedit.textarea.TriangleFoldPainter
+      Type : TriangleFoldPainter
     Resource : textarea.actions.xml
   Package : org.gjt.sp.jedit.visitors
     Resource : JEditVisitor.class
-      Type : org.gjt.sp.jedit.visitors.JEditVisitor
+      Type : JEditVisitor
     Resource : JEditVisitorAdapter.class
-      Type : org.gjt.sp.jedit.visitors.JEditVisitorAdapter
+      Type : JEditVisitorAdapter
     Resource : SaveCaretInfoVisitor.class
-      Type : org.gjt.sp.jedit.visitors.SaveCaretInfoVisitor
+      Type : SaveCaretInfoVisitor
   Package : org.gjt.sp.util
     Resource : HtmlUtilities.class
-      Type : org.gjt.sp.util.HtmlUtilities
+      Type : HtmlUtilities
     Resource : IOUtilities.class
-      Type : org.gjt.sp.util.IOUtilities
+      Type : IOUtilities
     Resource : IntegerArray.class
-      Type : org.gjt.sp.util.IntegerArray
+      Type : IntegerArray
     Resource : Log$LogListModel.class
-      Type : org.gjt.sp.util.Log$LogListModel
+      Type : Log$LogListModel
     Resource : Log$LogOutputStream.class
-      Type : org.gjt.sp.util.Log$LogOutputStream
+      Type : Log$LogOutputStream
     Resource : Log$LogPrintStream.class
-      Type : org.gjt.sp.util.Log$LogPrintStream
+      Type : Log$LogPrintStream
     Resource : Log.class
-      Type : org.gjt.sp.util.Log
+      Type : Log
     Resource : ProgressObserver.class
-      Type : org.gjt.sp.util.ProgressObserver
+      Type : ProgressObserver
     Resource : PropertiesBean.class
-      Type : org.gjt.sp.util.PropertiesBean
+      Type : PropertiesBean
     Resource : ReadWriteLock.class
-      Type : org.gjt.sp.util.ReadWriteLock
+      Type : ReadWriteLock
     Resource : ReverseCharSequence.class
-      Type : org.gjt.sp.util.ReverseCharSequence
+      Type : ReverseCharSequence
     Resource : SegmentBuffer.class
-      Type : org.gjt.sp.util.SegmentBuffer
+      Type : SegmentBuffer
     Resource : SegmentCharSequence.class
-      Type : org.gjt.sp.util.SegmentCharSequence
+      Type : SegmentCharSequence
     Resource : StandardUtilities$StringCompare.class
-      Type : org.gjt.sp.util.StandardUtilities$StringCompare
+      Type : StandardUtilities$StringCompare
     Resource : StandardUtilities.class
-      Type : org.gjt.sp.util.StandardUtilities
+      Type : StandardUtilities
     Resource : StringList.class
-      Type : org.gjt.sp.util.StringList
+      Type : StringList
     Resource : SyntaxUtilities.class
-      Type : org.gjt.sp.util.SyntaxUtilities
+      Type : SyntaxUtilities
     Resource : Task.class
-      Type : org.gjt.sp.util.Task
+      Type : Task
     Resource : TaskListener.class
-      Type : org.gjt.sp.util.TaskListener
+      Type : TaskListener
     Resource : TaskManager$MyTask.class
-      Type : org.gjt.sp.util.TaskManager$MyTask
+      Type : TaskManager$MyTask
     Resource : TaskManager$TaskVisitor.class
-      Type : org.gjt.sp.util.TaskManager$TaskVisitor
+      Type : TaskManager$TaskVisitor
     Resource : TaskManager.class
-      Type : org.gjt.sp.util.TaskManager
+      Type : TaskManager
     Resource : ThreadAbortMonitor.class
-      Type : org.gjt.sp.util.ThreadAbortMonitor
+      Type : ThreadAbortMonitor
     Resource : ThreadUtilities$JEditThreadFactory.class
-      Type : org.gjt.sp.util.ThreadUtilities$JEditThreadFactory
+      Type : ThreadUtilities$JEditThreadFactory
     Resource : ThreadUtilities$MyRunnable.class
-      Type : org.gjt.sp.util.ThreadUtilities$MyRunnable
+      Type : ThreadUtilities$MyRunnable
     Resource : ThreadUtilities.class
-      Type : org.gjt.sp.util.ThreadUtilities
+      Type : ThreadUtilities
     Resource : WorkRequest.class
-      Type : org.gjt.sp.util.WorkRequest
+      Type : WorkRequest
     Resource : WorkThread$Abort.class
-      Type : org.gjt.sp.util.WorkThread$Abort
+      Type : WorkThread$Abort
     Resource : WorkThread.class
-      Type : org.gjt.sp.util.WorkThread
+      Type : WorkThread
     Resource : WorkThreadPool$Request.class
-      Type : org.gjt.sp.util.WorkThreadPool$Request
+      Type : WorkThreadPool$Request
     Resource : WorkThreadPool$RunRequestsInAWTThread.class
-      Type : org.gjt.sp.util.WorkThreadPool$RunRequestsInAWTThread
+      Type : WorkThreadPool$RunRequestsInAWTThread
     Resource : WorkThreadPool.class
-      Type : org.gjt.sp.util.WorkThreadPool
+      Type : WorkThreadPool
     Resource : WorkThreadProgressListener.class
-      Type : org.gjt.sp.util.WorkThreadProgressListener
+      Type : WorkThreadProgressListener
     Resource : XMLUtilities.class
-      Type : org.gjt.sp.util.XMLUtilities
+      Type : XMLUtilities

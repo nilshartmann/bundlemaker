@@ -156,7 +156,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   }
 
   @Override
-  protected void onAddArtifact(IArtifact artifact) {
+  protected void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
@@ -167,7 +167,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   }
 
   @Override
-  protected void onRemoveArtifact(IArtifact artifact) {
+  protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {

@@ -86,13 +86,13 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
   }
 
   @Override
-  protected void onRemoveArtifact(IArtifact artifact) {
+  protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onRemoveArtifact");
 
   }
 
   @Override
-  protected void onAddArtifact(IArtifact artifact) {
+  protected void onAddArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onAddArtifact");
   }
 

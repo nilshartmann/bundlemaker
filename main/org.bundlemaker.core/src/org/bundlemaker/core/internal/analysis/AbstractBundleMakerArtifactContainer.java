@@ -1,18 +1,24 @@
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -39,12 +45,11 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
+   * {@inheritDoc}
    */
-  protected abstract void onRemoveArtifact(IArtifact artifact);
+  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts) {
+    return getDependencies(Arrays.asList(artifacts));
+  }
 
   /**
    * <p>
@@ -52,7 +57,63 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * 
    * @param artifact
    */
-  protected abstract void onAddArtifact(IArtifact artifact);
+  protected abstract void onRemoveArtifact(IBundleMakerArtifact artifact);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  protected abstract void onAddArtifact(IBundleMakerArtifact artifact);
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getUniquePathIdentifier() {
+    return getName();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPath getFullPath() {
+
+    //
+    if (hasParent()) {
+
+      //
+      IPath path = getParent().getFullPath();
+      return path.append(getUniquePathIdentifier());
+
+    } else {
+
+      //
+      return new Path(getUniquePathIdentifier());
+    }
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
+    return ArtifactHelper.findChild(this, filter, clazz);
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
+    return ArtifactHelper.findChildren(this, clazz);
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
+    return ArtifactHelper.findChildren(this, filter, clazz);
+  }
+
+  @Override
+  public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
+    return ArtifactHelper.getChildByPath(this, path, clazz);
+  }
 
   /**
    * {@inheritDoc}
@@ -210,7 +271,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
     ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
         (IBundleMakerArtifact) artifact, ChangeAction.ADDED));
 
-    onAddArtifact(artifact);
+    onAddArtifact((IBundleMakerArtifact) artifact);
 
     // set change action to null
     ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);
@@ -227,7 +288,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
     ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
         (IBundleMakerArtifact) artifact, ChangeAction.REMOVED));
 
-    onRemoveArtifact(artifact);
+    onRemoveArtifact((IBundleMakerArtifact) artifact);
 
     // set change action to null
     ((AdapterModularizedSystem2IArtifact) getRoot()).setCurrentAction(null);

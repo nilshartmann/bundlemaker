@@ -396,6 +396,20 @@ public class BundleMakerProject implements IBundleMakerProject {
     return _projectDescription;
   }
 
+  @Override
+  public void modifyBundleMakerProjectDescription(IProjectDescriptionModifier modifier) throws CoreException {
+
+    //
+    Assert.isNotNull(modifier);
+
+    // Creating the project description
+    IModifiableBundleMakerProjectDescription projectDescription = this.getModifiableProjectDescription();
+
+    modifier.modifyProjectDescription(projectDescription);
+
+    projectDescription.save();
+  }
+
   public IDependencyModel getDependencyModel() {
     return _dependencyModel;
   }

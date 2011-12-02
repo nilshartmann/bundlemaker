@@ -3,6 +3,7 @@ package org.bundlemaker.core.itest.complex.analysis;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
     String jeditOriginalContent = ArtifactUtils.artifactToString(getJeditModuleArtifact());
 
     //
-    IArtifact testModule = createNewModule(getRootArtifact(), "testModule");
+    IBundleMakerArtifact testModule = createNewModule(getRootArtifact(), "testModule");
     Assert.assertNotNull(testModule);
 
     //
@@ -55,7 +56,7 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
     String jeditOriginalContent = ArtifactUtils.artifactToString(getJeditModuleArtifact());
 
     //
-    IArtifact testModule = createNewModule(getRootArtifact(), "testModule");
+    IBundleMakerArtifact testModule = createNewModule(getRootArtifact(), "testModule");
     Assert.assertNotNull(testModule);
 
     String packagePath = "org|gjt|sp|util";

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="topic_pjp_llh_m2">
+  <title>Path Specification</title>
+  <body>
+    <p>Path Specification</p>
+    <bodydiv>
+      <ul>
+
+        <li>FullPath - QualifedName - Name - PathIdentifier</li>
+
+        <li>Root: MySystem - MySystem - MySystem - MySystem</li>
+
+        <li>Group: MySystem/group1/group2 - group1/group2 - group2 - group2</li>
+
+        <li>Module: MySystem/group1/group2/MyModule_1.0.0 - group1/group2/MyModule_1.0.0 -
+          MyModule_1.0.0</li>
+
+        <li>Package: MySystem/group1/group2/MyModule_1.0.0/de.bla.blubb - de.bla.blubb - blubb -
+          de.bla.blubb</li>
+        <li>Package: MySystem/group1/group2/MyModule_1.0.0/de/bla/blubb - de.bla.blubb - blubb -
+          blubb</li>
+
+        <li>Resource: MySystem/group1/group2/MyModule_1.0.0/de.bla.blubb/Test.class -
+          de/bla/blubb/Test.class - Test.class - Test.class</li>
+        <li>Resource: MySystem/group1/group2/MyModule_1.0.0/de/bla/blubb/Test.class -
+          de/bla/blubb/Test.class - Test.class - Test.class</li>
+
+        <li>Type: MySystem/group1/group2/MyModule_1.0.0/de.bla.blubb/Test.class/de.bla.blubb.Test -
+          de.bla.blubb.Test - Test</li>
+
+        <li>Type: MySystem/group1/group2/MyModule_1.0.0/de/bla/blubb/Test.class/de.bla.blubb.Test -
+          de.bla.blubb.Test - Test</li>
+
+      </ul>
+    </bodydiv>
+  </body>
+</topic>

@@ -134,13 +134,13 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
   }
 
   @Override
-  protected void onRemoveArtifact(IArtifact artifact) {
+  protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onRemoveArtifact");
 
   }
 
   @Override
-  protected void onAddArtifact(IArtifact artifact) {
+  protected void onAddArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onAddArtifact");
   }
 
@@ -151,7 +151,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
 
   @Override
   public String getQualifiedName() {
-    return getName();
+    return _resource.getPath();
   }
 
   public IResource getResource() {

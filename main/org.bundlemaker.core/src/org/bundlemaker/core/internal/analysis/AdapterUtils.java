@@ -37,7 +37,7 @@ public class AdapterUtils {
    * @param artifact
    * @return
    */
-  public static IModifiableModularizedSystem getModularizedSystem(IArtifact artifact) {
+  public static IModifiableModularizedSystem getModularizedSystem(IBundleMakerArtifact artifact) {
 
     //
     IArtifact root = ((IBundleMakerArtifact) artifact).getRoot();
@@ -56,7 +56,7 @@ public class AdapterUtils {
    * 
    * @param artifact
    */
-  public static boolean addModuleToModularizedSystem(IArtifact artifact, String path) {
+  public static boolean addModuleToModularizedSystem(IBundleMakerArtifact artifact, String path) {
 
     Assert.isTrue(artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact);
 
@@ -136,7 +136,7 @@ public class AdapterUtils {
    * 
    * @param artifact
    */
-  public static boolean removeResourceModuleFromModularizedSystem(IArtifact artifact) {
+  public static boolean removeResourceModuleFromModularizedSystem(IBundleMakerArtifact artifact) {
 
     //
     IModifiableModularizedSystem modularizedSystem = AdapterUtils.getModularizedSystem(artifact);
@@ -348,8 +348,6 @@ public class AdapterUtils {
 
     //
     IModifiableResourceModule module = (IModifiableResourceModule) movableUnit.getContainingResourceModule();
-
-    System.out.println(module);
 
     if (module != null) {
       module.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);

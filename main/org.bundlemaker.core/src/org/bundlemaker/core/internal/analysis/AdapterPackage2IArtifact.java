@@ -27,10 +27,10 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
   private String        _qualifiedName;
 
   /** - */
-  private boolean       _isFlat = true;
+  private boolean       _isVirtual;
 
   /** - */
-  private boolean       _isVirtual;
+  private boolean       _isHierarchical;
 
   /** - */
   private ArtifactCache _artifactCache;
@@ -46,8 +46,8 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
    * @param qualifiedName
    * @param parent
    */
-  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent, boolean isVirtual, IModule containingModule,
-      ArtifactCache artifactCache) {
+  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent, boolean isVirtual, boolean isHierarchical,
+      IModule containingModule, ArtifactCache artifactCache) {
     super(ArtifactType.Package, _getName(qualifiedName));
 
     // set parent/children dependency
@@ -60,12 +60,18 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
 
     // set the qualified name
     _qualifiedName = qualifiedName;
-
     _isVirtual = isVirtual;
-
     _artifactCache = artifactCache;
-
     _containingModule = containingModule;
+    _isHierarchical = isHierarchical;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getUniquePathIdentifier() {
+    return _isHierarchical ? getName() : getQualifiedName();
   }
 
   /**
@@ -150,7 +156,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
    * {@inheritDoc}
    */
   @Override
-  protected void onAddArtifact(IArtifact artifact) {
+  protected void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // asserts
     Assert.isNotNull(artifact);
@@ -176,7 +182,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
   }
 
   @Override
-  protected void onRemoveArtifact(IArtifact artifact) {
+  protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
 
     // TODO: TYPE CHECK??
     AdapterUtils.removeArtifact(artifact, this);

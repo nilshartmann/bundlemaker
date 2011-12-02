@@ -9,6 +9,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -20,24 +21,86 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 public interface IBundleMakerArtifact extends IArtifact, Comparable<IBundleMakerArtifact> {
 
   /**
+   * <p>
+   * Returns the path identifier for this artifact.
+   * </p>
+   * 
+   * @return
+   */
+  String getUniquePathIdentifier();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IPath getFullPath();
+
+  /**
    * {@inheritDoc}
    */
+  @Deprecated
   IBundleMakerArtifact getChild(String path);
 
   /**
    * {@inheritDoc}
    */
-  public Collection<IBundleMakerArtifact> getChildren();
+  Collection<IBundleMakerArtifact> getChildren();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param <T>
+   * @param clazz
+   * @param filter
+   * @return
+   */
+  <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param <T>
+   * @param clazz
+   * @return
+   */
+  <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param <T>
+   * @param filter
+   * @param clazz
+   * @return
+   */
+  <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param clazz
+   * @param path
+   * 
+   * @param <T>
+   * @return
+   */
+  <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path);
 
   /**
    * {@inheritDoc}
    */
-  public IBundleMakerArtifact getParent();
+  IBundleMakerArtifact getParent();
 
   /**
    * {@inheritDoc}
    */
-  public IBundleMakerArtifact getParent(ArtifactType type);
+  IBundleMakerArtifact getParent(ArtifactType type);
 
   /**
    * <p>
@@ -65,12 +128,17 @@ public interface IBundleMakerArtifact extends IArtifact, Comparable<IBundleMaker
   // public boolean hasParentResource();
 
   /**
+   * {@inheritDoc}
+   */
+  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts);
+
+  /**
    * <p>
    * </p>
    * 
    * @return
    */
-  public boolean hasParent();
+  boolean hasParent();
 
   /**
    * <p>

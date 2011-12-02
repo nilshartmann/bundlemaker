@@ -82,6 +82,15 @@ public interface IBundleMakerProject {
    * <p>
    * </p>
    * 
+   * @param modifier
+   * @throws CoreException
+   */
+  void modifyBundleMakerProjectDescription(IProjectDescriptionModifier modifier) throws CoreException;
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @return
    */
   public IBundleMakerProjectDescription getProjectDescription();
@@ -253,4 +262,22 @@ public interface IBundleMakerProject {
    */
   @Deprecated
   public IDependencyModel getDependencyModel();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   * 
+   */
+  static public interface IProjectDescriptionModifier {
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param projectDescription
+     */
+    void modifyProjectDescription(IModifiableBundleMakerProjectDescription projectDescription);
+  }
 }

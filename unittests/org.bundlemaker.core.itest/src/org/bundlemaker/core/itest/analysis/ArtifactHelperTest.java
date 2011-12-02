@@ -21,53 +21,283 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
+import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * <p>
+ * </p>
+ * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ArtifactHelperTest extends AbstractModularizedSystemTest {
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
   @Test
-  public void getQualifiedName() throws Exception {
+  public void testNameAndPath_BINARY() throws Exception {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
         ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
-    Assert.assertEquals("BasicArtifactTest", rootArtifact.getQualifiedName());
+    Assert.assertEquals(new Path("BasicArtifactTest"), rootArtifact.getFullPath());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getUniquePathIdentifier());
     Assert.assertEquals("BasicArtifactTest", rootArtifact.getName());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getQualifiedName());
 
     //
-    assertArtifact(rootArtifact, "[group1]", "group1", IGroupArtifact.class);
+    IGroupArtifact group1Artifact = findArtifact(rootArtifact, "group1", IGroupArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1"), group1Artifact.getFullPath());
+    Assert.assertEquals("group1", group1Artifact.getUniquePathIdentifier());
+    Assert.assertEquals("group1", group1Artifact.getName());
+    Assert.assertEquals("group1", group1Artifact.getQualifiedName());
+    Assert.assertEquals(group1Artifact, ArtifactHelper.getChildByPath(rootArtifact, group1Artifact.getFullPath()
+        .removeFirstSegments(1), IGroupArtifact.class));
 
     //
-    assertArtifact(rootArtifact, "[group2]", "group2", IGroupArtifact.class);
-    assertArtifact(rootArtifact, "[group2]", "group1/group2", IGroupArtifact.class);
+    IGroupArtifact group2Artifact = findArtifact(rootArtifact, "group2", IGroupArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2"), group2Artifact.getFullPath());
+    Assert.assertEquals("group2", group2Artifact.getUniquePathIdentifier());
+    Assert.assertEquals("group2", group2Artifact.getName());
+    Assert.assertEquals("group1/group2", group2Artifact.getQualifiedName());
+    Assert.assertEquals(group2Artifact, ArtifactHelper.getChildByPath(rootArtifact, group2Artifact.getFullPath()
+        .removeFirstSegments(1), IGroupArtifact.class));
 
     //
-    assertArtifact(rootArtifact, "[BasicArtifactTest_1.0.0]", "group1/group2/BasicArtifactTest_1.0.0",
-        IModuleArtifact.class);
-    assertArtifact(rootArtifact, "[BasicArtifactTest_1.0.0]", "BasicArtifactTest_1.0.0", IModuleArtifact.class);
-    assertArtifact(rootArtifact, "[BasicArtifactTest_1.0.0]", "BasicArtifactTest", IModuleArtifact.class);
+    IModuleArtifact moduleArtifact = findArtifact(rootArtifact, "BasicArtifactTest_1.0.0", IModuleArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0"),
+        moduleArtifact.getFullPath());
+    Assert.assertEquals("BasicArtifactTest_1.0.0", moduleArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("BasicArtifactTest_1.0.0", moduleArtifact.getName());
+    Assert.assertEquals("group1/group2/BasicArtifactTest_1.0.0", moduleArtifact.getQualifiedName());
+    Assert.assertEquals(moduleArtifact, ArtifactHelper.getChildByPath(rootArtifact, moduleArtifact.getFullPath()
+        .removeFirstSegments(1), IModuleArtifact.class));
 
     //
-    assertArtifact(rootArtifact, "[BasicArtifactTest_1.0.0]", "group1/group2/BasicArtifactTest_1.0.0",
-        IModuleArtifact.class);
-    assertArtifact(rootArtifact, "[BasicArtifactTest_1.0.0]", "BasicArtifactTest_1.0.0", IModuleArtifact.class);
-    assertArtifact(rootArtifact, "[BasicArtifactTest_1.0.0]", "BasicArtifactTest", IModuleArtifact.class);
+    IPackageArtifact packageArtifact = findArtifact(rootArtifact, "de.test.basic", IPackageArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de.test.basic"),
+        packageArtifact.getFullPath());
+    Assert.assertEquals("de.test.basic", packageArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("basic", packageArtifact.getName());
+    Assert.assertEquals("de.test.basic", packageArtifact.getQualifiedName());
+    Assert.assertEquals(packageArtifact, ArtifactHelper.getChildByPath(rootArtifact, packageArtifact.getFullPath()
+        .removeFirstSegments(1), IPackageArtifact.class));
 
     //
-    assertArtifact(rootArtifact, "[basic]", "de.test.basic", IPackageArtifact.class);
-    assertArtifact(rootArtifact, "[basic]", "basic", IPackageArtifact.class);
+    IResourceArtifact resourceArtifact = findArtifact(rootArtifact, "TestClass.class", IResourceArtifact.class);
+    Assert.assertEquals(new Path(
+        "BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de.test.basic/TestClass.class"), resourceArtifact
+        .getFullPath());
+    Assert.assertEquals("TestClass.class", resourceArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("TestClass.class", resourceArtifact.getName());
+    Assert.assertEquals("de/test/basic/TestClass.class", resourceArtifact.getQualifiedName());
+    Assert.assertEquals(resourceArtifact, ArtifactHelper.getChildByPath(rootArtifact, resourceArtifact.getFullPath()
+        .removeFirstSegments(1), IResourceArtifact.class));
 
-    Assert
-        .assertEquals(1, ArtifactHelper.findChildren(rootArtifact, "TestClass.class", IResourceArtifact.class).size());
-    Assert.assertEquals(1, ArtifactHelper.findChildren(rootArtifact, "de.test.basic.TestClass", ITypeArtifact.class)
-        .size());
+    //
+    ITypeArtifact typeArtifact = findArtifact(rootArtifact, "de.test.basic.TestClass", ITypeArtifact.class);
+    Assert.assertEquals(new Path(
+        "BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de.test.basic/TestClass.class/TestClass"),
+        typeArtifact.getFullPath());
+    Assert.assertEquals("TestClass", typeArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("TestClass", typeArtifact.getName());
+    Assert.assertEquals("de.test.basic.TestClass", typeArtifact.getQualifiedName());
+    Assert.assertEquals(typeArtifact, ArtifactHelper.getChildByPath(rootArtifact, typeArtifact.getFullPath()
+        .removeFirstSegments(1), ITypeArtifact.class));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
+  @Test
+  public void testNameAndPath_HIERARCHICAL_BINARY() throws Exception {
+
+    // step 1: get the rootArtifact
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+
+    // assert the qualified name && the name
+    Assert.assertEquals(new Path("BasicArtifactTest"), rootArtifact.getFullPath());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getName());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getQualifiedName());
+
+    //
+    IGroupArtifact group1Artifact = findArtifact(rootArtifact, "group1", IGroupArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1"), group1Artifact.getFullPath());
+    Assert.assertEquals("group1", group1Artifact.getUniquePathIdentifier());
+    Assert.assertEquals("group1", group1Artifact.getName());
+    Assert.assertEquals("group1", group1Artifact.getQualifiedName());
+    Assert.assertEquals(group1Artifact, ArtifactHelper.getChildByPath(rootArtifact, group1Artifact.getFullPath()
+        .removeFirstSegments(1), IGroupArtifact.class));
+
+    //
+    IGroupArtifact group2Artifact = findArtifact(rootArtifact, "group2", IGroupArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2"), group2Artifact.getFullPath());
+    Assert.assertEquals("group2", group2Artifact.getUniquePathIdentifier());
+    Assert.assertEquals("group2", group2Artifact.getName());
+    Assert.assertEquals("group1/group2", group2Artifact.getQualifiedName());
+    Assert.assertEquals(group2Artifact, ArtifactHelper.getChildByPath(rootArtifact, group2Artifact.getFullPath()
+        .removeFirstSegments(1), IGroupArtifact.class));
+
+    //
+    IModuleArtifact moduleArtifact = findArtifact(rootArtifact, "BasicArtifactTest_1.0.0", IModuleArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0"),
+        moduleArtifact.getFullPath());
+    Assert.assertEquals("BasicArtifactTest_1.0.0", moduleArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("BasicArtifactTest_1.0.0", moduleArtifact.getName());
+    Assert.assertEquals("group1/group2/BasicArtifactTest_1.0.0", moduleArtifact.getQualifiedName());
+    Assert.assertEquals(moduleArtifact, ArtifactHelper.getChildByPath(rootArtifact, moduleArtifact.getFullPath()
+        .removeFirstSegments(1), IModuleArtifact.class));
+
+    //
+    IPackageArtifact packageArtifact = findArtifact(rootArtifact, "de.test.basic", IPackageArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de/test/basic"),
+        packageArtifact.getFullPath());
+    Assert.assertEquals("basic", packageArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("basic", packageArtifact.getName());
+    Assert.assertEquals("de.test.basic", packageArtifact.getQualifiedName());
+    Assert.assertEquals(packageArtifact, ArtifactHelper.getChildByPath(rootArtifact, packageArtifact.getFullPath()
+        .removeFirstSegments(1), IPackageArtifact.class));
+
+    //
+    IResourceArtifact resourceArtifact = findArtifact(rootArtifact, "TestClass.class", IResourceArtifact.class);
+    Assert.assertEquals(new Path(
+        "BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de/test/basic/TestClass.class"), resourceArtifact
+        .getFullPath());
+    Assert.assertEquals("TestClass.class", resourceArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("TestClass.class", resourceArtifact.getName());
+    Assert.assertEquals("de/test/basic/TestClass.class", resourceArtifact.getQualifiedName());
+    Assert.assertEquals(resourceArtifact, ArtifactHelper.getChildByPath(rootArtifact, resourceArtifact.getFullPath()
+        .removeFirstSegments(1), IResourceArtifact.class));
+
+    //
+    ITypeArtifact typeArtifact = findArtifact(rootArtifact, "de.test.basic.TestClass", ITypeArtifact.class);
+    Assert.assertEquals(new Path(
+        "BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de/test/basic/TestClass.class/TestClass"),
+        typeArtifact.getFullPath());
+    Assert.assertEquals("TestClass", typeArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("TestClass", typeArtifact.getName());
+    Assert.assertEquals("de.test.basic.TestClass", typeArtifact.getQualifiedName());
+    Assert.assertEquals(typeArtifact, ArtifactHelper.getChildByPath(rootArtifact, typeArtifact.getFullPath()
+        .removeFirstSegments(1), ITypeArtifact.class));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
+  @Test
+  public void testNameAndPath_AGGREGATE_INNER_TYPES_NO_RESOURCES() throws Exception {
+
+    // step 1: get the rootArtifact
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
+
+    // assert the qualified name && the name
+    Assert.assertEquals(new Path("BasicArtifactTest"), rootArtifact.getFullPath());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getName());
+    Assert.assertEquals("BasicArtifactTest", rootArtifact.getQualifiedName());
+
+    //
+    IGroupArtifact group1Artifact = findArtifact(rootArtifact, "group1", IGroupArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1"), group1Artifact.getFullPath());
+    Assert.assertEquals("group1", group1Artifact.getUniquePathIdentifier());
+    Assert.assertEquals("group1", group1Artifact.getName());
+    Assert.assertEquals("group1", group1Artifact.getQualifiedName());
+    Assert.assertEquals(group1Artifact, ArtifactHelper.getChildByPath(rootArtifact, group1Artifact.getFullPath()
+        .removeFirstSegments(1), IGroupArtifact.class));
+
+    //
+    IGroupArtifact group2Artifact = findArtifact(rootArtifact, "group2", IGroupArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2"), group2Artifact.getFullPath());
+    Assert.assertEquals("group2", group2Artifact.getUniquePathIdentifier());
+    Assert.assertEquals("group2", group2Artifact.getName());
+    Assert.assertEquals("group1/group2", group2Artifact.getQualifiedName());
+    Assert.assertEquals(group2Artifact, ArtifactHelper.getChildByPath(rootArtifact, group2Artifact.getFullPath()
+        .removeFirstSegments(1), IGroupArtifact.class));
+
+    //
+    IModuleArtifact moduleArtifact = findArtifact(rootArtifact, "BasicArtifactTest_1.0.0", IModuleArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0"),
+        moduleArtifact.getFullPath());
+    Assert.assertEquals("BasicArtifactTest_1.0.0", moduleArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("BasicArtifactTest_1.0.0", moduleArtifact.getName());
+    Assert.assertEquals("group1/group2/BasicArtifactTest_1.0.0", moduleArtifact.getQualifiedName());
+    Assert.assertEquals(moduleArtifact, ArtifactHelper.getChildByPath(rootArtifact, moduleArtifact.getFullPath()
+        .removeFirstSegments(1), IModuleArtifact.class));
+
+    //
+    IPackageArtifact packageArtifact = findArtifact(rootArtifact, "de.test.basic", IPackageArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de.test.basic"),
+        packageArtifact.getFullPath());
+    Assert.assertEquals("de.test.basic", packageArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("basic", packageArtifact.getName());
+    Assert.assertEquals("de.test.basic", packageArtifact.getQualifiedName());
+    Assert.assertEquals(packageArtifact, ArtifactHelper.getChildByPath(rootArtifact, packageArtifact.getFullPath()
+        .removeFirstSegments(1), IPackageArtifact.class));
+
+    //
+    ITypeArtifact typeArtifact = findArtifact(rootArtifact, "de.test.basic.TestClass", ITypeArtifact.class);
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de.test.basic/TestClass"),
+        typeArtifact.getFullPath());
+    Assert.assertEquals("TestClass", typeArtifact.getUniquePathIdentifier());
+    Assert.assertEquals("TestClass", typeArtifact.getName());
+    Assert.assertEquals("de.test.basic.TestClass", typeArtifact.getQualifiedName());
+    Assert.assertEquals(typeArtifact, ArtifactHelper.getChildByPath(rootArtifact, typeArtifact.getFullPath()
+        .removeFirstSegments(1), ITypeArtifact.class));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws Exception
+   */
+  @Test
+  public void testNameAndPath_WildCards() throws Exception {
+
+    // step 1: get the rootArtifact
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+
+    //
+    IGroupArtifact group1Artifact = findArtifact(rootArtifact, "g*1", IGroupArtifact.class);
+    Assert.assertNotNull(group1Artifact);
+
+    //
+    IGroupArtifact group2Artifact = findArtifact(rootArtifact, "g*2", IGroupArtifact.class);
+    Assert.assertNotNull(group2Artifact);
+
+    //
+    IModuleArtifact moduleArtifact = findArtifact(rootArtifact, "BasicArtifactTest*", IModuleArtifact.class);
+    Assert.assertNotNull(moduleArtifact);
+
+    //
+    IPackageArtifact packageArtifact = findArtifact(rootArtifact, "de.*.basic", IPackageArtifact.class);
+    Assert.assertNotNull(packageArtifact);
+
+    //
+    IResourceArtifact resourceArtifact = findArtifact(rootArtifact, "Test*.class", IResourceArtifact.class);
+    Assert.assertNotNull(resourceArtifact);
+
+    //
+    ITypeArtifact typeArtifact = findArtifact(rootArtifact, "de.**.TestClass", ITypeArtifact.class);
+    Assert.assertNotNull(typeArtifact);
   }
 
   /**
@@ -79,19 +309,10 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
    * @param name
    * @param clazz
    */
-  public void assertArtifact(IBundleMakerArtifact rootArtifact, String result, String name,
-      Class<? extends IBundleMakerArtifact> clazz) {
-
-    //
-    List<? extends IBundleMakerArtifact> moduleArtifacts = ArtifactHelper.findChildren(rootArtifact, name, clazz);
-
-    // assert
-    for (IBundleMakerArtifact iBundleMakerArtifact : moduleArtifacts) {
-      System.out.println(iBundleMakerArtifact.getQualifiedName());
-    }
-
+  public <T extends IBundleMakerArtifact> T findArtifact(IBundleMakerArtifact rootArtifact, String name, Class<T> clazz) {
+    List<T> moduleArtifacts = ArtifactHelper.findChildren(rootArtifact, name, clazz);
     Assert.assertEquals(1, moduleArtifacts.size());
-    Assert.assertEquals(result, moduleArtifacts.toString());
+    return moduleArtifacts.get(0);
   }
 
   /**
@@ -101,24 +322,4 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
   protected String computeTestProjectName() {
     return BasicArtifactTest.class.getSimpleName();
   }
-
-  // @Test
-  // public void getChildren() throws Exception {
-  //
-  // // step 1: get the rootArtifact
-  // IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-  // ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
-  //
-  // // step 2: get the package child
-  // List<? extends IModuleArtifact> artifacts = rootArtifact.findChildren(".*BasicArtifactTest.*",
-  // IModuleArtifact.class);
-  // for (IModuleArtifact artifact : artifacts) {
-  // System.out.println(artifact.getQualifiedName());
-  // }
-  //
-  // //
-  // Assert.assertNotNull(artifacts);
-  // assertEquals(1, artifacts.size());
-  // }
-
 }

@@ -23,25 +23,25 @@ import org.junit.Before;
 public abstract class AbstractJeditArtifactTest extends AbstractModularizedSystemTest {
 
   /** - */
-  private IRootArtifact _rootArtifact;
+  private IRootArtifact        _rootArtifact;
 
   /** - */
-  private IArtifact     _jeditModuleArtifact;
+  private IBundleMakerArtifact _jeditModuleArtifact;
 
   /** - */
-  private IArtifact     _velocityModuleArtifact;
+  private IBundleMakerArtifact _velocityModuleArtifact;
 
   /** - */
-  private IArtifact     _jdk16Artifact;
+  private IBundleMakerArtifact _jdk16Artifact;
 
   /** - */
-  private IArtifact     _group1Artifact;
+  private IBundleMakerArtifact _group1Artifact;
 
   /** - */
-  private IArtifact     _group2Artifact;
+  private IBundleMakerArtifact _group2Artifact;
 
   /** - */
-  private IArtifact     _missingTypesArtifact;
+  private IBundleMakerArtifact _missingTypesArtifact;
 
   @Before
   public void init() throws CoreException {
@@ -51,7 +51,8 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     assertTypeCount(1438);
 
     // assert the input
-    InputStream inputstream = AbstractJeditArtifactTest.class.getResourceAsStream("results/" + getTestProjectName() + ".txt");
+    InputStream inputstream = AbstractJeditArtifactTest.class.getResourceAsStream("results/" + getTestProjectName()
+        + ".txt");
     assertResult(ModuleUtils.dump(getModularizedSystem().getResourceModule(getTestProjectName(), "1.0.0")),
         inputstream, getTestProjectName() + getCurrentTimeStamp());
 
@@ -109,7 +110,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * 
    * @return
    */
-  protected final IArtifact getJeditModuleArtifact() {
+  protected final IBundleMakerArtifact getJeditModuleArtifact() {
     return _jeditModuleArtifact;
   }
 
@@ -164,8 +165,8 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * @param path
    * @return
    */
-  protected IArtifact getArtifact(IArtifact root, String path) {
-    IArtifact artifact = _rootArtifact.getChild(path);
+  protected IBundleMakerArtifact getArtifact(IArtifact root, String path) {
+    IBundleMakerArtifact artifact = _rootArtifact.getChild(path);
     Assert.assertNotNull(artifact);
     return artifact;
   }
@@ -213,9 +214,9 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * @param artifact
    * @return
    */
-  protected IArtifact createNewGroup(IArtifact artifact, String name) {
+  protected IBundleMakerArtifact createNewGroup(IArtifact artifact, String name) {
     //
-    IArtifact testGroup = getRootArtifact().getDependencyModel()
+    IBundleMakerArtifact testGroup = (IBundleMakerArtifact) getRootArtifact().getDependencyModel()
         .createArtifactContainer(name, name, ArtifactType.Group);
     artifact.addArtifact(testGroup);
     return testGroup;
@@ -228,10 +229,10 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * @param artifact
    * @return
    */
-  protected IArtifact createNewModule(IArtifact artifact, String name) {
+  protected IBundleMakerArtifact createNewModule(IArtifact artifact, String name) {
     //
-    IArtifact testGroup = getRootArtifact().getDependencyModel().createArtifactContainer(name, name,
-        ArtifactType.Module);
+    IBundleMakerArtifact testGroup = (IBundleMakerArtifact) getRootArtifact().getDependencyModel()
+        .createArtifactContainer(name, name, ArtifactType.Module);
     artifact.addArtifact(testGroup);
     return testGroup;
   }
