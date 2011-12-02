@@ -54,21 +54,21 @@ public class Dependency implements IDependency {
     IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
 
     if (extensionRegistry != null) {
-    IExtensionPoint extensionPoint = extensionRegistry
+      IExtensionPoint extensionPoint = extensionRegistry
           .getExtensionPoint("org.bundlemaker.analysis.dependencyVisitors");
-    if (extensionPoint != null) {
-      for (IExtension extension : extensionPoint.getExtensions()) {
-        for (IConfigurationElement element : extension.getConfigurationElements()) {
-          try {
-            DependencyVisitor dependencyVisitor = (DependencyVisitor) element.createExecutableExtension(CLAZZ);
-            dependencyVisitors.add(dependencyVisitor);
-          } catch (Exception e) {
-            e.printStackTrace();
+      if (extensionPoint != null) {
+        for (IExtension extension : extensionPoint.getExtensions()) {
+          for (IConfigurationElement element : extension.getConfigurationElements()) {
+            try {
+              DependencyVisitor dependencyVisitor = (DependencyVisitor) element.createExecutableExtension(CLAZZ);
+              dependencyVisitors.add(dependencyVisitor);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           }
         }
       }
     }
-  }
   }
 
   public Dependency(IArtifact from, IArtifact to) {
@@ -95,12 +95,12 @@ public class Dependency implements IDependency {
 
   protected void ignoreDependencyNotification() {
     for (DependencyVisitor dependencyVisitor : dependencyVisitors) {
-    	try {
-      dependencyVisitor.addIgnoreDependency(this);
-    	} catch (RuntimeException ex) {
-    		// TODO
-    		ex.printStackTrace();
-    	}
+      try {
+        dependencyVisitor.addIgnoreDependency(this);
+      } catch (RuntimeException ex) {
+        // TODO
+        ex.printStackTrace();
+      }
     }
   }
 
@@ -165,11 +165,11 @@ public class Dependency implements IDependency {
     StringBuffer sb = new StringBuffer();
 
     sb.append("Dependency( ");
-    sb.append(this.getFrom().getName());
+    sb.append(this.getFrom().getQualifiedName());
     sb.append(" ");
     sb.append(dependencyKind);
     sb.append(" ");
-    sb.append(this.getTo().getName());
+    sb.append(this.getTo().getQualifiedName());
     sb.append(" )");
 
     return sb.toString();
