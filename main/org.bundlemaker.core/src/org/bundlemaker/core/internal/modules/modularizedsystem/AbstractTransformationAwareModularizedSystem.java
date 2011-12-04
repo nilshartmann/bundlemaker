@@ -143,7 +143,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     // step 3: create the type modules
     for (IFileBasedContent fileBasedContent : getProjectDescription().getFileBasedContent()) {
-      if (!fileBasedContent.isResourceContent()) {
+      if (!fileBasedContent.isAnalyze()) {
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
         // TODO!!
         try {

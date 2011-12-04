@@ -24,7 +24,6 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -105,11 +104,6 @@ public class FileBasedContent implements IModifiableFileBasedContent {
     return Collections.unmodifiableSet(_binaryPaths);
   }
 
-  @Override
-  public boolean isResourceContent() {
-    return isAnalyze();
-  }
-
   public boolean isAnalyze() {
     return _analyze.isAnalyze();
   }
@@ -179,33 +173,13 @@ public class FileBasedContent implements IModifiableFileBasedContent {
   }
 
   @Override
-  public boolean isAnalyzeSourceResources() {
-    return _analyze == AnalyzeMode.BINARIES_AND_SOURCES;
-  }
-
-  @Override
-  public IResource getResource(IPath path, ContentType type) {
-    return isAnalyze() ? _resourceContent.getResource(path, type) : null;
-  }
-
-  @Override
   public Set<? extends IResource> getResources(ContentType type) {
     return isAnalyze() ? _resourceContent.getResources(type) : EMPTY_RESOURCE_SET;
   }
 
   @Override
-  public IResource getBinaryResource(IPath path) {
-    return isAnalyze() ? _resourceContent.getBinaryResource(path) : null;
-  }
-
-  @Override
   public Set<? extends IResource> getBinaryResources() {
     return isAnalyze() ? _resourceContent.getBinaryResources() : EMPTY_RESOURCE_SET;
-  }
-
-  @Override
-  public IResource getSourceResource(IPath path) {
-    return isAnalyze() ? _resourceContent.getSourceResource(path) : null;
   }
 
   @Override

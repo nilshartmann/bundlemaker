@@ -204,7 +204,7 @@ public class ModelSetup {
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
         // we only have check resource content
-        if (fileBasedContent.isResourceContent()) {
+        if (fileBasedContent.isAnalyze()) {
 
           //
           if (LOG) {

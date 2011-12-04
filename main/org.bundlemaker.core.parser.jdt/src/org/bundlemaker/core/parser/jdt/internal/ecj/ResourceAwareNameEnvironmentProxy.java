@@ -3,6 +3,7 @@ package org.bundlemaker.core.parser.jdt.internal.ecj;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
@@ -51,7 +52,8 @@ public class ResourceAwareNameEnvironmentProxy implements INameEnvironment {
     //
     for (IFileBasedContent content : projectDescription.getFileBasedContent()) {
 
-      if (content.isResourceContent() && !content.getSourceResources().isEmpty() && content.isAnalyzeSourceResources()) {
+      if (content.isAnalyze() && !content.getSourceResources().isEmpty()
+          && content.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES) {
 
         for (IResource resource : content.getSourceResources()) {
 

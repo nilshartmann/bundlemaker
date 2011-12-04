@@ -3,6 +3,7 @@ package org.bundlemaker.core.ui.editor;
 import java.util.LinkedList;
 import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.eclipse.core.runtime.Assert;
@@ -68,7 +69,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _binaryRoots = stringList(existingContent.getBinaryRootPaths());
     _sourceRoots = stringList(existingContent.getSourceRootPaths());
     _analyze = existingContent.isAnalyze();
-    _analyzeSources = existingContent.isAnalyzeSourceResources();
+    _analyzeSources = existingContent.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
 
     configureDialog();
   }
@@ -160,7 +161,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     }
 
     _analyzeButton.setSelection(_originalContent.isAnalyze());
-    _analyzeSourcesButton.setSelection(_originalContent.isAnalyzeSourceResources());
+    _analyzeSourcesButton.setSelection(_originalContent.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES);
   }
 
   private void createHeadSection(Composite dialogComposite) {

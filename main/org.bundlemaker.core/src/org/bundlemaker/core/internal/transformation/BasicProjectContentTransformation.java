@@ -27,7 +27,7 @@ public class BasicProjectContentTransformation implements ITransformation {
     // iterate over the file based content
     for (IFileBasedContent fileBasedContent : modularizedSystem.getProjectDescription().getFileBasedContent()) {
 
-      if (fileBasedContent.isResourceContent()) {
+      if (fileBasedContent.isAnalyze()) {
 
         // create new module
         IModifiableResourceModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent

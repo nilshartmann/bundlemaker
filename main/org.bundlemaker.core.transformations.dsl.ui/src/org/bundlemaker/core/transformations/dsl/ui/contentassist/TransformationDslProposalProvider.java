@@ -78,7 +78,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
     super.completeModuleIdentifier_Modulename(model, assignment, context, acceptor);
     List<? extends IFileBasedContent> fileBasedContent = getFileBasedContent(model);
     for (IFileBasedContent iFileBasedContent : fileBasedContent) {
-      if (iFileBasedContent.isResourceContent()) {
+      if (iFileBasedContent.isAnalyze()) {
         String moduleName = getValueConverter().toString(iFileBasedContent.getName(), "MODULEID");
         // Create completion proposal
         ICompletionProposal completionProposal = createCompletionProposal(moduleName, context);
@@ -105,7 +105,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
     ModuleIdentifier moduleIdentifier = (ModuleIdentifier) model;
     List<? extends IFileBasedContent> fileBasedContent = getFileBasedContent(model);
     for (IFileBasedContent iFileBasedContent : fileBasedContent) {
-      if (iFileBasedContent.isResourceContent()) {
+      if (iFileBasedContent.isAnalyze()) {
         if (moduleIdentifier.getModulename() == null
             || moduleIdentifier.getModulename().equals(iFileBasedContent.getName())) {
 

@@ -179,7 +179,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       fileBasedContent.initialize(this);
 
       //
-      if (fileBasedContent.isResourceContent()) {
+      if (fileBasedContent.isAnalyze()) {
 
         binaryResourcesCount += fileBasedContent.getModifiableResourceContent().getModifiableBinaryResources().size();
 
