@@ -266,14 +266,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.com.springsource.util.osgi.internal"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="com.springsource.slf4j.api"
          download-size="0"
          install-size="0"
