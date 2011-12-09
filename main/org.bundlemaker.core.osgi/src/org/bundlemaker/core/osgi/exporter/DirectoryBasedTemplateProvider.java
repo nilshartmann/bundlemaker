@@ -88,7 +88,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
    * 
    * @return
    */
-  private final File getTemplateRootDirectory() {
+  public final File getTemplateRootDirectory() {
     return _templateRootDirectory;
   }
 
@@ -158,7 +158,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
    * 
    * @return
    */
-  private final boolean hasModuleTemplateDirectory(IResourceModule resourceModule) {
+  public final boolean hasModuleTemplateDirectory(IResourceModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
@@ -171,7 +171,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
    * 
    * @return
    */
-  private final File getModuleTemplateDirectory(IResourceModule resourceModule) {
+  public final File getModuleTemplateDirectory(IResourceModule resourceModule) {
 
     //
     Assert.isNotNull(resourceModule);

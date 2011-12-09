@@ -232,6 +232,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 
       // step 2a: if the package is contained in exactly one module, we can use 'Import-Package'
       if (forceImportPackage(packageEntry.getKey(), packageEntry.getValue())
+          || DependencyStyle.STRICT_IMPORT_PACKAGE.equals(getManifestPreferences().getDependencyStyle())
           || (packageEntry.getValue().size() == 1 && !DependencyStyle.STRICT_REQUIRE_BUNDLE
               .equals(getManifestPreferences().getDependencyStyle()))) {
 
@@ -419,7 +420,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
         for (Iterator<String> iterator = transitiveClosure.iterator(); iterator.hasNext();) {
           stringBuilder.append(iterator.next());
           if (iterator.hasNext()) {
-            stringBuilder.append(" ,");
+            stringBuilder.append(", ");
           }
         }
         getBundleManifest().setHeader(IManifestConstants.TRANSITIVE_CLOSURE, stringBuilder.toString());
