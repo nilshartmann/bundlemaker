@@ -53,7 +53,16 @@ public interface IBundleMakerProjectDescription {
    *          the identifier
    * @return the {@link IFileBasedContent} with the specified identifier.
    */
+  // TODO: REMOVE
   IFileBasedContent getFileBasedContent(String id);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  List<? extends IFileBasedContentProvider> getFileBasedContentProviders();
 
   /**
    * <p>

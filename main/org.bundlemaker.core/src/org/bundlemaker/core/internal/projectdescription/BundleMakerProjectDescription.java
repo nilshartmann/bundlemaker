@@ -27,6 +27,8 @@ import org.bundlemaker.core.internal.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IFileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.modifiable.FileBasedContent;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.resource.IResource;
@@ -44,28 +46,31 @@ import org.eclipse.core.variables.VariablesPlugin;
 public class BundleMakerProjectDescription implements IModifiableBundleMakerProjectDescription {
 
   /** - */
-  private static NumberFormat    FORMATTER  = new DecimalFormat("000000");
+  private static NumberFormat                       FORMATTER  = new DecimalFormat("000000");
 
   /** - */
-  private List<FileBasedContent> _fileBasedContent;
+  private List<FileBasedContent>                    _fileBasedContent;
+
+  /** - */
+  private List<? extends IFileBasedContentProvider> _fileBasedContentProvider;
 
   /** the resource list */
-  private List<ResourceStandin>  _sourceResources;
+  private List<ResourceStandin>                     _sourceResources;
 
   /** the resource list */
-  private List<ResourceStandin>  _binaryResources;
+  private List<ResourceStandin>                     _binaryResources;
 
   /** - */
-  private String                 _jre;
+  private String                                    _jre;
 
   /** - */
-  private boolean                _initialized;
+  private boolean                                   _initialized;
 
   /** - */
-  private int                    _currentId = 0;
+  private int                                       _currentId = 0;
 
   /** - */
-  private BundleMakerProject     _bundleMakerProject;
+  private BundleMakerProject                        _bundleMakerProject;
 
   /**
    * <p>
@@ -78,6 +83,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
 
     //
     _fileBasedContent = new ArrayList<FileBasedContent>();
+    _fileBasedContentProvider = new ArrayList<IFileBasedContentProvider>();
     _sourceResources = new ArrayList<ResourceStandin>();
     _binaryResources = new ArrayList<ResourceStandin>();
     _bundleMakerProject = bundleMakerProject;
@@ -95,9 +101,23 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * {@inheritDoc}
    */
   @Override
-  public List<? extends IFileBasedContent> getFileBasedContent() {
+  public List<? extends IFileBasedContentProvider> getFileBasedContentProviders() {
+    return Collections.unmodifiableList(_fileBasedContentProvider);
+  }
 
-    //
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<? extends IFileBasedContentProvider> getModifiableFileBasedContentProvider() {
+    return _fileBasedContentProvider;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<? extends IFileBasedContent> getFileBasedContent() {
     return Collections.unmodifiableList(_fileBasedContent);
   }
 
@@ -105,6 +125,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * {@inheritDoc}
    */
   @Override
+  // TODO
   public IFileBasedContent getFileBasedContent(String id) {
     //
     return getModifiableFileBasedContent(id);
@@ -341,11 +362,11 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * 
    * @param resource
    */
-  void addSourceResource(ResourceStandin resourceStandin) {
+  public void addSourceResource(ResourceStandin resourceStandin) {
     _sourceResources.add(resourceStandin);
   }
 
-  void addBinaryResource(ResourceStandin resourceStandin) {
+  public void addBinaryResource(ResourceStandin resourceStandin) {
     _binaryResources.add(resourceStandin);
   }
 
