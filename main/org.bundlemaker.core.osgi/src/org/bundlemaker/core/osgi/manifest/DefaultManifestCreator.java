@@ -278,8 +278,9 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     IModuleArtifact moduleArtifact = moduleArtifacts.get(0);
 
     // Rule: filter self hosted packages
-    if (moduleArtifact.isVirtual() || moduleArtifact.getAssociatedModule().equals(getResourceModule())
-        || ManifestUtils.isHostForResourceModule(moduleArtifact.getAssociatedModule(), getResourceModule())) {
+    if (moduleArtifact.getAssociatedModule() != null
+        && (moduleArtifact.getAssociatedModule().equals(getResourceModule()) || ManifestUtils.isHostForResourceModule(
+            moduleArtifact.getAssociatedModule(), getResourceModule()))) {
       return;
     }
 
