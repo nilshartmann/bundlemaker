@@ -15,6 +15,7 @@ import java.util.List;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IFileBasedContentProvider;
 import org.eclipse.core.runtime.CoreException;
 
 /**
@@ -46,6 +47,14 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * @return a (modifiable) list with all the defined {@link IModifiableFileBasedContent}.
    */
   List<? extends IModifiableFileBasedContent> getModifiableFileBasedContent();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  List<? extends IFileBasedContentProvider> getModifiableFileBasedContentProvider();
 
   /**
    * <p>

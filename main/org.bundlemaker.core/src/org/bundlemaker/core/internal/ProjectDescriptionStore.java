@@ -17,7 +17,6 @@ import java.io.InputStream;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.projectdescription.ResourceContent;
 import org.bundlemaker.core.internal.projectdescription.RootPath;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
@@ -25,6 +24,7 @@ import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDesc
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.modifiable.FileBasedContent;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
