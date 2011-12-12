@@ -44,8 +44,8 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
   private IBundleMakerArtifact _missingTypesArtifact;
 
   @Before
-  public void init() throws CoreException {
-    super.init();
+  public void before() throws CoreException {
+    super.before();
 
     // prepare the model
     assertTypeCount(1438);

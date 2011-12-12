@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.internal.CenterImageLabelProvider;
@@ -33,8 +33,8 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
   @Override
   public Image getImage(Object element) {
 
-    if (element instanceof IFileBasedContent) {
-      return getImageForFileBasedContent((IFileBasedContent) element);
+    if (element instanceof IBundleMakerProjectContent) {
+      return getImageForFileBasedContent((IBundleMakerProjectContent) element);
     }
 
     if (element instanceof IRootPath) {
@@ -62,7 +62,7 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
    * @param element
    * @return
    */
-  private Image getImageForFileBasedContent(IFileBasedContent content) {
+  private Image getImageForFileBasedContent(IBundleMakerProjectContent content) {
     Image image = null;
 
     switch (_column) {
@@ -94,8 +94,8 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       return null;
     }
 
-    if (element instanceof IFileBasedContent) {
-      IFileBasedContent content = (IFileBasedContent) element;
+    if (element instanceof IBundleMakerProjectContent) {
+      IBundleMakerProjectContent content = (IBundleMakerProjectContent) element;
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 

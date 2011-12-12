@@ -35,7 +35,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.projectdescription.IRootPath;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -142,7 +142,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     subMonitor.worked(10);
 
     // step 3: create the type modules
-    for (IFileBasedContent fileBasedContent : getProjectDescription().getFileBasedContent()) {
+    for (IBundleMakerProjectContent fileBasedContent : getProjectDescription().getContent()) {
       if (!fileBasedContent.isAnalyze()) {
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
         // TODO!!

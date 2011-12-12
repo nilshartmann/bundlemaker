@@ -11,6 +11,8 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -26,7 +28,7 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.Test;
 
-public class AdditionalContentTest {
+public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
 
   @Test
   public void test() throws CoreException, IOException {
@@ -65,8 +67,11 @@ public class AdditionalContentTest {
 
     //
     JDTFileBaseContentProvider provider = new JDTFileBaseContentProvider(javaProject);
-    System.out.println(provider.getFileBaseContent());
-
+    for (IBundleMakerProjectContent fileBasedContent : provider.getBundleMakerProjectContent(getBundleMakerProject())) {
+      System.out.println(fileBasedContent.getName() + "_" + fileBasedContent.getVersion());
+      System.out.println(" - " + fileBasedContent.getBinaryResources());
+      System.out.println(" - " + fileBasedContent.getSourceResources());
+    }
   }
 
   /**
@@ -101,7 +106,7 @@ public class AdditionalContentTest {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param sourceLocation
    * @param targetLocation
    * @throws IOException

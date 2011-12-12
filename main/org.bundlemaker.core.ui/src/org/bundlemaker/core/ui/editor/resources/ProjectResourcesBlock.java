@@ -12,7 +12,6 @@ package org.bundlemaker.core.ui.editor.resources;
 
 import static java.lang.String.format;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,11 +23,10 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IRootPath;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.EditEntryDialog;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
@@ -430,79 +428,82 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
     return AnalyzeMode.DO_NOT_ANALYZE;
   }
 
-  private void moveUp() {
-    Collection<IModifiableFileBasedContent> selectedContents = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-    if (selectedContents.isEmpty()) {
-      return;
-    }
-
-    @SuppressWarnings("unchecked")
-    List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>) getBundleMakerProjectDescription()
-        .getModifiableFileBasedContent();
-    List<IModifiableFileBasedContent> newList = moveUp(modifiableFileBasedContent, selectedContents);
-
-    modifiableFileBasedContent.clear();
-    modifiableFileBasedContent.addAll(newList);
-
-    projectDescriptionChanged();
-
-  }
-
-  private void moveDown() {
-    Collection<IModifiableFileBasedContent> toMoveDown = getSelectedElementsOfType(IModifiableFileBasedContent.class);
-
-    if (toMoveDown.isEmpty()) {
-      return;
-    }
-
-    @SuppressWarnings("unchecked")
-    List<IModifiableFileBasedContent> fileBasedContent = (List<IModifiableFileBasedContent>) getBundleMakerProjectDescription()
-        .getModifiableFileBasedContent();
-    List<IModifiableFileBasedContent> newOrder = reverse(moveUp(reverse(fileBasedContent), toMoveDown));
-    fileBasedContent.clear();
-    fileBasedContent.addAll(newOrder);
-
-    projectDescriptionChanged();
-
-  }
-
-  /**
-   * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
-   * 
-   */
-  private List<IModifiableFileBasedContent> reverse(List<IModifiableFileBasedContent> p) {
-    List<IModifiableFileBasedContent> reverse = new ArrayList<IModifiableFileBasedContent>(p.size());
-    for (int i = p.size() - 1; i >= 0; i--) {
-      reverse.add(p.get(i));
-    }
-    return reverse;
-  }
-
-  /**
-   * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
-   * 
-   */
-  private List<IModifiableFileBasedContent> moveUp(List<IModifiableFileBasedContent> elements,
-      Collection<IModifiableFileBasedContent> move) {
-    int nElements = elements.size();
-    List<IModifiableFileBasedContent> res = new ArrayList<IModifiableFileBasedContent>(nElements);
-    IModifiableFileBasedContent floating = null;
-    for (int i = 0; i < nElements; i++) {
-      IModifiableFileBasedContent curr = elements.get(i);
-      if (move.contains(curr)) {
-        res.add(curr);
-      } else {
-        if (floating != null) {
-          res.add(floating);
-        }
-        floating = curr;
-      }
-    }
-    if (floating != null) {
-      res.add(floating);
-    }
-    return res;
-  }
+  // private void moveUp() {
+  // Collection<IModifiableFileBasedContent> selectedContents =
+  // getSelectedElementsOfType(IModifiableFileBasedContent.class);
+  // if (selectedContents.isEmpty()) {
+  // return;
+  // }
+  //
+  // @SuppressWarnings("unchecked")
+  // List<IModifiableFileBasedContent> modifiableFileBasedContent = (List<IModifiableFileBasedContent>)
+  // getBundleMakerProjectDescription()
+  // .getModifiableFileBasedContent();
+  // List<IModifiableFileBasedContent> newList = moveUp(modifiableFileBasedContent, selectedContents);
+  //
+  // modifiableFileBasedContent.clear();
+  // modifiableFileBasedContent.addAll(newList);
+  //
+  // projectDescriptionChanged();
+  //
+  // }
+  //
+  // private void moveDown() {
+  // Collection<IModifiableFileBasedContent> toMoveDown = getSelectedElementsOfType(IModifiableFileBasedContent.class);
+  //
+  // if (toMoveDown.isEmpty()) {
+  // return;
+  // }
+  //
+  // @SuppressWarnings("unchecked")
+  // List<IModifiableFileBasedContent> fileBasedContent = (List<IModifiableFileBasedContent>)
+  // getBundleMakerProjectDescription()
+  // .getModifiableFileBasedContent();
+  // List<IModifiableFileBasedContent> newOrder = reverse(moveUp(reverse(fileBasedContent), toMoveDown));
+  // fileBasedContent.clear();
+  // fileBasedContent.addAll(newOrder);
+  //
+  // projectDescriptionChanged();
+  //
+  // }
+  //
+  // /**
+  // * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
+  // *
+  // */
+  // private List<IModifiableFileBasedContent> reverse(List<IModifiableFileBasedContent> p) {
+  // List<IModifiableFileBasedContent> reverse = new ArrayList<IModifiableFileBasedContent>(p.size());
+  // for (int i = p.size() - 1; i >= 0; i--) {
+  // reverse.add(p.get(i));
+  // }
+  // return reverse;
+  // }
+  //
+  // /**
+  // * from org.eclipse.jdt.internal.ui.wizards.dialogfields.ListDialogField
+  // *
+  // */
+  // private List<IModifiableFileBasedContent> moveUp(List<IModifiableFileBasedContent> elements,
+  // Collection<IModifiableFileBasedContent> move) {
+  // int nElements = elements.size();
+  // List<IModifiableFileBasedContent> res = new ArrayList<IModifiableFileBasedContent>(nElements);
+  // IModifiableFileBasedContent floating = null;
+  // for (int i = 0; i < nElements; i++) {
+  // IModifiableFileBasedContent curr = elements.get(i);
+  // if (move.contains(curr)) {
+  // res.add(curr);
+  // } else {
+  // if (floating != null) {
+  // res.add(floating);
+  // }
+  // floating = curr;
+  // }
+  // }
+  // if (floating != null) {
+  // res.add(floating);
+  // }
+  // return res;
+  // }
 
   /**
    * Add content to the project description using the {@link ModifyProjectContentDialog}
@@ -537,9 +538,9 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
 
     for (TreePath treePath : paths) {
       Object element = treePath.getLastSegment();
-      if (element instanceof IFileBasedContent) {
-        IFileBasedContent content = (IFileBasedContent) element;
-        getBundleMakerProjectDescription().removeContent(content.getId());
+      if (element instanceof IBundleMakerProjectContent) {
+        IBundleMakerProjectContent content = (IBundleMakerProjectContent) element;
+        getBundleMakerProjectDescription().removeContentProvider(content.getId());
       }
       if (element instanceof IRootPath) {
         IRootPath rootPath = (IRootPath) element;

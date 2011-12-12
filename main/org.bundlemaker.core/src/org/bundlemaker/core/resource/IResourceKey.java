@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.resource;
 
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 
 /**
  * <p>
@@ -27,10 +27,10 @@ public interface IResourceKey extends IContentProvider {
 
   /**
    * <p>
-   * Returns the identifier of the {@link IFileBasedContent} that defines the resource.
+   * Returns the identifier of the {@link IBundleMakerProjectContent} that defines the resource.
    * </p>
    * 
-   * @return the identifier of the {@link IFileBasedContent} that defines the resource.
+   * @return the identifier of the {@link IBundleMakerProjectContent} that defines the resource.
    */
   String getContentId();
 

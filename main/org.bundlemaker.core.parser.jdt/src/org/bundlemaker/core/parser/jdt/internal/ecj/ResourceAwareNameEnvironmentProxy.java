@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
@@ -50,7 +50,7 @@ public class ResourceAwareNameEnvironmentProxy implements INameEnvironment {
     _sources = new HashMap<String, IResource>();
 
     //
-    for (IFileBasedContent content : projectDescription.getFileBasedContent()) {
+    for (IBundleMakerProjectContent content : projectDescription.getContent()) {
 
       if (content.isAnalyze() && !content.getSourceResources().isEmpty()
           && content.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES) {

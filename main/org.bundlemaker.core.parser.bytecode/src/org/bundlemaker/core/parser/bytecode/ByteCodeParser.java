@@ -14,7 +14,7 @@ import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
@@ -53,7 +53,7 @@ public class ByteCodeParser extends AbstractParser {
   }
 
   @Override
-  public void parseResource(IFileBasedContent content, IResourceKey resourceKey, IResourceCache cache) {
+  public void parseResource(IBundleMakerProjectContent content, IResourceKey resourceKey, IResourceCache cache) {
 
     // get the IModifiableResource
     IModifiableResource resource = cache.getOrCreateResource(resourceKey);

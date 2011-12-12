@@ -21,7 +21,9 @@ import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.modifiable.FileBasedContent;
+import org.bundlemaker.core.projectdescription.AbstractBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.util.StopWatch;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -76,11 +78,11 @@ public class ModelSetup {
    * @param modifiableFileBasedContent
    * @param dependencyStore
    */
-  public List<IProblem> setup(final List<FileBasedContent> fileBasedContents,
+  public List<IProblem> setup(final List<IBundleMakerProjectContent> projectContents,
       final IPersistentDependencyStore dependencyStore, IProgressMonitor mainMonitor)
       throws OperationCanceledException, CoreException {
 
-    Assert.isNotNull(fileBasedContents);
+    Assert.isNotNull(projectContents);
     Assert.isNotNull(dependencyStore);
 
     final List[] result = new List[1];
@@ -126,8 +128,7 @@ public class ModelSetup {
       StaticLog.log(LOG, "Compare and update...", new LoggableAction<Void>() {
         @Override
         public Void execute() {
-          result[0] = compareAndUpdate(fileBasedContents, storedResourcesMap, resourceCache,
-              progressMonitor.newChild(60));
+          result[0] = compareAndUpdate(projectContents, storedResourcesMap, resourceCache, progressMonitor.newChild(60));
           return null;
         }
       });
@@ -178,12 +179,12 @@ public class ModelSetup {
    * <p>
    * </p>
    * 
-   * @param fileBasedContents
+   * @param projectContents
    * @param storedResourcesMap
    * @param resourceCache
    * @param mainMonitor
    */
-  private List<IProblem> compareAndUpdate(List<FileBasedContent> fileBasedContents,
+  private List<IProblem> compareAndUpdate(List<IBundleMakerProjectContent> projectContents,
       Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
 
     //
@@ -193,18 +194,18 @@ public class ModelSetup {
     StopWatch stopWatch = null;
 
     //
-    int contentCount = fileBasedContents.size();
+    int contentCount = projectContents.size();
     SubMonitor subMonitor = SubMonitor.convert(mainMonitor, contentCount);
 
     try {
 
       //
-      for (FileBasedContent fileBasedContent : fileBasedContents) {
+      for (IBundleMakerProjectContent projectContent : projectContents) {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
         // we only have check resource content
-        if (fileBasedContent.isAnalyze()) {
+        if (projectContent.isAnalyze()) {
 
           //
           if (LOG) {
@@ -212,22 +213,22 @@ public class ModelSetup {
             stopWatch.start();
           }
 
-          SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (fileBasedContent
-              .getModifiableBinaryResources().size() + fileBasedContent.getModifiableSourceResources().size()));
+          SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (projectContent.getBinaryResources()
+              .size() + projectContent.getSourceResources().size()));
 
           // step 4.1: compute new and modified resources
           Set<ResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              fileBasedContent.getModifiableBinaryResources(), storedResourcesMap, resourceCache,
+              ((AbstractBundleMakerProjectContent) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
               new NullProgressMonitor());
 
           Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-              fileBasedContent.getModifiableSourceResources(), storedResourcesMap, resourceCache,
+              ((AbstractBundleMakerProjectContent) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
               new NullProgressMonitor());
 
           //
           if (LOG) {
             StaticLog.log(String.format(" - compare and update '%s_%s' - computeNewAndModifiedResources [%s ms]",
-                fileBasedContent.getName(), fileBasedContent.getVersion(), stopWatch.getElapsedTime()));
+                projectContent.getName(), projectContent.getVersion(), stopWatch.getElapsedTime()));
 
             StaticLog
                 .log(String.format("   - new/modified binary resources: %s", newAndModifiedBinaryResources.size()));
@@ -243,7 +244,7 @@ public class ModelSetup {
             resourceCache.getOrCreateResource(resourceStandin);
           }
 
-          resourceCache.setupTypeCache(fileBasedContent);
+          resourceCache.setupTypeCache(projectContent);
 
           // adjust work remaining
           int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
@@ -251,7 +252,7 @@ public class ModelSetup {
           resourceContentMonitor.setWorkRemaining(remaining);
 
           result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
-              newAndModifiedBinaryResources, resourceCache, fileBasedContent,
+              newAndModifiedBinaryResources, resourceCache, (FileBasedContent) projectContent,
               resourceContentMonitor.newChild(remaining));
 
         }

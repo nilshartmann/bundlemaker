@@ -44,14 +44,17 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
   }
 
   @Before
-  public void init() throws CoreException {
+  @Override
+  public void before() throws CoreException {
+
+    super.before();
 
     //
     addProjectDescription();
 
-    // 
+    //
     getBundleMakerProject().initialize(new ProgressMonitor());
-    
+
     // parse and open the project
     getBundleMakerProject().parseAndOpen(new ProgressMonitor());
 
@@ -71,8 +74,11 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     Assert.assertNotNull(module);
   }
 
-  @After
-  public void dispose() throws CoreException {
+  @Override
+  public void after() throws CoreException {
+
+    //
+    super.after();
 
     //
     _modularizedSystem = null;

@@ -93,4 +93,8 @@ public class RootPath implements IRootPath {
     return _binaryPath;
   }
 
+  @Override
+  public String toString() {
+    return "RootPath [_binaryPath=" + _binaryPath + ", _path=" + _path + "]";
+  }
 }

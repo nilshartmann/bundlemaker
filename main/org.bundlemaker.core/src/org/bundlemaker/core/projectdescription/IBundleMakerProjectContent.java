@@ -25,7 +25,7 @@ import org.bundlemaker.core.resource.IResource;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IFileBasedContent {
+public interface IBundleMakerProjectContent {
 
   /**
    * <p>
@@ -56,11 +56,11 @@ public interface IFileBasedContent {
 
   /**
    * <p>
-   * Returns the set of all binary paths that belongs to this {@link IFileBasedContent}. A {@link IFileBasedContent}
+   * Returns the set of all binary paths that belongs to this {@link IBundleMakerProjectContent}. A {@link IBundleMakerProjectContent}
    * <i>always</i> has one or more binary paths.
    * </p>
    * 
-   * @return the set of all binary paths that belongs to this {@link IFileBasedContent}.
+   * @return the set of all binary paths that belongs to this {@link IBundleMakerProjectContent}.
    */
   Set<IRootPath> getBinaryRootPaths();
 
@@ -136,5 +136,4 @@ public interface IFileBasedContent {
    * @return a Set of resources, never null.
    */
   Set<? extends IResource> getSourceResources();
-
 }

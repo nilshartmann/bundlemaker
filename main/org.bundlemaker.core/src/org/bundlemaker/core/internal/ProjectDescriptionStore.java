@@ -23,8 +23,9 @@ import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedCo
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IRootPath;
-import org.bundlemaker.core.projectdescription.modifiable.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -49,27 +50,30 @@ public class ProjectDescriptionStore {
     xmlProjectDescription.setJre(projectDescription.getJRE());
 
     // add the file based content
-    for (FileBasedContent content : projectDescription.getModifiableFileBasedContent()) {
+    // TODO
+    for (IBundleMakerProjectContentProvider contentProvider : projectDescription.getContentProviders()) {
 
-      XmlFileBasedContentType xmlFileBasedContent = new XmlFileBasedContentType();
-      xmlProjectDescription.getFileBasedContent().add(xmlFileBasedContent);
+      // TODO
+      if (contentProvider instanceof FileBasedContentProvider) {
 
-      xmlFileBasedContent.setId(content.getId());
-      xmlFileBasedContent.setName(content.getName());
-      xmlFileBasedContent.setVersion(content.getVersion());
-      xmlFileBasedContent.setAnalyzeMode(content.getAnalyzeMode().toString());
+        FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) contentProvider;
 
-      for (IRootPath path : content.getBinaryRootPaths()) {
-        xmlFileBasedContent.getBinaryPathNames().add(path.getUnresolvedPath().toString());
+        XmlFileBasedContentType xmlFileBasedContent = new XmlFileBasedContentType();
+        xmlProjectDescription.getFileBasedContent().add(xmlFileBasedContent);
+
+        xmlFileBasedContent.setId(contentProvider.getId());
+        xmlFileBasedContent.setName(fileBasedContentProvider.getFileBasedContent().getName());
+        xmlFileBasedContent.setVersion(fileBasedContentProvider.getFileBasedContent().getVersion());
+        xmlFileBasedContent.setAnalyzeMode(fileBasedContentProvider.getFileBasedContent().getAnalyzeMode().toString());
+        for (IRootPath path : fileBasedContentProvider.getFileBasedContent().getBinaryRootPaths()) {
+          xmlFileBasedContent.getBinaryPathNames().add(path.getUnresolvedPath().toString());
+        }
+        XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
+        xmlFileBasedContent.setResourceContent(xmlResourceContent);
+        for (IRootPath path : fileBasedContentProvider.getFileBasedContent().getSourceRootPaths()) {
+          xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
+        }
       }
-
-      XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
-      xmlFileBasedContent.setResourceContent(xmlResourceContent);
-
-      for (IRootPath path : content.getSourceRootPaths()) {
-        xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
-      }
-
     }
 
     //
@@ -116,10 +120,10 @@ public class ProjectDescriptionStore {
 
     for (XmlFileBasedContentType eFileBasedContent : xmlProjectDescription.getFileBasedContent()) {
 
-      FileBasedContent fileBasedContent = new FileBasedContent();
-      result.getModifiableFileBasedContent().add(fileBasedContent);
+      FileBasedContentProvider fileBasedContent = new FileBasedContentProvider();
+      result.addContentProvider(fileBasedContent);
 
-      fileBasedContent.setId(eFileBasedContent.getId());
+      fileBasedContent.getFileBasedContent().setId(eFileBasedContent.getId());
       fileBasedContent.setName(eFileBasedContent.getName());
       fileBasedContent.setVersion(eFileBasedContent.getVersion());
       fileBasedContent.setAnalyzeMode(AnalyzeMode.valueOf(eFileBasedContent.getAnalyzeMode()));
@@ -128,10 +132,9 @@ public class ProjectDescriptionStore {
         fileBasedContent.getModifiableBinaryPaths().add(new RootPath(path, true));
       }
 
-      ResourceContent resourceContent = fileBasedContent.getModifiableResourceContent();
+      ResourceContent resourceContent = fileBasedContent.getFileBasedContent().getModifiableResourceContent();
 
       for (String path : eFileBasedContent.getResourceContent().getSourcePathNames()) {
-
         resourceContent.getModifiableSourcePaths().add(new RootPath(path, false));
       }
     }

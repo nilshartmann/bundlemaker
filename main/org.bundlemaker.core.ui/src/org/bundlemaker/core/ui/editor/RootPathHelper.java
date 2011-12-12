@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.editor;
 
 import org.bundlemaker.core.projectdescription.IRootPath;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
+import org.bundlemaker.core.projectdescription.file.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;

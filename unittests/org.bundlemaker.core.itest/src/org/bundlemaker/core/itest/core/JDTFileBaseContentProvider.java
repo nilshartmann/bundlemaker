@@ -5,13 +5,19 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IFileBasedContentProvider;
-import org.bundlemaker.core.projectdescription.modifiable.FileBasedContent;
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentFactory;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.FileASTRequestor;
 
 /**
  * <p>
@@ -19,7 +25,7 @@ import org.eclipse.jdt.core.JavaModelException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JDTFileBaseContentProvider implements IFileBasedContentProvider {
+public class JDTFileBaseContentProvider implements IBundleMakerProjectContentProvider {
 
   /** - */
   private IJavaProject _javaProject;
@@ -57,12 +63,15 @@ public class JDTFileBaseContentProvider implements IFileBasedContentProvider {
 
   /**
    * {@inheritDoc}
+   * 
+   * @throws CoreException
    */
   @Override
-  public List<IFileBasedContent> getFileBaseContent() {
+  public List<IBundleMakerProjectContent> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+      throws CoreException {
 
     //
-    List<IFileBasedContent> fileBasedContents = new LinkedList<IFileBasedContent>();
+    List<IBundleMakerProjectContent> fileBasedContents = new LinkedList<IBundleMakerProjectContent>();
 
     //
     try {
@@ -80,11 +89,13 @@ public class JDTFileBaseContentProvider implements IFileBasedContentProvider {
           IPath classes = classpathEntry.getOutputLocation() != null ? classpathEntry.getOutputLocation()
               : _javaProject.getOutputLocation();
 
-          FileBasedContent basedContent = new FileBasedContent();
-          basedContent.setSourcePaths(new String[] { source.toOSString() });
-          basedContent.setBinaryPaths(new String[] { classes.toOSString() });
-          basedContent.setId(_id + "#" + counter);
-          fileBasedContents.add(basedContent);
+          FileBasedContentProvider contentProvider = FileBasedContentFactory.addContent("name", "1.2.3", _javaProject
+              .getProject().getLocation().append(classes.removeFirstSegments(1)).toOSString(), _javaProject
+              .getProject().getLocation().append(source.removeFirstSegments(1)).toOSString());
+
+          contentProvider.getFileBasedContent().initialize(bundleMakerProject.getProjectDescription());
+          
+          fileBasedContents.add(contentProvider.getFileBasedContent());
 
         } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
           System.out.println("CPE_CONTAINER: " + classpathEntry);

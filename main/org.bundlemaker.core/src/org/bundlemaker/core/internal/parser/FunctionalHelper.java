@@ -17,7 +17,7 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
-import org.bundlemaker.core.projectdescription.modifiable.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;

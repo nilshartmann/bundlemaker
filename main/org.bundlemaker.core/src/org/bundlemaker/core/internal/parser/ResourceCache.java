@@ -18,7 +18,7 @@ import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.TypeEnum;
@@ -215,7 +215,7 @@ public class ResourceCache implements IResourceCache {
    * @param fileBasedContent
    * @param map
    */
-  public void setupTypeCache(IFileBasedContent fileBasedContent) {
+  public void setupTypeCache(IBundleMakerProjectContent fileBasedContent) {
 
     // clear the type map
     _typeMap.clear();

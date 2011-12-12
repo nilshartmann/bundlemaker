@@ -89,10 +89,7 @@ public final class BundleMakerCore {
       // step 1: create the project
       bundleMakerProject = new BundleMakerProject(project);
 
-      // // step 2: initialize
-      // bundleMakerProject.initialize(progressMonitor);
-
-      // step 3: cache the bundle maker project
+      // step 2: cache the bundle maker project
       Activator.getDefault().cacheBundleMakerProject(project, bundleMakerProject);
     }
 

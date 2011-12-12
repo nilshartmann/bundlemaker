@@ -5,7 +5,7 @@ import java.util.Set;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -79,10 +79,10 @@ public class TestTypeSelector implements ITypeSelector {
       if (!contentID.equals(TestTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
 
         // get the file based content
-        IFileBasedContent fileBasedContent = _bundleMakerProjectDescription.getFileBasedContent(contentID);
+        IBundleMakerProjectContent fileBasedContent = _bundleMakerProjectDescription.getFileBasedContent(contentID);
 
         // get the index
-        int index = _bundleMakerProjectDescription.getFileBasedContent().indexOf(fileBasedContent);
+        int index = _bundleMakerProjectDescription.getContent().indexOf(fileBasedContent);
 
         //
         if (index < currentIndex) {

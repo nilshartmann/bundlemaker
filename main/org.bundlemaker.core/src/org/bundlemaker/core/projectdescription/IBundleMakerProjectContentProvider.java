@@ -2,13 +2,16 @@ package org.bundlemaker.core.projectdescription;
 
 import java.util.List;
 
+import org.bundlemaker.core.IBundleMakerProject;
+import org.eclipse.core.runtime.CoreException;
+
 /**
  * <p>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IFileBasedContentProvider {
+public interface IBundleMakerProjectContentProvider {
 
   /**
    * <p>
@@ -25,5 +28,6 @@ public interface IFileBasedContentProvider {
    * 
    * @return
    */
-  List<IFileBasedContent> getFileBaseContent();
+  List<IBundleMakerProjectContent> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+      throws CoreException;
 }
