@@ -51,9 +51,9 @@ public abstract class AbstractExportOsgiBundleTest extends AbstractJeditTest {
    * {@inheritDoc}
    */
   @Before
-  public void init() throws CoreException {
+  public void before() throws CoreException {
 
-    super.init();
+    super.before();
 
     //
     _resultDir = new File(System.getProperty("java.io.tmpdir"), "bm-test");
@@ -71,9 +71,9 @@ public abstract class AbstractExportOsgiBundleTest extends AbstractJeditTest {
    * {@inheritDoc}
    */
   @After
-  public void dispose() throws CoreException {
+  public void after() throws CoreException {
 
-    super.dispose();
+    super.after();
 
     _resultDir = null;
     _jeditmodule = null;

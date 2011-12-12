@@ -37,32 +37,25 @@ public interface IBundleMakerProjectDescription {
 
   /**
    * <p>
-   * Returns a list with all the defined {@link IFileBasedContent}.
+   * Returns a list with all the defined {@link IBundleMakerProjectContent}.
    * </p>
    * 
-   * @return a list with all the defined {@link IFileBasedContent}.
+   * @return a list with all the defined {@link IBundleMakerProjectContent}.
    */
-  List<? extends IFileBasedContent> getFileBasedContent();
+  List<? extends IBundleMakerProjectContent> getContent();
 
   /**
    * <p>
-   * Returns the {@link IFileBasedContent} with the specified identifier.
+   * Returns the {@link IBundleMakerProjectContent} with the specified identifier.
    * </p>
    * 
    * @param id
    *          the identifier
-   * @return the {@link IFileBasedContent} with the specified identifier.
+   * @return the {@link IBundleMakerProjectContent} with the specified identifier.
    */
   // TODO: REMOVE
-  IFileBasedContent getFileBasedContent(String id);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  List<? extends IFileBasedContentProvider> getFileBasedContentProviders();
+  @Deprecated
+  IBundleMakerProjectContent getFileBasedContent(String id);
 
   /**
    * <p>

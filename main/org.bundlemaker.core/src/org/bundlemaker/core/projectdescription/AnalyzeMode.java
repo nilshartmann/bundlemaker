@@ -11,7 +11,7 @@
 package org.bundlemaker.core.projectdescription;
 
 /**
- * Specifies how an {@link IFileBasedContent} entry in a {@link IBundleMakerProjectDescription} should be analyzed
+ * Specifies how an {@link IBundleMakerProjectContent} entry in a {@link IBundleMakerProjectDescription} should be analyzed
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 

@@ -81,9 +81,9 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
    * {@inheritDoc}
    */
   @Before
-  public void init() throws CoreException {
+  public void before() throws CoreException {
 
-    super.init();
+    super.before();
 
     // prepare
     getModularizedSystem().addModularizedSystemChangedListener(new TestListener());
