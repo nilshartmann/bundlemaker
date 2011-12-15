@@ -11,16 +11,16 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -32,46 +32,7 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
 
   @Test
   public void test() throws CoreException, IOException {
-
-    //
-    IProject project = createNewJavaProject("test");
-    IJavaProject javaProject = JavaCore.create(project);
-
-    Assert.assertNotNull(javaProject);
-
-    //
-    File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), "NoPrimaryTypeTest");
-    Assert.assertTrue(testDataDirectory.isDirectory());
-    copyDirectory(testDataDirectory, project.getLocation().toFile());
-
-    // step 2: 'unset' the class path
-    javaProject.setRawClasspath(null, null);
-
-    // step 3: create the entries list
-    List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
-
-    // step 3.1: add the vm path
-    IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-    IPath path = JavaRuntime.newJREContainerPath(vmInstall);
-    IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
-    entries.add(classpathEntry);
-
-    // TODO!!
-    //
-    classpathEntry = JavaCore.newSourceEntry(project.getFullPath().append("src"));
-    entries.add(classpathEntry);
-
-    // set the classpath
-    javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
-    javaProject.setOutputLocation(project.getFullPath().append("classes"), null);
-
-    //
-    JDTFileBaseContentProvider provider = new JDTFileBaseContentProvider(javaProject);
-    for (IBundleMakerProjectContent fileBasedContent : provider.getBundleMakerProjectContent(getBundleMakerProject())) {
-      System.out.println(fileBasedContent.getName() + "_" + fileBasedContent.getVersion());
-      System.out.println(" - " + fileBasedContent.getBinaryResources());
-      System.out.println(" - " + fileBasedContent.getSourceResources());
-    }
+    System.out.println("HHLAO");
   }
 
   /**
@@ -136,5 +97,64 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
       in.close();
       out.close();
     }
+  }
+
+  protected void addProjectDescription(IBundleMakerProject bundleMakerProject, File directory) throws CoreException {
+
+    Assert.assertTrue(directory.isDirectory());
+
+    //
+    IModifiableBundleMakerProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
+
+    // step 1:
+    projectDescription.clear();
+
+    //
+    IProject project = createNewJavaProject("test");
+    IJavaProject javaProject = JavaCore.create(project);
+
+    Assert.assertNotNull(javaProject);
+
+    //
+    File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), "NoPrimaryTypeTest");
+    Assert.assertTrue(testDataDirectory.isDirectory());
+    try {
+      copyDirectory(testDataDirectory, project.getLocation().toFile());
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+    // step 2: 'unset' the class path
+    javaProject.setRawClasspath(null, null);
+
+    // step 3: create the entries list
+    List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
+
+    // step 3.1: add the vm path
+    IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+    IPath path = JavaRuntime.newJREContainerPath(vmInstall);
+    IClasspathEntry classpathEntry = JavaCore.newContainerEntry(path);
+    entries.add(classpathEntry);
+
+    // TODO!!
+    //
+    classpathEntry = JavaCore.newSourceEntry(project.getFullPath().append("src"));
+    entries.add(classpathEntry);
+
+    // set the classpath
+    javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[0]), null);
+    javaProject.setOutputLocation(project.getFullPath().append("classes"), null);
+
+    //
+    JdtProjectContentProvider provider = new JdtProjectContentProvider();
+    provider.setJavaProject(javaProject);
+
+    // step 2: add the JRE
+    projectDescription.setJre(getDefaultVmName());
+    projectDescription.addContentProvider(provider);
+
+    //
+    projectDescription.save();
   }
 }

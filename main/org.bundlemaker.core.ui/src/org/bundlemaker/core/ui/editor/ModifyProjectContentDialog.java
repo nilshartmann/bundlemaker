@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IVariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -87,10 +87,10 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
   }
 
-  private static java.util.List<String> stringList(Set<IRootPath> paths) {
+  private static java.util.List<String> stringList(Set<IVariablePath> paths) {
     java.util.List<String> strings = new LinkedList<String>();
     if (paths != null) {
-      for (IRootPath path : paths) {
+      for (IVariablePath path : paths) {
         strings.add(RootPathHelper.getLabel(path));
       }
     }

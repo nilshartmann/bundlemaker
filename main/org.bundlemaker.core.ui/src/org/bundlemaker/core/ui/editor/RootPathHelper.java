@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor;
 
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IVariablePath;
 import org.bundlemaker.core.projectdescription.file.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.CoreException;
@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class RootPathHelper {
 
-  public static String getLabel(IRootPath rootPath) {
+  public static String getLabel(IVariablePath rootPath) {
     return String.valueOf(rootPath.getUnresolvedPath());
   }
 
@@ -32,7 +32,7 @@ public class RootPathHelper {
    * @param element
    * @return
    */
-  public static Image getImageForPath(IRootPath path) {
+  public static Image getImageForPath(IVariablePath path) {
     boolean isFolder;
     try {
       isFolder = path.getAsFile().isDirectory();
@@ -57,7 +57,7 @@ public class RootPathHelper {
    * @param path
    * @return
    */
-  public static ImageDescriptor getImageDescriptorForPath(IRootPath path) {
+  public static ImageDescriptor getImageDescriptorForPath(IVariablePath path) {
     boolean isFolder;
     try {
       isFolder = path.getAsFile().isDirectory();

@@ -12,6 +12,7 @@ package org.bundlemaker.core.internal;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;

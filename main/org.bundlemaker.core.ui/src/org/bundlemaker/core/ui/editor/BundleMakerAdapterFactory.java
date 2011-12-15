@@ -17,7 +17,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IVariablePath;
 import org.bundlemaker.core.projectdescription.file.IModifiableFileBasedContent;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -112,14 +112,14 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public ImageDescriptor getImageDescriptor(Object object) {
-      IRootPath path = (IRootPath) object;
+      IVariablePath path = (IVariablePath) object;
 
       return RootPathHelper.getImageDescriptorForPath(path);
     }
 
     @Override
     public String getLabel(Object o) {
-      IRootPath path = (IRootPath) o;
+      IVariablePath path = (IVariablePath) o;
       return RootPathHelper.getLabel(path);
     }
 
@@ -148,7 +148,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       return _fileBasedContentAdapter;
     }
 
-    if (adaptableObject instanceof IRootPath) {
+    if (adaptableObject instanceof IVariablePath) {
       return _rootPathAdapter;
     }
 
@@ -169,7 +169,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProject.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProjectDescription.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProjectContent.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IRootPath.class);
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IVariablePath.class);
 
   }
 

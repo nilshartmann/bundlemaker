@@ -16,5 +16,17 @@
          </run>
       </runtime>
    </extension>
+   
+   <extension
+         id="org.bundlemaker.core.projectdescription.file.FileBasedContentProvider"
+         point="org.bundlemaker.core.projectcontentprovider">
+      <projectContentProvider
+            class="org.bundlemaker.core.projectdescription.file.FileBasedContentProvider">
+         <jaxbObjectFactory
+               class="org.bundlemaker.core.content.file.xml.ObjectFactory">
+         </jaxbObjectFactory>
+      </projectContentProvider>
+   </extension>
+   
 
 </plugin>

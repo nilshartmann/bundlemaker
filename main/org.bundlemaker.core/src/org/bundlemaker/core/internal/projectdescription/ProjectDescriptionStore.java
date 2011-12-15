@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal;
+package org.bundlemaker.core.internal.projectdescription;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -16,16 +16,10 @@ import java.io.InputStream;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.ResourceContent;
-import org.bundlemaker.core.internal.projectdescription.RootPath;
-import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
+import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.model.internal.projectdescription.xml.ContentProviderFactoryType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
-import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IRootPath;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -53,27 +47,13 @@ public class ProjectDescriptionStore {
     // TODO
     for (IBundleMakerProjectContentProvider contentProvider : projectDescription.getContentProviders()) {
 
-      // TODO
-      if (contentProvider instanceof FileBasedContentProvider) {
+      ContentProviderFactoryType providerFactoryType = new ContentProviderFactoryType();
 
-        FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) contentProvider;
+      providerFactoryType.setContentProviderFactoryClass(contentProvider.getClass().getName());
+      providerFactoryType.setContentProviderFactoryId(contentProvider.getId());
+      providerFactoryType.setAny(contentProvider.getConfiguration());
 
-        XmlFileBasedContentType xmlFileBasedContent = new XmlFileBasedContentType();
-        xmlProjectDescription.getFileBasedContent().add(xmlFileBasedContent);
-
-        xmlFileBasedContent.setId(contentProvider.getId());
-        xmlFileBasedContent.setName(fileBasedContentProvider.getFileBasedContent().getName());
-        xmlFileBasedContent.setVersion(fileBasedContentProvider.getFileBasedContent().getVersion());
-        xmlFileBasedContent.setAnalyzeMode(fileBasedContentProvider.getFileBasedContent().getAnalyzeMode().toString());
-        for (IRootPath path : fileBasedContentProvider.getFileBasedContent().getBinaryRootPaths()) {
-          xmlFileBasedContent.getBinaryPathNames().add(path.getUnresolvedPath().toString());
-        }
-        XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
-        xmlFileBasedContent.setResourceContent(xmlResourceContent);
-        for (IRootPath path : fileBasedContentProvider.getFileBasedContent().getSourceRootPaths()) {
-          xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
-        }
-      }
+      xmlProjectDescription.getContentProviderFactory().add(providerFactoryType);
     }
 
     //
@@ -118,24 +98,24 @@ public class ProjectDescriptionStore {
     result.setCurrentId(xmlProjectDescription.getCurrentId());
     result.setJre(xmlProjectDescription.getJre());
 
-    for (XmlFileBasedContentType eFileBasedContent : xmlProjectDescription.getFileBasedContent()) {
+    //
+    JaxbCompoundClassLoader jaxbCompoundClassLoader = new JaxbCompoundClassLoader();
 
-      FileBasedContentProvider fileBasedContent = new FileBasedContentProvider();
-      result.addContentProvider(fileBasedContent);
+    for (ContentProviderFactoryType type : xmlProjectDescription.getContentProviderFactory()) {
 
-      fileBasedContent.getFileBasedContent().setId(eFileBasedContent.getId());
-      fileBasedContent.setName(eFileBasedContent.getName());
-      fileBasedContent.setVersion(eFileBasedContent.getVersion());
-      fileBasedContent.setAnalyzeMode(AnalyzeMode.valueOf(eFileBasedContent.getAnalyzeMode()));
+      try {
 
-      for (String path : eFileBasedContent.getBinaryPathNames()) {
-        fileBasedContent.getModifiableBinaryPaths().add(new RootPath(path, true));
-      }
+        System.out.println(xmlProjectDescription.getClass().getClassLoader());
+        Class<?> clazz = jaxbCompoundClassLoader.getCompoundClassLoader().loadClass(
+            type.getContentProviderFactoryClass());
+        IBundleMakerProjectContentProvider instObject = (IBundleMakerProjectContentProvider) clazz.newInstance();
+        instObject.setId(type.getContentProviderFactoryId());
+        instObject.setConfiguration(type.getAny());
+        result.addContentProvider(instObject, false);
 
-      ResourceContent resourceContent = fileBasedContent.getFileBasedContent().getModifiableResourceContent();
-
-      for (String path : eFileBasedContent.getResourceContent().getSourcePathNames()) {
-        resourceContent.getModifiableSourcePaths().add(new RootPath(path, false));
+      } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
       }
     }
 

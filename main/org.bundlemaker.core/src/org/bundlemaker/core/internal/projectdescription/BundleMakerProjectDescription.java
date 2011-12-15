@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.projectdescription;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -20,12 +22,11 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.ProjectDescriptionStore;
-import org.bundlemaker.core.internal.resource.ResourceStandin;
-import org.bundlemaker.core.projectdescription.AbstractBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.AbstractContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -37,6 +38,9 @@ import org.eclipse.core.runtime.CoreException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class BundleMakerProjectDescription implements IModifiableBundleMakerProjectDescription {
+
+  /** - */
+  private static NumberFormat                      FORMATTER       = new DecimalFormat("000000");
 
   /** the current identifier */
   private int                                      _currentId      = 0;
@@ -51,10 +55,10 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   private List<IBundleMakerProjectContentProvider> _projectContentProviders;
 
   /** the resource list */
-  private List<ResourceStandin>                    _sourceResources;
+  private List<IResourceStandin>                   _sourceResources;
 
   /** the resource list */
-  private List<ResourceStandin>                    _binaryResources;
+  private List<IResourceStandin>                   _binaryResources;
 
   /** - */
   private String                                   _jre;
@@ -77,8 +81,8 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     //
     _projectContent = new ArrayList<IBundleMakerProjectContent>();
     _projectContentProviders = new ArrayList<IBundleMakerProjectContentProvider>();
-    _sourceResources = new ArrayList<ResourceStandin>();
-    _binaryResources = new ArrayList<ResourceStandin>();
+    _sourceResources = new ArrayList<IResourceStandin>();
+    _binaryResources = new ArrayList<IResourceStandin>();
     _bundleMakerProject = bundleMakerProject;
   }
 
@@ -133,13 +137,6 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   }
 
   @Override
-  public int getNextId() {
-    synchronized (_identifierLock) {
-      return _currentId++;
-    }
-  }
-
-  @Override
   @Deprecated
   public IBundleMakerProjectContent getFileBasedContent(String id) {
     // TODO Auto-generated method stub
@@ -153,8 +150,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   public void addContentProvider(IBundleMakerProjectContentProvider contentProvider) {
     Assert.isNotNull(contentProvider);
 
-    //
-    _projectContentProviders.add(contentProvider);
+    addContentProvider(contentProvider, true);
   }
 
   /**
@@ -221,7 +217,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   public void removeContentProvider(String id) {
     for (Iterator<IBundleMakerProjectContent> iterator = _projectContent.iterator(); iterator.hasNext();) {
 
-      AbstractBundleMakerProjectContent content = (AbstractBundleMakerProjectContent) iterator.next();
+      AbstractContent content = (AbstractContent) iterator.next();
 
       if (content.getId().equals(id)) {
         iterator.remove();
@@ -238,6 +234,24 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       _currentId = 0;
       _initialized = false;
       _jre = null;
+    }
+  }
+
+  public void addContentProvider(IBundleMakerProjectContentProvider contentProvider, boolean resetIdentifier) {
+    Assert.isNotNull(contentProvider);
+
+    //
+    _projectContentProviders.add(contentProvider);
+
+    //
+    if (resetIdentifier) {
+      contentProvider.setId(getNextContentProviderId());
+    }
+  }
+
+  public String getNextContentProviderId() {
+    synchronized (_identifierLock) {
+      return FORMATTER.format(_currentId++);
     }
   }
 
@@ -274,10 +288,10 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       _projectContent.addAll(projectContents);
     }
 
-    for (IBundleMakerProjectContent content : _projectContent) {
-      System.out.println(content.getSourceRootPaths());
-      System.out.println(content.getBinaryRootPaths());
-    }
+    // for (IBundleMakerProjectContent content : _projectContent) {
+    // System.out.println(content.getSourceRootPaths());
+    // System.out.println(content.getBinaryRootPaths());
+    // }
 
     // //
     // int sourceResourcesCount = 0;
@@ -338,11 +352,11 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     return (List<IResource>) result;
   }
 
-  public final List<ResourceStandin> getSourceResourceStandins() {
+  public final List<IResourceStandin> getSourceResourceStandins() {
     return Collections.unmodifiableList(_sourceResources);
   }
 
-  public final List<ResourceStandin> getBinaryResourceStandins() {
+  public final List<IResourceStandin> getBinaryResourceStandins() {
     return Collections.unmodifiableList(_binaryResources);
   }
 
@@ -352,11 +366,11 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * 
    * @param resource
    */
-  public void addSourceResource(ResourceStandin resourceStandin) {
+  public void addSourceResource(IResourceStandin resourceStandin) {
     _sourceResources.add(resourceStandin);
   }
 
-  public void addBinaryResource(ResourceStandin resourceStandin) {
+  public void addBinaryResource(IResourceStandin resourceStandin) {
     _binaryResources.add(resourceStandin);
   }
 

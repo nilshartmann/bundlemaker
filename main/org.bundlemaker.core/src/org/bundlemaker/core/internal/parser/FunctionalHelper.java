@@ -17,7 +17,8 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
@@ -27,8 +28,8 @@ import org.eclipse.core.runtime.OperationCanceledException;
 
 public class FunctionalHelper {
 
-  static List<IProblem> parseNewOrModifiedResources(FileBasedContent fileBasedContent,
-      Collection<ResourceStandin> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
+  static List<IProblem> parseNewOrModifiedResources(IBundleMakerProjectContent content,
+      Collection<IResourceStandin> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
       IProgressMonitor monitor) throws CoreException {
 
     //
@@ -41,14 +42,14 @@ public class FunctionalHelper {
 
       if (parser.getParserType().equals(parserType)) {
 
-        for (ResourceStandin resourceStandin : resources) {
+        for (IResourceStandin resourceStandin : resources) {
 
           // check if the operation has been canceled
           FunctionalHelper.checkIfCanceled(monitor);
 
           //
           if (parser.canParse(resourceStandin)) {
-            parser.parseResource(fileBasedContent, resourceStandin, resourceCache);
+            parser.parseResource(content, resourceStandin, resourceCache);
             result.addAll(parser.getProblems());
           }
 
@@ -71,21 +72,21 @@ public class FunctionalHelper {
    * @param monitor
    * @return
    */
-  static Set<ResourceStandin> computeNewAndModifiedResources(Collection<ResourceStandin> resourceStandins,
+  static Set<IResourceStandin> computeNewAndModifiedResources(Collection<IResourceStandin> resourceStandins,
       Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor monitor) {
 
     //
     monitor.beginTask("", resourceStandins.size());
 
     //
-    Set<ResourceStandin> result;
+    Set<IResourceStandin> result;
 
     try {
 
-      result = new HashSet<ResourceStandin>();
+      result = new HashSet<IResourceStandin>();
 
       //
-      for (ResourceStandin resourceStandin : resourceStandins) {
+      for (IResourceStandin resourceStandin : resourceStandins) {
 
         // check if the operation has been canceled
         checkIfCanceled(monitor);
@@ -111,7 +112,7 @@ public class FunctionalHelper {
     return result;
   }
 
-  static void associateResourceStandinsWithResources(Collection<ResourceStandin> resourceStandins,
+  static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
       Map<IResourceKey, Resource> map, boolean isSource, IProgressMonitor monitor) {
 
     Assert.isNotNull(resourceStandins);
@@ -119,7 +120,7 @@ public class FunctionalHelper {
     Assert.isNotNull(monitor);
 
     //
-    for (ResourceStandin resourceStandin : resourceStandins) {
+    for (IResourceStandin resourceStandin : resourceStandins) {
 
       // check if the operation has been canceled
       checkIfCanceled(monitor);
@@ -136,7 +137,7 @@ public class FunctionalHelper {
 
       // perform some checks
       // TODO: MAYBE REMOVE?
-      Assert.isNotNull(resourceStandin.getResource());
+      Assert.isNotNull(((ResourceStandin) resourceStandin).getResource());
       for (IType type : resource.getContainedTypes()) {
         Assert.isNotNull(type.getBinaryResource(), resourceStandin.toString());
         Assert.isTrue(type.hasBinaryResource());
@@ -158,15 +159,15 @@ public class FunctionalHelper {
    * @param resourceStandin
    * @param map
    */
-  static void setupResourceStandin(ResourceStandin resourceStandin, Resource resource, boolean isSource) {
+  static void setupResourceStandin(IResourceStandin resourceStandin, Resource resource, boolean isSource) {
 
     Assert.isNotNull(resourceStandin);
     Assert.isNotNull(resource, "No resource for " + resourceStandin.toString());
 
     // associate resource and resource stand-in...
-    resourceStandin.setResource(resource);
+    ((ResourceStandin) resourceStandin).setResource(resource);
     // ... and set the opposite
-    resource.setResourceStandin(resourceStandin);
+    resource.setResourceStandin((ResourceStandin) resourceStandin);
 
     // set the references
     Set<Reference> resourceReferences = new HashSet<Reference>();
@@ -208,7 +209,7 @@ public class FunctionalHelper {
     }
   }
 
-  static boolean hasToBeReparsed(ResourceStandin resourceStandin, Resource resource) {
+  static boolean hasToBeReparsed(IResourceStandin resourceStandin, Resource resource) {
 
     // resource has to be re-parsed if no resource was stored in the database
     if (resource == null) {
@@ -221,7 +222,7 @@ public class FunctionalHelper {
       // we can additionally check the hash values...
       if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
         if (!resourceStandin.hasHashvalue()) {
-          resourceStandin.computeHashvalue();
+          ((ResourceStandin) resourceStandin).computeHashvalue();
         }
 
         byte[] storedResourceHashValue = resource.getHashvalue();

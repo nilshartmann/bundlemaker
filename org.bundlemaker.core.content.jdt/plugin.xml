@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="org.bundlemaker.core.content.jdt.JdtProjectContentProvider"
+         name="JdtProjectContentProvider"
+         point="org.bundlemaker.core.projectcontentprovider">
+      <projectContentProvider
+            class="org.bundlemaker.core.content.jdt.JdtProjectContentProvider">
+         <jaxbObjectFactory
+               class="org.bundlemaker.core.content.jdt.xml.ObjectFactory">
+         </jaxbObjectFactory>
+      </projectContentProvider>
+   </extension>
+</plugin>

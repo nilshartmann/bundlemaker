@@ -15,6 +15,15 @@ public interface IBundleMakerProjectContentProvider {
 
   /**
    * <p>
+   * Sets the identifier.
+   * </p>
+   * 
+   * @param identifier
+   */
+  void setId(String identifier);
+
+  /**
+   * <p>
    * Returns the internal identifier of this content entry provider.
    * </p>
    * 
@@ -30,4 +39,20 @@ public interface IBundleMakerProjectContentProvider {
    */
   List<IBundleMakerProjectContent> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
       throws CoreException;
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Object getConfiguration();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param configuration
+   */
+  void setConfiguration(Object configuration);
 }

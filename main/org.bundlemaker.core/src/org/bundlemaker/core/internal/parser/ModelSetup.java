@@ -16,14 +16,13 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.AbstractBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.AbstractContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.util.StopWatch;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -217,13 +216,13 @@ public class ModelSetup {
               .size() + projectContent.getSourceResources().size()));
 
           // step 4.1: compute new and modified resources
-          Set<ResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((AbstractBundleMakerProjectContent) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
-              new NullProgressMonitor());
+          Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
+              ((AbstractContent) projectContent).getBinaryResourceStandins(), storedResourcesMap,
+              resourceCache, new NullProgressMonitor());
 
-          Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((AbstractBundleMakerProjectContent) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
-              new NullProgressMonitor());
+          Set<IResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
+              ((AbstractContent) projectContent).getSourceResourceStandins(), storedResourcesMap,
+              resourceCache, new NullProgressMonitor());
 
           //
           if (LOG) {
@@ -237,10 +236,10 @@ public class ModelSetup {
           }
 
           // step 4.2:
-          for (ResourceStandin resourceStandin : newAndModifiedBinaryResources) {
+          for (IResourceStandin resourceStandin : newAndModifiedBinaryResources) {
             resourceCache.getOrCreateResource(resourceStandin);
           }
-          for (ResourceStandin resourceStandin : newAndModifiedSourceResources) {
+          for (IResourceStandin resourceStandin : newAndModifiedSourceResources) {
             resourceCache.getOrCreateResource(resourceStandin);
           }
 
@@ -252,8 +251,7 @@ public class ModelSetup {
           resourceContentMonitor.setWorkRemaining(remaining);
 
           result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
-              newAndModifiedBinaryResources, resourceCache, (FileBasedContent) projectContent,
-              resourceContentMonitor.newChild(remaining));
+              newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
 
         }
 
@@ -268,8 +266,8 @@ public class ModelSetup {
   }
 
   private List<IProblem> multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
-      Collection<ResourceStandin> sourceResources, Collection<ResourceStandin> binaryResources,
-      ResourceCache resourceCache, FileBasedContent fileBasedContent, IProgressMonitor monitor) {
+      Collection<IResourceStandin> sourceResources, Collection<IResourceStandin> binaryResources,
+      ResourceCache resourceCache, IBundleMakerProjectContent fileBasedContent, IProgressMonitor monitor) {
 
     List<IProblem> result = new LinkedList<IProblem>();
 
@@ -287,10 +285,10 @@ public class ModelSetup {
       };
 
       //
-      for (ResourceStandin resourceStandin : binaryResources) {
+      for (IResourceStandin resourceStandin : binaryResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addBinaryResource(resourceStandin);
       }
-      for (ResourceStandin resourceStandin : sourceResources) {
+      for (IResourceStandin resourceStandin : sourceResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addSourceResource(resourceStandin);
       }
 
@@ -505,13 +503,13 @@ public class ModelSetup {
   public static class Directory {
 
     /** - */
-    private List<ResourceStandin> _binaryResources;
+    private List<IResourceStandin> _binaryResources;
 
     /** - */
-    private List<ResourceStandin> _sourceResources;
+    private List<IResourceStandin> _sourceResources;
 
     /** - */
-    private int                   _count = 0;
+    private int                    _count = 0;
 
     /**
      * <p>
@@ -519,8 +517,8 @@ public class ModelSetup {
      * </p>
      */
     public Directory() {
-      _binaryResources = new LinkedList<ResourceStandin>();
-      _sourceResources = new LinkedList<ResourceStandin>();
+      _binaryResources = new LinkedList<IResourceStandin>();
+      _sourceResources = new LinkedList<IResourceStandin>();
     }
 
     /**
@@ -529,7 +527,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addBinaryResource(ResourceStandin resourceStandin) {
+    public void addBinaryResource(IResourceStandin resourceStandin) {
       _binaryResources.add(resourceStandin);
       _count++;
     }
@@ -540,7 +538,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addSourceResource(ResourceStandin resourceStandin) {
+    public void addSourceResource(IResourceStandin resourceStandin) {
       _sourceResources.add(resourceStandin);
       _count++;
     }
@@ -551,7 +549,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<ResourceStandin> getBinaryResources() {
+    public List<IResourceStandin> getBinaryResources() {
       return _binaryResources;
     }
 
@@ -561,7 +559,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<ResourceStandin> getSourceResources() {
+    public List<IResourceStandin> getSourceResources() {
       return _sourceResources;
     }
 

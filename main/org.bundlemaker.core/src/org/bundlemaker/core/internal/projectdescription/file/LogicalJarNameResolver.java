@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.projectdescription;
+package org.bundlemaker.core.internal.projectdescription.file;
 
 import java.util.Enumeration;
 import java.util.jar.JarEntry;

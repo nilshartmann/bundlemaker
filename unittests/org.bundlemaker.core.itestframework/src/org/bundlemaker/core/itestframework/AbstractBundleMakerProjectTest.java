@@ -3,15 +3,12 @@ package org.bundlemaker.core.itestframework;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
-import java.rmi.activation.Activator;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentFactory;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -66,7 +63,7 @@ public abstract class AbstractBundleMakerProjectTest {
    */
   @Before
   public void before() throws CoreException {
-    
+
     //
     _testProjectName = computeTestProjectName();
 
@@ -157,15 +154,16 @@ public abstract class AbstractBundleMakerProjectTest {
     }
 
     //
-    projectDescription.addContentProvider(FileBasedContentFactory.addContent(_testProjectName, TEST_PROJECT_VERSION,
-        classes.getAbsolutePath(), sources != null ? sources.getAbsolutePath() : null));
+    FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, _testProjectName,
+        TEST_PROJECT_VERSION, classes.getAbsolutePath(), sources != null ? sources.getAbsolutePath() : null);
 
     // step 4: process the class path entries
     File libsDir = new File(directory, "libs");
     if (libsDir.exists()) {
       File[] jarFiles = libsDir.listFiles();
       for (File externalJar : jarFiles) {
-        projectDescription.addContentProvider(FileBasedContentFactory.addContent(externalJar.getAbsolutePath()));
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
+            externalJar.getAbsolutePath());
       }
     }
 
