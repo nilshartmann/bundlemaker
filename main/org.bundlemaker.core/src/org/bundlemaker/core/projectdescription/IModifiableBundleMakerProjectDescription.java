@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * Defines the interface of a bundle maker project description.
+ * Defines the interface of a modifiable bundle maker project description.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -35,14 +35,6 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * @param jre
    */
   void setJre(String jre);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  int getNextId();
 
   /**
    * <p>

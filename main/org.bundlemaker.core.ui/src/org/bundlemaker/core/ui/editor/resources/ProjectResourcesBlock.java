@@ -26,7 +26,7 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IVariablePath;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.EditEntryDialog;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
@@ -343,8 +343,8 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
       return;
     }
 
-    if (selectedObject instanceof IRootPath) {
-      IRootPath rootPath = (IRootPath) selectedObject;
+    if (selectedObject instanceof IVariablePath) {
+      IVariablePath rootPath = (IVariablePath) selectedObject;
 
       // open edit dialog
       String currentPath = RootPathHelper.getLabel(rootPath);
@@ -361,7 +361,7 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
 
       // Get existing root paths from owning FileBasedContent
       IModifiableFileBasedContent content = RootPathHelper.getOwningFileBasedContent(path);
-      Set<IRootPath> existingPaths;
+      Set<IVariablePath> existingPaths;
       if (rootPath.isBinaryPath()) {
         existingPaths = content.getBinaryRootPaths();
       } else {
@@ -370,7 +370,7 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
 
       // Create new set of root paths, replacing the old path with the new, edited, root path
       List<String> newRootPaths = new LinkedList<String>();
-      for (IRootPath iRootPath : existingPaths) {
+      for (IVariablePath iRootPath : existingPaths) {
         String existingPath = RootPathHelper.getLabel(iRootPath);
         if (!existingPath.equals(currentPath)) {
           newRootPaths.add(existingPath);
@@ -542,8 +542,8 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
         IBundleMakerProjectContent content = (IBundleMakerProjectContent) element;
         getBundleMakerProjectDescription().removeContentProvider(content.getId());
       }
-      if (element instanceof IRootPath) {
-        IRootPath rootPath = (IRootPath) element;
+      if (element instanceof IVariablePath) {
+        IVariablePath rootPath = (IVariablePath) element;
         IModifiableFileBasedContent fileBasedContent = RootPathHelper.getOwningFileBasedContent(treePath);
         if (rootPath.isBinaryPath()) {
           fileBasedContent.getModifiableBinaryPaths().remove(rootPath);

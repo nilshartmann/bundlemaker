@@ -16,14 +16,9 @@ import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
- * Describes a file based content entry in an {@link IBundleMakerProjectDescription}. A file base content entry can
- * contain one or many directories or archive files (*.zip or *.jar).
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- * 
- * @noimplement This interface is not intended to be implemented by clients.
- * @noextend This interface is not intended to be extended by clients.
  */
 public interface IBundleMakerProjectContent {
 
@@ -56,16 +51,6 @@ public interface IBundleMakerProjectContent {
 
   /**
    * <p>
-   * Returns the set of all binary paths that belongs to this {@link IBundleMakerProjectContent}. A {@link IBundleMakerProjectContent}
-   * <i>always</i> has one or more binary paths.
-   * </p>
-   * 
-   * @return the set of all binary paths that belongs to this {@link IBundleMakerProjectContent}.
-   */
-  Set<IRootPath> getBinaryRootPaths();
-
-  /**
-   * <p>
    * Return <code>true</code> if this content entry is a resource entry that should be parsed and analyzed,
    * <code>false</code> otherwise.
    * </p>
@@ -82,16 +67,6 @@ public interface IBundleMakerProjectContent {
    * @return the {@link AnalyzeMode} for this content
    */
   AnalyzeMode getAnalyzeMode();
-
-  /**
-   * <p>
-   * Returns the set of all defined source paths for this content entry. The result set is never <code>null</code>, but
-   * maybe empty.
-   * </p>
-   * 
-   * @return the set of all defined source paths for this content entry.
-   */
-  Set<IRootPath> getSourceRootPaths();
 
   /**
    * <p>

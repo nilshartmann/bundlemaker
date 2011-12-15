@@ -2,18 +2,27 @@ package org.bundlemaker.core.projectdescription.file;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.content.file.xml.XmlFileBasedContentType;
+import org.bundlemaker.core.content.file.xml.XmlResourceContentType;
+import org.bundlemaker.core.projectdescription.AbstractContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
-public class FileBasedContentProvider implements IBundleMakerProjectContentProvider {
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
+public class FileBasedContentProvider extends AbstractContentProvider implements IBundleMakerProjectContentProvider {
 
-  /** - */
+  /** the file based content */
   private FileBasedContent _fileBasedContent;
 
   /**
@@ -22,29 +31,36 @@ public class FileBasedContentProvider implements IBundleMakerProjectContentProvi
    * </p>
    */
   public FileBasedContentProvider() {
-    //
+
+    // create a new instance of type FileBasedContent
     _fileBasedContent = new FileBasedContent();
   }
 
   /**
    * <p>
+   * Returns the contained {@link FileBasedContent}.
    * </p>
    * 
-   * @return
+   * @return the contained {@link FileBasedContent}.
    */
   public FileBasedContent getFileBasedContent() {
     return _fileBasedContent;
   }
 
-  @Override
-  public String getId() {
-    return _fileBasedContent.getId();
-  }
-
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<IBundleMakerProjectContent> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
       throws CoreException {
+
+    //
+    Assert.isNotNull(bundleMakerProject);
+
+    // initialize the file based content
     _fileBasedContent.initialize(bundleMakerProject.getProjectDescription());
+
+    // return the file based content
     return Arrays.asList(new IBundleMakerProjectContent[] { _fileBasedContent });
   }
 
@@ -101,16 +117,60 @@ public class FileBasedContentProvider implements IBundleMakerProjectContentProvi
   }
 
   /**
-   * @return
+   * {@inheritDoc}
    */
-  public Set<IRootPath> getModifiableBinaryPaths() {
-    return _fileBasedContent.getModifiableBinaryPaths();
+  @Override
+  public Object getConfiguration() {
+
+    // create the configuration object
+    XmlFileBasedContentType contentType = new XmlFileBasedContentType();
+
+    // add the content
+    contentType.setName(_fileBasedContent.getName());
+    contentType.setVersion(_fileBasedContent.getVersion());
+    contentType.setAnalyzeMode(_fileBasedContent.getAnalyzeMode().toString());
+    for (VariablePath path : _fileBasedContent.getBinaryRootPaths()) {
+      contentType.getBinaryPathNames().add(path.getUnresolvedPath().toString());
+    }
+
+    XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
+    contentType.setResourceContent(xmlResourceContent);
+    for (VariablePath path : _fileBasedContent.getSourceRootPaths()) {
+      xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
+    }
+
+    // return the result
+    return contentType;
   }
 
   /**
-   * @return
+   * {@inheritDoc}
    */
-  public Set<IRootPath> getModifiableSourcePaths() {
-    return _fileBasedContent.getModifiableSourcePaths();
+  @Override
+  public void setConfiguration(Object configuration) {
+
+    //
+    Assert.isNotNull(configuration);
+    Assert.isTrue(configuration instanceof XmlFileBasedContentType);
+
+    // cast down
+    XmlFileBasedContentType config = (XmlFileBasedContentType) configuration;
+
+    _fileBasedContent.setId(getId());
+    _fileBasedContent.setName(config.getName());
+    _fileBasedContent.setVersion(config.getVersion());
+    _fileBasedContent.setAnalyzeMode(AnalyzeMode.valueOf(config.getAnalyzeMode()));
+
+    // set the binary path names
+    for (String path : config.getBinaryPathNames()) {
+      _fileBasedContent.addRootPath(new VariablePath(path), ContentType.BINARY);
+    }
+
+    // set the source path name
+    if (config.getResourceContent() != null) {
+      for (String path : config.getResourceContent().getSourcePathNames()) {
+        _fileBasedContent.addRootPath(new VariablePath(path), ContentType.SOURCE);
+      }
+    }
   }
 }

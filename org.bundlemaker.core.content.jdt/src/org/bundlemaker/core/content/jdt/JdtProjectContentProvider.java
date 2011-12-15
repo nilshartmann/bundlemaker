@@ -1,23 +1,25 @@
-package org.bundlemaker.core.itest.core;
+package org.bundlemaker.core.content.jdt;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.content.jdt.xml.JdtProjectContentType;
+import org.bundlemaker.core.projectdescription.AbstractContentProvider;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentFactory;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.FileASTRequestor;
 
 /**
  * <p>
@@ -25,40 +27,29 @@ import org.eclipse.jdt.core.dom.FileASTRequestor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JDTFileBaseContentProvider implements IBundleMakerProjectContentProvider {
+public class JdtProjectContentProvider extends AbstractContentProvider implements IBundleMakerProjectContentProvider {
 
   /** - */
   private IJavaProject _javaProject;
 
-  /** - */
-  private String       _id;
-
   /**
    * <p>
-   * Creates a new instance of type {@link JDTFileBaseContentProvider}.
    * </p>
    * 
    * @param javaProject
    */
-  public JDTFileBaseContentProvider(IJavaProject javaProject) {
-    Assert.assertNotNull(javaProject);
-
+  public void setJavaProject(IJavaProject javaProject) {
     _javaProject = javaProject;
-  }
-
-  @Override
-  public String getId() {
-    return _id;
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param id
+   * @return
    */
-  public void setId(String id) {
-    _id = id;
+  public IJavaProject getJavaProject() {
+    return _javaProject;
   }
 
   /**
@@ -73,10 +64,10 @@ public class JDTFileBaseContentProvider implements IBundleMakerProjectContentPro
     //
     List<IBundleMakerProjectContent> fileBasedContents = new LinkedList<IBundleMakerProjectContent>();
 
+    int counter = 0;
+
     //
     try {
-      int counter = 0;
-
       IClasspathEntry[] entries = _javaProject.getRawClasspath();
 
       for (IClasspathEntry classpathEntry : entries) {
@@ -85,17 +76,28 @@ public class JDTFileBaseContentProvider implements IBundleMakerProjectContentPro
         if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
           System.out.println("CPE_LIBRARY: " + classpathEntry);
         } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+
           IPath source = classpathEntry.getPath();
+
           IPath classes = classpathEntry.getOutputLocation() != null ? classpathEntry.getOutputLocation()
               : _javaProject.getOutputLocation();
 
-          FileBasedContentProvider contentProvider = FileBasedContentFactory.addContent("name", "1.2.3", _javaProject
-              .getProject().getLocation().append(classes.removeFirstSegments(1)).toOSString(), _javaProject
-              .getProject().getLocation().append(source.removeFirstSegments(1)).toOSString());
+          FileBasedContent fbpContent = new FileBasedContent();
+          fbpContent.setId(getId() + counter++);
+          fbpContent.setName("name");
+          fbpContent.setVersion("1.2.3");
 
-          contentProvider.getFileBasedContent().initialize(bundleMakerProject.getProjectDescription());
-          
-          fileBasedContents.add(contentProvider.getFileBasedContent());
+          fbpContent.addRootPath(
+              new VariablePath(_javaProject.getProject().getLocation().append(classes.removeFirstSegments(1))
+                  .toOSString()), ContentType.BINARY);
+
+          fbpContent.addRootPath(
+              new VariablePath(_javaProject.getProject().getLocation().append(source.removeFirstSegments(1))
+                  .toOSString()), ContentType.SOURCE);
+
+          fbpContent.initialize(bundleMakerProject.getProjectDescription());
+
+          fileBasedContents.add(fbpContent);
 
         } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
           System.out.println("CPE_CONTAINER: " + classpathEntry);
@@ -116,5 +118,40 @@ public class JDTFileBaseContentProvider implements IBundleMakerProjectContentPro
 
     //
     return fileBasedContents;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Object getConfiguration() {
+
+    //
+    JdtProjectContentType result = new JdtProjectContentType();
+    result.setProject(_javaProject.getElementName());
+
+    //
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setConfiguration(Object configuration) {
+
+    //
+    Assert.isNotNull(configuration);
+    Assert.isTrue(configuration instanceof JdtProjectContentType);
+
+    // cast down
+    JdtProjectContentType config = (JdtProjectContentType) configuration;
+
+    //
+    String projectName = config.getProject();
+
+    //
+    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+    _javaProject = JavaCore.create(project);
   }
 }

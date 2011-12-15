@@ -13,6 +13,7 @@ import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
@@ -187,15 +188,16 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
       Assert.fail("No classes found!");
     }
 
-    projectDescription.addResourceContent(getTestProjectName(), TEST_PROJECT_VERSION, classes.getAbsolutePath(),
-        sources.getAbsolutePath());
+    FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, getTestProjectName(),
+        TEST_PROJECT_VERSION, classes.getAbsolutePath(), sources.getAbsolutePath());
 
     // step 4: process the class path entries
     File libsDir = new File(directory, "libs");
     if (libsDir.exists()) {
       File[] jarFiles = libsDir.listFiles();
       for (File externalJar : jarFiles) {
-        projectDescription.addResourceContent(externalJar.getAbsolutePath());
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
+            externalJar.getAbsolutePath());
       }
     }
 

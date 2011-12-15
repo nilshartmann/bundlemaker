@@ -34,9 +34,10 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
@@ -147,8 +148,11 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
         // TODO!!
         try {
-          TypeModule typeModule = createTypeModule(fileBasedContent.getId(), identifier, new File[] { fileBasedContent
-              .getBinaryRootPaths().toArray(new IRootPath[0])[0].getAsFile() });
+          TypeModule typeModule = createTypeModule(fileBasedContent.getId(),
+              identifier,
+              // TODO!!
+              new File[] { ((FileBasedContent) fileBasedContent).getBinaryRootPaths().toArray(
+                  new VariablePath[0])[0].getAsFile() });
           getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
         } catch (CoreException ex) {
           // TODO

@@ -8,22 +8,20 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal;
+package org.bundlemaker.core.internal.projectdescription;
 
 import java.io.InputStream;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import org.bundlemaker.core.internal.extensionpoints.projectcontentprovider.ProjectContentProviderExtension;
 import org.bundlemaker.core.model.internal.projectdescription.xml.ObjectFactory;
-import org.bundlemaker.core.model.internal.projectdescription.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
-import org.bundlemaker.core.model.internal.projectdescription.xml.XmlResourceContentType;
 
 /**
  * <p>
@@ -42,9 +40,14 @@ public class XmlProjectDescriptionExporterUtils {
 
     try {
 
+      ProjectContentProviderExtension.getAllProjectContentProviderExtension();
+
+      //
+      JaxbCompoundClassLoader jaxbCompoundClassLoader = new JaxbCompoundClassLoader();
+
       // the JAXBContext
-      JAXBContext jaxbContext = JAXBContext.newInstance(XmlFileBasedContentType.class, XmlProjectDescriptionType.class,
-          XmlResourceContentType.class);
+      JAXBContext jaxbContext = JAXBContext.newInstance(jaxbCompoundClassLoader.getPackageString(),
+          jaxbCompoundClassLoader.getCompoundClassLoader());
 
       // create the marshaller
       Marshaller marshaller = jaxbContext.createMarshaller();
@@ -61,7 +64,8 @@ public class XmlProjectDescriptionExporterUtils {
       //
       return result.toString();
 
-    } catch (JAXBException e) {
+    } catch (Exception e) {
+      e.printStackTrace();
       throw new RuntimeException(e.getMessage(), e);
     }
   }
@@ -77,9 +81,12 @@ public class XmlProjectDescriptionExporterUtils {
 
     try {
 
+      //
+      JaxbCompoundClassLoader jaxbCompoundClassLoader = new JaxbCompoundClassLoader();
+
       // the JAXBContext
-      JAXBContext jaxbContext = JAXBContext.newInstance(XmlFileBasedContentType.class, XmlProjectDescriptionType.class,
-          XmlResourceContentType.class);
+      JAXBContext jaxbContext = JAXBContext.newInstance(jaxbCompoundClassLoader.getPackageString(),
+          jaxbCompoundClassLoader.getCompoundClassLoader());
 
       // create the marshaller
       Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -89,7 +96,7 @@ public class XmlProjectDescriptionExporterUtils {
           XmlProjectDescriptionType.class);
       return root.getValue();
 
-    } catch (JAXBException e) {
+    } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }
   }
