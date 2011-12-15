@@ -60,7 +60,7 @@ public class DefaultManifestPreferences implements IManifestPreferences {
 
   @Override
   public boolean noExportPackageVersion() {
-    return false;
+    return true;
   }
 
   @Override
