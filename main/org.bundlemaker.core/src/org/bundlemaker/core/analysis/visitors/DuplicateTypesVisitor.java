@@ -1,4 +1,4 @@
-package org.bundlemaker.core.reports.visitors;
+package org.bundlemaker.core.analysis.visitors;
 
 import java.util.Collection;
 import java.util.HashMap;

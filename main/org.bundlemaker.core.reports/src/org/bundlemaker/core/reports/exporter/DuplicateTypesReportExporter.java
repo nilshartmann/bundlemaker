@@ -19,11 +19,11 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
+import org.bundlemaker.core.analysis.visitors.DuplicateTypesVisitor;
 import org.bundlemaker.core.exporter.IModularizedSystemExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.reports.visitors.DuplicatePackagesVisitor;
-import org.bundlemaker.core.reports.visitors.DuplicateTypesVisitor;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**

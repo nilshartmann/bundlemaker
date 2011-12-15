@@ -13,6 +13,7 @@ import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences.DependencyStyle;
@@ -39,6 +40,8 @@ import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
  */
 public class DefaultManifestCreator extends AbstractManifestCreator {
 
+  private DuplicatePackagesVisitor _duplicatePackagesVisitor;
+  
   /**
    * {@inheritDoc}
    */
@@ -297,10 +300,24 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 
     // Add Bundle-SymbolicName to imported package
     if (moduleArtifact.getAssociatedModule() != null) {
-      if (isDuplicatePackage(packageName)) {
+      Collection<IPackageArtifact> duplicatePackageProvider = getDuplicatePackageProvider(packageName);
+      if (duplicatePackageProvider != null) {
         String moduleName = moduleArtifact.getAssociatedModule().getModuleIdentifier().getName();
-        System.out.println(" ** Bundle " + getResourceModule().getModuleIdentifier() + " imports duplicate package '"
-            + packageName + "' with Symbolic-Name '" + moduleName + "'");
+        
+        StringBuilder builder = new StringBuilder();
+        for (IPackageArtifact iPackageArtifact : duplicatePackageProvider) {
+          if (builder.length()>0) {
+            builder.append(',');
+          }
+          builder.append(iPackageArtifact.getParent(ArtifactType.Module).getName());
+        }
+
+        String msg = String.format("Bundle '%s' imports duplicate package '%s' (exported by %s). Choosing exporter bundle '%s'",
+            getResourceModule().getModuleIdentifier(),
+            packageName,
+            builder, moduleName);
+        
+        System.out.println(msg);
         importedPackage.setBundleSymbolicName(moduleName);
       }
     }
@@ -319,56 +336,20 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     }
   }
 
-  private HashSet<String> duplicatePackages = null;
+  protected Collection<IPackageArtifact> getDuplicatePackageProvider(String packageName) {
 
-  protected boolean isDuplicatePackage(String packageName) {
-    return getDuplicatePackages().contains(packageName);
-  }
+    if (_duplicatePackagesVisitor == null) {
+      _duplicatePackagesVisitor = new DuplicatePackagesVisitor();
+      getRootArtifact().accept(_duplicatePackagesVisitor);
 
-  protected HashSet<String> getDuplicatePackages() {
-
-    if (duplicatePackages == null) {
-      duplicatePackages = new HashSet<String>();
-      class DuplicatePackageVisitorVisitor extends IArtifactTreeVisitor.Adapter {
-
-        private HashSet<String> visitedPackages = new HashSet<String>();
-
-        public boolean visit(IPackageArtifact packageArtifact) {
-          // return if package is virtual
-          if (packageArtifact.isVirtual()) {
-            return false;
-          }
-
-          // return if package is the default package
-          if (packageArtifact.getQualifiedName().isEmpty()) {
-            return true;
-          }
-
-          // return if package contains no types
-          if (!packageArtifact.containsTypes()) {
-            return true;
-          }
-
-          String qualifiedName = packageArtifact.getQualifiedName();
-
-          if (visitedPackages.contains(qualifiedName)) {
-            duplicatePackages.add(qualifiedName);
-          } else {
-            visitedPackages.add(qualifiedName);
-          }
-          return true;
-        }
-      }
-      getRootArtifact().accept(new DuplicatePackageVisitorVisitor());
       System.out.println("Detected duplicate packages: ");
-      for (String pn : duplicatePackages) {
+      for (String pn : _duplicatePackagesVisitor.getDuplicatePackages().keySet()) {
         System.out.println("  " + pn);
       }
       System.out.println("======================= ");
-
     }
-
-    return duplicatePackages;
+    
+    return _duplicatePackagesVisitor.getDuplicatePackageProvider(packageName);
 
   }
 

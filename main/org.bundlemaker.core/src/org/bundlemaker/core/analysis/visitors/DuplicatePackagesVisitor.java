@@ -1,4 +1,4 @@
-package org.bundlemaker.core.reports.visitors;
+package org.bundlemaker.core.analysis.visitors;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,6 +64,19 @@ public class DuplicatePackagesVisitor extends IArtifactTreeVisitor.Adapter {
    */
   public Map<String, Collection<IPackageArtifact>> getDuplicatePackages() {
     return _duplicatePackages;
+  }
+
+  /**
+   * Returns all providers for the specified package or null if either the package is not known or not a duplicate
+   * package
+   * <p>
+   * </p>
+   * 
+   * @param packageName
+   * @return a collection with at least two IPackageArtifacts or null
+   */
+  public Collection<IPackageArtifact> getDuplicatePackageProvider(String packageName) {
+    return _duplicatePackages.get(packageName);
   }
 
   /**
