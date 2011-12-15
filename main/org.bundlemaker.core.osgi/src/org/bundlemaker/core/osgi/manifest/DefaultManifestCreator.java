@@ -1,6 +1,7 @@
 package org.bundlemaker.core.osgi.manifest;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -293,6 +294,16 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     // Rule: import the required package
     ImportedPackage importedPackage = getBundleManifest().getImportPackage().addImportedPackage(packageName);
 
+    // Add Bundle-SymbolicName to imported package
+    if (moduleArtifact.getAssociatedModule() != null) {
+      if (isDuplicatePackage(packageName)) {
+        String moduleName = moduleArtifact.getAssociatedModule().getModuleIdentifier().getName();
+        System.out.println(" ** Bundle " + getResourceModule().getModuleIdentifier() + " imports duplicate package '"
+            + packageName + "' with Symbolic-Name '" + moduleName + "'");
+        importedPackage.setBundleSymbolicName(moduleName);
+      }
+    }
+
     // Rule: set missing types 'optional'
     if (moduleArtifact.getName().equals("<< Missing Types >>")) {
       importedPackage.setResolution(Resolution.OPTIONAL);
@@ -305,6 +316,59 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
       importedPackage.getAttributes().putAll(headerDeclaration.getAttributes());
       importedPackage.getDirectives().putAll(headerDeclaration.getDirectives());
     }
+  }
+
+  private HashSet<String> duplicatePackages = null;
+
+  protected boolean isDuplicatePackage(String packageName) {
+    return getDuplicatePackages().contains(packageName);
+  }
+
+  protected HashSet<String> getDuplicatePackages() {
+
+    if (duplicatePackages == null) {
+      duplicatePackages = new HashSet<String>();
+      class DuplicatePackageVisitorVisitor extends IArtifactTreeVisitor.Adapter {
+
+        private HashSet<String> visitedPackages = new HashSet<String>();
+
+        public boolean visit(IPackageArtifact packageArtifact) {
+          // return if package is virtual
+          if (packageArtifact.isVirtual()) {
+            return false;
+          }
+
+          // return if package is the default package
+          if (packageArtifact.getQualifiedName().isEmpty()) {
+            return true;
+          }
+
+          // return if package contains no types
+          if (!packageArtifact.containsTypes()) {
+            return true;
+          }
+
+          String qualifiedName = packageArtifact.getQualifiedName();
+
+          if (visitedPackages.contains(qualifiedName)) {
+            duplicatePackages.add(qualifiedName);
+          } else {
+            visitedPackages.add(qualifiedName);
+          }
+          return true;
+        }
+      }
+      getRootArtifact().accept(new DuplicatePackageVisitorVisitor());
+      System.out.println("Detected duplicate packages: ");
+      for (String pn : duplicatePackages) {
+        System.out.println("  " + pn);
+      }
+      System.out.println("======================= ");
+
+    }
+
+    return duplicatePackages;
+
   }
 
   /**
@@ -393,38 +457,32 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
    */
   protected void setTransitiveClosure() {
 
+    List<String> transitiveClosure = new LinkedList<String>();
     //
-    if (DependencyStyle.STRICT_REQUIRE_BUNDLE.equals(getManifestPreferences().getDependencyStyle())) {
+    for (IModule module : getModularizedSystem().getTransitiveReferencedModules(getResourceModule())
+        .getReferencedModules()) {
 
       //
-      List<String> transitiveClosure = new LinkedList<String>();
-
-      //
-      for (IModule module : getModularizedSystem().getTransitiveReferencedModules(getResourceModule())
-          .getReferencedModules()) {
+      if (!containsBundle(module.getModuleIdentifier().getName())
+          && !module.equals(getModularizedSystem().getExecutionEnvironment())) {
 
         //
-        if (!containsBundle(module.getModuleIdentifier().getName())
-            && !module.equals(getModularizedSystem().getExecutionEnvironment())) {
-
-          //
-          transitiveClosure.add(module.getModuleIdentifier().getName());
-        }
+        transitiveClosure.add(module.getModuleIdentifier().getName());
       }
+    }
+
+    //
+    if (!transitiveClosure.isEmpty()) {
 
       //
-      if (!transitiveClosure.isEmpty()) {
-
-        //
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Iterator<String> iterator = transitiveClosure.iterator(); iterator.hasNext();) {
-          stringBuilder.append(iterator.next());
-          if (iterator.hasNext()) {
-            stringBuilder.append(", ");
-          }
+      StringBuilder stringBuilder = new StringBuilder();
+      for (Iterator<String> iterator = transitiveClosure.iterator(); iterator.hasNext();) {
+        stringBuilder.append(iterator.next());
+        if (iterator.hasNext()) {
+          stringBuilder.append(", ");
         }
-        getBundleManifest().setHeader(IManifestConstants.TRANSITIVE_CLOSURE, stringBuilder.toString());
       }
+      getBundleManifest().setHeader(IManifestConstants.TRANSITIVE_CLOSURE, stringBuilder.toString());
     }
   }
 
