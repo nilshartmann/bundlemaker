@@ -12,27 +12,69 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
+import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
+
+  /**
+   * {@inheritDoc}
+   */
+  @Before
+  public void before() throws CoreException {
+    super.before();
+
+    addProjectDescription();
+
+    getBundleMakerProject().initialize(null);
+    getBundleMakerProject().parseAndOpen(null);
+  }
 
   @Test
   public void test() throws CoreException, IOException {
-    System.out.println("HHLAO");
+
+    //
+    IModularizedSystem modularizedSystem = getBundleMakerProject().getModularizedSystemWorkingCopy();
+    Assert.assertNotNull(modularizedSystem);
+
+    IRootArtifact rootArtifact = modularizedSystem
+        .getArtifactModel(IArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
+    IModuleArtifact moduleArtifact = rootArtifact.findChild(IModuleArtifact.class, "name_1.2.3");
+
+    ArtifactUtils.dumpArtifact(moduleArtifact);
   }
 
   /**
@@ -124,6 +166,7 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    project.refreshLocal(IResource.DEPTH_INFINITE, null);
 
     // step 2: 'unset' the class path
     javaProject.setRawClasspath(null, null);
@@ -156,5 +199,10 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
 
     //
     projectDescription.save();
+  }
+
+  @Override
+  protected String computeTestProjectName() {
+    return "NoPrimaryTypeTest";
   }
 }

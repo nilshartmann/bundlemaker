@@ -47,13 +47,27 @@ public abstract class AbstractContent implements IBundleMakerProjectContent {
   /** the project description */
   private IBundleMakerProjectDescription     _projectDescription;
 
+  /** the bundle maker project content provider */
+  private IBundleMakerProjectContentProvider _provider;
+
   /**
    * <p>
    * Creates a new instance of type {@link AbstractContent}.
    * </p>
    */
-  public AbstractContent() {
-    super();
+  public AbstractContent(IBundleMakerProjectContentProvider provider) {
+    Assert.isNotNull(provider);
+
+    // set the provider
+    _provider = provider;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IBundleMakerProjectContentProvider getProvider() {
+    return _provider;
   }
 
   /**

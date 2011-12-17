@@ -80,6 +80,10 @@ public interface IBundleMakerProject {
 
   /**
    * <p>
+   * Allows to modify the {@link IBundleMakerProjectDescription} using the template class
+   * {@link IProjectDescriptionModifier}. This method automatically calls
+   * {@link IModifiableBundleMakerProjectDescription#save()} after executing
+   * {@link IProjectDescriptionModifier#modifyProjectDescription(IModifiableBundleMakerProjectDescription)}.
    * </p>
    * 
    * @param modifier
@@ -89,9 +93,10 @@ public interface IBundleMakerProject {
 
   /**
    * <p>
+   * Returns the (unmodifiable) IBundleMakerProjectDescription of this {@link IBundleMakerProject}.
    * </p>
    * 
-   * @return
+   * @return the (unmodifiable) IBundleMakerProjectDescription of this {@link IBundleMakerProject}.
    */
   public IBundleMakerProjectDescription getProjectDescription();
 
@@ -154,39 +159,46 @@ public interface IBundleMakerProject {
 
   /**
    * <p>
+   * Returns a list with all {@link IProblem IProblems} that occurred whilst parsing the project content.
    * </p>
    * 
-   * @return
+   * @return a list with all {@link IProblem IProblems} that occurred whilst parsing the project content.
    */
   List<IProblem> getProblems();
 
   /**
    * <p>
+   * Disposes the project.
    * </p>
    */
   void dispose();
 
   /**
    * <p>
+   * Returns a list with all binary resources that are contained in this project.
    * </p>
    * 
-   * @return
+   * @return a list with all binary resources that are contained in this project.
    */
   List<IResource> getBinaryResources();
 
   /**
    * <p>
+   * Returns a list with all source resources that are contained in this project.
    * </p>
    * 
-   * @return
+   * @return a list with all source resources that are contained in this project.
    */
   List<IResource> getSourceResources();
 
   /**
    * <p>
+   * Returns a list with all {@link IModularizedSystem IModularizedSystems} that are defined in this
+   * {@link IBundleMakerProject}.
    * </p>
    * 
-   * @return
+   * @return a list with all {@link IModularizedSystem IModularizedSystems} that are defined in this
+   *         {@link IBundleMakerProject}.
    * @throws CoreException
    */
   Collection<IModularizedSystem> getModularizedSystemWorkingCopies() throws CoreException;
@@ -259,24 +271,45 @@ public interface IBundleMakerProject {
    * </p>
    * 
    * @precondition BundleMakerProjectState.OPENED
+   * @deprecated use
+   *             {@link IModularizedSystem#getArtifactModel(org.bundlemaker.core.analysis.IArtifactModelConfiguration)}
+   *             instead
    */
   @Deprecated
   public IDependencyModel getDependencyModel();
 
   /**
    * <p>
+   * <code>
+   * bundleMakerProject.modifyBundleMakerProjectDescription(new IProjectDescriptionModifier() {
+   * 
+   *   public void modifyProjectDescription(IModifiableBundleMakerProjectDescription projectDescription) {
+   *   
+   *     // clear the project description
+   *     projectDescription.clear();
+   * 
+   *     // add new file based content
+   *     FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, new File(
+   *       "hibernate-validator/hibernate-validator-4.2.0.Final.jar").getAbsolutePath());
+   * 
+   *     // set the JRE
+   *     projectDescription.setJre("jdk16");
+   *   }
+   * });
+   * </code>
    * </p>
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-   * 
    */
   static public interface IProjectDescriptionModifier {
 
     /**
      * <p>
+     * Call-back method that allows to modify the project description of this {@link IBundleMakerProject}.
      * </p>
      * 
      * @param projectDescription
+     *          the modifiable project description
      */
     void modifyProjectDescription(IModifiableBundleMakerProjectDescription projectDescription);
   }

@@ -23,7 +23,7 @@ import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IResourceKey extends IContentProvider {
+public interface IResourceKey extends IReadableResource {
 
   /**
    * <p>

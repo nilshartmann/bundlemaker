@@ -70,6 +70,15 @@ public interface IBundleMakerProjectContent {
 
   /**
    * <p>
+   * Returns the {@link IBundleMakerProjectContentProvider} that created this {@link IBundleMakerProjectContent}.
+   * </p>
+   * 
+   * @return the {@link IBundleMakerProjectContentProvider} that created this {@link IBundleMakerProjectContent}.
+   */
+  IBundleMakerProjectContentProvider getProvider();
+
+  /**
+   * <p>
    * Returns a {@link Set} of all resources of the specified type
    * </p>
    * <p>

@@ -27,7 +27,7 @@ import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IContentProvider;
+import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -102,7 +102,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
           getCurrentContext());
 
       //
-      Set<IContentProvider> resourceKeys = getTemplateProvider().getAdditionalResources(getCurrentModule(),
+      Set<IReadableResource> resourceKeys = getTemplateProvider().getAdditionalResources(getCurrentModule(),
           getCurrentModularizedSystem(), getCurrentContext());
 
       // export the jar archive

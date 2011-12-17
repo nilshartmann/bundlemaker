@@ -5,7 +5,7 @@ import java.util.Set;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IContentProvider;
+import org.bundlemaker.core.resource.IReadableResource;
 
 import com.springsource.util.parser.manifest.ManifestContents;
 
@@ -42,6 +42,6 @@ public interface ITemplateProvider {
    * @param currentContext
    * @return
    */
-  Set<IContentProvider> getAdditionalResources(IResourceModule currentModule,
+  Set<IReadableResource> getAdditionalResources(IResourceModule currentModule,
       IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext);
 }

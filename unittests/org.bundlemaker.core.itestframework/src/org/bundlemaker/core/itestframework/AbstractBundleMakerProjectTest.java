@@ -107,7 +107,7 @@ public abstract class AbstractBundleMakerProjectTest {
   protected void addProjectDescription() throws CoreException {
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), getTestProjectName());
-    Assert.assertTrue(testDataDirectory.isDirectory());
+    Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory), testDataDirectory.isDirectory());
 
     // create the project description
     log("Adding project description...");

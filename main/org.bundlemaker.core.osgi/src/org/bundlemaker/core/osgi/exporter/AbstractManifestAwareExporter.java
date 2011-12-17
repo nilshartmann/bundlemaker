@@ -30,7 +30,7 @@ import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.resource.IContentProvider;
+import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -293,7 +293,7 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
      * {@inheritDoc}
      */
     @Override
-    public Set<IContentProvider> getAdditionalResources(IResourceModule currentModule,
+    public Set<IReadableResource> getAdditionalResources(IResourceModule currentModule,
         IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {
 
       //

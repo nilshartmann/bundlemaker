@@ -18,6 +18,7 @@ import org.bundlemaker.core.projectdescription.AbstractContent;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
@@ -47,7 +48,8 @@ public class FileBasedContent extends AbstractContent implements IBundleMakerPro
    * Creates a new instance of type {@link FileBasedContent}.
    * </p>
    */
-  public FileBasedContent() {
+  public FileBasedContent(IBundleMakerProjectContentProvider provider) {
+    super(provider);
 
     //
     setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);

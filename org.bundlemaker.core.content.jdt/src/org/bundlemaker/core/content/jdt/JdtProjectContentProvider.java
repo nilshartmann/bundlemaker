@@ -82,7 +82,7 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
           IPath classes = classpathEntry.getOutputLocation() != null ? classpathEntry.getOutputLocation()
               : _javaProject.getOutputLocation();
 
-          FileBasedContent fbpContent = new FileBasedContent();
+          FileBasedContent fbpContent = new FileBasedContent(this);
           fbpContent.setId(getId() + counter++);
           fbpContent.setName("name");
           fbpContent.setVersion("1.2.3");

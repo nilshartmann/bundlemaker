@@ -60,7 +60,6 @@ public class FileBasedContentProviderFactory {
    *          the analyze mode. Not null
    * @return
    */
-  @Deprecated
   public static FileBasedContentProvider addNewFileBasedContentProvider(
       IModifiableBundleMakerProjectDescription description, String binaryRoot, String sourceRoot,
       AnalyzeMode analyzeMode) {

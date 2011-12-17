@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IVariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -31,34 +30,34 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ModifyProjectContentDialog extends TitleAreaDialog {
 
-  private Text                    _nameTextField;
+  private Text                             _nameTextField;
 
-  private Text                    _versionTextField;
+  private Text                             _versionTextField;
 
-  private Button                  _analyzeButton;
+  private Button                           _analyzeButton;
 
-  private Button                  _analyzeSourcesButton;
+  private Button                           _analyzeSourcesButton;
 
   /**
    * The original content or null if a new content is created with this dialog
    */
   private final IBundleMakerProjectContent _originalContent;
 
-  private ContentListBlock        _binariesContentList;
+  private ContentListBlock                 _binariesContentList;
 
-  private ContentListBlock        _sourcesContentList;
+  private ContentListBlock                 _sourcesContentList;
 
-  private String                  _name;
+  private String                           _name;
 
-  private String                  _version;
+  private String                           _version;
 
-  private java.util.List<String>  _binaryRoots;
+  private java.util.List<String>           _binaryRoots;
 
-  private java.util.List<String>  _sourceRoots;
+  private java.util.List<String>           _sourceRoots;
 
-  boolean                         _analyze        = true;
+  boolean                                  _analyze        = true;
 
-  boolean                         _analyzeSources = false;
+  boolean                                  _analyzeSources = false;
 
   public ModifyProjectContentDialog(Shell parentShell, IBundleMakerProjectContent existingContent) {
     super(parentShell);

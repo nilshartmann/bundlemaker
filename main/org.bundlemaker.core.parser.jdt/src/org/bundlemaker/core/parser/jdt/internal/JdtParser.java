@@ -12,6 +12,7 @@ package org.bundlemaker.core.parser.jdt.internal;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
@@ -76,7 +77,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  public synchronized void parseResource(IBundleMakerProjectContent fileBasedContent, IResourceKey resourceKey,
+  public synchronized void parseResource(IBundleMakerProjectContent projectContent, IResourceKey resourceKey,
       IResourceCache cache) {
 
     //
@@ -91,7 +92,15 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       // _parser.setSource(iCompilationUnit);
       char[] content = new String(modifiableResource.getContent()).toCharArray();
+
+      // TODO
+      // if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
+      // IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getJavaProject();
+      // _parser.setProject(javaProject);
+      // } else {
       _parser.setProject(_javaProject);
+      // }
+
       _parser.setSource(content);
       // TODO
       _parser.setUnitName("/" + _javaProject.getProject().getName() + "/" + modifiableResource.getPath());

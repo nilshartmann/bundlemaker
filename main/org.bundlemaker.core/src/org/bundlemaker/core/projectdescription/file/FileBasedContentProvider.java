@@ -33,7 +33,7 @@ public class FileBasedContentProvider extends AbstractContentProvider implements
   public FileBasedContentProvider() {
 
     // create a new instance of type FileBasedContent
-    _fileBasedContent = new FileBasedContent();
+    _fileBasedContent = new FileBasedContent(this);
   }
 
   /**

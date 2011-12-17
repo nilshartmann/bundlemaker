@@ -37,10 +37,10 @@ public interface IBundleMakerProjectDescription {
 
   /**
    * <p>
-   * Returns a list with all the defined {@link IBundleMakerProjectContent}.
+   * Returns a (read-only) list with all the defined {@link IBundleMakerProjectContent}.
    * </p>
    * 
-   * @return a list with all the defined {@link IBundleMakerProjectContent}.
+   * @return a (read-only) list with all the defined {@link IBundleMakerProjectContent}.
    */
   List<? extends IBundleMakerProjectContent> getContent();
 
