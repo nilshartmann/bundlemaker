@@ -39,7 +39,7 @@ import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 public class DefaultManifestCreator extends AbstractManifestCreator {
 
   private DuplicatePackagesVisitor _duplicatePackagesVisitor;
-  
+
   /**
    * {@inheritDoc}
    */
@@ -299,24 +299,24 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     // Add Bundle-SymbolicName to imported package
     if (moduleArtifact.getAssociatedModule() != null) {
       Collection<IPackageArtifact> duplicatePackageProvider = getDuplicatePackageProvider(packageName);
-     
+
       if (duplicatePackageProvider != null) {
         int hostModules = 0;
         String moduleName = moduleArtifact.getAssociatedModule().getModuleIdentifier().getName();
-        
+
         for (IPackageArtifact iPackageArtifact : duplicatePackageProvider) {
 
-
           IBundleMakerArtifact exportingModuleArtifact = iPackageArtifact.getParent(ArtifactType.Module);
-          
-          IModule associatedModule = ((IModuleArtifact)exportingModuleArtifact).getAssociatedModule();
-          
-          if (associatedModule == null || !associatedModule.getUserAttributes().containsKey(IManifestConstants.OSGI_FRAGMENT_HOST)) {
+
+          IModule associatedModule = ((IModuleArtifact) exportingModuleArtifact).getAssociatedModule();
+
+          if (associatedModule == null
+              || !associatedModule.getUserAttributes().containsKey(IManifestConstants.OSGI_FRAGMENT_HOST)) {
             hostModules++;
           }
         }
-        
-        if (hostModules>1) {
+
+        if (hostModules > 1) {
           importedPackage.setBundleSymbolicName(moduleName);
         }
 
@@ -343,7 +343,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
       _duplicatePackagesVisitor = new DuplicatePackagesVisitor();
       getRootArtifact().accept(_duplicatePackagesVisitor);
     }
-    
+
     return _duplicatePackagesVisitor.getDuplicatePackageProvider(packageName);
   }
 
