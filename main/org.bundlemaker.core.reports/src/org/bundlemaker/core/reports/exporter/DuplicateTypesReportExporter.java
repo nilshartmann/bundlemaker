@@ -19,6 +19,7 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
 import org.bundlemaker.core.analysis.visitors.DuplicateTypesVisitor;
 import org.bundlemaker.core.exporter.IModularizedSystemExporter;
@@ -159,40 +160,35 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     for (IPackageArtifact packageArtifact : packageArtifacts) {
 
       IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(ArtifactType.Module);
-      List<IResourceArtifact> exclusiveResources = new LinkedList<IResourceArtifact>();
+      List<ITypeArtifact> exclusiveTypes = new LinkedList<ITypeArtifact>();
 
       //
-      for (IBundleMakerArtifact child : packageArtifact.getChildren()) {
-        if (child.getType().equals(ArtifactType.Resource)) {
+      for (ITypeArtifact typeArtifact : packageArtifact.findChildren(ITypeArtifact.class)) {
 
-          //
-          IResourceArtifact resourceArtifact = (IResourceArtifact) child;
-
-          //
-          if (!containedInAllPackages(resourceArtifact, packageArtifacts)) {
-            exclusiveResources.add(resourceArtifact);
-          }
+        //
+        if (!containedInAllPackages(typeArtifact, packageArtifacts)) {
+          exclusiveTypes.add(typeArtifact);
         }
       }
 
       //
-      if (!exclusiveResources.isEmpty()) {
+      if (!exclusiveTypes.isEmpty()) {
 
         identical = false;
 
-        Collections.sort(exclusiveResources);
+        Collections.sort(exclusiveTypes);
 
         _fileWriter.append("      - Only in " + moduleArtifact.getQualifiedName() + " : ");
-        for (IResourceArtifact exclusiveResource : exclusiveResources) {
-          _fileWriter.append(exclusiveResource + " ");
+        for (ITypeArtifact exclusiveType : exclusiveTypes) {
+          _fileWriter.append(exclusiveType + " ");
         }
         _fileWriter.append("\n");
       }
-    }
 
-    //
-    if (identical) {
-      _fileWriter.append("      Identical\n");
+      //
+      if (identical) {
+        _fileWriter.append("      Identical\n");
+      }
     }
   }
 
@@ -200,17 +196,15 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
    * <p>
    * </p>
    * 
-   * @param resourceArtifact
+   * @param typeArtifact
    * @param packageArtifacts
    * @return
    */
-  private boolean containedInAllPackages(IResourceArtifact resourceArtifact,
-      Collection<IPackageArtifact> packageArtifacts) {
+  private boolean containedInAllPackages(ITypeArtifact typeArtifact, Collection<IPackageArtifact> packageArtifacts) {
 
     //
     for (IPackageArtifact packageArtifact : packageArtifacts) {
-      if (!packageArtifact.hasChild(resourceArtifact.getName())) {
-        System.out.println(resourceArtifact.getName());
+      if (packageArtifact.findChildren(ITypeArtifact.class, typeArtifact.getQualifiedName()).size() == 0) {
         return false;
       }
     }
