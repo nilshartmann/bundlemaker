@@ -1,7 +1,6 @@
 package org.bundlemaker.core.osgi.manifest;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map.Entry;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -301,24 +299,27 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     // Add Bundle-SymbolicName to imported package
     if (moduleArtifact.getAssociatedModule() != null) {
       Collection<IPackageArtifact> duplicatePackageProvider = getDuplicatePackageProvider(packageName);
+     
       if (duplicatePackageProvider != null) {
+        int hostModules = 0;
         String moduleName = moduleArtifact.getAssociatedModule().getModuleIdentifier().getName();
         
-        StringBuilder builder = new StringBuilder();
         for (IPackageArtifact iPackageArtifact : duplicatePackageProvider) {
-          if (builder.length()>0) {
-            builder.append(',');
+
+
+          IBundleMakerArtifact exportingModuleArtifact = iPackageArtifact.getParent(ArtifactType.Module);
+          
+          IModule associatedModule = ((IModuleArtifact)exportingModuleArtifact).getAssociatedModule();
+          
+          if (associatedModule == null || !associatedModule.getUserAttributes().containsKey(IManifestConstants.OSGI_FRAGMENT_HOST)) {
+            hostModules++;
           }
-          builder.append(iPackageArtifact.getParent(ArtifactType.Module).getName());
+        }
+        
+        if (hostModules>1) {
+          importedPackage.setBundleSymbolicName(moduleName);
         }
 
-        String msg = String.format("Bundle '%s' imports duplicate package '%s' (exported by %s). Choosing exporter bundle '%s'",
-            getResourceModule().getModuleIdentifier(),
-            packageName,
-            builder, moduleName);
-        
-        System.out.println(msg);
-        importedPackage.setBundleSymbolicName(moduleName);
       }
     }
 
@@ -341,16 +342,9 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     if (_duplicatePackagesVisitor == null) {
       _duplicatePackagesVisitor = new DuplicatePackagesVisitor();
       getRootArtifact().accept(_duplicatePackagesVisitor);
-
-      System.out.println("Detected duplicate packages: ");
-      for (String pn : _duplicatePackagesVisitor.getDuplicatePackages().keySet()) {
-        System.out.println("  " + pn);
-      }
-      System.out.println("======================= ");
     }
     
     return _duplicatePackagesVisitor.getDuplicatePackageProvider(packageName);
-
   }
 
   /**
@@ -618,28 +612,6 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 
       //
       if (alreadyImportedPackage.getPackageName().equalsIgnoreCase(importedPackageName)) {
-        return true;
-      }
-    }
-
-    //
-    return false;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param exportedPackageName
-   * @return
-   */
-  private boolean containsExportedPackage(String exportedPackageName) {
-
-    //
-    for (ExportedPackage alreadyExportedPackage : getBundleManifest().getExportPackage().getExportedPackages()) {
-
-      //
-      if (alreadyExportedPackage.getPackageName().equalsIgnoreCase(exportedPackageName)) {
         return true;
       }
     }
