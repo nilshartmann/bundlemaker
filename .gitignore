@@ -7,3 +7,4 @@ org.eclipse.pde.api.tools.ui/*
 org.bundlemaker.itest.sherlog/*
 patch.mbox
 /org.eclipse.draw2d.examples/
+_custom
