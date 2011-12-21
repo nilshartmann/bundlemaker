@@ -14,18 +14,20 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.projectdescription.AbstractContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -37,37 +39,43 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProjectDescription implements IModifiableBundleMakerProjectDescription {
+public class BundleMakerProjectDescription implements IModifiableProjectDescription {
 
   /** - */
-  private static NumberFormat                      FORMATTER       = new DecimalFormat("000000");
+  private static NumberFormat                  FORMATTER       = new DecimalFormat("000000");
 
   /** the current identifier */
-  private int                                      _currentId      = 0;
+  private int                                  _currentId      = 0;
 
   /** - */
-  private Object                                   _identifierLock = new Object();
+  private Object                               _identifierLock = new Object();
 
   /** - */
-  private List<IBundleMakerProjectContent>         _projectContent;
+  private List<IProjectContentEntry>           _projectContentEntries;
 
   /** - */
-  private List<IBundleMakerProjectContentProvider> _projectContentProviders;
+  private Map<String, IProjectContentEntry>    _projectContentEntriesMap;
+
+  /** - */
+  private List<IProjectContentProvider>        _projectContentProviders;
+
+  /** - */
+  private Map<String, IProjectContentProvider> _projectContentProviderMap;
 
   /** the resource list */
-  private List<IResourceStandin>                   _sourceResources;
+  private List<IResourceStandin>               _sourceResources;
 
   /** the resource list */
-  private List<IResourceStandin>                   _binaryResources;
+  private List<IResourceStandin>               _binaryResources;
 
   /** - */
-  private String                                   _jre;
+  private String                               _jre;
 
   /** - */
-  private boolean                                  _initialized;
+  private boolean                              _initialized;
 
   /** - */
-  private BundleMakerProject                       _bundleMakerProject;
+  private BundleMakerProject                   _bundleMakerProject;
 
   /**
    * <p>
@@ -79,8 +87,10 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
   public BundleMakerProjectDescription(BundleMakerProject bundleMakerProject) {
 
     //
-    _projectContent = new ArrayList<IBundleMakerProjectContent>();
-    _projectContentProviders = new ArrayList<IBundleMakerProjectContentProvider>();
+    _projectContentEntries = new ArrayList<IProjectContentEntry>();
+    _projectContentProviders = new ArrayList<IProjectContentProvider>();
+    _projectContentProviderMap = new HashMap<String, IProjectContentProvider>();
+    _projectContentEntriesMap = new HashMap<String, IProjectContentEntry>();
     _sourceResources = new ArrayList<IResourceStandin>();
     _binaryResources = new ArrayList<IResourceStandin>();
     _bundleMakerProject = bundleMakerProject;
@@ -98,77 +108,60 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * {@inheritDoc}
    */
   @Override
-  public List<? extends IBundleMakerProjectContentProvider> getContentProviders() {
+  public List<? extends IProjectContentProvider> getContentProviders() {
     return _projectContentProviders;
   }
 
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // // TODO
-  // public IBundleMakerProjectContent getFileBasedContent(String id) {
-  // //
-  // return getModifiableFileBasedContent(id);
-  // }
-  //
-  // @Override
-  // public IModifiableFileBasedContent getModifiableFileBasedContent(String id) {
-  //
-  // // file based content
-  // for (FileBasedContent fileBasedContent : _fileBasedContent) {
-  //
-  // //
-  // if (fileBasedContent.getId().equals(id)) {
-  // return fileBasedContent;
-  // }
-  // }
-  //
-  // //
-  // return null;
-  // }
-
   /**
    * {@inheritDoc}
    */
   @Override
-  public List<IBundleMakerProjectContent> getContent() {
-    return Collections.unmodifiableList(_projectContent);
-  }
-
-  @Override
-  @Deprecated
-  public IBundleMakerProjectContent getFileBasedContent(String id) {
-    // TODO Auto-generated method stub
-    return null;
+  public List<IProjectContentEntry> getContent() {
+    return Collections.unmodifiableList(_projectContentEntries);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void addContentProvider(IBundleMakerProjectContentProvider contentProvider) {
+  public IProjectContentEntry getProjectContentEntry(String identifier) {
+    Assert.isNotNull(identifier);
+
+    return _projectContentEntriesMap.get(identifier);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addContentProvider(IProjectContentProvider contentProvider) {
     Assert.isNotNull(contentProvider);
 
     addContentProvider(contentProvider, true);
+
+    // cache
+    _projectContentProviderMap.put(contentProvider.getId(), contentProvider);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void removeContentProvider(IBundleMakerProjectContentProvider contentProvider) {
+  public void removeContentProvider(IProjectContentProvider contentProvider) {
     Assert.isNotNull(contentProvider);
 
     //
     _projectContentProviders.remove(contentProvider);
+
+    // cache
+    _projectContentProviderMap.remove(contentProvider.getId());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void moveUpContentProviders(List<? extends IBundleMakerProjectContentProvider> selectedItems) {
+  public void moveUpContentProviders(List<? extends IProjectContentProvider> selectedItems) {
 
     // asserts
     Assert.isNotNull(selectedItems);
@@ -179,8 +172,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     }
 
     //
-    List<IBundleMakerProjectContentProvider> newOrder = new LinkedList<IBundleMakerProjectContentProvider>(
-        _projectContentProviders);
+    List<IProjectContentProvider> newOrder = new LinkedList<IProjectContentProvider>(_projectContentProviders);
     newOrder = moveUp(newOrder, selectedItems);
 
     //
@@ -192,7 +184,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * {@inheritDoc}
    */
   @Override
-  public void moveDownContentProviders(List<? extends IBundleMakerProjectContentProvider> selectedItems) {
+  public void moveDownContentProviders(List<? extends IProjectContentProvider> selectedItems) {
 
     // asserts
     Assert.isNotNull(selectedItems);
@@ -202,8 +194,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
       return;
     }
 
-    List<IBundleMakerProjectContentProvider> newOrder = new LinkedList<IBundleMakerProjectContentProvider>(
-        _projectContentProviders);
+    List<IProjectContentProvider> newOrder = new LinkedList<IProjectContentProvider>(_projectContentProviders);
     Collections.reverse(newOrder);
     newOrder = moveUp(newOrder, selectedItems);
     Collections.reverse(newOrder);
@@ -215,7 +206,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
 
   @Override
   public void removeContentProvider(String id) {
-    for (Iterator<IBundleMakerProjectContent> iterator = _projectContent.iterator(); iterator.hasNext();) {
+    for (Iterator<IProjectContentEntry> iterator = _projectContentEntries.iterator(); iterator.hasNext();) {
 
       AbstractContent content = (AbstractContent) iterator.next();
 
@@ -226,18 +217,31 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IProjectContentProvider getProjectContentProvider(String identifier) {
+    return _projectContentProviderMap.get(identifier);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void clear() {
     synchronized (_identifierLock) {
-      _projectContent.clear();
+      _projectContentEntries.clear();
       _projectContentProviders.clear();
+      _projectContentProviderMap.clear();
+      _projectContentEntriesMap.clear();
       _currentId = 0;
       _initialized = false;
       _jre = null;
     }
   }
 
-  public void addContentProvider(IBundleMakerProjectContentProvider contentProvider, boolean resetIdentifier) {
+  public void addContentProvider(IProjectContentProvider contentProvider, boolean resetIdentifier) {
     Assert.isNotNull(contentProvider);
 
     //
@@ -270,7 +274,7 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     }
 
     // clear the project content list
-    _projectContent.clear();
+    _projectContentEntries.clear();
 
     // // TODO
     // if (isValid()) {
@@ -278,39 +282,20 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
     // }
 
     //
-    for (IBundleMakerProjectContentProvider contentProvider : _projectContentProviders) {
+    for (IProjectContentProvider contentProvider : _projectContentProviders) {
 
       //
-      List<IBundleMakerProjectContent> projectContents = contentProvider
+      List<IProjectContentEntry> projectContents = contentProvider
           .getBundleMakerProjectContent(getBundleMakerProject());
 
       //
-      _projectContent.addAll(projectContents);
+      _projectContentEntries.addAll(projectContents);
     }
 
-    // for (IBundleMakerProjectContent content : _projectContent) {
-    // System.out.println(content.getSourceRootPaths());
-    // System.out.println(content.getBinaryRootPaths());
-    // }
-
-    // //
-    // int sourceResourcesCount = 0;
-    // int binaryResourcesCount = 0;
     //
-    // // TODO
-    // for (IBundleMakerProjectContent fileBasedContent : _projectContent) {
-    // fileBasedContent.initialize(this);
-    //
-    // //
-    // if (fileBasedContent.isAnalyze()) {
-    // binaryResourcesCount += fileBasedContent.getModifiableResourceContent().getModifiableBinaryResources().size();
-    // sourceResourcesCount += fileBasedContent.getModifiableResourceContent().getModifiableSourceResources().size();
-    // }
-    // }
-    //
-    // // TODO:
-    // System.out.println("Source resources to process: " + sourceResourcesCount);
-    // System.out.println("Binary resources to process: " + binaryResourcesCount);
+    for (IProjectContentEntry entry : _projectContentEntries) {
+      _projectContentEntriesMap.put(entry.getId(), entry);
+    }
 
     //
     _initialized = true;
@@ -424,15 +409,15 @@ public class BundleMakerProjectDescription implements IModifiableBundleMakerProj
    * @param selectedItems
    * @return
    */
-  private List<IBundleMakerProjectContentProvider> moveUp(List<? extends IBundleMakerProjectContentProvider> original,
-      List<? extends IBundleMakerProjectContentProvider> selectedItems) {
+  private List<IProjectContentProvider> moveUp(List<? extends IProjectContentProvider> original,
+      List<? extends IProjectContentProvider> selectedItems) {
 
     //
     int nElements = selectedItems.size();
-    List<IBundleMakerProjectContentProvider> res = new ArrayList<IBundleMakerProjectContentProvider>(nElements);
-    IBundleMakerProjectContentProvider floating = null;
+    List<IProjectContentProvider> res = new ArrayList<IProjectContentProvider>(nElements);
+    IProjectContentProvider floating = null;
     for (int i = 0; i < nElements; i++) {
-      IBundleMakerProjectContentProvider curr = selectedItems.get(i);
+      IProjectContentProvider curr = selectedItems.get(i);
       if (original.contains(curr)) {
         res.add(curr);
       } else {

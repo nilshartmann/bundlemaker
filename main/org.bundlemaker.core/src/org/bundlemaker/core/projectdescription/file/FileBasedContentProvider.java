@@ -9,8 +9,8 @@ import org.bundlemaker.core.content.file.xml.XmlResourceContentType;
 import org.bundlemaker.core.projectdescription.AbstractContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedContentProvider extends AbstractContentProvider implements IBundleMakerProjectContentProvider {
+public class FileBasedContentProvider extends AbstractContentProvider implements IProjectContentProvider {
 
   /** the file based content */
   private FileBasedContent _fileBasedContent;
@@ -51,7 +51,7 @@ public class FileBasedContentProvider extends AbstractContentProvider implements
    * {@inheritDoc}
    */
   @Override
-  public List<IBundleMakerProjectContent> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
     //
@@ -61,7 +61,7 @@ public class FileBasedContentProvider extends AbstractContentProvider implements
     _fileBasedContent.initialize(bundleMakerProject.getProjectDescription());
 
     // return the file based content
-    return Arrays.asList(new IBundleMakerProjectContent[] { _fileBasedContent });
+    return Arrays.asList(new IProjectContentEntry[] { _fileBasedContent });
   }
 
   /**

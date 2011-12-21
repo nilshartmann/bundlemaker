@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IBundleMakerProjectContentProvider {
+public interface IProjectContentProvider {
 
   /**
    * <p>
@@ -37,8 +37,7 @@ public interface IBundleMakerProjectContentProvider {
    * 
    * @return
    */
-  List<IBundleMakerProjectContent> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
-      throws CoreException;
+  List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject) throws CoreException;
 
   /**
    * <p>

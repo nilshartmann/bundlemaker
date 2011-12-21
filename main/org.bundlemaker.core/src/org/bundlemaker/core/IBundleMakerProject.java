@@ -16,8 +16,8 @@ import java.util.List;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -34,12 +34,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @noextend This interface is not intended to be extended by clients.
  */
 public interface IBundleMakerProject {
-
-  /** the bundle make directory name */
-  public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
-
-  /** the project description file name */
-  public static final String PROJECT_DESCRIPTION_NAME   = "projectdescription.xml";
 
   /**
    * <p>
@@ -76,14 +70,14 @@ public interface IBundleMakerProject {
    * 
    * @precondition none
    */
-  public IModifiableBundleMakerProjectDescription getModifiableProjectDescription();
+  public IModifiableProjectDescription getModifiableProjectDescription();
 
   /**
    * <p>
-   * Allows to modify the {@link IBundleMakerProjectDescription} using the template class
+   * Allows to modify the {@link IProjectDescription} using the template class
    * {@link IProjectDescriptionModifier}. This method automatically calls
-   * {@link IModifiableBundleMakerProjectDescription#save()} after executing
-   * {@link IProjectDescriptionModifier#modifyProjectDescription(IModifiableBundleMakerProjectDescription)}.
+   * {@link IModifiableProjectDescription#save()} after executing
+   * {@link IProjectDescriptionModifier#modifyProjectDescription(IModifiableProjectDescription)}.
    * </p>
    * 
    * @param modifier
@@ -98,7 +92,7 @@ public interface IBundleMakerProject {
    * 
    * @return the (unmodifiable) IBundleMakerProjectDescription of this {@link IBundleMakerProject}.
    */
-  public IBundleMakerProjectDescription getProjectDescription();
+  public IProjectDescription getProjectDescription();
 
   /**
    * <p>
@@ -311,6 +305,6 @@ public interface IBundleMakerProject {
      * @param projectDescription
      *          the modifiable project description
      */
-    void modifyProjectDescription(IModifiableBundleMakerProjectDescription projectDescription);
+    void modifyProjectDescription(IModifiableProjectDescription projectDescription);
   }
 }

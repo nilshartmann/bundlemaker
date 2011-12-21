@@ -3,7 +3,7 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ public abstract class AbstractArtifactModelAwareModularizedSystem extends Abstra
    * @param name
    * @param projectDescription
    */
-  public AbstractArtifactModelAwareModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+  public AbstractArtifactModelAwareModularizedSystem(String name, IProjectDescription projectDescription) {
     super(name, projectDescription);
   }
 

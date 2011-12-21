@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -41,7 +41,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
   /**
    * The original content or null if a new content is created with this dialog
    */
-  private final IBundleMakerProjectContent _originalContent;
+  private final IProjectContentEntry _originalContent;
 
   private ContentListBlock                 _binariesContentList;
 
@@ -59,7 +59,7 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
   boolean                                  _analyzeSources = false;
 
-  public ModifyProjectContentDialog(Shell parentShell, IBundleMakerProjectContent existingContent) {
+  public ModifyProjectContentDialog(Shell parentShell, IProjectContentEntry existingContent) {
     super(parentShell);
     Assert.isNotNull(existingContent);
     _originalContent = existingContent;

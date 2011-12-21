@@ -12,12 +12,12 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * Abstract base class for all {@link IBundleMakerProjectContent} implementations.
+ * Abstract base class for all {@link IProjectContentEntry} implementations.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractContent implements IBundleMakerProjectContent {
+public abstract class AbstractContent implements IProjectContentEntry {
 
   /** the empty resource standin set */
   private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
@@ -45,17 +45,17 @@ public abstract class AbstractContent implements IBundleMakerProjectContent {
   private Set<IResourceStandin>              _sourceResourceStandins;
 
   /** the project description */
-  private IBundleMakerProjectDescription     _projectDescription;
+  private IProjectDescription                _projectDescription;
 
   /** the bundle maker project content provider */
-  private IBundleMakerProjectContentProvider _provider;
+  private IProjectContentProvider            _provider;
 
   /**
    * <p>
    * Creates a new instance of type {@link AbstractContent}.
    * </p>
    */
-  public AbstractContent(IBundleMakerProjectContentProvider provider) {
+  public AbstractContent(IProjectContentProvider provider) {
     Assert.isNotNull(provider);
 
     // set the provider
@@ -66,7 +66,7 @@ public abstract class AbstractContent implements IBundleMakerProjectContent {
    * {@inheritDoc}
    */
   @Override
-  public IBundleMakerProjectContentProvider getProvider() {
+  public IProjectContentProvider getProvider() {
     return _provider;
   }
 
@@ -239,7 +239,7 @@ public abstract class AbstractContent implements IBundleMakerProjectContent {
    *          the project description.
    * @throws CoreException
    */
-  public final void initialize(IBundleMakerProjectDescription projectDescription) throws CoreException {
+  public final void initialize(IProjectDescription projectDescription) throws CoreException {
 
     //
     Assert.isNotNull(projectDescription);
@@ -266,7 +266,7 @@ public abstract class AbstractContent implements IBundleMakerProjectContent {
    * 
    * @param projectDescription
    */
-  protected abstract void onInitialize(IBundleMakerProjectDescription projectDescription) throws CoreException;
+  protected abstract void onInitialize(IProjectDescription projectDescription) throws CoreException;
 
   /**
    * <p>

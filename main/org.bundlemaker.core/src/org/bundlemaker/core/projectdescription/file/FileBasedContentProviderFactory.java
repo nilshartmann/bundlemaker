@@ -8,7 +8,7 @@ import org.bundlemaker.core.internal.projectdescription.file.JarInfo;
 import org.bundlemaker.core.internal.projectdescription.file.JarInfoService;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.variables.IStringVariableManager;
@@ -28,7 +28,7 @@ public class FileBasedContentProviderFactory {
    * @return
    */
   public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableBundleMakerProjectDescription description, String name, String version, String binaryRoot,
+      IModifiableProjectDescription description, String name, String version, String binaryRoot,
       String sourceRoot) {
     return addNewFileBasedContentProvider(description, name, version, toList(binaryRoot), toList(sourceRoot),
         AnalyzeMode.BINARIES_AND_SOURCES);
@@ -43,7 +43,7 @@ public class FileBasedContentProviderFactory {
    * @return
    */
   public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableBundleMakerProjectDescription description, String binaryRoot) {
+      IModifiableProjectDescription description, String binaryRoot) {
     return addNewFileBasedContentProvider(description, binaryRoot, null, AnalyzeMode.BINARIES_AND_SOURCES);
   }
 
@@ -61,7 +61,7 @@ public class FileBasedContentProviderFactory {
    * @return
    */
   public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableBundleMakerProjectDescription description, String binaryRoot, String sourceRoot,
+      IModifiableProjectDescription description, String binaryRoot, String sourceRoot,
       AnalyzeMode analyzeMode) {
     Assert.isNotNull(binaryRoot);
     Assert.isNotNull(analyzeMode);
@@ -94,7 +94,7 @@ public class FileBasedContentProviderFactory {
    * @return
    */
   public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableBundleMakerProjectDescription description, String name, String version, List<String> binaryRoots,
+      IModifiableProjectDescription description, String name, String version, List<String> binaryRoots,
       List<String> sourceRoots, AnalyzeMode analyzeMode) {
     Assert.isNotNull(name);
     Assert.isNotNull(version);

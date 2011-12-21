@@ -17,7 +17,7 @@ import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 
 public class FunctionalHelper {
 
-  static List<IProblem> parseNewOrModifiedResources(IBundleMakerProjectContent content,
+  static List<IProblem> parseNewOrModifiedResources(IProjectContentEntry content,
       Collection<IResourceStandin> resources, ResourceCache resourceCache, ParserType parserType, IParser[] parsers,
       IProgressMonitor monitor) throws CoreException {
 

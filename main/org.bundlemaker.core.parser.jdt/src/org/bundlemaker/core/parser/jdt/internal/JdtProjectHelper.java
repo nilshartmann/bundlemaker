@@ -16,7 +16,7 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.util.JdkCreator;
@@ -72,7 +72,7 @@ public class JdtProjectHelper {
       entries.add(classpathEntry);
 
       // step 3.2: add the binary paths
-      for (IBundleMakerProjectContent projectContent : project.getProjectDescription().getContent()) {
+      for (IProjectContentEntry projectContent : project.getProjectDescription().getContent()) {
 
         // TODO!!
         IPath sourceRoot = null;

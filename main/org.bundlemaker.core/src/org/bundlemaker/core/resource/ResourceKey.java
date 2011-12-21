@@ -100,7 +100,7 @@ public class ResourceKey implements IResourceKey {
    * {@inheritDoc}
    */
   @Override
-  public String getContentId() {
+  public String getProjectContentEntryId() {
     return _contentId.toString();
   }
 
@@ -375,7 +375,7 @@ public class ResourceKey implements IResourceKey {
     if (!(ResourceKey.class.isAssignableFrom(obj.getClass())))
       return false;
     ResourceKey other = (ResourceKey) obj;
-    if (!_contentId.equals(other.getContentId()))
+    if (!_contentId.equals(other.getProjectContentEntryId()))
       return false;
     if (!_path.equals(other.getPath()))
       return false;

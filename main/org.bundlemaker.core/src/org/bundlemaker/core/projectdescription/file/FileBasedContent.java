@@ -17,22 +17,22 @@ import java.util.Set;
 import org.bundlemaker.core.projectdescription.AbstractContent;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * Implementation of an {@link IBundleMakerProjectDescription} that contains file based definition (source and binary
+ * Implementation of an {@link IProjectDescription} that contains file based definition (source and binary
  * folders and/or archives).
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedContent extends AbstractContent implements IBundleMakerProjectContent {
+public class FileBasedContent extends AbstractContent implements IProjectContentEntry {
 
   /** - */
   private static final Set<VariablePath> EMPTY_ROOTPATH_SET = Collections.unmodifiableSet(new HashSet<VariablePath>());
@@ -48,7 +48,7 @@ public class FileBasedContent extends AbstractContent implements IBundleMakerPro
    * Creates a new instance of type {@link FileBasedContent}.
    * </p>
    */
-  public FileBasedContent(IBundleMakerProjectContentProvider provider) {
+  public FileBasedContent(IProjectContentProvider provider) {
     super(provider);
 
     //
@@ -75,7 +75,7 @@ public class FileBasedContent extends AbstractContent implements IBundleMakerPro
   /**
    * {@inheritDoc}
    */
-  protected void onInitialize(IBundleMakerProjectDescription projectDescription) throws CoreException {
+  protected void onInitialize(IProjectDescription projectDescription) throws CoreException {
 
     if (isAnalyze()) {
 

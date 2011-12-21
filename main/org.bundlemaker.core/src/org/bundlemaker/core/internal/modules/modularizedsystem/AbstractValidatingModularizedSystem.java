@@ -12,7 +12,7 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 
 /**
  */
@@ -25,7 +25,7 @@ public abstract class AbstractValidatingModularizedSystem extends AbstractArtifa
    * @param name
    * @param projectDescription
    */
-  public AbstractValidatingModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+  public AbstractValidatingModularizedSystem(String name, IProjectDescription projectDescription) {
 
     //
     super(name, projectDescription);

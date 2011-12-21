@@ -24,7 +24,7 @@ import org.bundlemaker.core.IBundleMakerProject;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IBundleMakerProjectDescription {
+public interface IProjectDescription {
 
   /**
    * <p>
@@ -37,25 +37,28 @@ public interface IBundleMakerProjectDescription {
 
   /**
    * <p>
-   * Returns a (read-only) list with all the defined {@link IBundleMakerProjectContent}.
+   * Returns a (read-only) list with all the defined {@link IProjectContentEntry}.
    * </p>
    * 
-   * @return a (read-only) list with all the defined {@link IBundleMakerProjectContent}.
+   * @return a (read-only) list with all the defined {@link IProjectContentEntry}.
    */
-  List<? extends IBundleMakerProjectContent> getContent();
+  List<? extends IProjectContentEntry> getContent();
 
   /**
    * <p>
-   * Returns the {@link IBundleMakerProjectContent} with the specified identifier.
    * </p>
    * 
-   * @param id
-   *          the identifier
-   * @return the {@link IBundleMakerProjectContent} with the specified identifier.
+   * @return
    */
-  // TODO: REMOVE
-  @Deprecated
-  IBundleMakerProjectContent getFileBasedContent(String id);
+  IProjectContentProvider getProjectContentProvider(String identifier);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IProjectContentEntry getProjectContentEntry(String identifier);
 
   /**
    * <p>

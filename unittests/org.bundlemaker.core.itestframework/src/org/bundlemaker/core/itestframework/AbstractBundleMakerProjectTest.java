@@ -7,7 +7,7 @@ import java.io.File;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
@@ -126,7 +126,7 @@ public abstract class AbstractBundleMakerProjectTest {
     Assert.assertTrue(directory.isDirectory());
 
     //
-    IModifiableBundleMakerProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
+    IModifiableProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
 
     // step 1:
     projectDescription.clear();

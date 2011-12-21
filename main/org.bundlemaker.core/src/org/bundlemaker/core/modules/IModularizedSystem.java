@@ -20,7 +20,7 @@ import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -64,12 +64,12 @@ public interface IModularizedSystem {
 
   /**
    * <p>
-   * Returns the {@link IBundleMakerProjectDescription}.
+   * Returns the {@link IProjectDescription}.
    * </p>
    * 
-   * @return the {@link IBundleMakerProjectDescription}
+   * @return the {@link IProjectDescription}
    */
-  IBundleMakerProjectDescription getProjectDescription();
+  IProjectDescription getProjectDescription();
 
   /**
    * <p>

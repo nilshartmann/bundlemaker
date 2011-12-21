@@ -23,9 +23,9 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IVariablePath;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.EditEntryDialog;
@@ -76,7 +76,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * A block (represented by a Form Section) that can be used to edit either the resources or the types of the bundlemaker
  * project description
  * 
- * @see IBundleMakerProjectDescription
+ * @see IProjectDescription
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
@@ -538,8 +538,8 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
 
     for (TreePath treePath : paths) {
       Object element = treePath.getLastSegment();
-      if (element instanceof IBundleMakerProjectContent) {
-        IBundleMakerProjectContent content = (IBundleMakerProjectContent) element;
+      if (element instanceof IProjectContentEntry) {
+        IProjectContentEntry content = (IProjectContentEntry) element;
         getBundleMakerProjectDescription().removeContentProvider(content.getId());
       }
       if (element instanceof IVariablePath) {
@@ -589,11 +589,11 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
   }
 
   /**
-   * Returns the {@link IBundleMakerProjectDescription} this block works on
+   * Returns the {@link IProjectDescription} this block works on
    * 
    * @return
    */
-  private IModifiableBundleMakerProjectDescription getBundleMakerProjectDescription() {
+  private IModifiableProjectDescription getBundleMakerProjectDescription() {
     return _bundleMakerProjectProvider.getBundleMakerProject().getModifiableProjectDescription();
   }
 

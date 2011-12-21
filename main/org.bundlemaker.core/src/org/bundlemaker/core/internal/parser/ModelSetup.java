@@ -21,7 +21,7 @@ import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.AbstractContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.util.StopWatch;
@@ -77,7 +77,7 @@ public class ModelSetup {
    * @param modifiableFileBasedContent
    * @param dependencyStore
    */
-  public List<IProblem> setup(final List<IBundleMakerProjectContent> projectContents,
+  public List<IProblem> setup(final List<IProjectContentEntry> projectContents,
       final IPersistentDependencyStore dependencyStore, IProgressMonitor mainMonitor)
       throws OperationCanceledException, CoreException {
 
@@ -183,7 +183,7 @@ public class ModelSetup {
    * @param resourceCache
    * @param mainMonitor
    */
-  private List<IProblem> compareAndUpdate(List<IBundleMakerProjectContent> projectContents,
+  private List<IProblem> compareAndUpdate(List<IProjectContentEntry> projectContents,
       Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
 
     //
@@ -199,7 +199,7 @@ public class ModelSetup {
     try {
 
       //
-      for (IBundleMakerProjectContent projectContent : projectContents) {
+      for (IProjectContentEntry projectContent : projectContents) {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
@@ -267,7 +267,7 @@ public class ModelSetup {
 
   private List<IProblem> multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
       Collection<IResourceStandin> sourceResources, Collection<IResourceStandin> binaryResources,
-      ResourceCache resourceCache, IBundleMakerProjectContent fileBasedContent, IProgressMonitor monitor) {
+      ResourceCache resourceCache, IProjectContentEntry fileBasedContent, IProgressMonitor monitor) {
 
     List<IProblem> result = new LinkedList<IProblem>();
 

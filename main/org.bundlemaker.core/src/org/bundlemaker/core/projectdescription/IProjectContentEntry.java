@@ -20,7 +20,7 @@ import org.bundlemaker.core.resource.IResource;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IBundleMakerProjectContent {
+public interface IProjectContentEntry {
 
   /**
    * <p>
@@ -70,12 +70,12 @@ public interface IBundleMakerProjectContent {
 
   /**
    * <p>
-   * Returns the {@link IBundleMakerProjectContentProvider} that created this {@link IBundleMakerProjectContent}.
+   * Returns the {@link IProjectContentProvider} that created this {@link IProjectContentEntry}.
    * </p>
    * 
-   * @return the {@link IBundleMakerProjectContentProvider} that created this {@link IBundleMakerProjectContent}.
+   * @return the {@link IProjectContentProvider} that created this {@link IProjectContentEntry}.
    */
-  IBundleMakerProjectContentProvider getProvider();
+  IProjectContentProvider getProvider();
 
   /**
    * <p>

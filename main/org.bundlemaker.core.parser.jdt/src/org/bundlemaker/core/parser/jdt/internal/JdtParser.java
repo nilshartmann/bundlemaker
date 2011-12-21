@@ -16,7 +16,7 @@ import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
@@ -77,7 +77,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  public synchronized void parseResource(IBundleMakerProjectContent projectContent, IResourceKey resourceKey,
+  public synchronized void parseResource(IProjectContentEntry projectContent, IResourceKey resourceKey,
       IResourceCache cache) {
 
     //

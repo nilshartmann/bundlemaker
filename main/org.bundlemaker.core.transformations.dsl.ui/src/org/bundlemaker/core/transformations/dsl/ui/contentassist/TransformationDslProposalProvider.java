@@ -14,7 +14,7 @@ import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ModuleIdentifier;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceList;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceSet;
@@ -76,8 +76,8 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
   public void completeModuleIdentifier_Modulename(EObject model, Assignment assignment, ContentAssistContext context,
       ICompletionProposalAcceptor acceptor) {
     super.completeModuleIdentifier_Modulename(model, assignment, context, acceptor);
-    List<? extends IBundleMakerProjectContent> fileBasedContent = getFileBasedContent(model);
-    for (IBundleMakerProjectContent iFileBasedContent : fileBasedContent) {
+    List<? extends IProjectContentEntry> fileBasedContent = getFileBasedContent(model);
+    for (IProjectContentEntry iFileBasedContent : fileBasedContent) {
       if (iFileBasedContent.isAnalyze()) {
         String moduleName = getValueConverter().toString(iFileBasedContent.getName(), "MODULEID");
         // Create completion proposal
@@ -103,8 +103,8 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
       ICompletionProposalAcceptor acceptor) {
     super.completeModuleIdentifier_Version(model, assignment, context, acceptor);
     ModuleIdentifier moduleIdentifier = (ModuleIdentifier) model;
-    List<? extends IBundleMakerProjectContent> fileBasedContent = getFileBasedContent(model);
-    for (IBundleMakerProjectContent iFileBasedContent : fileBasedContent) {
+    List<? extends IProjectContentEntry> fileBasedContent = getFileBasedContent(model);
+    for (IProjectContentEntry iFileBasedContent : fileBasedContent) {
       if (iFileBasedContent.isAnalyze()) {
         if (moduleIdentifier.getModulename() == null
             || moduleIdentifier.getModulename().equals(iFileBasedContent.getName())) {
@@ -202,19 +202,19 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
 
   }
 
-  private List<? extends IBundleMakerProjectContent> getFileBasedContent(EObject model) {
+  private List<? extends IProjectContentEntry> getFileBasedContent(EObject model) {
     IBundleMakerProject bundleMakerProject = getBundleMakerProject(model);
     System.out.printf("model: %s bundleMakerProject: %s%n", model, bundleMakerProject);
 
     if (bundleMakerProject == null) {
-      return new LinkedList<IBundleMakerProjectContent>();
+      return new LinkedList<IProjectContentEntry>();
     }
 
     if (bundleMakerProject.getState() != BundleMakerProjectState.READY) {
-      return new LinkedList<IBundleMakerProjectContent>();
+      return new LinkedList<IProjectContentEntry>();
     }
 
-    List<? extends IBundleMakerProjectContent> fileBasedContent = bundleMakerProject.getProjectDescription()
+    List<? extends IProjectContentEntry> fileBasedContent = bundleMakerProject.getProjectDescription()
         .getContent();
     return fileBasedContent;
 

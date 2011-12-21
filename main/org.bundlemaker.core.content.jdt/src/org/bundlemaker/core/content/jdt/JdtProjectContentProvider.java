@@ -7,8 +7,8 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.content.jdt.xml.JdtProjectContentType;
 import org.bundlemaker.core.projectdescription.AbstractContentProvider;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.resources.IProject;
@@ -27,7 +27,7 @@ import org.eclipse.jdt.core.JavaModelException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JdtProjectContentProvider extends AbstractContentProvider implements IBundleMakerProjectContentProvider {
+public class JdtProjectContentProvider extends AbstractContentProvider implements IProjectContentProvider {
 
   /** - */
   private IJavaProject _javaProject;
@@ -58,11 +58,11 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
    * @throws CoreException
    */
   @Override
-  public List<IBundleMakerProjectContent> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
     //
-    List<IBundleMakerProjectContent> fileBasedContents = new LinkedList<IBundleMakerProjectContent>();
+    List<IProjectContentEntry> fileBasedContents = new LinkedList<IProjectContentEntry>();
 
     int counter = 0;
 

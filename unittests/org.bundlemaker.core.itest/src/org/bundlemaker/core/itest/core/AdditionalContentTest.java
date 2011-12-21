@@ -20,7 +20,7 @@ import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
@@ -146,7 +146,7 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
     Assert.assertTrue(directory.isDirectory());
 
     //
-    IModifiableBundleMakerProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
+    IModifiableProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
 
     // step 1:
     projectDescription.clear();

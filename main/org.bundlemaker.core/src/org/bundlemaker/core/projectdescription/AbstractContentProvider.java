@@ -6,7 +6,7 @@ package org.bundlemaker.core.projectdescription;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractContentProvider implements IBundleMakerProjectContentProvider {
+public abstract class AbstractContentProvider implements IProjectContentProvider {
 
   /** - */
   private String _id;

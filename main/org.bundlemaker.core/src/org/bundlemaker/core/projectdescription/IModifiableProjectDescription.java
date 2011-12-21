@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.CoreException;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IModifiableBundleMakerProjectDescription extends IBundleMakerProjectDescription {
+public interface IModifiableProjectDescription extends IProjectDescription {
 
   /**
    * <p>
@@ -43,7 +43,7 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * 
    * @return
    */
-  List<? extends IBundleMakerProjectContentProvider> getContentProviders();
+  List<? extends IProjectContentProvider> getContentProviders();
 
   /**
    * <p>
@@ -51,7 +51,7 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * 
    * @param contentProvider
    */
-  void addContentProvider(IBundleMakerProjectContentProvider contentProvider);
+  void addContentProvider(IProjectContentProvider contentProvider);
 
   /**
    * <p>
@@ -59,7 +59,7 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * 
    * @param contentProvider
    */
-  void removeContentProvider(IBundleMakerProjectContentProvider contentProvider);
+  void removeContentProvider(IProjectContentProvider contentProvider);
 
   /**
    * <p>
@@ -67,7 +67,7 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * 
    * @param move
    */
-  void moveUpContentProviders(List<? extends IBundleMakerProjectContentProvider> move);
+  void moveUpContentProviders(List<? extends IProjectContentProvider> move);
 
   /**
    * <p>
@@ -75,7 +75,7 @@ public interface IModifiableBundleMakerProjectDescription extends IBundleMakerPr
    * 
    * @param move
    */
-  void moveDownContentProviders(List<? extends IBundleMakerProjectContentProvider> move);
+  void moveDownContentProviders(List<? extends IProjectContentProvider> move);
 
   /**
    * <p>

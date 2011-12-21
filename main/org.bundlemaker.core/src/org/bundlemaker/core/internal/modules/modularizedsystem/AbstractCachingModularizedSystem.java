@@ -28,7 +28,7 @@ import org.bundlemaker.core.modules.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -67,7 +67,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * @param name
    * @param projectDescription
    */
-  public AbstractCachingModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+  public AbstractCachingModularizedSystem(String name, IProjectDescription projectDescription) {
 
     // call the super constructor
     super(name, projectDescription);

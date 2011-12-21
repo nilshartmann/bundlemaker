@@ -9,7 +9,7 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.parser.ModelSetup.Directory;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -22,7 +22,7 @@ public class CallableReparse implements Callable<List<IProblem>> {
   private IProgressMonitor           _progressMonitor;
 
   /** - */
-  private IBundleMakerProjectContent _content;
+  private IProjectContentEntry _content;
 
   /** - */
   private Collection<Directory>      _directories;
@@ -43,7 +43,7 @@ public class CallableReparse implements Callable<List<IProblem>> {
    * @param parser
    * @param resourceCache
    */
-  public CallableReparse(IBundleMakerProjectContent content, Collection<Directory> directories, IParser[] parser,
+  public CallableReparse(IProjectContentEntry content, Collection<Directory> directories, IParser[] parser,
       ResourceCache resourceCache, IProgressMonitor progressMonitor) {
 
     //

@@ -43,7 +43,7 @@ public class Type implements IType, IModifiableType {
   private TypeEnum                     _typeEnum;
 
   /** - */
-  private transient String             _contentId;
+  private transient String             _projectContentEntryId;
 
   /** transient: the source resource */
   private transient Resource           _sourceResource;
@@ -61,11 +61,11 @@ public class Type implements IType, IModifiableType {
    * @param fullyQualifiedName
    * @param typeEnum
    */
-  public Type(String fullyQualifiedName, TypeEnum typeEnum, String contentId) {
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, String contentEntry) {
 
     Assert.isNotNull(fullyQualifiedName);
     Assert.isNotNull(typeEnum);
-    Assert.isNotNull(contentId);
+    Assert.isNotNull(contentEntry);
 
     //
     _fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
@@ -74,7 +74,7 @@ public class Type implements IType, IModifiableType {
     _typeEnum = typeEnum;
 
     //
-    _contentId = contentId;
+    _projectContentEntryId = contentEntry;
   }
 
   // /**
@@ -114,13 +114,14 @@ public class Type implements IType, IModifiableType {
   }
 
   @Override
-  public String getContentId() {
+  public String getProjectContentEntryId() {
 
-    if (_contentId != null) {
-      return _contentId;
+    if (_projectContentEntryId != null) {
+      return _projectContentEntryId;
     }
 
-    return _binaryResource != null ? _binaryResource.getContentId() : _sourceResource.getContentId();
+    return _binaryResource != null ? _binaryResource.getProjectContentEntryId() : _sourceResource
+        .getProjectContentEntryId();
   }
 
   @Override

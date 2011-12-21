@@ -34,8 +34,8 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.resource.TypeEnum;
@@ -62,7 +62,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * @param name
    * @param projectDescription
    */
-  public AbstractTransformationAwareModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+  public AbstractTransformationAwareModularizedSystem(String name, IProjectDescription projectDescription) {
     super(name, projectDescription);
   }
 
@@ -143,16 +143,15 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     subMonitor.worked(10);
 
     // step 3: create the type modules
-    for (IBundleMakerProjectContent fileBasedContent : getProjectDescription().getContent()) {
+    for (IProjectContentEntry fileBasedContent : getProjectDescription().getContent()) {
       if (!fileBasedContent.isAnalyze()) {
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
         // TODO!!
         try {
-          TypeModule typeModule = createTypeModule(fileBasedContent.getId(),
-              identifier,
-              // TODO!!
-              new File[] { ((FileBasedContent) fileBasedContent).getBinaryRootPaths().toArray(
-                  new VariablePath[0])[0].getAsFile() });
+          TypeModule typeModule = createTypeModule(fileBasedContent.getId().toString(), identifier,
+          // TODO!!
+              new File[] { ((FileBasedContent) fileBasedContent).getBinaryRootPaths().toArray(new VariablePath[0])[0]
+                  .getAsFile() });
           getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
         } catch (CoreException ex) {
           // TODO

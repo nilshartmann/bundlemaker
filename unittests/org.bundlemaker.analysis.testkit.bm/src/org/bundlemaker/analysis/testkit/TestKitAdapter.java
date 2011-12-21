@@ -12,7 +12,7 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
@@ -161,7 +161,7 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
     Assert.assertTrue(directory.isDirectory());
 
     //
-    IModifiableBundleMakerProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
+    IModifiableProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
 
     // step 1:
     projectDescription.clear();

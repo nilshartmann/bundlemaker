@@ -8,7 +8,7 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.ui.editor.resources.ProjectResourcesBlock;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.resources.IResource;
@@ -127,12 +127,12 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
 
   /**
    * <p>
-   * Returns the {@link IBundleMakerProjectDescription} that this editor is working on.
+   * Returns the {@link IProjectDescription} that this editor is working on.
    * </p>
    * 
    * @return the project description. Never null.
    */
-  protected IBundleMakerProjectDescription getBundleMakerProjectDescription() {
+  protected IProjectDescription getBundleMakerProjectDescription() {
     return getBundleMakerProject().getProjectDescription();
   }
 

@@ -71,7 +71,7 @@ public interface IType extends Comparable<IType> {
    * 
    * @return
    */
-  String getContentId();
+  String getProjectContentEntryId();
 
   /**
    * <p>
@@ -159,7 +159,7 @@ public interface IType extends Comparable<IType> {
    * @return
    */
   boolean isPrimaryType();
-  
+
   /**
    * <p>
    * </p>

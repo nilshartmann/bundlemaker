@@ -21,7 +21,7 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
@@ -48,7 +48,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
    * @param name
    * @param projectDescription
    */
-  public AbstractQueryableModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+  public AbstractQueryableModularizedSystem(String name, IProjectDescription projectDescription) {
     super(name, projectDescription);
 
     //

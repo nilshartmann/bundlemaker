@@ -19,7 +19,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.model.internal.projectdescription.xml.ContentProviderFactoryType;
 import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -45,7 +45,7 @@ public class ProjectDescriptionStore {
 
     // add the file based content
     // TODO
-    for (IBundleMakerProjectContentProvider contentProvider : projectDescription.getContentProviders()) {
+    for (IProjectContentProvider contentProvider : projectDescription.getContentProviders()) {
 
       ContentProviderFactoryType providerFactoryType = new ContentProviderFactoryType();
 
@@ -108,7 +108,7 @@ public class ProjectDescriptionStore {
         System.out.println(xmlProjectDescription.getClass().getClassLoader());
         Class<?> clazz = jaxbCompoundClassLoader.getCompoundClassLoader().loadClass(
             type.getContentProviderFactoryClass());
-        IBundleMakerProjectContentProvider instObject = (IBundleMakerProjectContentProvider) clazz.newInstance();
+        IProjectContentProvider instObject = (IProjectContentProvider) clazz.newInstance();
         instObject.setId(type.getContentProviderFactoryId());
         instObject.setConfiguration(type.getAny());
         result.addContentProvider(instObject, false);

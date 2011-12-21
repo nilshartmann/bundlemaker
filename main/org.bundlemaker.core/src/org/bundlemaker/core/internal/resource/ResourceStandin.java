@@ -76,8 +76,8 @@ public class ResourceStandin extends ResourceKey implements IResourceStandin {
   @Override
   public int compareTo(IResource other) {
 
-    if (!getContentId().equals(other.getContentId())) {
-      return getContentId().compareTo(other.getContentId());
+    if (!getProjectContentEntryId().equals(other.getProjectContentEntryId())) {
+      return getProjectContentEntryId().compareTo(other.getProjectContentEntryId());
     }
     if (!getRoot().equals(other.getRoot())) {
       return getRoot().compareTo(other.getRoot());

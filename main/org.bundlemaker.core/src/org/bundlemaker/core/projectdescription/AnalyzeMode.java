@@ -12,7 +12,7 @@ package org.bundlemaker.core.projectdescription;
 
 /**
  * <p>
- * Specifies how an {@link IBundleMakerProjectContent} entry in a {@link IBundleMakerProjectDescription} should be
+ * Specifies how an {@link IProjectContentEntry} entry in a {@link IProjectDescription} should be
  * analyzed.
  * </p>
  * 

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.resources;
 
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IVariablePath;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -33,8 +33,8 @@ class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
 
   @Override
   public String getText(Object element) {
-    if (element instanceof IBundleMakerProjectContent) {
-      IBundleMakerProjectContent content = (IBundleMakerProjectContent) element;
+    if (element instanceof IProjectContentEntry) {
+      IProjectContentEntry content = (IProjectContentEntry) element;
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 

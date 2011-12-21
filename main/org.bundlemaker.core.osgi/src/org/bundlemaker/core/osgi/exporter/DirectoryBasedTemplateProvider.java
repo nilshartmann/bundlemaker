@@ -216,7 +216,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
       for (String child : FileUtils.getAllChildren(templateDirectory)) {
 
         // create the resource standin
-        ResourceKey resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID", templateDirectory.getAbsolutePath(),
+        IReadableResource resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID", templateDirectory.getAbsolutePath(),
             child);
 
         // add the resource

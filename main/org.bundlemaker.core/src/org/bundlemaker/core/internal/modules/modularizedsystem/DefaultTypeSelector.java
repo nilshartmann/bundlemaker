@@ -4,8 +4,8 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -18,13 +18,13 @@ import org.eclipse.core.runtime.Assert;
 public class DefaultTypeSelector implements ITypeSelector {
 
   /** - */
-  public static final String             BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
+  public static final String  BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
 
   /** - */
-  private IBundleMakerProjectDescription _bundleMakerProjectDescription;
+  private IProjectDescription _bundleMakerProjectDescription;
 
   /** - */
-  private boolean                        _preferJdkTypes;
+  private boolean             _preferJdkTypes;
 
   /**
    * <p>
@@ -33,7 +33,7 @@ public class DefaultTypeSelector implements ITypeSelector {
    * 
    * @param bundleMakerProjectDescription
    */
-  public DefaultTypeSelector(IBundleMakerProjectDescription bundleMakerProjectDescription) {
+  public DefaultTypeSelector(IProjectDescription bundleMakerProjectDescription) {
 
     Assert.isNotNull(bundleMakerProjectDescription);
 
@@ -71,15 +71,17 @@ public class DefaultTypeSelector implements ITypeSelector {
     IType currentType = null;
     IType jdkType = null;
 
+    //
     for (IType iType : types) {
 
-      // get the content identifier
-      String contentID = iType.getContentId();
+      //
+      String identifier = iType.getProjectContentEntryId().toString();
 
-      if (!contentID.equals(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
+      // get the content identifier
+      if (!identifier.equals(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
 
         // get the file based content
-        IBundleMakerProjectContent fileBasedContent = _bundleMakerProjectDescription.getFileBasedContent(contentID);
+        IProjectContentEntry fileBasedContent = _bundleMakerProjectDescription.getProjectContentEntry(identifier);
 
         // get the index
         int index = _bundleMakerProjectDescription.getContent().indexOf(fileBasedContent);

@@ -35,8 +35,8 @@ import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -388,12 +388,12 @@ public class BundleMakerProject implements IBundleMakerProject {
    * @return
    */
   @Override
-  public IBundleMakerProjectDescription getProjectDescription() {
+  public IProjectDescription getProjectDescription() {
     return _projectDescription;
   }
 
   @Override
-  public IModifiableBundleMakerProjectDescription getModifiableProjectDescription() {
+  public IModifiableProjectDescription getModifiableProjectDescription() {
     return _projectDescription;
   }
 
@@ -404,7 +404,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     Assert.isNotNull(modifier);
 
     // Creating the project description
-    IModifiableBundleMakerProjectDescription projectDescription = this.getModifiableProjectDescription();
+    IModifiableProjectDescription projectDescription = this.getModifiableProjectDescription();
 
     modifier.modifyProjectDescription(projectDescription);
 

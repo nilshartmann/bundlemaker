@@ -28,7 +28,7 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
 import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -53,7 +53,7 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    * 
    * @param name
    */
-  public ModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+  public ModularizedSystem(String name, IProjectDescription projectDescription) {
 
     //
     super(name, projectDescription);

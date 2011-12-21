@@ -14,7 +14,7 @@ import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
 import org.bundlemaker.core.parser.bytecode.asm.AsmReferenceRecorder;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.modifiable.IModifiableResource;
@@ -53,7 +53,7 @@ public class ByteCodeParser extends AbstractParser {
   }
 
   @Override
-  public void parseResource(IBundleMakerProjectContent content, IResourceKey resourceKey, IResourceCache cache) {
+  public void parseResource(IProjectContentEntry content, IResourceKey resourceKey, IResourceCache cache) {
 
     // get the IModifiableResource
     IModifiableResource resource = cache.getOrCreateResource(resourceKey);
@@ -79,7 +79,7 @@ public class ByteCodeParser extends AbstractParser {
       String enclosingName = JavaTypeUtils.getEnclosingNonLocalAndNonAnonymousTypeName(fullyQualifiedName);
 
       // the resource key for the enclosing type
-      ResourceKey enclosingKey = new ResourceKey(resourceKey.getContentId(), resourceKey.getRoot(),
+      ResourceKey enclosingKey = new ResourceKey(resourceKey.getProjectContentEntryId(), resourceKey.getRoot(),
           JavaTypeUtils.convertFromFullyQualifiedName(enclosingName));
 
       // get the enclosing resource
