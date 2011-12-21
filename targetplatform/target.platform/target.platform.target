@@ -10,6 +10,7 @@
 <location path="${project_loc:target.platform}/slf4j-1.5.10" type="Directory"/>
 <location path="${project_loc:target.platform}/bundlor-1.0.0.RELEASE" type="Directory"/>
 <location path="${project_loc:target.platform}/test/cglib" type="Directory"/>
+<location path="${project_loc:target.platform}/asm" type="Directory"/>
 </locations>
 <launcherArgs>
 <vmArgs>-Xms40m -Xmx256m</vmArgs>
