@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor;
 
-import org.bundlemaker.core.projectdescription.IVariablePath;
-import org.bundlemaker.core.projectdescription.file.IModifiableFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.Image;
  */
 public class RootPathHelper {
 
-  public static String getLabel(IVariablePath rootPath) {
+  public static String getLabel(VariablePath rootPath) {
     return String.valueOf(rootPath.getUnresolvedPath());
   }
 
@@ -32,7 +32,7 @@ public class RootPathHelper {
    * @param element
    * @return
    */
-  public static Image getImageForPath(IVariablePath path) {
+  public static Image getImageForPath(VariablePath path, boolean isBinaryPath) {
     boolean isFolder;
     try {
       isFolder = path.getAsFile().isDirectory();
@@ -41,12 +41,12 @@ public class RootPathHelper {
     }
 
     if (isFolder) {
-      if (path.isBinaryPath()) {
+      if (isBinaryPath) {
         return UIImages.BINARY_FOLDER.getImage();
       }
       return UIImages.SOURCE_FOLDER.getImage();
     }
-    if (path.isBinaryPath()) {
+    if (isBinaryPath) {
       return UIImages.BINARY_ARCHIVE.getImage();
     }
     return UIImages.SOURCE_ARCHIVE.getImage();
@@ -57,7 +57,7 @@ public class RootPathHelper {
    * @param path
    * @return
    */
-  public static ImageDescriptor getImageDescriptorForPath(IVariablePath path) {
+  public static ImageDescriptor getImageDescriptorForPath(VariablePath path, boolean isBinaryPath) {
     boolean isFolder;
     try {
       isFolder = path.getAsFile().isDirectory();
@@ -66,19 +66,19 @@ public class RootPathHelper {
     }
 
     if (isFolder) {
-      if (path.isBinaryPath()) {
+      if (isBinaryPath) {
         return UIImages.BINARY_FOLDER.getImageDescriptor();
       }
       return UIImages.SOURCE_FOLDER.getImageDescriptor();
     }
-    if (path.isBinaryPath()) {
+    if (isBinaryPath) {
       return UIImages.BINARY_ARCHIVE.getImageDescriptor();
     }
     return UIImages.SOURCE_ARCHIVE.getImageDescriptor();
   }
 
-  public static IModifiableFileBasedContent getOwningFileBasedContent(TreePath treePath) {
-    IModifiableFileBasedContent lastSegment = (IModifiableFileBasedContent) treePath.getParentPath().getLastSegment();
+  public static IProjectContentProvider getOwningFileBasedContent(TreePath treePath) {
+    IProjectContentProvider lastSegment = (IProjectContentProvider) treePath.getParentPath().getLastSegment();
     return lastSegment;
   }
 

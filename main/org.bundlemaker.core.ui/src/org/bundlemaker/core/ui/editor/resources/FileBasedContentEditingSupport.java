@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.file.IModifiableFileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -62,15 +62,15 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
    */
   @Override
   protected boolean canEdit(Object element) {
-    if (!(element instanceof IModifiableFileBasedContent)) {
+    if (!(element instanceof FileBasedContentProvider)) {
       return false;
     }
 
-    IModifiableFileBasedContent content = (IModifiableFileBasedContent) element;
+    FileBasedContentProvider content = (FileBasedContentProvider) element;
     return canEditInternal(content);
   }
 
-  protected abstract boolean canEditInternal(IModifiableFileBasedContent content);
+  protected abstract boolean canEditInternal(FileBasedContentProvider content);
 
   /*
    * (non-Javadoc)
@@ -79,11 +79,11 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
    */
   @Override
   protected Object getValue(Object element) {
-    IModifiableFileBasedContent content = (IModifiableFileBasedContent) element;
+    FileBasedContentProvider content = (FileBasedContentProvider) element;
     return getValueInternal(content);
   }
 
-  protected abstract boolean getValueInternal(IModifiableFileBasedContent content);
+  protected abstract boolean getValueInternal(FileBasedContentProvider content);
 
   /*
    * (non-Javadoc)
@@ -92,7 +92,7 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
    */
   @Override
   protected void setValue(Object element, Object value) {
-    IModifiableFileBasedContent content = (IModifiableFileBasedContent) element;
+    FileBasedContentProvider content = (FileBasedContentProvider) element;
     Boolean analyze = (Boolean) value;
 
     setValueInternal(content, analyze);
@@ -101,7 +101,7 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
     _projectResourcesBlock.projectDescriptionChanged();
   }
 
-  protected abstract void setValueInternal(IModifiableFileBasedContent content, boolean value);
+  protected abstract void setValueInternal(FileBasedContentProvider content, boolean value);
 
   static class AnalyzeResourceEditingSupport extends FileBasedContentEditingSupport {
 
@@ -114,7 +114,7 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
     }
 
     @Override
-    protected void setValueInternal(IModifiableFileBasedContent content, boolean value) {
+    protected void setValueInternal(FileBasedContentProvider content, boolean value) {
       if (value) {
         content.setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);
       } else {
@@ -123,12 +123,12 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
     }
 
     @Override
-    protected boolean getValueInternal(IModifiableFileBasedContent content) {
-      return content.getAnalyzeMode().isAnalyze();
+    protected boolean getValueInternal(FileBasedContentProvider content) {
+      return content.getFileBasedContent().getAnalyzeMode().isAnalyze();
     }
 
     @Override
-    protected boolean canEditInternal(IModifiableFileBasedContent content) {
+    protected boolean canEditInternal(FileBasedContentProvider content) {
       return true;
     }
 
@@ -145,11 +145,11 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
     }
 
     @Override
-    protected void setValueInternal(IModifiableFileBasedContent content, boolean value) {
+    protected void setValueInternal(FileBasedContentProvider content, boolean value) {
       if (value) {
         content.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES);
       } else {
-        if (content.getAnalyzeMode() != AnalyzeMode.DO_NOT_ANALYZE) {
+        if (content.getFileBasedContent().getAnalyzeMode() != AnalyzeMode.DO_NOT_ANALYZE) {
           content.setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);
         }
       }
@@ -157,13 +157,13 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
     }
 
     @Override
-    protected boolean getValueInternal(IModifiableFileBasedContent content) {
-      return content.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
+    protected boolean getValueInternal(FileBasedContentProvider content) {
+      return content.getFileBasedContent().getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
     }
 
     @Override
-    protected boolean canEditInternal(IModifiableFileBasedContent content) {
-      return content.getAnalyzeMode().isAnalyze();
+    protected boolean canEditInternal(FileBasedContentProvider content) {
+      return content.getFileBasedContent().getAnalyzeMode().isAnalyze();
     }
 
   }

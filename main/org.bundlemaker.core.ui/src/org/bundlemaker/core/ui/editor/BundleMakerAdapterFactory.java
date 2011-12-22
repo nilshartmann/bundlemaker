@@ -15,10 +15,11 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IVariablePath;
-import org.bundlemaker.core.projectdescription.file.IModifiableFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
@@ -45,9 +46,9 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     @Override
     public Object[] getChildren(Object o) {
       BundleMakerProject project = (BundleMakerProject) o;
-      List<? extends IModifiableFileBasedContent> fileBasedContent = project.getModifiableProjectDescription()
-          .getModifiableFileBasedContent();
-      return fileBasedContent.toArray(new IModifiableFileBasedContent[0]);
+      List<? extends IProjectContentProvider> fileBasedContent = project.getModifiableProjectDescription()
+          .getContentProviders();
+      return fileBasedContent.toArray(new IProjectContentProvider[0]);
     }
 
     @Override
@@ -74,8 +75,8 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
       List<Object> children = new LinkedList<Object>();
       IProjectContentEntry content = (IProjectContentEntry) o;
-      children.addAll(content.getBinaryRootPaths());
-      children.addAll(content.getSourceRootPaths());
+      children.addAll(((FileBasedContent) content).getBinaryRootPaths());
+      children.addAll(((FileBasedContent) content).getSourceRootPaths());
       return children.toArray();
     }
 
@@ -112,14 +113,15 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public ImageDescriptor getImageDescriptor(Object object) {
-      IVariablePath path = (IVariablePath) object;
+      VariablePath path = (VariablePath) object;
 
-      return RootPathHelper.getImageDescriptorForPath(path);
+      // TODO: FIX ME!!
+      return RootPathHelper.getImageDescriptorForPath(path, true);
     }
 
     @Override
     public String getLabel(Object o) {
-      IVariablePath path = (IVariablePath) o;
+      VariablePath path = (VariablePath) o;
       return RootPathHelper.getLabel(path);
     }
 
@@ -148,7 +150,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       return _fileBasedContentAdapter;
     }
 
-    if (adaptableObject instanceof IVariablePath) {
+    if (adaptableObject instanceof VariablePath) {
       return _rootPathAdapter;
     }
 
@@ -169,8 +171,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProject.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectDescription.class);
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectContentEntry.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IVariablePath.class);
-
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, VariablePath.class);
   }
 
 }

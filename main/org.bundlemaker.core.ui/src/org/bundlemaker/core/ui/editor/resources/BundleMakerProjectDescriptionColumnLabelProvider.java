@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IVariablePath;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.internal.CenterImageLabelProvider;
 import org.bundlemaker.core.ui.internal.UIImages;
@@ -37,8 +37,8 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       return getImageForFileBasedContent((IProjectContentEntry) element);
     }
 
-    if (element instanceof IVariablePath) {
-      return getImageForBundleMakerPath((IVariablePath) element);
+    if (element instanceof VariablePath) {
+      return getImageForBundleMakerPath((VariablePath) element);
     }
 
     return null;
@@ -48,13 +48,14 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
    * @param element
    * @return
    */
-  private Image getImageForBundleMakerPath(IVariablePath path) {
+  private Image getImageForBundleMakerPath(VariablePath path) {
     if (_column != 0) {
       // Icons are shown in the left column only
       return null;
     }
 
-    return RootPathHelper.getImageForPath(path);
+    // TODO: FIX ME
+    return RootPathHelper.getImageForPath(path, true);
 
   }
 
@@ -99,7 +100,7 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
-    IVariablePath path = (IVariablePath) element;
+    VariablePath path = (VariablePath) element;
     return RootPathHelper.getLabel(path);
   }
 }

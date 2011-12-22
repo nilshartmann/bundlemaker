@@ -23,10 +23,10 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.IVariablePath;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.EditEntryDialog;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
@@ -343,8 +343,8 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
       return;
     }
 
-    if (selectedObject instanceof IVariablePath) {
-      IVariablePath rootPath = (IVariablePath) selectedObject;
+    if (selectedObject instanceof VariablePath) {
+      VariablePath rootPath = (VariablePath) selectedObject;
 
       // open edit dialog
       String currentPath = RootPathHelper.getLabel(rootPath);
@@ -361,7 +361,7 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
 
       // Get existing root paths from owning FileBasedContent
       IModifiableFileBasedContent content = RootPathHelper.getOwningFileBasedContent(path);
-      Set<IVariablePath> existingPaths;
+      Set<VariablePath> existingPaths;
       if (rootPath.isBinaryPath()) {
         existingPaths = content.getBinaryRootPaths();
       } else {
@@ -370,7 +370,7 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
 
       // Create new set of root paths, replacing the old path with the new, edited, root path
       List<String> newRootPaths = new LinkedList<String>();
-      for (IVariablePath iRootPath : existingPaths) {
+      for (VariablePath iRootPath : existingPaths) {
         String existingPath = RootPathHelper.getLabel(iRootPath);
         if (!existingPath.equals(currentPath)) {
           newRootPaths.add(existingPath);

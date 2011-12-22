@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IVariablePath;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -24,8 +24,9 @@ class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
   @Override
   public Image getImage(Object element) {
 
-    if (element instanceof IVariablePath) {
-      return RootPathHelper.getImageForPath((IVariablePath) element);
+    if (element instanceof VariablePath) {
+      // TODO
+      return RootPathHelper.getImageForPath((VariablePath) element, true);
     }
 
     return null;
@@ -38,7 +39,7 @@ class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
-    IVariablePath path = (IVariablePath) element;
+    VariablePath path = (VariablePath) element;
     return RootPathHelper.getLabel(path);
   }
 }
