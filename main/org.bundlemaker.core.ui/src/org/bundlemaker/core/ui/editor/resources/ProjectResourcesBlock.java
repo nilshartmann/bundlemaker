@@ -15,8 +15,6 @@ import static java.lang.String.format;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
@@ -26,11 +24,10 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
-import org.bundlemaker.core.ui.editor.EditEntryDialog;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
-import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.ui.internal.VerticalFormButtonBar;
 import org.eclipse.core.runtime.IPath;
@@ -224,13 +221,18 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
     _moveUpButton = buttonBar.newButton("Up", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        moveUp();
+        // TODO
+        System.out.println(" MOVE UP NEEDS TO BE IMPLEMENTED !!!!");
+        // moveUp();
       }
     });
     _moveDownButton = buttonBar.newButton("Down", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        moveDown();
+        // TODO
+        System.out.println(" MOVE DOWN NEEDS TO BE IMPLEMENTED !!!!");
+
+        // moveDown();
       }
     });
 
@@ -325,93 +327,96 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
    */
   private void editContent(Shell shell) {
 
-    ITreeSelection selection = getSelection();
-
-    if (selection.size() != 1) {
-      return;
-    }
-
-    boolean projectDescriptionHasChanged = false;
-
-    TreePath path = selection.getPaths()[0];
-    Object selectedObject = path.getLastSegment();
-    if (selectedObject instanceof IModifiableFileBasedContent) {
-      IModifiableFileBasedContent content = (IModifiableFileBasedContent) selectedObject;
-      projectDescriptionHasChanged = editFileBasedContent(shell, content);
-      projectDescriptionChanged();
-      System.out.printf("content after projectDescriptionChanged: %s  name: %s%n", content, content.getName());
-      return;
-    }
-
-    if (selectedObject instanceof VariablePath) {
-      VariablePath rootPath = (VariablePath) selectedObject;
-
-      // open edit dialog
-      String currentPath = RootPathHelper.getLabel(rootPath);
-      EditEntryDialog editEntryDialog = new EditEntryDialog(shell, currentPath);
-      if (editEntryDialog.open() != Window.OK) {
-        return;
-      }
-
-      String newPath = editEntryDialog.getEntry();
-      if (currentPath.equals(newPath)) {
-        // no changes
-        return;
-      }
-
-      // Get existing root paths from owning FileBasedContent
-      IModifiableFileBasedContent content = RootPathHelper.getOwningFileBasedContent(path);
-      Set<VariablePath> existingPaths;
-      if (rootPath.isBinaryPath()) {
-        existingPaths = content.getBinaryRootPaths();
-      } else {
-        existingPaths = content.getSourceRootPaths();
-      }
-
-      // Create new set of root paths, replacing the old path with the new, edited, root path
-      List<String> newRootPaths = new LinkedList<String>();
-      for (VariablePath iRootPath : existingPaths) {
-        String existingPath = RootPathHelper.getLabel(iRootPath);
-        if (!existingPath.equals(currentPath)) {
-          newRootPaths.add(existingPath);
-        } else {
-          newRootPaths.add(newPath);
-        }
-      }
-
-      // Set new array of root paths to FileBasedContent
-      if (rootPath.isBinaryPath()) {
-        content.setBinaryPaths(newRootPaths.toArray(new String[0]));
-      } else {
-        content.setSourcePaths(newRootPaths.toArray(new String[0]));
-      }
-
-      projectDescriptionHasChanged = true;
-
-    }
-
-    if (projectDescriptionHasChanged) {
-      projectDescriptionChanged();
-    }
+    // ITreeSelection selection = getSelection();
+    //
+    // if (selection.size() != 1) {
+    // return;
+    // }
+    //
+    // boolean projectDescriptionHasChanged = false;
+    //
+    // TreePath path = selection.getPaths()[0];
+    // Object selectedObject = path.getLastSegment();
+    // if (selectedObject instanceof FileBasedContentProvider) {
+    // FileBasedContentProvider contentProvider = (FileBasedContentProvider) selectedObject;
+    // FileBasedContent content = contentProvider.getFileBasedContent();
+    // projectDescriptionHasChanged = editFileBasedContent(shell, contentProvider);
+    // projectDescriptionChanged();
+    // System.out.printf("content after projectDescriptionChanged: %s  name: %s%n", content, content.getName());
+    // return;
+    // }
+    //
+    // if (selectedObject instanceof VariablePath) {
+    // VariablePath rootPath = (VariablePath) selectedObject;
+    //
+    // // open edit dialog
+    // String currentPath = RootPathHelper.getLabel(rootPath);
+    // EditEntryDialog editEntryDialog = new EditEntryDialog(shell, currentPath);
+    // if (editEntryDialog.open() != Window.OK) {
+    // return;
+    // }
+    //
+    // String newPath = editEntryDialog.getEntry();
+    // if (currentPath.equals(newPath)) {
+    // // no changes
+    // return;
+    // }
+    //
+    // // Get existing root paths from owning FileBasedContent
+    // IProjectContentProvider content = RootPathHelper.getOwningFileBasedContent(path);
+    // if (content instanceof FileBasedContentProvider) {
+    // FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) content;
+    // // TODO
+    // Set<VariablePath> existingPaths = null;
+    // // if (rootPath.isBinaryPath()) {
+    // // existingPaths = content.getBinaryRootPaths();
+    // // } else {
+    // // existingPaths = content.getSourceRootPaths();
+    // // }
+    //
+    // // Create new set of root paths, replacing the old path with the new, edited, root path
+    // List<String> newRootPaths = new LinkedList<String>();
+    // for (VariablePath iRootPath : existingPaths) {
+    // String existingPath = RootPathHelper.getLabel(iRootPath);
+    // if (!existingPath.equals(currentPath)) {
+    // newRootPaths.add(existingPath);
+    // } else {
+    // newRootPaths.add(newPath);
+    // }
+    // }
+    //
+    // // Set new array of root paths to FileBasedContent
+    // if (rootPath.isBinaryPath()) {
+    // content.setBinaryPaths(newRootPaths.toArray(new String[0]));
+    // } else {
+    // content.setSourcePaths(newRootPaths.toArray(new String[0]));
+    // }
+    //
+    // projectDescriptionHasChanged = true;
+    //
+    // }
+    // }
+    //
+    // if (projectDescriptionHasChanged) {
+    // projectDescriptionChanged();
+    // }
   }
 
-  private boolean editFileBasedContent(Shell shell, IModifiableFileBasedContent content) {
+  private boolean editFileBasedContent(Shell shell, FileBasedContentProvider content) {
 
-    System.out.printf("content before opening: %s  name: %s%n", content, content.getName());
+    System.out.printf("content before opening: %s  name: %s%n", content, content.getFileBasedContent().getName());
 
-    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, content);
+    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell, content.getFileBasedContent());
     if (dialog.open() != Window.OK) {
       return false;
     }
 
     // Update the content
     content.setName(dialog.getName());
-    System.out.printf("dialog.getName(): %s%n", dialog.getName());
     content.setVersion(dialog.getVersion());
     content.setBinaryPaths(dialog.getBinaryPaths().toArray(new String[0]));
     content.setSourcePaths(dialog.getSourcePaths().toArray(new String[0]));
     content.setAnalyzeMode(getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
-    System.out.printf("content after opening: %s  name: %s%n", content, content.getName());
 
     return true;
   }
@@ -517,8 +522,10 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
     }
 
     // add the new content to the project description
-    getBundleMakerProjectDescription().addContent(dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths(),
-        dialog.getSourcePaths(), getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
+
+    FileBasedContentProviderFactory.addNewFileBasedContentProvider(getBundleMakerProjectDescription(),
+        dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths(), dialog.getSourcePaths(),
+        getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
 
     projectDescriptionChanged();
 
@@ -542,15 +549,15 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
         IProjectContentEntry content = (IProjectContentEntry) element;
         getBundleMakerProjectDescription().removeContentProvider(content.getId());
       }
-      if (element instanceof IVariablePath) {
-        IVariablePath rootPath = (IVariablePath) element;
-        IModifiableFileBasedContent fileBasedContent = RootPathHelper.getOwningFileBasedContent(treePath);
-        if (rootPath.isBinaryPath()) {
-          fileBasedContent.getModifiableBinaryPaths().remove(rootPath);
-        } else {
-          fileBasedContent.getModifiableSourcePaths().remove(rootPath);
-        }
-      }
+      // if (element instanceof IVariablePath) {
+      // IVariablePath rootPath = (IVariablePath) element;
+      // IModifiableFileBasedContent fileBasedContent = RootPathHelper.getOwningFileBasedContent(treePath);
+      // if (rootPath.isBinaryPath()) {
+      // fileBasedContent.getModifiableBinaryPaths().remove(rootPath);
+      // } else {
+      // fileBasedContent.getModifiableSourcePaths().remove(rootPath);
+      // }
+      // }
 
     }
 
@@ -648,7 +655,10 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
     for (String string : fileNames) {
       IPath path = new Path(fileDialog.getFilterPath()).append(string);
       String binaryRoot = path.toOSString();
-      getBundleMakerProjectDescription().addContent(binaryRoot, null, AnalyzeMode.BINARIES_AND_SOURCES);
+
+      FileBasedContentProviderFactory.addNewFileBasedContentProvider(getBundleMakerProjectDescription(), binaryRoot,
+          null, AnalyzeMode.BINARIES_AND_SOURCES);
+
     }
 
     projectDescriptionChanged();
@@ -670,7 +680,8 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
 
     for (IPath iPath : selected) {
       String workspacePath = format("${workspace_loc:%s}", iPath.toString());
-      getBundleMakerProjectDescription().addContent(workspacePath, null, AnalyzeMode.BINARIES_ONLY);
+      FileBasedContentProviderFactory.addNewFileBasedContentProvider(getBundleMakerProjectDescription(), workspacePath,
+          null, AnalyzeMode.BINARIES_ONLY);
     }
 
     projectDescriptionChanged();
