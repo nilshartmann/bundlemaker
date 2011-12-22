@@ -4,9 +4,8 @@ import java.io.File;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -21,8 +20,8 @@ public class TypeContentTest extends AbstractModularizedSystemTest {
   public void qualifiedNameWithFlatPackages() throws Exception {
 
     // get the root artifact
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
-        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION).getRoot();
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     Assert.assertNotNull(rootArtifact);
 
@@ -33,11 +32,11 @@ public class TypeContentTest extends AbstractModularizedSystemTest {
     for (IArtifact advancedArtifact : packageArtifact.getChildren()) {
       System.out.println(advancedArtifact.getDependencies());
     }
-    
+
     // Dump all module dependencies
     DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(getBundleMakerProject(), new File(
         "d:/temp"), getModularizedSystem());
-    
+
     JarFileBundleExporter jarFileBundleExporter = new JarFileBundleExporter(null, null, null);
     ModularizedSystemExporterAdapter exporterAdapter = new ModularizedSystemExporterAdapter(jarFileBundleExporter);
     exporterAdapter.export(getModularizedSystem(), exporterContext, null);

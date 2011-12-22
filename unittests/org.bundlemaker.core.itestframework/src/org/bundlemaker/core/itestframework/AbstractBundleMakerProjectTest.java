@@ -7,6 +7,7 @@ import java.io.File;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
@@ -107,7 +108,8 @@ public abstract class AbstractBundleMakerProjectTest {
   protected void addProjectDescription() throws CoreException {
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), getTestProjectName());
-    Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory), testDataDirectory.isDirectory());
+    Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory),
+        testDataDirectory.isDirectory());
 
     // create the project description
     log("Adding project description...");
@@ -162,7 +164,8 @@ public abstract class AbstractBundleMakerProjectTest {
     if (libsDir.exists()) {
       File[] jarFiles = libsDir.listFiles();
       for (File externalJar : jarFiles) {
-        projectDescription.addContent(externalJar.getAbsolutePath(), null, getLibraryAnalyzeMode());
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
+            externalJar.getAbsolutePath(), null, getLibraryAnalyzeMode());
       }
     }
 
