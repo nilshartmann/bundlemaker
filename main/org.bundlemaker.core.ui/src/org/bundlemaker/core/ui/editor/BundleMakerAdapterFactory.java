@@ -15,10 +15,11 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.Platform;
@@ -45,9 +46,9 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     @Override
     public Object[] getChildren(Object o) {
       BundleMakerProject project = (BundleMakerProject) o;
-      List<? extends IModifiableFileBasedContent> fileBasedContent = project.getModifiableProjectDescription()
-          .getModifiableFileBasedContent();
-      return fileBasedContent.toArray(new IModifiableFileBasedContent[0]);
+      List<? extends IProjectContentProvider> fileBasedContent = project.getModifiableProjectDescription()
+          .getContentProviders();
+      return fileBasedContent.toArray(new IProjectContentProvider[0]);
     }
 
     @Override
@@ -73,9 +74,9 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
     public Object[] getChildren(Object o) {
 
       List<Object> children = new LinkedList<Object>();
-      IFileBasedContent content = (IFileBasedContent) o;
-      children.addAll(content.getBinaryRootPaths());
-      children.addAll(content.getSourceRootPaths());
+      IProjectContentEntry content = (IProjectContentEntry) o;
+      children.addAll(((FileBasedContent) content).getBinaryRootPaths());
+      children.addAll(((FileBasedContent) content).getSourceRootPaths());
       return children.toArray();
     }
 
@@ -86,7 +87,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public String getLabel(Object o) {
-      IFileBasedContent content = (IFileBasedContent) o;
+      IProjectContentEntry content = (IProjectContentEntry) o;
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
@@ -112,14 +113,15 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public ImageDescriptor getImageDescriptor(Object object) {
-      IRootPath path = (IRootPath) object;
+      VariablePath path = (VariablePath) object;
 
-      return RootPathHelper.getImageDescriptorForPath(path);
+      // TODO: FIX ME!!
+      return RootPathHelper.getImageDescriptorForPath(path, true);
     }
 
     @Override
     public String getLabel(Object o) {
-      IRootPath path = (IRootPath) o;
+      VariablePath path = (VariablePath) o;
       return RootPathHelper.getLabel(path);
     }
 
@@ -144,11 +146,11 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
       return _bundleMakerProjectAdapter;
     }
 
-    if (adaptableObject instanceof IFileBasedContent) {
+    if (adaptableObject instanceof IProjectContentEntry) {
       return _fileBasedContentAdapter;
     }
 
-    if (adaptableObject instanceof IRootPath) {
+    if (adaptableObject instanceof VariablePath) {
       return _rootPathAdapter;
     }
 
@@ -167,10 +169,9 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
   public static void register() {
     BundleMakerAdapterFactory bundleMakerAdapterFactory = new BundleMakerAdapterFactory();
     Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProject.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProjectDescription.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IFileBasedContent.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IRootPath.class);
-
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectDescription.class);
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectContentEntry.class);
+    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, VariablePath.class);
   }
 
 }

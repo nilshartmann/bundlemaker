@@ -22,8 +22,8 @@ public class ResourceKeyTest {
   @Test
   public void testEquals() {
 
-    ResourceKey key_1 = new ResourceKey("1", "path", "root");
-    ResourceKey key_2 = new ResourceKey("1", "path", "root");
+    ReadableResource key_1 = new ResourceKey("1", "path", "root");
+    ReadableResource key_2 = new ResourceKey("1", "path", "root");
     IModifiableResource resource_1 = new Resource("1", "path", "root");
     IModifiableResource resource_2 = new Resource("1", "path", "root");
     ResourceStandin resourceStandin_1 = new ResourceStandin("1", "path", "root");

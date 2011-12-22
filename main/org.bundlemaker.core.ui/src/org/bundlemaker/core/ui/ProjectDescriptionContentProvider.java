@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -56,9 +56,9 @@ public class ProjectDescriptionContentProvider implements ITreeContentProvider {
 
     if (inputElement instanceof IBundleMakerProject) {
       IBundleMakerProject project = (IBundleMakerProject) inputElement;
-      List<? extends IModifiableFileBasedContent> fileBasedContent = project.getModifiableProjectDescription()
-          .getModifiableFileBasedContent();
-      return fileBasedContent.toArray(new IModifiableFileBasedContent[0]);
+      List<? extends IProjectContentProvider> fileBasedContent = project.getModifiableProjectDescription()
+          .getContentProviders();
+      return fileBasedContent.toArray(new IProjectContentProvider[0]);
     }
 
     // TODO Auto-generated method stub

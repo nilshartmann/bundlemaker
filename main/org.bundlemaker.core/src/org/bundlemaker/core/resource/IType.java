@@ -129,6 +129,22 @@ public interface IType extends Comparable<IType> {
 
   /**
    * <p>
+   * Returns the binary {@link IReadableResource} that defined this type. If this type is defined within a content entry
+   * that has been parsed, this method returns the same instance as the <code>getBinaryResource()</code>. If the
+   * associated content entry has not been parsed, <code>getBinaryResource()</code> returns <code>null</code>. In this
+   * case you can use this method, that always returns the associated binary resource.
+   * </p>
+   * <p>
+   * The main purpose of this method is to allow to compare the content of the binary resource with another resource
+   * that may defines the same type.
+   * </p>
+   * 
+   * @return
+   */
+  IReadableResource getBinaryReadableResource();
+
+  /**
+   * <p>
    * </p>
    * 
    * @param modularizedSystem

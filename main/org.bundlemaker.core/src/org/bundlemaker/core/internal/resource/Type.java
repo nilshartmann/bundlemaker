@@ -17,6 +17,7 @@ import java.util.Set;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -43,13 +44,13 @@ public class Type implements IType, IModifiableType {
   private TypeEnum                     _typeEnum;
 
   /** - */
-  private transient String             _contentId;
+  private transient String             _projectContentEntryId;
 
   /** transient: the source resource */
   private transient Resource           _sourceResource;
 
   /** transient: the binary resource */
-  private transient Resource           _binaryResource;
+  private transient IReadableResource  _binaryResource;
 
   /** transient: the reference container */
   private transient ReferenceContainer _referenceContainer;
@@ -61,11 +62,11 @@ public class Type implements IType, IModifiableType {
    * @param fullyQualifiedName
    * @param typeEnum
    */
-  public Type(String fullyQualifiedName, TypeEnum typeEnum, String contentId) {
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, String contentEntry) {
 
     Assert.isNotNull(fullyQualifiedName);
     Assert.isNotNull(typeEnum);
-    Assert.isNotNull(contentId);
+    Assert.isNotNull(contentEntry);
 
     //
     _fullyQualifiedName = new FlyWeightString(fullyQualifiedName);
@@ -74,7 +75,7 @@ public class Type implements IType, IModifiableType {
     _typeEnum = typeEnum;
 
     //
-    _contentId = contentId;
+    _projectContentEntryId = contentEntry;
   }
 
   // /**
@@ -114,13 +115,14 @@ public class Type implements IType, IModifiableType {
   }
 
   @Override
-  public String getContentId() {
+  public String getProjectContentEntryId() {
 
-    if (_contentId != null) {
-      return _contentId;
+    if (_projectContentEntryId != null) {
+      return _projectContentEntryId;
     }
 
-    return _binaryResource != null ? _binaryResource.getContentId() : _sourceResource.getContentId();
+    return (_binaryResource != null && _binaryResource instanceof Resource) ? ((Resource) _binaryResource)
+        .getProjectContentEntryId() : _sourceResource.getProjectContentEntryId();
   }
 
   @Override
@@ -209,7 +211,23 @@ public class Type implements IType, IModifiableType {
    */
   @Override
   public IResource getBinaryResource() {
-    return _binaryResource != null ? _binaryResource.getResourceStandin() : null;
+
+    //
+    if (_binaryResource == null) {
+      return null;
+    }
+
+    //
+    if (_binaryResource instanceof Resource) {
+      return ((Resource) _binaryResource).getResourceStandin();
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public IReadableResource getBinaryReadableResource() {
+    return _binaryResource;
   }
 
   /**
@@ -266,8 +284,8 @@ public class Type implements IType, IModifiableType {
 
     IModule result = null;
 
-    if (_binaryResource != null) {
-      result = _binaryResource.getAssociatedResourceModule(modularizedSystem);
+    if (_binaryResource != null && _binaryResource instanceof Resource) {
+      result = ((Resource) _binaryResource).getAssociatedResourceModule(modularizedSystem);
     }
 
     if (result == null && _sourceResource != null) {
@@ -312,7 +330,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param binaryResource
    */
-  public void setBinaryResource(Resource binaryResource) {
+  public void setBinaryResource(IReadableResource binaryResource) {
     _binaryResource = binaryResource;
   }
 

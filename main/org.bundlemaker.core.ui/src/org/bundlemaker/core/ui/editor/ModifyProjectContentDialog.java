@@ -4,8 +4,9 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -31,43 +32,43 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ModifyProjectContentDialog extends TitleAreaDialog {
 
-  private Text                    _nameTextField;
+  private Text                       _nameTextField;
 
-  private Text                    _versionTextField;
+  private Text                       _versionTextField;
 
-  private Button                  _analyzeButton;
+  private Button                     _analyzeButton;
 
-  private Button                  _analyzeSourcesButton;
+  private Button                     _analyzeSourcesButton;
 
   /**
    * The original content or null if a new content is created with this dialog
    */
-  private final IFileBasedContent _originalContent;
+  private final IProjectContentEntry _originalContent;
 
-  private ContentListBlock        _binariesContentList;
+  private ContentListBlock           _binariesContentList;
 
-  private ContentListBlock        _sourcesContentList;
+  private ContentListBlock           _sourcesContentList;
 
-  private String                  _name;
+  private String                     _name;
 
-  private String                  _version;
+  private String                     _version;
 
-  private java.util.List<String>  _binaryRoots;
+  private java.util.List<String>     _binaryRoots;
 
-  private java.util.List<String>  _sourceRoots;
+  private java.util.List<String>     _sourceRoots;
 
-  boolean                         _analyze        = true;
+  boolean                            _analyze        = true;
 
-  boolean                         _analyzeSources = false;
+  boolean                            _analyzeSources = false;
 
-  public ModifyProjectContentDialog(Shell parentShell, IFileBasedContent existingContent) {
+  public ModifyProjectContentDialog(Shell parentShell, IProjectContentEntry existingContent) {
     super(parentShell);
     Assert.isNotNull(existingContent);
     _originalContent = existingContent;
     _name = existingContent.getName();
     _version = existingContent.getVersion();
-    _binaryRoots = stringList(existingContent.getBinaryRootPaths());
-    _sourceRoots = stringList(existingContent.getSourceRootPaths());
+    _binaryRoots = stringList(((FileBasedContentProvider) existingContent).getFileBasedContent().getBinaryRootPaths());
+    _sourceRoots = stringList(((FileBasedContentProvider) existingContent).getFileBasedContent().getSourceRootPaths());
     _analyze = existingContent.isAnalyze();
     _analyzeSources = existingContent.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
 
@@ -87,10 +88,10 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
 
   }
 
-  private static java.util.List<String> stringList(Set<IRootPath> paths) {
+  private static java.util.List<String> stringList(Set<VariablePath> paths) {
     java.util.List<String> strings = new LinkedList<String>();
     if (paths != null) {
-      for (IRootPath path : paths) {
+      for (VariablePath path : paths) {
         strings.add(RootPathHelper.getLabel(path));
       }
     }

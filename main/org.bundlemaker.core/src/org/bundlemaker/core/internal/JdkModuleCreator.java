@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.DefaultTypeSelect
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.util.FileUtils;
 import org.bundlemaker.core.util.JdkCreator;
@@ -71,7 +73,11 @@ public class JdkModuleCreator {
 
     for (LibraryLocation libraryLocation : JavaRuntime.getLibraryLocations(vmInstall)) {
 
-      List<String> children = FileUtils.getAllChildren(libraryLocation.getSystemLibraryPath().toFile());
+      // get the root
+      File root = libraryLocation.getSystemLibraryPath().toFile();
+
+      // get the children
+      List<String> children = FileUtils.getAllChildren(root);
 
       for (String child : children) {
 
@@ -89,6 +95,8 @@ public class JdkModuleCreator {
 
           // TODO
           Type type = new Type(typeName, TypeEnum.CLASS, DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER);
+          type.setBinaryResource(new ResourceKey(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER, root
+              .getAbsolutePath(), child));
           //
           // type.setTypeModule(virtualModule);
 

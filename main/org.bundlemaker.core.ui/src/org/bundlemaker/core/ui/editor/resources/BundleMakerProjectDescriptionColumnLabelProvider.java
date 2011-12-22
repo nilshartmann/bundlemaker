@@ -11,8 +11,8 @@
 package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.internal.CenterImageLabelProvider;
 import org.bundlemaker.core.ui.internal.UIImages;
@@ -33,12 +33,12 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
   @Override
   public Image getImage(Object element) {
 
-    if (element instanceof IFileBasedContent) {
-      return getImageForFileBasedContent((IFileBasedContent) element);
+    if (element instanceof IProjectContentEntry) {
+      return getImageForFileBasedContent((IProjectContentEntry) element);
     }
 
-    if (element instanceof IRootPath) {
-      return getImageForBundleMakerPath((IRootPath) element);
+    if (element instanceof VariablePath) {
+      return getImageForBundleMakerPath((VariablePath) element);
     }
 
     return null;
@@ -48,13 +48,14 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
    * @param element
    * @return
    */
-  private Image getImageForBundleMakerPath(IRootPath path) {
+  private Image getImageForBundleMakerPath(VariablePath path) {
     if (_column != 0) {
       // Icons are shown in the left column only
       return null;
     }
 
-    return RootPathHelper.getImageForPath(path);
+    // TODO: FIX ME
+    return RootPathHelper.getImageForPath(path, true);
 
   }
 
@@ -62,7 +63,7 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
    * @param element
    * @return
    */
-  private Image getImageForFileBasedContent(IFileBasedContent content) {
+  private Image getImageForFileBasedContent(IProjectContentEntry content) {
     Image image = null;
 
     switch (_column) {
@@ -94,12 +95,12 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
       return null;
     }
 
-    if (element instanceof IFileBasedContent) {
-      IFileBasedContent content = (IFileBasedContent) element;
+    if (element instanceof IProjectContentEntry) {
+      IProjectContentEntry content = (IProjectContentEntry) element;
       return String.format("%s [%s]", content.getName(), content.getVersion());
     }
 
-    IRootPath path = (IRootPath) element;
+    VariablePath path = (VariablePath) element;
     return RootPathHelper.getLabel(path);
   }
 }
