@@ -1,0 +1,49 @@
+package org.bundlemaker.core.itest.analysis;
+
+import java.io.File;
+
+import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
+import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
+import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
+import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class TypeContentTest extends AbstractModularizedSystemTest {
+
+  @Test
+  public void qualifiedNameWithFlatPackages() throws Exception {
+
+    // get the root artifact
+    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
+        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION).getRoot();
+
+    Assert.assertNotNull(rootArtifact);
+
+    IPackageArtifact packageArtifact = (IPackageArtifact) rootArtifact
+        .getChild("group1|group2|TypeContentTest_1.0.0|de|test");
+
+    //
+    for (IArtifact advancedArtifact : packageArtifact.getChildren()) {
+      System.out.println(advancedArtifact.getDependencies());
+    }
+    
+    // Dump all module dependencies
+    DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(getBundleMakerProject(), new File(
+        "d:/temp"), getModularizedSystem());
+    
+    JarFileBundleExporter jarFileBundleExporter = new JarFileBundleExporter(null, null, null);
+    ModularizedSystemExporterAdapter exporterAdapter = new ModularizedSystemExporterAdapter(jarFileBundleExporter);
+    exporterAdapter.export(getModularizedSystem(), exporterContext, null);
+  }
+
+  protected AnalyzeMode getLibraryAnalyzeMode() {
+    return AnalyzeMode.DO_NOT_ANALYZE;
+  }
+}

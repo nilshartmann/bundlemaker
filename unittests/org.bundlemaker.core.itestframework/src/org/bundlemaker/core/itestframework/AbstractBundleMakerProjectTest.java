@@ -162,13 +162,16 @@ public abstract class AbstractBundleMakerProjectTest {
     if (libsDir.exists()) {
       File[] jarFiles = libsDir.listFiles();
       for (File externalJar : jarFiles) {
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
-            externalJar.getAbsolutePath());
+        projectDescription.addContent(externalJar.getAbsolutePath(), null, getLibraryAnalyzeMode());
       }
     }
 
     //
     projectDescription.save();
+  }
+
+  protected AnalyzeMode getLibraryAnalyzeMode() {
+    return AnalyzeMode.BINARIES_ONLY;
   }
 
   /**

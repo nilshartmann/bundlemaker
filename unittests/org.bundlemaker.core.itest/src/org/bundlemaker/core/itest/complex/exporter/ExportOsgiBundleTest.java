@@ -102,15 +102,12 @@ public class ExportOsgiBundleTest extends AbstractExportOsgiBundleTest {
     // the manifest creator
     IBundleManifestCreator manifestCreator = new DefaultManifestCreator() {
 
-      /**
-       * {@inheritDoc}
-       */
       @Override
-      protected boolean forceImportPackage(String packageName, List<IModuleArtifact> moduleArtifacts) {
+      protected boolean useImportPackage(String packageName, List<IModuleArtifact> exportingModules) {
 
         //
-        if (moduleArtifacts.size() == 1) {
-          return getModularizedSystem().getExecutionEnvironment().equals(moduleArtifacts.get(0).getAssociatedModule())
+        if (exportingModules.size() == 1) {
+          return getModularizedSystem().getExecutionEnvironment().equals(exportingModules.get(0).getAssociatedModule())
               && packageName.startsWith("javax.");
         }
 
