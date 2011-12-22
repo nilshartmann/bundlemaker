@@ -30,7 +30,7 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
 
@@ -50,7 +50,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   private Map<String, Object>                               _userAttributes;
 
   /** the project description */
-  private IBundleMakerProjectDescription                    _projectDescription;
+  private IProjectDescription                    _projectDescription;
 
   /** the list of defined transformations */
   private List<ITransformation>                             _transformations;
@@ -72,7 +72,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    * @param name
    * @param projectDescription
    */
-  public AbstractModularizedSystem(String name, IBundleMakerProjectDescription projectDescription) {
+  public AbstractModularizedSystem(String name, IProjectDescription projectDescription) {
 
     Assert.isNotNull(name);
     Assert.isNotNull(projectDescription);
@@ -118,7 +118,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    * {@inheritDoc}
    */
   @Override
-  public final IBundleMakerProjectDescription getProjectDescription() {
+  public final IProjectDescription getProjectDescription() {
     return _projectDescription;
   }
 

@@ -11,10 +11,12 @@
 package org.bundlemaker.core.projectdescription;
 
 /**
- * Specifies how an {@link IFileBasedContent} entry in a {@link IBundleMakerProjectDescription} should be analyzed
+ * <p>
+ * Specifies how an {@link IProjectContentEntry} entry in a {@link IProjectDescription} should be
+ * analyzed.
+ * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
- * 
  */
 public enum AnalyzeMode {
 
@@ -39,5 +41,4 @@ public enum AnalyzeMode {
   public boolean isAnalyze() {
     return this == BINARIES_ONLY || this == BINARIES_AND_SOURCES;
   }
-
 }

@@ -18,7 +18,7 @@ import org.bundlemaker.core.itest.complex.core.AbstractJeditTest;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
-import org.bundlemaker.core.resource.IContentProvider;
+import org.bundlemaker.core.resource.IReadableResource;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
 import org.junit.Before;
@@ -51,9 +51,9 @@ public abstract class AbstractExportOsgiBundleTest extends AbstractJeditTest {
    * {@inheritDoc}
    */
   @Before
-  public void init() throws CoreException {
+  public void before() throws CoreException {
 
-    super.init();
+    super.before();
 
     //
     _resultDir = new File(System.getProperty("java.io.tmpdir"), "bm-test");
@@ -71,9 +71,9 @@ public abstract class AbstractExportOsgiBundleTest extends AbstractJeditTest {
    * {@inheritDoc}
    */
   @After
-  public void dispose() throws CoreException {
+  public void after() throws CoreException {
 
-    super.dispose();
+    super.after();
 
     _resultDir = null;
     _jeditmodule = null;
@@ -193,7 +193,7 @@ public abstract class AbstractExportOsgiBundleTest extends AbstractJeditTest {
      * {@inheritDoc}
      */
     @Override
-    public Set<IContentProvider> getAdditionalResources(IResourceModule currentModule,
+    public Set<IReadableResource> getAdditionalResources(IResourceModule currentModule,
         IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {
 
       //

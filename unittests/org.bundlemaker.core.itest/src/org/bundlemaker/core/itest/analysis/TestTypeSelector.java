@@ -4,8 +4,9 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -18,13 +19,13 @@ import org.eclipse.core.runtime.Assert;
 public class TestTypeSelector implements ITypeSelector {
 
   /** - */
-  public static final String             BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
+  public static final String  BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
 
   /** - */
-  private IBundleMakerProjectDescription _bundleMakerProjectDescription;
+  private IProjectDescription _bundleMakerProjectDescription;
 
   /** - */
-  private boolean                        _preferJdkTypes;
+  private boolean             _preferJdkTypes;
 
   /**
    * <p>
@@ -33,7 +34,7 @@ public class TestTypeSelector implements ITypeSelector {
    * 
    * @param bundleMakerProjectDescription
    */
-  public TestTypeSelector(IBundleMakerProjectDescription bundleMakerProjectDescription) {
+  public TestTypeSelector(IProjectDescription bundleMakerProjectDescription) {
 
     Assert.isNotNull(bundleMakerProjectDescription);
 
@@ -73,16 +74,17 @@ public class TestTypeSelector implements ITypeSelector {
 
     for (IType iType : types) {
 
-      // get the content identifier
-      String contentID = iType.getContentId();
+      //
+      String identifier = iType.getProjectContentEntryId().toString();
 
-      if (!contentID.equals(TestTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
+      // get the content identifier
+      if (!identifier.equals(TestTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
 
         // get the file based content
-        IFileBasedContent fileBasedContent = _bundleMakerProjectDescription.getFileBasedContent(contentID);
+        IProjectContentEntry fileBasedContent = _bundleMakerProjectDescription.getProjectContentEntry(identifier);
 
         // get the index
-        int index = _bundleMakerProjectDescription.getFileBasedContent().indexOf(fileBasedContent);
+        int index = _bundleMakerProjectDescription.getContent().indexOf(fileBasedContent);
 
         //
         if (index < currentIndex) {

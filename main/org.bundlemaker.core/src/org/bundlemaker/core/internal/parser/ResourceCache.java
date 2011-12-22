@@ -18,7 +18,7 @@ import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IResourceCache;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.TypeEnum;
@@ -102,7 +102,7 @@ public class ResourceCache implements IResourceCache {
 
     // update all
     for (Resource modifiableResource : _newResourceMap.values()) {
-      
+
       //
       _dependencyStore.updateResource(modifiableResource);
 
@@ -145,7 +145,8 @@ public class ResourceCache implements IResourceCache {
     }
 
     // create a new one if necessary
-    resource = new Resource(resourceKey.getContentId(), resourceKey.getRoot(), resourceKey.getPath(), this);
+    resource = new Resource(resourceKey.getProjectContentEntryId().toString(), resourceKey.getRoot(),
+        resourceKey.getPath(), this);
 
     // store the Resource
     _newResourceMap.put(resource, resource);
@@ -215,7 +216,7 @@ public class ResourceCache implements IResourceCache {
    * @param fileBasedContent
    * @param map
    */
-  public void setupTypeCache(IFileBasedContent fileBasedContent) {
+  public void setupTypeCache(IProjectContentEntry fileBasedContent) {
 
     // clear the type map
     _typeMap.clear();

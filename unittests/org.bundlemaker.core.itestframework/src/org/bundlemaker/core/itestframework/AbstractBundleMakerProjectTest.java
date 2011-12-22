@@ -7,7 +7,8 @@ import java.io.File;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ModelTransformer;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -106,7 +107,7 @@ public abstract class AbstractBundleMakerProjectTest {
   protected void addProjectDescription() throws CoreException {
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), getTestProjectName());
-    Assert.assertTrue(testDataDirectory.isDirectory());
+    Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory), testDataDirectory.isDirectory());
 
     // create the project description
     log("Adding project description...");
@@ -125,7 +126,7 @@ public abstract class AbstractBundleMakerProjectTest {
     Assert.assertTrue(directory.isDirectory());
 
     //
-    IModifiableBundleMakerProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
+    IModifiableProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
 
     // step 1:
     projectDescription.clear();
@@ -152,15 +153,17 @@ public abstract class AbstractBundleMakerProjectTest {
       // Assert.fail("No classes found!");
     }
 
-    projectDescription.addResourceContent(_testProjectName, TEST_PROJECT_VERSION, classes.getAbsolutePath(),
-        sources != null ? sources.getAbsolutePath() : null);
+    //
+    FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, _testProjectName,
+        TEST_PROJECT_VERSION, classes.getAbsolutePath(), sources != null ? sources.getAbsolutePath() : null);
 
     // step 4: process the class path entries
     File libsDir = new File(directory, "libs");
     if (libsDir.exists()) {
       File[] jarFiles = libsDir.listFiles();
       for (File externalJar : jarFiles) {
-        projectDescription.addResourceContent(externalJar.getAbsolutePath());
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
+            externalJar.getAbsolutePath());
       }
     }
 

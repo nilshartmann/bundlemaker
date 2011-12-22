@@ -17,6 +17,7 @@ import java.util.Set;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -29,7 +30,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceStandin extends ResourceKey implements IResource {
+public class ResourceStandin extends ResourceKey implements IResourceStandin {
 
   /** - */
   private Resource       _resource;
@@ -75,8 +76,8 @@ public class ResourceStandin extends ResourceKey implements IResource {
   @Override
   public int compareTo(IResource other) {
 
-    if (!getContentId().equals(other.getContentId())) {
-      return getContentId().compareTo(other.getContentId());
+    if (!getProjectContentEntryId().equals(other.getProjectContentEntryId())) {
+      return getProjectContentEntryId().compareTo(other.getProjectContentEntryId());
     }
     if (!getRoot().equals(other.getRoot())) {
       return getRoot().compareTo(other.getRoot());

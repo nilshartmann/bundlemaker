@@ -29,14 +29,15 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.resources.IProject;
@@ -172,7 +173,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // get the dependency store
     ModelSetup modelSetup = new ModelSetup(this);
-    _problems = modelSetup.setup(_projectDescription.getModifiableFileBasedContent(),
+    _problems = modelSetup.setup(_projectDescription.getContent(),
         ((IPersistentDependencyStore) getDependencyStore(null)), progressMonitor);
 
     // set 'READY' state
@@ -260,7 +261,7 @@ public class BundleMakerProject implements IBundleMakerProject {
    * 
    * @return
    */
-  public final List<ResourceStandin> getSourceResourceStandins() {
+  public final List<IResourceStandin> getSourceResourceStandins() {
     return _projectDescription.getSourceResourceStandins();
   }
 
@@ -270,7 +271,7 @@ public class BundleMakerProject implements IBundleMakerProject {
    * 
    * @return
    */
-  public final List<ResourceStandin> getBinaryResourceStandins() {
+  public final List<IResourceStandin> getBinaryResourceStandins() {
     return _projectDescription.getBinaryResourceStandins();
   }
 
@@ -387,12 +388,12 @@ public class BundleMakerProject implements IBundleMakerProject {
    * @return
    */
   @Override
-  public IBundleMakerProjectDescription getProjectDescription() {
+  public IProjectDescription getProjectDescription() {
     return _projectDescription;
   }
 
   @Override
-  public IModifiableBundleMakerProjectDescription getModifiableProjectDescription() {
+  public IModifiableProjectDescription getModifiableProjectDescription() {
     return _projectDescription;
   }
 
@@ -403,7 +404,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     Assert.isNotNull(modifier);
 
     // Creating the project description
-    IModifiableBundleMakerProjectDescription projectDescription = this.getModifiableProjectDescription();
+    IModifiableProjectDescription projectDescription = this.getModifiableProjectDescription();
 
     modifier.modifyProjectDescription(projectDescription);
 

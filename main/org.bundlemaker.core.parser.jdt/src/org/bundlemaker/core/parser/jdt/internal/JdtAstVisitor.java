@@ -27,7 +27,6 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.CastExpression;
 import org.eclipse.jdt.core.dom.CatchClause;
@@ -332,65 +331,6 @@ public class JdtAstVisitor extends ASTVisitor {
     _currentTypes.pop();
     _realTypes.pop();
   }
-
-  // @Override
-  // public boolean visit(AnonymousClassDeclaration node) {
-  //
-  // // add the type name
-  // ITypeBinding typeBinding = node.resolveBinding();
-  //
-  // TypeEnum typeEnum = null;
-  // if (typeBinding.isInterface()) {
-  // typeEnum = TypeEnum.INTERFACE;
-  // } else if (typeBinding.isEnum()) {
-  // typeEnum = TypeEnum.ENUM;
-  // } else if (typeBinding.isAnnotation()) {
-  // typeEnum = TypeEnum.ANNOTATION;
-  // } else if (typeBinding.isClass()) {
-  // typeEnum = TypeEnum.CLASS;
-  // } else if (typeBinding.isAnonymous()) {
-  // typeEnum = TypeEnum.CLASS;
-  // } else {
-  // // TODO
-  // throw new RuntimeException("HAE " + node);
-  // }
-  //
-  // //
-  // String fullyQualifiedName = node.resolveBinding().getBinaryName();
-  //
-  // //
-  // if (fullyQualifiedName != null) {
-  //
-  // IModifiableType type = _javaSourceResource.getOrCreateType(
-  // fullyQualifiedName, typeEnum);
-  //
-  // _currentTypes.push(type);
-  //
-  // } else {
-  //
-  // // if the anonymous class has an empty body, no binary type will
-  // // be created and the binary name is null.
-  // // In this case we push the current type again to satisfy the
-  // // 'pop' in the end visit.
-  // _currentTypes.push(_currentTypes.peek());
-  // }
-  //
-  // // //
-  // // IAnnotationBinding[] annotationBindings = node.resolveBinding()
-  // // .getAnnotations();
-  // // for (IAnnotationBinding annotationBinding : annotationBindings) {
-  // // resolveTypeBinding(annotationBinding.getAnnotationType(), false,
-  // // false, true);
-  // // }
-  //
-  // // visit the child nodes
-  // return true;
-  // }
-  //
-  // @Override
-  // public void endVisit(AnonymousClassDeclaration node) {
-  // _currentTypes.pop();
-  // }
 
   /*
    * (non-Javadoc)

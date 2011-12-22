@@ -14,9 +14,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
-import org.bundlemaker.core.projectdescription.IRootPath;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -59,7 +61,7 @@ public class JdtProjectHelper {
 
       // step 2: 'unset' the class path
       javaProject.setRawClasspath(null, null);
-      
+
       // step 3: create the entries list
       List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
 
@@ -70,16 +72,17 @@ public class JdtProjectHelper {
       entries.add(classpathEntry);
 
       // step 3.2: add the binary paths
-      for (IFileBasedContent projectContent : project.getProjectDescription().getFileBasedContent()) {
+      for (IProjectContentEntry projectContent : project.getProjectDescription().getContent()) {
 
         // TODO!!
         IPath sourceRoot = null;
-        if (!projectContent.getSourceRootPaths().isEmpty()) {
-          sourceRoot = projectContent.getSourceRootPaths().toArray(new IRootPath[0])[0].getResolvedPath();
+        if (!((FileBasedContent) projectContent).getSourceRootPaths().isEmpty()) {
+          sourceRoot = ((FileBasedContent) projectContent).getSourceRootPaths().toArray(new VariablePath[0])[0]
+              .getResolvedPath();
         }
 
         // add binary paths
-        for (IRootPath iClasspathEntry : projectContent.getBinaryRootPaths()) {
+        for (VariablePath iClasspathEntry : ((FileBasedContent) projectContent).getBinaryRootPaths()) {
           classpathEntry = JavaCore.newLibraryEntry(iClasspathEntry.getResolvedPath(), sourceRoot, null);
           entries.add(classpathEntry);
         }
@@ -202,6 +205,8 @@ public class JdtProjectHelper {
     if (associatedProject.exists()) {
       associatedProject.delete(true, null);
     }
+
+    Assert.isTrue(!associatedProject.exists());
 
     IProjectDescription description = ResourcesPlugin.getWorkspace().newProjectDescription(
         getAssociatedJavaProjectName(bundleMakerProject));

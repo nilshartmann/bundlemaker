@@ -15,13 +15,14 @@ import java.util.concurrent.FutureTask;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.internal.resource.Resource;
-import org.bundlemaker.core.internal.resource.ResourceStandin;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
+import org.bundlemaker.core.projectdescription.AbstractContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.util.StopWatch;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -76,11 +77,11 @@ public class ModelSetup {
    * @param modifiableFileBasedContent
    * @param dependencyStore
    */
-  public List<IProblem> setup(final List<FileBasedContent> fileBasedContents,
+  public List<IProblem> setup(final List<IProjectContentEntry> projectContents,
       final IPersistentDependencyStore dependencyStore, IProgressMonitor mainMonitor)
       throws OperationCanceledException, CoreException {
 
-    Assert.isNotNull(fileBasedContents);
+    Assert.isNotNull(projectContents);
     Assert.isNotNull(dependencyStore);
 
     final List[] result = new List[1];
@@ -126,8 +127,7 @@ public class ModelSetup {
       StaticLog.log(LOG, "Compare and update...", new LoggableAction<Void>() {
         @Override
         public Void execute() {
-          result[0] = compareAndUpdate(fileBasedContents, storedResourcesMap, resourceCache,
-              progressMonitor.newChild(60));
+          result[0] = compareAndUpdate(projectContents, storedResourcesMap, resourceCache, progressMonitor.newChild(60));
           return null;
         }
       });
@@ -178,12 +178,12 @@ public class ModelSetup {
    * <p>
    * </p>
    * 
-   * @param fileBasedContents
+   * @param projectContents
    * @param storedResourcesMap
    * @param resourceCache
    * @param mainMonitor
    */
-  private List<IProblem> compareAndUpdate(List<FileBasedContent> fileBasedContents,
+  private List<IProblem> compareAndUpdate(List<IProjectContentEntry> projectContents,
       Map<IResourceKey, Resource> storedResourcesMap, ResourceCache resourceCache, IProgressMonitor mainMonitor) {
 
     //
@@ -193,18 +193,18 @@ public class ModelSetup {
     StopWatch stopWatch = null;
 
     //
-    int contentCount = fileBasedContents.size();
+    int contentCount = projectContents.size();
     SubMonitor subMonitor = SubMonitor.convert(mainMonitor, contentCount);
 
     try {
 
       //
-      for (FileBasedContent fileBasedContent : fileBasedContents) {
+      for (IProjectContentEntry projectContent : projectContents) {
 
         SubMonitor contentMonitor = subMonitor.newChild(1);
 
         // we only have check resource content
-        if (fileBasedContent.isAnalyze()) {
+        if (projectContent.isAnalyze()) {
 
           //
           if (LOG) {
@@ -212,22 +212,22 @@ public class ModelSetup {
             stopWatch.start();
           }
 
-          SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (fileBasedContent
-              .getModifiableBinaryResources().size() + fileBasedContent.getModifiableSourceResources().size()));
+          SubMonitor resourceContentMonitor = SubMonitor.convert(contentMonitor, (projectContent.getBinaryResources()
+              .size() + projectContent.getSourceResources().size()));
 
           // step 4.1: compute new and modified resources
-          Set<ResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              fileBasedContent.getModifiableBinaryResources(), storedResourcesMap, resourceCache,
-              new NullProgressMonitor());
+          Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
+              ((AbstractContent) projectContent).getBinaryResourceStandins(), storedResourcesMap,
+              resourceCache, new NullProgressMonitor());
 
-          Set<ResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-              fileBasedContent.getModifiableSourceResources(), storedResourcesMap, resourceCache,
-              new NullProgressMonitor());
+          Set<IResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
+              ((AbstractContent) projectContent).getSourceResourceStandins(), storedResourcesMap,
+              resourceCache, new NullProgressMonitor());
 
           //
           if (LOG) {
             StaticLog.log(String.format(" - compare and update '%s_%s' - computeNewAndModifiedResources [%s ms]",
-                fileBasedContent.getName(), fileBasedContent.getVersion(), stopWatch.getElapsedTime()));
+                projectContent.getName(), projectContent.getVersion(), stopWatch.getElapsedTime()));
 
             StaticLog
                 .log(String.format("   - new/modified binary resources: %s", newAndModifiedBinaryResources.size()));
@@ -236,14 +236,14 @@ public class ModelSetup {
           }
 
           // step 4.2:
-          for (ResourceStandin resourceStandin : newAndModifiedBinaryResources) {
+          for (IResourceStandin resourceStandin : newAndModifiedBinaryResources) {
             resourceCache.getOrCreateResource(resourceStandin);
           }
-          for (ResourceStandin resourceStandin : newAndModifiedSourceResources) {
+          for (IResourceStandin resourceStandin : newAndModifiedSourceResources) {
             resourceCache.getOrCreateResource(resourceStandin);
           }
 
-          resourceCache.setupTypeCache(fileBasedContent);
+          resourceCache.setupTypeCache(projectContent);
 
           // adjust work remaining
           int remaining = newAndModifiedSourceResources.size() + newAndModifiedBinaryResources.size();
@@ -251,8 +251,7 @@ public class ModelSetup {
           resourceContentMonitor.setWorkRemaining(remaining);
 
           result = multiThreadedReparse(storedResourcesMap, newAndModifiedSourceResources,
-              newAndModifiedBinaryResources, resourceCache, fileBasedContent,
-              resourceContentMonitor.newChild(remaining));
+              newAndModifiedBinaryResources, resourceCache, projectContent, resourceContentMonitor.newChild(remaining));
 
         }
 
@@ -267,8 +266,8 @@ public class ModelSetup {
   }
 
   private List<IProblem> multiThreadedReparse(Map<IResourceKey, Resource> storedResourcesMap,
-      Collection<ResourceStandin> sourceResources, Collection<ResourceStandin> binaryResources,
-      ResourceCache resourceCache, FileBasedContent fileBasedContent, IProgressMonitor monitor) {
+      Collection<IResourceStandin> sourceResources, Collection<IResourceStandin> binaryResources,
+      ResourceCache resourceCache, IProjectContentEntry fileBasedContent, IProgressMonitor monitor) {
 
     List<IProblem> result = new LinkedList<IProblem>();
 
@@ -286,10 +285,10 @@ public class ModelSetup {
       };
 
       //
-      for (ResourceStandin resourceStandin : binaryResources) {
+      for (IResourceStandin resourceStandin : binaryResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addBinaryResource(resourceStandin);
       }
-      for (ResourceStandin resourceStandin : sourceResources) {
+      for (IResourceStandin resourceStandin : sourceResources) {
         directories.getOrCreate(resourceStandin.getDirectory()).addSourceResource(resourceStandin);
       }
 
@@ -504,13 +503,13 @@ public class ModelSetup {
   public static class Directory {
 
     /** - */
-    private List<ResourceStandin> _binaryResources;
+    private List<IResourceStandin> _binaryResources;
 
     /** - */
-    private List<ResourceStandin> _sourceResources;
+    private List<IResourceStandin> _sourceResources;
 
     /** - */
-    private int                   _count = 0;
+    private int                    _count = 0;
 
     /**
      * <p>
@@ -518,8 +517,8 @@ public class ModelSetup {
      * </p>
      */
     public Directory() {
-      _binaryResources = new LinkedList<ResourceStandin>();
-      _sourceResources = new LinkedList<ResourceStandin>();
+      _binaryResources = new LinkedList<IResourceStandin>();
+      _sourceResources = new LinkedList<IResourceStandin>();
     }
 
     /**
@@ -528,7 +527,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addBinaryResource(ResourceStandin resourceStandin) {
+    public void addBinaryResource(IResourceStandin resourceStandin) {
       _binaryResources.add(resourceStandin);
       _count++;
     }
@@ -539,7 +538,7 @@ public class ModelSetup {
      * 
      * @param resourceStandin
      */
-    public void addSourceResource(ResourceStandin resourceStandin) {
+    public void addSourceResource(IResourceStandin resourceStandin) {
       _sourceResources.add(resourceStandin);
       _count++;
     }
@@ -550,7 +549,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<ResourceStandin> getBinaryResources() {
+    public List<IResourceStandin> getBinaryResources() {
       return _binaryResources;
     }
 
@@ -560,7 +559,7 @@ public class ModelSetup {
      * 
      * @return
      */
-    public List<ResourceStandin> getSourceResources() {
+    public List<IResourceStandin> getSourceResources() {
       return _sourceResources;
     }
 

@@ -8,7 +8,7 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.resource.IContentProvider;
+import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
@@ -72,7 +72,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
    * {@inheritDoc}
    */
   @Override
-  public Set<IContentProvider> getAdditionalResources(IResourceModule resourceModule,
+  public Set<IReadableResource> getAdditionalResources(IResourceModule resourceModule,
       IModularizedSystem currentModularizedSystem, IModuleExporterContext currentContext) {
 
     // step 1a: get the current root directory
@@ -202,10 +202,10 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
    * @param templateDirectory
    * @return
    */
-  private Set<IContentProvider> getAdditionalResources(File templateDirectory) {
+  private Set<IReadableResource> getAdditionalResources(File templateDirectory) {
 
     //
-    Set<IContentProvider> result = new HashSet<IContentProvider>();
+    Set<IReadableResource> result = new HashSet<IReadableResource>();
 
     if (templateDirectory == null) {
       return result;
@@ -216,7 +216,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
       for (String child : FileUtils.getAllChildren(templateDirectory)) {
 
         // create the resource standin
-        ResourceKey resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID", templateDirectory.getAbsolutePath(),
+        IReadableResource resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID", templateDirectory.getAbsolutePath(),
             child);
 
         // add the resource
@@ -238,13 +238,13 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
    * @param contentProvider
    * @return
    */
-  protected Set<IContentProvider> filterAdditionalResources(Set<IContentProvider> contentProvider) {
+  protected Set<IReadableResource> filterAdditionalResources(Set<IReadableResource> contentProvider) {
 
     //
-    Set<IContentProvider> filteredResult = new HashSet<IContentProvider>();
+    Set<IReadableResource> filteredResult = new HashSet<IReadableResource>();
 
     //
-    for (IContentProvider resourceKey : contentProvider) {
+    for (IReadableResource resourceKey : contentProvider) {
       if (!"manifest.properties".equals(resourceKey.getName())) {
         filteredResult.add(resourceKey);
       }

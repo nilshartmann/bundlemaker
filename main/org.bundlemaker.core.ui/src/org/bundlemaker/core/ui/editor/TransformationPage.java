@@ -15,7 +15,7 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
 import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
 import org.bundlemaker.core.osgi.exporter.pde.TargetPlatformProjectExporter;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedModuleDefinition;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
 import org.bundlemaker.core.ui.editor.transformation.Evaluator;
@@ -191,7 +191,7 @@ public class TransformationPage extends FormPage {
 
   /**
    * <p>
-   * Returns the {@link IBundleMakerProjectDescription} that this editor is working on.
+   * Returns the {@link IProjectDescription} that this editor is working on.
    * </p>
    * 
    * @return the project description. Never null.

@@ -26,7 +26,7 @@ public class ResourceTest {
 
     Resource resource = new Resource("contentId", "root", "path");
 
-    Assert.assertEquals("contentId", resource.getContentId());
+    Assert.assertEquals("contentId", resource.getProjectContentEntryId());
     Assert.assertEquals("root", resource.getRoot());
     Assert.assertEquals("path", resource.getPath());
 

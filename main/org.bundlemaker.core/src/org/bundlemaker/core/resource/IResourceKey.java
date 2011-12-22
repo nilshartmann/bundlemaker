@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.resource;
 
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 
 /**
  * <p>
@@ -23,16 +23,16 @@ import org.bundlemaker.core.projectdescription.IFileBasedContent;
  * @noimplement This interface is not intended to be implemented by clients.
  * @noextend This interface is not intended to be extended by clients.
  */
-public interface IResourceKey extends IContentProvider {
+public interface IResourceKey extends IReadableResource {
 
   /**
    * <p>
-   * Returns the identifier of the {@link IFileBasedContent} that defines the resource.
+   * Returns the identifier of the {@link IProjectContentEntry} that defines the resource.
    * </p>
    * 
-   * @return the identifier of the {@link IFileBasedContent} that defines the resource.
+   * @return the identifier of the {@link IProjectContentEntry} that defines the resource.
    */
-  String getContentId();
+  String getProjectContentEntryId();
 
   /**
    * <p>

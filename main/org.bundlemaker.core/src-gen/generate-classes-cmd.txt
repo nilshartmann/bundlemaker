@@ -1,1 +1,2 @@
 R:\software\jdk\jdk16\bin\xjc.exe -p org.bundlemaker.core.model.internal.projectdescription.xml xmlprojectdescription.xsd
+R:\software\jdk\jdk16\bin\xjc.exe -p org.bundlemaker.core.content.file.xml filebasecontentprovider.xsd

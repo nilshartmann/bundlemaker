@@ -89,10 +89,7 @@ public final class BundleMakerCore {
       // step 1: create the project
       bundleMakerProject = new BundleMakerProject(project);
 
-      // // step 2: initialize
-      // bundleMakerProject.initialize(progressMonitor);
-
-      // step 3: cache the bundle maker project
+      // step 2: cache the bundle maker project
       Activator.getDefault().cacheBundleMakerProject(project, bundleMakerProject);
     }
 
@@ -167,17 +164,18 @@ public final class BundleMakerCore {
   }
 
   /**
-   * Returns true if the specified {@link IProject} is a BundleMaker project.
-   * 
-   * 
+   * <p>
+   * Returns <code>true</code> if the specified {@link IProject} is a BundleMaker project.
+   * </p>
    * 
    * @param project
-   *          the project to check. Might be null
-   * @return true if the project is a BundleMaker project. In that case it is save to invoke
-   *         {@link #getBundleMakerProject(IProject, IProgressMonitor)}
+   *          the project to test
+   * @return
    * @throws CoreException
    */
   public static boolean isBundleMakerProject(IProject project) throws CoreException {
+
+    //
     if (project == null) {
       return false;
     }
@@ -192,6 +190,7 @@ public final class BundleMakerCore {
       return false;
     }
 
+    // returns true
     return true;
   }
 }

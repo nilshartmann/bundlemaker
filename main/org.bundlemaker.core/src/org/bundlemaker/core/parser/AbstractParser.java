@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IResourceKey;
 
 /**
@@ -67,7 +67,7 @@ public abstract class AbstractParser implements IParser {
    * @param resourceKey
    * @param cache
    */
-  public abstract void parseResource(IFileBasedContent content, IResourceKey resource, IResourceCache cache);
+  public abstract void parseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache);
 
   /**
    * <p>

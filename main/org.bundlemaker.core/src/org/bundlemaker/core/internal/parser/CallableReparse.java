@@ -7,31 +7,31 @@ import java.util.concurrent.Callable;
 
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.parser.ModelSetup.Directory;
-import org.bundlemaker.core.internal.projectdescription.FileBasedContent;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 public class CallableReparse implements Callable<List<IProblem>> {
 
   /** - */
-  private ResourceCache         _resourceCache;
+  private ResourceCache              _resourceCache;
 
   /** - */
-  private IProgressMonitor      _progressMonitor;
+  private IProgressMonitor           _progressMonitor;
 
   /** - */
-  private FileBasedContent      _content;
+  private IProjectContentEntry _content;
 
   /** - */
-  private Collection<Directory> _directories;
+  private Collection<Directory>      _directories;
 
   // /** the list of all errors */
   // private List<IProblem> _errors;
 
   /** - */
-  private IParser[]             _parser;
+  private IParser[]                  _parser;
 
   /**
    * <p>
@@ -43,7 +43,7 @@ public class CallableReparse implements Callable<List<IProblem>> {
    * @param parser
    * @param resourceCache
    */
-  public CallableReparse(FileBasedContent content, Collection<Directory> directories, IParser[] parser,
+  public CallableReparse(IProjectContentEntry content, Collection<Directory> directories, IParser[] parser,
       ResourceCache resourceCache, IProgressMonitor progressMonitor) {
 
     //

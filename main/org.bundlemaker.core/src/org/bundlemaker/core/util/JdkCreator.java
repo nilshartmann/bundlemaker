@@ -32,18 +32,16 @@ public class JdkCreator {
    */
   public static final IVMInstall getIVMInstall(String name) throws CoreException {
 
-    // asserts
-    Assert.isNotNull(name);
-
     // get the VMInstallType
     IVMInstallType type = JavaRuntime.getVMInstallType(ID_STANDARD_VM_TYPE);
 
-    if (type == null) {
+    if (type == null || name == null) {
       return getDefaultVMInstall(name);
     }
 
     //
-    IVMInstall result = type.findVMInstallByName(name);
+    IVMInstall result;
+    result = type.findVMInstallByName(name);
 
     if (result == null) {
       return getDefaultVMInstall(name);

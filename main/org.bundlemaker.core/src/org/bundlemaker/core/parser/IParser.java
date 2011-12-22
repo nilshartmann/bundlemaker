@@ -15,7 +15,7 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.eclipse.core.runtime.CoreException;
 
@@ -54,7 +54,7 @@ public interface IParser {
    * @param cache
    * @throws CoreException
    */
-  public void parseResource(IFileBasedContent content, IResourceKey resource, IResourceCache cache)
+  public void parseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache)
       throws CoreException;
 
   /**
