@@ -48,6 +48,15 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * <p>
    * Creates a new instance of type {@link JarFileBundleExporter}.
    * </p>
+   */
+  public JarFileBundleExporter() {
+    super(null, null, null);
+  }
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link JarFileBundleExporter}.
+   * </p>
    * 
    * @param templateProvider
    */
