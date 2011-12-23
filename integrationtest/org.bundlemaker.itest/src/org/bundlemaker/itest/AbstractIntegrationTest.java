@@ -241,8 +241,8 @@ public abstract class AbstractIntegrationTest {
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
     File templates = new File(System.getProperty("user.dir"), "templates");
-    JarFileBundleExporter exporter = new JarFileBundleExporter(new DirectoryBasedTemplateProvider(templates), null,
-        null);
+    JarFileBundleExporter exporter = templates.exists() ? new JarFileBundleExporter(new DirectoryBasedTemplateProvider(
+        templates), null, null) : new JarFileBundleExporter(null, null, null);
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Elapsed time " + stopWatch.getElapsedTime());
@@ -322,9 +322,10 @@ public abstract class AbstractIntegrationTest {
         modularizedSystem);
 
     File templateDirectory = new File(System.getProperty("user.dir"), "templates");
+    DirectoryBasedTemplateProvider templateProvider = templateDirectory.exists() ? new DirectoryBasedTemplateProvider(
+        templateDirectory) : null;
 
-    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter(new DirectoryBasedTemplateProvider(
-        templateDirectory), null, null);
+    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter(templateProvider, null, null);
     pdeExporter.setUseClassifcationForExportDestination(true);
     new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext, null);
 
