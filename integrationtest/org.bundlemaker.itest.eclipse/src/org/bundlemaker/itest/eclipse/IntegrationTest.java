@@ -13,6 +13,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.itest.AbstractIntegrationTest;
@@ -59,7 +60,8 @@ public class IntegrationTest extends AbstractIntegrationTest {
     for (File file : jarFiles) {
       classes.add(file.getAbsolutePath());
     }
-    bundleMakerProject.getModifiableProjectDescription().addContent("eclipse", "3.6.1", classes,
+    FileBasedContentProviderFactory.addNewFileBasedContentProvider(
+        bundleMakerProject.getModifiableProjectDescription(), "eclipse", "3.6.1", classes,
         Arrays.asList(new String[] { sourceDirectory.getAbsolutePath() }), AnalyzeMode.BINARIES_AND_SOURCES);
 
     // step 4: process the class path entries
@@ -70,7 +72,8 @@ public class IntegrationTest extends AbstractIntegrationTest {
       }
     });
     for (File externalJar : jarFiles) {
-      bundleMakerProject.getModifiableProjectDescription().addResourceContent(externalJar.getAbsolutePath());
+      FileBasedContentProviderFactory.addNewFileBasedContentProvider(
+          bundleMakerProject.getModifiableProjectDescription(), externalJar.getAbsolutePath());
     }
 
     //

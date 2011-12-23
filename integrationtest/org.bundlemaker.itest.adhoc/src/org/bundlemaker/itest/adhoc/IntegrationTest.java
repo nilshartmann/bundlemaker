@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.itest.AbstractIntegrationTest;
 
 /**
@@ -42,7 +42,8 @@ public class IntegrationTest extends AbstractIntegrationTest {
       }
     });
     for (File externalJar : jarFiles) {
-      bundleMakerProject.getModifiableProjectDescription().addResourceContent(externalJar.getAbsolutePath());
+      FileBasedContentProviderFactory.addNewFileBasedContentProvider(
+          bundleMakerProject.getModifiableProjectDescription(), externalJar.getAbsolutePath());
     }
 
     bundleMakerProject.getModifiableProjectDescription().save();

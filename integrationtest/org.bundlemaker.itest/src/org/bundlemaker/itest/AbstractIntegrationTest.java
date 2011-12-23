@@ -13,9 +13,10 @@ import org.bundlemaker.core.exporter.SimpleReportExporter;
 import org.bundlemaker.core.exporter.structure101.Structure101Exporter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.osgi.exporter.BinaryBundleExporter;
-import org.bundlemaker.core.osgi.pde.exporter.PdePluginProjectModuleExporter;
-import org.bundlemaker.core.osgi.pde.exporter.TargetPlatformProjectExporter;
+import org.bundlemaker.core.osgi.exporter.DirectoryBasedTemplateProvider;
+import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
+import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.osgi.exporter.pde.TargetPlatformProjectExporter;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
@@ -239,9 +240,9 @@ public abstract class AbstractIntegrationTest {
 
     StopWatch stopWatch = new StopWatch();
     stopWatch.start();
-    BinaryBundleExporter exporter = new BinaryBundleExporter();
     File templates = new File(System.getProperty("user.dir"), "templates");
-    exporter.setTemplateRootDirectory(templates);
+    JarFileBundleExporter exporter = new JarFileBundleExporter(new DirectoryBasedTemplateProvider(templates), null,
+        null);
     new ModularizedSystemExporterAdapter(exporter).export(modularizedSystem, exporterContext, null);
     stopWatch.stop();
     System.out.println("Elapsed time " + stopWatch.getElapsedTime());
@@ -322,13 +323,12 @@ public abstract class AbstractIntegrationTest {
 
     File templateDirectory = new File(System.getProperty("user.dir"), "templates");
 
-    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
+    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter(new DirectoryBasedTemplateProvider(
+        templateDirectory), null, null);
     pdeExporter.setUseClassifcationForExportDestination(true);
-    pdeExporter.setTemplateRootDirectory(templateDirectory);
     new ModularizedSystemExporterAdapter(pdeExporter).export(modularizedSystem, exporterContext, null);
 
     TargetPlatformProjectExporter targetPlatformProjectExporter = new TargetPlatformProjectExporter();
-    targetPlatformProjectExporter.setTemplateDirectory(templateDirectory);
     targetPlatformProjectExporter.export(modularizedSystem, exporterContext, null);
   }
 

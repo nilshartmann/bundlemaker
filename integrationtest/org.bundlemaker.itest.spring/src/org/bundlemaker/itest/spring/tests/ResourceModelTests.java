@@ -6,7 +6,7 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IFileBasedContent;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -22,10 +22,7 @@ public class ResourceModelTests {
   public static void checkResourceModel(IBundleMakerProject bundleMakerProject) {
 
     // check each file content entry
-    for (IFileBasedContent fileBasedContent : bundleMakerProject.getProjectDescription().getFileBasedContent()) {
-
-      //
-      Assert.assertTrue(fileBasedContent.isResourceContent());
+    for (IProjectContentEntry fileBasedContent : bundleMakerProject.getProjectDescription().getContent()) {
 
       //
       Map<String, IType> typeMap = new HashMap<String, IType>();

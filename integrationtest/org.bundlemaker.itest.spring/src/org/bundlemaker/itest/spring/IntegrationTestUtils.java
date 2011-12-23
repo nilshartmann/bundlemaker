@@ -9,8 +9,9 @@ import org.apache.tools.ant.taskdefs.Mkdir;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.projectdescription.IBundleMakerProjectDescription;
-import org.bundlemaker.core.projectdescription.modifiable.IModifiableBundleMakerProjectDescription;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.transformations.EmbedModuleTransformation;
 import org.bundlemaker.core.transformations.resourceset.ResourceSetBasedTransformation;
 import org.bundlemaker.itest.AbstractIntegrationTest;
@@ -96,8 +97,8 @@ public class IntegrationTestUtils {
    * <p>
    * </p>
    */
-  public static IBundleMakerProjectDescription createProjectDescription(
-      IModifiableBundleMakerProjectDescription projectDescription) throws CoreException {
+  public static IProjectDescription createProjectDescription(IModifiableProjectDescription projectDescription)
+      throws CoreException {
 
     // step 1:
     projectDescription.clear();
@@ -108,8 +109,8 @@ public class IntegrationTestUtils {
     // step 3: add the source and classes
     File classesZip = new File(System.getProperty("user.dir"), "spring/classes");
     File sourceDirectory = new File(System.getProperty("user.dir"), "spring/source");
-    projectDescription.addResourceContent("Spring", "2.5.6", classesZip.getAbsolutePath(),
-        sourceDirectory.getAbsolutePath());
+    FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, "Spring", "2.5.6",
+        classesZip.getAbsolutePath(), sourceDirectory.getAbsolutePath());
 
     // step 4: process the class path entries
     File libsDir = new File(System.getProperty("user.dir"), "spring/libs");
@@ -119,7 +120,7 @@ public class IntegrationTestUtils {
       }
     });
     for (File externalJar : jarFiles) {
-      projectDescription.addResourceContent(externalJar.getAbsolutePath());
+      FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, externalJar.getAbsolutePath());
     }
 
     // return the result
