@@ -105,7 +105,6 @@ public class ProjectDescriptionStore {
 
       try {
 
-        System.out.println(xmlProjectDescription.getClass().getClassLoader());
         Class<?> clazz = jaxbCompoundClassLoader.getCompoundClassLoader().loadClass(
             type.getContentProviderFactoryClass());
         IProjectContentProvider instObject = (IProjectContentProvider) clazz.newInstance();
