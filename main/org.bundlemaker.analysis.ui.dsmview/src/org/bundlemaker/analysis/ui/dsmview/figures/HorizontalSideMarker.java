@@ -1,6 +1,6 @@
 package org.bundlemaker.analysis.ui.dsmview.figures;
 
-import org.bundlemaker.analysis.ui.dsmview.DsmViewModel;
+import org.bundlemaker.analysis.ui.dsmview.AbstractDsmViewModel;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -20,7 +20,7 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
    * 
    * @param model
    */
-  public HorizontalSideMarker(DsmViewModel model) {
+  public HorizontalSideMarker(AbstractDsmViewModel model) {
     super(model);
   }
 

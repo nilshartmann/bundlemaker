@@ -1,5 +1,6 @@
 package org.bundlemaker.analysis.ui.dsmview.figures;
 
+import org.bundlemaker.analysis.ui.dsmview.AbstractDsmViewModel;
 import org.bundlemaker.analysis.ui.dsmview.DsmViewModel;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
@@ -16,13 +17,13 @@ import org.eclipse.swt.graphics.FontMetrics;
 public abstract class AbstractSideMarker extends Figure implements ISideMarker {
 
   /** the model */
-  private DsmViewModel _model;
+  private AbstractDsmViewModel _model;
 
   /** the marked item */
-  private int          _markedItem = -1;
+  private int                  _markedItem = -1;
 
   /** - */
-  private FontMetrics  _fontMetrics;
+  private FontMetrics          _fontMetrics;
 
   /**
    * <p>
@@ -32,7 +33,7 @@ public abstract class AbstractSideMarker extends Figure implements ISideMarker {
    * @param model
    *          the model
    */
-  public AbstractSideMarker(DsmViewModel model) {
+  public AbstractSideMarker(AbstractDsmViewModel model) {
 
     //
     Assert.isNotNull(model);
@@ -59,7 +60,7 @@ public abstract class AbstractSideMarker extends Figure implements ISideMarker {
    * 
    * @return
    */
-  protected DsmViewModel getModel() {
+  protected AbstractDsmViewModel getModel() {
     return _model;
   }
 

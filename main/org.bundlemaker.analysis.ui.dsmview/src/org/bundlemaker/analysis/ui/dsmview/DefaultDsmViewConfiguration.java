@@ -55,7 +55,7 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
 
   @Override
   public Color getSideMarkerEvenColor() {
-    return VAR_4_LIGHT_MEDIUM;
+    return VAR_5_LIGHT;
   }
 
   @Override

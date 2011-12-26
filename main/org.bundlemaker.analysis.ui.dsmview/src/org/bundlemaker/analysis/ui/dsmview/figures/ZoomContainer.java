@@ -37,8 +37,8 @@ public class ZoomContainer extends Figure {
   @Override
   public Rectangle getClientArea(Rectangle rect) {
     super.getClientArea(rect);
-    rect.width /= zoom;
-    rect.height /= zoom;
+    rect.width = (int) Math.ceil(rect.width / zoom);
+    rect.height = (int) Math.ceil(rect.height / zoom);
     return rect;
   }
 

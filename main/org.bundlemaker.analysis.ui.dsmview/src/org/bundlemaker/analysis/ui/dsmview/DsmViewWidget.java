@@ -17,12 +17,15 @@ import org.eclipse.draw2d.ButtonBorder;
 import org.eclipse.draw2d.ChangeEvent;
 import org.eclipse.draw2d.ChangeListener;
 import org.eclipse.draw2d.CheckBox;
+import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.draw2d.MouseEvent;
+import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.ScrollBar;
 import org.eclipse.draw2d.ScrollPane;
@@ -30,9 +33,11 @@ import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * <p>
@@ -42,11 +47,152 @@ import org.eclipse.swt.widgets.Display;
  */
 public class DsmViewWidget implements Observer {
 
+  private final class MyMotionListener implements MouseMotionListener {
+
+    /** - */
+    private static final int HORIZONTAL   = 1;
+
+    /** - */
+    private static final int VERTICAL     = 2;
+
+    /** - */
+    private static final int RANGE        = 3;
+
+    /** - */
+    private int              _currentDrag = -1;
+
+    @Override
+    public void mouseMoved(MouseEvent me) {
+      dump(me, false);
+    }
+
+    @Override
+    public void mouseHover(MouseEvent me) {
+      // dump(me, false);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
+      // dump(me, false);
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent me) {
+      // dump(me, false);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent me) {
+      dump(me, true);
+    }
+
+    public void dump(MouseEvent me, boolean isDragged) {
+
+      if (!isDragged) {
+        _currentDrag = -1;
+      }
+
+      //
+      if (me.getSource() instanceof Figure) {
+
+        switch (isInRange(me)) {
+        case HORIZONTAL:
+          ((Figure) me.getSource()).setCursor(Cursors.SIZENS);
+          break;
+        case VERTICAL:
+          ((Figure) me.getSource()).setCursor(Cursors.SIZEWE);
+          break;
+        default:
+          ((Figure) me.getSource()).setCursor(Cursors.ARROW);
+          break;
+        }
+      }
+
+      //
+      if ((me.getState() & MouseEvent.BUTTON1) != 0 && isDragged) {
+
+        //
+        if (_currentDrag == -1) {
+          _currentDrag = isInRange(me);
+        }
+
+        //
+        if (_currentDrag == HORIZONTAL && me.getSource().equals(DsmViewWidget.this._matrixFigure)) {
+          DsmViewWidget.this._horizontalWidth = DsmViewWidget.this._horizontalWidth + me.getLocation().y;
+        }
+
+        //
+        if (_currentDrag == HORIZONTAL && me.getSource().equals(DsmViewWidget.this._horizontalListFigure)) {
+          DsmViewWidget.this._horizontalWidth = me.getLocation().y;
+        }
+
+        //
+        if (_currentDrag == VERTICAL && me.getSource().equals(DsmViewWidget.this._matrixFigure)) {
+          DsmViewWidget.this._verticalWidth = DsmViewWidget.this._verticalWidth + me.getLocation().x;
+        }
+
+        //
+        if (_currentDrag == VERTICAL && me.getSource().equals(DsmViewWidget.this._verticalListFigure)) {
+          DsmViewWidget.this._verticalWidth = me.getLocation().x;
+        }
+
+        // DsmViewWidget.this._horizontalWidth = me.y;
+        DsmViewWidget.this._mainFigure.revalidate();
+      }
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param me
+     * @return
+     */
+    private int isInRange(MouseEvent me) {
+
+      //
+      if (me.getSource().equals(DsmViewWidget.this._matrixFigure)) {
+        if (Math.abs(me.getLocation().x) < RANGE) {
+          return VERTICAL;
+        }
+
+        if (Math.abs(me.getLocation().y) < RANGE) {
+          return HORIZONTAL;
+        }
+      }
+
+      else if (me.getSource().equals(DsmViewWidget.this._horizontalListFigure)) {
+
+        if (Math.abs(me.getLocation().x) < RANGE) {
+          return VERTICAL;
+        }
+
+        if (DsmViewWidget.this._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < RANGE) {
+          return HORIZONTAL;
+        }
+      }
+
+      else if (me.getSource().equals(DsmViewWidget.this._verticalListFigure)) {
+
+        if (Math.abs(me.getLocation().y) < RANGE) {
+          return HORIZONTAL;
+        }
+
+        if (DsmViewWidget.this._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < RANGE) {
+          return VERTICAL;
+        }
+      }
+
+      //
+      return -1;
+    }
+  }
+
   /** the SWT canvas */
   private Canvas               _canvas;
 
   /** the {@link DsmViewModel} */
-  private DsmViewModel         _model;
+  private AbstractDsmViewModel _model;
 
   /** the main figure */
   private Figure               _mainFigure;
@@ -68,6 +214,10 @@ public class DsmViewWidget implements Observer {
 
   private HorizontalSideMarker _horizontalListFigure;
 
+  private int                  _horizontalWidth = 10;
+
+  public int                   _verticalWidth   = -1;
+
   /**
    * <p>
    * Creates a new instance of type {@link DsmViewWidget}.
@@ -76,7 +226,7 @@ public class DsmViewWidget implements Observer {
    * @param model
    * @param canvas
    */
-  public DsmViewWidget(DsmViewModel model, Composite parent) {
+  public DsmViewWidget(AbstractDsmViewModel model, Composite parent) {
 
     // assert not null
     Assert.isNotNull(model);
@@ -118,14 +268,18 @@ public class DsmViewWidget implements Observer {
     _mainFigure.setLayoutManager(new XYLayout());
     lws.setContents(_mainFigure);
 
+    MyMotionListener motionListener = new MyMotionListener();
     _matrixFigure = new Matrix(_model);
+    _matrixFigure.addMouseMotionListener(motionListener);
 
     _zoomableScrollpane = new ZoomableScrollPane(_matrixFigure, ScrollPane.ALWAYS, ScrollPane.ALWAYS);
 
     _verticalListFigure = new VerticalSideMarker(_model);
+    _verticalListFigure.addMouseMotionListener(motionListener);
     _zoomableScrollpaneVerticalBar = new ZoomableScrollPane(_verticalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 
     _horizontalListFigure = new HorizontalSideMarker(_model);
+    _horizontalListFigure.addMouseMotionListener(motionListener);
     _zoomableScrollpaneHorizontalBar = new ZoomableScrollPane(_horizontalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 
     _matrixFigure.addMatrixListener(new IMatrixListener() {
@@ -137,8 +291,10 @@ public class DsmViewWidget implements Observer {
 
       @Override
       public void singleClick(MatrixEvent event) {
-        Analysis.instance().getDependencySelectionService()
-            .setSelection(DSMView.ID, _model.getDependency(event.getX(), event.getY()));
+        if (_model instanceof DsmViewModel) {
+          Analysis.instance().getDependencySelectionService()
+              .setSelection(DSMView.ID, ((DsmViewModel) _model).getDependency(event.getX(), event.getY()));
+        }
       }
 
       @Override
@@ -234,7 +390,7 @@ public class DsmViewWidget implements Observer {
     //
     int testExtend = FigureUtilities.getTextWidth(
         getLongestString(_model.isUseShortendLabels() ? _model.getShortendLabels() : _model.getLabels()),
-        _matrixFigure.getFont()) + 25;
+        _matrixFigure.getFont()) + 15;
     return (int) (testExtend * zoomableScrollpane.getZoom());
   }
 
@@ -282,26 +438,28 @@ public class DsmViewWidget implements Observer {
 
     _useShortendLabelsCheckBox.setLocation(new Point(mainFigureHalfWidth + 1, 0.0));
     _useShortendLabelsCheckBox.setSize(mainFigureHalfWidth, 20);
-    //
-    int textExtend = getTextExtend(_matrixFigure, _zoomableScrollpane);
 
-    int horizontalBarHeight = textExtend;
-    // int horizontalBarHeight = 200;
+    int horizontalBarHeight = (int) (_horizontalWidth * _zoomableScrollpaneHorizontalBar.getZoom());
+    if (_verticalWidth == -1) {
+      _verticalWidth = getTextExtend(_matrixFigure, _zoomableScrollpane);
+    }
+    int verticalBarWidth = (int) (_verticalWidth * _zoomableScrollpaneVerticalBar.getZoom());
 
     //
-    _zoomableScrollpane.setLocation(new Point(textExtend, 21.0 + horizontalBarHeight));
-    _zoomableScrollpane.setSize(_mainFigure.getSize().width - textExtend,
+    _zoomableScrollpane.setLocation(new Point(verticalBarWidth, 21.0 + horizontalBarHeight));
+    _zoomableScrollpane.setSize(_mainFigure.getSize().width - verticalBarWidth,
         (int) (_mainFigure.getSize().height - (21.0 + horizontalBarHeight)));
 
     //
     _zoomableScrollpaneVerticalBar.setLocation(new Point(0, (21.0 + horizontalBarHeight)));
-    _zoomableScrollpaneVerticalBar
-        .setSize(textExtend, (_mainFigure.getSize().height - (21 + horizontalBarHeight + 17)));
+    _zoomableScrollpaneVerticalBar.setSize(verticalBarWidth,
+        (_mainFigure.getSize().height - (21 + horizontalBarHeight + 17)));
 
     //
-    _zoomableScrollpaneHorizontalBar.setLocation(new Point(textExtend, 21.0));
+    _zoomableScrollpaneHorizontalBar.setLocation(new Point(verticalBarWidth, 21.0));
     // _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (textExtend + 17)), textExtend);
-    _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (textExtend + 17)), horizontalBarHeight);
+    _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (verticalBarWidth + 17)),
+        horizontalBarHeight);
   }
 
   private int computeSize() {
@@ -355,5 +513,43 @@ public class DsmViewWidget implements Observer {
 
   public void removeMatrixLIstener(IMatrixListener listener) {
     _matrixFigure.removeMatrixLIstener(listener);
+  }
+
+  public static void main(String args[]) {
+
+    Display d = new Display();
+    final Shell shell = new Shell(d);
+    shell.setSize(800, 800);
+    shell.setLayout(new FillLayout());
+    final AbstractDsmViewModel model = new AbstractDsmViewModel() {
+
+      @Override
+      public String getToolTip(int x, int y) {
+        return "same";
+      }
+
+      @Override
+      protected String[][] createValues() {
+        return new String[][] { { "1", "12", "1", "12" }, { "3", "56", "1", "12" }, { "3", "56", "1", "12" },
+            { "3", "56", "1", "12" } };
+      }
+
+      @Override
+      protected String[] createLabels() {
+        return new String[] { "Test_1", "Test_2", "Test_3", "Test_4" };
+      }
+
+      @Override
+      protected IDsmViewConfiguration createConfiguration() {
+        return new DefaultDsmViewConfiguration();
+      }
+    };
+
+    new DsmViewWidget(model, shell);
+    shell.open();
+
+    while (!shell.isDisposed())
+      while (!d.readAndDispatch())
+        d.sleep();
   }
 }

@@ -1,6 +1,6 @@
 package org.bundlemaker.analysis.ui.dsmview.figures;
 
-import org.bundlemaker.analysis.ui.dsmview.DsmViewModel;
+import org.bundlemaker.analysis.ui.dsmview.AbstractDsmViewModel;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -21,7 +21,7 @@ public class VerticalSideMarker extends AbstractSideMarker implements ISideMarke
    * 
    * @param model
    */
-  public VerticalSideMarker(DsmViewModel model) {
+  public VerticalSideMarker(AbstractDsmViewModel model) {
     super(model);
   }
 

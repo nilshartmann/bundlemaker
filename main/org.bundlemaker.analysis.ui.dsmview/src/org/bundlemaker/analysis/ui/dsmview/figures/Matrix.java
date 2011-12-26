@@ -3,6 +3,7 @@ package org.bundlemaker.analysis.ui.dsmview.figures;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.analysis.ui.dsmview.AbstractDsmViewModel;
 import org.bundlemaker.analysis.ui.dsmview.DsmViewModel;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
@@ -24,22 +25,22 @@ import org.eclipse.swt.widgets.Display;
 public class Matrix extends Figure {
 
   /** the model */
-  protected DsmViewModel        _model;
+  protected AbstractDsmViewModel _model;
 
   /** - */
-  int                           _x          = -1;
+  int                            _x          = -1;
 
   /** - */
-  int                           _y          = -1;
+  int                            _y          = -1;
 
   /** - */
-  int                           _selected_x = -1;
+  int                            _selected_x = -1;
 
   /** - */
-  int                           _selected_y = -1;
+  int                            _selected_y = -1;
 
   /** - */
-  private List<IMatrixListener> _matrixListeners;
+  private List<IMatrixListener>  _matrixListeners;
 
   /**
    * <p>
@@ -48,7 +49,7 @@ public class Matrix extends Figure {
    * 
    * @param model
    */
-  public Matrix(DsmViewModel model) {
+  public Matrix(AbstractDsmViewModel model) {
 
     //
     Assert.isNotNull(model);
@@ -94,7 +95,7 @@ public class Matrix extends Figure {
    * 
    * @return
    */
-  public DsmViewModel getModel() {
+  public AbstractDsmViewModel getModel() {
     return _model;
   }
 
