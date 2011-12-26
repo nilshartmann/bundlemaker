@@ -16,8 +16,8 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.dependencyview.ArtifactPathLabelGenerator;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration.ResourcePresentation;
-import org.bundlemaker.core.analysis.IAdvancedArtifact;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -82,7 +82,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
 
   @Test
   public void test_generateTitlesForFlatPackages_NoResources() {
-    IAdvancedArtifact rootArtifact = getRootArtifact(false);
+    IBundleMakerArtifact rootArtifact = getRootArtifact(false);
 
     IArtifact typeArtifact = rootArtifact
         .getChild("group1|group2|ArtifactPathLabelGeneratorTest_1.0.0|de.test.basic|TestClass");
@@ -139,7 +139,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
 
   @Test
   public void test_generateTitlesForHierarchicalPackages_NoResources() {
-    IAdvancedArtifact rootArtifact = getRootArtifact(true);
+    IBundleMakerArtifact rootArtifact = getRootArtifact(true);
 
     IArtifact typeArtifact = rootArtifact
         .getChild("group1|group2|ArtifactPathLabelGeneratorTest_1.0.0|de|test|basic|TestClass");
@@ -203,7 +203,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("group1/group2/ArtifactPathLabelGeneratorTest_1.0.0/de.test.basic.TestClass", label);
   }
 
-  protected IAdvancedArtifact getRootArtifact(boolean hierarchical) {
+  protected IBundleMakerArtifact getRootArtifact(boolean hierarchical) {
 
     ArtifactModelConfiguration artifactModelConfiguration = new ArtifactModelConfiguration();
     artifactModelConfiguration.setHierarchicalPackages(hierarchical);
@@ -212,8 +212,8 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     artifactModelConfiguration.setAggregateInnerTypes(false);
     artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);
 
-    IAdvancedArtifact rootArtifact = (IAdvancedArtifact) ModelTransformer.getDependencyModel(getModularizedSystem(),
-        artifactModelConfiguration).getRoot();
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+        getModularizedSystem(), artifactModelConfiguration).getRoot();
 
     Assert.assertNotNull(rootArtifact);
 
