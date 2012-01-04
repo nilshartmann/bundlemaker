@@ -16,9 +16,9 @@ import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
+public class ResourceNameColumnLabelProvider extends ColumnLabelProvider {
 
-  ResourceNameColumnLabelProvider() {
+  public ResourceNameColumnLabelProvider() {
   }
 
   @Override

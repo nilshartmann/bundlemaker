@@ -17,12 +17,10 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
@@ -167,11 +165,11 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
   }
 
   public static void register() {
-    BundleMakerAdapterFactory bundleMakerAdapterFactory = new BundleMakerAdapterFactory();
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProject.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectDescription.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectContentEntry.class);
-    Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, VariablePath.class);
+    // BundleMakerAdapterFactory bundleMakerAdapterFactory = new BundleMakerAdapterFactory();
+    // Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IBundleMakerProject.class);
+    // Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectDescription.class);
+    // Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, IProjectContentEntry.class);
+    // Platform.getAdapterManager().registerAdapters(bundleMakerAdapterFactory, VariablePath.class);
   }
 
 }
