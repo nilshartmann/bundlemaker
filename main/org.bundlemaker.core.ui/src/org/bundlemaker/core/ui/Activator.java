@@ -13,6 +13,7 @@ package org.bundlemaker.core.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.bundlemaker.core.ui.editor.adapter.ProjectDescriptionAdapterFactory;
 import org.bundlemaker.core.ui.view.navigator.ArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.view.navigator.IArtifactModelConfigurationProvider;
 import org.eclipse.core.runtime.FileLocator;
@@ -54,6 +55,8 @@ public class Activator extends AbstractUIPlugin {
     super.start(context);
     plugin = this;
 
+    ProjectDescriptionAdapterFactory.register();
+
     _artifactModelConfigurationProvider = new ArtifactModelConfigurationProvider(getPreferenceStore());
   }
 
@@ -65,6 +68,8 @@ public class Activator extends AbstractUIPlugin {
   @Override
   public void stop(BundleContext context) throws Exception {
     plugin = null;
+
+    ProjectDescriptionAdapterFactory.unregister();
     super.stop(context);
   }
 

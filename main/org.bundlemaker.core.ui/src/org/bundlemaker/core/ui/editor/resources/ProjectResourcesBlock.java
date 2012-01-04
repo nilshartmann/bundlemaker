@@ -733,6 +733,5 @@ public class ProjectResourcesBlock implements IBundleMakerProjectChangedListener
    */
   public void dispose() {
     _bundleMakerProjectProvider.getBundleMakerProject().removeBundleMakerProjectChangedListener(this);
-
   }
 }

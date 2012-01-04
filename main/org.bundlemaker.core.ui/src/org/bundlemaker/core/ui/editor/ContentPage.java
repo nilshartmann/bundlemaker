@@ -9,7 +9,7 @@ import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.ui.editor.resources.ProjectResourcesBlock;
+import org.bundlemaker.core.ui.editor.provider.ContentProviderBlock;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -37,11 +37,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  */
 public class ContentPage extends FormPage implements BundleMakerProjectProvider {
 
-  private ScrolledForm          _form;
+  private ScrolledForm         _form;
 
-  private boolean               _needsReparsing = true;
+  private boolean              _needsReparsing = true;
 
-  private ProjectResourcesBlock _projectResourcesBlock;
+  private ContentProviderBlock _contentProviderBlock;
 
   public ContentPage(ProjectDescriptionEditor editor) {
     super(editor, "Content", "Content");
@@ -101,8 +101,8 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
   private void createResourcesSection(final IManagedForm mform, String title, String description,
       final boolean resources) {
 
-    _projectResourcesBlock = new ProjectResourcesBlock(title, description, this);
-    _projectResourcesBlock.addPropertyChangeListener(new IPropertyChangeListener() {
+    _contentProviderBlock = new ContentProviderBlock(this);
+    _contentProviderBlock.addPropertyChangeListener(new IPropertyChangeListener() {
 
       @Override
       public void propertyChange(PropertyChangeEvent event) {
@@ -110,7 +110,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
         refreshFormTitle();
       }
     });
-    _projectResourcesBlock.createControl(mform);
+    _contentProviderBlock.createControl(mform);
   }
 
   /*
@@ -191,9 +191,9 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
    */
   @Override
   public void dispose() {
-    if (_projectResourcesBlock != null) {
+    if (_contentProviderBlock != null) {
       try {
-        _projectResourcesBlock.dispose();
+        _contentProviderBlock.dispose();
       } catch (Exception ex) {
         ex.printStackTrace();
       }
