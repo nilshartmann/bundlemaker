@@ -12,8 +12,6 @@ package org.bundlemaker.core.ui.editor.provider;
 
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
 import org.bundlemaker.core.ui.internal.UIImages;
@@ -30,6 +28,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -236,18 +235,27 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
    * @param shell
    */
   private void addContent(Shell shell) {
-    ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell);
-    if (dialog.open() != Window.OK) {
-      return;
+    //
+    ChooseContentProviderWizard wizard = new ChooseContentProviderWizard(_bundleMakerProjectProvider
+        .getBundleMakerProject().getModifiableProjectDescription());
+
+    WizardDialog dialog = new WizardDialog(shell, wizard);
+    if (dialog.open() != Window.CANCEL) {
+      projectDescriptionChanged();
     }
+
+    // ModifyProjectContentDialog dialog = new ModifyProjectContentDialog(shell);
+    // if (dialog.open() != Window.OK) {
+    // return;
+    // }
 
     // add the new content to the project description
 
-    FileBasedContentProviderFactory.addNewFileBasedContentProvider(_bundleMakerProjectProvider.getBundleMakerProject()
-        .getModifiableProjectDescription(), dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths(), dialog
-        .getSourcePaths(), getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
-
-    projectDescriptionChanged();
+    // FileBasedContentProviderFactory.addNewFileBasedContentProvider(_bundleMakerProjectProvider.getBundleMakerProject()
+    // .getModifiableProjectDescription(), dialog.getName(), dialog.getVersion(), dialog.getBinaryPaths(), dialog
+    // .getSourcePaths(), getAnalyzeMode(dialog.isAnalyze(), dialog.isAnalyzeSources()));
+    //
+    // projectDescriptionChanged();
 
   }
 
@@ -265,18 +273,6 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     _resourcesSectionPart.markDirty();
 
     refreshEnablement();
-  }
-
-  private AnalyzeMode getAnalyzeMode(boolean analyze, boolean analyzeSources) {
-    if (analyzeSources) {
-      return AnalyzeMode.BINARIES_AND_SOURCES;
-    }
-
-    if (analyze) {
-      return AnalyzeMode.BINARIES_ONLY;
-    }
-
-    return AnalyzeMode.DO_NOT_ANALYZE;
   }
 
   /**

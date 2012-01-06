@@ -72,7 +72,17 @@ public enum UIImages {
   /**
    * Decorator used for error icons
    */
-  ERROR_DECORATOR("icons/decorator/error_decorator.gif") //
+  ERROR_DECORATOR("icons/decorator/error_decorator.gif"), //
+
+  /**
+   * Icon for JDTProjectContentProvider
+   */
+  JDT_PROJECT_CONTENT_PROVIDER("icons/jdt_project_provider.gif"), //
+
+  /**
+   * Icon for FileBasedProjectContentProvider
+   */
+  FILEBASED_PROJECT_CONTENT_PROVIDER("icons/filebased_project_provider.gif");
   ;
 
   /**

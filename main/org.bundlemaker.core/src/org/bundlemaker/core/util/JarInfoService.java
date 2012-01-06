@@ -43,26 +43,45 @@ public class JarInfoService {
    * @return
    */
   public static JarInfo extractJarInfo(File file) {
+    try {
+      if (file.isFile()) {
+        return extractInfoFromFile(file);
+      }
 
+      return extractInfoFromPath(file);
+
+      //
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
+  private static JarInfo extractInfoFromPath(File path) {
+    String dirName = path.getName();
+    int x = dirName.lastIndexOf('_');
+    String version = "0.0.0";
+    String name = dirName;
+
+    if (x > 0) {
+      name = dirName.substring(0, x);
+      version = dirName.substring(x + 1);
+    }
+
+    return new JarInfo(name, version);
+  }
+
+  private static JarInfo extractInfoFromFile(File file) throws IOException {
     String name = null;
     String version = null;
 
-    try {
+    // TRY TO RESOLVE THE NAME
+    name = extractName(file);
 
-      // TRY TO RESOLVE THE NAME
-      name = extractName(file);
+    // TRY TO RESOLVE THE VERSION
+    version = extractVersion(file);
 
-      // TRY TO RESOLVE THE VERSION
-      version = extractVersion(file);
-
-      // return the result
-      return new JarInfo(name, version);
-    }
-
-    //
-    catch (IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
+    // return the result
+    return new JarInfo(name, version);
   }
 
   private static String extractName(File file) throws IOException {
@@ -169,17 +188,17 @@ public class JarInfoService {
 
     // Still no version found, try maven pom properties
     if (version == null) {
-    // try to read maven pom.properties
-    Enumeration<JarEntry> entries = jarFile.entries();
-    while (entries.hasMoreElements()) {
-      JarEntry jarEntry = (JarEntry) entries.nextElement();
-      if (jarEntry.getName().endsWith("pom.properties")) {
-        Properties properties = new Properties();
-        properties.load(jarFile.getInputStream(jarEntry));
-        version = properties.getProperty("version");
-        break;
+      // try to read maven pom.properties
+      Enumeration<JarEntry> entries = jarFile.entries();
+      while (entries.hasMoreElements()) {
+        JarEntry jarEntry = (JarEntry) entries.nextElement();
+        if (jarEntry.getName().endsWith("pom.properties")) {
+          Properties properties = new Properties();
+          properties.load(jarFile.getInputStream(jarEntry));
+          version = properties.getProperty("version");
+          break;
+        }
       }
-    }
     }
 
     File fileToParse = file;
