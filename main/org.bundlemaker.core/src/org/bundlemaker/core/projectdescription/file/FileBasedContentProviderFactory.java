@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.internal.projectdescription.file.JarInfo;
-import org.bundlemaker.core.internal.projectdescription.file.JarInfoService;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.util.JarInfo;
+import org.bundlemaker.core.util.JarInfoService;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.variables.IStringVariableManager;
