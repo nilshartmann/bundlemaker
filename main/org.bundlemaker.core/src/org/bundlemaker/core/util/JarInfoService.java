@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.projectdescription.file;
+package org.bundlemaker.core.util;
 
 import java.io.File;
 import java.io.IOException;
