@@ -461,7 +461,8 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 		}
 
 		// Rule: set missing types 'optional'
-		if (moduleArtifact.getName().equals("<< Missing Types >>")) {
+		// TODO "<< Missing Types >>"
+		if (moduleArtifact.getName().equals("<< Missing Types >>") || forceOptionalImportPackage(packageName, moduleArtifacts)) {
 			importedPackage.setResolution(Resolution.OPTIONAL);
 		}
 
@@ -476,7 +477,19 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 		}
 	}
 
-	protected Collection<IPackageArtifact> getDuplicatePackageProvider(
+	/**
+	 * <p>
+	 * </p>
+	 *
+	 * @param packageName
+	 * @param moduleArtifacts
+	 * @return
+	 */
+	protected boolean forceOptionalImportPackage(String packageName, List<IModuleArtifact> moduleArtifacts) {
+    return false;
+  }
+
+  protected Collection<IPackageArtifact> getDuplicatePackageProvider(
 			String packageName) {
 
 		if (_duplicatePackagesVisitor == null) {
