@@ -42,7 +42,7 @@ public class JdtProjectContentProviderNode extends AbstractProjectContentProvide
   @Override
   public IWizard createWizard() {
     return new Wizard() {
-      private final EditJdtContentProviderPage _page = new EditJdtContentProviderPage();
+      private final EditJdtContentProviderPage _page = new EditJdtContentProviderPage(getModifiableProjectDescription());
 
       /*
        * (non-Javadoc)
