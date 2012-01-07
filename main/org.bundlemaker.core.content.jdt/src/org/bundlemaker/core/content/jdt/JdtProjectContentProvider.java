@@ -84,7 +84,7 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
 
           FileBasedContent fbpContent = new FileBasedContent(this);
           fbpContent.setId(getId() + counter++);
-          fbpContent.setName("name");
+          fbpContent.setName(_javaProject.getProject().getName());
           fbpContent.setVersion("1.2.3");
 
           fbpContent.addRootPath(
