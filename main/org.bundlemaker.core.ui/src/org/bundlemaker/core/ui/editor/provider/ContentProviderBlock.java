@@ -141,7 +141,6 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     final Shell shell = client.getShell();
 
     _treeViewer.setInput(_bundleMakerProjectProvider.getBundleMakerProject().getModifiableProjectDescription());
-    _treeViewer.expandAll();
     // _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
     //
     // @Override
