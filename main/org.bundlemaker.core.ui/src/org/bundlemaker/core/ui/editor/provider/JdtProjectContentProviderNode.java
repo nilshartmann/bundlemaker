@@ -10,8 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.provider;
 
-import java.util.Arrays;
-
 import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.internal.UIImages;
@@ -58,14 +56,11 @@ public class JdtProjectContentProviderNode extends AbstractProjectContentProvide
 
       @Override
       public boolean performFinish() {
-        System.out.println("FINISH...");
         IProject[] selectedProjects = _page.getSelectedProjects();
-        System.out.println("pro: " + Arrays.asList(selectedProjects));
         for (IProject iProject : selectedProjects) {
           JdtProjectContentProvider provider = new JdtProjectContentProvider();
           IJavaProject javaProject = JavaCore.create(iProject);
           provider.setJavaProject(javaProject);
-          System.out.println("adding provider: " + provider);
           getModifiableProjectDescription().addContentProvider(provider);
         }
         return true;
