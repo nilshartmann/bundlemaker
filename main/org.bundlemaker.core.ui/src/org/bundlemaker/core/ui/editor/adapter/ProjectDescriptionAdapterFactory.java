@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.adapter;
 
+import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -24,18 +25,21 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  */
 public class ProjectDescriptionAdapterFactory implements IAdapterFactory {
 
-  private final static Class<?>                 ADAPTER_LIST[] = new Class<?>[] { IWorkbenchAdapter.class };
+  private final static Class<?>                  ADAPTER_LIST[] = new Class<?>[] { IWorkbenchAdapter.class };
 
-  private final ProjectDescriptionAdapter       _projectDescriptionAdapter;
+  private final ProjectDescriptionAdapter        _projectDescriptionAdapter;
 
-  private final FileBasedContentProviderAdapter _fileBasedContentProviderAdapter;
+  private final FileBasedContentProviderAdapter  _fileBasedContentProviderAdapter;
 
-  private final ProjectPathAdapter              _projectPathAdapter;
+  private final ProjectPathAdapter               _projectPathAdapter;
+
+  private final JdtProjectContentProviderAdapter _jdtProjectContentProviderAdapter;
 
   public ProjectDescriptionAdapterFactory() {
     _projectDescriptionAdapter = new ProjectDescriptionAdapter();
     _fileBasedContentProviderAdapter = new FileBasedContentProviderAdapter();
     _projectPathAdapter = new ProjectPathAdapter();
+    _jdtProjectContentProviderAdapter = new JdtProjectContentProviderAdapter();
   }
 
   /*
@@ -67,6 +71,10 @@ public class ProjectDescriptionAdapterFactory implements IAdapterFactory {
       return _fileBasedContentProviderAdapter;
     }
 
+    if (adaptableObject instanceof JdtProjectContentProvider) {
+      return _jdtProjectContentProviderAdapter;
+    }
+
     if (adaptableObject instanceof ProjectPath) {
       return _projectPathAdapter;
     }
@@ -78,6 +86,7 @@ public class ProjectDescriptionAdapterFactory implements IAdapterFactory {
     ProjectDescriptionAdapterFactory factory = new ProjectDescriptionAdapterFactory();
     Platform.getAdapterManager().registerAdapters(factory, IProjectDescription.class);
     Platform.getAdapterManager().registerAdapters(factory, FileBasedContentProvider.class);
+    Platform.getAdapterManager().registerAdapters(factory, JdtProjectContentProvider.class);
     Platform.getAdapterManager().registerAdapters(factory, ProjectPath.class);
   }
 
