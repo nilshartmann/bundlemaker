@@ -12,20 +12,21 @@ package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.ui.editor.provider.ContentProviderBlock;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.swt.SWT;
 
-abstract class FileBasedContentEditingSupport extends EditingSupport {
+public abstract class FileBasedContentEditingSupport extends EditingSupport {
 
-  public static EditingSupport newEditingSupportForAnalyzeSources(ProjectResourcesBlock projectResourcesBlock,
+  public static EditingSupport newEditingSupportForAnalyzeSources(ContentProviderBlock projectResourcesBlock,
       ColumnViewer columnViewer) {
     return new AnalyzeResourceSourceEditingSupport(projectResourcesBlock, columnViewer);
   }
 
-  public static EditingSupport newEditingSupportForAnalyzeResource(ProjectResourcesBlock projectResourcesBlock,
+  public static EditingSupport newEditingSupportForAnalyzeResource(ContentProviderBlock projectResourcesBlock,
       ColumnViewer columnViewer) {
     return new AnalyzeResourceEditingSupport(projectResourcesBlock, columnViewer);
   }
@@ -33,9 +34,9 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
   /**
    * 
    */
-  private final ProjectResourcesBlock _projectResourcesBlock;
+  private final ContentProviderBlock _projectResourcesBlock;
 
-  private FileBasedContentEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
+  private FileBasedContentEditingSupport(ContentProviderBlock projectResourcesBlock, ColumnViewer viewer) {
     super(viewer);
     _projectResourcesBlock = projectResourcesBlock;
   }
@@ -109,7 +110,7 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
      * @param projectResourcesBlock
      * @param viewer
      */
-    public AnalyzeResourceEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
+    public AnalyzeResourceEditingSupport(ContentProviderBlock projectResourcesBlock, ColumnViewer viewer) {
       super(projectResourcesBlock, viewer);
     }
 
@@ -140,7 +141,7 @@ abstract class FileBasedContentEditingSupport extends EditingSupport {
      * @param projectResourcesBlock
      * @param viewer
      */
-    public AnalyzeResourceSourceEditingSupport(ProjectResourcesBlock projectResourcesBlock, ColumnViewer viewer) {
+    public AnalyzeResourceSourceEditingSupport(ContentProviderBlock projectResourcesBlock, ColumnViewer viewer) {
       super(projectResourcesBlock, viewer);
     }
 

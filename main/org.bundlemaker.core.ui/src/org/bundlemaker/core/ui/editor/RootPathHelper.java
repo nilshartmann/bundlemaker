@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.editor;
 
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.ui.editor.adapter.ProjectPath;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -26,6 +27,10 @@ public class RootPathHelper {
 
   public static String getLabel(VariablePath rootPath) {
     return String.valueOf(rootPath.getUnresolvedPath());
+  }
+
+  public static String getLabel(ProjectPath projectPath) {
+    return getLabel(projectPath.getPath());
   }
 
   /**
@@ -80,6 +85,15 @@ public class RootPathHelper {
   public static IProjectContentProvider getOwningFileBasedContent(TreePath treePath) {
     IProjectContentProvider lastSegment = (IProjectContentProvider) treePath.getParentPath().getLastSegment();
     return lastSegment;
+  }
+
+  /**
+   * @param path
+   * @param isBinaryPath
+   * @return
+   */
+  public static Image getImageForPath(ProjectPath path) {
+    return getImageForPath(path.getPath(), path.isBinary());
   }
 
 }

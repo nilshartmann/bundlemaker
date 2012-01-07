@@ -14,6 +14,8 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
+import org.bundlemaker.core.ui.editor.resources.BundleMakerProjectDescriptionColumnLabelProvider;
+import org.bundlemaker.core.ui.editor.resources.FileBasedContentEditingSupport;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.bundlemaker.core.ui.internal.VerticalFormButtonBar;
 import org.eclipse.core.runtime.ListenerList;
@@ -47,6 +49,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -134,7 +137,7 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);
-    // _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
+    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
     _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
     createColumns();
 
@@ -261,7 +264,7 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
   /**
    * Indicate the the project description has been changed
    */
-  protected void projectDescriptionChanged() {
+  public void projectDescriptionChanged() {
     // Refresh view
     _treeViewer.refresh();
 
@@ -288,8 +291,8 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     layout.setColumnData(column.getColumn(), new ColumnWeightData(80));
 
     column = new TreeViewerColumn(_treeViewer, SWT.NONE);
-    column.setLabelProvider(new WorkbenchAdapterColumnLabelProvider()); // BundleMakerProjectDescriptionColumnLabelProvider(1));
-    // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeResource(this, _treeViewer));
+    column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(1));
+    column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeResource(this, _treeViewer));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze");
@@ -297,9 +300,8 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     layout.setColumnData(column.getColumn(), new ColumnWeightData(10));
 
     column = new TreeViewerColumn(_treeViewer, SWT.NONE);
-    column.setLabelProvider(new WorkbenchAdapterColumnLabelProvider()); // new
-                                                                        // BundleMakerProjectDescriptionColumnLabelProvider(2));
-    // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeSources(this, _treeViewer));
+    column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(2));
+    column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeSources(this, _treeViewer));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze Sources");
