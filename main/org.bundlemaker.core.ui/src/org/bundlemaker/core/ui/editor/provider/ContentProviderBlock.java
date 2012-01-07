@@ -12,6 +12,10 @@ package org.bundlemaker.core.ui.editor.provider;
 
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
 import org.bundlemaker.core.ui.editor.resources.BundleMakerProjectDescriptionColumnLabelProvider;
@@ -26,7 +30,9 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
@@ -41,6 +47,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.SectionPart;
 import org.eclipse.ui.forms.widgets.FormText;
@@ -177,7 +184,7 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     _removeButton = buttonBar.newButton("Remove", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        // removeContent();
+        removeContent();
       }
     });
     _moveUpButton = buttonBar.newButton("Up", new SelectionAdapter() {
@@ -385,8 +392,69 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     _bundleMakerProjectProvider.getBundleMakerProject().removeBundleMakerProjectChangedListener(this);
   }
 
-  private void refreshEnablement() {
-    // TODO Auto-generated method stub
+  /**
+   * Remove the selected content from the project
+   */
+  private void removeContent() {
 
+    ITreeSelection selection = getSelection();
+    if (selection.isEmpty()) {
+      return;
+    }
+
+    TreePath[] paths = selection.getPaths();
+
+    for (TreePath treePath : paths) {
+      Object element = treePath.getLastSegment();
+
+      if (element instanceof IProjectContentProvider) {
+        IProjectContentProvider projectContentProvider = (IProjectContentProvider) element;
+        getBundleMakerProjectDescription().removeContentProvider(projectContentProvider);
+      }
+
+      if (element instanceof IProjectContentEntry) {
+        IProjectContentEntry content = (IProjectContentEntry) element;
+        getBundleMakerProjectDescription().removeContentProvider(content.getId());
+      }
+    }
+
+    projectDescriptionChanged();
+
+  }
+
+  protected ITreeSelection getSelection() {
+    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
+    return selection;
+  }
+
+  private void refreshEnablement() {
+    ITreeSelection selection = (ITreeSelection) _treeViewer.getSelection();
+    int selectedElements = selection.size();
+
+    _removeButton.setEnabled(selectedElements > 0);
+    _editButton.setEnabled(selectedElements == 1);
+
+    TreeItem[] selectedItems = _treeViewer.getTree().getSelection();
+    System.out.println("selecteditems: " + selectedItems.length);
+    if (selectedItems.length > 0) {
+      // TODO: Allow multiple selection
+      // TODO: what should happen if a path (not a IFileBasedContent) is selected?
+      int selectedIndex = _treeViewer.getTree().indexOf(selectedItems[0]);
+      _moveDownButton.setEnabled(selectedIndex < _treeViewer.getTree().getItemCount() - 1);
+      _moveUpButton.setEnabled(selectedIndex > 0);
+    } else {
+      _moveDownButton.setEnabled(false);
+      _moveUpButton.setEnabled(false);
+    }
+
+  }
+
+  /**
+   * Returns the {@link IProjectDescription} this block works on
+   * 
+   * @return
+   */
+  private IModifiableProjectDescription getBundleMakerProjectDescription() {
+    return _bundleMakerProjectProvider.getBundleMakerProject().getModifiableProjectDescription();
   }
 }
