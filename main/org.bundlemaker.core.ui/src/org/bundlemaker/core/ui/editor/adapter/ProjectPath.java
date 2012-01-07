@@ -39,6 +39,10 @@ public class ProjectPath {
     return _source;
   }
 
+  public boolean isBinary() {
+    return !_source;
+  }
+
   /**
    * @param source
    *          the source to set

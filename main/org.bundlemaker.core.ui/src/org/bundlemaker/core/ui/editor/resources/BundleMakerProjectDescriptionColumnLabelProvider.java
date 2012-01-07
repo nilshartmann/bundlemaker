@@ -12,33 +12,43 @@ package org.bundlemaker.core.ui.editor.resources;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
+import org.bundlemaker.core.ui.editor.adapter.ProjectPath;
 import org.bundlemaker.core.ui.internal.CenterImageLabelProvider;
 import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelProvider implements ILabelProvider {
+public class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelProvider implements
+    ILabelProvider {
 
   private final int _column;
 
   /**
    * @param column
    */
-  BundleMakerProjectDescriptionColumnLabelProvider(int column) {
+  public BundleMakerProjectDescriptionColumnLabelProvider(int column) {
     _column = column;
   }
 
   @Override
   public Image getImage(Object element) {
 
+    if (element instanceof FileBasedContentProvider) {
+      FileBasedContentProvider p = (FileBasedContentProvider) element;
+      FileBasedContent fileBasedContent = p.getFileBasedContent();
+      return getImageForFileBasedContent(fileBasedContent);
+    }
+
     if (element instanceof IProjectContentEntry) {
       return getImageForFileBasedContent((IProjectContentEntry) element);
     }
 
-    if (element instanceof VariablePath) {
-      return getImageForBundleMakerPath((VariablePath) element);
+    if (element instanceof ProjectPath) {
+      return getImageForBundleMakerPath((ProjectPath) element);
     }
 
     return null;
@@ -48,14 +58,13 @@ class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImageLabelP
    * @param element
    * @return
    */
-  private Image getImageForBundleMakerPath(VariablePath path) {
+  private Image getImageForBundleMakerPath(ProjectPath path) {
     if (_column != 0) {
       // Icons are shown in the left column only
       return null;
     }
 
-    // TODO: FIX ME
-    return RootPathHelper.getImageForPath(path, true);
+    return RootPathHelper.getImageForPath(path);
 
   }
 
