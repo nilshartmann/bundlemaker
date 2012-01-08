@@ -15,13 +15,15 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.editor.ContentListBlock;
 import org.bundlemaker.core.ui.editor.FormLayoutUtils;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.util.JarInfo;
 import org.bundlemaker.core.util.JarInfoService;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.PixelConverter;
@@ -41,34 +43,47 @@ import org.eclipse.swt.widgets.Text;
  * 
  */
 public class EditFileBasedContentProviderPage extends WizardPage {
-  private Text                       _nameTextField;
+  private Text                   _nameTextField;
 
-  private Text                       _versionTextField;
+  private Text                   _versionTextField;
 
-  private Button                     _analyzeButton;
+  private Button                 _analyzeButton;
 
-  private Button                     _analyzeSourcesButton;
+  private Button                 _analyzeSourcesButton;
 
   /**
    * The original content or null if a new content is created with this dialog
    */
-  private final IProjectContentEntry _originalContent;
+  private final FileBasedContent _originalContent;
 
-  private ContentListBlock           _binariesContentList;
+  private ContentListBlock       _binariesContentList;
 
-  private ContentListBlock           _sourcesContentList;
+  private ContentListBlock       _sourcesContentList;
 
-  private String                     _name;
+  private String                 _name;
 
-  private String                     _version;
+  private String                 _version;
 
-  private java.util.List<String>     _binaryRoots;
+  private java.util.List<String> _binaryRoots;
 
-  private java.util.List<String>     _sourceRoots;
+  private java.util.List<String> _sourceRoots;
 
-  boolean                            _analyze        = true;
+  boolean                        _analyze        = true;
 
-  boolean                            _analyzeSources = false;
+  boolean                        _analyzeSources = false;
+
+  public EditFileBasedContentProviderPage(FileBasedContentProvider existingContent) {
+    super("FileBasedContentProviderPage");
+    Assert.isNotNull(existingContent);
+    _originalContent = existingContent.getFileBasedContent();
+    _name = _originalContent.getName();
+    _version = _originalContent.getVersion();
+    _binaryRoots = stringList(_originalContent.getBinaryRootPaths());
+    _sourceRoots = stringList(_originalContent.getSourceRootPaths());
+    _analyze = _originalContent.isAnalyze();
+    _analyzeSources = _originalContent.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
+
+  }
 
   public EditFileBasedContentProviderPage() {
     super("FileBasedContentProviderPage");

@@ -16,6 +16,8 @@ import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
 import org.bundlemaker.core.ui.editor.resources.BundleMakerProjectDescriptionColumnLabelProvider;
@@ -36,6 +38,7 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -177,6 +180,7 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     _editButton = buttonBar.newButton("Edit...", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
+        editContent(shell);
       }
 
     });
@@ -419,6 +423,57 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     }
 
     projectDescriptionChanged();
+
+  }
+
+  private void editContent(Shell shell) {
+
+    ITreeSelection selection = getSelection();
+    if (selection.size() != 1) {
+      // cannot edit more than one entry
+      return;
+    }
+
+    TreePath path = selection.getPaths()[0];
+    Object selectedObject = path.getLastSegment();
+
+    if (selectedObject instanceof FileBasedContentProvider) {
+      final FileBasedContentProvider provider = (FileBasedContentProvider) selectedObject;
+      final EditFileBasedContentProviderPage page = new EditFileBasedContentProviderPage(provider);
+
+      Wizard wizard = new Wizard() {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.jface.wizard.Wizard#addPages()
+         */
+        @Override
+        public void addPages() {
+          addPage(page);
+        }
+
+        @Override
+        public boolean performFinish() {
+          page.finish();
+          FileBasedContent content = provider.getFileBasedContent();
+          content.setName(page.getName());
+          content.setVersion(page.getVersion());
+          content.setBinaryPaths(page.getBinaryPaths().toArray(new String[0]));
+          content.setSourcePaths(page.getSourcePaths().toArray(new String[0]));
+
+          content.setAnalyzeMode(FileBasedProjectContentProviderNode.getAnalyzeMode(page.isAnalyze(),
+              page.isAnalyzeSources()));
+          return true;
+        }
+      };
+
+      WizardDialog dialog = new WizardDialog(shell, wizard);
+      if (dialog.open() != Window.CANCEL) {
+        projectDescriptionChanged();
+      }
+
+    }
 
   }
 

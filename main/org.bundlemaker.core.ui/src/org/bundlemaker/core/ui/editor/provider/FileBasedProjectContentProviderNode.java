@@ -67,7 +67,7 @@ public class FileBasedProjectContentProviderNode extends AbstractProjectContentP
     };
   }
 
-  private static AnalyzeMode getAnalyzeMode(boolean analyze, boolean analyzeSources) {
+  public static AnalyzeMode getAnalyzeMode(boolean analyze, boolean analyzeSources) {
     if (analyzeSources) {
       return AnalyzeMode.BINARIES_AND_SOURCES;
     }
