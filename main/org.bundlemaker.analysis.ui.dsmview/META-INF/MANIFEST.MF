@@ -14,3 +14,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  lib/KTable.jar
+Import-Package: org.sonar.graph
