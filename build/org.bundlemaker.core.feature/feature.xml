@@ -281,6 +281,13 @@ litigation.
          unpack="false"/>
 
    <plugin
+         id="org.bundlemaker.core.content.jdt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="org.bundlemaker.analysis.ui.dependencyview"
          download-size="0"
          install-size="0"
