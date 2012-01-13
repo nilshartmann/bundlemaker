@@ -243,7 +243,7 @@ public class Type implements IType, IModifiableType {
    */
   @Override
   public boolean hasBinaryResource() {
-    return _binaryResource != null;
+    return getBinaryResource() != null;
   }
 
   /**
