@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
 import org.bundlemaker.analysis.ui.dependencies.internal.DependencyGraphService;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
@@ -55,7 +55,7 @@ public class Analysis {
   private final IDependencySelectionService _dependencySelectionService;
 
   /**
-   * The {@link IDependencyGraphService} instance for getting {@link DependencyGraph}-instances
+   * The {@link IDependencyGraphService} instance for getting {@link IDependencyGraph}-instances
    */
   private final IDependencyGraphService     _dependencyGraphService;
 

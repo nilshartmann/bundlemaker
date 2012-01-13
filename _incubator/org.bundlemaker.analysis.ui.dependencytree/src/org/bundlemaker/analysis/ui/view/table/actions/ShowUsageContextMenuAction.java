@@ -7,6 +7,7 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
 import org.bundlemaker.analysis.ui.view.table.DependencyTreeTableContextMenuAction;
 import org.eclipse.swt.widgets.TreeItem;
@@ -47,7 +48,7 @@ public class ShowUsageContextMenuAction extends DependencyTreeTableContextMenuAc
       artifacts.add(singleClassArtifact);
       artifacts.add(root);
 
-      DependencyGraph newGraph = DependencyGraph.calculateDependencyGraph(artifacts);
+      IDependencyGraph newGraph = DependencyGraph.calculateDependencyGraph(artifacts);
       analysisContext.setDependencyGraph(newGraph);
     }
   }

@@ -6,6 +6,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
 import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
@@ -27,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public abstract class DependencyPart {
 
-  private Composite composite;
+  private Composite          composite;
 
   private ISelectionProvider _selectionProvider;
 
@@ -82,22 +83,22 @@ public abstract class DependencyPart {
     return Analysis.instance().getContext();
   }
 
-  protected DependencyGraph getDependencyGraphForCurrentArtifacts() {
+  protected IDependencyGraph getDependencyGraphForCurrentArtifacts() {
     IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
 
     return dependencyGraphService.getDependencyGraph(getCurrentArtifacts());
 
-    }
+  }
 
   /**
-   * Returns the calculated {@link DependencyGraph} for the specified artifacts
+   * Returns the calculated {@link IDependencyGraph} for the specified artifacts
    * <p>
    * </p>
    * 
    * @param artifacts
    * @return
    */
-  protected DependencyGraph getDependencyGraph(List<IArtifact> artifacts) {
+  protected IDependencyGraph getDependencyGraph(List<IArtifact> artifacts) {
     IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
 
     return dependencyGraphService.getDependencyGraph(artifacts);

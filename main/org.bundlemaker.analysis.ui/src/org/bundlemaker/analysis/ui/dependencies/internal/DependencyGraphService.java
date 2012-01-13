@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
 import org.eclipse.core.runtime.Assert;
 
@@ -30,15 +31,15 @@ import org.eclipse.core.runtime.Assert;
 public class DependencyGraphService implements IDependencyGraphService {
 
   // --- "Mini-Cache" ----------------------
-  private List<IArtifact> _lastRecentlyUsedArtifacts;
+  private List<IArtifact>  _lastRecentlyUsedArtifacts;
 
-  private DependencyGraph _lastRecentlyUsedGraph;
+  private IDependencyGraph _lastRecentlyUsedGraph;
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public synchronized DependencyGraph getDependencyGraph(List<IArtifact> artifacts) {
+  public synchronized IDependencyGraph getDependencyGraph(List<IArtifact> artifacts) {
     Assert.isNotNull(artifacts, "Parameter 'artifacts' must not be null");
 
     // Check if Graph can returned from 'cache'

@@ -7,6 +7,7 @@ import java.util.HashSet;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
 import org.eclipse.core.runtime.Assert;
 
@@ -16,7 +17,7 @@ public class AnalysisContext implements IAnalysisContext {
 
   private IDependencyModel            _dependencyModel;
 
-  private DependencyGraph             _dependencyGraph       = new DependencyGraph(new HashSet<IArtifact>());
+  private IDependencyGraph             _dependencyGraph       = new DependencyGraph(new HashSet<IArtifact>());
 
   @Override
   public IDependencyModel getDependencyModel() {
@@ -32,12 +33,12 @@ public class AnalysisContext implements IAnalysisContext {
   }
 
   @Override
-  public DependencyGraph getDependencyGraph() {
+  public IDependencyGraph getDependencyGraph() {
     return _dependencyGraph;
   }
 
   @Override
-  public void setDependencyGraph(DependencyGraph dependencyGraph) {
+  public void setDependencyGraph(IDependencyGraph dependencyGraph) {
     Assert.isNotNull(dependencyGraph);
     Object oldGraph = _dependencyGraph;
     _dependencyGraph = dependencyGraph;

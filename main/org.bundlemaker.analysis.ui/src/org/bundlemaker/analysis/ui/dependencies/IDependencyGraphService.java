@@ -14,11 +14,11 @@ package org.bundlemaker.analysis.ui.dependencies;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 
 /**
  * <p>
- * Provides access to {@link DependencyGraph} instances for sets of {@link IArtifact artifacts}
+ * Provides access to {@link IDependencyGraph} instances for sets of {@link IArtifact artifacts}
  * </p>
  * <p>
  * The IDependencyGraphService implementation provides a cache for last recently used dependency graphs.
@@ -30,12 +30,12 @@ public interface IDependencyGraphService {
 
   /**
    * <p>
-   * Returns the calculated {@link DependencyGraph} for the specified {@link IArtifact artifacts}
+   * Returns the calculated {@link IDependencyGraph} for the specified {@link IArtifact artifacts}
    * </p>
    * 
    * @param artifacts
    * @return The DependencyGraph. Never null
    */
-  public DependencyGraph getDependencyGraph(List<IArtifact> artifacts);
+  public IDependencyGraph getDependencyGraph(List<IArtifact> artifacts);
 
 }

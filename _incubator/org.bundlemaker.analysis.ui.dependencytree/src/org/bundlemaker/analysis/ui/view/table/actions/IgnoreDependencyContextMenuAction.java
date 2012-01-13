@@ -1,6 +1,7 @@
 package org.bundlemaker.analysis.ui.view.table.actions;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
 import org.bundlemaker.analysis.ui.view.table.DependencyTreeTableContextMenuAction;
 import org.eclipse.swt.widgets.TreeItem;
@@ -30,7 +31,8 @@ public class IgnoreDependencyContextMenuAction extends DependencyTreeTableContex
         dependency.setTaggedIgnore(true);
       }
     }
-    analysisContext.getDependencyGraph().setInvalid(true);
+    if (analysisContext.getDependencyGraph() instanceof DependencyGraph) {
+      ((DependencyGraph) analysisContext.getDependencyGraph()).setInvalid(true);
+    }
   }
-
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
-import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.eclipse.swt.SWT;
@@ -57,17 +57,17 @@ import de.kupzog.ktable.SWTX;
  */
 public class DSMComposite<V, E extends Edge<V>> extends Composite {
 
-  private Dsm<IArtifact>  dsm;
+  private Dsm<? extends IArtifact> dsm;
 
-  private DependencyGraph graph;
+  private IDependencyGraph         graph;
 
-  private KTable          kTable;
+  private KTable                   kTable;
 
-  private IDependency[][] dependencies;
+  private IDependency[][]          dependencies;
 
-  private DependencyPart  dependencyPart;
+  private DependencyPart           dependencyPart;
 
-  private Slider          _zoomSlider;
+  private Slider                   _zoomSlider;
 
   public DSMComposite(Composite parent, DependencyPart dependencyPart) {
     super(parent, SWT.CENTER | SWT.BORDER | SWT.FILL);
@@ -100,7 +100,7 @@ public class DSMComposite<V, E extends Edge<V>> extends Composite {
 
   }
 
-  public void setDependencyGraph(DependencyGraph graph) {
+  public void setDependencyGraph(IDependencyGraph graph) {
     this.graph = graph;
     this.dsm = graph.getDsm();
     if (dsm != null) {

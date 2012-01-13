@@ -18,7 +18,7 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
-import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -90,7 +90,7 @@ public class DSMView extends DependencyPart {
   // useDependencyGraph(getDependencyGraphForCurrentArtifacts());
   // }
 
-  protected void useDependencyGraph(DependencyGraph graph) {
+  protected void useDependencyGraph(IDependencyGraph graph) {
 
     if (FEATURE_USE_NEW_DSM) {
       useDependencyGraphNew(graph);
@@ -105,7 +105,7 @@ public class DSMView extends DependencyPart {
     dsmComposite = new DSMComposite<IArtifact, DependencyEdge>(parent, this);
   }
 
-  public void useDependencyGraphOld(DependencyGraph graph) {
+  public void useDependencyGraphOld(IDependencyGraph graph) {
     dsmComposite.setDependencyGraph(graph);
   }
 
@@ -113,19 +113,19 @@ public class DSMView extends DependencyPart {
 
   /************ START - NEW DsmView ***************************/
 
-  private DsmViewWidget   _dsmViewWidget;
+  private DsmViewWidget            _dsmViewWidget;
 
-  private DependencyGraph _graph;
+  private IDependencyGraph         _graph;
 
-  private Dsm<IArtifact>  _dsm;
+  private Dsm<? extends IArtifact> _dsm;
 
-  private IDependency[][] _dependencies;
+  private IDependency[][]          _dependencies;
 
   public void doInitNew(Composite parent) {
     _dsmViewWidget = new DsmViewWidget(new DsmViewModel(), parent);
   }
 
-  public void useDependencyGraphNew(DependencyGraph graph) {
+  public void useDependencyGraphNew(IDependencyGraph graph) {
 
     this._graph = graph;
 

@@ -31,7 +31,7 @@ import org.sonar.graph.MinimumFeedbackEdgeSetSolver;
  * @author Kai Lehmann
  * 
  */
-public class DependencyGraph implements Serializable {
+public class DependencyGraph implements Serializable, IDependencyGraph {
   /**
    * 
    */
@@ -98,10 +98,9 @@ public class DependencyGraph implements Serializable {
   }
 
   /**
-   * Gibt die Menge der Artefakte zurueck
-   * 
-   * @return <code>Collection</code> der Artefakte
+   * {@inheritDoc}
    */
+  @Override
   public Collection<IArtifact> getArtifacts() {
     return new ArrayList(artifactsMap.keySet());
   }
@@ -153,8 +152,9 @@ public class DependencyGraph implements Serializable {
   }
 
   /**
-   * Gibt die Menge der Abhaengigkeiten zurueck
+   * {@inheritDoc}
    */
+  @Override
   public Collection<? extends IDependency> getDependencies() {
     Collection<IDependency> dependenciesSet = new HashSet<IDependency>();
     for (Collection<? extends IDependency> dependencies : artifactsMap.values()) {
@@ -165,15 +165,9 @@ public class DependencyGraph implements Serializable {
   }
 
   /**
-   * <p>
-   * Gibt die Artefakte in einer partitionierten Dependency Structure Matrix (DSM) zurueck.
-   * 
-   * <p>
-   * Zur Partitionierung wird der Partitionierungsalgorihmus von Sonar-Graph verwendet. Ebenso die Datenstruktur des DSM
-   * von Sonargraph
-   * 
-   * @return
+   * {@inheritDoc}
    */
+  @Override
   public Dsm<IArtifact> getDsm() {
     if (!isInvalid && (dsm == null)) {
       if (!hasTooMuchArtifactsForDSM) {

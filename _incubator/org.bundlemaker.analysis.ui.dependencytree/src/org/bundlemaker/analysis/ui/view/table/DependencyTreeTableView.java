@@ -11,7 +11,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
+import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
 import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.CurrentContextInfos;
 import org.bundlemaker.analysis.ui.IAnalysisContext;
@@ -204,7 +204,7 @@ public class DependencyTreeTableView extends ViewPart implements IDependencySele
     });
 
     ColumnViewerToolTipSupport.enableFor(treeViewer);
-    DependencyGraph dependencyGraph = getAnalysisContext().getDependencyGraph();
+    IDependencyGraph dependencyGraph = getAnalysisContext().getDependencyGraph();
     if (!dependencyGraph.getArtifacts().isEmpty()) {
       List<IDependency> dependencies = new ArrayList<IDependency>(dependencyGraph.getDependencies());
       this.changeTable(dependencies);
@@ -222,7 +222,7 @@ public class DependencyTreeTableView extends ViewPart implements IDependencySele
   public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
 
     List<IArtifact> selectedArtifacts = event.getSelection().getSelectedArtifacts();
-    DependencyGraph graph = Analysis.instance().getDependencyGraphService().getDependencyGraph(selectedArtifacts);
+    IDependencyGraph graph = Analysis.instance().getDependencyGraphService().getDependencyGraph(selectedArtifacts);
 
     final List<IDependency> dependencies = new ArrayList<IDependency>(graph.getDependencies());
     getSite().getShell().getDisplay().syncExec(new Runnable() {
