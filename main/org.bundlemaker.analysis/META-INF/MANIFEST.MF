@@ -7,9 +7,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.analysis.model,
  org.bundlemaker.analysis.model.dependencies,
  org.bundlemaker.analysis.model.impl,
- org.bundlemaker.analysis.rules,
- org.bundlemaker.analysis.rules.impl,
- org.bundlemaker.analysis.transformations
+ org.bundlemaker.analysis.rules
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.6.0"
 Bundle-ClassPath: .
 Import-Package: org.sonar.graph
