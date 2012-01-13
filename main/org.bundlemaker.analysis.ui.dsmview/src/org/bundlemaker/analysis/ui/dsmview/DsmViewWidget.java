@@ -47,7 +47,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class DsmViewWidget implements Observer {
 
-  private final class MyMotionListener implements MouseMotionListener {
+  private final class MyMotionListener extends MouseMotionListener.Stub {
 
     /** - */
     private static final int HORIZONTAL   = 1;
@@ -56,7 +56,7 @@ public class DsmViewWidget implements Observer {
     private static final int VERTICAL     = 2;
 
     /** - */
-    private static final int RANGE        = 3;
+    private static final int RANGE        = 10;
 
     /** - */
     private int              _currentDrag = -1;
@@ -64,21 +64,6 @@ public class DsmViewWidget implements Observer {
     @Override
     public void mouseMoved(MouseEvent me) {
       dump(me, false);
-    }
-
-    @Override
-    public void mouseHover(MouseEvent me) {
-      // dump(me, false);
-    }
-
-    @Override
-    public void mouseExited(MouseEvent me) {
-      // dump(me, false);
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent me) {
-      // dump(me, false);
     }
 
     @Override
