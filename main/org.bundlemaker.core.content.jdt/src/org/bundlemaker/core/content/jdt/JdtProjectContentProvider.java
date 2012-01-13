@@ -1,21 +1,18 @@
 package org.bundlemaker.core.content.jdt;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.content.jdt.xml.JdtProjectContentType;
 import org.bundlemaker.core.projectdescription.AbstractContentProvider;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -31,6 +28,9 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
 
   /** - */
   private IJavaProject _javaProject;
+
+  /** - */
+  private EntryHelper  _entryHelper;
 
   /**
    * <p>
@@ -61,63 +61,66 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
   public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
+    // build the project first
+    if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+      _javaProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+    }
+
+    // create instance of entry helper
+    _entryHelper = new EntryHelper(bundleMakerProject.getProjectDescription(), this, _javaProject);
+
     //
-    List<IProjectContentEntry> fileBasedContents = new LinkedList<IProjectContentEntry>();
-
-    int counter = 0;
-
-    //
-    try {
-      IClasspathEntry[] entries = _javaProject.getRawClasspath();
-
-      for (IClasspathEntry classpathEntry : entries) {
-
-        //
-        if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-          System.out.println("CPE_LIBRARY: " + classpathEntry);
-        } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-
-          IPath source = classpathEntry.getPath();
-
-          IPath classes = classpathEntry.getOutputLocation() != null ? classpathEntry.getOutputLocation()
-              : _javaProject.getOutputLocation();
-
-          FileBasedContent fbpContent = new FileBasedContent(this);
-          fbpContent.setId(getId() + counter++);
-          fbpContent.setName(_javaProject.getProject().getName());
-          fbpContent.setVersion("1.2.3");
-
-          fbpContent.addRootPath(
-              new VariablePath(_javaProject.getProject().getLocation().append(classes.removeFirstSegments(1))
-                  .toOSString()), ContentType.BINARY);
-
-          fbpContent.addRootPath(
-              new VariablePath(_javaProject.getProject().getLocation().append(source.removeFirstSegments(1))
-                  .toOSString()), ContentType.SOURCE);
-
-          fbpContent.initialize(bundleMakerProject.getProjectDescription());
-
-          fileBasedContents.add(fbpContent);
-
-        } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
-          System.out.println("CPE_CONTAINER: " + classpathEntry);
-        } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-          System.out.println("CPE_PROJECT: " + classpathEntry);
-        } else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
-          System.out.println("CPE_VARIABLE: " + classpathEntry);
-        }
-
-        // FileBasedContent fileBasedContent = new FileBasedContent();
-        // counter++;
-      }
-
-    } catch (JavaModelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    for (IClasspathEntry classpathEntry : _javaProject.getRawClasspath()) {
+      handleClasspathEntry(classpathEntry);
     }
 
     //
-    return fileBasedContents;
+    return _entryHelper.getFileBasedContents();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param classpathEntry
+   * @throws CoreException
+   * @throws JavaModelException
+   */
+  private void handleClasspathEntry(IClasspathEntry classpathEntry) throws CoreException, JavaModelException {
+    //
+    if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+      _entryHelper.addLibraryEntry(classpathEntry);
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+      _entryHelper.addSourceEntry(classpathEntry);
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+
+      if (!classpathEntry.getPath().toString().startsWith("org.eclipse.jdt.launching.JRE_CONTAINER")) {
+
+        IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(classpathEntry.getPath(), _javaProject);
+
+        for (IClasspathEntry iClasspathEntry : classpathContainer.getClasspathEntries()) {
+          handleClasspathEntry(iClasspathEntry);
+        }
+      }
+
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+      System.out.println("CPE_PROJECT: " + classpathEntry);
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
+      System.out.println("CPE_VARIABLE: " + classpathEntry);
+    }
   }
 
   /**
