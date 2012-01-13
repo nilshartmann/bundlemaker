@@ -2,15 +2,19 @@ package org.bundlemaker.core.itest.complex.analysis;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -22,6 +26,55 @@ import org.junit.Test;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  @Test
+  public void testModule_GetOrCreateModule() {
+
+    // Step 1: transform the model
+    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
+    Assert.assertNotNull(rootArtifact);
+
+    IModuleArtifact moduleArtifact = rootArtifact.findChild(IModuleArtifact.class, "jedit_1.0.0");
+    List<ITypeArtifact> types = moduleArtifact.findChildren(ITypeArtifact.class);
+
+    IModuleArtifact newModule = null;
+    for (ITypeArtifact typeArtifact : types) {
+      newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test", "1.23");
+      newModule.addArtifact(typeArtifact);
+    }
+    ArtifactUtils.dumpArtifact(newModule);
+  }
+
+  @Test
+  public void testModule_GetOrCreateModule_DeprecatedAPI() {
+
+    // Step 1: transform the model
+    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
+    Assert.assertNotNull(rootArtifact);
+
+    //
+    ArtifactUtils.dumpArtifact(rootArtifact);
+    
+    Collection<IArtifact> leafs = rootArtifact.getLeafs();
+    IModuleArtifact newModule = null;
+    for (IArtifact typeArtifact : leafs) {
+      IArtifact moduleArtifact = typeArtifact.getParent(ArtifactType.Module);
+      
+      if (((IModuleArtifact)moduleArtifact).isResourceModule()) {
+        newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test_1.2.3", "1.2.3");
+        newModule.addArtifact(typeArtifact);
+      }
+    }
+
+    ArtifactUtils.dumpArtifact(newModule);
+  }
 
   /**
    * <p>

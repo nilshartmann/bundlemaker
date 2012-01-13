@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
@@ -179,9 +180,15 @@ public class MovableUnit implements IMovableUnit {
 
     //
     if (!_associatedTypes.isEmpty()) {
-      resourceModule = (IResourceModule) _associatedTypes.get(0).getModule(_modularizedSystem);
+      IModule module = _associatedTypes.get(0).getModule(_modularizedSystem);
+      if (module instanceof IResourceModule) {
+        resourceModule = (IResourceModule) module;
+      }
     } else if (!_binaryResources.isEmpty()) {
-      resourceModule = (IResourceModule) _binaryResources.get(0).getAssociatedResourceModule(_modularizedSystem);
+      IModule module = _binaryResources.get(0).getAssociatedResourceModule(_modularizedSystem);
+      if (module instanceof IResourceModule) {
+        resourceModule = (IResourceModule) module;
+      }
     } else {
       resourceModule = _sourceResource.getAssociatedResourceModule(_modularizedSystem);
     }

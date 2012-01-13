@@ -113,6 +113,11 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
     return "Can not add artifacts to non-resource modules.";
   }
 
+  @Override
+  public boolean isResourceModule() {
+    return false;
+  }
+
   /**
    * {@inheritDoc}
    */

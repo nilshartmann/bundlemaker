@@ -1,9 +1,17 @@
 package org.bundlemaker.core.itest.analysis;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.CoreException;
@@ -92,7 +100,7 @@ public class SimpleArtifact_NO_TYPE_RESOURCES_CONFIGURATION_Test extends Abstrac
     // get package
     IArtifact packageDeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test");
     Assert.assertNotNull(packageDeTest);
-    
+
     // Test 2: remove resources
     moduleArtifact.removeArtifact(typeKlasse);
     moduleArtifact.removeArtifact(typeTest);

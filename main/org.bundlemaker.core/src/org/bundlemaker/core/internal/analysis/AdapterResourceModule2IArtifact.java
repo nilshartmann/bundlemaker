@@ -4,6 +4,7 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
@@ -124,7 +125,19 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
       return "Only packages, types or resources can be added to a resource module.";
     }
 
+    //
+    IModuleArtifact moduleArtifact = (IModuleArtifact) artifact.getParent(ArtifactType.Module);
+
+    // TODO
+    if (moduleArtifact != null && !(moduleArtifact.getAssociatedModule() instanceof IResourceModule)) {
+      return "Can not add packages, types or resources from a non-resource module.";
+    }
     return null;
+  }
+
+  @Override
+  public boolean isResourceModule() {
+    return true;
   }
 
   /**

@@ -62,6 +62,11 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
     return null;
   }
 
+  @Override
+  public boolean isResourceModule() {
+    return false;
+  }
+
   /**
    * {@inheritDoc}
    */

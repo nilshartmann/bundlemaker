@@ -56,6 +56,12 @@ public class ArtifactUtils {
    * @param artifact
    */
   public static void dumpArtifact(IBundleMakerArtifact artifact) {
+
+    if (artifact == null) {
+      System.out.println("Artifact is 'null'.");
+      return;
+    }
+
     StringBuilder builder = new StringBuilder();
     dumpArtifact(artifact, 0, builder, -1);
     System.out.println(builder.toString());

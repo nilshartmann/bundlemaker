@@ -26,8 +26,8 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * <p>
- * Implementation of an {@link IProjectDescription} that contains file based definition (source and binary
- * folders and/or archives).
+ * Implementation of an {@link IProjectDescription} that contains file based definition (source and binary folders
+ * and/or archives).
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -174,8 +174,21 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
    */
   @Override
   public String toString() {
-    return "FileBasedBundleMakerProjectContent [_id=" + getId() + ", _name=" + getName() + ", _version=" + getVersion()
-        + ", _analyze=" + getAnalyzeMode() + ", _binaryPaths=" + _binaryPaths + "]";
+    StringBuilder builder = new StringBuilder();
+    builder.append("FileBasedContent [_binaryPaths=");
+    builder.append(_binaryPaths);
+    builder.append(", _sourcePaths=");
+    builder.append(_sourcePaths);
+    builder.append(", getId()=");
+    builder.append(getId());
+    builder.append(", getName()=");
+    builder.append(getName());
+    builder.append(", getVersion()=");
+    builder.append(getVersion());
+    builder.append(", isAnalyze()=");
+    builder.append(isAnalyze());
+    builder.append("]");
+    return builder.toString();
   }
 
   /**

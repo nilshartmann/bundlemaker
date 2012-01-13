@@ -48,4 +48,12 @@ public interface IModuleArtifact extends IBundleMakerArtifact {
    *          the version
    */
   void setNameAndVersion(String name, String version);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isResourceModule();
 }
