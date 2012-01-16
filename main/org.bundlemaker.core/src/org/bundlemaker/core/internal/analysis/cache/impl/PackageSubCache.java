@@ -42,8 +42,9 @@ public class PackageSubCache extends AbstractSubCache<ModulePackageKey, Abstract
     IArtifact parent = getPackageParent(modulePackageKey);
 
     // return the package artifact
-    return new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, false, getArtifactCache()
-        .getConfiguration().isHierarchicalPackages(), modulePackageKey.getModuleKey().getModule(), getArtifactCache());
+    return new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, modulePackageKey.getModuleKey()
+        .getModule() == null, getArtifactCache().getConfiguration().isHierarchicalPackages(), modulePackageKey
+        .getModuleKey().getModule(), getArtifactCache());
   }
 
   /**

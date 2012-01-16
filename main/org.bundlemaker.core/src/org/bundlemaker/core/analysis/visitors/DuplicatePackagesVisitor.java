@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.util.collections.GenericCache;
 
@@ -105,7 +106,7 @@ public class DuplicatePackagesVisitor extends IArtifactTreeVisitor.Adapter {
     if (packageArtifact.getQualifiedName().isEmpty()) {
       return true;
     }
-    
+
     // return if package is the META-INF
     if (!packageArtifact.containsTypes()) {
       return true;
@@ -138,5 +139,13 @@ public class DuplicatePackagesVisitor extends IArtifactTreeVisitor.Adapter {
 
     // return true
     return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean visit(IModuleArtifact moduleArtifact) {
+    return !moduleArtifact.isVirtual();
   }
 }

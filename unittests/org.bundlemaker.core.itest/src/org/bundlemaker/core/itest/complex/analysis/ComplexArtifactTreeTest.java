@@ -11,10 +11,13 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,6 +29,29 @@ import org.junit.Test;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
+
+  @Test
+  public void testMissingTypes() {
+
+    // Step 1: transform the model
+    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+        new ArtifactModelConfiguration(false, ResourcePresentation.NO_RESOURCE, ContentType.BINARY, true, true));
+    Assert.assertNotNull(rootArtifact);
+
+    //
+    for (IModuleArtifact moduleArtifact : rootArtifact.findChildren(IModuleArtifact.class)) {
+      System.out.println(moduleArtifact);
+    }
+
+    IModuleArtifact moduleArtifact = rootArtifact.findChild(IModuleArtifact.class, "<< Missing Types >>");
+    Assert.assertTrue(moduleArtifact.isVirtual());
+
+    for (IPackageArtifact packageArtifact : moduleArtifact.findChildren(IPackageArtifact.class)) {
+      Assert.assertTrue(packageArtifact.isVirtual());
+    }
+
+    Assert.assertNotNull(moduleArtifact);
+  }
 
   /**
    * <p>
@@ -61,13 +87,13 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     //
     ArtifactUtils.dumpArtifact(rootArtifact);
-    
+
     Collection<IArtifact> leafs = rootArtifact.getLeafs();
     IModuleArtifact newModule = null;
     for (IArtifact typeArtifact : leafs) {
       IArtifact moduleArtifact = typeArtifact.getParent(ArtifactType.Module);
-      
-      if (((IModuleArtifact)moduleArtifact).isResourceModule()) {
+
+      if (((IModuleArtifact) moduleArtifact).isResourceModule()) {
         newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test_1.2.3", "1.2.3");
         newModule.addArtifact(typeArtifact);
       }
