@@ -1,5 +1,7 @@
 package org.bundlemaker.core.osgi.utils;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,11 +91,11 @@ public class ArtifactUtils {
     //
     return result;
   }
-  
+
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param artifact
    * @return
    */
@@ -116,6 +118,14 @@ public class ArtifactUtils {
 
         //
         return true;
+      }
+    });
+
+    Collections.sort(result, new Comparator<IPackageArtifact>() {
+
+      @Override
+      public int compare(IPackageArtifact package1, IPackageArtifact package2) {
+        return package1.getQualifiedName().compareTo(package2.getQualifiedName());
       }
     });
 
