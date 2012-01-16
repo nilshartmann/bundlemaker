@@ -12,32 +12,24 @@ import org.bundlemaker.analysis.ui.dsmview.figures.Matrix;
 import org.bundlemaker.analysis.ui.dsmview.figures.MatrixEvent;
 import org.bundlemaker.analysis.ui.dsmview.figures.VerticalSideMarker;
 import org.bundlemaker.analysis.ui.dsmview.figures.ZoomableScrollPane;
+import org.bundlemaker.analysis.ui.dsmview.utils.DsmUtils;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.draw2d.ButtonBorder;
-import org.eclipse.draw2d.ChangeEvent;
-import org.eclipse.draw2d.ChangeListener;
-import org.eclipse.draw2d.CheckBox;
-import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.LightweightSystem;
-import org.eclipse.draw2d.MouseEvent;
-import org.eclipse.draw2d.MouseMotionListener;
-import org.eclipse.draw2d.SchemeBorder;
-import org.eclipse.draw2d.ScrollBar;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 
 /**
  * <p>
@@ -45,142 +37,22 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DsmViewWidget implements Observer {
+public class DsmViewWidget extends Canvas implements Observer {
 
-  private final class MyMotionListener extends MouseMotionListener.Stub {
+  // @Deprecated
+  // static final double HORIZONTAL_OFFSET = 21.0;
 
-    /** - */
-    private static final int HORIZONTAL   = 1;
+  @Deprecated
+  float                        _zoom                   = 1.0f;
 
-    /** - */
-    private static final int VERTICAL     = 2;
-
-    /** - */
-    private static final int RANGE        = 10;
-
-    /** - */
-    private int              _currentDrag = -1;
-
-    @Override
-    public void mouseMoved(MouseEvent me) {
-      dump(me, false);
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent me) {
-      dump(me, true);
-    }
-
-    public void dump(MouseEvent me, boolean isDragged) {
-
-      if (!isDragged) {
-        _currentDrag = -1;
-      }
-
-      //
-      if (me.getSource() instanceof Figure) {
-
-        switch (isInRange(me)) {
-        case HORIZONTAL:
-          ((Figure) me.getSource()).setCursor(Cursors.SIZENS);
-          break;
-        case VERTICAL:
-          ((Figure) me.getSource()).setCursor(Cursors.SIZEWE);
-          break;
-        default:
-          ((Figure) me.getSource()).setCursor(Cursors.ARROW);
-          break;
-        }
-      }
-
-      //
-      if ((me.getState() & MouseEvent.BUTTON1) != 0 && isDragged) {
-
-        //
-        if (_currentDrag == -1) {
-          _currentDrag = isInRange(me);
-        }
-
-        //
-        if (_currentDrag == HORIZONTAL && me.getSource().equals(DsmViewWidget.this._matrixFigure)) {
-          DsmViewWidget.this._horizontalWidth = DsmViewWidget.this._horizontalWidth + me.getLocation().y;
-        }
-
-        //
-        if (_currentDrag == HORIZONTAL && me.getSource().equals(DsmViewWidget.this._horizontalListFigure)) {
-          DsmViewWidget.this._horizontalWidth = me.getLocation().y;
-        }
-
-        //
-        if (_currentDrag == VERTICAL && me.getSource().equals(DsmViewWidget.this._matrixFigure)) {
-          DsmViewWidget.this._verticalWidth = DsmViewWidget.this._verticalWidth + me.getLocation().x;
-        }
-
-        //
-        if (_currentDrag == VERTICAL && me.getSource().equals(DsmViewWidget.this._verticalListFigure)) {
-          DsmViewWidget.this._verticalWidth = me.getLocation().x;
-        }
-
-        // DsmViewWidget.this._horizontalWidth = me.y;
-        DsmViewWidget.this._mainFigure.revalidate();
-      }
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @param me
-     * @return
-     */
-    private int isInRange(MouseEvent me) {
-
-      //
-      if (me.getSource().equals(DsmViewWidget.this._matrixFigure)) {
-        if (Math.abs(me.getLocation().x) < RANGE) {
-          return VERTICAL;
-        }
-
-        if (Math.abs(me.getLocation().y) < RANGE) {
-          return HORIZONTAL;
-        }
-      }
-
-      else if (me.getSource().equals(DsmViewWidget.this._horizontalListFigure)) {
-
-        if (Math.abs(me.getLocation().x) < RANGE) {
-          return VERTICAL;
-        }
-
-        if (DsmViewWidget.this._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < RANGE) {
-          return HORIZONTAL;
-        }
-      }
-
-      else if (me.getSource().equals(DsmViewWidget.this._verticalListFigure)) {
-
-        if (Math.abs(me.getLocation().y) < RANGE) {
-          return HORIZONTAL;
-        }
-
-        if (DsmViewWidget.this._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < RANGE) {
-          return VERTICAL;
-        }
-      }
-
-      //
-      return -1;
-    }
-  }
-
-  /** the SWT canvas */
-  private Canvas               _canvas;
+  // /** the SWT canvas */
+  // private Canvas _canvas;
 
   /** the {@link DsmViewModel} */
   private AbstractDsmViewModel _model;
 
   /** the main figure */
-  private Figure               _mainFigure;
+  Figure                       _mainFigure;
 
   private ZoomableScrollPane   _zoomableScrollpane;
 
@@ -188,20 +60,22 @@ public class DsmViewWidget implements Observer {
 
   private ZoomableScrollPane   _zoomableScrollpaneHorizontalBar;
 
-  private ScrollBar            _zoomScrollBar;
-
-  private CheckBox             _useShortendLabelsCheckBox;
+  // private ScrollBar _zoomScrollBar;
+  //
+  // private CheckBox _useShortendLabelsCheckBox;
 
   /** - */
-  private Matrix               _matrixFigure;
+  Matrix                       _matrixFigure;
 
-  private VerticalSideMarker   _verticalListFigure;
+  VerticalSideMarker           _verticalListFigure;
 
-  private HorizontalSideMarker _horizontalListFigure;
+  HorizontalSideMarker         _horizontalListFigure;
 
-  private int                  _horizontalWidth = 10;
+  int                          _horizontalFigureHeight = 10;
 
-  public int                   _verticalWidth   = -1;
+  public int                   _verticalFigureWidth    = -1;
+
+  private MatrixEvent          _matrixEvent;
 
   /**
    * <p>
@@ -212,6 +86,7 @@ public class DsmViewWidget implements Observer {
    * @param canvas
    */
   public DsmViewWidget(AbstractDsmViewModel model, Composite parent) {
+    super(parent, SWT.NO_REDRAW_RESIZE);
 
     // assert not null
     Assert.isNotNull(model);
@@ -219,7 +94,6 @@ public class DsmViewWidget implements Observer {
 
     // set model and canvas
     this._model = model;
-    this._canvas = new Canvas(parent, SWT.NO_REDRAW_RESIZE);
 
     // set this view as an observer
     this._model.addObserver(this);
@@ -248,16 +122,52 @@ public class DsmViewWidget implements Observer {
    */
   private void init() {
 
-    LightweightSystem lws = new LightweightSystem(_canvas);
-    _mainFigure = new Figure();
+    LightweightSystem lws = new LightweightSystem(this);
+
+    //
+    DsmViewWidgetMouseMotionListener motionListener = new DsmViewWidgetMouseMotionListener(this);
+
+    //
+    this.addMouseWheelListener(new MouseWheelListener() {
+      @Override
+      public void mouseScrolled(MouseEvent e) {
+        // System.out.println("MouseWheelListener -> " + e);
+
+        if (e.count > 0) {
+          DsmViewWidget.this.setZoom(getZoom() * 1.05f);
+        } else if (e.count < 0) {
+          DsmViewWidget.this.setZoom(getZoom() * 0.95f);
+        }
+      }
+    });
+
+    // this.addMouseMoveListener(new MouseMoveListener() {
+    // @Override
+    // public void mouseMove(MouseEvent e) {
+    // System.out.println("mouseMove " + e);
+    // }
+    // });
+
+    _mainFigure = new Figure() {
+
+      @Override
+      public void paint(Graphics graphics) {
+        super.paint(graphics);
+
+        if (_matrixEvent != null && _matrixEvent.getMouseX() >= 0 && _matrixEvent.getMouseY() >= 0) {
+          graphics.drawRectangle(_verticalFigureWidth + _matrixEvent.getMouseX(), _horizontalFigureHeight
+              + _matrixEvent.getMouseY(), 100, 100);
+        }
+      }
+    };
     _mainFigure.setLayoutManager(new XYLayout());
+    _mainFigure.addMouseMotionListener(motionListener);
     lws.setContents(_mainFigure);
 
-    MyMotionListener motionListener = new MyMotionListener();
     _matrixFigure = new Matrix(_model);
     _matrixFigure.addMouseMotionListener(motionListener);
 
-    _zoomableScrollpane = new ZoomableScrollPane(_matrixFigure, ScrollPane.ALWAYS, ScrollPane.ALWAYS);
+    _zoomableScrollpane = new ZoomableScrollPane(_matrixFigure, ScrollPane.AUTOMATIC, ScrollPane.AUTOMATIC);
 
     _verticalListFigure = new VerticalSideMarker(_model);
     _verticalListFigure.addMouseMotionListener(motionListener);
@@ -271,7 +181,9 @@ public class DsmViewWidget implements Observer {
 
       @Override
       public void toolTip(MatrixEvent event) {
-        drawToolTip(event.getX(), event.getY());
+        System.out.println(event.getX() + ", " + event.getY());
+        _matrixEvent = event;
+        _mainFigure.repaint();
       }
 
       @Override
@@ -289,51 +201,52 @@ public class DsmViewWidget implements Observer {
 
       @Override
       public void marked(MatrixEvent event) {
+        _matrixEvent = null;
+        _mainFigure.repaint();
         _horizontalListFigure.mark(event.getX());
         _verticalListFigure.mark(event.getY());
+        System.out.println(event.getX() + " : " + event.getMouseY());
       }
     });
 
-    _zoomScrollBar = new ScrollBar();
-    final Label zoomLabel = new Label("Zoom");
-    zoomLabel.setBorder(new SchemeBorder(ButtonBorder.SCHEMES.BUTTON_SCROLLBAR));
-    _zoomScrollBar.setThumb(zoomLabel);
-    _zoomScrollBar.setHorizontal(true);
-    _zoomScrollBar.setMaximum(200);
-    _zoomScrollBar.setMinimum(0);
-    _zoomScrollBar.setExtent(25);
-    _zoomScrollBar.addPropertyChangeListener("value", new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        float z = (_zoomScrollBar.getValue() + 10) * 0.02f;
-        _zoomableScrollpane.setZoom(z);
-        _zoomableScrollpaneVerticalBar.setZoom(z);
-        _zoomableScrollpaneHorizontalBar.setZoom(z);
-      }
-    });
-
-    _useShortendLabelsCheckBox = new CheckBox("Shorten labels");
-    _useShortendLabelsCheckBox.getModel().addChangeListener(new ChangeListener() {
-
-      @Override
-      public void handleStateChanged(ChangeEvent event) {
-        if ("selected".equals(event.getPropertyName())) {
-          _model.setUseShortendLabels(_useShortendLabelsCheckBox.isSelected());
-          _mainFigure.revalidate();
-          _mainFigure.repaint();
-        }
-      }
-    });
+    // _zoomScrollBar = new ScrollBar();
+    // final Label zoomLabel = new Label("Zoom");
+    // zoomLabel.setBorder(new SchemeBorder(ButtonBorder.SCHEMES.BUTTON_SCROLLBAR));
+    // _zoomScrollBar.setThumb(zoomLabel);
+    // _zoomScrollBar.setHorizontal(true);
+    // _zoomScrollBar.setMaximum(200);
+    // _zoomScrollBar.setMinimum(0);
+    // _zoomScrollBar.setExtent(25);
+    // _zoomScrollBar.addPropertyChangeListener("value", new PropertyChangeListener() {
+    // @Override
+    // public void propertyChange(PropertyChangeEvent evt) {
+    // float z = (_zoomScrollBar.getValue() + 10) * 0.02f;
+    // _zoomableScrollpane.setZoom(z);
+    // _zoomableScrollpaneVerticalBar.setZoom(z);
+    // _zoomableScrollpaneHorizontalBar.setZoom(z);
+    // _zoom = z;
+    // }
+    // });
+    //
+    // _useShortendLabelsCheckBox = new CheckBox("Shorten labels");
+    // _useShortendLabelsCheckBox.getModel().addChangeListener(new ChangeListener() {
+    //
+    // @Override
+    // public void handleStateChanged(ChangeEvent event) {
+    // if ("selected".equals(event.getPropertyName())) {
+    // _model.setUseShortendLabels(_useShortendLabelsCheckBox.isSelected());
+    // _mainFigure.revalidate();
+    // _mainFigure.repaint();
+    // }
+    // }
+    // });
 
     _zoomableScrollpane.getViewport().addPropertyChangeListener(new PropertyChangeListener() {
       @Override
       public void propertyChange(PropertyChangeEvent evt) {
         Viewport viewport = (Viewport) evt.getSource();
-
         _zoomableScrollpaneVerticalBar.getViewport().setViewLocation(0, viewport.getViewLocation().y);
-
         _zoomableScrollpaneHorizontalBar.getViewport().setViewLocation(viewport.getViewLocation().x, 0);
-
         _zoomableScrollpane.getViewport().setViewLocation(viewport.getViewLocation().x, viewport.getViewLocation().y);
 
         _mainFigure.revalidate();
@@ -341,8 +254,8 @@ public class DsmViewWidget implements Observer {
       }
     });
 
-    _mainFigure.add(_zoomScrollBar);
-    _mainFigure.add(_useShortendLabelsCheckBox);
+    // _mainFigure.add(_zoomScrollBar);
+    // _mainFigure.add(_useShortendLabelsCheckBox);
     _mainFigure.add(_zoomableScrollpane);
     _mainFigure.add(_zoomableScrollpaneVerticalBar);
     _mainFigure.add(_zoomableScrollpaneHorizontalBar);
@@ -357,8 +270,23 @@ public class DsmViewWidget implements Observer {
     });
   }
 
-  protected void drawToolTip(int x, int y) {
-    // System.out.println("drawToolTip");
+  public void setZoom(float value) {
+    System.out.println(value);
+    // float z = (value + 10) * 0.02f;
+    _zoomableScrollpane.setZoom(value);
+    _zoomableScrollpaneVerticalBar.setZoom(value);
+    _zoomableScrollpaneHorizontalBar.setZoom(value);
+    _zoom = value;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the zoom
+   */
+  public float getZoom() {
+    return _zoom;
   }
 
   /**
@@ -374,36 +302,9 @@ public class DsmViewWidget implements Observer {
 
     //
     int testExtend = FigureUtilities.getTextWidth(
-        getLongestString(_model.isUseShortendLabels() ? _model.getShortendLabels() : _model.getLabels()),
-        _matrixFigure.getFont()) + 15;
+        DsmUtils.getLongestString(_model.isUseShortendLabels() ? _model.getShortendLabels() : _model.getLabels()),
+        matrixFigure.getFont()) + 15;
     return (int) (testExtend * zoomableScrollpane.getZoom());
-  }
-
-  /**
-   * <p>
-   * Helper method that returns the longest string from the string array.
-   * </p>
-   * 
-   * @param strings
-   *          the string array
-   * @return the longest string from the string array.
-   */
-  private String getLongestString(String[] strings) {
-
-    // create the result
-    String result = null;
-
-    // iterate over all strings
-    for (String string : strings) {
-      if (result == null) {
-        result = string;
-      } else if (result.length() < string.length()) {
-        result = string;
-      }
-    }
-
-    // return the result
-    return (result == null ? "" : result);
   }
 
   private void layoutF(IFigure figure) {
@@ -416,66 +317,40 @@ public class DsmViewWidget implements Observer {
     _horizontalListFigure.resetSize();
     _verticalListFigure.resetSize();
 
-    // fix sized
-    _zoomScrollBar.setLocation(new Point(0.0, 0.0));
-    int mainFigureHalfWidth = _mainFigure.getSize().width / 2;
-    _zoomScrollBar.setSize(mainFigureHalfWidth, 20);
+    // // fix sized
+    // _zoomScrollBar.setLocation(new Point(0.0, 0.0));
+    // int mainFigureHalfWidth = _mainFigure.getSize().width / 2;
+    // _zoomScrollBar.setSize(mainFigureHalfWidth, 20);
+    //
+    // _useShortendLabelsCheckBox.setLocation(new Point(mainFigureHalfWidth + 1, 0.0));
+    // _useShortendLabelsCheckBox.setSize(mainFigureHalfWidth, 20);
 
-    _useShortendLabelsCheckBox.setLocation(new Point(mainFigureHalfWidth + 1, 0.0));
-    _useShortendLabelsCheckBox.setSize(mainFigureHalfWidth, 20);
-
-    int horizontalBarHeight = (int) (_horizontalWidth * _zoomableScrollpaneHorizontalBar.getZoom());
-    if (_verticalWidth == -1) {
-      _verticalWidth = getTextExtend(_matrixFigure, _zoomableScrollpane);
+    int horizontalBarHeight = (int) (_horizontalFigureHeight * _zoomableScrollpaneHorizontalBar.getZoom());
+    if (_verticalFigureWidth == -1) {
+      _verticalFigureWidth = getTextExtend(_matrixFigure, _zoomableScrollpane);
     }
-    int verticalBarWidth = (int) (_verticalWidth * _zoomableScrollpaneVerticalBar.getZoom());
+    int verticalBarWidth = (int) (_verticalFigureWidth * _zoomableScrollpaneVerticalBar.getZoom());
 
     //
-    _zoomableScrollpane.setLocation(new Point(verticalBarWidth, 21.0 + horizontalBarHeight));
+    _zoomableScrollpane.setLocation(new Point(verticalBarWidth, /* HORIZONTAL_OFFSET + */horizontalBarHeight));
     _zoomableScrollpane.setSize(_mainFigure.getSize().width - verticalBarWidth,
-        (int) (_mainFigure.getSize().height - (21.0 + horizontalBarHeight)));
+        (_mainFigure.getSize().height - (/* HORIZONTAL_OFFSET + */horizontalBarHeight)));
 
     //
-    _zoomableScrollpaneVerticalBar.setLocation(new Point(0, (21.0 + horizontalBarHeight)));
+    _zoomableScrollpaneVerticalBar.setLocation(new Point(0, (/* HORIZONTAL_OFFSET + */horizontalBarHeight)));
     _zoomableScrollpaneVerticalBar.setSize(verticalBarWidth,
-        (_mainFigure.getSize().height - (21 + horizontalBarHeight + 17)));
+        (_mainFigure.getSize().height - (/* HORIZONTAL_OFFSET + */horizontalBarHeight + 17)));
 
     //
-    _zoomableScrollpaneHorizontalBar.setLocation(new Point(verticalBarWidth, 21.0));
+    _zoomableScrollpaneHorizontalBar.setLocation(new Point(verticalBarWidth, 0 /* HORIZONTAL_OFFSET */));
     // _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (textExtend + 17)), textExtend);
     _zoomableScrollpaneHorizontalBar.setSize((_mainFigure.getSize().width - (verticalBarWidth + 17)),
         horizontalBarHeight);
   }
 
   private int computeSize() {
-
-    //
-    String value = getLongestString(_model.getValues());
+    String value = DsmUtils.getLongestString(_model.getValues());
     return FigureUtilities.getTextWidth(value, _matrixFigure.getFont()) + 6;
-  }
-
-  private String getLongestString(String[][] values) {
-
-    // create the result
-    String result = "";
-
-    // iterate over all strings
-    for (String[] value : values) {
-      for (String string : value) {
-
-        if (string != null) {
-
-          if (result == null) {
-            result = string;
-          } else if (result.length() < string.length()) {
-            result = string;
-          }
-        }
-      }
-    }
-
-    // return the result
-    return result;
   }
 
   public void setModel(DsmViewModel model) {
@@ -488,8 +363,8 @@ public class DsmViewWidget implements Observer {
     _mainFigure.revalidate();
     _mainFigure.repaint();
 
-    _zoomScrollBar.setValue(40);
-    _useShortendLabelsCheckBox.setSelected(_model.isUseShortendLabels());
+    // _zoomScrollBar.setValue(40);
+    // _useShortendLabelsCheckBox.setSelected(_model.isUseShortendLabels());
   }
 
   public void addMatrixListener(IMatrixListener listener) {
@@ -498,43 +373,5 @@ public class DsmViewWidget implements Observer {
 
   public void removeMatrixLIstener(IMatrixListener listener) {
     _matrixFigure.removeMatrixLIstener(listener);
-  }
-
-  public static void main(String args[]) {
-
-    Display d = new Display();
-    final Shell shell = new Shell(d);
-    shell.setSize(800, 800);
-    shell.setLayout(new FillLayout());
-    final AbstractDsmViewModel model = new AbstractDsmViewModel() {
-
-      @Override
-      public String getToolTip(int x, int y) {
-        return "same";
-      }
-
-      @Override
-      protected String[][] createValues() {
-        return new String[][] { { "1", "12", "1", "12" }, { "3", "56", "1", "12" }, { "3", "56", "1", "12" },
-            { "3", "56", "1", "12" } };
-      }
-
-      @Override
-      protected String[] createLabels() {
-        return new String[] { "Test_1", "Test_2", "Test_3", "Test_4" };
-      }
-
-      @Override
-      protected IDsmViewConfiguration createConfiguration() {
-        return new DefaultDsmViewConfiguration();
-      }
-    };
-
-    new DsmViewWidget(model, shell);
-    shell.open();
-
-    while (!shell.isDisposed())
-      while (!d.readAndDispatch())
-        d.sleep();
   }
 }

@@ -40,6 +40,12 @@ public class Matrix extends Figure {
   int                            _selected_y = -1;
 
   /** - */
+  int                            _mouse_x    = -1;
+
+  /** - */
+  int                            _mouse_y    = -1;
+
+  /** - */
   private List<IMatrixListener>  _matrixListeners;
 
   /**
@@ -235,7 +241,7 @@ public class Matrix extends Figure {
     public void mouseMoved(MouseEvent me) {
 
       //
-      Point location = me.getLocation();
+      final Point location = me.getLocation();
 
       //
       final int x = (location.x / _model.getConfiguration().getHorizontalBoxSize());
@@ -266,7 +272,7 @@ public class Matrix extends Figure {
             if (_x == x && _y == y) {
 
               // notify listener
-              MatrixEvent event = new MatrixEvent(_x, _y);
+              MatrixEvent event = new MatrixEvent(_x, _y, location.x, location.y);
               for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
                 listener.toolTip(event);
               }
@@ -278,7 +284,7 @@ public class Matrix extends Figure {
         repaint();
 
         // notify listener
-        MatrixEvent event = new MatrixEvent(_x, _y);
+        MatrixEvent event = new MatrixEvent(_x, _y, location.x, location.y);
         for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
           listener.marked(event);
         }
@@ -299,7 +305,7 @@ public class Matrix extends Figure {
       repaint();
 
       // notify listener
-      MatrixEvent event = new MatrixEvent(_x, _y);
+      MatrixEvent event = new MatrixEvent(_x, _y, me.getLocation().x, me.getLocation().y);
       for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
         listener.marked(event);
       }
@@ -334,6 +340,8 @@ public class Matrix extends Figure {
           //
           _selected_x = x;
           _selected_y = y;
+          _mouse_x = location.x;
+          _mouse_y = location.y;
 
           //
           Display.getCurrent().timerExec(250, new Runnable() {
@@ -354,7 +362,7 @@ public class Matrix extends Figure {
         if (_clickCount == 1) {
 
           // notify listener
-          MatrixEvent event = new MatrixEvent(_selected_x, _selected_y);
+          MatrixEvent event = new MatrixEvent(_selected_x, _selected_y, _mouse_x, _mouse_y);
           for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
             listener.singleClick(event);
           }
@@ -362,7 +370,7 @@ public class Matrix extends Figure {
         } else {
 
           // notify listener
-          MatrixEvent event = new MatrixEvent(_selected_x, _selected_y);
+          MatrixEvent event = new MatrixEvent(_selected_x, _selected_y, _mouse_x, _mouse_y);
           for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
             listener.doubleClick(event);
           }
