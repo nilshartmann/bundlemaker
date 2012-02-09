@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
+import org.bundlemaker.core.osgi.manifest.CustomManifestCreator;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -21,6 +22,6 @@ public class BinaryBundleExportHandler extends AbstractExportHandler {
 
   @Override
   protected IModuleExporter createExporter() throws Exception {
-    return new JarFileBundleExporter(null, null, null);
+    return new JarFileBundleExporter(null, new CustomManifestCreator(), null);
   }
 }
