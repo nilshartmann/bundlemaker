@@ -120,7 +120,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * 
    * @return
    */
-  protected final IArtifact getVelocityModuleArtifact() {
+  protected final IBundleMakerArtifact getVelocityModuleArtifact() {
     return _velocityModuleArtifact;
   }
 
