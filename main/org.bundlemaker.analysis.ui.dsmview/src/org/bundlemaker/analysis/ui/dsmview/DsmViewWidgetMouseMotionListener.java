@@ -1,7 +1,5 @@
 package org.bundlemaker.analysis.ui.dsmview;
 
-import org.eclipse.draw2d.Cursors;
-import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 
@@ -60,23 +58,23 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub {
     }
 
     //
-    if (me.getSource() instanceof Figure) {
+    // if (me.getSource() instanceof Figure) {
 
-      switch (isInRange(me)) {
-      case HORIZONTAL:
-        ((Figure) me.getSource()).setCursor(Cursors.SIZENS);
-        break;
-      case VERTICAL:
-        ((Figure) me.getSource()).setCursor(Cursors.SIZEWE);
-        break;
-      case DIAGONAL:
-        ((Figure) me.getSource()).setCursor(Cursors.SIZENWSE);
-        break;
-      default:
-        ((Figure) me.getSource()).setCursor(Cursors.ARROW);
-        break;
-      }
-    }
+    // switch (isInRange(me)) {
+    // case HORIZONTAL:
+    // ((Figure) me.getSource()).setCursor(Cursors.SIZENS);
+    // break;
+    // case VERTICAL:
+    // ((Figure) me.getSource()).setCursor(Cursors.SIZEWE);
+    // break;
+    // case DIAGONAL:
+    // ((Figure) me.getSource()).setCursor(Cursors.SIZENWSE);
+    // break;
+    // default:
+    // ((Figure) me.getSource()).setCursor(Cursors.ARROW);
+    // break;
+    // }
+    // }
 
     //
     if ((me.getState() & MouseEvent.BUTTON1) != 0 && isDragged) {
@@ -173,47 +171,48 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub {
     //
     if (me.getSource().equals(_dsmViewWidget._matrixFigure)) {
 
-      if (Math.abs(me.getLocation().x) < RANGE && Math.abs(me.getLocation().y) < RANGE) {
+      if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)
+          && Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
         return DIAGONAL;
       }
 
-      if (Math.abs(me.getLocation().x) < RANGE) {
+      if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
         return VERTICAL;
       }
 
-      if (Math.abs(me.getLocation().y) < RANGE) {
+      if (Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
         return HORIZONTAL;
       }
     }
 
     else if (me.getSource().equals(_dsmViewWidget._horizontalListFigure)) {
 
-      if (Math.abs(me.getLocation().x) < RANGE
-          && _dsmViewWidget._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < RANGE) {
+      if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)
+          && _dsmViewWidget._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
         return DIAGONAL;
       }
 
-      if (Math.abs(me.getLocation().x) < RANGE) {
+      if (Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
         return VERTICAL;
       }
 
-      if (_dsmViewWidget._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < RANGE) {
+      if (_dsmViewWidget._horizontalListFigure.getSize().height - Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
         return HORIZONTAL;
       }
     }
 
     else if (me.getSource().equals(_dsmViewWidget._verticalListFigure)) {
 
-      if (Math.abs(me.getLocation().y) < RANGE
-          && _dsmViewWidget._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < RANGE) {
+      if (Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)
+          && _dsmViewWidget._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
         return HORIZONTAL;
       }
 
-      if (Math.abs(me.getLocation().y) < RANGE) {
+      if (Math.abs(me.getLocation().y) < (RANGE * _dsmViewWidget._zoom)) {
         return HORIZONTAL;
       }
 
-      if (_dsmViewWidget._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < RANGE) {
+      if (_dsmViewWidget._verticalListFigure.getSize().width - Math.abs(me.getLocation().x) < (RANGE * _dsmViewWidget._zoom)) {
         return VERTICAL;
       }
     }

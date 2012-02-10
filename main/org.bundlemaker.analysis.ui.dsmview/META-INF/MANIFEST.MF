@@ -12,6 +12,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.draw2d;bundle-version="3.6.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-ClassPath: .,
- lib/KTable.jar
+Bundle-ClassPath: .
 Import-Package: org.sonar.graph

@@ -14,12 +14,6 @@ public class MatrixEvent {
   /** - */
   private int _y;
 
-  /** - */
-  private int _mouseX;
-
-  /** - */
-  private int _mouseY;
-
   /**
    * <p>
    * Creates a new instance of type {@link MatrixEvent}.
@@ -27,15 +21,11 @@ public class MatrixEvent {
    * 
    * @param x
    * @param y
-   * @param mouseX
-   * @param mouseY
    */
-  public MatrixEvent(int x, int y, int mouseX, int mouseY) {
+  public MatrixEvent(int x, int y) {
     super();
     _x = x;
     _y = y;
-    _mouseX = mouseX;
-    _mouseY = mouseY;
   }
 
   // /**
@@ -59,26 +49,6 @@ public class MatrixEvent {
    */
   public int getX() {
     return _x;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the mouseX
-   */
-  public int getMouseX() {
-    return _mouseX;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the mouseY
-   */
-  public int getMouseY() {
-    return _mouseY;
   }
 
   /**

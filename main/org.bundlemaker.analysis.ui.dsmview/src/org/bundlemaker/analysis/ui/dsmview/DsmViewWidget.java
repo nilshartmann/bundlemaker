@@ -20,6 +20,7 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.LightweightSystem;
+import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.XYLayout;
@@ -39,14 +40,8 @@ import org.eclipse.swt.widgets.Display;
  */
 public class DsmViewWidget extends Canvas implements Observer {
 
-  // @Deprecated
-  // static final double HORIZONTAL_OFFSET = 21.0;
-
   @Deprecated
   float                        _zoom                   = 1.0f;
-
-  // /** the SWT canvas */
-  // private Canvas _canvas;
 
   /** the {@link DsmViewModel} */
   private AbstractDsmViewModel _model;
@@ -60,10 +55,6 @@ public class DsmViewWidget extends Canvas implements Observer {
 
   private ZoomableScrollPane   _zoomableScrollpaneHorizontalBar;
 
-  // private ScrollBar _zoomScrollBar;
-  //
-  // private CheckBox _useShortendLabelsCheckBox;
-
   /** - */
   Matrix                       _matrixFigure;
 
@@ -75,7 +66,11 @@ public class DsmViewWidget extends Canvas implements Observer {
 
   public int                   _verticalFigureWidth    = -1;
 
-  private MatrixEvent          _matrixEvent;
+  public int                   _x;
+
+  public int                   _y;
+
+  boolean                      _drawToolTip            = false;
 
   /**
    * <p>
@@ -141,12 +136,8 @@ public class DsmViewWidget extends Canvas implements Observer {
       }
     });
 
-    // this.addMouseMoveListener(new MouseMoveListener() {
-    // @Override
-    // public void mouseMove(MouseEvent e) {
-    // System.out.println("mouseMove " + e);
-    // }
-    // });
+    //
+    this.addMouseMoveListener(new MyMouseMoveListener(this));
 
     _mainFigure = new Figure() {
 
@@ -154,12 +145,13 @@ public class DsmViewWidget extends Canvas implements Observer {
       public void paint(Graphics graphics) {
         super.paint(graphics);
 
-        if (_matrixEvent != null && _matrixEvent.getMouseX() >= 0 && _matrixEvent.getMouseY() >= 0) {
-          graphics.drawRectangle(_verticalFigureWidth + _matrixEvent.getMouseX(), _horizontalFigureHeight
-              + _matrixEvent.getMouseY(), 100, 100);
+        if (_drawToolTip && _x >= _verticalFigureWidth && _y >= _horizontalFigureHeight) {
+          graphics.fillRectangle(_x, _y, 100, 100);
+          graphics.drawRectangle(_x, _y, 100, 100);
         }
       }
     };
+
     _mainFigure.setLayoutManager(new XYLayout());
     _mainFigure.addMouseMotionListener(motionListener);
     lws.setContents(_mainFigure);
@@ -177,35 +169,46 @@ public class DsmViewWidget extends Canvas implements Observer {
     _horizontalListFigure.addMouseMotionListener(motionListener);
     _zoomableScrollpaneHorizontalBar = new ZoomableScrollPane(_horizontalListFigure, ScrollPane.NEVER, ScrollPane.NEVER);
 
+    _matrixFigure.addMouseMotionListener(new MouseMotionListener.Stub() {
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void mouseExited(org.eclipse.draw2d.MouseEvent me) {
+        _drawToolTip = false;
+      }
+    });
+
     _matrixFigure.addMatrixListener(new IMatrixListener() {
 
       @Override
       public void toolTip(MatrixEvent event) {
-        System.out.println(event.getX() + ", " + event.getY());
-        _matrixEvent = event;
+        _drawToolTip = true;
         _mainFigure.repaint();
       }
 
       @Override
       public void singleClick(MatrixEvent event) {
+        _drawToolTip = false;
         if (_model instanceof DsmViewModel) {
           Analysis.instance().getDependencySelectionService()
               .setSelection(DSMView.ID, ((DsmViewModel) _model).getDependency(event.getX(), event.getY()));
         }
+        _mainFigure.repaint();
       }
 
       @Override
       public void doubleClick(MatrixEvent event) {
-        // do nothing
+        _drawToolTip = false;
+        _mainFigure.repaint();
       }
 
       @Override
       public void marked(MatrixEvent event) {
-        _matrixEvent = null;
         _mainFigure.repaint();
         _horizontalListFigure.mark(event.getX());
         _verticalListFigure.mark(event.getY());
-        System.out.println(event.getX() + " : " + event.getMouseY());
       }
     });
 

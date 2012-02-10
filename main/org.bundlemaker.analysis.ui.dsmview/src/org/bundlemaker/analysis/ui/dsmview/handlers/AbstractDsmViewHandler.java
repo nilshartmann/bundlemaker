@@ -5,7 +5,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.dsmview.DSMView;
+import org.bundlemaker.analysis.ui.dsmview.DsmViewWidget;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 
@@ -45,7 +45,7 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
   }
 
   private void openEditorAndViews(List<IArtifact> selectedArtifacts) {
-    Analysis.instance().showInGenericEditor(DSMView.class.getName(), selectedArtifacts);
+    Analysis.instance().showInGenericEditor(DsmViewWidget.class.getName(), selectedArtifacts);
     // Open the DependencyTreeTableView
     // Analysis.instance().openDependencyTreeTableView();
   }

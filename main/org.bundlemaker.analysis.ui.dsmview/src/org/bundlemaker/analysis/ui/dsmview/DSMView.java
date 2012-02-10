@@ -39,14 +39,12 @@ import org.sonar.graph.Dsm;
 public class DSMView extends DependencyPart {
 
   //
-  private static final boolean                    FEATURE_USE_NEW_DSM = Boolean.getBoolean("bm.useNewDsm");
+  private static final boolean FEATURE_USE_NEW_DSM = Boolean.getBoolean("bm.useNewDsm");
 
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String                            ID                  = "org.bundlemaker.analysis.ui.dsmview.DSMView";
-
-  private DSMComposite<IArtifact, DependencyEdge> dsmComposite;
+  public static String         ID                  = "org.bundlemaker.analysis.ui.dsmview.DSMView";
 
   @Override
   public void doDispose() {
@@ -55,8 +53,6 @@ public class DSMView extends DependencyPart {
        * @todo dispose _dsmViewWidget
        * 
        */
-    } else {
-      dsmComposite.dispose();
     }
   }
 
@@ -64,8 +60,6 @@ public class DSMView extends DependencyPart {
   protected void doInit(Composite composite) {
     if (FEATURE_USE_NEW_DSM) {
       doInitNew(composite);
-    } else {
-      doInitOld(composite);
     }
   }
 
@@ -94,22 +88,8 @@ public class DSMView extends DependencyPart {
 
     if (FEATURE_USE_NEW_DSM) {
       useDependencyGraphNew(graph);
-    } else {
-      useDependencyGraphOld(graph);
     }
   }
-
-  /************ START - OLD DsmView ***************************/
-
-  public void doInitOld(Composite parent) {
-    dsmComposite = new DSMComposite<IArtifact, DependencyEdge>(parent, this);
-  }
-
-  public void useDependencyGraphOld(IDependencyGraph graph) {
-    dsmComposite.setDependencyGraph(graph);
-  }
-
-  /************ STOP - OLD DsmView ***************************/
 
   /************ START - NEW DsmView ***************************/
 
