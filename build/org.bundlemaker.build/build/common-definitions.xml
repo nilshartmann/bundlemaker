@@ -49,11 +49,13 @@
 
 	<!-- define the ant4eclipse target platform -->
 	<ant4eclipse:targetPlatform id="target.platform">
+		<location dir="${targetplatform-subdir}/target.platform/asm" />
 		<location dir="${targetplatform-subdir}/target.platform/bundlor-1.0.0.RELEASE" />
-		<location dir="${targetplatform-subdir}/target.platform/slf4j-1.5.10" />
-		<location dir="${targetplatform-subdir}/target.platform/xtext-1.0.1" />
 		<location dir="${targetplatform-subdir}/target.platform/draw2d" />
+		<location dir="${targetplatform-subdir}/target.platform/slf4j-1.5.10" />
+		<location dir="${targetplatform-subdir}/target.platform/sonar-graph_2.4.1" />
 		<location dir="${targetplatform-subdir}/target.platform/test/pde.test.utils" />
+		<location dir="${targetplatform-subdir}/target.platform/xtext-1.0.1" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 
