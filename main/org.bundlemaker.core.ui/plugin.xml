@@ -135,7 +135,7 @@
                </reference>
          </enabledWhen>
       </handler>
-      <handler class="org.bundlemaker.core.ui.commands.TransformHandler"
+      <!-- handler class="org.bundlemaker.core.ui.commands.TransformHandler"
             commandId="org.bundlemaker.core.ui.commands.TransformHandler">
          <activeWhen>
          <reference
@@ -166,7 +166,7 @@
                     definitionId="org.bundlemaker.core.transformations.dsl.TransformationDsl.Editor.opened"/>
           	</or>
          </enabledWhen>
-      </handler>
+      </handler  -->
       <handler
             commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
             class="org.bundlemaker.core.ui.commands.CustomizeDependencyTreeHandler">

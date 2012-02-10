@@ -18,10 +18,7 @@ import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.transformations.dsl.transformationDsl.TransformationModel;
-import org.bundlemaker.core.transformations.dsl.ui.utils.TransformationDslUtils;
 import org.bundlemaker.core.ui.Activator;
-import org.bundlemaker.core.ui.editor.transformation.TransformationExecutor;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IContainer;
@@ -57,9 +54,8 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
-   * , java.util.List)
+   * @see org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent ,
+   * java.util.List)
    */
   @Override
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
@@ -98,18 +94,19 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
       throws Exception {
 
     PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+      @Override
       public void run(final IProgressMonitor monitor) throws InvocationTargetException {
         try {
           // monitor.beginTask("Running " + scriptFile.getName(), 100);
 
           // Parse the transformation script
-          TransformationModel model = TransformationDslUtils.parse(scriptFile.getLocationURI().toString());
+          // TransformationModel model = TransformationDslUtils.parse(scriptFile.getLocationURI().toString());
 
-          // Execute the script and apply the contained transformation
-          final TransformationExecutor executor = new TransformationExecutor(createModularizedSystem(
-              bundleMakerProject, moduleName), model);
+          // // Execute the script and apply the contained transformation
+          // final TransformationExecutor executor = new TransformationExecutor(createModularizedSystem(
+          // bundleMakerProject, moduleName), model);
 
-          executor.apply(monitor);
+          // executor.apply(monitor);
         } catch (Exception ex) {
           throw new InvocationTargetException(ex);
         } finally {
@@ -195,6 +192,7 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
 
   class DslFileFilter extends ViewerFilter {
 
+    @Override
     public boolean select(Viewer viewer, Object parent, Object element) {
       if (element instanceof IFile) {
         IPath fullPath = ((IFile) element).getFullPath();
