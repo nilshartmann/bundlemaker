@@ -231,6 +231,14 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
         // iterate over the associated binary resources
         _addResource(movableUnit.getAssociatedSourceResource());
       }
+      // TODO: BUGFIX!!
+      else if (configuration.isSourceContent() && movableUnit.hasAssociatedBinaryResources()) {
+
+        // iterate over the associated binary resources
+        for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+          _addResource(resource);
+        }
+      }
     }
 
     // TODO
