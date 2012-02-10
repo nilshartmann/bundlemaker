@@ -41,7 +41,11 @@ import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
  */
 public class DefaultManifestCreator extends AbstractManifestCreator {
 
+  /** - */
   private DuplicatePackagesVisitor _duplicatePackagesVisitor;
+
+  // TODO
+  boolean                          _specifyBundleNameIfMultipleExporterExist = true;
 
   /**
    * {@inheritDoc}
@@ -60,8 +64,10 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     setExportPackage();
     setImportPackageAndRequireBundle();
 
-    addSpiProvider();
-    
+    importExportedPackages();
+
+    setSpiProviderHeader();
+
     setTransitiveClosure();
 
     copyOriginalManifestHeader();
@@ -392,7 +398,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
           }
         }
 
-        if (hostModules > 1) {
+        if (hostModules > 1 && _specifyBundleNameIfMultipleExporterExist) {
 
           // get the module
           IModule module = moduleArtifact.getAssociatedModule();
@@ -619,9 +625,10 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
   /**
    * <p>
    * </p>
-   * 
    */
-  protected void addSpiProvider() {
+  protected void setSpiProviderHeader() {
+
+    // TODO
     if (getModuleArtifact().findChild(IPackageArtifact.class, "META-INF.services") != null) {
       getBundleManifest().setHeader("SPI-Provider", "*");
     }
@@ -683,6 +690,22 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 
     // return the result
     return declaration != null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  protected void importExportedPackages() {
+
+    //
+    for (ExportedPackage exportedPackage : getBundleManifest().getExportPackage().getExportedPackages()) {
+      //
+      if (!containsImportedPackage(exportedPackage.getPackageName())) {
+        // TODO: Attributes?
+        getBundleManifest().getImportPackage().addImportedPackage(exportedPackage.getPackageName());
+      }
+    }
   }
 
   /**

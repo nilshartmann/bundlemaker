@@ -3,8 +3,6 @@ package org.bundlemaker.core.osgi.manifest;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.eclipse.core.runtime.Path;
 
 public class CustomManifestCreator extends DefaultManifestCreator {
 
