@@ -19,9 +19,6 @@
                </adapt>
             </and>
          </triggerPoints>
-          <!--commonSorter
-                class="org.eclipse.egit.ui.internal.repository.tree.RepositoriesViewSorter">
-          </commonSorter -->
          <dropAssistant 
                class="org.bundlemaker.core.ui.view.navigator.ArtifactTreeDropAdapterAssistant"
                id="org.bundlemaker.core.ui.dropAssistant1">
