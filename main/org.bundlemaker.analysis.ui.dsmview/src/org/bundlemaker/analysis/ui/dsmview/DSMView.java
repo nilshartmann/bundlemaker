@@ -11,144 +11,67 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.ui.dsmview;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.dependencies.DependencyEdge;
-import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
+import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.MessageBox;
-import org.sonar.graph.Dsm;
 
 /**
  * <p>
- * Die DSM-View
+ * </p>
  * 
- * <p>
- * Stellt den selektierten Abhaengigkeitsgraphen in Form einer Dependency Structure Matrix dar.
- * 
- * 
- * @author Kai Lehmann
- * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class DSMView extends DependencyPart {
-
-  //
-  private static final boolean FEATURE_USE_NEW_DSM = Boolean.getBoolean("bm.useNewDsm");
 
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String         ID                  = "org.bundlemaker.analysis.ui.dsmview.DSMView";
+  public static String     ID = "org.bundlemaker.analysis.ui.dsmview.DSMView";
 
-  @Override
-  public void doDispose() {
-    if (FEATURE_USE_NEW_DSM) {
-      /**
-       * @todo dispose _dsmViewWidget
-       * 
-       */
-    }
-  }
+  private DsmViewComposite _dsmViewWidget;
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected void doInit(Composite composite) {
-    if (FEATURE_USE_NEW_DSM) {
-      doInitNew(composite);
-    }
+    //
+    _dsmViewWidget = new DsmViewComposite(composite, new DsmViewModel());
+
+    //
+    Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(new IArtifactSelectionListener() {
+      @Override
+      public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+        if (event.getSelection().getSelectedArtifacts().size() == 1) {
+
+          IArtifact selectedArtifact = event.getSelection().getSelectedArtifacts().get(0);
+          List<IArtifact> artifacts = new LinkedList<IArtifact>(selectedArtifact.getChildren());
+          useArtifacts(artifacts);
+        }
+      }
+    });
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void doDispose() {
+    //
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected void useArtifacts(List<IArtifact> artifacts) {
     super.useArtifacts(artifacts);
-    useDependencyGraph(getDependencyGraphForCurrentArtifacts());
+    _dsmViewWidget.setModel(new DsmViewModel(artifacts));
   }
-
-  // /**
-  // * <p>
-  // * Will be invoked when this DependencyPart is going to be opened
-  // * </p>
-  // *
-  // * <p>
-  // * Subclasses can implemented this method to update their displays
-  // *
-  // */
-  // @Override
-  // public void onShow() {
-  // System.out.println("DSMView - on show");
-  // useDependencyGraph(getDependencyGraphForCurrentArtifacts());
-  // }
-
-  protected void useDependencyGraph(IDependencyGraph graph) {
-
-    if (FEATURE_USE_NEW_DSM) {
-      useDependencyGraphNew(graph);
-    }
-  }
-
-  /************ START - NEW DsmView ***************************/
-
-  private DsmViewWidget            _dsmViewWidget;
-
-  private IDependencyGraph         _graph;
-
-  private Dsm<? extends IArtifact> _dsm;
-
-  private IDependency[][]          _dependencies;
-
-  public void doInitNew(Composite parent) {
-    _dsmViewWidget = new DsmViewWidget(new DsmViewModel(), parent);
-  }
-
-  public void useDependencyGraphNew(IDependencyGraph graph) {
-
-    this._graph = graph;
-
-    this._dsm = graph.getDsm();
-
-    if (_dsm != null) {
-      generateMatrix();
-    } else {
-      MessageBox msgBox = new MessageBox(Display.getCurrent().getActiveShell());
-      msgBox.setMessage("Too many artifacts for DSM view.");
-      msgBox.open();
-    }
-  }
-
-  private void generateMatrix() {
-    Object[] vertices = _dsm.getVertices();
-    IArtifact[] headers = new IArtifact[vertices.length];
-    Map<IArtifact, Integer> artifactColumnMap = new HashMap<IArtifact, Integer>();
-
-    _dependencies = new IDependency[headers.length][headers.length];
-
-    for (int i = 0; i < vertices.length; i++) {
-      headers[i] = (IArtifact) vertices[i];
-      artifactColumnMap.put(headers[i], i);
-      for (int j = 0; j < headers.length; j++) {
-        DependencyEdge dependencyEdge = (DependencyEdge) _dsm.getCell(i, j).getEdge();
-        _dependencies[j][i] = dependencyEdge != null ? dependencyEdge.getDependency() : null;
-      }
-    }
-
-    // if (_graph.getIgnoredDependencies() != null) {
-    // for (IDependency ignoredDependency : _graph.getIgnoredDependencies()) {
-    // int row = artifactColumnMap.get(ignoredDependency.getFrom());
-    // int col = artifactColumnMap.get(ignoredDependency.getTo());
-    // _dependencies[row][col] = ignoredDependency;
-    // // System.out.println("IgnoredDependency[" + row + "," + col + "]: " + ignoredDependency.getWeight());
-    // }
-    // }
-
-    DsmViewModel tableModel = new DsmViewModel(headers, _dependencies);
-
-    _dsmViewWidget.setModel(tableModel);
-  }
-
-  /************ END - NEW DsmView ***************************/
 }

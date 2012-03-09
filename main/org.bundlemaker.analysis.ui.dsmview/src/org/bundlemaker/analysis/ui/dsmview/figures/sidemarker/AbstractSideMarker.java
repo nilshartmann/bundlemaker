@@ -1,7 +1,6 @@
-package org.bundlemaker.analysis.ui.dsmview.figures;
+package org.bundlemaker.analysis.ui.dsmview.figures.sidemarker;
 
-import org.bundlemaker.analysis.ui.dsmview.AbstractDsmViewModel;
-import org.bundlemaker.analysis.ui.dsmview.DsmViewModel;
+import org.bundlemaker.analysis.ui.dsmview.IDsmViewModel;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
@@ -17,13 +16,13 @@ import org.eclipse.swt.graphics.FontMetrics;
 public abstract class AbstractSideMarker extends Figure implements ISideMarker {
 
   /** the model */
-  private AbstractDsmViewModel _model;
+  private IDsmViewModel _model;
 
   /** the marked item */
-  private int                  _markedItem = -1;
+  private int           _markedItem = -1;
 
   /** - */
-  private FontMetrics          _fontMetrics;
+  private FontMetrics   _fontMetrics;
 
   /**
    * <p>
@@ -33,7 +32,7 @@ public abstract class AbstractSideMarker extends Figure implements ISideMarker {
    * @param model
    *          the model
    */
-  public AbstractSideMarker(AbstractDsmViewModel model) {
+  public AbstractSideMarker(IDsmViewModel model) {
 
     //
     Assert.isNotNull(model);
@@ -60,7 +59,7 @@ public abstract class AbstractSideMarker extends Figure implements ISideMarker {
    * 
    * @return
    */
-  protected AbstractDsmViewModel getModel() {
+  protected IDsmViewModel getModel() {
     return _model;
   }
 
@@ -125,7 +124,7 @@ public abstract class AbstractSideMarker extends Figure implements ISideMarker {
     return _fontMetrics.getHeight();
   }
 
-  public void setModel(DsmViewModel model) {
+  public void setModel(IDsmViewModel model) {
     _model = model;
   }
 }

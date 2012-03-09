@@ -8,7 +8,7 @@ import java.util.Observable;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractDsmViewModel extends Observable {
+public abstract class AbstractDsmViewModel extends Observable implements IDsmViewModel {
 
   private String[]              _labels;
 
@@ -192,13 +192,4 @@ public abstract class AbstractDsmViewModel extends Observable {
    * @return
    */
   public abstract String getToolTip(int x, int y);
-
-  // public static void main(String[] args) {
-  // DsmViewModel model = new DsmViewModel();
-  // System.out.printf("a.b.c -> '%s%n", model.getShortendLabel("a.b.c"));
-  // System.out.printf(" -> '%s%n", model.getShortendLabel("abc.bdef.ghi"));
-  // System.out.printf(" -> '%s%n", model.getShortendLabel("GR/H2/F/abc.def"));
-  // System.out.printf(" -> '%s%n", model.getShortendLabel("X1/G2"));
-  // System.out.printf(" -> '%s%n", model.getShortendLabel("GGG/HHH/aaa"));
-  // }
 }

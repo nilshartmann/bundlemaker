@@ -1,6 +1,6 @@
-package org.bundlemaker.analysis.ui.dsmview.figures;
+package org.bundlemaker.analysis.ui.dsmview.figures.sidemarker;
 
-import org.bundlemaker.analysis.ui.dsmview.AbstractDsmViewModel;
+import org.bundlemaker.analysis.ui.dsmview.IDsmViewModel;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -21,7 +21,7 @@ public class VerticalSideMarker extends AbstractSideMarker implements ISideMarke
    * 
    * @param model
    */
-  public VerticalSideMarker(AbstractDsmViewModel model) {
+  public VerticalSideMarker(IDsmViewModel model) {
     super(model);
   }
 
@@ -66,16 +66,27 @@ public class VerticalSideMarker extends AbstractSideMarker implements ISideMarke
     // draw the rows/columns
     for (int i = 0; i < getModel().getItemCount(); i++) {
 
-      if (i == getMarkedItem() || i % 2 == 0) {
+      //
+      boolean isInCycle = getModel().isInCycle(i);
+
+      // set new background color
+      if (isInCycle || i == getMarkedItem() || i % 2 == 0) {
 
         // set background color
         oldColor = graphics.getBackgroundColor();
 
-        // set new background color
         if (i == getMarkedItem()) {
-          graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerMarkedColor());
+          if (isInCycle) {
+            graphics.setBackgroundColor(getModel().getConfiguration().getCycleSideMarkerMarkedColor());
+          } else {
+            graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerMarkedColor());
+          }
         } else {
-          graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerEvenColor());
+          if (isInCycle) {
+            graphics.setBackgroundColor(getModel().getConfiguration().getCycleSideMarkerColor());
+          } else {
+            graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerEvenColor());
+          }
         }
 
         // draw cell
@@ -92,9 +103,13 @@ public class VerticalSideMarker extends AbstractSideMarker implements ISideMarke
           10, (getModel().getConfiguration().getVerticalBoxSize() * i) + offset));
 
       // draw
-      graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerSeparatorColor());
+      if (isInCycle && getModel().isInCycle(i - 1)) {
+        graphics.setForegroundColor(getModel().getConfiguration().getCycleSideMarkerSeparatorColor());
+      } else {
+        // draw the separator lines
+        graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerSeparatorColor());
+      }
       graphics.drawLine(0, getVerticalSliceSize(i), getSize().width + 1, getVerticalSliceSize(i));
-
     }
 
     graphics.drawLine(0, getSize().height, getSize().width, getSize().height);

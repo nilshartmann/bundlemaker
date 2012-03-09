@@ -1,4 +1,4 @@
-package org.bundlemaker.analysis.ui.dsmview.figures;
+package org.bundlemaker.analysis.ui.dsmview.figures.sidemarker;
 
 /**
  * <p>

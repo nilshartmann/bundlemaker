@@ -23,23 +23,9 @@ public class MatrixEvent {
    * @param y
    */
   public MatrixEvent(int x, int y) {
-    super();
     _x = x;
     _y = y;
   }
-
-  // /**
-  // * <p>
-  // * Creates a new instance of type {@link MatrixEvent}.
-  // * </p>
-  // *
-  // * @param x
-  // * @param y
-  // */
-  // public MatrixEvent(int x, int y) {
-  // _x = x;
-  // _y = y;
-  // }
 
   /**
    * <p>
@@ -65,7 +51,30 @@ public class MatrixEvent {
    * {@inheritDoc}
    */
   @Override
-  public String toString() {
-    return "MatrixEvent [_x=" + _x + ", _y=" + _y + "]";
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + _x;
+    result = prime * result + _y;
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    MatrixEvent other = (MatrixEvent) obj;
+    if (_x != other._x)
+      return false;
+    if (_y != other._y)
+      return false;
+    return true;
   }
 }

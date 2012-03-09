@@ -1,4 +1,4 @@
-package org.bundlemaker.analysis.ui.dsmview.figures;
+package org.bundlemaker.analysis.ui.dsmview.figures.zoom;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.IFigure;
@@ -6,6 +6,7 @@ import org.eclipse.draw2d.ScrollPane;
 
 /**
  * <p>
+ * Implements a zoomable {@link ScrollPane}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)

@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Shell;
  * Note that you can add as many controls to the same direction as you like, but the last one added for the direction
  * will be the one displayed.
  */
-class BorderLayout extends Layout {
+public class BorderLayout extends Layout {
 
   private Control north;
 

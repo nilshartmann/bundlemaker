@@ -1,6 +1,6 @@
-package org.bundlemaker.analysis.ui.dsmview.figures;
+package org.bundlemaker.analysis.ui.dsmview.figures.sidemarker;
 
-import org.bundlemaker.analysis.ui.dsmview.AbstractDsmViewModel;
+import org.bundlemaker.analysis.ui.dsmview.IDsmViewModel;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -20,7 +20,7 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
    * 
    * @param model
    */
-  public HorizontalSideMarker(AbstractDsmViewModel model) {
+  public HorizontalSideMarker(IDsmViewModel model) {
     super(model);
   }
 
@@ -46,14 +46,25 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
     // draw the makers
     for (int i = 0; i < getModel().getItemCount(); i++) {
 
+      //
+      boolean isInCycle = getModel().isInCycle(i);
+
       // draw the "even" marker
-      if (getMarkedItem() == i || i % 2 == 0) {
+      if (isInCycle || getMarkedItem() == i || i % 2 == 0) {
 
         // set the background
-        if (getMarkedItem() == i) {
-          graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerMarkedColor());
+        if (i == getMarkedItem()) {
+          if (isInCycle) {
+            graphics.setBackgroundColor(getModel().getConfiguration().getCycleSideMarkerMarkedColor());
+          } else {
+            graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerMarkedColor());
+          }
         } else {
-          graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerEvenColor());
+          if (isInCycle) {
+            graphics.setBackgroundColor(getModel().getConfiguration().getCycleSideMarkerColor());
+          } else {
+            graphics.setBackgroundColor(getModel().getConfiguration().getSideMarkerEvenColor());
+          }
         }
 
         // draw the background
@@ -61,8 +72,12 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
             + 1, getSize().height + 1);
       }
 
-      // draw the separator lines
-      graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerSeparatorColor());
+      if (isInCycle && getModel().isInCycle(i - 1)) {
+        graphics.setForegroundColor(getModel().getConfiguration().getCycleSideMarkerSeparatorColor());
+      } else {
+        // draw the separator lines
+        graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerSeparatorColor());
+      }
       graphics.drawLine(getHorizontalSliceSize(i), 0, getHorizontalSliceSize(i), getSize().height);
 
     }
@@ -81,9 +96,10 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
 
       graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
 
-      graphics.drawString(useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i], new Point(
-          10, (((getModel().getItemCount() - (i)) * getModel().getConfiguration().getHorizontalBoxSize()) - 22)
-              - offset));
+      graphics
+          .drawString(useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i],
+              new Point(10, (((getModel().getItemCount() - (i + 1)) * getModel().getConfiguration()
+                  .getHorizontalBoxSize())) + offset));
     }
 
     // restore the state

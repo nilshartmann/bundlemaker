@@ -1,5 +1,7 @@
 package org.bundlemaker.analysis.ui.dsmview;
 
+import org.eclipse.draw2d.Cursors;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseMotionListener;
 
@@ -29,7 +31,7 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub {
   private static final int DIAGONAL     = 3;
 
   /** - */
-  private static final int RANGE        = 10;
+  private static final int RANGE        = 5;
 
   /** - */
   private int              _currentDrag = -1;
@@ -53,55 +55,46 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub {
    */
   private void handle(MouseEvent me, boolean isDragged) {
 
-    if (!isDragged) {
-      _currentDrag = -1;
-    }
+    // if (!isDragged) {
+    // _currentDrag = -1;
+    // }
 
     //
-    // if (me.getSource() instanceof Figure) {
-
-    // switch (isInRange(me)) {
-    // case HORIZONTAL:
-    // ((Figure) me.getSource()).setCursor(Cursors.SIZENS);
-    // break;
-    // case VERTICAL:
-    // ((Figure) me.getSource()).setCursor(Cursors.SIZEWE);
-    // break;
-    // case DIAGONAL:
-    // ((Figure) me.getSource()).setCursor(Cursors.SIZENWSE);
-    // break;
-    // default:
-    // ((Figure) me.getSource()).setCursor(Cursors.ARROW);
-    // break;
-    // }
-    // }
+    if (me.getSource() instanceof Figure && (me.getState() & MouseEvent.BUTTON1) == 0) {
+      _currentDrag = isInRange(me);
+      switch (_currentDrag) {
+      case HORIZONTAL:
+        ((Figure) me.getSource()).setCursor(Cursors.SIZENS);
+        break;
+      case VERTICAL:
+        ((Figure) me.getSource()).setCursor(Cursors.SIZEWE);
+        break;
+      case DIAGONAL:
+        ((Figure) me.getSource()).setCursor(Cursors.SIZENWSE);
+        break;
+      default:
+        ((Figure) me.getSource()).setCursor(Cursors.ARROW);
+        break;
+      }
+    }
 
     //
     if ((me.getState() & MouseEvent.BUTTON1) != 0 && isDragged) {
 
       //
-      if (_currentDrag == -1) {
-        _currentDrag = isInRange(me);
-      }
+      // if (_currentDrag == -1) {
+      // _currentDrag = isInRange(me);
+      // }
 
       if ((me.getState() & MouseEvent.SHIFT) != 0) {
 
         //
         if (me.getSource().equals(_dsmViewWidget._matrixFigure)) {
-          System.out.println("location: " + me.getLocation().x);
           float newZoom = me.getLocation().x / (float) _dsmViewWidget._verticalFigureWidth;
-          System.out.println("new zoom: " + newZoom);
-          System.out.println("zoomed location: " + newZoom);
-          System.out.println("width: " + _dsmViewWidget._verticalFigureWidth);
         }
         //
         else if (me.getSource().equals(_dsmViewWidget._mainFigure)) {
-          System.out.println("location: " + me.getLocation().x);
-          System.out.println("zoom: " + _dsmViewWidget._zoom);
           float newZoom = me.getLocation().x / (float) _dsmViewWidget._verticalFigureWidth;
-          System.out.println("new zoom: " + newZoom);
-          System.out.println("zoomed location: " + me.getLocation().x / _dsmViewWidget._zoom);
-          System.out.println("width: " + _dsmViewWidget._verticalFigureWidth);
 
           _dsmViewWidget.setZoom(newZoom);
 
@@ -154,7 +147,6 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub {
           _dsmViewWidget._verticalFigureWidth = (int) (me.getLocation().x / _dsmViewWidget._zoom);
         }
       }
-      // DsmViewWidget.this._horizontalWidth = me.y;
       _dsmViewWidget._mainFigure.revalidate();
     }
   }

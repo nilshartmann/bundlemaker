@@ -32,4 +32,15 @@ public interface IDsmViewConfiguration {
 
   Color getMatrixMarkedCellColor();
 
+  Color getCycleSideMarkerColor();
+
+  Color getCycleMatrixMarkedColumnRowColor();
+
+  Color getCycleSideMarkerSeparatorColor();
+
+  Color getCycleMatrixMarkedCellColor();
+
+  Color getCycleMatrixDiagonalColor();
+
+  Color getCycleSideMarkerMarkedColor();
 }

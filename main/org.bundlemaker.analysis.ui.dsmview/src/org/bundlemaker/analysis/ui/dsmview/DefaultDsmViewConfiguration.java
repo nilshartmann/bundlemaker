@@ -21,17 +21,36 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
   // var. 4 = #FFEAB2 = rgb(255,234,178)
   // var. 5 = #FFF3D3 = rgb(255,243,211)
 
-  private final Color VAR_1_MEDIUM       = getColor("FFDE8A");
+  // ##### Color Palette by Color Scheme Designer
+  // ##### Palette URL: http://colorschemedesigner.com/#0911ThWs0g0g0
+  // ##### Color Space: RGB;
+  // var. 1 = #DF8462 = rgb(223,132,98)
+  // var. 2 = #C37D64 = rgb(195,125,100)
+  // var. 3 = #B85E3D = rgb(184,94,61)
+  // var. 4 = #E79476 = rgb(231,148,118)
+  // var. 5 = #E79E83 = rgb(231,158,131)
 
-  private final Color VAR_2_DARK_MEDIUM  = getColor("DEC585");
+  private final Color VAR_1_MEDIUM             = getColor("FFDE8A");
 
-  private final Color VAR_3_DARK         = getColor("D1AE54");
+  private final Color VAR_2_DARK_MEDIUM        = getColor("DEC585");
 
-  private final Color VAR_4_LIGHT_MEDIUM = getColor("FFEAB2");
+  private final Color VAR_3_DARK               = getColor("D1AE54");
 
-  private final Color VAR_5_LIGHT        = getColor("FFF3D3");
+  private final Color VAR_4_LIGHT_MEDIUM       = getColor("FFEAB2");
 
-  private int         _horizontalBoxSize = 20;
+  private final Color VAR_5_LIGHT              = getColor("FFF3D3");
+
+  private final Color CYCLE_VAR_1_MEDIUM       = getColor("DF8462");
+
+  private final Color CYCLE_VAR_2_DARK_MEDIUM  = getColor("C37D64");
+
+  private final Color CYCLE_VAR_3_DARK         = getColor("B85E3D");
+
+  private final Color CYCLE_VAR_4_LIGHT_MEDIUM = getColor("E79476");
+
+  private final Color CYCLE_VAR_5_LIGHT        = getColor("E79E83");
+
+  private int         _horizontalBoxSize       = 20;
 
   @Override
   public int getVerticalBoxSize() {
@@ -54,13 +73,55 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
   }
 
   @Override
+  public Color getCycleSideMarkerColor() {
+    return CYCLE_VAR_5_LIGHT;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Color getCycleSideMarkerSeparatorColor() {
+    return CYCLE_VAR_2_DARK_MEDIUM;
+  }
+
+  @Override
+  public Color getCycleMatrixDiagonalColor() {
+    return CYCLE_VAR_4_LIGHT_MEDIUM;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Color getCycleMatrixMarkedCellColor() {
+    return CYCLE_VAR_3_DARK;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Color getCycleMatrixMarkedColumnRowColor() {
+    return CYCLE_VAR_2_DARK_MEDIUM;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Color getCycleSideMarkerMarkedColor() {
+    return CYCLE_VAR_2_DARK_MEDIUM;
+  }
+
+  @Override
   public Color getSideMarkerEvenColor() {
     return VAR_5_LIGHT;
   }
 
   @Override
   public Color getSideMarkerMarkedColor() {
-    return VAR_1_MEDIUM;
+    return VAR_2_DARK_MEDIUM;
   }
 
   @Override
@@ -95,12 +156,12 @@ public class DefaultDsmViewConfiguration implements IDsmViewConfiguration {
 
   @Override
   public Color getMatrixMarkedColumnRowColor() {
-    return VAR_1_MEDIUM;
+    return VAR_2_DARK_MEDIUM;
   }
 
   @Override
   public Color getMatrixMarkedCellColor() {
-    return VAR_2_DARK_MEDIUM;
+    return VAR_3_DARK;
   }
 
   /**
