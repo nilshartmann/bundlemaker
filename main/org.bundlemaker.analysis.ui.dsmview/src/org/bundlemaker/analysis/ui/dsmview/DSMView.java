@@ -32,20 +32,22 @@ public class DSMView extends DependencyPart {
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String     ID = "org.bundlemaker.analysis.ui.dsmview.DSMView";
+  public static String               ID = "org.bundlemaker.analysis.ui.dsmview.DSMView";
 
-  private DsmViewComposite _dsmViewWidget;
+  private DsmViewComposite           _dsmViewWidget;
+
+  private IArtifactSelectionListener _artifactSelectionListener;
 
   /**
    * {@inheritDoc}
    */
   @Override
   protected void doInit(Composite composite) {
+
     //
     _dsmViewWidget = new DsmViewComposite(composite, new DsmViewModel());
 
-    //
-    Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(new IArtifactSelectionListener() {
+    _artifactSelectionListener = new IArtifactSelectionListener() {
       @Override
       public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
         if (event.getSelection().getSelectedArtifacts().size() == 1) {
@@ -55,7 +57,10 @@ public class DSMView extends DependencyPart {
           useArtifacts(artifacts);
         }
       }
-    });
+    };
+
+    //
+    Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(_artifactSelectionListener);
   }
 
   /**
@@ -63,7 +68,12 @@ public class DSMView extends DependencyPart {
    */
   @Override
   public void doDispose() {
+
     //
+    System.out.println("Dispose");
+
+    //
+    Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(_artifactSelectionListener);
   }
 
   /**

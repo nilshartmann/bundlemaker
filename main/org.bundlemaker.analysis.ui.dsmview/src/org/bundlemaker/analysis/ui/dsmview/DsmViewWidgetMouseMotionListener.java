@@ -3,12 +3,13 @@ package org.bundlemaker.analysis.ui.dsmview;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.MouseEvent;
+import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
 
-final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub {
+final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub implements MouseListener {
 
   /** - */
-  final DsmViewWidget _dsmViewWidget;
+  private final DsmViewWidget _dsmViewWidget;
 
   /**
    * <p>
@@ -35,6 +36,36 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub {
 
   /** - */
   private int              _currentDrag = -1;
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void mousePressed(MouseEvent me) {
+    // //
+    // if (me.getSource().equals(_dsmViewWidget._matrixFigure)) {
+    // ((Figure) me.getSource()).setCursor(Cursors.HAND);
+    // }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void mouseReleased(MouseEvent me) {
+    // if (me.getSource().equals(_dsmViewWidget._matrixFigure)) {
+    // ((Figure) me.getSource()).setCursor(Cursors.ARROW);
+    // }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void mouseDoubleClicked(MouseEvent me) {
+    System.out.println("Double");
+
+  }
 
   @Override
   public void mouseMoved(MouseEvent me) {

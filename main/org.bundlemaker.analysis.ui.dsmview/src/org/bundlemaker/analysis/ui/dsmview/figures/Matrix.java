@@ -4,15 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.ui.dsmview.IDsmViewModel;
+import org.bundlemaker.analysis.ui.dsmview.figures.zoom.ZoomContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
+import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -28,16 +29,10 @@ public class Matrix extends Figure {
   protected IDsmViewModel       _model;
 
   /** - */
-  int                           _x          = -1;
+  private int                   _x = -1;
 
   /** - */
-  int                           _y          = -1;
-
-  /** - */
-  int                           _selected_x = -1;
-
-  /** - */
-  int                           _selected_y = -1;
+  private int                   _y = -1;
 
   /** - */
   private List<IMatrixListener> _matrixListeners;
@@ -62,8 +57,6 @@ public class Matrix extends Figure {
 
     //
     addMouseListener(new MatrixMouseListener());
-
-    //
     addMouseMotionListener(new MatrixMouseMotionListener());
   }
 
@@ -142,8 +135,6 @@ public class Matrix extends Figure {
 
     }
 
-    Rectangle rectangle = graphics.getClip(new Rectangle());
-
     // draw marked rows and columns
     if (_x != -1 && _y != -1) {
 
@@ -186,9 +177,9 @@ public class Matrix extends Figure {
 
     // draw the text
     graphics.setForegroundColor(getModel().getConfiguration().getMatrixTextColor());
-    for (int i = 0; (i < _model.getItemCount())
-        && rectangle.getSize().width > (_model.isToggled() ? getHorizontalSliceSize(i) : getVerticalSliceSize(i)); i++) {
-      for (int j = 0; j < _model.getItemCount(); j++) {
+    int[] visibleSlices = getVisibleSlices();
+    for (int i = visibleSlices[0]; (i <= visibleSlices[1]); i++) {
+      for (int j = visibleSlices[2]; j < _model.getItemCount(); j++) {
         if (i != j) {
           String value = _model.isToggled() ? _model.getValues()[j][i] : _model.getValues()[i][j];
           if (value != null) {
@@ -227,6 +218,27 @@ public class Matrix extends Figure {
 
     // restore state
     graphics.popState();
+  }
+
+  private int[] getVisibleSlices() {
+
+    ZoomContainer zoomContainer = (ZoomContainer) this.getParent();
+    Viewport viewport = ((Viewport) this.getParent().getParent());
+
+    int horMin = (int) (viewport.getViewLocation().x / (_model.getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));
+    int horVisibleSlicesCount = (int) (viewport.getSize().width / (_model.getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));
+
+    //
+    int verMin = (int) (viewport.getViewLocation().y / (_model.getConfiguration().getVerticalBoxSize() * zoomContainer.zoom));
+    int verVisibleSlicesCount = (int) (viewport.getSize().height / (_model.getConfiguration().getVerticalBoxSize() * zoomContainer.zoom));
+
+    return new int[] {
+        horMin,
+        horMin + horVisibleSlicesCount > _model.getItemCount() - 1 ? _model.getItemCount() - 1 : horMin
+            + horVisibleSlicesCount,
+        verMin,
+        verMin + verVisibleSlicesCount > _model.getItemCount() - 1 ? _model.getItemCount() - 1 : verMin
+            + verVisibleSlicesCount };
   }
 
   /**
@@ -341,8 +353,6 @@ public class Matrix extends Figure {
       //
       _x = -1;
       _y = -1;
-      _selected_x = -1;
-      _selected_y = -1;
 
       // repaint
       repaint();
@@ -363,62 +373,26 @@ public class Matrix extends Figure {
    */
   private final class MatrixMouseListener extends MouseListener.Stub {
 
-    //
-    private Object lock        = new Object();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void mouseDoubleClicked(MouseEvent me) {
 
-    //
-    int            _clickCount = 0;
+      // notify listener
+      MatrixEvent event = new MatrixEvent(_x, _y);
+      for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
+        listener.doubleClick(event);
+      }
+    }
 
     @Override
     public synchronized void mouseReleased(MouseEvent me) {
 
-      synchronized (lock) {
-        if (_clickCount == 0) {
-
-          //
-          Point location = me.getLocation();
-          final int x = (location.x / _model.getConfiguration().getHorizontalBoxSize());
-          final int y = (location.y / _model.getConfiguration().getVerticalBoxSize());
-
-          //
-          _selected_x = x;
-          _selected_y = y;
-
-          //
-          Display.getCurrent().timerExec(250, new Runnable() {
-            @Override
-            public void run() {
-              collectResult();
-            }
-          });
-        }
-
-        _clickCount++;
-      }
-    }
-
-    private void collectResult() {
-      synchronized (lock) {
-
-        if (_clickCount == 1) {
-
-          // notify listener
-          MatrixEvent event = new MatrixEvent(_x, _y);
-          for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
-            listener.singleClick(event);
-          }
-
-        } else {
-
-          // notify listener
-          MatrixEvent event = new MatrixEvent(_x, _y);
-          for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
-            listener.doubleClick(event);
-          }
-        }
-
-        //
-        _clickCount = 0;
+      // notify listener
+      MatrixEvent event = new MatrixEvent(_x, _y);
+      for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
+        listener.singleClick(event);
       }
     }
   }

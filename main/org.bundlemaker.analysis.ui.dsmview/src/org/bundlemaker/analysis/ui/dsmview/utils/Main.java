@@ -14,7 +14,7 @@ public class Main {
     shell.setSize(800, 800);
     shell.setLayout(new BorderLayout());
 
-    final AbstractDsmViewModel model = new DemoDsmViewModel(500);
+    final AbstractDsmViewModel model = new DemoDsmViewModel(1500);
     final DsmViewComposite viewComposite = new DsmViewComposite(shell, model);
 
     // final DsmViewWidget viewWidget = new DsmViewWidget(model, shell);

@@ -27,7 +27,6 @@ import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -65,13 +64,13 @@ public class DsmViewWidget extends Canvas implements Observer {
 
   int                        _horizontalFigureHeight = 10;
 
-  public int                 _verticalFigureWidth    = -1;
+  int                        _verticalFigureWidth    = -1;
 
-  public int                 _x;
+  private int                _x;
 
-  public int                 _y;
+  private int                _y;
 
-  boolean                    _drawToolTip            = false;
+  private boolean            _drawToolTip            = false;
 
   /**
    * <p>
@@ -126,7 +125,7 @@ public class DsmViewWidget extends Canvas implements Observer {
     //
     this.addMouseWheelListener(new MouseWheelListener() {
       @Override
-      public void mouseScrolled(MouseEvent e) {
+      public void mouseScrolled(org.eclipse.swt.events.MouseEvent e) {
         if (e.count > 0) {
           DsmViewWidget.this.setZoom(getZoom() * 1.05f);
         } else if (e.count < 0) {
@@ -157,6 +156,7 @@ public class DsmViewWidget extends Canvas implements Observer {
 
     _matrixFigure = new Matrix(_model);
     _matrixFigure.addMouseMotionListener(motionListener);
+    _matrixFigure.addMouseListener(motionListener);
 
     _zoomableScrollpane = new ZoomableScrollPane(_matrixFigure, ScrollPane.ALWAYS, ScrollPane.ALWAYS);
 
@@ -397,4 +397,5 @@ public class DsmViewWidget extends Canvas implements Observer {
   public void removeMatrixLIstener(IMatrixListener listener) {
     _matrixFigure.removeMatrixLIstener(listener);
   }
+
 }

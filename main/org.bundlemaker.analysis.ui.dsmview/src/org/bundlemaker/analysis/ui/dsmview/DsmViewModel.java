@@ -218,7 +218,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
     for (int i = 0; i < orderedArtifacts.size(); i++) {
       for (int j = 0; j < orderedArtifacts.size(); j++) {
         IDependency dependency = orderedArtifacts.get(i).getDependency(orderedArtifacts.get(j));
-        _dependencies[j][i] = dependency.getWeight() != 0 ? dependency : null;
+        _dependencies[j][i] = dependency != null && dependency.getWeight() != 0 ? dependency : null;
       }
     }
   }
