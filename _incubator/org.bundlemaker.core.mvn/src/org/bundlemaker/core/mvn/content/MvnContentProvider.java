@@ -114,7 +114,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
             binaryFile = currentArtifact.getFile();
 
             try {
-              createFileBasedContent(currentArtifact.getGroupId() + ":" + currentArtifact.getArtifactId(),
+              createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
                   currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject);
             } catch (CoreException e) {
               // TODO Auto-generated catch block
