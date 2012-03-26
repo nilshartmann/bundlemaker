@@ -13,11 +13,10 @@ package org.bundlemaker.core;
 import java.util.Collection;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -74,9 +73,8 @@ public interface IBundleMakerProject {
 
   /**
    * <p>
-   * Allows to modify the {@link IProjectDescription} using the template class
-   * {@link IProjectDescriptionModifier}. This method automatically calls
-   * {@link IModifiableProjectDescription#save()} after executing
+   * Allows to modify the {@link IProjectDescription} using the template class {@link IProjectDescriptionModifier}. This
+   * method automatically calls {@link IModifiableProjectDescription#save()} after executing
    * {@link IProjectDescriptionModifier#modifyProjectDescription(IModifiableProjectDescription)}.
    * </p>
    * 
@@ -259,18 +257,18 @@ public interface IBundleMakerProject {
    */
   void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
 
-  /**
-   * Returns the {@link IDependencyModel} view of this project.
-   * <p>
-   * </p>
-   * 
-   * @precondition BundleMakerProjectState.OPENED
-   * @deprecated use
-   *             {@link IModularizedSystem#getArtifactModel(org.bundlemaker.core.analysis.IArtifactModelConfiguration)}
-   *             instead
-   */
-  @Deprecated
-  public IDependencyModel getDependencyModel();
+  // /**
+  // * Returns the {@link IDependencyModel} view of this project.
+  // * <p>
+  // * </p>
+  // *
+  // * @precondition BundleMakerProjectState.OPENED
+  // * @deprecated use
+  // * {@link IModularizedSystem#getArtifactModel(org.bundlemaker.core.analysis.IArtifactModelConfiguration)}
+  // * instead
+  // */
+  // @Deprecated
+  // public IDependencyModel getDependencyModel();
 
   /**
    * <p>

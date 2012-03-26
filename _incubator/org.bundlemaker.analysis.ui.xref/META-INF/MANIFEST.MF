@@ -5,6 +5,6 @@ Bundle-SymbolicName: org.bundlemaker.analysis.ui.xref; singleton:=true
 Bundle-Version: 1.0.0
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.bundlemaker.analysis;bundle-version="1.0.0",
- org.bundlemaker.analysis.ui;bundle-version="1.0.0"
+ org.bundlemaker.analysis.ui;bundle-version="1.0.0",
+ org.bundlemaker.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

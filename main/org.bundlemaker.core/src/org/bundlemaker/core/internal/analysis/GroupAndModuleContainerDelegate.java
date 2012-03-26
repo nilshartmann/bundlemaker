@@ -86,8 +86,9 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     if (moduleArtifact == null) {
 
       //
-      moduleArtifact = (IModuleArtifact) getAdvancedArtifact().getDependencyModel().createArtifactContainer(
-          moduleIdentifier.toString(), moduleIdentifier.toString(), ArtifactType.Module);
+      moduleArtifact = (IModuleArtifact) ((AdapterModularizedSystem2IArtifact) getAdvancedArtifact().getRoot())
+          .getDependencyModel().createArtifactContainer(moduleIdentifier.toString(), moduleIdentifier.toString(),
+              ArtifactType.Module);
 
       // TEST
       rootContainer.getRoot().getChild("groupTest1");
@@ -133,9 +134,9 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       if (newArtifact == null) {
 
         // create new
-        newArtifact = (AbstractBundleMakerArtifactContainer) getAdvancedArtifact().getDependencyModel()
-            .createArtifactContainer(iPath.segment(i),
-                iPath.removeLastSegments(iPath.segmentCount() - (i + 1)).toString(), ArtifactType.Group);
+        newArtifact = (AbstractBundleMakerArtifactContainer) ((AdapterModularizedSystem2IArtifact) getAdvancedArtifact()
+            .getRoot()).getDependencyModel().createArtifactContainer(iPath.segment(i),
+            iPath.removeLastSegments(iPath.segmentCount() - (i + 1)).toString(), ArtifactType.Group);
 
         // add to parent
         if (newArtifact.getParent() != currentArtifact) {

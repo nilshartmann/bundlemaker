@@ -2,7 +2,6 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -17,7 +16,7 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DependencyModel implements IDependencyModel {
+public class DependencyModel {
 
   /** - */
   private IModifiableModularizedSystem _modifiableModularizedSystem;
@@ -26,7 +25,7 @@ public class DependencyModel implements IDependencyModel {
   private IArtifact                    _artifactModel;
 
   /** - */
-  private ArtifactCache         _artifactCache;
+  private ArtifactCache                _artifactCache;
 
   /**
    * <p>
@@ -37,8 +36,8 @@ public class DependencyModel implements IDependencyModel {
    * @param modifiableModularizedSystem
    * @throws CoreException
    */
-  public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
-      ArtifactCache defaultArtifactCache) throws CoreException {
+  public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem, ArtifactCache defaultArtifactCache)
+      throws CoreException {
 
     Assert.isNotNull(modifiableModularizedSystem);
     Assert.isNotNull(defaultArtifactCache);
@@ -54,7 +53,6 @@ public class DependencyModel implements IDependencyModel {
   /**
    * {@inheritDoc}
    */
-  @Override
   public String getName() {
     return _modifiableModularizedSystem.getName();
   }
@@ -62,7 +60,6 @@ public class DependencyModel implements IDependencyModel {
   /**
    * {@inheritDoc}
    */
-  @Override
   public IArtifact getRoot() {
     return _artifactModel;
   }
@@ -70,21 +67,6 @@ public class DependencyModel implements IDependencyModel {
   /**
    * {@inheritDoc}
    */
-  @Override
-  public IDependencyModel createDependencyModel(String name) {
-    throw new UnsupportedOperationException(
-        "Unsupported method 'public IDependencyModel createDependencyModel(String name)'");
-  }
-
-  @Override
-  public IArtifact createArtifact(String name, ArtifactType type) {
-    throw new RuntimeException("DO WE NEED THIS METHOD??");
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   // TODO: name/qualifiedname
   public IArtifact createArtifactContainer(String name, String qualifiedName, ArtifactType type) {
 

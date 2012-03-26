@@ -9,7 +9,7 @@ import org.bundlemaker.analysis.testkit.framework.ITimeStampAwareTestKitAdapter;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
@@ -40,7 +40,7 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
   private IModifiableModularizedSystem _modularizedSystem;
 
   /** - */
-  private IDependencyModel             _dependencyModel;
+  private IRootArtifact                _rootArtifact;
 
   /** - */
   private String                       _timestamp;
@@ -86,8 +86,7 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
     _modularizedSystem.applyTransformations(null);
 
     //
-    _dependencyModel = _modularizedSystem.getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION).getDependencyModel();
+    _rootArtifact = _modularizedSystem.getArtifactModel(ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
     //
     ModularizedSystemChecker.check(_modularizedSystem, _timestamp);
@@ -111,16 +110,8 @@ public class TestKitAdapter implements ITestKitAdapter, ITimeStampAwareTestKitAd
    * {@inheritDoc}
    */
   @Override
-  public IDependencyModel getDependencyModel() {
-    return _dependencyModel;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public IArtifact getRoot() {
-    return _dependencyModel.getRoot();
+    return _rootArtifact.getRoot();
   }
 
   /**

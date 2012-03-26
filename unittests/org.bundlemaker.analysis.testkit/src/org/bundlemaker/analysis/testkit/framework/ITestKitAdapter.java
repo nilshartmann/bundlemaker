@@ -29,13 +29,5 @@ public interface ITestKitAdapter {
    * 
    * @return
    */
-  IDependencyModel getDependencyModel();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   IArtifact getRoot();
 }

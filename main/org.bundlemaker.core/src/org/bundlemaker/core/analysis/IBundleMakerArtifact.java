@@ -7,7 +7,6 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.IPath;
 
@@ -208,14 +207,14 @@ public interface IBundleMakerArtifact extends IArtifact, Comparable<IBundleMaker
    */
   boolean containsResources();
 
-  /**
-   * <p>
-   * Returns the associated {@link IDependencyModel}.
-   * </p>
-   * 
-   * @return the associated {@link IDependencyModel}.
-   */
-  IDependencyModel getDependencyModel();
+  // /**
+  // * <p>
+  // * Returns the associated {@link IDependencyModel}.
+  // * </p>
+  // *
+  // * @return the associated {@link IDependencyModel}.
+  // */
+  // IDependencyModel getDependencyModel();
 
   /**
    * <p>

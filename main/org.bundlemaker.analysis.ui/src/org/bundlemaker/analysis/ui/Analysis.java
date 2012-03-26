@@ -4,13 +4,9 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
-import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
-import org.bundlemaker.analysis.ui.dependencies.internal.DependencyGraphService;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
 import org.bundlemaker.analysis.ui.editor.GenericEditor;
 import org.bundlemaker.analysis.ui.internal.Activator;
-import org.bundlemaker.analysis.ui.internal.AnalysisContext;
 import org.bundlemaker.analysis.ui.internal.selection.ArtifactSelectionService;
 import org.bundlemaker.analysis.ui.internal.selection.DependencySelectionService;
 import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
@@ -45,19 +41,12 @@ public class Analysis {
 
   private static Analysis                   _instance;
 
-  private final IAnalysisContext            _analysisContext;
-
   private final IArtifactSelectionService   _artifactSelectionService;
 
   /**
    * The {@link IDependencySelectionService} that manages selections of {@link IDependency} objects in the IDE
    */
   private final IDependencySelectionService _dependencySelectionService;
-
-  /**
-   * The {@link IDependencyGraphService} instance for getting {@link IDependencyGraph}-instances
-   */
-  private final IDependencyGraphService     _dependencyGraphService;
 
   private IEditorInput                      nullInputEditor                                 = new NullEditorInput();
 
@@ -81,25 +70,11 @@ public class Analysis {
    * Use {@link #instance()} to retrieve the singleton instance of this class
    */
   private Analysis() {
-    _analysisContext = new AnalysisContext();
-
     // Create the ArtifactSelectionService
     _artifactSelectionService = new ArtifactSelectionService();
 
     // Create the DependencySelectionService
     _dependencySelectionService = new DependencySelectionService();
-
-    // Create the DependencyGraphService
-    _dependencyGraphService = new DependencyGraphService();
-  }
-
-  /**
-   * Returns the {@link IAnalysisContext} instance
-   * 
-   * @return
-   */
-  public IAnalysisContext getContext() {
-    return _analysisContext;
   }
 
   /**
@@ -121,17 +96,6 @@ public class Analysis {
   }
 
   /**
-   * <p>
-   * Returns the single {@link IDependencyGraphService} instance
-   * </p>
-   * 
-   * @return The {@link IDependencyGraphService}. Never null.
-   */
-  public IDependencyGraphService getDependencyGraphService() {
-    return this._dependencyGraphService;
-  }
-
-  /**
    * Returns the Icon-Image that should be used for the given artifact.
    * 
    * <p>
@@ -148,21 +112,6 @@ public class Analysis {
     return Activator.getDefault().getIcon(artifact.getType().getKuerzel());
   }
 
-  // /**
-  // * Returns the {@link DependencyTreeTableView} or null if it does not exists (yet)
-  // *
-  // * @return
-  // */
-  // public DependencyTreeTableView getDependencyTreeTableView() {
-  // IWorkbenchPage workbenchPage = getActiveWorkbenchPage();
-  //
-  // if (workbenchPage != null) {
-  // return (DependencyTreeTableView) workbenchPage.findView(DependencyTreeTableView.ID);
-  // }
-  //
-  // return null;
-  // }
-  //
   /**
    * Opens the {@link DependencyTreeTableView}
    */

@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   
    <extension
          point="org.bundlemaker.analysis.ui.dependencyView">
       <dependencyView
-            class="org.bundlemaker.analysis.ui.dsmview.DSMView"
+            class="org.bundlemaker.core.ui.dsmview.DSMView"
             name="DSM">
       </dependencyView>
    </extension>
      <!-- the pop up menus --> 
    <extension point="org.eclipse.ui.commands"> 
-      <command id="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand" 
+      <command id="org.bundlemaker.core.ui.dsmview.commands.OpenDsmViewCommand" 
               name="DSM view with selected artifacts" /> 
-      <command id="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand" 
+         <command id="org.bundlemaker.core.ui.dsmview.commands.OpenDsmViewForChildrenCommand" 
               name="DSM view for children of selected artifacts" />
    </extension>
    
         <extension 
          point="org.eclipse.ui.handlers"> 
-      <handler class="org.bundlemaker.analysis.ui.dsmview.handlers.OpenDsmViewHandler" 
-            commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand"> 
+      <handler class="org.bundlemaker.core.ui.dsmview.handlers.OpenDsmViewHandler" 
+            commandId="org.bundlemaker.core.ui.dsmview.commands.OpenDsmViewCommand"> 
          <activeWhen> 
          <reference 
                definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> 
@@ -31,8 +32,8 @@
                </reference> 
          </enabledWhen> 
       </handler> 
-      <handler class="org.bundlemaker.analysis.ui.dsmview.handlers.OpenDsmViewForChildrenHandler" 
-            commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand"> 
+      <handler class="org.bundlemaker.core.ui.dsmview.handlers.OpenDsmViewForChildrenHandler" 
+            commandId="org.bundlemaker.core.ui.dsmview.commands.OpenDsmViewForChildrenCommand"> 
          <activeWhen> 
          <reference 
                definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> 
@@ -52,19 +53,19 @@
            <menuContribution 
     	locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions"> 
 		<separator
-			name="org.bundlemaker.analysis.ui.dsmview.separator"
+			name="org.bundlemaker.core.ui.dsmview.separator"
 		    visible="true">
 		</separator>
 	 	<command
-	    	commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewForChildrenCommand"
+	    	commandId="org.bundlemaker.core.ui.dsmview.commands.OpenDsmViewForChildrenCommand"
 	        style="push">
 	        <visibleWhen checkEnabled="true" />
 	     </command> 
 		<command
-			commandId="org.bundlemaker.analysis.ui.dsmview.commands.OpenDsmViewCommand"
+			commandId="org.bundlemaker.core.ui.dsmview.commands.OpenDsmViewCommand"
 	        style="push">
 	        <visibleWhen checkEnabled="true" />
 		</command> 
            </menuContribution> 
-   </extension> 
+   </extension>
 </plugin>

@@ -21,7 +21,6 @@ import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
@@ -365,10 +364,10 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return AdapterUtils.getModularizedSystem(this);
   }
 
-  @Override
-  public IDependencyModel getDependencyModel() {
-    return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
-  }
+  // @Override
+  // public IDependencyModel getDependencyModel() {
+  // return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
+  // }
 
   /**
 	 * 

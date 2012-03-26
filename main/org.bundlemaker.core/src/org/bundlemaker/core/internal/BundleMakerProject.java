@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
@@ -35,8 +34,8 @@ import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -73,9 +72,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
   /** the project description working copies */
   private Map<String, ModularizedSystem>           _modifiableModualizedSystemWorkingCopies;
-
-  /** - */
-  private IDependencyModel                         _dependencyModel;
 
   private List<IProblem>                           _problems;
 
@@ -409,10 +405,6 @@ public class BundleMakerProject implements IBundleMakerProject {
     modifier.modifyProjectDescription(projectDescription);
 
     projectDescription.save();
-  }
-
-  public IDependencyModel getDependencyModel() {
-    return _dependencyModel;
   }
 
   /**

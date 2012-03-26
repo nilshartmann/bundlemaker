@@ -2,11 +2,9 @@ package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IGroupArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.ui.commands.validators.NonEmptyStringValidator;
 import org.bundlemaker.core.ui.view.navigator.CommonNavigatorUtils;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -26,7 +24,7 @@ public class CreateNewModuleHandler extends AbstractBundleMakerHandler {
 
     IStructuredSelection structuredSelection = (IStructuredSelection) selection;
     IArtifact artifact = (IArtifact) structuredSelection.getFirstElement();
-    if (artifact instanceof IRootArtifact || artifact instanceof IGroupArtifact) {
+    if (artifact instanceof IGroupAndModuleContainer) {
 
       // JFace Input Dialog
       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter Module Name", "module",
@@ -38,10 +36,9 @@ public class CreateNewModuleHandler extends AbstractBundleMakerHandler {
 
       System.out.println(artifact);
 
-      IBundleMakerArtifact advancedArtifact = ((IBundleMakerArtifact) artifact);
-      IDependencyModel dependencyModel = advancedArtifact.getDependencyModel();
-      IArtifact newGroup = dependencyModel.createArtifactContainer(dlg.getValue(), dlg.getValue(), ArtifactType.Module);
-      advancedArtifact.addArtifact(newGroup);
+      IModuleArtifact newGroup = ((IGroupAndModuleContainer) artifact).getOrCreateModule(dlg.getValue(), "1.0.0");
+      // HAE??
+      artifact.addArtifact(newGroup);
 
       // update navigator
       // TODO

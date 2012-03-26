@@ -7,7 +7,6 @@ import java.util.List;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.ArtifactHelper;
@@ -226,13 +225,13 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
     return AdapterUtils.getModularizedSystem(this);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IDependencyModel getDependencyModel() {
-    return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
-  }
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public IDependencyModel getDependencyModel() {
+  // return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
+  // }
 
   /**
    * {@inheritDoc}

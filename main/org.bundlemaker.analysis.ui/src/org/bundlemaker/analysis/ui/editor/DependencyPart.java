@@ -4,12 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
-import org.bundlemaker.analysis.model.dependencies.DependencyGraph;
-import org.bundlemaker.analysis.model.dependencies.IDependencyGraph;
-import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.IAnalysisContext;
-import org.bundlemaker.analysis.ui.dependencies.IDependencyGraphService;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -79,30 +73,30 @@ public abstract class DependencyPart {
 
   }
 
-  protected IAnalysisContext getAnalysisContext() {
-    return Analysis.instance().getContext();
-  }
+  // protected IAnalysisContext getAnalysisContext() {
+  // return Analysis.instance().getContext();
+  // }
 
-  protected IDependencyGraph getDependencyGraphForCurrentArtifacts() {
-    IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
+  // protected IDependencyGraph getDependencyGraphForCurrentArtifacts() {
+  // IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
+  //
+  // return dependencyGraphService.getDependencyGraph(getCurrentArtifacts());
+  //
+  // }
 
-    return dependencyGraphService.getDependencyGraph(getCurrentArtifacts());
-
-  }
-
-  /**
-   * Returns the calculated {@link IDependencyGraph} for the specified artifacts
-   * <p>
-   * </p>
-   * 
-   * @param artifacts
-   * @return
-   */
-  protected IDependencyGraph getDependencyGraph(List<IArtifact> artifacts) {
-    IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
-
-    return dependencyGraphService.getDependencyGraph(artifacts);
-  }
+  // /**
+  // * Returns the calculated {@link IDependencyGraph} for the specified artifacts
+  // * <p>
+  // * </p>
+  // *
+  // * @param artifacts
+  // * @return
+  // */
+  // protected IDependencyGraph getDependencyGraph(List<IArtifact> artifacts) {
+  // IDependencyGraphService dependencyGraphService = Analysis.instance().getDependencyGraphService();
+  //
+  // return dependencyGraphService.getDependencyGraph(artifacts);
+  // }
 
   public Composite getComposite() {
     return composite;
@@ -164,13 +158,13 @@ public abstract class DependencyPart {
    */
   protected abstract void doDispose();
 
-  /**
-   * Might return null!
-   * 
-   * @return
-   */
-  protected IDependencyModel getDependencyModel() {
-    return getAnalysisContext().getDependencyModel();
-  }
+  // /**
+  // * Might return null!
+  // *
+  // * @return
+  // */
+  // protected IDependencyModel getDependencyModel() {
+  // return getAnalysisContext().getDependencyModel();
+  // }
 
 }

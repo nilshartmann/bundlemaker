@@ -86,15 +86,15 @@ public abstract class AbstractTestKitTest {
     return _timestamp;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IDependencyModel getDependencyModel() {
-    return _testKitAdapter.getDependencyModel();
-  }
+//  /**
+//   * <p>
+//   * </p>
+//   * 
+//   * @return
+//   */
+//  public IDependencyModel getDependencyModel() {
+//    return _testKitAdapter.getDependencyModel();
+//  }
 
   /**
    * <p>
