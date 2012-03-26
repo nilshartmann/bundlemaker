@@ -27,7 +27,7 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
     String jeditOriginalContent = ArtifactUtils.artifactToString(getJeditModuleArtifact());
 
     //
-    IBundleMakerArtifact testModule = createNewModule(getRootArtifact(), "testModule");
+    IBundleMakerArtifact testModule = getRootArtifact().getOrCreateModule("testModule", "1.0.0");
     Assert.assertNotNull(testModule);
 
     //
@@ -56,7 +56,7 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
     String jeditOriginalContent = ArtifactUtils.artifactToString(getJeditModuleArtifact());
 
     //
-    IBundleMakerArtifact testModule = createNewModule(getRootArtifact(), "testModule");
+    IBundleMakerArtifact testModule = getRootArtifact().getOrCreateModule("testModule", "1.0.0");
     Assert.assertNotNull(testModule);
 
     String packagePath = "org|gjt|sp|util";

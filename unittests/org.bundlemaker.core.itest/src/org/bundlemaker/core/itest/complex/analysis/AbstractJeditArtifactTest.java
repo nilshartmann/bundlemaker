@@ -57,11 +57,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
         inputstream, getTestProjectName() + getCurrentTimeStamp());
 
     //
-    IDependencyModel dependencyModel = ModelTransformer.getDependencyModel(getModularizedSystem(),
-        getArtifactModelConfiguration());
-    Assert.assertNotNull(dependencyModel);
-
-    _rootArtifact = (IRootArtifact) dependencyModel.getRoot();
+    _rootArtifact = getModularizedSystem().getArtifactModel(getArtifactModelConfiguration());
     Assert.assertNotNull(_rootArtifact);
 
     // assert the input
@@ -205,35 +201,5 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
 
   public void assertArtifactHasParent(IArtifact child, IArtifact parent) {
     assertEquals(parent, child.getParent());
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @return
-   */
-  protected IBundleMakerArtifact createNewGroup(IArtifact artifact, String name) {
-    //
-    IBundleMakerArtifact testGroup = (IBundleMakerArtifact) getRootArtifact().getDependencyModel()
-        .createArtifactContainer(name, name, ArtifactType.Group);
-    artifact.addArtifact(testGroup);
-    return testGroup;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @return
-   */
-  protected IBundleMakerArtifact createNewModule(IArtifact artifact, String name) {
-    //
-    IBundleMakerArtifact testGroup = (IBundleMakerArtifact) getRootArtifact().getDependencyModel()
-        .createArtifactContainer(name, name, ArtifactType.Module);
-    artifact.addArtifact(testGroup);
-    return testGroup;
   }
 }

@@ -32,7 +32,7 @@ public class DnDSourceBinaryArtifactTreeTest extends AbstractJeditArtifactTest {
   public void testAddModuleWithoutRemove() {
 
     // create test group and add the 'jedit' artifact
-    IBundleMakerArtifact moduleGroup = createNewModule(getRootArtifact(), "module_1.2.3");
+    IBundleMakerArtifact moduleGroup = getRootArtifact().getOrCreateModule("testModule", "1.2.3");
 
     ResourceCounter counter = new ResourceCounter();
     moduleGroup.accept(counter);

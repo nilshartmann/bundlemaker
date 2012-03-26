@@ -14,6 +14,7 @@ import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ModuleIdentifier;
 import org.bundlemaker.core.transformations.dsl.transformationDsl.ResourceList;
@@ -63,7 +64,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
     ResourceSet resourceSet = (ResourceSet) model;
     addPackageProposals(resourceSet, context, acceptor);
   }
-  
+
   /*
    * (non-Javadoc)
    * 
@@ -119,15 +120,20 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
       }
     }
   }
-  
-  /* (non-Javadoc)
-   * @see org.bundlemaker.core.transformations.dsl.ui.contentassist.AbstractTransformationDslProposalProvider#completeResourceList_Resources(org.eclipse.emf.ecore.EObject, org.eclipse.xtext.Assignment, org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext, org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor)
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.transformations.dsl.ui.contentassist.AbstractTransformationDslProposalProvider#
+   * completeResourceList_Resources(org.eclipse.emf.ecore.EObject, org.eclipse.xtext.Assignment,
+   * org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext,
+   * org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor)
    */
   @Override
   public void completeResourceList_Resources(EObject model, Assignment assignment, ContentAssistContext context,
       ICompletionProposalAcceptor acceptor) {
     super.completeResourceList_Resources(model, assignment, context, acceptor);
-    
+
     ResourceList resourceList = (ResourceList) model;
     ResourceSet resourceSet = (ResourceSet) resourceList.eContainer();
 
@@ -160,7 +166,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
     // TODO hide already added resource patterns
     addPackageProposals(moduleArtifact, ignoredResources, context, acceptor);
   }
-  
+
   private void addPackageProposals(IArtifact root, HashSet<String> ignoredResources, ContentAssistContext context,
       ICompletionProposalAcceptor acceptor) {
     if (root == null) {
@@ -168,10 +174,10 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
     }
     boolean packageArtifact = root.getType() == ArtifactType.Package;
     if (packageArtifact) {
-      String packageResourceName = root.getQualifiedName().replace('.', '/')+ "/**";
+      String packageResourceName = root.getQualifiedName().replace('.', '/') + "/**";
 
       if (!ignoredResources.contains(packageResourceName)) {
-        String packageName = getValueConverter().toString(packageResourceName , "STRING");
+        String packageName = getValueConverter().toString(packageResourceName, "STRING");
         // Create completion proposal
         ICompletionProposal completionProposal = createCompletionProposal(packageName, context);
 
@@ -193,13 +199,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
       return null;
     }
 
-    IDependencyModel dependencyModel = bundleMakerProject.getDependencyModel();
-    if (dependencyModel == null) {
-      return null; // project not open
-    }
-
-    return dependencyModel.getRoot();
-
+    return null;
   }
 
   private List<? extends IProjectContentEntry> getFileBasedContent(EObject model) {
@@ -214,8 +214,7 @@ public class TransformationDslProposalProvider extends AbstractTransformationDsl
       return new LinkedList<IProjectContentEntry>();
     }
 
-    List<? extends IProjectContentEntry> fileBasedContent = bundleMakerProject.getProjectDescription()
-        .getContent();
+    List<? extends IProjectContentEntry> fileBasedContent = bundleMakerProject.getProjectDescription().getContent();
     return fileBasedContent;
 
   }

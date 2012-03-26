@@ -296,9 +296,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(group1_Artifact);
 
     //
-    IDependencyModel dependencyModel = group1_Artifact.getDependencyModel();
-    IArtifact newGroup = dependencyModel.createArtifactContainer("group2", "group2", ArtifactType.Group);
-    group1_Artifact.addArtifact(newGroup);
+    group1_Artifact.getOrCreateGroup("group2");
   }
 
   /**
