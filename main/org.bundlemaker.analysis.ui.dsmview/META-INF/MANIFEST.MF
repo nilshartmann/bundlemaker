@@ -9,8 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.draw2d;bundle-version="3.6.0",
- org.bundlemaker.core;bundle-version="1.0.0"
+ org.bundlemaker.core;bundle-version="1.0.0",
+ org.bundlemaker.core.ui.print;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
-Import-Package: org.sonar.graph

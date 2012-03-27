@@ -223,6 +223,10 @@ public class Matrix extends Figure {
   private int[] getVisibleSlices() {
 
     ZoomContainer zoomContainer = (ZoomContainer) this.getParent();
+    if (zoomContainer == null) {
+      return new int[] { 0, _model.getItemCount() - 1, 0, _model.getItemCount() - 1 };
+    }
+
     Viewport viewport = ((Viewport) this.getParent().getParent());
 
     int horMin = (int) (viewport.getViewLocation().x / (_model.getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));
