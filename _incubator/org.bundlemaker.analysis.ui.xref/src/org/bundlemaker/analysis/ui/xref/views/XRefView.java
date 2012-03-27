@@ -43,7 +43,9 @@ import org.eclipse.swt.widgets.Composite;
  * left or right selection is displayed in detail in the tree dependency view.
  * 
  * @see org.bundlemaker.analysis.ui.Analysis
+ * 
  * @author Frank Schlueter
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class XRefView extends DependencyPart {
 
@@ -167,7 +169,6 @@ public class XRefView extends DependencyPart {
         dependencies.addAll(artifact.getDependencies(toArtifacts));
       }
       Analysis.instance().getDependencySelectionService().setSelection(ID, dependencies);
-      Analysis.instance().openDependencyTreeTableView();
     }
   }
 
@@ -205,11 +206,11 @@ public class XRefView extends DependencyPart {
   protected void useArtifacts(List<IArtifact> artifacts) {
     middleSelectedArtifacts = null;
     dependentSelectedArtifacts = null;
-    middleTree.getTreeViewer().setInput(artifacts);
     rootArtifact = artifacts.get(0);
     if (rootArtifact.getType() != ArtifactType.Root) {
       rootArtifact = rootArtifact.getParent(ArtifactType.Root);
     }
+    middleTree.getTreeViewer().setInput(rootArtifact);
     leftTree.getTreeViewer().setInput(rootArtifact);
     rightTree.getTreeViewer().setInput(rootArtifact);
     selectMiddleTree(artifacts);

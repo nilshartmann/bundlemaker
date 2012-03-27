@@ -1,6 +1,8 @@
 package org.bundlemaker.analysis.ui.xref.views;
 
-import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
+import org.bundlemaker.core.ui.view.navigator.ArtifactTreeContentProvider;
+import org.bundlemaker.core.ui.view.navigator.ArtifactTreeLabelProvider;
+import org.bundlemaker.core.ui.view.navigator.ArtifactTreeViewerSorter;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -9,11 +11,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 public class TreeViewerPanel extends Composite {
-  private static DefaultArtifactLabelProvider artifactLabelProvider = new DefaultArtifactLabelProvider();
 
-  private Label                               titleLabel;
+  private Label      titleLabel;
 
-  private TreeViewer                          treeViewer;
+  private TreeViewer treeViewer;
 
   public TreeViewerPanel(Composite parent, String title) {
     super(parent, SWT.NONE);
@@ -28,7 +29,8 @@ public class TreeViewerPanel extends Composite {
     treeViewer = new TreeViewer(this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
     treeViewer.setContentProvider(new ArtifactTreeContentProvider());
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-    treeViewer.setLabelProvider(artifactLabelProvider);
+    treeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
+    treeViewer.setSorter(new ArtifactTreeViewerSorter());
   }
 
   public void setTitle(String title) {

@@ -35,5 +35,4 @@ public class OpenXRefViewHandler extends AbstractArtifactBasedHandler {
   protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
     Analysis.instance().showInGenericEditor(XRefView.class.getName(), selectedArtifacts);
   }
-
 }
