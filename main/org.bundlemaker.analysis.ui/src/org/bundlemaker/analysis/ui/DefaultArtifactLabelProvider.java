@@ -12,9 +12,11 @@
 package org.bundlemaker.analysis.ui;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * <p>
@@ -202,7 +204,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
     case Package:
       return getImageForPackageArtifact(artifact);
     case Resource:
-      return getImageForResourceArtifact(artifact);
+      return getImageForResourceArtifact((IResourceArtifact) artifact);
     case Type:
       return getImageForTypeArtifact(artifact);
     default:
@@ -281,8 +283,10 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param resourceArtifact
    *          the artifact of type Resource. Never null
    */
-  protected Image getImageForResourceArtifact(IArtifact resourceArtifact) {
-    return ArtifactImages.RESOURCE_ARTIFACT_ICON.getImage();
+  protected Image getImageForResourceArtifact(IResourceArtifact resourceArtifact) {
+    return PlatformUI.getWorkbench().getEditorRegistry()
+        .getImageDescriptor(resourceArtifact.getAssociatedResource().getName()).createImage();
+    // return ArtifactImages.RESOURCE_ARTIFACT_ICON.getImage();
   }
 
   // ------------------------------------------------------------------
