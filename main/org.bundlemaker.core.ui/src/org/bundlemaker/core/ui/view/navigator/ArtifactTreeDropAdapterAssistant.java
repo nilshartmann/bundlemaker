@@ -1,7 +1,6 @@
 package org.bundlemaker.core.ui.view.navigator;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.core.runtime.IStatus;
@@ -53,24 +52,24 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(
         aDropAdapter.getCurrentTransfer());
 
-    final IArtifact sourceArtifact = (IArtifact) treeSelection.getFirstElement();
-    IArtifact targetArtifact = (IArtifact) aTarget;
+    IRootArtifact root = null;
+    for (Object selectedObject : treeSelection.toArray()) {
 
-    targetArtifact.addArtifact(sourceArtifact);
+      final IArtifact sourceArtifact = (IArtifact) selectedObject;
+      IArtifact targetArtifact = (IArtifact) aTarget;
+      targetArtifact.addArtifact(sourceArtifact);
 
-    // ArtifactUtils.dumpArtifact(((IAdvancedArtifact) sourceArtifact).getRoot());
+      //
+      if (root == null) {
+        root = ((IBundleMakerArtifact) targetArtifact).getRoot();
+      }
+    }
+    root.invalidateDependencyCache();
 
     //
     CommonNavigator commonNavigator = CommonNavigatorUtils
         .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
 
-    //
-    IRootArtifact root = ((IBundleMakerArtifact) targetArtifact).getRoot();
-
-    //
-    ArtifactUtils.dumpArtifact(root);
-
-    root.invalidateDependencyCache();
     TreePath[] expanedTreePath = commonNavigator.getCommonViewer().getExpandedTreePaths();
     commonNavigator.getCommonViewer().refresh();
     commonNavigator.getCommonViewer().setExpandedTreePaths(expanedTreePath);
@@ -80,7 +79,6 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
   @Override
   public boolean isSupportedType(TransferData transferData) {
-    System.out.println(transferData.getClass());
     return true;
   }
 
@@ -92,7 +90,6 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
    * @return
    */
   private boolean canHandle(IArtifact artifact) {
-
     return true;
   }
 }
