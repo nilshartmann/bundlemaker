@@ -6,11 +6,13 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
+import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.projectdescription.AbstractContentProvider;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
@@ -27,6 +29,7 @@ import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.graph.DependencyVisitor;
+import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
@@ -44,7 +47,7 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  */
 public class MvnContentProvider extends AbstractContentProvider implements IProjectContentProvider {
 
-  private MvnContentType             _result  = new MvnContentType();
+  private MvnContentType             _mvnContent  = new MvnContentType();
 
   /** - */
   private int                        _counter = 0;
@@ -67,10 +70,10 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     final RepositorySystemSession session = Booter.newRepositorySystemSession(system);
     final RemoteRepository repo = Booter.newCentralRepository();
 
-    for (MvnArtifactType artifactType : _result.getArtifacts()) {
+    for (MvnArtifactType artifactType : _mvnContent.getArtifacts()) {
 
-      Artifact artifact = new DefaultArtifact(artifactType.getGroupId() + ":" + artifactType.getArtifactId() + ":"
-          + artifactType.getVersionId());
+      Artifact artifact = new DefaultArtifact(artifactType.getGroupId(), artifactType.getArtifactId(), "jar",
+          artifactType.getVersion());
       CollectRequest collectRequest = new CollectRequest();
       collectRequest.setRoot(new Dependency(artifact, "compile"));
       collectRequest.addRepository(repo);
@@ -115,7 +118,8 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
             try {
               createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
-                  currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject);
+                  currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
+                      .getGroupId().startsWith("de.o"));
             } catch (CoreException e) {
               // TODO Auto-generated catch block
               e.printStackTrace();
@@ -140,7 +144,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
   @Override
   public Object getConfiguration() {
     //
-    return _result;
+    return _mvnContent;
   }
 
   /**
@@ -155,7 +159,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     Assert.isTrue(((JAXBElement<MvnContentType>) configuration).getValue() instanceof MvnContentType);
 
     // cast down
-    _result = (MvnContentType) ((JAXBElement<MvnContentType>) configuration).getValue();
+    _mvnContent = (MvnContentType) ((JAXBElement<MvnContentType>) configuration).getValue();
   }
 
   /**
@@ -169,16 +173,22 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    * @throws CoreException
    */
   private void createFileBasedContent(String contentName, String contentVersion, File binaryPath, File sourcePath,
-      IBundleMakerProject bundleMakerProject) throws CoreException {
+      IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
 
     Assert.isNotNull(contentName);
     Assert.isNotNull(contentVersion);
     Assert.isNotNull(binaryPath);
 
-    System.out.println("binaryPath: " + binaryPath);
-    System.out.println("sourcePath: " + sourcePath);
-
     FileBasedContent result = new FileBasedContent(MvnContentProvider.this);
+    if (!analyze) {
+      result.setAnalyzeMode(AnalyzeMode.DO_NOT_ANALYZE);
+    } else {
+      if (sourcePath != null) {
+        result.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES);
+      } else {
+        result.setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);
+      }
+    }
     result.setId(getId() + _counter++);
     result.setName(contentName);
     result.setVersion(contentVersion);

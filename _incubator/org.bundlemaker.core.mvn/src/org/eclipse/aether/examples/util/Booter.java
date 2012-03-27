@@ -32,7 +32,7 @@ public class Booter
     {
         MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
-        LocalRepository localRepo = new LocalRepository( "target/local-repo" );
+        LocalRepository localRepo = new LocalRepository( "D:/development/_save/o/Repository" );
         session.setLocalRepositoryManager( system.newLocalRepositoryManager( localRepo ) );
 
 //        session.setTransferListener( new ConsoleTransferListener() );
@@ -46,7 +46,6 @@ public class Booter
 
     public static RemoteRepository newCentralRepository()
     {
-        return new RemoteRepository( "central", "default", "http://repo1.maven.org/maven2/" );
+       return new RemoteRepository( "central", "default", "http://repo1.maven.org/maven2/" );
     }
-
 }
