@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU General Public License
  * along with ImageExport.  If not, see <http://www.gnu.org/licenses/>.
  */
-package nl.utwente.ce.imagexport.export.svg;
+package org.bundlemaker.core.ui.print.internal.nl.utwente.ce.imagexport.export.svg;
 
-import nl.utwente.ce.imagexport.export.svg.utils.GraphicsToGraphics2DAdaptor;
 
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
+import org.bundlemaker.core.ui.print.internal.nl.utwente.ce.imagexport.export.svg.utils.GraphicsToGraphics2DAdaptor;
 import org.eclipse.draw2d.IFigure;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;

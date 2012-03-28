@@ -16,7 +16,7 @@
  *    			
  ****************************************************************************/
 
-package nl.utwente.ce.imagexport.export.svg.utils;
+package org.bundlemaker.core.ui.print.internal.nl.utwente.ce.imagexport.export.svg.utils;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;

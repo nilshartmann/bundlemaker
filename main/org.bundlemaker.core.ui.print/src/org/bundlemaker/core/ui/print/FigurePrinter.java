@@ -6,13 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import nl.utwente.ce.imagexport.export.svg.ExportSVG;
-
 import org.apache.batik.svggen.SVGGraphics2DIOException;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
+import org.bundlemaker.core.ui.print.internal.nl.utwente.ce.imagexport.export.svg.ExportSVG;
 import org.eclipse.draw2d.IFigure;
 
 public class FigurePrinter {
@@ -35,11 +34,11 @@ public class FigurePrinter {
       t.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(figure.getSize().height));
 
       // Create the transcoder input.
-      String svgURI = new File("D:/temp/svg.svg").toURI().toString();
+      String svgURI = new File(fileName).toURI().toString();
       TranscoderInput input = new TranscoderInput(svgURI);
 
       // Create the transcoder output.
-      OutputStream ostream = new FileOutputStream("D:/temp/out.jpg");
+      OutputStream ostream = new FileOutputStream(fileName + ".jpg");
       TranscoderOutput output = new TranscoderOutput(ostream);
 
       // Save the image.

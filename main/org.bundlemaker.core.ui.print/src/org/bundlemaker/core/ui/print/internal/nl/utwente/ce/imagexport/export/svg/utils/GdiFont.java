@@ -10,7 +10,7 @@
  *    SAP AG - copied the class from GMF runtime since Graphiti can not have a dependency to GMF 
  ****************************************************************************/
 
-package nl.utwente.ce.imagexport.export.svg.utils;
+package org.bundlemaker.core.ui.print.internal.nl.utwente.ce.imagexport.export.svg.utils;
 
 import java.awt.Font;
 
