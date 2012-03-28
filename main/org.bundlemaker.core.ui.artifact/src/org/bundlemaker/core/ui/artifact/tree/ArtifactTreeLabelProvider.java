@@ -1,13 +1,14 @@
-package org.bundlemaker.core.ui.view.navigator;
+package org.bundlemaker.core.ui.artifact.tree;
+
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.ui.ArtifactImages;
-import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.ui.Activator;
+import org.bundlemaker.core.ui.artifact.ArtifactImages;
+import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.swt.graphics.Image;
+
 
 /**
  * <p>

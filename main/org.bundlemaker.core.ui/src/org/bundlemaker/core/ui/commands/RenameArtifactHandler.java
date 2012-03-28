@@ -5,14 +5,15 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.commands.validators.NonEmptyStringValidator;
-import org.bundlemaker.core.ui.view.navigator.CommonNavigatorUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
+
 
 public class RenameArtifactHandler extends AbstractBundleMakerHandler {
 

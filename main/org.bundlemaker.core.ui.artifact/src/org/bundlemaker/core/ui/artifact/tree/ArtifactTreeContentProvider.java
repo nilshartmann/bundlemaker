@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.view.navigator;
+package org.bundlemaker.core.ui.artifact.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,10 +11,12 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.ui.Activator;
+import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
+import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+
 
 /**
  * <p>

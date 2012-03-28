@@ -10,21 +10,12 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.editor.adapter.ProjectDescriptionAdapterFactory;
-import org.bundlemaker.core.ui.view.navigator.ArtifactModelConfigurationProvider;
-import org.bundlemaker.core.ui.view.navigator.IArtifactModelConfigurationProvider;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+
 
 /**
  * The activator class controls the plug-in life cycle
@@ -32,12 +23,12 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String                  PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
+  public static final String PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
 
   // The shared instance
-  private static Activator                    plugin;
+  private static Activator   plugin;
 
-  private IArtifactModelConfigurationProvider _artifactModelConfigurationProvider;
+  private BundleContext      _bundleContext;
 
   /**
    * The constructor
@@ -54,10 +45,9 @@ public class Activator extends AbstractUIPlugin {
   public void start(BundleContext context) throws Exception {
     super.start(context);
     plugin = this;
+    _bundleContext = context;
 
     ProjectDescriptionAdapterFactory.register();
-
-    _artifactModelConfigurationProvider = new ArtifactModelConfigurationProvider(getPreferenceStore());
   }
 
   /*
@@ -68,6 +58,7 @@ public class Activator extends AbstractUIPlugin {
   @Override
   public void stop(BundleContext context) throws Exception {
     plugin = null;
+    _bundleContext = null;
 
     ProjectDescriptionAdapterFactory.unregister();
     super.stop(context);
@@ -82,41 +73,30 @@ public class Activator extends AbstractUIPlugin {
     return plugin;
   }
 
-  public String getFile(String path) {
-    Bundle bundle = Platform.getBundle(PLUGIN_ID);
-    Object file = FileLocator.find(bundle, new Path(path), null);
-    if (file != null) {
-      return file.toString();
-    } else {
-      return null;
-    }
-  }
-
-  public Image getIcon(String icon) {
-    ImageRegistry registry = getImageRegistry();
-    Image image = registry.get(icon);
-
-    if (image != null) {
-      return image;
-    }
-    URL url = null;
-    try {
-      url = new URL(getFile("icons/" + icon));
-    } catch (MalformedURLException e) {
-    }
-
-    ImageDescriptor myImage = ImageDescriptor.createFromURL(url);
-    image = myImage.createImage();
-    getImageRegistry().put(icon, image);
-
-    return image;
-  }
-
   /**
-   * @return the {@link IArtifactModelConfigurationProvider}. Never null
+   * <p>
+   * </p>
+   * 
+   * @return
    */
   public IArtifactModelConfigurationProvider getArtifactModelConfigurationProvider() {
-    return _artifactModelConfigurationProvider;
-  }
 
+    //
+    ServiceReference serviceReference = _bundleContext.getServiceReference(IArtifactModelConfigurationProvider.class
+        .getName());
+
+    //
+    if (serviceReference != null) {
+
+      //
+      IArtifactModelConfigurationProvider provider = (IArtifactModelConfigurationProvider) _bundleContext
+          .getService(serviceReference);
+
+      //
+      return provider;
+    }
+
+    //
+    return null;
+  }
 }

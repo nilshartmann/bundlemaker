@@ -5,9 +5,9 @@
    <!-- -->
    <extension point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent activeByDefault="true"
-         contentProvider="org.bundlemaker.core.ui.view.navigator.ArtifactTreeContentProvider"
-         icon="icons/navigator/root.gif" id="org.bundlemaker.analysis.ui.navigatorContent1"
-         labelProvider="org.bundlemaker.core.ui.view.navigator.ArtifactTreeLabelProvider"
+         contentProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider"
+         id="org.bundlemaker.analysis.ui.navigatorContent1"
+         labelProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider"
          name="artifactContent" 
          priority="lowest">
          <triggerPoints>
@@ -20,7 +20,7 @@
             </and>
          </triggerPoints>
          <dropAssistant 
-               class="org.bundlemaker.core.ui.view.navigator.ArtifactTreeDropAdapterAssistant"
+               class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeDropAdapterAssistant"
                id="org.bundlemaker.core.ui.dropAssistant1">
             <possibleDropTargets>
                <instanceof
@@ -33,7 +33,7 @@
                     value="org.bundlemaker.analysis.model.IArtifact" /> 
      </possibleChildren>
                 <commonSorter
-                      class="org.bundlemaker.core.ui.view.navigator.ArtifactTreeViewerSorter">
+                      class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter">
                 </commonSorter>
 
       </navigatorContent>

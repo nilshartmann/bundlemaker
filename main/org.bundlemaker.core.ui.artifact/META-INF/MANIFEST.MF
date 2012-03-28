@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: provider
+Bundle-SymbolicName: org.bundlemaker.core.ui.artifact
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.bundlemaker.core;bundle-version="1.0.0",
+ org.eclipse.jface;bundle-version="3.6.2",
+ org.eclipse.core.resources;bundle-version="3.6.1",
+ org.eclipse.core.runtime;bundle-version="3.6.0",
+ org.eclipse.ui.workbench;bundle-version="3.6.2",
+ org.eclipse.ui.navigator;bundle-version="3.5.0"
+Bundle-Activator: org.bundlemaker.core.ui.artifact.internal.Activator
+Export-Package: org.bundlemaker.core.ui.artifact,
+ org.bundlemaker.core.ui.artifact.configuration,
+ org.bundlemaker.core.ui.artifact.tree
+Bundle-ActivationPolicy: lazy

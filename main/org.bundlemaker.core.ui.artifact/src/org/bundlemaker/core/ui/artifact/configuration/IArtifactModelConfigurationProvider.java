@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.view.navigator;
+package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 

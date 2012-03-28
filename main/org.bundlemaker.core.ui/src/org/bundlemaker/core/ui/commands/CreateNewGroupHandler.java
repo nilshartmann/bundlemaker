@@ -6,14 +6,15 @@ import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.commands.validators.NonEmptyStringValidator;
-import org.bundlemaker.core.ui.view.navigator.CommonNavigatorUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
+
 
 public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
 
@@ -36,7 +37,7 @@ public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
         System.out.println(dlg.getValue());
       }
 
-	  // we have to use "getOrCreateGroup" to prevent duplicate groups	
+      // we have to use "getOrCreateGroup" to prevent duplicate groups
       IGroupAndModuleContainer advancedArtifact = ((IGroupAndModuleContainer) artifact);
       advancedArtifact.getOrCreateGroup(dlg.getValue());
 

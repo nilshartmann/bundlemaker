@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.view.navigator;
+package org.bundlemaker.core.ui.artifact;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.eclipse.ui.IViewPart;

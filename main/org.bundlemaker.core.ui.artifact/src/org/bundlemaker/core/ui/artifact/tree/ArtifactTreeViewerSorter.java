@@ -1,4 +1,5 @@
-package org.bundlemaker.core.ui.view.navigator;
+package org.bundlemaker.core.ui.artifact.tree;
+
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
