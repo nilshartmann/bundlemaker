@@ -1,8 +1,8 @@
 package org.bundlemaker.analysis.ui.xref.views;
 
-import org.bundlemaker.core.ui.view.navigator.ArtifactTreeContentProvider;
-import org.bundlemaker.core.ui.view.navigator.ArtifactTreeLabelProvider;
-import org.bundlemaker.core.ui.view.navigator.ArtifactTreeViewerSorter;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;

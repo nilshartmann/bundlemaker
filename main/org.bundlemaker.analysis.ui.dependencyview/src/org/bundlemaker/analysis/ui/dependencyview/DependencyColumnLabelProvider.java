@@ -12,7 +12,7 @@ package org.bundlemaker.analysis.ui.dependencyview;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.ui.DefaultArtifactLabelProvider;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
@@ -21,9 +21,10 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider {
-  private static final DefaultArtifactLabelProvider _defaultArtifactLabelProvider = new DefaultArtifactLabelProvider();
 
-  private final ArtifactPathLabelGenerator          _labelGenerator;
+  private static final ArtifactTreeLabelProvider _defaultArtifactLabelProvider = new ArtifactTreeLabelProvider();
+
+  private final ArtifactPathLabelGenerator       _labelGenerator;
 
   /**
    * @param labelGenerator
