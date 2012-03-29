@@ -7,7 +7,6 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.core.testutils.ArtifactTestUtil;
 import org.bundlemaker.core.testutils.BundleMakerTestUtils;
 import org.bundlemaker.core.testutils.FileDiffUtil;

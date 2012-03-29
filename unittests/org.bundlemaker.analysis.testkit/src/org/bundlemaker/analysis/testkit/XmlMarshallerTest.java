@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.testkit.framework.AbstractTestKitTest;
 import org.bundlemaker.analysis.xml.ArtifactMarshallerUnmarshallerFactory;
 import org.bundlemaker.analysis.xml.IArtifactMarshaller;

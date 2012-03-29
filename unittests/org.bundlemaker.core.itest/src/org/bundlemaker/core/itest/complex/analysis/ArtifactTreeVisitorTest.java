@@ -2,7 +2,6 @@ package org.bundlemaker.core.itest.complex.analysis;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;

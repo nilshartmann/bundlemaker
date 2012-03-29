@@ -7,7 +7,6 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
-import org.bundlemaker.core.itest.analysis.SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.runtime.CoreException;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 
+
 /**
  * <p>
  * </p>

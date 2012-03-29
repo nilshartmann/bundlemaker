@@ -1,7 +1,6 @@
 package org.bundlemaker.analysis.testkit.framework;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
 
 /**
  * <p>

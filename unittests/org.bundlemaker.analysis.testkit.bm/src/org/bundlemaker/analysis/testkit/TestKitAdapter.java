@@ -3,7 +3,6 @@ package org.bundlemaker.analysis.testkit;
 import java.io.File;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.model.IDependencyModel;
 import org.bundlemaker.analysis.testkit.framework.ITestKitAdapter;
 import org.bundlemaker.analysis.testkit.framework.ITimeStampAwareTestKitAdapter;
 import org.bundlemaker.core.BundleMakerCore;
