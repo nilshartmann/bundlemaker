@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.artifact;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -29,13 +29,13 @@ public class CommonNavigatorUtils {
    * <p>
    * </p>
    */
-  public static void refresh(String identifier, IArtifact... artifacts) {
+  public static void refresh(String identifier, IBundleMakerArtifact... artifacts) {
 
     //
     CommonNavigator commonNavigator = findCommonNavigator(identifier);
 
     //
-    for (IArtifact iArtifact : artifacts) {
+    for (IBundleMakerArtifact iArtifact : artifacts) {
       commonNavigator.getCommonViewer().refresh(iArtifact);
     }
   }

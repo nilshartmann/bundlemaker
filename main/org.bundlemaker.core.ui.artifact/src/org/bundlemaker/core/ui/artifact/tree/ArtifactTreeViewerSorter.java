@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.artifact.tree;
 
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 /**
@@ -20,8 +20,8 @@ public class ArtifactTreeViewerSorter extends ViewerSorter {
   public int category(Object element) {
 
     //
-    if (element instanceof IArtifact) {
-      return ((IArtifact) element).getType().equals(ArtifactType.Package) ? 0 : 1;
+    if (element instanceof IBundleMakerArtifact) {
+      return ((IBundleMakerArtifact) element).getType().equals(ArtifactType.Package) ? 0 : 1;
     }
 
     // default category is 1

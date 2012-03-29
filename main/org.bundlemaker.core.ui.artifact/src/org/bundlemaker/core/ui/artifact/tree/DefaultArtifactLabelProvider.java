@@ -11,7 +11,7 @@
 
 package org.bundlemaker.core.ui.artifact.tree;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -21,7 +21,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * <p>
- * A default {@link ILabelProvider} implementation for {@link IArtifact}s
+ * A default {@link ILabelProvider} implementation for {@link IBundleMakerArtifact}s
  * </p>
  * 
  * <p>
@@ -37,30 +37,30 @@ import org.eclipse.ui.PlatformUI;
  */
 public class DefaultArtifactLabelProvider implements ILabelProvider {
   /**
-   * This implementation delegates to {@link #getImageForArtifact(IArtifact)} if <tt>element</tt> is an
-   * {@link IArtifact}. Otherwise null is returned
+   * This implementation delegates to {@link #getImageForArtifact(IBundleMakerArtifact)} if <tt>element</tt> is an
+   * {@link IBundleMakerArtifact}. Otherwise null is returned
    */
   @Override
   public Image getImage(Object element) {
-    if (!(element instanceof IArtifact)) {
+    if (!(element instanceof IBundleMakerArtifact)) {
       return null;
     }
 
-    IArtifact artifact = (IArtifact) element;
+    IBundleMakerArtifact artifact = (IBundleMakerArtifact) element;
     return getImageForArtifact(artifact);
   }
 
   /**
-   * This implementation delegates to {@link #getTextForArtifact(IArtifact)} if <tt>element</tt> is an {@link IArtifact}
-   * . Otherwise null is returned
+   * This implementation delegates to {@link #getTextForArtifact(IBundleMakerArtifact)} if <tt>element</tt> is an
+   * {@link IBundleMakerArtifact} . Otherwise null is returned
    */
   @Override
   public String getText(Object element) {
-    if (!(element instanceof IArtifact)) {
+    if (!(element instanceof IBundleMakerArtifact)) {
       return null;
     }
 
-    IArtifact artifact = (IArtifact) element;
+    IBundleMakerArtifact artifact = (IBundleMakerArtifact) element;
     return getTextForArtifact(artifact);
   }
 
@@ -73,7 +73,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param artifact
    * @return
    */
-  protected String getTextForArtifact(IArtifact artifact) {
+  protected String getTextForArtifact(IBundleMakerArtifact artifact) {
     switch (artifact.getType()) {
     case Root:
       return getTextForRootArtifact(artifact);
@@ -106,7 +106,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param artifact
    * @return
    */
-  protected String getTextForRootArtifact(IArtifact artifact) {
+  protected String getTextForRootArtifact(IBundleMakerArtifact artifact) {
     return artifact.getName();
   }
 
@@ -121,7 +121,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param artifact
    * @return
    */
-  protected String getTextForGroupArtifact(IArtifact artifact) {
+  protected String getTextForGroupArtifact(IBundleMakerArtifact artifact) {
     return artifact.getName();
   }
 
@@ -136,7 +136,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param artifact
    * @return
    */
-  protected String getTextForModuleArtifact(IArtifact artifact) {
+  protected String getTextForModuleArtifact(IBundleMakerArtifact artifact) {
     return artifact.getName();
   }
 
@@ -151,7 +151,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param artifact
    * @return
    */
-  protected String getTextForPackageArtifact(IArtifact artifact) {
+  protected String getTextForPackageArtifact(IBundleMakerArtifact artifact) {
     return artifact.getQualifiedName();
   }
 
@@ -166,7 +166,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param artifact
    * @return
    */
-  protected String getTextForResourceArtifact(IArtifact artifact) {
+  protected String getTextForResourceArtifact(IBundleMakerArtifact artifact) {
     return artifact.getName();
   }
 
@@ -181,7 +181,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param artifact
    * @return
    */
-  protected String getTextForTypeArtifact(IArtifact artifact) {
+  protected String getTextForTypeArtifact(IBundleMakerArtifact artifact) {
     return artifact.getName();
   }
 
@@ -194,7 +194,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    *          the artifact. Never null.
    * @return
    */
-  protected Image getImageForArtifact(IArtifact artifact) {
+  protected Image getImageForArtifact(IBundleMakerArtifact artifact) {
     switch (artifact.getType()) {
     case Root:
       return getImageForRootArtifact(artifact);
@@ -224,7 +224,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    *          the artifact of type Root. Never null
    * 
    */
-  protected Image getImageForRootArtifact(IArtifact rootArtifact) {
+  protected Image getImageForRootArtifact(IBundleMakerArtifact rootArtifact) {
     return ArtifactImages.ROOT_ARTIFACT_ICON.getImage();
   }
 
@@ -236,7 +236,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param groupArtifact
    *          the artifact of type Group. Never null
    */
-  protected Image getImageForGroupArtifact(IArtifact groupArtifact) {
+  protected Image getImageForGroupArtifact(IBundleMakerArtifact groupArtifact) {
     return ArtifactImages.GROUP_ARTIFACT_ICON.getImage();
   }
 
@@ -248,7 +248,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param moduleArtifact
    *          the artifact of type Module. Never null
    */
-  protected Image getImageForModuleArtifact(IArtifact moduleArtifact) {
+  protected Image getImageForModuleArtifact(IBundleMakerArtifact moduleArtifact) {
     return ArtifactImages.MODULE_ARTIFACT_ICON.getImage();
   }
 
@@ -260,7 +260,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param packageArtifact
    *          the artifact of type Package. Never null
    */
-  protected Image getImageForPackageArtifact(IArtifact packageArtifact) {
+  protected Image getImageForPackageArtifact(IBundleMakerArtifact packageArtifact) {
     return ArtifactImages.PACKAGE_ARTIFACT_ICON.getImage();
   }
 
@@ -272,7 +272,7 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @param typeArtifact
    *          the artifact of type Type. Never null
    */
-  protected Image getImageForTypeArtifact(IArtifact typeArtifact) {
+  protected Image getImageForTypeArtifact(IBundleMakerArtifact typeArtifact) {
     return ArtifactImages.TYPE_ARTIFACT_ICON.getImage();
   }
 

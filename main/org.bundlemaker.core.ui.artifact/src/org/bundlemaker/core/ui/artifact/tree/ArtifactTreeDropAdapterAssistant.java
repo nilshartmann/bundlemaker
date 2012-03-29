@@ -1,6 +1,5 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -56,8 +55,8 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     IRootArtifact root = null;
     for (Object selectedObject : treeSelection.toArray()) {
 
-      final IArtifact sourceArtifact = (IArtifact) selectedObject;
-      IArtifact targetArtifact = (IArtifact) aTarget;
+      final IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) selectedObject;
+      IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) aTarget;
       targetArtifact.addArtifact(sourceArtifact);
 
       //

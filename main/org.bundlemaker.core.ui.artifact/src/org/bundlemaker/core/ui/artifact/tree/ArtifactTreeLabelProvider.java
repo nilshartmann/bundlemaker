@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.artifact.tree;
 
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
@@ -44,9 +44,9 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
       return (String) obj;
     } else if (obj instanceof IModularizedSystem) {
       return ((IModularizedSystem) obj).getName();
-    } else if (obj instanceof IArtifact && ((IArtifact) obj).getType().equals(ArtifactType.Package)
+    } else if (obj instanceof IBundleMakerArtifact && ((IBundleMakerArtifact) obj).getType().equals(ArtifactType.Package)
         && isHierarchicalPackageLayout()) {
-      return ((IArtifact) obj).getName();
+      return ((IBundleMakerArtifact) obj).getName();
     }
 
     // All other cases are handled by the superclass
@@ -55,7 +55,7 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
   }
 
   @Override
-  protected Image getImageForTypeArtifact(IArtifact artifact) {
+  protected Image getImageForTypeArtifact(IBundleMakerArtifact artifact) {
     if (artifact instanceof ITypeArtifact) {
       ITypeArtifact typeHolder = (ITypeArtifact) artifact;
 

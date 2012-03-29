@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.artifact;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
