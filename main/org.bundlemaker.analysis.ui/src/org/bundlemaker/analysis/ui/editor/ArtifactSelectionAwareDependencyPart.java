@@ -1,10 +1,9 @@
 package org.bundlemaker.analysis.ui.editor;
 
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -16,14 +15,17 @@ import org.eclipse.swt.widgets.Composite;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public abstract class ArtifactSelectionAwareDependencyPart extends DependencyPart implements IArtifactSelectionListener {
+public abstract class ArtifactSelectionAwareDependencyPart extends DependencyPart /*
+                                                                                   * implements
+                                                                                   * IArtifactSelectionListener
+                                                                                   */{
 
   @Override
   void init(Composite parent) {
     super.init(parent);
 
     // add listener
-    Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
+    // Analysis.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
 
     // initialize view with current selection from Artifact tree
     IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(
@@ -38,7 +40,7 @@ public abstract class ArtifactSelectionAwareDependencyPart extends DependencyPar
   @Override
   void dispose() {
     // Remove ourself from the list of listeners
-    Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
+    // Analysis.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
 
     // invoke super
     super.dispose();
@@ -51,10 +53,11 @@ public abstract class ArtifactSelectionAwareDependencyPart extends DependencyPar
    * @return the IArtifactSelectionService
    */
   protected IArtifactSelectionService getArtifactSelectionService() {
-    return Analysis.instance().getArtifactSelectionService();
+    // return Analysis.instance().getArtifactSelectionService();
+    return null;
   }
 
-  @Override
-  public abstract void artifactSelectionChanged(IArtifactSelectionChangedEvent event);
+  // @Override
+  // public abstract void artifactSelectionChanged(IArtifactSelectionChangedEvent event);
 
 }

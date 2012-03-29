@@ -22,15 +22,15 @@ import org.eclipse.ui.part.EditorPart;
 
 public class GenericEditor extends EditorPart {
 
-  public static final String   ID    = "org.bundlemaker.analysis.ui.editor.GenericEditor";
+  public static final String        ID    = "org.bundlemaker.analysis.ui.editor.GenericEditor";
 
-  private final String         NAME  = "name";
+  private final String              NAME  = "name";
 
-  private final String         CLAZZ = "class";
+  private final String              CLAZZ = "class";
 
   private List<DependencyTabHolder> dependencyParts;
 
-  private TabFolder            tabFolder;
+  private TabFolder                 tabFolder;
 
   @Override
   public void doSave(IProgressMonitor monitor) {

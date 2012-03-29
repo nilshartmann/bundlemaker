@@ -4,16 +4,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.bundlemaker.analysis.ui.Analysis;
+import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -48,6 +54,18 @@ public class Activator extends AbstractUIPlugin {
     plugin = this;
 
     registerProjectExplorerSelectionForwarder();
+
+    // CommonNavigatorUtils.findCommonNavigator()
+    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    CommonNavigator commonNavigator = (CommonNavigator) page.findView(IPageLayout.ID_PROJECT_EXPLORER);
+    commonNavigator.getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
+
+      @Override
+      public void doubleClick(DoubleClickEvent event) {
+        System.out.println(event.getSelection());
+      }
+    });
+
     PlatformUI.getWorkbench().addWindowListener(new WindowListener());
 
   }
@@ -63,7 +81,7 @@ public class Activator extends AbstractUIPlugin {
     if (selectionService != null) {
       System.out.println("Register ProjectExplorerSelectionForwarder");
       // register forwarder
-      _projectExplorerSelectionForwarder = new ProjectExplorerSelectionForwarder(Analysis.instance()
+      _projectExplorerSelectionForwarder = new ProjectExplorerSelectionForwarder(Selection.instance()
           .getArtifactSelectionService());
       selectionService.addSelectionListener(Analysis.PROJECT_EXPLORER_VIEW_ID, _projectExplorerSelectionForwarder);
     }

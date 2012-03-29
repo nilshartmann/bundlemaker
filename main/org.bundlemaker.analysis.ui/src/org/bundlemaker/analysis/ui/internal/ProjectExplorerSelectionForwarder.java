@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
