@@ -8,5 +8,6 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.analysis.ui;bundle-version="1.0.0",
  org.bundlemaker.core;bundle-version="1.0.0",
  org.bundlemaker.core.ui;bundle-version="1.0.0",
- org.bundlemaker.core.ui.artifact;bundle-version="1.0.0"
+ org.bundlemaker.core.ui.artifact;bundle-version="1.0.0",
+ org.bundlemaker.core.ui.selection;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

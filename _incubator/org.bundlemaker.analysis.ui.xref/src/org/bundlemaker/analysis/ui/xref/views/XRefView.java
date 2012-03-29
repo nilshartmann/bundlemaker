@@ -19,8 +19,8 @@ import java.util.Set;
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.analysis.ui.editor.DependencyPart;
+import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -168,7 +168,7 @@ public class XRefView extends DependencyPart {
       for (IArtifact artifact : fromArtifacts) {
         dependencies.addAll(artifact.getDependencies(toArtifacts));
       }
-      Analysis.instance().getDependencySelectionService().setSelection(ID, dependencies);
+      Selection.instance().getDependencySelectionService().setSelection(ID, dependencies);
     }
   }
 
