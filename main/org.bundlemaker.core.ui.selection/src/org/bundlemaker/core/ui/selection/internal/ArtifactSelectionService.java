@@ -8,16 +8,18 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.internal.selection;
+package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionListener;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -29,6 +31,28 @@ import org.eclipse.core.runtime.Assert;
 public class ArtifactSelectionService extends
     AbstractSelectionService<IArtifactSelection, IArtifactSelectionListener, IArtifactSelectionChangedEvent> implements
     IArtifactSelectionService {
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected IArtifactSelection getNullSelection(String providerId) {
+    List<IArtifact> emptyList = Collections.emptyList();
+    return new ArtifactSelection(providerId, emptyList);
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected boolean equals(IArtifactSelection newSelection, IArtifactSelection selection) {
+    if (newSelection == null) {
+      return false;
+    }
+    return newSelection.equals(selection);
+  }
+
+
 
   @Override
   public void setSelection(String providerId, Collection<IArtifact> selectedArtifacts) {

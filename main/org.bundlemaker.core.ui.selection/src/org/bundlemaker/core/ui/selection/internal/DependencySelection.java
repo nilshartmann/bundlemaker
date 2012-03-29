@@ -8,14 +8,14 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.internal.selection;
+package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
-import org.bundlemaker.analysis.ui.selection.IDependencySelection;
+import org.bundlemaker.core.ui.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.selection.IDependencySelection;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -80,4 +80,40 @@ public class DependencySelection implements IDependencySelection {
     return !_selectedDependencies.isEmpty();
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_providerId == null) ? 0 : _providerId.hashCode());
+    result = prime * result + ((_selectedDependencies == null) ? 0 : _selectedDependencies.hashCode());
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    DependencySelection other = (DependencySelection) obj;
+    if (_providerId == null) {
+      if (other._providerId != null)
+        return false;
+    } else if (!_providerId.equals(other._providerId))
+      return false;
+    if (_selectedDependencies == null) {
+      if (other._selectedDependencies != null)
+        return false;
+    } else if (!_selectedDependencies.equals(other._selectedDependencies))
+      return false;
+    return true;
+  }
 }

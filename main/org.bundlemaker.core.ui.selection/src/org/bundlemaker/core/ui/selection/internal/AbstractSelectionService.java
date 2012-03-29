@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.internal.selection;
+package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -45,6 +45,11 @@ public abstract class AbstractSelectionService<SELECTION, LISTENER, EVENT> {
   }
 
   protected void setSelection(String providerId, SELECTION newSelection) {
+    
+    if (equals(newSelection,  _currentSelections.get(providerId))) {
+      return;
+    }
+    
     // add selection
     _currentSelections.put(providerId, newSelection);
 
@@ -55,6 +60,20 @@ public abstract class AbstractSelectionService<SELECTION, LISTENER, EVENT> {
     // notify listeners
     fireSelectionChanged(providerId, event);
   }
+
+  protected abstract boolean equals(SELECTION newSelection, SELECTION selection);
+
+  /**
+   * <p>
+   * </p>
+   */
+  protected void clearCurrentSelections() {
+    for (String providerId : _currentSelections.keySet()) {
+      setSelection(providerId, getNullSelection(providerId));
+    }
+  }
+
+  protected abstract SELECTION getNullSelection(String providerId);
 
   /**
    * Creates a new xxxSelectionChangedEvent instance for the given selection

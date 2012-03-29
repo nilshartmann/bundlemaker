@@ -8,20 +8,20 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.selection;
+package org.bundlemaker.core.ui.selection;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.analysis.model.IDependency;
 
 /**
- * A selection of {@link IArtifact} objects
+ * A selection of {@link IDependency} instances
  * 
  * @author Nils Hartmann
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IArtifactSelection {
+public interface IDependencySelection {
 
   /**
    * @return the selection provider's Id
@@ -31,8 +31,22 @@ public interface IArtifactSelection {
   /**
    * The selected artifacts. Never null but might be empty.
    * 
-   * @return an <b>unmodifiable</b> list of {@link IArtifact IArtifacts}
+   * @return an <b>unmodifiable</b> list of {@link IDependency IDependency-Objects}
    */
-  public List<IArtifact> getSelectedArtifacts();
+  public List<IDependency> getSelectedDependencies();
+
+  /**
+   * Returns the first element in this selection, or <code>null</code> if the selection is empty.
+   * 
+   * @return an element, or <code>null</code> if none
+   */
+  public IDependency getFirstDependency();
+
+  /**
+   * Returns true if this selection is not empty and contains at least one selected {@link IDependency}
+   * 
+   * @return
+   */
+  public boolean hasDependencies();
 
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.internal.selection;
+package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,18 +17,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.ui.Analysis;
-import org.bundlemaker.analysis.ui.selection.IDependencySelection;
-import org.bundlemaker.analysis.ui.selection.IDependencySelectionChangedEvent;
-import org.bundlemaker.analysis.ui.selection.IDependencySelectionListener;
-import org.bundlemaker.analysis.ui.selection.IDependencySelectionService;
+import org.bundlemaker.core.ui.selection.IDependencySelection;
+import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
+import org.bundlemaker.core.ui.selection.IDependencySelectionService;
+import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.Assert;
 
 /**
  * The implementation of the {@link IDependencySelectionListener}.
  * 
  * <p>
- * Instances of the {@link IDependencySelectionListener} can be received via the {@link Analysis} factory class
+ * Instances of the {@link IDependencySelectionListener} can be received via the {@link Selection} factory class
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
@@ -36,6 +36,26 @@ import org.eclipse.core.runtime.Assert;
 public class DependencySelectionService extends
     AbstractSelectionService<IDependencySelection, IDependencySelectionListener, IDependencySelectionChangedEvent>
     implements IDependencySelectionService {
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected IDependencySelection getNullSelection(String providerId) {
+    List<IDependency> emptyList = Collections.emptyList();
+    return new DependencySelection(providerId, emptyList);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected boolean equals(IDependencySelection newSelection, IDependencySelection selection) {
+    if (newSelection == null) {
+      return false;
+    }
+    return newSelection.equals(selection);
+  }
 
   /*
    * (non-Javadoc)

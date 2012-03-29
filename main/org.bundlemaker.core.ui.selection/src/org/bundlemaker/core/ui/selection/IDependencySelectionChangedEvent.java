@@ -8,20 +8,20 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.selection;
+package org.bundlemaker.core.ui.selection;
 
 /**
- * An event describing a changed selection
+ * An event describing a changed dependency
  * 
  * @author Nils Hartmann
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IArtifactSelectionChangedEvent {
+public interface IDependencySelectionChangedEvent {
 
   /**
    * Not null but might be empty
    */
-  public IArtifactSelection getSelection();
+  public IDependencySelection getSelection();
 
 }

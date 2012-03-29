@@ -8,31 +8,31 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.internal.selection;
+package org.bundlemaker.core.ui.selection.internal;
 
-import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IDependencySelection;
+import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
 import org.eclipse.core.runtime.Assert;
 
 /**
  * @author Nils Hartmann
  * 
  */
-public class ArtifactSelectionChangedEvent implements IArtifactSelectionChangedEvent {
+public class DependencySelectionChangedEvent implements IDependencySelectionChangedEvent {
 
   /**
    * the new selection
    */
-  private final IArtifactSelection _selection;
+  private final IDependencySelection _selection;
 
-  public ArtifactSelectionChangedEvent(IArtifactSelection selection) {
+  public DependencySelectionChangedEvent(IDependencySelection selection) {
     Assert.isNotNull(selection, "The parameter 'selection' must not be null");
 
     _selection = selection;
   }
 
   @Override
-  public IArtifactSelection getSelection() {
+  public IDependencySelection getSelection() {
     return _selection;
   }
 

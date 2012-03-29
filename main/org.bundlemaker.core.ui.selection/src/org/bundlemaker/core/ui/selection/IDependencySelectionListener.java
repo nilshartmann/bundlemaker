@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.selection;
+package org.bundlemaker.core.ui.selection;
 
 /**
  * A listener that is invoked when a dependency selection changed.

@@ -8,13 +8,13 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.internal.selection;
+package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.ui.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -24,6 +24,43 @@ import org.eclipse.core.runtime.Assert;
  * 
  */
 public class ArtifactSelection implements IArtifactSelection {
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_providerId == null) ? 0 : _providerId.hashCode());
+    result = prime * result + ((_selectedArtifacts == null) ? 0 : _selectedArtifacts.hashCode());
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    ArtifactSelection other = (ArtifactSelection) obj;
+    if (_providerId == null) {
+      if (other._providerId != null)
+        return false;
+    } else if (!_providerId.equals(other._providerId))
+      return false;
+    if (_selectedArtifacts == null) {
+      if (other._selectedArtifacts != null)
+        return false;
+    } else if (!_selectedArtifacts.equals(other._selectedArtifacts))
+      return false;
+    return true;
+  }
 
   /**
    * The provider that provides this selection
