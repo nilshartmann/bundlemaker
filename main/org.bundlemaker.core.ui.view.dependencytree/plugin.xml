@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension point="org.eclipse.ui.views">
+    <view category="org.bundlemaker.analysis.ui.views.category"
+      class="org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView"
+      id="org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView"
+      name="Dependencies Tree" restorable="true"> </view>
+  </extension>
+
+</plugin>

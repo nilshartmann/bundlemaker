@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.core.ui.view.dependencytree
+Bundle-SymbolicName: org.bundlemaker.core.ui.view.dependencytree;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.bundlemaker.core.ui.view.dependencytree.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bundlemaker.core;bundle-version="1.0.0",
+ org.bundlemaker.analysis.ui;bundle-version="1.0.0",
+ org.bundlemaker.core.ui;bundle-version="1.0.0",
+ org.bundlemaker.core.ui.artifact;bundle-version="1.0.0",
+ org.bundlemaker.core.ui.selection;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
