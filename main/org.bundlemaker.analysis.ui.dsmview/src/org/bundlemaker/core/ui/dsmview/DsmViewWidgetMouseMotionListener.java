@@ -1,7 +1,5 @@
 package org.bundlemaker.core.ui.dsmview;
 
-import org.bundlemaker.core.ui.dsmview.figures.Matrix;
-import org.bundlemaker.core.ui.print.FigurePrinter;
 import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.MouseEvent;
@@ -67,11 +65,11 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub im
   public void mouseDoubleClicked(MouseEvent me) {
     System.out.println("Double");
 
-    Matrix matrix = new Matrix(_dsmViewWidget.getModel());
-    IDsmViewModel viewModel = _dsmViewWidget.getModel();
-    matrix.setSize(viewModel.getConfiguration().getVerticalBoxSize() * viewModel.getItemCount(), viewModel
-        .getConfiguration().getHorizontalBoxSize() * viewModel.getItemCount());
-    FigurePrinter.print("D:/temp/svg.svg", matrix);
+    // Matrix matrix = new Matrix(_dsmViewWidget.getModel());
+    // IDsmViewModel viewModel = _dsmViewWidget.getModel();
+    // matrix.setSize(viewModel.getConfiguration().getVerticalBoxSize() * viewModel.getItemCount(), viewModel
+    // .getConfiguration().getHorizontalBoxSize() * viewModel.getItemCount());
+    // FigurePrinter.print("D:/temp/svg.svg", matrix);
   }
 
   @Override

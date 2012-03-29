@@ -66,6 +66,16 @@ public class DsmViewComposite extends Composite {
     });
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the viewWidget
+   */
+  public DsmViewWidget getViewWidget() {
+    return _viewWidget;
+  }
+
   public void setModel(DsmViewModel tableModel) {
     _viewWidget.setModel(tableModel);
   }

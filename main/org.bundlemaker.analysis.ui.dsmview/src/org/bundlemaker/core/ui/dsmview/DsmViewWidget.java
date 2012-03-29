@@ -6,7 +6,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.core.ui.dsmview.figures.IMatrixListener;
 import org.bundlemaker.core.ui.dsmview.figures.Matrix;
 import org.bundlemaker.core.ui.dsmview.figures.MatrixEvent;
@@ -14,6 +13,7 @@ import org.bundlemaker.core.ui.dsmview.figures.sidemarker.HorizontalSideMarker;
 import org.bundlemaker.core.ui.dsmview.figures.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.dsmview.figures.zoom.ZoomableScrollPane;
 import org.bundlemaker.core.ui.dsmview.utils.DsmUtils;
+import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
@@ -195,7 +195,8 @@ public class DsmViewWidget extends Canvas implements Observer {
           IDependency dependency = _model.isToggled() ? ((DsmViewModel) _model).getDependency(event.getY(),
               event.getX()) : ((DsmViewModel) _model).getDependency(event.getX(), event.getY());
 
-          Analysis.instance().getDependencySelectionService().setSelection(DSMView.ID, dependency);
+          Selection.instance().getDependencySelectionService()
+              .setSelection(Selection.MAIN_SELECTION_PROVIDER_ID, dependency);
         }
         _mainFigure.repaint();
       }

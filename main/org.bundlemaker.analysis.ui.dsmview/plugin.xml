@@ -2,13 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    
-   <extension
-         point="org.bundlemaker.analysis.ui.dependencyView">
-      <dependencyView
-            class="org.bundlemaker.core.ui.dsmview.DSMView"
-            name="DSM">
-      </dependencyView>
-   </extension>
      <!-- the pop up menus --> 
    <extension point="org.eclipse.ui.commands"> 
       <command id="org.bundlemaker.core.ui.dsmview.commands.OpenDsmViewCommand" 
@@ -66,6 +59,23 @@
 	        style="push">
 	        <visibleWhen checkEnabled="true" />
 		</command> 
+           </menuContribution>
+           <menuContribution
+                 allPopups="false"
+                 locationURI="org.bundlemaker.analysis.ui.dsmview.DSMView#PopupMenu?after=edit">
            </menuContribution> 
    </extension>
+   
+    <!-- DSM EDITOR -->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.bundlemaker.core.ui.dsmview.DSMArtifactModelEditor"
+            default="false"
+            icon="icons/module.gif"
+            id="org.bundlemaker.core.ui.dsmview.DSMArtifactModelEditor"
+            name="DSM Analysis">
+      </editor>
+   </extension>
+   
 </plugin>
