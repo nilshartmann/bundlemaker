@@ -1,8 +1,8 @@
 package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
-
 public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
 
   /**
@@ -25,7 +24,7 @@ public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
   protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
 
     IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-    IArtifact artifact = (IArtifact) structuredSelection.getFirstElement();
+    IBundleMakerArtifact artifact = (IBundleMakerArtifact) structuredSelection.getFirstElement();
     System.out.println(artifact.getClass());
     if (artifact instanceof IRootArtifact || artifact instanceof IGroupArtifact) {
 

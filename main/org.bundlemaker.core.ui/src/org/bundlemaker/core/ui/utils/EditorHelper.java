@@ -7,6 +7,7 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -16,7 +17,9 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.navigator.CommonNavigator;
 
 public class EditorHelper {
 
@@ -24,6 +27,11 @@ public class EditorHelper {
 
     // TODO: MOVE
     try {
+
+      CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
+
+      commonNavigator.setLinkingEnabled(false);
+
       IResourceArtifact resourceArtifact = (IResourceArtifact) artifact.getParent(ArtifactType.Resource);
       IResource resource = resourceArtifact.getAssociatedResource();
       IMovableUnit movableUnit = MovableUnit.createFromResource(resource, resourceArtifact.getModularizedSystem());

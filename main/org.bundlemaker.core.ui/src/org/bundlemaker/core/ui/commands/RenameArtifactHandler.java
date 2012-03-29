@@ -1,8 +1,8 @@
 package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -14,7 +14,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
-
 public class RenameArtifactHandler extends AbstractBundleMakerHandler {
 
   /**
@@ -24,7 +23,7 @@ public class RenameArtifactHandler extends AbstractBundleMakerHandler {
   protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
 
     IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-    IArtifact artifact = (IArtifact) structuredSelection.getFirstElement();
+    IBundleMakerArtifact artifact = (IBundleMakerArtifact) structuredSelection.getFirstElement();
     if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
 
       // JFace Input Dialog
