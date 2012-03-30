@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+
+
+   <!-- the pop up menus -->
+   <extension point="org.eclipse.ui.handlers">
+      <handler class="org.bundlemaker.core.ui.editor.xref.handler.OpenXRefViewHandler"
+         commandId="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand">
+         <activeWhen>
+            <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+            > </reference>
+         </activeWhen>
+         <enabledWhen>
+            <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+            > </reference>
+         </enabledWhen>
+      </handler>
+   </extension>
+
+   <extension point="org.eclipse.ui.commands">
+      <command id="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand" name="Open XRef view"/>
+   </extension>
+
+   <!-- XRef Submenu -->
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+         locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+         <separator name="org.bundlemaker.core.ui.editor.xref.separator" visible="true"> </separator>
+         <command commandId="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand" style="push">
+            <visibleWhen checkEnabled="true"/>
+         </command>
+      </menuContribution>
+   </extension>
+
+   <!-- XREF EDITOR -->
+   <extension point="org.eclipse.ui.editors">
+      <editor class="org.bundlemaker.core.ui.editor.xref.XRefView" default="false"
+         icon="icons/module.gif" id="org.bundlemaker.core.ui.editor.xref.XRefView"
+         name="Cross Referencer"> </editor>
+   </extension>
+
+</plugin>

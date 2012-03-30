@@ -1,4 +1,4 @@
-package org.bundlemaker.analysis.ui.xref.views;
+package org.bundlemaker.core.ui.editor.xref;
 
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;

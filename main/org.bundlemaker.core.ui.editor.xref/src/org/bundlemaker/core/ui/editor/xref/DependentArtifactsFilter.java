@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.ui.xref.views;
+package org.bundlemaker.core.ui.editor.xref;
 
 import java.util.HashSet;
 import java.util.List;
