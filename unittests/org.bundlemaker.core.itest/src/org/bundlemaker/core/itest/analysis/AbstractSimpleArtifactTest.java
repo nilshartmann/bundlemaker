@@ -9,7 +9,7 @@ import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -65,7 +65,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   public void testGroup_RemoveModuleAndAddToSameGroup() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -99,7 +99,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   public void testGroup_RemoveModuleAndAddToExistingOtherGroup() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -160,7 +160,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   public void testGroup_RemoveGroupAndAddToSameGroup() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -191,7 +191,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   public void testGroup_RemoveGroupAndAddToExistingOtherGroup() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -294,7 +294,10 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(group1_Artifact);
 
     //
-    group1_Artifact.getOrCreateGroup("group2");
+    IGroupArtifact group1_no2_Artifact = group1_Artifact.getOrCreateGroup("group1");
+    
+    //
+    rootArtifact.addArtifact(group1_no2_Artifact);
   }
 
   /**
@@ -354,7 +357,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertSame(typeContainingModule, module);
 
     // transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 

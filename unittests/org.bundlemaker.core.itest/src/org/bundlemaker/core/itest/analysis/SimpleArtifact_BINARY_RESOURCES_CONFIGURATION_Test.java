@@ -11,7 +11,7 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.CoreException;
@@ -49,7 +49,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
   public void testTransformedModel() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
     ArtifactUtils.dumpArtifact(rootArtifact);
@@ -95,7 +95,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
   public void testPackage_SimpleRemoveAndAdd() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -129,7 +129,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
   public void testResource_SimpleRemoveAndAdd() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 

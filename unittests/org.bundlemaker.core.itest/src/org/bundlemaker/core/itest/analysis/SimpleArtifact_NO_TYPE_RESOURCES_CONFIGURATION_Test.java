@@ -4,7 +4,7 @@ import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
@@ -32,7 +32,7 @@ public class SimpleArtifact_NO_TYPE_RESOURCES_CONFIGURATION_Test extends Abstrac
   public void testType_RemoveAndAddToParentPackage() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -70,7 +70,7 @@ public class SimpleArtifact_NO_TYPE_RESOURCES_CONFIGURATION_Test extends Abstrac
   public void testType_RemoveAndAddToParentModule() throws CoreException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformer.getDependencyModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
