@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IModuleIdentifier;
@@ -25,7 +25,7 @@ public class ModelTransformer {
   private IModifiableModularizedSystem _modifiableModularizedSystem;
 
   /** - */
-  private IArtifact                    _artifactModel;
+  private IBundleMakerArtifact         _artifactModel;
 
   /** - */
   private ArtifactCache                _artifactCache;
@@ -59,7 +59,7 @@ public class ModelTransformer {
    * 
    * @return
    */
-  public IArtifact getRoot() {
+  public IBundleMakerArtifact getRoot() {
     return _artifactModel;
   }
 
@@ -94,7 +94,7 @@ public class ModelTransformer {
    * {@inheritDoc}
    */
   // TODO: name/qualifiedname
-  private IArtifact createArtifactContainer(String name, String qualifiedName, ArtifactType type) {
+  private IBundleMakerArtifact createArtifactContainer(String name, String qualifiedName, ArtifactType type) {
 
     //
     Assert.isNotNull(name);

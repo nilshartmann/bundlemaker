@@ -12,10 +12,10 @@ package org.bundlemaker.core.ui.selection;
 
 import java.util.Collection;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
- * A central selection service for selected {@link IArtifact artifacts}
+ * A central selection service for selected {@link IBundleMakerArtifact artifacts}
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
@@ -37,7 +37,7 @@ public interface IArtifactSelectionService {
    * @param selectedArtifacts
    *          the (newly) selected artifacts. might be null, resulting in an empty selection
    */
-  public void setSelection(String selectionProviderId, Collection<IArtifact> selectedArtifacts);
+  public void setSelection(String selectionProviderId, Collection<IBundleMakerArtifact> selectedArtifacts);
 
   /**
    * Registers an {@link IArtifactSelectionListener} for the specified providerId.
@@ -53,23 +53,10 @@ public interface IArtifactSelectionService {
    */
   public void addArtifactSelectionListener(String providerId, IArtifactSelectionListener listener);
 
-  // /**
-  // * Registers an {@link IArtifactSelectionListener} for all providers.
-  // *
-  // * <p>
-  // * Same as calling <tt>addArtifactSelectionListener(null, listener)</tt>
-  // *
-  // * @param listener
-  // * the listener. Must not be null
-  // */
-  //
-  // public void addArtifactSelectionListener(IArtifactSelectionListener listener);
-
   /**
    * Removes the specified listener
    * 
    * @param listener
    */
   public void removeArtifactSelectionListener(IArtifactSelectionListener listener);
-
 }

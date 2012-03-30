@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
@@ -140,7 +139,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   }
 
   @Override
-  public void setParent(IArtifact parent) {
+  public void setParent(IBundleMakerArtifact parent) {
     super.setParent(parent);
     getRoot();
   }
@@ -177,7 +176,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   public boolean containsTypes() {
 
     // return 'true' if any child contains (or is) a type
-    for (IArtifact artifact : getChildren()) {
+    for (IBundleMakerArtifact artifact : getChildren()) {
       if (((IBundleMakerArtifact) artifact).containsTypes()) {
         return true;
       }
@@ -194,7 +193,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
   public boolean containsResources() {
 
     // return 'true' if any child contains (or is) a resource
-    for (IArtifact artifact : getChildren()) {
+    for (IBundleMakerArtifact artifact : getChildren()) {
       if (((IBundleMakerArtifact) artifact).containsResources()) {
         return true;
       }
@@ -208,7 +207,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * {@inheritDoc}
    */
   @Override
-  public final boolean canAdd(IArtifact artifact) {
+  public final boolean canAdd(IBundleMakerArtifact artifact) {
 
     if (artifact == null) {
       return false;
@@ -268,7 +267,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * {@inheritDoc}
    */
   @Override
-  public final void addArtifact(IArtifact artifact) {
+  public final void addArtifact(IBundleMakerArtifact artifact) {
 
     // asserts
     Assert.isNotNull(artifact);
@@ -288,7 +287,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * {@inheritDoc}
    */
   @Override
-  public final boolean removeArtifact(IArtifact artifact) {
+  public final boolean removeArtifact(IBundleMakerArtifact artifact) {
     Assert.isNotNull(artifact);
 
     // set the change action
@@ -310,7 +309,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * 
    * @param artifact
    */
-  public final void internalAddArtifact(IArtifact artifact) {
+  public final void internalAddArtifact(IBundleMakerArtifact artifact) {
 
     // assert not null
     Assert.isNotNull(artifact);
@@ -330,7 +329,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * 
    * @param artifact
    */
-  public final void internalRemoveArtifact(IArtifact artifact) {
+  public final void internalRemoveArtifact(IBundleMakerArtifact artifact) {
 
     // assert not null
     Assert.isNotNull(artifact);
@@ -366,7 +365,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * @param artifact
    * @return
    */
-  protected String handleCanAdd(IArtifact artifact) {
+  protected String handleCanAdd(IBundleMakerArtifact artifact) {
     return null;
   }
 
@@ -376,7 +375,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
    * 
    * @param artifact
    */
-  protected void assertCanAdd(IArtifact artifact) {
+  protected void assertCanAdd(IBundleMakerArtifact artifact) {
 
     //
     if (artifact == null) {

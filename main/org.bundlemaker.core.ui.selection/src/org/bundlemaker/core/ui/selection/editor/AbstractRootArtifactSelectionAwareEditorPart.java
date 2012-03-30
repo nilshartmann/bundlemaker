@@ -1,6 +1,5 @@
 package org.bundlemaker.core.ui.selection.editor;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionListener;
@@ -43,7 +42,7 @@ public abstract class AbstractRootArtifactSelectionAwareEditorPart extends Edito
 
   /**
    * <p>
-   * Returns the {@link IArtifact} instances that should be visualized
+   * Returns the {@link IRootArtifactSelection} instances that should be visualized
    * </p>
    * 
    * @return

@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterPackage2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
@@ -39,7 +39,7 @@ public class PackageSubCache extends AbstractSubCache<ModulePackageKey, Abstract
     Assert.isNotNull(modulePackageKey);
 
     // get the parent for this package
-    IArtifact parent = getPackageParent(modulePackageKey);
+    IBundleMakerArtifact parent = getPackageParent(modulePackageKey);
 
     // return the package artifact
     return new AdapterPackage2IArtifact(modulePackageKey.getPackageName(), parent, modulePackageKey.getModuleKey()
@@ -54,7 +54,7 @@ public class PackageSubCache extends AbstractSubCache<ModulePackageKey, Abstract
    * @param modulePackageKey
    * @return
    */
-  public IArtifact getPackageParent(ModulePackageKey modulePackageKey) {
+  public IBundleMakerArtifact getPackageParent(ModulePackageKey modulePackageKey) {
 
     Assert.isNotNull(modulePackageKey);
 

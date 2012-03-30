@@ -1,7 +1,6 @@
 package org.bundlemaker.core.internal.analysis.virtual;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -29,7 +28,7 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
    * @param fullyQualifiedName
    * @param parent
    */
-  public VirtualModule2IArtifact(String name, String fullyQualifiedName, IArtifact parent) {
+  public VirtualModule2IArtifact(String name, String fullyQualifiedName, IBundleMakerArtifact parent) {
     super(ArtifactType.Module, name);
 
     _fullyQualifiedName = fullyQualifiedName;
@@ -86,7 +85,7 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
   }
 
   @Override
-  public String handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifact) {
     return "Can not artifacts to virtual modules.";
   }
 
@@ -110,7 +109,7 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
     //
     if (visitor.visit(this)) {
       //
-      for (IArtifact artifact : getChildren()) {
+      for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }

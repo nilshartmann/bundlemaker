@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -40,7 +39,7 @@ public class AdapterUtils {
   public static IModifiableModularizedSystem getModularizedSystem(IBundleMakerArtifact artifact) {
 
     //
-    IArtifact root = ((IBundleMakerArtifact) artifact).getRoot();
+    IBundleMakerArtifact root = ((IBundleMakerArtifact) artifact).getRoot();
 
     //
     Assert.isNotNull(root, "No root for :" + ArtifactUtils.artifactToString(artifact));
@@ -64,10 +63,10 @@ public class AdapterUtils {
     IModifiableModularizedSystem modularizedSystem = AdapterUtils.getModularizedSystem(artifact);
 
     //
-    List<IArtifact> artifacts = getAllContainedResourceModules(artifact);
+    List<IBundleMakerArtifact> artifacts = getAllContainedResourceModules(artifact);
 
     //
-    for (IArtifact moduleArtifact : artifacts) {
+    for (IBundleMakerArtifact moduleArtifact : artifacts) {
 
       //
       if (moduleArtifact.getParent() != null && !artifact.getType().equals(ArtifactType.Module)) {
@@ -101,13 +100,13 @@ public class AdapterUtils {
     return !artifacts.isEmpty();
   }
 
-  public static String computeRelativeClassification(IArtifact artifact, IArtifact moduleArtifact) {
+  public static String computeRelativeClassification(IBundleMakerArtifact artifact, IBundleMakerArtifact moduleArtifact) {
 
     //
-    List<IArtifact> groups = new LinkedList<IArtifact>();
+    List<IBundleMakerArtifact> groups = new LinkedList<IBundleMakerArtifact>();
 
     //
-    IArtifact currentArtifact = moduleArtifact;
+    IBundleMakerArtifact currentArtifact = moduleArtifact;
     while (currentArtifact.getParent() != null && currentArtifact.getParent().getType().equals(ArtifactType.Group)) {
       currentArtifact = currentArtifact.getParent();
       groups.add(currentArtifact);
@@ -118,8 +117,8 @@ public class AdapterUtils {
 
     //
     StringBuilder builder = new StringBuilder();
-    for (Iterator<IArtifact> iterator = groups.iterator(); iterator.hasNext();) {
-      IArtifact iArtifact = iterator.next();
+    for (Iterator<IBundleMakerArtifact> iterator = groups.iterator(); iterator.hasNext();) {
+      IBundleMakerArtifact iArtifact = iterator.next();
       builder.append(iArtifact.getName());
       if (iterator.hasNext()) {
         builder.append("|");
@@ -142,10 +141,10 @@ public class AdapterUtils {
     IModifiableModularizedSystem modularizedSystem = AdapterUtils.getModularizedSystem(artifact);
 
     //
-    List<IArtifact> artifacts = getAllContainedResourceModules(artifact);
+    List<IBundleMakerArtifact> artifacts = getAllContainedResourceModules(artifact);
 
     //
-    for (IArtifact moduleArtifact : artifacts) {
+    for (IBundleMakerArtifact moduleArtifact : artifacts) {
 
       // TODO
       AdapterModule2IArtifact module2IArtifact = ((AdapterModule2IArtifact) moduleArtifact);
@@ -162,7 +161,8 @@ public class AdapterUtils {
    * @param adapterPackage2IArtifact
    * @param artifact
    */
-  public static void addArtifactToPackage(AdapterPackage2IArtifact adapterPackage2IArtifact, IArtifact artifact) {
+  public static void addArtifactToPackage(AdapterPackage2IArtifact adapterPackage2IArtifact,
+      IBundleMakerArtifact artifact) {
 
     Assert.isNotNull(adapterPackage2IArtifact);
     Assert.isNotNull(artifact);
@@ -185,7 +185,7 @@ public class AdapterUtils {
    * @param artifactToRemove
    * @param adapterPackage2IArtifact
    */
-  public static void removeArtifact(IArtifact artifactToRemove, IArtifact artifactToRemoveFrom) {
+  public static void removeArtifact(IBundleMakerArtifact artifactToRemove, IBundleMakerArtifact artifactToRemoveFrom) {
 
     //
     AdapterResourceModule2IArtifact moduleArtifact = null;
@@ -214,7 +214,8 @@ public class AdapterUtils {
   // * @param packageArtifact
   // * @param moduleArtifact
   // */
-  // public static void removePackageFromModule(IArtifact packageArtifact, IArtifact moduleArtifact) {
+  // public static void removePackageFromModule(IBundleMakerArtifact packageArtifact, IBundleMakerArtifact
+  // moduleArtifact) {
   //
   // Assert.isTrue(packageArtifact instanceof AdapterPackage2IArtifact);
   // Assert.isTrue(moduleArtifact instanceof AdapterResourceModule2IArtifact);
@@ -237,7 +238,7 @@ public class AdapterUtils {
    * @param packageArtifact
    * @param moduleArtifact
    */
-  public static void addPackageToModule(IArtifact packageArtifact, IArtifact moduleArtifact) {
+  public static void addPackageToModule(IBundleMakerArtifact packageArtifact, IBundleMakerArtifact moduleArtifact) {
 
     Assert.isTrue(packageArtifact instanceof AdapterPackage2IArtifact);
     Assert.isTrue(moduleArtifact instanceof AdapterResourceModule2IArtifact);
@@ -260,16 +261,16 @@ public class AdapterUtils {
    * @param artifact
    * @return
    */
-  private static List<IArtifact> getAllContainedResourceModules(IArtifact artifact) {
+  private static List<IBundleMakerArtifact> getAllContainedResourceModules(IBundleMakerArtifact artifact) {
 
     //
-    List<IArtifact> result = new LinkedList<IArtifact>();
+    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
 
     //
     if (artifact.getType().equals(ArtifactType.Module)) {
       result.add(artifact);
     } else if (artifact.getType().equals(ArtifactType.Group) || artifact.getType().equals(ArtifactType.Root)) {
-      for (IArtifact child : artifact.getChildren()) {
+      for (IBundleMakerArtifact child : artifact.getChildren()) {
         result.addAll(getAllContainedResourceModules(child));
       }
     }
@@ -278,7 +279,7 @@ public class AdapterUtils {
     return result;
   }
 
-  public static List<IMovableUnit> getAllMovableUnits(IArtifact artifact) {
+  public static List<IMovableUnit> getAllMovableUnits(IBundleMakerArtifact artifact) {
 
     //
     List<IMovableUnit> result = new LinkedList<IMovableUnit>();
@@ -291,7 +292,7 @@ public class AdapterUtils {
       // DO NOT ADD THE CHILDREN OF 'IMovableUnit'
 
     } else {
-      for (IArtifact child : artifact.getChildren()) {
+      for (IBundleMakerArtifact child : artifact.getChildren()) {
         result.addAll(getAllMovableUnits(child));
       }
     }
@@ -300,7 +301,7 @@ public class AdapterUtils {
     return result;
   }
 
-  private static List<ITypeArtifact> getAllContainedTypeHolder(IArtifact artifact) {
+  private static List<ITypeArtifact> getAllContainedTypeHolder(IBundleMakerArtifact artifact) {
 
     List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
 
@@ -312,7 +313,7 @@ public class AdapterUtils {
       // DO NOT ADD THE CHILDREN OF 'IResourceHolder'
 
     } else {
-      for (IArtifact child : artifact.getChildren()) {
+      for (IBundleMakerArtifact child : artifact.getChildren()) {
         result.addAll(getAllContainedTypeHolder(child));
       }
     }

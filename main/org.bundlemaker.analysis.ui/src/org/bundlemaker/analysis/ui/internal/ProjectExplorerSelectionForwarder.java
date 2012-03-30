@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,7 +30,7 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
   @Override
   public void selectionChanged(IWorkbenchPart part, ISelection selection) {
     // Get selected artifacts
-    List<IArtifact> artifacts = getSelectedObject(selection, IArtifact.class);
+    List<IBundleMakerArtifact> artifacts = getSelectedObject(selection, IBundleMakerArtifact.class);
 
     // System.out.printf("Forwarding event from '%s' with selection '%s'. Artifacts: %s%n", part.getSite().getId(),
     // selection, artifacts);

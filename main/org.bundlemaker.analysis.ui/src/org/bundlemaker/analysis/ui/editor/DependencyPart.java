@@ -3,7 +3,7 @@ package org.bundlemaker.analysis.ui.editor;
 import java.util.Collections;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -22,14 +22,14 @@ import org.eclipse.swt.widgets.Composite;
  */
 public abstract class DependencyPart {
 
-  private Composite          composite;
+  private Composite                  composite;
 
-  private ISelectionProvider _selectionProvider;
+  private ISelectionProvider         _selectionProvider;
 
   /**
    * The current artifacts (contents) of this dependency part
    */
-  private List<IArtifact>    _currentArtifacts;
+  private List<IBundleMakerArtifact> _currentArtifacts;
 
   public DependencyPart() {
     _currentArtifacts = Collections.emptyList();
@@ -137,7 +137,7 @@ public abstract class DependencyPart {
    * @param artifacts
    *          The new artifacts. Must not be null but might be empty
    */
-  protected void useArtifacts(List<IArtifact> artifacts) {
+  protected void useArtifacts(List<IBundleMakerArtifact> artifacts) {
     _currentArtifacts = artifacts;
   }
 
@@ -148,7 +148,7 @@ public abstract class DependencyPart {
    * 
    * @return
    */
-  public List<IArtifact> getCurrentArtifacts() {
+  public List<IBundleMakerArtifact> getCurrentArtifacts() {
     return _currentArtifacts;
 
   }

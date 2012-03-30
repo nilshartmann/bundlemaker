@@ -16,8 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.bundlemaker.core.ui.selection.editor.AbstractRootArtifactSelectionAwareEditorPart;
@@ -58,11 +58,11 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
 
   private TreeViewerPanel    rightTree;
 
-  private IArtifact          rootArtifact;
+  private IBundleMakerArtifact          rootArtifact;
 
-  private List<IArtifact>    middleSelectedArtifacts;
+  private List<IBundleMakerArtifact>    middleSelectedArtifacts;
 
-  private List<IArtifact>    dependentSelectedArtifacts;
+  private List<IBundleMakerArtifact>    dependentSelectedArtifacts;
 
   private boolean            showUsedDependencies = true;
 
@@ -132,16 +132,16 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
     super.dispose();
   }
 
-  private void selectLeftTree(List<IArtifact> selectedArtifacts) {
+  private void selectLeftTree(List<IBundleMakerArtifact> selectedArtifacts) {
     dependentSelectedArtifacts = selectedArtifacts;
     showUsedDependencies = true;
     rightTree.getTreeViewer().getTree().deselectAll();
     showDependencyDetails(selectedArtifacts, middleSelectedArtifacts);
   }
 
-  private int getTypeCount(List<IArtifact> artifacts) {
-    Set<IArtifact> types = new HashSet<IArtifact>();
-    for (IArtifact artifact : artifacts) {
+  private int getTypeCount(List<IBundleMakerArtifact> artifacts) {
+    Set<IBundleMakerArtifact> types = new HashSet<IBundleMakerArtifact>();
+    for (IBundleMakerArtifact artifact : artifacts) {
       if (artifact.getType().isContainer()) {
         types.addAll(artifact.getLeafs());
       } else {
@@ -151,10 +151,10 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
     return types.size();
   }
 
-  private void selectMiddleTree(List<IArtifact> selectedArtifacts) {
+  private void selectMiddleTree(List<IBundleMakerArtifact> selectedArtifacts) {
     middleSelectedArtifacts = selectedArtifacts;
-    List<IArtifact> dependentArtifacts = getDependencies(selectedArtifacts);
-    List<IArtifact> usedByArtifacts = getUsedByArtifacts(selectedArtifacts);
+    List<IBundleMakerArtifact> dependentArtifacts = getDependencies(selectedArtifacts);
+    List<IBundleMakerArtifact> usedByArtifacts = getUsedByArtifacts(selectedArtifacts);
     leftTree.setTitle("Used By: " + getTypeCount(usedByArtifacts));
     middleTree.setTitle("Artifacts: " + getTypeCount(selectedArtifacts));
     rightTree.setTitle("Using: " + getTypeCount(dependentArtifacts));
@@ -167,16 +167,16 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
     }
   }
 
-  private void selectRightTree(List<IArtifact> selectedArtifacts) {
+  private void selectRightTree(List<IBundleMakerArtifact> selectedArtifacts) {
     showUsedDependencies = false;
     leftTree.getTreeViewer().getTree().deselectAll();
     showDependencyDetails(middleSelectedArtifacts, selectedArtifacts);
   }
 
-  private void showDependencyDetails(List<IArtifact> fromArtifacts, List<IArtifact> toArtifacts) {
+  private void showDependencyDetails(List<IBundleMakerArtifact> fromArtifacts, List<IBundleMakerArtifact> toArtifacts) {
     List<IDependency> dependencies = new ArrayList<IDependency>();
     if ((fromArtifacts != null) && (toArtifacts != null)) {
-      for (IArtifact artifact : fromArtifacts) {
+      for (IBundleMakerArtifact artifact : fromArtifacts) {
         dependencies.addAll(artifact.getDependencies(toArtifacts));
       }
       Selection.instance().getDependencySelectionService()
@@ -184,9 +184,9 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
     }
   }
 
-  private List<IArtifact> getDependencies(List<IArtifact> selectedArtifacts) {
-    List<IArtifact> dependentArtifacts = new ArrayList<IArtifact>();
-    for (IArtifact artifact : selectedArtifacts) {
+  private List<IBundleMakerArtifact> getDependencies(List<IBundleMakerArtifact> selectedArtifacts) {
+    List<IBundleMakerArtifact> dependentArtifacts = new ArrayList<IBundleMakerArtifact>();
+    for (IBundleMakerArtifact artifact : selectedArtifacts) {
       for (IDependency dependency : artifact.getDependencies()) {
         dependentArtifacts.add(dependency.getTo());
       }
@@ -194,9 +194,9 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
     return dependentArtifacts;
   }
 
-  private List<IArtifact> getUsedByArtifacts(List<IArtifact> selectedArtifacts) {
+  private List<IBundleMakerArtifact> getUsedByArtifacts(List<IBundleMakerArtifact> selectedArtifacts) {
     Collection<? extends IDependency> usedByDependencies = rootArtifact.getDependencies(selectedArtifacts);
-    List<IArtifact> dependentArtifacts = new ArrayList<IArtifact>();
+    List<IBundleMakerArtifact> dependentArtifacts = new ArrayList<IBundleMakerArtifact>();
     for (IDependency dependency : usedByDependencies) {
       Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
       dependency.getLeafDependencies(leafDependencies);

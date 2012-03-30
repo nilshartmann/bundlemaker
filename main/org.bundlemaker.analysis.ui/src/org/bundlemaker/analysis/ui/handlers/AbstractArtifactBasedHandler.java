@@ -12,8 +12,8 @@ package org.bundlemaker.analysis.ui.handlers;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.internal.Activator;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -32,7 +32,7 @@ public abstract class AbstractArtifactBasedHandler extends AbstractBundleMakerHa
 
   @Override
   protected void execute(ExecutionEvent event, ISelection structuredSelection) throws Exception {
-    List<IArtifact> selectedArtifacts = getSelectedObject(structuredSelection, IArtifact.class);
+    List<IBundleMakerArtifact> selectedArtifacts = getSelectedObject(structuredSelection, IBundleMakerArtifact.class);
 
     // Invoke execution method
     execute(event, selectedArtifacts);
@@ -44,7 +44,7 @@ public abstract class AbstractArtifactBasedHandler extends AbstractBundleMakerHa
    * @param selectedArtifacts
    *          The {@link IArtifact} objects that are selected in the tree. Never null.
    */
-  protected abstract void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception;
+  protected abstract void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception;
 
   @Override
   protected void reportError(String pluginId, String message, Throwable ex) {

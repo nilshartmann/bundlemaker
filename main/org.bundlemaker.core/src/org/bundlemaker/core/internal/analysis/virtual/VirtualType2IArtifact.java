@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
@@ -55,7 +54,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
    * @param type
    * @param classification
    */
-  public VirtualType2IArtifact(String name, String fullyQualifiedName, IArtifact parent) {
+  public VirtualType2IArtifact(String name, String fullyQualifiedName, IBundleMakerArtifact parent) {
 
     super(ArtifactType.Type, name);
 
@@ -181,12 +180,12 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public List<IArtifact> invalidateDependencyCache() {
-    return Arrays.asList(new IArtifact[] { this });
+  public List<IBundleMakerArtifact> invalidateDependencyCache() {
+    return Arrays.asList(new IBundleMakerArtifact[] { this });
   }
 
   @Override
-  public Map<IArtifact, IDependency> getCachedDependencies() {
+  public Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
     return Collections.emptyMap();
   }
 
@@ -245,7 +244,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public void setParent(IArtifact parent) {
+  public void setParent(IBundleMakerArtifact parent) {
 
     //
     super.setParent(parent);
@@ -270,12 +269,12 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
+  public boolean removeArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public void addArtifact(IArtifact artifact) {
+  public void addArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException();
   }
 
@@ -293,12 +292,12 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public boolean contains(IArtifact artifact) {
+  public boolean contains(IBundleMakerArtifact artifact) {
     return this.equals(artifact);
   }
 
   @Override
-  public IDependency getDependency(IArtifact artifact) {
+  public IDependency getDependency(IBundleMakerArtifact artifact) {
     return null;
   }
 
@@ -308,7 +307,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public Collection<IArtifact> getLeafs() {
+  public Collection<IBundleMakerArtifact> getLeafs() {
     // simply return null
     return null;
   }
@@ -324,7 +323,7 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   // }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
+  public boolean canAdd(IBundleMakerArtifact artifact) {
     return false;
   }
 

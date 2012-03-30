@@ -12,8 +12,8 @@ package org.bundlemaker.core.ui.editor.xref.handler;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.editor.xref.XRefView;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
@@ -40,23 +40,21 @@ public class OpenXRefViewHandler extends AbstractArtifactBasedHandler {
    * java.util.List)
    */
   @Override
-  protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
+  protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
     IWorkbenchPage page = getActiveWorkbenchPage();
     if (page != null) {
       try {
         IEditorPart editorPart = page.openEditor(nullInputEditor, XRefView.ID);
         if (!(editorPart instanceof XRefView)) {
-          System.err.println("EditorPart " + editorPart + " is not a DSMViewNeu?");
+          System.err.println("EditorPart " + editorPart + " is not a XRefView?");
           return;
         }
-
-        XRefView genericEditor = (XRefView) editorPart;
       } catch (PartInitException e) {
         e.printStackTrace();
       }
     }
   }
-  
+
   private IWorkbenchPage getActiveWorkbenchPage() {
     IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     if (workbenchWindow != null) {

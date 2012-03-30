@@ -1,7 +1,6 @@
 package org.bundlemaker.core.ui.view.dependencytable;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
@@ -31,14 +30,14 @@ public class ArtifactPathLabelGenerator {
   /**
    * The common base artifact that is used to calculate the labels
    */
-  private IArtifact _baseArtifact;
+  private IBundleMakerArtifact _baseArtifact;
 
-  private IArtifact _titleArtifact;
+  private IBundleMakerArtifact _titleArtifact;
 
   /**
    * @return the baseArtifact
    */
-  public IArtifact getBaseArtifact() {
+  public IBundleMakerArtifact getBaseArtifact() {
     return _baseArtifact;
   }
 
@@ -46,7 +45,7 @@ public class ArtifactPathLabelGenerator {
    * @param baseArtifact
    *          the baseArtifact to set
    */
-  public void setBaseArtifact(IArtifact baseArtifact) {
+  public void setBaseArtifact(IBundleMakerArtifact baseArtifact) {
     _baseArtifact = baseArtifact;
     _titleArtifact = null;
   }
@@ -56,12 +55,12 @@ public class ArtifactPathLabelGenerator {
    * 
    * @return
    */
-  protected IArtifact getTitleArtifact() {
+  protected IBundleMakerArtifact getTitleArtifact() {
     if (_titleArtifact != null) {
       return _titleArtifact;
     }
 
-    IArtifact artifact = _baseArtifact;
+    IBundleMakerArtifact artifact = _baseArtifact;
     if (artifact == null) {
       return null;
     }
@@ -81,7 +80,7 @@ public class ArtifactPathLabelGenerator {
   }
 
   public String getTitle() {
-    IArtifact artifact = getTitleArtifact();
+    IBundleMakerArtifact artifact = getTitleArtifact();
     if (artifact == null) {
       return "";
     }
@@ -108,14 +107,14 @@ public class ArtifactPathLabelGenerator {
   /**
    * @return
    */
-  public String getLabel(IArtifact typeArtifact) {
+  public String getLabel(IBundleMakerArtifact typeArtifact) {
 
-    IArtifact titleArtifact = getTitleArtifact();
+    IBundleMakerArtifact titleArtifact = getTitleArtifact();
     if (titleArtifact == null) {
       return "";
     }
 
-    IArtifact artifact = typeArtifact;
+    IBundleMakerArtifact artifact = typeArtifact;
 
     String path = "";
     boolean inPackage = false;

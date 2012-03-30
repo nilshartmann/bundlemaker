@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -34,7 +33,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    * 
    * @param modularizedSystem
    */
-  public AdapterGroup2IArtifact(String name, IArtifact parent) {
+  public AdapterGroup2IArtifact(String name, IBundleMakerArtifact parent) {
     super(ArtifactType.Group, name);
 
     Assert.isNotNull(parent);
@@ -94,7 +93,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
     List<String> groupNames = new LinkedList<String>();
 
     //
-    IArtifact group = this;
+    IBundleMakerArtifact group = this;
     while (group != null && ArtifactType.Group.equals(group.getType())) {
       groupNames.add(group.getName());
       group = group.getParent();
@@ -122,7 +121,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    * {@inheritDoc}
    */
   @Override
-  public String handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     //
     if (!(artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact)) {
@@ -168,7 +167,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
     //
     if (visitor.visit(this)) {
       //
-      for (IArtifact artifact : getChildren()) {
+      for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }

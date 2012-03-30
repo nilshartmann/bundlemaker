@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
@@ -88,14 +87,6 @@ public class ArtifactSelectionService extends
     _rootSelectionlistenerList.add(wrapper);
   }
 
-//  /**
-//   * {@inheritDoc}
-//   */
-//  @Override
-//  public void addRootArtifactSelectionListener(IRootArtifactSelectionListener listener) {
-//    addRootArtifactSelectionListener(null, listener);
-//  }
-
   /**
    * {@inheritDoc}
    */
@@ -113,13 +104,13 @@ public class ArtifactSelectionService extends
   }
 
   @Override
-  public void setSelection(String providerId, Collection<IArtifact> selectedArtifacts) {
+  public void setSelection(String providerId, Collection<IBundleMakerArtifact> selectedArtifacts) {
     Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
     Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
 
     // create selection object for selected artifacts
-    ArtifactSelection artifactSelection = new ArtifactSelection(providerId,
-        new LinkedList<IArtifact>(selectedArtifacts));
+    ArtifactSelection artifactSelection = new ArtifactSelection(providerId, new LinkedList<IBundleMakerArtifact>(
+        selectedArtifacts));
 
     // set the selection
     setSelection(providerId, artifactSelection);
@@ -131,11 +122,6 @@ public class ArtifactSelectionService extends
 
     addSelectionListener(providerId, listener);
   }
-
-  // @Override
-  // public void addArtifactSelectionListener(IArtifactSelectionListener listener) {
-  // addArtifactSelectionListener(null, listener);
-  // }
 
   @Override
   public void removeArtifactSelectionListener(IArtifactSelectionListener listener) {
@@ -165,7 +151,7 @@ public class ArtifactSelectionService extends
    */
   @Override
   protected IArtifactSelection getNullSelection(String providerId) {
-    List<IArtifact> emptyList = Collections.emptyList();
+    List<IBundleMakerArtifact> emptyList = Collections.emptyList();
     return new ArtifactSelection(providerId, emptyList);
   }
 

@@ -1,7 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -29,7 +28,7 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
    * 
    * @param modularizedSystem
    */
-  public AdapterModule2IArtifact(IModule module, IArtifact parent) {
+  public AdapterModule2IArtifact(IModule module, IBundleMakerArtifact parent) {
     super(ArtifactType.Module, module.getModuleIdentifier().toString());
 
     Assert.isNotNull(module);
@@ -109,7 +108,7 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
   }
 
   @Override
-  public String handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifact) {
     return "Can not add artifacts to non-resource modules.";
   }
 
@@ -127,7 +126,7 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
     //
     if (visitor.visit(this)) {
       //
-      for (IArtifact artifact : getChildren()) {
+      for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }

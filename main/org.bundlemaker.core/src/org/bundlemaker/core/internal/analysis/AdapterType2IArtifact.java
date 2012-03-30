@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.DependencyKind;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.AbstractArtifact;
 import org.bundlemaker.analysis.model.impl.Dependency;
@@ -50,18 +49,18 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     ITypeArtifact {
 
   /** the bundle maker type */
-  private IType                       _type;
+  private IType                                  _type;
 
   /** - */
-  private ArtifactCache               _artifactCache;
+  private ArtifactCache                          _artifactCache;
 
   /** - */
-  private Map<IArtifact, IDependency> _cachedDependencies;
+  private Map<IBundleMakerArtifact, IDependency> _cachedDependencies;
 
   /** - */
-  private IMovableUnit                _movableUnit;
+  private IMovableUnit                           _movableUnit;
 
-  private IRootArtifact               _root;
+  private IRootArtifact                          _root;
 
   /**
    * <p>
@@ -70,7 +69,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    * @param type
    * @param classification
    */
-  public AdapterType2IArtifact(IType type, ArtifactCache defaultArtifactCache, IArtifact parent) {
+  public AdapterType2IArtifact(IType type, ArtifactCache defaultArtifactCache, IBundleMakerArtifact parent) {
 
     super(ArtifactType.Type, type.getName());
 
@@ -203,7 +202,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   public boolean isMovable() {
 
     //
-    IArtifact artifact = getParent(ArtifactType.Module);
+    IBundleMakerArtifact artifact = getParent(ArtifactType.Module);
 
     //
     if (!(artifact instanceof IModuleArtifact)
@@ -216,13 +215,13 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public List<IArtifact> invalidateDependencyCache() {
+  public List<IBundleMakerArtifact> invalidateDependencyCache() {
     _cachedDependencies = null;
-    return Arrays.asList(new IArtifact[] { this });
+    return Arrays.asList(new IBundleMakerArtifact[] { this });
   }
 
   @Override
-  public Map<IArtifact, IDependency> getCachedDependencies() {
+  public Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
     return _cachedDependencies;
   }
 
@@ -277,7 +276,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public void setParent(IArtifact parent) {
+  public void setParent(IBundleMakerArtifact parent) {
 
     //
     super.setParent(parent);
@@ -315,12 +314,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public boolean contains(IArtifact artifact) {
+  public boolean contains(IBundleMakerArtifact artifact) {
     return this.equals(artifact);
   }
 
   @Override
-  public IDependency getDependency(IArtifact artifact) {
+  public IDependency getDependency(IBundleMakerArtifact artifact) {
 
     //
     initDependencies();
@@ -333,7 +332,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       return _cachedDependencies.get(artifact);
     } else {
       Dependency dependencyContainer = new Dependency(this, artifact, 0);
-      for (IArtifact leaf : artifact.getLeafs()) {
+      for (IBundleMakerArtifact leaf : artifact.getLeafs()) {
         IDependency dependency = getDependency(leaf);
         if ((dependency != null) && (dependency.getTo().getType() == ArtifactType.Type)) {
           dependencyContainer.addDependency(dependency);
@@ -353,7 +352,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public Collection<IArtifact> getLeafs() {
+  public Collection<IBundleMakerArtifact> getLeafs() {
 
     // simply return null
     return null;
@@ -380,7 +379,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     }
 
     //
-    _cachedDependencies = new HashMap<IArtifact, IDependency>();
+    _cachedDependencies = new HashMap<IBundleMakerArtifact, IDependency>();
 
     // TODO: WRONG!
     initReferences(_type.getReferences(), _artifactCache.getConfiguration().isAggregateInnerTypes());
@@ -431,7 +430,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       }
 
       //
-      IArtifact artifact = _artifactCache.getTypeArtifact(referenceName, false);
+      IBundleMakerArtifact artifact = _artifactCache.getTypeArtifact(referenceName, false);
 
       // does the artifact exist?
       if (artifact != null) {
@@ -552,7 +551,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public boolean canAdd(IArtifact artifact) {
+  public boolean canAdd(IBundleMakerArtifact artifact) {
     return false;
   }
 
@@ -581,12 +580,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   }
 
   @Override
-  public void addArtifact(IArtifact artifact) {
+  public void addArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException();
   }
 
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
+  public boolean removeArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException();
   }
 

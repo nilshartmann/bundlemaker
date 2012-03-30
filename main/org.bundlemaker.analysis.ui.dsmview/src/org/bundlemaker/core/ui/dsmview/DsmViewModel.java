@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.dsmview.utils.Tarjan;
 import org.eclipse.core.runtime.Assert;
 
@@ -20,16 +20,16 @@ import org.eclipse.core.runtime.Assert;
 public class DsmViewModel extends AbstractDsmViewModel {
 
   /** - */
-  private List<List<IArtifact>> _cycles;
+  private List<List<IBundleMakerArtifact>> _cycles;
 
   /** - */
-  private IArtifact[]           _artifacts;
+  private IBundleMakerArtifact[]           _artifacts;
 
   /** - */
-  private IDependency[][]       _dependencies;
+  private IDependency[][]                  _dependencies;
 
   /** - */
-  private int[][]               _cycleArray;
+  private int[][]                          _cycleArray;
 
   /**
    * <p>
@@ -46,7 +46,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
    * 
    * @param unorderedArtifacts
    */
-  public DsmViewModel(Collection<? extends IArtifact> unorderedArtifacts) {
+  public DsmViewModel(Collection<? extends IBundleMakerArtifact> unorderedArtifacts) {
 
     initialize(unorderedArtifacts);
   }
@@ -57,7 +57,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
    * </p>
    */
   public DsmViewModel() {
-    _artifacts = new IArtifact[0];
+    _artifacts = new IBundleMakerArtifact[0];
     _dependencies = new IDependency[0][0];
   }
 
@@ -100,7 +100,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
     }
 
     //
-    for (List<IArtifact> artifacts : _cycles) {
+    for (List<IBundleMakerArtifact> artifacts : _cycles) {
       if (artifacts.size() > 1 && artifacts.contains(_artifacts[i]) && artifacts.contains(_artifacts[j])) {
         return true;
       }
@@ -173,37 +173,37 @@ public class DsmViewModel extends AbstractDsmViewModel {
     return null;
   }
 
-  private void initialize(Collection<? extends IArtifact> unorderedArtifacts) {
+  private void initialize(Collection<? extends IBundleMakerArtifact> unorderedArtifacts) {
 
     // IArtifact[] headers, IDependency[][] dependencies
     Assert.isNotNull(unorderedArtifacts);
 
-    _cycles = new Tarjan<IArtifact>().executeTarjan(unorderedArtifacts);
+    _cycles = new Tarjan<IBundleMakerArtifact>().executeTarjan(unorderedArtifacts);
 
     // Map<IArtifact, Integer> artifactColumnMap = new HashMap<IArtifact, Integer>();
-    List<IArtifact> orderedArtifacts = new ArrayList<IArtifact>();
+    List<IBundleMakerArtifact> orderedArtifacts = new ArrayList<IBundleMakerArtifact>();
 
     // hack: artifacts without dependencies first
-    for (List<IArtifact> artifactList : _cycles) {
+    for (List<IBundleMakerArtifact> artifactList : _cycles) {
       if (artifactList.size() == 1 && artifactList.get(0).getDependencies().size() == 0) {
         orderedArtifacts.add(artifactList.get(0));
       }
     }
 
     //
-    for (List<IArtifact> artifactList : _cycles) {
-      for (IArtifact iArtifact : artifactList) {
+    for (List<IBundleMakerArtifact> artifactList : _cycles) {
+      for (IBundleMakerArtifact iArtifact : artifactList) {
         if (!orderedArtifacts.contains(iArtifact)) {
           orderedArtifacts.add(iArtifact);
         }
       }
     }
     Collections.reverse(orderedArtifacts);
-    _artifacts = orderedArtifacts.toArray(new IArtifact[0]);
+    _artifacts = orderedArtifacts.toArray(new IBundleMakerArtifact[0]);
 
     //
     List<int[]> cycles = new LinkedList<int[]>();
-    for (List<IArtifact> artifactList : _cycles) {
+    for (List<IBundleMakerArtifact> artifactList : _cycles) {
       if (artifactList.size() > 1) {
         int[] cycle = new int[artifactList.size()];
         for (int i = 0; i < cycle.length; i++) {

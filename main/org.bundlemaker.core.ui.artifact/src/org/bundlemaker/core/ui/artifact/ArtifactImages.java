@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.artifact;
 
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -17,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
 
 
 /**
- * This enumeration provides icons for several {@link IArtifact} types
+ * This enumeration provides icons for several {@link IBundleMakerArtifact} types
  * 
  * <p>
  * BundleMaker clients should use this class for getting icons for artifacts in order to provide consistent UI look and

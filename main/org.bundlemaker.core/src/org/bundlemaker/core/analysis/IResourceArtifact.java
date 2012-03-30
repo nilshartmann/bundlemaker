@@ -1,6 +1,5 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.resource.IResource;
 
 /**

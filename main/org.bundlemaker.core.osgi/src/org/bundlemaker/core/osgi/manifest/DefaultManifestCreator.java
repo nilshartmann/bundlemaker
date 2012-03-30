@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -388,7 +387,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
         int hostModules = 0;
 
         for (IPackageArtifact iPackageArtifact : duplicatePackageProvider) {
-          IArtifact exportingModuleArtifact = iPackageArtifact.getParent(ArtifactType.Module);
+          IBundleMakerArtifact exportingModuleArtifact = iPackageArtifact.getParent(ArtifactType.Module);
 
           IModule associatedModule = ((IModuleArtifact) exportingModuleArtifact).getAssociatedModule();
 

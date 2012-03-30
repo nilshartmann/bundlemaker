@@ -13,7 +13,6 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -51,7 +50,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
    * @param type
    * @param parent
    */
-  public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IArtifact parent,
+  public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IBundleMakerArtifact parent,
       ArtifactCache artifactCache) {
     super(ArtifactType.Resource, resource.getName());
 
@@ -116,7 +115,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
   @Override
   public boolean isMovable() {
     //
-    IArtifact artifact = getParent(ArtifactType.Module);
+    IBundleMakerArtifact artifact = getParent(ArtifactType.Module);
 
     //
     return artifact instanceof IModuleArtifact
@@ -129,7 +128,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
   }
 
   @Override
-  public String handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifact) {
     return "Can not add artifacts to resource";
   }
 
@@ -171,7 +170,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
     //
     if (visitor.visit(this)) {
       //
-      for (IArtifact artifact : getChildren()) {
+      for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }

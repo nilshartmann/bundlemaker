@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.cache;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -164,7 +163,7 @@ public class ArtifactCache {
    * @param resourceModule
    * @return
    */
-  public final IArtifact getModuleArtifact(IModule module) {
+  public final IBundleMakerArtifact getModuleArtifact(IModule module) {
 
     //
     try {
@@ -181,7 +180,7 @@ public class ArtifactCache {
    * @param type
    * @return
    */
-  public final IArtifact getTypeArtifact(IType type, boolean createIfMissing) {
+  public final IBundleMakerArtifact getTypeArtifact(IType type, boolean createIfMissing) {
     Assert.isNotNull(type);
 
     //
@@ -221,7 +220,7 @@ public class ArtifactCache {
    * @param fullyQualifiedName
    * @throws Exception
    */
-  public final IArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
+  public final IBundleMakerArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
     try {

@@ -7,31 +7,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.Assert;
 
 /**
  */
-public class Tarjan<T extends IArtifact> {
+public class Tarjan<T extends IBundleMakerArtifact> {
 
   /** - */
-  private int                _index                       = 0;
+  private int                    _index                       = 0;
 
   /** - */
-  private ArrayList<Integer> _stack                       = new ArrayList<Integer>();
+  private ArrayList<Integer>     _stack                       = new ArrayList<Integer>();
 
   /** - */
-  private List<List<T>>      _stronglyConnectedComponents = new ArrayList<List<T>>();
+  private List<List<T>>          _stronglyConnectedComponents = new ArrayList<List<T>>();
 
   /** - */
-  int[]                      _vlowlink;
+  int[]                          _vlowlink;
 
   /** - */
-  int[]                      _vindex;
+  int[]                          _vindex;
 
   /** - */
-  private IArtifact[]        _artifacts;
+  private IBundleMakerArtifact[] _artifacts;
 
   /**
    * @param artifacts
@@ -40,7 +40,7 @@ public class Tarjan<T extends IArtifact> {
   public List<List<T>> executeTarjan(Collection<? extends T> artifacts) {
     Assert.isNotNull(artifacts);
 
-    _artifacts = artifacts.toArray(new IArtifact[0]);
+    _artifacts = artifacts.toArray(new IBundleMakerArtifact[0]);
     int[][] adjacencyList = computeAdjacencyList(_artifacts);
     return executeTarjan(adjacencyList);
   }
@@ -104,7 +104,7 @@ public class Tarjan<T extends IArtifact> {
   /**
    * @param children
    */
-  private int[][] computeAdjacencyList(IArtifact[] children) {
+  private int[][] computeAdjacencyList(IBundleMakerArtifact[] children) {
 
     //
     // List<IArtifact> bundleMakerArtifacts = new LinkedList<IArtifact>(
@@ -112,8 +112,8 @@ public class Tarjan<T extends IArtifact> {
 
     // prepare
     int i = 0;
-    Map<IArtifact, Integer> map = new HashMap<IArtifact, Integer>();
-    for (IArtifact iArtifact : children) {
+    Map<IBundleMakerArtifact, Integer> map = new HashMap<IBundleMakerArtifact, Integer>();
+    for (IBundleMakerArtifact iArtifact : children) {
       map.put(iArtifact, i);
       i++;
     }
@@ -122,7 +122,7 @@ public class Tarjan<T extends IArtifact> {
     int[][] matrix = new int[children.length][];
 
     //
-    for (IArtifact artifact : children) {
+    for (IBundleMakerArtifact artifact : children) {
 
       // get the referenced artifacts
       Collection<? extends IDependency> dependencies = artifact.getDependencies(Arrays.asList(children));

@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -31,8 +30,8 @@ public class DependentArtifactsFilter extends ViewerFilter {
 
   public DependentArtifactsFilter(List<IBundleMakerArtifact> visibleArtifacts) {
     this._artifacts.addAll(visibleArtifacts);
-    for (IArtifact dependency : visibleArtifacts) {
-      IArtifact parent = dependency.getParent();
+    for (IBundleMakerArtifact dependency : visibleArtifacts) {
+      IBundleMakerArtifact parent = dependency.getParent();
       while (parent != null) {
         this._artifacts.add((IBundleMakerArtifact) parent);
         parent = parent.getParent();

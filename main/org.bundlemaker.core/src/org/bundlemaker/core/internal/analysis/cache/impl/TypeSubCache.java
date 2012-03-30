@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -70,7 +69,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
   private IBundleMakerArtifact createTypeArtifactFromTypeName(String typeName) {
 
     //
-    IArtifact parent = null;
+    IBundleMakerArtifact parent = null;
 
     //
     int index = typeName.lastIndexOf('.');

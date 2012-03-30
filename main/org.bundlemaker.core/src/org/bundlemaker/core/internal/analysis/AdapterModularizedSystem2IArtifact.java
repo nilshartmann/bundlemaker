@@ -3,7 +3,6 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
@@ -113,7 +112,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
    * {@inheritDoc}
    */
   @Override
-  public List<IArtifact> invalidateDependencyCache() {
+  public List<IBundleMakerArtifact> invalidateDependencyCache() {
     super.invalidateDependencyCache();
     accept(new InvalidateAggregatedDependencies());
     return null;
@@ -148,7 +147,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   }
 
   @Override
-  public String handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifact) {
     //
     if (!(artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact)) {
       return "Only groups and modules are addable to root";
@@ -207,7 +206,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     if (visitor.visit(this)) {
 
       //
-      for (IArtifact artifact : getChildren()) {
+      for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
@@ -264,7 +263,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
         if ((!getConfiguration().isAggregateInnerTypes() && !type.isLocalOrAnonymousType())
             || (getConfiguration().isAggregateInnerTypes() && !type.isInnerType() && type.handleAsPrimaryType())) {
           TypeKey typeKey = new TypeKey(type);
-          IArtifact artifact = _dependencyModel.getArtifactCache().getTypeCache().getOrCreate(typeKey);
+          IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getTypeCache().getOrCreate(typeKey);
           AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getTypeCache()
               .getTypeParent(typeKey.getType());
           parentArtifact.internalAddArtifact(artifact);
@@ -336,7 +335,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
         && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
       for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
-        IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
+        IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
 
         if (artifact != null && artifact.getParent() != null) {
           ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
@@ -345,7 +344,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
     } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
         && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
       IResource resource = movableUnit.getAssociatedSourceResource();
-      IArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
+      IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
 
       if (artifact != null && artifact.getParent() != null) {
         ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
@@ -357,7 +356,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
         TypeSubCache typeCache = _dependencyModel.getArtifactCache().getTypeCache();
 
         //
-        IArtifact artifact = typeCache.get(new TypeKey(type));
+        IBundleMakerArtifact artifact = typeCache.get(new TypeKey(type));
         if (artifact != null && artifact.getParent() != null) {
           ((AbstractBundleMakerArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
         }

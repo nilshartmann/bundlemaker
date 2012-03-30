@@ -3,7 +3,7 @@ package org.bundlemaker.analysis.ui.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -140,7 +140,7 @@ public class GenericEditor extends EditorPart {
 
   }
 
-  public void useArtifacts(List<IArtifact> artifacts) {
+  public void useArtifacts(List<IBundleMakerArtifact> artifacts) {
     // Notify dependency parts of new artifacts
     for (DependencyTabHolder dependencyPart : dependencyParts) {
       dependencyPart.getDependencyPart().useArtifacts(artifacts);

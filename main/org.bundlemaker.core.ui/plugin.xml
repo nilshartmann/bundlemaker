@@ -24,13 +24,13 @@
                id="org.bundlemaker.core.ui.dropAssistant1">
             <possibleDropTargets>
                <instanceof
-                     value="org.bundlemaker.analysis.model.IArtifact">
+                     value="org.bundlemaker.core.analysis.IBundleMakerArtifact">
                </instanceof>
             </possibleDropTargets>
          </dropAssistant>
                 <possibleChildren>
               <instanceof 
-                    value="org.bundlemaker.analysis.model.IArtifact" /> 
+                    value="org.bundlemaker.core.analysis.IBundleMakerArtifact" /> 
      </possibleChildren>
                 <commonSorter
                       class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter">

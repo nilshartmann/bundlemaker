@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
@@ -88,7 +87,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
     createTableViewerColumn(parent, viewer, "From", 45, new DependencyColumnLabelProvider(_fromLabelGenerator) {
       @Override
-      protected IArtifact getArtifactElement(IDependency element) {
+      protected IBundleMakerArtifact getArtifactElement(IDependency element) {
         return element.getFrom();
       }
     });
@@ -108,7 +107,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     createTableViewerColumn(parent, viewer, "To", 45, new DependencyColumnLabelProvider(_toLabelGenerator) {
 
       @Override
-      public IArtifact getArtifactElement(IDependency element) {
+      public IBundleMakerArtifact getArtifactElement(IDependency element) {
         return element.getTo();
       }
     });

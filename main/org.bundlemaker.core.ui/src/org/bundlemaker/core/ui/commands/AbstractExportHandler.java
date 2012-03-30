@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
@@ -48,14 +47,14 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
    * java.util.List)
    */
   @Override
-  protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
+  protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
 
     IModularizedSystem modularizedSystem = null;
 
     try {
-      for (IArtifact iArtifact : selectedArtifacts) {
+      for (IBundleMakerArtifact iArtifact : selectedArtifacts) {
         if (iArtifact instanceof IBundleMakerArtifact) {
-          IBundleMakerArtifact advancedArtifact = (IBundleMakerArtifact) iArtifact;
+          IBundleMakerArtifact advancedArtifact = iArtifact;
           if (modularizedSystem == null) {
             modularizedSystem = advancedArtifact.getModularizedSystem();
           } else if (!modularizedSystem.equals(advancedArtifact.getModularizedSystem())) {
@@ -84,11 +83,12 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
    * @param modularizedSystem
    *          The Modularized system that is parent of the selectedArtifacts
    * @param selectedArtifacts
-   *          The artifact that should be exported. Never null. All contained {@link IArtifact} objects must be long to
-   *          the given modularizedSystem
+   *          The artifact that should be exported. Never null. All contained {@link IBundleMakerArtifact} objects must
+   *          be long to the given modularizedSystem
    * @throws Exception
    */
-  protected void exportAll(IModularizedSystem modularizedSystem, List<IArtifact> selectedArtifacts) throws Exception {
+  protected void exportAll(IModularizedSystem modularizedSystem, List<IBundleMakerArtifact> selectedArtifacts)
+      throws Exception {
 
     File destination = getDestinationDirectory();
     if (destination == null) {
@@ -111,8 +111,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     System.out.println("export done!");
   }
 
-  protected ModularizedSystemExporterAdapter createModularizedSystemExporterAdapter(List<IArtifact> selectedArtifacts)
-      throws Exception {
+  protected ModularizedSystemExporterAdapter createModularizedSystemExporterAdapter(
+      List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
     // create module exporter
     IModuleExporter moduleExporter = createExporter();
 
@@ -125,22 +125,22 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     return adapter;
   }
 
-  protected IQueryFilter<IModule> createModuleFilter(List<IArtifact> artifacts) {
+  protected IQueryFilter<IModule> createModuleFilter(List<IBundleMakerArtifact> artifacts) {
     ListBasedModuleQueryFilter moduleFilter = new ListBasedModuleQueryFilter();
 
-    for (IArtifact iArtifact : artifacts) {
+    for (IBundleMakerArtifact iArtifact : artifacts) {
       addModules(moduleFilter, iArtifact);
     }
     return moduleFilter;
   }
 
-  private void addModules(ListBasedModuleQueryFilter moduleFilter, IArtifact artifact) {
+  private void addModules(ListBasedModuleQueryFilter moduleFilter, IBundleMakerArtifact artifact) {
     if (artifact.getType() == ArtifactType.Module) {
       moduleFilter.add(artifact);
       return;
     }
 
-    for (IArtifact iArtifact : artifact.getChildren()) {
+    for (IBundleMakerArtifact iArtifact : artifact.getChildren()) {
       if (iArtifact instanceof IBundleMakerArtifact) {
         addModules(moduleFilter, iArtifact);
       }
@@ -207,7 +207,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
       return contains;
     }
 
-    void add(IArtifact artifact) {
+    void add(IBundleMakerArtifact artifact) {
       _moduleNames.add(artifact.getName());
     }
   }

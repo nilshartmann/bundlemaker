@@ -3,7 +3,7 @@ package org.bundlemaker.core.ui.selection.editor;
 import java.util.Collections;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
@@ -26,7 +26,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
   /**
    * The current artifacts (contents) of this dependency part
    */
-  private List<IArtifact> _currentArtifacts;
+  private List<IBundleMakerArtifact> _currentArtifacts;
 
   /**
    * <p>
@@ -45,18 +45,18 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
    * @param artifacts
    *          The new artifacts. Must not be null but might be empty
    */
-  protected void useArtifacts(List<IArtifact> artifacts) {
+  protected void useArtifacts(List<IBundleMakerArtifact> artifacts) {
     _currentArtifacts = artifacts;
   }
 
   /**
    * <p>
-   * Returns the {@link IArtifact} instances that should be visualized
+   * Returns the {@link IBundleMakerArtifact} instances that should be visualized
    * </p>
    * 
    * @return
    */
-  public List<IArtifact> getCurrentArtifacts() {
+  public List<IBundleMakerArtifact> getCurrentArtifacts() {
     return _currentArtifacts;
 
   }

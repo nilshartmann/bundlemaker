@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterGroup2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
@@ -42,7 +42,7 @@ public class GroupSubCache extends AbstractSubCache<IPath, AbstractBundleMakerAr
     }
 
     // step 2: compute the parent
-    IArtifact parent = getGroupParent(classification);
+    IBundleMakerArtifact parent = getGroupParent(classification);
 
     // step 3: create the new instance
     return new AdapterGroup2IArtifact(classification.lastSegment(), parent);
@@ -56,7 +56,7 @@ public class GroupSubCache extends AbstractSubCache<IPath, AbstractBundleMakerAr
    * @param classification
    * @return
    */
-  private IArtifact getGroupParent(IPath classification) {
+  private IBundleMakerArtifact getGroupParent(IPath classification) {
 
     Assert.isNotNull(classification);
 

@@ -5,8 +5,8 @@ import java.util.Collection;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.DependencyKind;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
  * <p>
@@ -17,9 +17,9 @@ import org.bundlemaker.analysis.model.IDependency;
  */
 public class Dependency implements IDependency {
 
-  private IArtifact               to;
+  private IBundleMakerArtifact    to;
 
-  private IArtifact               from;
+  private IBundleMakerArtifact    from;
 
   private int                     weight;
 
@@ -29,14 +29,14 @@ public class Dependency implements IDependency {
 
   private Collection<IDependency> dependencies;
 
-  public Dependency(IArtifact from, IArtifact to) {
+  public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to) {
     this(from, to, 1);
     if (from.getType().equals(ArtifactType.Type)) {
       isLeaf = true;
     }
   }
 
-  public Dependency(IArtifact from, IArtifact to, int weight) {
+  public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to, int weight) {
     this.from = from;
     this.to = to;
     this.weight = weight;
@@ -85,12 +85,12 @@ public class Dependency implements IDependency {
    * @return the from
    */
   @Override
-  public IArtifact getFrom() {
+  public IBundleMakerArtifact getFrom() {
     return from;
   }
 
   @Override
-  public IArtifact getTo() {
+  public IBundleMakerArtifact getTo() {
     return to;
   }
 

@@ -2,8 +2,8 @@ package org.bundlemaker.core.ui.commands;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -14,13 +14,11 @@ public class DemoHandler extends AbstractArtifactBasedHandler implements IHandle
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
-   * , java.util.List)
+   * @see org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent ,
+   * java.util.List)
    */
   @Override
-  protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
+  protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
     MessageDialog.openInformation(new Shell(), "Artifact selected", "Selected artifacts: " + selectedArtifacts);
   }
-
 }

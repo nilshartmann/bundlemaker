@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
@@ -18,8 +18,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModuleSubCache extends
-    AbstractSubCache<ModuleKey, AbstractBundleMakerArtifactContainer> {
+public class ModuleSubCache extends AbstractSubCache<ModuleKey, AbstractBundleMakerArtifactContainer> {
 
   /** serialVersionUID */
   private static final long serialVersionUID = 1L;
@@ -50,7 +49,7 @@ public class ModuleSubCache extends
       IModule module = moduleKey.getModule();
 
       // get the parent
-      IArtifact parent = getModuleParent(module);
+      IBundleMakerArtifact parent = getModuleParent(module);
 
       // return the module adapter
       return module instanceof IResourceModule ? new AdapterResourceModule2IArtifact((IResourceModule) module, parent,

@@ -12,12 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
@@ -222,7 +220,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
    * @param stringBuilder
    * @throws IOException
    */
-  private void dumpPackage(String prefix, IArtifact artifact) throws IOException {
+  private void dumpPackage(String prefix, IBundleMakerArtifact artifact) throws IOException {
 
     //
     _fileWriter.append(prefix);
@@ -232,16 +230,16 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     _fileWriter.append("\n");
 
     //
-    List<IArtifact> sorted = new ArrayList<IArtifact>(artifact.getChildren());
-    Collections.sort(sorted, new Comparator<IArtifact>() {
+    List<IBundleMakerArtifact> sorted = new ArrayList<IBundleMakerArtifact>(artifact.getChildren());
+    Collections.sort(sorted, new Comparator<IBundleMakerArtifact>() {
       @Override
-      public int compare(IArtifact o1, IArtifact o2) {
+      public int compare(IBundleMakerArtifact o1, IBundleMakerArtifact o2) {
         return o1.getQualifiedName().compareTo(o2.getQualifiedName());
       }
     });
 
     //
-    for (IArtifact child : sorted) {
+    for (IBundleMakerArtifact child : sorted) {
       if (child.getType().equals(ArtifactType.Resource)
       // || child.getType().equals(ArtifactType.Group)
       // || child.getType().equals(ArtifactType.Module)

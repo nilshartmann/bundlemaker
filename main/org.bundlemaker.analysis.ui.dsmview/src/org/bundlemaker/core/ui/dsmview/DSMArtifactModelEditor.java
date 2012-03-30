@@ -15,8 +15,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.bundlemaker.core.ui.selection.editor.AbstractArtifactSelectionAwareEditorPart;
@@ -60,8 +60,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
     if (event.getSelection().getSelectedArtifacts().size() == 1) {
 
-      IArtifact selectedArtifact = event.getSelection().getSelectedArtifacts().get(0);
-      List<IArtifact> artifacts = new LinkedList<IArtifact>(selectedArtifact.getChildren());
+      IBundleMakerArtifact selectedArtifact = event.getSelection().getSelectedArtifacts().get(0);
+      List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>(selectedArtifact.getChildren());
       useArtifacts(artifacts);
     }
   }
@@ -109,7 +109,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * {@inheritDoc}
    */
   @Override
-  public void useArtifacts(List<IArtifact> artifacts) {
+  public void useArtifacts(List<IBundleMakerArtifact> artifacts) {
     super.useArtifacts(artifacts);
     if (_dsmViewWidget != null) {
       _dsmViewWidget.setModel(new DsmViewModel(artifacts));

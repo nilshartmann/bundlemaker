@@ -2,6 +2,8 @@ package org.bundlemaker.analysis.model;
 
 import java.util.Collection;
 
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+
 /**
  * <p>
  * Interface einer Abgaengigkeit
@@ -36,7 +38,7 @@ public interface IDependency {
    * 
    * @return
    */
-  IArtifact getTo();
+  IBundleMakerArtifact getTo();
 
   /**
    * <p>
@@ -44,7 +46,7 @@ public interface IDependency {
    * 
    * @return
    */
-  IArtifact getFrom();
+  IBundleMakerArtifact getFrom();
 
   /**
    * <p>

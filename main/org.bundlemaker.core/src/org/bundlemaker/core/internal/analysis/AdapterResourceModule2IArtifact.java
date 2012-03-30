@@ -1,7 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -31,7 +30,8 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    * Creates a new instance of type {@link AdapterResourceModule2IArtifact}.
    * </p>
    */
-  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IArtifact parent, ArtifactCache artifactCache) {
+  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IBundleMakerArtifact parent,
+      ArtifactCache artifactCache) {
     super(resourceModule, parent);
 
     //
@@ -106,7 +106,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    * 
    * @param artifact
    */
-  private void handleAddPackage(IArtifact artifact) {
+  private void handleAddPackage(IBundleMakerArtifact artifact) {
 
     //
     AdapterUtils.addResourcesToModule(getResourceModule(), AdapterUtils.getAllMovableUnits(artifact));
@@ -116,7 +116,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    * {@inheritDoc}
    */
   @Override
-  public String handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     // a resource module artifact can contain packages, types and resources
     if (!(artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type) || artifact
@@ -159,7 +159,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     //
     if (visitor.visit(this)) {
       //
-      for (IArtifact artifact : getChildren()) {
+      for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }

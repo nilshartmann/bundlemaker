@@ -12,10 +12,10 @@ package org.bundlemaker.core.ui.selection;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
- * A selection of {@link IArtifact} objects
+ * A selection of {@link IBundleMakerArtifact} objects
  * 
  * @author Nils Hartmann
  * 
@@ -31,8 +31,8 @@ public interface IArtifactSelection {
   /**
    * The selected artifacts. Never null but might be empty.
    * 
-   * @return an <b>unmodifiable</b> list of {@link IArtifact IArtifacts}
+   * @return an <b>unmodifiable</b> list of {@link IBundleMakerArtifact IArtifacts}
    */
-  public List<IArtifact> getSelectedArtifacts();
+  public List<IBundleMakerArtifact> getSelectedArtifacts();
 
 }

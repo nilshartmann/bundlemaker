@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -19,17 +19,17 @@ import org.eclipse.core.runtime.Assert;
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
  */
-public abstract class AbstractArtifact implements IArtifact {
+public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
   // Ordnungs Eigenschaften
-  private final ArtifactType  type;
+  private final ArtifactType   type;
 
-  private String              name;
+  private String               name;
 
-  private IArtifact           parent;
+  private IBundleMakerArtifact parent;
 
   // Meta-Daten
-  private Map<Object, Object> properties;
+  private Map<Object, Object>  properties;
 
   /**
    * <p>
@@ -48,7 +48,7 @@ public abstract class AbstractArtifact implements IArtifact {
   }
 
   @Override
-  public IArtifact getChild(String path) {
+  public IBundleMakerArtifact getChild(String path) {
     return null;
   }
 
@@ -58,25 +58,20 @@ public abstract class AbstractArtifact implements IArtifact {
   }
 
   @Override
-  public IArtifact getParent() {
+  public IBundleMakerArtifact getParent() {
     return parent;
   }
 
-  public void setParent(IArtifact parent) {
+  public void setParent(IBundleMakerArtifact parent) {
     this.parent = parent;
-  }
-
-  @Override
-  public void addArtifact(IArtifact artifact, boolean relinkParent) {
-    addArtifact(artifact);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public IArtifact getParent(ArtifactType type) {
-    IArtifact parent = this.getParent();
+  public IBundleMakerArtifact getParent(ArtifactType type) {
+    IBundleMakerArtifact parent = this.getParent();
 
     if (parent == null) {
       return null;
@@ -112,10 +107,10 @@ public abstract class AbstractArtifact implements IArtifact {
   }
 
   @Override
-  public List<? extends IDependency> getDependencies(Collection<? extends IArtifact> artifacts) {
+  public List<? extends IDependency> getDependencies(Collection<? extends IBundleMakerArtifact> artifacts) {
     List<IDependency> dependencies = new ArrayList<IDependency>();
 
-    for (IArtifact artifact : artifacts) {
+    for (IBundleMakerArtifact artifact : artifacts) {
       IDependency dependency = this.getDependency(artifact);
       if (dependency != null && dependency.getWeight() != 0) {
         dependencies.add(this.getDependency(artifact));

@@ -3,7 +3,7 @@ package org.bundlemaker.analysis.ui.internal;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -132,7 +132,7 @@ public class Activator extends AbstractUIPlugin {
    * @param artifact
    * @return
    */
-  public Image getIconForArtifact(IArtifact artifact) {
+  public Image getIconForArtifact(IBundleMakerArtifact artifact) {
     if (artifact == null) {
       return null;
     }

@@ -1,7 +1,5 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.analysis.model.IArtifact;
-
 /**
  * <p>
  * Defines an {@link IArtifact} that represents a group.

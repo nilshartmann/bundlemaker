@@ -2,8 +2,8 @@ package org.bundlemaker.core.ui.dsmview.handlers;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.dsmview.DSMArtifactModelEditor;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
@@ -19,10 +19,10 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
   private IEditorInput nullInputEditor = new NullEditorInput();
 
   @Override
-  protected void execute(ExecutionEvent event, List<IArtifact> selectedArtifacts) throws Exception {
+  protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
 
     // get the artifacts that should be displayed in DSM View
-    List<IArtifact> artifactsForDsmView = getArtifactsForDsmView(selectedArtifacts);
+    List<IBundleMakerArtifact> artifactsForDsmView = getArtifactsForDsmView(selectedArtifacts);
 
     // make sure the editor and views are visible
     openEditorAndViews(artifactsForDsmView);
@@ -34,9 +34,9 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
    * @param selectedArtifacts
    * @return
    */
-  protected abstract List<IArtifact> getArtifactsForDsmView(List<IArtifact> selectedArtifacts);
+  protected abstract List<IBundleMakerArtifact> getArtifactsForDsmView(List<IBundleMakerArtifact> selectedArtifacts);
 
-  private void openEditorAndViews(List<IArtifact> selectedArtifacts) {
+  private void openEditorAndViews(List<IBundleMakerArtifact> selectedArtifacts) {
     IWorkbenchPage page = getActiveWorkbenchPage();
     if (page != null) {
       try {

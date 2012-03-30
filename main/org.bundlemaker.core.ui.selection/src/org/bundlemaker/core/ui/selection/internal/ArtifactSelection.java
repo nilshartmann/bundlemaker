@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.selection.internal;
 import java.util.Collections;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.eclipse.core.runtime.Assert;
 
@@ -70,9 +70,9 @@ public class ArtifactSelection implements IArtifactSelection {
   /**
    * the selected artifacts
    */
-  private final List<IArtifact> _selectedArtifacts;
+  private final List<IBundleMakerArtifact> _selectedArtifacts;
 
-  public ArtifactSelection(String providerId, List<IArtifact> selectedArtifacts) {
+  public ArtifactSelection(String providerId, List<IBundleMakerArtifact> selectedArtifacts) {
     Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
     Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
 
@@ -86,7 +86,7 @@ public class ArtifactSelection implements IArtifactSelection {
   }
 
   @Override
-  public List<IArtifact> getSelectedArtifacts() {
+  public List<IBundleMakerArtifact> getSelectedArtifacts() {
     return _selectedArtifacts;
   }
 

@@ -1,7 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -46,8 +45,8 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
    * @param qualifiedName
    * @param parent
    */
-  public AdapterPackage2IArtifact(String qualifiedName, IArtifact parent, boolean isVirtual, boolean isHierarchical,
-      IModule containingModule, ArtifactCache artifactCache) {
+  public AdapterPackage2IArtifact(String qualifiedName, IBundleMakerArtifact parent, boolean isVirtual,
+      boolean isHierarchical, IModule containingModule, ArtifactCache artifactCache) {
     super(ArtifactType.Package, _getName(qualifiedName));
 
     // set parent/children dependency
@@ -89,7 +88,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
   public boolean isMovable() {
 
     //
-    IArtifact artifact = getParent(ArtifactType.Module);
+    IBundleMakerArtifact artifact = getParent(ArtifactType.Module);
 
     //
     return artifact instanceof IModuleArtifact
@@ -105,7 +104,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
   }
 
   @Override
-  public String handleCanAdd(IArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     //
     if (artifact.getType().equals(ArtifactType.Resource)) {
@@ -173,7 +172,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
           modulePackageKey);
 
       // move the children to the new package artifact
-      for (IArtifact child : artifact.getChildren()) {
+      for (IBundleMakerArtifact child : artifact.getChildren()) {
         packageArtifact.addArtifact(child);
       }
     } else {
@@ -197,7 +196,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
     //
     if (visitor.visit(this)) {
       //
-      for (IArtifact artifact : getChildren()) {
+      for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }

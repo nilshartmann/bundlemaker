@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -26,26 +26,26 @@ import org.eclipse.core.runtime.Assert;
  */
 public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
-  private Collection<IArtifact>                 children;
+  private Collection<IBundleMakerArtifact>                 children;
 
-  private Collection<IDependency>               dependencies;
+  private Collection<IDependency>                          dependencies;
 
-  private Collection<IArtifact>                 leafs;
+  private Collection<IBundleMakerArtifact>                 leafs;
 
-  private transient Map<IArtifact, IDependency> cachedDependencies;
+  private transient Map<IBundleMakerArtifact, IDependency> cachedDependencies;
 
   public AbstractArtifactContainer(ArtifactType type, String name) {
     super(type, name);
 
-    children = new ArrayList<IArtifact>();
-    cachedDependencies = new HashMap<IArtifact, IDependency>();
+    children = new ArrayList<IBundleMakerArtifact>();
+    cachedDependencies = new HashMap<IBundleMakerArtifact, IDependency>();
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public IArtifact getChild(String path) {
+  public IBundleMakerArtifact getChild(String path) {
 
     // assert not null
     Assert.isNotNull(path);
@@ -69,7 +69,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * @param splittedString
    * @return
    */
-  private IArtifact getChild(String[] splittedString) {
+  private IBundleMakerArtifact getChild(String[] splittedString) {
 
     // assert not null
     Assert.isNotNull(splittedString);
@@ -88,7 +88,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     else {
 
       // get the direct child
-      IArtifact directChild = getDirectChild(splittedString[0]);
+      IBundleMakerArtifact directChild = getDirectChild(splittedString[0]);
 
       // recurse
       if (directChild != null) {
@@ -119,7 +119,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public IDependency getDependency(IArtifact to) {
+  public IDependency getDependency(IBundleMakerArtifact to) {
 
     if (this.equals(to)) {
       return new Dependency(this, to, 0);
@@ -160,7 +160,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     dependencies = new ArrayList<IDependency>();
 
     //
-    for (IArtifact child : children) {
+    for (IBundleMakerArtifact child : children) {
 
       //
       Collection<IDependency> childDependencies = child.getDependencies();
@@ -175,9 +175,9 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * <p>
    * </p>
    */
-  public List<IArtifact> invalidateDependencyCache() {
+  public List<IBundleMakerArtifact> invalidateDependencyCache() {
 
-    List<IArtifact> result = new LinkedList<IArtifact>();
+    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
     result.add(this);
 
     //
@@ -195,12 +195,12 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     return result;
   }
 
-  public final Map<IArtifact, IDependency> getCachedDependencies() {
+  public final Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
     return cachedDependencies;
   }
 
   @Override
-  public void addArtifact(IArtifact artifact) {
+  public void addArtifact(IBundleMakerArtifact artifact) {
     if (!children.contains(artifact)) {
       children.add(artifact);
     }
@@ -209,12 +209,12 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public boolean removeArtifact(IArtifact artifact) {
+  public boolean removeArtifact(IBundleMakerArtifact artifact) {
     return children.remove(artifact);
   }
 
   @Override
-  public boolean contains(IArtifact artifact) {
+  public boolean contains(IBundleMakerArtifact artifact) {
     if (leafs == null || leafs.isEmpty()) {
       leafs = getLeafs();
     }
@@ -222,10 +222,10 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   }
 
   @Override
-  public Collection<IArtifact> getLeafs() {
+  public Collection<IBundleMakerArtifact> getLeafs() {
     if (leafs == null || leafs.isEmpty()) {
-      leafs = new HashSet<IArtifact>();
-      for (IArtifact child : children) {
+      leafs = new HashSet<IBundleMakerArtifact>();
+      for (IBundleMakerArtifact child : children) {
         if (child.getChildren().isEmpty()) {
           leafs.add(child);
         } else {
@@ -243,8 +243,8 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Collection<? extends IArtifact> getChildren() {
-    return Collections.unmodifiableCollection(new LinkedList<IArtifact>(children));
+  public Collection<IBundleMakerArtifact> getChildren() {
+    return Collections.unmodifiableCollection(new LinkedList<IBundleMakerArtifact>(children));
   }
 
   /**
@@ -253,7 +253,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * 
    * @return
    */
-  public Collection<IArtifact> getModifiableChildren() {
+  public Collection<IBundleMakerArtifact> getModifiableChildren() {
     return children;
   }
 
@@ -264,16 +264,16 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * @param identifier
    * @return
    */
-  private IArtifact getDirectChild(String identifier) {
+  private IBundleMakerArtifact getDirectChild(String identifier) {
 
     // assert not null
     Assert.isNotNull(identifier);
 
     //
-    IArtifact result = null;
+    IBundleMakerArtifact result = null;
 
     // step 1a: search for the qualified name
-    for (IArtifact artifact : getChildren()) {
+    for (IBundleMakerArtifact artifact : getChildren()) {
 
       // check the qualified name
       if (identifier.equals(artifact.getQualifiedName())) {
@@ -297,7 +297,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     }
 
     // step 2: search for the simple name
-    for (IArtifact artifact : getChildren()) {
+    for (IBundleMakerArtifact artifact : getChildren()) {
 
       // check the qualified name
       if (identifier.equals(artifact.getName())) {

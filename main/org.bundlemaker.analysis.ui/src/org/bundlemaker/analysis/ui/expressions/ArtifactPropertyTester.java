@@ -11,7 +11,7 @@
 package org.bundlemaker.analysis.ui.expressions;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.runtime.Assert;
 
@@ -41,7 +41,7 @@ public class ArtifactPropertyTester extends PropertyTester {
   @Override
   public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 
-    IArtifact artifact = (IArtifact) receiver;
+    IBundleMakerArtifact artifact = (IBundleMakerArtifact) receiver;
 
     if ("type".equalsIgnoreCase(property)) {
       ArtifactType expectedType = ArtifactType.valueOf((String) expectedValue);

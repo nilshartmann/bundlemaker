@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -53,7 +53,7 @@ public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider 
    * @param baseArtifact
    *          the baseArtifact to set
    */
-  public void setBaseArtifact(IArtifact baseArtifact) {
+  public void setBaseArtifact(IBundleMakerArtifact baseArtifact) {
     getLabelGenerator().setBaseArtifact(baseArtifact);
   }
 
@@ -68,7 +68,7 @@ public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider 
    * @param element
    * @return
    */
-  protected abstract IArtifact getArtifactElement(IDependency element);
+  protected abstract IBundleMakerArtifact getArtifactElement(IDependency element);
 
   /*
    * (non-Javadoc)
@@ -78,13 +78,13 @@ public abstract class DependencyColumnLabelProvider extends ColumnLabelProvider 
   @Override
   public String getText(Object element) {
     if (element instanceof IDependency) {
-      IArtifact artifact = getArtifactElement((IDependency) element);
+      IBundleMakerArtifact artifact = getArtifactElement((IDependency) element);
       return getArtifactLabel(artifact);
     }
     return _defaultArtifactLabelProvider.getText(element);
   }
 
-  protected String getArtifactLabel(IArtifact artifact) {
+  protected String getArtifactLabel(IBundleMakerArtifact artifact) {
     return _labelGenerator.getLabel(artifact);
   }
 
