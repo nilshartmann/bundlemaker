@@ -2,7 +2,7 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ModelTransformer;
+import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 
 /**
@@ -31,7 +31,7 @@ public abstract class AbstractArtifactModelAwareModularizedSystem extends Abstra
   @Override
   public IRootArtifact getArtifactModel(IArtifactModelConfiguration configuration) {
 
-    IRootArtifact result = (IRootArtifact) ModelTransformer.getDependencyModel(this, configuration).getRoot();
+    IRootArtifact result = (IRootArtifact) ModelTransformerCache.getArtifactModel(this, configuration);
 
     return result;
   }

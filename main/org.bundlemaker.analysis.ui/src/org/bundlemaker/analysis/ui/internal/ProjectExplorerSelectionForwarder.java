@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;
@@ -36,7 +36,7 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
     // selection, artifacts);
 
     // notify selection service
-    _artifactSelectionService.setSelection(Analysis.PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID, artifacts);
+    _artifactSelectionService.setSelection(Selection.MAIN_ARTIFACT_SELECTION_PROVIDER_ID, artifacts);
 
   }
 

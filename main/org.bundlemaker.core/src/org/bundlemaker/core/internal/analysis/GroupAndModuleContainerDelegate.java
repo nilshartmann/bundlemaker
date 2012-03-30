@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -21,7 +20,10 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 {
 
   /** - */
-  private final IGroupAndModuleContainer _groupAndModuleContainer;
+  private final AbstractBundleMakerArtifactContainer _groupAndModuleContainer;
+
+  // TODO: remove this shit...
+  private ModelTransformer                           _dependencyModel;
 
   /**
    * <p>
@@ -32,9 +34,9 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
    */
   public GroupAndModuleContainerDelegate(IGroupAndModuleContainer groupAndModuleContainer) {
     Assert.isNotNull(groupAndModuleContainer);
-    Assert.isTrue(groupAndModuleContainer instanceof IBundleMakerArtifact);
+    Assert.isTrue(groupAndModuleContainer instanceof AbstractBundleMakerArtifactContainer);
 
-    _groupAndModuleContainer = groupAndModuleContainer;
+    _groupAndModuleContainer = (AbstractBundleMakerArtifactContainer) groupAndModuleContainer;
   }
 
   /**
@@ -55,7 +57,8 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     qualifiedModuleName = qualifiedModuleName.replace('\\', '/');
 
     // step 2: check if absolute
-    IBundleMakerArtifact rootContainer = getAdvancedArtifact();
+    IBundleMakerArtifact rootContainer = _groupAndModuleContainer;
+
     if (qualifiedModuleName.startsWith("/")) {
       qualifiedModuleName = qualifiedModuleName.substring(1);
       rootContainer = rootContainer.getRoot();
@@ -86,19 +89,11 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     if (moduleArtifact == null) {
 
       //
-      moduleArtifact = (IModuleArtifact) ((AdapterModularizedSystem2IArtifact) getAdvancedArtifact().getRoot())
-          .getDependencyModel().createArtifactContainer(moduleIdentifier.toString(), moduleIdentifier.toString(),
-              ArtifactType.Module);
-
-      // TEST
-      rootContainer.getRoot().getChild("groupTest1");
+      moduleArtifact = getDependencyModel().createModule(moduleIdentifier);
 
       //
       parent.addArtifact(moduleArtifact);
     }
-
-    // TEST
-    rootContainer.getRoot().getChild("groupTest1");
 
     //
     return moduleArtifact;
@@ -120,7 +115,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     // String[] segments = path.split("/");
 
     // add children
-    AbstractBundleMakerArtifactContainer currentArtifact = getAdvancedArtifact();
+    AbstractBundleMakerArtifactContainer currentArtifact = _groupAndModuleContainer;
 
     IPath iPath = new Path(path);
 
@@ -134,9 +129,9 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       if (newArtifact == null) {
 
         // create new
-        newArtifact = (AbstractBundleMakerArtifactContainer) ((AdapterModularizedSystem2IArtifact) getAdvancedArtifact()
-            .getRoot()).getDependencyModel().createArtifactContainer(iPath.segment(i),
-            iPath.removeLastSegments(iPath.segmentCount() - (i + 1)).toString(), ArtifactType.Group);
+        newArtifact = getDependencyModel().createGroup(
+            currentArtifact.getFullPath().removeFirstSegments(1)
+                .append(iPath.removeLastSegments(iPath.segmentCount() - (i + 1))));
 
         // add to parent
         if (newArtifact.getParent() != currentArtifact) {
@@ -156,7 +151,15 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
    * 
    * @return
    */
-  public AbstractBundleMakerArtifactContainer getAdvancedArtifact() {
-    return (AbstractBundleMakerArtifactContainer) _groupAndModuleContainer;
+  private ModelTransformer getDependencyModel() {
+
+    //
+    if (_dependencyModel == null) {
+      _dependencyModel = ((AdapterModularizedSystem2IArtifact) _groupAndModuleContainer.getRoot()).getDependencyModel();
+      Assert.isNotNull(_dependencyModel);
+    }
+
+    //
+    return _dependencyModel;
   }
 }

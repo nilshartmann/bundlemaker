@@ -34,9 +34,9 @@ public abstract class AbstractDependencySelectionAwareViewPart extends ViewPart 
   @Override
   public void init(IViewSite site) throws PartInitException {
     super.init(site);
-    
+
     //
-    Selection.instance().getDependencySelectionService().addDependencySelectionListener(this);
+    Selection.instance().getDependencySelectionService().addDependencySelectionListener(getProviderId(), this);
   }
 
   @Override
@@ -58,17 +58,15 @@ public abstract class AbstractDependencySelectionAwareViewPart extends ViewPart 
   public void setFocus() {
     pullDependency();
   }
-  
-  
 
   private void pullDependency() {
     //
     IDependencySelection dependencySelection = Selection.instance().getDependencySelectionService()
-        .getSelection(Selection.MAIN_SELECTION_PROVIDER_ID);
+        .getSelection(getProviderId());
 
     //
     _currentDependency = dependencySelection != null ? dependencySelection.getFirstDependency() : null;
-    
+
     //
     updateDependencies();
   }
@@ -94,6 +92,16 @@ public abstract class AbstractDependencySelectionAwareViewPart extends ViewPart 
    */
   public IDependency getCurrentDependency() {
     return _currentDependency;
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  protected String getProviderId() {
+    return Selection.MAIN_DEPENDENCY_SELECTION_PROVIDER_ID;
   }
 
   /**

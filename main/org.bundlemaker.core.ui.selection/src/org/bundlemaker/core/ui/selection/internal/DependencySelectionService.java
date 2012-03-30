@@ -114,17 +114,17 @@ public class DependencySelectionService extends
     addSelectionListener(providerId, listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.bundlemaker.analysis.ui.selection.IDependencySelectionService#addDependencySelectionListener(org.bundlemaker
-   * .analysis.ui.selection.IDependencySelectionListener)
-   */
-  @Override
-  public void addDependencySelectionListener(IDependencySelectionListener listener) {
-    addSelectionListener(null, listener);
-  }
+  // /*
+  // * (non-Javadoc)
+  // *
+  // * @see
+  // * org.bundlemaker.analysis.ui.selection.IDependencySelectionService#addDependencySelectionListener(org.bundlemaker
+  // * .analysis.ui.selection.IDependencySelectionListener)
+  // */
+  // @Override
+  // public void addDependencySelectionListener(IDependencySelectionListener listener) {
+  // addSelectionListener(null, listener);
+  // }
 
   /*
    * (non-Javadoc)

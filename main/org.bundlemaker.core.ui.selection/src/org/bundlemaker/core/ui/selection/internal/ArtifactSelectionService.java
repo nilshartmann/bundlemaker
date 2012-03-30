@@ -14,12 +14,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
+import org.bundlemaker.core.ui.selection.IRootArtifactSelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IRootArtifactSelectionListener;
+import org.bundlemaker.core.ui.selection.IRootArtifactSelectionService;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -30,29 +36,81 @@ import org.eclipse.core.runtime.Assert;
  */
 public class ArtifactSelectionService extends
     AbstractSelectionService<IArtifactSelection, IArtifactSelectionListener, IArtifactSelectionChangedEvent> implements
-    IArtifactSelectionService {
+    IArtifactSelectionService, IRootArtifactSelectionService {
+
+  /** - */
+  private final CopyOnWriteArraySet<SelectionListenerWrapper<IRootArtifactSelectionListener>> _rootSelectionlistenerList = new CopyOnWriteArraySet<SelectionListenerWrapper<IRootArtifactSelectionListener>>();
 
   /**
    * {@inheritDoc}
    */
   @Override
-  protected IArtifactSelection getNullSelection(String providerId) {
-    List<IArtifact> emptyList = Collections.emptyList();
-    return new ArtifactSelection(providerId, emptyList);
+  protected void setSelection(String providerId, IArtifactSelection newSelection) {
+    super.setSelection(providerId, newSelection);
+
+    IRootArtifactSelection rootArtifactSelection = getRootArtifactSelection(providerId);
+    fireRootArtifactSelectionChanged(providerId, new RootArtifactSelectionChangedEvent(rootArtifactSelection));
   }
-  
+
   /**
    * {@inheritDoc}
    */
   @Override
-  protected boolean equals(IArtifactSelection newSelection, IArtifactSelection selection) {
-    if (newSelection == null) {
-      return false;
+  public IRootArtifactSelection getRootArtifactSelection(String selectionProviderId) {
+
+    //
+    IArtifactSelection artifactSelection = getSelection(selectionProviderId);
+
+    //
+    if (artifactSelection == null || artifactSelection.getSelectedArtifacts().size() == 0) {
+      return new RootArtifactSelection(selectionProviderId);
     }
-    return newSelection.equals(selection);
+
+    //
+    IBundleMakerArtifact artifact = (IBundleMakerArtifact) artifactSelection.getSelectedArtifacts().get(0);
+
+    //
+    return new RootArtifactSelection(selectionProviderId, artifact.getRoot());
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addRootArtifactSelectionListener(String providerId, IRootArtifactSelectionListener listener) {
+    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
 
+    // Create wrapper
+    SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper = new SelectionListenerWrapper<IRootArtifactSelectionListener>(
+        providerId, listener);
+
+    // add to listener list
+    _rootSelectionlistenerList.add(wrapper);
+  }
+
+//  /**
+//   * {@inheritDoc}
+//   */
+//  @Override
+//  public void addRootArtifactSelectionListener(IRootArtifactSelectionListener listener) {
+//    addRootArtifactSelectionListener(null, listener);
+//  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeRootArtifactSelectionListener(IRootArtifactSelectionListener listener) {
+    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
+
+    for (SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper : _rootSelectionlistenerList) {
+      if (listener.equals(wrapper.getListener())) {
+        // Remove from listener list
+        _rootSelectionlistenerList.remove(wrapper);
+        break;
+      }
+    }
+  }
 
   @Override
   public void setSelection(String providerId, Collection<IArtifact> selectedArtifacts) {
@@ -74,10 +132,10 @@ public class ArtifactSelectionService extends
     addSelectionListener(providerId, listener);
   }
 
-  @Override
-  public void addArtifactSelectionListener(IArtifactSelectionListener listener) {
-    addArtifactSelectionListener(null, listener);
-  }
+  // @Override
+  // public void addArtifactSelectionListener(IArtifactSelectionListener listener) {
+  // addArtifactSelectionListener(null, listener);
+  // }
 
   @Override
   public void removeArtifactSelectionListener(IArtifactSelectionListener listener) {
@@ -86,21 +144,55 @@ public class ArtifactSelectionService extends
     removeSelectionListener(listener);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.bundlemaker.analysis.ui.internal.selection.AbstractSelectionService#createSelectionChangedEvent(java.lang.Object
-   * )
+  /**
+   * {@inheritDoc}
    */
   @Override
   protected IArtifactSelectionChangedEvent createSelectionChangedEvent(IArtifactSelection newSelection) {
     return new ArtifactSelectionChangedEvent(newSelection);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected void invokeListener(IArtifactSelectionListener listener, IArtifactSelectionChangedEvent event) {
     listener.artifactSelectionChanged(event);
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected IArtifactSelection getNullSelection(String providerId) {
+    List<IArtifact> emptyList = Collections.emptyList();
+    return new ArtifactSelection(providerId, emptyList);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected boolean equals(IArtifactSelection newSelection, IArtifactSelection selection) {
+    if (newSelection == null) {
+      return false;
+    }
+    return newSelection.equals(selection);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param providerId
+   * @param event
+   */
+  protected void fireRootArtifactSelectionChanged(String providerId, IRootArtifactSelectionChangedEvent event) {
+    for (SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper : _rootSelectionlistenerList) {
+      // check if listener is registered for the provider
+      if (wrapper.matches(providerId)) {
+        wrapper.getListener().rootArtifactSelectionChanged(event);
+      }
+    }
+  }
 }

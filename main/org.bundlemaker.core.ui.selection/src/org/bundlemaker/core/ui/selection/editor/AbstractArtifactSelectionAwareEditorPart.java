@@ -10,8 +10,6 @@ import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.viewers.ISelectionProvider;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -20,18 +18,15 @@ import org.eclipse.ui.part.EditorPart;
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPart implements IArtifactSelectionListener {
 
-  /** - */
-  private ISelectionProvider _selectionProvider;
-
   /**
    * The current artifacts (contents) of this dependency part
    */
-  private List<IArtifact>    _currentArtifacts;
+  private List<IArtifact> _currentArtifacts;
 
   /**
    * <p>
@@ -40,28 +35,6 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
    */
   public AbstractArtifactSelectionAwareEditorPart() {
     _currentArtifacts = Collections.emptyList();
-  }
-
-  /**
-   * <p>
-   * </p>
-   *
-   * @return
-   */
-  public ISelectionProvider getSelectionProvider() {
-    return _selectionProvider;
-  }
-
-  /**
-   * Sets the {@link ISelectionProvider} that can be used by this {@link DependencyPart} to propagate selection changes
-   * 
-   * <p>
-   * This method will be invoked <b>before</b> {@link #init(Composite)} is invoked.
-   * 
-   * @param selectionProvider
-   */
-  public void setSelectionProvider(ISelectionProvider selectionProvider) {
-    _selectionProvider = selectionProvider;
   }
 
   /**
@@ -129,11 +102,10 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
     setSite(site);
 
     // add listener
-    Selection.instance().getArtifactSelectionService().addArtifactSelectionListener(this);
+    Selection.instance().getArtifactSelectionService().addArtifactSelectionListener(getProviderId(), this);
 
     // initialize view with current selection from Artifact tree
-    IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(
-        Selection.PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID);
+    IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(getProviderId());
 
     if (currentArtifactSelection != null) {
       useArtifacts(currentArtifactSelection.getSelectedArtifacts());
@@ -165,4 +137,8 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
 
   @Override
   public abstract void artifactSelectionChanged(IArtifactSelectionChangedEvent event);
+
+  protected String getProviderId() {
+    return Selection.MAIN_ARTIFACT_SELECTION_PROVIDER_ID;
+  }
 }

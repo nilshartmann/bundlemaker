@@ -40,7 +40,7 @@ public interface IArtifactSelectionService {
   public void setSelection(String selectionProviderId, Collection<IArtifact> selectedArtifacts);
 
   /**
-   * Registeres an {@link IArtifactSelectionListener} for the specified providerId.
+   * Registers an {@link IArtifactSelectionListener} for the specified providerId.
    * 
    * <p>
    * The listener is invoked if the provider's selection changes. If the providerId is null, the listener is invoked for
@@ -53,17 +53,17 @@ public interface IArtifactSelectionService {
    */
   public void addArtifactSelectionListener(String providerId, IArtifactSelectionListener listener);
 
-  /**
-   * Registers an {@link IArtifactSelectionListener} for all providers.
-   * 
-   * <p>
-   * Same as calling <tt>addArtifactSelectionListener(null, listener)</tt>
-   * 
-   * @param listener
-   *          the listener. Must not be null
-   */
-
-  public void addArtifactSelectionListener(IArtifactSelectionListener listener);
+  // /**
+  // * Registers an {@link IArtifactSelectionListener} for all providers.
+  // *
+  // * <p>
+  // * Same as calling <tt>addArtifactSelectionListener(null, listener)</tt>
+  // *
+  // * @param listener
+  // * the listener. Must not be null
+  // */
+  //
+  // public void addArtifactSelectionListener(IArtifactSelectionListener listener);
 
   /**
    * Removes the specified listener

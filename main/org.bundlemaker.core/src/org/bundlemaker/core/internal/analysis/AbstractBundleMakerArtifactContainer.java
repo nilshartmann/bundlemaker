@@ -214,6 +214,14 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractArtif
       return false;
     }
 
+    if (this.equals(artifact)) {
+      return false;
+    }
+
+    if (!((IBundleMakerArtifact) artifact).getRoot().equals(this.getRoot())) {
+      return false;
+    }
+
     return handleCanAdd(artifact) == null;
   }
 

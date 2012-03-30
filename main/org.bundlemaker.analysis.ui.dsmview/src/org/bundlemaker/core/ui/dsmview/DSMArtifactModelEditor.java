@@ -102,7 +102,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   private void clearDependencySelection() {
     List<IDependency> dependencies = Collections.emptyList();
     Selection.instance().getDependencySelectionService()
-        .setSelection(Selection.MAIN_SELECTION_PROVIDER_ID, dependencies);
+        .setSelection(Selection.MAIN_ARTIFACT_SELECTION_PROVIDER_ID, dependencies);
   }
 
   /**

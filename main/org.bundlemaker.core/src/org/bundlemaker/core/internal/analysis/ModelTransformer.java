@@ -2,12 +2,15 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
+import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -16,7 +19,7 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DependencyModel {
+public class ModelTransformer {
 
   /** - */
   private IModifiableModularizedSystem _modifiableModularizedSystem;
@@ -29,14 +32,14 @@ public class DependencyModel {
 
   /**
    * <p>
-   * Creates a new instance of type {@link DependencyModel}.
+   * Creates a new instance of type {@link ModelTransformer}.
    * </p>
    * 
    * @param bundleMakerProject
    * @param modifiableModularizedSystem
    * @throws CoreException
    */
-  public DependencyModel(IModifiableModularizedSystem modifiableModularizedSystem, ArtifactCache defaultArtifactCache)
+  public ModelTransformer(IModifiableModularizedSystem modifiableModularizedSystem, ArtifactCache defaultArtifactCache)
       throws CoreException {
 
     Assert.isNotNull(modifiableModularizedSystem);
@@ -51,24 +54,47 @@ public class DependencyModel {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  public String getName() {
-    return _modifiableModularizedSystem.getName();
-  }
-
-  /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
+   * @return
    */
   public IArtifact getRoot() {
     return _artifactModel;
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public ArtifactCache getArtifactCache() {
+    return _artifactCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param qualifiedName
+   * @return
+   */
+  public AbstractBundleMakerArtifactContainer createGroup(IPath qualifiedName) {
+    return (AbstractBundleMakerArtifactContainer) createArtifactContainer(qualifiedName.lastSegment(),
+        qualifiedName.toOSString(), ArtifactType.Group);
+  }
+
+  public IModuleArtifact createModule(IModuleIdentifier moduleIdentifier) {
+    return (IModuleArtifact) createArtifactContainer(moduleIdentifier.toString(), moduleIdentifier.toString(),
+        ArtifactType.Module);
+  }
+
+  /**
    * {@inheritDoc}
    */
   // TODO: name/qualifiedname
-  public IArtifact createArtifactContainer(String name, String qualifiedName, ArtifactType type) {
+  private IArtifact createArtifactContainer(String name, String qualifiedName, ArtifactType type) {
 
     //
     Assert.isNotNull(name);
@@ -85,6 +111,9 @@ public class DependencyModel {
       //
     case Group: {
       // new AdapterGroup2IArtifact(name, getRoot())
+
+      System.out.println("Create group " + qualifiedName);
+
       return _artifactCache.getGroupCache().getOrCreate(new Path(qualifiedName));
     }
 
@@ -130,9 +159,5 @@ public class DependencyModel {
     }
 
     return null;
-  }
-
-  public ArtifactCache getArtifactCache() {
-    return _artifactCache;
   }
 }

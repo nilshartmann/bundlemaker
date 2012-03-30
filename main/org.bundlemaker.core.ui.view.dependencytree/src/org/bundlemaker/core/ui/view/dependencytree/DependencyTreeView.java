@@ -258,35 +258,35 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
     return treeViewer;
   }
 
-  class MyLabelProvider extends StyledCellLabelProvider {
-
-    final private Set<IBundleMakerArtifact> _bundleMakerArtifacts;
-
-    private ArtifactTreeLabelProvider       _artifactTreeLabelProvider = new ArtifactTreeLabelProvider();
-
-    public MyLabelProvider(Set<IBundleMakerArtifact> bundleMakerArtifacts) {
-      super();
-      _bundleMakerArtifacts = bundleMakerArtifacts;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(ViewerCell cell) {
-      Object element = cell.getElement();
-      StyledString text = new StyledString();
-      text.append(_artifactTreeLabelProvider.getText(element));
-      if (_bundleMakerArtifacts.contains(element)) {
-        cell.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
-      } else {
-        cell.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-      }
-      cell.setStyleRanges(text.getStyleRanges());
-      cell.setImage(_artifactTreeLabelProvider.getImage(element));
-      cell.setText(text.toString());
-      cell.setStyleRanges(text.getStyleRanges());
-      super.update(cell);
-    }
-  }
+  // class MyLabelProvider extends StyledCellLabelProvider {
+  //
+  // final private Set<IBundleMakerArtifact> _bundleMakerArtifacts;
+  //
+  // private ArtifactTreeLabelProvider _artifactTreeLabelProvider = new ArtifactTreeLabelProvider();
+  //
+  // public MyLabelProvider(Set<IBundleMakerArtifact> bundleMakerArtifacts) {
+  // super();
+  // _bundleMakerArtifacts = bundleMakerArtifacts;
+  // }
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public void update(ViewerCell cell) {
+  // Object element = cell.getElement();
+  // StyledString text = new StyledString();
+  // text.append(_artifactTreeLabelProvider.getText(element));
+  // if (_bundleMakerArtifacts.contains(element)) {
+  // cell.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
+  // } else {
+  // cell.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
+  // }
+  // cell.setStyleRanges(text.getStyleRanges());
+  // cell.setImage(_artifactTreeLabelProvider.getImage(element));
+  // cell.setText(text.toString());
+  // cell.setStyleRanges(text.getStyleRanges());
+  // super.update(cell);
+  // }
+  // }
 }

@@ -13,7 +13,7 @@ package org.bundlemaker.core.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.internal.analysis.DependencyModel;
+import org.bundlemaker.core.internal.analysis.ModelTransformer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.CoreException;
  * Helper class to transform {@link IModifiableModularizedSystem IModifiableModularizedSystems}.
  * </p>
  */
-public class ModelTransformer {
+public class ModelTransformerCache {
 
   //
   private static Map<CacheKey, IRootArtifact> _cache = new HashMap<CacheKey, IRootArtifact>();
@@ -46,7 +46,7 @@ public class ModelTransformer {
    *          the modularized system
    * @return the {@link IDependencyModel}
    */
-  public static IRootArtifact getDependencyModel(IModifiableModularizedSystem modifiableModularizedSystem,
+  public static IRootArtifact getArtifactModel(IModifiableModularizedSystem modifiableModularizedSystem,
       IArtifactModelConfiguration configuration) {
 
     // assert not null
@@ -69,9 +69,9 @@ public class ModelTransformer {
       ArtifactCache artifactCache = new ArtifactCache(modifiableModularizedSystem, configuration);
 
       // create the dependency model
-      DependencyModel model = new DependencyModel(modifiableModularizedSystem, artifactCache);
-      _cache.put(cacheKey, (IRootArtifact) model.getRoot());
-      return (IRootArtifact) model.getRoot();
+      ModelTransformer modelTransformer = new ModelTransformer(modifiableModularizedSystem, artifactCache);
+      _cache.put(cacheKey, (IRootArtifact) modelTransformer.getRoot());
+      return (IRootArtifact) modelTransformer.getRoot();
 
     } catch (CoreException e) {
       System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);
@@ -111,25 +111,25 @@ public class ModelTransformer {
       this._configuration = configuration;
     }
 
-    /**
-     * <p>
-     * </p>
-     * 
-     * @return
-     */
-    public final IModifiableModularizedSystem getModifiableModularizedSystem() {
-      return _modifiableModularizedSystem;
-    }
-
-    /**
-     * <p>
-     * </p>
-     * 
-     * @return
-     */
-    public final IArtifactModelConfiguration getConfiguration() {
-      return _configuration;
-    }
+    // /**
+    // * <p>
+    // * </p>
+    // *
+    // * @return
+    // */
+    // public final IModifiableModularizedSystem getModifiableModularizedSystem() {
+    // return _modifiableModularizedSystem;
+    // }
+    //
+    // /**
+    // * <p>
+    // * </p>
+    // *
+    // * @return
+    // */
+    // public final IArtifactModelConfiguration getConfiguration() {
+    // return _configuration;
+    // }
 
     /**
      * {@inheritDoc}

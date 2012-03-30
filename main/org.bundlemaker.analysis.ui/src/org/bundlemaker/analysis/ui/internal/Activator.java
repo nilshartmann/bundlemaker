@@ -3,7 +3,7 @@ package org.bundlemaker.analysis.ui.internal;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.bundlemaker.analysis.ui.Analysis;
+import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -83,7 +83,7 @@ public class Activator extends AbstractUIPlugin {
       // register forwarder
       _projectExplorerSelectionForwarder = new ProjectExplorerSelectionForwarder(Selection.instance()
           .getArtifactSelectionService());
-      selectionService.addSelectionListener(Analysis.PROJECT_EXPLORER_VIEW_ID, _projectExplorerSelectionForwarder);
+      selectionService.addSelectionListener(Selection.PROJECT_EXPLORER_VIEW_ID, _projectExplorerSelectionForwarder);
     }
   }
 
@@ -121,6 +121,23 @@ public class Activator extends AbstractUIPlugin {
     } else {
       return null;
     }
+  }
+
+  /**
+   * Returns the Icon-Image that should be used for the given artifact.
+   * 
+   * <p>
+   * If no artifact is given, <tt>null</tt> is returned.
+   * 
+   * @param artifact
+   * @return
+   */
+  public Image getIconForArtifact(IArtifact artifact) {
+    if (artifact == null) {
+      return null;
+    }
+
+    return Activator.getDefault().getIcon(artifact.getType().getKuerzel());
   }
 
   public Image getIcon(String icon) {

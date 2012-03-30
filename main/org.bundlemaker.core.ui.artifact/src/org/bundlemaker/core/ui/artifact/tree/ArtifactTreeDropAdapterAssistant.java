@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -49,6 +50,10 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
   @Override
   public IStatus handleDrop(CommonDropAdapter aDropAdapter, DropTargetEvent aDropTargetEvent, Object aTarget) {
 
+    // TODO
+    CommonNavigator commonNavigator = CommonNavigatorUtils
+        .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
+    
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(
         aDropAdapter.getCurrentTransfer());
 
@@ -58,7 +63,7 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
       final IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) selectedObject;
       IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) aTarget;
       targetArtifact.addArtifact(sourceArtifact);
-
+      
       //
       if (root == null) {
         root = ((IBundleMakerArtifact) targetArtifact).getRoot();
@@ -66,14 +71,13 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     }
     root.invalidateDependencyCache();
 
-    // TODO
-    CommonNavigator commonNavigator = CommonNavigatorUtils
-        .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
-
+    CommonNavigatorUtils.update("org.eclipse.ui.navigator.ProjectExplorer");
     TreePath[] expanedTreePath = commonNavigator.getCommonViewer().getExpandedTreePaths();
     commonNavigator.getCommonViewer().refresh();
     commonNavigator.getCommonViewer().setExpandedTreePaths(expanedTreePath);
 
+    ArtifactUtils.dumpArtifact(root,3);
+    
     return Status.OK_STATUS;
   }
 

@@ -143,12 +143,12 @@ public abstract class AbstractSelectionService<SELECTION, LISTENER, EVENT> {
     }
   }
 
-  private static class SelectionListenerWrapper<LISTENER> {
+  protected static class SelectionListenerWrapper<LISTENER> {
     private final String   _providerId;
 
     private final LISTENER _listener;
 
-    private SelectionListenerWrapper(String providerId, LISTENER listener) {
+    protected SelectionListenerWrapper(String providerId, LISTENER listener) {
       super();
       _providerId = providerId;
       _listener = listener;

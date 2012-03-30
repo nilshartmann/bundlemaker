@@ -60,17 +60,17 @@ public interface IDependencySelectionService {
    */
   public void addDependencySelectionListener(String providerId, IDependencySelectionListener listener);
 
-  /**
-   * Registers an {@link IDependencySelectionListener} for all providers.
-   * 
-   * <p>
-   * Same as calling <tt>addDependencySelectionListener(null, listener)</tt>
-   * 
-   * @param listener
-   *          the listener. Must not be null
-   */
-
-  public void addDependencySelectionListener(IDependencySelectionListener listener);
+  // /**
+  // * Registers an {@link IDependencySelectionListener} for all providers.
+  // *
+  // * <p>
+  // * Same as calling <tt>addDependencySelectionListener(null, listener)</tt>
+  // *
+  // * @param listener
+  // * the listener. Must not be null
+  // */
+  //
+  // public void addDependencySelectionListener(IDependencySelectionListener listener);
 
   /**
    * Removes the specified listener

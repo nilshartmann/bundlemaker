@@ -41,7 +41,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
   private IModifiableModularizedSystem          _modularizedSystem;
 
   /** - */
-  private DependencyModel                       _dependencyModel;
+  private ModelTransformer                      _dependencyModel;
 
   /** - */
   private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
@@ -83,7 +83,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
    * 
    * @return the dependencyModel
    */
-  public DependencyModel getDependencyModel() {
+  public ModelTransformer getDependencyModel() {
     return _dependencyModel;
   }
 
@@ -149,10 +149,15 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
 
   @Override
   public String handleCanAdd(IArtifact artifact) {
-
     //
     if (!(artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact)) {
       return "Only groups and modules are addable to root";
+    }
+
+    // prevent entries with duplicate names entries
+    if (getChild(artifact.getName()) != null) {
+      return String.format("The group '%s' already contains a child with the name '%s'.", this.getQualifiedName(),
+          artifact.getName());
     }
 
     //
@@ -510,7 +515,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
    * 
    * @param dependencyModel
    */
-  void setDependencyModel(DependencyModel dependencyModel) {
+  void setDependencyModel(ModelTransformer dependencyModel) {
     _dependencyModel = dependencyModel;
   }
 

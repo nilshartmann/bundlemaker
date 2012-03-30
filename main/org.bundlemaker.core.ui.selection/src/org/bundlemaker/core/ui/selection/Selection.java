@@ -14,15 +14,17 @@ import org.bundlemaker.core.ui.selection.internal.DependencySelectionService;
 public class Selection {
 
   /** - */
-  public static final String               MAIN_SELECTION_PROVIDER_ID                      = Selection.class
-                                                                                               .getPackage().getName()
-                                                                                               + ".MAIN_SELECTION_PROVIDER_ID";
+  public static final String               MAIN_ARTIFACT_SELECTION_PROVIDER_ID   = Selection.class.getPackage()
+                                                                                     .getName()
+                                                                                     + ".MAIN_ARTIFACT_SELECTION_PROVIDER_ID";
 
-  /** the id for the Project-Explorer Artifact selection provider */
-  public static final String               PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID = "org.bundlemaker.ui.navigator.selectionprovider";
+  /** - */
+  public static final String               MAIN_DEPENDENCY_SELECTION_PROVIDER_ID = Selection.class.getPackage()
+                                                                                     .getName()
+                                                                                     + ".MAIN_DEPENDENCY_SELECTION_PROVIDER_ID";
 
   /** the id of the Eclipse project explorer */
-  public static final String               PROJECT_EXPLORER_VIEW_ID                        = "org.eclipse.ui.navigator.ProjectExplorer";
+  public static final String               PROJECT_EXPLORER_VIEW_ID              = "org.eclipse.ui.navigator.ProjectExplorer";
 
   /** - */
   private static Selection                 _instance;
@@ -72,6 +74,15 @@ public class Selection {
    * @return the {@link IArtifactSelectionService}. Never null
    */
   public IArtifactSelectionService getArtifactSelectionService() {
+    return _artifactSelectionService;
+  }
+
+  /**
+   * Returns the {@link IArtifactSelectionService} instance.
+   * 
+   * @return the {@link IArtifactSelectionService}. Never null.
+   */
+  public IRootArtifactSelectionService getRootArtifactSelectionService() {
     return _artifactSelectionService;
   }
 

@@ -1,9 +1,9 @@
 package org.bundlemaker.analysis.ui.editor;
 
-import org.bundlemaker.analysis.ui.Analysis;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -29,7 +29,7 @@ public abstract class ArtifactSelectionAwareDependencyPart extends DependencyPar
 
     // initialize view with current selection from Artifact tree
     IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(
-        Analysis.PROJECT_EXPLORER_ARTIFACT_SELECTION_PROVIDER_ID);
+        Selection.MAIN_ARTIFACT_SELECTION_PROVIDER_ID);
 
     if (currentArtifactSelection != null) {
       useArtifacts(currentArtifactSelection.getSelectedArtifacts());

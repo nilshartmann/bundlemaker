@@ -196,7 +196,7 @@ public class DsmViewWidget extends Canvas implements Observer {
               event.getX()) : ((DsmViewModel) _model).getDependency(event.getX(), event.getY());
 
           Selection.instance().getDependencySelectionService()
-              .setSelection(Selection.MAIN_SELECTION_PROVIDER_ID, dependency);
+              .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_PROVIDER_ID, dependency);
         }
         _mainFigure.repaint();
       }
