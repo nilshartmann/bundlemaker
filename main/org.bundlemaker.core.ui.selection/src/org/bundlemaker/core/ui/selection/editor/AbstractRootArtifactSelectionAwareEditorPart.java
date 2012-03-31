@@ -8,7 +8,11 @@ import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.internal.PartListenerList;
+import org.eclipse.ui.internal.PartListenerList2;
 import org.eclipse.ui.part.EditorPart;
 
 /**
@@ -92,7 +96,7 @@ public abstract class AbstractRootArtifactSelectionAwareEditorPart extends Edito
 
     setInput(input);
     setSite(site);
-
+    
     // add listener
     Selection.instance().getRootArtifactSelectionService().addRootArtifactSelectionListener(getProviderId(), this);
   }
