@@ -7,7 +7,7 @@ package org.bundlemaker.core.ui.selection;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  *
  */
-public interface IRootArtifactSelectionChangedEvent {
+public interface IRootArtifactSelectionChangedEvent extends IRootArtifactSelection {
 
   /**
    * <p>

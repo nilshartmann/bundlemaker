@@ -8,7 +8,10 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.selection.view;
+package org.bundlemaker.core.ui.selection.workbench.view;
+
+import java.util.Collection;
+import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.ui.selection.IDependencySelection;
@@ -17,16 +20,16 @@ import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.ViewPart;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractDependencySelectionAwareViewPart extends ViewPart implements IDependencySelectionListener {
+public abstract class AbstractDependencySelectionAwareViewPart extends AbstractPartLifecycleAwareViewPart implements
+    IDependencySelectionListener {
 
   /** - */
-  private IDependency _currentDependency;
+  private List<IDependency> _currentDependencies;
 
   /**
    * {@inheritDoc}
@@ -36,7 +39,7 @@ public abstract class AbstractDependencySelectionAwareViewPart extends ViewPart 
     super.init(site);
 
     //
-    Selection.instance().getDependencySelectionService().addDependencySelectionListener(getProviderId(), this);
+    Selection.instance().getDependencySelectionService().addDependencySelectionListener(getSelectionId(), this);
   }
 
   @Override
@@ -49,39 +52,19 @@ public abstract class AbstractDependencySelectionAwareViewPart extends ViewPart 
     super.dispose();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-   */
-  @Override
-  public void setFocus() {
-    pullDependency();
-  }
-
-  private void pullDependency() {
-    //
-    IDependencySelection dependencySelection = Selection.instance().getDependencySelectionService()
-        .getSelection(getProviderId());
-
-    //
-    _currentDependency = dependencySelection != null ? dependencySelection.getFirstDependency() : null;
-
-    //
-    updateDependencies();
-  }
-
   /**
    * {@inheritDoc}
    */
   @Override
   public final void dependencySelectionChanged(IDependencySelectionChangedEvent event) {
 
-    //
-    _currentDependency = event.getSelection().getFirstDependency();
+    System.out.println("dependencySelectionChanged " + event.getSelection().getSelectedDependencies());
 
     //
-    updateDependencies();
+    _currentDependencies = event.getSelection().getSelectedDependencies();
+
+    //
+    onDependencySelectionChanged(event);
   }
 
   /**
@@ -90,24 +73,37 @@ public abstract class AbstractDependencySelectionAwareViewPart extends ViewPart 
    * 
    * @return the currentDependency
    */
-  public IDependency getCurrentDependency() {
-    return _currentDependency;
-  }
-
-  /**
-   * <p>
-   * </p>
-   *
-   * @return
-   */
-  protected String getProviderId() {
-    return Selection.MAIN_DEPENDENCY_SELECTION_PROVIDER_ID;
+  public List<IDependency> getCurrentDependencies() {
+    return _currentDependencies;
   }
 
   /**
    * <p>
    * </p>
    * 
+   * @param currentDependencies
+   *          the currentDependencies to set
    */
-  protected abstract void updateDependencies();
+  public void setCurrentDependencies(List<IDependency> currentDependencies) {
+    _currentDependencies = currentDependencies;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected String getSelectionId() {
+    return Selection.MAIN_DEPENDENCY_SELECTION_ID;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   * 
+   */
+  protected abstract void onDependencySelectionChanged(IDependencySelection event);
 }

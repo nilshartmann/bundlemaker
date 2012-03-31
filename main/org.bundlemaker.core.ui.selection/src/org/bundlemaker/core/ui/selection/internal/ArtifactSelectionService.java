@@ -11,9 +11,7 @@
 package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -21,6 +19,8 @@ import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionListener;
@@ -31,60 +31,82 @@ import org.eclipse.core.runtime.Assert;
  * The selection service implementation
  * 
  * @author Nils Hartmann
- * 
  */
-public class ArtifactSelectionService extends
-    AbstractSelectionService<IArtifactSelection, IArtifactSelectionListener, IArtifactSelectionChangedEvent> implements
+public class ArtifactSelectionService extends AbstractSelectionService<IArtifactSelection> implements
     IArtifactSelectionService, IRootArtifactSelectionService {
 
   /** - */
-  private final CopyOnWriteArraySet<SelectionListenerWrapper<IRootArtifactSelectionListener>> _rootSelectionlistenerList = new CopyOnWriteArraySet<SelectionListenerWrapper<IRootArtifactSelectionListener>>();
+  private SelectionListenerList<IArtifactSelectionListener, IArtifactSelectionChangedEvent>         _artifactSelectionListenerContainer     = null;
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void setSelection(String providerId, IArtifactSelection newSelection) {
-    super.setSelection(providerId, newSelection);
+  /** - */
+  private SelectionListenerList<IRootArtifactSelectionListener, IRootArtifactSelectionChangedEvent> _rootArtifactSelectionListenerContainer = null;
 
-    IRootArtifactSelection rootArtifactSelection = getRootArtifactSelection(providerId);
-    fireRootArtifactSelectionChanged(providerId, new RootArtifactSelectionChangedEvent(rootArtifactSelection));
+  public ArtifactSelectionService() {
+
+    //
+    _artifactSelectionListenerContainer = new SelectionListenerList<IArtifactSelectionListener, IArtifactSelectionChangedEvent>() {
+      @Override
+      protected void invokeListener(IArtifactSelectionListener listener, IArtifactSelectionChangedEvent event) {
+        listener.artifactSelectionChanged(event);
+      }
+    };
+
+    //
+    _rootArtifactSelectionListenerContainer = new SelectionListenerList<IRootArtifactSelectionListener, IRootArtifactSelectionChangedEvent>() {
+
+      @Override
+      protected void invokeListener(IRootArtifactSelectionListener listener, IRootArtifactSelectionChangedEvent event) {
+        listener.rootArtifactSelectionChanged(event);
+      }
+    };
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public IRootArtifactSelection getRootArtifactSelection(String selectionProviderId) {
+  public void setSelection(String selectionId, String providerId, Collection<IBundleMakerArtifact> selectedArtifacts) {
+
+    Assert.isNotNull(selectionId, "The parameter 'selectionId' must not be null");
+    Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
+    Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
+
+    // create selection object for selected artifacts
+    ArtifactSelection artifactSelection = new ArtifactSelection(selectionId, providerId,
+        new LinkedList<IBundleMakerArtifact>(selectedArtifacts));
+
+    // set the selection
+    setSelection(selectionId, providerId, artifactSelection);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IRootArtifactSelection getRootArtifactSelection(String selectionId) {
 
     //
-    IArtifactSelection artifactSelection = getSelection(selectionProviderId);
+    IArtifactSelection artifactSelection = getSelection(selectionId);
 
     //
     if (artifactSelection == null || artifactSelection.getSelectedArtifacts().size() == 0) {
-      return new RootArtifactSelection(selectionProviderId);
+      // TODO
+      return new RootArtifactSelection(selectionId, "");
     }
 
     //
     IBundleMakerArtifact artifact = (IBundleMakerArtifact) artifactSelection.getSelectedArtifacts().get(0);
 
     //
-    return new RootArtifactSelection(selectionProviderId, artifact.getRoot());
+    return new RootArtifactSelection(selectionId, artifactSelection.getProviderId(), artifact.getRoot());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void addRootArtifactSelectionListener(String providerId, IRootArtifactSelectionListener listener) {
-    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
-
-    // Create wrapper
-    SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper = new SelectionListenerWrapper<IRootArtifactSelectionListener>(
-        providerId, listener);
-
-    // add to listener list
-    _rootSelectionlistenerList.add(wrapper);
+  public void addRootArtifactSelectionListener(String selectionId, IRootArtifactSelectionListener listener) {
+    _rootArtifactSelectionListenerContainer.addSelectionListener(selectionId, listener);
   }
 
   /**
@@ -92,68 +114,34 @@ public class ArtifactSelectionService extends
    */
   @Override
   public void removeRootArtifactSelectionListener(IRootArtifactSelectionListener listener) {
-    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
-
-    for (SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper : _rootSelectionlistenerList) {
-      if (listener.equals(wrapper.getListener())) {
-        // Remove from listener list
-        _rootSelectionlistenerList.remove(wrapper);
-        break;
-      }
-    }
+    _rootArtifactSelectionListenerContainer.removeSelectionListener(listener);
   }
 
   @Override
-  public void setSelection(String providerId, Collection<IBundleMakerArtifact> selectedArtifacts) {
-    Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
-    Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
-
-    // create selection object for selected artifacts
-    ArtifactSelection artifactSelection = new ArtifactSelection(providerId, new LinkedList<IBundleMakerArtifact>(
-        selectedArtifacts));
-
-    // set the selection
-    setSelection(providerId, artifactSelection);
-  }
-
-  @Override
-  public void addArtifactSelectionListener(String providerId, IArtifactSelectionListener listener) {
-    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
-
-    addSelectionListener(providerId, listener);
+  public void addArtifactSelectionListener(String selectionId, IArtifactSelectionListener listener) {
+    _artifactSelectionListenerContainer.addSelectionListener(selectionId, listener);
   }
 
   @Override
   public void removeArtifactSelectionListener(IArtifactSelectionListener listener) {
-    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
-
-    removeSelectionListener(listener);
+    _artifactSelectionListenerContainer.removeSelectionListener(listener);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected IArtifactSelectionChangedEvent createSelectionChangedEvent(IArtifactSelection newSelection) {
-    return new ArtifactSelectionChangedEvent(newSelection);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void invokeListener(IArtifactSelectionListener listener, IArtifactSelectionChangedEvent event) {
-    listener.artifactSelectionChanged(event);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected IArtifactSelection getNullSelection(String providerId) {
-    List<IBundleMakerArtifact> emptyList = Collections.emptyList();
-    return new ArtifactSelection(providerId, emptyList);
-  }
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // protected IArtifactSelectionChangedEvent createSelectionChangedEvent(IArtifactSelection newSelection) {
+  // return new ArtifactSelectionChangedEvent(newSelection);
+  // }
+  //
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // protected void invokeListener(IArtifactSelectionListener listener, IArtifactSelectionChangedEvent event) {
+  // listener.artifactSelectionChanged(event);
+  // }
 
   /**
    * {@inheritDoc}
@@ -166,19 +154,43 @@ public class ArtifactSelectionService extends
     return newSelection.equals(selection);
   }
 
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param providerId
+  // * @param event
+  // */
+  // protected void fireRootArtifactSelectionChanged(String providerId, IRootArtifactSelectionChangedEvent event) {
+  // for (SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper : _rootSelectionlistenerList) {
+  // // check if listener is registered for the provider
+  // if (wrapper.matches(providerId)) {
+  // wrapper.getListener().rootArtifactSelectionChanged(event);
+  // }
+  // }
+  // }
+
   /**
-   * <p>
-   * </p>
-   * 
-   * @param providerId
-   * @param event
+   * {@inheritDoc}
    */
-  protected void fireRootArtifactSelectionChanged(String providerId, IRootArtifactSelectionChangedEvent event) {
-    for (SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper : _rootSelectionlistenerList) {
-      // check if listener is registered for the provider
-      if (wrapper.matches(providerId)) {
-        wrapper.getListener().rootArtifactSelectionChanged(event);
-      }
+  @Override
+  protected void fireSelectionChanged(String selectionId, String providerId, IArtifactSelection newSelection) {
+    _artifactSelectionListenerContainer.fireSelectionChanged(selectionId, new ArtifactSelectionChangedEvent(
+        newSelection));
+
+    //
+    RootArtifactSelection rootArtifactSelection = null;
+    if (newSelection.getSelectedArtifacts().size() == 0) {
+      rootArtifactSelection = new RootArtifactSelection(selectionId, providerId);
+    } else {
+      //
+      IBundleMakerArtifact artifact = (IBundleMakerArtifact) newSelection.getSelectedArtifacts().get(0);
+      rootArtifactSelection = new RootArtifactSelection(selectionId, newSelection.getProviderId(), artifact.getRoot());
     }
+
+    IRootArtifactSelectionChangedEvent rootArtifactSelectionChangedEvent = new RootArtifactSelectionChangedEvent(
+        rootArtifactSelection);
+    _rootArtifactSelectionListenerContainer.fireSelectionChanged(selectionId, rootArtifactSelectionChangedEvent);
   }
+
 }

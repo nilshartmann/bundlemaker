@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.selection.internal;
 
+import java.util.List;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.eclipse.core.runtime.Assert;
@@ -36,4 +39,36 @@ public class ArtifactSelectionChangedEvent implements IArtifactSelectionChangedE
     return _selection;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IProviderSelection#getSelectionId()
+   */
+  public String getSelectionId() {
+    return _selection.getSelectionId();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IProviderSelection#getProviderId()
+   */
+  public String getProviderId() {
+    return _selection.getProviderId();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IArtifactSelection#getSelectedArtifacts()
+   */
+  public List<IBundleMakerArtifact> getSelectedArtifacts() {
+    return _selection.getSelectedArtifacts();
+  }
 }

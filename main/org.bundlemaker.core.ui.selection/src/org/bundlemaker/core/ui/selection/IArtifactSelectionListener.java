@@ -17,7 +17,6 @@ package org.bundlemaker.core.ui.selection;
  * This method must be implemented by clients
  * 
  * @author Nils Hartmann
- * 
  */
 public interface IArtifactSelectionListener {
 

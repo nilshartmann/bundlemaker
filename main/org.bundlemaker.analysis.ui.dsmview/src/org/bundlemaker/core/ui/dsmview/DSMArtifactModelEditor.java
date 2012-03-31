@@ -19,7 +19,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.Selection;
-import org.bundlemaker.core.ui.selection.editor.AbstractArtifactSelectionAwareEditorPart;
+import org.bundlemaker.core.ui.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -44,25 +44,37 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String     ID = DSMArtifactModelEditor.class.getName();
+  public static String     DSM_EDITOR_ID = DSMArtifactModelEditor.class.getName();
 
   /** - */
   private DsmViewComposite _dsmViewWidget;
-
-  // /** - */
-  // private IArtifactSelectionListener _artifactSelectionListener;
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+  public void onPartActivated() {
+    System.out.println("onPartActivated: " + getCurrentArtifacts());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void onPartDeactivated() {
+    System.out.println("onPartDeactivated: " + getCurrentArtifacts());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void onArtifactSelectionChanged(IArtifactSelectionChangedEvent event) {
 
     if (event.getSelection().getSelectedArtifacts().size() == 1) {
-
       IBundleMakerArtifact selectedArtifact = event.getSelection().getSelectedArtifacts().get(0);
       List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>(selectedArtifact.getChildren());
-      useArtifacts(artifacts);
+      setCurrentArtifacts(artifacts);
     }
   }
 
@@ -78,7 +90,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     createContextMenu(_dsmViewWidget.getViewWidget());
 
     //
-    useArtifacts(getCurrentArtifacts());
+    setCurrentArtifacts(getCurrentArtifacts());
   }
 
   /**
@@ -86,7 +98,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void setFocus() {
-    useArtifacts(getCurrentArtifacts());
+    setCurrentArtifacts(getCurrentArtifacts());
   }
 
   /**
@@ -102,19 +114,18 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   private void clearDependencySelection() {
     List<IDependency> dependencies = Collections.emptyList();
     Selection.instance().getDependencySelectionService()
-        .setSelection(Selection.MAIN_ARTIFACT_SELECTION_PROVIDER_ID, dependencies);
+        .setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, DSM_EDITOR_ID, dependencies);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public void useArtifacts(List<IBundleMakerArtifact> artifacts) {
-    super.useArtifacts(artifacts);
+  public void setCurrentArtifacts(List<IBundleMakerArtifact> artifacts) {
+    super.setCurrentArtifacts(artifacts);
     if (_dsmViewWidget != null) {
       _dsmViewWidget.setModel(new DsmViewModel(artifacts));
     }
-
     clearDependencySelection();
   }
 

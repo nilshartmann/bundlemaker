@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.selection.internal;
 
+import java.util.List;
+
+import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.ui.selection.IDependencySelection;
 import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
 import org.eclipse.core.runtime.Assert;
@@ -36,4 +39,58 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
     return _selection;
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IProviderSelection#getSelectionId()
+   */
+  public String getSelectionId() {
+    return _selection.getSelectionId();
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IProviderSelection#getProviderId()
+   */
+  public String getProviderId() {
+    return _selection.getProviderId();
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IDependencySelection#getSelectedDependencies()
+   */
+  public List<IDependency> getSelectedDependencies() {
+    return _selection.getSelectedDependencies();
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IDependencySelection#getFirstDependency()
+   */
+  public IDependency getFirstDependency() {
+    return _selection.getFirstDependency();
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IDependencySelection#hasDependencies()
+   */
+  public boolean hasDependencies() {
+    return _selection.hasDependencies();
+  }
 }

@@ -31,19 +31,81 @@ import org.eclipse.core.runtime.Assert;
  * Instances of the {@link IDependencySelectionListener} can be received via the {@link Selection} factory class
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
- * 
  */
-public class DependencySelectionService extends
-    AbstractSelectionService<IDependencySelection, IDependencySelectionListener, IDependencySelectionChangedEvent>
-    implements IDependencySelectionService {
+public class DependencySelectionService extends AbstractSelectionService<IDependencySelection> implements
+    IDependencySelectionService {
+
+  /** - */
+  private SelectionListenerList<IDependencySelectionListener, IDependencySelectionChangedEvent> _listenerContainer = null;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link DependencySelectionService}.
+   * </p>
+   */
+  public DependencySelectionService() {
+
+    //
+    _listenerContainer = new SelectionListenerList<IDependencySelectionListener, IDependencySelectionChangedEvent>() {
+      @Override
+      protected void invokeListener(IDependencySelectionListener listener, IDependencySelectionChangedEvent event) {
+        listener.dependencySelectionChanged(event);
+      }
+    };
+  }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  protected IDependencySelection getNullSelection(String providerId) {
-    List<IDependency> emptyList = Collections.emptyList();
-    return new DependencySelection(providerId, emptyList);
+  public void setSelection(String selectionId, String providerId, Collection<IDependency> selectedArtifacts) {
+    Assert.isNotNull(selectionId, "The parameter 'selectionId' must not be null");
+    Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
+    Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
+
+    // Create selection
+    DependencySelection dependencySelection = new DependencySelection(selectionId, providerId,
+        new LinkedList<IDependency>(selectedArtifacts));
+
+    // register selection and inform listener
+    setSelection(selectionId, providerId, dependencySelection);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setSelection(String selectionId, String providerId, IDependency dependency) {
+
+    // Create list of dependencies
+    List<IDependency> dependencies;
+    if (dependency == null)
+      dependencies = Collections.emptyList();
+    else {
+      dependencies = Arrays.asList(dependency);
+    }
+
+    // Create DependencySelection
+    DependencySelection dependencySelection = new DependencySelection(selectionId, providerId, dependencies);
+
+    // register selection and inform listener
+    setSelection(selectionId, providerId, dependencySelection);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addDependencySelectionListener(String selectionId, IDependencySelectionListener listener) {
+    _listenerContainer.addSelectionListener(selectionId, listener);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeDependencySelectionListener(IDependencySelectionListener listener) {
+    _listenerContainer.removeSelectionListener(listener);
   }
 
   /**
@@ -57,108 +119,12 @@ public class DependencySelectionService extends
     return newSelection.equals(selection);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.analysis.ui.selection.IDependencySelectionService#setSelection(java.lang.String,
-   * java.util.Collection)
+  /**
+   * {@inheritDoc}
    */
   @Override
-  public void setSelection(String providerId, Collection<IDependency> selectedArtifacts) {
-    Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
-    Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
-
-    // Create selection
-    DependencySelection dependencySelection = new DependencySelection(providerId, new LinkedList<IDependency>(
-        selectedArtifacts));
-
-    // register selection and inform listener
-    setSelection(providerId, dependencySelection);
-
+  protected void fireSelectionChanged(String selectionId, String providerId, IDependencySelection newSelection) {
+    IDependencySelectionChangedEvent event = new DependencySelectionChangedEvent(newSelection);
+    _listenerContainer.fireSelectionChanged(selectionId, event);
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.analysis.ui.selection.IDependencySelectionService#setSelection(java.lang.String,
-   * org.bundlemaker.analysis.model.IDependency)
-   */
-  @Override
-  public void setSelection(String providerId, IDependency dependency) {
-    Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
-
-    // Create list of dependencies
-    List<IDependency> dependencies;
-    if (dependency == null)
-      dependencies = Collections.emptyList();
-    else {
-      dependencies = Arrays.asList(dependency);
-    }
-
-    // Create DependencySelection
-    DependencySelection dependencySelection = new DependencySelection(providerId, dependencies);
-
-    // register selection and inform listener
-    setSelection(providerId, dependencySelection);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.bundlemaker.analysis.ui.selection.IDependencySelectionService#addDependencySelectionListener(java.lang.String,
-   * org.bundlemaker.analysis.ui.selection.IDependencySelectionListener)
-   */
-  @Override
-  public void addDependencySelectionListener(String providerId, IDependencySelectionListener listener) {
-    addSelectionListener(providerId, listener);
-  }
-
-  // /*
-  // * (non-Javadoc)
-  // *
-  // * @see
-  // * org.bundlemaker.analysis.ui.selection.IDependencySelectionService#addDependencySelectionListener(org.bundlemaker
-  // * .analysis.ui.selection.IDependencySelectionListener)
-  // */
-  // @Override
-  // public void addDependencySelectionListener(IDependencySelectionListener listener) {
-  // addSelectionListener(null, listener);
-  // }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.bundlemaker.analysis.ui.selection.IDependencySelectionService#removeDependencySelectionListener(org.bundlemaker
-   * .analysis.ui.selection.IDependencySelectionListener)
-   */
-  @Override
-  public void removeDependencySelectionListener(IDependencySelectionListener listener) {
-    removeSelectionListener(listener);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.bundlemaker.analysis.ui.internal.selection.AbstractSelectionService#createSelectionChangedEvent(java.lang.Object
-   * )
-   */
-  @Override
-  protected IDependencySelectionChangedEvent createSelectionChangedEvent(IDependencySelection newSelection) {
-    return new DependencySelectionChangedEvent(newSelection);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.analysis.ui.internal.selection.AbstractSelectionService#invokeListener(java.lang.Object,
-   * java.lang.Object)
-   */
-  @Override
-  protected void invokeListener(IDependencySelectionListener listener, IDependencySelectionChangedEvent event) {
-    listener.dependencySelectionChanged(event);
-  }
-
 }

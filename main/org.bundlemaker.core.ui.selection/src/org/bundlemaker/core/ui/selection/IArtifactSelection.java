@@ -15,18 +15,13 @@ import java.util.List;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
- * A selection of {@link IBundleMakerArtifact} objects
+ * A selection of {@link IBundleMakerArtifact} objects.
  * 
  * @author Nils Hartmann
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IArtifactSelection {
-
-  /**
-   * @return the selection provider's Id
-   */
-  public String getProviderId();
+public interface IArtifactSelection extends IProviderSelection {
 
   /**
    * The selected artifacts. Never null but might be empty.

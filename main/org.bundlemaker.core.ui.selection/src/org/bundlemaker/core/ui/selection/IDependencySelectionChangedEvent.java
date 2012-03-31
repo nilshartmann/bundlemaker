@@ -17,7 +17,7 @@ package org.bundlemaker.core.ui.selection;
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IDependencySelectionChangedEvent {
+public interface IDependencySelectionChangedEvent extends IDependencySelection {
 
   /**
    * Not null but might be empty

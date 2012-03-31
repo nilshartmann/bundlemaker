@@ -22,31 +22,30 @@ import org.eclipse.core.runtime.Assert;
  * Implementation of {@link IArtifactSelection}
  * 
  * @author Nils Hartmann
- * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DependencySelection implements IDependencySelection {
+public class DependencySelection extends AbstractProviderSelection implements IDependencySelection {
 
-  /**
-   * The provider that provides this selection
-   */
-  private final String            _providerId;
-
-  /**
-   * the selected artifacts
-   */
+  /** the selected artifacts */
   private final List<IDependency> _selectedDependencies;
 
-  public DependencySelection(String providerId, List<IDependency> selectedDependencies) {
-    Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
+  /**
+   * <p>
+   * Creates a new instance of type {@link DependencySelection}.
+   * </p>
+   * 
+   * @param dependencySelectionId
+   * @param providerId
+   * @param selectedDependencies
+   */
+  public DependencySelection(String dependencySelectionId, String providerId, List<IDependency> selectedDependencies) {
+
+    //
+    super(dependencySelectionId, providerId);
+
+    //
     Assert.isNotNull(selectedDependencies, "The parameter 'selectedDependencies' must not be null");
-
-    _providerId = providerId;
     _selectedDependencies = Collections.unmodifiableList(selectedDependencies);
-  }
-
-  @Override
-  public String getProviderId() {
-    return _providerId;
   }
 
   @Override
@@ -86,8 +85,7 @@ public class DependencySelection implements IDependencySelection {
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = 1;
-    result = prime * result + ((_providerId == null) ? 0 : _providerId.hashCode());
+    int result = super.hashCode();
     result = prime * result + ((_selectedDependencies == null) ? 0 : _selectedDependencies.hashCode());
     return result;
   }
@@ -99,16 +97,11 @@ public class DependencySelection implements IDependencySelection {
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!super.equals(obj))
       return false;
     if (getClass() != obj.getClass())
       return false;
     DependencySelection other = (DependencySelection) obj;
-    if (_providerId == null) {
-      if (other._providerId != null)
-        return false;
-    } else if (!_providerId.equals(other._providerId))
-      return false;
     if (_selectedDependencies == null) {
       if (other._selectedDependencies != null)
         return false;
@@ -116,4 +109,23 @@ public class DependencySelection implements IDependencySelection {
       return false;
     return true;
   }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("DependencySelection [selectionId=");
+
+    builder.append(getSelectionId());
+    builder.append(", providerId=");
+    builder.append(getProviderId());
+    builder.append(", selectedDependencies=");
+    builder.append(_selectedDependencies);
+    builder.append("]");
+    return builder.toString();
+  }
+  
+  
 }

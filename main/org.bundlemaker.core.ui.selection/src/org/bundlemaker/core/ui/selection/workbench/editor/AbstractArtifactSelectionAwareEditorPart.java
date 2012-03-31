@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.selection.editor;
+package org.bundlemaker.core.ui.selection.workbench.editor;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,13 +7,10 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
-import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.core.ui.selection.Selection;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.part.EditorPart;
 
 /**
  * <p>
@@ -21,7 +18,8 @@ import org.eclipse.ui.part.EditorPart;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPart implements IArtifactSelectionListener {
+public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractPartLifecycleAwareEditorPart implements
+    IArtifactSelectionListener {
 
   /**
    * The current artifacts (contents) of this dependency part
@@ -35,18 +33,6 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
    */
   public AbstractArtifactSelectionAwareEditorPart() {
     _currentArtifacts = Collections.emptyList();
-  }
-
-  /**
-   * This method is invoked to set the artifacts that should be visualized when this editor is visible
-   * <p>
-   * </p>
-   * 
-   * @param artifacts
-   *          The new artifacts. Must not be null but might be empty
-   */
-  protected void useArtifacts(List<IBundleMakerArtifact> artifacts) {
-    _currentArtifacts = artifacts;
   }
 
   /**
@@ -65,50 +51,20 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
    * {@inheritDoc}
    */
   @Override
-  public boolean isDirty() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean isSaveAsAllowed() {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void doSave(IProgressMonitor monitor) {
-    // nothing to do here
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void doSaveAs() {
-    // nothing to do here
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-    setInput(input);
-    setSite(site);
+
+    // call super
+    super.init(site, input);
 
     // add listener
     Selection.instance().getArtifactSelectionService().addArtifactSelectionListener(getProviderId(), this);
 
     // initialize view with current selection from Artifact tree
-    IArtifactSelection currentArtifactSelection = getArtifactSelectionService().getSelection(getProviderId());
+    IArtifactSelection currentArtifactSelection = Selection.instance().getArtifactSelectionService()
+        .getSelection(getProviderId());
 
     if (currentArtifactSelection != null) {
-      useArtifacts(currentArtifactSelection.getSelectedArtifacts());
+      setCurrentArtifacts(currentArtifactSelection.getSelectedArtifacts());
     }
   }
 
@@ -126,19 +82,50 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends EditorPar
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+
+    //
+    if (!isActive()) {
+      return;
+    }
+
+    System.out.println("onArtifactSelectionChanged " + event.getSelection().getSelectedArtifacts());
+
+    //
+    onArtifactSelectionChanged(event);
+  }
+
+  /**
    * <p>
    * </p>
    * 
-   * @return the IArtifactSelectionService
+   * @param event
    */
-  protected IArtifactSelectionService getArtifactSelectionService() {
-    return Selection.instance().getArtifactSelectionService();
+  protected abstract void onArtifactSelectionChanged(IArtifactSelectionChangedEvent event);
+
+  /**
+   * This method is invoked to set the artifacts that should be visualized when this editor is visible
+   * <p>
+   * </p>
+   * 
+   * @param artifacts
+   *          The new artifacts. Must not be null but might be empty
+   */
+  // TODO RENAME
+  protected void setCurrentArtifacts(List<IBundleMakerArtifact> artifacts) {
+    _currentArtifacts = artifacts;
   }
 
-  @Override
-  public abstract void artifactSelectionChanged(IArtifactSelectionChangedEvent event);
-
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   protected String getProviderId() {
-    return Selection.MAIN_ARTIFACT_SELECTION_PROVIDER_ID;
+    return Selection.MAIN_ARTIFACT_SELECTION_ID;
   }
 }

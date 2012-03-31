@@ -21,9 +21,37 @@ import org.eclipse.core.runtime.Assert;
  * Implementation of {@link IArtifactSelection}
  * 
  * @author Nils Hartmann
- * 
  */
-public class ArtifactSelection implements IArtifactSelection {
+public class ArtifactSelection extends AbstractProviderSelection implements IArtifactSelection {
+
+  /** the selected artifacts */
+  private final List<IBundleMakerArtifact> _selectedArtifacts;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ArtifactSelection}.
+   * </p>
+   * 
+   * @param artifactSelectionId
+   * @param providerId
+   * @param selectedArtifacts
+   */
+  public ArtifactSelection(String artifactSelectionId, String providerId, List<IBundleMakerArtifact> selectedArtifacts) {
+
+    // call super
+    super(artifactSelectionId, providerId);
+
+    // assert not null
+    Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
+
+    // set the selected artifacts
+    _selectedArtifacts = Collections.unmodifiableList(selectedArtifacts);
+  }
+
+  @Override
+  public List<IBundleMakerArtifact> getSelectedArtifacts() {
+    return _selectedArtifacts;
+  }
 
   /**
    * {@inheritDoc}
@@ -31,8 +59,7 @@ public class ArtifactSelection implements IArtifactSelection {
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = 1;
-    result = prime * result + ((_providerId == null) ? 0 : _providerId.hashCode());
+    int result = super.hashCode();
     result = prime * result + ((_selectedArtifacts == null) ? 0 : _selectedArtifacts.hashCode());
     return result;
   }
@@ -44,16 +71,11 @@ public class ArtifactSelection implements IArtifactSelection {
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!super.equals(obj))
       return false;
     if (getClass() != obj.getClass())
       return false;
     ArtifactSelection other = (ArtifactSelection) obj;
-    if (_providerId == null) {
-      if (other._providerId != null)
-        return false;
-    } else if (!_providerId.equals(other._providerId))
-      return false;
     if (_selectedArtifacts == null) {
       if (other._selectedArtifacts != null)
         return false;
@@ -61,33 +83,4 @@ public class ArtifactSelection implements IArtifactSelection {
       return false;
     return true;
   }
-
-  /**
-   * The provider that provides this selection
-   */
-  private final String          _providerId;
-
-  /**
-   * the selected artifacts
-   */
-  private final List<IBundleMakerArtifact> _selectedArtifacts;
-
-  public ArtifactSelection(String providerId, List<IBundleMakerArtifact> selectedArtifacts) {
-    Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
-    Assert.isNotNull(selectedArtifacts, "The parameter 'selectedArtifacts' must not be null");
-
-    _providerId = providerId;
-    _selectedArtifacts = Collections.unmodifiableList(selectedArtifacts);
-  }
-
-  @Override
-  public String getProviderId() {
-    return _providerId;
-  }
-
-  @Override
-  public List<IBundleMakerArtifact> getSelectedArtifacts() {
-    return _selectedArtifacts;
-  }
-
 }

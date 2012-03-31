@@ -15,7 +15,7 @@ import java.util.Collection;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
- * A central selection service for selected {@link IBundleMakerArtifact artifacts}
+ * A central selection service for selected {@link IBundleMakerArtifact artifacts}.
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
@@ -24,34 +24,38 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 public interface IArtifactSelectionService {
 
   /**
-   * Return the current selection of the specified provider.
+   * Return the current selection of the specified artifactSelectionId.
    * 
-   * @param selectionProviderId
-   *          the provider id. must not be null
-   * @return the selection, or null if there is no selection for the specified provider
+   * @param artifactSelectionId
+   *          the artifactSelectionId. must not be null
+   * @return the selection, or null if there is no selection for the specified artifactSelectionId
    */
-  public IArtifactSelection getSelection(String selectionProviderId);
+  public IArtifactSelection getSelection(String artifactSelectionId);
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @param artifactSelectionId
    * @param selectionProviderId
    * @param selectedArtifacts
    *          the (newly) selected artifacts. might be null, resulting in an empty selection
    */
-  public void setSelection(String selectionProviderId, Collection<IBundleMakerArtifact> selectedArtifacts);
+  public void setSelection(String artifactSelectionId, String selectionProviderId,
+      Collection<IBundleMakerArtifact> selectedArtifacts);
 
   /**
-   * Registers an {@link IArtifactSelectionListener} for the specified providerId.
+   * Registers an {@link IArtifactSelectionListener} for the specified artifactSelectionId.
    * 
    * <p>
-   * The listener is invoked if the provider's selection changes. If the providerId is null, the listener is invoked for
-   * selection change on any provider
+   * The listener is invoked if the selection with the given artifactSelectionId changes.
    * 
-   * @param providerId
-   *          the providerId or null
+   * @param artifactSelectionId
+   *          the artifactSelectionId
    * @param listener
    *          the listener. Must not be null
    */
-  public void addArtifactSelectionListener(String providerId, IArtifactSelectionListener listener);
+  public void addArtifactSelectionListener(String artifactSelectionId, IArtifactSelectionListener listener);
 
   /**
    * Removes the specified listener

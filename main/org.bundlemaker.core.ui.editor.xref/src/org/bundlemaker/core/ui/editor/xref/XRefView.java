@@ -20,7 +20,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
 import org.bundlemaker.core.ui.selection.Selection;
-import org.bundlemaker.core.ui.selection.editor.AbstractRootArtifactSelectionAwareEditorPart;
+import org.bundlemaker.core.ui.selection.workbench.editor.AbstractRootArtifactSelectionAwareEditorPart;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -50,21 +50,21 @@ import org.eclipse.swt.widgets.Composite;
 public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
 
   /** the ID of the view as specified by the extension */
-  public static final String ID                   = XRefView.class.getName();
+  public static final String         XREF_ID              = XRefView.class.getName();
 
-  private TreeViewerPanel    leftTree;
+  private TreeViewerPanel            leftTree;
 
-  private TreeViewerPanel    middleTree;
+  private TreeViewerPanel            middleTree;
 
-  private TreeViewerPanel    rightTree;
+  private TreeViewerPanel            rightTree;
 
-  private IBundleMakerArtifact          rootArtifact;
+  private IBundleMakerArtifact       rootArtifact;
 
-  private List<IBundleMakerArtifact>    middleSelectedArtifacts;
+  private List<IBundleMakerArtifact> middleSelectedArtifacts;
 
-  private List<IBundleMakerArtifact>    dependentSelectedArtifacts;
+  private List<IBundleMakerArtifact> dependentSelectedArtifacts;
 
-  private boolean            showUsedDependencies = true;
+  private boolean                    showUsedDependencies = true;
 
   /**
    * {@inheritDoc}
@@ -180,7 +180,7 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
         dependencies.addAll(artifact.getDependencies(toArtifacts));
       }
       Selection.instance().getDependencySelectionService()
-          .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_PROVIDER_ID, dependencies);
+          .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, XREF_ID, dependencies);
     }
   }
 

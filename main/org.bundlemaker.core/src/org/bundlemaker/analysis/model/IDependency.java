@@ -66,6 +66,8 @@ public interface IDependency {
    */
   public int getWeight();
 
+  public Collection<IDependency> getLeafDependencies();
+
   /**
    * <p>
    * </p>
