@@ -36,7 +36,8 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
     // selection, artifacts);
 
     // notify selection service
-    _artifactSelectionService.setSelection(Selection.MAIN_ARTIFACT_SELECTION_PROVIDER_ID, artifacts);
+    _artifactSelectionService.setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, Selection.PROJECT_EXPLORER_VIEW_ID,
+        artifacts);
 
   }
 

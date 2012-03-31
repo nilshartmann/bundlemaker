@@ -17,11 +17,10 @@ package org.bundlemaker.core.ui.selection;
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IArtifactSelectionChangedEvent {
+public interface IArtifactSelectionChangedEvent extends IArtifactSelection {
 
   /**
    * Not null but might be empty
    */
   public IArtifactSelection getSelection();
-
 }

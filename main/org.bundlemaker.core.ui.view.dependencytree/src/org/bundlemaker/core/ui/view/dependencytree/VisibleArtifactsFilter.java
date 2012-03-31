@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytree;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -19,17 +19,24 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 /**
- * Filter for IArtifact trees. This filter gets a white list of IArtifacts given in the constructor. Only these artifacts
- * and their parent nodes are displayed in the tree, everything else is hidden.
+ * <p>
+ * Filter for IArtifact trees. This filter gets a white list of IArtifacts given in the constructor. Only these
+ * artifacts and their parent nodes are displayed in the tree, everything else is hidden.
+ * </p>
  * 
  * @author Frank Schlueter
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DependentArtifactsFilter extends ViewerFilter {
+public class VisibleArtifactsFilter extends ViewerFilter {
 
   private Set<IBundleMakerArtifact> _artifacts = new HashSet<IBundleMakerArtifact>();
 
-  public DependentArtifactsFilter(List<IBundleMakerArtifact> visibleArtifacts) {
+  public VisibleArtifactsFilter(Collection<IBundleMakerArtifact> visibleArtifacts) {
+
+    //
     this._artifacts.addAll(visibleArtifacts);
+
+    //
     for (IBundleMakerArtifact dependency : visibleArtifacts) {
       IBundleMakerArtifact parent = dependency.getParent();
       while (parent != null) {

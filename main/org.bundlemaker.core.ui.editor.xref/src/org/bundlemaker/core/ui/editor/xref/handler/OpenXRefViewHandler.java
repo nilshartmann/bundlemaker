@@ -44,7 +44,7 @@ public class OpenXRefViewHandler extends AbstractArtifactBasedHandler {
     IWorkbenchPage page = getActiveWorkbenchPage();
     if (page != null) {
       try {
-        IEditorPart editorPart = page.openEditor(nullInputEditor, XRefView.ID);
+        IEditorPart editorPart = page.openEditor(nullInputEditor, XRefView.XREF_ID);
         if (!(editorPart instanceof XRefView)) {
           System.err.println("EditorPart " + editorPart + " is not a XRefView?");
           return;

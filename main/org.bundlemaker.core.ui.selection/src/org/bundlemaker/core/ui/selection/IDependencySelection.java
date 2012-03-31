@@ -21,12 +21,7 @@ import org.bundlemaker.analysis.model.IDependency;
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IDependencySelection {
-
-  /**
-   * @return the selection provider's Id
-   */
-  public String getProviderId();
+public interface IDependencySelection  extends IProviderSelection {
 
   /**
    * The selected artifacts. Never null but might be empty.

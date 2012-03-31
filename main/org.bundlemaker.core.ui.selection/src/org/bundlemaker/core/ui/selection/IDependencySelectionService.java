@@ -35,16 +35,29 @@ public interface IDependencySelectionService {
   /**
    * @param selectionProviderId
    * @param selectedArtifacts
-   *          the (newly) selected dependencies. might be null, resulting in an empty selection
+   * 
    */
-  public void setSelection(String selectionProviderId, Collection<IDependency> selectedArtifacts);
-
   /**
+   * <p>
+   * </p>
+   * 
+   * @param artifactSelectionId
    * @param selectionProviderId
    * @param selectedArtifacts
-   *          the (newly) selected artifacts. might be null, resulting in an empty selection
+   *          the (newly) selected dependencies. might be null, resulting in an empty selection
    */
-  public void setSelection(String selectionProviderId, IDependency dependency);
+  public void setSelection(String artifactSelectionId, String selectionProviderId,
+      Collection<IDependency> selectedArtifacts);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifactSelectionId
+   * @param selectionProviderId
+   * @param dependency
+   */
+  public void setSelection(String artifactSelectionId, String selectionProviderId, IDependency dependency);
 
   /**
    * Registers an {@link IDependencySelectionListener} for the specified providerId.
@@ -53,24 +66,12 @@ public interface IDependencySelectionService {
    * The listener is invoked if the provider's selection changes. If the providerId is null, the listener is invoked for
    * selection change on any provider
    * 
-   * @param providerId
-   *          the providerId or null
+   * @param selectionId
+   *          the selectionId or null
    * @param listener
    *          the listener. Must not be null
    */
-  public void addDependencySelectionListener(String providerId, IDependencySelectionListener listener);
-
-  // /**
-  // * Registers an {@link IDependencySelectionListener} for all providers.
-  // *
-  // * <p>
-  // * Same as calling <tt>addDependencySelectionListener(null, listener)</tt>
-  // *
-  // * @param listener
-  // * the listener. Must not be null
-  // */
-  //
-  // public void addDependencySelectionListener(IDependencySelectionListener listener);
+  public void addDependencySelectionListener(String selectionId, IDependencySelectionListener listener);
 
   /**
    * Removes the specified listener

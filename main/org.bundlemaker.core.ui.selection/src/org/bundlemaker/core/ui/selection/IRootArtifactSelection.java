@@ -8,15 +8,7 @@ import org.bundlemaker.core.analysis.IRootArtifact;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IRootArtifactSelection {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the selection provider's Id
-   */
-  public String getProviderId();
+public interface IRootArtifactSelection extends IProviderSelection {
 
   /**
    * <p>
@@ -26,11 +18,11 @@ public interface IRootArtifactSelection {
    * @return the selected {@link IRootArtifact}. Maybe null.
    */
   public IRootArtifact getSelectedRootArtifact();
-  
+
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   public boolean hasSelectedRootArtifact();

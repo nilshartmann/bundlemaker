@@ -2,6 +2,7 @@ package org.bundlemaker.analysis.model.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.DependencyKind;
@@ -139,6 +140,16 @@ public class Dependency implements IDependency {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<IDependency> getLeafDependencies() {
+    Collection<IDependency> result = new LinkedList<IDependency>();
+    getLeafDependencies(result);
+    return result;
   }
 
   @Override

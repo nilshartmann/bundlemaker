@@ -12,8 +12,10 @@ package org.bundlemaker.core.ui.view.dependencytable;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.selection.IDependencySelection;
 import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
-import org.bundlemaker.core.ui.selection.view.AbstractDependencySelectionAwareViewPart;
+import org.bundlemaker.core.ui.selection.Selection;
+import org.bundlemaker.core.ui.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -68,6 +70,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     createColumns(tableComposite, _viewer);
 
     // open editor
+    // TODO : DOUBLECLICK
     _viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
       @Override
@@ -81,6 +84,53 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
         }
       }
     });
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setFocus() {
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void onDependencySelectionChanged(IDependencySelection selection) {
+
+    // set current dependencies
+    setCurrentDependencies(selection.getSelectedDependencies());
+
+    if (getCurrentDependencies() == null || getCurrentDependencies().size() == 0) {
+      setColumnTitles("From", "To");
+      _viewer.setInput(new Object());
+      _viewer.getTable().redraw();
+      return;
+    } else {
+
+      // TODO
+      IBundleMakerArtifact bundleMakerArtifact = getCurrentDependencies().get(0).getFrom().getRoot();
+      _fromLabelGenerator.setBaseArtifact(bundleMakerArtifact);
+      _toLabelGenerator.setBaseArtifact(bundleMakerArtifact);
+      //
+      String fromColumnTitle = "From " + _fromLabelGenerator.getTitle();
+      String toColumnTitle = "To " + _toLabelGenerator.getTitle();
+
+      setColumnTitles(fromColumnTitle, toColumnTitle);
+
+      _viewer.setInput(getCurrentDependencies());
+      _viewer.getTable().redraw();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected String getSelectionId() {
+    return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
   }
 
   private void createColumns(Composite parent, TableViewer viewer) {
@@ -132,54 +182,10 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void updateDependencies() {
-
-    if (getCurrentDependency() == null) {
-      setColumnTitles("From", "To");
-      _viewer.setInput(new Object());
-      _viewer.getTable().redraw();
-      return;
-    } else {
-
-      _fromLabelGenerator.setBaseArtifact(getCurrentDependency().getFrom());
-      _toLabelGenerator.setBaseArtifact(getCurrentDependency().getTo());
-
-      // StringBuilder builder = new StringBuilder();
-      // dumpDependencies(builder, 0, dependency);
-
-      String fromColumnTitle = "From " + _fromLabelGenerator.getTitle();
-      String toColumnTitle = "To " + _toLabelGenerator.getTitle();
-
-      setColumnTitles(fromColumnTitle, toColumnTitle);
-
-      _viewer.setInput(getCurrentDependency().getDependencies());
-      _viewer.getTable().redraw();
-    }
-  }
-
   private void setColumnTitles(String fromColumnTitle, String toColumnTitle) {
     Table table = _viewer.getTable();
 
     table.getColumn(0).setText(fromColumnTitle);
     table.getColumn(2).setText(toColumnTitle);
   }
-
-  // private void dumpDependencies(StringBuilder builder, int level, IDependency iDependency) {
-  // for (int i = 0; i < level; i++) {
-  // builder.append("  ");
-  // }
-  // builder.append(String.format("From: %s To: %s Type: %s%n", iDependency.getFrom().getQualifiedName(), iDependency
-  // .getTo().getQualifiedName(), iDependency.getDependencyKind()));
-  // Collection<IDependency> dependencies = iDependency.getDependencies();
-  // if (dependencies != null) {
-  // for (IDependency iDependency2 : dependencies) {
-  // dumpDependencies(builder, level + 1, iDependency2);
-  // }
-  // }
-  // }
-
 }

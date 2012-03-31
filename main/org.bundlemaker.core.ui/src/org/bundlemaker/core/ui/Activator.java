@@ -55,6 +55,10 @@ public class Activator extends AbstractUIPlugin {
 
     registerProjectExplorerSelectionForwarder();
 
+    PlatformUI.getWorkbench().addWindowListener(new WindowListener());
+
+    ProjectDescriptionAdapterFactory.register();
+
     // CommonNavigatorUtils.findCommonNavigator()
     // IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
     // CommonNavigator commonNavigator = (CommonNavigator) page.findView(IPageLayout.ID_PROJECT_EXPLORER);
@@ -64,10 +68,6 @@ public class Activator extends AbstractUIPlugin {
     // System.out.println(event.getSelection());
     // }
     // });
-
-    PlatformUI.getWorkbench().addWindowListener(new WindowListener());
-
-    ProjectDescriptionAdapterFactory.register();
 
     // /** -- */
     // IPartListener partListener = new IPartListener() {

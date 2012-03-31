@@ -10,34 +10,32 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytree;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
-import org.bundlemaker.core.ui.selection.view.AbstractDependencySelectionAwareViewPart;
+import org.bundlemaker.core.ui.selection.IDependencySelection;
+import org.bundlemaker.core.ui.selection.Selection;
+import org.bundlemaker.core.ui.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
+import org.bundlemaker.core.util.collections.GenericCache;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.StyledCellLabelProvider;
-import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * <p>
@@ -47,246 +45,226 @@ import org.eclipse.swt.widgets.Display;
  */
 public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart {
 
-  private TreeViewer                _fromTreeViewer;
+  public static final String                                    ID                 = DependencyTreeView.class.getName();
 
-  private TreeViewer                _toTreeViewer;
+  /** - */
+  private TreeViewer                                            _fromTreeViewer;
 
-  private Set<IBundleMakerArtifact> _visibleFromArtifacts = new HashSet<IBundleMakerArtifact>();
+  /** - */
+  private TreeViewer                                            _toTreeViewer;
 
-  private Set<IBundleMakerArtifact> _fromArtifacts        = new HashSet<IBundleMakerArtifact>();
+  /** - */
+  @SuppressWarnings("serial")
+  private GenericCache<IBundleMakerArtifact, List<IDependency>> _targetArtifactMap = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
+                                                                                     @Override
+                                                                                     protected List<IDependency> create(
+                                                                                         IBundleMakerArtifact key) {
+                                                                                       return new LinkedList<IDependency>();
+                                                                                     }
+                                                                                   };
 
-  private Set<IBundleMakerArtifact> _visibleToArtifacts   = new HashSet<IBundleMakerArtifact>();
+  /** - */
+  @SuppressWarnings("serial")
+  private GenericCache<IBundleMakerArtifact, List<IDependency>> _sourceArtifactMap = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
+                                                                                     @Override
+                                                                                     protected List<IDependency> create(
+                                                                                         IBundleMakerArtifact key) {
+                                                                                       return new LinkedList<IDependency>();
+                                                                                     }
+                                                                                   };
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+  /** - */
+  private List<IDependency>                                     _leafDependencies;
+
+  /**
+   * {@inheritDoc}
    */
   @Override
   public void createPartControl(Composite parent) {
 
+    //
     parent.setLayout(new GridLayout(2, true));
 
+    //
     _fromTreeViewer = createTreeViewer(parent);
     _fromTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
 
+    //
     _toTreeViewer = createTreeViewer(parent);
-    // _toTreeViewer.setLabelProvider(new MyLabelProvider(_toArtifacts));
     _toTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
 
-    // add SelectionListener
-    _fromTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-
-        //
-        IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
-
-        //
-        _visibleToArtifacts.clear();
-
-        //
-        for (Object selectedObject : structuredSelection.toList()) {
-          if (selectedObject instanceof IBundleMakerArtifact) {
-            Collection<IDependency> dependencies = ((IBundleMakerArtifact) selectedObject).getDependencies();
-            for (IDependency iDependency : dependencies) {
-              _visibleToArtifacts.add(((IBundleMakerArtifact) iDependency.getTo()));
-              _visibleToArtifacts.add(((IBundleMakerArtifact) iDependency.getTo().getParent(ArtifactType.Resource)));
-            }
-          }
-        }
-
-        if (structuredSelection.getFirstElement() != null) {
-          updateDependencies(false, true, false, true);
-          _toTreeViewer.setSelection(new StructuredSelection());
-        } else {
-          updateDependencies(false, true, false, false);
-        }
-      }
-    });
-
-    // add SelectionListener
-    _toTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-
-        //
-        IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
-
-        //
-        _visibleFromArtifacts.clear();
-
-        //
-        Collection<IBundleMakerArtifact> selection = structuredSelection.toList();
-        for (IBundleMakerArtifact artifact : _fromArtifacts) {
-
-          Collection<? extends IDependency> deps = artifact.getDependencies(selection);
-
-          if (!deps.isEmpty()) {
-            _visibleFromArtifacts.add(((IBundleMakerArtifact) artifact));
-            _visibleFromArtifacts.add(((IBundleMakerArtifact) artifact.getParent(ArtifactType.Resource)));
-          }
-        }
-
-        if (structuredSelection.getFirstElement() != null) {
-          updateDependencies(true, false, true, false);
-          _fromTreeViewer.setSelection(new StructuredSelection());
-        } else {
-          updateDependencies(true, false, false, false);
-        }
-      }
-    });
+    // add SelectionListeners
+    _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());
+    _toTreeViewer.addSelectionChangedListener(new ToArtifactSelectionChangedListener());
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  protected void updateDependencies() {
-    updateDependencies(true, true, false, false);
+  public void setFocus() {
+    //
   }
 
   /**
    * {@inheritDoc}
    */
-  protected void updateDependencies(boolean updateFromArtifacts, boolean updateToArtifacts, boolean filterFrom,
-      boolean filterTo) {
+  @Override
+  protected void onDependencySelectionChanged(IDependencySelection selection) {
 
-    if (getCurrentDependency() == null) {
-      if (updateFromArtifacts) {
-        _fromTreeViewer.setInput(new Object());
-      }
-      if (updateToArtifacts) {
-        _toTreeViewer.setInput(new Object());
-      }
-      return;
-    }
+    // set the current dependencies
+    setCurrentDependencies(selection.getSelectedDependencies());
 
     //
-    List<IBundleMakerArtifact> fromArtifacts = null;
-    if (updateFromArtifacts) {
-      fromArtifacts = getFromArtifacts(getCurrentDependency(), filterFrom);
-    }
-    List<IBundleMakerArtifact> toArtifacts = null;
-    if (updateToArtifacts) {
-      toArtifacts = getToArtifacts(getCurrentDependency(), filterTo);
-    }
+    _leafDependencies = Helper.getAllLeafDependencies(getCurrentDependencies());
 
     //
-    if (updateFromArtifacts) {
-      setTreeViewer(_fromTreeViewer, fromArtifacts);
-    }
-    if (updateToArtifacts) {
-      setTreeViewer(_toTreeViewer, toArtifacts);
-    }
-
+    _sourceArtifactMap.clear();
+    _targetArtifactMap.clear();
+    
     //
-    if (updateFromArtifacts) {
-      _fromTreeViewer.expandToLevel(getCurrentDependency().getFrom(), 1);
-    }
-    if (updateToArtifacts) {
-      _toTreeViewer.expandToLevel(getCurrentDependency().getTo(), 1);
-    }
-  }
-
-  private void setTreeViewer(TreeViewer treeViewer, List<IBundleMakerArtifact> artifacts) {
-    if (artifacts.size() > 0) {
-      if (!artifacts.get(0).getRoot().equals(treeViewer.getInput())) {
-        treeViewer.setInput(artifacts.get(0).getRoot());
-      }
-      treeViewer.setFilters(new ViewerFilter[] { new DependentArtifactsFilter(artifacts) });
-    } else {
-      treeViewer.setInput(Collections.emptyList());
-    }
-  }
-
-  private List<IBundleMakerArtifact> getFromArtifacts(IDependency dependency, boolean filter) {
-
-    List<IBundleMakerArtifact> fromArtifacts = new ArrayList<IBundleMakerArtifact>();
-    Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
-    dependency.getLeafDependencies(leafDependencies);
-    for (IDependency leafDependency : leafDependencies) {
-      if (!filter || _visibleFromArtifacts.contains((IBundleMakerArtifact) leafDependency.getFrom())) {
-        fromArtifacts.add((IBundleMakerArtifact) leafDependency.getFrom());
-      }
-      _fromArtifacts.add((IBundleMakerArtifact) leafDependency.getFrom());
+    for (IDependency dependency : _leafDependencies) {
+      _sourceArtifactMap.getOrCreate(dependency.getFrom()).add(dependency);
+      _targetArtifactMap.getOrCreate(dependency.getTo()).add(dependency);
     }
 
-    return fromArtifacts;
+    // update 'from' and 'to' tree, no filtering
+    setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
+    setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param dependencies
-   * @return
+   * @param treeViewer
+   * @param visibleArtifacts
    */
-  private List<IBundleMakerArtifact> getToArtifacts(IDependency dependency, boolean filter) {
+  private void setVisibleArtifacts(TreeViewer treeViewer, Collection<IBundleMakerArtifact> visibleArtifacts) {
+    Assert.isNotNull(treeViewer);
+    Assert.isNotNull(visibleArtifacts);
 
-    List<IBundleMakerArtifact> toArtifacts = new ArrayList<IBundleMakerArtifact>();
-    Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
-    dependency.getLeafDependencies(leafDependencies);
-    for (IDependency leafDependency : leafDependencies) {
-      if (!filter || _visibleToArtifacts.contains((IBundleMakerArtifact) leafDependency.getTo())) {
-        toArtifacts.add((IBundleMakerArtifact) leafDependency.getTo());
+    if (visibleArtifacts.size() > 0) {
+      
+      // set the root if necessary
+      IRootArtifact rootArtifact = visibleArtifacts.toArray(new IBundleMakerArtifact[0])[0].getRoot();
+      if (!rootArtifact.equals(treeViewer.getInput())) {
+        treeViewer.setInput(rootArtifact);
       }
+      
+      // set the filter
+      treeViewer.setFilters(new ViewerFilter[] { new VisibleArtifactsFilter(visibleArtifacts) });
     }
 
-    return toArtifacts;
+    // set empty list
+    else {
+      treeViewer.setInput(Collections.emptyList());
+    }
   }
 
   /**
    * <p>
+   * Creates a new TreeViewer
    * </p>
    * 
    * @param parent
    * @return
    */
   private TreeViewer createTreeViewer(Composite parent) {
-
-    //
     TreeViewer treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
     treeViewer.setContentProvider(new ArtifactTreeContentProvider());
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
-
     treeViewer.setSorter(new ArtifactTreeViewerSorter());
-
-    //
     return treeViewer;
   }
 
-  // class MyLabelProvider extends StyledCellLabelProvider {
-  //
-  // final private Set<IBundleMakerArtifact> _bundleMakerArtifacts;
-  //
-  // private ArtifactTreeLabelProvider _artifactTreeLabelProvider = new ArtifactTreeLabelProvider();
-  //
-  // public MyLabelProvider(Set<IBundleMakerArtifact> bundleMakerArtifacts) {
-  // super();
-  // _bundleMakerArtifacts = bundleMakerArtifacts;
-  // }
-  //
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public void update(ViewerCell cell) {
-  // Object element = cell.getElement();
-  // StyledString text = new StyledString();
-  // text.append(_artifactTreeLabelProvider.getText(element));
-  // if (_bundleMakerArtifacts.contains(element)) {
-  // cell.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
-  // } else {
-  // cell.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-  // }
-  // cell.setStyleRanges(text.getStyleRanges());
-  // cell.setImage(_artifactTreeLabelProvider.getImage(element));
-  // cell.setText(text.toString());
-  // cell.setStyleRanges(text.getStyleRanges());
-  // super.update(cell);
-  // }
-  // }
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  private final class FromArtifactsSelectionChangedListener implements ISelectionChangedListener {
+
+    @Override
+    public void selectionChanged(SelectionChangedEvent event) {
+
+      //
+      IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
+
+      //
+      List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
+      List<IDependency> selectedDetailDependencies = new LinkedList<IDependency>();
+      for (Object selectedObject : structuredSelection.toList()) {
+        if (selectedObject instanceof IBundleMakerArtifact) {
+          IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
+          for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
+            if (_sourceArtifactMap.containsKey(artifact)) {
+              List<IDependency> dependencies = _sourceArtifactMap.get(artifact);
+              selectedDetailDependencies.addAll(dependencies);
+              for (IDependency dep : dependencies) {
+                visibleArtifacts.add(dep.getTo());
+              }
+            }
+          }
+        }
+      }
+
+      if (structuredSelection.size() > 0) {
+        _toTreeViewer.setSelection(new StructuredSelection());
+        setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
+        Selection.instance().getDependencySelectionService()
+            .setSelection(Selection.DETAIL_DEPENDENCY_SELECTION_ID, ID, selectedDetailDependencies);
+      } else {
+        setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
+        Selection.instance().getDependencySelectionService()
+            .setSelection(Selection.DETAIL_DEPENDENCY_SELECTION_ID, ID, _leafDependencies);
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  private final class ToArtifactSelectionChangedListener implements ISelectionChangedListener {
+
+    @Override
+    public void selectionChanged(SelectionChangedEvent event) {
+
+      //
+      IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
+
+      //
+      List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
+      List<IDependency> selectedDetailDependencies = new LinkedList<IDependency>();
+      for (Object selectedObject : structuredSelection.toList()) {
+        if (selectedObject instanceof IBundleMakerArtifact) {
+          IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
+          for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
+            if (_targetArtifactMap.containsKey(artifact)) {
+              List<IDependency> dependencies = _targetArtifactMap.get(artifact);
+              selectedDetailDependencies.addAll(dependencies);
+              for (IDependency dep : dependencies) {
+                visibleArtifacts.add(dep.getFrom());
+              }
+            }
+          }
+        }
+      }
+
+      if (structuredSelection.size() > 0) {
+        _fromTreeViewer.setSelection(new StructuredSelection());
+        setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
+        Selection.instance().getDependencySelectionService()
+            .setSelection(Selection.DETAIL_DEPENDENCY_SELECTION_ID, ID, selectedDetailDependencies);
+      } else {
+        setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
+        Selection.instance().getDependencySelectionService()
+            .setSelection(Selection.DETAIL_DEPENDENCY_SELECTION_ID, ID, _leafDependencies);
+      }
+    }
+  }
 }

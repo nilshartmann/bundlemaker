@@ -1,5 +1,9 @@
 package org.bundlemaker.core.ui.selection;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.ui.selection.internal.ArtifactSelectionService;
 import org.bundlemaker.core.ui.selection.internal.DependencySelectionService;
@@ -14,17 +18,19 @@ import org.bundlemaker.core.ui.selection.internal.DependencySelectionService;
 public class Selection {
 
   /** - */
-  public static final String               MAIN_ARTIFACT_SELECTION_PROVIDER_ID   = Selection.class.getPackage()
-                                                                                     .getName()
-                                                                                     + ".MAIN_ARTIFACT_SELECTION_PROVIDER_ID";
+  public static final String               MAIN_ARTIFACT_SELECTION_ID     = Selection.class.getPackage().getName()
+                                                                              + ".MAIN_ARTIFACT_SELECTION_ID";
 
   /** - */
-  public static final String               MAIN_DEPENDENCY_SELECTION_PROVIDER_ID = Selection.class.getPackage()
-                                                                                     .getName()
-                                                                                     + ".MAIN_DEPENDENCY_SELECTION_PROVIDER_ID";
+  public static final String               MAIN_DEPENDENCY_SELECTION_ID   = Selection.class.getPackage().getName()
+                                                                              + ".MAIN_DEPENDENCY_SELECTION_ID";
+
+  /** - */
+  public static final String               DETAIL_DEPENDENCY_SELECTION_ID = Selection.class.getPackage().getName()
+                                                                              + ".DETAIL_DEPENDENCY_SELECTION_ID";
 
   /** the id of the Eclipse project explorer */
-  public static final String               PROJECT_EXPLORER_VIEW_ID              = "org.eclipse.ui.navigator.ProjectExplorer";
+  public static final String               PROJECT_EXPLORER_VIEW_ID       = "org.eclipse.ui.navigator.ProjectExplorer";
 
   /** - */
   private static Selection                 _instance;
@@ -66,6 +72,16 @@ public class Selection {
 
     // Create the DependencySelectionService
     _dependencySelectionService = new DependencySelectionService();
+
+    // add MAIN_DEPENDENCY_SELECTION_ID to DETAIL_DEPENDENCY_SELECTION_ID forwarder
+    _dependencySelectionService.addDependencySelectionListener(Selection.MAIN_DEPENDENCY_SELECTION_ID,
+        new IDependencySelectionListener() {
+          @Override
+          public void dependencySelectionChanged(IDependencySelectionChangedEvent event) {
+            _dependencySelectionService.setSelection(Selection.DETAIL_DEPENDENCY_SELECTION_ID, event.getProviderId(),
+                getAllLeafDependencies(event.getSelectedDependencies()));
+          }
+        });
   }
 
   /**
@@ -93,5 +109,25 @@ public class Selection {
    */
   public IDependencySelectionService getDependencySelectionService() {
     return _dependencySelectionService;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private static List<IDependency> getAllLeafDependencies(Collection<IDependency> dependencies) {
+
+    //
+    final List<IDependency> result = new LinkedList<IDependency>();
+
+    for (IDependency dependency : dependencies) {
+      for (IDependency leafDependency : dependency.getLeafDependencies()) {
+        result.add(leafDependency);
+      }
+    }
+
+    return result;
   }
 }

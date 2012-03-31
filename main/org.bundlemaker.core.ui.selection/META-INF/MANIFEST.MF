@@ -11,5 +11,6 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.ui.selection,
- org.bundlemaker.core.ui.selection.editor,
- org.bundlemaker.core.ui.selection.view
+ org.bundlemaker.core.ui.selection.workbench,
+ org.bundlemaker.core.ui.selection.workbench.editor,
+ org.bundlemaker.core.ui.selection.workbench.view

@@ -11,8 +11,8 @@
 package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.bundlemaker.core.ui.selection.IProviderSelection;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -21,179 +21,68 @@ import org.eclipse.core.runtime.Assert;
  * @author Nils Hartmann
  * @param <SELECTION>
  *          The type of the selection-object
- * @param <LISTENER>
- *          The SelectionListener-Type
- * @param <EVENT>
- *          The SelectionEvent-Type
  */
-public abstract class AbstractSelectionService<SELECTION, LISTENER, EVENT> {
-
-  /**
-   * A set containing the registered listeners
-   */
-  private final CopyOnWriteArraySet<SelectionListenerWrapper<LISTENER>> _listenerList      = new CopyOnWriteArraySet<SelectionListenerWrapper<LISTENER>>();
+public abstract class AbstractSelectionService<SELECTION extends IProviderSelection> {
 
   /**
    * A map containing all current selections
    */
-  private final ConcurrentHashMap<String, SELECTION>                    _currentSelections = new ConcurrentHashMap<String, SELECTION>();
-
-  public SELECTION getSelection(String selectionProviderId) {
-    Assert.isNotNull(selectionProviderId, "The parameter 'selectionProviderId' must not be null");
-
-    return _currentSelections.get(selectionProviderId);
-  }
-
-  protected void setSelection(String providerId, SELECTION newSelection) {
-    
-    if (equals(newSelection,  _currentSelections.get(providerId))) {
-      return;
-    }
-    
-    // add selection
-    _currentSelections.put(providerId, newSelection);
-
-    // create event
-    EVENT event = createSelectionChangedEvent(newSelection);
-    Assert.isNotNull(event, "createSelectionChangedEvent() must not return null");
-
-    // notify listeners
-    fireSelectionChanged(providerId, event);
-  }
-
-  protected abstract boolean equals(SELECTION newSelection, SELECTION selection);
+  private final ConcurrentHashMap<String, SELECTION> _currentSelections = new ConcurrentHashMap<String, SELECTION>();
 
   /**
    * <p>
    * </p>
+   * 
+   * @param selectionId
+   * @return
    */
-  protected void clearCurrentSelections() {
-    for (String providerId : _currentSelections.keySet()) {
-      setSelection(providerId, getNullSelection(providerId));
-    }
+  public SELECTION getSelection(String selectionId) {
+    Assert.isNotNull(selectionId, "The parameter 'selectionId' must not be null");
+
+    return _currentSelections.get(selectionId);
   }
 
-  protected abstract SELECTION getNullSelection(String providerId);
+  /**
+   * <p>
+   * </p>
+   *
+   * @param selectionId
+   * @param providerId
+   * @param newSelection
+   */
+  protected void setSelection(String selectionId, String providerId, SELECTION newSelection) {
+
+    if (equals(newSelection, _currentSelections.get(selectionId))) {
+      return;
+    }
+
+    //
+    System.out.println("setSelection(" + selectionId + ", " + providerId + ", " + newSelection + ")");
+
+    // add selection
+    _currentSelections.put(selectionId, newSelection);
+
+    // notify listeners
+    fireSelectionChanged(selectionId, providerId, newSelection);
+  }
 
   /**
-   * Creates a new xxxSelectionChangedEvent instance for the given selection
-   * 
    * <p>
-   * Subclasses must implement this method to instantiate their appropriate event type
+   * </p>
+   * 
+   * @param selectionId
+   * @param providerId
+   * @param newSelection
+   */
+  protected abstract void fireSelectionChanged(String selectionId, String providerId, SELECTION newSelection);
+
+  /**
+   * <p>
+   * </p>
    * 
    * @param newSelection
-   *          the selection that the event should be created for
-   * @return the EVENT for this selection. Never null
+   * @param selection
+   * @return
    */
-  protected abstract EVENT createSelectionChangedEvent(SELECTION newSelection);
-
-  /**
-   * Invoke the specified listener with the given event
-   * 
-   * <p>
-   * Subclasses must implement this method to call the appropriate method on the LISTENER class
-   * 
-   * @param listener
-   *          the listener to be invoked
-   * @param event
-   *          the event that should be passed to the listener method
-   */
-  protected abstract void invokeListener(LISTENER listener, EVENT event);
-
-  /**
-   * Add the specified listener to the list of listeners.
-   * 
-   * @param providerId
-   *          the provider or null, if this listener should react on changes from all providers
-   * @param listener
-   */
-  protected void addSelectionListener(String providerId, LISTENER listener) {
-    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
-
-    // Create wrapper
-    SelectionListenerWrapper<LISTENER> wrapper = new SelectionListenerWrapper<LISTENER>(providerId, listener);
-
-    // add to listener list
-    _listenerList.add(wrapper);
-  }
-
-  protected void removeSelectionListener(LISTENER listener) {
-    Assert.isNotNull(listener, "The parameter 'listener' must not be null");
-
-    for (SelectionListenerWrapper<LISTENER> wrapper : _listenerList) {
-      if (listener.equals(wrapper.getListener())) {
-        // Remove from listener list
-        _listenerList.remove(wrapper);
-        break;
-      }
-    }
-  }
-
-  protected void fireSelectionChanged(String providerId, EVENT event) {
-    for (SelectionListenerWrapper<LISTENER> wrapper : _listenerList) {
-      // check if listener is registered for the provider
-      if (wrapper.matches(providerId)) {
-
-        // invoke!
-        invokeListener(wrapper.getListener(), event);
-      } else {
-        System.out.println("SelectionListenerWrapper does not match: " + wrapper._providerId + " != " + providerId);
-      }
-
-    }
-  }
-
-  protected static class SelectionListenerWrapper<LISTENER> {
-    private final String   _providerId;
-
-    private final LISTENER _listener;
-
-    protected SelectionListenerWrapper(String providerId, LISTENER listener) {
-      super();
-      _providerId = providerId;
-      _listener = listener;
-    }
-
-    public boolean matches(String providerId) {
-      return (_providerId == null // matches all
-      || _providerId.equals(providerId));
-    }
-
-    public LISTENER getListener() {
-      return _listener;
-    }
-
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((_listener == null) ? 0 : _listener.hashCode());
-      result = prime * result + ((_providerId == null) ? 0 : _providerId.hashCode());
-      return result;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
-      SelectionListenerWrapper other = (SelectionListenerWrapper) obj;
-      if (_listener == null) {
-        if (other._listener != null)
-          return false;
-      } else if (!_listener.equals(other._listener))
-        return false;
-      if (_providerId == null) {
-        if (other._providerId != null)
-          return false;
-      } else if (!_providerId.equals(other._providerId))
-        return false;
-      return true;
-    }
-  }
-
+  protected abstract boolean equals(SELECTION newSelection, SELECTION selection);
 }
