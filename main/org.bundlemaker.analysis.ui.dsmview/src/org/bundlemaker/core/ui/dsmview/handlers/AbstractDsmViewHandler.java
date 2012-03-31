@@ -2,9 +2,9 @@ package org.bundlemaker.core.ui.dsmview.handlers;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.dsmview.DSMArtifactModelEditor;
+import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;

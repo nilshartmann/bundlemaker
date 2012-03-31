@@ -72,7 +72,6 @@
       <editor
             class="org.bundlemaker.core.ui.dsmview.DSMArtifactModelEditor"
             default="false"
-            icon="icons/module.gif"
             id="org.bundlemaker.core.ui.dsmview.DSMArtifactModelEditor"
             name="DSM Analysis">
       </editor>
