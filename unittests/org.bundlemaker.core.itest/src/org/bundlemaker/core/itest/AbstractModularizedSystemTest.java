@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;

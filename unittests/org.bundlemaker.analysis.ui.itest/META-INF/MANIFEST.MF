@@ -5,6 +5,5 @@ Bundle-SymbolicName: org.bundlemaker.analysis.ui.itest
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.bundlemaker.core.itest;bundle-version="1.0.0",
- org.bundlemaker.analysis.ui;bundle-version="1.0.0",
  org.bundlemaker.core.itestframework;bundle-version="1.0.0",
  org.bundlemaker.core.ui.view.dependencytable;bundle-version="1.0.0"
