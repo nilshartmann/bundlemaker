@@ -1,12 +1,12 @@
 package org.bundlemaker.core.ui.commands;
 
 import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.ui.handlers.AbstractBundleMakerHandler;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.commands.validators.NonEmptyStringValidator;
+import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;

@@ -12,6 +12,11 @@ package org.bundlemaker.core.ui;
 
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.editor.adapter.ProjectDescriptionAdapterFactory;
+import org.bundlemaker.core.ui.selection.Selection;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -22,12 +27,14 @@ import org.osgi.framework.ServiceReference;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
+  public static final String                PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
 
   // The shared instance
-  private static Activator   plugin;
+  private static Activator                  plugin;
 
-  private BundleContext      _bundleContext;
+  private BundleContext                     _bundleContext;
+
+  private ProjectExplorerSelectionForwarder _projectExplorerSelectionForwarder;
 
   /**
    * The constructor
@@ -46,7 +53,52 @@ public class Activator extends AbstractUIPlugin {
     plugin = this;
     _bundleContext = context;
 
+    registerProjectExplorerSelectionForwarder();
+
+    // CommonNavigatorUtils.findCommonNavigator()
+    // IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    // CommonNavigator commonNavigator = (CommonNavigator) page.findView(IPageLayout.ID_PROJECT_EXPLORER);
+    // commonNavigator.getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
+    // @Override
+    // public void doubleClick(DoubleClickEvent event) {
+    // System.out.println(event.getSelection());
+    // }
+    // });
+
+    PlatformUI.getWorkbench().addWindowListener(new WindowListener());
+
     ProjectDescriptionAdapterFactory.register();
+
+    // /** -- */
+    // IPartListener partListener = new IPartListener() {
+    //
+    // @Override
+    // public void partOpened(IWorkbenchPart part) {
+    // System.out.println("partOpened: " + part);
+    // }
+    //
+    // @Override
+    // public void partDeactivated(IWorkbenchPart part) {
+    // System.out.println("partDeactivated: " + part);
+    // }
+    //
+    // @Override
+    // public void partClosed(IWorkbenchPart part) {
+    // System.out.println("partClosed: " + part);
+    // }
+    //
+    // @Override
+    // public void partBroughtToTop(IWorkbenchPart part) {
+    // System.out.println("partBroughtToTop: " + part);
+    // }
+    //
+    // @Override
+    // public void partActivated(IWorkbenchPart part) {
+    // System.out.println("partActivated: " + part);
+    // }
+    // };
+    //
+    // page.addPartListener(partListener);
   }
 
   /*
@@ -60,6 +112,14 @@ public class Activator extends AbstractUIPlugin {
     _bundleContext = null;
 
     ProjectDescriptionAdapterFactory.unregister();
+
+    if (_projectExplorerSelectionForwarder != null) {
+      ISelectionService selectionService = getSelectionService();
+      if (selectionService != null) {
+        selectionService.removeSelectionListener(_projectExplorerSelectionForwarder);
+      }
+    }
+
     super.stop(context);
   }
 
@@ -70,6 +130,23 @@ public class Activator extends AbstractUIPlugin {
    */
   public static Activator getDefault() {
     return plugin;
+  }
+
+  private void registerProjectExplorerSelectionForwarder() {
+    if (_projectExplorerSelectionForwarder != null) {
+      // already registered
+      return;
+    }
+
+    // Try to get selection service
+    ISelectionService selectionService = getSelectionService();
+    if (selectionService != null) {
+      System.out.println("Register ProjectExplorerSelectionForwarder");
+      // register forwarder
+      _projectExplorerSelectionForwarder = new ProjectExplorerSelectionForwarder(Selection.instance()
+          .getArtifactSelectionService());
+      selectionService.addSelectionListener(Selection.PROJECT_EXPLORER_VIEW_ID, _projectExplorerSelectionForwarder);
+    }
   }
 
   /**
@@ -97,5 +174,38 @@ public class Activator extends AbstractUIPlugin {
 
     //
     return null;
+  }
+
+  /**
+   * @return the {@link ISelectionService} or null
+   */
+  private ISelectionService getSelectionService() {
+
+    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if (workbenchWindow != null) {
+      return workbenchWindow.getSelectionService();
+    }
+    return null;
+  }
+
+  class WindowListener implements IWindowListener {
+
+    @Override
+    public void windowActivated(IWorkbenchWindow window) {
+      registerProjectExplorerSelectionForwarder();
+    }
+
+    @Override
+    public void windowDeactivated(IWorkbenchWindow window) {
+    }
+
+    @Override
+    public void windowClosed(IWorkbenchWindow window) {
+    }
+
+    @Override
+    public void windowOpened(IWorkbenchWindow window) {
+      registerProjectExplorerSelectionForwarder();
+    }
   }
 }

@@ -13,11 +13,11 @@ package org.bundlemaker.core.ui.commands;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.Activator;
+import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IContainer;

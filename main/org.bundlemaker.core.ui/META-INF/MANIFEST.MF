@@ -27,11 +27,16 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jface.text;bundle-version="3.6.0",
  org.bundlemaker.core.osgi;bundle-version="1.0.0",
  org.bundlemaker.core.content.jdt;bundle-version="1.0.0",
- org.bundlemaker.analysis.ui;bundle-version="1.0.0",
- org.bundlemaker.core.ui.artifact;bundle-version="1.0.0"
+ org.bundlemaker.core.ui.artifact;bundle-version="1.0.0",
+ org.eclipse.core.expressions;bundle-version="3.4.200",
+ org.bundlemaker.core.ui.selection;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: org.bundlemaker.core.ui.Activator
-Export-Package: org.bundlemaker.core.ui.commands,
+Export-Package: org.bundlemaker.core.ui,
+ org.bundlemaker.core.ui.commands,
+ org.bundlemaker.core.ui.editor,
+ org.bundlemaker.core.ui.expressions,
+ org.bundlemaker.core.ui.handler,
  org.bundlemaker.core.ui.utils
 
