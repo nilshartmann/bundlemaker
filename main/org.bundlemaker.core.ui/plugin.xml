@@ -92,7 +92,7 @@
 			</possibleChildren>
 			<commonSorter
 				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter"> </commonSorter>
-
+<actionProvider class="org.bundlemaker.core.ui.test.MyActionProvider"/>
 		</navigatorContent>
 	</extension>
 
