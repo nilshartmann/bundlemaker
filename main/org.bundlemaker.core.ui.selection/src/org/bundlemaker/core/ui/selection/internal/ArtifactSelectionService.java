@@ -12,15 +12,12 @@ package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
-import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
-import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionListener;
@@ -65,7 +62,8 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
    * {@inheritDoc}
    */
   @Override
-  public void setSelection(String selectionId, String providerId, Collection<IBundleMakerArtifact> selectedArtifacts) {
+  public void setSelection(String selectionId, String providerId, Collection<IBundleMakerArtifact> selectedArtifacts,
+      boolean useChildrenOfSelectedArtifacts) {
 
     Assert.isNotNull(selectionId, "The parameter 'selectionId' must not be null");
     Assert.isNotNull(providerId, "The parameter 'providerId' must not be null");
@@ -73,7 +71,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
 
     // create selection object for selected artifacts
     ArtifactSelection artifactSelection = new ArtifactSelection(selectionId, providerId,
-        new LinkedList<IBundleMakerArtifact>(selectedArtifacts));
+        new LinkedList<IBundleMakerArtifact>(selectedArtifacts), useChildrenOfSelectedArtifacts);
 
     // set the selection
     setSelection(selectionId, providerId, artifactSelection);

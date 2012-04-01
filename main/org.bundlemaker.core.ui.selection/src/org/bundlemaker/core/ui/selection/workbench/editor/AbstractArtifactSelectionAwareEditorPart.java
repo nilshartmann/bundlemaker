@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.selection.workbench.editor;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -8,6 +9,7 @@ import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
+import org.bundlemaker.core.ui.selection.internal.ArtifactSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -24,7 +26,10 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
   /**
    * The current artifacts (contents) of this dependency part
    */
-  private List<IBundleMakerArtifact> _currentArtifacts;
+  private IArtifactSelection      _currentArtifactSelection;
+
+  /** - */
+  public final IArtifactSelection EMPTY_ARTIFACT_SELECTION = new ArtifactSelection(getProviderId(), "");
 
   /**
    * <p>
@@ -32,18 +37,17 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * </p>
    */
   public AbstractArtifactSelectionAwareEditorPart() {
-    _currentArtifacts = Collections.emptyList();
+    _currentArtifactSelection = EMPTY_ARTIFACT_SELECTION;
   }
 
   /**
    * <p>
-   * Returns the {@link IBundleMakerArtifact} instances that should be visualized
    * </p>
    * 
    * @return
    */
-  public List<IBundleMakerArtifact> getCurrentArtifacts() {
-    return _currentArtifacts;
+  public IArtifactSelection getCurrentArtifactSelection() {
+    return _currentArtifactSelection;
 
   }
 
@@ -60,12 +64,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
     Selection.instance().getArtifactSelectionService().addArtifactSelectionListener(getProviderId(), this);
 
     // initialize view with current selection from Artifact tree
-    IArtifactSelection currentArtifactSelection = Selection.instance().getArtifactSelectionService()
-        .getSelection(getProviderId());
-
-    if (currentArtifactSelection != null) {
-      setCurrentArtifacts(currentArtifactSelection.getSelectedArtifacts());
-    }
+    initFromArtifactSelectionService();
   }
 
   /**
@@ -92,8 +91,6 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
       return;
     }
 
-    System.out.println("onArtifactSelectionChanged " + event.getSelection().getSelectedArtifacts());
-
     //
     onArtifactSelectionChanged(event);
   }
@@ -114,9 +111,8 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * @param artifacts
    *          The new artifacts. Must not be null but might be empty
    */
-  // TODO RENAME
-  protected void setCurrentArtifacts(List<IBundleMakerArtifact> artifacts) {
-    _currentArtifacts = artifacts;
+  protected void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
+    _currentArtifactSelection = artifactSelection;
   }
 
   /**
@@ -127,5 +123,14 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    */
   protected String getProviderId() {
     return Selection.MAIN_ARTIFACT_SELECTION_ID;
+  }
+  
+  private void initFromArtifactSelectionService() {
+    IArtifactSelection currentArtifactSelection = Selection.instance().getArtifactSelectionService()
+        .getSelection(getProviderId());
+
+    if (currentArtifactSelection != null) {
+      setCurrentArtifactSelection(currentArtifactSelection);
+    }
   }
 }

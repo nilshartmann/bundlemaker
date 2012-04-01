@@ -71,4 +71,15 @@ public class ArtifactSelectionChangedEvent implements IArtifactSelectionChangedE
   public List<IBundleMakerArtifact> getSelectedArtifacts() {
     return _selection.getSelectedArtifacts();
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @see org.bundlemaker.core.ui.selection.IArtifactSelection#useChildrenOfSelectedArtifacts()
+   */
+  public boolean useChildrenOfSelectedArtifacts() {
+    return _selection.useChildrenOfSelectedArtifacts();
+  }
 }

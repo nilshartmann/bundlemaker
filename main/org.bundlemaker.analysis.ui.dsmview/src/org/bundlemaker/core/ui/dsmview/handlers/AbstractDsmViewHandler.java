@@ -28,13 +28,9 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
     openEditorAndViews(artifactsForDsmView);
   }
 
-  /**
-   * Return the IArtifacts from the list of selected artifacts that should be added to the DSM view.
-   * 
-   * @param selectedArtifacts
-   * @return
-   */
-  protected abstract List<IBundleMakerArtifact> getArtifactsForDsmView(List<IBundleMakerArtifact> selectedArtifacts);
+  protected List<IBundleMakerArtifact> getArtifactsForDsmView(List<IBundleMakerArtifact> selectedArtifacts) {
+    return selectedArtifacts;
+  }
 
   private void openEditorAndViews(List<IBundleMakerArtifact> selectedArtifacts) {
     IWorkbenchPage page = getActiveWorkbenchPage();
@@ -46,8 +42,8 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
           return;
         }
 
-        DSMArtifactModelEditor genericEditor = (DSMArtifactModelEditor) editorPart;
-        genericEditor.setCurrentArtifacts(selectedArtifacts);
+        // DSMArtifactModelEditor genericEditor = (DSMArtifactModelEditor) editorPart;
+        // genericEditor.setCurrentArtifactSelection(selectedArtifacts);
 
       } catch (PartInitException e) {
         e.printStackTrace();

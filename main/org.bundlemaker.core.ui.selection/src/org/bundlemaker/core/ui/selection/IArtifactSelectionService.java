@@ -40,9 +40,10 @@ public interface IArtifactSelectionService {
    * @param selectionProviderId
    * @param selectedArtifacts
    *          the (newly) selected artifacts. might be null, resulting in an empty selection
+   * @param useChildrenOfSelectedArtifacts
    */
   public void setSelection(String artifactSelectionId, String selectionProviderId,
-      Collection<IBundleMakerArtifact> selectedArtifacts);
+      Collection<IBundleMakerArtifact> selectedArtifacts, boolean useChildrenOfSelectedArtifacts);
 
   /**
    * Registers an {@link IArtifactSelectionListener} for the specified artifactSelectionId.

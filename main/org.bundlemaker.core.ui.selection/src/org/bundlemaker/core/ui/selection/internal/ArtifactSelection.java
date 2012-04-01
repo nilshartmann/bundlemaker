@@ -27,6 +27,23 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
   /** the selected artifacts */
   private final List<IBundleMakerArtifact> _selectedArtifacts;
 
+  /** - */
+  private final boolean                    _useChildrenOfSelectedArtifacts;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ArtifactSelection}.
+   * </p>
+   * 
+   * @param selectionId
+   * @param providerId
+   */
+  public ArtifactSelection(String selectionId, String providerId) {
+    super(selectionId, providerId);
+    _selectedArtifacts = Collections.emptyList();
+    _useChildrenOfSelectedArtifacts = false;
+  }
+
   /**
    * <p>
    * Creates a new instance of type {@link ArtifactSelection}.
@@ -35,8 +52,10 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
    * @param artifactSelectionId
    * @param providerId
    * @param selectedArtifacts
+   * @param useChildrenOfSelectedArtifacts
    */
-  public ArtifactSelection(String artifactSelectionId, String providerId, List<IBundleMakerArtifact> selectedArtifacts) {
+  public ArtifactSelection(String artifactSelectionId, String providerId, List<IBundleMakerArtifact> selectedArtifacts,
+      boolean useChildrenOfSelectedArtifacts) {
 
     // call super
     super(artifactSelectionId, providerId);
@@ -46,11 +65,25 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
 
     // set the selected artifacts
     _selectedArtifacts = Collections.unmodifiableList(selectedArtifacts);
+
+    //
+    _useChildrenOfSelectedArtifacts = useChildrenOfSelectedArtifacts;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<IBundleMakerArtifact> getSelectedArtifacts() {
     return _selectedArtifacts;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean useChildrenOfSelectedArtifacts() {
+    return _useChildrenOfSelectedArtifacts;
   }
 
   /**

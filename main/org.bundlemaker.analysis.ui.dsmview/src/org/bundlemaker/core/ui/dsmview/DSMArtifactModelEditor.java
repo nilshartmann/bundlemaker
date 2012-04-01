@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.bundlemaker.core.ui.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
@@ -54,7 +55,18 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void onPartActivated() {
-    System.out.println("onPartActivated: " + getCurrentArtifacts());
+    System.out.println("onPartActivated: " + getCurrentArtifactSelection());
+
+    if (!EMPTY_ARTIFACT_SELECTION.equals(getCurrentArtifactSelection())) {
+      Selection
+          .instance()
+          .getArtifactSelectionService()
+          .setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, DSM_EDITOR_ID,
+              getCurrentArtifactSelection().getSelectedArtifacts(),
+              getCurrentArtifactSelection().useChildrenOfSelectedArtifacts());
+    } else {
+      initArtifactSelectionFromSelectionService();
+    }
   }
 
   /**
@@ -62,7 +74,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void onPartDeactivated() {
-    System.out.println("onPartDeactivated: " + getCurrentArtifacts());
+    System.out.println("onPartDeactivated: " + getCurrentArtifactSelection());
   }
 
   /**
@@ -70,12 +82,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void onArtifactSelectionChanged(IArtifactSelectionChangedEvent event) {
-
-    if (event.getSelection().getSelectedArtifacts().size() == 1) {
-      IBundleMakerArtifact selectedArtifact = event.getSelection().getSelectedArtifacts().get(0);
-      List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>(selectedArtifact.getChildren());
-      setCurrentArtifacts(artifacts);
-    }
+    setCurrentArtifactSelection(event);
   }
 
   /**
@@ -90,7 +97,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     createContextMenu(_dsmViewWidget.getViewWidget());
 
     //
-    setCurrentArtifacts(getCurrentArtifacts());
+    setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 
   /**
@@ -98,7 +105,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void setFocus() {
-    setCurrentArtifacts(getCurrentArtifacts());
+    setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 
   /**
@@ -107,7 +114,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   @Override
   public void dispose() {
     super.dispose();
-
     clearDependencySelection();
   }
 
@@ -121,11 +127,26 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * {@inheritDoc}
    */
   @Override
-  public void setCurrentArtifacts(List<IBundleMakerArtifact> artifacts) {
-    super.setCurrentArtifacts(artifacts);
+  public void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
+    super.setCurrentArtifactSelection(artifactSelection);
+
+    //
     if (_dsmViewWidget != null) {
-      _dsmViewWidget.setModel(new DsmViewModel(artifacts));
+
+      // set the model
+      if (artifactSelection.useChildrenOfSelectedArtifacts()) {
+        List<IBundleMakerArtifact> bundleMakerArtifacts = new LinkedList<IBundleMakerArtifact>();
+        for (IBundleMakerArtifact artifact : artifactSelection.getSelectedArtifacts()) {
+          bundleMakerArtifacts.addAll(artifact.getChildren());
+        }
+        _dsmViewWidget.setModel(new DsmViewModel(bundleMakerArtifacts));
+      } else {
+        _dsmViewWidget.setModel(new DsmViewModel(artifactSelection.getSelectedArtifacts()));
+      }
+
     }
+
+    // clear the dependency selection
     clearDependencySelection();
   }
 
@@ -176,5 +197,9 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
     Menu menu = menuManager.createContextMenu(dsmViewWidget);
     dsmViewWidget.setMenu(menu);
+  }
+
+  private void initArtifactSelectionFromSelectionService() {
+
   }
 }

@@ -32,10 +32,9 @@ public class Helper {
       return new IBundleMakerArtifact[0];
     }
 
-    System.out.println("getChildrenOfCommonParent " + commonParent.getChildren());
-    
     //
-    return commonParent.getChildren().toArray(new IBundleMakerArtifact[0]);
+    return commonParent.getChildren().size() == 0 ? new IBundleMakerArtifact[] { commonParent } : commonParent
+        .getChildren().toArray(new IBundleMakerArtifact[0]);
   }
 
   /**

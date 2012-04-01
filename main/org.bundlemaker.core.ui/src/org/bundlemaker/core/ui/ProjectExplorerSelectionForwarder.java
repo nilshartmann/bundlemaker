@@ -30,15 +30,11 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
   @Override
   public void selectionChanged(IWorkbenchPart part, ISelection selection) {
     // Get selected artifacts
-    List<IBundleMakerArtifact> artifacts = getSelectedObject(selection, IBundleMakerArtifact.class);
-
-    // System.out.printf("Forwarding event from '%s' with selection '%s'. Artifacts: %s%n", part.getSite().getId(),
-    // selection, artifacts);
+    List<IBundleMakerArtifact> artifacts = getSelectedObjects(selection, IBundleMakerArtifact.class);
 
     // notify selection service
     _artifactSelectionService.setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, Selection.PROJECT_EXPLORER_VIEW_ID,
-        artifacts);
-
+        artifacts, artifacts.size() == 1);
   }
 
   /**
@@ -55,7 +51,7 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
    * @return
    */
   @SuppressWarnings({ "unchecked", "rawtypes" })
-  public static <T> List<T> getSelectedObject(ISelection selection, Class<T> type) {
+  public static <T> List<T> getSelectedObjects(ISelection selection, Class<T> type) {
     final List<T> result = new LinkedList<T>();
     if (selection instanceof IStructuredSelection) {
       IStructuredSelection structuredSelection = (IStructuredSelection) selection;

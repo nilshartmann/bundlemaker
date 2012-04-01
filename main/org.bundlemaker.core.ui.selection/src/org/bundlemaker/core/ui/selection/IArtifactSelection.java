@@ -18,6 +18,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
  * A selection of {@link IBundleMakerArtifact} objects.
  * 
  * @author Nils Hartmann
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  * 
  * @noimplement This interface should not be implemented by clients
  */
@@ -28,6 +29,13 @@ public interface IArtifactSelection extends IProviderSelection {
    * 
    * @return an <b>unmodifiable</b> list of {@link IBundleMakerArtifact IArtifacts}
    */
-  public List<IBundleMakerArtifact> getSelectedArtifacts();
+  List<IBundleMakerArtifact> getSelectedArtifacts();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean useChildrenOfSelectedArtifacts();
 }

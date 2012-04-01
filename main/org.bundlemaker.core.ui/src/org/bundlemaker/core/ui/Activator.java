@@ -10,13 +10,18 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui;
 
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.editor.adapter.ProjectDescriptionAdapterFactory;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -35,6 +40,8 @@ public class Activator extends AbstractUIPlugin {
   private BundleContext                     _bundleContext;
 
   private ProjectExplorerSelectionForwarder _projectExplorerSelectionForwarder;
+
+  private IArtifactSelectionListener        _projectExplorerSelectionListener;
 
   /**
    * The constructor
@@ -59,46 +66,19 @@ public class Activator extends AbstractUIPlugin {
 
     ProjectDescriptionAdapterFactory.register();
 
-    // CommonNavigatorUtils.findCommonNavigator()
-    // IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    // CommonNavigator commonNavigator = (CommonNavigator) page.findView(IPageLayout.ID_PROJECT_EXPLORER);
-    // commonNavigator.getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
-    // @Override
-    // public void doubleClick(DoubleClickEvent event) {
-    // System.out.println(event.getSelection());
-    // }
-    // });
+    _projectExplorerSelectionListener = new IArtifactSelectionListener() {
+      @Override
+      public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+        if (!Selection.PROJECT_EXPLORER_VIEW_ID.equals(event.getProviderId())) {
+          CommonNavigator commonNavigator = CommonNavigatorUtils
+              .findCommonNavigator(Selection.PROJECT_EXPLORER_VIEW_ID);
+          commonNavigator.getCommonViewer().setSelection(new StructuredSelection(event.getSelectedArtifacts()));
+        }
+      }
+    };
 
-    // /** -- */
-    // IPartListener partListener = new IPartListener() {
-    //
-    // @Override
-    // public void partOpened(IWorkbenchPart part) {
-    // System.out.println("partOpened: " + part);
-    // }
-    //
-    // @Override
-    // public void partDeactivated(IWorkbenchPart part) {
-    // System.out.println("partDeactivated: " + part);
-    // }
-    //
-    // @Override
-    // public void partClosed(IWorkbenchPart part) {
-    // System.out.println("partClosed: " + part);
-    // }
-    //
-    // @Override
-    // public void partBroughtToTop(IWorkbenchPart part) {
-    // System.out.println("partBroughtToTop: " + part);
-    // }
-    //
-    // @Override
-    // public void partActivated(IWorkbenchPart part) {
-    // System.out.println("partActivated: " + part);
-    // }
-    // };
-    //
-    // page.addPartListener(partListener);
+    Selection.instance().getArtifactSelectionService()
+        .addArtifactSelectionListener(Selection.MAIN_ARTIFACT_SELECTION_ID, _projectExplorerSelectionListener);
   }
 
   /*
@@ -111,8 +91,10 @@ public class Activator extends AbstractUIPlugin {
     plugin = null;
     _bundleContext = null;
 
+    //
     ProjectDescriptionAdapterFactory.unregister();
 
+    //
     if (_projectExplorerSelectionForwarder != null) {
       ISelectionService selectionService = getSelectionService();
       if (selectionService != null) {
@@ -120,6 +102,11 @@ public class Activator extends AbstractUIPlugin {
       }
     }
 
+    //
+    Selection.instance().getArtifactSelectionService()
+        .removeArtifactSelectionListener(_projectExplorerSelectionListener);
+
+    //
     super.stop(context);
   }
 
