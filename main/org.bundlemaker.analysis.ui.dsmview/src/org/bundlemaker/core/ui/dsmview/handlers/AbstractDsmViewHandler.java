@@ -16,7 +16,7 @@ import org.eclipse.ui.internal.part.NullEditorInput;
 
 public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandler {
 
-  private IEditorInput nullInputEditor = new NullEditorInput();
+  private static IEditorInput nullInputEditor = new NullEditorInput();
 
   @Override
   protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
