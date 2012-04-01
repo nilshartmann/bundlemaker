@@ -40,6 +40,24 @@
 		</definition>
 	</extension>
 
+	<!-- org.bundlemaker.core.ui.bmProjectSelected: evaluates
+        to true if a Project with BundleMaker-Nature is selcted -->
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.bundlemaker.core.ui.bmProjectSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<and>
+						<instanceof value="org.eclipse.core.resources.IProject"> </instanceof>
+						<adapt type="org.eclipse.core.resources.IProject">
+							<test property="org.eclipse.core.resources.projectNature"
+								value="org.bundlemaker.core.bundlemakernature"/>
+						</adapt>
+					</and>
+				</iterate>
+			</with>
+		</definition>
+	</extension>
+
 	<extension point="org.eclipse.ui.views">
 		<category id="org.bundlemaker.analysis.ui.views.category"
 			name="BundleMaker Dependency Analysis"> </category>
@@ -114,6 +132,15 @@
 	<!-- the handlers -->
 	<!-- ======================================== -->
 	<extension point="org.eclipse.ui.handlers">
+		<handler class="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectHandler"
+			commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand">
+			<activeWhen>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectSelected"></reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectSelected"></reference>
+			</enabledWhen>
+		</handler>
 		<handler class="org.bundlemaker.core.ui.commands.DemoHandler"
 			commandId="org.bundlemaker.core.ui.commands.Demo">
 			<activeWhen>
@@ -269,6 +296,7 @@
 	<!-- the commands -->
 	<extension point="org.eclipse.ui.commands">
 		<command id="org.bundlemaker.core.ui.commands.Demo" name="Demo"/>
+		<command id="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand" name="Parse and Open" />
 		<command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
 			name="Export PDE Plug-in Projects"/>
 		<command id="org.bundlemaker.core.ui.commands.ReportExportHandler"
@@ -296,6 +324,10 @@
 		<menuContribution
 			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
 			<separator name="org.bundlemaker.core.ui.separator.transformer" visible="true"/>
+			
+			<command commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
+				style="push">
+			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.TransformHandler"
 				style="push">
 				<visibleWhen checkEnabled="true"/>
