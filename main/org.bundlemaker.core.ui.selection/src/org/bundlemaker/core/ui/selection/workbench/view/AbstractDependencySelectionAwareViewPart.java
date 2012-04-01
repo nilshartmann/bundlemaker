@@ -18,6 +18,7 @@ import org.bundlemaker.core.ui.selection.IDependencySelection;
 import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
+import org.bundlemaker.core.ui.selection.internal.DependencySelection;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
@@ -58,8 +59,6 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
   @Override
   public final void dependencySelectionChanged(IDependencySelectionChangedEvent event) {
 
-    System.out.println("dependencySelectionChanged " + event.getSelection().getSelectedDependencies());
-
     //
     _currentDependencies = event.getSelection().getSelectedDependencies();
 
@@ -96,6 +95,21 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
    */
   protected String getSelectionId() {
     return Selection.MAIN_DEPENDENCY_SELECTION_ID;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void onPartBroughtToTop() {
+    super.onPartBroughtToTop();
+
+    IDependencySelection dependencySelection = Selection.instance().getDependencySelectionService()
+        .getSelection(getSelectionId());
+    
+    if (dependencySelection != null) {
+      onDependencySelectionChanged(dependencySelection);
+    }
   }
 
   /**

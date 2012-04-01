@@ -52,12 +52,10 @@ public abstract class AbstractSelectionService<SELECTION extends IProviderSelect
    */
   protected void setSelection(String selectionId, String providerId, SELECTION newSelection) {
 
-    if (equals(newSelection, _currentSelections.get(selectionId))) {
-      return;
-    }
-
-    //
-    System.out.println("setSelection(" + selectionId + ", " + providerId + ", " + newSelection + ")");
+    // always propagate the new selection
+    // if (equals(newSelection, _currentSelections.get(selectionId))) {
+    // return;
+    // }
 
     // add selection
     _currentSelections.put(selectionId, newSelection);
