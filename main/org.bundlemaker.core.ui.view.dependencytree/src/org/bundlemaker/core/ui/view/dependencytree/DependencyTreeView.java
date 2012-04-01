@@ -131,6 +131,14 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
     // update 'from' and 'to' tree, no filtering
     setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
+    
+    // auto expand
+    for (IBundleMakerArtifact artifact : Helper.getChildrenOfCommonParent(_sourceArtifactMap.keySet())) {
+      _fromTreeViewer.expandToLevel(artifact, 0);
+    }
+    for (IBundleMakerArtifact artifact : Helper.getChildrenOfCommonParent(_targetArtifactMap.keySet())) {
+      _toTreeViewer.expandToLevel(artifact, 0);
+    }
   }
 
   /**
