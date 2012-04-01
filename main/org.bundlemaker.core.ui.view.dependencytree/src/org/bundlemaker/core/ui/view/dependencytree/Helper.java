@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -13,6 +14,71 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 
 public class Helper {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerArtifacts
+   * @return
+   */
+  public static IBundleMakerArtifact[] getChildrenOfCommonParent(Collection<IBundleMakerArtifact> bundleMakerArtifacts) {
+
+    //
+    IBundleMakerArtifact commonParent = getCommonParent(bundleMakerArtifacts);
+
+    //
+    if (commonParent == null) {
+      return new IBundleMakerArtifact[0];
+    }
+
+    System.out.println("getChildrenOfCommonParent " + commonParent.getChildren());
+    
+    //
+    return commonParent.getChildren().toArray(new IBundleMakerArtifact[0]);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerArtifacts
+   * @return
+   */
+  public static IBundleMakerArtifact getCommonParent(Collection<IBundleMakerArtifact> bundleMakerArtifacts) {
+
+    //
+    if (bundleMakerArtifacts == null || bundleMakerArtifacts.isEmpty()) {
+      return null;
+    }
+
+    // initial parent list
+    List<IBundleMakerArtifact> parents = new LinkedList<IBundleMakerArtifact>();
+    IBundleMakerArtifact currentArtifact = bundleMakerArtifacts.toArray(new IBundleMakerArtifact[0])[0];
+    parents.add(currentArtifact);
+    while (currentArtifact != null && !currentArtifact.getType().equals(ArtifactType.Root)) {
+      currentArtifact = currentArtifact.getParent();
+      parents.add(currentArtifact);
+    }
+
+    //
+    for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
+      List<IBundleMakerArtifact> commonParents = new LinkedList<IBundleMakerArtifact>();
+      if (parents.contains(artifact)) {
+        commonParents.add(artifact);
+      }
+      while (artifact != null && !artifact.getType().equals(ArtifactType.Root)) {
+        artifact = artifact.getParent();
+        if (parents.contains(artifact)) {
+          commonParents.add(artifact);
+        }
+      }
+      parents = commonParents;
+    }
+
+    // return null
+    return parents.get(0);
+  }
 
   /**
    * <p>
@@ -37,7 +103,7 @@ public class Helper {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param bundleMakerArtifact
    * @return
    */
@@ -47,7 +113,7 @@ public class Helper {
     final Set<IBundleMakerArtifact> result = new HashSet<IBundleMakerArtifact>();
 
     result.add(bundleMakerArtifact);
-    
+
     //
     bundleMakerArtifact.accept(new IArtifactTreeVisitor.Adapter() {
 
