@@ -38,6 +38,9 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
   /** - */
   private SelectionListenerList<IRootArtifactSelectionListener, IRootArtifactSelectionChangedEvent> _rootArtifactSelectionListenerContainer = null;
 
+  /** - */
+  private boolean                                                                                   _useChildrenOfSelectedArtifacts         = false;
+
   public ArtifactSelectionService() {
 
     //
@@ -50,12 +53,27 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
 
     //
     _rootArtifactSelectionListenerContainer = new SelectionListenerList<IRootArtifactSelectionListener, IRootArtifactSelectionChangedEvent>() {
-
       @Override
       protected void invokeListener(IRootArtifactSelectionListener listener, IRootArtifactSelectionChangedEvent event) {
         listener.rootArtifactSelectionChanged(event);
       }
     };
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setUseChildrenOfSelectedArtifacts(boolean useChildrenOfSelectedArtifacts) {
+    _useChildrenOfSelectedArtifacts = useChildrenOfSelectedArtifacts;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean getUseChildrenOfSelectedArtifacts() {
+    return _useChildrenOfSelectedArtifacts;
   }
 
   /**
@@ -75,6 +93,18 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
 
     // set the selection
     setSelection(selectionId, providerId, artifactSelection);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param selectionId
+   * @param providerId
+   * @param selectedArtifacts
+   */
+  public void setSelection(String selectionId, String providerId, Collection<IBundleMakerArtifact> selectedArtifacts) {
+    setSelection(selectionId, providerId, selectedArtifacts, getUseChildrenOfSelectedArtifacts());
   }
 
   /**
@@ -125,22 +155,6 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
     _artifactSelectionListenerContainer.removeSelectionListener(listener);
   }
 
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // protected IArtifactSelectionChangedEvent createSelectionChangedEvent(IArtifactSelection newSelection) {
-  // return new ArtifactSelectionChangedEvent(newSelection);
-  // }
-  //
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // protected void invokeListener(IArtifactSelectionListener listener, IArtifactSelectionChangedEvent event) {
-  // listener.artifactSelectionChanged(event);
-  // }
-
   /**
    * {@inheritDoc}
    */
@@ -151,22 +165,6 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
     }
     return newSelection.equals(selection);
   }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param providerId
-  // * @param event
-  // */
-  // protected void fireRootArtifactSelectionChanged(String providerId, IRootArtifactSelectionChangedEvent event) {
-  // for (SelectionListenerWrapper<IRootArtifactSelectionListener> wrapper : _rootSelectionlistenerList) {
-  // // check if listener is registered for the provider
-  // if (wrapper.matches(providerId)) {
-  // wrapper.getListener().rootArtifactSelectionChanged(event);
-  // }
-  // }
-  // }
 
   /**
    * {@inheritDoc}

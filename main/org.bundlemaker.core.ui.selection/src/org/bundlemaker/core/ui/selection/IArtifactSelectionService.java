@@ -18,10 +18,27 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
  * A central selection service for selected {@link IBundleMakerArtifact artifacts}.
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  * 
  * @noimplement This interface should not be implemented by clients
  */
 public interface IArtifactSelectionService {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param useChildrenOfSelectedArtifacts
+   */
+  public void setUseChildrenOfSelectedArtifacts(boolean useChildrenOfSelectedArtifacts);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean getUseChildrenOfSelectedArtifacts();
 
   /**
    * Return the current selection of the specified artifactSelectionId.
@@ -32,6 +49,17 @@ public interface IArtifactSelectionService {
    */
   public IArtifactSelection getSelection(String artifactSelectionId);
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @param artifactSelectionId
+   * @param selectionProviderId
+   * @param selectedArtifacts
+   */
+  public void setSelection(String artifactSelectionId, String selectionProviderId,
+      Collection<IBundleMakerArtifact> selectedArtifacts);
+  
   /**
    * <p>
    * </p>
