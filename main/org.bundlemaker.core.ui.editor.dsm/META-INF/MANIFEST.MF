@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.core.ui.editor.dsm
+Bundle-SymbolicName: org.bundlemaker.core.ui.editor.dsm;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.draw2d;bundle-version="3.6.0",
+ org.bundlemaker.core;bundle-version="1.0.0",
+ org.bundlemaker.core.ui;bundle-version="1.0.0",
+ org.bundlemaker.core.ui.selection;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .
