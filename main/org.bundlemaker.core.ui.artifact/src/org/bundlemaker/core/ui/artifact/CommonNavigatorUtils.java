@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.artifact;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -14,6 +15,9 @@ import org.eclipse.ui.navigator.CommonNavigator;
  */
 public class CommonNavigatorUtils {
 
+  /** the id of the Eclipse project explorer */
+  public static final String PROJECT_EXPLORER_VIEW_ID = IPageLayout.ID_PROJECT_EXPLORER;
+
   /**
    * <p>
    * </p>
@@ -22,7 +26,9 @@ public class CommonNavigatorUtils {
    */
   public static void update(String identifier) {
     CommonNavigator commonNavigator = findCommonNavigator(identifier);
-    commonNavigator.getNavigatorContentService().update();
+    if (commonNavigator != null) {
+      commonNavigator.getNavigatorContentService().update();
+    }
   }
 
   /**
@@ -33,6 +39,10 @@ public class CommonNavigatorUtils {
 
     //
     CommonNavigator commonNavigator = findCommonNavigator(identifier);
+
+    if (commonNavigator == null) {
+      return;
+    }
 
     //
     for (IBundleMakerArtifact iArtifact : artifacts) {

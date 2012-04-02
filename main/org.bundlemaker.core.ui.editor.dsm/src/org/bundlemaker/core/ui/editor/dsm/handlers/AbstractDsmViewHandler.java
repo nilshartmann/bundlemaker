@@ -33,32 +33,33 @@ public abstract class AbstractDsmViewHandler extends AbstractArtifactBasedHandle
   }
 
   private void openEditorAndViews(List<IBundleMakerArtifact> selectedArtifacts) {
-    IWorkbenchPage page = getActiveWorkbenchPage();
-    if (page != null) {
-      try {
-        IEditorPart editorPart = page.openEditor(nullInputEditor, DSMArtifactModelEditor.DSM_EDITOR_ID);
-        if (!(editorPart instanceof DSMArtifactModelEditor)) {
-          System.err.println("EditorPart " + editorPart + " is not a DSMViewNeu?");
-          return;
-        }
-
-        // DSMArtifactModelEditor genericEditor = (DSMArtifactModelEditor) editorPart;
-        // genericEditor.setCurrentArtifactSelection(selectedArtifacts);
-
-      } catch (PartInitException e) {
-        e.printStackTrace();
-      }
-    }
+    DSMArtifactModelEditor.openDsmView();
+//    IWorkbenchPage page = getActiveWorkbenchPage();
+//    if (page != null) {
+//      try {
+//        IEditorPart editorPart = page.openEditor(nullInputEditor, DSMArtifactModelEditor.DSM_EDITOR_ID);
+//        if (!(editorPart instanceof DSMArtifactModelEditor)) {
+//          System.err.println("EditorPart " + editorPart + " is not a DSMViewNeu?");
+//          return;
+//        }
+//
+//        // DSMArtifactModelEditor genericEditor = (DSMArtifactModelEditor) editorPart;
+//        // genericEditor.setCurrentArtifactSelection(selectedArtifacts);
+//
+//      } catch (PartInitException e) {
+//        e.printStackTrace();
+//      }
+//    }
   }
 
-  private IWorkbenchPage getActiveWorkbenchPage() {
-    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if (workbenchWindow != null) {
-      IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-      if (workbenchPage != null) {
-        return workbenchPage;
-      }
-    }
-    return null;
-  }
+//  private IWorkbenchPage getActiveWorkbenchPage() {
+//    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+//    if (workbenchWindow != null) {
+//      IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+//      if (workbenchPage != null) {
+//        return workbenchPage;
+//      }
+//    }
+//    return null;
+//  }
 }

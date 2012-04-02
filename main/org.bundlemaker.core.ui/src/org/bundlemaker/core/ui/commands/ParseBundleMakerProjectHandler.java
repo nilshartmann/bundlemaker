@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.commands;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.bundlemaker.core.BundleMakerCore;
@@ -26,6 +25,7 @@ import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IViewPart;
@@ -55,29 +55,14 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
       return;
     }
 
+    // Select default modularized system in common navigator
+    selectDefaultModularizedSystemArtifact(bundleMakerProject);
+
     // Notify listeners
     Events.instance().fireProjectOpened(bundleMakerProject);
 
-    // IHandlerService handlerService = (IHandlerService) PlatformUI.getWorkbench().getService(IHandlerService.class);
-    // handlerService.executeCommand("", null);
-
-    CommonNavigatorUtils.update("org.eclipse.ui.navigator.ProjectExplorer");
-    CommonNavigator findCommonNavigator = CommonNavigatorUtils
-        .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
-
-    IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
-        .getArtifactModelConfigurationProvider();
-
-    Collection<IModularizedSystem> modularizedSystems = bundleMakerProject.getModularizedSystemWorkingCopies();
-    for (IModularizedSystem modularizedSystem : modularizedSystems) {
-      IBundleMakerArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
-          .getArtifactModelConfiguration());
-
-      StructuredSelection newSelection = new StructuredSelection(artifact);
-      System.out.println("SET NEW SELECTION: " + newSelection);
-      findCommonNavigator.selectReveal(newSelection);
-
-    }
+    //
+    // }
 
     // StructuredSelection newSelection = new StructuredSelection(artifact);
     // System.out.println("SET NEW SELECTION: " + newSelection);
@@ -92,6 +77,40 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
     // System.out.println("classpath: " + classpath);
     //
     // findCommonNavigator.selectReveal(new StructuredSelection(classpath));
+
+  }
+
+  protected void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject) throws CoreException {
+    IProject eclipseProject = bundleMakerProject.getProject();
+
+    // get the common navigator
+    CommonNavigator commonNavigator = CommonNavigatorUtils
+        .findCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+    if (commonNavigator == null) {
+      return;
+    }
+
+    // Expand Eclipse Project project in tree (i.e. make Artifacts node visible)
+
+    commonNavigator.getCommonViewer().expandToLevel(eclipseProject, 1);
+
+    // Select root artifact in tree
+    IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject);
+    StructuredSelection newSelection = new StructuredSelection(defaultModularizedSystemArtifact);
+    commonNavigator.selectReveal(newSelection);
+  }
+
+  protected IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
+      throws CoreException {
+    IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
+        .getArtifactModelConfigurationProvider();
+    IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy();
+
+    //
+    IBundleMakerArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
+        .getArtifactModelConfiguration());
+
+    return artifact;
 
   }
 

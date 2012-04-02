@@ -37,7 +37,14 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.part.NullEditorInput;
 
 /**
  * <p>
@@ -50,16 +57,47 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String       DSM_EDITOR_ID = DSMArtifactModelEditor.class.getName();
+  public static String        DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
+
+  /**
+   * Dummy input used for this editor
+   */
+  @SuppressWarnings("restriction")
+  private static IEditorInput nullInputEditor = new NullEditorInput();
 
   /** - */
-  private DsmViewWidget      _viewWidget;
+  private DsmViewWidget       _viewWidget;
 
   /** - */
-  private DsmDetailComposite _detailComposite;
+  private DsmDetailComposite  _detailComposite;
 
   /** - */
-  private MatrixEvent        _selectedCell;
+  private MatrixEvent         _selectedCell;
+
+  /**
+   * Opens the DSM View.
+   * 
+   * <p>This method does nothing in case the DSM view could not be opened for any reason.
+   * 
+   */
+  public static void openDsmView() {
+    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if (workbenchWindow == null) {
+      return;
+    }
+
+    IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+    if (workbenchPage == null) {
+      return;
+    }
+
+    try {
+      workbenchPage.openEditor(nullInputEditor, DSMArtifactModelEditor.DSM_EDITOR_ID);
+    } catch (PartInitException e) {
+      e.printStackTrace();
+    }
+
+  }
 
   /**
    * {@inheritDoc}
