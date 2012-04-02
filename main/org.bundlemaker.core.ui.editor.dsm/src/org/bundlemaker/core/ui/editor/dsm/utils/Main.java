@@ -1,7 +1,6 @@
 package org.bundlemaker.core.ui.editor.dsm.utils;
 
 import org.bundlemaker.core.ui.editor.dsm.AbstractDsmViewModel;
-import org.bundlemaker.core.ui.editor.dsm.DsmViewComposite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -15,7 +14,7 @@ public class Main {
     shell.setLayout(new BorderLayout());
 
     final AbstractDsmViewModel model = new DemoDsmViewModel(1500);
-    final DsmViewComposite viewComposite = new DsmViewComposite(shell, model);
+    // final DsmViewComposite viewComposite = new DsmViewComposite(shell, model);
 
     // final DsmViewWidget viewWidget = new DsmViewWidget(model, shell);
     // viewWidget.setLayoutData(BorderData.CENTER);

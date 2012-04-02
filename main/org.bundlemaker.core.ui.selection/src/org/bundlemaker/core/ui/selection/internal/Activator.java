@@ -1,12 +1,10 @@
 package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
@@ -22,8 +20,8 @@ public class Activator extends AbstractUIPlugin {
   /** - */
   private IDependencySelectionListener _mainDependencySelectionToDetailDependencySelectionForwarder;
 
-  /** - */
-  private IArtifactSelectionListener   _mainDependencySelectionCleaner;
+//  /** - */
+//  private IArtifactSelectionListener   _mainDependencySelectionCleaner;
 
   /*
    * (non-Javadoc)
@@ -52,18 +50,18 @@ public class Activator extends AbstractUIPlugin {
         .addDependencySelectionListener(Selection.MAIN_DEPENDENCY_SELECTION_ID,
             _mainDependencySelectionToDetailDependencySelectionForwarder);
 
+    // //
+    // _mainDependencySelectionCleaner = new IArtifactSelectionListener() {
+    // @Override
+    // public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+    // Collection<IDependency> EMPTY_DEPENDENCIES = Collections.emptyList();
+    // Selection.instance().getDependencySelectionService()
+    // .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, event.getProviderId(), EMPTY_DEPENDENCIES);
+    // }
+    // };
     //
-    _mainDependencySelectionCleaner = new IArtifactSelectionListener() {
-      @Override
-      public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
-        Collection<IDependency> EMPTY_DEPENDENCIES = Collections.emptyList();
-        Selection.instance().getDependencySelectionService()
-            .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, event.getProviderId(), EMPTY_DEPENDENCIES);
-      }
-    };
-
-    Selection.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener(Selection.MAIN_ARTIFACT_SELECTION_ID, _mainDependencySelectionCleaner);
+    // Selection.instance().getArtifactSelectionService()
+    // .addArtifactSelectionListener(Selection.MAIN_ARTIFACT_SELECTION_ID, _mainDependencySelectionCleaner);
   }
 
   /*
@@ -77,7 +75,7 @@ public class Activator extends AbstractUIPlugin {
 
     Selection.instance().getDependencySelectionService()
         .removeDependencySelectionListener(_mainDependencySelectionToDetailDependencySelectionForwarder);
-    Selection.instance().getArtifactSelectionService().removeArtifactSelectionListener(_mainDependencySelectionCleaner);
+    // Selection.instance().getArtifactSelectionService().removeArtifactSelectionListener(_mainDependencySelectionCleaner);
   }
 
   /**

@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.editor.adapter.ProjectDescriptionAdapterFactory;
-import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
+import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -68,11 +68,11 @@ public class Activator extends AbstractUIPlugin {
 
     _projectExplorerSelectionListener = new IArtifactSelectionListener() {
       @Override
-      public void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
-        if (!Selection.PROJECT_EXPLORER_VIEW_ID.equals(event.getProviderId())) {
+      public void artifactSelectionChanged(IArtifactSelection selection) {
+        if (!Selection.PROJECT_EXPLORER_VIEW_ID.equals(selection.getProviderId())) {
           CommonNavigator commonNavigator = CommonNavigatorUtils
               .findCommonNavigator(Selection.PROJECT_EXPLORER_VIEW_ID);
-          commonNavigator.getCommonViewer().setSelection(new StructuredSelection(event.getSelectedArtifacts()));
+          commonNavigator.getCommonViewer().setSelection(new StructuredSelection(selection.getSelectedArtifacts()));
         }
       }
     };
