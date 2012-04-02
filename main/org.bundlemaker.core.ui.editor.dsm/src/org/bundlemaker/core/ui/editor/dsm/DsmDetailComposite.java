@@ -1,13 +1,8 @@
 package org.bundlemaker.core.ui.editor.dsm;
 
-import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixListener;
-import org.bundlemaker.core.ui.editor.dsm.figures.MatrixEvent;
-import org.bundlemaker.core.ui.selection.Selection;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -17,19 +12,22 @@ import org.eclipse.swt.widgets.Label;
 public class DsmDetailComposite extends Composite {
 
   /** - */
-  private DsmViewWidget _viewWidget;
+  private Label  _fromLabel;
 
   /** - */
-  private Label         _fromLabel;
+  private Label  _toLabel;
 
   /** - */
-  private Label         _toLabel;
+  private Label  _selectionCountLabel;
 
   /** - */
-  private Label         _selectionCountLabel;
+  private Button _visualizeChildren;
 
   /** - */
-  private Button        _visualizeChildren;
+  private int    _x_selected = -1;
+
+  /** - */
+  private int    _y_selected = -1;
 
   /**
    * <p>
@@ -47,8 +45,6 @@ public class DsmDetailComposite extends Composite {
 
     // this.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
     this.setLayout(new FillLayout());
-
-    _viewWidget = viewWidget;
 
     Composite composite = new Composite(this, SWT.NONE);
     GridLayout gridLayout = new GridLayout(2, false);
@@ -73,35 +69,37 @@ public class DsmDetailComposite extends Composite {
     composite.setLayout(gridLayout);
     _visualizeChildren = new Button(composite, SWT.CHECK);
     _visualizeChildren.setText("Visualize children of selected artifacts");
-    _visualizeChildren.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        Selection.instance().getArtifactSelectionService()
-            .setUseChildrenOfSelectedArtifacts(_visualizeChildren.getSelection());
-      }
-    });
 
-    _viewWidget.addMatrixListener(new IMatrixListener.Adapter() {
+  }
 
-      @Override
-      public void marked(MatrixEvent event) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the fromLabel
+   */
+  protected final Label getFromLabel() {
+    return _fromLabel;
+  }
 
-        //
-        String[] labels = _viewWidget.getModel().getLabels();
-        boolean xSelected = event.getX() <= labels.length && event.getX() >= 0;
-        boolean ySelected = event.getY() <= labels.length && event.getY() >= 0;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the toLabel
+   */
+  protected final Label getToLabel() {
+    return _toLabel;
+  }
 
-        String selectionCount = ySelected && xSelected
-            && _viewWidget.getModel().getValues()[event.getX()][event.getY()] != null ? _viewWidget.getModel()
-            .getValues()[event.getX()][event.getY()] : "0";
-        String from = ySelected ? labels[event.getY()] : "-";
-        String to = xSelected ? labels[event.getX()] : "-";
-
-        _selectionCountLabel.setText(selectionCount);
-        _fromLabel.setText(from);
-        _toLabel.setText(to);
-      }
-    });
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the selectionCountLabel
+   */
+  protected final Label getSelectionCountLabel() {
+    return _selectionCountLabel;
   }
 
   /**
@@ -110,7 +108,7 @@ public class DsmDetailComposite extends Composite {
    * 
    * @return the visualizeChildren
    */
-  public final Button getVisualizeChildren() {
+  public final Button getVisualizeChildrenButton() {
     return _visualizeChildren;
   }
 
@@ -134,15 +132,5 @@ public class DsmDetailComposite extends Composite {
 
     //
     return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the viewWidget
-   */
-  public DsmViewWidget getViewWidget() {
-    return _viewWidget;
   }
 }

@@ -29,6 +29,7 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
 
   @Override
   public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+
     // Get selected artifacts
     List<IBundleMakerArtifact> artifacts = getSelectedObjects(selection, IBundleMakerArtifact.class);
 

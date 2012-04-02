@@ -1,10 +1,5 @@
 package org.bundlemaker.core.ui.selection.workbench.editor;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
@@ -29,7 +24,8 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
   private IArtifactSelection      _currentArtifactSelection;
 
   /** - */
-  public final IArtifactSelection EMPTY_ARTIFACT_SELECTION = new ArtifactSelection(getProviderId(), "");
+  public final IArtifactSelection EMPTY_ARTIFACT_SELECTION = new ArtifactSelection(getArtifactSelectionId(),
+                                                               getProviderId());
 
   /**
    * <p>
@@ -61,7 +57,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
     super.init(site, input);
 
     // add listener
-    Selection.instance().getArtifactSelectionService().addArtifactSelectionListener(getProviderId(), this);
+    Selection.instance().getArtifactSelectionService().addArtifactSelectionListener(getArtifactSelectionId(), this);
 
     // initialize view with current selection from Artifact tree
     initFromArtifactSelectionService();
@@ -84,15 +80,25 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * {@inheritDoc}
    */
   @Override
-  public final void artifactSelectionChanged(IArtifactSelectionChangedEvent event) {
+  public final void artifactSelectionChanged(IArtifactSelection selection) {
 
     //
     if (!isActive()) {
       return;
     }
 
+    // // skip self
+    // if (selection.getProviderId().equals(getProviderId())) {
+    // return;
+    // }
+    
+    // skip already set
+    if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().equals(selection)) {
+      return;
+    }
+
     //
-    onArtifactSelectionChanged(event);
+    onArtifactSelectionChanged(selection);
   }
 
   /**
@@ -101,7 +107,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * 
    * @param event
    */
-  protected abstract void onArtifactSelectionChanged(IArtifactSelectionChangedEvent event);
+  protected abstract void onArtifactSelectionChanged(IArtifactSelection event);
 
   /**
    * This method is invoked to set the artifacts that should be visualized when this editor is visible
@@ -121,13 +127,15 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * 
    * @return
    */
-  protected String getProviderId() {
+  protected String getArtifactSelectionId() {
     return Selection.MAIN_ARTIFACT_SELECTION_ID;
   }
-  
+
+  protected abstract String getProviderId();
+
   private void initFromArtifactSelectionService() {
     IArtifactSelection currentArtifactSelection = Selection.instance().getArtifactSelectionService()
-        .getSelection(getProviderId());
+        .getSelection(getArtifactSelectionId());
 
     if (currentArtifactSelection != null) {
       setCurrentArtifactSelection(currentArtifactSelection);

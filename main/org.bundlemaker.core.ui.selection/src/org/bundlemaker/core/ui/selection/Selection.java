@@ -1,10 +1,5 @@
 package org.bundlemaker.core.ui.selection;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.ui.selection.internal.ArtifactSelectionService;
 import org.bundlemaker.core.ui.selection.internal.DependencySelectionService;

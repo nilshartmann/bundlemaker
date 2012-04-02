@@ -71,7 +71,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   private int                _y;
 
   private boolean            _drawToolTip            = false;
-
+  
   /**
    * <p>
    * Creates a new instance of type {@link DsmViewWidget}.
@@ -398,5 +398,4 @@ public class DsmViewWidget extends Canvas implements Observer {
   public void removeMatrixLIstener(IMatrixListener listener) {
     _matrixFigure.removeMatrixLIstener(listener);
   }
-
 }

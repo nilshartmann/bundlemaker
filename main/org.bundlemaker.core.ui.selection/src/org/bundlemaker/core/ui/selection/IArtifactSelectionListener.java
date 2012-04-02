@@ -26,6 +26,6 @@ public interface IArtifactSelectionListener {
    * @param event
    *          the event describing the selection. Never null.
    */
-  public void artifactSelectionChanged(IArtifactSelectionChangedEvent event);
+  public void artifactSelectionChanged(IArtifactSelection event);
 
 }

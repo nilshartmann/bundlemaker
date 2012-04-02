@@ -1,0 +1,3 @@
+~ rename to org.bundlemaker.core.ui.event
+~ WhiteBoard Pattern
+~ replace *ChangedEvent with *

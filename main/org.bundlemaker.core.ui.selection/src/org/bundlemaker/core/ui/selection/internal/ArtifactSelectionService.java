@@ -34,7 +34,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
     IArtifactSelectionService, IRootArtifactSelectionService {
 
   /** - */
-  private SelectionListenerList<IArtifactSelectionListener, IArtifactSelectionChangedEvent>         _artifactSelectionListenerContainer     = null;
+  private SelectionListenerList<IArtifactSelectionListener, IArtifactSelection>         _artifactSelectionListenerContainer     = null;
 
   /** - */
   private SelectionListenerList<IRootArtifactSelectionListener, IRootArtifactSelectionChangedEvent> _rootArtifactSelectionListenerContainer = null;
@@ -45,9 +45,9 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
   public ArtifactSelectionService() {
 
     //
-    _artifactSelectionListenerContainer = new SelectionListenerList<IArtifactSelectionListener, IArtifactSelectionChangedEvent>() {
+    _artifactSelectionListenerContainer = new SelectionListenerList<IArtifactSelectionListener, IArtifactSelection>() {
       @Override
-      protected void invokeListener(IArtifactSelectionListener listener, IArtifactSelectionChangedEvent event) {
+      protected void invokeListener(IArtifactSelectionListener listener, IArtifactSelection event) {
         listener.artifactSelectionChanged(event);
       }
     };
@@ -185,8 +185,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
    */
   @Override
   protected void fireSelectionChanged(String selectionId, String providerId, IArtifactSelection newSelection) {
-    _artifactSelectionListenerContainer.fireSelectionChanged(selectionId, new ArtifactSelectionChangedEvent(
-        newSelection));
+    _artifactSelectionListenerContainer.fireSelectionChanged(selectionId, newSelection);
 
     //
     RootArtifactSelection rootArtifactSelection = null;

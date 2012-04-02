@@ -94,6 +94,7 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
     final int prime = 31;
     int result = super.hashCode();
     result = prime * result + ((_selectedArtifacts == null) ? 0 : _selectedArtifacts.hashCode());
+    result = prime * result + (_useChildrenOfSelectedArtifacts ? 1231 : 1237);
     return result;
   }
 
@@ -113,6 +114,8 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
       if (other._selectedArtifacts != null)
         return false;
     } else if (!_selectedArtifacts.equals(other._selectedArtifacts))
+      return false;
+    if (_useChildrenOfSelectedArtifacts != other._useChildrenOfSelectedArtifacts)
       return false;
     return true;
   }
