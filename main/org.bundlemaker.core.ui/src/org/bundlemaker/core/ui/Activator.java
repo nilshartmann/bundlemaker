@@ -79,6 +79,7 @@ public class Activator extends AbstractUIPlugin {
 
     Selection.instance().getArtifactSelectionService()
         .addArtifactSelectionListener(Selection.MAIN_ARTIFACT_SELECTION_ID, _projectExplorerSelectionListener);
+
   }
 
   /*
