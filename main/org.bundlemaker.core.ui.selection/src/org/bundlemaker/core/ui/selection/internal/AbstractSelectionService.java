@@ -45,7 +45,7 @@ public abstract class AbstractSelectionService<SELECTION extends IProviderSelect
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param selectionId
    * @param providerId
    * @param newSelection
@@ -64,6 +64,16 @@ public abstract class AbstractSelectionService<SELECTION extends IProviderSelect
     fireSelectionChanged(selectionId, providerId, newSelection);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the currentSelections
+   */
+  protected final ConcurrentHashMap<String, SELECTION> getCurrentSelections() {
+    return _currentSelections;
+  }
+  
   /**
    * <p>
    * </p>

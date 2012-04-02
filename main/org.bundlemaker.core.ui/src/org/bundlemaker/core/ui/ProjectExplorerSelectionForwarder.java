@@ -34,7 +34,7 @@ public class ProjectExplorerSelectionForwarder implements ISelectionListener {
 
     // notify selection service
     _artifactSelectionService.setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, Selection.PROJECT_EXPLORER_VIEW_ID,
-        artifacts, artifacts.size() == 1);
+        artifacts /* , artifacts.size() == 1 */);
   }
 
   /**

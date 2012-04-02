@@ -1,13 +1,10 @@
 package org.bundlemaker.core.ui.editor.dsm;
 
-import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixListener;
-import org.bundlemaker.core.ui.editor.dsm.figures.MatrixEvent;
-import org.bundlemaker.core.ui.editor.dsm.utils.BorderData;
-import org.bundlemaker.core.ui.editor.dsm.utils.BorderLayout;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * <p>
@@ -18,13 +15,10 @@ import org.eclipse.swt.widgets.Label;
 public class DsmViewComposite extends Composite {
 
   /** - */
-  private DsmViewWidget _viewWidget;
+  private DsmViewWidget      _viewWidget;
 
   /** - */
-  private Label         _fromLabel;
-
-  /** - */
-  private Label         _toLabel;
+  private DsmDetailComposite _detailComposite;
 
   /**
    * <p>
@@ -37,33 +31,27 @@ public class DsmViewComposite extends Composite {
   public DsmViewComposite(Composite parent, IDsmViewModel viewModel) {
     super(parent, 0);
 
-    setLayout(new BorderLayout());
+    //
+    GridLayout gridLayout = new GridLayout(1, true);
+    setLayout(gridLayout);
 
+    //
     _viewWidget = new DsmViewWidget(viewModel, this);
-    _viewWidget.setLayoutData(BorderData.CENTER);
+    GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(_viewWidget);
     _viewWidget.setZoom((50 + 10) * 0.02f);
 
-    Composite composite = new Composite(this, 0);
-    composite.setLayoutData(BorderData.SOUTH);
-    FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
-    fillLayout.marginHeight = 5;
-    fillLayout.marginWidth = 5;
-    fillLayout.spacing = 1;
-
-    composite.setLayout(fillLayout);
-
-    _fromLabel = new Label(composite, SWT.NONE);
-    _toLabel = new Label(composite, SWT.NONE);
-
-    _viewWidget.addMatrixListener(new IMatrixListener.Adapter() {
-      @Override
-      public void marked(MatrixEvent event) {
-        _fromLabel.setText(event.getY() <= _viewWidget.getModel().getLabels().length && event.getY() >= 0 ? _viewWidget
-            .getModel().getLabels()[event.getY()] : "");
-        _toLabel.setText(event.getX() <= _viewWidget.getModel().getLabels().length && event.getX() >= 0 ? _viewWidget
-            .getModel().getLabels()[event.getX()] : "");
-      }
-    });
+    _detailComposite = new DsmDetailComposite(this, _viewWidget);
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(_detailComposite);
+  }
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  public final Button getVisualizeChildrenButton() {
+    return _detailComposite.getVisualizeChildren();
   }
 
   /**

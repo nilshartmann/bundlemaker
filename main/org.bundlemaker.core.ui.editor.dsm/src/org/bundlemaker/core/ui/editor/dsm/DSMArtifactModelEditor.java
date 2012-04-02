@@ -133,6 +133,9 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     //
     if (_dsmViewWidget != null) {
 
+      //
+      _dsmViewWidget.getVisualizeChildrenButton().setSelection(artifactSelection.useChildrenOfSelectedArtifacts());
+
       // set the model
       if (artifactSelection.useChildrenOfSelectedArtifacts()) {
         List<IBundleMakerArtifact> bundleMakerArtifacts = new LinkedList<IBundleMakerArtifact>();

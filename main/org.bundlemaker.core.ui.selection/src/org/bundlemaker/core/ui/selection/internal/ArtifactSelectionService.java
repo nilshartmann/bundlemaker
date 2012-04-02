@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
@@ -39,7 +40,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
   private SelectionListenerList<IRootArtifactSelectionListener, IRootArtifactSelectionChangedEvent> _rootArtifactSelectionListenerContainer = null;
 
   /** - */
-  private boolean                                                                                   _useChildrenOfSelectedArtifacts         = false;
+  private boolean                                                                                   _useChildrenOfSelectedArtifacts         = true;
 
   public ArtifactSelectionService() {
 
@@ -65,7 +66,20 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
    */
   @Override
   public void setUseChildrenOfSelectedArtifacts(boolean useChildrenOfSelectedArtifacts) {
+
+    //
     _useChildrenOfSelectedArtifacts = useChildrenOfSelectedArtifacts;
+
+    //
+    for (Entry<String, IArtifactSelection> entry : getCurrentSelections().entrySet()) {
+
+      //
+      IArtifactSelection oldArtifactSelection = entry.getValue();
+
+      //
+      setSelection(oldArtifactSelection.getSelectionId(), oldArtifactSelection.getProviderId(),
+          oldArtifactSelection.getSelectedArtifacts());
+    }
   }
 
   /**
