@@ -103,7 +103,14 @@ public class BundleMakerUiUtils {
       CommonNavigator navigator = (CommonNavigator) projectExplorerView;
       navigator.getCommonViewer().refresh(bundleMakerProject.getProject());
     }
-
   }
 
+  public static void refreshProjectExplorer() {
+    IViewPart projectExplorerView = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+        .findView("org.eclipse.ui.navigator.ProjectExplorer");
+    if (projectExplorerView instanceof CommonNavigator) {
+      CommonNavigator navigator = (CommonNavigator) projectExplorerView;
+      navigator.getCommonViewer().refresh();
+    }
+  }
 }

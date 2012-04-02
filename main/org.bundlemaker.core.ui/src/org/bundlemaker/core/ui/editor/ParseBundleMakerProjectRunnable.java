@@ -88,8 +88,7 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
     }
 
     // Refresh navigator tree
-    BundleMakerUiUtils.refreshProjectExplorer(bundleMakerProject);
-
+    BundleMakerUiUtils.refreshProjectExplorer();
   }
 
 }
