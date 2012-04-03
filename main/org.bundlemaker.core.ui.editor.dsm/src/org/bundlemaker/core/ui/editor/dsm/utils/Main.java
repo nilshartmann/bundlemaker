@@ -1,6 +1,12 @@
 package org.bundlemaker.core.ui.editor.dsm.utils;
 
 import org.bundlemaker.core.ui.editor.dsm.AbstractDsmViewModel;
+import org.bundlemaker.core.ui.editor.dsm.DsmDetailComposite;
+import org.bundlemaker.core.ui.editor.dsm.DsmViewWidget;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -12,13 +18,18 @@ public class Main {
     final Shell shell = new Shell(d);
     shell.setSize(800, 800);
     shell.setLayout(new BorderLayout());
-
-    final AbstractDsmViewModel model = new DemoDsmViewModel(1500);
+    Canvas canvas = new Canvas(shell, SWT.NONE);
+    draw(canvas, new DemoDsmViewModel(500));
+    
+    // LightweightSystem lws = new LightweightSystem(shell);
+   // lws.setControl(canvas);
+    
+    
     // final DsmViewComposite viewComposite = new DsmViewComposite(shell, model);
 
-    // final DsmViewWidget viewWidget = new DsmViewWidget(model, shell);
-    // viewWidget.setLayoutData(BorderData.CENTER);
-    // viewWidget.setZoom((50 + 10) * 0.02f);
+//     final DsmViewWidget viewWidget = new DsmViewWidget(model, shell);
+//     viewWidget.setLayoutData(BorderData.CENTER);
+//     viewWidget.setZoom((50 + 10) * 0.02f);
     //
     // Composite composite = new Composite(shell, 0);
     // composite.setLayoutData(BorderData.SOUTH);
@@ -49,4 +60,68 @@ public class Main {
       while (!d.readAndDispatch())
         d.sleep();
   }
+  
+  static private void draw(Canvas parent, AbstractDsmViewModel model) {
+    //
+    GridLayout gridLayout = new GridLayout(1, true);
+    parent.setLayout(gridLayout);
+
+    //
+    DsmViewWidget _viewWidget = new DsmViewWidget(model, parent);
+    GridDataFactory.swtDefaults().grab(true, true).align(SWT.FILL, SWT.FILL).applyTo(_viewWidget);
+    _viewWidget.setZoom((50 + 10) * 0.02f);
+
+    //
+    DsmDetailComposite _detailComposite = new DsmDetailComposite(parent, _viewWidget);
+    GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(_detailComposite);
+    // setDefaultDependencyDescription();
+
+//    //
+//    _viewWidget.addMatrixListener(new IMatrixListener.Adapter() {
+//
+//      @Override
+//      public void marked(MatrixEvent event) {
+//
+//        //
+//        if (isCellSelected(event)) {
+//          _detailComposite.getSelectionCountLabel().setText(
+//              getNullSafeString(_viewWidget.getModel().getValues()[event.getX()][event.getY()], "0"));
+//          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[event.getY()]);
+//          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[event.getX()]);
+//        }
+//
+//        //
+//        else if (_selectedCell != null) {
+//          _detailComposite.getSelectionCountLabel().setText(
+//              getNullSafeString(_viewWidget.getModel().getValues()[_selectedCell.getX()][_selectedCell.getY()], "0"));
+//          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell.getY()]);
+//          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell.getX()]);
+//        }
+//
+//        //
+//        else {
+//          setDefaultDependencyDescription();
+//        }
+      }
+
+//      /**
+//       * {@inheritDoc}
+//       */
+//      @Override
+//      public void singleClick(MatrixEvent event) {
+//        if (isCellSelected(event)) {
+//          _selectedCell = event;
+//        }
+//      }
+//    });
+//
+//    //
+//    _detailComposite.getVisualizeChildrenButton().addSelectionListener(new SelectionAdapter() {
+//      @Override
+//      public void widgetSelected(SelectionEvent e) {
+//        Selection.instance().getArtifactSelectionService()
+//            .setUseChildrenOfSelectedArtifacts(_detailComposite.getVisualizeChildrenButton().getSelection());
+//      }
+//    });
+//  }
 }

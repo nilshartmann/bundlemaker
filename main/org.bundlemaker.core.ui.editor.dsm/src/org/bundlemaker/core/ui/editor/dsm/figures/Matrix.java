@@ -8,6 +8,7 @@ import org.bundlemaker.core.ui.editor.dsm.figures.zoom.ZoomContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MouseEvent;
 import org.eclipse.draw2d.MouseListener;
 import org.eclipse.draw2d.MouseMotionListener;
@@ -221,12 +222,12 @@ public class Matrix extends Figure {
   }
 
   private int[] getVisibleSlices() {
-
-    ZoomContainer zoomContainer = (ZoomContainer) this.getParent();
-    if (zoomContainer == null) {
+    
+    if (! (this.getParent() instanceof ZoomContainer)) {
       return new int[] { 0, _model.getItemCount() - 1, 0, _model.getItemCount() - 1 };
     }
 
+    ZoomContainer zoomContainer = (ZoomContainer) this.getParent();
     Viewport viewport = ((Viewport) this.getParent().getParent());
 
     int horMin = (int) (viewport.getViewLocation().x / (_model.getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));

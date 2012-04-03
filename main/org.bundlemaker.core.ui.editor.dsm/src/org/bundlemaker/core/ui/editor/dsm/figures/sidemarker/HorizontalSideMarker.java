@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.editor.dsm.figures.sidemarker;
 
 import org.bundlemaker.core.ui.editor.dsm.IDsmViewModel;
+import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -13,6 +14,8 @@ import org.eclipse.draw2d.geometry.Point;
  */
 public class HorizontalSideMarker extends AbstractSideMarker implements ISideMarker {
 
+  private boolean _rotateText = true;
+
   /**
    * <p>
    * Creates a new instance of type {@link HorizontalSideMarker}.
@@ -22,6 +25,17 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
    */
   public HorizontalSideMarker(IDsmViewModel model) {
     super(model);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param rotateText
+   *          the rotateText to set
+   */
+  public final void setRotateText(boolean rotateText) {
+    _rotateText = rotateText;
   }
 
   /**
@@ -84,22 +98,42 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
 
     // draw the last line
     graphics.drawLine(getSize().width, 0, getSize().width, getSize().height);
-    graphics.translate(getModel().getItemCount() * getModel().getConfiguration().getHorizontalBoxSize(), 0);
-    graphics.rotate(90f);
-
-    // compute the text offset (to make the text centered)
-    int offset = (getModel().getConfiguration().getHorizontalBoxSize() - getFontHeight()) / 2;
 
     boolean useShortendLabels = getModel().isUseShortendLabels();
 
-    for (int i = 0; i < getModel().getItemCount(); i++) {
+    // rotate
+    if (_rotateText) {
 
+      graphics.translate(getModel().getItemCount() * getModel().getConfiguration().getHorizontalBoxSize(), 0);
+      graphics.rotate(90f);
+      // compute the text offset (to make the text centered)
+      int offset = (getModel().getConfiguration().getHorizontalBoxSize() - getFontHeight()) / 2;
+      for (int i = 0; i < getModel().getItemCount(); i++) {
+
+        graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
+
+        graphics.drawString(useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i],
+            new Point(10, (((getModel().getItemCount() - (i + 1)) * getModel().getConfiguration()
+                .getHorizontalBoxSize())) + offset));
+      }
+    }
+
+    // don't rotate
+    else {
       graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
 
-      graphics
-          .drawString(useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i],
-              new Point(10, (((getModel().getItemCount() - (i + 1)) * getModel().getConfiguration()
-                  .getHorizontalBoxSize())) + offset));
+      int centerOffset = (getModel().getConfiguration().getHorizontalBoxSize() / 2);
+      int fontHeight = getFont().getFontData()[0].getHeight() + 2;
+      int horizontalBoxSize = getModel().getConfiguration().getHorizontalBoxSize();
+      for (int i = 0; i < getModel().getItemCount(); i++) {
+        String label = useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i];
+        int offset = i * horizontalBoxSize + centerOffset;
+        for (int j = 0; j < label.length(); j++) {
+          String currentChar = label.substring(j, j + 1);
+          graphics.drawString(currentChar, offset - (FigureUtilities.getTextWidth(currentChar, getFont()) / 2), j
+              * fontHeight);
+        }
+      }
     }
 
     // restore the state

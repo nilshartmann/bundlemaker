@@ -13,32 +13,46 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.JPEGTranscoder;
 import org.bundlemaker.core.ui.print.internal.nl.utwente.ce.imagexport.export.svg.ExportSVG;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.ui.PlatformUI;
 
 public class FigurePrinter {
 
-  public static void print(String fileName, IFigure figure) {
-    ExportSVG exportSVG = new ExportSVG();
-    try {
-      exportSVG.exportImage(fileName, figure);
-    } catch (SVGGraphics2DIOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+  public static void save(IFigure figure) {
 
     try {
-      // Create a JPEG transcoder
+
+      Display display = PlatformUI.getWorkbench().getDisplay();
+      FileDialog fd = new FileDialog(display.getActiveShell(), SWT.SAVE);
+      fd.setText("Save");
+      fd.setFilterPath("D:/");
+      String[] filterExt = { "*.jpg" };
+      fd.setFilterExtensions(filterExt);
+      String selected = fd.open();
+
+      if (selected == null) {
+        return;
+      }
+
+      if (!selected.endsWith(".jpg")) {
+        selected = selected.concat(".jpg");
+      }
+
+      ExportSVG exportSVG = new ExportSVG();
+      File tmpFile = exportSVG.exportImage(figure);
+
       JPEGTranscoder t = new JPEGTranscoder();
-      // Set the transcoding hints.
-      t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
       t.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(figure.getSize().width));
       t.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(figure.getSize().height));
+      t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(1.0));
 
       // Create the transcoder input.
-      String svgURI = new File(fileName).toURI().toString();
-      TranscoderInput input = new TranscoderInput(svgURI);
+      TranscoderInput input = new TranscoderInput(tmpFile.toURI().toString());
 
       // Create the transcoder output.
-      OutputStream ostream = new FileOutputStream(fileName + ".jpg");
+      OutputStream ostream = new FileOutputStream(selected);
       TranscoderOutput output = new TranscoderOutput(ostream);
 
       // Save the image.
@@ -48,6 +62,8 @@ public class FigurePrinter {
       ostream.flush();
       ostream.close();
 
+    } catch (SVGGraphics2DIOException e) {
+      e.printStackTrace();
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -58,6 +74,13 @@ public class FigurePrinter {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+
+    // // Create a JPEG transcoder
+    // JPEGTranscoder t = new JPEGTranscoder();
+    // // Set the transcoding hints.
+    // t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, new Float(.8));
+    // t.addTranscodingHint(JPEGTranscoder.KEY_WIDTH, new Float(figure.getSize().width));
+    // t.addTranscodingHint(JPEGTranscoder.KEY_HEIGHT, new Float(figure.getSize().height));
 
     // IFigure rootFigure = _dsmViewWidget._matrixFigure;
     // Rectangle rootFigureBounds = rootFigure.getBounds();

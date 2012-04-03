@@ -18,11 +18,17 @@ import java.util.List;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixListener;
+import org.bundlemaker.core.ui.editor.dsm.figures.Matrix;
 import org.bundlemaker.core.ui.editor.dsm.figures.MatrixEvent;
+import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarker;
+import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
+import org.bundlemaker.core.ui.print.FigurePrinter;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.bundlemaker.core.ui.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -35,10 +41,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -77,7 +83,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   /**
    * Opens the DSM View.
    * 
-   * <p>This method does nothing in case the DSM view could not be opened for any reason.
+   * <p>
+   * This method does nothing in case the DSM view could not be opened for any reason.
    * 
    */
   public static void openDsmView() {
@@ -287,7 +294,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
       @Override
       public void menuAboutToShow(IMenuManager manager) {
-        System.out.println("menuAboutToShow");
         manager.add(new Separator("edit"));
         manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         manager.appendToGroup("edit", new ContributionItem("Test") {
@@ -298,17 +304,66 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
           @Override
           public void fill(Menu menu, int index) {
             _menuItem = new MenuItem(menu, SWT.PUSH);
-            _menuItem.setText("Jupp");
+            _menuItem.setText("Export...");
             _menuItem.addSelectionListener(new SelectionListener() {
 
               @Override
               public void widgetSelected(SelectionEvent e) {
-                System.out.println(e);
+                System.out.println(System.currentTimeMillis());
+
+                final int sideMarkerOffset = 200;
+
+                //
+                int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
+                    * _viewWidget.getModel().getItemCount();
+                int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
+                    * _viewWidget.getModel().getItemCount();
+                final Matrix matrix = new Matrix(_viewWidget.getModel());
+                matrix.setSize(matrixWidth, matrixHeight);
+
+                //
+                final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
+                verticalSideMarker.setSize(sideMarkerOffset, matrixHeight);
+                verticalSideMarker.setFont(Display.getCurrent().getSystemFont());
+
+                //
+                final HorizontalSideMarker horizontalSideMarker = new HorizontalSideMarker(_viewWidget.getModel());
+                horizontalSideMarker.setSize(matrixWidth, sideMarkerOffset);
+                horizontalSideMarker.setFont(Display.getCurrent().getSystemFont());
+
+                IFigure mainFigure = new Figure() {
+
+                  /**
+                   * {@inheritDoc}
+                   */
+                  @Override
+                  public void paint(Graphics graphics) {
+                    super.paint(graphics);
+
+                    graphics.pushState();
+                    graphics.translate(0, sideMarkerOffset);
+                    verticalSideMarker.paint(graphics);
+                    graphics.restoreState();
+
+                    graphics.pushState();
+                    graphics.translate(sideMarkerOffset, sideMarkerOffset);
+                    matrix.paint(graphics);
+                    graphics.restoreState();
+                    
+                    graphics.pushState();
+                    graphics.translate(sideMarkerOffset, 0);
+                    horizontalSideMarker.paint(graphics);
+                    graphics.restoreState();
+                  }
+                };
+                mainFigure.setSize(matrix.getSize().width + sideMarkerOffset + 1, matrix.getSize().height
+                    + sideMarkerOffset + 1);
+
+                FigurePrinter.save(mainFigure);
               }
 
               @Override
               public void widgetDefaultSelected(SelectionEvent e) {
-                System.out.println(e);
               }
             });
           }
@@ -319,6 +374,21 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     Menu menu = menuManager.createContextMenu(dsmViewWidget);
     dsmViewWidget.setMenu(menu);
   }
+
+  // /** Paints the figure onto the given graphics */
+  // public static void paintDiagram(Graphics g, IFigure figure) {
+  // // We want to ignore the first FreeformLayer (or we lose also all figure, as it draws the 'page boundaries'
+  // // which is obviously not wanted in the exported images.
+  // for (Object child : figure.getChildren()) {
+  // // ConnectionLayer inherits from FreeformLayer, so rather checking for FreeformLayer we check whether child
+  // // is not a ConnectionLayer!
+  // if (child instanceof FreeformLayer && !(child instanceof ConnectionLayer)) {
+  // paintDiagram(g, (IFigure) child);
+  // } else {
+  // ((IFigure) child).paint(g);
+  // }
+  // }
+  // }
 
   /**
    * <p>

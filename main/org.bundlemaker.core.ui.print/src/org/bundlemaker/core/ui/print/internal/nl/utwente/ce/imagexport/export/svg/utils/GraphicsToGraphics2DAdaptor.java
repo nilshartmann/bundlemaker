@@ -456,6 +456,16 @@ public class GraphicsToGraphics2DAdaptor extends Graphics
         gc.setForeground(getForegroundColor());
     }
 
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void rotate(float degrees) {
+      getGraphics2D().rotate(degrees);
+    }
+
     @Override
     public int getInterpolation()
     {
