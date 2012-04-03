@@ -24,6 +24,8 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
  */
 public interface IModifiableModularizedSystem extends IModularizedSystem {
 
+  // TODO IModifiableModule
+
   /**
    * <p>
    * Creates a new IModifiableResourceModule and adds it to this {@link IModularizedSystem}.

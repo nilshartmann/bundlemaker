@@ -11,7 +11,6 @@
 package org.bundlemaker.core.modules.modifiable;
 
 import org.bundlemaker.core.modules.IResourceModule;
-import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -19,15 +18,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModifiableResourceModule extends IResourceModule {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param classification
-   */
-  void setClassification(IPath classification);
+public interface IModifiableResourceModule extends IResourceModule, IModifiableModule {
 
   /**
    * <p>

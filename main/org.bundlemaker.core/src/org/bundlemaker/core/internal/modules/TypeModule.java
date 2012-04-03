@@ -14,6 +14,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
+import org.bundlemaker.core.modules.modifiable.IModifiableModule;
 
 /**
  * <p>
@@ -21,7 +22,7 @@ import org.bundlemaker.core.modules.ITypeContainer;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeModule extends AbstractModule<ITypeContainer, TypeContainer> implements IModule {
+public class TypeModule extends AbstractModule<ITypeContainer, TypeContainer> implements IModule, IModifiableModule {
 
   /**
    * <p>
