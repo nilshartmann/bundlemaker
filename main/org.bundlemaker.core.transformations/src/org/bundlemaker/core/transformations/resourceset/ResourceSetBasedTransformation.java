@@ -211,8 +211,8 @@ public class ResourceSetBasedTransformation implements ITransformation {
     for (IResource iResource : resourceStandinsToMove) {
 
       IMovableUnit movableUnit = MovableUnit.createFromResource(iResource, modularizedSystem);
-      targetResourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
       originResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);
+      targetResourceModule.getModifiableSelfResourceContainer().addMovableUnit(movableUnit);
     }
   }
 
