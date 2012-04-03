@@ -31,6 +31,8 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
 
   private final IBundleMakerProject _bundleMakerProject;
 
+  private boolean                   _success = false;
+
   /**
    * @param bundleMakerProject
    */
@@ -53,6 +55,7 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
       if (state == BundleMakerProjectState.INITIALIZED | state == BundleMakerProjectState.READY) {
         // parse the project
         _bundleMakerProject.parseAndOpen(monitor);
+        _success = true;
       }
     } catch (Exception ex) {
       // Forward exception
@@ -67,8 +70,9 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
    * Errors happening during the operation are reported via Error Log and an Error Dialog
    * 
    * @param bundleMakerProject
+   * @return true if the project has been successfully opened
    */
-  public static void parseProject(IBundleMakerProject bundleMakerProject) {
+  public static boolean parseProject(IBundleMakerProject bundleMakerProject) {
     // Create runnable
     ParseBundleMakerProjectRunnable runnable = new ParseBundleMakerProjectRunnable(bundleMakerProject);
 
@@ -89,6 +93,8 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
 
     // Refresh navigator tree
     BundleMakerUiUtils.refreshProjectExplorer();
+
+    return runnable._success;
   }
 
 }

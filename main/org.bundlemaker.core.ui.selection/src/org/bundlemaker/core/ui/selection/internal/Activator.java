@@ -1,10 +1,13 @@
 package org.bundlemaker.core.ui.selection.internal;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.ui.event.Events;
+import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
@@ -23,14 +26,31 @@ public class Activator extends AbstractUIPlugin {
 //  /** - */
 //  private IArtifactSelectionListener   _mainDependencySelectionCleaner;
 
+  private Events                       _events;
+
   /*
    * (non-Javadoc)
    * 
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
    */
-  public void start(BundleContext context) throws Exception {
+  @Override
+  public void start(final BundleContext context) throws Exception {
     super.start(context);
     plugin = this;
+
+    this._events = new Events() {
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.bundlemaker.core.ui.event.Events#getBundleContext()
+       */
+      @Override
+      protected BundleContext getBundleContext() {
+        return context;
+      }
+
+    };
 
     //
     _mainDependencySelectionToDetailDependencySelectionForwarder = new IDependencySelectionListener() {
@@ -69,8 +89,10 @@ public class Activator extends AbstractUIPlugin {
    * 
    * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
    */
+  @Override
   public void stop(BundleContext context) throws Exception {
     plugin = null;
+    this._events = null;
     super.stop(context);
 
     Selection.instance().getDependencySelectionService()
@@ -105,5 +127,12 @@ public class Activator extends AbstractUIPlugin {
     }
 
     return result;
+  }
+
+  /**
+   * @return
+   */
+  public Events getEvents() {
+    return this._events;
   }
 }
