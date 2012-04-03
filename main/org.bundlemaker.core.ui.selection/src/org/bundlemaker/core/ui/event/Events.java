@@ -75,7 +75,7 @@ public abstract class Events {
 
   @SuppressWarnings("unchecked")
   protected <T> List<T> getServices(Class<T> type) {
-    ServiceTracker<T, T> serviceTracker = new ServiceTracker<T, T>(getBundleContext(), type, null);
+    ServiceTracker serviceTracker = new ServiceTracker(getBundleContext(), type.getName(), null);
     serviceTracker.open();
 
     try {
