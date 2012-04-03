@@ -41,6 +41,8 @@ import org.eclipse.swt.widgets.TableColumn;
 public class DependencyTableView extends AbstractDependencySelectionAwareViewPart implements
     IDependencySelectionListener {
 
+  public static String               ID                  = DependencyTableView.class.getName();
+
   /** - */
   private TableViewer                _viewer;
 

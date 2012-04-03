@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse versi
+on="3.4"?>
+<plugin>
+	<extension point="org.eclipse.ui.perspectives">
+		<perspective class="org.bundlemaker.core.ui.app.perspective.BundleMakerPerspectiveFactory"
+			fixed="false" icon="icons/bundlemaker-icon-small.png"
+			id="org.bundlemaker.core.ui.app.perspective" name="BundleMaker"> </perspective>
+	</extension>
+</plugin>

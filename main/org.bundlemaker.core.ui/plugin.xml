@@ -378,11 +378,4 @@
 			</command>
 		</menuContribution>
 	</extension>
-
-
-	<extension point="org.eclipse.ui.perspectives">
-		<perspective class="org.bundlemaker.core.ui.perspective.BundleMakerPerspectiveFactory"
-			fixed="false" icon="icons/bundlemaker-icon-small.png"
-			id="org.bundlemaker.core.ui.perspective" name="BundleMaker"> </perspective>
-	</extension>
 </plugin>

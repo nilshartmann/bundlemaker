@@ -11,3 +11,4 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.core.ui.selection;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bundlemaker.core.ui.view.dependencytable
