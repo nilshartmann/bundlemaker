@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.bundlemaker.core.ui.app.perspective
+Bundle-SymbolicName: org.bundlemaker.core.ui.app.perspective;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.bundlemaker.core.ui.app.perspective.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bundlemaker.core.ui.view.dependencytable;bundle-version="1.0.0",
+ org.bundlemaker.core.ui.view.dependencytree;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
