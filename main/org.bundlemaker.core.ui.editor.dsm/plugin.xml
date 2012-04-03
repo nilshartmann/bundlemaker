@@ -1,80 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   
-     <!-- the pop up menus --> 
-   <extension point="org.eclipse.ui.commands"> 
-      <command id="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand" 
-              name="DSM view with selected artifacts" /> 
-         <command id="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewForChildrenCommand" 
-              name="DSM view for children of selected artifacts" />
-   </extension>
-   
-        <extension 
-         point="org.eclipse.ui.handlers"> 
-      <handler class="org.bundlemaker.core.ui.editor.dsm.handlers.OpenDsmViewHandler" 
-            commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand"> 
-         <activeWhen> 
-         <reference 
-               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> 
-         </reference> 
-         </activeWhen> 
-         <enabledWhen> 
-          <reference 
-               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> 
-               </reference> 
-         </enabledWhen> 
-      </handler> 
-      <handler class="org.bundlemaker.core.ui.editor.dsm.handlers.OpenDsmViewForChildrenHandler" 
-            commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewForChildrenCommand"> 
-         <activeWhen> 
-         <reference 
-               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> 
-         </reference> 
-         </activeWhen> 
-         <enabledWhen> 
-          <reference 
-               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> 
-               </reference> 
-         </enabledWhen> 
-      </handler> 
-   </extension> 
-   
-   
-   <!-- DSM Submenu -->
-   <extension point="org.eclipse.ui.menus"> 
-           <menuContribution 
-    	locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions"> 
-		<separator
-			name="org.bundlemaker.core.ui.editor.dsm.separator"
-		    visible="true">
-		</separator>
-	 	<command
-	    	commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewForChildrenCommand"
-	        style="push">
-	        <visibleWhen checkEnabled="true" />
-	     </command> 
-		<command
-			commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand"
-	        style="push">
-	        <visibleWhen checkEnabled="true" />
-		</command> 
-           </menuContribution>
-           <menuContribution
-                 allPopups="false"
-                 locationURI="org.bundlemaker.analysis.ui.dsmview.DSMView#PopupMenu?after=edit">
-           </menuContribution> 
-   </extension>
-   
-    <!-- DSM EDITOR -->
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
-            default="false"
-            id="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
-            name="DSM Analysis">
-      </editor>
-   </extension>
-   
+
+      <!-- the pop up menus -->
+      <extension point="org.eclipse.ui.commands">
+            <command id="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand"
+                  name="Open DSM"/>
+      </extension>
+
+      <extension point="org.eclipse.ui.handlers">
+            <handler class="org.bundlemaker.core.ui.editor.dsm.handlers.OpenDsmViewHandler"
+                  commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand">
+                  <activeWhen>
+                        <reference
+                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+                        > </reference>
+                  </activeWhen>
+                  <enabledWhen>
+                        <reference
+                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+                        > </reference>
+                  </enabledWhen>
+            </handler>
+      </extension>
+
+
+      <!-- DSM Submenu -->
+      <extension point="org.eclipse.ui.menus">
+            <menuContribution
+                  locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+                  <separator name="org.bundlemaker.core.ui.editor.dsm.separator" visible="true"> </separator>
+                  <command
+                        commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand"
+                        style="push">
+                        <visibleWhen checkEnabled="true"/>
+                  </command>
+            </menuContribution>
+            <menuContribution allPopups="false"
+                  locationURI="org.bundlemaker.analysis.ui.dsmview.DSMView#PopupMenu?after=edit"
+            > </menuContribution>
+      </extension>
+
+      <!-- DSM EDITOR -->
+      <extension point="org.eclipse.ui.editors">
+            <editor class="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
+                  default="false" id="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
+                  name="DSM Analysis"> </editor>
+      </extension>
+
 </plugin>
