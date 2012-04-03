@@ -56,6 +56,7 @@
 		<location dir="${targetplatform-subdir}/target.platform/sonar-graph_2.4.1" />
 		<location dir="${targetplatform-subdir}/target.platform/test/pde.test.utils" />
 		<location dir="${targetplatform-subdir}/target.platform/xtext-1.0.1" />
+		<location dir="${targetplatform-subdir}/target.platform/ds" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 
