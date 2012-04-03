@@ -90,13 +90,16 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   public void applyTransformations(IProgressMonitor progressMonitor, List<ITransformation> transformations) {
 
     //
+    Assert.isNotNull(transformations);
+
+    //
     if (progressMonitor == null) {
       progressMonitor = new NullProgressMonitor();
     }
 
     SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
     subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
-    _applyTransformations(subMonitor, getTransformations().toArray(new ITransformation[0]));
+    _applyTransformations(subMonitor, transformations.toArray(new ITransformation[0]));
   }
 
   /**
