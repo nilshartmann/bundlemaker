@@ -22,11 +22,13 @@ import org.bundlemaker.core.ui.editor.dsm.figures.Matrix;
 import org.bundlemaker.core.ui.editor.dsm.figures.MatrixEvent;
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
+import org.bundlemaker.core.ui.editor.dsm.utils.DsmUtils;
 import org.bundlemaker.core.ui.print.FigurePrinter;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.bundlemaker.core.ui.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.jface.action.ContributionItem;
@@ -309,9 +311,9 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
               @Override
               public void widgetSelected(SelectionEvent e) {
-                System.out.println(System.currentTimeMillis());
 
-                final int sideMarkerOffset = 200;
+                final int sideMarkerOffset = FigureUtilities.getTextWidth(
+                    DsmUtils.getLongestString(_viewWidget.getModel().getLabels()), Display.getCurrent().getSystemFont());
 
                 //
                 int matrixWidth = _viewWidget.getModel().getConfiguration().getHorizontalBoxSize()
@@ -320,6 +322,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
                     * _viewWidget.getModel().getItemCount();
                 final Matrix matrix = new Matrix(_viewWidget.getModel());
                 matrix.setSize(matrixWidth, matrixHeight);
+                matrix.setFont(Display.getCurrent().getSystemFont());
 
                 //
                 final VerticalSideMarker verticalSideMarker = new VerticalSideMarker(_viewWidget.getModel());
@@ -349,7 +352,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
                     graphics.translate(sideMarkerOffset, sideMarkerOffset);
                     matrix.paint(graphics);
                     graphics.restoreState();
-                    
+
                     graphics.pushState();
                     graphics.translate(sideMarkerOffset, 0);
                     horizontalSideMarker.paint(graphics);
