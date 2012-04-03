@@ -60,24 +60,6 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
 
     // Notify listeners
     Events.instance().fireProjectOpened(bundleMakerProject);
-
-    //
-    // }
-
-    // StructuredSelection newSelection = new StructuredSelection(artifact);
-    // System.out.println("SET NEW SELECTION: " + newSelection);
-    // findCommonNavigator.selectReveal(newSelection);
-    // CommonNavigatorUtils.refresh("org.eclipse.ui.navigator.ProjectExplorer");
-
-    // ITreeContentProvider contentProvider = (ITreeContentProvider) findCommonNavigator.getCommonViewer()
-    // .getContentProvider();
-    // System.out.println("ContentProvider: " + contentProvider);
-    // IProject project2 = ResourcesPlugin.getWorkspace().getRoot().getProject("JavaProject");
-    // IFile classpath = project2.getFile(".classpath");
-    // System.out.println("classpath: " + classpath);
-    //
-    // findCommonNavigator.selectReveal(new StructuredSelection(classpath));
-
   }
 
   protected void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject) throws CoreException {
@@ -90,14 +72,19 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
       return;
     }
 
-    // Expand Eclipse Project project in tree (i.e. make Artifacts node visible)
+    // get "root" BundleMakerArtifact
+    IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject);
 
+    // Expand Eclipse Project project in tree (i.e. make Artifacts node visible)
     commonNavigator.getCommonViewer().expandToLevel(eclipseProject, 1);
 
+    // Expand Tree to BundleMaker artifact (no idea why two steps are neccessary)
+    commonNavigator.getCommonViewer().expandToLevel(defaultModularizedSystemArtifact, 1);
+
     // Select root artifact in tree
-    IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject);
     StructuredSelection newSelection = new StructuredSelection(defaultModularizedSystemArtifact);
     commonNavigator.selectReveal(newSelection);
+
   }
 
   protected IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
