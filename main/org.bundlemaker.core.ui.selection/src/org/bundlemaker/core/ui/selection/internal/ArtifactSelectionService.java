@@ -16,7 +16,6 @@ import java.util.Map.Entry;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
@@ -34,7 +33,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
     IArtifactSelectionService, IRootArtifactSelectionService {
 
   /** - */
-  private SelectionListenerList<IArtifactSelectionListener, IArtifactSelection>         _artifactSelectionListenerContainer     = null;
+  private SelectionListenerList<IArtifactSelectionListener, IArtifactSelection>                     _artifactSelectionListenerContainer     = null;
 
   /** - */
   private SelectionListenerList<IRootArtifactSelectionListener, IRootArtifactSelectionChangedEvent> _rootArtifactSelectionListenerContainer = null;
@@ -117,6 +116,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
    * @param providerId
    * @param selectedArtifacts
    */
+  @Override
   public void setSelection(String selectionId, String providerId, Collection<IBundleMakerArtifact> selectedArtifacts) {
     setSelection(selectionId, providerId, selectedArtifacts, getUseChildrenOfSelectedArtifacts());
   }
@@ -137,7 +137,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
     }
 
     //
-    IBundleMakerArtifact artifact = (IBundleMakerArtifact) artifactSelection.getSelectedArtifacts().get(0);
+    IBundleMakerArtifact artifact = artifactSelection.getSelectedArtifacts().get(0);
 
     //
     return new RootArtifactSelection(selectionId, artifactSelection.getProviderId(), artifact.getRoot());
@@ -193,7 +193,7 @@ public class ArtifactSelectionService extends AbstractSelectionService<IArtifact
       rootArtifactSelection = new RootArtifactSelection(selectionId, providerId);
     } else {
       //
-      IBundleMakerArtifact artifact = (IBundleMakerArtifact) newSelection.getSelectedArtifacts().get(0);
+      IBundleMakerArtifact artifact = newSelection.getSelectedArtifacts().get(0);
       rootArtifactSelection = new RootArtifactSelection(selectionId, newSelection.getProviderId(), artifact.getRoot());
     }
 

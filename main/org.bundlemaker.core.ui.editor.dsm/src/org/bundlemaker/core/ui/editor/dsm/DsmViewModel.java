@@ -173,6 +173,14 @@ public class DsmViewModel extends AbstractDsmViewModel {
     return null;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void refresh(Collection<IBundleMakerArtifact> unorderedArtifacts) {
+    initialize(unorderedArtifacts);
+  }
+
   private void initialize(Collection<? extends IBundleMakerArtifact> unorderedArtifacts) {
 
     // IArtifact[] headers, IDependency[][] dependencies

@@ -1,6 +1,9 @@
 package org.bundlemaker.core.ui.editor.dsm;
 
+import java.util.Collection;
 import java.util.Observer;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
  * <p>
@@ -17,6 +20,8 @@ public interface IDsmViewModel {
    * @return
    */
   IDsmViewConfiguration getConfiguration();
+  
+  void refresh(Collection<IBundleMakerArtifact> artifacts);
 
   int getItemCount();
 

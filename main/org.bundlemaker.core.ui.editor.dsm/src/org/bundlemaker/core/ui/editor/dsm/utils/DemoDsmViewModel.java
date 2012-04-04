@@ -1,5 +1,8 @@
 package org.bundlemaker.core.ui.editor.dsm.utils;
 
+import java.util.Collection;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.editor.dsm.AbstractDsmViewModel;
 import org.bundlemaker.core.ui.editor.dsm.DefaultDsmViewConfiguration;
 import org.bundlemaker.core.ui.editor.dsm.IDsmViewConfiguration;
@@ -40,6 +43,13 @@ public class DemoDsmViewModel extends AbstractDsmViewModel {
         _values[i][j] = i + "" + j;
       }
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void refresh(Collection<IBundleMakerArtifact> artifacts) {
   }
 
   @Override

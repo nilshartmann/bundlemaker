@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.eclipse.core.runtime.Assert;
 
@@ -76,6 +77,24 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
   @Override
   public List<IBundleMakerArtifact> getSelectedArtifacts() {
     return _selectedArtifacts;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasSelectedArtifacts() {
+    return _selectedArtifacts != null && !_selectedArtifacts.isEmpty();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IRootArtifact getRootArtifact() {
+    Assert.isTrue(hasSelectedArtifacts());
+
+    return _selectedArtifacts.get(0).getRoot();
   }
 
   /**

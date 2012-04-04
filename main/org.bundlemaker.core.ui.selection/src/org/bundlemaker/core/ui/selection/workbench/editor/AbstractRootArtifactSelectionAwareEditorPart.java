@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.selection.workbench.editor;
 
+import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IRootArtifactSelectionListener;
@@ -18,7 +19,7 @@ import org.eclipse.ui.part.EditorPart;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractRootArtifactSelectionAwareEditorPart extends EditorPart implements
-    IRootArtifactSelectionListener {
+    IRootArtifactSelectionListener, IArtifactModelChangedListener {
 
   /** - */
   private IRootArtifactSelection _rootArtifactSelection;
@@ -91,12 +92,12 @@ public abstract class AbstractRootArtifactSelectionAwareEditorPart extends Edito
 
     setInput(input);
     setSite(site);
-    
+
     // add listener
     Selection.instance().getRootArtifactSelectionService().addRootArtifactSelectionListener(getProviderId(), this);
-    
+
     // register part listener
-    //this.getSite().getPage().addPartListener(listener);
+    // this.getSite().getPage().addPartListener(listener);
   }
 
   /**
@@ -109,6 +110,11 @@ public abstract class AbstractRootArtifactSelectionAwareEditorPart extends Edito
         .getRootArtifactSelection(getProviderId());
 
     if (currentRootArtifactSelection != null) {
+
+      _rootArtifactSelection = currentRootArtifactSelection;
+
+      registerArtifactModelChangedListener();
+
       onRootArtifactSelectionChanged(currentRootArtifactSelection);
     }
   }
@@ -141,10 +147,39 @@ public abstract class AbstractRootArtifactSelectionAwareEditorPart extends Edito
    */
   @Override
   public final void rootArtifactSelectionChanged(IRootArtifactSelectionChangedEvent event) {
-    onRootArtifactSelectionChanged(event.getSelection());
+
+    unregisterArtifactModelChangedListener();
+
+    _rootArtifactSelection = event.getSelection();
+
+    onRootArtifactSelectionChanged(_rootArtifactSelection);
+
+    registerArtifactModelChangedListener();
   }
 
   protected String getProviderId() {
     return Selection.MAIN_ARTIFACT_SELECTION_ID;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  private void registerArtifactModelChangedListener() {
+    if (_rootArtifactSelection != null && _rootArtifactSelection.hasSelectedRootArtifact()) {
+      _rootArtifactSelection.getSelectedRootArtifact().addArtifactModelChangedListener(this);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  private void unregisterArtifactModelChangedListener() {
+    if (_rootArtifactSelection != null && _rootArtifactSelection.hasSelectedRootArtifact()) {
+      _rootArtifactSelection.getSelectedRootArtifact().removeArtifactModelChangedListener(this);
+    }
   }
 }

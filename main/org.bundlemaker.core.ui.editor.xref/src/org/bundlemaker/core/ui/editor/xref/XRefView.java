@@ -117,6 +117,16 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
    * {@inheritDoc}
    */
   @Override
+  public void artifactModelChanged() {
+    leftTree.getTreeViewer().refresh();
+    middleTree.getTreeViewer().refresh();
+    rightTree.getTreeViewer().refresh();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public void setFocus() {
     middleTree.getTreeViewer().getControl().setFocus();
   }

@@ -13,6 +13,7 @@ package org.bundlemaker.core.ui.selection;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 
 /**
  * A selection of {@link IBundleMakerArtifact} objects.
@@ -30,6 +31,22 @@ public interface IArtifactSelection extends IProviderSelection {
    * @return an <b>unmodifiable</b> list of {@link IBundleMakerArtifact IArtifacts}
    */
   List<IBundleMakerArtifact> getSelectedArtifacts();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasSelectedArtifacts();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IRootArtifact getRootArtifact();
 
   /**
    * <p>
