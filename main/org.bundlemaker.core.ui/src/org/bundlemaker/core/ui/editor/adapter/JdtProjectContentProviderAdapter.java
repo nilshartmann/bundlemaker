@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.editor.adapter;
 
 import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 
@@ -39,7 +39,7 @@ public class JdtProjectContentProviderAdapter implements IWorkbenchAdapter {
    */
   @Override
   public ImageDescriptor getImageDescriptor(Object object) {
-    return UIImages.JDT_PROJECT_CONTENT_PROVIDER.getImageDescriptor();
+    return BundleMakerImages.JDT_PROJECT_CONTENT_PROVIDER.getImageDescriptor();
   }
 
   /*

@@ -66,4 +66,13 @@ public class CommonNavigatorUtils {
     }
     return null;
   }
+
+  public static void activateCommonNavigator(String navigatorViewId) {
+    CommonNavigator navigator = findCommonNavigator(navigatorViewId);
+    if (navigator == null) {
+      return;
+    }
+    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    page.activate(navigator);
+  }
 }

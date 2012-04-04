@@ -9,7 +9,7 @@ import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.editor.provider.ContentProviderBlock;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -57,7 +57,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
     final ScrolledForm form = mform.getForm();
     _form = form;
     toolkit.decorateFormHeading(form.getForm());
-    form.setImage(UIImages.BUNDLEMAKER_ICON_SMALL.getImage());
+    form.setImage(BundleMakerImages.BUNDLEMAKER_ICON_SMALL.getImage());
     form.setText("Content");
     form.getBody().setLayout(FormLayoutUtils.createFormGridLayout(true, 1));
 
@@ -175,7 +175,7 @@ public class ContentPage extends FormPage implements BundleMakerProjectProvider 
   class ParseAction extends Action {
     public ParseAction() {
       super("Parse");
-      setImageDescriptor(UIImages.REFRESH.getImageDescriptor());
+      setImageDescriptor(BundleMakerImages.REFRESH.getImageDescriptor());
     }
 
     @Override

@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.editor.provider;
 
 import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -31,7 +31,7 @@ public class JdtProjectContentProviderNode extends AbstractProjectContentProvide
    * @param image
    */
   public JdtProjectContentProviderNode(IModifiableProjectDescription pd) {
-    super(pd, "JDT Project", "Add a JDT project from your workspace", UIImages.JDT_PROJECT_CONTENT_PROVIDER.getImage());
+    super(pd, "JDT Project", "Add a JDT project from your workspace", BundleMakerImages.JDT_PROJECT_CONTENT_PROVIDER.getImage());
   }
 
   /*

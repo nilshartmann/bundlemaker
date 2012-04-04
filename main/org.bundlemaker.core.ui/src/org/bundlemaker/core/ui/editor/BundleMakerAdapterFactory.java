@@ -19,7 +19,7 @@ import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -80,7 +80,7 @@ public class BundleMakerAdapterFactory implements IAdapterFactory {
 
     @Override
     public ImageDescriptor getImageDescriptor(Object object) {
-      return UIImages.RESOURCE_CONTENT.getImageDescriptor();
+      return BundleMakerImages.RESOURCE_CONTENT.getImageDescriptor();
     }
 
     @Override

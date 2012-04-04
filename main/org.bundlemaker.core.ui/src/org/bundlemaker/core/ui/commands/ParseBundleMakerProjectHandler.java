@@ -60,6 +60,10 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
 
     // Notify listeners
     Events.instance().fireProjectOpened(bundleMakerProject);
+
+    // Re-activate common navigator make selections via context menu work
+    CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+
   }
 
   protected void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject) throws CoreException {
