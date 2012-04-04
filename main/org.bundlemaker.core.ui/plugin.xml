@@ -92,7 +92,7 @@
 			</possibleChildren>
 			<commonSorter
 				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter"> </commonSorter>
-<actionProvider class="org.bundlemaker.core.ui.test.MyActionProvider"/>
+<actionProvider class="org.bundlemaker.core.ui.actions.BundleMakerActionProvider"/>
 		</navigatorContent>
 	</extension>
 
@@ -242,7 +242,7 @@
 
 	<!-- -->
 	<extension point="org.eclipse.jdt.ui.javaElementFilters">
-		<filter class="org.bundlemaker.core.ui.internal.JavaElementFilter"
+		<filter class="org.bundlemaker.core.ui.internal.BundleMakerProjectViewerFilter"
 			description="Filters any bundlemaker JDT project." enabled="true"
 			id="org.bundlemaker.core.ui.internal.JavaElementFilter"
 			name="BundleMaker$JDT project filter"> </filter>
@@ -264,10 +264,6 @@
 			project="true">
 			<description> Create a Bundlemaker project </description>
 		</wizard>
-		<wizard canFinishEarly="true" category="org.bundlemaker.core.ui.wizards.category"
-			class="org.bundlemaker.core.ui.wizards.NewTransformationScriptWizard"
-			hasPages="true" id="org.bundlemaker.core.ui.wizards.NewTransformationScriptWizard"
-			name="Transformation script" project="false"> </wizard>
 	</extension>
 
 	<!-- ======================================== -->

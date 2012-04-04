@@ -1,19 +1,19 @@
-package org.bundlemaker.core.ui.test;
+package org.bundlemaker.core.ui.actions;
 
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 
-public class MyActionProvider extends CommonActionProvider {
+public class BundleMakerActionProvider extends CommonActionProvider {
 
-  private MyAction doubleClickAction;
+  private OpenBundleMakerProjectAction doubleClickAction;
 
   @Override
   public void init(ICommonActionExtensionSite aSite) {
     super.init(aSite);
 
-    doubleClickAction = new MyAction();
+    doubleClickAction = new OpenBundleMakerProjectAction();
 
     // only if doubleClickAction must know tree selection:
     aSite.getStructuredViewer().addSelectionChangedListener(doubleClickAction);

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.internal;
+package org.bundlemaker.core.ui;
 
 import org.eclipse.jface.viewers.OwnerDrawLabelProvider;
 import org.eclipse.swt.graphics.Image;

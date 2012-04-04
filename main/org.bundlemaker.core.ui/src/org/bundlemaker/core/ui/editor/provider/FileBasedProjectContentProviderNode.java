@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.editor.provider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
-import org.bundlemaker.core.ui.internal.UIImages;
+import org.bundlemaker.core.ui.UIImages;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 
