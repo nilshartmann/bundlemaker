@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.JAXBElement;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
