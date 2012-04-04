@@ -76,9 +76,5 @@ public interface IDependency {
    */
   public void getLeafDependencies(Collection<IDependency> leafDependencies);
 
-  public void getNewDependencies(Collection<IDependency> newDependencies);
-
-  public void addDependency(IDependency dependency);
-
   DependencyKind getDependencyKind();
 }

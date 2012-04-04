@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.IPath;
@@ -128,6 +127,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * <p>
    * </p>
    */
+  @Deprecated
   boolean hasChild(String path);
 
   /**
@@ -295,6 +295,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param <T>
    * @return
    */
+  @Deprecated
   <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path);
 
   /**
@@ -328,22 +329,6 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return the root artifact.
    */
   IRootArtifact getRoot();
-
-  // public IGroupArtifact getParentGroup();
-  //
-  // public boolean hasParentGroup();
-  //
-  // public IModuleArtifact getParentModule();
-  //
-  // public boolean hasParentModule();
-  //
-  // public IPackageArtifact getParentPackage();
-  //
-  // public boolean hasParentPackage();
-  //
-  // public IResourceArtifact getParentResource();
-  //
-  // public boolean hasParentResource();
 
   /**
    * {@inheritDoc}
@@ -425,15 +410,6 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return
    */
   boolean containsResources();
-
-  // /**
-  // * <p>
-  // * Returns the associated {@link IDependencyModel}.
-  // * </p>
-  // *
-  // * @return the associated {@link IDependencyModel}.
-  // */
-  // IDependencyModel getDependencyModel();
 
   /**
    * <p>

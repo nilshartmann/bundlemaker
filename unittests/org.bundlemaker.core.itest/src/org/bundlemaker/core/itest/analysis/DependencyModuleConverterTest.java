@@ -1,6 +1,5 @@
 package org.bundlemaker.core.itest.analysis;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -14,7 +13,7 @@ public class DependencyModuleConverterTest extends AbstractModularizedSystemTest
   public void testDependencies() throws CoreException {
 
     // transform the model
-    IArtifact artifact = ((IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact artifact = ((IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
         ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION).getRoot())
         .getChild("group1|group2|DependencyModuleConverterTest_1.0.0|de.test.inner2|Inner2");
 

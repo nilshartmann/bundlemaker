@@ -2,10 +2,9 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.util.LinkedList;
 
-import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.junit.Assert;
@@ -32,7 +31,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     // get the 'test' artifact
-    IArtifact artifact = rootArtifact.getChild("group1|group2|AmbiguousTypesTest_1.0.0|test|Test.java");
+    IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|AmbiguousTypesTest_1.0.0|test|Test.java");
     Assert.assertNotNull(artifact);
 
     // assert that the type

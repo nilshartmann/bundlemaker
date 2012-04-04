@@ -1,6 +1,5 @@
 package org.bundlemaker.core.itest.analysis;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -37,13 +36,13 @@ public class SimpleArtifact_NO_TYPE_RESOURCES_CONFIGURATION_Test extends Abstrac
     Assert.assertNotNull(rootArtifact);
 
     // get package
-    IArtifact packageDeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test");
+    IBundleMakerArtifact packageDeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test");
     Assert.assertNotNull(packageDeTest);
 
     // get resources
-    IArtifact typeKlasse = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Klasse");
+    IBundleMakerArtifact typeKlasse = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Klasse");
     Assert.assertNotNull(typeKlasse);
-    IArtifact typeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Test");
+    IBundleMakerArtifact typeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Test");
     Assert.assertNotNull(typeTest);
 
     // Test 1: assert resources
@@ -75,13 +74,13 @@ public class SimpleArtifact_NO_TYPE_RESOURCES_CONFIGURATION_Test extends Abstrac
     Assert.assertNotNull(rootArtifact);
 
     // get module artifact
-    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // get resources
-    IArtifact typeKlasse = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Klasse");
+    IBundleMakerArtifact typeKlasse = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Klasse");
     Assert.assertNotNull(typeKlasse);
-    IArtifact typeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Test");
+    IBundleMakerArtifact typeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test|Test");
     Assert.assertNotNull(typeTest);
 
     // Test 1: assert resources
@@ -90,7 +89,7 @@ public class SimpleArtifact_NO_TYPE_RESOURCES_CONFIGURATION_Test extends Abstrac
     Assert.assertNotNull(resourceModule.getType("de.test.Klasse"));
 
     // get package
-    IArtifact packageDeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test");
+    IBundleMakerArtifact packageDeTest = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0|de.test");
     Assert.assertNotNull(packageDeTest);
 
     // Test 2: remove resources

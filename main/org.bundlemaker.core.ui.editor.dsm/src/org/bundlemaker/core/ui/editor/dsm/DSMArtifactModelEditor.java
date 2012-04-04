@@ -246,8 +246,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * {@inheritDoc}
    */
   @Override
-  public void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
-    super.setCurrentArtifactSelection(artifactSelection);
+  public void onSetCurrentArtifactSelection(IArtifactSelection artifactSelection) {
 
     //
     if (_viewWidget != null && _detailComposite != null) {

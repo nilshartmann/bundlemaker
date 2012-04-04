@@ -1,7 +1,6 @@
 package org.bundlemaker.core.ui.selection.workbench.editor;
 
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.bundlemaker.core.ui.selection.internal.ArtifactSelection;
@@ -91,7 +90,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
     // if (selection.getProviderId().equals(getProviderId())) {
     // return;
     // }
-    
+
     // skip already set
     if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().equals(selection)) {
       return;
@@ -103,11 +102,14 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
 
   /**
    * <p>
+   * <code>artifactSelectionChanged</code>
    * </p>
    * 
    * @param event
    */
-  protected abstract void onArtifactSelectionChanged(IArtifactSelection event);
+  protected void onArtifactSelectionChanged(IArtifactSelection event) {
+    setCurrentArtifactSelection(event);
+  }
 
   /**
    * This method is invoked to set the artifacts that should be visualized when this editor is visible
@@ -117,8 +119,23 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * @param artifacts
    *          The new artifacts. Must not be null but might be empty
    */
-  protected void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
+  protected final void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
+
+    // _currentArtifactSelection.addArtifactModelChangedListener();
+
     _currentArtifactSelection = artifactSelection;
+
+    onSetCurrentArtifactSelection(artifactSelection);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifactSelection
+   */
+  protected void onSetCurrentArtifactSelection(IArtifactSelection artifactSelection) {
+    //
   }
 
   /**

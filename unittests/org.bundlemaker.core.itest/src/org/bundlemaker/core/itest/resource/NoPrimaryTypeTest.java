@@ -2,9 +2,6 @@ package org.bundlemaker.core.itest.resource;
 
 import java.io.IOException;
 
-import org.bundlemaker.analysis.model.IArtifact;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IType;

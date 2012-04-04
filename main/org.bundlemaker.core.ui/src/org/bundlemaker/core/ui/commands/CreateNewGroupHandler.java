@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.commands;
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -22,10 +22,9 @@ public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
    */
   @Override
   protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
-
     IStructuredSelection structuredSelection = (IStructuredSelection) selection;
     IBundleMakerArtifact artifact = (IBundleMakerArtifact) structuredSelection.getFirstElement();
-    System.out.println(artifact.getClass());
+
     if (artifact instanceof IRootArtifact || artifact instanceof IGroupArtifact) {
 
       // JFace Input Dialog
@@ -46,5 +45,4 @@ public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
           artifact.getType().equals(ArtifactType.Root) ? artifact : artifact.getParent(ArtifactType.Root));
     }
   }
-
 }

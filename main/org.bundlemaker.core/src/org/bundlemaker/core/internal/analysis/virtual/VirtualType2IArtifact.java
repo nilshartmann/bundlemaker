@@ -16,14 +16,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.impl.AbstractArtifact;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterUtils;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
@@ -39,7 +39,7 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact {
+public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implements IMovableUnit, ITypeArtifact {
 
   /** - */
   private String        _fullyQualifiedName;

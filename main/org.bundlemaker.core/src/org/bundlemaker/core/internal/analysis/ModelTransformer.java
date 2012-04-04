@@ -1,12 +1,10 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -48,7 +46,7 @@ public class ModelTransformer {
     _artifactCache = defaultArtifactCache;
     _artifactModel = defaultArtifactCache.transform();
 
-    ((AdapterModularizedSystem2IArtifact) _artifactModel).setDependencyModel(this);
+    ((AdapterRoot2IArtifact) _artifactModel).setDependencyModel(this);
 
     _modifiableModularizedSystem = modifiableModularizedSystem;
   }
@@ -120,21 +118,7 @@ public class ModelTransformer {
       //
     case Module: {
 
-      String[] splitted = qualifiedName.split("_");
-
-      if (splitted.length == 1) {
-        splitted = new String[2];
-        splitted[0] = qualifiedName;
-        splitted[1] = "0.0.0";
-      }
-
-      IResourceModule resourceModule = _modifiableModularizedSystem.createResourceModule(new ModuleIdentifier(
-          splitted[0], splitted[1]));
-
-      // 'Workaround' - we have to remove the module form the internal list as it not has been added yet
-      _modifiableModularizedSystem.removeModule(resourceModule.getModuleIdentifier());
-
-      return _artifactCache.getModuleArtifact(resourceModule);
+      throw new RuntimeException("Can not create IArtifact of type 'ArtifactType.Type'.");
     }
 
       //

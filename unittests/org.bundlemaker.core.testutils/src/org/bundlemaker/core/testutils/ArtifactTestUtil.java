@@ -3,8 +3,8 @@ package org.bundlemaker.core.testutils;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 
 /**
@@ -22,7 +22,7 @@ public class ArtifactTestUtil {
    * @param module
    * @return
    */
-  public static String toString(IArtifact root) {
+  public static String toString(IBundleMakerArtifact root) {
 
     StringBuilder builder = new StringBuilder();
     toString(root, builder, 0);
@@ -52,7 +52,7 @@ public class ArtifactTestUtil {
    * @param root
    * @param stringBuilder
    */
-  private static void toString(IArtifact artifact, StringBuilder builder, int offset) {
+  private static void toString(IBundleMakerArtifact artifact, StringBuilder builder, int offset) {
 
     //
     for (int i = 0; i < offset; i++) {
@@ -66,13 +66,13 @@ public class ArtifactTestUtil {
     builder.append("\n");
 
     //
-    List<? extends IArtifact> children = BundleMakerTestUtils.asSortedList((List<IArtifact>)artifact.getChildren(), new Comparator<IArtifact>() {
+    List<? extends IBundleMakerArtifact> children = BundleMakerTestUtils.asSortedList((List<IBundleMakerArtifact>)artifact.getChildren(), new Comparator<IBundleMakerArtifact>() {
       @Override
-      public int compare(IArtifact o1, IArtifact o2) {
+      public int compare(IBundleMakerArtifact o1, IBundleMakerArtifact o2) {
         return o1.getQualifiedName().compareTo(o2.getQualifiedName());
       }
     });
-    for (IArtifact child : children) {
+    for (IBundleMakerArtifact child : children) {
       toString(child, builder, offset + 1);
     }
   }

@@ -13,8 +13,9 @@ package org.bundlemaker.core.internal.analysis.cache;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
-import org.bundlemaker.core.internal.analysis.AdapterModularizedSystem2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.impl.GroupSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
@@ -74,7 +75,7 @@ public class ArtifactCache {
    * @param modularizedSystem
    */
   public ArtifactCache(IModifiableModularizedSystem modularizedSystem, IArtifactModelConfiguration configuration) {
-    this(modularizedSystem, new AdapterModularizedSystem2IArtifact(modularizedSystem, configuration), configuration);
+    this(modularizedSystem, new AdapterRoot2IArtifact(modularizedSystem, configuration), configuration);
   }
 
   /**
@@ -163,11 +164,11 @@ public class ArtifactCache {
    * @param resourceModule
    * @return
    */
-  public final IBundleMakerArtifact getModuleArtifact(IModule module) {
+  public final IModuleArtifact getModuleArtifact(IModule module) {
 
     //
     try {
-      return _moduleCache.getOrCreate(new ModuleKey(module));
+      return (IModuleArtifact) _moduleCache.getOrCreate(new ModuleKey(module));
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage(), e);
     }

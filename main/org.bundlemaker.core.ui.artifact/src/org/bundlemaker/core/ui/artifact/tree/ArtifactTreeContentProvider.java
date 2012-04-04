@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;

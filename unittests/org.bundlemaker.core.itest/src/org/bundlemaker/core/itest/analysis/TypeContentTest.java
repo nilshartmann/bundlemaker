@@ -2,7 +2,6 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.io.File;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -29,7 +28,7 @@ public class TypeContentTest extends AbstractModularizedSystemTest {
         .getChild("group1|group2|TypeContentTest_1.0.0|de|test");
 
     //
-    for (IArtifact advancedArtifact : packageArtifact.getChildren()) {
+    for (IBundleMakerArtifact advancedArtifact : packageArtifact.getChildren()) {
       System.out.println(advancedArtifact.getDependencies());
     }
 

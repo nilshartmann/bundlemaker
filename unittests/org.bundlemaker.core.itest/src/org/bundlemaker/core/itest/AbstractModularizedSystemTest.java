@@ -6,18 +6,17 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.testutils.ArtifactTestUtil;
 import org.bundlemaker.core.testutils.BundleMakerTestUtils;
 import org.bundlemaker.core.testutils.FileDiffUtil;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
@@ -92,7 +91,7 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
    *          TODO
    * @param modularizedSystem
    */
-  protected void assertNode(IArtifact node, ArtifactType type, String nodeName, String parentName) {
+  protected void assertNode(IBundleMakerArtifact node, ArtifactType type, String nodeName, String parentName) {
     Assert.assertEquals(type, node.getType());
     Assert.assertEquals(nodeName, node.getName());
     Assert.assertNotNull(node.getParent());
