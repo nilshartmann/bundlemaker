@@ -17,7 +17,7 @@ import java.util.Set;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
-import org.bundlemaker.core.ui.internal.UIImages;
+import org.bundlemaker.core.ui.UIImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 

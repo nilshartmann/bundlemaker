@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.editor.adapter;
 
 import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
-import org.bundlemaker.core.ui.internal.UIImages;
+import org.bundlemaker.core.ui.UIImages;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.model.IWorkbenchAdapter;
 

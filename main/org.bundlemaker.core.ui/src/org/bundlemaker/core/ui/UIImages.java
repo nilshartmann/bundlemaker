@@ -8,9 +8,9 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.internal;
+package org.bundlemaker.core.ui;
 
-import org.bundlemaker.core.ui.Activator;
+import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;

@@ -5,7 +5,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
-public class JavaElementFilter extends ViewerFilter {
+public class BundleMakerProjectViewerFilter extends ViewerFilter {
 
   @Override
   public boolean select(Viewer viewer, Object parentElement, Object element) {

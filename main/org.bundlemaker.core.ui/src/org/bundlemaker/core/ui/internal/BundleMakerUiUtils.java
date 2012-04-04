@@ -11,7 +11,6 @@
 package org.bundlemaker.core.ui.internal;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.ui.Activator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

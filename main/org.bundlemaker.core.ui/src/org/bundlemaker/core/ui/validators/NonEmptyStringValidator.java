@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.commands.validators;
+package org.bundlemaker.core.ui.validators;
 
 import org.eclipse.jface.dialogs.IInputValidator;
 

@@ -15,10 +15,10 @@ import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.ui.CenterImageLabelProvider;
+import org.bundlemaker.core.ui.UIImages;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.editor.adapter.ProjectPath;
-import org.bundlemaker.core.ui.internal.CenterImageLabelProvider;
-import org.bundlemaker.core.ui.internal.UIImages;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.swt.graphics.Image;
 
