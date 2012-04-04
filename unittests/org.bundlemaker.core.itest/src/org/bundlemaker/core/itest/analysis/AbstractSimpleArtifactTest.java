@@ -136,7 +136,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     IBundleMakerArtifact group2_Artifact = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(group2_Artifact);
 
-    IBundleMakerArtifact groupNew_Artifact = rootArtifact.getOrCreateGroup("groupNew");
+    IBundleMakerArtifact groupNew_Artifact = rootArtifact.getOrCreateGroup(new Path("groupNew"));
     Assert.assertNotNull(groupNew_Artifact);
 
     // TEST 3: REMOVE FROM GROUP_1 AND ADD TO GROUP_2
@@ -236,7 +236,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(group2Group);
 
     // get newGroup group
-    IBundleMakerArtifact newGroupGroup = rootArtifact.getOrCreateGroup("newGroup");
+    IBundleMakerArtifact newGroupGroup = rootArtifact.getOrCreateGroup(new Path("newGroup"));
     Assert.assertNotNull(newGroupGroup);
 
     // TEST 3: REMOVE AND ADD TO PARENT
@@ -271,7 +271,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(group1_Artifact);
 
     //
-    IGroupArtifact group2_2_Artifact = group1_Artifact.getOrCreateGroup("group2");
+    IGroupArtifact group2_2_Artifact = group1_Artifact.getOrCreateGroup(new Path("group2"));
     Assert.assertSame(group2Group, group2_2_Artifact);
   }
 
@@ -293,7 +293,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(group1_Artifact);
 
     //
-    IGroupArtifact group1_no2_Artifact = group1_Artifact.getOrCreateGroup("group1");
+    IGroupArtifact group1_no2_Artifact = group1_Artifact.getOrCreateGroup(new Path("group1"));
     
     //
     rootArtifact.addArtifact(group1_no2_Artifact);

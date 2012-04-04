@@ -5,9 +5,9 @@ import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -78,7 +78,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
       // create the group
       parent = (AbstractBundleMakerArtifactContainer) ((IGroupAndModuleContainer) rootContainer)
-          .getOrCreateGroup(qualifiedModuleName.substring(0, index));
+          .getOrCreateGroup(new Path(qualifiedModuleName.substring(0, index)));
 
       moduleName = qualifiedModuleName.substring(index + 1);
     }
@@ -91,17 +91,13 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     if (moduleArtifact == null) {
 
       //
-      IResourceModule resourceModule = ((IModifiableModularizedSystem) _groupAndModuleContainer.getRoot()
+      IModifiableResourceModule resourceModule = ((IModifiableModularizedSystem) _groupAndModuleContainer.getRoot()
           .getModularizedSystem()).createResourceModule(moduleIdentifier);
+
+      resourceModule.setClassification(this._groupAndModuleContainer.getFullPath().removeFirstSegments(1));
 
       //
       moduleArtifact = getDependencyModel().getArtifactCache().getModuleArtifact(resourceModule);
-
-      //
-      if (parent != moduleArtifact.getParent() && moduleArtifact.hasParent()) {
-        moduleArtifact.getParent().removeArtifact(moduleArtifact);
-        parent.addArtifact(moduleArtifact);
-      }
     }
 
     //
@@ -111,28 +107,24 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
   /**
    * {@inheritDoc}
    */
-  public IGroupArtifact getOrCreateGroup(String path) {
+  public IGroupArtifact getOrCreateGroup(IPath path) {
 
     Assert.isNotNull(path);
 
     System.out.println("getOrCreateGroup " + path);
 
     // normalize
-    path = path.replace('\\', '/');
-
     // // split
     // String[] segments = path.split("/");
 
     // add children
     AbstractBundleMakerArtifactContainer currentArtifact = _groupAndModuleContainer;
 
-    IPath iPath = new Path(path);
-
-    for (int i = 0; i < iPath.segmentCount(); i++) {
+    for (int i = 0; i < path.segmentCount(); i++) {
 
       // try to get the child
       AbstractBundleMakerArtifactContainer newArtifact = (AbstractBundleMakerArtifactContainer) currentArtifact
-          .getChild(iPath.segment(i));
+          .getChild(path.segment(i));
 
       //
       if (newArtifact == null) {
@@ -143,12 +135,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
             .getGroupCache()
             .getOrCreate(
                 currentArtifact.getFullPath().removeFirstSegments(1)
-                    .append(iPath.removeLastSegments(iPath.segmentCount() - (i + 1))));
-
-        // add to parent
-        // if (newArtifact.getParent() != currentArtifact) {
-        // currentArtifact.addArtifact(newArtifact);
-        // }
+                    .append(path.removeLastSegments(path.segmentCount() - (i + 1))));
       }
 
       currentArtifact = newArtifact;

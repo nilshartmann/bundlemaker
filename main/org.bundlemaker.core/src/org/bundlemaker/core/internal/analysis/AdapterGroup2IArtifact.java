@@ -11,6 +11,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -56,7 +57,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   /**
    * {@inheritDoc}
    */
-  public IGroupArtifact getOrCreateGroup(String path) {
+  public IGroupArtifact getOrCreateGroup(IPath path) {
     return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
   }
 

@@ -1,5 +1,7 @@
 package org.bundlemaker.core.analysis;
 
+import org.eclipse.core.runtime.IPath;
+
 /**
  * <p>
  * </p>
@@ -13,10 +15,9 @@ public interface IGroupAndModuleContainer extends IBundleMakerArtifact {
    * </p>
    * 
    * @param path
-   *          separated by '/'
    * @return
    */
-  IGroupArtifact getOrCreateGroup(String path);
+  IGroupArtifact getOrCreateGroup(IPath path);
 
   /**
    * <p>

@@ -103,7 +103,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   /**
    * {@inheritDoc}
    */
-  public IGroupArtifact getOrCreateGroup(String path) {
+  public IGroupArtifact getOrCreateGroup(IPath path) {
     return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
   }
 

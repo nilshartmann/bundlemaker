@@ -9,6 +9,7 @@ import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.commands.validators.NonEmptyStringValidator;
 import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -37,7 +38,7 @@ public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
 
       // we have to use "getOrCreateGroup" to prevent duplicate groups
       IGroupAndModuleContainer advancedArtifact = ((IGroupAndModuleContainer) artifact);
-      advancedArtifact.getOrCreateGroup(dlg.getValue());
+      advancedArtifact.getOrCreateGroup(new Path(dlg.getValue()));
 
       // update navigator
       // TODO

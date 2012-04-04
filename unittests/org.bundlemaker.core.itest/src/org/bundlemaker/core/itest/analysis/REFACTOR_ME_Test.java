@@ -8,6 +8,7 @@ import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
 
     //
     Assert.assertNull(_rootArtifact.getChild("hurz"));
-    IBundleMakerArtifact purzGroup = _rootArtifact.getOrCreateGroup("hurz/purz");
+    IBundleMakerArtifact purzGroup = _rootArtifact.getOrCreateGroup(new Path("hurz/purz"));
     Assert.assertNotNull(_rootArtifact.getChild("hurz"));
     purzGroup.addArtifact(_rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0"));
     Assert.assertNotNull(_rootArtifact.getChild("hurz"));
