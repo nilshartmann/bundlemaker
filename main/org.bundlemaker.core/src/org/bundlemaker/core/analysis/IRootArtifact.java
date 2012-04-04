@@ -12,5 +12,19 @@ import org.bundlemaker.core.modules.IModularizedSystem;
  */
 public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleContainer {
 
-  // empty tag interface
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  void addArtifactModelChangedListener(IArtifactModelChangedListener listener);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  void removeArtifactModelChangedListener(IArtifactModelChangedListener listener);
 }

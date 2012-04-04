@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;

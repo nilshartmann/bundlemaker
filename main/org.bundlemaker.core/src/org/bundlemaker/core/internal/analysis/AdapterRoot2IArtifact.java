@@ -2,8 +2,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -33,7 +32,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtifactContainer implements IRootArtifact,
+public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer implements IRootArtifact,
     IModularizedSystemChangedListener {
 
   /** - */
@@ -58,7 +57,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
    * 
    * @param modularizedSystem
    */
-  public AdapterModularizedSystem2IArtifact(IModifiableModularizedSystem modularizedSystem,
+  public AdapterRoot2IArtifact(IModifiableModularizedSystem modularizedSystem,
       IArtifactModelConfiguration modelConfiguration) {
     super(ArtifactType.Root, name(modularizedSystem));
 
@@ -458,7 +457,7 @@ public class AdapterModularizedSystem2IArtifact extends AbstractBundleMakerArtif
 
       //
       IModule module = event.getModule();
-      AbstractArtifactContainer moduleArtifact = _dependencyModel.getArtifactCache().getModuleCache()
+      AbstractBundleMakerArtifactContainer moduleArtifact = _dependencyModel.getArtifactCache().getModuleCache()
           .getOrCreate(new ModuleKey(module));
 
       //

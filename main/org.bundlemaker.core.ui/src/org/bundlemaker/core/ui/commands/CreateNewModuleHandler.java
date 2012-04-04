@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.commands;
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -36,9 +36,9 @@ public class CreateNewModuleHandler extends AbstractBundleMakerHandler {
 
       System.out.println(artifact);
 
-      IModuleArtifact newGroup = ((IGroupAndModuleContainer) artifact).getOrCreateModule(dlg.getValue(), "1.0.0");
-      // HAE??
-      artifact.addArtifact(newGroup);
+      IModuleArtifact moduleArtifact = ((IGroupAndModuleContainer) artifact).getOrCreateModule(dlg.getValue(), "1.0.0");
+
+      System.out.println("Classifiy " + moduleArtifact.getAssociatedModule().getClassification());
 
       // update navigator
       // TODO

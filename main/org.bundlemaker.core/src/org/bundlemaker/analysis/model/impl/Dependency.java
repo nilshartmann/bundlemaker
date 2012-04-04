@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
@@ -63,7 +63,6 @@ public class Dependency implements IDependency {
    * @param dependency
    *          Abhaengigkeit, die hinzugefuegt werden soll
    */
-  @Override
   public void addDependency(IDependency dependency) {
     if (dependencies == null) {
       dependencies = new ArrayList<IDependency>();
@@ -120,26 +119,6 @@ public class Dependency implements IDependency {
    */
   public Collection<IDependency> getDependencies() {
     return dependencies;
-  }
-
-  // @Override
-  // public IBaseArtifact getBaseFrom() {
-  // return getFrom();
-  // }
-  @Override
-  public void getNewDependencies(Collection<IDependency> newDependencies) {
-    Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
-    getLeafDependencies(leafDependencies);
-    for (IDependency leafDependency : leafDependencies) {
-      String transformed = leafDependency.getFrom().getProperty("transformed");
-      String fromBundleName = leafDependency.getFrom().getParent(ArtifactType.Module).getName();
-      String toBundleName = leafDependency.getTo().getParent(ArtifactType.Module).getName();
-      if (transformed != null) {
-        if (fromBundleName.equals(toBundleName)) {
-          newDependencies.add(leafDependency);
-        }
-      }
-    }
   }
 
   /**

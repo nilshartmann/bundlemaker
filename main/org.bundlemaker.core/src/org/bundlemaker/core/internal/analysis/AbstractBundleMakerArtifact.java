@@ -1,4 +1,4 @@
-package org.bundlemaker.analysis.model.impl;
+package org.bundlemaker.core.internal.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.ArtifactType;
+import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.Assert;
 
@@ -19,7 +20,7 @@ import org.eclipse.core.runtime.Assert;
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
  */
-public abstract class AbstractArtifact implements IBundleMakerArtifact {
+public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifact {
 
   // Ordnungs Eigenschaften
   private final ArtifactType   type;
@@ -33,18 +34,38 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractArtifact}.
+   * Creates a new instance of type {@link AbstractBundleMakerArtifact}.
    * </p>
    * 
    * @param type
    * @param name
    */
-  public AbstractArtifact(ArtifactType type, String name) {
+  public AbstractBundleMakerArtifact(ArtifactType type, String name) {
     Assert.isNotNull(type);
     Assert.isNotNull(name);
 
     this.type = type;
     this.name = name;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  public void addArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  public void removeArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+
   }
 
   @Override

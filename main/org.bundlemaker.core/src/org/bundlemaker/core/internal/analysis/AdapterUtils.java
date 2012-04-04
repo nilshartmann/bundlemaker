@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -43,10 +43,10 @@ public class AdapterUtils {
 
     //
     Assert.isNotNull(root, "No root for :" + ArtifactUtils.artifactToString(artifact));
-    Assert.isTrue(root instanceof AdapterModularizedSystem2IArtifact);
+    Assert.isTrue(root instanceof AdapterRoot2IArtifact);
 
     //
-    return ((AdapterModularizedSystem2IArtifact) root).getModularizedSystem();
+    return ((AdapterRoot2IArtifact) root).getModularizedSystem();
   }
 
   /**

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.expressions;
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.runtime.Assert;

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.utils;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;

@@ -5,7 +5,9 @@ import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -89,10 +91,17 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     if (moduleArtifact == null) {
 
       //
-      moduleArtifact = getDependencyModel().createModule(moduleIdentifier);
+      IResourceModule resourceModule = ((IModifiableModularizedSystem) _groupAndModuleContainer.getRoot()
+          .getModularizedSystem()).createResourceModule(moduleIdentifier);
 
       //
-      parent.addArtifact(moduleArtifact);
+      moduleArtifact = getDependencyModel().getArtifactCache().getModuleArtifact(resourceModule);
+
+      //
+      if (parent != moduleArtifact.getParent() && moduleArtifact.hasParent()) {
+        moduleArtifact.getParent().removeArtifact(moduleArtifact);
+        parent.addArtifact(moduleArtifact);
+      }
     }
 
     //
@@ -129,14 +138,17 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       if (newArtifact == null) {
 
         // create new
-        newArtifact = getDependencyModel().createGroup(
-            currentArtifact.getFullPath().removeFirstSegments(1)
-                .append(iPath.removeLastSegments(iPath.segmentCount() - (i + 1))));
+        newArtifact = getDependencyModel()
+            .getArtifactCache()
+            .getGroupCache()
+            .getOrCreate(
+                currentArtifact.getFullPath().removeFirstSegments(1)
+                    .append(iPath.removeLastSegments(iPath.segmentCount() - (i + 1))));
 
         // add to parent
-        if (newArtifact.getParent() != currentArtifact) {
-          currentArtifact.addArtifact(newArtifact);
-        }
+        // if (newArtifact.getParent() != currentArtifact) {
+        // currentArtifact.addArtifact(newArtifact);
+        // }
       }
 
       currentArtifact = newArtifact;
@@ -155,7 +167,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
     //
     if (_dependencyModel == null) {
-      _dependencyModel = ((AdapterModularizedSystem2IArtifact) _groupAndModuleContainer.getRoot()).getDependencyModel();
+      _dependencyModel = ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).getDependencyModel();
       Assert.isNotNull(_dependencyModel);
     }
 

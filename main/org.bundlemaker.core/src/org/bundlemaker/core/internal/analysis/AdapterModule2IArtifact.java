@@ -1,7 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.impl.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -32,7 +31,7 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
     super(ArtifactType.Module, module.getModuleIdentifier().toString());
 
     Assert.isNotNull(module);
-    Assert.isTrue(parent instanceof AbstractArtifactContainer);
+    Assert.isTrue(parent instanceof AbstractBundleMakerArtifactContainer);
 
     // set the resource module
     _module = module;

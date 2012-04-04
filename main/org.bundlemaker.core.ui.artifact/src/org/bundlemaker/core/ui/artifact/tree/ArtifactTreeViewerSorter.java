@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
 
-import org.bundlemaker.analysis.model.ArtifactType;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.jface.viewers.ViewerSorter;
 
