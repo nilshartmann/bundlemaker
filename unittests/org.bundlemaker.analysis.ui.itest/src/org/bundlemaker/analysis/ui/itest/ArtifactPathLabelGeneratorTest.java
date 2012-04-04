@@ -12,8 +12,8 @@ package org.bundlemaker.analysis.ui.itest;
 
 import static org.junit.Assert.assertEquals;
 
-import org.bundlemaker.analysis.model.ArtifactType;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformerCache;
@@ -83,7 +83,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
   public void test_generateTitlesForFlatPackages_NoResources() {
     IBundleMakerArtifact rootArtifact = getRootArtifact(false);
 
-    IArtifact typeArtifact = rootArtifact
+    IBundleMakerArtifact typeArtifact = rootArtifact
         .getChild("group1|group2|ArtifactPathLabelGeneratorTest_1.0.0|de.test.basic|TestClass");
     Assert.assertNotNull(typeArtifact);
 
@@ -97,7 +97,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a package -> Title ends with bundle name, Label starts with package
-    IArtifact packageArtifact = typeArtifact.getParent();
+    IBundleMakerArtifact packageArtifact = typeArtifact.getParent();
     generator.setBaseArtifact(packageArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2/ArtifactPathLabelGeneratorTest_1.0.0", title);
@@ -105,7 +105,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a bundle -> Title ends with bundle name, Label starts with package
-    IArtifact bundleArtifact = packageArtifact.getParent(ArtifactType.Module);
+    IBundleMakerArtifact bundleArtifact = packageArtifact.getParent(ArtifactType.Module);
     generator.setBaseArtifact(bundleArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2/ArtifactPathLabelGeneratorTest_1.0.0", title);
@@ -113,7 +113,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a group -> Title ends with group name, label starts with bundle name
-    IArtifact groupArtifact = bundleArtifact.getParent();
+    IBundleMakerArtifact groupArtifact = bundleArtifact.getParent();
     generator.setBaseArtifact(groupArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2", title);
@@ -121,7 +121,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("ArtifactPathLabelGeneratorTest_1.0.0/de.test.basic.TestClass", label);
 
     // Artifact is first group -> Title ends with first group name, label starts with second group name
-    IArtifact firstGroupArtifact = groupArtifact.getParent();
+    IBundleMakerArtifact firstGroupArtifact = groupArtifact.getParent();
     generator.setBaseArtifact(firstGroupArtifact);
     title = generator.getTitle();
     assertEquals("group1", title);
@@ -140,7 +140,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
   public void test_generateTitlesForHierarchicalPackages_NoResources() {
     IBundleMakerArtifact rootArtifact = getRootArtifact(true);
 
-    IArtifact typeArtifact = rootArtifact
+    IBundleMakerArtifact typeArtifact = rootArtifact
         .getChild("group1|group2|ArtifactPathLabelGeneratorTest_1.0.0|de|test|basic|TestClass");
     Assert.assertNotNull(typeArtifact);
 
@@ -154,7 +154,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a package -> Title ends with bundle name, Label starts with package
-    IArtifact packageArtifact = typeArtifact.getParent();
+    IBundleMakerArtifact packageArtifact = typeArtifact.getParent();
     generator.setBaseArtifact(packageArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2/ArtifactPathLabelGeneratorTest_1.0.0", title);
@@ -162,7 +162,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is first package -> Title ends with bundle name, Label starts with package
-    IArtifact testPackageArtifact = packageArtifact.getParent();
+    IBundleMakerArtifact testPackageArtifact = packageArtifact.getParent();
     assertEquals("test", testPackageArtifact.getName());
     generator.setBaseArtifact(testPackageArtifact);
     title = generator.getTitle();
@@ -171,7 +171,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a bundle -> Title ends with bundle name, Label starts with package
-    IArtifact bundleArtifact = testPackageArtifact.getParent(ArtifactType.Module);
+    IBundleMakerArtifact bundleArtifact = testPackageArtifact.getParent(ArtifactType.Module);
     generator.setBaseArtifact(bundleArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2/ArtifactPathLabelGeneratorTest_1.0.0", title);
@@ -179,7 +179,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a group -> Title ends with group name, label starts with bundle name
-    IArtifact groupArtifact = bundleArtifact.getParent();
+    IBundleMakerArtifact groupArtifact = bundleArtifact.getParent();
     generator.setBaseArtifact(groupArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2", title);
@@ -187,7 +187,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("ArtifactPathLabelGeneratorTest_1.0.0/de.test.basic.TestClass", label);
 
     // Artifact is first group -> Title ends with first group name, label starts with second group name
-    IArtifact firstGroupArtifact = groupArtifact.getParent();
+    IBundleMakerArtifact firstGroupArtifact = groupArtifact.getParent();
     generator.setBaseArtifact(firstGroupArtifact);
     title = generator.getTitle();
     assertEquals("group1", title);

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.itest.analysis;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -56,13 +56,13 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
 
     //
     Assert.assertNull(_rootArtifact.getChild("hurz"));
-    IArtifact purzGroup = _rootArtifact.getOrCreateGroup("hurz/purz");
+    IBundleMakerArtifact purzGroup = _rootArtifact.getOrCreateGroup("hurz/purz");
     Assert.assertNotNull(_rootArtifact.getChild("hurz"));
     purzGroup.addArtifact(_rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0"));
     Assert.assertNotNull(_rootArtifact.getChild("hurz"));
 
     //
-    IArtifact module = _rootArtifact.getOrCreateModule("hurz/purz/test", "1.2.2");
+    IBundleMakerArtifact module = _rootArtifact.getOrCreateModule("hurz/purz/test", "1.2.2");
     Assert.assertNotNull(_rootArtifact.getChild("hurz|purz|test_1.2.2"));
   }
 
@@ -74,7 +74,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
   public void removeArtifactAndAddArtifact() {
 
     // get the module artifact
-    IArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // create the new module artifact
@@ -83,7 +83,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
     Assert.assertNotNull(getModularizedSystem().getModule("NewModule", "2.0.0"));
 
     // get the 'de.test.innertypes.A$AA.class' artifact
-    IArtifact resource = moduleArtifact.getChild("de|test|innertypes|A$AA.class");
+    IBundleMakerArtifact resource = moduleArtifact.getChild("de|test|innertypes|A$AA.class");
     Assert.assertNotNull(resource);
     Assert.assertNotNull(moduleArtifact.getChild("de|test|innertypes|A$AA.class|A$AA"));
 
@@ -102,7 +102,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
   public void justAddArtifact() {
 
     // get the module artifact
-    IArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // create the new module artifact
@@ -111,7 +111,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
     Assert.assertNotNull(getModularizedSystem().getModule("NewModule", "2.0.0"));
 
     // get the 'de.test.innertypes.A$AA.class' artifact
-    IArtifact resource = moduleArtifact.getChild("de|test|innertypes|A$AA.class");
+    IBundleMakerArtifact resource = moduleArtifact.getChild("de|test|innertypes|A$AA.class");
     Assert.assertNotNull(resource);
     Assert.assertNotNull(moduleArtifact.getChild("de|test|innertypes|A$AA.class|A$AA"));
 
@@ -129,7 +129,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
   public void multipleAddArtifact() {
 
     // get the module artifact
-    IArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // create the new module artifact
@@ -138,7 +138,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
     Assert.assertNotNull(getModularizedSystem().getModule("NewModule", "2.0.0"));
 
     // get the 'de.test.innertypes.A$AA.class' artifact
-    IArtifact resource = moduleArtifact.getChild("de|test|innertypes|A$AA.class");
+    IBundleMakerArtifact resource = moduleArtifact.getChild("de|test|innertypes|A$AA.class");
 
     // just add the artifact
     newModuleArtifact.addArtifact(resource);
@@ -162,7 +162,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
   public void multipleAddType() {
 
     // get the module artifact
-    IArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = _rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     // create the new module artifact
@@ -171,8 +171,8 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
     Assert.assertNotNull(getModularizedSystem().getModule("NewModule", "2.0.0"));
 
     // get the 'de.test.innertypes.A$AA.class' artifact
-    IArtifact type_1 = moduleArtifact.getChild("de|test|innertypes|A$AA.class|A$AA");
-    IArtifact type_2 = moduleArtifact.getChild("de|test|referenced|X.class|X");
+    IBundleMakerArtifact type_1 = moduleArtifact.getChild("de|test|innertypes|A$AA.class|A$AA");
+    IBundleMakerArtifact type_2 = moduleArtifact.getChild("de|test|referenced|X.class|X");
     Assert.assertNotNull(type_1);
     Assert.assertNotNull(type_2);
     

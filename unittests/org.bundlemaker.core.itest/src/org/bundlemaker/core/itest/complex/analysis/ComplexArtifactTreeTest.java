@@ -5,9 +5,8 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.ArtifactType;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -88,10 +87,10 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
     //
     ArtifactUtils.dumpArtifact(rootArtifact);
 
-    Collection<IArtifact> leafs = rootArtifact.getLeafs();
+    Collection<IBundleMakerArtifact> leafs = rootArtifact.getLeafs();
     IModuleArtifact newModule = null;
-    for (IArtifact typeArtifact : leafs) {
-      IArtifact moduleArtifact = typeArtifact.getParent(ArtifactType.Module);
+    for (IBundleMakerArtifact typeArtifact : leafs) {
+      IBundleMakerArtifact moduleArtifact = typeArtifact.getParent(ArtifactType.Module);
 
       if (((IModuleArtifact) moduleArtifact).isResourceModule()) {
         newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test_1.2.3", "1.2.3");
@@ -167,7 +166,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(moduleArtifact);
 
     // get the 'group1Artifact' artifact...
-    IArtifact group1Artifact = rootArtifact.getChild("group1");
+    IBundleMakerArtifact group1Artifact = rootArtifact.getChild("group1");
     Assert.assertNotNull(moduleArtifact);
 
     moduleArtifact.getParent(ArtifactType.Group).removeArtifact(moduleArtifact);

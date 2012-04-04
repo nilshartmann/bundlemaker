@@ -3,7 +3,6 @@ package org.bundlemaker.core.itest.analysis;
 import java.io.IOException;
 
 import org.bundlemaker.analysis.model.DependencyKind;
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -37,16 +36,16 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|NoPrimaryTypeTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|NoPrimaryTypeTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     //
-    IArtifact clientTypeArtifact = moduleArtifact
+    IBundleMakerArtifact clientTypeArtifact = moduleArtifact
         .getChild("org.bundlemaker.noprimarytype|org.bundlemaker.noprimarytype.Client");
     Assert.assertNotNull(clientTypeArtifact);
 
     //
-    IArtifact noPrimaryTestInterfaceTypeArtifact = moduleArtifact
+    IBundleMakerArtifact noPrimaryTestInterfaceTypeArtifact = moduleArtifact
         .getChild("org.bundlemaker.noprimarytype|org.bundlemaker.noprimarytype.NoPrimaryTestInterface");
     Assert.assertNotNull(noPrimaryTestInterfaceTypeArtifact);
 

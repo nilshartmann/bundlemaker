@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Collection;
 import java.util.Set;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -61,11 +60,11 @@ public class TransitiveDependenciesTest extends AbstractModularizedSystemTest {
   protected void moveType(String typeName, String targetModuleName) {
 
     // run artifact-based transformation
-    IArtifact root = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact root = getModularizedSystem().getArtifactModel(
         ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
-    Collection<IArtifact> leafs = root.getLeafs();
+    Collection<IBundleMakerArtifact> leafs = root.getLeafs();
 
-    for (IArtifact artifact : leafs) {
+    for (IBundleMakerArtifact artifact : leafs) {
       if (typeName.equals(artifact.getQualifiedName())) {
         moveArtifact(artifact, targetModuleName, ((IBundleMakerArtifact)root).getRoot());
       }
@@ -90,7 +89,7 @@ public class TransitiveDependenciesTest extends AbstractModularizedSystemTest {
     return referencedModules;
   }
 
-  private void moveArtifact(final IArtifact typeArtifact, String moduleName, IRootArtifact rootArtifact) {
+  private void moveArtifact(final IBundleMakerArtifact typeArtifact, String moduleName, IRootArtifact rootArtifact) {
 
     // das root object
     IModuleArtifact moduleArtifact = rootArtifact.getOrCreateModule(moduleName, "1.0.0");

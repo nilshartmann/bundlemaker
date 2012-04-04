@@ -2,7 +2,6 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.util.Collection;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
@@ -65,9 +64,9 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
         ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
 
-    IArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
+    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
     Assert.assertNotNull(aArtifact);
-    IArtifact bArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B");
+    IBundleMakerArtifact bArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B");
     Assert.assertNull(bArtifact);
 
     Collection<IDependency> dependencies = aArtifact.getDependencies();

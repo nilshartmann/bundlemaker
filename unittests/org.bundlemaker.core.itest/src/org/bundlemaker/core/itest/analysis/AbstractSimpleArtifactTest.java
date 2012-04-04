@@ -2,7 +2,6 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.util.Collection;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
@@ -72,10 +71,10 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     ArtifactUtils.dumpArtifact(rootArtifact);
 
     // get the module artifact
-    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
-    IArtifact groupArtifact = rootArtifact.getChild("group1|group2");
+    IBundleMakerArtifact groupArtifact = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(groupArtifact);
 
     // TEST 1: REMOVE
@@ -104,13 +103,13 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(rootArtifact);
 
     // get the module artifact
-    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
-    IArtifact group1_Artifact = rootArtifact.getChild("group1");
+    IBundleMakerArtifact group1_Artifact = rootArtifact.getChild("group1");
     Assert.assertNotNull(group1_Artifact);
 
-    IArtifact group2_Artifact = rootArtifact.getChild("group1|group2");
+    IBundleMakerArtifact group2_Artifact = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(group2_Artifact);
 
     // TEST 3: REMOVE FROM GROUP_2 AND ADD TO GROUP_1
@@ -165,10 +164,10 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(rootArtifact);
 
     // get group2 group
-    IArtifact group2Group = rootArtifact.getChild("group1|group2");
+    IBundleMakerArtifact group2Group = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(group2Group);
 
-    IArtifact group1Group = rootArtifact.getChild("group1");
+    IBundleMakerArtifact group1Group = rootArtifact.getChild("group1");
     Assert.assertNotNull(group2Group);
 
     // TEST: REMOVE AND ADD
@@ -196,11 +195,11 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(rootArtifact);
 
     // get group2 group
-    IArtifact group2Group = rootArtifact.getChild("group1|group2");
+    IBundleMakerArtifact group2Group = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(group2Group);
 
     // get group1 group
-    IArtifact group1Group = rootArtifact.getChild("group1");
+    IBundleMakerArtifact group1Group = rootArtifact.getChild("group1");
     Assert.assertNotNull(group2Group);
 
     // TEST: remove from group1
@@ -314,7 +313,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertNotNull(rootArtifact);
 
     // get the module artifact
-    IArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
     moduleArtifact = rootArtifact.getChild("group1|group2");
     Assert.assertNotNull(moduleArtifact);
@@ -361,11 +360,11 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
         getModularizedSystem(), getConfiguration()).getRoot();
     Assert.assertNotNull(rootArtifact);
 
-    IArtifact module1 = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
+    IBundleMakerArtifact module1 = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
     Assert.assertNotNull(module1);
 
     // get group1 group
-    IArtifact jreModule = rootArtifact.getChild("jdk16_jdk16");
+    IBundleMakerArtifact jreModule = rootArtifact.getChild("jdk16_jdk16");
     Assert.assertNotNull(jreModule);
 
     //

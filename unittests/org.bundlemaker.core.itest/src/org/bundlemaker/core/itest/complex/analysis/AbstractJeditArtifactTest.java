@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
 
-import org.bundlemaker.analysis.model.IArtifact;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
@@ -122,19 +121,19 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * 
    * @return
    */
-  protected final IArtifact getJdkArtifact() {
+  protected final IBundleMakerArtifact getJdkArtifact() {
     return _jdk16Artifact;
   }
 
-  protected final IArtifact getGroup1Artifact() {
+  protected final IBundleMakerArtifact getGroup1Artifact() {
     return _group1Artifact;
   }
 
-  protected final IArtifact getGroup2Artifact() {
+  protected final IBundleMakerArtifact getGroup2Artifact() {
     return _group2Artifact;
   }
 
-  protected final IArtifact getMissingTypesArtifact() {
+  protected final IBundleMakerArtifact getMissingTypesArtifact() {
     return _missingTypesArtifact;
   }
 
@@ -157,7 +156,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * @param path
    * @return
    */
-  protected IBundleMakerArtifact getArtifact(IArtifact root, String path) {
+  protected IBundleMakerArtifact getArtifact(IBundleMakerArtifact root, String path) {
     IBundleMakerArtifact artifact = _rootArtifact.getChild(path);
     Assert.assertNotNull(artifact);
     return artifact;
@@ -178,7 +177,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * @param artifact
    * @param count
    */
-  public void assertArtifactChildrenCount(IArtifact artifact, int count) {
+  public void assertArtifactChildrenCount(IBundleMakerArtifact artifact, int count) {
     assertEquals(artifact.getChildren().toString(), count, artifact.getChildren().size());
   }
 
@@ -190,12 +189,12 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * @param to
    * @param weight
    */
-  public void assertDependencyWeight(IArtifact from, IArtifact to, int weight) {
+  public void assertDependencyWeight(IBundleMakerArtifact from, IBundleMakerArtifact to, int weight) {
     IDependency dependency = from.getDependency(to);
     assertEquals(weight, dependency.getWeight());
   }
 
-  public void assertArtifactHasParent(IArtifact child, IArtifact parent) {
+  public void assertArtifactHasParent(IBundleMakerArtifact child, IBundleMakerArtifact parent) {
     assertEquals(parent, child.getParent());
   }
 }
