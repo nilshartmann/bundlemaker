@@ -18,7 +18,7 @@ import java.net.URI;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -72,7 +72,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
     _workbench = workbench;
     setNeedsProgressMonitor(true);
     setWindowTitle("New Bundlemaker Project");
-    setDefaultPageImageDescriptor(UIImages.BUNDLEMAKER_ICON.getImageDescriptor());
+    setDefaultPageImageDescriptor(BundleMakerImages.BUNDLEMAKER_ICON.getImageDescriptor());
   }
 
   NewBundleMakerProjectWizardCreationPage mainPage;

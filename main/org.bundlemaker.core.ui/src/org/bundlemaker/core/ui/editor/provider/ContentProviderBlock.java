@@ -18,7 +18,7 @@ import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.editor.BundleMakerProjectProvider;
 import org.bundlemaker.core.ui.editor.ModifyProjectContentDialog;
@@ -220,7 +220,7 @@ public class ContentProviderBlock implements IBundleMakerProjectChangedListener 
     GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
     layoutData.grabExcessVerticalSpace = true;
     layoutData.verticalAlignment = SWT.BOTTOM;
-    _parseProjectButton.setImage(UIImages.REFRESH.getImage());
+    _parseProjectButton.setImage(BundleMakerImages.REFRESH.getImage());
     _parseProjectButton.setLayoutData(layoutData);
 
     _treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {

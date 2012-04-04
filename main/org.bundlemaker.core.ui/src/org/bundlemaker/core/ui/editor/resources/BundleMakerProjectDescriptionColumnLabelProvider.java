@@ -16,7 +16,7 @@ import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.CenterImageLabelProvider;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.editor.RootPathHelper;
 import org.bundlemaker.core.ui.editor.adapter.ProjectPath;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -78,17 +78,17 @@ public class BundleMakerProjectDescriptionColumnLabelProvider extends CenterImag
     switch (_column) {
     case 1:
       if (content.getAnalyzeMode().isAnalyze()) {
-        image = UIImages.CHECKED.getImage();
+        image = BundleMakerImages.CHECKED.getImage();
       } else {
-        image = UIImages.UNCHECKED.getImage();
+        image = BundleMakerImages.UNCHECKED.getImage();
       }
       break;
     case 2:
       AnalyzeMode analyzeMode = content.getAnalyzeMode();
       if (analyzeMode == AnalyzeMode.BINARIES_AND_SOURCES) {
-        image = UIImages.CHECKED.getImage();
+        image = BundleMakerImages.CHECKED.getImage();
       } else if (analyzeMode == AnalyzeMode.BINARIES_ONLY) {
-        image = UIImages.UNCHECKED.getImage();
+        image = BundleMakerImages.UNCHECKED.getImage();
       }
       break;
     default:

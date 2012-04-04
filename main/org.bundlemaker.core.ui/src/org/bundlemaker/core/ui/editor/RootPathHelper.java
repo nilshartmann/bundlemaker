@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.editor;
 
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
-import org.bundlemaker.core.ui.UIImages;
+import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.editor.adapter.ProjectPath;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -42,19 +42,19 @@ public class RootPathHelper {
     try {
       isFolder = path.getAsFile().isDirectory();
     } catch (CoreException ex) {
-      return UIImages.UNKNOWN_OBJECT.getImage();
+      return BundleMakerImages.UNKNOWN_OBJECT.getImage();
     }
 
     if (isFolder) {
       if (isBinaryPath) {
-        return UIImages.BINARY_FOLDER.getImage();
+        return BundleMakerImages.BINARY_FOLDER.getImage();
       }
-      return UIImages.SOURCE_FOLDER.getImage();
+      return BundleMakerImages.SOURCE_FOLDER.getImage();
     }
     if (isBinaryPath) {
-      return UIImages.BINARY_ARCHIVE.getImage();
+      return BundleMakerImages.BINARY_ARCHIVE.getImage();
     }
-    return UIImages.SOURCE_ARCHIVE.getImage();
+    return BundleMakerImages.SOURCE_ARCHIVE.getImage();
 
   }
 
@@ -67,19 +67,19 @@ public class RootPathHelper {
     try {
       isFolder = path.getAsFile().isDirectory();
     } catch (CoreException ex) {
-      return UIImages.UNKNOWN_OBJECT.getImageDescriptor();
+      return BundleMakerImages.UNKNOWN_OBJECT.getImageDescriptor();
     }
 
     if (isFolder) {
       if (isBinaryPath) {
-        return UIImages.BINARY_FOLDER.getImageDescriptor();
+        return BundleMakerImages.BINARY_FOLDER.getImageDescriptor();
       }
-      return UIImages.SOURCE_FOLDER.getImageDescriptor();
+      return BundleMakerImages.SOURCE_FOLDER.getImageDescriptor();
     }
     if (isBinaryPath) {
-      return UIImages.BINARY_ARCHIVE.getImageDescriptor();
+      return BundleMakerImages.BINARY_ARCHIVE.getImageDescriptor();
     }
-    return UIImages.SOURCE_ARCHIVE.getImageDescriptor();
+    return BundleMakerImages.SOURCE_ARCHIVE.getImageDescriptor();
   }
 
   public static IProjectContentProvider getOwningFileBasedContent(TreePath treePath) {

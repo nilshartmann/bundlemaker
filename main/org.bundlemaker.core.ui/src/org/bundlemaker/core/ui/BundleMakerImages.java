@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
  * <p>
  * Taken from http://blogs.itemis.de/wendehal/2010/07/08/pretty-elegant-way-to-provide -images-in-eclipse-ui-plug-ins/
  */
-public enum UIImages {
+public enum BundleMakerImages {
 
   /**
    * the BundleMaker logo
@@ -90,7 +90,7 @@ public enum UIImages {
    */
   private final String path;
 
-  private UIImages(final String path) {
+  private BundleMakerImages(final String path) {
     this.path = path;
   }
 
