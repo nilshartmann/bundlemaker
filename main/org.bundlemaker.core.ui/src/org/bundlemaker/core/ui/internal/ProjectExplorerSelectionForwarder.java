@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui;
+package org.bundlemaker.core.ui.internal;
 
 import java.util.Iterator;
 import java.util.LinkedList;

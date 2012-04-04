@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.test;
+package org.bundlemaker.core.ui.actions;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 
-public class MyAction extends Action implements ISelectionChangedListener {
+public class OpenBundleMakerProjectAction extends Action implements ISelectionChangedListener {
 
   private IBundleMakerProject _bundleMakerProject;
 

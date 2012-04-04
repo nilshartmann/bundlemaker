@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.internal;
+package org.bundlemaker.core.ui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;

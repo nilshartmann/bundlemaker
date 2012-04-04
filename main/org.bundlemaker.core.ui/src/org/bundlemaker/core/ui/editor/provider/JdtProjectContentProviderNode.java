@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.editor.provider;
 
 import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.ui.internal.UIImages;
+import org.bundlemaker.core.ui.UIImages;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
