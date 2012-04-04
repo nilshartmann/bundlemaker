@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.selection.workbench.editor;
 
+import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
@@ -122,6 +123,16 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
   protected final void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
 
     // _currentArtifactSelection.addArtifactModelChangedListener();
+
+    if (!_currentArtifactSelection.getSelectedArtifacts().isEmpty()) {
+      _currentArtifactSelection.getSelectedArtifacts().get(0).getRoot()
+          .addArtifactModelChangedListener(new IArtifactModelChangedListener() {
+            @Override
+            public void artifactModelChanged() {
+              System.out.println("artifactModelChanged");
+            }
+          });
+    }
 
     _currentArtifactSelection = artifactSelection;
 

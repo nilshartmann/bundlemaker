@@ -6,9 +6,11 @@ import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
@@ -39,7 +41,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   private IModifiableModularizedSystem          _modularizedSystem;
 
   /** - */
-  private ModelTransformer                      _dependencyModel;
+  private ArtifactCache                         _artifactCache;
 
   /** - */
   private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
@@ -56,9 +58,10 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * </p>
    * 
    * @param modularizedSystem
+   * @param artifactCache
    */
   public AdapterRoot2IArtifact(IModifiableModularizedSystem modularizedSystem,
-      IArtifactModelConfiguration modelConfiguration) {
+      IArtifactModelConfiguration modelConfiguration, ArtifactCache artifactCache) {
     super(ArtifactType.Root, name(modularizedSystem));
 
     //
@@ -67,6 +70,9 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     // set the resource module
     _modularizedSystem = modularizedSystem;
     _modularizedSystem.addModularizedSystemChangedListener(this);
+
+    //
+    _artifactCache = artifactCache;
 
     //
     _artifactModelConfiguration = modelConfiguration;
@@ -79,10 +85,10 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * <p>
    * </p>
    * 
-   * @return the dependencyModel
+   * @return
    */
-  public ModelTransformer getDependencyModel() {
-    return _dependencyModel;
+  public ArtifactCache getArtifactCache() {
+    return _artifactCache;
   }
 
   /**
@@ -262,9 +268,9 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
         if ((!getConfiguration().isAggregateInnerTypes() && !type.isLocalOrAnonymousType())
             || (getConfiguration().isAggregateInnerTypes() && !type.isInnerType() && type.handleAsPrimaryType())) {
           TypeKey typeKey = new TypeKey(type);
-          IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getTypeCache().getOrCreate(typeKey);
-          AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getTypeCache()
-              .getTypeParent(typeKey.getType());
+          IBundleMakerArtifact artifact = _artifactCache.getTypeCache().getOrCreate(typeKey);
+          AbstractBundleMakerArtifactContainer parentArtifact = _artifactCache.getTypeCache().getTypeParent(
+              typeKey.getType());
           parentArtifact.internalAddArtifact(artifact);
         }
       }
@@ -284,9 +290,8 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     }
 
     // add the resource
-    IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().getOrCreate(resource);
-    AbstractBundleMakerArtifactContainer parentArtifact = _dependencyModel.getArtifactCache().getResourceCache()
-        .getOrCreateParent(resource);
+    IBundleMakerArtifact artifact = _artifactCache.getResourceCache().getOrCreate(resource);
+    AbstractBundleMakerArtifactContainer parentArtifact = _artifactCache.getResourceCache().getOrCreateParent(resource);
     parentArtifact.internalAddArtifact(artifact);
   }
 
@@ -334,7 +339,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
         && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
       for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
-        IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
+        IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
         if (artifact != null && artifact.getParent() != null) {
           ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
@@ -343,7 +348,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
         && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
       IResource resource = movableUnit.getAssociatedSourceResource();
-      IBundleMakerArtifact artifact = _dependencyModel.getArtifactCache().getResourceCache().get(resource);
+      IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
       if (artifact != null && artifact.getParent() != null) {
         ((AdapterPackage2IArtifact) artifact.getParent()).internalRemoveArtifact(artifact);
@@ -352,7 +357,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
       for (IType type : movableUnit.getAssociatedTypes()) {
 
         //
-        TypeSubCache typeCache = _dependencyModel.getArtifactCache().getTypeCache();
+        TypeSubCache typeCache = _artifactCache.getTypeCache();
 
         //
         IBundleMakerArtifact artifact = typeCache.get(new TypeKey(type));
@@ -381,7 +386,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     } else {
 
       //
-      ModuleSubCache moduleCache = _dependencyModel.getArtifactCache().getModuleCache();
+      ModuleSubCache moduleCache = _artifactCache.getModuleCache();
 
       //
       AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) moduleCache.getOrCreate(new ModuleKey(event
@@ -389,8 +394,8 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
       //
       if (moduleArtifact.getParent() == null) {
-        AbstractBundleMakerArtifactContainer parent = moduleCache.getModuleParent(event.getModule());
-        parent.internalAddArtifact(moduleArtifact);
+        IGroupAndModuleContainer parent = moduleCache.getModuleParent(event.getModule());
+        ((AbstractBundleMakerArtifactContainer) parent).internalAddArtifact(moduleArtifact);
       }
     }
   }
@@ -409,8 +414,8 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     } else {
 
       //
-      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _dependencyModel.getArtifactCache()
-          .getModuleCache().get(new ModuleKey(event.getModule()));
+      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _artifactCache.getModuleCache().get(
+          new ModuleKey(event.getModule()));
 
       //
       if (moduleArtifact != null) {
@@ -457,8 +462,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
       //
       IModule module = event.getModule();
-      AbstractBundleMakerArtifactContainer moduleArtifact = _dependencyModel.getArtifactCache().getModuleCache()
-          .getOrCreate(new ModuleKey(module));
+      IModuleArtifact moduleArtifact = _artifactCache.getModuleCache().getOrCreate(new ModuleKey(module));
 
       //
       IPath classification = module.getClassification();
@@ -466,10 +470,9 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
       if (classification != null) {
 
         //
-        AbstractBundleMakerArtifactContainer groupArtifact = _dependencyModel.getArtifactCache().getGroupCache()
-            .getOrCreate(classification);
+        IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);
         //
-        groupArtifact.internalAddArtifact(moduleArtifact);
+        ((AbstractBundleMakerArtifactContainer) groupArtifact).internalAddArtifact(moduleArtifact);
 
       } else {
         internalAddArtifact(moduleArtifact);
@@ -511,21 +514,15 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * <p>
    * </p>
    * 
-   * @param dependencyModel
-   */
-  void setDependencyModel(ModelTransformer dependencyModel) {
-    _dependencyModel = dependencyModel;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @param modularizedSystem
    * @return
    */
   private static String name(IModifiableModularizedSystem modularizedSystem) {
     Assert.isNotNull(modularizedSystem);
     return modularizedSystem.getName();
+  }
+
+  public void fireArtifactModelChanged() {
+    System.out.println("ArtifactModelChanged");
   }
 }

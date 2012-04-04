@@ -183,6 +183,16 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected boolean isPinSelection() {
+    return _detailComposite.getPinSelectionButton().getSelection();
+  }
+
   protected String getNullSafeString(String string, String defaultValue) {
     return string == null ? defaultValue : string;
   }
@@ -209,6 +219,11 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void onArtifactSelectionChanged(IArtifactSelection selection) {
+
+    //
+    if (isPinSelection()) {
+      return;
+    }
 
     //
     if (selection.getProviderId().equals(DSM_EDITOR_ID)) {
@@ -260,8 +275,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
         for (IBundleMakerArtifact artifact : artifactSelection.getSelectedArtifacts()) {
           bundleMakerArtifacts.addAll(artifact.getChildren());
         }
-        _viewWidget.setModel(new DsmViewModel(bundleMakerArtifacts));
-      } else {
         _viewWidget.setModel(new DsmViewModel(artifactSelection.getSelectedArtifacts()));
       }
 

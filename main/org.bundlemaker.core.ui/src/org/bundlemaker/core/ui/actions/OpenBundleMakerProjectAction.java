@@ -2,6 +2,7 @@ package org.bundlemaker.core.ui.actions;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.event.Events;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -37,6 +38,8 @@ public class OpenBundleMakerProjectAction extends Action implements ISelectionCh
     //
     if (_bundleMakerProject != null) {
       Events.instance().fireProjectOpened(_bundleMakerProject);
+      // Re-activate common navigator make selections via context menu work
+      CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
     }
   }
 }

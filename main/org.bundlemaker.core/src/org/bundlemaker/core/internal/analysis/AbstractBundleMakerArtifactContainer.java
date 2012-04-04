@@ -29,7 +29,8 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundleMakerArtifact implements IBundleMakerArtifact {
+public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundleMakerArtifact implements
+    IBundleMakerArtifact {
 
   /** - */
   private IRootArtifact                                    _root;
@@ -445,8 +446,8 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     assertCanAdd(artifact);
 
     // set the change action
-    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
-        (IBundleMakerArtifact) artifact, ChangeAction.ADDED));
+    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this, (IBundleMakerArtifact) artifact,
+        ChangeAction.ADDED));
 
     onAddArtifact((IBundleMakerArtifact) artifact);
 
@@ -462,8 +463,8 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     Assert.isNotNull(artifact);
 
     // set the change action
-    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this,
-        (IBundleMakerArtifact) artifact, ChangeAction.REMOVED));
+    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this, (IBundleMakerArtifact) artifact,
+        ChangeAction.REMOVED));
 
     onRemoveArtifact((IBundleMakerArtifact) artifact);
 

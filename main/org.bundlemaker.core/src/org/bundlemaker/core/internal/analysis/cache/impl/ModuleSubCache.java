@@ -1,7 +1,8 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
@@ -18,7 +19,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModuleSubCache extends AbstractSubCache<ModuleKey, AbstractBundleMakerArtifactContainer> {
+public class ModuleSubCache extends AbstractSubCache<ModuleKey, IModuleArtifact> {
 
   /** serialVersionUID */
   private static final long serialVersionUID = 1L;
@@ -38,7 +39,7 @@ public class ModuleSubCache extends AbstractSubCache<ModuleKey, AbstractBundleMa
    * {@inheritDoc}
    */
   @Override
-  protected AbstractBundleMakerArtifactContainer create(ModuleKey moduleKey) {
+  protected IModuleArtifact create(ModuleKey moduleKey) {
 
     Assert.isNotNull(moduleKey);
 
@@ -74,7 +75,7 @@ public class ModuleSubCache extends AbstractSubCache<ModuleKey, AbstractBundleMa
    * @param module
    * @return
    */
-  public AbstractBundleMakerArtifactContainer getModuleParent(IModule module) {
+  public IGroupAndModuleContainer getModuleParent(IModule module) {
 
     Assert.isNotNull(module);
 

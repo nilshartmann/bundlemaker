@@ -50,6 +50,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
   @Override
   protected void onAddArtifact(IBundleMakerArtifact artifact) {
+
     // handle package
     if (artifact.getType().equals(ArtifactType.Package)) {
       handleAddPackage(artifact);
@@ -58,12 +59,19 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     } else if (artifact.getType().equals(ArtifactType.Type)) {
       handleAddType((ITypeArtifact) artifact);
     }
+
+    //
+    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
   }
 
   @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
+
     //
     AdapterUtils.removeArtifact(artifact, this);
+
+    //
+    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
   }
 
   private void handleAddType(ITypeArtifact artifact) {

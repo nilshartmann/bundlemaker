@@ -13,7 +13,6 @@ package org.bundlemaker.core.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.internal.analysis.ModelTransformer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
@@ -69,9 +68,10 @@ public class ModelTransformerCache {
       ArtifactCache artifactCache = new ArtifactCache(modifiableModularizedSystem, configuration);
 
       // create the dependency model
-      ModelTransformer modelTransformer = new ModelTransformer(modifiableModularizedSystem, artifactCache);
-      _cache.put(cacheKey, (IRootArtifact) modelTransformer.getRoot());
-      return (IRootArtifact) modelTransformer.getRoot();
+      IRootArtifact artifactModel = artifactCache.transform();
+
+      _cache.put(cacheKey, artifactModel);
+      return artifactModel;
 
     } catch (CoreException e) {
       System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);

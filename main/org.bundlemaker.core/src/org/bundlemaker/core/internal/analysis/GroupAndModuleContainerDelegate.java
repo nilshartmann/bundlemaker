@@ -22,10 +22,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 {
 
   /** - */
-  private final AbstractBundleMakerArtifactContainer _groupAndModuleContainer;
-
-  // TODO: remove this shit...
-  private ModelTransformer                           _dependencyModel;
+  private final IGroupAndModuleContainer _groupAndModuleContainer;
 
   /**
    * <p>
@@ -38,7 +35,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     Assert.isNotNull(groupAndModuleContainer);
     Assert.isTrue(groupAndModuleContainer instanceof AbstractBundleMakerArtifactContainer);
 
-    _groupAndModuleContainer = (AbstractBundleMakerArtifactContainer) groupAndModuleContainer;
+    _groupAndModuleContainer = groupAndModuleContainer;
   }
 
   /**
@@ -97,7 +94,8 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       resourceModule.setClassification(this._groupAndModuleContainer.getFullPath().removeFirstSegments(1));
 
       //
-      moduleArtifact = getDependencyModel().getArtifactCache().getModuleArtifact(resourceModule);
+      moduleArtifact = ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).getArtifactCache()
+          .getModuleArtifact(resourceModule);
     }
 
     //
@@ -118,19 +116,18 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     // String[] segments = path.split("/");
 
     // add children
-    AbstractBundleMakerArtifactContainer currentArtifact = _groupAndModuleContainer;
+    IGroupAndModuleContainer currentArtifact = _groupAndModuleContainer;
 
     for (int i = 0; i < path.segmentCount(); i++) {
 
       // try to get the child
-      AbstractBundleMakerArtifactContainer newArtifact = (AbstractBundleMakerArtifactContainer) currentArtifact
-          .getChild(path.segment(i));
+      IGroupAndModuleContainer newArtifact = (IGroupAndModuleContainer) currentArtifact.getChild(path.segment(i));
 
       //
       if (newArtifact == null) {
 
         // create new
-        newArtifact = getDependencyModel()
+        newArtifact = ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot())
             .getArtifactCache()
             .getGroupCache()
             .getOrCreate(
@@ -142,23 +139,5 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     }
 
     return (IGroupArtifact) currentArtifact;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  private ModelTransformer getDependencyModel() {
-
-    //
-    if (_dependencyModel == null) {
-      _dependencyModel = ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).getDependencyModel();
-      Assert.isNotNull(_dependencyModel);
-    }
-
-    //
-    return _dependencyModel;
   }
 }

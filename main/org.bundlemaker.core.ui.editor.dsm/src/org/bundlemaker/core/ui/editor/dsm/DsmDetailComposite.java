@@ -23,6 +23,9 @@ public class DsmDetailComposite extends Composite {
   /** - */
   private Button _visualizeChildren;
 
+  /** - */
+  private Button _pinSelection;
+
   /**
    * <p>
    * Creates a new instance of type {@link DsmDetailComposite}.
@@ -63,6 +66,9 @@ public class DsmDetailComposite extends Composite {
     composite.setLayout(gridLayout);
     _visualizeChildren = new Button(composite, SWT.CHECK);
     _visualizeChildren.setText("Visualize children of selected artifacts");
+    
+    _pinSelection = new Button(composite, SWT.CHECK);
+    _pinSelection.setText("Pin Selection");
 
   }
 
@@ -104,6 +110,16 @@ public class DsmDetailComposite extends Composite {
    */
   public final Button getVisualizeChildrenButton() {
     return _visualizeChildren;
+  }
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  public Button getPinSelectionButton() {
+    return _pinSelection;
   }
 
   /**

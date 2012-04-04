@@ -14,9 +14,10 @@ import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
-import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.impl.GroupSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.PackageSubCache;
@@ -41,31 +42,31 @@ import org.eclipse.core.runtime.CoreException;
 public class ArtifactCache {
 
   /** - */
-  private static final String                  MISSING_TYPES = "<< Missing Types >>";
+  // private static final String MISSING_TYPES = "<< Missing Types >>";
 
   /** the root artifact */
-  private AbstractBundleMakerArtifactContainer _rootArtifact;
+  private IRootArtifact                 _rootArtifact;
 
   /** the modularized system */
-  private IModularizedSystem                   _modularizedSystem;
+  private IModularizedSystem            _modularizedSystem;
 
   /** - */
-  protected GroupSubCache                      _groupCache;
+  protected GroupSubCache               _groupCache;
 
   /** - */
-  protected ModuleSubCache                     _moduleCache;
+  protected ModuleSubCache              _moduleCache;
 
   /** - */
-  protected PackageSubCache                    _packageCache;
+  protected PackageSubCache             _packageCache;
 
   /** - */
-  protected ResourceSubCache                   _resourceCache;
+  protected ResourceSubCache            _resourceCache;
 
   /** - */
-  protected TypeSubCache                       _typeCache;
+  protected TypeSubCache                _typeCache;
 
   /** - */
-  protected IArtifactModelConfiguration        _modelConfiguration;
+  protected IArtifactModelConfiguration _modelConfiguration;
 
   /**
    * <p>
@@ -75,31 +76,16 @@ public class ArtifactCache {
    * @param modularizedSystem
    */
   public ArtifactCache(IModifiableModularizedSystem modularizedSystem, IArtifactModelConfiguration configuration) {
-    this(modularizedSystem, new AdapterRoot2IArtifact(modularizedSystem, configuration), configuration);
-  }
-
-  /**
-   * <p>
-   * Creates a new instance of type {@link ArtifactCache}.
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @param rootArtifact
-   * @param configuration
-   */
-  protected ArtifactCache(IModularizedSystem modularizedSystem, AbstractBundleMakerArtifactContainer rootArtifact,
-      IArtifactModelConfiguration configuration) {
 
     // assert not null
     Assert.isNotNull(modularizedSystem);
-    Assert.isNotNull(rootArtifact);
     Assert.isNotNull(configuration);
 
     // set the modularized system
     _modularizedSystem = modularizedSystem;
 
     // create the root artifact
-    _rootArtifact = rootArtifact;
+    _rootArtifact = new AdapterRoot2IArtifact(modularizedSystem, configuration, this);
 
     //
     _modelConfiguration = configuration;
@@ -132,7 +118,7 @@ public class ArtifactCache {
    * 
    * @return
    */
-  public final AbstractBundleMakerArtifactContainer getRootArtifact() {
+  public final IRootArtifact getRootArtifact() {
     return _rootArtifact;
   }
 
@@ -153,7 +139,7 @@ public class ArtifactCache {
    * @return
    * @throws CoreException
    */
-  public final IBundleMakerArtifact transform() throws CoreException {
+  public final IRootArtifact transform() throws CoreException {
     return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]));
   }
 
@@ -312,7 +298,7 @@ public class ArtifactCache {
    * @return
    * @throws Exception
    */
-  protected IBundleMakerArtifact transform(IModule[] modules) {
+  protected IRootArtifact transform(IModule[] modules) {
 
     // create virtual module for missing types
     if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
