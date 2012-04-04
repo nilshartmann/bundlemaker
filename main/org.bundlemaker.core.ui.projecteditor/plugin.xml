@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   	<extension id="org.bundlemaker.core.ui.editors" name="Bundlemaker Editors"
+		point="org.eclipse.ui.editors">
+		<editor icon="icons/bundlemaker-icon-small.png"
+			class="org.bundlemaker.core.ui.projecteditor.ProjectEditor" default="false"
+			id="org.bundlemaker.core.ui.projecteditor" name="Bundlemaker project editor (DO NOT USE YET)">
+			<contentTypeBinding
+				contentTypeId="org.bundlemaker.core.ui.contenttypes.projectdescription"
+			> </contentTypeBinding>
+		</editor>
+	</extension>
+
+
+</plugin>
