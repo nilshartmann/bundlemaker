@@ -1,9 +1,11 @@
 package org.bundlemaker.core.ui.selection.workbench.editor;
 
+import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
 import org.bundlemaker.core.ui.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.selection.Selection;
 import org.bundlemaker.core.ui.selection.internal.ArtifactSelection;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -15,7 +17,7 @@ import org.eclipse.ui.PartInitException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractPartLifecycleAwareEditorPart implements
-    IArtifactSelectionListener {
+    IArtifactSelectionListener, IArtifactModelChangedListener {
 
   /**
    * The current artifacts (contents) of this dependency part
@@ -43,6 +45,23 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    */
   public IArtifactSelection getCurrentArtifactSelection() {
     return _currentArtifactSelection;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void createPartControl(Composite parent) {
+    // TODO Auto-generated method stub
+
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setFocus() {
+    // TODO Auto-generated method stub
 
   }
 
@@ -70,6 +89,9 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
 
     // Remove ourself from the list of listeners
     Selection.instance().getArtifactSelectionService().removeArtifactSelectionListener(this);
+
+    //
+    unregisterArtifactModelChangedListener();
 
     // invoke super
     super.dispose();
@@ -121,11 +143,26 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    */
   protected final void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
 
-    // _currentArtifactSelection.addArtifactModelChangedListener();
+    // remove ArtifactModelChangedListener from 'old' model
+    unregisterArtifactModelChangedListener();
 
     _currentArtifactSelection = artifactSelection;
 
+    registerArtifactModelChangedListener();
+
     onSetCurrentArtifactSelection(artifactSelection);
+  }
+
+  private void unregisterArtifactModelChangedListener() {
+    if (_currentArtifactSelection != null && _currentArtifactSelection.hasSelectedArtifacts()) {
+      _currentArtifactSelection.getRootArtifact().removeArtifactModelChangedListener(this);
+    }
+  }
+
+  private void registerArtifactModelChangedListener() {
+    if (_currentArtifactSelection != null && _currentArtifactSelection.hasSelectedArtifacts()) {
+      _currentArtifactSelection.getRootArtifact().addArtifactModelChangedListener(this);
+    }
   }
 
   /**
