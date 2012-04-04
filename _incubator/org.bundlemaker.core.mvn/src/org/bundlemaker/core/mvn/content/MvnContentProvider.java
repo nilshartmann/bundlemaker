@@ -123,6 +123,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
             } catch (CoreException e) {
               // TODO Auto-generated catch block
               e.printStackTrace();
+              throw new RuntimeException(e.getMessage(), e);
             }
 
             return true;
