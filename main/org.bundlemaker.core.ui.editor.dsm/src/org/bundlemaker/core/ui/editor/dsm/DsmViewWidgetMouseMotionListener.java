@@ -63,13 +63,6 @@ final class DsmViewWidgetMouseMotionListener extends MouseMotionListener.Stub im
    */
   @Override
   public void mouseDoubleClicked(MouseEvent me) {
-    System.out.println("Double");
-
-    // Matrix matrix = new Matrix(_dsmViewWidget.getModel());
-    // IDsmViewModel viewModel = _dsmViewWidget.getModel();
-    // matrix.setSize(viewModel.getConfiguration().getVerticalBoxSize() * viewModel.getItemCount(), viewModel
-    // .getConfiguration().getHorizontalBoxSize() * viewModel.getItemCount());
-    // FigurePrinter.print("D:/temp/svg.svg", matrix);
   }
 
   @Override

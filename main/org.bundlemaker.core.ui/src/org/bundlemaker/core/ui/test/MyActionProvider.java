@@ -16,7 +16,7 @@ public class MyActionProvider extends CommonActionProvider {
     doubleClickAction = new MyAction();
 
     // only if doubleClickAction must know tree selection:
-    // aSite.getStructuredViewer().addSelectionChangedListener(doubleClickAction);
+    aSite.getStructuredViewer().addSelectionChangedListener(doubleClickAction);
   }
 
   /*

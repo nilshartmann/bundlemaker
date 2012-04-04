@@ -18,6 +18,7 @@ public class BundleMakerPerspectiveFactory implements IPerspectiveFactory {
     String editorArea = layout.getEditorArea();
 
     layout.addView(IPageLayout.ID_PROJECT_EXPLORER, IPageLayout.LEFT, 0.25f, editorArea);
+    layout.addView(IPageLayout.ID_OUTLINE, IPageLayout.LEFT, 0.25f, editorArea);
 
     IFolderLayout middle = layout.createFolder("middle", IPageLayout.BOTTOM, 0.5f, editorArea);
     middle.addView(DependencyTreeView.ID);

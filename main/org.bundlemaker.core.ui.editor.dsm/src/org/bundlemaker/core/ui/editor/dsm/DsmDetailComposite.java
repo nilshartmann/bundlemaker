@@ -23,12 +23,6 @@ public class DsmDetailComposite extends Composite {
   /** - */
   private Button _visualizeChildren;
 
-  /** - */
-  private int    _x_selected = -1;
-
-  /** - */
-  private int    _y_selected = -1;
-
   /**
    * <p>
    * Creates a new instance of type {@link DsmDetailComposite}.
