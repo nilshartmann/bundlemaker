@@ -146,16 +146,6 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
     // remove ArtifactModelChangedListener from 'old' model
     unregisterArtifactModelChangedListener();
 
-    if (!_currentArtifactSelection.getSelectedArtifacts().isEmpty()) {
-      _currentArtifactSelection.getSelectedArtifacts().get(0).getRoot()
-          .addArtifactModelChangedListener(new IArtifactModelChangedListener() {
-            @Override
-            public void artifactModelChanged() {
-              System.out.println("artifactModelChanged");
-            }
-          });
-    }
-
     _currentArtifactSelection = artifactSelection;
 
     registerArtifactModelChangedListener();

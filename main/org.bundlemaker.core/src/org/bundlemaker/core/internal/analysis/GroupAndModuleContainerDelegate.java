@@ -91,12 +91,15 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       IModifiableResourceModule resourceModule = ((IModifiableModularizedSystem) _groupAndModuleContainer.getRoot()
           .getModularizedSystem()).createResourceModule(moduleIdentifier);
 
-      resourceModule.setClassification(this._groupAndModuleContainer.getFullPath().removeFirstSegments(1));
-
+      if (this._groupAndModuleContainer.getFullPath().segmentCount() > 1) {
+        resourceModule.setClassification(this._groupAndModuleContainer.getFullPath().removeFirstSegments(1));
+      }
       //
       moduleArtifact = ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).getArtifactCache()
           .getModuleArtifact(resourceModule);
     }
+
+    ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).fireArtifactModelChanged();
 
     //
     return moduleArtifact;
@@ -137,6 +140,8 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
       currentArtifact = newArtifact;
     }
+
+    ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).fireArtifactModelChanged();
 
     return (IGroupArtifact) currentArtifact;
   }

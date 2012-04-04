@@ -59,9 +59,6 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
     } else if (artifact.getType().equals(ArtifactType.Type)) {
       handleAddType((ITypeArtifact) artifact);
     }
-
-    //
-    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
   }
 
   @Override
@@ -69,9 +66,6 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
     //
     AdapterUtils.removeArtifact(artifact, this);
-
-    //
-    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
   }
 
   private void handleAddType(ITypeArtifact artifact) {

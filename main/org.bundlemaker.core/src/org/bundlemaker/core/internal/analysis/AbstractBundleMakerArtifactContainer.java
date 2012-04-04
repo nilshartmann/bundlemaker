@@ -449,10 +449,17 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this, (IBundleMakerArtifact) artifact,
         ChangeAction.ADDED));
 
+    //
+    getRoot().invalidateDependencyCache();
+
     onAddArtifact((IBundleMakerArtifact) artifact);
 
     // set change action to null
     ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(null);
+
+    //
+    getRoot().invalidateDependencyCache();
+    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
   }
 
   /**
@@ -470,6 +477,10 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     // set change action to null
     ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(null);
+
+    //
+    getRoot().invalidateDependencyCache();
+    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
 
     //
     return true;

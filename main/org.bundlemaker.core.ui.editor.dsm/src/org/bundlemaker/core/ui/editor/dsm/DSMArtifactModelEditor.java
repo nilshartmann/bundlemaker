@@ -285,6 +285,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
         for (IBundleMakerArtifact artifact : artifactSelection.getSelectedArtifacts()) {
           bundleMakerArtifacts.addAll(artifact.getChildren());
         }
+        _viewWidget.setModel(new DsmViewModel(bundleMakerArtifacts));
+      } else {
         _viewWidget.setModel(new DsmViewModel(artifactSelection.getSelectedArtifacts()));
       }
 

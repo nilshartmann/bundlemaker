@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactType;
-import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.Assert;
 
@@ -46,26 +45,6 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
 
     this.type = type;
     this.name = name;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param listener
-   */
-  public void addArtifactModelChangedListener(IArtifactModelChangedListener listener) {
-
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param listener
-   */
-  public void removeArtifactModelChangedListener(IArtifactModelChangedListener listener) {
-
   }
 
   @Override

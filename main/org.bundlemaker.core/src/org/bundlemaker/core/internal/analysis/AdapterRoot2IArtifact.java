@@ -1,8 +1,10 @@
 package org.bundlemaker.core.internal.analysis;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.analysis.ArtifactType;
+import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -38,19 +40,21 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     IModularizedSystemChangedListener {
 
   /** - */
-  private IModifiableModularizedSystem          _modularizedSystem;
+  private IModifiableModularizedSystem                              _modularizedSystem;
 
   /** - */
-  private ArtifactCache                         _artifactCache;
+  private ArtifactCache                                             _artifactCache;
 
   /** - */
-  private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
+  private final GroupAndModuleContainerDelegate                     _groupAndModuleContainerDelegate;
 
   /** - */
-  private final IArtifactModelConfiguration     _artifactModelConfiguration;
+  private final IArtifactModelConfiguration                         _artifactModelConfiguration;
 
   /** - */
-  private CurrentAction                         _currentAction = null;
+  private CurrentAction                                             _currentAction = null;
+
+  private final CopyOnWriteArrayList<IArtifactModelChangedListener> _artifactModelChangedListeners;
 
   /**
    * <p>
@@ -79,6 +83,9 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     //
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
+
+    //
+    _artifactModelChangedListeners = new CopyOnWriteArrayList<IArtifactModelChangedListener>();
   }
 
   /**
@@ -522,7 +529,40 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     return modularizedSystem.getName();
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  public void addArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+
+    Assert.isNotNull(listener);
+
+    _artifactModelChangedListeners.addIfAbsent(listener);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param listener
+   */
+  public void removeArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+
+    Assert.isNotNull(listener);
+
+    _artifactModelChangedListeners.remove(listener);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
   public void fireArtifactModelChanged() {
-    System.out.println("ArtifactModelChanged");
+    for (IArtifactModelChangedListener artifactModelChangedListener : _artifactModelChangedListeners) {
+      artifactModelChangedListener.artifactModelChanged();
+    }
   }
 }
