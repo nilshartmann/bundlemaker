@@ -295,13 +295,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.ui.selection"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bundlemaker.core.ui.view.dependencytable"
          download-size="0"
          install-size="0"
@@ -331,6 +324,13 @@ litigation.
 
    <plugin
          id="org.bundlemaker.core.ui.app.perspective"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bundlemaker.core.ui.event"
          download-size="0"
          install-size="0"
          version="0.0.0"
