@@ -46,7 +46,7 @@ public class DBTest {
 
     IProject project = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature("dbtest");
     IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project, null);
-    IPersistentDependencyStore store = Activator.getDefault().getPersistentDependencyStore(bundleMakerProject);
+    IPersistentDependencyStore store = Activator.getDefault().getPersistentDependencyStoreFactory().getPersistentDependencyStore(bundleMakerProject);
     Assert.assertNotNull(store);
 
     // step 2: delete the existing '.bundlemaker/db4o.store' file

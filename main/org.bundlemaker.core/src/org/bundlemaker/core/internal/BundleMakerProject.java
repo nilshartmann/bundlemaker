@@ -29,8 +29,8 @@ import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
-import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
+import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.parser.IParserFactory;
@@ -63,9 +63,6 @@ public class BundleMakerProject implements IBundleMakerProject {
 
   /** - */
   private List<IBundleMakerProjectChangedListener> _projectChangedListeners;
-
-  /** the associated info store */
-  private IDependencyStore                         _additionalInfoStore;
 
   /** the state the project is in */
   private BundleMakerProjectState                  _projectState;
@@ -167,10 +164,13 @@ public class BundleMakerProject implements IBundleMakerProject {
     // TODO
     _modifiableModualizedSystemWorkingCopies.clear();
 
+    // get the store
+    IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
+    IPersistentDependencyStore store = factory.getPersistentDependencyStore(this);
+
     // get the dependency store
     ModelSetup modelSetup = new ModelSetup(this);
-    _problems = modelSetup.setup(_projectDescription.getContent(),
-        ((IPersistentDependencyStore) getDependencyStore(null)), progressMonitor);
+    _problems = modelSetup.setup(_projectDescription.getContent(), store, progressMonitor);
 
     // set 'READY' state
     _projectState = BundleMakerProjectState.READY;
@@ -180,11 +180,8 @@ public class BundleMakerProject implements IBundleMakerProject {
         .getName()) : createModularizedSystemWorkingCopy(getProject().getName());
     modularizedSystem.applyTransformations(progressMonitor);
 
-    // // TODO
-    // _dependencyModel = ModelTransformer.getDependencyModel(this, (IModifiableModularizedSystem) modularizedSystem);
-    //
-    // //
-    // Activator.getContext().registerService(IDependencyModel.class.getName(), _dependencyModel, null);
+    // release the store
+    factory.releasePersistentDependencyStore(this);
 
     // notify listeners
     notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
@@ -196,21 +193,21 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public void dispose() {
 
-    // delete the dependency store
-    try {
-
-      //
-      IDependencyStore dependencyStore = getDependencyStore(null);
-
-      //
-      if (dependencyStore instanceof IPersistentDependencyStore) {
-        ((IPersistentDependencyStore) dependencyStore).dispose();
-      }
-
-    } catch (CoreException e) {
-      // TODO
-      e.printStackTrace();
-    }
+    // // delete the dependency store
+    // try {
+    //
+    // //
+    // IDependencyStore dependencyStore = getDependencyStore(null);
+    //
+    // //
+    // if (dependencyStore instanceof IPersistentDependencyStore) {
+    // ((IPersistentDependencyStore) dependencyStore).dispose();
+    // }
+    //
+    // } catch (CoreException e) {
+    // // TODO
+    // e.printStackTrace();
+    // }
 
     Activator.getDefault().removeCachedBundleMakerProject(_project);
 
@@ -405,26 +402,6 @@ public class BundleMakerProject implements IBundleMakerProject {
     modifier.modifyProjectDescription(projectDescription);
 
     projectDescription.save();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param progressMonitor
-   * @return
-   * @throws CoreException
-   */
-  public IDependencyStore getDependencyStore(IProgressMonitor progressMonitor) throws CoreException {
-
-    // assert
-    assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.READY);
-
-    if (_additionalInfoStore == null) {
-      return Activator.getDefault().getPersistentDependencyStore(this);
-    }
-
-    return _additionalInfoStore;
   }
 
   @Override

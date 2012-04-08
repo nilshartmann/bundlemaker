@@ -35,6 +35,14 @@ public interface IPersistentDependencyStoreFactory {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @param project
+   */
+  public void releasePersistentDependencyStore(IBundleMakerProject project);
+
+  /**
+   * <p>
    * Resets the {@link IPersistentDependencyStore} for the specified {@link IBundleMakerProject}.
    * </p>
    * 

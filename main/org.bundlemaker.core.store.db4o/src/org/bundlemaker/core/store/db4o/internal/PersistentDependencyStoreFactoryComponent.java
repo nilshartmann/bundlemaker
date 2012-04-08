@@ -78,6 +78,26 @@ public class PersistentDependencyStoreFactoryComponent implements IPersistentDep
     }
   }
 
+  
+  
+  public void releasePersistentDependencyStore(IBundleMakerProject project) {
+    // step 1: dispose the cache if necessary
+    if (_cache.containsKey(project)) {
+
+      // get the store
+      PersistentDependencyStoreImpl storeImpl = _cache.get(project);
+
+      // dispose the store if necessary
+      if (storeImpl.isInitialized()) {
+        storeImpl.dispose();
+      }
+      
+      //
+      _cache.remove(project);
+    }
+    
+  }
+
   /**
    * @see org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory#getPersistentDependencyStore(org.bundlemaker.core.IBundleMakerProject)
    */

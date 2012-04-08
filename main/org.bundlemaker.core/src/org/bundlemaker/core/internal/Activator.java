@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
-import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -178,27 +177,9 @@ public class Activator extends Plugin {
    * <p>
    * </p>
    * 
-   * @param bundleMakerProject
    * @return
    */
-  public IPersistentDependencyStore getPersistentDependencyStore(IBundleMakerProject bundleMakerProject) {
-
-    IPersistentDependencyStoreFactory factory = getPersistentInfoStoreFactory();
-
-    // TODO
-
-    IPersistentDependencyStore infoStore = factory.getPersistentDependencyStore(bundleMakerProject);
-
-    return infoStore;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IPersistentDependencyStoreFactory getPersistentInfoStoreFactory() {
+  public IPersistentDependencyStoreFactory getPersistentDependencyStoreFactory() {
 
     try {
 
