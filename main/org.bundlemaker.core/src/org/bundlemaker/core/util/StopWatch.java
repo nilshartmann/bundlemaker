@@ -64,4 +64,14 @@ public class StopWatch {
     }
     return elapsed;
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param msg
+   */
+  public void dumpElapsedTime(String msg) {
+    System.out.println(msg + " : " + getElapsedTime());
+  }
 }
