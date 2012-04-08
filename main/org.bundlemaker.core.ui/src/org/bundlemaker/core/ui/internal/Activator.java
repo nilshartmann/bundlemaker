@@ -17,6 +17,7 @@ import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -32,7 +33,10 @@ import org.osgi.framework.ServiceReference;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String                PLUGIN_ID = "org.bundlemaker.core.ui"; //$NON-NLS-1$
+  public static final String                PLUGIN_ID                                 = "org.bundlemaker.core.ui"; //$NON-NLS-1$
+
+  /** the bundle maker "artificial project" identifier */
+  public static final String                BUNDLEMAKER_ARTIFICIAL_PROJECT_IDENTIFIER = "$bundlemaker";
 
   // The shared instance
   private static Activator                  plugin;
@@ -59,6 +63,9 @@ public class Activator extends AbstractUIPlugin {
     super.start(context);
     plugin = this;
     _bundleContext = context;
+
+    CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
+    commonNavigator.getCommonViewer().addFilter(new BundleMakerProjectViewerFilter());
 
     registerProjectExplorerSelectionForwarder();
 

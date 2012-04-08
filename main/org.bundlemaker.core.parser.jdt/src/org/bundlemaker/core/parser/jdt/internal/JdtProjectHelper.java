@@ -120,7 +120,7 @@ public class JdtProjectHelper {
 
       try {
         IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(associatedProjectName);
-        project.open(null);
+        project.open(IResource.HIDDEN, null);
 
         IJavaProject javaProject = JavaCore.create(project);
 
