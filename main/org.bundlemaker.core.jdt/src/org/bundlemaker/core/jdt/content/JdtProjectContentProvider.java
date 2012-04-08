@@ -33,97 +33,6 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
   private EntryHelper  _entryHelper;
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param javaProject
-   */
-  public void setJavaProject(IJavaProject javaProject) {
-    _javaProject = javaProject;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IJavaProject getJavaProject() {
-    return _javaProject;
-  }
-
-  /**
-   * {@inheritDoc}
-   * 
-   * @throws CoreException
-   */
-  @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
-      throws CoreException {
-
-    // build the project first
-    if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-      _javaProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-    }
-
-    // create instance of entry helper
-    _entryHelper = new EntryHelper(bundleMakerProject.getProjectDescription(), this, _javaProject);
-
-    //
-    for (IClasspathEntry classpathEntry : _javaProject.getRawClasspath()) {
-      handleClasspathEntry(classpathEntry);
-    }
-
-    //
-    return _entryHelper.getFileBasedContents();
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerProject
-   * @param classpathEntry
-   * @throws CoreException
-   * @throws JavaModelException
-   */
-  private void handleClasspathEntry(IClasspathEntry classpathEntry) throws CoreException, JavaModelException {
-    //
-    if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-      _entryHelper.addLibraryEntry(classpathEntry);
-    }
-
-    //
-    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-      _entryHelper.addSourceEntry(classpathEntry);
-    }
-
-    //
-    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
-
-      if (!classpathEntry.getPath().toString().startsWith("org.eclipse.jdt.launching.JRE_CONTAINER")) {
-
-        IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(classpathEntry.getPath(), _javaProject);
-
-        for (IClasspathEntry iClasspathEntry : classpathContainer.getClasspathEntries()) {
-          handleClasspathEntry(iClasspathEntry);
-        }
-      }
-
-    }
-
-    //
-    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-      System.out.println("CPE_PROJECT: " + classpathEntry);
-    }
-
-    //
-    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
-      System.out.println("CPE_VARIABLE: " + classpathEntry);
-    }
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override
@@ -157,4 +66,112 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
     IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
     _javaProject = JavaCore.create(project);
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param javaProject
+   */
+  public void setJavaProject(IJavaProject javaProject) {
+    _javaProject = javaProject;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IJavaProject getJavaProject() {
+    return _javaProject;
+  }
+
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    // create instance of entry helper
+    _entryHelper = new EntryHelper(bundleMakerProject.getProjectDescription(), this);
+
+    //
+    return resolveJavaProject(_javaProject);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param javaProject
+   * @return
+   * @throws CoreException
+   * @throws JavaModelException
+   */
+  private List<IProjectContentEntry> resolveJavaProject(IJavaProject javaProject) throws CoreException,
+      JavaModelException {
+    Assert.isNotNull(javaProject);
+
+    // build the project first
+    if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+      javaProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+    }
+
+    //
+    for (IClasspathEntry classpathEntry : javaProject.getRawClasspath()) {
+      handleClasspathEntry(classpathEntry, javaProject);
+    }
+
+    //
+    return _entryHelper.getFileBasedContents();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param classpathEntry
+   * @throws CoreException
+   * @throws JavaModelException
+   */
+  private void handleClasspathEntry(IClasspathEntry classpathEntry, IJavaProject javaProject) throws CoreException,
+      JavaModelException {
+    //
+    if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+      _entryHelper.addLibraryEntry(classpathEntry);
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+      _entryHelper.addSourceEntry(classpathEntry, javaProject);
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+      if (!classpathEntry.getPath().toString().startsWith("org.eclipse.jdt.launching.JRE_CONTAINER")) {
+        IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(classpathEntry.getPath(), _javaProject);
+        for (IClasspathEntry iClasspathEntry : classpathContainer.getClasspathEntries()) {
+          handleClasspathEntry(iClasspathEntry, javaProject);
+        }
+      }
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+
+      IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(classpathEntry.getPath().toPortableString());
+      resolveJavaProject(JavaCore.create(project));
+    }
+
+    //
+    else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_VARIABLE) {
+      System.out.println("CPE_VARIABLE: " + classpathEntry);
+    }
+  }
+
 }

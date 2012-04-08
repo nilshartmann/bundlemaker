@@ -26,9 +26,6 @@ public class EntryHelper {
   private IProjectContentProvider    _provider;
 
   /** - */
-  private IJavaProject               _javaProject;
-
-  /** - */
   private int                        _counter = 0;
 
   /** - */
@@ -42,15 +39,13 @@ public class EntryHelper {
    * @param provider
    * @param javaProject
    */
-  public EntryHelper(IProjectDescription projectDescription, IProjectContentProvider provider, IJavaProject javaProject) {
+  public EntryHelper(IProjectDescription projectDescription, IProjectContentProvider provider) {
     Assert.isNotNull(projectDescription);
     Assert.isNotNull(provider);
-    Assert.isNotNull(javaProject);
 
     //
     _projectDescription = projectDescription;
     _provider = provider;
-    _javaProject = javaProject;
 
     //
     _fileBasedContents = new LinkedList<IProjectContentEntry>();
@@ -81,16 +76,18 @@ public class EntryHelper {
    * 
    * @param classpathEntry
    */
-  public void addSourceEntry(IClasspathEntry classpathEntry) throws CoreException {
+  public void addSourceEntry(IClasspathEntry classpathEntry, IJavaProject javaProject) throws CoreException {
+    Assert.isNotNull(classpathEntry);
+    Assert.isNotNull(javaProject);
 
     IPath source = classpathEntry.getPath();
     source = makeAbsolute(source);
 
-    IPath classes = classpathEntry.getOutputLocation() != null ? classpathEntry.getOutputLocation() : _javaProject
+    IPath classes = classpathEntry.getOutputLocation() != null ? classpathEntry.getOutputLocation() : javaProject
         .getOutputLocation();
     classes = makeAbsolute(classes);
 
-    createFileBasedContent(_javaProject.getProject().getName(), "1.0.0", classes, source);
+    createFileBasedContent(javaProject.getProject().getName(), "1.0.0", classes, source);
   }
 
   /**
