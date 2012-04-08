@@ -45,12 +45,31 @@ public class Activator extends AbstractUIPlugin {
 
   private ProjectExplorerSelectionForwarder _projectExplorerSelectionForwarder;
 
+  /** - */
   private IArtifactSelectionListener        _projectExplorerSelectionListener;
+
+  /** - */
+  private boolean                           _filterInitialized;
 
   /**
    * The constructor
    */
   public Activator() {
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  // TODO: As an extension??
+  public void initFilters() {
+
+    //
+    if (!_filterInitialized) {
+      CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
+      commonNavigator.getCommonViewer().addFilter(new BundleMakerProjectViewerFilter());
+      _filterInitialized = true;
+    }
   }
 
   /*
@@ -63,9 +82,6 @@ public class Activator extends AbstractUIPlugin {
     super.start(context);
     plugin = this;
     _bundleContext = context;
-
-    CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
-    commonNavigator.getCommonViewer().addFilter(new BundleMakerProjectViewerFilter());
 
     registerProjectExplorerSelectionForwarder();
 

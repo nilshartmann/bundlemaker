@@ -47,6 +47,11 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
    */
   @Override
   protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
+
+    // TODO: As an exception?
+    Activator.getDefault().initFilters();
+
+    //
     List<IProject> selectedObjects = getSelectedObject(selection, IProject.class);
     IProject project = selectedObjects.get(0);
     IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project, null);
