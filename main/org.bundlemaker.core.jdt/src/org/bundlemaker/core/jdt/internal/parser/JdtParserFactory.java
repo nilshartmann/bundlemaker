@@ -8,14 +8,14 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.parser.jdt.internal;
+package org.bundlemaker.core.jdt.internal.parser;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.jdt.parser.CoreParserJdt;
+import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.parser.jdt.CoreParserJdt;
-import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;
 import org.bundlemaker.core.util.ExtensionRegistryTracker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

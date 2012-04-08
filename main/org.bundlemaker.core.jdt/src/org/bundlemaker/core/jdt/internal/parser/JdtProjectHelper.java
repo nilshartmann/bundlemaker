@@ -8,14 +8,13 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.parser.jdt.internal;
+package org.bundlemaker.core.jdt.internal.parser;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
-import org.bundlemaker.core.parser.jdt.CoreParserJdt;
+import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;

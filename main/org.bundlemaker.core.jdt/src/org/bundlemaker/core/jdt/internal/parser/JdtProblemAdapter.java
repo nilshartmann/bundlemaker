@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.parser.jdt.internal;
+package org.bundlemaker.core.jdt.internal.parser;
 
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.resource.IResourceKey;

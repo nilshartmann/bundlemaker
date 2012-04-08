@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.parser.jdt;
+package org.bundlemaker.core.jdt.parser;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -23,10 +23,10 @@ public class CoreParserJdt {
   public static final String BUNDLEMAKER_JDT_PROJECT_POSTFIX = "$bundlemakerJdt";
 
   /** - */
-  public static final String BUNDLE_ID          = "org.bundlemaker.core.parser.jdt";
+  public static final String BUNDLE_ID          = "org.bundlemaker.core.jdt";
 
   /** the EXTENSION_POINT_ID */
-  public static final String EXTENSION_POINT_ID = "org.bundlemaker.core.parser.jdt.jdtsourceparserhook";
+  public static final String EXTENSION_POINT_ID = "org.bundlemaker.core.jdt.jdtsourceparserhook";
 
   /**
    * Returns the default compiler options. The returned map contains at least
