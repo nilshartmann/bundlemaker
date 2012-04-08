@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
+import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.adapter;
 
-import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
+import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.eclipse.core.runtime.IAdapterFactory;

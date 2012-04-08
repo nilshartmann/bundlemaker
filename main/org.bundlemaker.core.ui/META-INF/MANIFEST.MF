@@ -32,10 +32,10 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.core.ui;bundle-version="1.0.0",
  org.eclipse.jface.text;bundle-version="3.6.0",
  org.bundlemaker.core.osgi;bundle-version="1.0.0",
- org.bundlemaker.core.content.jdt;bundle-version="1.0.0",
  org.bundlemaker.core.ui.artifact;bundle-version="1.0.0",
  org.eclipse.core.expressions;bundle-version="3.4.200",
- org.bundlemaker.core.ui.event;bundle-version="1.0.0"
+ org.bundlemaker.core.ui.event;bundle-version="1.0.0",
+ org.bundlemaker.core.jdt;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.service.component.annotations
 Bundle-ActivationPolicy: lazy

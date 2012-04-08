@@ -12,7 +12,7 @@ package org.bundlemaker.core.parser.jdt.internal;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
+import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.jdt.CoreParserJdt;
 import org.bundlemaker.core.parser.jdt.IJdtSourceParserHook;

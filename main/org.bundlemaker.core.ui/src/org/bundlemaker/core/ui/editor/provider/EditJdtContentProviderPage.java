@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.editor.provider;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.content.jdt.JdtProjectContentProvider;
+import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.core.resources.IProject;
