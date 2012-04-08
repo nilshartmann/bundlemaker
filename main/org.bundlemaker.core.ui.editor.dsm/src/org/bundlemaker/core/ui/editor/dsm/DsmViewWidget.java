@@ -13,7 +13,7 @@ import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarke
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.figures.zoom.ZoomableScrollPane;
 import org.bundlemaker.core.ui.editor.dsm.utils.DsmUtils;
-import org.bundlemaker.core.ui.selection.Selection;
+import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.selection.IArtifactSelectionService;
-import org.bundlemaker.core.ui.selection.Selection;
+import org.bundlemaker.core.ui.event.selection.IArtifactSelectionService;
+import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.ISelectionListener;

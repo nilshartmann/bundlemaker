@@ -41,5 +41,8 @@ public class OpenBundleMakerProjectAction extends Action implements ISelectionCh
       // Re-activate common navigator make selections via context menu work
       CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
     }
+
+    //
+    // TODO: Handle DoubleCLick here...
   }
 }

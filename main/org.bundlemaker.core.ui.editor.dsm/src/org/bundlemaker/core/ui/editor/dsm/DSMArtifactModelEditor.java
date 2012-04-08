@@ -23,10 +23,10 @@ import org.bundlemaker.core.ui.editor.dsm.figures.MatrixEvent;
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.utils.DsmUtils;
+import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.print.FigurePrinter;
-import org.bundlemaker.core.ui.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.selection.Selection;
-import org.bundlemaker.core.ui.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
@@ -107,7 +107,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     }
 
   }
-  
+
   /**
    * {@inheritDoc}
    */
@@ -115,8 +115,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   public void artifactModelChanged() {
     onSetCurrentArtifactSelection(getCurrentArtifactSelection());
   }
-
-
 
   /**
    * {@inheritDoc}
@@ -194,6 +192,14 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setFocus() {
+    //
+  }
+
+  /**
    * <p>
    * </p>
    * 
@@ -241,14 +247,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     }
 
     setCurrentArtifactSelection(selection);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setFocus() {
-    // setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 
   /**

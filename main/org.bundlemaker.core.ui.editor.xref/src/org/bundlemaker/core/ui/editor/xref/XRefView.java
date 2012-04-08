@@ -18,9 +18,10 @@ import java.util.Set;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.selection.IRootArtifactSelection;
-import org.bundlemaker.core.ui.selection.Selection;
-import org.bundlemaker.core.ui.selection.workbench.editor.AbstractRootArtifactSelectionAwareEditorPart;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeSelection;
@@ -47,7 +48,7 @@ import org.eclipse.swt.widgets.Composite;
  * @author Frank Schlueter
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
+public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
 
   /** the ID of the view as specified by the extension */
   public static final String         XREF_ID              = XRefView.class.getName();
@@ -58,13 +59,14 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
 
   private TreeViewerPanel            rightTree;
 
-  private IBundleMakerArtifact       rootArtifact;
-
   private List<IBundleMakerArtifact> middleSelectedArtifacts;
 
   private List<IBundleMakerArtifact> dependentSelectedArtifacts;
 
   private boolean                    showUsedDependencies = true;
+
+  /** - */
+  private IRootArtifact              _rootArtifact;
 
   /**
    * {@inheritDoc}
@@ -109,8 +111,9 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
         selectRightTree(treeSelection.toList());
       }
     });
-
-    initRootArtifactSelection();
+    
+    //
+    
   }
 
   /**
@@ -204,8 +207,15 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
     return dependentArtifacts;
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @param selectedArtifacts
+   * @return
+   */
   private List<IBundleMakerArtifact> getUsedByArtifacts(List<IBundleMakerArtifact> selectedArtifacts) {
-    Collection<? extends IDependency> usedByDependencies = rootArtifact.getDependencies(selectedArtifacts);
+    Collection<? extends IDependency> usedByDependencies = _rootArtifact.getDependencies(selectedArtifacts);
     List<IBundleMakerArtifact> dependentArtifacts = new ArrayList<IBundleMakerArtifact>();
     for (IDependency dependency : usedByDependencies) {
       Collection<IDependency> leafDependencies = new ArrayList<IDependency>();
@@ -220,9 +230,8 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
   /**
    * {@inheritDoc}
    */
-  @Override
-  protected void onRootArtifactSelectionChanged(IRootArtifactSelection rootArtifactSelection) {
-    System.out.println("onRootArtifactSelectionChanged");
+  protected void onArtifactSelectionChanged(IArtifactSelection event) {
+
     //
     if (middleTree == null || leftTree == null || rightTree == null) {
       return;
@@ -233,21 +242,34 @@ public class XRefView extends AbstractRootArtifactSelectionAwareEditorPart {
     dependentSelectedArtifacts = null;
 
     //
-    if (rootArtifactSelection != null && rootArtifactSelection.hasSelectedRootArtifact()) {
-      rootArtifact = rootArtifactSelection.getSelectedRootArtifact();
-      if (middleTree != null) {
-        middleTree.getTreeViewer().setInput(rootArtifact);
-      }
-      if (leftTree != null) {
-        leftTree.getTreeViewer().setInput(rootArtifact);
-      }
-      if (rightTree != null) {
-        rightTree.getTreeViewer().setInput(rootArtifact);
-      }
-    } else {
+    if (event == null || !event.hasSelectedArtifacts()) {
       middleTree.getTreeViewer().setInput(new Object());
       leftTree.getTreeViewer().setInput(new Object());
       rightTree.getTreeViewer().setInput(new Object());
+      return;
+    } 
+
+    //
+    if (event.hasSelectedArtifacts() && !event.getRootArtifact().equals(_rootArtifact)) {
+      
+      //
+      _rootArtifact = event.getRootArtifact();
+      
+      //
+      if (middleTree != null) {
+        middleTree.getTreeViewer().setInput(_rootArtifact);
+      }
+      if (leftTree != null) {
+        leftTree.getTreeViewer().setInput(_rootArtifact);
+      }
+      if (rightTree != null) {
+        rightTree.getTreeViewer().setInput(_rootArtifact);
+      }
     }
+  }
+
+  @Override
+  protected String getProviderId() {
+    return XREF_ID;
   }
 }

@@ -12,10 +12,10 @@ package org.bundlemaker.core.ui.view.dependencytable;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.selection.IDependencySelection;
-import org.bundlemaker.core.ui.selection.IDependencySelectionListener;
-import org.bundlemaker.core.ui.selection.Selection;
-import org.bundlemaker.core.ui.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
+import org.bundlemaker.core.ui.event.selection.IDependencySelection;
+import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
+import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
