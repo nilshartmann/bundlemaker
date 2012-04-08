@@ -2,13 +2,13 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         id="org.bundlemaker.core.content.jdt.JdtProjectContentProvider"
+         id="org.bundlemaker.core.jdt.content.JdtProjectContentProvider"
          name="JdtProjectContentProvider"
          point="org.bundlemaker.core.projectcontentprovider">
       <projectContentProvider
-            class="org.bundlemaker.core.content.jdt.JdtProjectContentProvider">
+            class="org.bundlemaker.core.jdt.content.JdtProjectContentProvider">
          <jaxbObjectFactory
-               class="org.bundlemaker.core.content.jdt.xml.ObjectFactory">
+               class="org.bundlemaker.core.jdt.content.xml.ObjectFactory">
          </jaxbObjectFactory>
       </projectContentProvider>
    </extension>

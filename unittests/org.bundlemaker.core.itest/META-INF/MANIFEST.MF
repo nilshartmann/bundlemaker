@@ -13,5 +13,5 @@ Require-Bundle: org.bundlemaker.core.itestframework;bundle-version="1.0.0",
  com.springsource.bundlor;bundle-version="1.0.0",
  com.springsource.util.parser.manifest;bundle-version="2.0.0",
  com.springsource.util.osgi;bundle-version="2.0.0",
- org.bundlemaker.core.content.jdt;bundle-version="1.0.0"
+ org.bundlemaker.core.jdt;bundle-version="1.0.0"
 Export-Package: org.bundlemaker.core.itest
