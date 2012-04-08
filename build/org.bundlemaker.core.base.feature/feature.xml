@@ -220,8 +220,6 @@ litigation.
       <import feature="org.eclipse.jdt" version="3.6.1.r361_v20100714-0800-7z8XFUSFLFlmgLc5z-Bvrt8-HVkH"/>
       <import feature="org.eclipse.platform" version="3.6.1.r361_v20100909-9gF78GrkFqw7GrsZnvz0JWNTeb6fue6896L"/>
       <import feature="org.eclipse.pde" version="3.6.1.r361_v20100727-7b7mFL-FET3dhESDgE5_bkJ"/>
-      <import feature="org.eclipse.xtext.runtime" version="1.0.1.v201008251220"/>
-      <import feature="org.eclipse.xtext.ui" version="1.0.1.v201008251220"/>
    </requires>
 
    <plugin
@@ -233,13 +231,6 @@ litigation.
 
    <plugin
          id="org.bundlemaker.core.parser.bytecode"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.bundlemaker.core.parser.jdt"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -262,6 +253,13 @@ litigation.
 
    <plugin
          id="org.bundlemaker.core.reports"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bundlemaker.core.jdt"
          download-size="0"
          install-size="0"
          version="0.0.0"
