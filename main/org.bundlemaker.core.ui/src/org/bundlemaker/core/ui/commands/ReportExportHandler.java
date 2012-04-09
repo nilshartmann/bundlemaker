@@ -10,8 +10,13 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.commands;
 
+import java.io.File;
+
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.SimpleReportExporter;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -22,5 +27,22 @@ public class ReportExportHandler extends AbstractExportHandler {
   @Override
   protected IModuleExporter createExporter() throws Exception {
     return new SimpleReportExporter();
+  }
+
+  @Override
+  protected File getDestinationDirectory() {
+    DirectoryDialog dialog = new DirectoryDialog(new Shell());
+    dialog.setMessage("Select the export destination folder");
+    dialog.setText("Export modules");
+    String res = dialog.open();
+
+    if (res != null) {
+      File destination = Path.fromOSString(res).makeAbsolute().toFile();
+      destination.mkdirs();
+
+      return destination;
     }
+
+    return null;
+  }
 }
