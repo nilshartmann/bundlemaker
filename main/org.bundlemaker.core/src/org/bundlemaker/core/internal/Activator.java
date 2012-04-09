@@ -87,7 +87,7 @@ public class Activator extends Plugin {
     _parserFactoryRegistry.initialize();
 
     //
-    enableAutoBuild(false);
+    // enableAutoBuild(false);
 
     //
     _activator = this;
