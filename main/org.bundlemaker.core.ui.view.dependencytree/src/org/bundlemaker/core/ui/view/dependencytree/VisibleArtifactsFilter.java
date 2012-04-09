@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider.VirtualRoot;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
@@ -48,7 +49,9 @@ public class VisibleArtifactsFilter extends ViewerFilter {
 
   @Override
   public boolean select(Viewer viewer, Object parentElement, Object element) {
-    if (_artifacts.contains(element)) {
+    if (element instanceof VirtualRoot) {
+      return true;
+    } else if (_artifacts.contains(element)) {
       return true;
     } else {
       return false;

@@ -27,7 +27,7 @@ public class TreeViewerPanel extends Composite {
       titleLabel.setText(title);
     }
     treeViewer = new TreeViewer(this, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    treeViewer.setContentProvider(new ArtifactTreeContentProvider());
+    treeViewer.setContentProvider(new ArtifactTreeContentProvider(false));
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
     treeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
     treeViewer.setSorter(new ArtifactTreeViewerSorter());

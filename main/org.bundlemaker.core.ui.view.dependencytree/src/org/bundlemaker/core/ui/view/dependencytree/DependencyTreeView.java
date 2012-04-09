@@ -87,11 +87,9 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
 
     //
     _fromTreeViewer = createTreeViewer(parent);
-    _fromTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
 
     //
     _toTreeViewer = createTreeViewer(parent);
-    _toTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
 
     // add SelectionListeners
     _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());
@@ -121,7 +119,7 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
     //
     _sourceArtifactMap.clear();
     _targetArtifactMap.clear();
-    
+
     //
     for (IDependency dependency : _leafDependencies) {
       _sourceArtifactMap.getOrCreate(dependency.getFrom()).add(dependency);
@@ -131,7 +129,7 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
     // update 'from' and 'to' tree, no filtering
     setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
-    
+
     // auto expand
     for (IBundleMakerArtifact artifact : Helper.getChildrenOfCommonParent(_sourceArtifactMap.keySet())) {
       _fromTreeViewer.expandToLevel(artifact, 0);
@@ -153,13 +151,13 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
     Assert.isNotNull(visibleArtifacts);
 
     if (visibleArtifacts.size() > 0) {
-      
+
       // set the root if necessary
       IRootArtifact rootArtifact = visibleArtifacts.toArray(new IBundleMakerArtifact[0])[0].getRoot();
       if (!rootArtifact.equals(treeViewer.getInput())) {
         treeViewer.setInput(rootArtifact);
       }
-      
+
       // set the filter
       treeViewer.setFilters(new ViewerFilter[] { new VisibleArtifactsFilter(visibleArtifacts) });
     }
@@ -180,9 +178,10 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
    */
   private TreeViewer createTreeViewer(Composite parent) {
     TreeViewer treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-    treeViewer.setContentProvider(new ArtifactTreeContentProvider());
+    treeViewer.setContentProvider(new ArtifactTreeContentProvider(true));
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
     treeViewer.setSorter(new ArtifactTreeViewerSorter());
+    treeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
     return treeViewer;
   }
 

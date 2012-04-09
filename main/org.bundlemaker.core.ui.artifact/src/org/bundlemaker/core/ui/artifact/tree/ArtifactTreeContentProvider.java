@@ -14,6 +14,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -29,6 +30,35 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
   /** EMPTY_OBJECT_ARRAY */
   private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
+  /** - */
+  private boolean               _showRoot;
+
+  /** needed to show the root in the tree viewer, see [BM-165 Show Root-Node in Dependency Tree / XRef View] */
+  private VirtualRoot           _virtualRoot;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ArtifactTreeContentProvider}.
+   * </p>
+   */
+  public ArtifactTreeContentProvider() {
+    this(false);
+  }
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ArtifactTreeContentProvider}.
+   * </p>
+   * 
+   * @param _showRoot
+   */
+  public ArtifactTreeContentProvider(boolean _showRoot) {
+    this._showRoot = _showRoot;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Object[] getChildren(Object parent) {
 
@@ -73,8 +103,8 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
       //
       return EMPTY_OBJECT_ARRAY;
-    } else if (parent instanceof VirtualSuperRoot) {
-      return ((VirtualSuperRoot) parent).getChildren();
+    } else if (parent instanceof VirtualRoot) {
+      return ((VirtualRoot) parent).getChildren();
     } else if (parent instanceof IBundleMakerArtifact) {
 
       IBundleMakerArtifact parentArtifact = (IBundleMakerArtifact) parent;
@@ -83,7 +113,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
       for (IBundleMakerArtifact iArtifact : parentArtifact.getChildren()) {
         if (iArtifact.getType().equals(ArtifactType.Package)) {
-          if (((IBundleMakerArtifact) iArtifact).containsTypesOrResources()) {
+          if (iArtifact.containsTypesOrResources()) {
             artifacts.add(iArtifact);
           } else {
             //
@@ -102,8 +132,15 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
   public Object getParent(Object input) {
 
     if (input instanceof IBundleMakerArtifact) {
-      return ((IBundleMakerArtifact) input).getParent();
+
+      if (_showRoot && ((IBundleMakerArtifact) input).getParent() instanceof IRootArtifact) {
+        return _virtualRoot;
+      } else {
+        return ((IBundleMakerArtifact) input).getParent();
+      }
     }
+
+    //
     return null;
   }
 
@@ -120,11 +157,15 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
    */
   @Override
   public Object[] getElements(Object parent) {
-//    if (parent instanceof IRootArtifact) {
-//      return new Object[] { new VirtualSuperRoot((IRootArtifact) parent) };
-//    } else {
+
+    if (_showRoot && parent instanceof IRootArtifact) {
+      if (_virtualRoot == null) {
+        _virtualRoot = new VirtualRoot((IRootArtifact) parent);
+      }
+      return new Object[] { _virtualRoot };
+    } else {
       return getChildren(parent);
-//    }
+    }
   }
 
   @Override
@@ -141,20 +182,31 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  class VirtualSuperRoot {
+  public class VirtualRoot {
 
     private IRootArtifact _rootArtifact;
 
     /**
      * <p>
-     * Creates a new instance of type {@link VirtualSuperRoot}.
+     * Creates a new instance of type {@link VirtualRoot}.
      * </p>
      * 
      * @param rootArtifact
      */
-    public VirtualSuperRoot(IRootArtifact rootArtifact) {
-      super();
+    public VirtualRoot(IRootArtifact rootArtifact) {
+      Assert.isNotNull(rootArtifact);
+
       _rootArtifact = rootArtifact;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public String getName() {
+      return _rootArtifact.getName();
     }
 
     /** - */
