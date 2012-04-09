@@ -66,24 +66,32 @@ public class VariablePath {
     return "VariablePath [_path=" + _path + "]";
   }
 
-  // /*
-  // * (non-Javadoc)
-  // *
-  // * @see org.bundlemaker.core.projectdescription.IRootPath#isSourcePath()
-  // */
-  // @Override
-  // public boolean isSourcePath() {
-  // return _binaryPath == false;
-  // }
-  //
-  // /*
-  // * (non-Javadoc)
-  // *
-  // * @see org.bundlemaker.core.projectdescription.IRootPath#isBinaryPath()
-  // */
-  // @Override
-  // public boolean isBinaryPath() {
-  // return _binaryPath;
-  // }
+  @Override
+  public int hashCode() {
+    int result = 31;
+    try {
+      result = result + getResolvedPath().hashCode();
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+
+    VariablePath other = (VariablePath) obj;
+    try {
+      return getResolvedPath().equals(other.getResolvedPath());
+    } catch (CoreException e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
 }
