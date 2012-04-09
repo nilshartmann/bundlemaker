@@ -1,10 +1,12 @@
 package org.bundlemaker.core.jdt.content;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.xml.JdtProjectContentType;
 import org.bundlemaker.core.projectdescription.AbstractContentProvider;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.core.resources.IProject;
@@ -27,10 +29,13 @@ import org.eclipse.jdt.core.JavaModelException;
 public class JdtProjectContentProvider extends AbstractContentProvider implements IProjectContentProvider {
 
   /** - */
-  private IJavaProject _javaProject;
+  private IJavaProject       _javaProject;
 
   /** - */
-  private EntryHelper  _entryHelper;
+  private EntryHelper        _entryHelper;
+
+  /** - */
+  private List<IJavaProject> _alreadyResolved = new LinkedList<IJavaProject>();
 
   /**
    * {@inheritDoc}
@@ -100,7 +105,10 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
     _entryHelper = new EntryHelper(bundleMakerProject.getProjectDescription(), this);
 
     //
-    return resolveJavaProject(_javaProject);
+    resolveJavaProject(_javaProject);
+
+    //
+    return _entryHelper.getFileBasedContents();
   }
 
   /**
@@ -112,9 +120,16 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
    * @throws CoreException
    * @throws JavaModelException
    */
-  private List<IProjectContentEntry> resolveJavaProject(IJavaProject javaProject) throws CoreException,
-      JavaModelException {
+  private void resolveJavaProject(IJavaProject javaProject) throws CoreException, JavaModelException {
     Assert.isNotNull(javaProject);
+
+    //
+    if (_alreadyResolved.contains(javaProject)) {
+      return;
+    }
+
+    //
+    _alreadyResolved.add(javaProject);
 
     // build the project first
     if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
@@ -123,11 +138,8 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
 
     //
     for (IClasspathEntry classpathEntry : javaProject.getRawClasspath()) {
-      handleClasspathEntry(classpathEntry, javaProject);
+      handleClasspathEntry(classpathEntry, javaProject, AnalyzeMode.BINARIES_AND_SOURCES);
     }
-
-    //
-    return _entryHelper.getFileBasedContents();
   }
 
   /**
@@ -139,8 +151,9 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
    * @throws CoreException
    * @throws JavaModelException
    */
-  private void handleClasspathEntry(IClasspathEntry classpathEntry, IJavaProject javaProject) throws CoreException,
-      JavaModelException {
+  private void handleClasspathEntry(IClasspathEntry classpathEntry, IJavaProject javaProject, AnalyzeMode analyzeMode)
+      throws CoreException, JavaModelException {
+
     //
     if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
       _entryHelper.addLibraryEntry(classpathEntry);
@@ -154,9 +167,9 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
     //
     else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
       if (!classpathEntry.getPath().toString().startsWith("org.eclipse.jdt.launching.JRE_CONTAINER")) {
-        IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(classpathEntry.getPath(), _javaProject);
+        IClasspathContainer classpathContainer = JavaCore.getClasspathContainer(classpathEntry.getPath(), javaProject);
         for (IClasspathEntry iClasspathEntry : classpathContainer.getClasspathEntries()) {
-          handleClasspathEntry(iClasspathEntry, javaProject);
+          handleClasspathEntry(iClasspathEntry, javaProject, AnalyzeMode.DO_NOT_ANALYZE);
         }
       }
     }
@@ -164,7 +177,8 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
     //
     else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
 
-      IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(classpathEntry.getPath().toPortableString());
+      IProject project = ResourcesPlugin.getWorkspace().getRoot()
+          .getProject(classpathEntry.getPath().toPortableString());
       resolveJavaProject(JavaCore.create(project));
     }
 

@@ -3,6 +3,7 @@ package org.bundlemaker.core.jdt.content;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
@@ -26,10 +27,13 @@ public class EntryHelper {
   private IProjectContentProvider    _provider;
 
   /** - */
-  private int                        _counter = 0;
+  private int                        _counter         = 0;
 
   /** - */
   private List<IProjectContentEntry> _fileBasedContents;
+
+  /** - */
+  private List<VariablePath>         _alreadyResolved = new LinkedList<VariablePath>();
 
   /**
    * <p>
@@ -67,7 +71,7 @@ public class EntryHelper {
     // source = makeAbsolute(source);
 
     // TODO
-    createFileBasedContent(classpathEntry.getPath().lastSegment(), "1.2.3", classes, null);
+    createFileBasedContent(classpathEntry.getPath().lastSegment(), "1.2.3", classes, null, AnalyzeMode.DO_NOT_ANALYZE);
   }
 
   /**
@@ -87,7 +91,8 @@ public class EntryHelper {
         .getOutputLocation();
     classes = makeAbsolute(classes);
 
-    createFileBasedContent(javaProject.getProject().getName(), "1.0.0", classes, source);
+    createFileBasedContent(javaProject.getProject().getName(), "1.0.0", classes, source,
+        AnalyzeMode.BINARIES_AND_SOURCES);
   }
 
   /**
@@ -111,20 +116,28 @@ public class EntryHelper {
    * @return
    * @throws CoreException
    */
-  private void createFileBasedContent(String contentName, String contentVersion, IPath binaryPath, IPath sourcePath)
-      throws CoreException {
+  private void createFileBasedContent(String contentName, String contentVersion, IPath binaryPath, IPath sourcePath,
+      AnalyzeMode analyzeMode) throws CoreException {
 
     Assert.isNotNull(contentName);
     Assert.isNotNull(contentVersion);
     Assert.isNotNull(binaryPath);
+    Assert.isNotNull(analyzeMode);
 
-    System.out.println("binaryPath: " + binaryPath);
-    System.out.println("sourcePath: " + sourcePath);
+    VariablePath variablePath = new VariablePath(binaryPath.toOSString());
+
+    if (_alreadyResolved.contains(variablePath)) {
+      return;
+    }
+
+    _alreadyResolved.add(variablePath);
 
     FileBasedContent result = new FileBasedContent(_provider);
     result.setId(_provider.getId() + _counter++);
     result.setName(contentName);
     result.setVersion(contentVersion);
+
+    result.setAnalyzeMode(analyzeMode);
 
     result.addRootPath(new VariablePath(binaryPath.toOSString()), ContentType.BINARY);
 
