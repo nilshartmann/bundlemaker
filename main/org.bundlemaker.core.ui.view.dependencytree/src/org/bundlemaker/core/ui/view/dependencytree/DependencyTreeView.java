@@ -19,6 +19,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider.VirtualRoot;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
@@ -199,25 +200,35 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
       //
       IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 
-      //
-      List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
-      List<IDependency> selectedDetailDependencies = new LinkedList<IDependency>();
-      for (Object selectedObject : structuredSelection.toList()) {
-        if (selectedObject instanceof IBundleMakerArtifact) {
-          IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
-          for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
-            if (_sourceArtifactMap.containsKey(artifact)) {
-              List<IDependency> dependencies = _sourceArtifactMap.get(artifact);
-              selectedDetailDependencies.addAll(dependencies);
-              for (IDependency dep : dependencies) {
-                visibleArtifacts.add(dep.getTo());
+      // check for selected root element
+      boolean containsRoot = false;
+      for (Object object : structuredSelection.toList()) {
+        if (object instanceof IRootArtifact || object instanceof VirtualRoot) {
+          containsRoot = true;
+          break;
+        }
+      }
+
+      if (structuredSelection.size() > 0 && !containsRoot) {
+
+        //
+        List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
+        List<IDependency> selectedDetailDependencies = new LinkedList<IDependency>();
+        for (Object selectedObject : structuredSelection.toList()) {
+          if (selectedObject instanceof IBundleMakerArtifact) {
+            IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
+            for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
+              if (_sourceArtifactMap.containsKey(artifact)) {
+                List<IDependency> dependencies = _sourceArtifactMap.get(artifact);
+                selectedDetailDependencies.addAll(dependencies);
+                for (IDependency dep : dependencies) {
+                  visibleArtifacts.add(dep.getTo());
+                }
               }
             }
           }
         }
-      }
 
-      if (structuredSelection.size() > 0) {
         _toTreeViewer.setSelection(new StructuredSelection());
         setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
         Selection.instance().getDependencySelectionService()
@@ -244,25 +255,35 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
       //
       IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 
-      //
-      List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
-      List<IDependency> selectedDetailDependencies = new LinkedList<IDependency>();
-      for (Object selectedObject : structuredSelection.toList()) {
-        if (selectedObject instanceof IBundleMakerArtifact) {
-          IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
-          for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
-            if (_targetArtifactMap.containsKey(artifact)) {
-              List<IDependency> dependencies = _targetArtifactMap.get(artifact);
-              selectedDetailDependencies.addAll(dependencies);
-              for (IDependency dep : dependencies) {
-                visibleArtifacts.add(dep.getFrom());
+      // check for selected root element
+      boolean containsRoot = false;
+      for (Object object : structuredSelection.toList()) {
+        if (object instanceof IRootArtifact || object instanceof VirtualRoot) {
+          containsRoot = true;
+          break;
+        }
+      }
+
+      if (structuredSelection.size() > 0 && !containsRoot) {
+
+        //
+        List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
+        List<IDependency> selectedDetailDependencies = new LinkedList<IDependency>();
+        for (Object selectedObject : structuredSelection.toList()) {
+          if (selectedObject instanceof IBundleMakerArtifact) {
+            IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
+            for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
+              if (_targetArtifactMap.containsKey(artifact)) {
+                List<IDependency> dependencies = _targetArtifactMap.get(artifact);
+                selectedDetailDependencies.addAll(dependencies);
+                for (IDependency dep : dependencies) {
+                  visibleArtifacts.add(dep.getFrom());
+                }
               }
             }
           }
         }
-      }
 
-      if (structuredSelection.size() > 0) {
         _fromTreeViewer.setSelection(new StructuredSelection());
         setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
         Selection.instance().getDependencySelectionService()
