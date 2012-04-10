@@ -10,7 +10,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ArtifactType;
-import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
+import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -179,7 +179,12 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
   }
 
   @Override
-  public void inputChanged(Viewer arg0, Object arg1, Object arg2) {
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    if (newInput != null && newInput instanceof IRootArtifact) {
+      _virtualRoot = new VirtualRoot((IRootArtifact) newInput);
+    } else {
+      _virtualRoot = null;
+    }
   }
 
   /**
@@ -190,6 +195,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
    */
   private class VirtualRoot implements IRootArtifact {
 
+    /** the root artifact */
     private IRootArtifact _rootArtifact;
 
     /**
@@ -216,7 +222,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
     }
 
     @Override
-    public void addArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+    public void addArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
       _rootArtifact.addArtifactModelChangedListener(listener);
     }
 
@@ -226,7 +232,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
     }
 
     @Override
-    public void removeArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+    public void removeArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
       _rootArtifact.removeArtifactModelChangedListener(listener);
     }
 
