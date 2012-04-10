@@ -18,38 +18,27 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 public class EditorHelper {
 
-  public static void open(IBundleMakerArtifact artifact) {
+  public static void open(IBundleMakerArtifact artifact) throws Exception {
 
     // TODO: MOVE
-    try {
+    CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
 
-      CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
+    commonNavigator.setLinkingEnabled(false);
 
-      commonNavigator.setLinkingEnabled(false);
+    IResourceArtifact resourceArtifact = (IResourceArtifact) artifact.getParent(ArtifactType.Resource);
+    IResource resource = resourceArtifact.getAssociatedResource();
+    IMovableUnit movableUnit = MovableUnit.createFromResource(resource, resourceArtifact.getModularizedSystem());
+    IResource sourceResource = movableUnit.hasAssociatedSourceResource() ? movableUnit.getAssociatedSourceResource()
+        : resource;
 
-      IResourceArtifact resourceArtifact = (IResourceArtifact) artifact.getParent(ArtifactType.Resource);
-      IResource resource = resourceArtifact.getAssociatedResource();
-      IMovableUnit movableUnit = MovableUnit.createFromResource(resource, resourceArtifact.getModularizedSystem());
-      IResource sourceResource = movableUnit.hasAssociatedSourceResource() ? movableUnit.getAssociatedSourceResource()
-          : resource;
-
-      IBundleMakerProject bundleMakerProject = resourceArtifact.getRoot().getModularizedSystem()
-          .getBundleMakerProject();
-      IJavaProject javaProject = getAssociatedJavaProject(bundleMakerProject.getProject());
-      IJavaElement javaElement = javaProject.findElement(new Path(sourceResource.getPath()));
-      JavaUI.openInEditor(javaElement);
-    } catch (PartInitException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (JavaModelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    IBundleMakerProject bundleMakerProject = resourceArtifact.getRoot().getModularizedSystem().getBundleMakerProject();
+    IJavaProject javaProject = getAssociatedJavaProject(bundleMakerProject.getProject());
+    IJavaElement javaElement = javaProject.findElement(new Path(sourceResource.getPath()));
+    JavaUI.openInEditor(javaElement);
   }
 
   private static IJavaProject getAssociatedJavaProject(IProject bundleMakerProject) {

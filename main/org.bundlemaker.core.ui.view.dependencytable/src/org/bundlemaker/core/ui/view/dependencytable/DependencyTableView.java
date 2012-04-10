@@ -21,6 +21,7 @@ import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -35,6 +36,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -68,7 +70,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     Composite tableComposite = new Composite(parent, SWT.NONE);
     tableComposite.setLayout(new TableColumnLayout());
 
-    _viewer = new TableViewer(tableComposite, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+    _viewer = new TableViewer(tableComposite, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
+        | SWT.FULL_SELECTION);
     final Table table = _viewer.getTable();
     table.setHeaderVisible(true);
     table.setLinesVisible(true);
@@ -87,7 +90,11 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
         if (dependency != null) {
           IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
           if (artifact != null) {
-            EditorHelper.open(artifact);
+            try {
+              EditorHelper.open(artifact);
+            } catch (Exception e) {
+              MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
+            }
           }
         }
       }
