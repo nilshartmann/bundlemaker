@@ -68,6 +68,18 @@ public class ProjectEditor extends FormEditor {
     return false;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.ui.forms.editor.FormEditor#isDirty()
+   */
+  @Override
+  public boolean isDirty() {
+    // TODO Auto-generated method stub
+    boolean dirty = super.isDirty();
+    return dirty;
+  }
+
   /**
    * Opens the {@link IBundleMakerProject}
    */

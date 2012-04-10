@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.projecteditor;
 
 import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
+import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectContentProviderEditorRegistry;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -13,12 +14,14 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String               PLUGIN_ID = "org.bundlemaker.core.ui.projecteditor"; //$NON-NLS-1$
+  public static final String                   PLUGIN_ID = "org.bundlemaker.core.ui.projecteditor"; //$NON-NLS-1$
 
   // The shared instance
-  private static Activator                 plugin;
+  private static Activator                     plugin;
 
-  private ProjectEditorDndProviderRegistry _projectEditorDndProviderRegistry;
+  private ProjectEditorDndProviderRegistry     _projectEditorDndProviderRegistry;
+
+  private ProjectContentProviderEditorRegistry _projectContentProviderEditorRegistry;
 
   /**
    * The constructor
@@ -35,6 +38,7 @@ public class Activator extends AbstractUIPlugin {
   public void start(BundleContext context) throws Exception {
     super.start(context);
     _projectEditorDndProviderRegistry = new ProjectEditorDndProviderRegistry();
+    _projectContentProviderEditorRegistry = new ProjectContentProviderEditorRegistry();
     plugin = this;
 
   }
@@ -52,7 +56,13 @@ public class Activator extends AbstractUIPlugin {
 
   public ProjectEditorDndProviderRegistry getProjectEditorDndProviderRegistry() {
     return _projectEditorDndProviderRegistry;
+  }
 
+  /**
+   * @return the projectContentProviderEditorRegistry
+   */
+  public ProjectContentProviderEditorRegistry getProjectContentProviderEditorRegistry() {
+    return _projectContentProviderEditorRegistry;
   }
 
   /**
