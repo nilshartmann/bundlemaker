@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
@@ -85,7 +86,9 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
         IDependency dependency = (IDependency) structuredSelection.getFirstElement();
         if (dependency != null) {
           IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
-          EditorHelper.open(artifact);
+          if (artifact != null) {
+            EditorHelper.open(artifact);
+          }
         }
       }
     });
