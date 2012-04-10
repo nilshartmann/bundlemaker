@@ -112,7 +112,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * {@inheritDoc}
    */
   @Override
-  public void artifactModelChanged() {
+  public void artifactModelModified() {
     onSetCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 

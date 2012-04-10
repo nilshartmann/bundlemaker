@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.analysis.ArtifactType;
-import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
+import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -54,7 +54,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   /** - */
   private CurrentAction                                             _currentAction = null;
 
-  private final CopyOnWriteArrayList<IArtifactModelChangedListener> _artifactModelChangedListeners;
+  private final CopyOnWriteArrayList<IArtifactModelModifiedListener> _artifactModelChangedListeners;
 
   /**
    * <p>
@@ -85,7 +85,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
 
     //
-    _artifactModelChangedListeners = new CopyOnWriteArrayList<IArtifactModelChangedListener>();
+    _artifactModelChangedListeners = new CopyOnWriteArrayList<IArtifactModelModifiedListener>();
   }
 
   /**
@@ -535,7 +535,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * 
    * @param listener
    */
-  public void addArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+  public void addArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
 
     Assert.isNotNull(listener);
 
@@ -548,7 +548,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * 
    * @param listener
    */
-  public void removeArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+  public void removeArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
 
     Assert.isNotNull(listener);
 
@@ -561,8 +561,8 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * 
    */
   public void fireArtifactModelChanged() {
-    for (IArtifactModelChangedListener artifactModelChangedListener : _artifactModelChangedListeners) {
-      artifactModelChangedListener.artifactModelChanged();
+    for (IArtifactModelModifiedListener artifactModelChangedListener : _artifactModelChangedListeners) {
+      artifactModelChangedListener.artifactModelModified();
     }
   }
 }

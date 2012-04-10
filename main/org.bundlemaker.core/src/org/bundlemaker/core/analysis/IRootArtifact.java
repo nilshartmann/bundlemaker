@@ -18,7 +18,7 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    * 
    * @param listener
    */
-  void addArtifactModelChangedListener(IArtifactModelChangedListener listener);
+  void addArtifactModelChangedListener(IArtifactModelModifiedListener listener);
 
   /**
    * <p>
@@ -26,5 +26,5 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    * 
    * @param listener
    */
-  void removeArtifactModelChangedListener(IArtifactModelChangedListener listener);
+  void removeArtifactModelChangedListener(IArtifactModelModifiedListener listener);
 }
