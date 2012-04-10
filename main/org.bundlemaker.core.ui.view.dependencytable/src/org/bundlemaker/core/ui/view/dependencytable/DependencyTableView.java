@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
+import java.util.Collection;
+
+import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
@@ -64,11 +67,11 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     Composite tableComposite = new Composite(parent, SWT.NONE);
     tableComposite.setLayout(new TableColumnLayout());
 
-    _viewer = new TableViewer(tableComposite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
+    _viewer = new TableViewer(tableComposite, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION);
     final Table table = _viewer.getTable();
     table.setHeaderVisible(true);
     table.setLinesVisible(true);
-    _viewer.setContentProvider(ArrayContentProvider.getInstance());
+    _viewer.setContentProvider(new LazyDependencyProvider(_viewer));
     createColumns(tableComposite, _viewer);
 
     // open editor
@@ -107,7 +110,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
     if (getCurrentDependencies() == null || getCurrentDependencies().size() == 0) {
       setColumnTitles("From", "To");
-      _viewer.setInput(new Object());
+      _viewer.setInput(new IDependency[0]);
       _viewer.getTable().redraw();
       return;
     } else {
@@ -122,7 +125,9 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
       setColumnTitles(fromColumnTitle, toColumnTitle);
 
-      _viewer.setInput(getCurrentDependencies());
+      IDependency[] dependencies = getCurrentDependencies().toArray(new IDependency[0]);
+      _viewer.setInput(dependencies);
+      _viewer.setItemCount(dependencies.length); // This is the difference when using a ILazyContentProvider
       _viewer.getTable().redraw();
     }
   }
