@@ -7,7 +7,6 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
-import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider.VirtualRoot;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -26,8 +25,7 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
   @Override
   public Image getImage(Object obj) {
 
-    if (obj instanceof String || obj instanceof IModularizedSystem || obj instanceof VirtualRoot
-        || obj instanceof IRootArtifact) {
+    if (obj instanceof String || obj instanceof IModularizedSystem || obj instanceof IRootArtifact) {
 
       return ArtifactImages.ROOT_ARTIFACT_ICON.getImage();
     }
@@ -49,8 +47,6 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
       return (String) obj;
     } else if (obj instanceof IModularizedSystem) {
       return ((IModularizedSystem) obj).getName();
-    } else if (obj instanceof VirtualRoot) {
-      return ((VirtualRoot) obj).getName();
     } else if (obj instanceof IBundleMakerArtifact
         && ((IBundleMakerArtifact) obj).getType().equals(ArtifactType.Package) && isHierarchicalPackageLayout()) {
       return ((IBundleMakerArtifact) obj).getName();

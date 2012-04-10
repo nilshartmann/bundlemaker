@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ArtifactType;
+import org.bundlemaker.core.analysis.IArtifactModelChangedListener;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -103,8 +111,6 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
 
       //
       return EMPTY_OBJECT_ARRAY;
-    } else if (parent instanceof VirtualRoot) {
-      return ((VirtualRoot) parent).getChildren();
     } else if (parent instanceof IBundleMakerArtifact) {
 
       IBundleMakerArtifact parentArtifact = (IBundleMakerArtifact) parent;
@@ -182,7 +188,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  public class VirtualRoot {
+  private class VirtualRoot implements IRootArtifact {
 
     private IRootArtifact _rootArtifact;
 
@@ -199,26 +205,225 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
       _rootArtifact = rootArtifact;
     }
 
-    /**
-     * <p>
-     * </p>
-     * 
-     * @return
-     */
+    @Override
+    public IGroupArtifact getOrCreateGroup(IPath path) {
+      return _rootArtifact.getOrCreateGroup(path);
+    }
+
+    @Override
+    public IModuleArtifact getOrCreateModule(String qualifiedModuleName, String moduleVersion) {
+      return _rootArtifact.getOrCreateModule(qualifiedModuleName, moduleVersion);
+    }
+
+    @Override
+    public void addArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+      _rootArtifact.addArtifactModelChangedListener(listener);
+    }
+
+    @Override
+    public ArtifactType getType() {
+      return _rootArtifact.getType();
+    }
+
+    @Override
+    public void removeArtifactModelChangedListener(IArtifactModelChangedListener listener) {
+      _rootArtifact.removeArtifactModelChangedListener(listener);
+    }
+
+    @Override
     public String getName() {
       return _rootArtifact.getName();
     }
 
-    /** - */
-    public Object[] getChildren() {
-      //
-      List<Object> artifacts = new ArrayList<Object>();
-
-      for (IBundleMakerArtifact iArtifact : _rootArtifact.getChildren()) {
-        artifacts.add(iArtifact);
-      }
-
-      return artifacts.toArray();
+    @Override
+    public String getQualifiedName() {
+      return _rootArtifact.getQualifiedName();
     }
+
+    @Override
+    public void setProperty(Object key, Object value) {
+      _rootArtifact.setProperty(key, value);
+    }
+
+    @Override
+    public String getProperty(Object key) {
+      return _rootArtifact.getProperty(key);
+    }
+
+    @Override
+    public <T> T getProperty(Object key, Class<T> t) {
+      return _rootArtifact.getProperty(key, t);
+    }
+
+    @Override
+    public boolean hasChild(String path) {
+      return _rootArtifact.hasChild(path);
+    }
+
+    @Override
+    public void addArtifact(IBundleMakerArtifact artifact) {
+      _rootArtifact.addArtifact(artifact);
+    }
+
+    @Override
+    public boolean removeArtifact(IBundleMakerArtifact artifact) {
+      return _rootArtifact.removeArtifact(artifact);
+    }
+
+    @Override
+    public Collection<IDependency> getDependencies() {
+      return _rootArtifact.getDependencies();
+    }
+
+    @Override
+    public IDependency getDependency(IBundleMakerArtifact artifact) {
+      return _rootArtifact.getDependency(artifact);
+    }
+
+    @Override
+    public Collection<? extends IDependency> getDependencies(Collection<? extends IBundleMakerArtifact> artifacts) {
+      return _rootArtifact.getDependencies(artifacts);
+    }
+
+    @Override
+    public Collection<IBundleMakerArtifact> getLeafs() {
+      return _rootArtifact.getLeafs();
+    }
+
+    @Override
+    public String getUniquePathIdentifier() {
+      return _rootArtifact.getUniquePathIdentifier();
+    }
+
+    @Override
+    public IPath getFullPath() {
+      return _rootArtifact.getFullPath();
+    }
+
+    @Override
+    public IBundleMakerArtifact getChild(String path) {
+      return _rootArtifact.getChild(path);
+    }
+
+    @Override
+    public Collection<IBundleMakerArtifact> getChildren() {
+      return _rootArtifact.getChildren();
+    }
+
+    @Override
+    public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
+      return _rootArtifact.findChildren(clazz);
+    }
+
+    @Override
+    public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
+      return _rootArtifact.findChildren(clazz, filter);
+    }
+
+    @Override
+    public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
+      return _rootArtifact.getChildByPath(clazz, path);
+    }
+
+    @Override
+    public IBundleMakerArtifact getParent() {
+      return _rootArtifact.getParent();
+    }
+
+    @Override
+    public IBundleMakerArtifact getParent(ArtifactType type) {
+      return _rootArtifact.getParent(type);
+    }
+
+    @Override
+    public IRootArtifact getRoot() {
+      return _rootArtifact.getRoot();
+    }
+
+    @Override
+    public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts) {
+      return _rootArtifact.getDependencies(artifacts);
+    }
+
+    @Override
+    public boolean hasParent() {
+      return _rootArtifact.hasParent();
+    }
+
+    @Override
+    public IArtifactModelConfiguration getConfiguration() {
+      return _rootArtifact.getConfiguration();
+    }
+
+    @Override
+    public IModularizedSystem getModularizedSystem() {
+      return _rootArtifact.getModularizedSystem();
+    }
+
+    @Override
+    public boolean isVirtual() {
+      return _rootArtifact.isVirtual();
+    }
+
+    @Override
+    public boolean isMovable() {
+      return _rootArtifact.isMovable();
+    }
+
+    @Override
+    public boolean canAdd(IBundleMakerArtifact artifact) {
+      return _rootArtifact.canAdd(artifact);
+    }
+
+    @Override
+    public void accept(IArtifactTreeVisitor visitor) {
+      _rootArtifact.accept(visitor);
+    }
+
+    @Override
+    public void accept(IArtifactTreeVisitor... visitors) {
+      _rootArtifact.accept(visitors);
+    }
+
+    @Override
+    public int compareTo(IBundleMakerArtifact arg0) {
+      return _rootArtifact.compareTo(arg0);
+    }
+
+    @Override
+    public boolean contains(IBundleMakerArtifact artifact) {
+      return _rootArtifact.contains(artifact);
+    }
+
+    @Override
+    public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
+      return _rootArtifact.findChild(clazz, filter);
+    }
+
+    @Override
+    public boolean containsTypesOrResources() {
+      return _rootArtifact.containsTypesOrResources();
+    }
+
+    @Override
+    public boolean containsTypes() {
+      return _rootArtifact.containsTypes();
+    }
+
+    @Override
+    public boolean containsResources() {
+      return _rootArtifact.containsResources();
+    }
+
+    @Override
+    public List<IBundleMakerArtifact> invalidateDependencyCache() {
+      return _rootArtifact.invalidateDependencyCache();
+    }
+
+    @Override
+    public Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
+      return _rootArtifact.getCachedDependencies();
+    }
+
   }
 }

@@ -19,7 +19,6 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
-import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider.VirtualRoot;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
@@ -203,7 +202,7 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
       // check for selected root element
       boolean containsRoot = false;
       for (Object object : structuredSelection.toList()) {
-        if (object instanceof IRootArtifact || object instanceof VirtualRoot) {
+        if (object instanceof IRootArtifact) {
           containsRoot = true;
           break;
         }
@@ -258,7 +257,7 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
       // check for selected root element
       boolean containsRoot = false;
       for (Object object : structuredSelection.toList()) {
-        if (object instanceof IRootArtifact || object instanceof VirtualRoot) {
+        if (object instanceof IRootArtifact) {
           containsRoot = true;
           break;
         }
