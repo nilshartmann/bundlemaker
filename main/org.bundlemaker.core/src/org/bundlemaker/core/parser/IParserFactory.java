@@ -39,8 +39,8 @@ public interface IParserFactory {
 
   /**
    * <p>
-   * Initializes the {@link IParserFactory} for the specified project. If the {@link IProjectDescription} of
-   * an {@link IBundleMakerProject} has changed, the {@link IBundleMakerProject} <b>always</b> will be re-initialized.
+   * Initializes the {@link IParserFactory} for the specified project. If the {@link IProjectDescription} of an
+   * {@link IBundleMakerProject} has changed, the {@link IBundleMakerProject} <b>always</b> will be re-initialized.
    * </p>
    * 
    * @param bundleMakerProject
@@ -54,12 +54,10 @@ public interface IParserFactory {
    * 
    * @param bundleMakerProject
    *          the {@link IBundleMakerProject}
-   * @param parseIndirectReferences
    * @return the newly created {@link IParser}
    * @throws CoreException
    */
-  public IParser createParser(IBundleMakerProject bundleMakerProject, boolean parseIndirectReferences)
-      throws CoreException;
+  public IParser createParser(IBundleMakerProject bundleMakerProject) throws CoreException;
 
   /**
    * <p>

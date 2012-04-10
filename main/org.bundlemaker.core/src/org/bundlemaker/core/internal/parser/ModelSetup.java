@@ -217,12 +217,12 @@ public class ModelSetup {
 
           // step 4.1: compute new and modified resources
           Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((AbstractContent) projectContent).getBinaryResourceStandins(), storedResourcesMap,
-              resourceCache, new NullProgressMonitor());
+              ((AbstractContent) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
+              new NullProgressMonitor());
 
           Set<IResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((AbstractContent) projectContent).getSourceResourceStandins(), storedResourcesMap,
-              resourceCache, new NullProgressMonitor());
+              ((AbstractContent) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
+              new NullProgressMonitor());
 
           //
           if (LOG) {
@@ -441,7 +441,7 @@ public class ModelSetup {
     // ... setup
     for (IParser[] parsers : parsers4threads) {
       for (int i = 0; i < parsers.length; i++) {
-        parsers[i] = parserFactories.get(i).createParser(_bundleMakerProject, _parseIndirectReferences);
+        parsers[i] = parserFactories.get(i).createParser(_bundleMakerProject);
       }
     }
 

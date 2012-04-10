@@ -50,8 +50,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * @param bundleMakerProject
    * @throws CoreException
    */
-  public JdtParser(IBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry,
-      boolean parseIndirectReferences) throws CoreException {
+  public JdtParser(IBundleMakerProject bundleMakerProject, ExtensionRegistryTracker<IJdtSourceParserHook> hookRegistry)
+      throws CoreException {
 
     super(hookRegistry);
 
