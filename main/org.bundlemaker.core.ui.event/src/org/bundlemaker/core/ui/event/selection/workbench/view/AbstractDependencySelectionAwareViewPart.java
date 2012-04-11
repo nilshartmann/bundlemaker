@@ -10,15 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.event.selection.workbench.view;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
-import org.bundlemaker.core.ui.event.selection.internal.DependencySelection;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
@@ -27,10 +23,10 @@ import org.eclipse.ui.PartInitException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractDependencySelectionAwareViewPart extends AbstractPartLifecycleAwareViewPart implements
-    IDependencySelectionListener {
+    IDependencySelectionListener, IArtifactModelModifiedListener {
 
   /** - */
-  private List<IDependency> _currentDependencies;
+  private IDependencySelection _currentDependencySelection;
 
   /**
    * {@inheritDoc}
@@ -41,8 +37,14 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
 
     //
     Selection.instance().getDependencySelectionService().addDependencySelectionListener(getSelectionId(), this);
+
+    //
+    initDependencySelectionFromSelectionService();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void dispose() {
 
@@ -60,11 +62,17 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
   public final void dependencySelectionChanged(IDependencySelectionChangedEvent event) {
 
     //
-    _currentDependencies = event.getSelection().getSelectedDependencies();
-
-    //
-    onDependencySelectionChanged(event);
+    setDependencySelection(event.getSelection());
   }
+
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public void onPartBroughtToTop() {
+  // super.onPartBroughtToTop();
+  // initDependencySelectionFromSelectionService();
+  // }
 
   /**
    * <p>
@@ -72,19 +80,25 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
    * 
    * @return the currentDependency
    */
-  public List<IDependency> getCurrentDependencies() {
-    return _currentDependencies;
+  public IDependencySelection getCurrentDependencySelection() {
+    return _currentDependencySelection;
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param currentDependencies
+   * @param dependencySelection
    *          the currentDependencies to set
    */
-  public void setCurrentDependencies(List<IDependency> currentDependencies) {
-    _currentDependencies = currentDependencies;
+  public void setCurrentDependencies(IDependencySelection dependencySelection) {
+
+    // remove ArtifactModelChangedListener from 'old' model
+    unregisterArtifactModelChangedListener();
+
+    _currentDependencySelection = dependencySelection;
+
+    registerArtifactModelChangedListener();
   }
 
   /**
@@ -98,17 +112,25 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
   }
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
+   * @param dependencySelection
+   * 
    */
-  @Override
-  public void onPartBroughtToTop() {
-    super.onPartBroughtToTop();
+  protected void setDependencySelection(IDependencySelection dependencySelection) {
+    _currentDependencySelection = dependencySelection;
+  }
 
-    IDependencySelection dependencySelection = Selection.instance().getDependencySelectionService()
-        .getSelection(getSelectionId());
-    
-    if (dependencySelection != null) {
-      onDependencySelectionChanged(dependencySelection);
+  private void unregisterArtifactModelChangedListener() {
+    if (_currentDependencySelection != null && _currentDependencySelection.hasDependencies()) {
+      _currentDependencySelection.getFirstDependency().getFrom().getRoot().removeArtifactModelChangedListener(this);
+    }
+  }
+
+  private void registerArtifactModelChangedListener() {
+    if (_currentDependencySelection != null && _currentDependencySelection.hasDependencies()) {
+      _currentDependencySelection.getFirstDependency().getFrom().getRoot().addArtifactModelChangedListener(this);
     }
   }
 
@@ -116,8 +138,13 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
    * <p>
    * </p>
    * 
-   * @param event
-   * 
    */
-  protected abstract void onDependencySelectionChanged(IDependencySelection event);
+  private void initDependencySelectionFromSelectionService() {
+    IDependencySelection dependencySelection = Selection.instance().getDependencySelectionService()
+        .getSelection(getSelectionId());
+
+    if (dependencySelection != null) {
+      setDependencySelection(dependencySelection);
+    }
+  }
 }

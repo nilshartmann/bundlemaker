@@ -8,6 +8,7 @@ import java.util.List;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -89,7 +90,7 @@ public class DependencyTreeComposite extends Composite {
   public void setDependencies(List<IDependency> dependencies) {
 
     //
-    _leafDependencies = Helper.getAllLeafDependencies(dependencies);
+    _leafDependencies = ArtifactUtilities.getAllLeafDependencies(dependencies);
 
     //
     _sourceArtifactMap.clear();
@@ -106,10 +107,10 @@ public class DependencyTreeComposite extends Composite {
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
 
     // auto expand
-    for (IBundleMakerArtifact artifact : Helper.getChildrenOfCommonParent(_sourceArtifactMap.keySet())) {
+    for (IBundleMakerArtifact artifact : ArtifactUtilities.getChildrenOfCommonParent(_sourceArtifactMap.keySet())) {
       _fromTreeViewer.expandToLevel(artifact, 0);
     }
-    for (IBundleMakerArtifact artifact : Helper.getChildrenOfCommonParent(_targetArtifactMap.keySet())) {
+    for (IBundleMakerArtifact artifact : ArtifactUtilities.getChildrenOfCommonParent(_targetArtifactMap.keySet())) {
       _toTreeViewer.expandToLevel(artifact, 0);
     }
   }
@@ -204,7 +205,7 @@ public class DependencyTreeComposite extends Composite {
         for (Object selectedObject : structuredSelection.toList()) {
           if (selectedObject instanceof IBundleMakerArtifact) {
             IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
-            for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
+            for (IBundleMakerArtifact artifact : ArtifactUtilities.getSelfAndAllChildren(bundleMakerArtifact)) {
               if (_sourceArtifactMap.containsKey(artifact)) {
                 List<IDependency> dependencies = _sourceArtifactMap.get(artifact);
                 selectedDetailDependencies.addAll(dependencies);
@@ -259,7 +260,7 @@ public class DependencyTreeComposite extends Composite {
         for (Object selectedObject : structuredSelection.toList()) {
           if (selectedObject instanceof IBundleMakerArtifact) {
             IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
-            for (IBundleMakerArtifact artifact : Helper.getSelfAndAllChildren(bundleMakerArtifact)) {
+            for (IBundleMakerArtifact artifact : ArtifactUtilities.getSelfAndAllChildren(bundleMakerArtifact)) {
               if (_targetArtifactMap.containsKey(artifact)) {
                 List<IDependency> dependencies = _targetArtifactMap.get(artifact);
                 selectedDetailDependencies.addAll(dependencies);

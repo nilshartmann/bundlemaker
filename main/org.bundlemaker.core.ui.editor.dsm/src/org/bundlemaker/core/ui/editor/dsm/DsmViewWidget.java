@@ -325,14 +325,6 @@ public class DsmViewWidget extends Canvas implements Observer {
     _horizontalListFigure.resetSize();
     _verticalListFigure.resetSize();
 
-    // // fix sized
-    // _zoomScrollBar.setLocation(new Point(0.0, 0.0));
-    // int mainFigureHalfWidth = _mainFigure.getSize().width / 2;
-    // _zoomScrollBar.setSize(mainFigureHalfWidth, 20);
-    //
-    // _useShortendLabelsCheckBox.setLocation(new Point(mainFigureHalfWidth + 1, 0.0));
-    // _useShortendLabelsCheckBox.setSize(mainFigureHalfWidth, 20);
-
     int horizontalBarHeight = (int) (_horizontalFigureHeight * _zoomableScrollpaneHorizontalBar.getZoom());
     if (_verticalFigureWidth == -1) {
       _verticalFigureWidth = getTextExtend(_matrixFigure, _zoomableScrollpane);
@@ -344,9 +336,6 @@ public class DsmViewWidget extends Canvas implements Observer {
     _zoomableScrollpane.setSize(_mainFigure.getSize().width - verticalBarWidth,
         (_mainFigure.getSize().height - (horizontalBarHeight)));
 
-    // //
-    // boolean horizontalScrollBarVisible = _zoomableScrollpane.getHorizontalScrollBar() != null
-    // && _zoomableScrollpane.getHorizontalScrollBar().isVisible();
 
     // HACK
     int verticalOffset = 18;

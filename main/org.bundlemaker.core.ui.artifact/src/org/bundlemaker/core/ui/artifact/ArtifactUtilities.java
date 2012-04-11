@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.view.dependencytree;
+package org.bundlemaker.core.ui.artifact;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 
-public class Helper {
+public class ArtifactUtilities {
 
   /**
    * <p>

@@ -10,11 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.xref;
 
+import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.view.dependencytree.DependencyTreeComposite;
-import org.bundlemaker.core.ui.view.dependencytree.Helper;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -65,7 +65,7 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
       if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts()) {
 
         //
-        _composite.setDependencies(Helper.getAllLeafDependencies(getCurrentArtifactSelection().getRootArtifact()
+        _composite.setDependencies(ArtifactUtilities.getAllLeafDependencies(getCurrentArtifactSelection().getRootArtifact()
             .getDependencies()));
 
       }

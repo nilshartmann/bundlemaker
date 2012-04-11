@@ -41,8 +41,8 @@ public class ZoomableScrollPane extends ScrollPane implements IZoomAware {
     getHorizontalScrollBar().setExtent(25);
     setHorizontalScrollBarVisibility(horizontalScrollBarVisibility);
     setVerticalScrollBarVisibility(verticalScrollBarVisibility);
-    getViewport().setContentsTracksWidth(false);
-    getViewport().setContentsTracksHeight(false);
+    getViewport().setContentsTracksWidth(true);
+    getViewport().setContentsTracksHeight(true);
   }
 
   /**

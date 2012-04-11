@@ -22,11 +22,12 @@ public abstract class AbstractPartLifecycleAwareViewPart extends ViewPart implem
    */
   @Override
   public void init(IViewSite site) throws PartInitException {
-    super.init(site);
 
     // register part listener
     _partListener = new LifecycleAwarePartListener(this);
-    this.getSite().getPage().addPartListener(_partListener);
+    site.getPage().addPartListener(_partListener);
+
+    super.init(site);
   }
 
   /**

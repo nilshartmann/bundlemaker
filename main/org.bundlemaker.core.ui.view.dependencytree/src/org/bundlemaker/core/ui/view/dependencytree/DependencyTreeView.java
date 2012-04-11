@@ -36,6 +36,9 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
 
     //
     _composite = new DependencyTreeComposite(parent, ID);
+
+    //
+    initDependencies(getCurrentDependencySelection());
   }
 
   /**
@@ -50,12 +53,32 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
    * {@inheritDoc}
    */
   @Override
-  protected void onDependencySelectionChanged(IDependencySelection selection) {
+  protected void setDependencySelection(IDependencySelection selection) {
 
     // set the current dependencies
-    setCurrentDependencies(selection.getSelectedDependencies());
+    super.setDependencySelection(selection);
 
     //
-    _composite.setDependencies(selection.getSelectedDependencies());
+    initDependencies(selection);
   }
+
+  @Override
+  public void artifactModelModified() {
+    // TODO
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param selection
+   */
+  private void initDependencies(IDependencySelection selection) {
+
+    //
+    if (_composite != null && selection != null) {
+      _composite.setDependencies(selection.getSelectedDependencies());
+    }
+  }
+
 }

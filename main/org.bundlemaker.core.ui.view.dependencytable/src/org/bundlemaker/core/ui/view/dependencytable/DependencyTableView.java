@@ -10,20 +10,17 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import java.util.Collection;
+import java.util.List;
 
-import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnLayoutData;
@@ -36,24 +33,29 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 /**
- * @author Nils Hartmann (nils@nilshartmann.net)
+ * <p>
+ * </p>
  * 
+ * @author Nils Hartmann (nils@nilshartmann.net)
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class DependencyTableView extends AbstractDependencySelectionAwareViewPart implements
     IDependencySelectionListener {
 
+  /** - */
   public static String               ID                  = DependencyTableView.class.getName();
 
   /** - */
   private TableViewer                _viewer;
 
+  /** - */
   private ArtifactPathLabelGenerator _fromLabelGenerator = new ArtifactPathLabelGenerator();
 
+  /** - */
   private ArtifactPathLabelGenerator _toLabelGenerator   = new ArtifactPathLabelGenerator();
 
   /**
@@ -99,6 +101,9 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
         }
       }
     });
+
+    // init the dependencies
+    initDependencies();
   }
 
   /**
@@ -106,19 +111,33 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
    */
   @Override
   public void setFocus() {
-
+    //
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  protected void onDependencySelectionChanged(IDependencySelection selection) {
+  protected void setDependencySelection(IDependencySelection selection) {
 
     // set current dependencies
-    setCurrentDependencies(selection.getSelectedDependencies());
+    super.setDependencySelection(selection);
 
-    if (getCurrentDependencies() == null || getCurrentDependencies().size() == 0) {
+    // init the dependencies
+    initDependencies();
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void initDependencies() {
+
+    if (_viewer == null) {
+      return;
+    }
+
+    if (getCurrentDependencySelection() == null || !getCurrentDependencySelection().hasDependencies()) {
       setColumnTitles("From", "To");
       _viewer.setInput(new IDependency[0]);
       _viewer.getTable().redraw();
@@ -126,7 +145,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     } else {
 
       // TODO
-      IBundleMakerArtifact bundleMakerArtifact = getCurrentDependencies().get(0).getFrom().getRoot();
+      IBundleMakerArtifact bundleMakerArtifact = getCurrentDependencySelection().getFirstDependency().getFrom()
+          .getRoot();
       _fromLabelGenerator.setBaseArtifact(bundleMakerArtifact);
       _toLabelGenerator.setBaseArtifact(bundleMakerArtifact);
       //
@@ -135,19 +155,19 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
       setColumnTitles(fromColumnTitle, toColumnTitle);
 
-      IDependency[] dependencies = getCurrentDependencies().toArray(new IDependency[0]);
+      List<IDependency> leafDependencies = ArtifactUtilities.getAllLeafDependencies(getCurrentDependencySelection()
+          .getSelectedDependencies());
+
+      IDependency[] dependencies = leafDependencies.toArray(new IDependency[0]);
       _viewer.setInput(dependencies);
       _viewer.setItemCount(dependencies.length); // This is the difference when using a ILazyContentProvider
       _viewer.getTable().redraw();
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  protected String getSelectionId() {
-    return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
+  public void artifactModelModified() {
+    // TODO
   }
 
   private void createColumns(Composite parent, TableViewer viewer) {
