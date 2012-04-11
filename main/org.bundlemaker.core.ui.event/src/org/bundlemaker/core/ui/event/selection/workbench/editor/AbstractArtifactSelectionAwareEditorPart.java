@@ -123,17 +123,11 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
   @Override
   public void onPartBroughtToTop() {
 
-    // initialize view with current selection from Artifact tree
-    initFromArtifactSelectionService();
-
     //
-    if (_currentArtifactSelection == null) {
+    if (_currentArtifactSelection == null || !_currentArtifactSelection.hasSelectedArtifacts()) {
 
-      //
-      IArtifactSelection artifactSelection = Selection.instance().getArtifactSelectionService()
-          .getSelection(getArtifactSelectionId());
-      //
-      setCurrentArtifactSelection(artifactSelection);
+      // initialize view with current selection from Artifact tree
+      initFromArtifactSelectionService();
     }
   }
 
