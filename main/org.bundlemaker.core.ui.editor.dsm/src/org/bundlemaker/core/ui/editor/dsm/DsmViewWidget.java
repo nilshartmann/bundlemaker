@@ -6,6 +6,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.ui.editor.dsm.figures.matrix.EventAwareMatrix;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.MatrixEvent;
@@ -56,7 +57,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   private ZoomableScrollPane _zoomableScrollpaneHorizontalBar;
 
   /** - */
-  Matrix                     _matrixFigure;
+  EventAwareMatrix           _matrixFigure;
 
   VerticalSideMarker         _verticalListFigure;
 
@@ -71,7 +72,7 @@ public class DsmViewWidget extends Canvas implements Observer {
   private int                _y;
 
   private boolean            _drawToolTip            = false;
-  
+
   /**
    * <p>
    * Creates a new instance of type {@link DsmViewWidget}.
@@ -154,7 +155,7 @@ public class DsmViewWidget extends Canvas implements Observer {
     _mainFigure.addMouseMotionListener(motionListener);
     lws.setContents(_mainFigure);
 
-    _matrixFigure = new Matrix(_model);
+    _matrixFigure = new EventAwareMatrix(_model, new DependencyLabelProvider(), _model);
     _matrixFigure.addMouseMotionListener(motionListener);
     _matrixFigure.addMouseListener(motionListener);
 

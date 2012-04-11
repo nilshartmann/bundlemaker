@@ -45,6 +45,24 @@ public class DemoDsmViewModel extends AbstractDsmViewModel {
     }
   }
 
+  @Override
+  public Object getDependency(int j, int i) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object[][] getDependencies() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Object[] getNodes() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
   /**
    * {@inheritDoc}
    */

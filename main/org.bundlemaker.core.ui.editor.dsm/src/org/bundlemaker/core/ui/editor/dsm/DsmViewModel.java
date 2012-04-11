@@ -61,6 +61,16 @@ public class DsmViewModel extends AbstractDsmViewModel {
     _dependencies = new IDependency[0][0];
   }
 
+  @Override
+  public Object[][] getDependencies() {
+    return _dependencies;
+  }
+
+  @Override
+  public Object[] getNodes() {
+    return _artifacts;
+  }
+
   /**
    * <p>
    * </p>
