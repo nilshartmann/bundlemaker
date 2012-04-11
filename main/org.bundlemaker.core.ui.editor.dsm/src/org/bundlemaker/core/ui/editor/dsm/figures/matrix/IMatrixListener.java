@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.dsm.figures;
+package org.bundlemaker.core.ui.editor.dsm.figures.matrix;
 
 /**
  * <p>

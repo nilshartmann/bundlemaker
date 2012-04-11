@@ -6,9 +6,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixListener;
-import org.bundlemaker.core.ui.editor.dsm.figures.Matrix;
-import org.bundlemaker.core.ui.editor.dsm.figures.MatrixEvent;
+import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
+import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;
+import org.bundlemaker.core.ui.editor.dsm.figures.matrix.MatrixEvent;
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.figures.zoom.ZoomableScrollPane;
