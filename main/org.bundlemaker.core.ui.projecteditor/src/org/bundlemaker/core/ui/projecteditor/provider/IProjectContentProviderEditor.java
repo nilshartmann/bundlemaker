@@ -10,8 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.projecteditor.provider;
 
+import java.util.List;
+
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -19,6 +22,18 @@ import org.bundlemaker.core.projectdescription.IProjectContentProvider;
  */
 public interface IProjectContentProviderEditor {
 
-  public Object[] getElements(IBundleMakerProject project, IProjectContentProvider provider);
+  public boolean canHandle(IProjectContentProvider provider);
+
+  public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider);
+
+  public List<Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider, Object rootElement);
+
+  public Image getImage(Object element);
+
+  public String getLabel(Object element);
+
+  public Boolean isAnalyze(Object element);
+
+  public Boolean isAnalyzeSources(Object element);
 
 }
