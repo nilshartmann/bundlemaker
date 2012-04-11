@@ -3,6 +3,10 @@
  */
 package org.bundlemaker.core.ui.projecteditor;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
@@ -10,6 +14,8 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.VerticalFormButtonBar;
+import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
+import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
 import org.bundlemaker.core.ui.projecteditor.layout.FormLayoutUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -26,6 +32,8 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -36,6 +44,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
@@ -101,6 +111,16 @@ public class ProjectEditorPage extends FormPage {
 
     addBundleMakerProjectChangedListener();
 
+    getEditor().addPropertyListener(new IPropertyListener() {
+
+      @Override
+      public void propertyChanged(Object source, int propId) {
+        if (propId == IEditorPart.PROP_DIRTY) {
+          dirty = !dirty;
+        }
+      }
+    });
+
     // HIER KOMMT DER EDITOR !!!
     createEditorControls(mform);
 
@@ -108,6 +128,20 @@ public class ProjectEditorPage extends FormPage {
     updateToolBar();
 
     refreshFormTitle();
+  }
+
+  private boolean dirty;
+
+  @Override
+  public boolean isDirty() {
+    return this.dirty;
+  }
+
+  public void markDirty() {
+    getEditor().editorDirtyStateChanged();
+    //
+    // IManagedForm managedForm = getManagedForm();
+    // managedForm.dirtyStateChanged();
   }
 
   private void createEditorControls(final IManagedForm mform) {
@@ -131,7 +165,8 @@ public class ProjectEditorPage extends FormPage {
     _treeViewer = new TreeViewer(projectContentTree);
     _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
     _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
-    createColumns();
+    configureTreeDragAndDrop();
+    createTreeColumns();
 
     final Shell shell = client.getShell();
 
@@ -212,6 +247,38 @@ public class ProjectEditorPage extends FormPage {
 
   }
 
+  private void configureTreeDragAndDrop() {
+    ProjectEditorDndProviderRegistry projectEditorDndProviderRegistry = Activator.getDefault()
+        .getProjectEditorDndProviderRegistry();
+
+    Set<IProjectEditorDropProvider> registeredDndProviders = projectEditorDndProviderRegistry
+        .getRegisteredDndProviders();
+
+    ProjectEditorTreeViewerDropAdapter adapter = new ProjectEditorTreeViewerDropAdapter(_treeViewer,
+        _bundleMakerProject, registeredDndProviders) {
+
+      @Override
+      protected void afterDrop() {
+        getViewer().refresh();
+        markDirty();
+      }
+
+    };
+
+    // TODO: allow providers to specify supported operations
+    int operations = DND.DROP_COPY | DND.DROP_MOVE;
+
+    Set<Transfer> allSupportedTransferTypes = new HashSet<Transfer>();
+
+    for (IProjectEditorDropProvider provider : registeredDndProviders) {
+      Transfer[] supportedTypes = provider.getSupportedDropTypes();
+      allSupportedTransferTypes.addAll(Arrays.asList(supportedTypes));
+    }
+
+    _treeViewer.addDropSupport(operations, allSupportedTransferTypes.toArray(new Transfer[0]), adapter);
+
+  }
+
   private void refreshEnablement() {
     // TODO Auto-generated method stub
 
@@ -244,7 +311,7 @@ public class ProjectEditorPage extends FormPage {
   /**
    * 
    */
-  private void createColumns() {
+  private void createTreeColumns() {
     Tree tree = _treeViewer.getTree();
     TreeColumnLayout layout = new TreeColumnLayout();
     TreeViewerColumn column = new TreeViewerColumn(_treeViewer, SWT.NONE);
@@ -335,6 +402,8 @@ public class ProjectEditorPage extends FormPage {
               refreshFormTitle();
             }
           });
+        } else if (event.getType() == Type.PROJECT_DESCRIPTION_CHANGED) {
+          _treeViewer.refresh();
         }
 
       }
