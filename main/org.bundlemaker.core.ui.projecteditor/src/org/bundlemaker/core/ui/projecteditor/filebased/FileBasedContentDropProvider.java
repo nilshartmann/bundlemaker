@@ -1,7 +1,6 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -9,9 +8,11 @@ import org.eclipse.swt.dnd.Transfer;
 
 public class FileBasedContentDropProvider implements IProjectEditorDropProvider {
 
-  private final Transfer[] SUPPORTED_TYPES = new Transfer[] { //
-                                           FileTransfer.getInstance() //
-                                           };
+  private final Transfer[]              SUPPORTED_TYPES          = new Transfer[] { //
+                                                                 FileTransfer.getInstance() //
+                                                                 };
+
+  private final FileBasedContentCreator _fileBasedContentCreator = new FileBasedContentCreator();
 
   @Override
   public Transfer[] getSupportedDropTypes() {
@@ -33,13 +34,10 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     FileTransfer instance = FileTransfer.getInstance();
     if (dropEvent.isTransferType(instance)) {
       String[] fileNames = dropEvent.getData(String[].class);
-      for (String file : fileNames) {
-        System.out.println("ADD FILE: " + file);
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, file);
-      }
-
+      _fileBasedContentCreator.addFiles(modifiableProjectDescription, fileNames);
     }
 
     return true;
   }
+
 }
