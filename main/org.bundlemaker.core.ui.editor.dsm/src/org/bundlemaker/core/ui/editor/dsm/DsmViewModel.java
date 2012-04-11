@@ -47,7 +47,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
    * @param unorderedArtifacts
    */
   public DsmViewModel(Collection<? extends IBundleMakerArtifact> unorderedArtifacts) {
-
+    this();
     initialize(unorderedArtifacts);
   }
 
@@ -57,6 +57,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
    * </p>
    */
   public DsmViewModel() {
+    _cycleArray = new int[0][0];
     _artifacts = new IBundleMakerArtifact[0];
     _dependencies = new IDependency[0][0];
   }
