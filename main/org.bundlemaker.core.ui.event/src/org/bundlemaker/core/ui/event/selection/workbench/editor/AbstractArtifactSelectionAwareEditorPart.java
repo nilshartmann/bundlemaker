@@ -57,9 +57,6 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
 
     // add listener
     Selection.instance().getArtifactSelectionService().addArtifactSelectionListener(getArtifactSelectionId(), this);
-
-    // initialize view with current selection from Artifact tree
-    initFromArtifactSelectionService();
   }
 
   /**
@@ -99,19 +96,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
       return;
     }
 
-    //
-    onArtifactSelectionChanged(selection);
-  }
-
-  /**
-   * <p>
-   * <code>artifactSelectionChanged</code>
-   * </p>
-   * 
-   * @param event
-   */
-  protected void onArtifactSelectionChanged(IArtifactSelection event) {
-    setCurrentArtifactSelection(event);
+    setCurrentArtifactSelection(selection);
   }
 
   /**
@@ -122,7 +107,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * @param artifacts
    *          The new artifacts. Must not be null but might be empty
    */
-  protected final void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
+  protected void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
 
     // remove ArtifactModelChangedListener from 'old' model
     unregisterArtifactModelChangedListener();
@@ -130,8 +115,6 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
     _currentArtifactSelection = artifactSelection;
 
     registerArtifactModelChangedListener();
-
-    onSetCurrentArtifactSelection(artifactSelection);
   }
 
   /**
@@ -140,6 +123,9 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
   @Override
   public void onPartBroughtToTop() {
 
+    // initialize view with current selection from Artifact tree
+    initFromArtifactSelectionService();
+
     //
     if (_currentArtifactSelection == null) {
 
@@ -147,7 +133,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
       IArtifactSelection artifactSelection = Selection.instance().getArtifactSelectionService()
           .getSelection(getArtifactSelectionId());
       //
-      onArtifactSelectionChanged(artifactSelection);
+      setCurrentArtifactSelection(artifactSelection);
     }
   }
 
@@ -167,16 +153,6 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
    * <p>
    * </p>
    * 
-   * @param artifactSelection
-   */
-  protected void onSetCurrentArtifactSelection(IArtifactSelection artifactSelection) {
-    //
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @return
    */
   protected String getArtifactSelectionId() {
@@ -185,6 +161,11 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
 
   protected abstract String getProviderId();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   */
   private void initFromArtifactSelectionService() {
     IArtifactSelection currentArtifactSelection = Selection.instance().getArtifactSelectionService()
         .getSelection(getArtifactSelectionId());

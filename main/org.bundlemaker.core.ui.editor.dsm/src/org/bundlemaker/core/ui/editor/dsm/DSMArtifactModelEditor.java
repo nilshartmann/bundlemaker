@@ -113,7 +113,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void artifactModelModified() {
-    onSetCurrentArtifactSelection(getCurrentArtifactSelection());
+    initSelection(getCurrentArtifactSelection());
   }
 
   /**
@@ -234,7 +234,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * {@inheritDoc}
    */
   @Override
-  public void onArtifactSelectionChanged(IArtifactSelection selection) {
+  public void setCurrentArtifactSelection(IArtifactSelection selection) {
 
     //
     if (isPinSelection()) {
@@ -246,7 +246,39 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       return;
     }
 
-    setCurrentArtifactSelection(selection);
+    super.setCurrentArtifactSelection(selection);
+
+    initSelection(selection);
+  }
+
+  private void initSelection(IArtifactSelection selection) {
+
+    // keep last selected?
+    if (!selection.hasSelectedArtifacts()) {
+      return;
+    }
+
+    //
+    if (_viewWidget != null && _detailComposite != null) {
+
+      //
+      _detailComposite.getVisualizeChildrenButton().setSelection(selection.useChildrenOfSelectedArtifacts());
+
+      // set the model
+      if (selection.useChildrenOfSelectedArtifacts()) {
+        List<IBundleMakerArtifact> bundleMakerArtifacts = new LinkedList<IBundleMakerArtifact>();
+        for (IBundleMakerArtifact artifact : selection.getSelectedArtifacts()) {
+          bundleMakerArtifacts.addAll(artifact.getChildren());
+        }
+        _viewWidget.setModel(new DsmViewModel(bundleMakerArtifacts));
+      } else {
+        _viewWidget.setModel(new DsmViewModel(selection.getSelectedArtifacts()));
+      }
+
+      // clear the dependency selection
+      clearDependencySelection();
+      setDefaultDependencyDescription();
+    }
   }
 
   /**
@@ -263,35 +295,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     List<IDependency> dependencies = Collections.emptyList();
     Selection.instance().getDependencySelectionService()
         .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSM_EDITOR_ID, dependencies);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void onSetCurrentArtifactSelection(IArtifactSelection artifactSelection) {
-
-    //
-    if (_viewWidget != null && _detailComposite != null) {
-
-      //
-      _detailComposite.getVisualizeChildrenButton().setSelection(artifactSelection.useChildrenOfSelectedArtifacts());
-
-      // set the model
-      if (artifactSelection.useChildrenOfSelectedArtifacts()) {
-        List<IBundleMakerArtifact> bundleMakerArtifacts = new LinkedList<IBundleMakerArtifact>();
-        for (IBundleMakerArtifact artifact : artifactSelection.getSelectedArtifacts()) {
-          bundleMakerArtifacts.addAll(artifact.getChildren());
-        }
-        _viewWidget.setModel(new DsmViewModel(bundleMakerArtifacts));
-      } else {
-        _viewWidget.setModel(new DsmViewModel(artifactSelection.getSelectedArtifacts()));
-      }
-
-      // clear the dependency selection
-      clearDependencySelection();
-      setDefaultDependencyDescription();
-    }
   }
 
   /**
