@@ -14,6 +14,8 @@ package org.bundlemaker.core.ui.artifact.tree;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
+import org.bundlemaker.core.util.collections.GenericCache;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
@@ -36,6 +38,15 @@ import org.eclipse.ui.PlatformUI;
  * 
  */
 public class DefaultArtifactLabelProvider implements ILabelProvider {
+
+  /** - */
+  private GenericCache<ImageDescriptor, Image> _imageMap = new GenericCache<ImageDescriptor, Image>() {
+                                                           @Override
+                                                           protected Image create(ImageDescriptor key) {
+                                                             return key.createImage();
+                                                           }
+                                                         };
+
   /**
    * This implementation delegates to {@link #getImageForArtifact(IBundleMakerArtifact)} if <tt>element</tt> is an
    * {@link IBundleMakerArtifact}. Otherwise null is returned
@@ -285,8 +296,11 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    *          the artifact of type Resource. Never null
    */
   protected Image getImageForResourceArtifact(IResourceArtifact resourceArtifact) {
-    return PlatformUI.getWorkbench().getEditorRegistry()
-        .getImageDescriptor(resourceArtifact.getAssociatedResource().getName()).createImage();
+
+    ImageDescriptor imageDescriptor = PlatformUI.getWorkbench().getEditorRegistry()
+        .getImageDescriptor(resourceArtifact.getAssociatedResource().getName());
+
+    return _imageMap.getOrCreate(imageDescriptor);
     // return ArtifactImages.RESOURCE_ARTIFACT_ICON.getImage();
   }
 
@@ -303,6 +317,9 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    */
   @Override
   public void dispose() {
+    for (Image image : _imageMap.values()) {
+      image.dispose();
+    }
   }
 
   /**
