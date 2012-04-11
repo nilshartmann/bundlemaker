@@ -6,7 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
@@ -28,7 +30,6 @@ import org.eclipse.swt.widgets.Composite;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- * 
  */
 public class DependencyTreeComposite extends Composite {
 
@@ -105,14 +106,6 @@ public class DependencyTreeComposite extends Composite {
     // update 'from' and 'to' tree, no filtering
     setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
-
-    // auto expand
-    for (IBundleMakerArtifact artifact : ArtifactUtilities.getChildrenOfCommonParent(_sourceArtifactMap.keySet())) {
-      _fromTreeViewer.expandToLevel(artifact, 0);
-    }
-    for (IBundleMakerArtifact artifact : ArtifactUtilities.getChildrenOfCommonParent(_targetArtifactMap.keySet())) {
-      _toTreeViewer.expandToLevel(artifact, 0);
-    }
   }
 
   /**
@@ -151,7 +144,17 @@ public class DependencyTreeComposite extends Composite {
       // set the root if necessary
       IRootArtifact rootArtifact = visibleArtifacts.toArray(new IBundleMakerArtifact[0])[0].getRoot();
       if (!rootArtifact.equals(treeViewer.getInput())) {
+        
+        treeViewer.getTree().setRedraw(false); 
         treeViewer.setInput(rootArtifact);
+
+        // expand
+        for (IBundleMakerArtifact artifact : ArtifactHelper.findChildren(rootArtifact, IModuleArtifact.class)) {
+          treeViewer.expandToLevel(artifact, 0);
+        }
+
+        //
+        treeViewer.getTree().setRedraw(true); 
       }
 
       // set the filter
