@@ -65,6 +65,17 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
     _isHierarchical = isHierarchical;
   }
 
+  @Override
+  public boolean containsPackages() {
+    for (IBundleMakerArtifact bundleMakerArtifact : getChildren()) {
+      if (bundleMakerArtifact.getType().equals(ArtifactType.Package)
+          && ((IPackageArtifact) bundleMakerArtifact).containsTypesOrResources()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * {@inheritDoc}
    */
