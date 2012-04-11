@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="BundleMaker Target" sequenceNumber="4">
+<target name="BundleMaker Target" sequenceNumber="7">
 <locations>
 <location path="${project_loc:target.platform}/asm" type="Directory"/>
 <location path="${project_loc:target.platform}/test/cglib" type="Directory"/>
-<location path="${project_loc:target.platform}/draw2d" type="Directory"/>
 <location path="${project_loc:target.platform}/slf4j-1.5.10" type="Directory"/>
 <location path="${project_loc:target.platform}/bundlor-1.0.0.RELEASE" type="Directory"/>
 <location path="${project_loc:target.platform}/test/easymock-3.0" type="Directory"/>
 <location path="${project_loc:target.platform}/ds" type="Directory"/>
 <location path="${project_loc:target.platform}/sonar-graph_2.4.1" type="Directory"/>
 <location path="${ECLIPSE_3.7.2}" type="Profile"/>
+<location path="${project_loc:target.platform}/draw2d" type="Directory"/>
+<location path="${project_loc:target.platform}/swttools" type="Directory"/>
 </locations>
 <launcherArgs>
 <vmArgs>-Xms40m -Xmx256m</vmArgs>
