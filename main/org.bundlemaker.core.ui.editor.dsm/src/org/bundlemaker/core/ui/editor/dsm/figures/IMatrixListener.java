@@ -48,18 +48,30 @@ public interface IMatrixListener {
    */
   public static class Adapter implements IMatrixListener {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void singleClick(MatrixEvent event) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doubleClick(MatrixEvent event) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void toolTip(MatrixEvent event) {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void marked(MatrixEvent event) {
     }
