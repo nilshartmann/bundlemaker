@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.util;
 
+import org.eclipse.core.runtime.Assert;
+
 /**
  * <p>
  * Implements a stop watch.
@@ -27,6 +29,31 @@ public class StopWatch {
 
   /** is the stop watch running? */
   private boolean _running  = false;
+
+  /** - */
+  private String  _msgPrefix;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link StopWatch}.
+   * </p>
+   */
+  public StopWatch() {
+    super();
+  }
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link StopWatch}.
+   * </p>
+   * 
+   * @param msgPrefix
+   */
+  public StopWatch(String msgPrefix) {
+    Assert.isNotNull(msgPrefix);
+
+    _msgPrefix = msgPrefix;
+  }
 
   /**
    * <p>
@@ -72,6 +99,15 @@ public class StopWatch {
    * @param msg
    */
   public void dumpElapsedTime(String msg) {
-    System.out.println(msg + " : " + getElapsedTime());
+
+    StringBuffer buffer = new StringBuffer();
+    if (_msgPrefix != null) {
+      buffer.append(_msgPrefix);
+    }
+    buffer.append(msg);
+    buffer.append(" : ");
+    buffer.append(getElapsedTime());
+
+    System.out.println(buffer.toString());
   }
 }
