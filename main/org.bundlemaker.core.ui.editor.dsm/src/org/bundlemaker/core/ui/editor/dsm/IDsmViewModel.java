@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Observer;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixContentProvider;
+import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixCycleDetector;
 
 /**
  * <p>
@@ -11,7 +13,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IDsmViewModel {
+public interface IDsmViewModel extends IMatrixContentProvider, IMatrixCycleDetector {
 
   /**
    * <p>
@@ -20,7 +22,7 @@ public interface IDsmViewModel {
    * @return
    */
   IDsmViewConfiguration getConfiguration();
-  
+
   void refresh(Collection<IBundleMakerArtifact> artifacts);
 
   int getItemCount();

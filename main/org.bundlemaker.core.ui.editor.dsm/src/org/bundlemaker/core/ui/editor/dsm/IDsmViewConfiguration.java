@@ -1,8 +1,9 @@
 package org.bundlemaker.core.ui.editor.dsm;
 
+import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixColorScheme;
 import org.eclipse.swt.graphics.Color;
 
-public interface IDsmViewConfiguration {
+public interface IDsmViewConfiguration extends IMatrixColorScheme {
 
   int getVerticalBoxSize();
 

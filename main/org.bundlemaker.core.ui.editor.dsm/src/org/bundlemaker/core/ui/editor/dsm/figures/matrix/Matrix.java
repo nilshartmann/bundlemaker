@@ -1,21 +1,18 @@
 package org.bundlemaker.core.ui.editor.dsm.figures.matrix;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bundlemaker.core.ui.editor.dsm.IDsmViewModel;
+import org.bundlemaker.core.ui.editor.dsm.figures.DefaultMatrixColorScheme;
+import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixColorScheme;
+import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixContentProvider;
+import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixCycleDetector;
 import org.bundlemaker.core.ui.editor.dsm.figures.zoom.ZoomContainer;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.MouseEvent;
-import org.eclipse.draw2d.MouseListener;
-import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.viewers.ILabelProvider;
 
 /**
  * <p>
@@ -27,16 +24,19 @@ import org.eclipse.swt.widgets.Display;
 public class Matrix extends Figure {
 
   /** the model */
-  protected IDsmViewModel       _model;
+  protected IMatrixContentProvider _model;
 
   /** - */
-  private int                   _x = -1;
+  private IMatrixColorScheme       _matrixColorScheme;
 
   /** - */
-  private int                   _y = -1;
+  private ILabelProvider           _labelProvider;
 
   /** - */
-  private List<IMatrixListener> _matrixListeners;
+  private IMatrixCycleDetector     _matrixCycleDetector;
+
+  /** - */
+  private int                      _horizontalBoxSize = -1;
 
   /**
    * <p>
@@ -44,43 +44,32 @@ public class Matrix extends Figure {
    * </p>
    * 
    * @param model
+   * @param matrixConfiguration
+   * @param labelProvider
+   * @param matrixCycleDetector
    */
-  public Matrix(IDsmViewModel model) {
+  public Matrix(IMatrixContentProvider model, ILabelProvider labelProvider, IMatrixCycleDetector matrixCycleDetector) {
 
     //
     Assert.isNotNull(model);
+    Assert.isNotNull(labelProvider);
+    Assert.isNotNull(matrixCycleDetector);
 
     // set the model
     _model = model;
-
-    //
-    _matrixListeners = new LinkedList<IMatrixListener>();
-
-    //
-    addMouseListener(new MatrixMouseListener());
-    addMouseMotionListener(new MatrixMouseMotionListener());
+    _matrixColorScheme = new DefaultMatrixColorScheme();
+    _labelProvider = labelProvider;
+    _matrixCycleDetector = matrixCycleDetector;
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param listener
+   * @param colorScheme
    */
-  public void addMatrixListener(IMatrixListener listener) {
-    if (!_matrixListeners.contains(listener)) {
-      _matrixListeners.add(listener);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param listener
-   */
-  public void removeMatrixLIstener(IMatrixListener listener) {
-    _matrixListeners.remove(listener);
+  protected final void setMatrixColorScheme(IMatrixColorScheme colorScheme) {
+    _matrixColorScheme = colorScheme;
   }
 
   /**
@@ -89,13 +78,33 @@ public class Matrix extends Figure {
    * 
    * @return
    */
-  public IDsmViewModel getModel() {
+  public IMatrixContentProvider getModel() {
     return _model;
   }
 
+  public void setModel(IMatrixContentProvider model) {
+
+    // TODO
+    _model = model;
+    _matrixCycleDetector = (IMatrixCycleDetector) model;
+    _matrixColorScheme = ((IDsmViewModel) model).getConfiguration();
+    _horizontalBoxSize = -1;
+  }
+
   /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
+   * @return
    */
+  protected final IMatrixColorScheme getMatrixConfiguration() {
+    return _matrixColorScheme;
+  }
+
+  protected IMatrixCycleDetector getMatrixCycleDetector() {
+    return _matrixCycleDetector;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -105,30 +114,30 @@ public class Matrix extends Figure {
 
     // reset the size
     resetSize();
-
+    
     // push the current state
     graphics.pushState();
 
     // draw the background for the complete matrix
-    graphics.setBackgroundColor(getModel().getConfiguration().getMatrixBackgroundColor());
+    graphics.setBackgroundColor(_matrixColorScheme.getMatrixBackgroundColor());
     graphics.fillRectangle(0, 0, getSize().width, getSize().height);
 
     // draw the diagonal
-    graphics.setBackgroundColor(getModel().getConfiguration().getMatrixDiagonalColor());
+    graphics.setBackgroundColor(_matrixColorScheme.getMatrixDiagonalColor());
     for (int i = 0; i < _model.getItemCount(); i++) {
       graphics.fillRectangle(getHorizontalSliceSize(i), getVerticalSliceSize(i), getHorizontalSliceSize(i + 1)
           - getHorizontalSliceSize(i) + 1, getVerticalSliceSize(i + 1) - getVerticalSliceSize(i) + 1);
     }
 
     // draw the cycles
-    for (int[] cycle : _model.getCycles()) {
-      graphics.setBackgroundColor(getModel().getConfiguration().getCycleSideMarkerColor());
+    for (int[] cycle : _matrixCycleDetector.getCycles()) {
+      graphics.setBackgroundColor(_matrixColorScheme.getCycleSideMarkerColor());
       int lenght = cycle[cycle.length - 1] - cycle[0] + 1;
       graphics.fillRectangle(getHorizontalSliceSize(cycle[0]), getVerticalSliceSize(cycle[0]),
           getHorizontalSliceSize(lenght) + 1, getVerticalSliceSize(lenght) + 1);
 
       for (int i = 0; i < cycle.length; i++) {
-        graphics.setBackgroundColor(getModel().getConfiguration().getCycleMatrixDiagonalColor());
+        graphics.setBackgroundColor(_matrixColorScheme.getCycleMatrixDiagonalColor());
         graphics.fillRectangle(getHorizontalSliceSize(cycle[i]), getVerticalSliceSize(cycle[i]),
             getHorizontalSliceSize(cycle[i] + 1) - getHorizontalSliceSize(cycle[i]) + 1,
             getVerticalSliceSize(cycle[i] + 1) - getVerticalSliceSize(cycle[i]) + 1);
@@ -136,53 +145,17 @@ public class Matrix extends Figure {
 
     }
 
-    // draw marked rows and columns
-    if (_x != -1 && _y != -1) {
-
-      // draw column
-      if (_model.isInCycle(_x, _y)) {
-        graphics.setBackgroundColor(_model.getConfiguration().getCycleMatrixMarkedColumnRowColor());
-      } else {
-        graphics.setBackgroundColor(_model.getConfiguration().getMatrixMarkedColumnRowColor());
-      }
-      graphics.fillRectangle(0, getVerticalSliceSize(_y), getHorizontalSliceSize(_x + 1) + 1,
-          getVerticalSliceSize(_y + 1) - getVerticalSliceSize(_y) + 1);
-
-      // draw row
-      graphics.fillRectangle(getHorizontalSliceSize(_x), 0, getHorizontalSliceSize(_x + 1) - getHorizontalSliceSize(_x)
-          + 1, getVerticalSliceSize(_y + 1) + 1);
-
-      // // draw square
-      // if (true) {
-      // graphics.fillRectangle(getHorizontalSliceSize(_x), 0, getHorizontalSliceSize(_x + 1)
-      // - getHorizontalSliceSize(_x) + 1, getVerticalSliceSize(_x + 1) + 1);
-      // graphics.fillRectangle(getHorizontalSliceSize(_x), getVerticalSliceSize(_y), getHorizontalSliceSize(_y + 1)
-      // - getHorizontalSliceSize(_x), getVerticalSliceSize(1));
-      // graphics.fillRectangle(getHorizontalSliceSize(_x), getVerticalSliceSize(_x), getHorizontalSliceSize(_y)
-      // - getHorizontalSliceSize(_x), getVerticalSliceSize(1));
-      // graphics.fillRectangle(getHorizontalSliceSize(_y), getVerticalSliceSize(_y), getHorizontalSliceSize(1),
-      // getVerticalSliceSize(_x) - getVerticalSliceSize(_y));
-      // }
-
-      // draw marked cell
-      if (_model.isInCycle(_x, _y)) {
-        graphics.setBackgroundColor(_model.getConfiguration().getCycleMatrixMarkedCellColor());
-      } else {
-        graphics.setBackgroundColor(_model.getConfiguration().getMatrixMarkedCellColor());
-      }
-      graphics.fillRectangle(getHorizontalSliceSize(_x), getVerticalSliceSize(_y), getHorizontalSliceSize(_x + 1)
-          - getHorizontalSliceSize(_x) + 1, getVerticalSliceSize(_y + 1) - getVerticalSliceSize(_y) + 1);
-      graphics.fillRectangle(getHorizontalSliceSize(_y), getVerticalSliceSize(_x), getHorizontalSliceSize(_y + 1)
-          - getHorizontalSliceSize(_y) + 1, getVerticalSliceSize(_x + 1) - getVerticalSliceSize(_x) + 1);
-    }
+    //
+    onPaintClientArea(graphics);
 
     // draw the text
-    graphics.setForegroundColor(getModel().getConfiguration().getMatrixTextColor());
+    graphics.setForegroundColor(_matrixColorScheme.getMatrixTextColor());
     int[] visibleSlices = getVisibleSlices();
     for (int i = visibleSlices[0]; (i <= visibleSlices[1]); i++) {
       for (int j = visibleSlices[2]; j < _model.getItemCount(); j++) {
         if (i != j) {
-          String value = _model.isToggled() ? _model.getValues()[j][i] : _model.getValues()[i][j];
+          String value = _model.isToggled() ? _labelProvider.getText(_model.getDependency(j, i)) : _labelProvider
+              .getText(_model.getDependency(i, j));
           if (value != null) {
             graphics.drawString(value, getHorizontalSliceSize(i) + 4, getVerticalSliceSize(j));
           }
@@ -191,17 +164,17 @@ public class Matrix extends Figure {
     }
 
     // draw the separator lines
-    graphics.setForegroundColor(_model.getConfiguration().getMatrixSeparatorColor());
+    graphics.setForegroundColor(_matrixColorScheme.getMatrixSeparatorColor());
     for (int i = 0; i <= _model.getItemCount(); i++) {
-      graphics.drawLine(new Point(0, getVerticalSliceSize(i)), new Point(_model.getConfiguration()
-          .getHorizontalBoxSize() * _model.getItemCount(), getVerticalSliceSize(i)));
-      graphics.drawLine(new Point(getHorizontalSliceSize(i), 0), new Point(getHorizontalSliceSize(i), _model
-          .getConfiguration().getVerticalBoxSize() * _model.getItemCount()));
+      graphics.drawLine(new Point(0, getVerticalSliceSize(i)), new Point(
+          ((IDsmViewModel)_model).getConfiguration().getHorizontalBoxSize() * _model.getItemCount(), getVerticalSliceSize(i)));
+      graphics.drawLine(new Point(getHorizontalSliceSize(i), 0), new Point(getHorizontalSliceSize(i),
+          ((IDsmViewModel)_model).getConfiguration().getVerticalBoxSize() * _model.getItemCount()));
     }
 
     // draw the cycle separator lines
-    graphics.setForegroundColor(getModel().getConfiguration().getCycleSideMarkerSeparatorColor());
-    for (int[] cycle : _model.getCycles()) {
+    graphics.setForegroundColor(_matrixColorScheme.getCycleSideMarkerSeparatorColor());
+    for (int[] cycle : _matrixCycleDetector.getCycles()) {
       int current = 0;
       for (int i : cycle) {
         current = i;
@@ -221,21 +194,31 @@ public class Matrix extends Figure {
     graphics.popState();
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param graphics
+   */
+  protected void onPaintClientArea(Graphics graphics) {
+    //
+  }
+
   private int[] getVisibleSlices() {
-    
-    if (! (this.getParent() instanceof ZoomContainer)) {
+
+    if (!(this.getParent() instanceof ZoomContainer)) {
       return new int[] { 0, _model.getItemCount() - 1, 0, _model.getItemCount() - 1 };
     }
 
     ZoomContainer zoomContainer = (ZoomContainer) this.getParent();
     Viewport viewport = ((Viewport) this.getParent().getParent());
 
-    int horMin = (int) (viewport.getViewLocation().x / (_model.getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));
-    int horVisibleSlicesCount = (int) (viewport.getSize().width / (_model.getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));
+    int horMin = (int) (viewport.getViewLocation().x / (((IDsmViewModel)_model).getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));
+    int horVisibleSlicesCount = (int) (viewport.getSize().width / (((IDsmViewModel)_model).getConfiguration().getHorizontalBoxSize() * zoomContainer.zoom));
 
     //
-    int verMin = (int) (viewport.getViewLocation().y / (_model.getConfiguration().getVerticalBoxSize() * zoomContainer.zoom));
-    int verVisibleSlicesCount = (int) (viewport.getSize().height / (_model.getConfiguration().getVerticalBoxSize() * zoomContainer.zoom));
+    int verMin = (int) (viewport.getViewLocation().y / (((IDsmViewModel)_model).getConfiguration().getVerticalBoxSize() * zoomContainer.zoom));
+    int verVisibleSlicesCount = (int) (viewport.getSize().height / (((IDsmViewModel)_model).getConfiguration().getVerticalBoxSize() * zoomContainer.zoom));
 
     return new int[] {
         horMin,
@@ -253,8 +236,8 @@ public class Matrix extends Figure {
   public void resetSize() {
 
     //
-    Dimension dimension = new Dimension(_model.getConfiguration().getHorizontalBoxSize() * _model.getItemCount() + 1,
-        _model.getConfiguration().getVerticalBoxSize() * _model.getItemCount() + 1);
+    Dimension dimension = new Dimension(((IDsmViewModel)_model).getConfiguration().getHorizontalBoxSize() * _model.getItemCount() + 1,
+        ((IDsmViewModel)_model).getConfiguration().getVerticalBoxSize() * _model.getItemCount() + 1);
 
     //
     if (!getSize().equals(dimension)) {
@@ -262,15 +245,8 @@ public class Matrix extends Figure {
     }
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param count
-   * @return
-   */
-  private final int getHorizontalSliceSize(int count) {
-    return (_model.getConfiguration().getHorizontalBoxSize() * count);
+  protected final int getHorizontalSliceSize(int count) {
+    return (((IDsmViewModel)_model).getConfiguration().getHorizontalBoxSize() * count);
   }
 
   /**
@@ -280,129 +256,7 @@ public class Matrix extends Figure {
    * @param count
    * @return
    */
-  private final int getVerticalSliceSize(int count) {
-    return (_model.getConfiguration().getVerticalBoxSize() * count);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-   */
-  private final class MatrixMouseMotionListener extends MouseMotionListener.Stub {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void mouseMoved(MouseEvent me) {
-
-      //
-      final Point location = me.getLocation();
-
-      //
-      final int x = (location.x / _model.getConfiguration().getHorizontalBoxSize());
-      final int y = (location.y / _model.getConfiguration().getVerticalBoxSize());
-
-      //
-      if (x != _x || y != _y) {
-
-        //
-        if (x >= _model.getItemCount() || y >= _model.getItemCount()) {
-
-          _x = -1;
-          _y = -1;
-        }
-
-        //
-        else {
-
-          _x = x;
-          _y = y;
-        }
-
-        // start the tool tip listener
-        Display.getCurrent().timerExec(1000, new Runnable() {
-          @Override
-          public void run() {
-            // set the new cell
-            if (_x == x && _y == y) {
-
-              // notify listener
-              MatrixEvent event = new MatrixEvent(_x, _y);
-              for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
-                listener.toolTip(event);
-              }
-            }
-          }
-        });
-
-        // repaint
-        repaint();
-
-        // notify listener
-        MatrixEvent event = new MatrixEvent(_x, _y);
-        for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
-          listener.marked(event);
-        }
-      }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void mouseExited(MouseEvent me) {
-
-      //
-      _x = -1;
-      _y = -1;
-
-      // repaint
-      repaint();
-
-      // notify listener
-      MatrixEvent event = new MatrixEvent(_x, _y);
-      for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
-        listener.marked(event);
-      }
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
-   */
-  private final class MatrixMouseListener extends MouseListener.Stub {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void mouseDoubleClicked(MouseEvent me) {
-
-      // notify listener
-      MatrixEvent event = new MatrixEvent(_x, _y);
-      for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
-        listener.doubleClick(event);
-      }
-    }
-
-    @Override
-    public synchronized void mouseReleased(MouseEvent me) {
-
-      // notify listener
-      MatrixEvent event = new MatrixEvent(_x, _y);
-      for (IMatrixListener listener : _matrixListeners.toArray(new IMatrixListener[0])) {
-        listener.singleClick(event);
-      }
-    }
-  }
-
-  public void setModel(IDsmViewModel model) {
-    _model = model;
+  protected final int getVerticalSliceSize(int count) {
+    return (((IDsmViewModel)_model).getConfiguration().getVerticalBoxSize() * count);
   }
 }

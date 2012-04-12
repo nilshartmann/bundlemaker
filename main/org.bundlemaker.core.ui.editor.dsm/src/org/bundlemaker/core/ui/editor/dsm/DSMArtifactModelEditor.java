@@ -345,7 +345,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
                     * _viewWidget.getModel().getItemCount();
                 int matrixHeight = _viewWidget.getModel().getConfiguration().getVerticalBoxSize()
                     * _viewWidget.getModel().getItemCount();
-                final Matrix matrix = new Matrix(_viewWidget.getModel());
+                final Matrix matrix = new Matrix(_viewWidget.getModel(), new DependencyLabelProvider(), _viewWidget
+                    .getModel());
                 matrix.setSize(matrixWidth, matrixHeight);
                 matrix.setFont(Display.getCurrent().getSystemFont());
 
