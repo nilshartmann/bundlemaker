@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.projecteditor;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.CenterImageLabelProvider;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
@@ -25,20 +26,23 @@ public class ProjectEditorTreeViewerAnalyzeLabelProvider extends CenterImageLabe
     IProjectContentProviderEditor editor = treeViewerElement.getProvidingEditor();
     Object contentElement = treeViewerElement.getElement();
 
+    AnalyzeMode analyzeMode = editor.getAnalyzeMode(contentElement);
+
+    if (analyzeMode == null) {
+      return null;
+    }
+
     switch (_column) {
     case 0:
-      return getCheckBox(editor.isAnalyze(contentElement));
+      return getCheckBox(analyzeMode.isAnalyze());
     case 1:
-      return getCheckBox(editor.isAnalyzeSources(contentElement));
+      return getCheckBox(analyzeMode.equals(AnalyzeMode.BINARIES_AND_SOURCES));
     }
 
     return null;
   }
 
-  private Image getCheckBox(Boolean state) {
-    if (state == null) {
-      return null;
-    }
+  private Image getCheckBox(boolean state) {
 
     if (state) {
       return BundleMakerImages.CHECKED.getImage();

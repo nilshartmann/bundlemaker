@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
@@ -60,17 +61,9 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
   }
 
   @Override
-  public Boolean isAnalyze(Object element) {
+  public AnalyzeMode getAnalyzeMode(Object element) {
     if (element instanceof JdtProjectContentProvider) {
-      return true;
-    }
-    return null;
-  }
-
-  @Override
-  public Boolean isAnalyzeSources(Object element) {
-    if (element instanceof JdtProjectContentProvider) {
-      return true;
+      return AnalyzeMode.BINARIES_AND_SOURCES;
     }
     return null;
   }

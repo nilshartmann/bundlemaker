@@ -54,23 +54,13 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   }
 
   @Override
-  public Boolean isAnalyze(Object element) {
-    if (element instanceof FileBasedContentProvider) {
-      FileBasedContentProvider provider = (FileBasedContentProvider) element;
-      return provider.getFileBasedContent().getAnalyzeMode().isAnalyze();
+  public AnalyzeMode getAnalyzeMode(Object element) {
+    if (!(element instanceof FileBasedContentProvider)) {
+      return null;
     }
 
-    return null;
-  }
-
-  @Override
-  public Boolean isAnalyzeSources(Object element) {
-    if (element instanceof FileBasedContentProvider) {
-      FileBasedContentProvider provider = (FileBasedContentProvider) element;
-      return AnalyzeMode.BINARIES_AND_SOURCES.equals(provider.getFileBasedContent().getAnalyzeMode());
-    }
-
-    return null;
+    FileBasedContentProvider provider = (FileBasedContentProvider) element;
+    return provider.getFileBasedContent().getAnalyzeMode();
   }
 
   private void addAsProjectPaths(List<Object> target, Set<VariablePath> paths, boolean source) {

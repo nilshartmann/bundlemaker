@@ -256,8 +256,14 @@ public class ProjectEditorPage extends FormPage {
         _bundleMakerProject, registeredDndProviders) {
 
       @Override
-      protected void afterDrop() {
-        getViewer().refresh();
+      protected void afterDrop(Object target) {
+
+        // refresh the tree
+        _treeViewer.refresh(target);
+
+        // make the new object visible
+        _treeViewer.expandToLevel(target, 1);
+
         markDirty();
       }
 

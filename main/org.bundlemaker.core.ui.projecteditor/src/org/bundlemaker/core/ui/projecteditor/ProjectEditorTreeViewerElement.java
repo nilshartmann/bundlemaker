@@ -54,4 +54,29 @@ public class ProjectEditorTreeViewerElement {
 
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_element == null) ? 0 : _element.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    ProjectEditorTreeViewerElement other = (ProjectEditorTreeViewerElement) obj;
+    if (_element == null) {
+      if (other._element != null)
+        return false;
+    } else if (!_element.equals(other._element))
+      return false;
+    return true;
+  }
+
 }
