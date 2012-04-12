@@ -52,9 +52,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormPage;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.model.BaseWorkbenchContentProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-import org.eclipse.ui.model.WorkbenchLabelProvider;
 
 /**
  * <p>
@@ -163,14 +161,14 @@ public class ProjectEditorPage extends FormPage {
     projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);
-    _treeViewer.setLabelProvider(new WorkbenchLabelProvider());
-    _treeViewer.setContentProvider(new BaseWorkbenchContentProvider());
+    _treeViewer.setContentProvider(new ProjectEditorTreeViewerContentProvider(Activator.getDefault()
+        .getProjectContentProviderEditorRegistry()));
     configureTreeDragAndDrop();
     createTreeColumns();
 
     final Shell shell = client.getShell();
 
-    _treeViewer.setInput(_bundleMakerProject.getModifiableProjectDescription());
+    _treeViewer.setInput(_bundleMakerProject);
 
     // Create the buttonbar
     final VerticalFormButtonBar buttonBar = new VerticalFormButtonBar(client, toolkit);
@@ -258,8 +256,14 @@ public class ProjectEditorPage extends FormPage {
         _bundleMakerProject, registeredDndProviders) {
 
       @Override
-      protected void afterDrop() {
-        getViewer().refresh();
+      protected void afterDrop(Object target) {
+
+        // refresh the tree
+        _treeViewer.refresh(target);
+
+        // make the new object visible
+        _treeViewer.expandToLevel(target, 1);
+
         markDirty();
       }
 
@@ -315,7 +319,8 @@ public class ProjectEditorPage extends FormPage {
     Tree tree = _treeViewer.getTree();
     TreeColumnLayout layout = new TreeColumnLayout();
     TreeViewerColumn column = new TreeViewerColumn(_treeViewer, SWT.NONE);
-    column.setLabelProvider(new WorkbenchAdapterColumnLabelProvider()); // (new ResourceNameColumnLabelProvider());
+    column.setLabelProvider(new ProjectEditorTreeViewerResourceLabelProvider());
+
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Resource");
@@ -324,7 +329,7 @@ public class ProjectEditorPage extends FormPage {
     column = new TreeViewerColumn(_treeViewer, SWT.NONE);
     // column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(1));
     // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeResource(this, _treeViewer));
-    column.setLabelProvider(new WorkbenchAdapterColumnLabelProvider()); // (new ResourceNameColumnLabelProvider());
+    column.setLabelProvider(new ProjectEditorTreeViewerAnalyzeLabelProvider(0));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze");
@@ -334,7 +339,7 @@ public class ProjectEditorPage extends FormPage {
     column = new TreeViewerColumn(_treeViewer, SWT.NONE);
     // column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(2));
     // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeSources(this, _treeViewer));
-    column.setLabelProvider(new WorkbenchAdapterColumnLabelProvider()); // (new ResourceNameColumnLabelProvider());
+    column.setLabelProvider(new ProjectEditorTreeViewerAnalyzeLabelProvider(1));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze Sources");

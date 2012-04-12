@@ -2,8 +2,11 @@ package org.bundlemaker.core.ui.projecteditor.dnd;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Shell;
 
 public interface IProjectEditorDropEvent {
+
+  public Shell getShell();
 
   public IBundleMakerProject getBundleMakerProject();
 

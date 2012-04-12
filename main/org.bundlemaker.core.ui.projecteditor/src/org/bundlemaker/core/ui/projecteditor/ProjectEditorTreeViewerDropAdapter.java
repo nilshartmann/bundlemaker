@@ -116,7 +116,7 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
       boolean dropped = _providerCandidate.performDrop(_currentDropEvent);
 
       if (dropped) {
-        afterDrop();
+        afterDrop(getCurrentTarget());
       }
       return dropped;
 
@@ -133,16 +133,21 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
    * 
    * @TODO replace with listener?!
    */
-  protected void afterDrop() {
+  protected void afterDrop(Object target) {
 
   }
 
   private ProjectEditorDropEvent createDropEvent(Object target) {
+
+    if (target instanceof ProjectEditorTreeViewerElement) {
+      target = ((ProjectEditorTreeViewerElement) target).getElement();
+    }
+
     int location = this.determineLocation(getCurrentEvent());
     DropLocation dropLocation = DropLocation.getDropLocation(location);
     System.out.println("DropLocation: " + dropLocation);
-    ProjectEditorDropEvent projectEditorDropEvent = new ProjectEditorDropEvent(_bundleMakerProject, target,
-        dropLocation, getCurrentEvent().currentDataType);
+    ProjectEditorDropEvent projectEditorDropEvent = new ProjectEditorDropEvent(getViewer().getControl().getShell(),
+        _bundleMakerProject, target, dropLocation, getCurrentEvent().currentDataType);
 
     return projectEditorDropEvent;
 

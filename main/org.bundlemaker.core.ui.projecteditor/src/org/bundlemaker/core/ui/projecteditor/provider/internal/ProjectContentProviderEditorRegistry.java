@@ -13,6 +13,8 @@ package org.bundlemaker.core.ui.projecteditor.provider.internal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentProviderEditor;
+import org.bundlemaker.core.ui.projecteditor.jdt.JdtProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 
 /**
@@ -26,7 +28,8 @@ public class ProjectContentProviderEditorRegistry {
   private final Set<IProjectContentProviderEditor> _editors = new LinkedHashSet<IProjectContentProviderEditor>();
 
   public ProjectContentProviderEditorRegistry() {
-    // _editors.add();
+    _editors.add(new FileBasedContentProviderEditor());
+    _editors.add(new JdtProjectContentProviderEditor());
   }
 
   public Set<IProjectContentProviderEditor> getProjectContentProviderEditors() {

@@ -5,8 +5,11 @@ import org.bundlemaker.core.ui.projecteditor.dnd.DropLocation;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.widgets.Shell;
 
 public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
+
+  private final Shell               _shell;
 
   private final IBundleMakerProject _bundleMakerProject;
 
@@ -18,9 +21,10 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
 
   private final DropLocation        _dropLocation;
 
-  public ProjectEditorDropEvent(IBundleMakerProject bundleMakerProject, Object target, DropLocation dropLocation,
-      TransferData transferData) {
+  public ProjectEditorDropEvent(final Shell shell, IBundleMakerProject bundleMakerProject, Object target,
+      DropLocation dropLocation, TransferData transferData) {
     super();
+    _shell = shell;
     _bundleMakerProject = bundleMakerProject;
     _target = target;
     _dropLocation = dropLocation;
@@ -30,6 +34,11 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
 
   public void setData(Object data) {
     this._data = data;
+  }
+
+  @Override
+  public Shell getShell() {
+    return _shell;
   }
 
   @Override
