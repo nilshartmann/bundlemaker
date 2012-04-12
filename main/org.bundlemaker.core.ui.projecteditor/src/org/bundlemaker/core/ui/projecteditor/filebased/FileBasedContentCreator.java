@@ -91,7 +91,7 @@ public class FileBasedContentCreator {
     return null;
   }
 
-  protected boolean isSourceModule(String moduleName) {
+  public static boolean isSourceModule(String moduleName) {
     moduleName = moduleName.toLowerCase();
 
     for (String sourceExtension : SOURCE_EXTENSIONS) {

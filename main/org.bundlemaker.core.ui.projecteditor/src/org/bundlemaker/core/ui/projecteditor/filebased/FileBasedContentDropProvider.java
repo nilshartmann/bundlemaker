@@ -17,8 +17,7 @@ import org.eclipse.swt.dnd.Transfer;
 public class FileBasedContentDropProvider implements IProjectEditorDropProvider {
 
   private final Transfer[]              SUPPORTED_TYPES          = new Transfer[] { //
-                                                                 FileTransfer.getInstance() //
-                                                                 };
+                                                                 FileTransfer.getInstance() };
 
   private final FileBasedContentCreator _fileBasedContentCreator = new FileBasedContentCreator();
 
@@ -44,7 +43,6 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
 
   @Override
   public boolean performDrop(IProjectEditorDropEvent dropEvent) throws Exception {
-
     if (!dropEvent.hasTarget()) {
       // add new filebased content
       return createFileBasedContents(dropEvent);
@@ -53,7 +51,9 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     String[] newFiles = dropEvent.getData(String[].class);
 
     String message = "Please choose how to add " + newFiles.length + " resources to your BundleMaker project";
-    Choice choice = ChoiceDialog.choose(dropEvent.getShell(), message, ADD_AS_BINARY_CONTENT, ADD_AS_SOURCE_CONTENT);
+
+    Choice choice = ChoiceDialog.choose(dropEvent.getShell(), message, ADD_AS_BINARY_CONTENT, ADD_AS_BINARY_CONTENT,
+        ADD_AS_SOURCE_CONTENT);
     if (choice == null) {
       return false;
     }

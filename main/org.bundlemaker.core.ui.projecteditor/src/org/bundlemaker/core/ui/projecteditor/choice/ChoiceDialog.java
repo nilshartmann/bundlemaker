@@ -27,8 +27,8 @@ public class ChoiceDialog extends TrayDialog {
 
   private final List<Button> _choiceButtons    = new LinkedList<Button>();
 
-  public static Choice choose(Shell shell, String message, Choice... choices) {
-    ChoiceDialog choiceDialog = new ChoiceDialog(shell, message, Arrays.asList(choices));
+  public static Choice choose(Shell shell, String message, Choice defaultChoice, Choice... choices) {
+    ChoiceDialog choiceDialog = new ChoiceDialog(shell, message, Arrays.asList(choices), defaultChoice);
 
     if (choiceDialog.open() != OK) {
       return null;
@@ -38,14 +38,18 @@ public class ChoiceDialog extends TrayDialog {
 
   }
 
-  public ChoiceDialog(Shell shell, String message, List<Choice> choices) {
+  public ChoiceDialog(Shell shell, String message, List<Choice> choices, Choice defaultChoice) {
     super(shell);
 
     this._message = message;
     this._choices = choices;
 
     // set default selection
-    this._currentSelection = choices.get(0);
+    if (defaultChoice != null) {
+      this._currentSelection = defaultChoice;
+    } else {
+      this._currentSelection = choices.get(0);
+    }
   }
 
   @Override
