@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
+ *         TODO rename IProjectContentTreeProvider
  */
 public interface IProjectContentProviderEditor {
 
@@ -28,7 +29,7 @@ public interface IProjectContentProviderEditor {
   /** TODO: Allow more than one root element? */
   public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider);
 
-  /** TODO: Allow children of children? */
+  /** TODO: Allow two level of children (e.g. Java Project -> FileBasedContent -> FileBasedContent paths) */
   public List<Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider, Object rootElement);
 
   /**
@@ -58,24 +59,19 @@ public interface IProjectContentProviderEditor {
 
   // ---- TODO: ---- //
 
-  // edit is only available on a single selection
+  // *Edit* is only available on a single selection
   // public boolean canEdit(Object selectedObject);
   // public void edit(Object selectedObject);
 
-  // HOW TO HANDLE SELECTED OBJECTS FROM DIFFERENT PROVIDERS?
-  // Maybe we pass in all selected object - regardless whether
-  // they came from this provder or not - and let
-  // the provider return true only if it can handle *all*
-  // selected objects
-
+  // *Removing* of ProjectContentProvider instances is directly done in the ProjectEditorPage
+  // this is only invoked for selected child-objects of this provider
   // public boolean canRemove(Object[] selectedObjects);
   // public void remove(Object[] selectedObjects);
 
-  // -- move up and down only at Provider level? --
-  // public boolean canMoveUp(Object[] selectedObjects);
-  // public void moveUp(Object[] selectedObjects);
-
-  // public boolean canMoveDown(Object[] selectedObjects);
-  // public void moveDown(Object[] selectedObjects);
+  // *Context menu*
+  // passed in are *all* selected objects
+  // ContextMenuAction getContextMenuActions(Object[] selectedObjects)
+  // ContextMenuAction getLabel(Object[] selectedObjects), isEnabled(Object[] selectedObjects), execute(Object[]
+  // selectedObject)
 
 }

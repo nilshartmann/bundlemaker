@@ -29,6 +29,9 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
 
   @Override
   public List<Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider, Object rootElement) {
+    // TODO: return IProjectContentEntries instead. Tree should show: Java Project Name and Version -> Content Entry ->
+    // Content Entry paths
+    // where Content Entry is a FileBasedContent
     JdtProjectContentProvider projectContentProvider = (JdtProjectContentProvider) rootElement;
     IJavaProject javaProject = projectContentProvider.getJavaProject();
     try {

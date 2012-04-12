@@ -5,6 +5,9 @@ package org.bundlemaker.core.ui.projecteditor;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
@@ -12,6 +15,7 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
@@ -27,7 +31,9 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
@@ -284,8 +290,13 @@ public class ProjectEditorPage extends FormPage {
   }
 
   private void refreshEnablement() {
-    // TODO Auto-generated method stub
-
+    // Add... Button is always enabled as long as their is a "IProjectContentProviderFactory-Editor" available
+    // Edit... is enabled only when there is exactly ONE selected object AND it's providing ProviderEditor returns true
+    // on canEdit(Object)
+    // Remove is enabled when at least one element is selected and either...
+    // ...all of the elements are IProjectContentProviders (top level types) OR
+    // ...all of the elements are children of the SAME TYPE of IProjectContentProviders
+    // Up/Down are enabled when at least on IProjectContentProvider is selected (and no other element)
   }
 
   /**
@@ -308,8 +319,37 @@ public class ProjectEditorPage extends FormPage {
    * 
    */
   protected void removeContent() {
-    // TODO Auto-generated method stub
 
+    List<ProjectEditorTreeViewerElement> selectedObjects = getSelectedObjects(_treeViewer.getSelection(),
+        ProjectEditorTreeViewerElement.class);
+
+    for (ProjectEditorTreeViewerElement projectEditorTreeViewerElement : selectedObjects) {
+      if (projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider) {
+        IProjectContentProvider provider = (IProjectContentProvider) projectEditorTreeViewerElement.getElement();
+        _bundleMakerProject.getModifiableProjectDescription().removeContentProvider(provider);
+      }
+    }
+
+    _treeViewer.refresh(null);
+
+    markDirty();
+
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  public static <T> List<T> getSelectedObjects(ISelection selection, Class<T> type) {
+    final List<T> result = new LinkedList<T>();
+    if (selection instanceof IStructuredSelection) {
+      IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+      Iterator iterator = structuredSelection.iterator();
+      while (iterator.hasNext()) {
+        Object element = iterator.next();
+        if (type.isInstance(element)) {
+          result.add((T) element);
+        }
+      }
+    }
+    return result;
   }
 
   /**
@@ -407,8 +447,6 @@ public class ProjectEditorPage extends FormPage {
               refreshFormTitle();
             }
           });
-        } else if (event.getType() == Type.PROJECT_DESCRIPTION_CHANGED) {
-          _treeViewer.refresh();
         }
 
       }
