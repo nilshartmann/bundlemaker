@@ -290,8 +290,13 @@ public class ProjectEditorPage extends FormPage {
   }
 
   private void refreshEnablement() {
-    // TODO Auto-generated method stub
-
+    // Add... Button is always enabled as long as their is a "IProjectContentProviderFactory-Editor" available
+    // Edit... is enabled only when there is exactly ONE selected object AND it's providing ProviderEditor returns true
+    // on canEdit(Object)
+    // Remove is enabled when at least one element is selected and either...
+    // ...all of the elements are IProjectContentProviders (top level types) OR
+    // ...all of the elements are children of the SAME TYPE of IProjectContentProviders
+    // Up/Down are enabled when at least on IProjectContentProvider is selected (and no other element)
   }
 
   /**
