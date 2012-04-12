@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
 
 /**
- * @author Nils Hartmann (nils@nilshartmann.net)
- * 
+ * @author Nils Hartmann (nils@nilshartmann.net) TODO: Rendering (getRootElement, getChildren, getImage, getLabel,
+ *         AnalyzeMode) should be re-usable, e.g. for JDTProjectContentProvider
  */
 public class FileBasedContentProviderEditor implements IProjectContentProviderEditor {
 
