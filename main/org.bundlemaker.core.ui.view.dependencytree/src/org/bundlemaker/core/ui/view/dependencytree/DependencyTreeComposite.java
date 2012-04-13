@@ -63,6 +63,9 @@ public class DependencyTreeComposite extends Composite {
   private List<IDependency>                                     _leafDependencies;
 
   /** - */
+  private List<IDependency>                                     _selectedDetailDependencies;
+
+  /** - */
   private String                                                _detailDependencySelectionId;
 
   /**
@@ -106,6 +109,20 @@ public class DependencyTreeComposite extends Composite {
     // update 'from' and 'to' tree, no filtering
     setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
+    
+    //
+    _fromTreeViewer.setSelection(null);
+    _toTreeViewer.setSelection(null);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final List<IDependency> getSelectedDetailDependencies() {
+    return _selectedDetailDependencies;
   }
 
   /**
@@ -126,6 +143,9 @@ public class DependencyTreeComposite extends Composite {
     // add SelectionListeners
     _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());
     _toTreeViewer.addSelectionChangedListener(new ToArtifactSelectionChangedListener());
+    
+    //
+    _selectedDetailDependencies = Collections.emptyList();
   }
 
   /**
@@ -139,32 +159,35 @@ public class DependencyTreeComposite extends Composite {
     Assert.isNotNull(treeViewer);
     Assert.isNotNull(visibleArtifacts);
 
+    // set redraw to false
+    treeViewer.getTree().setRedraw(false);
+    
     if (visibleArtifacts.size() > 0) {
 
+      // set the filter
+      treeViewer.setFilters(new ViewerFilter[] { new VisibleArtifactsFilter(visibleArtifacts) });
+      
       // set the root if necessary
       IRootArtifact rootArtifact = visibleArtifacts.toArray(new IBundleMakerArtifact[0])[0].getRoot();
       if (!rootArtifact.equals(treeViewer.getInput())) {
-        
-        treeViewer.getTree().setRedraw(false); 
+
+        //
         treeViewer.setInput(rootArtifact);
 
         // expand
         for (IBundleMakerArtifact artifact : ArtifactHelper.findChildren(rootArtifact, IModuleArtifact.class)) {
           treeViewer.expandToLevel(artifact, 0);
         }
-
-        //
-        treeViewer.getTree().setRedraw(true); 
       }
-
-      // set the filter
-      treeViewer.setFilters(new ViewerFilter[] { new VisibleArtifactsFilter(visibleArtifacts) });
     }
 
     // set empty list
     else {
       treeViewer.setInput(Collections.emptyList());
     }
+    
+    // redraw again
+    treeViewer.getTree().setRedraw(true);
   }
 
   /**
@@ -175,6 +198,22 @@ public class DependencyTreeComposite extends Composite {
    */
   protected String getDependencySelectionId() {
     return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param selectedDetailDependencies
+   */
+  private void setSelectedDetailDependencies(List<IDependency> selectedDetailDependencies) {
+
+    //
+    _selectedDetailDependencies = selectedDetailDependencies;
+
+    //
+    Selection.instance().getDependencySelectionService()
+        .setSelection(getDependencySelectionId(), _detailDependencySelectionId, selectedDetailDependencies);
   }
 
   /**
@@ -222,12 +261,10 @@ public class DependencyTreeComposite extends Composite {
 
         _toTreeViewer.setSelection(new StructuredSelection());
         setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
-        Selection.instance().getDependencySelectionService()
-            .setSelection(getDependencySelectionId(), _detailDependencySelectionId, selectedDetailDependencies);
+        setSelectedDetailDependencies(selectedDetailDependencies);
       } else {
         setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
-        Selection.instance().getDependencySelectionService()
-            .setSelection(getDependencySelectionId(), _detailDependencySelectionId, _leafDependencies);
+        setSelectedDetailDependencies(_leafDependencies);
       }
     }
   }
@@ -277,12 +314,10 @@ public class DependencyTreeComposite extends Composite {
 
         _fromTreeViewer.setSelection(new StructuredSelection());
         setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
-        Selection.instance().getDependencySelectionService()
-            .setSelection(getDependencySelectionId(), _detailDependencySelectionId, selectedDetailDependencies);
+        setSelectedDetailDependencies(selectedDetailDependencies);
       } else {
         setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
-        Selection.instance().getDependencySelectionService()
-            .setSelection(getDependencySelectionId(), _detailDependencySelectionId, _leafDependencies);
+        setSelectedDetailDependencies(_leafDependencies);
       }
     }
   }

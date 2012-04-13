@@ -23,10 +23,10 @@ import org.eclipse.swt.widgets.Composite;
 public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart {
 
   /** - */
-  public static final String      ID = DependencyTreeView.class.getName();
+  public static final String              ID = DependencyTreeView.class.getName();
 
   /** - */
-  private DependencyTreeComposite _composite;
+  private CropableDependencyTreeComposite _composite;
 
   /**
    * {@inheritDoc}
@@ -35,7 +35,7 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
   public void createPartControl(Composite parent) {
 
     //
-    _composite = new DependencyTreeComposite(parent, ID);
+    _composite = new CropableDependencyTreeComposite(parent, ID);
 
     //
     initDependencies(getCurrentDependencySelection());

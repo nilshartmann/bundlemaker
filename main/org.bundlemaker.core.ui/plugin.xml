@@ -272,7 +272,7 @@
 	<!-- Project description editor -->
 	<extension id="org.bundlemaker.core.ui.editors" name="Bundlemaker Editors"
 		point="org.eclipse.ui.editors">
-		<editor icon="icons/bundlemaker-icon-small.png"
+		<editor icon="icons/bm-project-description.png"
 			class="org.bundlemaker.core.ui.editor.ProjectDescriptionEditor" default="false"
 			id="org.bundlemaker.core.ui.editor.projectdescription" name="Bundlemaker editor">
 			<contentTypeBinding

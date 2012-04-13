@@ -14,6 +14,7 @@ import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
+import org.bundlemaker.core.ui.view.dependencytree.CropableDependencyTreeComposite;
 import org.bundlemaker.core.ui.view.dependencytree.DependencyTreeComposite;
 import org.eclipse.swt.widgets.Composite;
 
@@ -23,10 +24,10 @@ import org.eclipse.swt.widgets.Composite;
 public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
 
   /** the ID of the view as specified by the extension */
-  public static final String      XREF_ID = XRefView.class.getName();
+  public static final String              XREF_ID = XRefView.class.getName();
 
   /** - */
-  private DependencyTreeComposite _composite;
+  private CropableDependencyTreeComposite _composite;
 
   /**
    * {@inheritDoc}
@@ -35,12 +36,13 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
   public void createPartControl(Composite parent) {
 
     //
-    _composite = new DependencyTreeComposite(parent, XREF_ID) {
+    _composite = new CropableDependencyTreeComposite(parent, XREF_ID) {
 
-      @Override
-      protected String getDependencySelectionId() {
-        return Selection.MAIN_DEPENDENCY_SELECTION_ID;
-      }
+      // TODO
+      // @Override
+      // protected String getDependencySelectionId() {
+      // return Selection.MAIN_DEPENDENCY_SELECTION_ID;
+      // }
     };
   }
 
@@ -65,8 +67,8 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
       if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts()) {
 
         //
-        _composite.setDependencies(ArtifactUtilities.getAllLeafDependencies(getCurrentArtifactSelection().getRootArtifact()
-            .getDependencies()));
+        _composite.setDependencies(ArtifactUtilities.getAllLeafDependencies(getCurrentArtifactSelection()
+            .getRootArtifact().getDependencies()));
 
       }
       // else {

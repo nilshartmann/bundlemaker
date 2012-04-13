@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.artifact;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,6 +87,10 @@ public class ArtifactUtilities {
    * @return
    */
   public static List<IDependency> getAllLeafDependencies(Collection<IDependency> dependencies) {
+
+    if (dependencies == null) {
+      return Collections.emptyList();
+    }
 
     //
     final List<IDependency> result = new LinkedList<IDependency>();

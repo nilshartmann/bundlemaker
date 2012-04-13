@@ -16,7 +16,6 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 
-
 /**
  * This enumeration provides icons for several {@link IBundleMakerArtifact} types
  * 
@@ -25,7 +24,7 @@ import org.eclipse.swt.graphics.Image;
  * feel.
  * 
  * <p>
- * Taken from http://blogs.itemis.de/wendehal/2010/07/08/pretty-elegant-way-to-provide -images-in-eclipse-ui-plug-ins/
+ * Taken from http://blogs.itemis.de/wendehal/2010/07/08/pretty-elegant-way-to-provide-images-in-eclipse-ui-plug-ins/
  * 
  * @author Nils Hartmann
  */

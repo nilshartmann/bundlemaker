@@ -17,6 +17,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
+import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -168,6 +169,16 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
   @Override
   public void artifactModelModified() {
     // TODO
+  }
+  
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected String getSelectionId() {
+    return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
   }
 
   private void createColumns(Composite parent, TableViewer viewer) {
