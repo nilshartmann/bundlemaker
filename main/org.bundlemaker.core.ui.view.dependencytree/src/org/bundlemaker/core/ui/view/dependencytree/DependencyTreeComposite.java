@@ -9,6 +9,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
@@ -40,24 +41,30 @@ public class DependencyTreeComposite extends Composite {
   private TreeViewer                                            _toTreeViewer;
 
   /** - */
-  @SuppressWarnings("serial")
-  private GenericCache<IBundleMakerArtifact, List<IDependency>> _targetArtifactMap = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
-                                                                                     @Override
-                                                                                     protected List<IDependency> create(
-                                                                                         IBundleMakerArtifact key) {
-                                                                                       return new LinkedList<IDependency>();
-                                                                                     }
-                                                                                   };
+  private boolean                                               _fromTreeViewerInitialExpanded = false;
+
+  /** - */
+  private boolean                                               _toTreeViewerInitialExpanded   = false;
 
   /** - */
   @SuppressWarnings("serial")
-  private GenericCache<IBundleMakerArtifact, List<IDependency>> _sourceArtifactMap = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
-                                                                                     @Override
-                                                                                     protected List<IDependency> create(
-                                                                                         IBundleMakerArtifact key) {
-                                                                                       return new LinkedList<IDependency>();
-                                                                                     }
-                                                                                   };
+  private GenericCache<IBundleMakerArtifact, List<IDependency>> _targetArtifactMap             = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
+                                                                                                 @Override
+                                                                                                 protected List<IDependency> create(
+                                                                                                     IBundleMakerArtifact key) {
+                                                                                                   return new LinkedList<IDependency>();
+                                                                                                 }
+                                                                                               };
+
+  /** - */
+  @SuppressWarnings("serial")
+  private GenericCache<IBundleMakerArtifact, List<IDependency>> _sourceArtifactMap             = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
+                                                                                                 @Override
+                                                                                                 protected List<IDependency> create(
+                                                                                                     IBundleMakerArtifact key) {
+                                                                                                   return new LinkedList<IDependency>();
+                                                                                                 }
+                                                                                               };
 
   /** - */
   private List<IDependency>                                     _leafDependencies;
@@ -109,7 +116,7 @@ public class DependencyTreeComposite extends Composite {
     // update 'from' and 'to' tree, no filtering
     setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
-    
+
     //
     _fromTreeViewer.setSelection(null);
     _toTreeViewer.setSelection(null);
@@ -143,7 +150,7 @@ public class DependencyTreeComposite extends Composite {
     // add SelectionListeners
     _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());
     _toTreeViewer.addSelectionChangedListener(new ToArtifactSelectionChangedListener());
-    
+
     //
     _selectedDetailDependencies = Collections.emptyList();
   }
@@ -161,12 +168,12 @@ public class DependencyTreeComposite extends Composite {
 
     // set redraw to false
     treeViewer.getTree().setRedraw(false);
-    
+
     if (visibleArtifacts.size() > 0) {
 
       // set the filter
       treeViewer.setFilters(new ViewerFilter[] { new VisibleArtifactsFilter(visibleArtifacts) });
-      
+
       // set the root if necessary
       IRootArtifact rootArtifact = visibleArtifacts.toArray(new IBundleMakerArtifact[0])[0].getRoot();
       if (!rootArtifact.equals(treeViewer.getInput())) {
@@ -185,7 +192,7 @@ public class DependencyTreeComposite extends Composite {
     else {
       treeViewer.setInput(Collections.emptyList());
     }
-    
+
     // redraw again
     treeViewer.getTree().setRedraw(true);
   }
@@ -240,6 +247,12 @@ public class DependencyTreeComposite extends Composite {
       }
 
       if (structuredSelection.size() > 0 && !containsRoot) {
+        
+        //
+        if (!_toTreeViewerInitialExpanded) {
+          expandResources(_toTreeViewer);
+          _toTreeViewerInitialExpanded = true;
+        }
 
         //
         List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
@@ -262,6 +275,9 @@ public class DependencyTreeComposite extends Composite {
         _toTreeViewer.setSelection(new StructuredSelection());
         setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
         setSelectedDetailDependencies(selectedDetailDependencies);
+
+        //
+        expandResources(_toTreeViewer);
       } else {
         setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
         setSelectedDetailDependencies(_leafDependencies);
@@ -295,6 +311,12 @@ public class DependencyTreeComposite extends Composite {
       if (structuredSelection.size() > 0 && !containsRoot) {
 
         //
+        if (!_fromTreeViewerInitialExpanded) {
+          expandResources(_fromTreeViewer);
+          _fromTreeViewerInitialExpanded = true;
+        }
+        
+        //
         List<IBundleMakerArtifact> visibleArtifacts = new LinkedList<IBundleMakerArtifact>();
         List<IDependency> selectedDetailDependencies = new LinkedList<IDependency>();
         for (Object selectedObject : structuredSelection.toList()) {
@@ -320,5 +342,30 @@ public class DependencyTreeComposite extends Composite {
         setSelectedDetailDependencies(_leafDependencies);
       }
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  private void expandResources(TreeViewer treeViewer) {
+    Assert.isNotNull(treeViewer);
+
+    //
+    treeViewer.getTree().setRedraw(false);
+
+    //
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) treeViewer.getInput();
+
+    // expand
+    for (IBundleMakerArtifact artifact : ArtifactHelper.findChildren((IBundleMakerArtifact) rootArtifact,
+        IResourceArtifact.class)) {
+
+      treeViewer.expandToLevel(artifact, 0);
+    }
+
+    //
+    treeViewer.getTree().setRedraw(true);
   }
 }
