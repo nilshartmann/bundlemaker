@@ -282,9 +282,8 @@ public class CropableDependencyTreeComposite extends Composite {
 
   @Override
   public void dispose() {
-    super.dispose();
-    
     Selection.instance().getDependencySelectionService().removeDependencySelectionListener(_dependencySelectionListener);
+    super.dispose();
   }
 
   private void enableButtons() {
