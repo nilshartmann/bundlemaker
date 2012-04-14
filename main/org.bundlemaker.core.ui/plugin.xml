@@ -321,8 +321,10 @@
 			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
 			<separator name="org.bundlemaker.core.ui.separator.transformer" visible="true"/>
 			
-			<command commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
-				style="push">
+			<command
+         commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
+         icon="icons/etools/bm-parse.png"
+         style="push">
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.TransformHandler"
 				style="push">
