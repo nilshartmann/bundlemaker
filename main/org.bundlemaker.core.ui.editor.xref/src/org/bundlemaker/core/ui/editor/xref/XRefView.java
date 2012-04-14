@@ -53,11 +53,20 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
 
   @Override
   public void artifactModelModified() {
-
+    setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 
   @Override
   protected void setCurrentArtifactSelection(IArtifactSelection event) {
+
+    // do nothing if the root has not changed
+    if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts() && event != null
+        && event.hasSelectedArtifacts()
+        && getCurrentArtifactSelection().getRootArtifact().equals(event.getRootArtifact())) {
+
+      //
+      return;
+    }
 
     // call super
     super.setCurrentArtifactSelection(event);
