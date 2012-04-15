@@ -68,7 +68,7 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
       return true;
     }
     // no handler found => drop not possible
-    return _providerCandidate != null;
+    return false;
   }
 
   protected boolean canDrop(IProjectEditorDropProvider provider, IProjectEditorDropEvent event) {
@@ -145,7 +145,6 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
 
     int location = this.determineLocation(getCurrentEvent());
     DropLocation dropLocation = DropLocation.getDropLocation(location);
-    System.out.println("DropLocation: " + dropLocation);
     ProjectEditorDropEvent projectEditorDropEvent = new ProjectEditorDropEvent(getViewer().getControl().getShell(),
         _bundleMakerProject, target, dropLocation, getCurrentEvent().currentDataType);
 

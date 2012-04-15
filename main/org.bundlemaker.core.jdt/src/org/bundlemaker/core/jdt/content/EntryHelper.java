@@ -67,11 +67,13 @@ public class EntryHelper {
     IPath classes = classpathEntry.getPath();
     classes = makeAbsolute(classes);
 
-    // IPath source = classpathEntry.getSourceAttachmentPath();
-    // source = makeAbsolute(source);
+     IPath source = classpathEntry.getSourceAttachmentPath();
+     if (source != null) {
+       source = makeAbsolute(source);
+     }
 
     // TODO
-    createFileBasedContent(classpathEntry.getPath().lastSegment(), "1.2.3", classes, null, AnalyzeMode.DO_NOT_ANALYZE);
+    createFileBasedContent(classpathEntry.getPath().lastSegment(), "1.2.3", classes, source, AnalyzeMode.DO_NOT_ANALYZE);
   }
 
   /**

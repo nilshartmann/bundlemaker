@@ -29,8 +29,13 @@ public interface IProjectContentProviderEditor {
   /** TODO: Allow more than one root element? */
   public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider);
 
-  /** TODO: Allow two level of children (e.g. Java Project -> FileBasedContent -> FileBasedContent paths) */
-  public List<Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider, Object rootElement);
+  /**
+   * TODO: Allow two level of children (e.g. Java Project -> FileBasedContent -> FileBasedContent paths)
+   * 
+   * @throws Exception
+   */
+  public List<? extends Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider,
+      Object rootElement) throws Exception;
 
   /**
    * Returns the image for left ("Resource") column

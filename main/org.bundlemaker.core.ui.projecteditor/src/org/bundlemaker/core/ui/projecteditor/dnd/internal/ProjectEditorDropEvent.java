@@ -66,6 +66,16 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
     return _dropLocation;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent#getTransferData()
+   */
+  @Override
+  public TransferData getTransferData() {
+    return this._transferData;
+  }
+
   @Override
   public boolean isTransferType(Transfer transfer) {
     if (transfer.isSupportedType(_transferData)) {
@@ -73,6 +83,17 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
     }
     return false;
   }
+
+  // public <T> T getJavaTransferData(Class<T> type, Transfer transfer) {
+  // if (!isTransferType(transfer)) {
+  // return null;
+  // }
+  //
+  // try {
+  // transfer.
+  // }
+  //
+  // }
 
   @Override
   public <T> T getData(Class<T> type) {

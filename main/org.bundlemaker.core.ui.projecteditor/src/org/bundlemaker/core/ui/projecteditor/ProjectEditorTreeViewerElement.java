@@ -14,20 +14,13 @@ public class ProjectEditorTreeViewerElement {
 
   private final IProjectContentProviderEditor _providingEditor;
 
-  private final boolean                       _root;
-
-  ProjectEditorTreeViewerElement(boolean root, IBundleMakerProject bundleMakerProject,
+  ProjectEditorTreeViewerElement(IBundleMakerProject bundleMakerProject,
       IProjectContentProvider projectContentProvider, Object rootElement, IProjectContentProviderEditor providingEditor) {
     super();
-    _root = root;
     _bundleMakerProject = bundleMakerProject;
     _projectContentProvider = projectContentProvider;
     _element = rootElement;
     _providingEditor = providingEditor;
-  }
-
-  public boolean isChild() {
-    return !_root;
   }
 
   public IBundleMakerProject getBundleMakerProject() {
@@ -47,7 +40,7 @@ public class ProjectEditorTreeViewerElement {
   }
 
   public ProjectEditorTreeViewerElement deriveChild(Object childElement) {
-    ProjectEditorTreeViewerElement child = new ProjectEditorTreeViewerElement(false, getBundleMakerProject(),
+    ProjectEditorTreeViewerElement child = new ProjectEditorTreeViewerElement(getBundleMakerProject(),
         getProjectContentProvider(), childElement, getProvidingEditor());
 
     return child;

@@ -51,8 +51,8 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
               .getRootElement(bundleMakerProject, iProjectContentProvider);
           if (rootElement != null) {
 
-            ProjectEditorTreeViewerElement treeViewerElement = new ProjectEditorTreeViewerElement(true,
-                bundleMakerProject, iProjectContentProvider, rootElement, iProjectContentProviderEditor);
+            ProjectEditorTreeViewerElement treeViewerElement = new ProjectEditorTreeViewerElement(bundleMakerProject,
+                iProjectContentProvider, rootElement, iProjectContentProviderEditor);
 
             result.add(treeViewerElement);
             break;
@@ -67,28 +67,34 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
   private final static Object[] EMPTY_RESULT = new Object[0];
 
   @Override
-  public Object[] getChildren(Object parentElement) {
+  public Object[] getChildren(Object parent) {
 
-    if (!(parentElement instanceof ProjectEditorTreeViewerElement)) {
+    if (!(parent instanceof ProjectEditorTreeViewerElement)) {
+      // should not happen. in case it does, simply ignore the entry
       return EMPTY_RESULT;
     }
 
-    ProjectEditorTreeViewerElement rootElement = (ProjectEditorTreeViewerElement) parentElement;
+    ProjectEditorTreeViewerElement parentElement = (ProjectEditorTreeViewerElement) parent;
 
-    if (rootElement.isChild()) {
+    List<? extends Object> children = null;
+
+    // Ask provider for children
+    try {
+      children = parentElement.getProvidingEditor().getChildren(parentElement.getBundleMakerProject(),
+          parentElement.getProjectContentProvider(), parentElement.getElement());
+    } catch (Exception ex) {
+      Activator.logError("Error while retrieving children for project editor: " + ex, ex);
+    }
+
+    if (children == null || children.isEmpty()) {
       return EMPTY_RESULT;
     }
 
-    List<Object> children = rootElement.getProvidingEditor().getChildren(rootElement.getBundleMakerProject(),
-        rootElement.getProjectContentProvider(), rootElement.getElement());
-    if (children == null) {
-      return EMPTY_RESULT;
-    }
-
+    // Wrap returned elements in TreeViewerElement objects
     List<Object> result = new LinkedList<Object>();
 
     for (Object child : children) {
-      result.add(rootElement.deriveChild(child));
+      result.add(parentElement.deriveChild(child));
     }
 
     return result.toArray();

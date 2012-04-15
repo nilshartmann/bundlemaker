@@ -1,21 +1,20 @@
 package org.bundlemaker.core.ui.projecteditor.jdt;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
+import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.swt.graphics.Image;
 
 public class JdtProjectContentProviderEditor implements IProjectContentProviderEditor {
+
+  private final FileBasedContentRenderer _fileBasedContentRenderer = FileBasedContentRenderer.getInstance();
 
   @Override
   public boolean canHandle(IProjectContentProvider provider) {
@@ -28,20 +27,21 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
   }
 
   @Override
-  public List<Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider, Object rootElement) {
+  public List<? extends Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider,
+      Object rootElement) throws Exception {
     // TODO: return IProjectContentEntries instead. Tree should show: Java Project Name and Version -> Content Entry ->
     // Content Entry paths
     // where Content Entry is a FileBasedContent
-    JdtProjectContentProvider projectContentProvider = (JdtProjectContentProvider) rootElement;
-    IJavaProject javaProject = projectContentProvider.getJavaProject();
-    try {
-      IClasspathEntry[] rawClasspath = javaProject.getRawClasspath();
-      return new LinkedList<Object>(Arrays.asList(rawClasspath));
-    } catch (Exception ex) {
-      ex.printStackTrace();
+
+    if (!(rootElement instanceof JdtProjectContentProvider)) {
+      return _fileBasedContentRenderer.getChildren(project, rootElement);
     }
 
-    return Collections.emptyList();
+    JdtProjectContentProvider projectContentProvider = (JdtProjectContentProvider) rootElement;
+
+    List<IProjectContentEntry> bundleMakerProjectContent = projectContentProvider.getBundleMakerProjectContent(project);
+
+    return bundleMakerProjectContent;
 
   }
 
@@ -50,7 +50,8 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
     if (element instanceof JdtProjectContentProvider) {
       return BundleMakerImages.JDT_PROJECT_CONTENT_PROVIDER.getImage();
     }
-    return null;
+
+    return _fileBasedContentRenderer.getImage(element);
   }
 
   @Override
@@ -60,15 +61,12 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
       return projectContentProvider.getJavaProject().getElementName();
     }
 
-    return String.valueOf(element);
+    return _fileBasedContentRenderer.getLabel(element);
   }
 
   @Override
   public AnalyzeMode getAnalyzeMode(Object element) {
-    if (element instanceof JdtProjectContentProvider) {
-      return AnalyzeMode.BINARIES_AND_SOURCES;
-    }
-    return null;
+    return _fileBasedContentRenderer.getAnalyzeMode(element);
   }
 
 }

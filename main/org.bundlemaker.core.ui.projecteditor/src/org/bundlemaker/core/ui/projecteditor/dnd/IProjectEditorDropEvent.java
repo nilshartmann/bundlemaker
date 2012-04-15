@@ -2,6 +2,7 @@ package org.bundlemaker.core.ui.projecteditor.dnd;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Shell;
 
 public interface IProjectEditorDropEvent {
@@ -13,6 +14,8 @@ public interface IProjectEditorDropEvent {
   public Object getTarget();
 
   public boolean hasTarget();
+
+  public TransferData getTransferData();
 
   /**
    * Data is only available in performDrop() otherwise null is returned !!!
