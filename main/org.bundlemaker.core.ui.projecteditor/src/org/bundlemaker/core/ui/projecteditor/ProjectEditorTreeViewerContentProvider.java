@@ -70,17 +70,27 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
   public Object[] getChildren(Object parent) {
 
     if (!(parent instanceof ProjectEditorTreeViewerElement)) {
+      // should not happen. in case it does, simply ignore the entry
       return EMPTY_RESULT;
     }
 
     ProjectEditorTreeViewerElement parentElement = (ProjectEditorTreeViewerElement) parent;
 
-    List<Object> children = parentElement.getProvidingEditor().getChildren(parentElement.getBundleMakerProject(),
-        parentElement.getProjectContentProvider(), parentElement.getElement());
-    if (children == null) {
+    List<? extends Object> children = null;
+
+    // Ask provider for children
+    try {
+      children = parentElement.getProvidingEditor().getChildren(parentElement.getBundleMakerProject(),
+          parentElement.getProjectContentProvider(), parentElement.getElement());
+    } catch (Exception ex) {
+      Activator.logError("Error while retrieving children for project editor: " + ex, ex);
+    }
+
+    if (children == null || children.isEmpty()) {
       return EMPTY_RESULT;
     }
 
+    // Wrap returned elements in TreeViewerElement objects
     List<Object> result = new LinkedList<Object>();
 
     for (Object child : children) {
