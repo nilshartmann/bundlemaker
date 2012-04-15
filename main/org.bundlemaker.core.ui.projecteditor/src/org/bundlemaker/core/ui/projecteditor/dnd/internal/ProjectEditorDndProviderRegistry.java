@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentDropProvider;
+import org.bundlemaker.core.ui.projecteditor.jdt.JdtProjectContentProviderDropAdapter;
 
 public class ProjectEditorDndProviderRegistry {
 
@@ -12,6 +13,7 @@ public class ProjectEditorDndProviderRegistry {
 
   public ProjectEditorDndProviderRegistry() {
     _registeredProviders.add(new FileBasedContentDropProvider());
+    _registeredProviders.add(new JdtProjectContentProviderDropAdapter());
   }
 
   public Set<IProjectEditorDropProvider> getRegisteredDndProviders() {
