@@ -68,7 +68,7 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
       return true;
     }
     // no handler found => drop not possible
-    return _providerCandidate != null;
+    return false;
   }
 
   protected boolean canDrop(IProjectEditorDropProvider provider, IProjectEditorDropEvent event) {
