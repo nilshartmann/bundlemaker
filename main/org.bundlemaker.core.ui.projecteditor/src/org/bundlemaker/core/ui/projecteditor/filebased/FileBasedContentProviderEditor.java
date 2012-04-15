@@ -43,6 +43,10 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   @Override
   public List<Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider, Object rootElement) {
 
+    if (!(rootElement instanceof FileBasedContentProvider)) {
+      return null;
+    }
+
     FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) rootElement;
 
     List<Object> result = new LinkedList<Object>();

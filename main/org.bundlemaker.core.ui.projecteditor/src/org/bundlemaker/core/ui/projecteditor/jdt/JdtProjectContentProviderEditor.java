@@ -32,6 +32,11 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
     // TODO: return IProjectContentEntries instead. Tree should show: Java Project Name and Version -> Content Entry ->
     // Content Entry paths
     // where Content Entry is a FileBasedContent
+
+    if (!(rootElement instanceof JdtProjectContentProvider)) {
+      return null;
+    }
+
     JdtProjectContentProvider projectContentProvider = (JdtProjectContentProvider) rootElement;
     IJavaProject javaProject = projectContentProvider.getJavaProject();
     try {
