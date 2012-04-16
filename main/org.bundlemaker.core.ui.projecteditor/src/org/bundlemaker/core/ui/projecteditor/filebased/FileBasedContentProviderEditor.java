@@ -34,9 +34,10 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
 
   @Override
   public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider) {
-    FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
-
-    return fileBasedContentProvider.getFileBasedContent();
+    return provider;
+    // FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
+    //
+    // return fileBasedContentProvider.getFileBasedContent();
   }
 
   @Override
