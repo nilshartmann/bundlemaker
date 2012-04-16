@@ -15,6 +15,7 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
+import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.VerticalFormButtonBar;
@@ -205,18 +206,14 @@ public class ProjectEditorPage extends FormPage {
     _moveUpButton = buttonBar.newButton("Up", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        // TODO
-        System.out.println(" MOVE UP NEEDS TO BE IMPLEMENTED !!!!");
-        // moveUp();
+        moveProjectContentProviderUp();
       }
+
     });
     _moveDownButton = buttonBar.newButton("Down", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        // TODO
-        System.out.println(" MOVE DOWN NEEDS TO BE IMPLEMENTED !!!!");
-
-        // moveDown();
+        moveProjectContentProviderDown();
       }
     });
 
@@ -297,6 +294,27 @@ public class ProjectEditorPage extends FormPage {
     // ...all of the elements are IProjectContentProviders (top level types) OR
     // ...all of the elements are children of the SAME TYPE of IProjectContentProviders
     // Up/Down are enabled when at least on IProjectContentProvider is selected (and no other element)
+
+    boolean moveButtonsEnabled;
+
+    List<ProjectEditorTreeViewerElement> selectedTreeViewerElements = getSelectedTreeViewerElements();
+
+    if (selectedTreeViewerElements.isEmpty()) {
+      moveButtonsEnabled = false;
+    } else {
+      moveButtonsEnabled = true;
+      for (ProjectEditorTreeViewerElement projectEditorTreeViewerElement : selectedTreeViewerElements) {
+        if (!(projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider)) {
+          moveButtonsEnabled = false;
+          break;
+        }
+
+      }
+    }
+
+    _moveDownButton.setEnabled(moveButtonsEnabled);
+    _moveUpButton.setEnabled(moveButtonsEnabled);
+
   }
 
   /**
@@ -315,13 +333,51 @@ public class ProjectEditorPage extends FormPage {
 
   }
 
+  protected void moveProjectContentProviderUp() {
+    moveProjectContentProvider(true);
+
+  }
+
+  protected void moveProjectContentProviderDown() {
+    moveProjectContentProvider(false);
+  }
+
+  protected void moveProjectContentProvider(boolean up) {
+    List<ProjectEditorTreeViewerElement> selectedTreeViewerElements = getSelectedTreeViewerElements();
+
+    List<IProjectContentProvider> contentProviders = new LinkedList<IProjectContentProvider>();
+
+    for (ProjectEditorTreeViewerElement projectEditorTreeViewerElement : selectedTreeViewerElements) {
+      if (projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider) {
+        IProjectContentProvider projectContentProvider = (IProjectContentProvider) projectEditorTreeViewerElement
+            .getElement();
+        contentProviders.add(projectContentProvider);
+      }
+    }
+
+    if (!contentProviders.isEmpty()) {
+      IModifiableProjectDescription modifiableProjectDescription = getBundleMakerProject()
+          .getModifiableProjectDescription();
+
+      if (up) {
+        modifiableProjectDescription.moveUpContentProviders(contentProviders);
+      } else {
+        modifiableProjectDescription.moveDownContentProviders(contentProviders);
+      }
+    }
+
+    markDirty();
+
+    _treeViewer.refresh(null);
+
+  }
+
   /**
    * 
    */
   protected void removeContent() {
 
-    List<ProjectEditorTreeViewerElement> selectedObjects = getSelectedObjects(_treeViewer.getSelection(),
-        ProjectEditorTreeViewerElement.class);
+    List<ProjectEditorTreeViewerElement> selectedObjects = getSelectedTreeViewerElements();
 
     for (ProjectEditorTreeViewerElement projectEditorTreeViewerElement : selectedObjects) {
       if (projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider) {
@@ -334,6 +390,10 @@ public class ProjectEditorPage extends FormPage {
 
     markDirty();
 
+  }
+
+  protected List<ProjectEditorTreeViewerElement> getSelectedTreeViewerElements() {
+    return getSelectedObjects(_treeViewer.getSelection(), ProjectEditorTreeViewerElement.class);
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -350,6 +410,10 @@ public class ProjectEditorPage extends FormPage {
       }
     }
     return result;
+  }
+
+  protected IStructuredSelection getTreeViewerSelection() {
+    return (IStructuredSelection) _treeViewer.getSelection();
   }
 
   /**
