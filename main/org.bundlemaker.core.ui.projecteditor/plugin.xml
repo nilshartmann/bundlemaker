@@ -3,7 +3,7 @@
 <plugin>
    	<extension id="org.bundlemaker.core.ui.editors" name="Bundlemaker Editors"
 		point="org.eclipse.ui.editors">
-		<editor icon="icons/bundlemaker-icon-small.png"
+		<editor icon="icons/etools/bm-project-description.png"
 			class="org.bundlemaker.core.ui.projecteditor.ProjectEditor" default="false"
 			id="org.bundlemaker.core.ui.projecteditor" name="Bundlemaker project editor (DO NOT USE YET)">
 			<contentTypeBinding
