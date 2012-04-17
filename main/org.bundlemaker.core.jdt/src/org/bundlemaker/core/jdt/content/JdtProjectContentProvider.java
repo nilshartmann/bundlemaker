@@ -101,9 +101,10 @@ public class JdtProjectContentProvider extends AbstractContentProvider implement
   public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
-    // create instance of entry helper
+    // create instance of entry helper & clear the 'already resolved' list
     _entryHelper = new EntryHelper(bundleMakerProject.getProjectDescription(), this);
-
+    _alreadyResolved.clear();
+    
     //
     resolveJavaProject(_javaProject);
 
