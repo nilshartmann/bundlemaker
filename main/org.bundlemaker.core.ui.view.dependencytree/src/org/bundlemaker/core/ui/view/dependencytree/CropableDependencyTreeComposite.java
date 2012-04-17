@@ -19,25 +19,25 @@ import org.eclipse.swt.widgets.ToolItem;
 public class CropableDependencyTreeComposite extends Composite {
 
   /** - */
-  private DependencyTreeComposite _dependencyTreeComposite;
+  private DependencyTreeComposite      _dependencyTreeComposite;
 
   /** - */
-  private ToolItem                _cropButton;
+  private ToolItem                     _cropButton;
 
   /** - */
-  private ToolItem                _backButton;
+  private ToolItem                     _backButton;
 
   /** - */
-  private ToolItem                _forwardButton;
+  private ToolItem                     _forwardButton;
 
   /** - */
-  private ToolItem                _clearButton;
+  private ToolItem                     _clearButton;
 
   /** - */
-  private int                     _currentPosition = -1;
+  private int                          _currentPosition = -1;
 
   /** - */
-  private List<List<IDependency>> _dependencySelectionList;
+  private List<List<IDependency>>      _dependencySelectionList;
 
   private IDependencySelectionListener _dependencySelectionListener;
 
@@ -59,8 +59,8 @@ public class CropableDependencyTreeComposite extends Composite {
     this.setLayout(gridLayout);
 
     final ToolBar toolbar = new ToolBar(this, SWT.FLAT);
-    
-    _dependencySelectionListener = new IDependencySelectionListener(){
+
+    _dependencySelectionListener = new IDependencySelectionListener() {
       @Override
       public void dependencySelectionChanged(IDependencySelectionChangedEvent event) {
         if (event.getProviderId().equals(DependencyTreeView.ID)) {
@@ -68,8 +68,9 @@ public class CropableDependencyTreeComposite extends Composite {
         }
       }
     };
-    
-    Selection.instance().getDependencySelectionService().addDependencySelectionListener(Selection.DETAIL_DEPENDENCY_SELECTION_ID, _dependencySelectionListener);
+
+    Selection.instance().getDependencySelectionService()
+        .addDependencySelectionListener(Selection.DETAIL_DEPENDENCY_SELECTION_ID, _dependencySelectionListener);
 
     // ToolBarManager toolBarManager = new ToolBarManager(toolbar);
     //
@@ -262,7 +263,7 @@ public class CropableDependencyTreeComposite extends Composite {
         enableButtons();
       }
     });
-    
+
     enableButtons();
   }
 
@@ -273,6 +274,9 @@ public class CropableDependencyTreeComposite extends Composite {
    * @param dependencies
    */
   public void setDependencies(List<IDependency> dependencies) {
+
+    checkDisposed();
+
     _dependencyTreeComposite.setDependencies(dependencies);
     _currentPosition = 0;
     _dependencySelectionList.clear();
@@ -282,7 +286,12 @@ public class CropableDependencyTreeComposite extends Composite {
 
   @Override
   public void dispose() {
-    Selection.instance().getDependencySelectionService().removeDependencySelectionListener(_dependencySelectionListener);
+
+    // dispose
+    Selection.instance().getDependencySelectionService()
+        .removeDependencySelectionListener(_dependencySelectionListener);
+
+    //
     super.dispose();
   }
 
@@ -292,10 +301,26 @@ public class CropableDependencyTreeComposite extends Composite {
     boolean dependenciesSelected = _dependencyTreeComposite.getSelectedDetailDependencies() != null
         && _dependencyTreeComposite.getSelectedDetailDependencies().size() > 0;
 
+    checkDisposed();
+
     //
     _backButton.setEnabled(dependenciesSelected && _currentPosition > 0);
     _forwardButton.setEnabled(dependenciesSelected && _currentPosition < _dependencySelectionList.size() - 1);
     _clearButton.setEnabled(dependenciesSelected && _dependencySelectionList.size() > 1);
     _cropButton.setEnabled(dependenciesSelected);
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void checkDisposed() {
+    //
+    if (_backButton.isDisposed() || _forwardButton.isDisposed() || _clearButton.isDisposed()
+        || _cropButton.isDisposed()) {
+      Selection.instance().getDependencySelectionService()
+          .removeDependencySelectionListener(_dependencySelectionListener);
+      return;
+    }
   }
 }
