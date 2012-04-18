@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -163,21 +164,36 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   @Override
   public void moveUpContentProviders(List<? extends IProjectContentProvider> selectedItems) {
 
-    // asserts
+    // assert selected items are not null
     Assert.isNotNull(selectedItems);
 
-    //
+    // return if empty
     if (selectedItems.isEmpty()) {
       return;
     }
 
-    //
-    List<IProjectContentProvider> newOrder = new LinkedList<IProjectContentProvider>(_projectContentProviders);
-    newOrder = moveUp(newOrder, selectedItems);
+    // order the selected items
+    List<IProjectContentProvider> orderSelectedItems = new LinkedList<IProjectContentProvider>(selectedItems);
+    Collections.sort(orderSelectedItems, new Comparator<IProjectContentProvider>() {
+      @Override
+      public int compare(IProjectContentProvider o1, IProjectContentProvider o2) {
+        return _projectContentProviders.indexOf(o1) - _projectContentProviders.indexOf(o2);
+      }
+    });
 
-    //
-    _projectContentProviders.clear();
-    _projectContentProviders.addAll(newOrder);
+    // move the items up
+    for (IProjectContentProvider provider : orderSelectedItems) {
+
+      //
+      int index = _projectContentProviders.indexOf(provider);
+      if (index == 0) {
+        return;
+      }
+
+      //
+      _projectContentProviders.remove(provider);
+      _projectContentProviders.add(index - 1, provider);
+    }
   }
 
   /**
@@ -186,22 +202,36 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   @Override
   public void moveDownContentProviders(List<? extends IProjectContentProvider> selectedItems) {
 
-    // asserts
+    // assert selected items are not null
     Assert.isNotNull(selectedItems);
 
-    //
+    // return if empty
     if (selectedItems.isEmpty()) {
       return;
     }
 
-    List<IProjectContentProvider> newOrder = new LinkedList<IProjectContentProvider>(_projectContentProviders);
-    Collections.reverse(newOrder);
-    newOrder = moveUp(newOrder, selectedItems);
-    Collections.reverse(newOrder);
+    // order the selected items
+    List<IProjectContentProvider> orderSelectedItems = new LinkedList<IProjectContentProvider>(selectedItems);
+    Collections.sort(orderSelectedItems, new Comparator<IProjectContentProvider>() {
+      @Override
+      public int compare(IProjectContentProvider o1, IProjectContentProvider o2) {
+        return _projectContentProviders.indexOf(o2) - _projectContentProviders.indexOf(o1);
+      }
+    });
 
-    _projectContentProviders.clear();
-    _projectContentProviders.addAll(newOrder);
+    // move the items up
+    for (IProjectContentProvider provider : orderSelectedItems) {
 
+      //
+      int index = _projectContentProviders.indexOf(provider);
+      if (index == _projectContentProviders.size() - 1) {
+        return;
+      }
+
+      //
+      _projectContentProviders.remove(provider);
+      _projectContentProviders.add(index + 1, provider);
+    }
   }
 
   @Override
@@ -400,36 +430,5 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
     // notify listener
     _bundleMakerProject.notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED));
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param selectedItems
-   * @return
-   */
-  private List<IProjectContentProvider> moveUp(List<? extends IProjectContentProvider> original,
-      List<? extends IProjectContentProvider> selectedItems) {
-
-    //
-    int nElements = selectedItems.size();
-    List<IProjectContentProvider> res = new ArrayList<IProjectContentProvider>(nElements);
-    IProjectContentProvider floating = null;
-    for (int i = 0; i < nElements; i++) {
-      IProjectContentProvider curr = selectedItems.get(i);
-      if (original.contains(curr)) {
-        res.add(curr);
-      } else {
-        if (floating != null) {
-          res.add(floating);
-        }
-        floating = curr;
-      }
-    }
-    if (floating != null) {
-      res.add(floating);
-    }
-    return res;
   }
 }
