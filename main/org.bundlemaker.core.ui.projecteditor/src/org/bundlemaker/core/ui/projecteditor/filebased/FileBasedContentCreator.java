@@ -13,6 +13,12 @@ import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFact
 import org.bundlemaker.core.util.JarInfo;
 import org.bundlemaker.core.util.JarInfoService;
 
+/**
+ * Util class that creates FileBasedContent instances based on a set of selected files.
+ * 
+ * @author Nils Hartmann (nils@nilshartmann.net)
+ * 
+ */
 public class FileBasedContentCreator {
   private final static String[] SOURCE_EXTENSIONS = { ".src", ".source" };
 

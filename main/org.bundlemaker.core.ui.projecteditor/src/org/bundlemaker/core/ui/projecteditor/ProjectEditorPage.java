@@ -345,7 +345,23 @@ public class ProjectEditorPage extends FormPage {
    * @param shell
    */
   protected void editContent(Shell shell) {
-    // TODO Auto-generated method stub
+
+    IStructuredSelection treeViewerSelection = getTreeViewerSelection();
+    if (treeViewerSelection.isEmpty()) {
+      return;
+    }
+
+    ProjectEditorTreeViewerElement element = (ProjectEditorTreeViewerElement) treeViewerSelection.getFirstElement();
+    boolean result = element.getProvidingEditor().edit(shell, _bundleMakerProject, element.getProjectContentProvider(),
+        element.getElement());
+
+    if (!result) {
+      return;
+    }
+
+    _treeViewer.refresh(null);
+
+    markDirty();
 
   }
 

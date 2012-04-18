@@ -10,6 +10,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.ui.BundleMakerImages;
+import org.bundlemaker.core.ui.FormLayoutUtils;
 import org.bundlemaker.core.ui.editor.provider.ContentProviderBlock;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;

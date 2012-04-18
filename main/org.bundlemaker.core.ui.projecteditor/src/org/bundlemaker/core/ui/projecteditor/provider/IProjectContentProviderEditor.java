@@ -16,6 +16,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -75,7 +76,14 @@ public interface IProjectContentProviderEditor {
    */
   public boolean canEdit(Object selectedObject);
 
-  // public void edit(Object selectedObject);
+  /**
+   * @param shell
+   * @param project
+   * @param provider
+   * @param selectedObject
+   * @return true if the BundleMaker project (description) has been changed during the edit or false if not
+   */
+  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
 
   // ---- TODO: ---- //
 

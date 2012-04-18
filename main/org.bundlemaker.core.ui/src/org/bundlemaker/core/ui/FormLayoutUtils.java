@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.editor;
+package org.bundlemaker.core.ui;
 
 import org.eclipse.swt.layout.GridLayout;
 

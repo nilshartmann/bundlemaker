@@ -1,13 +1,16 @@
-package org.bundlemaker.core.ui.editor;
+package org.bundlemaker.core.ui.projecteditor.filebased.edit;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.FormLayoutUtils;
+import org.bundlemaker.core.util.JarInfo;
+import org.bundlemaker.core.util.JarInfoService;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -26,87 +29,66 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * Allows the creation and modification on IFilebasedContent
- * 
- * @author Nils Hartmann
+ * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ModifyProjectContentDialog extends TitleAreaDialog {
+public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
+  private Text                   _nameTextField;
 
-  private Text                       _nameTextField;
+  private Text                   _versionTextField;
 
-  private Text                       _versionTextField;
+  private Button                 _analyzeButton;
 
-  private Button                     _analyzeButton;
-
-  private Button                     _analyzeSourcesButton;
+  private Button                 _analyzeSourcesButton;
 
   /**
    * The original content or null if a new content is created with this dialog
    */
-  private final IProjectContentEntry _originalContent;
+  private final FileBasedContent _originalContent;
 
-  private ContentListBlock           _binariesContentList;
+  private ContentListBlock       _binariesContentList;
 
-  private ContentListBlock           _sourcesContentList;
+  private ContentListBlock       _sourcesContentList;
 
-  private String                     _name;
+  private String                 _name;
 
-  private String                     _version;
+  private String                 _version;
 
-  private java.util.List<String>     _binaryRoots;
+  private java.util.List<String> _binaryRoots;
 
-  private java.util.List<String>     _sourceRoots;
+  private java.util.List<String> _sourceRoots;
 
-  boolean                            _analyze        = true;
+  boolean                        _analyze        = true;
 
-  boolean                            _analyzeSources = false;
+  boolean                        _analyzeSources = false;
 
-  public ModifyProjectContentDialog(Shell parentShell, IProjectContentEntry existingContent) {
-    super(parentShell);
+  public EditFileBasedContentProviderDialog(Shell shell, FileBasedContentProvider existingContent) {
+    super(shell);
     Assert.isNotNull(existingContent);
-    _originalContent = existingContent;
-    _name = existingContent.getName();
-    _version = existingContent.getVersion();
-    _binaryRoots = stringList(((FileBasedContentProvider) existingContent).getFileBasedContent().getBinaryRootPaths());
-    _sourceRoots = stringList(((FileBasedContentProvider) existingContent).getFileBasedContent().getSourceRootPaths());
-    _analyze = existingContent.isAnalyze();
-    _analyzeSources = existingContent.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
+    _originalContent = existingContent.getFileBasedContent();
+    _name = _originalContent.getName();
+    _version = _originalContent.getVersion();
+    _binaryRoots = stringList(_originalContent.getBinaryRootPaths());
+    _sourceRoots = stringList(_originalContent.getSourceRootPaths());
+    _analyze = _originalContent.isAnalyze();
+    _analyzeSources = _originalContent.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
 
-    configureDialog();
   }
 
-  public ModifyProjectContentDialog(Shell parentShell) {
-    super(parentShell);
+  public EditFileBasedContentProviderDialog(Shell shell) {
+    super(shell);
+
     _originalContent = null;
-    configureDialog();
-  }
-
-  private void configureDialog() {
-    setShellStyle(SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE
-        | getDefaultOrientation());
-    setHelpAvailable(false);
-
   }
 
   private static java.util.List<String> stringList(Set<VariablePath> paths) {
     java.util.List<String> strings = new LinkedList<String>();
     if (paths != null) {
       for (VariablePath path : paths) {
-        strings.add(RootPathHelper.getLabel(path));
+        strings.add(String.valueOf(path.getUnresolvedPath()));
       }
     }
     return strings;
-  }
-
-  @Override
-  protected void configureShell(Shell newShell) {
-    super.configureShell(newShell);
-    String text = (isNewContent() ? "Add" : "Edit");
-
-    text += " content";
-
-    newShell.setText(text);
   }
 
   /**
@@ -119,13 +101,18 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     return (_originalContent == null);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
+   */
   @Override
   protected Control createDialogArea(Composite parent) {
-    setTitle("Define content");
+    setMessage("Define project content from archives and folders");
+    setTitle("Add files and folders");
+    // setPageComplete(false);
 
-    final Composite areaComposite = (Composite) super.createDialogArea(parent);
-
-    Composite dialogComposite = new Composite(areaComposite, SWT.NONE);
+    Composite dialogComposite = new Composite(parent, SWT.NONE);
     dialogComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
     GridLayout gridLayout = FormLayoutUtils.createFormGridLayout(false, 2);
     dialogComposite.setLayout(gridLayout);
@@ -137,9 +124,10 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     prepopulateForm();
     refresh();
 
-    Dialog.applyDialogFont(areaComposite);
+    Dialog.applyDialogFont(parent);
 
-    return areaComposite;
+    // setControl(dialogComposite);
+    return parent;
 
   }
 
@@ -252,7 +240,51 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _analyzeSourcesButton.setEnabled(analyze);
     _sourcesContentList.setEnabled(analyze);
 
+    guessNameAndVersionIfNotSet();
+
+    boolean canFinish = _binariesContentList.hasItems() && isNameAndVersionSet();
+    // setPageComplete(canFinish);
+
     refreshMessages();
+  }
+
+  private boolean isNameAndVersionSet() {
+    return !(_nameTextField.getText().isEmpty() && _versionTextField.getText().isEmpty());
+  }
+
+  /**
+   * 
+   */
+  private void guessNameAndVersionIfNotSet() {
+
+    if (_binariesContentList.getItems().size() != 1) {
+      return; // nothing to guess
+    }
+
+    if (_nameTextField.getText().isEmpty() && _versionTextField.getText().isEmpty()) {
+      JarInfo jarInfo = getJarInfo(_binariesContentList.getItems().get(0));
+      if (jarInfo != null) {
+        _nameTextField.setText(jarInfo.getName());
+        _versionTextField.setText(jarInfo.getVersion());
+      }
+    }
+
+  }
+
+  protected JarInfo getJarInfo(String fileName) {
+    try {
+
+      VariablePath variablePath = new VariablePath(fileName);
+
+      File file = variablePath.getAsFile();
+      return JarInfoService.extractJarInfo(file);
+
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
+
+    // either not an existing file or failure
+    return null;
   }
 
   private Text addText(Composite parent) {
@@ -276,8 +308,8 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     return label;
   }
 
+  // @Override
   public String getName() {
-    System.out.printf("getName(), _name: %s%n", _name);
     return _name;
   }
 
@@ -301,8 +333,18 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     return _analyzeSources;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+   */
   @Override
   protected void okPressed() {
+    finish();
+    super.okPressed();
+  }
+
+  public void finish() {
     _name = _nameTextField.getText();
     System.out.printf("ModifyProjectContentDialog, _name: %s%n", _name);
     System.out.printf("ModifyProjectContentDialog, _nameTextField: %s%n", _nameTextField.getText());
@@ -313,7 +355,6 @@ public class ModifyProjectContentDialog extends TitleAreaDialog {
     _analyze = _analyzeButton.getSelection();
     _analyzeSources = _analyzeSourcesButton.getSelection();
 
-    super.okPressed();
   }
 
 }
