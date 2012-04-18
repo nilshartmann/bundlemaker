@@ -287,26 +287,40 @@ public class ProjectEditorPage extends FormPage {
   }
 
   private void refreshEnablement() {
+    List<ProjectEditorTreeViewerElement> selectedTreeViewerElements = getSelectedTreeViewerElements();
+
     // Add... Button is always enabled as long as their is a "IProjectContentProviderFactory-Editor" available
     // Edit... is enabled only when there is exactly ONE selected object AND it's providing ProviderEditor returns true
     // on canEdit(Object)
+
     // Remove is enabled when at least one element is selected and either...
     // ...all of the elements are IProjectContentProviders (top level types) OR
     // ...all of the elements are children of the SAME TYPE of IProjectContentProviders
     // Up/Down are enabled when at least on IProjectContentProvider is selected (and no other element)
 
     boolean moveButtonsEnabled;
-
-    List<ProjectEditorTreeViewerElement> selectedTreeViewerElements = getSelectedTreeViewerElements();
+    boolean editButtonEnabled;
+    boolean removeButtonEnabled;
 
     if (selectedTreeViewerElements.isEmpty()) {
       moveButtonsEnabled = false;
+      editButtonEnabled = false;
+      removeButtonEnabled = false;
     } else {
       moveButtonsEnabled = true;
+      removeButtonEnabled = true;
+      editButtonEnabled = selectedTreeViewerElements.size() == 1;
       for (ProjectEditorTreeViewerElement projectEditorTreeViewerElement : selectedTreeViewerElements) {
         if (!(projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider)) {
+          // move and remove buttons are only enable if only IProjectContentProvider elements are selected
           moveButtonsEnabled = false;
-          break;
+          // TODO it should be possible to remove children of IProjectContentProvider via their editors
+          removeButtonEnabled = false;
+        }
+
+        if (editButtonEnabled) {
+          editButtonEnabled = projectEditorTreeViewerElement.getProvidingEditor().canEdit(
+              projectEditorTreeViewerElement.getElement());
         }
 
       }
@@ -314,6 +328,8 @@ public class ProjectEditorPage extends FormPage {
 
     _moveDownButton.setEnabled(moveButtonsEnabled);
     _moveUpButton.setEnabled(moveButtonsEnabled);
+    _removeButton.setEnabled(removeButtonEnabled);
+    _editButton.setEnabled(editButtonEnabled);
 
   }
 

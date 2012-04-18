@@ -20,8 +20,7 @@ import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEdi
 import org.eclipse.swt.graphics.Image;
 
 /**
- * @author Nils Hartmann (nils@nilshartmann.net) TODO: Rendering (getRootElement, getChildren, getImage, getLabel,
- *         AnalyzeMode) should be re-usable, e.g. for JDTProjectContentProvider
+ * @author Nils Hartmann (nils@nilshartmann.net)
  */
 public class FileBasedContentProviderEditor implements IProjectContentProviderEditor {
 
@@ -62,7 +61,16 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   @Override
   public String getLabel(Object element) {
     return _fileBasedContentRenderer.getLabel(element);
+  }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canEdit(java.lang.Object)
+   */
+  @Override
+  public boolean canEdit(Object selectedObject) {
+    return selectedObject instanceof FileBasedContentProvider || selectedObject instanceof ProjectPath;
   }
 
 }

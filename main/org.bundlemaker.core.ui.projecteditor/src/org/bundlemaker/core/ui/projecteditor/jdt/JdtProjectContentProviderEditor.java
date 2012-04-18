@@ -69,4 +69,14 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
     return _fileBasedContentRenderer.getAnalyzeMode(element);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canEdit(java.lang.Object)
+   */
+  @Override
+  public boolean canEdit(Object selectedObject) {
+    return false;
+  }
+
 }
