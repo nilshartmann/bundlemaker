@@ -275,12 +275,16 @@ public class CropableDependencyTreeComposite extends Composite {
    */
   public void setDependencies(List<IDependency> dependencies) {
 
-    checkDisposed();
+    // check disposed
+    if (checkDisposed()) {
+      return;
+    }
 
     _dependencyTreeComposite.setDependencies(dependencies);
     _currentPosition = 0;
     _dependencySelectionList.clear();
     _dependencySelectionList.add(dependencies);
+
     enableButtons();
   }
 
@@ -301,26 +305,40 @@ public class CropableDependencyTreeComposite extends Composite {
     boolean dependenciesSelected = _dependencyTreeComposite.getSelectedDetailDependencies() != null
         && _dependencyTreeComposite.getSelectedDetailDependencies().size() > 0;
 
-    checkDisposed();
+    if (checkDisposed()) {
+      return;
+    }
 
-    //
-    _backButton.setEnabled(dependenciesSelected && _currentPosition > 0);
-    _forwardButton.setEnabled(dependenciesSelected && _currentPosition < _dependencySelectionList.size() - 1);
-    _clearButton.setEnabled(dependenciesSelected && _dependencySelectionList.size() > 1);
-    _cropButton.setEnabled(dependenciesSelected);
+    try {
+      //
+      _backButton.setEnabled(dependenciesSelected && _currentPosition > 0);
+      _forwardButton.setEnabled(dependenciesSelected && _currentPosition < _dependencySelectionList.size() - 1);
+      _clearButton.setEnabled(dependenciesSelected && _dependencySelectionList.size() > 1);
+      _cropButton.setEnabled(dependenciesSelected);
+    } catch (Exception e) {
+      checkDisposed();
+    }
   }
 
   /**
    * <p>
    * </p>
    */
-  private void checkDisposed() {
+  private boolean checkDisposed() {
+
     //
     if (_backButton.isDisposed() || _forwardButton.isDisposed() || _clearButton.isDisposed()
         || _cropButton.isDisposed()) {
+
+      //
       Selection.instance().getDependencySelectionService()
           .removeDependencySelectionListener(_dependencySelectionListener);
-      return;
+
+      //
+      return true;
     }
+
+    //
+    return false;
   }
 }

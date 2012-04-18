@@ -10,8 +10,8 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ArtifactType;
-import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -33,7 +33,7 @@ import org.eclipse.jface.viewers.Viewer;
  * @author Kai Lehmann
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ArtifactTreeContentProvider implements ITreeContentProvider {
+public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtualRootContentProvider {
 
   /** EMPTY_OBJECT_ARRAY */
   private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
@@ -62,6 +62,14 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider {
    */
   public ArtifactTreeContentProvider(boolean _showRoot) {
     this._showRoot = _showRoot;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IRootArtifact getVirtualRoot() {
+    return _virtualRoot;
   }
 
   /**
