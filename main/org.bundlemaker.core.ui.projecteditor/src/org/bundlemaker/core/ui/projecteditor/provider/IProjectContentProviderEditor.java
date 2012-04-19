@@ -16,6 +16,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -26,11 +27,13 @@ public interface IProjectContentProviderEditor {
 
   public boolean canHandle(IProjectContentProvider provider);
 
-  /** TODO: Allow more than one root element? */
   public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider);
 
   /**
-   * TODO: Allow two level of children (e.g. Java Project -> FileBasedContent -> FileBasedContent paths)
+   * @param provider
+   *          the provider instance that has been passed to
+   *          {@link #getRootElement(IBundleMakerProject, IProjectContentProvider)} or this method, which in turn has
+   *          returned the given root element
    * 
    * @throws Exception
    */
@@ -62,11 +65,29 @@ public interface IProjectContentProviderEditor {
    */
   public AnalyzeMode getAnalyzeMode(Object element);
 
+  /**
+   * Determines if the given object can be edited by this provider.
+   * 
+   * <p>
+   * This method is invoked to check the enablement of the Edit button on the ProjectEditorPage
+   * 
+   * @param selectedObject
+   * @return
+   */
+  public boolean canEdit(Object selectedObject);
+
+  /**
+   * @param shell
+   * @param project
+   * @param provider
+   * @param selectedObject
+   * @return true if the BundleMaker project (description) has been changed during the edit or false if not
+   */
+  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
+
   // ---- TODO: ---- //
 
   // *Edit* is only available on a single selection
-  // public boolean canEdit(Object selectedObject);
-  // public void edit(Object selectedObject);
 
   // *Removing* of ProjectContentProvider instances is directly done in the ProjectEditorPage
   // this is only invoked for selected child-objects of this provider

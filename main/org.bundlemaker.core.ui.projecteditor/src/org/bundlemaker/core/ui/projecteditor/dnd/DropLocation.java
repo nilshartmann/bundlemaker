@@ -1,5 +1,11 @@
 package org.bundlemaker.core.ui.projecteditor.dnd;
 
+/**
+ * Represents the relative location to the target element in a drop operation
+ * 
+ * @author Nils Hartmann (nils@nilshartmann.net)
+ * 
+ */
 public enum DropLocation {
 
   before, on, after, nothing;

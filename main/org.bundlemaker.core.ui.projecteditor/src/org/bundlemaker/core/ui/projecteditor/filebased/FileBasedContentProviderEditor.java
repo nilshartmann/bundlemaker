@@ -15,13 +15,16 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 
 /**
- * @author Nils Hartmann (nils@nilshartmann.net) TODO: Rendering (getRootElement, getChildren, getImage, getLabel,
- *         AnalyzeMode) should be re-usable, e.g. for JDTProjectContentProvider
+ * @author Nils Hartmann (nils@nilshartmann.net)
  */
 public class FileBasedContentProviderEditor implements IProjectContentProviderEditor {
 
@@ -34,9 +37,10 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
 
   @Override
   public Object getRootElement(IBundleMakerProject project, IProjectContentProvider provider) {
-    FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
-
-    return fileBasedContentProvider.getFileBasedContent();
+    return provider;
+    // FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
+    //
+    // return fileBasedContentProvider.getFileBasedContent();
   }
 
   @Override
@@ -61,7 +65,56 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   @Override
   public String getLabel(Object element) {
     return _fileBasedContentRenderer.getLabel(element);
+  }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canEdit(java.lang.Object)
+   */
+  @Override
+  public boolean canEdit(Object selectedObject) {
+    return selectedObject instanceof FileBasedContentProvider || selectedObject instanceof ProjectPath;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#edit(org.bundlemaker.core.
+   * IBundleMakerProject, org.bundlemaker.core.projectdescription.IProjectContentProvider, java.lang.Object)
+   */
+  @Override
+  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
+
+    FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
+
+    EditFileBasedContentProviderDialog page = new EditFileBasedContentProviderDialog(shell, fileBasedContentProvider);
+    if (page.open() != Window.OK) {
+      return false;
+    }
+
+    FileBasedContent content = fileBasedContentProvider.getFileBasedContent();
+    content.setName(page.getName());
+    content.setVersion(page.getVersion());
+    content.setBinaryPaths(page.getBinaryPaths().toArray(new String[0]));
+    content.setSourcePaths(page.getSourcePaths().toArray(new String[0]));
+
+    content.setAnalyzeMode(getAnalyzeMode(page.isAnalyze(), page.isAnalyzeSources()));
+
+    return true;
+
+  }
+
+  public static AnalyzeMode getAnalyzeMode(boolean analyze, boolean analyzeSources) {
+    if (analyzeSources) {
+      return AnalyzeMode.BINARIES_AND_SOURCES;
+    }
+
+    if (analyze) {
+      return AnalyzeMode.BINARIES_ONLY;
+    }
+
+    return AnalyzeMode.DO_NOT_ANALYZE;
   }
 
 }

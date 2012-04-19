@@ -11,6 +11,7 @@ import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 
 public class JdtProjectContentProviderEditor implements IProjectContentProviderEditor {
 
@@ -67,6 +68,32 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
   @Override
   public AnalyzeMode getAnalyzeMode(Object element) {
     return _fileBasedContentRenderer.getAnalyzeMode(element);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canEdit(java.lang.Object)
+   */
+  @Override
+  public boolean canEdit(Object selectedObject) {
+    // can't edit anything
+    return false;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#edit(org.eclipse.swt.widgets.Shell,
+   * org.bundlemaker.core.IBundleMakerProject, org.bundlemaker.core.projectdescription.IProjectContentProvider,
+   * java.lang.Object)
+   */
+  @Override
+  public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
+
+    // can't edit anything
+    return false;
   }
 
 }

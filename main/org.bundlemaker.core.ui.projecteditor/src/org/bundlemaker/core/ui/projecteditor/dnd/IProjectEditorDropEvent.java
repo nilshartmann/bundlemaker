@@ -5,6 +5,12 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * Event passed to a {@link IProjectEditorDropProvider}, describing a Drop operation
+ * 
+ * @author Nils Hartmann (nils@nilshartmann.net)
+ * 
+ */
 public interface IProjectEditorDropEvent {
 
   public Shell getShell();
