@@ -6,18 +6,27 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.choice.Choice;
 import org.bundlemaker.core.ui.projecteditor.choice.ChoiceDialog;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 
 public class FileBasedContentDropProvider implements IProjectEditorDropProvider {
 
   private final Transfer[]              SUPPORTED_TYPES          = new Transfer[] { //
-                                                                 FileTransfer.getInstance() };
+                                                                 LocalSelectionTransfer.getTransfer(), //
+      FileTransfer.getInstance()                                //
+                                                                 };
 
   private final FileBasedContentCreator _fileBasedContentCreator = new FileBasedContentCreator();
 
@@ -33,6 +42,10 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
   @Override
   public boolean canDrop(IProjectEditorDropEvent dropEvent) throws Exception {
 
+    if (dropEvent.isTransferType(LocalSelectionTransfer.getTransfer())) {
+      return canDropLocalSelection(dropEvent);
+    }
+
     if (!dropEvent.hasTarget()) {
       return true;
     }
@@ -43,6 +56,42 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
 
   @Override
   public boolean performDrop(IProjectEditorDropEvent dropEvent) throws Exception {
+
+    if (dropEvent.isTransferType(FileTransfer.getInstance())) {
+      return performFileTransferDrop(dropEvent);
+    }
+
+    return performLocalSeletionDrop(dropEvent);
+  }
+
+  /**
+   * @param dropEvent
+   * @return
+   */
+  protected boolean performLocalSeletionDrop(IProjectEditorDropEvent dropEvent) {
+
+    List<?> selectedObjects = getSelectedObjects(dropEvent.getData());
+
+    IModifiableProjectDescription modifiableProjectDescription = dropEvent.getBundleMakerProject()
+        .getModifiableProjectDescription();
+
+    if (!dropEvent.hasTarget()) {
+      for (Object object : selectedObjects) {
+
+        org.eclipse.core.resources.IResource resource = (org.eclipse.core.resources.IResource) object;
+
+        IPath relativePath = resource.getProjectRelativePath();
+        String projectName = resource.getProject().getName();
+
+        String path = "${project_loc:" + projectName + "}/" + relativePath;
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path);
+      }
+    }
+    return true;
+  }
+
+  protected boolean performFileTransferDrop(IProjectEditorDropEvent dropEvent) throws Exception {
+
     if (!dropEvent.hasTarget()) {
       // add new filebased content
       return createFileBasedContents(dropEvent);
@@ -83,6 +132,51 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     }
 
     return true;
+  }
+
+  /**
+   * @param dropEvent
+   * @return
+   */
+  protected boolean canDropLocalSelection(IProjectEditorDropEvent dropEvent) {
+
+    ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
+
+    // get selected objects
+    List<?> selectedObjects = getSelectedObjects(selection);
+
+    if (selectedObjects == null) {
+      return false;
+    }
+
+    // drop only possible with folders and files
+    for (Object object : selectedObjects) {
+      if (!(object instanceof IFolder) && !(object instanceof IFile)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Returns the selected objects or null if object is not a supported selection or empty
+   * 
+   * @param object
+   * @return
+   */
+  protected List<?> getSelectedObjects(Object object) {
+    if (!(object instanceof IStructuredSelection)) {
+      return null;
+    }
+
+    IStructuredSelection structuredSelection = (IStructuredSelection) object;
+
+    if (structuredSelection.isEmpty()) {
+      return null;
+    }
+
+    return structuredSelection.toList();
   }
 
   private boolean createFileBasedContents(IProjectEditorDropEvent dropEvent) {

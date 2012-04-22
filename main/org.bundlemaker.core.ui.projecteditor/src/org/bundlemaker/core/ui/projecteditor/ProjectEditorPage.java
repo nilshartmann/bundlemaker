@@ -22,6 +22,7 @@ import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
 import org.bundlemaker.core.ui.projecteditor.layout.FormLayoutUtils;
+import org.bundlemaker.core.ui.utils.ParseBundleMakerProjectRunnable;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -526,7 +527,7 @@ public class ProjectEditorPage extends FormPage {
     }
 
     // Parse the project
-    // ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
+    ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
   }
 
   private void addBundleMakerProjectChangedListener() {

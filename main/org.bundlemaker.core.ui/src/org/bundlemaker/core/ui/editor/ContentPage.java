@@ -12,6 +12,7 @@ import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.FormLayoutUtils;
 import org.bundlemaker.core.ui.editor.provider.ContentProviderBlock;
+import org.bundlemaker.core.ui.utils.ParseBundleMakerProjectRunnable;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
