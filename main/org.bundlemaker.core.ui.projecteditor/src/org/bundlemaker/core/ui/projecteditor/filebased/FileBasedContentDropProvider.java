@@ -14,6 +14,7 @@ import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaElement;
@@ -173,6 +174,13 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     for (Object object : selectedObjects) {
       if (object instanceof IFolder || object instanceof IFile) {
         continue;
+      }
+
+      System.out.println("OBJECT: " + object.getClass().getName());
+
+      if (object instanceof IProject) {
+        // don't add Java projects via this drop adapter
+        return false;
       }
 
       if (object instanceof IJavaElement) {
