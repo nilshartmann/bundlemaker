@@ -94,7 +94,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
           IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
           if (artifact != null) {
             try {
-              EditorHelper.open(artifact);
+              EditorHelper.open(artifact, dependency.getTo());
             } catch (Exception e) {
               MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
             }

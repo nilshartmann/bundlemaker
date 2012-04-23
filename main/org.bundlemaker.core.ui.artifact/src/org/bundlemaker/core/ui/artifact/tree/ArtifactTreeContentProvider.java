@@ -345,6 +345,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
+    public <T extends IBundleMakerArtifact> T getParent(Class<T> type) {
+      return _rootArtifact.getParent(type);
+    }
+
+    @Override
     public IBundleMakerArtifact getParent(ArtifactType type) {
       return _rootArtifact.getParent(type);
     }

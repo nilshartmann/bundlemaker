@@ -103,7 +103,12 @@
 			<includes>
 				<contentExtension isRoot="false"
 					pattern="org.bundlemaker.analysis.ui.navigatorContent1"
-				> </contentExtension>
+				> 
+				
+				</contentExtension>
+    <contentExtension
+          pattern="org.bundlemaker.core.ui.utils.BundleMakerFileLinkHelper">
+    </contentExtension>
 			</includes>
 		</viewerContentBinding>
 	</extension>
@@ -279,6 +284,12 @@
 				contentTypeId="org.bundlemaker.core.ui.contenttypes.projectdescription"
 			> </contentTypeBinding>
 		</editor>
+  <editor
+        class="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditor"
+        default="false"
+        id="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditor"
+        name="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditor">
+  </editor>
 	</extension>
 
 	<!-- The BundleMaker project content type ('bundlemaker.xml') -->
@@ -376,4 +387,60 @@
 			</command>
 		</menuContribution>
 	</extension>
+	
+	<extension
+    id="org.bundlemaker.core.ui.referencemarker"
+    name="Reference"
+    point="org.eclipse.core.resources.markers">
+  <super
+    type="org.eclipse.core.resources.textmarker">
+  </super>
+</extension>
+
+<extension
+      point="org.eclipse.ui.editors.annotationTypes"
+      id="org.bundlemaker.core.ui.referenceAnno">
+   <type
+         markerType="org.bundlemaker.core.ui.referencemarker"
+         name="org.bundlemaker.core.ui.referencemarker">
+   </type>
+</extension>
+	
+<extension
+      point="org.eclipse.ui.editors.markerAnnotationSpecification">
+   <specification
+         annotationType="org.bundlemaker.core.ui.referencemarker"
+         colorPreferenceKey="org.bundlemaker.core.ui.reference.color"
+         colorPreferenceValue="195,125,100"
+         contributesToHeader="false"
+         highlightPreferenceKey="org.bundlemaker.core.ui.reference.highlight"
+         highlightPreferenceValue="true"
+         includeOnPreferencePage="true"
+         label="MB References Marker"
+         overviewRulerPreferenceKey="org.bundlemaker.core.ui.reference.overview"
+         overviewRulerPreferenceValue="true"
+         presentationLayer="0"
+         showInNextPrevDropdownToolbarAction="true"
+         textPreferenceKey="org.bundlemaker.core.ui.reference.text"
+         textPreferenceValue="true"
+         textStylePreferenceValue="BOX"
+         verticalRulerPreferenceKey="org.bundlemaker.core.ui.reference.ruler"
+         verticalRulerPreferenceValue="true">
+   </specification>
+</extension>
+
+ <extension
+       point="org.eclipse.ui.navigator.linkHelper">
+		<linkHelper
+	          class="org.bundlemaker.core.ui.utils.BundleMakerFileLinkHelper"
+	          id="org.bundlemaker.core.ui.utils.BundleMakerFileLinkHelper">          
+	         <editorInputEnablement>
+		         	<instanceof value="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditorInput" />
+	         </editorInputEnablement>
+	         <selectionEnablement>
+	         		         	<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact" />			
+	         </selectionEnablement>
+      </linkHelper>          
+   </extension>
+
 </plugin>

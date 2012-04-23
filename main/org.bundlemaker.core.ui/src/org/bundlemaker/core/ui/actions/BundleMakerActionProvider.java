@@ -13,6 +13,7 @@ public class BundleMakerActionProvider extends CommonActionProvider {
   public void init(ICommonActionExtensionSite aSite) {
     super.init(aSite);
 
+    // TODO: RENAME
     doubleClickAction = new OpenBundleMakerProjectAction();
 
     // only if doubleClickAction must know tree selection:
