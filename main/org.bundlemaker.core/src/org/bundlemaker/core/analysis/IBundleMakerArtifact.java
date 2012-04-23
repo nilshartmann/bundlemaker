@@ -323,6 +323,15 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  <T extends IBundleMakerArtifact> T getParent(Class<T> type);
+
+  /**
+   * <p>
    * Returns the root artifact for this artifact node.
    * </p>
    * 
