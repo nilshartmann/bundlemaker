@@ -85,6 +85,24 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
     }
   }
 
+  @Override
+  public <T extends IBundleMakerArtifact> T getParent(Class<T> type) {
+
+    IBundleMakerArtifact parent = this.getParent();
+
+    if (parent == null) {
+      return null;
+    } else if (parent == this) {
+      return null;
+    }
+
+    if (type.isAssignableFrom(parent.getClass())) {
+      return (T) parent;
+    } else {
+      return parent.getParent(type);
+    }
+  }
+
   /**
    * {@inheritDoc}
    */
