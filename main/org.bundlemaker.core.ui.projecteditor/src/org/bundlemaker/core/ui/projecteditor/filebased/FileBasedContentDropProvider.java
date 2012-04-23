@@ -14,7 +14,9 @@ import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -78,7 +80,11 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     if (!dropEvent.hasTarget()) {
       for (Object object : selectedObjects) {
 
-        org.eclipse.core.resources.IResource resource = (org.eclipse.core.resources.IResource) object;
+        IResource resource = getAsResource(object);
+
+        if (resource == null) {
+          continue;
+        }
 
         IPath relativePath = resource.getProjectRelativePath();
         String projectName = resource.getProject().getName();
@@ -88,6 +94,20 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       }
     }
     return true;
+  }
+
+  protected IResource getAsResource(Object object) {
+    if (object instanceof IResource) {
+      return (IResource) object;
+    }
+
+    if (object instanceof IJavaElement) {
+      IJavaElement javaElement = (IJavaElement) object;
+      return javaElement.getResource();
+    }
+
+    return null;
+
   }
 
   protected boolean performFileTransferDrop(IProjectEditorDropEvent dropEvent) throws Exception {
@@ -151,8 +171,17 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
 
     // drop only possible with folders and files
     for (Object object : selectedObjects) {
-      if (!(object instanceof IFolder) && !(object instanceof IFile)) {
-        return false;
+      if (object instanceof IFolder || object instanceof IFile) {
+        continue;
+      }
+
+      if (object instanceof IJavaElement) {
+        IJavaElement javaElement = (IJavaElement) object;
+        IResource resource = javaElement.getResource();
+
+        if (!(resource instanceof IFolder) && !(resource instanceof IFile)) {
+          return false;
+        }
       }
     }
 
