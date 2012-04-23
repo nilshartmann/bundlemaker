@@ -467,6 +467,7 @@ public class ProjectEditorPage extends FormPage {
     // column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(1));
     // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeResource(this, _treeViewer));
     column.setLabelProvider(new ProjectEditorTreeViewerAnalyzeLabelProvider(0));
+    column.setEditingSupport(new ProjectEditorTreeViewerEditingSupport(_treeViewer, true));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze");
@@ -477,6 +478,7 @@ public class ProjectEditorPage extends FormPage {
     // column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(2));
     // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeSources(this, _treeViewer));
     column.setLabelProvider(new ProjectEditorTreeViewerAnalyzeLabelProvider(1));
+    column.setEditingSupport(new ProjectEditorTreeViewerEditingSupport(_treeViewer, false));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze Sources");

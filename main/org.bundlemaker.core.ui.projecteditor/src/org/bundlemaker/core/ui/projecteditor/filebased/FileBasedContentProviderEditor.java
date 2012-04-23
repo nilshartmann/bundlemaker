@@ -58,6 +58,41 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
     return _fileBasedContentRenderer.getAnalyzeMode(element);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canChangeAnalyzeMode(org.bundlemaker
+   * .core.projectdescription.IProjectContentProvider, java.lang.Object)
+   */
+  @Override
+  public boolean canChangeAnalyzeMode(IProjectContentProvider projectContentProvider, Object element) {
+    return (element instanceof FileBasedContentProvider || element instanceof FileBasedContent);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#setAnalyzeMode(org.bundlemaker.core
+   * .projectdescription.IProjectContentProvider, java.lang.Object)
+   */
+  @Override
+  public void setAnalyzeMode(IProjectContentProvider projectContentProvider, Object element, AnalyzeMode analyzeMode) {
+    FileBasedContent fileBasedContent = null;
+
+    if (element instanceof FileBasedContent) {
+      fileBasedContent = (FileBasedContent) element;
+    } else if (element instanceof FileBasedContentProvider) {
+      fileBasedContent = ((FileBasedContentProvider) element).getFileBasedContent();
+    }
+
+    if (fileBasedContent != null) {
+      fileBasedContent.setAnalyzeMode(analyzeMode);
+    }
+
+  }
+
   @Override
   public Image getImage(Object element) {
     return _fileBasedContentRenderer.getImage(element);
