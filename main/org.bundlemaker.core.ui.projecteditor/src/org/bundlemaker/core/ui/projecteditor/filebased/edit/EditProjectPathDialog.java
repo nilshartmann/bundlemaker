@@ -4,6 +4,8 @@ import static java.lang.String.format;
 
 import java.util.List;
 
+import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.ui.projecteditor.filebased.ProjectPath;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -46,16 +48,16 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  * 
  */
 @SuppressWarnings("restriction")
-public class EditEntryDialog extends TitleAreaDialog {
+public class EditProjectPathDialog extends TitleAreaDialog {
 
-  private String _entry;
+  private ProjectPath _entry;
 
-  private Text   _entryText;
+  private Text        _entryText;
 
   /**
    * @param parentShell
    */
-  public EditEntryDialog(Shell parentShell, String preselection) {
+  public EditProjectPathDialog(Shell parentShell, ProjectPath preselection) {
     super(parentShell);
     _entry = preselection;
 
@@ -83,7 +85,7 @@ public class EditEntryDialog extends TitleAreaDialog {
     label.setText("Entry:");
     _entryText = new Text(dialogComposite, SWT.BORDER);
     _entryText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    _entryText.setText(_entry);
+    _entryText.setText(_entry.asString());
 
     Composite buttonBar = new Composite(dialogComposite, SWT.NONE);
     buttonBar.setLayout(new GridLayout(3, true));
@@ -241,7 +243,7 @@ public class EditEntryDialog extends TitleAreaDialog {
 
   @Override
   protected void okPressed() {
-    _entry = _entryText.getText();
+    _entry = new ProjectPath(new VariablePath(_entryText.getText()), _entry.isSource());
     super.okPressed();
   }
 
@@ -252,7 +254,7 @@ public class EditEntryDialog extends TitleAreaDialog {
 
   }
 
-  public String getEntry() {
+  public ProjectPath getEntry() {
     return _entry;
   }
 

@@ -124,7 +124,7 @@ public class FileBasedContentRenderer {
 
     if (element instanceof ProjectPath) {
       ProjectPath projectPath = (ProjectPath) element;
-      return projectPath.getTitle();
+      return projectPath.asString();
     }
 
     return String.valueOf(element);

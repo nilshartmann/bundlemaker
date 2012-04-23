@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 
 /**
@@ -11,6 +12,14 @@ public class ProjectPath {
   private final VariablePath _path;
 
   private boolean            _source;
+
+  /**
+   * @param path
+   * @param source
+   */
+  public ProjectPath(String path, boolean source) {
+    this(new VariablePath(path), source);
+  }
 
   /**
    * @param path
@@ -41,7 +50,7 @@ public class ProjectPath {
     _source = source;
   }
 
-  public String getTitle() {
+  public String asString() {
     return _path.getUnresolvedPath().toString();
   }
 
@@ -50,6 +59,10 @@ public class ProjectPath {
    */
   public VariablePath getPath() {
     return _path;
+  }
+
+  public ContentType getContentType() {
+    return (_source ? ContentType.SOURCE : ContentType.BINARY);
   }
 
 }
