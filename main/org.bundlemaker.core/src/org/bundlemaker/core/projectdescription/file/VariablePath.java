@@ -18,7 +18,7 @@ import org.eclipse.core.variables.VariablesPlugin;
 public class VariablePath {
 
   /** - */
-  private IPath _path;
+  private final IPath _path;
 
   /**
    * <p>

@@ -22,6 +22,7 @@ import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
 import org.bundlemaker.core.ui.projecteditor.layout.FormLayoutUtils;
+import org.bundlemaker.core.ui.utils.ParseBundleMakerProjectRunnable;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -466,6 +467,7 @@ public class ProjectEditorPage extends FormPage {
     // column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(1));
     // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeResource(this, _treeViewer));
     column.setLabelProvider(new ProjectEditorTreeViewerAnalyzeLabelProvider(0));
+    column.setEditingSupport(new ProjectEditorTreeViewerEditingSupport(_treeViewer, true));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze");
@@ -476,6 +478,7 @@ public class ProjectEditorPage extends FormPage {
     // column.setLabelProvider(new BundleMakerProjectDescriptionColumnLabelProvider(2));
     // column.setEditingSupport(FileBasedContentEditingSupport.newEditingSupportForAnalyzeSources(this, _treeViewer));
     column.setLabelProvider(new ProjectEditorTreeViewerAnalyzeLabelProvider(1));
+    column.setEditingSupport(new ProjectEditorTreeViewerEditingSupport(_treeViewer, false));
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(true);
     column.getColumn().setText("Analyze Sources");
@@ -526,7 +529,7 @@ public class ProjectEditorPage extends FormPage {
     }
 
     // Parse the project
-    // ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
+    ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
   }
 
   private void addBundleMakerProjectChangedListener() {

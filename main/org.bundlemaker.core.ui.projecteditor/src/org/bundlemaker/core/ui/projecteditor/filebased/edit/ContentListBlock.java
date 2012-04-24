@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.bundlemaker.core.ui.projecteditor.filebased.ProjectPath;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -130,9 +131,10 @@ public class ContentListBlock {
       @Override
       public void widgetSelected(SelectionEvent e) {
         String selection = _contentList.getSelection()[0];
-        EditEntryDialog dialog = new EditEntryDialog(shell, selection);
+        ProjectPath projectPath = new ProjectPath(selection, false);
+        EditProjectPathDialog dialog = new EditProjectPathDialog(shell, projectPath);
         if (dialog.open() == Window.OK) {
-          String modifiedEntry = dialog.getEntry();
+          String modifiedEntry = dialog.getEntry().asString();
           _contentList.setItem(_contentList.getSelectionIndex(), modifiedEntry);
         }
       }

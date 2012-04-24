@@ -17,7 +17,9 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
+import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditProjectPathDialog;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
@@ -56,6 +58,41 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
     return _fileBasedContentRenderer.getAnalyzeMode(element);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canChangeAnalyzeMode(org.bundlemaker
+   * .core.projectdescription.IProjectContentProvider, java.lang.Object)
+   */
+  @Override
+  public boolean canChangeAnalyzeMode(IProjectContentProvider projectContentProvider, Object element) {
+    return (element instanceof FileBasedContentProvider || element instanceof FileBasedContent);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#setAnalyzeMode(org.bundlemaker.core
+   * .projectdescription.IProjectContentProvider, java.lang.Object)
+   */
+  @Override
+  public void setAnalyzeMode(IProjectContentProvider projectContentProvider, Object element, AnalyzeMode analyzeMode) {
+    FileBasedContent fileBasedContent = null;
+
+    if (element instanceof FileBasedContent) {
+      fileBasedContent = (FileBasedContent) element;
+    } else if (element instanceof FileBasedContentProvider) {
+      fileBasedContent = ((FileBasedContentProvider) element).getFileBasedContent();
+    }
+
+    if (fileBasedContent != null) {
+      fileBasedContent.setAnalyzeMode(analyzeMode);
+    }
+
+  }
+
   @Override
   public Image getImage(Object element) {
     return _fileBasedContentRenderer.getImage(element);
@@ -88,6 +125,33 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
 
     FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
 
+    if (selectedObject instanceof FileBasedContentProvider) {
+      return editFileBasedContentProvider(shell, project, fileBasedContentProvider);
+    }
+
+    if (selectedObject instanceof ProjectPath) {
+      ProjectPath projectPath = (ProjectPath) selectedObject;
+      VariablePath path = projectPath.getPath();
+      EditProjectPathDialog editDialog = new EditProjectPathDialog(shell, projectPath);
+      if (editDialog.open() == Window.OK) {
+        // remove old path
+        fileBasedContentProvider.getFileBasedContent().removeRootPath(path, projectPath.getContentType());
+
+        // add modified path
+        ProjectPath modifiedPath = editDialog.getEntry();
+        fileBasedContentProvider.getFileBasedContent().addRootPath(modifiedPath.getPath(),
+            modifiedPath.getContentType());
+
+        return true;
+      }
+    }
+
+    return false;
+
+  }
+
+  protected boolean editFileBasedContentProvider(Shell shell, IBundleMakerProject project,
+      FileBasedContentProvider fileBasedContentProvider) {
     EditFileBasedContentProviderDialog page = new EditFileBasedContentProviderDialog(shell, fileBasedContentProvider);
     if (page.open() != Window.OK) {
       return false;

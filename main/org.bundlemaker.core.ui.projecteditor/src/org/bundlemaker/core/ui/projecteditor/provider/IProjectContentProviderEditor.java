@@ -65,6 +65,10 @@ public interface IProjectContentProviderEditor {
    */
   public AnalyzeMode getAnalyzeMode(Object element);
 
+  public boolean canChangeAnalyzeMode(IProjectContentProvider projectContentProvider, Object element);
+
+  public void setAnalyzeMode(IProjectContentProvider projectContentProvider, Object element, AnalyzeMode analyzeMode);
+
   /**
    * Determines if the given object can be edited by this provider.
    * 
