@@ -4,15 +4,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -41,6 +52,9 @@ public class CropableDependencyTreeComposite extends Composite {
 
   private IDependencySelectionListener _dependencySelectionListener;
 
+  /** - */
+  private String                       _detailDependencySelectionId;
+
   /**
    * <p>
    * Creates a new instance of type {@link CropableDependencyTreeComposite}.
@@ -52,13 +66,20 @@ public class CropableDependencyTreeComposite extends Composite {
     super(parent, SWT.NONE);
 
     //
+    Assert.isNotNull(detailDependencySelectionId);
+
+    //
+    _detailDependencySelectionId = detailDependencySelectionId;
     _dependencySelectionList = new LinkedList<List<IDependency>>();
 
     //
-    GridLayout gridLayout = new GridLayout();
-    this.setLayout(gridLayout);
+    this.setLayout(new org.eclipse.swt.layout.GridLayout());
 
-    final ToolBar toolbar = new ToolBar(this, SWT.FLAT);
+    //
+    ToolBar toolbar = new ToolBar(this, SWT.FLAT);
+    createCropButtons(toolbar);
+    new ToolItem(toolbar, SWT.SEPARATOR);
+    createAutoExpandMenus(toolbar);
 
     _dependencySelectionListener = new IDependencySelectionListener() {
       @Override
@@ -69,9 +90,75 @@ public class CropableDependencyTreeComposite extends Composite {
       }
     };
 
+    //
     Selection.instance().getDependencySelectionService()
         .addDependencySelectionListener(Selection.DETAIL_DEPENDENCY_SELECTION_ID, _dependencySelectionListener);
+  }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @param toolbar
+   */
+  private void createAutoExpandMenus(ToolBar toolbar) {
+   
+    //
+    Menu menu = createAutoExpandMenu(toolbar);
+    
+    //
+    SelectionListener selectionListener = new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent e) {
+        MenuItem item = (MenuItem) e.widget;
+        if (item.getSelection()) {
+          if ("Group".equals(item.getText())) {
+            _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IGroupArtifact.class);
+          } else if ("Module".equals(item.getText())) {
+            _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IModuleArtifact.class);
+          } else if ("Package".equals(item.getText())) {
+            _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IPackageArtifact.class);
+          } else if ("Resource".equals(item.getText())) {
+            _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IResourceArtifact.class);
+          }
+        }
+      }
+    };
+    
+    //
+    for (MenuItem menuItem : menu.getItems()) {
+      menuItem.addSelectionListener(selectionListener);
+    }
+    
+    
+    
+    //
+    menu = createAutoExpandMenu(toolbar);
+    
+    //
+    selectionListener = new SelectionAdapter() {
+      public void widgetSelected(SelectionEvent e) {
+        MenuItem item = (MenuItem) e.widget;
+        if (item.getSelection()) {
+          if ("Group".equals(item.getText())) {
+            _dependencyTreeComposite.setToTreeViewerAutoExpandType(IGroupArtifact.class);
+          } else if ("Module".equals(item.getText())) {
+            _dependencyTreeComposite.setToTreeViewerAutoExpandType(IModuleArtifact.class);
+          } else if ("Package".equals(item.getText())) {
+            _dependencyTreeComposite.setToTreeViewerAutoExpandType(IPackageArtifact.class);
+          } else if ("Resource".equals(item.getText())) {
+            _dependencyTreeComposite.setToTreeViewerAutoExpandType(IResourceArtifact.class);
+          }
+        }
+      }
+    };
+    
+    //
+    for (MenuItem menuItem : menu.getItems()) {
+      menuItem.addSelectionListener(selectionListener);
+    }
+  }
+
+  public void createCropButtons(ToolBar toolbar) {
     // ToolBarManager toolBarManager = new ToolBarManager(toolbar);
     //
     // //
@@ -192,7 +279,19 @@ public class CropableDependencyTreeComposite extends Composite {
     //
     // // toolbar.pack();
 
-    _dependencyTreeComposite = new DependencyTreeComposite(this, detailDependencySelectionId);
+    _dependencyTreeComposite = new DependencyTreeComposite(this, _detailDependencySelectionId) {
+      @Override
+      protected String getDependencySelectionId() {
+        
+        String dependencySelectionId = CropableDependencyTreeComposite.this.getDependencySelectionId();
+        
+        if (dependencySelectionId != null) {
+          return dependencySelectionId;
+        }
+        
+        return super.getDependencySelectionId();
+      }
+    };
     GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
     _dependencyTreeComposite.setLayoutData(gridData);
 
@@ -267,6 +366,47 @@ public class CropableDependencyTreeComposite extends Composite {
     enableButtons();
   }
 
+  public Menu createAutoExpandMenu(final ToolBar toolbar) {
+
+    // Rectangle clientArea = shell.getClientArea ();
+    // toolBar.setLocation(clientArea.x, clientArea.y);
+    final Menu menu = new Menu(toolbar.getShell(), SWT.POP_UP);
+
+    // ToolItem
+    final ToolItem toolItem = new ToolItem(toolbar, SWT.DROP_DOWN);
+    toolItem.setImage(UIDependencyTreeImages.ENABLED_BACKWARD_NAV.getImage());
+
+    MenuItem menuItemGroup = new MenuItem(menu, SWT.RADIO);
+    menuItemGroup.setText("Group");
+
+
+    MenuItem menuItemModule = new MenuItem(menu, SWT.RADIO);
+    menuItemModule.setText("Module");
+
+    MenuItem menuItemPackage = new MenuItem(menu, SWT.RADIO);
+    menuItemPackage.setText("Package");
+
+    MenuItem menuItemResource = new MenuItem(menu, SWT.RADIO);
+    menuItemResource.setText("Resource");
+
+    toolItem.addListener(SWT.Selection, new Listener() {
+      public void handleEvent(Event event) {
+        if (event.detail == SWT.ARROW) {
+          Rectangle rect = toolItem.getBounds();
+          Point pt = new Point(rect.x, rect.y + rect.height);
+          pt = toolbar.toDisplay(pt);
+          menu.setLocation(pt.x, pt.y);
+          menu.setVisible(true);
+        }
+      }
+    });
+
+    menuItemModule.setSelection(true);
+
+    //
+    return menu;
+  }
+
   /**
    * <p>
    * </p>
@@ -299,6 +439,16 @@ public class CropableDependencyTreeComposite extends Composite {
     super.dispose();
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  protected String getDependencySelectionId() {
+    return null;
+  }
+  
   private void enableButtons() {
 
     //
