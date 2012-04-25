@@ -313,6 +313,11 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
   }
 
   @Override
+  public <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz) {
+    return Collections.emptySet();
+  }
+
+  @Override
   public boolean contains(IBundleMakerArtifact artifact) {
     return this.equals(artifact);
   }

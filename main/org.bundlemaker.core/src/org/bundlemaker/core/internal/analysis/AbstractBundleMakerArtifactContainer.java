@@ -567,6 +567,31 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
   /**
    * {@inheritDoc}
    */
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz) {
+
+    //
+    Assert.isNotNull(clazz);
+
+    //
+    List<T> result = new ArrayList<T>();
+
+    //
+    for (IBundleMakerArtifact child : children) {
+      if (clazz.isAssignableFrom(child.getClass())) {
+        result.add((T) child);
+      }
+    }
+
+    //
+    return Collections.unmodifiableCollection(result);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int compareTo(IBundleMakerArtifact o) {
 

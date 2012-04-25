@@ -26,6 +26,10 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    */
   public ArtifactType getType();
 
+  // public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz);
+
+  // <T> public T castTo(Class<? extends IBundleMakerArtifact> clazz);
+
   /**
    * <p>
    * Returns the simple name of the artifact. For a detailed description of the semantic of <code>getName()</code> and
@@ -123,12 +127,12 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    */
   public <T> T getProperty(Object key, Class<T> t);
 
-  /**
-   * <p>
-   * </p>
-   */
-  @Deprecated
-  boolean hasChild(String path);
+  // /**
+  // * <p>
+  // * </p>
+  // */
+  // @Deprecated
+  // boolean hasChild(String path);
 
   /**
    * <p>
@@ -141,6 +145,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    */
   @Deprecated
   // must not check for leafs
+  // replace with visitor
   public boolean contains(IBundleMakerArtifact artifact);
 
   /**
@@ -242,16 +247,26 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return
    */
   @Deprecated
+  // replace with visitor
   IBundleMakerArtifact getChild(String path);
 
   /**
    * <p>
-   * Returns an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
+   * Returns an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact}.
    * </p>
    * 
-   * @return an unmodifiable {@link Collection} with all children of this {@link IArtifact}.
+   * @return an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact}.
    */
   Collection<IBundleMakerArtifact> getChildren();
+
+  /**
+   * <p>
+   * Returns an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact} of the given type.
+   * </p>
+   * 
+   * @return an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact} of the given type.
+   */
+  <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz);
 
   /**
    * <p>
@@ -262,6 +277,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param filter
    * @return
    */
+  @Deprecated
+  // replace with visitor
   <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter);
 
   /**
@@ -272,6 +289,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param clazz
    * @return
    */
+  @Deprecated
+  // replace with visitor
   <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz);
 
   /**
@@ -283,6 +302,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param clazz
    * @return
    */
+  @Deprecated
+  // replace with visitor
   <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter);
 
   /**
@@ -296,6 +317,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return
    */
   @Deprecated
+  // replace with visitor
   <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path);
 
   /**
@@ -319,6 +341,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return the first parent artifact of this artifact that has the specified type or <code>null</code> if no such
    *         parent exists.
    */
+  @Deprecated
+  // replace with T getParent(Class<T> type);
   IBundleMakerArtifact getParent(ArtifactType type);
 
   /**

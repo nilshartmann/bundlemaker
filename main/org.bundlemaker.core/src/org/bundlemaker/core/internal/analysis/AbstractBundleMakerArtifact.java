@@ -52,10 +52,10 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
     return null;
   }
 
-  @Override
-  public boolean hasChild(String path) {
-    return false;
-  }
+  // @Override
+  // public boolean hasChild(String path) {
+  // return false;
+  // }
 
   @Override
   public IBundleMakerArtifact getParent() {

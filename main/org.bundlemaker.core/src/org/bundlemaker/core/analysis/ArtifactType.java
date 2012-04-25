@@ -9,7 +9,10 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Kai Lehmann
  * @author Frank Schl&uuml;ter
+ * 
+ * @deprecated replace with concrete sub-type (IResourceArtifact.class etc.)
  */
+@Deprecated
 public enum ArtifactType {
 
   /** - */

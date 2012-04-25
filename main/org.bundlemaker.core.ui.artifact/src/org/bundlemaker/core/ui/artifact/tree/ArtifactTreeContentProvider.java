@@ -201,6 +201,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
+  // TODO: Implement as Proxy
   private class VirtualRoot implements IRootArtifact {
 
     /** the root artifact */
@@ -217,6 +218,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       Assert.isNotNull(rootArtifact);
 
       _rootArtifact = rootArtifact;
+    }
+
+    @Override
+    public <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz) {
+      return _rootArtifact.getChildren(clazz);
     }
 
     @Override
@@ -269,10 +275,10 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       return _rootArtifact.getProperty(key, t);
     }
 
-    @Override
-    public boolean hasChild(String path) {
-      return _rootArtifact.hasChild(path);
-    }
+    // @Override
+    // public boolean hasChild(String path) {
+    // return _rootArtifact.hasChild(path);
+    // }
 
     @Override
     public void addArtifact(IBundleMakerArtifact artifact) {

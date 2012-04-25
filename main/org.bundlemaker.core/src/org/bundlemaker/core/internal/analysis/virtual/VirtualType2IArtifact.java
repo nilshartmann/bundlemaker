@@ -283,6 +283,11 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
     return Collections.emptySet();
   }
 
+  @Override
+  public <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz) {
+    return Collections.emptySet();
+  }
+
   public IBundleMakerArtifact getParent() {
     return (IBundleMakerArtifact) super.getParent();
   }
