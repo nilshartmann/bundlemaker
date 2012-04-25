@@ -38,11 +38,10 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
     //
     _composite = new CropableDependencyTreeComposite(parent, XREF_ID) {
 
-      // TODO
-      // @Override
-      // protected String getDependencySelectionId() {
-      // return Selection.MAIN_DEPENDENCY_SELECTION_ID;
-      // }
+      @Override
+      protected String getDependencySelectionId() {
+        return Selection.MAIN_DEPENDENCY_SELECTION_ID;
+      }
     };
   }
 
