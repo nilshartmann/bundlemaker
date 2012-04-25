@@ -13,39 +13,54 @@ package org.eclipse.aether.examples.util;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.eclipse.aether.examples.manual.ManualRepositorySystemFactory;
 import org.sonatype.aether.RepositorySystem;
+import org.sonatype.aether.collection.DependencyCollectionContext;
+import org.sonatype.aether.collection.DependencySelector;
+import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.util.DefaultRepositorySystemSession;
+import org.sonatype.aether.util.artifact.JavaScopes;
 
 /**
  * A helper to boot the repository system and a repository system session.
  */
-public class Booter
-{
+public class Booter {
 
-    public static RepositorySystem newRepositorySystem()
-    {
-        return ManualRepositorySystemFactory.newRepositorySystem();
-    }
+  public static RepositorySystem newRepositorySystem() {
+    return ManualRepositorySystemFactory.newRepositorySystem();
+  }
 
-    public static DefaultRepositorySystemSession newRepositorySystemSession( RepositorySystem system )
-    {
-        MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+  public static DefaultRepositorySystemSession newRepositorySystemSession(RepositorySystem system) {
+    MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
-        LocalRepository localRepo = new LocalRepository( "D:/development/_save/o/Repository" );
-        session.setLocalRepositoryManager( system.newLocalRepositoryManager( localRepo ) );
+    LocalRepository localRepo = new LocalRepository("D:/development/_save/o/Repository");
+    session.setLocalRepositoryManager(system.newLocalRepositoryManager(localRepo));
 
-//        session.setTransferListener( new ConsoleTransferListener() );
-//        session.setRepositoryListener( new ConsoleRepositoryListener() );
+    // session.setTransferListener( new ConsoleTransferListener() );
+    // session.setRepositoryListener( new ConsoleRepositoryListener() );
 
-        // uncomment to generate dirty trees
-        // session.setDependencyGraphTransformer( null );
+    // uncomment to generate dirty trees
+    // session.setDependencyGraphTransformer( null );
 
-        return session;
-    }
+    session.setDependencySelector(new DependencySelector() {
 
-    public static RemoteRepository newCentralRepository()
-    {
-       return new RemoteRepository( "central", "default", "http://repo1.maven.org/maven2/" );
-    }
+      @Override
+      public boolean selectDependency(Dependency dependency) {
+        System.out.println(dependency);
+        return dependency.getScope().equals(JavaScopes.COMPILE) || dependency.getScope().equals(JavaScopes.PROVIDED)
+            || dependency.getScope().equals(JavaScopes.RUNTIME);
+      }
+
+      @Override
+      public DependencySelector deriveChildSelector(DependencyCollectionContext context) {
+        return this;
+      }
+    });
+
+    return session;
+  }
+
+  public static RemoteRepository newCentralRepository() {
+    return new RemoteRepository("central", "default", "http://repo1.maven.org/maven2/");
+  }
 }

@@ -26,6 +26,8 @@ import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.collection.CollectRequest;
+import org.sonatype.aether.collection.CollectResult;
+import org.sonatype.aether.collection.DependencyCollectionException;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.graph.DependencyVisitor;
@@ -47,10 +49,10 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  */
 public class MvnContentProvider extends AbstractContentProvider implements IProjectContentProvider {
 
-  private MvnContentType             _mvnContent  = new MvnContentType();
+  private MvnContentType             _mvnContent = new MvnContentType();
 
   /** - */
-  private int                        _counter = 0;
+  private int                        _counter    = 0;
 
   /** - */
   private List<IProjectContentEntry> _fileBasedContents;
@@ -79,58 +81,131 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
       collectRequest.addRepository(repo);
 
       try {
-        DependencyResult collectResult = system.resolveDependencies(session,
-            new DependencyRequest(collectRequest, null));
 
+        //
+        CollectResult collectResult = system.collectDependencies(session, collectRequest);
+        
+        //
         collectResult.getRoot().accept(new DependencyVisitor() {
-
+          
           @Override
           public boolean visitLeave(DependencyNode node) {
             return true;
           }
-
+          
           @Override
           public boolean visitEnter(DependencyNode node) {
-
-            File sourceFile = null;
-            File binaryFile = null;
-
+            
             //
-            Artifact currentArtifact = node.getDependency().getArtifact();
-            //
-            Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
-                currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
-                    .getVersion());
             ArtifactRequest artifactRequest = new ArtifactRequest();
-            artifactRequest.setArtifact(sourceArtifact);
+            artifactRequest.setArtifact(node.getDependency().getArtifact());
             artifactRequest.addRepository(repo);
 
             try {
-              ArtifactResult artifactResult;
-              artifactResult = system.resolveArtifact(session, artifactRequest);
-              sourceFile = artifactResult.getArtifact().getFile();
-            } catch (ArtifactResolutionException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
+              
+              //
+             ArtifactResult artifactResult = system.resolveArtifact(session, artifactRequest);
+             
+             
+             File sourceFile = null;
+             File binaryFile = null;
+
+             //
+             Artifact currentArtifact = artifactResult.getArtifact();
+             
+             //
+             Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
+                 currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
+                     .getVersion());
+             
+             artifactRequest = new ArtifactRequest();
+             artifactRequest.setArtifact(sourceArtifact);
+             artifactRequest.addRepository(repo);
+
+             try {
+               artifactResult = system.resolveArtifact(session, artifactRequest);
+               sourceFile = artifactResult.getArtifact().getFile();
+             } catch (ArtifactResolutionException e) {
+               System.out.println(e.getMessage());
+             }
+
+             binaryFile = currentArtifact.getFile();
+
+             try {
+               createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
+                   currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
+                       .getGroupId().startsWith("de.o"));
+             } catch (CoreException e) {
+               System.out.println(e.getMessage());
+               throw new RuntimeException(e.getMessage(), e);
+             }
+             
+              //
+              // System.out.println(artifactResult.getArtifact().getFile().getAbsolutePath());
+              
+            } catch (Exception e) {
+              // TODO: handle exception
             }
-
-            binaryFile = currentArtifact.getFile();
-
-            try {
-              createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
-                  currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
-                      .getGroupId().startsWith("de.o"));
-            } catch (CoreException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-              throw new RuntimeException(e.getMessage(), e);
-            }
-
             return true;
           }
         });
+        
+        //
 
-      } catch (DependencyResolutionException e) {
+
+//        collectResult.getRoot().accept(new DependencyVisitor() {
+//
+//          @Override
+//          public boolean visitLeave(DependencyNode node) {
+//            return true;
+//          }
+//
+//          @Override
+//          public boolean visitEnter(DependencyNode node) {
+//
+//            File sourceFile = null;
+//            File binaryFile = null;
+//
+//            //
+//            Artifact currentArtifact = node.getDependency().getArtifact();
+//            //
+//            Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
+//                currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
+//                    .getVersion());
+//            ArtifactRequest artifactRequest = new ArtifactRequest();
+//            artifactRequest.setArtifact(sourceArtifact);
+//            artifactRequest.addRepository(repo);
+//
+//            try {
+//              ArtifactResult artifactResult;
+//              artifactResult = system.resolveArtifact(session, artifactRequest);
+//              sourceFile = artifactResult.getArtifact().getFile();
+//            } catch (ArtifactResolutionException e) {
+//              System.out.println(e.getMessage());
+//            }
+//
+//            binaryFile = currentArtifact.getFile();
+//
+//            try {
+//              createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
+//                  currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
+//                      .getGroupId().startsWith("de.o"));
+//            } catch (CoreException e) {
+//              System.out.println(e.getMessage());
+//              throw new RuntimeException(e.getMessage(), e);
+//            }
+//
+//            return true;
+//          }
+//        });
+//
+      }
+      // catch (DependencyResolutionException e) {
+      // System.out.println(e.getMessage());
+      // throw new RuntimeException(e.getMessage(), e);
+      // }
+
+      catch (DependencyCollectionException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
