@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.MatrixEvent;
@@ -246,9 +247,20 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       return;
     }
 
+    //
+    if (selection.hasSelectedArtifacts() && selection.getSelectedArtifacts().size() == 1
+        && isResourceOrResourceContent(selection)) {
+      return;
+    }
+
     super.setCurrentArtifactSelection(selection);
 
     initSelection(selection);
+  }
+
+  private boolean isResourceOrResourceContent(IArtifactSelection selection) {
+    return selection.getSelectedArtifacts().get(0) instanceof IResourceArtifact
+        || selection.getSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
   }
 
   private void initSelection(IArtifactSelection selection) {
