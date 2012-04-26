@@ -429,6 +429,6 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
 
     // notify listener
-    _bundleMakerProject.notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED));
+    _bundleMakerProject.notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_SAVED));
   }
 }

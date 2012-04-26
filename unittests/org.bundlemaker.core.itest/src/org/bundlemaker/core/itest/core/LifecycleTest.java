@@ -74,7 +74,7 @@ public class LifecycleTest extends AbstractBundleMakerProjectTest {
 
     //
     Assert.assertNotNull(_changedEvent);
-    Assert.assertEquals(Type.PROJECT_DESCRIPTION_CHANGED, _changedEvent.getType());
+    Assert.assertEquals(Type.PROJECT_DESCRIPTION_SAVED, _changedEvent.getType());
   }
 
   /**

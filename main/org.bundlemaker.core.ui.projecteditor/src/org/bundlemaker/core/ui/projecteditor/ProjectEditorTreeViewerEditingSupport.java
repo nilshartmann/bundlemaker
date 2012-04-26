@@ -116,10 +116,13 @@ public class ProjectEditorTreeViewerEditingSupport extends EditingSupport {
       }
     }
 
+    System.out.println("New Analyze Mode: " + newAnalyzeMode);
+
     treeviewerElement.getProvidingEditor().setAnalyzeMode(treeviewerElement.getProjectContentProvider(),
         treeviewerElement.getElement(), newAnalyzeMode);
 
     getViewer().refresh(null);
+
   }
 
   private ProjectEditorTreeViewerElement getAsProjectEditorTreeViewerElement(Object element) {
