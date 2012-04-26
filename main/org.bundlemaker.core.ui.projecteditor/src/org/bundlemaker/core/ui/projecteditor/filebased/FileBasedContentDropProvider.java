@@ -2,14 +2,13 @@ package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.choice.Choice;
-import org.bundlemaker.core.ui.projecteditor.choice.ChoiceDialog;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.eclipse.core.resources.IFile;
@@ -23,6 +22,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.widgets.Shell;
 
 public class FileBasedContentDropProvider implements IProjectEditorDropProvider {
 
@@ -32,6 +32,8 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
                                                                  };
 
   private final FileBasedContentCreator _fileBasedContentCreator = new FileBasedContentCreator();
+
+  private final ContentTypeDetector     _contentTypeDetector     = new ContentTypeDetector();
 
   final static Choice                   ADD_AS_BINARY_CONTENT    = new Choice("Add as binary content");
 
@@ -78,22 +80,35 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     IModifiableProjectDescription modifiableProjectDescription = dropEvent.getBundleMakerProject()
         .getModifiableProjectDescription();
 
-    if (!dropEvent.hasTarget()) {
-      for (Object object : selectedObjects) {
+    // Create a list of project-relative paths
+    List<String> projectRelativePaths = new LinkedList<String>();
 
-        IResource resource = getAsResource(object);
+    for (Object object : selectedObjects) {
 
-        if (resource == null) {
-          continue;
-        }
+      IResource resource = getAsResource(object);
 
-        IPath relativePath = resource.getProjectRelativePath();
-        String projectName = resource.getProject().getName();
-
-        String path = "${project_loc:" + projectName + "}/" + relativePath;
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path);
+      if (resource == null) {
+        continue;
       }
+
+      IPath relativePath = resource.getProjectRelativePath();
+      String projectName = resource.getProject().getName();
+
+      String path = "${project_loc:" + projectName + "}/" + relativePath;
+      projectRelativePaths.add(path);
     }
+
+    if (!dropEvent.hasTarget()) {
+      // add as individual file based contents
+      for (String relativePath : projectRelativePaths) {
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, relativePath);
+      }
+    } else {
+      // add to selected filebasedcontentprovider
+      FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getTarget();
+      addFiles(dropEvent.getShell(), provider, projectRelativePaths.toArray(new String[0]));
+    }
+
     return true;
   }
 
@@ -117,39 +132,31 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       // add new filebased content
       return createFileBasedContents(dropEvent);
     }
-
     String[] newFiles = dropEvent.getData(String[].class);
-
-    String message = "Please choose how to add " + newFiles.length + " resources to your BundleMaker project";
-
-    Choice choice = ChoiceDialog.choose(dropEvent.getShell(), message, ADD_AS_BINARY_CONTENT, ADD_AS_BINARY_CONTENT,
-        ADD_AS_SOURCE_CONTENT);
-    if (choice == null) {
-      return false;
-    }
-
     FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getTarget();
-    Set<VariablePath> rootPaths;
 
-    if (choice == ADD_AS_BINARY_CONTENT) {
-      rootPaths = provider.getFileBasedContent().getBinaryRootPaths();
-    } else {
-      rootPaths = provider.getFileBasedContent().getSourceRootPaths();
-    }
+    return addFiles(dropEvent.getShell(), provider, newFiles);
+  }
 
-    // Merge together existing with new (dropped) paths
-    List<String> newRootPaths = new LinkedList<String>();
-    for (VariablePath variablePath : rootPaths) {
-      newRootPaths.add(variablePath.getUnresolvedPath().toString());
-    }
+  protected boolean addFiles(Shell shell, FileBasedContentProvider provider, String[] newFiles) {
 
+    // String message = "Please choose how to add " + newFiles.length + " resources to your BundleMaker project";
+    //
+    // Choice choice = ChoiceDialog.choose(shell, message, ADD_AS_BINARY_CONTENT, ADD_AS_BINARY_CONTENT,
+    // ADD_AS_SOURCE_CONTENT);
+    // if (choice == null) {
+    // return false;
+    // }
+
+    // Iterate over each dropped file
     for (String newFile : newFiles) {
-      newRootPaths.add(newFile);
-    }
-    if (choice == ADD_AS_BINARY_CONTENT) {
-      provider.setBinaryPaths(newRootPaths.toArray(new String[0]));
-    } else {
-      provider.setSourcePaths(newRootPaths.toArray(new String[0]));
+      VariablePath variablePath = new VariablePath(newFile);
+
+      // Determine ("guess") the content type
+      ContentType contentType = _contentTypeDetector.detectContentType(variablePath);
+
+      // add to provider
+      provider.addRootPath(variablePath, contentType);
     }
 
     return true;

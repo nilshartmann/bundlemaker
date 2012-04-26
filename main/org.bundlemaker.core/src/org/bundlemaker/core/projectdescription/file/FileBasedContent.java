@@ -207,4 +207,5 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
     // return the source paths
     return _sourcePaths;
   }
+
 }
