@@ -2,14 +2,13 @@ package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.choice.Choice;
-import org.bundlemaker.core.ui.projecteditor.choice.ChoiceDialog;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.eclipse.core.resources.IFile;
@@ -33,6 +32,8 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
                                                                  };
 
   private final FileBasedContentCreator _fileBasedContentCreator = new FileBasedContentCreator();
+
+  private final ContentTypeDetector     _contentTypeDetector     = new ContentTypeDetector();
 
   final static Choice                   ADD_AS_BINARY_CONTENT    = new Choice("Add as binary content");
 
@@ -139,35 +140,23 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
 
   protected boolean addFiles(Shell shell, FileBasedContentProvider provider, String[] newFiles) {
 
-    String message = "Please choose how to add " + newFiles.length + " resources to your BundleMaker project";
+    // String message = "Please choose how to add " + newFiles.length + " resources to your BundleMaker project";
+    //
+    // Choice choice = ChoiceDialog.choose(shell, message, ADD_AS_BINARY_CONTENT, ADD_AS_BINARY_CONTENT,
+    // ADD_AS_SOURCE_CONTENT);
+    // if (choice == null) {
+    // return false;
+    // }
 
-    Choice choice = ChoiceDialog.choose(shell, message, ADD_AS_BINARY_CONTENT, ADD_AS_BINARY_CONTENT,
-        ADD_AS_SOURCE_CONTENT);
-    if (choice == null) {
-      return false;
-    }
-
-    Set<VariablePath> rootPaths;
-
-    if (choice == ADD_AS_BINARY_CONTENT) {
-      rootPaths = provider.getFileBasedContent().getBinaryRootPaths();
-    } else {
-      rootPaths = provider.getFileBasedContent().getSourceRootPaths();
-    }
-
-    // Merge together existing with new (dropped) paths
-    List<String> newRootPaths = new LinkedList<String>();
-    for (VariablePath variablePath : rootPaths) {
-      newRootPaths.add(variablePath.getUnresolvedPath().toString());
-    }
-
+    // Iterate over each dropped file
     for (String newFile : newFiles) {
-      newRootPaths.add(newFile);
-    }
-    if (choice == ADD_AS_BINARY_CONTENT) {
-      provider.setBinaryPaths(newRootPaths.toArray(new String[0]));
-    } else {
-      provider.setSourcePaths(newRootPaths.toArray(new String[0]));
+      VariablePath variablePath = new VariablePath(newFile);
+
+      // Determine ("guess") the content type
+      ContentType contentType = _contentTypeDetector.detectContentType(variablePath);
+
+      // add to provider
+      provider.addRootPath(variablePath, contentType);
     }
 
     return true;

@@ -106,6 +106,10 @@ public class FileBasedContentProvider extends AbstractContentProvider implements
     _fileBasedContent.setSourcePaths(sourceRootPaths);
   }
 
+  public void addRootPath(VariablePath rootPath, ContentType type) {
+    _fileBasedContent.addRootPath(rootPath, type);
+  }
+
   /**
    * <p>
    * </p>
