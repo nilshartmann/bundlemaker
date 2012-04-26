@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="BundleMaker Target" sequenceNumber="7">
+<target name="BundleMaker Target" sequenceNumber="8">
 <locations>
 <location path="${project_loc:target.platform}/asm" type="Directory"/>
 <location path="${project_loc:target.platform}/test/cglib" type="Directory"/>
@@ -10,9 +10,9 @@
 <location path="${project_loc:target.platform}/test/easymock-3.0" type="Directory"/>
 <location path="${project_loc:target.platform}/ds" type="Directory"/>
 <location path="${project_loc:target.platform}/sonar-graph_2.4.1" type="Directory"/>
-<location path="${ECLIPSE_3.7.2}" type="Profile"/>
 <location path="${project_loc:target.platform}/draw2d" type="Directory"/>
 <location path="${project_loc:target.platform}/swttools" type="Directory"/>
+<location path="${eclipse_home}" type="Profile"/>
 </locations>
 <launcherArgs>
 <vmArgs>-Xms40m -Xmx256m</vmArgs>

@@ -1,24 +1,17 @@
 package org.bundlemaker.core.ui.utils;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModelStatusConstants;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.internal.corext.util.Messages;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.JavaUIStatus;
 import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaSourceViewer;
-import org.eclipse.jdt.internal.ui.javaeditor.SemanticHighlightingReconciler;
-import org.eclipse.jdt.ui.SharedASTProvider;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -140,44 +133,44 @@ public class BundleMakerClassFileEditor extends JavaEditor {
 
     documentProvider = getDocumentProvider();
 
-    if (fSemanticManager != null)
-      installSemanticHighlighting();
+    // if (fSemanticManager != null)
+    // installSemanticHighlighting();
 
   }
 
-  /*
-   * @see org.eclipse.jdt.internal.ui.javaeditor.JavaEditor#installSemanticHighlighting()
-   * 
-   * @since 3.7
-   */
-  @Override
-  protected void installSemanticHighlighting() {
-    super.installSemanticHighlighting();
-    Job job = new Job("") {
-      /*
-       * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
-       * 
-       * @since 3.0
-       */
-      @Override
-      protected IStatus run(IProgressMonitor monitor) {
-        CompilationUnit ast = SharedASTProvider.getAST(getInputJavaElement(), SharedASTProvider.WAIT_YES, null);
-        if (fOverrideIndicatorManager != null)
-          // fOverrideIndicatorManager.reconciled(ast, true, monitor);
-          if (fSemanticManager != null) {
-            SemanticHighlightingReconciler reconciler = fSemanticManager.getReconciler();
-            if (reconciler != null)
-              reconciler.reconciled(ast, false, monitor);
-          }
-        if (isMarkingOccurrences())
-          installOccurrencesFinder(false);
-        return Status.OK_STATUS;
-      }
-    };
-    job.setPriority(Job.DECORATE);
-    job.setSystem(true);
-    job.schedule();
-  }
+  // /*
+  // * @see org.eclipse.jdt.internal.ui.javaeditor.JavaEditor#installSemanticHighlighting()
+  // *
+  // * @since 3.7
+  // */
+  // @Override
+  // protected void installSemanticHighlighting() {
+  // super.installSemanticHighlighting();
+  // Job job = new Job("") {
+  // /*
+  // * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
+  // *
+  // * @since 3.0
+  // */
+  // @Override
+  // protected IStatus run(IProgressMonitor monitor) {
+  // CompilationUnit ast = SharedASTProvider.getAST(getInputJavaElement(), SharedASTProvider.WAIT_YES, null);
+  // if (fOverrideIndicatorManager != null)
+  // // fOverrideIndicatorManager.reconciled(ast, true, monitor);
+  // if (fSemanticManager != null) {
+  // SemanticHighlightingReconciler reconciler = fSemanticManager.getReconciler();
+  // if (reconciler != null)
+  // reconciler.reconciled(ast, false, monitor);
+  // }
+  // if (isMarkingOccurrences())
+  // installOccurrencesFinder(false);
+  // return Status.OK_STATUS;
+  // }
+  // };
+  // job.setPriority(Job.DECORATE);
+  // job.setSystem(true);
+  // job.schedule();
+  // }
 
   private JavaModelException probeInputForSource(IEditorInput input) {
     if (input == null)
