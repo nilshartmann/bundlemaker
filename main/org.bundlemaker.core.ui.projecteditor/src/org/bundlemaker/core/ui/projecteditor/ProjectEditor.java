@@ -4,7 +4,10 @@
 package org.bundlemaker.core.ui.projecteditor;
 
 import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.BundleMakerProjectChangedEvent;
+import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -25,7 +28,11 @@ import org.eclipse.ui.forms.editor.FormEditor;
  */
 public class ProjectEditor extends FormEditor {
 
-  private IBundleMakerProject _bundleMakerProject;
+  private final BundleMakerProjectDirtyListener _bundleMakerProjectDirtyListener = new BundleMakerProjectDirtyListener();
+
+  private IBundleMakerProject                   _bundleMakerProject;
+
+  private boolean                               _projectDirty                    = false;
 
   public ProjectEditor() {
     super();
@@ -50,8 +57,6 @@ public class ProjectEditor extends FormEditor {
     try {
       _bundleMakerProject.getModifiableProjectDescription().save();
 
-      // propagate new dirty state
-      editorDirtyStateChanged();
     } catch (Exception ex) {
       Activator.logError("Error while saving project: " + ex, ex);
     }
@@ -75,9 +80,16 @@ public class ProjectEditor extends FormEditor {
    */
   @Override
   public boolean isDirty() {
-    // TODO Auto-generated method stub
-    boolean dirty = super.isDirty();
-    return dirty;
+    return _projectDirty;
+  }
+
+  protected void setProjectDirty(boolean dirty) {
+    boolean oldValue = _projectDirty;
+    _projectDirty = dirty;
+
+    if (_projectDirty != oldValue) {
+      editorDirtyStateChanged();
+    }
   }
 
   /**
@@ -106,6 +118,9 @@ public class ProjectEditor extends FormEditor {
 
       _bundleMakerProject = bundleMakerProject;
 
+      // add listener
+      _bundleMakerProject.addBundleMakerProjectChangedListener(this._bundleMakerProjectDirtyListener);
+
     } catch (Exception ex) {
       throw new PartInitException("Could not open BundleMaker project", ex);
     }
@@ -122,6 +137,49 @@ public class ProjectEditor extends FormEditor {
   public IBundleMakerProject getBundleMakerProject() {
     Assert.isNotNull(_bundleMakerProject);
     return this._bundleMakerProject;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.ui.forms.editor.FormEditor#dispose()
+   */
+  @Override
+  public void dispose() {
+    // remvoe dirty listener
+    if (_bundleMakerProject != null) {
+      _bundleMakerProject.removeBundleMakerProjectChangedListener(_bundleMakerProjectDirtyListener);
+    }
+
+    // dispose
+    super.dispose();
+  }
+
+  /**
+   * A Listener that tracks configuration state of the project that is edited in this editor.
+   * 
+   * @author Nils Hartmann (nils@nilshartmann.net)
+   * 
+   */
+  class BundleMakerProjectDirtyListener implements IBundleMakerProjectChangedListener {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bundlemaker.core.IBundleMakerProjectChangedListener#bundleMakerProjectChanged(org.bundlemaker.core.
+     * BundleMakerProjectChangedEvent)
+     */
+    @Override
+    public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
+      if (event.getType() == Type.PROJECT_DESCRIPTION_CHANGED) {
+        setProjectDirty(true);
+      }
+
+      if (event.getType() == Type.PROJECT_DESCRIPTION_SAVED) {
+        setProjectDirty(false);
+      }
+    }
+
   }
 
 }

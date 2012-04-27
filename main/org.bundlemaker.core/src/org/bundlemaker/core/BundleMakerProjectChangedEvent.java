@@ -24,6 +24,12 @@ public class BundleMakerProjectChangedEvent {
     /** The state of the project has been changed (for example when the project has been opened) */
     PROJECT_STATE_CHANGED,
 
+    /**
+     * The project description has been modified via the api. This means the project description is 'dirty', i.e. not
+     * written to disc
+     */
+    PROJECT_DESCRIPTION_CHANGED,
+
     /** The project description has been saved to disc */
     PROJECT_DESCRIPTION_SAVED;
   }

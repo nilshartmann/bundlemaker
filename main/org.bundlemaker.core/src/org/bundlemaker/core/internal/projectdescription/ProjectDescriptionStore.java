@@ -96,7 +96,7 @@ public class ProjectDescriptionStore {
 
     BundleMakerProjectDescription result = new BundleMakerProjectDescription((BundleMakerProject) project);
     result.setCurrentId(xmlProjectDescription.getCurrentId());
-    result.setJre(xmlProjectDescription.getJre());
+    result.setJreInternal(xmlProjectDescription.getJre());
 
     //
     JaxbCompoundClassLoader jaxbCompoundClassLoader = new JaxbCompoundClassLoader();

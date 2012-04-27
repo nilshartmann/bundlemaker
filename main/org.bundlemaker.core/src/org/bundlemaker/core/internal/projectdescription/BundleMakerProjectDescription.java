@@ -110,7 +110,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    */
   @Override
   public List<? extends IProjectContentProvider> getContentProviders() {
-    return _projectContentProviders;
+    return Collections.unmodifiableList(_projectContentProviders);
   }
 
   /**
@@ -142,6 +142,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
     // cache
     _projectContentProviderMap.put(contentProvider.getId(), contentProvider);
+
+    fireProjectDescriptionChangedEvent();
   }
 
   /**
@@ -156,6 +158,10 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
     // cache
     _projectContentProviderMap.remove(contentProvider.getId());
+
+    // notify listeners
+    fireProjectDescriptionChangedEvent();
+
   }
 
   /**
@@ -181,18 +187,22 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
       }
     });
 
-    // move the items up
-    for (IProjectContentProvider provider : orderSelectedItems) {
+    try {
+      // move the items up
+      for (IProjectContentProvider provider : orderSelectedItems) {
 
-      //
-      int index = _projectContentProviders.indexOf(provider);
-      if (index == 0) {
-        return;
+        //
+        int index = _projectContentProviders.indexOf(provider);
+        if (index == 0) {
+          return;
+        }
+
+        //
+        _projectContentProviders.remove(provider);
+        _projectContentProviders.add(index - 1, provider);
       }
-
-      //
-      _projectContentProviders.remove(provider);
-      _projectContentProviders.add(index - 1, provider);
+    } finally {
+      fireProjectDescriptionChangedEvent();
     }
   }
 
@@ -220,17 +230,21 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     });
 
     // move the items up
-    for (IProjectContentProvider provider : orderSelectedItems) {
+    try {
+      for (IProjectContentProvider provider : orderSelectedItems) {
 
-      //
-      int index = _projectContentProviders.indexOf(provider);
-      if (index == _projectContentProviders.size() - 1) {
-        return;
+        //
+        int index = _projectContentProviders.indexOf(provider);
+        if (index == _projectContentProviders.size() - 1) {
+          return;
+        }
+
+        //
+        _projectContentProviders.remove(provider);
+        _projectContentProviders.add(index + 1, provider);
       }
-
-      //
-      _projectContentProviders.remove(provider);
-      _projectContentProviders.add(index + 1, provider);
+    } finally {
+      fireProjectDescriptionChangedEvent();
     }
   }
 
@@ -242,6 +256,9 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
       if (content.getId().equals(id)) {
         iterator.remove();
+
+        fireProjectDescriptionChangedEvent();
+
         return;
       }
     }
@@ -269,9 +286,11 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
       _initialized = false;
       _jre = null;
     }
+
+    fireProjectDescriptionChangedEvent();
   }
 
-  public void addContentProvider(IProjectContentProvider contentProvider, boolean resetIdentifier) {
+  void addContentProvider(IProjectContentProvider contentProvider, boolean resetIdentifier) {
     Assert.isNotNull(contentProvider);
 
     //
@@ -281,6 +300,9 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     if (resetIdentifier) {
       contentProvider.setId(getNextContentProviderId());
     }
+
+    // this is an internal method only. do NOT fire BundleMakerProjectChangedEvent
+
   }
 
   public String getNextContentProviderId() {
@@ -406,7 +428,15 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    */
   @Override
   public void setJre(String jre) {
+    setJreInternal(jre);
+
+    fireProjectDescriptionChangedEvent();
+  }
+
+  void setJreInternal(String jre) {
     _jre = jre;
+
+    // internal method. Do NOT fire BundleMakerProjectChangedEvent
   }
 
   /**
@@ -430,5 +460,17 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
     // notify listener
     _bundleMakerProject.notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_SAVED));
+  }
+
+  /**
+   * Notifies the BundleMakerProjectChangedListeners that the description has been changed
+   */
+  private void fireProjectDescriptionChangedEvent() {
+
+    // Create the Event
+    BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED);
+
+    // notify listeners
+    _bundleMakerProject.notifyListeners(event);
   }
 }
