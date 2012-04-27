@@ -178,6 +178,8 @@ public abstract class AbstractContent implements IProjectContentEntry {
   public void setName(String name) {
     Assert.isNotNull(name);
     _name = name;
+
+    fireProjectDescriptionChangeEvent();
   }
 
   /**
@@ -191,6 +193,8 @@ public abstract class AbstractContent implements IProjectContentEntry {
   public void setVersion(String version) {
     Assert.isNotNull(version);
     _version = version;
+
+    fireProjectDescriptionChangeEvent();
   }
 
   /**
@@ -206,6 +210,8 @@ public abstract class AbstractContent implements IProjectContentEntry {
 
     //
     _analyze = analyzeMode;
+
+    fireProjectDescriptionChangeEvent();
   }
 
   /**
@@ -306,6 +312,14 @@ public abstract class AbstractContent implements IProjectContentEntry {
 
     //
     return resourceStandin;
+  }
+
+  protected void fireProjectDescriptionChangeEvent() {
+
+    if (_provider instanceof AbstractContentProvider) {
+      ((AbstractContentProvider) _provider).fireProjectDescriptionChangedEvent();
+    }
+
   }
 
   /**

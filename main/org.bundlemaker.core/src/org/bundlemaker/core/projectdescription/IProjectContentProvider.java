@@ -9,6 +9,10 @@ import org.eclipse.core.runtime.CoreException;
  * <p>
  * </p>
  * 
+ * <p>
+ * Note: Implementations of this class must be subclasses of
+ * <tt>org.bundlemaker.core.projectdescription.AbstractContentProvider</tt>
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IProjectContentProvider {

@@ -52,8 +52,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
@@ -117,15 +115,15 @@ public class ProjectEditorPage extends FormPage {
 
     addBundleMakerProjectChangedListener();
 
-    getEditor().addPropertyListener(new IPropertyListener() {
-
-      @Override
-      public void propertyChanged(Object source, int propId) {
-        if (propId == IEditorPart.PROP_DIRTY) {
-          dirty = !dirty;
-        }
-      }
-    });
+    // getEditor().addPropertyListener(new IPropertyListener() {
+    //
+    // @Override
+    // public void propertyChanged(Object source, int propId) {
+    // if (propId == IEditorPart.PROP_DIRTY) {
+    // dirty = !dirty;
+    // }
+    // }
+    // });
 
     // HIER KOMMT DER EDITOR !!!
     createEditorControls(mform);
@@ -136,15 +134,8 @@ public class ProjectEditorPage extends FormPage {
     refreshFormTitle();
   }
 
-  private boolean dirty;
-
-  @Override
-  public boolean isDirty() {
-    return this.dirty;
-  }
-
   public void markDirty() {
-    getEditor().editorDirtyStateChanged();
+    // getEditor().editorDirtyStateChanged();
     //
     // IManagedForm managedForm = getManagedForm();
     // managedForm.dirtyStateChanged();
