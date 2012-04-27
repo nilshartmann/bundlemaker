@@ -26,6 +26,7 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.projectdescription.AbstractContent;
+import org.bundlemaker.core.projectdescription.AbstractContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
@@ -282,6 +283,12 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
       contentProvider.setId(getNextContentProviderId());
     }
 
+    // contentProvider should always be AbstractContentProvider...
+    if (contentProvider instanceof AbstractContentProvider) {
+      AbstractContentProvider abstractContentProvider = (AbstractContentProvider) contentProvider;
+      abstractContentProvider.setProjectDescription(this);
+    }
+
     // this is an internal method only. do NOT fire BundleMakerProjectChangedEvent
 
   }
@@ -446,7 +453,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   /**
    * Notifies the BundleMakerProjectChangedListeners that the description has been changed
    */
-  private void fireProjectDescriptionChangedEvent() {
+  public void fireProjectDescriptionChangedEvent() {
 
     // Create the Event
     BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED);

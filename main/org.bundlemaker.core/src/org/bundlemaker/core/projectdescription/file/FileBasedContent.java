@@ -116,6 +116,8 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
     } else if (type.equals(ContentType.SOURCE)) {
       sourcePaths().add(rootPath);
     }
+
+    fireProjectDescriptionChangeEvent();
   }
 
   /**
@@ -135,6 +137,8 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
     } else if (type.equals(ContentType.SOURCE)) {
       _sourcePaths.remove(rootPath);
     }
+
+    fireProjectDescriptionChangeEvent();
   }
 
   /**
@@ -151,6 +155,9 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
     for (String path : binaryRootPaths) {
       _binaryPaths.add(new VariablePath(path));
     }
+
+    fireProjectDescriptionChangeEvent();
+
   }
 
   /**
@@ -167,6 +174,8 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
     for (String path : sourceRootPaths) {
       sourcePaths().add(new VariablePath(path));
     }
+
+    fireProjectDescriptionChangeEvent();
   }
 
   /**
