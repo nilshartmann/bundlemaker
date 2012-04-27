@@ -50,14 +50,6 @@ public interface IProjectDescription {
    * 
    * @return
    */
-  IProjectContentProvider getProjectContentProvider(String identifier);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   IProjectContentEntry getProjectContentEntry(String identifier);
 
   /**
