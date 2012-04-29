@@ -51,12 +51,33 @@ public abstract class AbstractContent implements IProjectContentEntry {
   private IProjectContentProvider            _provider;
 
   /**
+   * indicates wether changes to this instance should be notified.
+   * 
+   * <p>
+   * This flag may be set to 'false' to prevent change notification while initializing this Content instance.
+   * 
+   */
+  private boolean                            _notifyChanges             = true;
+
+  /**
    * <p>
    * Creates a new instance of type {@link AbstractContent}.
    * </p>
    */
   public AbstractContent(IProjectContentProvider provider) {
+    this(provider, false);
+  }
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractContent}.
+   * </p>
+   */
+  public AbstractContent(IProjectContentProvider provider, boolean notifyChanges) {
     Assert.isNotNull(provider);
+
+    // set notify flag
+    _notifyChanges = notifyChanges;
 
     // set the provider
     _provider = provider;
@@ -237,6 +258,15 @@ public abstract class AbstractContent implements IProjectContentEntry {
   }
 
   /**
+   * This method can be used to switch on/off the notification of changes that are made on this Content instance.
+   * 
+   * @param notifyChanges
+   */
+  public void setNotifyChanges(boolean notifyChanges) {
+    _notifyChanges = notifyChanges;
+  }
+
+  /**
    * <p>
    * Initializes this content entry.
    * </p>
@@ -316,7 +346,7 @@ public abstract class AbstractContent implements IProjectContentEntry {
 
   protected void fireProjectDescriptionChangeEvent() {
 
-    if (_provider instanceof AbstractContentProvider) {
+    if (_notifyChanges && _provider instanceof AbstractContentProvider) {
       ((AbstractContentProvider) _provider).fireProjectDescriptionChangedEvent();
     }
 
@@ -355,4 +385,5 @@ public abstract class AbstractContent implements IProjectContentEntry {
     //
     return _sourceResourceStandins;
   }
+
 }
