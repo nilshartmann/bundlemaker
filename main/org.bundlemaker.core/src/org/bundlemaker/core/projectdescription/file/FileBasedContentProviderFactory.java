@@ -11,8 +11,6 @@ import org.bundlemaker.core.util.JarInfo;
 import org.bundlemaker.core.util.JarInfoService;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.variables.IStringVariableManager;
-import org.eclipse.core.variables.VariablesPlugin;
 
 public class FileBasedContentProviderFactory {
 
@@ -27,9 +25,14 @@ public class FileBasedContentProviderFactory {
    * @param sourceRoot
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String name, String version, String binaryRoot,
-      String sourceRoot) {
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String name, String version, String binaryRoot, String sourceRoot) {
+    return addNewFileBasedContentProvider(description, name, version, (binaryRoot == null ? null : new VariablePath(
+        binaryRoot)), (sourceRoot == null ? null : new VariablePath(sourceRoot)));
+  }
+
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String name, String version, VariablePath binaryRoot, VariablePath sourceRoot) {
     return addNewFileBasedContentProvider(description, name, version, toList(binaryRoot), toList(sourceRoot),
         AnalyzeMode.BINARIES_AND_SOURCES);
   }
@@ -42,9 +45,18 @@ public class FileBasedContentProviderFactory {
    * @param binaryRoot
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String binaryRoot) {
-    return addNewFileBasedContentProvider(description, binaryRoot, null, AnalyzeMode.BINARIES_AND_SOURCES);
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String binaryRoot) {
+    return addNewFileBasedContentProvider(description, (binaryRoot == null ? null : new VariablePath(binaryRoot)),
+        null, AnalyzeMode.BINARIES_AND_SOURCES);
+  }
+
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String binaryRoot, String sourceRoot, AnalyzeMode analyzeMode) {
+    Assert.isNotNull(binaryRoot);
+    Assert.isNotNull(analyzeMode);
+
+    return addNewFileBasedContentProvider(description, new VariablePath(binaryRoot), null, analyzeMode);
   }
 
   /**
@@ -60,9 +72,8 @@ public class FileBasedContentProviderFactory {
    *          the analyze mode. Not null
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String binaryRoot, String sourceRoot,
-      AnalyzeMode analyzeMode) {
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      VariablePath binaryRoot, VariablePath sourceRoot, AnalyzeMode analyzeMode) {
     Assert.isNotNull(binaryRoot);
     Assert.isNotNull(analyzeMode);
 
@@ -93,13 +104,32 @@ public class FileBasedContentProviderFactory {
    * @param analyzeMode
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String name, String version, List<String> binaryRoots,
-      List<String> sourceRoots, AnalyzeMode analyzeMode) {
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String name, String version, String[] binaryRoots, String[] sourceRoots, AnalyzeMode analyzeMode) {
     Assert.isNotNull(name);
     Assert.isNotNull(version);
     Assert.isNotNull(binaryRoots);
     Assert.isNotNull(analyzeMode);
+
+    List<VariablePath> binaryPaths = new LinkedList<VariablePath>();
+    for (String binaryRoot : binaryRoots) {
+      binaryPaths.add(new VariablePath(binaryRoot));
+    }
+
+    List<VariablePath> sourcePaths = null;
+    if (sourceRoots != null) {
+      sourcePaths = new LinkedList<VariablePath>();
+      for (String sourceRoot : sourceRoots) {
+        sourcePaths.add(new VariablePath(sourceRoot));
+      }
+    }
+
+    return addNewFileBasedContentProvider(description, name, version, binaryPaths, sourcePaths, analyzeMode);
+  }
+
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String name, String version, List<VariablePath> binaryRoots, List<VariablePath> sourceRoots,
+      AnalyzeMode analyzeMode) {
 
     // create new file based content
     FileBasedContentProvider fileBasedContentProvider = new FileBasedContentProvider();
@@ -107,14 +137,14 @@ public class FileBasedContentProviderFactory {
     fileBasedContentProvider.setVersion(version);
 
     // add the binary roots
-    for (String string : binaryRoots) {
-      fileBasedContentProvider.getFileBasedContent().addRootPath(new VariablePath(string), ContentType.BINARY);
+    for (VariablePath path : binaryRoots) {
+      fileBasedContentProvider.getFileBasedContent().addRootPath(path, ContentType.BINARY);
     }
 
     if (sourceRoots != null) {
       // add the source roots
-      for (String string : sourceRoots) {
-        fileBasedContentProvider.getFileBasedContent().addRootPath(new VariablePath(string), ContentType.SOURCE);
+      for (VariablePath path : sourceRoots) {
+        fileBasedContentProvider.getFileBasedContent().addRootPath(path, ContentType.SOURCE);
       }
     }
     // add the analyze flag
@@ -134,30 +164,32 @@ public class FileBasedContentProviderFactory {
    * @return
    * @throws CoreException
    */
-  private static File getAsFile(String path) throws CoreException {
+  private static File getAsFile(VariablePath path) throws CoreException {
 
+    return path.getAsFile();
     //
-    IStringVariableManager stringVariableManager = VariablesPlugin.getDefault().getStringVariableManager();
-
+    // //
+    // IStringVariableManager stringVariableManager = VariablesPlugin.getDefault().getStringVariableManager();
     //
-    return new File(stringVariableManager.performStringSubstitution(path));
+    // //
+    // return new File(stringVariableManager.performStringSubstitution(path));
   }
 
   /**
    * <p>
    * </p>
    * 
-   * @param string
+   * @param path
    * @return
    */
-  private static List<String> toList(String string) {
+  private static List<VariablePath> toList(VariablePath path) {
 
     //
-    List<String> list = new LinkedList<String>();
+    List<VariablePath> list = new LinkedList<VariablePath>();
 
     //
-    if (string != null) {
-      list.add(string);
+    if (path != null) {
+      list.add(path);
     }
 
     //
