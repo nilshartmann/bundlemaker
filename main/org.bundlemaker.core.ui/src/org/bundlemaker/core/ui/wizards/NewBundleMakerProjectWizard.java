@@ -28,6 +28,8 @@ import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -45,6 +47,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.statushandlers.IStatusAdapterConstants;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 
 /**
  * <p>
@@ -54,7 +57,7 @@ import org.eclipse.ui.statushandlers.StatusManager;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
+public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, IExecutableExtension {
 
   /**
    * The project that has been created after the wizard has been successfully completed
@@ -77,6 +80,8 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 
   NewBundleMakerProjectWizardCreationPage mainPage;
 
+  private IConfigurationElement           _configurationElement;
+
   @Override
   public void addPages() {
     super.addPages();
@@ -86,6 +91,15 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
     addPage(mainPage);
   }
 
+  /*
+   * Stores the configuration element for the wizard. The config element will be used in <code>performFinish</code> to
+   * set the result perspective.
+   */
+  @Override
+  public void setInitializationData(IConfigurationElement cfig, String propertyName, Object data) {
+    _configurationElement = cfig;
+  }
+
   @Override
   public boolean performFinish() {
     createNewProject();
@@ -93,6 +107,9 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
     if (_newProject == null) {
       return false;
     }
+
+    // open associated BundleMaker perspective
+    BasicNewProjectResourceWizard.updatePerspective(_configurationElement);
 
     // open the bundlemaker project description editor
     openProjectDescriptionEditor(_newProject);
@@ -120,6 +137,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
 
     // create the new project operation
     IRunnableWithProgress op = new IRunnableWithProgress() {
+      @Override
       public void run(IProgressMonitor monitor) throws InvocationTargetException {
         CreateProjectOperation op = new CreateProjectOperation(description, "Create new Bundlemaker project");
         try {
@@ -170,8 +188,7 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard {
       BundleMakerCore.addBundleMakerNature(newProjectHandle);
       IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(newProjectHandle,
           new NullProgressMonitor());
-      IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject
-          .getModifiableProjectDescription();
+      IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject.getModifiableProjectDescription();
       modifiableProjectDescription.setJre(mainPage.getSelectedJreId());
       modifiableProjectDescription.save();
 
