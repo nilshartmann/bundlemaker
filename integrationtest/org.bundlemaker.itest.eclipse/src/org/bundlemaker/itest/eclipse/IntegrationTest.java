@@ -61,8 +61,8 @@ public class IntegrationTest extends AbstractIntegrationTest {
       classes.add(file.getAbsolutePath());
     }
     FileBasedContentProviderFactory.addNewFileBasedContentProvider(
-        bundleMakerProject.getModifiableProjectDescription(), "eclipse", "3.6.1", classes,
-        Arrays.asList(new String[] { sourceDirectory.getAbsolutePath() }), AnalyzeMode.BINARIES_AND_SOURCES);
+        bundleMakerProject.getModifiableProjectDescription(), "eclipse", "3.6.1", classes.toArray(new String[0]),
+        new String[] { sourceDirectory.getAbsolutePath() }, AnalyzeMode.BINARIES_AND_SOURCES);
 
     // step 4: process the class path entries
     File libsDir = new File(System.getProperty("user.dir"), "eclipse/libs");
