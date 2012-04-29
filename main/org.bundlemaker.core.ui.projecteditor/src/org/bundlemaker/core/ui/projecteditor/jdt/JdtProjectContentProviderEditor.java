@@ -30,10 +30,6 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
   @Override
   public List<? extends Object> getChildren(IBundleMakerProject project, IProjectContentProvider provider,
       Object rootElement) throws Exception {
-    // TODO: return IProjectContentEntries instead. Tree should show: Java Project Name and Version -> Content Entry ->
-    // Content Entry paths
-    // where Content Entry is a FileBasedContent
-
     if (!(rootElement instanceof JdtProjectContentProvider)) {
       return _fileBasedContentRenderer.getChildren(project, rootElement);
     }
