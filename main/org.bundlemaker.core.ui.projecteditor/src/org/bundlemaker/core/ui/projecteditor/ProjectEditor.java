@@ -172,8 +172,6 @@ public class ProjectEditor extends FormEditor {
     @Override
     public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
       if (event.getType() == Type.PROJECT_DESCRIPTION_CHANGED) {
-        System.out.println(" *** PROJECT DESCRIPTION CHANGED *** ");
-        Thread.dumpStack();
         setProjectDirty(true);
       }
 
