@@ -13,6 +13,7 @@ package org.bundlemaker.core.ui.projecteditor.newwizard.internal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.bundlemaker.core.ui.projecteditor.filebased.wizard.ResourcesProjectContentProviderWizardContribution;
 import org.bundlemaker.core.ui.projecteditor.jdt.wizard.JdtProjectContentProviderWizardContribution;
 import org.bundlemaker.core.ui.projecteditor.provider.NewProjectContentProviderWizardContribution;
 
@@ -27,6 +28,7 @@ public class NewProjectContentProviderWizardContributionRegistry {
   private final Set<NewProjectContentProviderWizardContribution> _registry = new LinkedHashSet<NewProjectContentProviderWizardContribution>();
 
   public NewProjectContentProviderWizardContributionRegistry() {
+    _registry.add(new ResourcesProjectContentProviderWizardContribution());
     _registry.add(new JdtProjectContentProviderWizardContribution());
     // _registry.add(new)
   }
