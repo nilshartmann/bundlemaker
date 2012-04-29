@@ -37,6 +37,15 @@ public interface IProjectDescription {
 
   /**
    * <p>
+   * Returns an <b>unmodifiable</b> list.
+   * </p>
+   * 
+   * @return
+   */
+  List<? extends IProjectContentProvider> getContentProviders();
+
+  /**
+   * <p>
    * Returns a (read-only) list with all the defined {@link IProjectContentEntry}.
    * </p>
    * 
