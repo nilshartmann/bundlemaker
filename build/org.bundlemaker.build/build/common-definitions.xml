@@ -37,7 +37,8 @@
 	<import file="${basedir}/../libs/ant4eclipse/macros/a4e-pde-test-macros.xml" />
 
 	<!-- set properties -->
-	<property file="${basedir}/build.properties" />
+	<property name="bundlemaker.build.properties.file" value="${basedir}/build.properties" />
+	<property file="${bundlemaker.build.properties.file}" />
 	<fail unless="eclipse.install.dir" message="You have to specify a valid eclipse installation directory (${basedir}/build.properties)"/>
 	<fail unless="jdk16.dir" message="You have to specify a valid JDK installation directory (${basedir}/build.properties)"/>
 	
