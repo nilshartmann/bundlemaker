@@ -57,9 +57,9 @@ public class FileBasedProjectContentProviderNode extends AbstractProjectContentP
       @Override
       public boolean performFinish() {
         _page.finish();
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(getModifiableProjectDescription(),
-            _page.getName(), _page.getVersion(), _page.getBinaryPaths(), _page.getSourcePaths(),
-            getAnalyzeMode(_page.isAnalyze(), _page.isAnalyzeSources()));
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(getModifiableProjectDescription(), _page
+            .getName(), _page.getVersion(), _page.getBinaryPaths().toArray(new String[0]), _page.getSourcePaths()
+            .toArray(new String[0]), getAnalyzeMode(_page.isAnalyze(), _page.isAnalyzeSources()));
 
         return true;
 

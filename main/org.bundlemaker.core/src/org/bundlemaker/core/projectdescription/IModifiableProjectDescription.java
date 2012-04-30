@@ -38,15 +38,6 @@ public interface IModifiableProjectDescription extends IProjectDescription {
 
   /**
    * <p>
-   * Returns an <b>unmodifiable</b> list.
-   * </p>
-   * 
-   * @return
-   */
-  List<? extends IProjectContentProvider> getContentProviders();
-
-  /**
-   * <p>
    * </p>
    * 
    * @param contentProvider

@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.projecteditor;
 
 import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
+import org.bundlemaker.core.ui.projecteditor.newwizard.internal.NewProjectContentProviderWizardContributionRegistry;
 import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectContentProviderEditorRegistry;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -14,14 +15,16 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String                   PLUGIN_ID = "org.bundlemaker.core.ui.projecteditor"; //$NON-NLS-1$
+  public static final String                      PLUGIN_ID = "org.bundlemaker.core.ui.projecteditor"; //$NON-NLS-1$
 
   // The shared instance
-  private static Activator                     plugin;
+  private static Activator                        plugin;
 
-  private ProjectEditorDndProviderRegistry     _projectEditorDndProviderRegistry;
+  private ProjectEditorDndProviderRegistry        _projectEditorDndProviderRegistry;
 
-  private ProjectContentProviderEditorRegistry _projectContentProviderEditorRegistry;
+  private ProjectContentProviderEditorRegistry    _projectContentProviderEditorRegistry;
+
+  private NewProjectContentProviderWizardContributionRegistry _newProjectContentProviderWizardRegistry;
 
   /**
    * The constructor
@@ -39,6 +42,7 @@ public class Activator extends AbstractUIPlugin {
     super.start(context);
     _projectEditorDndProviderRegistry = new ProjectEditorDndProviderRegistry();
     _projectContentProviderEditorRegistry = new ProjectContentProviderEditorRegistry();
+    _newProjectContentProviderWizardRegistry = new NewProjectContentProviderWizardContributionRegistry();
     plugin = this;
 
   }
@@ -63,6 +67,13 @@ public class Activator extends AbstractUIPlugin {
    */
   public ProjectContentProviderEditorRegistry getProjectContentProviderEditorRegistry() {
     return _projectContentProviderEditorRegistry;
+  }
+
+  /**
+   * @return the newProjectContentProviderWizardRegistry
+   */
+  public NewProjectContentProviderWizardContributionRegistry getNewProjectContentProviderWizardRegistry() {
+    return _newProjectContentProviderWizardRegistry;
   }
 
   /**

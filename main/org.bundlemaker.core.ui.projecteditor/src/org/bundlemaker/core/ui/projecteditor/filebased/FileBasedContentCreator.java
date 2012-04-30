@@ -10,6 +10,7 @@ import java.util.Map;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.util.JarInfo;
 import org.bundlemaker.core.util.JarInfoService;
 
@@ -20,14 +21,34 @@ import org.bundlemaker.core.util.JarInfoService;
  * 
  */
 public class FileBasedContentCreator {
-  private final static String[] SOURCE_EXTENSIONS = { ".src", ".source" };
+  private final static String[] SOURCE_EXTENSIONS = { ".src", ".source", "-src", "-source" };
 
   public void addFiles(IModifiableProjectDescription modifiableProjectDescription, String[] fileNames) {
 
-    final Map<String, File> modules = new Hashtable<String, File>();
+    VariablePath[] paths = new VariablePath[fileNames.length];
 
-    for (String fileName : fileNames) {
-      File file = new File(fileName);
+    for (int i = 0; i < fileNames.length; i++) {
+      paths[i] = new VariablePath(fileNames[i]);
+    }
+
+    addFiles(modifiableProjectDescription, paths);
+  }
+
+  public void addFiles(IModifiableProjectDescription modifiableProjectDescription, VariablePath[] variablePaths) {
+
+    final Map<String, VariablePath> modules = new Hashtable<String, VariablePath>();
+
+    for (VariablePath variablePath : variablePaths) {
+      File file = getFile(variablePath);
+
+      if (file == null) {
+        // variable cannot be resolved. use name only
+
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, variablePath
+            .getUnresolvedPath().toOSString(), null, AnalyzeMode.BINARIES_ONLY);
+
+        continue;
+      }
 
       if (file.isDirectory()) {
         // for now we assume a directory is always binary content
@@ -38,7 +59,7 @@ public class FileBasedContentCreator {
       }
 
       JarInfo jarInfo = JarInfoService.extractJarInfo(file);
-      modules.put(jarInfo.getName(), file);
+      modules.put(jarInfo.getName(), variablePath);
     }
 
     List<String> moduleNames = new LinkedList<String>(modules.keySet());
@@ -49,28 +70,28 @@ public class FileBasedContentCreator {
         continue;
       }
 
-      File file = modules.remove(moduleName);
-      if (file == null) {
+      VariablePath path = modules.remove(moduleName);
+      if (path == null) {
         // already handled
         continue;
       }
 
-      File sourceFile = getSourceFile(modules, moduleName);
+      VariablePath sourceFile = getSourceFile(modules, moduleName);
       if (sourceFile != null) {
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
-            file.getAbsolutePath(), sourceFile.getAbsolutePath(), AnalyzeMode.BINARIES_AND_SOURCES);
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, sourceFile,
+            AnalyzeMode.BINARIES_AND_SOURCES);
 
       } else {
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
-            file.getAbsolutePath(), null, AnalyzeMode.BINARIES_ONLY);
+        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, null,
+            AnalyzeMode.BINARIES_ONLY);
       }
     }
 
     // add rest of files (most probably source files according to our naming conventions. Add it anyway)
-    Collection<File> files = modules.values();
-    for (File file : files) {
-      FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
-          file.getAbsolutePath(), null, AnalyzeMode.BINARIES_ONLY);
+    Collection<VariablePath> files = modules.values();
+    for (VariablePath file : files) {
+      FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, file, null,
+          AnalyzeMode.BINARIES_ONLY);
     }
 
   }
@@ -85,10 +106,10 @@ public class FileBasedContentCreator {
    * @param binaryModuleName
    * @return
    */
-  protected File getSourceFile(Map<String, File> modules, String binaryModuleName) {
+  protected VariablePath getSourceFile(Map<String, VariablePath> modules, String binaryModuleName) {
 
     for (String sourceExtension : SOURCE_EXTENSIONS) {
-      File sourceModule = modules.remove(binaryModuleName + sourceExtension);
+      VariablePath sourceModule = modules.remove(binaryModuleName + sourceExtension);
       if (sourceModule != null) {
         return sourceModule;
       }
@@ -107,6 +128,20 @@ public class FileBasedContentCreator {
     }
 
     return false;
+  }
+
+  /**
+   * Returns the resolved path as file or null if it couldn't be resolved
+   * 
+   * @param variablePath
+   * @return
+   */
+  private File getFile(VariablePath variablePath) {
+    try {
+      return variablePath.getAsFile();
+    } catch (Exception ex) {
+      return null;
+    }
   }
 
 }
