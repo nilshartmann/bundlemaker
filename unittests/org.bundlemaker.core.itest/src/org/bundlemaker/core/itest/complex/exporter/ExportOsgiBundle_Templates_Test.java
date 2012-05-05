@@ -6,18 +6,17 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IManifestConstants;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences.DependencyStyle;
-import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
+import org.eclipse.virgo.util.osgi.manifest.ImportedPackage;
+import org.eclipse.virgo.util.osgi.manifest.RequiredBundle;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 import org.junit.Test;
-
-import com.springsource.bundlor.util.SimpleManifestContents;
-import com.springsource.util.osgi.manifest.BundleManifest;
-import com.springsource.util.osgi.manifest.ExportedPackage;
-import com.springsource.util.osgi.manifest.ImportedPackage;
-import com.springsource.util.osgi.manifest.RequiredBundle;
-import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
  * <p>

@@ -20,15 +20,14 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
 import org.bundlemaker.core.resource.IReadableResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.virgo.bundlor.util.BundleManifestUtils;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
+import org.eclipse.virgo.util.osgi.manifest.ImportedPackage;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.util.parser.manifest.RecoveringManifestParser;
 import org.junit.After;
 import org.junit.Before;
-
-import com.springsource.bundlor.util.BundleManifestUtils;
-import com.springsource.util.osgi.manifest.BundleManifest;
-import com.springsource.util.osgi.manifest.ExportedPackage;
-import com.springsource.util.osgi.manifest.ImportedPackage;
-import com.springsource.util.parser.manifest.ManifestContents;
-import com.springsource.util.parser.manifest.RecoveringManifestParser;
 
 /**
  * <p>

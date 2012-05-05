@@ -8,15 +8,14 @@ import junit.framework.Assert;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences.DependencyStyle;
-import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.ImportedPackage;
+import org.eclipse.virgo.util.osgi.manifest.RequiredBundle;
 import org.junit.Test;
-
-import com.springsource.util.osgi.manifest.BundleManifest;
-import com.springsource.util.osgi.manifest.ImportedPackage;
-import com.springsource.util.osgi.manifest.RequiredBundle;
 
 /**
  * <p>
