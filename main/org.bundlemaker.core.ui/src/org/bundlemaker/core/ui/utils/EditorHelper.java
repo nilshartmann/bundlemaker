@@ -1,6 +1,8 @@
 package org.bundlemaker.core.ui.utils;
 
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ArtifactType;
@@ -18,9 +20,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jface.text.Position;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
@@ -35,23 +35,24 @@ public class EditorHelper {
       // CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
       // commonNavigator.setLinkingEnabled(false);
 
+      IReferenceDetailParser detailParser = new ReferenceDetailParser();
+
       IResourceArtifact resourceArtifact = artifact instanceof IResourceArtifact ? (IResourceArtifact) artifact
           : (IResourceArtifact) artifact.getParent(ArtifactType.Resource);
+
       IResource resource = resourceArtifact.getAssociatedResource();
       IMovableUnit movableUnit = MovableUnit.createFromResource(resource, resourceArtifact.getModularizedSystem());
-      IResource sourceResource = movableUnit.hasAssociatedSourceResource() ? movableUnit.getAssociatedSourceResource()
-          : resource;
+
+      //
+      IResource sourceResource = movableUnit.getAssociatedBinaryResources().get(0);
 
       IBundleMakerProject bundleMakerProject = resourceArtifact.getRoot().getModularizedSystem()
           .getBundleMakerProject();
       IJavaProject javaProject = getAssociatedJavaProject(bundleMakerProject.getProject());
+      System.out.println(sourceResource.getContainedType().getFullyQualifiedName());
       IJavaElement javaElement = javaProject.findElement(new Path(sourceResource.getPath()));
 
       if (javaElement instanceof IClassFile) {
-
-        CompilationUnit compilationUnit = parse((IClassFile) javaElement);
-        JdtAstVisitor jdtAstVisitor = new JdtAstVisitor();
-        compilationUnit.accept(jdtAstVisitor);
 
         // http://www.vogella.com/articles/EclipseEditors/article.html
         // "org.eclipse.jdt.ui.ClassFileEditor"
@@ -76,23 +77,23 @@ public class EditorHelper {
           e.printStackTrace();
         }
 
+        //
         if (toArtifact != null) {
+
           //
-          ReferenceAnnotationModel.attach((ITextEditor) editorPart, toArtifact.getQualifiedName(), jdtAstVisitor
-              .getReferences().get(toArtifact.getQualifiedName()));
+          Map<String, List<Position>> positions = detailParser.parseReferencePositions(sourceResource,
+              artifact.getModularizedSystem());
+
+          //
+          if (positions.containsKey(toArtifact.getQualifiedName())) {
+            ReferenceAnnotationModel.attach((ITextEditor) editorPart, toArtifact.getQualifiedName(),
+                positions.get(toArtifact.getQualifiedName()));
+          }
         }
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  protected static CompilationUnit parse(IClassFile classFile) {
-    ASTParser parser = ASTParser.newParser(AST.JLS3);
-    parser.setKind(ASTParser.K_COMPILATION_UNIT);
-    parser.setSource(classFile); // set source
-    parser.setResolveBindings(true); // we need bindings later on
-    return (CompilationUnit) parser.createAST(null /* IProgressMonitor */); // parse
   }
 
   private static IJavaProject getAssociatedJavaProject(IProject bundleMakerProject) {

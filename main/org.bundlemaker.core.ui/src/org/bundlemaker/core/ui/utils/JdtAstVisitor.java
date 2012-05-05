@@ -16,6 +16,7 @@ import java.util.Stack;
 
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.ASTVisitor;
@@ -166,6 +167,11 @@ public class JdtAstVisitor extends ASTVisitor {
     _messages = node.getMessages();
     _problems = node.getProblems();
 
+    System.out.println("************************************************************");
+    for (IProblem problem : node.getProblems()) {
+      System.out.println(problem);
+    }
+    System.out.println("************************************************************");
     // visit the child nodes
     return true;
   }
@@ -254,11 +260,13 @@ public class JdtAstVisitor extends ASTVisitor {
     }
 
     //
-    IAnnotationBinding[] annotationBindings = node.resolveBinding().getAnnotations();
-    for (IAnnotationBinding annotationBinding : annotationBindings) {
-      resolveTypeBinding(annotationBinding.getAnnotationType(), node.getStartPosition(), node.getLength());
+    ITypeBinding typeBinding = node.resolveBinding();
+    if (typeBinding != null) {
+      IAnnotationBinding[] annotationBindings = typeBinding.getAnnotations();
+      for (IAnnotationBinding annotationBinding : annotationBindings) {
+        resolveTypeBinding(annotationBinding.getAnnotationType(), node.getStartPosition(), node.getLength());
+      }
     }
-
     // visit the child nodes
     return true;
   }
@@ -538,6 +546,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
     // TODO: Zusammenlegen mit ConstructorInvocation
 
+
     IMethodBinding methodBinding = node.resolveConstructorBinding();
 
     // resolve type arguments
@@ -683,8 +692,13 @@ public class JdtAstVisitor extends ASTVisitor {
       return;
     }
 
-    // resolve the type binding
-    resolveTypeBinding(type.resolveBinding(), type.getStartPosition(), type.getLength());
+    if (type.resolveBinding() != null && !type.resolveBinding().isRecovered()) {
+      // resolve the type binding
+      resolveTypeBinding(type.resolveBinding(), type.getStartPosition(), type.getLength());
+    } else {
+      //
+      System.out.println("Resolve Type " + type.toString());
+    }
   }
 
   /**
@@ -730,7 +744,10 @@ public class JdtAstVisitor extends ASTVisitor {
   private void resolveTypeBinding(ITypeBinding typeBinding, int startPosition, int length) {
 
     // return null if type == null
-    if (typeBinding == null) {
+    if (typeBinding == null || typeBinding.isRecovered()) {
+
+      System.out.println(typeBinding.getName());
+
       return;
     }
 
@@ -792,7 +809,18 @@ public class JdtAstVisitor extends ASTVisitor {
         // System.err.println("*****");
       } else {
 
-        addReferencedType(((IType) typeBinding.getJavaElement()).getFullyQualifiedName('$'), startPosition, length);
+        IJavaElement javaElement = typeBinding.getJavaElement();
+
+        if (javaElement instanceof IType) {
+          addReferencedType(((IType) typeBinding.getJavaElement()).getFullyQualifiedName('$'), startPosition, length);
+        } else {
+          System.out.println("------------------------------------");
+          System.out.println(javaElement.getClass());
+          System.out.println(javaElement.getElementName());
+          System.out.println(startPosition + " : " + length);
+          new RuntimeException().printStackTrace();
+        }
+
       }
     }
 
