@@ -14,9 +14,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.virgo.util.osgi.manifest.parse.HeaderDeclaration;
 import org.osgi.framework.Constants;
-
-import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 
 /**
  * <p>

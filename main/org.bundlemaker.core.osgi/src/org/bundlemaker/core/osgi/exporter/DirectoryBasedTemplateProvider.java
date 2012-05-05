@@ -13,8 +13,7 @@ import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * <p>

@@ -21,16 +21,15 @@ import org.bundlemaker.core.osgi.utils.ArtifactUtils;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.virgo.util.osgi.VersionRange;
+import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
+import org.eclipse.virgo.util.osgi.manifest.ImportedPackage;
+import org.eclipse.virgo.util.osgi.manifest.RequiredBundle;
+import org.eclipse.virgo.util.osgi.manifest.RequiredBundle.Visibility;
+import org.eclipse.virgo.util.osgi.manifest.Resolution;
+import org.eclipse.virgo.util.osgi.manifest.parse.HeaderDeclaration;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
-
-import com.springsource.util.osgi.VersionRange;
-import com.springsource.util.osgi.manifest.ExportedPackage;
-import com.springsource.util.osgi.manifest.ImportedPackage;
-import com.springsource.util.osgi.manifest.RequiredBundle;
-import com.springsource.util.osgi.manifest.RequiredBundle.Visibility;
-import com.springsource.util.osgi.manifest.Resolution;
-import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
 
 /**
  * <p>

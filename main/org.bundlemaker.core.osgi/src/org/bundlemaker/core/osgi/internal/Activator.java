@@ -12,7 +12,6 @@ package org.bundlemaker.core.osgi.internal;
 
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.eclipse.pde.core.project.IBundleProjectService;
-
 import org.eclipse.pde.internal.core.target.provisional.ITargetPlatformService;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

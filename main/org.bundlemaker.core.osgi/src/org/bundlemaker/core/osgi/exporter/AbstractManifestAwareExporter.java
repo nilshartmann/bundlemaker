@@ -25,10 +25,10 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.internal.exporter.ManifestCreatorAdapter;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
-import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
-import org.bundlemaker.core.osgi.manifest.DefaultManifestCreator;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -37,9 +37,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.osgi.service.resolver.StateObjectFactory;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 import org.osgi.framework.BundleException;
-
-import com.springsource.util.parser.manifest.ManifestContents;
 
 /**
  * <p>

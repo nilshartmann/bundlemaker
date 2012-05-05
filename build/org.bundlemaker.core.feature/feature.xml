@@ -257,14 +257,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="com.springsource.slf4j.simple"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bundlemaker.core.ui.print"
          download-size="0"
          install-size="0"
@@ -339,6 +331,14 @@ litigation.
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.slf4j.nop"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>

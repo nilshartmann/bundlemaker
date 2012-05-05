@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="Running Platform" sequenceNumber="31">
+<locations>
+<location includeAllPlatforms="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.draw2d.feature.group" version="3.7.2.v20110927-2020-4617w3122212803131"/>
+<unit id="org.eclipse.draw2d.source.feature.group" version="3.7.2.v20110927-2020-4617w3122212803131"/>
+<repository location="http://download.eclipse.org/tools/gef/updates/releases/"/>
+</location>
+<location path="${eclipse_home}" type="Profile"/>
+<location path="${project_loc:target.platform}/bundlor-1.1.0.M04/plugins" type="Directory"/>
+<location path="${project_loc:target.platform}/ds" type="Directory"/>
+</locations>
+<environment>
+<os>win32</os>
+<ws>win32</ws>
+<arch>x86_64</arch>
+<nl>de_DE</nl>
+</environment>
+<launcherArgs>
+<vmArgs>-Xms40m -Xmx384m</vmArgs>
+</launcherArgs>
+</target>

@@ -29,11 +29,10 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
 import org.bundlemaker.core.util.JarFileUtils;
-
-import com.springsource.bundlor.ManifestWriter;
-import com.springsource.bundlor.util.BundleManifestUtils;
-import com.springsource.util.osgi.manifest.BundleManifest;
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.bundlor.ManifestWriter;
+import org.eclipse.virgo.bundlor.util.BundleManifestUtils;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 public class JarFileManifestWriter implements ManifestWriter {
 

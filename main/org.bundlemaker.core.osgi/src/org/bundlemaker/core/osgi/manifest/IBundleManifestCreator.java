@@ -2,8 +2,7 @@ package org.bundlemaker.core.osgi.manifest;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * <p>

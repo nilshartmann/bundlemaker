@@ -10,11 +10,10 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.utils.ArtifactUtils;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.eclipse.core.runtime.Assert;
-
-import com.springsource.bundlor.util.BundleManifestUtils;
-import com.springsource.util.osgi.manifest.BundleManifest;
-import com.springsource.util.osgi.manifest.BundleManifestFactory;
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.bundlor.util.BundleManifestUtils;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * <p>

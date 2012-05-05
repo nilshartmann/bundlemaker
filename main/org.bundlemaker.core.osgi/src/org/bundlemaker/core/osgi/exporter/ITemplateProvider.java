@@ -6,8 +6,7 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IReadableResource;
-
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * <p>

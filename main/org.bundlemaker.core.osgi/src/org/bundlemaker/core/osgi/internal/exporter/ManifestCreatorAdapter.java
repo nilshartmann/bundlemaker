@@ -6,17 +6,16 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
-import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
-
-import com.springsource.bundlor.util.SimpleManifestContents;
-import com.springsource.util.osgi.manifest.BundleManifestFactory;
-import com.springsource.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  */

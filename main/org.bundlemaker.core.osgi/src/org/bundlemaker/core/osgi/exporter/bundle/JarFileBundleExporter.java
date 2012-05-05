@@ -33,8 +33,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-
-import com.springsource.bundlor.ManifestWriter;
+import org.eclipse.virgo.bundlor.ManifestWriter;
 
 /**
  * <p>

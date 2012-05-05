@@ -34,18 +34,17 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.manifest.IManifestConstants;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.virgo.bundlor.util.MatchUtils;
+import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
+import org.eclipse.virgo.bundlor.util.SimpleParserLogger;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
+import org.eclipse.virgo.util.osgi.manifest.parse.HeaderDeclaration;
+import org.eclipse.virgo.util.osgi.manifest.parse.HeaderParserFactory;
+import org.eclipse.virgo.util.parser.manifest.ManifestContents;
+import org.eclipse.virgo.util.parser.manifest.RecoveringManifestParser;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
-
-import com.springsource.bundlor.util.MatchUtils;
-import com.springsource.bundlor.util.SimpleManifestContents;
-import com.springsource.bundlor.util.SimpleParserLogger;
-import com.springsource.util.osgi.manifest.BundleManifest;
-import com.springsource.util.osgi.manifest.BundleManifestFactory;
-import com.springsource.util.osgi.manifest.parse.HeaderDeclaration;
-import com.springsource.util.osgi.manifest.parse.HeaderParserFactory;
-import com.springsource.util.parser.manifest.ManifestContents;
-import com.springsource.util.parser.manifest.RecoveringManifestParser;
 
 /**
  * <p>
