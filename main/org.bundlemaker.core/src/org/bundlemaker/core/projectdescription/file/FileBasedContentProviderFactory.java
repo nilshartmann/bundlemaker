@@ -27,11 +27,29 @@ public class FileBasedContentProviderFactory {
    * @param sourceRoot
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String name, String version, String binaryRoot,
-      String sourceRoot) {
+  @Deprecated
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String name, String version, String binaryRoot, String sourceRoot) {
     return addNewFileBasedContentProvider(description, name, version, toList(binaryRoot), toList(sourceRoot),
         AnalyzeMode.BINARIES_AND_SOURCES);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param description
+   * @param name
+   * @param version
+   * @param binaryRoot
+   * @param sourceRoot
+   * @param analyzeMode
+   * @return
+   */
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String name, String version, String binaryRoot, String sourceRoot, AnalyzeMode analyzeMode) {
+    return addNewFileBasedContentProvider(description, name, version, toList(binaryRoot), toList(sourceRoot),
+        analyzeMode);
   }
 
   /**
@@ -42,8 +60,8 @@ public class FileBasedContentProviderFactory {
    * @param binaryRoot
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String binaryRoot) {
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String binaryRoot) {
     return addNewFileBasedContentProvider(description, binaryRoot, null, AnalyzeMode.BINARIES_AND_SOURCES);
   }
 
@@ -60,9 +78,8 @@ public class FileBasedContentProviderFactory {
    *          the analyze mode. Not null
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String binaryRoot, String sourceRoot,
-      AnalyzeMode analyzeMode) {
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String binaryRoot, String sourceRoot, AnalyzeMode analyzeMode) {
     Assert.isNotNull(binaryRoot);
     Assert.isNotNull(analyzeMode);
 
@@ -93,9 +110,8 @@ public class FileBasedContentProviderFactory {
    * @param analyzeMode
    * @return
    */
-  public static FileBasedContentProvider addNewFileBasedContentProvider(
-      IModifiableProjectDescription description, String name, String version, List<String> binaryRoots,
-      List<String> sourceRoots, AnalyzeMode analyzeMode) {
+  public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+      String name, String version, List<String> binaryRoots, List<String> sourceRoots, AnalyzeMode analyzeMode) {
     Assert.isNotNull(name);
     Assert.isNotNull(version);
     Assert.isNotNull(binaryRoots);

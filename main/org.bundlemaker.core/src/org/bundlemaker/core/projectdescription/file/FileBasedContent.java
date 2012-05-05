@@ -88,11 +88,13 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
       }
 
       // add the source resources
-      if (_sourcePaths != null) {
-        for (VariablePath root : _sourcePaths) {
-          for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
-            // create the resource standin
-            createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ContentType.SOURCE);
+      if (getAnalyzeMode().equals(AnalyzeMode.BINARIES_AND_SOURCES)) {
+        if (_sourcePaths != null) {
+          for (VariablePath root : _sourcePaths) {
+            for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
+              // create the resource standin
+              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ContentType.SOURCE);
+            }
           }
         }
       }
