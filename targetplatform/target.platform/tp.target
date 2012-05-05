@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.6"?>
 
-<target name="Running Platform" sequenceNumber="34">
+<target name="Running Platform" sequenceNumber="37">
 <locations>
 <location path="${project_loc:target.platform}/bundlor-1.1.0.M04/plugins" type="Directory"/>
 <location path="${eclipse_home}" type="Profile"/>
@@ -9,9 +9,6 @@
 <location path="${project_loc:target.platform}/draw2d" type="Directory"/>
 </locations>
 <environment>
-<os>win32</os>
-<ws>win32</ws>
-<arch>x86_64</arch>
 <nl>de_DE</nl>
 </environment>
 <launcherArgs>
