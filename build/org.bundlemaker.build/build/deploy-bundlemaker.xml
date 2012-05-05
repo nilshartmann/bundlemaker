@@ -49,16 +49,16 @@
 	<target name="upload-development" depends="deploy-bundlemaker">
 
 		  <ftp action="del"
-		       server="ftp.wuetherich.com"
-		       userid="wuekxrys2"
+		       server="${ftp.host}"
+		       userid="${ftp.user}"
 		       password="${ftp.pwd}">
 		    <fileset>
 		      <include name="**/*"/>
 		    </fileset>
 		  </ftp>
 		
-		<ftp server="ftp.wuetherich.com"
-		     userid="wuekxrys2"
+		<ftp server="${ftp.host}"
+		     userid="${ftp.user}"
 		     password="${ftp.pwd}"
 		     verbose="true">
 			<fileset dir="${bundlemaker-deploy-dir}/bundlemaker-repo" />

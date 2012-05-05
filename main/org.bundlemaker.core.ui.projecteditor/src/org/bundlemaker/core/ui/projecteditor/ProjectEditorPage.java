@@ -22,6 +22,8 @@ import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
 import org.bundlemaker.core.ui.projecteditor.layout.FormLayoutUtils;
+import org.bundlemaker.core.ui.projecteditor.newwizard.ChooseContentProviderWizard;
+import org.bundlemaker.core.ui.projecteditor.newwizard.internal.NewProjectContentProviderWizardContributionRegistry;
 import org.bundlemaker.core.ui.utils.ParseBundleMakerProjectRunnable;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -39,6 +41,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -329,8 +332,18 @@ public class ProjectEditorPage extends FormPage {
    * @param shell
    */
   protected void addContent(Shell shell) {
-    // TODO Auto-generated method stub
 
+    // Create the wizard presenting the available content provider wizards
+    NewProjectContentProviderWizardContributionRegistry registry = Activator.getDefault()
+        .getNewProjectContentProviderWizardRegistry();
+    ChooseContentProviderWizard wizard = new ChooseContentProviderWizard(_bundleMakerProject, registry);
+
+    // create the WizardDialog
+    WizardDialog dialog = new WizardDialog(shell, wizard);
+    dialog.open();
+
+    // refresh Tree
+    _treeViewer.refresh(null);
   }
 
   /**

@@ -49,7 +49,11 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
    * </p>
    */
   public FileBasedContent(IProjectContentProvider provider) {
-    super(provider);
+    this(provider, false);
+  }
+
+  public FileBasedContent(IProjectContentProvider provider, boolean notifyChanges) {
+    super(provider, notifyChanges);
 
     //
     setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);

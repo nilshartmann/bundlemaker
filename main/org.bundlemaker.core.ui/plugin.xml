@@ -262,11 +262,16 @@
 	<extension id="org.bundlemaker.core.ui.newWizards" name="Bundlemaker Wizards"
 		point="org.eclipse.ui.newWizards">
 		<category id="org.bundlemaker.core.ui.wizards.category" name="Bundlemaker"> </category>
-		<wizard canFinishEarly="false" category="org.bundlemaker.core.ui.wizards.category"
-			class="org.bundlemaker.core.ui.wizards.NewBundleMakerProjectWizard"
-			hasPages="true" icon="icons/bundlemaker-icon-small.png"
-			id="org.bundlemaker.core.ui.wizards.newwizard" name="Bundlemaker project"
-			project="true">
+		<wizard
+        canFinishEarly="false"
+        category="org.bundlemaker.core.ui.wizards.category"
+        class="org.bundlemaker.core.ui.wizards.NewBundleMakerProjectWizard"
+        finalPerspective="org.bundlemaker.core.ui.app.perspective"
+        hasPages="true"
+        icon="icons/bundlemaker-icon-small.png"
+        id="org.bundlemaker.core.ui.wizards.newwizard"
+        name="Bundlemaker project"
+        project="true">
 			<description> Create a Bundlemaker project </description>
 		</wizard>
 	</extension>

@@ -21,6 +21,7 @@ import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfiguratio
 import org.bundlemaker.core.ui.event.Events;
 import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.bundlemaker.core.ui.internal.Activator;
+import org.bundlemaker.core.ui.utils.BundleMakerPerspectiveHelper;
 import org.bundlemaker.core.ui.utils.ParseBundleMakerProjectRunnable;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
@@ -38,6 +39,9 @@ import org.eclipse.ui.navigator.CommonNavigator;
  * 
  */
 public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler implements IHandler {
+
+  public static final String PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN = Activator.PLUGIN_ID
+                                                                            + ".switch_to_perspective_on_open";
 
   /*
    * (non-Javadoc)
@@ -59,6 +63,9 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
     if (!ParseBundleMakerProjectRunnable.parseProject(bundleMakerProject)) {
       return;
     }
+
+    // ask user if the perspective should be opened
+    BundleMakerPerspectiveHelper.openBundleMakerPerspectiveIfWanted(PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN);
 
     // Select default modularized system in common navigator
     selectDefaultModularizedSystemArtifact(bundleMakerProject);
