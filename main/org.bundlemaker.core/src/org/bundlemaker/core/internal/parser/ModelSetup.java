@@ -21,6 +21,7 @@ import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParserFactory;
 import org.bundlemaker.core.projectdescription.AbstractContent;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResourceKey;
@@ -220,9 +221,15 @@ public class ModelSetup {
               ((AbstractContent) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
               new NullProgressMonitor());
 
-          Set<IResourceStandin> newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((AbstractContent) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
-              new NullProgressMonitor());
+          //
+          Set<IResourceStandin> newAndModifiedSourceResources = Collections.emptySet();
+
+          //
+          if (AnalyzeMode.BINARIES_AND_SOURCES.equals(projectContent.getAnalyzeMode())) {
+            newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
+                ((AbstractContent) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
+                new NullProgressMonitor());
+          }
 
           //
           if (LOG) {
