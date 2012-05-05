@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.exporter;
 
+import java.io.File;
+
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -25,7 +27,7 @@ import org.eclipse.core.runtime.SubMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModularizedSystemExporterAdapter implements IModularizedSystemExporter {
+public class ModularizedSystemExporterAdapter implements IModularizedSystemExporter, IModularizedSystemExporter2 {
 
   /** - */
   private IModuleExporter        _moduleExporter;
@@ -63,6 +65,16 @@ public class ModularizedSystemExporterAdapter implements IModularizedSystemExpor
    */
   public void setModuleFilter(IQueryFilter<IModule> moduleFilter) {
     _moduleFilter = moduleFilter;
+  }
+
+  @Override
+  public void export(IModularizedSystem modularizedSystem, File outputDirectory, IProgressMonitor progressMonitor)
+      throws Exception {
+
+    IModuleExporterContext ctx = new DefaultModuleExporterContext(modularizedSystem.getBundleMakerProject(),
+        outputDirectory, modularizedSystem);
+
+    export(modularizedSystem, ctx, progressMonitor);
   }
 
   /**
