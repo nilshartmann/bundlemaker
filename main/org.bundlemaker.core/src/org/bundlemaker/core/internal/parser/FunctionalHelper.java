@@ -51,6 +51,7 @@ public class FunctionalHelper {
           if (parser.canParse(resourceStandin)) {
             parser.parseResource(content, resourceStandin, resourceCache);
             result.addAll(parser.getProblems());
+            resourceCache.getOrCreateResource(resourceStandin).setErroneous(parser.getProblems().isEmpty());
           }
 
           monitor.worked(1);
@@ -213,6 +214,11 @@ public class FunctionalHelper {
 
     // resource has to be re-parsed if no resource was stored in the database
     if (resource == null) {
+      return true;
+    }
+
+    //
+    if (resource.isErroneous()) {
       return true;
     }
 

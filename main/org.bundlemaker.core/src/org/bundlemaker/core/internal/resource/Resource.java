@@ -52,6 +52,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
   private Set<IModifiableResource>     _stickyResources;
 
   /** - */
+  private boolean                      _erroneous;
+
+  /** - */
   private transient ReferenceContainer _referenceContainer;
 
   /** - */
@@ -96,6 +99,14 @@ public class Resource extends ResourceKey implements IModifiableResource {
    */
   public Resource(String contentId, String root, String path) {
     super(contentId, root, path);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void setErroneous(boolean erroneous) {
+    _erroneous = erroneous;
   }
 
   /**
@@ -318,5 +329,9 @@ public class Resource extends ResourceKey implements IModifiableResource {
     }
 
     return _stickyResources;
+  }
+
+  public boolean isErroneous() {
+    return _erroneous;
   }
 }

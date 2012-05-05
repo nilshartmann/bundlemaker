@@ -60,4 +60,12 @@ public interface IModifiableResource extends IResource, IReferenceRecorder {
    * @param stickyResource
    */
   public void addStickyResource(IModifiableResource stickyResource);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param erroneous
+   */
+  public void setErroneous(boolean erroneous);
 }
