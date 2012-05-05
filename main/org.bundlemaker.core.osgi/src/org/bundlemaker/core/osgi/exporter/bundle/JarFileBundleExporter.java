@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
@@ -28,6 +30,7 @@ import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReadableResource;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.JarFileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,6 +46,13 @@ import com.springsource.bundlor.ManifestWriter;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class JarFileBundleExporter extends AbstractManifestAwareExporter {
+
+  /**
+   * If set to <tt>true</tt> sources will be included in the resulting JAR (beneath OSGI-OPT/src subfolder)
+   * 
+   * <p>Defaults to <tt>false</tt>
+   */
+  private boolean _includeSources = false;
 
   /**
    * <p>
@@ -74,7 +84,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
   protected void doExport(IProgressMonitor progressMonitor) throws CoreException {
 
     // create new file if repackaging is required
-    if (!getTemplateProvider().getAdditionalResources(getCurrentModule(), getCurrentModularizedSystem(),
+    if (isIncludeSources() || !getTemplateProvider().getAdditionalResources(getCurrentModule(), getCurrentModularizedSystem(),
         getCurrentContext()).isEmpty()
         || ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ContentType.BINARY)) {
 
@@ -114,9 +124,25 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       Set<IReadableResource> resourceKeys = getTemplateProvider().getAdditionalResources(getCurrentModule(),
           getCurrentModularizedSystem(), getCurrentContext());
 
+      Set<IReadableResource> additionalResources;
+
+      if (isIncludeSources()) {
+        additionalResources = new HashSet<IReadableResource>();
+        // add files from template provider
+        additionalResources.addAll(resourceKeys);
+        
+        // add sources
+        Set<IResource> sources = getCurrentModule().getResources(ContentType.SOURCE);
+        additionalResources.addAll(wrapSourceResources(sources));
+      } else {
+        
+        // add only resources from template provider
+        additionalResources = resourceKeys;
+      }
+
       // export the jar archive
       JarFileUtils.createJarArchive(getCurrentModule().getResources(ContentType.BINARY),
-          ManifestUtils.toManifest(getManifestContents()), resourceKeys, outputStream);
+          ManifestUtils.toManifest(getManifestContents()), additionalResources, outputStream);
 
       // close the output stream
       outputStream.close();
@@ -130,6 +156,59 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       e.printStackTrace();
       throw new CoreException(new Status(IStatus.ERROR, "", ""));
     }
+  }
+
+  /**
+   * "virtually" moves the specified resources to OSGI-OPT/src
+   * @param sources
+   * @return
+   */
+  private Collection<? extends IReadableResource> wrapSourceResources(Set<IResource> sources) {
+    
+    Set<IReadableResource> movedSources = new HashSet<IReadableResource>();
+    
+    // wrap sources in new IReadableResource that has it's path pointing to OSGI-OPT/src
+    for (final IReadableResource source : sources) {
+      final IReadableResource movedSource = new IReadableResource() {
+        
+        @Override
+        public boolean isValidJavaPackage() {
+          return source.isValidJavaPackage();
+        }
+        
+        @Override
+        public String getPath() {
+          return "OSGI-OPT/src/" + source.getPath();
+        }
+        
+        @Override
+        public String getPackageName() {
+          return source.getPackageName();
+        }
+        
+        @Override
+        public String getName() {
+          return source.getName();
+        }
+        
+        @Override
+        public String getDirectory() {
+          return "OSGI-OPT/src/" + getDirectory();
+        }
+        
+        @Override
+        public byte[] getContent() {
+          return source.getContent();
+        }
+      };
+      
+      // add to result
+      movedSources.add(movedSource);
+    }
+    
+    // return
+    return movedSources;
+    
   }
 
   /**
@@ -184,4 +263,22 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
     //
     return module.getModuleIdentifier().getName() + "_" + module.getModuleIdentifier().getVersion() + ".jar";
   }
+
+  /**
+   * @return the includeSources
+   */
+  public boolean isIncludeSources() {
+    return _includeSources;
+  }
+
+  /**
+   * Set to true to include sources in the jar file (in OSGI-OPT/src)
+   * 
+   * @param includeSources
+   *          the includeSources to set
+   */
+  public void setIncludeSources(boolean includeSources) {
+    _includeSources = includeSources;
+  }
+
 }
