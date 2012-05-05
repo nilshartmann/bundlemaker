@@ -50,7 +50,7 @@ public class FileBasedContentProviderFactory {
    * @return
    */
   public static FileBasedContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
-      String name, String version, String binaryRoot, String sourceRoot, AnalyzeMode analyzeMode) {
+      String name, String version, VariablePath binaryRoot, VariablePath sourceRoot, AnalyzeMode analyzeMode) {
     return addNewFileBasedContentProvider(description, name, version, toList(binaryRoot), toList(sourceRoot),
         analyzeMode);
   }
