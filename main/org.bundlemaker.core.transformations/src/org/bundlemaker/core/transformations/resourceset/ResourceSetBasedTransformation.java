@@ -63,14 +63,7 @@ public class ResourceSetBasedTransformation implements ITransformation {
       // get the target module
       IModuleIdentifier targetModuleIdentifier = moduleDefinition.getModuleIdentifier();
 
-      if (targetModuleIdentifier.toString().equals("spring-jdbc_2.5.6")) {
-        System.out.println("spring-jdbc_2.5.6");
-      }
-
       subMonitor.subTask("Creating module '" + targetModuleIdentifier.toString() + "'...");
-
-      // log
-      System.out.println("Creating module '" + targetModuleIdentifier.toString() + "'...");
 
       IModifiableResourceModule targetResourceModule = modularizedSystem
           .getModifiableResourceModule(targetModuleIdentifier);

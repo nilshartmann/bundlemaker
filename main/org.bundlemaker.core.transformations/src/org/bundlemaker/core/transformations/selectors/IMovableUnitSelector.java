@@ -1,8 +1,5 @@
 package org.bundlemaker.core.transformations.selectors;
 
-import java.util.List;
-
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 
 /**
@@ -13,19 +10,6 @@ import org.bundlemaker.core.modules.modifiable.IMovableUnit;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IMovableUnitSelector {
-
-  /**
-   * <p>
-   * Returns a list of all {@link IMovableUnit IMovableUnits} of the specified {@link IResourceModule} that matches this
-   * selector.
-   * </p>
-   * 
-   * @param resourceModule
-   *          the resource module
-   * @return a list of all {@link IMovableUnit IMovableUnits} of the specified {@link IResourceModule} that matches this
-   *         selector.
-   */
-  public List<IMovableUnit> getMatchingMovableUnits(IResourceModule resourceModule);
 
   /**
    * <p>

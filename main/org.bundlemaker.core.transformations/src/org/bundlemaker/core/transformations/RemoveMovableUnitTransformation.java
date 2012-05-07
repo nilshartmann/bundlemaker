@@ -60,10 +60,10 @@ public class RemoveMovableUnitTransformation implements ITransformation {
       //
       for (IModifiableResourceModule modifiableResourceModule : modularizedSystem.getModifiableResourceModules()) {
 
-        //
-        for (IMovableUnit movableUnit : movableUnitSelector.getMatchingMovableUnits(modifiableResourceModule)) {
-
-          modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);
+        for (IMovableUnit movableUnit : modifiableResourceModule.getMovableUnits()) {
+          if (movableUnitSelector.matches(movableUnit)) {
+            modifiableResourceModule.getModifiableSelfResourceContainer().removeMovableUnit(movableUnit);
+          }
         }
       }
 
@@ -93,30 +93,30 @@ public class RemoveMovableUnitTransformation implements ITransformation {
    */
   public void addPatternBasedMovableUnitSelector(IResourceModuleSelector resourceModuleSelector, String[] includes,
       String[] excludes) {
-
+    // TODO
+    // //
+    // PatternBasedMovableUnitSelector patternBasedMovableUnitSelector = new PatternBasedMovableUnitSelector();
     //
-    PatternBasedMovableUnitSelector patternBasedMovableUnitSelector = new PatternBasedMovableUnitSelector();
-
+    // //
+    // if (resourceModuleSelector != null) {
+    // patternBasedMovableUnitSelector.setResourceModuleSelector(resourceModuleSelector);
+    // }
     //
-    if (resourceModuleSelector != null) {
-      patternBasedMovableUnitSelector.setResourceModuleSelector(resourceModuleSelector);
-    }
-
+    // //
+    // if (includes != null) {
+    // for (String include : includes) {
+    // patternBasedMovableUnitSelector.getIncludes().add(include);
+    // }
+    // }
     //
-    if (includes != null) {
-      for (String include : includes) {
-        patternBasedMovableUnitSelector.getIncludes().add(include);
-      }
-    }
-
+    // //
+    // if (excludes != null) {
+    // for (String exclude : excludes) {
+    // patternBasedMovableUnitSelector.getExcludes().add(exclude);
+    // }
+    // }
     //
-    if (excludes != null) {
-      for (String exclude : excludes) {
-        patternBasedMovableUnitSelector.getExcludes().add(exclude);
-      }
-    }
-
-    //
-    _movableUnitSelectors.add(patternBasedMovableUnitSelector);
+    // //
+    // _movableUnitSelectors.add(patternBasedMovableUnitSelector);
   }
 }

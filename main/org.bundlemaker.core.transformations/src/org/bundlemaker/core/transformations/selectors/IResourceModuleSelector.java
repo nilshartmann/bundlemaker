@@ -1,10 +1,6 @@
 package org.bundlemaker.core.transformations.selectors;
 
-import java.util.List;
-
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 
 /**
  * <p>
@@ -14,19 +10,6 @@ import org.bundlemaker.core.modules.modifiable.IMovableUnit;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IResourceModuleSelector {
-
-  /**
-   * <p>
-   * Returns a list of all {@link IResourceModule IResourceModules} of the specified {@link IModularizedSystem} that
-   * matches this selector.
-   * </p>
-   * 
-   * @param modularizedSystem
-   *          the modularized system.
-   * @return a list of all {@link IMovableUnit IMovableUnits} of the specified {@link IResourceModule} that matches this
-   *         selector.
-   */
-  public List<IResourceModule> getMatchingResourceModules(IModularizedSystem modularizedSystem);
 
   /**
    * <p>

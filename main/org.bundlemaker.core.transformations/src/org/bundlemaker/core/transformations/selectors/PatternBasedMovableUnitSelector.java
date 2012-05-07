@@ -10,11 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.transformations.selectors;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
@@ -48,31 +43,8 @@ public class PatternBasedMovableUnitSelector extends AbstractPatternBasedSelecto
     TYPES
   }
 
-  /** the resource module selector */
-  private IResourceModuleSelector _resourceModuleSelector;
-
   /** - */
-  private Origin                  _origin = Origin.SOURCES_AND_BINARIES;
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IResourceModuleSelector getResourceModuleSelector() {
-    return _resourceModuleSelector;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceModuleSelector
-   */
-  public void setResourceModuleSelector(IResourceModuleSelector resourceModuleSelector) {
-    _resourceModuleSelector = resourceModuleSelector;
-  }
+  private Origin _origin = Origin.SOURCES_AND_BINARIES;
 
   /**
    * <p>
@@ -97,34 +69,6 @@ public class PatternBasedMovableUnitSelector extends AbstractPatternBasedSelecto
    */
   public Origin getOrigin() {
     return _origin;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<IMovableUnit> getMatchingMovableUnits(IResourceModule resourceModule) {
-
-    // assert not null
-    Assert.isNotNull(resourceModule);
-
-    // return empty list if resourceModule does not match
-    if (_resourceModuleSelector != null && !_resourceModuleSelector.matches(resourceModule)) {
-      return Collections.emptyList();
-    }
-
-    // create the result list
-    List<IMovableUnit> result = new ArrayList<IMovableUnit>();
-
-    //
-    for (IMovableUnit movableUnit : resourceModule.getMovableUnits()) {
-      if (matches(movableUnit)) {
-        result.add(movableUnit);
-      }
-    }
-
-    //
-    return result;
   }
 
   /**
