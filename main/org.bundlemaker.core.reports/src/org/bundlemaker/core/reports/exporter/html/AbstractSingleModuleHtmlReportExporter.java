@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporter;
+import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -45,6 +47,7 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
       BufferedWriter bufferedWriter = getBufferedWriter(file);
 
       writeHtmlHead(bufferedWriter);
+      writeHtmlBody(bufferedWriter);
 
       bufferedWriter.flush();
       bufferedWriter.close();
@@ -56,6 +59,25 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
       throw new CoreException(new Status(IStatus.ERROR, "", ""));
     }
 
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bufferedWriter
+   * @throws IOException
+   */
+  private void writeHtmlBody(BufferedWriter bw) throws IOException {
+
+    bw.write("<ul>\n");
+
+    //
+    for (IResource resource : getCurrentModule().getResources(ContentType.BINARY)) {
+      bw.write("<li>" + resource.getPath() + "</li>\n");
+    }
+
+    bw.write("</ul>\n");
   }
 
   private BufferedWriter getBufferedWriter(File file) throws IOException {
