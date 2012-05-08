@@ -5,10 +5,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporter;
-import org.bundlemaker.core.projectdescription.ContentType;
-import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -23,6 +26,19 @@ import org.eclipse.core.runtime.SubMonitor;
  */
 public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExporter implements IModuleExporter {
 
+  /** - */
+  private IRootArtifact _rootArtifact;
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected IRootArtifact getCurrentRootArtifact() {
+    return _rootArtifact;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -33,11 +49,13 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
     SubMonitor subMonitor = SubMonitor.convert(progressMonitor, 3);
     subMonitor.beginTask(null, 3);
 
+    //
+    _rootArtifact = getCurrentModularizedSystem().getArtifactModel(getModelConfiguration());
+
     try {
 
       //
-      File file = new File(getCurrentContext().getDestinationDirectory(), getCurrentModule().getModuleIdentifier()
-          .toString() + ".html");
+      File file = new File(getCurrentContext().getDestinationDirectory(), getReportName() + ".html");
 
       if (!file.getParentFile().exists()) {
         file.getParentFile().mkdirs();
@@ -58,8 +76,15 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
       e.printStackTrace();
       throw new CoreException(new Status(IStatus.ERROR, "", ""));
     }
-
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected abstract String getReportName();
 
   /**
    * <p>
@@ -68,17 +93,7 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
    * @param bufferedWriter
    * @throws IOException
    */
-  private void writeHtmlBody(BufferedWriter bw) throws IOException {
-
-    bw.write("<ul>\n");
-
-    //
-    for (IResource resource : getCurrentModule().getResources(ContentType.BINARY)) {
-      bw.write("<li>" + resource.getPath() + "</li>\n");
-    }
-
-    bw.write("</ul>\n");
-  }
+  protected abstract void writeHtmlBody(BufferedWriter bw) throws IOException;
 
   private BufferedWriter getBufferedWriter(File file) throws IOException {
     FileWriter fw = new FileWriter(file);
@@ -90,9 +105,39 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
         + "\"http://www.w3.org/TR/html4/loose.dtd\">\n");
     bw.write("<html>\n");
     bw.write("<head>\n");
-    bw.write("  <title>HALLO</title>\n");
+    bw.write("  <title>\n");
+    bw.write(getReportName());
+    bw.write("</title>\n");
     bw.write("  <meta http-equiv=\"Content-Type\" content=\"text/html;charset=utf-8\">\n");
-    bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"../style.css\">\n");
+    bw.write("  <link rel=\"stylesheet\" type=\"text/css\" href=\"style.css\">\n");
     bw.write("</head>\n");
+  }
+
+  protected IModuleArtifact getModuleArtifact(final IModule module) {
+
+    final IModuleArtifact[] result = new IModuleArtifact[1];
+
+    getCurrentRootArtifact().accept(new IArtifactTreeVisitor.Adapter() {
+
+      @Override
+      public boolean visit(IModuleArtifact moduleArtifact) {
+        if (moduleArtifact.getAssociatedModule().equals(module)) {
+          result[0] = moduleArtifact;
+        }
+        return false;
+      }
+    });
+
+    return result[0];
+  }
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @return
+   */
+  protected IArtifactModelConfiguration getModelConfiguration() {
+    return IArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
   }
 }

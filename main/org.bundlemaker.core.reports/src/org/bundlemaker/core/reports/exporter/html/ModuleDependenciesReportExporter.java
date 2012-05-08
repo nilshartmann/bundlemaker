@@ -14,16 +14,17 @@ import java.util.Set;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.util.collections.GenericCache;
 
-public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportExporter {
+public class ModuleDependenciesReportExporter extends AbstractSingleModuleHtmlReportExporter {
 
   /**
    * {@inheritDoc}
    */
   protected String getReportName() {
-    return getCurrentModule().getModuleIdentifier().toString() + "_Dependencies";
+    return getCurrentModule().getModuleIdentifier().toString() + "_Module-Dependencies";
   }
 
   /**
@@ -38,7 +39,7 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
     bw.write("<table>\n");
 
     bw.write("  <tr>\n");
-    bw.write("     <th>Archive</th>\n");
+    bw.write("     <th>Module</th>\n");
     bw.write("     <th>Depends On</th>\n");
     bw.write("  </tr>\n");
 
@@ -46,14 +47,14 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
     boolean odd = true;
 
     //
-    Collection<IResourceArtifact> resourceArtifacts = ArtifactHelper.findChildren(
-        getModuleArtifact(getCurrentModule()), IResourceArtifact.class);
+    Collection<IModuleArtifact> moduleArtifacts = ArtifactHelper.findChildren(getCurrentRootArtifact(),
+        IModuleArtifact.class);
 
     //
-    for (IResourceArtifact iResourceArtifact : resourceArtifacts) {
+    for (IModuleArtifact iModuleArtifact : moduleArtifacts) {
 
       //
-      List<IDependency> dependencies = new LinkedList<IDependency>(iResourceArtifact.getDependencies());
+      List<IDependency> dependencies = new LinkedList<IDependency>(iModuleArtifact.getDependencies(moduleArtifacts));
       Collections.sort(dependencies, new Comparator<IDependency>() {
         @Override
         public int compare(IDependency arg0, IDependency arg1) {
@@ -75,7 +76,7 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
         bw.write("     <td>");
 
         if (dependencies.indexOf(dependency) == 0) {
-          bw.write(iResourceArtifact.getQualifiedName());
+          bw.write(iModuleArtifact.getQualifiedName());
         }
 
         bw.write("     </td>");
