@@ -87,8 +87,6 @@ public class ProjectEditorPage extends FormPage {
 
   private TreeViewer                _treeViewer;
 
-  private Button                    _addButton;
-
   private Button                    _editButton;
 
   private Button                    _removeButton;
