@@ -5,7 +5,7 @@
 		point="org.eclipse.ui.editors">
 		<editor icon="icons/etools/bm-project-description.png"
 			class="org.bundlemaker.core.ui.projecteditor.ProjectEditor" default="false"
-			id="org.bundlemaker.core.ui.projecteditor" name="Bundlemaker project editor (DO NOT USE YET)">
+			id="org.bundlemaker.core.ui.projecteditor" name="BundleMaker project editor">
 			<contentTypeBinding
 				contentTypeId="org.bundlemaker.core.ui.contenttypes.projectdescription"
 			> </contentTypeBinding>
