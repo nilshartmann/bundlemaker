@@ -35,6 +35,8 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -168,7 +170,17 @@ public class ProjectEditorPage extends FormPage {
 
     final Shell shell = client.getShell();
 
+    // Set tree content
     _treeViewer.setInput(_bundleMakerProject);
+
+    // add double click listener that edits the selected item
+    _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+
+      @Override
+      public void doubleClick(DoubleClickEvent event) {
+        editContent(shell);
+      }
+    });
 
     // Create the buttonbar
     final VerticalFormButtonBar buttonBar = new VerticalFormButtonBar(client, toolkit);
