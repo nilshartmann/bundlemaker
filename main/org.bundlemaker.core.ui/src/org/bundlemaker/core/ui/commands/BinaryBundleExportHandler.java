@@ -22,6 +22,8 @@ public class BinaryBundleExportHandler extends AbstractExportHandler {
 
   @Override
   protected IModuleExporter createExporter() throws Exception {
-    return new JarFileBundleExporter(null, new CustomManifestCreator(), null);
+    JarFileBundleExporter jarFileBundleExporter = new JarFileBundleExporter(null, new CustomManifestCreator(), null);
+    jarFileBundleExporter.setIncludeSources(true);
+    return jarFileBundleExporter;
   }
 }

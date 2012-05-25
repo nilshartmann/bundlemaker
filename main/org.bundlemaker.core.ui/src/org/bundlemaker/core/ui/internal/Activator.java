@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2011 Bundlemaker project team.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +11,6 @@ package org.bundlemaker.core.ui.internal;
 
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
-import org.bundlemaker.core.ui.editor.adapter.ProjectDescriptionAdapterFactory;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
@@ -87,8 +85,6 @@ public class Activator extends AbstractUIPlugin {
 
     PlatformUI.getWorkbench().addWindowListener(new WindowListener());
 
-    ProjectDescriptionAdapterFactory.register();
-
     _projectExplorerSelectionListener = new IArtifactSelectionListener() {
       @Override
       public void artifactSelectionChanged(IArtifactSelection selection) {
@@ -114,9 +110,6 @@ public class Activator extends AbstractUIPlugin {
   public void stop(BundleContext context) throws Exception {
     plugin = null;
     _bundleContext = null;
-
-    //
-    ProjectDescriptionAdapterFactory.unregister();
 
     //
     if (_projectExplorerSelectionForwarder != null) {
