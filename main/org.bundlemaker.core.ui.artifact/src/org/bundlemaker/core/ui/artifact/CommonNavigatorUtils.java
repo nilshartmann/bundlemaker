@@ -1,9 +1,12 @@
 package org.bundlemaker.core.ui.artifact;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.ui.artifact.internal.Activator;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 
@@ -69,10 +72,19 @@ public class CommonNavigatorUtils {
 
   public static void activateCommonNavigator(String navigatorViewId) {
     CommonNavigator navigator = findCommonNavigator(navigatorViewId);
-    if (navigator == null) {
-      return;
-    }
     IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+    if (navigator == null) {
+      try {
+        page.showView(navigatorViewId);
+      } catch (PartInitException ex) {
+        Activator
+            .getDefault()
+            .getLog()
+            .log(
+                new Status(Status.ERROR, Activator.PLUGIN_ID, "Could not open view '" + navigatorViewId + "': " + ex,
+                    ex));
+      }
+    }
     page.activate(navigator);
   }
 }
