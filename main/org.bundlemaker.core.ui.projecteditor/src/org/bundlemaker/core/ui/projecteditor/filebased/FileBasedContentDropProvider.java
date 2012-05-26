@@ -66,14 +66,14 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       return performFileTransferDrop(dropEvent);
     }
 
-    return performLocalSeletionDrop(dropEvent);
+    return performLocalSelectionDrop(dropEvent);
   }
 
   /**
    * @param dropEvent
    * @return
    */
-  protected boolean performLocalSeletionDrop(IProjectEditorDropEvent dropEvent) {
+  protected boolean performLocalSelectionDrop(IProjectEditorDropEvent dropEvent) {
 
     List<?> selectedObjects = getSelectedObjects(dropEvent.getData());
 
