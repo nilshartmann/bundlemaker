@@ -65,8 +65,10 @@ public class Activator extends AbstractUIPlugin {
     //
     if (!_filterInitialized) {
       CommonNavigator commonNavigator = CommonNavigatorUtils.findCommonNavigator(IPageLayout.ID_PROJECT_EXPLORER);
-      commonNavigator.getCommonViewer().addFilter(new BundleMakerProjectViewerFilter());
-      _filterInitialized = true;
+      if (commonNavigator != null) {
+        commonNavigator.getCommonViewer().addFilter(new BundleMakerProjectViewerFilter());
+        _filterInitialized = true;
+      }
     }
   }
 
