@@ -198,7 +198,7 @@ public class ProjectEditorPage extends FormPage {
     _removeButton = buttonBar.newButton("Remove", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        removeContent();
+        removeContent(shell);
       }
     });
     _moveUpButton = buttonBar.newButton("Up", new SelectionAdapter() {
@@ -308,11 +308,17 @@ public class ProjectEditorPage extends FormPage {
       removeButtonEnabled = true;
       editButtonEnabled = selectedTreeViewerElements.size() == 1;
       for (ProjectEditorTreeViewerElement projectEditorTreeViewerElement : selectedTreeViewerElements) {
-        if (!(projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider)) {
+
+        final boolean isProjectContentProviderSelected = (projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider);
+
+        if (!isProjectContentProviderSelected) {
           // move and remove buttons are only enable if only IProjectContentProvider elements are selected
           moveButtonsEnabled = false;
-          // TODO it should be possible to remove children of IProjectContentProvider via their editors
-          removeButtonEnabled = false;
+
+          if (removeButtonEnabled) {
+            removeButtonEnabled = projectEditorTreeViewerElement.getProvidingEditor().canRemove(
+                projectEditorTreeViewerElement.getElement());
+          }
         }
 
         if (editButtonEnabled) {
@@ -410,7 +416,7 @@ public class ProjectEditorPage extends FormPage {
   /**
    * 
    */
-  protected void removeContent() {
+  protected void removeContent(final Shell shell) {
 
     List<ProjectEditorTreeViewerElement> selectedObjects = getSelectedTreeViewerElements();
 
@@ -418,6 +424,11 @@ public class ProjectEditorPage extends FormPage {
       if (projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider) {
         IProjectContentProvider provider = (IProjectContentProvider) projectEditorTreeViewerElement.getElement();
         _bundleMakerProject.getModifiableProjectDescription().removeContentProvider(provider);
+      } else {
+        projectEditorTreeViewerElement.getProvidingEditor().remove(shell, _bundleMakerProject,
+            projectEditorTreeViewerElement.getProjectContentProvider(),
+            projectEditorTreeViewerElement.getElement());
+
       }
     }
 

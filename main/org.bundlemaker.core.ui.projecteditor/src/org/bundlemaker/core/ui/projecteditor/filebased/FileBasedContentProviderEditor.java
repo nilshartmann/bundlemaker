@@ -150,6 +150,35 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
 
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canRemove(java.lang.Object)
+   */
+  @Override
+  public boolean canRemove(Object selectedObject) {
+    return selectedObject instanceof ProjectPath;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#remove(org.eclipse.swt.widgets.Shell,
+   * org.bundlemaker.core.IBundleMakerProject, org.bundlemaker.core.projectdescription.IProjectContentProvider,
+   * java.lang.Object)
+   */
+  @Override
+  public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
+    FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
+
+    ProjectPath pathToRemove = (ProjectPath) selectedObject;
+
+    fileBasedContentProvider.getFileBasedContent()
+        .removeRootPath(pathToRemove.getPath(), pathToRemove.getContentType());
+
+  }
+
   protected boolean editFileBasedContentProvider(Shell shell, IBundleMakerProject project,
       FileBasedContentProvider fileBasedContentProvider) {
     EditFileBasedContentProviderDialog page = new EditFileBasedContentProviderDialog(shell, fileBasedContentProvider);

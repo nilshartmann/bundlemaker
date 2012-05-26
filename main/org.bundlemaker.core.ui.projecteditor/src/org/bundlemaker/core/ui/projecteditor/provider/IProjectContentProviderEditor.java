@@ -89,6 +89,34 @@ public interface IProjectContentProviderEditor {
    */
   public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
 
+  /**
+   * Determines if the given object can be removed by this provider.
+   * 
+   * <p>
+   * This method is only invoked for childs of the IProjectContentProvider not for the IProjectContentProvider itself.
+   * 
+   * 
+   * <p>
+   * This method is invoked to check the enablement of the Remove button on the ProjectEditorPage
+   * 
+   * @param selectedObject
+   * @return
+   */
+  public boolean canRemove(Object selectedObject);
+
+  /**
+   * Remove the selectedObject from the specified {@link IProjectContentProvider}
+   * <p>
+   * This method is only invoked for childs of the IProjectContentProvider not for the IProjectContentProvider itself.
+   * 
+   * @param shell
+   * @param project
+   * @param provider
+   * @param selectedObject
+   *          The object that should be removed
+   */
+  public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
+
   // ---- TODO: ---- //
 
   // *Edit* is only available on a single selection

@@ -116,4 +116,29 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
     return false;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#canRemove(java.lang.Object)
+   */
+  @Override
+  public boolean canRemove(Object selectedObject) {
+
+    // can't remove childs of JdtProjectContentProvider
+    return false;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#remove(org.eclipse.swt.widgets.Shell,
+   * org.bundlemaker.core.IBundleMakerProject, org.bundlemaker.core.projectdescription.IProjectContentProvider,
+   * java.lang.Object)
+   */
+  @Override
+  public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
+    // can't remove childs of JdtProjectContentProvider
+  }
+
 }
