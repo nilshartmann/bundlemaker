@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
@@ -91,10 +90,7 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
         continue;
       }
 
-      IPath relativePath = resource.getProjectRelativePath();
-      String projectName = resource.getProject().getName();
-
-      String path = "${project_loc:" + projectName + "}/" + relativePath;
+      String path = FileBasedContentEditorUtils.getProjectRelativePath(resource);
       projectRelativePaths.add(path);
     }
 

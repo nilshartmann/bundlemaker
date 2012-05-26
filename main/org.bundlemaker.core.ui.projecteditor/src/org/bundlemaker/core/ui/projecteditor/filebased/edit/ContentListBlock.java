@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentEditorUtils;
 import org.bundlemaker.core.ui.projecteditor.filebased.ProjectPath;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -267,7 +268,8 @@ public class ContentListBlock {
       Object[] elements = dialog.getResult();
       for (int i = 0; i < elements.length; i++) {
         IResource elem = (IResource) elements[i];
-        String workspaceFolder = format("${workspace_loc:%s}", elem.getFullPath());
+
+        String workspaceFolder = FileBasedContentEditorUtils.getProjectRelativePath(elem);
         _contentList.add(workspaceFolder);
         contentListChanged();
       }
