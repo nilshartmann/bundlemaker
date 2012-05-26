@@ -98,14 +98,20 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       projectRelativePaths.add(path);
     }
 
+    System.out.printf("FileBasedContentDropProvider target: %b (%s), location: %s%n", dropEvent.hasTarget(),
+        dropEvent.getTarget(),
+        dropEvent.getDropLocation());
+
     if (!dropEvent.hasTarget()) {
+      System.out.println("NO TARGET!");
+
       // add as individual file based contents
       for (String relativePath : projectRelativePaths) {
         FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, relativePath);
       }
     } else {
       // add to selected filebasedcontentprovider
-      FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getTarget();
+      FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getProjectContentProvider();
       addFiles(dropEvent.getShell(), provider, projectRelativePaths.toArray(new String[0]));
     }
 

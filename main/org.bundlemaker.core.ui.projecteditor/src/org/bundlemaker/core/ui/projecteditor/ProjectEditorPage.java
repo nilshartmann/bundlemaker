@@ -260,7 +260,7 @@ public class ProjectEditorPage extends FormPage {
       protected void afterDrop(Object target) {
 
         // refresh the tree
-        _treeViewer.refresh(target);
+        _treeViewer.refresh(null);
 
         // make the new object visible
         _treeViewer.expandToLevel(target, 1);

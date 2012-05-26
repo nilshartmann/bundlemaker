@@ -3,6 +3,7 @@ package org.bundlemaker.core.ui.projecteditor;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.dnd.DropLocation;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
@@ -27,7 +28,7 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
 
   public ProjectEditorTreeViewerDropAdapter(Viewer viewer, IBundleMakerProject bundleMakerProject,
 
-  Set<IProjectEditorDropProvider> dndProviders) {
+      Set<IProjectEditorDropProvider> dndProviders) {
     super(viewer);
     _bundleMakerProject = bundleMakerProject;
     _dndProviders = dndProviders;
@@ -46,6 +47,11 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
 
     // create a new drop event
     ProjectEditorDropEvent dropEvent = createDropEvent(target);
+
+    if (dropEvent == null) {
+      // drop not possible
+      return false;
+    }
 
     // try to find a provider for the drop data
     for (IProjectEditorDropProvider dndProvider : _dndProviders) {
@@ -139,14 +145,29 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
 
   private ProjectEditorDropEvent createDropEvent(Object target) {
 
-    if (target instanceof ProjectEditorTreeViewerElement) {
-      target = ((ProjectEditorTreeViewerElement) target).getElement();
+    System.out.println("TARGET: " + target);
+
+    Object targetElement = null;
+    IProjectContentProvider projectContentProvider = null;
+
+    if (target != null) {
+
+      // can only handle targets of type ProjectEditorTreeViewerElement
+      if (!(target instanceof ProjectEditorTreeViewerElement)) {
+        return null;
+      }
+
+      ProjectEditorTreeViewerElement treeViewerElement = ((ProjectEditorTreeViewerElement) target);
+      targetElement = treeViewerElement.getElement();
+      projectContentProvider = treeViewerElement.getProjectContentProvider();
     }
 
     int location = this.determineLocation(getCurrentEvent());
     DropLocation dropLocation = DropLocation.getDropLocation(location);
     ProjectEditorDropEvent projectEditorDropEvent = new ProjectEditorDropEvent(getViewer().getControl().getShell(),
-        _bundleMakerProject, target, dropLocation, getCurrentEvent().currentDataType);
+        _bundleMakerProject,
+        projectContentProvider,
+        targetElement, dropLocation, getCurrentEvent().currentDataType);
 
     return projectEditorDropEvent;
 

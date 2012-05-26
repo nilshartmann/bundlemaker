@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.projecteditor.dnd.internal;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.dnd.DropLocation;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.eclipse.swt.dnd.Transfer;
@@ -9,23 +10,28 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
 
-  private final Shell               _shell;
+  private final Shell                   _shell;
 
-  private final IBundleMakerProject _bundleMakerProject;
+  private final IBundleMakerProject     _bundleMakerProject;
 
-  private final Object              _target;
+  private final IProjectContentProvider _projectContentProvider;
 
-  private Object                    _data;
+  private final Object                  _target;
 
-  private final TransferData        _transferData;
+  private Object                        _data;
 
-  private final DropLocation        _dropLocation;
+  private final TransferData            _transferData;
 
-  public ProjectEditorDropEvent(final Shell shell, IBundleMakerProject bundleMakerProject, Object target,
+  private final DropLocation            _dropLocation;
+
+  public ProjectEditorDropEvent(final Shell shell, IBundleMakerProject bundleMakerProject,
+      IProjectContentProvider projectContentProvider,
+      Object target,
       DropLocation dropLocation, TransferData transferData) {
     super();
     _shell = shell;
     _bundleMakerProject = bundleMakerProject;
+    _projectContentProvider = projectContentProvider;
     _target = target;
     _dropLocation = dropLocation;
     this._transferData = transferData;
@@ -44,6 +50,16 @@ public class ProjectEditorDropEvent implements IProjectEditorDropEvent {
   @Override
   public IBundleMakerProject getBundleMakerProject() {
     return _bundleMakerProject;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent#getProjectContentProvider()
+   */
+  @Override
+  public IProjectContentProvider getProjectContentProvider() {
+    return _projectContentProvider;
   }
 
   @Override
