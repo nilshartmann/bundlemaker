@@ -35,19 +35,33 @@ public class BundleMakerPerspectiveHelper {
    */
   private final static String BUNDLEMAKER_PERSPECTIVE_ID = "org.bundlemaker.core.ui.app.perspective";
 
-  public static void openBundleMakerPerspectiveIfWanted(String preferenceKey) {
+  /**
+   * Opens the BundleMaker perspective. If the perspective is not active the User gets prompted if he want to switch the
+   * perspective.
+   * 
+   * @param preferenceKey
+   *          The preference that holds the user's decision
+   * @return true if the bundlemaker perspective is now active
+   */
+  public static boolean openBundleMakerPerspectiveIfWanted(String preferenceKey) {
 
     BundleMakerPerspectiveHelper helper = new BundleMakerPerspectiveHelper();
 
-    helper.openBundleMakerPerspective(BUNDLEMAKER_PERSPECTIVE_ID, preferenceKey);
+    boolean result = helper.openBundleMakerPerspective(BUNDLEMAKER_PERSPECTIVE_ID, preferenceKey);
+
+    return result;
 
   }
 
-  protected void openBundleMakerPerspective(String perspectiveId, String preferenceKey) {
+  protected boolean openBundleMakerPerspective(String perspectiveId, String preferenceKey) {
     IWorkbenchWindow window = getWindowForPerspective(perspectiveId);
     if (window != null && shouldSwitchPerspective(window, perspectiveId, preferenceKey)) {
       switchToPerspective(window, perspectiveId);
     }
+
+    // check if BundleMaker perspective is now active
+    boolean isBundleMakerPerspectiveActive = isCurrentPerspective(window, perspectiveId);
+    return isBundleMakerPerspectiveActive;
   }
 
   /**

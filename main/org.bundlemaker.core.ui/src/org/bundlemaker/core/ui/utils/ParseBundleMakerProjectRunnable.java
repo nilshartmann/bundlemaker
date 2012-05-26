@@ -24,6 +24,9 @@ import org.eclipse.ui.PlatformUI;
 /**
  * A {@link IRunnableWithProgress} that initializes and (re-parses) a bundlemaker project
  * 
+ * @see BundleMakerProjectOpener for a convienence class that not only parses the project but also runs all required
+ *      actions for the UI handling
+ * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */

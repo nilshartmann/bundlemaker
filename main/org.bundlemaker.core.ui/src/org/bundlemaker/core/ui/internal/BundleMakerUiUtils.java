@@ -55,7 +55,11 @@ public class BundleMakerUiUtils {
    * @return
    */
   public static IStatus newError(String message, Throwable throwable) {
-    return new Status(IStatus.ERROR, Activator.PLUGIN_ID, message, throwable);
+    int severity = Status.ERROR;
+    if (throwable instanceof CoreException) {
+      severity = ((CoreException) throwable).getStatus().getSeverity();
+    }
+    return new Status(severity, Activator.PLUGIN_ID, message, throwable);
   }
 
   /**

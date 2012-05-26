@@ -24,7 +24,7 @@ import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProvid
 import org.bundlemaker.core.ui.projecteditor.layout.FormLayoutUtils;
 import org.bundlemaker.core.ui.projecteditor.newwizard.ChooseContentProviderWizard;
 import org.bundlemaker.core.ui.projecteditor.newwizard.internal.NewProjectContentProviderWizardContributionRegistry;
-import org.bundlemaker.core.ui.utils.ParseBundleMakerProjectRunnable;
+import org.bundlemaker.core.ui.utils.BundleMakerProjectOpener;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -543,7 +543,7 @@ public class ProjectEditorPage extends FormPage {
     }
 
     // Parse the project
-    ParseBundleMakerProjectRunnable.parseProject(getBundleMakerProject());
+    BundleMakerProjectOpener.openProject(getBundleMakerProject());
   }
 
   private void addBundleMakerProjectChangedListener() {
