@@ -137,13 +137,6 @@ public class ProjectEditorPage extends FormPage {
     refreshFormTitle();
   }
 
-  public void markDirty() {
-    // getEditor().editorDirtyStateChanged();
-    //
-    // IManagedForm managedForm = getManagedForm();
-    // managedForm.dirtyStateChanged();
-  }
-
   private void createEditorControls(final IManagedForm mform) {
     FormToolkit toolkit = mform.getToolkit();
     final ScrolledForm form = mform.getForm();
@@ -272,7 +265,6 @@ public class ProjectEditorPage extends FormPage {
         // make the new object visible
         _treeViewer.expandToLevel(target, 1);
 
-        markDirty();
       }
 
     };
@@ -376,8 +368,6 @@ public class ProjectEditorPage extends FormPage {
 
     _treeViewer.refresh(null);
 
-    markDirty();
-
   }
 
   protected void moveProjectContentProviderUp() {
@@ -413,8 +403,6 @@ public class ProjectEditorPage extends FormPage {
       }
     }
 
-    markDirty();
-
     _treeViewer.refresh(null);
 
   }
@@ -434,8 +422,6 @@ public class ProjectEditorPage extends FormPage {
     }
 
     _treeViewer.refresh(null);
-
-    markDirty();
 
   }
 
