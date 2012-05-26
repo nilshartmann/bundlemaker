@@ -85,7 +85,7 @@ public class ProjectEditorPage extends FormPage {
    */
   private ScrolledForm              _form;
 
-  private boolean                   _needsReparsing = true;
+  private boolean                   _needsReopening = true;
 
   private TreeViewer                _treeViewer;
 
@@ -222,7 +222,7 @@ public class ProjectEditorPage extends FormPage {
       }
     });
 
-    _parseProjectButton = buttonBar.newButton("Parse project", new SelectionAdapter() {
+    _parseProjectButton = buttonBar.newButton("Open project", new SelectionAdapter() {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
@@ -518,8 +518,8 @@ public class ProjectEditorPage extends FormPage {
   private void refreshFormTitle() {
     if (!_form.isDisposed()) {
       _form.setText("Content");
-      if (_needsReparsing) {
-        _form.setMessage("Needs reparsing", IMessageProvider.INFORMATION);
+      if (_needsReopening) {
+        _form.setMessage("Needs re-opening", IMessageProvider.INFORMATION);
       } else {
         _form.setMessage(null, IMessageProvider.NONE);
       }
@@ -553,7 +553,7 @@ public class ProjectEditorPage extends FormPage {
       public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
 
         if (event.getType() == Type.PROJECT_STATE_CHANGED) {
-          _needsReparsing = getBundleMakerProject().getState() != BundleMakerProjectState.READY;
+          _needsReopening = getBundleMakerProject().getState() != BundleMakerProjectState.READY;
           Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
@@ -579,8 +579,8 @@ public class ProjectEditorPage extends FormPage {
    */
   class ParseAction extends Action {
     public ParseAction() {
-      super("Parse");
-      setImageDescriptor(BundleMakerImages.REFRESH.getImageDescriptor());
+      super("Open");
+      setImageDescriptor(BundleMakerImages.BUNDLEMAKER_PARSE_PROJECT.getImageDescriptor());
     }
 
     @Override
