@@ -183,8 +183,6 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
         continue;
       }
 
-      System.out.println("OBJECT: " + object.getClass().getName());
-
       if (object instanceof IProject) {
         // don't add Java projects via this drop adapter
         return false;
