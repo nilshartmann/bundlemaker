@@ -8,13 +8,12 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.commands;
+package org.bundlemaker.core.ui.handler;
 
 import java.util.List;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.bundlemaker.core.ui.utils.BundleMakerProjectOpener;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;

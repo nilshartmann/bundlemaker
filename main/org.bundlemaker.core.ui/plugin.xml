@@ -137,7 +137,7 @@
 	<!-- the handlers -->
 	<!-- ======================================== -->
 	<extension point="org.eclipse.ui.handlers">
-		<handler class="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectHandler"
+		<handler class="org.bundlemaker.core.ui.handler.ParseBundleMakerProjectHandler"
 			commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand">
 			<activeWhen>
 				<reference definitionId="org.bundlemaker.core.ui.bmProjectSelected"></reference>
@@ -146,7 +146,7 @@
 				<reference definitionId="org.bundlemaker.core.ui.bmProjectSelected"></reference>
 			</enabledWhen>
 		</handler>
-		<handler class="org.bundlemaker.core.ui.commands.DemoHandler"
+		<handler class="org.bundlemaker.core.ui.handler.DemoHandler"
 			commandId="org.bundlemaker.core.ui.commands.Demo">
 			<activeWhen>
 				<reference
@@ -159,7 +159,7 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
-		<handler class="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+		<handler class="org.bundlemaker.core.ui.handler.PdePluginProjectExportHandler"
 			commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler">
 			<activeWhen>
 				<reference
@@ -172,7 +172,7 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
-		<handler class="org.bundlemaker.core.ui.commands.ReportExportHandler"
+		<handler class="org.bundlemaker.core.ui.handler.ReportExportHandler"
 			commandId="org.bundlemaker.core.ui.commands.ReportExportHandler">
 			<activeWhen>
 				<reference
@@ -185,7 +185,7 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
-		<handler class="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
+		<handler class="org.bundlemaker.core.ui.handler.BinaryBundleExportHandler"
 			commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler">
 			<activeWhen>
 				<reference
@@ -231,13 +231,13 @@
          </enabledWhen>
       </handler  -->
 		<handler commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
-			class="org.bundlemaker.core.ui.commands.CustomizeDependencyTreeHandler"> </handler>
+			class="org.bundlemaker.core.ui.handler.CustomizeDependencyTreeHandler"> </handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
-			class="org.bundlemaker.core.ui.commands.CreateNewGroupHandler"> </handler>
+			class="org.bundlemaker.core.ui.handler.CreateNewGroupHandler"> </handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
-			class="org.bundlemaker.core.ui.commands.CreateNewModuleHandler"> </handler>
+			class="org.bundlemaker.core.ui.handler.CreateNewModuleHandler"> </handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
-			class="org.bundlemaker.core.ui.commands.RenameArtifactHandler"> </handler>
+			class="org.bundlemaker.core.ui.handler.RenameArtifactHandler"> </handler>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
