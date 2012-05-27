@@ -30,8 +30,8 @@ public class RenameArtifactHandler extends AbstractBundleMakerHandler {
       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter Name", "GROUP",
           NonEmptyStringValidator.instance());
 
-      if (dlg.open() == Window.OK) {
-        System.out.println(dlg.getValue());
+      if (dlg.open() != Window.OK) {
+        return;
       }
 
       if (artifact instanceof IModuleArtifact) {
