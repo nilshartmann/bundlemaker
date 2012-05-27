@@ -20,10 +20,6 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -48,15 +44,4 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
     BundleMakerProjectOpener.openProject(bundleMakerProject);
 
   }
-
-  public static CommonNavigator findCommonNavigator(String navigatorViewId) {
-    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    if (page != null) {
-      IViewPart view = page.findView(navigatorViewId);
-      if (view != null && view instanceof CommonNavigator)
-        return ((CommonNavigator) view);
-    }
-    return null;
-  }
-
 }
