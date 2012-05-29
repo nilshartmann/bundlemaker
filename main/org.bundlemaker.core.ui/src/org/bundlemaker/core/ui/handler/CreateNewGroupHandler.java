@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.commands;
+package org.bundlemaker.core.ui.handler;
 
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -6,7 +6,6 @@ import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
-import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.bundlemaker.core.ui.validators.NonEmptyStringValidator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Path;

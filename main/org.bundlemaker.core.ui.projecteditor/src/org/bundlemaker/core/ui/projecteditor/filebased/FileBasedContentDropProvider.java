@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
@@ -66,14 +65,14 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       return performFileTransferDrop(dropEvent);
     }
 
-    return performLocalSeletionDrop(dropEvent);
+    return performLocalSelectionDrop(dropEvent);
   }
 
   /**
    * @param dropEvent
    * @return
    */
-  protected boolean performLocalSeletionDrop(IProjectEditorDropEvent dropEvent) {
+  protected boolean performLocalSelectionDrop(IProjectEditorDropEvent dropEvent) {
 
     List<?> selectedObjects = getSelectedObjects(dropEvent.getData());
 
@@ -91,21 +90,24 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
         continue;
       }
 
-      IPath relativePath = resource.getProjectRelativePath();
-      String projectName = resource.getProject().getName();
-
-      String path = "${project_loc:" + projectName + "}/" + relativePath;
+      String path = FileBasedContentEditorUtils.getProjectRelativePath(resource);
       projectRelativePaths.add(path);
     }
 
+    System.out.printf("FileBasedContentDropProvider target: %b (%s), location: %s%n", dropEvent.hasTarget(),
+        dropEvent.getTarget(),
+        dropEvent.getDropLocation());
+
     if (!dropEvent.hasTarget()) {
+      System.out.println("NO TARGET!");
+
       // add as individual file based contents
       for (String relativePath : projectRelativePaths) {
         FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, relativePath);
       }
     } else {
       // add to selected filebasedcontentprovider
-      FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getTarget();
+      FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getProjectContentProvider();
       addFiles(dropEvent.getShell(), provider, projectRelativePaths.toArray(new String[0]));
     }
 
@@ -182,8 +184,6 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       if (object instanceof IFolder || object instanceof IFile) {
         continue;
       }
-
-      System.out.println("OBJECT: " + object.getClass().getName());
 
       if (object instanceof IProject) {
         // don't add Java projects via this drop adapter

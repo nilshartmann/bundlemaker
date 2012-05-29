@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.bundlemaker.core.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.internal.Activator
 Export-Package: org.bundlemaker.core.ui,
- org.bundlemaker.core.ui.commands,
  org.bundlemaker.core.ui.expressions,
  org.bundlemaker.core.ui.handler,
  org.bundlemaker.core.ui.utils

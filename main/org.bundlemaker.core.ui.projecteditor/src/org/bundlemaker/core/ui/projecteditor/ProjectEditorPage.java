@@ -85,7 +85,7 @@ public class ProjectEditorPage extends FormPage {
    */
   private ScrolledForm              _form;
 
-  private boolean                   _needsReparsing = true;
+  private boolean                   _needsReopening = true;
 
   private TreeViewer                _treeViewer;
 
@@ -135,13 +135,6 @@ public class ProjectEditorPage extends FormPage {
     updateToolBar();
 
     refreshFormTitle();
-  }
-
-  public void markDirty() {
-    // getEditor().editorDirtyStateChanged();
-    //
-    // IManagedForm managedForm = getManagedForm();
-    // managedForm.dirtyStateChanged();
   }
 
   private void createEditorControls(final IManagedForm mform) {
@@ -205,7 +198,7 @@ public class ProjectEditorPage extends FormPage {
     _removeButton = buttonBar.newButton("Remove", new SelectionAdapter() {
       @Override
       public void widgetSelected(SelectionEvent e) {
-        removeContent();
+        removeContent(shell);
       }
     });
     _moveUpButton = buttonBar.newButton("Up", new SelectionAdapter() {
@@ -222,7 +215,7 @@ public class ProjectEditorPage extends FormPage {
       }
     });
 
-    _parseProjectButton = buttonBar.newButton("Parse project", new SelectionAdapter() {
+    _parseProjectButton = buttonBar.newButton("Open project", new SelectionAdapter() {
 
       @Override
       public void widgetSelected(SelectionEvent e) {
@@ -267,12 +260,11 @@ public class ProjectEditorPage extends FormPage {
       protected void afterDrop(Object target) {
 
         // refresh the tree
-        _treeViewer.refresh(target);
+        _treeViewer.refresh(null);
 
         // make the new object visible
         _treeViewer.expandToLevel(target, 1);
 
-        markDirty();
       }
 
     };
@@ -316,11 +308,17 @@ public class ProjectEditorPage extends FormPage {
       removeButtonEnabled = true;
       editButtonEnabled = selectedTreeViewerElements.size() == 1;
       for (ProjectEditorTreeViewerElement projectEditorTreeViewerElement : selectedTreeViewerElements) {
-        if (!(projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider)) {
+
+        final boolean isProjectContentProviderSelected = (projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider);
+
+        if (!isProjectContentProviderSelected) {
           // move and remove buttons are only enable if only IProjectContentProvider elements are selected
           moveButtonsEnabled = false;
-          // TODO it should be possible to remove children of IProjectContentProvider via their editors
-          removeButtonEnabled = false;
+
+          if (removeButtonEnabled) {
+            removeButtonEnabled = projectEditorTreeViewerElement.getProvidingEditor().canRemove(
+                projectEditorTreeViewerElement.getElement());
+          }
         }
 
         if (editButtonEnabled) {
@@ -376,8 +374,6 @@ public class ProjectEditorPage extends FormPage {
 
     _treeViewer.refresh(null);
 
-    markDirty();
-
   }
 
   protected void moveProjectContentProviderUp() {
@@ -413,8 +409,6 @@ public class ProjectEditorPage extends FormPage {
       }
     }
 
-    markDirty();
-
     _treeViewer.refresh(null);
 
   }
@@ -422,7 +416,7 @@ public class ProjectEditorPage extends FormPage {
   /**
    * 
    */
-  protected void removeContent() {
+  protected void removeContent(final Shell shell) {
 
     List<ProjectEditorTreeViewerElement> selectedObjects = getSelectedTreeViewerElements();
 
@@ -430,12 +424,15 @@ public class ProjectEditorPage extends FormPage {
       if (projectEditorTreeViewerElement.getElement() instanceof IProjectContentProvider) {
         IProjectContentProvider provider = (IProjectContentProvider) projectEditorTreeViewerElement.getElement();
         _bundleMakerProject.getModifiableProjectDescription().removeContentProvider(provider);
+      } else {
+        projectEditorTreeViewerElement.getProvidingEditor().remove(shell, _bundleMakerProject,
+            projectEditorTreeViewerElement.getProjectContentProvider(),
+            projectEditorTreeViewerElement.getElement());
+
       }
     }
 
     _treeViewer.refresh(null);
-
-    markDirty();
 
   }
 
@@ -518,8 +515,8 @@ public class ProjectEditorPage extends FormPage {
   private void refreshFormTitle() {
     if (!_form.isDisposed()) {
       _form.setText("Content");
-      if (_needsReparsing) {
-        _form.setMessage("Needs reparsing", IMessageProvider.INFORMATION);
+      if (_needsReopening) {
+        _form.setMessage("Needs re-opening", IMessageProvider.INFORMATION);
       } else {
         _form.setMessage(null, IMessageProvider.NONE);
       }
@@ -553,7 +550,7 @@ public class ProjectEditorPage extends FormPage {
       public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
 
         if (event.getType() == Type.PROJECT_STATE_CHANGED) {
-          _needsReparsing = getBundleMakerProject().getState() != BundleMakerProjectState.READY;
+          _needsReopening = getBundleMakerProject().getState() != BundleMakerProjectState.READY;
           Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
@@ -579,8 +576,8 @@ public class ProjectEditorPage extends FormPage {
    */
   class ParseAction extends Action {
     public ParseAction() {
-      super("Parse");
-      setImageDescriptor(BundleMakerImages.REFRESH.getImageDescriptor());
+      super("Open");
+      setImageDescriptor(BundleMakerImages.BUNDLEMAKER_PARSE_PROJECT.getImageDescriptor());
     }
 
     @Override

@@ -15,9 +15,11 @@ import static java.lang.String.format;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentEditorUtils;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -171,9 +173,17 @@ public class ResourcesProjectContentProviderWizardPage extends WizardPage {
       return;
     }
 
+    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+
     for (int i = 0; i < selected.length; i++) {
-      String workspacePath = format("${workspace_loc:%s}", selected[i].toString());
-      _contentList.add(workspacePath);
+      IResource member = workspaceRoot.findMember(selected[i]);
+      if (member == null) {
+        String workspacePath = format("${workspace_loc:%s}", selected[i].toString());
+        _contentList.add(workspacePath);
+      } else {
+        String projectRelativePath = FileBasedContentEditorUtils.getProjectRelativePath(member);
+        _contentList.add(projectRelativePath);
+      }
     }
 
     refreshEnablement();
@@ -196,7 +206,7 @@ public class ResourcesProjectContentProviderWizardPage extends WizardPage {
       Object[] elements = dialog.getResult();
       for (int i = 0; i < elements.length; i++) {
         IResource elem = (IResource) elements[i];
-        String workspaceFolder = format("${workspace_loc:%s}", elem.getFullPath());
+        String workspaceFolder = FileBasedContentEditorUtils.getProjectRelativePath(elem);
         _contentList.add(workspaceFolder);
       }
     }

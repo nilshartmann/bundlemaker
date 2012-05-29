@@ -1,10 +1,9 @@
 package org.bundlemaker.core.ui.projecteditor.filebased.edit;
 
-import static java.lang.String.format;
-
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentEditorUtils;
 import org.bundlemaker.core.ui.projecteditor.filebased.ProjectPath;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -161,8 +160,9 @@ public class EditProjectPathDialog extends TitleAreaDialog {
 
     if (dialog.open() == Window.OK) {
       IResource resource = (IResource) dialog.getFirstResult();
-      resource.getLocation();
-      String entry = format("{workspace_loc:%s}", resource.getLocation());
+      // resource.getLocation();
+      String entry = FileBasedContentEditorUtils.getProjectRelativePath(resource);
+      // format("{workspace_loc:%s}", resource.getLocation());
       _entryText.setText(entry);
     }
   }
