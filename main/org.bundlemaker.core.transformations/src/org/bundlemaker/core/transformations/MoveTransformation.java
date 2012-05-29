@@ -31,7 +31,7 @@ public class MoveTransformation implements ITransformation {
   public static final String                 USER_ATTRIBUTE_KEY = "ResourceSetBasedTransformation-USER_ATTRIBUTE_KEY";
 
   /** - */
-  private List<TargetModuleModuleDefinition> _targetModuleModuleDefinitions;
+  private List<TargetModuleDefinition> _targetModuleModuleDefinitions;
 
   // /** - */
   // private IResourceSetProcessor _resourceSetProcessor;
@@ -42,7 +42,7 @@ public class MoveTransformation implements ITransformation {
    * </p>
    */
   public MoveTransformation() {
-    _targetModuleModuleDefinitions = new ArrayList<TargetModuleModuleDefinition>();
+    _targetModuleModuleDefinitions = new ArrayList<TargetModuleDefinition>();
   }
 
   /**
@@ -55,7 +55,7 @@ public class MoveTransformation implements ITransformation {
     SubMonitor subMonitor = SubMonitor.convert(progressMonitor, _targetModuleModuleDefinitions.size());
 
     //
-    for (TargetModuleModuleDefinition targetModuleDefinition : _targetModuleModuleDefinitions) {
+    for (TargetModuleDefinition targetModuleDefinition : _targetModuleModuleDefinitions) {
 
       // get the target module
       IModuleIdentifier targetModuleIdentifier = targetModuleDefinition.getModuleIdentifier();
@@ -133,7 +133,7 @@ public class MoveTransformation implements ITransformation {
   }
 
   private IModifiableResourceModule getOrCreateTargetModule(IModifiableModularizedSystem modularizedSystem,
-      TargetModuleModuleDefinition moduleDefinition, IModuleIdentifier targetModuleIdentifier) {
+      TargetModuleDefinition moduleDefinition, IModuleIdentifier targetModuleIdentifier) {
     IModifiableResourceModule targetResourceModule = modularizedSystem
         .getModifiableResourceModule(targetModuleIdentifier);
 
@@ -164,7 +164,7 @@ public class MoveTransformation implements ITransformation {
    * @param targetResourceModule
    *          the new module that should be classified
    */
-  protected void setClassification(TargetModuleModuleDefinition moduleDefinition,
+  protected void setClassification(TargetModuleDefinition moduleDefinition,
       IModifiableResourceModule targetResourceModule) {
 
     // set classification if no classification has been set yet
@@ -182,7 +182,7 @@ public class MoveTransformation implements ITransformation {
    * @param version
    * @return
    */
-  public TargetModuleModuleDefinition addModuleDefinition(String name, String version) {
+  public TargetModuleDefinition addModuleDefinition(String name, String version) {
     return addModuleDefinition(name, version, new HashMap<String, Object>());
   }
 
@@ -195,7 +195,7 @@ public class MoveTransformation implements ITransformation {
    * @param version
    * @return
    */
-  public TargetModuleModuleDefinition addModuleDefinition(
+  public TargetModuleDefinition addModuleDefinition(
 
   String name, String version, Map<String, Object> userAttibutes) {
 
@@ -205,7 +205,7 @@ public class MoveTransformation implements ITransformation {
     // TODO: check if duplicate
 
     // create
-    TargetModuleModuleDefinition moduleDefinition = new TargetModuleModuleDefinition();
+    TargetModuleDefinition moduleDefinition = new TargetModuleDefinition();
     ModuleIdentifier targetIdentifier = new ModuleIdentifier(name, version);
     moduleDefinition.setModuleIdentifier(targetIdentifier);
     moduleDefinition.getUserAttributes().putAll(userAttibutes);

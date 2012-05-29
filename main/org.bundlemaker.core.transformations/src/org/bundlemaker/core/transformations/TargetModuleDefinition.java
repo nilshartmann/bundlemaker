@@ -33,7 +33,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TargetModuleModuleDefinition implements IMovableUnitSelector, IResourceModuleSelector {
+public class TargetModuleDefinition implements IMovableUnitSelector, IResourceModuleSelector {
 
   /** - */
   private IModuleIdentifier                          _moduleIdentifier;
@@ -49,10 +49,10 @@ public class TargetModuleModuleDefinition implements IMovableUnitSelector, IReso
 
   /**
    * <p>
-   * Creates a new instance of type {@link TargetModuleModuleDefinition}.
+   * Creates a new instance of type {@link TargetModuleDefinition}.
    * </p>
    */
-  public TargetModuleModuleDefinition() {
+  public TargetModuleDefinition() {
 
     //
     _selectors = new LinkedList<ResourceModuleAndMovableUnitSelector>();
