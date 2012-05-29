@@ -7,8 +7,6 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ArtifactType;
-import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.projectdescription.AbstractContentProvider;
@@ -21,7 +19,6 @@ import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.aether.examples.util.Booter;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
@@ -31,14 +28,10 @@ import org.sonatype.aether.collection.DependencyCollectionException;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.graph.DependencyVisitor;
-import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.resolution.ArtifactResult;
-import org.sonatype.aether.resolution.DependencyRequest;
-import org.sonatype.aether.resolution.DependencyResolutionException;
-import org.sonatype.aether.resolution.DependencyResult;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
@@ -56,6 +49,26 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
   /** - */
   private List<IProjectContentEntry> _fileBasedContents;
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param groupId
+   * @param artifactId
+   * @param version
+   */
+  public void addMvnArtifact(String groupId, String artifactId, String version) {
+
+    //
+    MvnArtifactType mvnArtifactType = new MvnArtifactType();
+    mvnArtifactType.setGroupId(groupId);
+    mvnArtifactType.setArtifactId(artifactId);
+    mvnArtifactType.setVersion(version);
+
+    //
+    _mvnContent.getArtifacts().add(mvnArtifactType);
+  }
 
   /**
    * {@inheritDoc}
@@ -84,121 +97,119 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
         //
         CollectResult collectResult = system.collectDependencies(session, collectRequest);
-        
+
         //
         collectResult.getRoot().accept(new DependencyVisitor() {
-          
+
           @Override
           public boolean visitLeave(DependencyNode node) {
             return true;
           }
-          
+
           @Override
           public boolean visitEnter(DependencyNode node) {
-            
+
             //
             ArtifactRequest artifactRequest = new ArtifactRequest();
             artifactRequest.setArtifact(node.getDependency().getArtifact());
             artifactRequest.addRepository(repo);
 
             try {
-              
+
               //
-             ArtifactResult artifactResult = system.resolveArtifact(session, artifactRequest);
-             
-             
-             File sourceFile = null;
-             File binaryFile = null;
+              ArtifactResult artifactResult = system.resolveArtifact(session, artifactRequest);
 
-             //
-             Artifact currentArtifact = artifactResult.getArtifact();
-             
-             //
-             Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
-                 currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
-                     .getVersion());
-             
-             artifactRequest = new ArtifactRequest();
-             artifactRequest.setArtifact(sourceArtifact);
-             artifactRequest.addRepository(repo);
+              File sourceFile = null;
+              File binaryFile = null;
 
-             try {
-               artifactResult = system.resolveArtifact(session, artifactRequest);
-               sourceFile = artifactResult.getArtifact().getFile();
-             } catch (ArtifactResolutionException e) {
-               System.out.println(e.getMessage());
-             }
+              //
+              Artifact currentArtifact = artifactResult.getArtifact();
 
-             binaryFile = currentArtifact.getFile();
+              //
+              Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
+                  currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
+                      .getVersion());
 
-             try {
-               createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
-                   currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
-                       .getGroupId().startsWith("de.o"));
-             } catch (CoreException e) {
-               System.out.println(e.getMessage());
-               throw new RuntimeException(e.getMessage(), e);
-             }
-             
+              artifactRequest = new ArtifactRequest();
+              artifactRequest.setArtifact(sourceArtifact);
+              artifactRequest.addRepository(repo);
+
+              try {
+                artifactResult = system.resolveArtifact(session, artifactRequest);
+                sourceFile = artifactResult.getArtifact().getFile();
+              } catch (ArtifactResolutionException e) {
+                System.out.println(e.getMessage());
+              }
+
+              binaryFile = currentArtifact.getFile();
+
+              try {
+                createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
+                    currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
+                        .getGroupId().startsWith("de.o"));
+              } catch (CoreException e) {
+                System.out.println(e.getMessage());
+                throw new RuntimeException(e.getMessage(), e);
+              }
+
               //
               // System.out.println(artifactResult.getArtifact().getFile().getAbsolutePath());
-              
+
             } catch (Exception e) {
               // TODO: handle exception
             }
             return true;
           }
         });
-        
+
         //
 
-
-//        collectResult.getRoot().accept(new DependencyVisitor() {
-//
-//          @Override
-//          public boolean visitLeave(DependencyNode node) {
-//            return true;
-//          }
-//
-//          @Override
-//          public boolean visitEnter(DependencyNode node) {
-//
-//            File sourceFile = null;
-//            File binaryFile = null;
-//
-//            //
-//            Artifact currentArtifact = node.getDependency().getArtifact();
-//            //
-//            Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
-//                currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
-//                    .getVersion());
-//            ArtifactRequest artifactRequest = new ArtifactRequest();
-//            artifactRequest.setArtifact(sourceArtifact);
-//            artifactRequest.addRepository(repo);
-//
-//            try {
-//              ArtifactResult artifactResult;
-//              artifactResult = system.resolveArtifact(session, artifactRequest);
-//              sourceFile = artifactResult.getArtifact().getFile();
-//            } catch (ArtifactResolutionException e) {
-//              System.out.println(e.getMessage());
-//            }
-//
-//            binaryFile = currentArtifact.getFile();
-//
-//            try {
-//              createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
-//                  currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
-//                      .getGroupId().startsWith("de.o"));
-//            } catch (CoreException e) {
-//              System.out.println(e.getMessage());
-//              throw new RuntimeException(e.getMessage(), e);
-//            }
-//
-//            return true;
-//          }
-//        });
-//
+        // collectResult.getRoot().accept(new DependencyVisitor() {
+        //
+        // @Override
+        // public boolean visitLeave(DependencyNode node) {
+        // return true;
+        // }
+        //
+        // @Override
+        // public boolean visitEnter(DependencyNode node) {
+        //
+        // File sourceFile = null;
+        // File binaryFile = null;
+        //
+        // //
+        // Artifact currentArtifact = node.getDependency().getArtifact();
+        // //
+        // Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
+        // currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
+        // .getVersion());
+        // ArtifactRequest artifactRequest = new ArtifactRequest();
+        // artifactRequest.setArtifact(sourceArtifact);
+        // artifactRequest.addRepository(repo);
+        //
+        // try {
+        // ArtifactResult artifactResult;
+        // artifactResult = system.resolveArtifact(session, artifactRequest);
+        // sourceFile = artifactResult.getArtifact().getFile();
+        // } catch (ArtifactResolutionException e) {
+        // System.out.println(e.getMessage());
+        // }
+        //
+        // binaryFile = currentArtifact.getFile();
+        //
+        // try {
+        // createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
+        // currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
+        // .getGroupId().startsWith("de.o"));
+        // } catch (CoreException e) {
+        // System.out.println(e.getMessage());
+        // throw new RuntimeException(e.getMessage(), e);
+        // }
+        //
+        // return true;
+        // }
+        // });
+        //
       }
       // catch (DependencyResolutionException e) {
       // System.out.println(e.getMessage());
@@ -232,10 +243,10 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     //
     Assert.isNotNull(configuration);
     System.out.println(configuration.getClass());
-    Assert.isTrue(((JAXBElement<MvnContentType>) configuration).getValue() instanceof MvnContentType);
+    Assert.isTrue(configuration instanceof MvnContentType);
 
     // cast down
-    _mvnContent = (MvnContentType) ((JAXBElement<MvnContentType>) configuration).getValue();
+    _mvnContent = (MvnContentType) configuration;
   }
 
   /**
