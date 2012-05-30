@@ -1,9 +1,9 @@
 package org.bundlemaker.core.ui.handler;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.validators.NonEmptyStringValidator;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -40,9 +40,8 @@ public class RenameArtifactHandler extends AbstractBundleMakerHandler {
       }
 
       // update navigator
-      // TODO
-      CommonNavigatorUtils.refresh("org.eclipse.ui.navigator.ProjectExplorer",
-          artifact.getType().equals(ArtifactType.Root) ? artifact : artifact.getParent(ArtifactType.Root));
+      CommonNavigatorUtils.refresh(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID,
+          (artifact instanceof IRootArtifact) ? artifact : artifact.getParent(IRootArtifact.class));
     }
   }
 }
