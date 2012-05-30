@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -125,7 +126,12 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     super.setDependencySelection(selection);
 
     // init the dependencies
-    initDependencies();
+    Display.getCurrent().asyncExec(new Runnable() {
+      @Override
+      public void run() {
+        initDependencies();
+      }
+    });
   }
 
   /**
@@ -134,7 +140,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
    */
   private void initDependencies() {
 
-    if (_viewer == null) {
+    if (_viewer == null || _viewer.getTable().isDisposed()) {
       return;
     }
 
@@ -170,7 +176,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
   public void artifactModelModified() {
     // TODO
   }
-  
+
   /**
    * <p>
    * </p>
