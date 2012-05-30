@@ -13,11 +13,16 @@ public class HTMLReportExporter implements IModularizedSystemExporter2 {
   public void export(IModularizedSystem modularizedSystem, File outputDirectory, IProgressMonitor progressMonitor)
       throws Exception {
 
+    //
     new ModularizedSystemExporterAdapter(
         new DependenciesReportExporter()).export(modularizedSystem, outputDirectory, null);
 
+    //
     new ModularizedSystemExporterAdapter(
-        new ModuleDependenciesReportExporter()).export(modularizedSystem, new File(
-        "D:/development/bundlemaker/temp"), null);
+        new ModuleDependenciesReportExporter()).export(modularizedSystem, outputDirectory, null);
+
+    //
+    new ModularizedSystemExporterAdapter(
+        new ModuleContentReportExporter()).export(modularizedSystem, outputDirectory, null);
   }
 }
