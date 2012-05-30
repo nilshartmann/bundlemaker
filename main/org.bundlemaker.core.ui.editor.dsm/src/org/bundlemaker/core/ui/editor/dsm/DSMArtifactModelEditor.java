@@ -11,6 +11,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.dsm;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,22 +67,28 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   /**
    * This is used as the DSMView's providerId for the xxxSelectionServices
    */
-  public static String        DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
+  public static String         DSM_EDITOR_ID   = DSMArtifactModelEditor.class.getName();
 
   /**
    * Dummy input used for this editor
    */
   @SuppressWarnings("restriction")
-  private static IEditorInput nullInputEditor = new NullEditorInput();
+  private static IEditorInput  nullInputEditor = new NullEditorInput();
 
   /** - */
-  private DsmViewWidget       _viewWidget;
+  private DsmViewWidget        _viewWidget;
 
   /** - */
-  private DsmDetailComposite  _detailComposite;
+  private DsmDetailComposite   _detailComposite;
 
   /** - */
-  private MatrixEvent         _selectedCell;
+  private int[]                _selectedCell;
+
+  /** - */
+  private IBundleMakerArtifact _fromArtifact;
+
+  /** - */
+  private IBundleMakerArtifact _toArtifact;
 
   /**
    * Opens the DSM View.
@@ -154,9 +161,9 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
         //
         else if (_selectedCell != null) {
           _detailComposite.getSelectionCountLabel().setText(
-              getNullSafeString(_viewWidget.getModel().getValues()[_selectedCell.getX()][_selectedCell.getY()], "0"));
-          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell.getY()]);
-          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell.getX()]);
+              getNullSafeString(_viewWidget.getModel().getValues()[_selectedCell[0]][_selectedCell[1]], "0"));
+          _detailComposite.getFromLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell[1]]);
+          _detailComposite.getToLabel().setText(_viewWidget.getModel().getLabels()[_selectedCell[0]]);
         }
 
         //
@@ -171,7 +178,18 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       @Override
       public void singleClick(MatrixEvent event) {
         if (isCellSelected(event)) {
-          _selectedCell = event;
+
+          _selectedCell = new int[] { event.getX(), event.getY() };
+
+          IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
+              .getDependency(event.getY(),
+                  event.getX()) : ((DsmViewModel) _viewWidget.getModel()).getDependency(event.getX(), event.getY());
+
+          Selection.instance().getDependencySelectionService()
+              .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
+
+          _fromArtifact = (IBundleMakerArtifact) _viewWidget.getModel().getNodes()[event.getX()];
+          _toArtifact = (IBundleMakerArtifact) _viewWidget.getModel().getNodes()[event.getY()];
         }
       }
     });
@@ -283,12 +301,16 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
           bundleMakerArtifacts.addAll(artifact.getChildren());
         }
         _viewWidget.setModel(new DsmViewModel(bundleMakerArtifacts));
+
+        // clear the dependency selection
+        resetDependencySelection();
       } else {
         _viewWidget.setModel(new DsmViewModel(selection.getSelectedArtifacts()));
+
+        // clear the dependency selection
+        resetDependencySelection();
       }
 
-      // clear the dependency selection
-      clearDependencySelection();
       setDefaultDependencyDescription();
     }
   }
@@ -302,11 +324,61 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     super.dispose();
   }
 
+  /**
+   * <p>
+   * </p>
+   */
   private void clearDependencySelection() {
     _selectedCell = null;
     List<IDependency> dependencies = Collections.emptyList();
     Selection.instance().getDependencySelectionService()
         .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSM_EDITOR_ID, dependencies);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param list
+   */
+  private void resetDependencySelection() {
+
+    //
+    DsmViewModel dsmViewModel = (DsmViewModel) _viewWidget.getModel();
+
+    //
+    List<?> artifacts = Arrays.asList(dsmViewModel.getNodes());
+
+    //
+    if (_fromArtifact == null || _toArtifact == null || !artifacts.contains(_fromArtifact)
+        || !artifacts.contains(_toArtifact)) {
+
+      //
+      clearDependencySelection();
+    }
+
+    //
+    else {
+
+      //
+      _selectedCell = new int[] { artifacts.indexOf(_fromArtifact), artifacts.indexOf(_toArtifact) };
+
+      IDependency dependency = _viewWidget.getModel().isToggled() ? ((DsmViewModel) _viewWidget.getModel())
+          .getDependency(_selectedCell[1],
+              _selectedCell[0]) : ((DsmViewModel) _viewWidget.getModel()).getDependency(_selectedCell[0],
+          _selectedCell[1]);
+
+      Selection.instance().getDependencySelectionService()
+          .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
+
+      // //
+      // _selectedCell = null;
+      //
+      // List<IDependency> dependencies = Collections.emptyList();
+      //
+      // Selection.instance().getDependencySelectionService()
+      // .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSM_EDITOR_ID, dependencies);
+    }
   }
 
   /**

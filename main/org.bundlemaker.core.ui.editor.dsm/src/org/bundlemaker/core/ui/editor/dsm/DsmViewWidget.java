@@ -191,14 +191,6 @@ public class DsmViewWidget extends Canvas implements Observer {
       @Override
       public void singleClick(MatrixEvent event) {
         _drawToolTip = false;
-
-        if (_model instanceof DsmViewModel) {
-          IDependency dependency = _model.isToggled() ? ((DsmViewModel) _model).getDependency(event.getY(),
-              event.getX()) : ((DsmViewModel) _model).getDependency(event.getX(), event.getY());
-
-          Selection.instance().getDependencySelectionService()
-              .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DSMArtifactModelEditor.DSM_EDITOR_ID, dependency);
-        }
         _mainFigure.repaint();
       }
 

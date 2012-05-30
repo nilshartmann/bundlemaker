@@ -8,9 +8,12 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
@@ -38,6 +41,11 @@ public class ArtifactTreeViewerFactory {
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
     treeViewer.setSorter(new ArtifactTreeViewerSorter());
     treeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
+
+    int operations = DND.DROP_MOVE;
+    Transfer[] transferTypes = new Transfer[] { LocalSelectionTransfer.getTransfer() };
+    treeViewer.addDragSupport(operations, transferTypes, new ArtifactTreeDragAdapter(treeViewer));
+    treeViewer.addDropSupport(operations, transferTypes, new ArtifactTreeDropAdapter(treeViewer));
 
     // menu manager
     MenuManager menuMgr = new MenuManager();
