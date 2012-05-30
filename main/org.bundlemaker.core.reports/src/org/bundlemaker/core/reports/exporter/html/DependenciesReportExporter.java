@@ -65,10 +65,10 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
       for (IDependency dependency : dependencies) {
 
         if (odd) {
-          bw.write("  <tr class=\"rowodd\">\n");
+          bw.write("  <tr class=\"oddrow\">\n");
           odd = false;
         } else {
-          bw.write("  <tr class=\"roweven\">\n");
+          bw.write("  <tr class=\"evenrow\">\n");
           odd = true;
         }
 
