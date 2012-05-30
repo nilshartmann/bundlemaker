@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.analysis.ArtifactType;
-import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
@@ -40,19 +41,19 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     IModularizedSystemChangedListener {
 
   /** - */
-  private IModifiableModularizedSystem                              _modularizedSystem;
+  private IModifiableModularizedSystem                               _modularizedSystem;
 
   /** - */
-  private ArtifactCache                                             _artifactCache;
+  private ArtifactCache                                              _artifactCache;
 
   /** - */
-  private final GroupAndModuleContainerDelegate                     _groupAndModuleContainerDelegate;
+  private final GroupAndModuleContainerDelegate                      _groupAndModuleContainerDelegate;
 
   /** - */
-  private final IArtifactModelConfiguration                         _artifactModelConfiguration;
+  private final IArtifactModelConfiguration                          _artifactModelConfiguration;
 
   /** - */
-  private CurrentAction                                             _currentAction = null;
+  private CurrentAction                                              _currentAction = null;
 
   private final CopyOnWriteArrayList<IArtifactModelModifiedListener> _artifactModelChangedListeners;
 
@@ -86,6 +87,22 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     //
     _artifactModelChangedListeners = new CopyOnWriteArrayList<IArtifactModelModifiedListener>();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IModuleArtifact getModuleArtifact(IModule module) {
+    return _artifactCache.getModuleCache().get(new ModuleKey(module));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IResourceArtifact getResourceArtifact(IResource resource) {
+    return _artifactCache.getResourceCache().get(resource);
   }
 
   /**

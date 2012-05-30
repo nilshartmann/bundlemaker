@@ -1,6 +1,8 @@
 package org.bundlemaker.core.analysis;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IResource;
 
 /**
  * <p>
@@ -27,4 +29,22 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    * @param listener
    */
   void removeArtifactModelChangedListener(IArtifactModelModifiedListener listener);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param module
+   * @return
+   */
+  IModuleArtifact getModuleArtifact(IModule module);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param resource
+   * @return
+   */
+  IResourceArtifact getResourceArtifact(IResource resource);
 }

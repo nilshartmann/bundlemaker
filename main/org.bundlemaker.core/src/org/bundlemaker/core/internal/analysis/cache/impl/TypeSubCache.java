@@ -136,8 +136,8 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
     if (module instanceof IResourceModule
         && getArtifactCache().getConfiguration().getResourcePresentation().equals(ResourcePresentation.ALL_RESOURCES)) {
 
-      //
-      return getArtifactCache().getResourceCache().getOrCreate(resource);
+      // force cast
+      return (AbstractBundleMakerArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);
 
     } else {
 
