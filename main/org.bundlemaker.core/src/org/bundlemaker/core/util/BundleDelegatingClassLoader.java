@@ -4,64 +4,91 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 
+import org.eclipse.core.runtime.Assert;
 import org.osgi.framework.Bundle;
 
 /**
- * A ClassLoader delegating to a given OSGi bundle.
- *
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class BundleDelegatingClassLoader extends ClassLoader {
-    private final Bundle bundle;
-    private final ClassLoader classLoader;
 
-    public BundleDelegatingClassLoader(Bundle bundle) {
-        this(bundle, null);
+  /** - */
+  private final Bundle _bundle;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link BundleDelegatingClassLoader}.
+   * </p>
+   * 
+   * @param bundle
+   */
+  public BundleDelegatingClassLoader(Bundle bundle) {
+    Assert.isNotNull(bundle);
+
+    _bundle = bundle;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Bundle getBundle() {
+    return _bundle;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected Class<?> findClass(String name) throws ClassNotFoundException {
+    return _bundle.loadClass(name);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected URL findResource(String name) {
+    URL resource = _bundle.getResource(name);
+    return resource;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected Enumeration<URL> findResources(String name) throws IOException {
+    return _bundle.getResources(name);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+
+    // the result
+    Class<?> clazz;
+
+    // try to load the class
+    try {
+      clazz = findClass(name);
+    } catch (ClassNotFoundException cnfe) {
+      throw new ClassNotFoundException(name + " from bundle " + _bundle.getBundleId() + " ("
+          + _bundle.getSymbolicName() + ")", cnfe);
     }
 
-    public BundleDelegatingClassLoader(Bundle bundle, ClassLoader classLoader) {
-        this.bundle = bundle;
-        this.classLoader = classLoader;
+    // resolve if requested
+    if (resolve) {
+      resolveClass(clazz);
     }
 
-    protected Class<?> findClass(String name) throws ClassNotFoundException {
-        return bundle.loadClass(name);
-    }
-
-    protected URL findResource(String name) {
-        URL resource = bundle.getResource(name);
-        if (classLoader != null && resource == null) {
-            resource = classLoader.getResource(name);
-        }
-        return resource;
-    }
-
-    @SuppressWarnings("unchecked")
-    protected Enumeration findResources(String name) throws IOException {
-        return bundle.getResources(name);
-    }
-
-    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        Class clazz;
-        try {
-            clazz = findClass(name);
-        } catch (ClassNotFoundException cnfe) {
-            if (classLoader != null) {
-                try {
-                    clazz = classLoader.loadClass(name);
-                } catch (ClassNotFoundException e) {
-                    throw new ClassNotFoundException(name + " from bundle " + bundle.getBundleId() + " (" + bundle.getSymbolicName() + ")", cnfe);
-                }
-            } else {
-                throw new ClassNotFoundException(name + " from bundle " + bundle.getBundleId() + " (" + bundle.getSymbolicName() + ")", cnfe);
-            }
-        }
-        if (resolve) {
-            resolveClass(clazz);
-        }
-        return clazz;
-    }
-
-    public Bundle getBundle() {
-        return bundle;
-    }
+    // return the result
+    return clazz;
+  }
 }
