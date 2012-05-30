@@ -79,4 +79,10 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
     //
     return false;
   }
+
+  @Override
+  public boolean performDrop(Object data) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }
