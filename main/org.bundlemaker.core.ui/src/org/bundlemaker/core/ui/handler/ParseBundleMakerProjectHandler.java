@@ -18,6 +18,7 @@ import org.bundlemaker.core.ui.utils.BundleMakerProjectOpener;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.viewers.ISelection;
 
 /**
@@ -35,11 +36,22 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
   @Override
   protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
 
-    //
-    List<IProject> selectedObjects = getSelectedObject(selection, IProject.class);
-    IProject project = selectedObjects.get(0);
+    // get the selected resource
+    List<IResource> selectedObjects = getSelectedObject(selection, IResource.class);
+
+    // check if there's at least one resource
+    if (selectedObjects.isEmpty()) {
+      return;
+    }
+
+    // grab resource and get the project
+    IResource selectedResource = selectedObjects.get(0);
+    IProject project = selectedResource.getProject();
+
+    // get the BundleMaker project
     IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project, null);
 
+    // open the BundleMaker project
     BundleMakerProjectOpener.openProject(bundleMakerProject);
 
   }

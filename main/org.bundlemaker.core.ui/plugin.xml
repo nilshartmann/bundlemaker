@@ -41,18 +41,24 @@
 	</extension>
 
 	<!-- org.bundlemaker.core.ui.bmProjectSelected: evaluates
-        to true if a Project with BundleMaker-Nature is selcted -->
+        to true if a Project with BundleMaker-Nature or it's bundlemaker.xml is selected -->
 	<extension point="org.eclipse.core.expressions.definitions">
-		<definition id="org.bundlemaker.core.ui.bmProjectSelected">
+		<definition id="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected">
 			<with variable="selection">
+				<!-- exactly one item must be selected -->
+				<count value="1" />
 				<iterate ifEmpty="false" operator="and">
-					<and>
-						<instanceof value="org.eclipse.core.resources.IProject"> </instanceof>
-						<adapt type="org.eclipse.core.resources.IProject">
+						<!-- Test if a resource from a bundlemaker project is selected -->
+						<adapt type="org.eclipse.core.resources.IResource">
 							<test property="org.eclipse.core.resources.projectNature"
 								value="org.bundlemaker.core.bundlemakernature"/>
+							<or>
+								<!-- either the Project itself or the bundlemaker.xml must be selected -->
+							 <instanceof value="org.eclipse.core.resources.IProject" />
+							 <test property="org.eclipse.core.resources.name"
+                         value="bundlemaker.xml"/>
+							</or>
 						</adapt>
-					</and>
 				</iterate>
 			</with>
 		</definition>
@@ -140,10 +146,10 @@
 		<handler class="org.bundlemaker.core.ui.handler.ParseBundleMakerProjectHandler"
 			commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand">
 			<activeWhen>
-				<reference definitionId="org.bundlemaker.core.ui.bmProjectSelected"></reference>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected"></reference>
 			</activeWhen>
 			<enabledWhen>
-				<reference definitionId="org.bundlemaker.core.ui.bmProjectSelected"></reference>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected"></reference>
 			</enabledWhen>
 		</handler>
 		<handler class="org.bundlemaker.core.ui.handler.DemoHandler"
@@ -440,5 +446,19 @@
 	         </selectionEnablement>
       </linkHelper>          
    </extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.bundlemaker.core.ui.preferences.BundleMakerPreferencePage"
+          id="org.bundlemaker.core.ui.preferences.page"
+          name="BundleMaker">
+    </page>
+ </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.bundlemaker.core.ui.preferences.BundleMakerPreferences">
+    </initializer>
+ </extension>
 
 </plugin>

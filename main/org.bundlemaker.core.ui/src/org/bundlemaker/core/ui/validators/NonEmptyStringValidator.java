@@ -14,9 +14,9 @@ public class NonEmptyStringValidator implements IInputValidator {
   }
 
   /**
-   * use {@link #instance()} to get an instance of this class
+   * you should use {@link #instance()} to get an instance of this class
    */
-  private NonEmptyStringValidator() {
+  public NonEmptyStringValidator() {
     //
   }
 

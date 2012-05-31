@@ -29,8 +29,9 @@ public class CreateNewModuleHandler extends AbstractBundleMakerHandler {
       InputDialog dlg = new InputDialog(Display.getCurrent().getActiveShell(), "", "Enter Module Name", "module",
           NonEmptyStringValidator.instance());
 
-      if (dlg.open() == Window.OK) {
-        System.out.println(dlg.getValue());
+      if (dlg.open() != Window.OK) {
+        // canceled
+        return;
       }
 
       System.out.println(artifact);
