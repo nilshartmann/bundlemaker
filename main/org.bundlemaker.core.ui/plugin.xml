@@ -350,11 +350,11 @@
 				<visibleWhen checkEnabled="true"/>
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
-				label="Create New Group..." style="push">
+				label="New Group..." style="push">
 				<visibleWhen checkEnabled="true"/>
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
-				label="Create New Module..." style="push">
+				label="New Module..." style="push">
 				<visibleWhen checkEnabled="true"/>
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
