@@ -440,5 +440,19 @@
 	         </selectionEnablement>
       </linkHelper>          
    </extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.bundlemaker.core.ui.preferences.BundleMakerPreferencePage"
+          id="org.bundlemaker.core.ui.preferences.page"
+          name="BundleMaker">
+    </page>
+ </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.bundlemaker.core.ui.preferences.BundleMakerPreferences">
+    </initializer>
+ </extension>
 
 </plugin>
