@@ -22,14 +22,50 @@ public class CreateNewGroupHandler extends AbstractCreateGroupOrModuleHandler {
    */
   @Override
   protected IBundleMakerArtifact createArtifact(Shell shell, IGroupAndModuleContainer groupAndModuleContainer) {
-    // Create Validator
-    Set<String> existingArtifactNames = getExistingArtifactNames(groupAndModuleContainer);
-    GroupNameValidator groupNameValidator = new GroupNameValidator(existingArtifactNames);
 
     String preset = getUniqueArtifactName(groupAndModuleContainer, "GROUP", null);
 
+    // prompt user for name of new group
+    String newGroupName = getGroupName(shell, groupAndModuleContainer, preset, true);
+
+    if (newGroupName == null) {
+      return null;
+    }
+
+    System.out.println("Create new Group: " + newGroupName);
+
+    // we have to use "getOrCreateGroup" to prevent duplicate groups
+    IGroupArtifact newArtifact = groupAndModuleContainer.getOrCreateGroup(new Path(newGroupName));
+
+    System.out.println("New Group Artifact: " + newArtifact);
+
+    //
+    return newArtifact;
+  }
+
+  /**
+   * Prompts the user for the name of a (new) group
+   * 
+   * @param shell
+   * @param parentContainer
+   *          the container the (new) group belongs to
+   * @param preset
+   *          the preset that is displayed to the user
+   * @return the entered name or null if the user has canceled the dialog
+   */
+  public static String getGroupName(Shell shell, IGroupAndModuleContainer parentContainer, String preset,
+      boolean newGroup) {
+
+    // Create Validator
+    Set<String> existingArtifactNames = getExistingArtifactNames(parentContainer);
+    existingArtifactNames.remove(preset);
+    GroupNameValidator groupNameValidator = new GroupNameValidator(existingArtifactNames);
+
     // JFace Input Dialog
-    InputDialog dlg = new InputDialog(shell, "Create new Group", "Please enter the name of new Group", preset,
+    InputDialog dlg = new InputDialog(shell, //
+        (newGroup ? "Create new Group" : "Rename Group"), //
+        (newGroup ? "Please enter the name of new Group" : "Please enter new name for Group " + preset), //
+        preset, //
         groupNameValidator);
 
     if (dlg.open() != Window.OK) {
@@ -37,14 +73,11 @@ public class CreateNewGroupHandler extends AbstractCreateGroupOrModuleHandler {
       return null;
     }
 
-    // we have to use "getOrCreateGroup" to prevent duplicate groups
-    IGroupArtifact newArtifact = groupAndModuleContainer.getOrCreateGroup(new Path(dlg.getValue()));
+    return dlg.getValue();
 
-    //
-    return newArtifact;
   }
 
-  class GroupNameValidator extends NonEmptyStringValidator {
+  static class GroupNameValidator extends NonEmptyStringValidator {
     private final Set<String> _existingGroupNames;
 
     /**

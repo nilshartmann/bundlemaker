@@ -75,7 +75,7 @@ public abstract class AbstractCreateGroupOrModuleHandler extends AbstractBundleM
    * @param container
    * @return
    */
-  protected Set<String> getExistingArtifactNames(IGroupAndModuleContainer container) {
+  public static Set<String> getExistingArtifactNames(IGroupAndModuleContainer container) {
     final Set<String> existingArtifactNames = new HashSet<String>();
 
     for (IBundleMakerArtifact iBundleMakerArtifact : container.getChildren()) {
