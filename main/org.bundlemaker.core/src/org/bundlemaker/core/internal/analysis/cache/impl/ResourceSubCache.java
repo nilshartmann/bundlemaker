@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
@@ -16,7 +17,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ResourceSubCache extends AbstractSubCache<IResource, AbstractBundleMakerArtifactContainer> {
+public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtifact> {
 
   /** serialVersionUID */
   private static final long serialVersionUID = 1L;
@@ -36,7 +37,7 @@ public class ResourceSubCache extends AbstractSubCache<IResource, AbstractBundle
    * {@inheritDoc}
    */
   @Override
-  protected AbstractBundleMakerArtifactContainer create(IResource key) {
+  protected IResourceArtifact create(IResource key) {
 
     // get the parent
     AbstractBundleMakerArtifactContainer parent = getOrCreateParent(key);

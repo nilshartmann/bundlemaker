@@ -8,7 +8,7 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.examples.manual;
+package org.bundlemaker.core.mvn.aether;
 
 import org.apache.maven.repository.internal.DefaultServiceLocator;
 import org.sonatype.aether.RepositorySystem;
@@ -34,7 +34,6 @@ public class ManualRepositorySystemFactory
         locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
         locator.addService( RepositoryConnectorFactory.class, WagonRepositoryConnectorFactory.class );
         locator.setServices( WagonProvider.class, new ManualWagonProvider() );
-
         return locator.getService( RepositorySystem.class );
     }
 

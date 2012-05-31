@@ -8,10 +8,12 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.examples.util;
+package org.bundlemaker.core.mvn.aether;
+
+import java.io.File;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
-import org.eclipse.aether.examples.manual.ManualRepositorySystemFactory;
+import org.eclipse.core.runtime.Assert;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.collection.DependencyCollectionContext;
 import org.sonatype.aether.collection.DependencySelector;
@@ -26,14 +28,36 @@ import org.sonatype.aether.util.artifact.JavaScopes;
  */
 public class Booter {
 
-  public static RepositorySystem newRepositorySystem() {
+  /** - */
+  private File   _localRepo;
+
+  /** - */
+  private String _remoteRepoUrl;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link Booter}. 
+   * </p>
+   * 
+   * @param localRepo
+   * @param remoteRepoUrl
+   */
+  public Booter(File localRepo, String remoteRepoUrl) {
+    Assert.isNotNull(localRepo);
+    Assert.isNotNull(remoteRepoUrl);
+
+    _localRepo = localRepo;
+    _remoteRepoUrl = remoteRepoUrl;
+  }
+
+  public RepositorySystem newRepositorySystem() {
     return ManualRepositorySystemFactory.newRepositorySystem();
   }
 
-  public static DefaultRepositorySystemSession newRepositorySystemSession(RepositorySystem system) {
+  public DefaultRepositorySystemSession newRepositorySystemSession(RepositorySystem system) {
     MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
-    LocalRepository localRepo = new LocalRepository("D:/development/_save/o/Repository");
+    LocalRepository localRepo = new LocalRepository(_localRepo);
     session.setLocalRepositoryManager(system.newLocalRepositoryManager(localRepo));
 
     // session.setTransferListener( new ConsoleTransferListener() );
@@ -46,7 +70,6 @@ public class Booter {
 
       @Override
       public boolean selectDependency(Dependency dependency) {
-        System.out.println(dependency);
         return dependency.getScope().equals(JavaScopes.COMPILE) || dependency.getScope().equals(JavaScopes.PROVIDED)
             || dependency.getScope().equals(JavaScopes.RUNTIME);
       }
@@ -60,7 +83,7 @@ public class Booter {
     return session;
   }
 
-  public static RemoteRepository newCentralRepository() {
-    return new RemoteRepository("central", "default", "http://repo1.maven.org/maven2/");
+  public RemoteRepository newCentralRepository() {
+    return new RemoteRepository("central", "default", _remoteRepoUrl);
   }
 }

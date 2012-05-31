@@ -16,8 +16,12 @@ import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
@@ -101,10 +105,17 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
             IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
                 .getArtifactModelConfigurationProvider();
 
-            IBundleMakerArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
+            IRootArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
                 .getArtifactModelConfiguration());
 
-            // ModelTransformer.dumpArtifact(artifact);
+            // TODO!
+            artifact.addArtifactModelChangedListener(new IArtifactModelModifiedListener() {
+              @Override
+              public void artifactModelModified() {
+                //
+                CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+              }
+            });
 
             result.add(artifact);
           }
@@ -218,6 +229,22 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       Assert.isNotNull(rootArtifact);
 
       _rootArtifact = rootArtifact;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IModuleArtifact getModuleArtifact(IModule module) {
+      return _rootArtifact.getModuleArtifact(module);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IResourceArtifact getResourceArtifact(IResource resource) {
+      return _rootArtifact.getResourceArtifact(resource);
     }
 
     @Override

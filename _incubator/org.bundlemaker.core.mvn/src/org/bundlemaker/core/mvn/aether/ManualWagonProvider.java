@@ -8,7 +8,7 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.examples.manual;
+package org.bundlemaker.core.mvn.aether;
 
 import org.apache.maven.wagon.Wagon;
 import org.sonatype.aether.connector.wagon.WagonProvider;

@@ -2,6 +2,12 @@ package org.bundlemaker.core.mvn.content;
 
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class MvnContentProviderFactory {
 
   /**

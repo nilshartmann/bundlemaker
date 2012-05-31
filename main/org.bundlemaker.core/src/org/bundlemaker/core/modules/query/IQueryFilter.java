@@ -22,5 +22,5 @@ public interface IQueryFilter<T> {
    * @param content
    * @return
    */
-  public abstract boolean matches(T content);
+  boolean matches(T content);
 }
