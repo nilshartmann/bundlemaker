@@ -320,9 +320,9 @@
 		<command id="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
 			name="Customize Dependency Tree..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
-			name="Create New Group..."/>
+			name="New Group..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
-			name="Create New Module..."/>
+			name="New Module..."/>
 		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."
 		> </command>
 	</extension>
