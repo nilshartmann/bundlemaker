@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.handler;
 
+import java.util.Set;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -43,20 +45,13 @@ public class EditModuleDialog extends TitleAreaDialog {
 
   private Text                 _versionTextField;
 
-  /**
-   * @param parentShell
-   */
-  public EditModuleDialog(Shell parentShell) {
-    this(parentShell, false, "NewModule", "1.0.0");
-  }
+  private final Set<String>    _existingArtifactNames;
 
-  public EditModuleDialog(Shell parentShell, String moduleName, String moduleVersion) {
-    this(parentShell, true, moduleName, moduleVersion);
-  }
-
-  private EditModuleDialog(Shell shell, boolean editExistingModule, String moduleName, String moduleVersion) {
+  public EditModuleDialog(Shell shell, Set<String> existingArtifactNames, boolean editExistingModule,
+      String moduleName, String moduleVersion) {
     super(shell);
 
+    this._existingArtifactNames = existingArtifactNames;
     this._editExistingModule = editExistingModule;
     this._moduleName = moduleName;
     this._moduleVersion = moduleVersion;
@@ -110,6 +105,10 @@ public class EditModuleDialog extends TitleAreaDialog {
     _versionTextField.setLayoutData(gd);
     _versionTextField.setText(_moduleVersion);
 
+    if (!_editExistingModule) {
+      _nameTextField.selectAll();
+    }
+
     _nameTextField.addModifyListener(_validationModifyListener);
     _versionTextField.addModifyListener(_validationModifyListener);
 
@@ -125,6 +124,16 @@ public class EditModuleDialog extends TitleAreaDialog {
       errorMessage = validateModuleVersion();
     }
 
+    if (errorMessage == null) {
+      // make sure, artifact name (including version) is not in use yet
+      String artifactName = _nameTextField.getText() + "_" + _versionTextField.getText();
+
+      if (_existingArtifactNames.contains(artifactName)) {
+        errorMessage = "Enter a unique module name and version";
+      }
+
+    }
+
     setErrorMessage(errorMessage);
 
   }
@@ -135,7 +144,6 @@ public class EditModuleDialog extends TitleAreaDialog {
       return "Enter a valid module name";
     }
 
-    // TODO check existing modules
     return null;
   }
 

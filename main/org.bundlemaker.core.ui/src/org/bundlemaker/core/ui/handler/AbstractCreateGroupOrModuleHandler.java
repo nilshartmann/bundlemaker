@@ -10,6 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.handler;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -66,4 +69,41 @@ public abstract class AbstractCreateGroupOrModuleHandler extends AbstractBundleM
 
   protected abstract IBundleMakerArtifact createArtifact(Shell shell, IGroupAndModuleContainer groupAndModuleContainer);
 
+  /**
+   * Returns a set of names of the artifacts that are already part of the given container
+   * 
+   * @param container
+   * @return
+   */
+  protected Set<String> getExistingArtifactNames(IGroupAndModuleContainer container) {
+    final Set<String> existingArtifactNames = new HashSet<String>();
+
+    for (IBundleMakerArtifact iBundleMakerArtifact : container.getChildren()) {
+      existingArtifactNames.add(iBundleMakerArtifact.getName());
+    }
+
+    return existingArtifactNames;
+  }
+
+  protected String getUniqueArtifactName(IGroupAndModuleContainer parentContainer, String prefix, String suffix) {
+
+    if (suffix == null) {
+      suffix = "";
+    }
+
+    Set<String> existingArtifacts = getExistingArtifactNames(parentContainer);
+
+    System.out.println("Existing Artifacts: " + existingArtifacts);
+
+    String candidate = prefix + suffix;
+    int ix = 0;
+    System.out.println("Candidate: " + candidate);
+    while (existingArtifacts.contains(candidate)) {
+      ix++;
+      candidate = prefix + ix + suffix;
+    }
+
+    return candidate.substring(0, candidate.length() - suffix.length());
+
+  }
 }

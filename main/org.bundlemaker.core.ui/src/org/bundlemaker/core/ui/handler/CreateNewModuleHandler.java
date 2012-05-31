@@ -1,5 +1,7 @@
 package org.bundlemaker.core.ui.handler;
 
+import java.util.Set;
+
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -17,8 +19,11 @@ public class CreateNewModuleHandler extends AbstractCreateGroupOrModuleHandler {
    */
   @Override
   protected IBundleMakerArtifact createArtifact(Shell shell, IGroupAndModuleContainer groupAndModuleContainer) {
+    Set<String> existingArtifactNames = getExistingArtifactNames(groupAndModuleContainer);
 
-    EditModuleDialog dialog = new EditModuleDialog(shell);
+    String preset = getUniqueArtifactName(groupAndModuleContainer, "NewModule", "_1.0.0");
+
+    EditModuleDialog dialog = new EditModuleDialog(shell, existingArtifactNames, false, preset, "1.0.0");
     if (dialog.open() != Window.OK) {
       // cancel
       return null;

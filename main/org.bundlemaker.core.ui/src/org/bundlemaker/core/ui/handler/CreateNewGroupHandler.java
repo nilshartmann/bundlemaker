@@ -1,7 +1,5 @@
 package org.bundlemaker.core.ui.handler;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -24,18 +22,14 @@ public class CreateNewGroupHandler extends AbstractCreateGroupOrModuleHandler {
    */
   @Override
   protected IBundleMakerArtifact createArtifact(Shell shell, IGroupAndModuleContainer groupAndModuleContainer) {
-    Collection<IBundleMakerArtifact> children = groupAndModuleContainer.getChildren();
-
-    Set<String> existingArtifactNames = new HashSet<String>();
-    for (IBundleMakerArtifact iBundleMakerArtifact : children) {
-      existingArtifactNames.add(iBundleMakerArtifact.getName());
-    }
-
     // Create Validator
+    Set<String> existingArtifactNames = getExistingArtifactNames(groupAndModuleContainer);
     GroupNameValidator groupNameValidator = new GroupNameValidator(existingArtifactNames);
 
+    String preset = getUniqueArtifactName(groupAndModuleContainer, "GROUP", null);
+
     // JFace Input Dialog
-    InputDialog dlg = new InputDialog(shell, "Create new Group", "Please enter the name of new Group", "",
+    InputDialog dlg = new InputDialog(shell, "Create new Group", "Please enter the name of new Group", preset,
         groupNameValidator);
 
     if (dlg.open() != Window.OK) {
