@@ -21,7 +21,6 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
@@ -108,14 +107,14 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
             IRootArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
                 .getArtifactModelConfiguration());
 
-            // TODO!
-            artifact.addArtifactModelChangedListener(new IArtifactModelModifiedListener() {
-              @Override
-              public void artifactModelModified() {
-                //
-                CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
-              }
-            });
+            // // TODO!
+            // artifact.addArtifactModelChangedListener(new IArtifactModelModifiedListener() {
+            // @Override
+            // public void artifactModelModified() {
+            // //
+            // CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+            // }
+            // });
 
             result.add(artifact);
           }
