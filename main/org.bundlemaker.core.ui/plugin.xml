@@ -12,13 +12,27 @@
 
 	<!-- the expression definitions -->
 
-	<!-- org.bundlemaker.analysis.ui.bmContentSelected: evaluates
+	<!-- org.bundlemaker.analysis.ui.artifactContentSelected: evaluates
         to true if all  of the selected elements are IArtifact -->
 	<extension point="org.eclipse.core.expressions.definitions">
 		<definition id="org.bundlemaker.analysis.ui.artifactContentSelected">
 			<with variable="selection">
 				<iterate ifEmpty="false" operator="and">
 					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"
+					> </instanceof>
+				</iterate>
+			</with>
+		</definition>
+	</extension>
+
+	<!-- org.bundlemaker.analysis.ui.groupAndModuleContentSelected: evaluates
+        to true if all  of the selected elements are IGRoupAndModuleContainer -->
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected">
+			<with variable="selection">
+				<count value="1" />
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IGroupAndModuleContainer"
 					> </instanceof>
 				</iterate>
 			</with>
@@ -239,11 +253,34 @@
 		<handler commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
 			class="org.bundlemaker.core.ui.handler.CustomizeDependencyTreeHandler"> </handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
-			class="org.bundlemaker.core.ui.handler.CreateNewGroupHandler"> </handler>
+			class="org.bundlemaker.core.ui.handler.CreateNewGroupHandler">
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected" />
+			</enabledWhen>
+		</handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
-			class="org.bundlemaker.core.ui.handler.CreateNewModuleHandler"> </handler>
+			class="org.bundlemaker.core.ui.handler.CreateNewModuleHandler">
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected" />
+			</enabledWhen>
+		</handler>
+		
 		<handler commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
-			class="org.bundlemaker.core.ui.handler.RenameArtifactHandler"> </handler>
+			class="org.bundlemaker.core.ui.handler.RenameArtifactHandler">
+			<enabledWhen>
+				<with variable="selection">
+					<count value="1" />
+					<iterate ifEmpty="false" operator="and">
+						<or>
+							<!-- Currently we only support renaming of groups and modules, so only enable on those types -->
+							<instanceof value="org.bundlemaker.core.analysis.IGroupArtifact" />
+							<instanceof value="org.bundlemaker.core.analysis.IModuleArtifact" />
+						</or>
+					</iterate>
+			</with>
+			
+			</enabledWhen>
+		</handler>
 	</extension>
 
 	<extension point="org.eclipse.ui.bindings">
@@ -320,9 +357,9 @@
 		<command id="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
 			name="Customize Dependency Tree..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
-			name="Create New Group..."/>
+			name="New Group..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
-			name="Create New Module..."/>
+			name="New Module..."/>
 		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."
 		> </command>
 	</extension>
@@ -350,16 +387,28 @@
 				<visibleWhen checkEnabled="true"/>
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
-				label="Create New Group..." style="push">
-				<visibleWhen checkEnabled="true"/>
+				label="New Group..." style="push">
+				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
-				label="Create New Module..." style="push">
-				<visibleWhen checkEnabled="true"/>
+				label="New Module..." style="push">
+				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
 				label="Rename..." style="push">
-				<visibleWhen checkEnabled="true"/>
+				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
 			</command>
 			<!-- The Exporter -->
 			<separator name="org.bundlemaker.core.ui.separator.exporter" visible="true"> </separator>

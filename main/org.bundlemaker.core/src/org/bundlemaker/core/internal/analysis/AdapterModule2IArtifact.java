@@ -68,9 +68,10 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
   @Override
   public void setNameAndVersion(String name, String version) {
 
-    ((AbstractModule<?, ?>) _module).setModuleIdentifier(new ModuleIdentifier(name, version));
+    ModuleIdentifier newModuleIdentifier = new ModuleIdentifier(name, version);
+    ((AbstractModule<?, ?>) _module).setModuleIdentifier(newModuleIdentifier);
 
-    super.setName(name);
+    super.setName(newModuleIdentifier.toString());
   }
 
   /**

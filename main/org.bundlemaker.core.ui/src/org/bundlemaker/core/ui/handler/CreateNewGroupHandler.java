@@ -1,72 +1,83 @@
 package org.bundlemaker.core.ui.handler;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
-import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
+import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.ui.validators.NonEmptyStringValidator;
-import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.handlers.HandlerUtil;
 
-public class CreateNewGroupHandler extends AbstractBundleMakerHandler {
+public class CreateNewGroupHandler extends AbstractCreateGroupOrModuleHandler {
 
-  /**
-   * {@inheritDoc}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.handler.AbstractCreateGroupOrModuleHandler#createArtifact(org.eclipse.swt.widgets.Shell,
+   * org.bundlemaker.core.analysis.IGroupAndModuleContainer)
    */
   @Override
-  protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
-    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-    IBundleMakerArtifact artifact = (IBundleMakerArtifact) structuredSelection.getFirstElement();
+  protected IBundleMakerArtifact createArtifact(Shell shell, IGroupAndModuleContainer groupAndModuleContainer) {
 
-    Shell shell = HandlerUtil.getActiveShell(event);
-    if (!(artifact instanceof IGroupAndModuleContainer)) {
-      MessageDialog.openError(shell, "Unsupported artifact selected",
-          "Please select another Group or the Root artifact to create a new Group.");
-      return;
+    String preset = getUniqueArtifactName(groupAndModuleContainer, "GROUP", null);
+
+    // prompt user for name of new group
+    String newGroupName = getGroupName(shell, groupAndModuleContainer, preset, true);
+
+    if (newGroupName == null) {
+      return null;
     }
 
-    IGroupAndModuleContainer groupAndModuleContainer = (IGroupAndModuleContainer) artifact;
-    Collection<IBundleMakerArtifact> children = groupAndModuleContainer.getChildren();
+    System.out.println("Create new Group: " + newGroupName);
 
-    Set<String> existingArtifactNames = new HashSet<String>();
-    for (IBundleMakerArtifact iBundleMakerArtifact : children) {
-      existingArtifactNames.add(iBundleMakerArtifact.getName());
-    }
+    // we have to use "getOrCreateGroup" to prevent duplicate groups
+    IGroupArtifact newArtifact = groupAndModuleContainer.getOrCreateGroup(new Path(newGroupName));
+
+    System.out.println("New Group Artifact: " + newArtifact);
+
+    //
+    return newArtifact;
+  }
+
+  /**
+   * Prompts the user for the name of a (new) group
+   * 
+   * @param shell
+   * @param parentContainer
+   *          the container the (new) group belongs to
+   * @param preset
+   *          the preset that is displayed to the user
+   * @return the entered name or null if the user has canceled the dialog
+   */
+  public static String getGroupName(Shell shell, IGroupAndModuleContainer parentContainer, String preset,
+      boolean newGroup) {
 
     // Create Validator
+    Set<String> existingArtifactNames = getExistingArtifactNames(parentContainer);
+    existingArtifactNames.remove(preset);
     GroupNameValidator groupNameValidator = new GroupNameValidator(existingArtifactNames);
 
     // JFace Input Dialog
-    InputDialog dlg = new InputDialog(shell, "Create new Group", "Please enter the name of new Group", "",
+    InputDialog dlg = new InputDialog(shell, //
+        (newGroup ? "Create new Group" : "Rename Group"), //
+        (newGroup ? "Please enter the name of new Group" : "Please enter new name for Group " + preset), //
+        preset, //
         groupNameValidator);
 
     if (dlg.open() != Window.OK) {
       // canceled
-      return;
+      return null;
     }
 
-    // we have to use "getOrCreateGroup" to prevent duplicate groups
-    IGroupAndModuleContainer advancedArtifact = ((IGroupAndModuleContainer) artifact);
-    advancedArtifact.getOrCreateGroup(new Path(dlg.getValue()));
+    return dlg.getValue();
 
-    // update navigator
-    // TODO
-    CommonNavigatorUtils.refresh("org.eclipse.ui.navigator.ProjectExplorer",
-        artifact.getType().equals(ArtifactType.Root) ? artifact : artifact.getParent(ArtifactType.Root));
   }
 
-  class GroupNameValidator extends NonEmptyStringValidator {
+  static class GroupNameValidator extends NonEmptyStringValidator {
     private final Set<String> _existingGroupNames;
 
     /**
