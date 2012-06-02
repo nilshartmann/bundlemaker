@@ -116,14 +116,14 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
               File binaryFile = null;
 
               //
-              Artifact currentArtifact = artifactResult.getArtifact();
+              Artifact currentMavenArtifact = artifactResult.getArtifact();
 
-              //
-              if (currentArtifact
+              // TODO
+              if (currentMavenArtifact
                   .getGroupId().startsWith("de.o")) {
 
-                Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
-                    currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
+                Artifact sourceArtifact = new DefaultArtifact(currentMavenArtifact.getGroupId(),
+                    currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(), currentMavenArtifact
                         .getVersion());
                 artifactRequest = new ArtifactRequest();
                 artifactRequest.setArtifact(sourceArtifact);
@@ -138,13 +138,15 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
               }
 
               //
-              binaryFile = currentArtifact.getFile();
+              binaryFile = currentMavenArtifact.getFile();
 
               // TODO!!!
               try {
-                createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
-                    currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
-                        .getGroupId().startsWith("de.o"));
+                createFileBasedContent(currentMavenArtifact.getGroupId() + "." + currentMavenArtifact.getArtifactId(),
+                    currentMavenArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentMavenArtifact
+                        .getGroupId().startsWith("de.o")
+                        && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact.getGroupId()
+                            .contains("standard")));
               } catch (CoreException e) {
                 System.out.println(e.getMessage());
                 throw new RuntimeException(e.getMessage(), e);

@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
@@ -30,11 +29,13 @@ public class ModuleContentReportExporter extends AbstractSingleModuleHtmlReportE
    */
   protected void writeHtmlBody(BufferedWriter bw) throws IOException {
 
-    bw.write("<table>\n");
+    //
+    bw.write("<h1>\n");
+    bw.write(getCurrentModule().getModuleIdentifier().toString() + "\n");
+    bw.write("</h1>\n");
 
-    bw.write("  <tr>\n");
-    bw.write("     <th>Content</th>\n");
-    bw.write("  </tr>\n");
+    //
+    bw.write("<table>\n");
 
     //
     boolean odd = true;
