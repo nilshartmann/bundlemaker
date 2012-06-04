@@ -15,8 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
@@ -32,6 +32,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -52,14 +53,11 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
     try {
       for (IBundleMakerArtifact iArtifact : selectedArtifacts) {
-        if (iArtifact instanceof IBundleMakerArtifact) {
-          IBundleMakerArtifact advancedArtifact = iArtifact;
-          if (modularizedSystem == null) {
-            modularizedSystem = advancedArtifact.getModularizedSystem();
-          } else if (!modularizedSystem.equals(advancedArtifact.getModularizedSystem())) {
-            MessageDialog.openError(new Shell(), "Exporter", "Only one modularized system can be exported at a time");
-            return;
-          }
+        if (modularizedSystem == null) {
+          modularizedSystem = iArtifact.getModularizedSystem();
+        } else if (!modularizedSystem.equals(iArtifact.getModularizedSystem())) {
+          MessageDialog.openError(new Shell(), "Exporter", "Only one modularized system can be exported at a time");
+          return;
         }
       }
 
@@ -67,7 +65,9 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
         return;
       }
 
-      exportAll(modularizedSystem, selectedArtifacts);
+      exportAll(
+          HandlerUtil.getActiveShell(event),
+          modularizedSystem, selectedArtifacts);
 
     } catch (Exception ex) {
       reportError(Activator.PLUGIN_ID, "Error during export: " + ex, ex);
@@ -86,7 +86,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
    *          be long to the given modularizedSystem
    * @throws Exception
    */
-  protected void exportAll(IModularizedSystem modularizedSystem, List<IBundleMakerArtifact> selectedArtifacts)
+  protected void exportAll(Shell shell, IModularizedSystem modularizedSystem,
+      List<IBundleMakerArtifact> selectedArtifacts)
       throws Exception {
 
     File destination = getDestinationDirectory();
@@ -98,11 +99,11 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
     DefaultModuleExporterContext exporterContext = new DefaultModuleExporterContext(
         modularizedSystem.getBundleMakerProject(), destination, modularizedSystem);
 
-    // create the exporter
-    System.out.println("export to " + destination);
+    // create module exporter
+    IModuleExporter moduleExporter = createExporter();
 
     // create the adapter
-    ModularizedSystemExporterAdapter adapter = createModularizedSystemExporterAdapter(selectedArtifacts);
+    ModularizedSystemExporterAdapter adapter = createModularizedSystemExporterAdapter(moduleExporter, selectedArtifacts);
 
     // do the export
     doExport(adapter, modularizedSystem, exporterContext);
@@ -111,9 +112,8 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
   }
 
   protected ModularizedSystemExporterAdapter createModularizedSystemExporterAdapter(
+      IModuleExporter moduleExporter,
       List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
-    // create module exporter
-    IModuleExporter moduleExporter = createExporter();
 
     // create the adapter
     final ModularizedSystemExporterAdapter adapter = new ModularizedSystemExporterAdapter(moduleExporter);
@@ -134,7 +134,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
   }
 
   private void addModules(ListBasedModuleQueryFilter moduleFilter, IBundleMakerArtifact artifact) {
-    if (artifact.getType() == ArtifactType.Module) {
+    if (artifact instanceof IModuleArtifact) {
       moduleFilter.add(artifact);
       return;
     }
@@ -169,12 +169,18 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
       @Override
       public void run(final IProgressMonitor monitor) throws InvocationTargetException {
         try {
-          adapter.export(modularizedSystem, exporterContext, monitor);
+          doExport(monitor, adapter, modularizedSystem, exporterContext);
         } catch (Exception ex) {
           throw new InvocationTargetException(ex);
         }
       }
     });
+  }
+
+  protected void doExport(IProgressMonitor monitor, final ModularizedSystemExporterAdapter adapter,
+      final IModularizedSystem modularizedSystem,
+      final IModuleExporterContext exporterContext) throws Exception {
+    adapter.export(modularizedSystem, exporterContext, monitor);
   }
 
   protected File getDestinationDirectory() {

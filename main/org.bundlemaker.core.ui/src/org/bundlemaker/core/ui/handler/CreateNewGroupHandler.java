@@ -32,12 +32,9 @@ public class CreateNewGroupHandler extends AbstractCreateGroupOrModuleHandler {
       return null;
     }
 
-    System.out.println("Create new Group: " + newGroupName);
-
     // we have to use "getOrCreateGroup" to prevent duplicate groups
-    IGroupArtifact newArtifact = groupAndModuleContainer.getOrCreateGroup(new Path(newGroupName));
-
-    System.out.println("New Group Artifact: " + newArtifact);
+    Path newGroupPath = new Path(newGroupName);
+    IGroupArtifact newArtifact = groupAndModuleContainer.getOrCreateGroup(newGroupPath);
 
     //
     return newArtifact;

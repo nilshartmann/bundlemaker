@@ -11,16 +11,13 @@
 package org.bundlemaker.core.ui.handler;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
-import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
@@ -28,20 +25,23 @@ import org.eclipse.ui.handlers.HandlerUtil;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public abstract class AbstractCreateGroupOrModuleHandler extends AbstractBundleMakerHandler {
+public abstract class AbstractCreateGroupOrModuleHandler extends AbstractArtifactBasedHandler {
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler#execute(org.eclipse.core.commands.ExecutionEvent,
+   * java.util.List)
+   */
   @Override
-  protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
+  protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
 
-    // Extract selected artifact
-    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-
-    if (structuredSelection.isEmpty()) {
+    if (selectedArtifacts.isEmpty()) {
       // nothing selected. Shouldn't happen anyway...
       return;
     }
 
-    IBundleMakerArtifact artifact = (IBundleMakerArtifact) structuredSelection.getFirstElement();
+    IBundleMakerArtifact artifact = selectedArtifacts.get(0);
 
     // Retrieve shell from Event
     Shell shell = HandlerUtil.getActiveShell(event);
@@ -60,11 +60,7 @@ public abstract class AbstractCreateGroupOrModuleHandler extends AbstractBundleM
     // Let subclasses create the actual artifact
     IBundleMakerArtifact newArtifact = createArtifact(shell, groupAndModuleContainer);
 
-    if (newArtifact != null) {
-      // update navigator
-      CommonNavigatorUtils.refresh(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID,
-          (artifact instanceof IRootArtifact) ? artifact : artifact.getParent(IRootArtifact.class));
-    }
+    refreshProjectExplorer(newArtifact);
   }
 
   protected abstract IBundleMakerArtifact createArtifact(Shell shell, IGroupAndModuleContainer groupAndModuleContainer);
