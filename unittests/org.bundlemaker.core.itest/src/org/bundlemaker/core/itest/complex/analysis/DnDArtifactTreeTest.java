@@ -47,9 +47,9 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     assertArtifactHasParent(getJeditModuleArtifact(), testGroup);
 
     // assert dependencies
-    assertDependencyWeight(testGroup, getJdkArtifact(), 1904);
-    assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
-    assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
+    assertDependencyWeight(testGroup, getJreArtifact(), 1904);
+    assertDependencyWeight(getGroup1Artifact(), getJreArtifact(), 0);
+    assertDependencyWeight(getVelocityModuleArtifact(), getJreArtifact(), 4);
   }
 
   /**
@@ -82,9 +82,9 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     assertArtifactHasParent(getJeditModuleArtifact(), GROUPgroup);
 
     // assert dependencies
-    assertDependencyWeight(GROUPgroup, getJdkArtifact(), 1904);
-    assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
-    assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
+    assertDependencyWeight(GROUPgroup, getJreArtifact(), 1904);
+    assertDependencyWeight(getGroup1Artifact(), getJreArtifact(), 0);
+    assertDependencyWeight(getVelocityModuleArtifact(), getJreArtifact(), 4);
 
     // create test group and add the 'jedit' artifact
     IBundleMakerArtifact GROUP2Group = getRootArtifact().getOrCreateGroup(new Path("GROUP2"));
@@ -105,10 +105,10 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     assertArtifactHasParent(getJeditModuleArtifact(), GROUP2Group);
 
     // assert dependencies
-    assertDependencyWeight(GROUP2Group, getJdkArtifact(), 1904);
-    assertDependencyWeight(GROUPgroup, getJdkArtifact(), 0);
-    assertDependencyWeight(getGroup1Artifact(), getJdkArtifact(), 0);
-    assertDependencyWeight(getVelocityModuleArtifact(), getJdkArtifact(), 4);
+    assertDependencyWeight(GROUP2Group, getJreArtifact(), 1904);
+    assertDependencyWeight(GROUPgroup, getJreArtifact(), 0);
+    assertDependencyWeight(getGroup1Artifact(), getJreArtifact(), 0);
+    assertDependencyWeight(getVelocityModuleArtifact(), getJreArtifact(), 4);
   }
 
   @Test
@@ -119,7 +119,7 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     IBundleMakerArtifact GROUP2group = getRootArtifact().getOrCreateGroup(new Path("GROUP2"));
 
     GROUPgroup.addArtifact(getJeditModuleArtifact());
-    GROUP2group.addArtifact(getJdkArtifact());
+    GROUP2group.addArtifact(getJreArtifact());
 
     // TODO
     getRootArtifact().invalidateDependencyCache();
@@ -132,22 +132,22 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     getRootArtifact().invalidateDependencyCache();
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 1908);
-    assertArtifactHasParent(getJdkArtifact(), GROUP2group);
+    assertArtifactHasParent(getJreArtifact(), GROUP2group);
 
-    getRootArtifact().addArtifact(getJdkArtifact());
+    getRootArtifact().addArtifact(getJreArtifact());
 
     // TODO
     getRootArtifact().invalidateDependencyCache();
 
     assertArtifactChildrenCount(GROUP2group, 0);
-    assertArtifactHasParent(getJdkArtifact(), getRootArtifact());
+    assertArtifactHasParent(getJreArtifact(), getRootArtifact());
 
     ArtifactUtils.dumpArtifact(GROUPgroup);
     System.out.println("********************************************");
     ArtifactUtils.dumpArtifact(GROUP2group);
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 0);
-    assertDependencyWeight(GROUPgroup, getJdkArtifact(), 1908);
+    assertDependencyWeight(GROUPgroup, getJreArtifact(), 1908);
   }
 
   @Test
@@ -156,7 +156,7 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     // create test group and add the 'jedit' artifact
     IBundleMakerArtifact testGroup = getRootArtifact().getOrCreateGroup(new Path("testGroup"));
     testGroup.addArtifact(getJeditModuleArtifact());
-    testGroup.addArtifact(getJdkArtifact());
+    testGroup.addArtifact(getJreArtifact());
     testGroup.addArtifact(getVelocityModuleArtifact());
 
     //
@@ -176,12 +176,12 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     // assert parent
     assertArtifactHasParent(testGroup, getRootArtifact());
     assertArtifactHasParent(getJeditModuleArtifact(), testGroup);
-    assertArtifactHasParent(getJdkArtifact(), testGroup);
+    assertArtifactHasParent(getJreArtifact(), testGroup);
     assertArtifactHasParent(getVelocityModuleArtifact(), testGroup);
 
     //
     getRootArtifact().addArtifact(getJeditModuleArtifact());
-    getRootArtifact().addArtifact(getJdkArtifact());
+    getRootArtifact().addArtifact(getJreArtifact());
     getRootArtifact().addArtifact(getVelocityModuleArtifact());
 
     assertEquals(null, jeditModule.getClassification());
@@ -217,8 +217,7 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     testGroup.addArtifact(getJeditModuleArtifact());
 
     // get the 'group2Artifact' artifact...
-    IBundleMakerArtifact group2Artifact = getArtifact(getRootArtifact(), "group1|group2");
-    assertEquals(0, group2Artifact.getChildren().size());
+    assertEquals(0, getGroup2Artifact().getChildren().size());
 
     // assert the result
     InputStream inputstream = getClass().getResourceAsStream("results/DnDArtifactTreeTest_MoveModuleToNewGroup.txt");

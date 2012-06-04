@@ -11,6 +11,7 @@ import org.junit.Test;
 
 /**
  * <p>
+ * In this test we test a java source file that contains no primary type but only a package friendly type.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)

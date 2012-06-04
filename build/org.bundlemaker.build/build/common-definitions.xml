@@ -53,6 +53,7 @@
 		<location dir="${targetplatform-subdir}/target.platform/bundlor-1.1.0.M04" />
 		<location dir="${targetplatform-subdir}/target.platform/draw2d" />
 		<location dir="${targetplatform-subdir}/target.platform/ds" />
+		<location dir="${targetplatform-subdir}/target.platform/test.utils" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 

@@ -62,10 +62,8 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
         getTestProjectName());
 
-    _modularizedSystem.getTransformations().add(
-        new GroupTransformation(new ModuleIdentifier(getTestProjectName(), "1.0.0"), new Path("group1/group2")));
-
-    _modularizedSystem.applyTransformations(null);
+    _modularizedSystem.applyTransformations(null, new GroupTransformation(new ModuleIdentifier(getTestProjectName(),
+        "1.0.0"), new Path("group1/group2")));
 
     //
     IModule module = getModularizedSystem().getModule(getTestProjectName(), "1.0.0");
@@ -91,11 +89,42 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
    *          TODO
    * @param modularizedSystem
    */
+  @Deprecated
   protected void assertNode(IBundleMakerArtifact node, ArtifactType type, String nodeName, String parentName) {
-    Assert.assertEquals(type, node.getType());
+    Assert.assertEquals(node.toString(), type, node.getType());
     Assert.assertEquals(nodeName, node.getName());
     Assert.assertNotNull(node.getParent());
     Assert.assertEquals(parentName, node.getParent().getName());
+  }
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @param node
+   * @param type
+   * @param nodeName
+   * @param parentName
+   */
+  protected void assertNode(IBundleMakerArtifact node, Class<?> type, String nodeName, String parentName) {
+    Assert.assertTrue(String.format("Node '%s' has to be assignable from %s", node, type), type.isAssignableFrom(node.getClass()));
+    Assert.assertEquals(nodeName, node.getName());
+    Assert.assertNotNull(node.getParent());
+    Assert.assertEquals(parentName, node.getParent().getName());
+  }
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @param node
+   * @param type
+   * @param nodeName
+   */
+  protected void assertNode(IBundleMakerArtifact node, Class<?> type, String nodeName) {
+    Assert.assertTrue(String.format("Node '%s' has to be assignable from %s", node, type), type.isAssignableFrom(node.getClass()));
+    Assert.assertEquals(nodeName, node.getName());
+    Assert.assertNotNull(node.getParent());
   }
 
   /**

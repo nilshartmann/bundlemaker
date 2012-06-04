@@ -8,7 +8,7 @@
 <listEntry value="1"/>
 </listAttribute>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="ANT_HOME" value="C:\_work\eclipse\plugins\org.apache.ant_1.7.1.v20100518-1145"/>
+<mapEntry key="ANT_HOME" value="D:\development\bundlemaker\eclipse-SDK-3.7.2-win32-x86_64\plugins\org.apache.ant_1.8.2.v20120109-1030"/>
 <mapEntry key="ant4eclipse.disableJdtResolverCache" value="true"/>
 </mapAttribute>
 <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
