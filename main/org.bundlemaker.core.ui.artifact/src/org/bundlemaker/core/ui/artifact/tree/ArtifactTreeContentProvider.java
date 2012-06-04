@@ -40,13 +40,18 @@ import org.eclipse.jface.viewers.Viewer;
 public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtualRootContentProvider {
 
   /** EMPTY_OBJECT_ARRAY */
-  private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+  private static final Object[]                                 EMPTY_OBJECT_ARRAY                    = new Object[0];
+
+  /**
+   * Listener used to refresh navigator on artifact model changes
+   */
+  private final static RefreshArtifactTreeModelModifiedListener ARTIFACT_TREE_MODEL_MODIFIED_LISTENER = new RefreshArtifactTreeModelModifiedListener();
 
   /** - */
-  private boolean               _showRoot;
+  private boolean                                               _showRoot;
 
   /** needed to show the root in the tree viewer, see [BM-165 Show Root-Node in Dependency Tree / XRef View] */
-  private VirtualRoot           _virtualRoot;
+  private VirtualRoot                                           _virtualRoot;
 
   /**
    * <p>
@@ -108,14 +113,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
             IRootArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
                 .getArtifactModelConfiguration());
 
-            // TODO!
-            artifact.addArtifactModelChangedListener(new IArtifactModelModifiedListener() {
-              @Override
-              public void artifactModelModified() {
-                //
-                CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
-              }
-            });
+            artifact.addArtifactModelChangedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
 
             result.add(artifact);
           }
@@ -478,4 +476,13 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
   }
+
+  static class RefreshArtifactTreeModelModifiedListener implements IArtifactModelModifiedListener {
+    @Override
+    public void artifactModelModified() {
+      //
+      CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+    }
+  }
+
 }
