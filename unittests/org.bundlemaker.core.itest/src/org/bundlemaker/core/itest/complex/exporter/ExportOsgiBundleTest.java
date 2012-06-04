@@ -48,6 +48,9 @@ public class ExportOsgiBundleTest extends AbstractExportOsgiBundleTest {
     //
     List<ImportedPackage> importedPackages = bundleManifest.getImportPackage().getImportedPackages();
     sortImportedPackages(importedPackages);
+    for (ImportedPackage importedPackage : importedPackages) {
+      System.out.println(" - " + importedPackage.getPackageName());
+    }
     Assert.assertEquals(14, importedPackages.size());
 
     //

@@ -29,7 +29,7 @@ public class ArtifactTreeVisitorTest extends AbstractJeditArtifactTest {
 
     final int[] resultCount = new int[7];
 
-    getRootArtifact().accept(new IArtifactTreeVisitor.Adapter() {
+    getJeditModuleArtifact().accept(new IArtifactTreeVisitor.Adapter() {
 
       @Override
       public boolean visit(IRootArtifact rootArtifact) {
@@ -69,11 +69,11 @@ public class ArtifactTreeVisitorTest extends AbstractJeditArtifactTest {
       }
     });
 
-    Assert.assertEquals(1, resultCount[0]);
-    Assert.assertEquals(2, resultCount[1]);
-    Assert.assertEquals(4, resultCount[2]);
-    Assert.assertEquals(879, resultCount[3]);
-    Assert.assertEquals(1547, resultCount[4]);
-    Assert.assertEquals(17483, resultCount[5]);
+    Assert.assertEquals(0, resultCount[0]);
+    Assert.assertEquals(0, resultCount[1]);
+    Assert.assertEquals(1, resultCount[2]);
+    Assert.assertEquals(69, resultCount[3]);
+    Assert.assertEquals(1302, resultCount[4]);
+    Assert.assertEquals(975, resultCount[5]);
   }
 }

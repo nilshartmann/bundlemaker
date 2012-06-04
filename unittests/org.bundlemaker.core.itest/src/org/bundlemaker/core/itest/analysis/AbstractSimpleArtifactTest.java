@@ -1,12 +1,18 @@
 package org.bundlemaker.core.itest.analysis;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -35,6 +41,44 @@ import org.junit.Test;
  */
 public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSystemTest {
 
+  /** - */
+  private IRootArtifact   _rootArtifact;
+
+  /** - */
+  private IModuleArtifact _module_Artifact;
+
+  /** - */
+  private IGroupArtifact  _group2_Artifact;
+
+  /** - */
+  private IGroupArtifact  _group1_Artifact;
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void before() throws CoreException {
+    super.before();
+
+    _rootArtifact = createArtifactModel();
+    _module_Artifact = assertSimpleArtifactModule(_rootArtifact);
+    _group1_Artifact = assertGroupArtifact(_rootArtifact, "group1");
+    _group2_Artifact = assertGroupArtifact(_rootArtifact, "group1/group2");
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void after() throws CoreException {
+    super.after();
+
+    _rootArtifact = null;
+    _module_Artifact = null;
+    _group1_Artifact = null;
+    _group2_Artifact = null;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -53,6 +97,14 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
 
   /**
    * <p>
+   * </p>
+   * 
+   * @param resources
+   */
+  public abstract void assertResourceArtifacts(List<IBundleMakerArtifact> resources);
+
+  /**
+   * <p>
    * This test removes and adds a module artifact from/to the group artifact.
    * </p>
    * 
@@ -63,30 +115,30 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test
   public void testGroup_RemoveModuleAndAddToSameGroup() throws CoreException {
 
-    // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), getConfiguration()).getRoot();
-    Assert.assertNotNull(rootArtifact);
-
-    ArtifactUtils.dumpArtifact(rootArtifact);
-
-    // get the module artifact
-    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
-    Assert.assertNotNull(moduleArtifact);
-
-    IBundleMakerArtifact groupArtifact = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(groupArtifact);
-
     // TEST 1: REMOVE
-    groupArtifact.removeArtifact(moduleArtifact);
+    _group2_Artifact.removeArtifact(_module_Artifact);
     Assert.assertNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
 
     // TEST 2: RE-ADD
-    groupArtifact.addArtifact(moduleArtifact);
+    _group2_Artifact.addArtifact(_module_Artifact);
     Assert.assertNotNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
     Assert.assertEquals(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0").getClassification(),
         new Path("group1/group2"));
   }
+  
+//  @Test
+//  public void testGroup_RemoveModuleFromRootAndAddToSameGroup() throws CoreException {
+//
+//    // TEST 1: REMOVE
+//    _rootArtifact.removeArtifact(_module_Artifact);
+//    Assert.assertNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
+//
+//    // TEST 2: RE-ADD
+//    _group2_Artifact.addArtifact(_module_Artifact);
+//    Assert.assertNotNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
+//    Assert.assertEquals(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0").getClassification(),
+//        new Path("group1/group2"));
+//  }
 
   /**
    * <p>
@@ -97,53 +149,34 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test
   public void testGroup_RemoveModuleAndAddToExistingOtherGroup() throws CoreException {
 
-    // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), getConfiguration()).getRoot();
-    Assert.assertNotNull(rootArtifact);
-
-    // get the module artifact
-    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
-    Assert.assertNotNull(moduleArtifact);
-
-    IBundleMakerArtifact group1_Artifact = rootArtifact.getChild("group1");
-    Assert.assertNotNull(group1_Artifact);
-
-    IBundleMakerArtifact group2_Artifact = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(group2_Artifact);
-
-    // TEST 3: REMOVE FROM GROUP_2 AND ADD TO GROUP_1
-    group2_Artifact.removeArtifact(moduleArtifact);
+    // REMOVE FROM GROUP_2 AND ADD TO GROUP_1
+    _group2_Artifact.removeArtifact(_module_Artifact);
     Assert.assertNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
 
-    group1_Artifact.addArtifact(moduleArtifact);
+    _group1_Artifact.addArtifact(_module_Artifact);
     Assert.assertNotNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
     Assert.assertEquals(new Path("group1"), getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0")
         .getClassification());
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
   @Test
   public void testGroup_RemoveModuleAndAddToNewGroup() throws CoreException {
 
-    // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(getConfiguration());
-    Assert.assertNotNull(rootArtifact);
-
-    // get the module artifact
-    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
-    Assert.assertNotNull(moduleArtifact);
-
-    IBundleMakerArtifact group2_Artifact = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(group2_Artifact);
-
-    IBundleMakerArtifact groupNew_Artifact = rootArtifact.getOrCreateGroup(new Path("groupNew"));
+    //
+    IBundleMakerArtifact groupNew_Artifact = _rootArtifact.getOrCreateGroup(new Path("groupNew"));
     Assert.assertNotNull(groupNew_Artifact);
 
-    // TEST 3: REMOVE FROM GROUP_1 AND ADD TO GROUP_2
-    group2_Artifact.removeArtifact(moduleArtifact);
+    // TEST: REMOVE FROM GROUP_1 AND ADD TO GROUP_2
+    _group2_Artifact.removeArtifact(_module_Artifact);
     Assert.assertNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
 
-    groupNew_Artifact.addArtifact(moduleArtifact);
+    groupNew_Artifact.addArtifact(_module_Artifact);
     Assert.assertNotNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
     Assert.assertEquals(new Path("groupNew"), getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0")
         .getClassification());
@@ -158,23 +191,11 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test
   public void testGroup_RemoveGroupAndAddToSameGroup() throws CoreException {
 
-    // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), getConfiguration()).getRoot();
-    Assert.assertNotNull(rootArtifact);
-
-    // get group2 group
-    IBundleMakerArtifact group2Group = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(group2Group);
-
-    IBundleMakerArtifact group1Group = rootArtifact.getChild("group1");
-    Assert.assertNotNull(group2Group);
-
     // TEST: REMOVE AND ADD
-    group1Group.removeArtifact(group2Group);
+    _group1_Artifact.removeArtifact(_group2_Artifact);
     Assert.assertNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
 
-    group1Group.addArtifact(group2Group);
+    _group1_Artifact.addArtifact(_group2_Artifact);
     Assert.assertNotNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
     Assert.assertEquals(new Path("group1/group2"), getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0")
         .getClassification());
@@ -189,26 +210,13 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test
   public void testGroup_RemoveGroupAndAddToExistingOtherGroup() throws CoreException {
 
-    // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), getConfiguration()).getRoot();
-    Assert.assertNotNull(rootArtifact);
-
-    // get group2 group
-    IBundleMakerArtifact group2Group = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(group2Group);
-
-    // get group1 group
-    IBundleMakerArtifact group1Group = rootArtifact.getChild("group1");
-    Assert.assertNotNull(group2Group);
-
     // TEST: remove from group1
-    group1Group.removeArtifact(group2Group);
+    _group1_Artifact.removeArtifact(_group2_Artifact);
     Assert.assertNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
 
     // TEST: add to root
-    rootArtifact.addArtifact(group2Group);
-    ArtifactUtils.dumpArtifact(rootArtifact);
+    _rootArtifact.addArtifact(_group2_Artifact);
+    ArtifactUtils.dumpArtifact(_rootArtifact);
     Assert.assertNotNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
     Assert.assertEquals(new Path("group2"), getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0")
         .getClassification());
@@ -223,27 +231,15 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test
   public void testGroup_RemoveGroupAndAddToNewGroup() throws CoreException {
 
-    // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(getConfiguration());
-    Assert.assertNotNull(rootArtifact);
-
-    // get group2 group
-    IBundleMakerArtifact group2Group = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(group2Group);
-
-    // get group1 group
-    IBundleMakerArtifact group1Group = rootArtifact.getChild("group1");
-    Assert.assertNotNull(group2Group);
-
     // get newGroup group
-    IBundleMakerArtifact newGroupGroup = rootArtifact.getOrCreateGroup(new Path("newGroup"));
+    IBundleMakerArtifact newGroupGroup = _rootArtifact.getOrCreateGroup(new Path("newGroup"));
     Assert.assertNotNull(newGroupGroup);
 
     // TEST 3: REMOVE AND ADD TO PARENT
-    group1Group.removeArtifact(group2Group);
+    _group1_Artifact.removeArtifact(_group2_Artifact);
     Assert.assertNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
 
-    newGroupGroup.addArtifact(group2Group);
+    newGroupGroup.addArtifact(_group2_Artifact);
     Assert.assertNotNull(getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0"));
     Assert.assertEquals(new Path("newGroup/group2"),
         getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0").getClassification());
@@ -258,21 +254,9 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test
   public void testGroup_CreateDuplicateGroup_getOrCreateGroup() throws CoreException {
 
-    // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(getConfiguration());
-    Assert.assertNotNull(rootArtifact);
-
-    // get group2 group
-    IBundleMakerArtifact group2Group = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(group2Group);
-
     //
-    IGroupArtifact group1_Artifact = (IGroupArtifact) rootArtifact.getChild("group1");
-    Assert.assertNotNull(group1_Artifact);
-
-    //
-    IGroupArtifact group2_2_Artifact = group1_Artifact.getOrCreateGroup(new Path("group2"));
-    Assert.assertSame(group2Group, group2_2_Artifact);
+    IGroupArtifact group2_2_Artifact = _group1_Artifact.getOrCreateGroup(new Path("group2"));
+    Assert.assertSame(_group2_Artifact, group2_2_Artifact);
   }
 
   /**
@@ -284,19 +268,11 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test(expected = RuntimeException.class)
   public void testGroup_CreateDuplicateGroup_createArtifactContainer() throws CoreException {
 
-    // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(getConfiguration());
-    Assert.assertNotNull(rootArtifact);
+    //
+    IGroupArtifact group1_no2_Artifact = _group1_Artifact.getOrCreateGroup(new Path("group1"));
 
     //
-    IGroupArtifact group1_Artifact = (IGroupArtifact) rootArtifact.getChild("group1");
-    Assert.assertNotNull(group1_Artifact);
-
-    //
-    IGroupArtifact group1_no2_Artifact = group1_Artifact.getOrCreateGroup(new Path("group1"));
-    
-    //
-    rootArtifact.addArtifact(group1_no2_Artifact);
+    _rootArtifact.addArtifact(group1_no2_Artifact);
   }
 
   /**
@@ -308,30 +284,14 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   @Test
   public void testGroup_ModifyModuleClassification() throws CoreException {
 
-    // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(getConfiguration());
-    Assert.assertNotNull(rootArtifact);
-
-    // get the module artifact
-    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
-    Assert.assertNotNull(moduleArtifact);
-    moduleArtifact = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(moduleArtifact);
-
     //
     IModifiableResourceModule resourceModule = getModularizedSystem().getModifiableResourceModule(
         new ModuleIdentifier("SimpleArtifactModelTest", "1.0.0"));
     resourceModule.setClassification(new Path("hurz/purz"));
 
     // get the module artifact
-    moduleArtifact = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
-    Assert.assertNull(moduleArtifact);
-    moduleArtifact = rootArtifact.getChild("group1|group2");
-    Assert.assertNotNull(moduleArtifact);
-
-    // get the module artifact
-    moduleArtifact = rootArtifact.getChild("hurz|purz|SimpleArtifactModelTest_1.0.0");
-    Assert.assertNotNull(moduleArtifact);
+    Assert.assertEquals("purz", _module_Artifact.getParent().getName());
+    Assert.assertEquals("hurz", _module_Artifact.getParent().getParent().getName());
   }
 
   /**
@@ -344,33 +304,22 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
   public void testDependencies() throws Exception {
 
     //
-    IModule module = getModularizedSystem().getModule("jdk16", "jdk16");
-    // Assert.assertEquals(18247, module.getContainedTypes().size());
-    Assert.assertEquals(16217, module.getContainedTypes().size());
-    Assert.assertNotNull(module.getType("javax.activation.DataHandler"));
+    IModule executionEnvironmentModule = getModularizedSystem().getExecutionEnvironment();
+    Assert.assertNotNull(executionEnvironmentModule.getType("javax.activation.DataHandler"));
 
     //
     Assert.assertNotNull(getModularizedSystem().getType("javax.activation.DataHandler"));
     IModule typeContainingModule = getModularizedSystem().getTypeContainingModule("javax.activation.DataHandler");
     Assert.assertNotNull(typeContainingModule);
-    Assert.assertSame(typeContainingModule, module);
-
-    // transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), getConfiguration()).getRoot();
-    Assert.assertNotNull(rootArtifact);
-
-    IBundleMakerArtifact module1 = rootArtifact.getChild("group1|group2|SimpleArtifactModelTest_1.0.0");
-    Assert.assertNotNull(module1);
-
-    // get group1 group
-    IBundleMakerArtifact jreModule = rootArtifact.getChild("jdk16_jdk16");
-    Assert.assertNotNull(jreModule);
+    Assert.assertSame(typeContainingModule, executionEnvironmentModule);
 
     //
-    IDependency dependency = module1.getDependency(jreModule);
+    IBundleMakerArtifact jreModule = _rootArtifact.getModuleArtifact(executionEnvironmentModule);
+
+    //
+    IDependency dependency = _module_Artifact.getDependency(jreModule);
     Assert.assertNotNull(dependency);
-    Assert.assertEquals(module1, dependency.getFrom());
+    Assert.assertEquals(_module_Artifact, dependency.getFrom());
     Assert.assertEquals(jreModule, dependency.getTo());
     Assert.assertEquals(dependency.getWeight(), 1);
 
@@ -387,4 +336,86 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     Assert.assertEquals(dependency.getWeight(), 1);
   }
 
+  // -------------------------------------------------------------------------------------------------//
+  // Helper methods
+  // -------------------------------------------------------------------------------------------------//
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param rootArtifact
+   * @return
+   */
+  protected IModuleArtifact assertSimpleArtifactModule(IBundleMakerArtifact rootArtifact) {
+
+    // get the module
+    IModuleArtifact moduleArtifact = ArtifactVisitorUtils.findModuleArtifact(rootArtifact, "SimpleArtifactModelTest",
+        "1.0.0");
+
+    // assert
+    assertNode(moduleArtifact, IModuleArtifact.class, "SimpleArtifactModelTest_1.0.0");
+    assertNode(moduleArtifact.getParent(), IGroupArtifact.class, "group2");
+    assertNode(moduleArtifact.getParent().getParent(), IGroupArtifact.class, "group1");
+
+    return moduleArtifact;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param moduleArtifact
+   * @return
+   */
+  protected IPackageArtifact assertTestPackage(IModuleArtifact moduleArtifact) {
+
+    IPackageArtifact packageArtifact = ArtifactVisitorUtils.findPackageArtifact(moduleArtifact, "de.test");
+    List<IBundleMakerArtifact> resources = new LinkedList<IBundleMakerArtifact>(packageArtifact.getChildren());
+    Collections.sort(resources, new Comparator<IBundleMakerArtifact>() {
+      @Override
+      public int compare(IBundleMakerArtifact o1, IBundleMakerArtifact o2) {
+        return o1.getName().compareTo(o2.getName());
+      }
+    });
+
+    assertResourceArtifacts(resources);
+
+    return packageArtifact;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param rootArtifact
+   * @param qualifiedName
+   * @return
+   */
+  protected IGroupArtifact assertGroupArtifact(IBundleMakerArtifact rootArtifact, String qualifiedName) {
+    IGroupArtifact result = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
+    Assert.assertNotNull(result);
+    return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected IRootArtifact createArtifactModel() {
+
+    IRootArtifact rootArtifact = ModelTransformerCache.getArtifactModel(
+        getModularizedSystem(), getConfiguration()).getRoot();
+
+    Assert.assertNotNull(rootArtifact);
+    Assert.assertEquals(2, rootArtifact.getChildren().size());
+
+    // assert JRE
+    Assert.assertNotNull(ArtifactVisitorUtils.findJreModuleArtifact(rootArtifact));
+
+    // return the result
+    return rootArtifact;
+  }
 }

@@ -114,7 +114,7 @@ public class FileDiffUtil {
     StringBuilder html = new StringBuilder();
 
     for (Diff aDiff : diffs) {
-
+      
       // prepare the text for HTML
       String text = aDiff.text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\n", "<br>\n");
 
@@ -152,7 +152,10 @@ public class FileDiffUtil {
         inChange = false;
       }
     }
-
+    
+    System.out.println("*****************************************************");    
+System.out.println(html.toString());
+System.out.println(builder.toString());
     return builder.toString();
   }
 
