@@ -76,14 +76,19 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
 
     //
     _group1Artifact = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(_rootArtifact, "group1");
-    _group1Artifact = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(_rootArtifact, "group1/group2");
-    _group1Artifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "jedit", "1.0.0");
-
-    //
+    _group2Artifact = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(_rootArtifact, "group1/group2");
+    _jeditModuleArtifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "jedit", "1.0.0");
     _velocityModuleArtifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "velocity", "1.5");
-
-    //
     _jreArtifact = ArtifactVisitorUtils.findJreModuleArtifact(_rootArtifact);
+    
+    //
+    Assert.assertNotNull(_rootArtifact);
+    Assert.assertNotNull(_jeditModuleArtifact);
+    Assert.assertNotNull(_velocityModuleArtifact);
+    Assert.assertNotNull(_jreArtifact);
+    Assert.assertNotNull(_group1Artifact);
+    Assert.assertNotNull(_group2Artifact);
+
 
     //
     if (_rootArtifact.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {

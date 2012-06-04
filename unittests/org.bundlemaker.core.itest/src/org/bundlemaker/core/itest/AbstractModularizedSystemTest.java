@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
@@ -57,7 +58,13 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     getBundleMakerProject().parseAndOpen(new ProgressMonitor());
 
     // assert no parse errors
-    Assert.assertEquals(0, getBundleMakerProject().getProblems().size());
+    if (getBundleMakerProject().getProblems().size() > 0) {
+      //
+      for (IProblem problem : getBundleMakerProject().getProblems()) {
+        System.out.println(problem);
+      }
+      Assert.fail();
+    }
 
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
         getTestProjectName());
