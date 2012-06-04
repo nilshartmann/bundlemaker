@@ -93,7 +93,9 @@ public abstract class AbstractBundleMakerProjectTest {
   public void after() throws CoreException {
 
     // dispose the project
-    _bundleMakerProject.dispose();
+    if (_bundleMakerProject != null) {
+      _bundleMakerProject.dispose();
+    }
 
     // delete the project
     EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
