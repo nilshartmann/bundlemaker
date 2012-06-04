@@ -15,8 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
@@ -52,14 +52,11 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
     try {
       for (IBundleMakerArtifact iArtifact : selectedArtifacts) {
-        if (iArtifact instanceof IBundleMakerArtifact) {
-          IBundleMakerArtifact advancedArtifact = iArtifact;
-          if (modularizedSystem == null) {
-            modularizedSystem = advancedArtifact.getModularizedSystem();
-          } else if (!modularizedSystem.equals(advancedArtifact.getModularizedSystem())) {
-            MessageDialog.openError(new Shell(), "Exporter", "Only one modularized system can be exported at a time");
-            return;
-          }
+        if (modularizedSystem == null) {
+          modularizedSystem = iArtifact.getModularizedSystem();
+        } else if (!modularizedSystem.equals(iArtifact.getModularizedSystem())) {
+          MessageDialog.openError(new Shell(), "Exporter", "Only one modularized system can be exported at a time");
+          return;
         }
       }
 
@@ -134,7 +131,7 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
   }
 
   private void addModules(ListBasedModuleQueryFilter moduleFilter, IBundleMakerArtifact artifact) {
-    if (artifact.getType() == ArtifactType.Module) {
+    if (artifact instanceof IModuleArtifact) {
       moduleFilter.add(artifact);
       return;
     }
