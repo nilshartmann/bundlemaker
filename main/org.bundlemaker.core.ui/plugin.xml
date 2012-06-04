@@ -365,7 +365,7 @@
 		<command id="org.bundlemaker.core.ui.commands.ReportExportHandler"
 			name="Export Simple Report"/>
 		<command id="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
-			name="Export Binary bundles"/>
+			name="Export binary bundles..."/>
 		<command id="org.bundlemaker.core.ui.commands.TransformHandler" name="Transform..."/>
 		<command id="org.bundlemaker.core.ui.commands.RunTransformationScript"
 			name="Execute transformation..."/>
