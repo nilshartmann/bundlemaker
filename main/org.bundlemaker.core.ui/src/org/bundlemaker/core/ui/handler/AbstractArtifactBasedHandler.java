@@ -13,6 +13,8 @@ package org.bundlemaker.core.ui.handler;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
@@ -45,6 +47,19 @@ public abstract class AbstractArtifactBasedHandler extends AbstractBundleMakerHa
    *          The {@link IArtifact} objects that are selected in the tree. Never null.
    */
   protected abstract void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception;
+
+  /**
+   * Refresh the Project Explorer that displays the bundlemaker artifacts.
+   * 
+   * @param artifact
+   *          the artifact or null. If null, nothing is refreshed
+   */
+  protected void refreshProjectExplorer(IBundleMakerArtifact artifact) {
+    if (artifact != null) {
+      CommonNavigatorUtils.refresh(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID,
+          (artifact instanceof IRootArtifact) ? artifact : artifact.getParent(IRootArtifact.class));
+    }
+  }
 
   @Override
   protected void reportError(String pluginId, String message, Throwable ex) {
