@@ -2,11 +2,9 @@ package org.bundlemaker.core.ui.handler;
 
 import java.util.Set;
 
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.validators.NonEmptyStringValidator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -34,17 +32,9 @@ public class CreateNewGroupHandler extends AbstractCreateGroupOrModuleHandler {
       return null;
     }
 
-    System.out.println("Create new Group: " + newGroupName);
-
     // we have to use "getOrCreateGroup" to prevent duplicate groups
     Path newGroupPath = new Path(newGroupName);
     IGroupArtifact newArtifact = groupAndModuleContainer.getOrCreateGroup(newGroupPath);
-
-    System.out.println("New Group Artifact: " + newArtifact);
-
-    System.out.println(" ======== NACH CREATEGROUP: ======================== ");
-    ArtifactUtils.dumpArtifact(newArtifact.getParent(IRootArtifact.class));
-    System.out.println(" ======== ENDE CREATEGROUP ======================== ");
 
     //
     return newArtifact;
