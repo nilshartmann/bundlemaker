@@ -113,7 +113,8 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
             IRootArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
                 .getArtifactModelConfiguration());
 
-            artifact.addArtifactModelChangedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
+            // // TODO!
+            // artifact.addArtifactModelChangedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
 
             result.add(artifact);
           }
