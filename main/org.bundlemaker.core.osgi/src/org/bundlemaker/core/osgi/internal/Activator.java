@@ -19,6 +19,8 @@ import org.osgi.util.tracker.ServiceTracker;
 
 @SuppressWarnings("restriction")
 public class Activator implements BundleActivator {
+  
+  public final static String BUNDLE_ID = "org.bundlemaker.core.osgi";
 
   /** - */
   private static BundleContext  _context;
