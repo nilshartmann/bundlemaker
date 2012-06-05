@@ -166,20 +166,7 @@
 				<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected"></reference>
 			</enabledWhen>
 		</handler>
-		<handler class="org.bundlemaker.core.ui.handler.DemoHandler"
-			commandId="org.bundlemaker.core.ui.commands.Demo">
-			<activeWhen>
-				<reference
-					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-				> </reference>
-			</activeWhen>
-			<enabledWhen>
-				<reference
-					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-				> </reference>
-			</enabledWhen>
-		</handler>
-		<handler class="org.bundlemaker.core.ui.handler.PdePluginProjectExportHandler"
+		<handler class="org.bundlemaker.core.ui.handler.exporter.PdePluginProjectExportHandler"
 			commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler">
 			<activeWhen>
 				<reference
@@ -192,7 +179,7 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
-		<handler class="org.bundlemaker.core.ui.handler.ReportExportHandler"
+		<handler class="org.bundlemaker.core.ui.handler.exporter.ReportExportHandler"
 			commandId="org.bundlemaker.core.ui.commands.ReportExportHandler">
 			<activeWhen>
 				<reference
@@ -205,7 +192,7 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
-		<handler class="org.bundlemaker.core.ui.handler.BinaryBundleExportHandler"
+		<handler class="org.bundlemaker.core.ui.handler.exporter.BinaryBundleExportHandler"
 			commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler">
 			<activeWhen>
 				<reference
@@ -277,8 +264,7 @@
 							<instanceof value="org.bundlemaker.core.analysis.IModuleArtifact" />
 						</or>
 					</iterate>
-			</with>
-			
+				</with>
 			</enabledWhen>
 		</handler>
 
@@ -294,6 +280,19 @@
 					</iterate>
 			</with>
 			
+			</enabledWhen>
+		</handler>
+		<handler class="org.bundlemaker.core.ui.handler.RefreshArtifactTreeHandler"
+			commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand">
+			<activeWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
 			</enabledWhen>
 		</handler>
 	</extension>
@@ -379,6 +378,8 @@
 		> </command>
 		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"
 		> </command>
+		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"
+		> </command>
 	</extension>
 
 	<!-- ======================================== -->
@@ -388,21 +389,20 @@
 
 		<menuContribution
 			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
-			<separator name="org.bundlemaker.core.ui.separator.transformer" visible="true"/>
+			<!-- Separator used as target for editor plug-ins -->
+			<separator name="org.bundlemaker.core.ui.editor.separator" visible="true"> </separator>
+			
+			<!-- separator for project-related actions (open, close, ...) -->
+			<separator name="org.bundlemaker.core.ui.project.separator" visible="true"> </separator>
 			
 			<command
          commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
          icon="icons/etools/bm-parse.png"
          style="push">
 			</command>
-			<command commandId="org.bundlemaker.core.ui.commands.TransformHandler"
-				style="push">
-				<visibleWhen checkEnabled="true"/>
-			</command>
-			<command commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
-				icon="icons/bundlemaker-icon-small.png" style="push">
-				<visibleWhen checkEnabled="true"/>
-			</command>
+
+			<!-- Separator for artifact-model-modifying operations -->
+			<separator name="org.bundlemaker.core.ui.artifacts.separator" visible="true"> </separator>
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
 				label="New Group..." style="push">
 				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
@@ -435,7 +435,15 @@
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 				</visibleWhen>
 			</command>
-			<!-- The Exporter -->
+			<command commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand"
+				label="Refresh" icon="icons/refresh.gif" style="push">
+				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>			
+			<!-- Exporter section -->
 			<separator name="org.bundlemaker.core.ui.separator.exporter" visible="true"> </separator>
 			<command
 				commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"

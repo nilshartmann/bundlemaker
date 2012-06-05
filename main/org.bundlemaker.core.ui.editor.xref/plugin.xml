@@ -20,14 +20,13 @@
    </extension>
 
    <extension point="org.eclipse.ui.commands">
-      <command id="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand" name="Open XRef view"/>
+      <command id="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand" name="Open Cross Referencer"/>
    </extension>
 
    <!-- XRef Submenu -->
    <extension point="org.eclipse.ui.menus">
       <menuContribution
-         locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
-         <separator name="org.bundlemaker.core.ui.editor.xref.separator" visible="true"> </separator>
+         locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
          <command commandId="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand" style="push">
             <visibleWhen checkEnabled="true"/>
          </command>
