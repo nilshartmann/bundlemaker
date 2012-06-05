@@ -264,8 +264,7 @@
 							<instanceof value="org.bundlemaker.core.analysis.IModuleArtifact" />
 						</or>
 					</iterate>
-			</with>
-			
+				</with>
 			</enabledWhen>
 		</handler>
 
@@ -281,6 +280,19 @@
 					</iterate>
 			</with>
 			
+			</enabledWhen>
+		</handler>
+		<handler class="org.bundlemaker.core.ui.handler.RefreshArtifactTreeHandler"
+			commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand">
+			<activeWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
 			</enabledWhen>
 		</handler>
 	</extension>
@@ -366,6 +378,8 @@
 		> </command>
 		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"
 		> </command>
+		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"
+		> </command>
 	</extension>
 
 	<!-- ======================================== -->
@@ -421,8 +435,15 @@
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 				</visibleWhen>
 			</command>
-			
-			<!-- The Exporter -->
+			<command commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand"
+				label="Refresh" icon="icons/refresh.gif" style="push">
+				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>			
+			<!-- Exporter section -->
 			<separator name="org.bundlemaker.core.ui.separator.exporter" visible="true"> </separator>
 			<command
 				commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
