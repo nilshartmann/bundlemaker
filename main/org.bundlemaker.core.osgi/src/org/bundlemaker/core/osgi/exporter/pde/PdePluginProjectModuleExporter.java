@@ -178,9 +178,8 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
           FileUtils.copy(new ByteArrayInputStream(resourceStandin.getContent()), new FileOutputStream(targetFile),
               new byte[1024]);
         } catch (Exception e) {
-          // TODO
-          e.printStackTrace();
-          throw new CoreException(new Status(IStatus.ERROR, "asd", "asd"));
+          throw new CoreException(new Status(IStatus.ERROR, Activator.BUNDLE_ID, "Unable to copy file "
+               + resourceStandin.getRoot() + "to " + targetFile +": " + e, e));
         }
       }
     }
