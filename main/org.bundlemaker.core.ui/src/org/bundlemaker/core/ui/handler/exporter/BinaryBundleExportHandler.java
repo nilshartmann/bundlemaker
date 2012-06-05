@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.handler;
+package org.bundlemaker.core.ui.handler.exporter;
 
 import java.io.File;
 import java.util.List;
@@ -21,7 +21,6 @@ import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
 import org.bundlemaker.core.osgi.manifest.CustomManifestCreator;
-import org.bundlemaker.core.ui.handler.exporter.BinaryBundleExporterConfigurationDialog;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.window.Window;

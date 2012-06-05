@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.handler;
+package org.bundlemaker.core.ui.handler.exporter;
 
 import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
