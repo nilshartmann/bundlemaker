@@ -23,9 +23,21 @@ public class PdePluginProjectExportHandler extends AbstractExportHandler {
   protected IModuleExporter createExporter() throws Exception {
     // Create the exporter instance
     PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
-    pdeExporter.setUseClassifcationForExportDestination(false);
+    pdeExporter.setUseClassifcationForExportDestination(true);
 
     return pdeExporter;
 
   }
+
+  // /*
+  // * (non-Javadoc)
+  // *
+  // * @see org.bundlemaker.core.ui.handler.exporter.AbstractExportHandler#getDestinationDirectory()
+  // */
+  // @Override
+  // protected File getDestinationDirectory() {
+  // // TODO Auto-generated method stub
+  // return new File("/Users/nils/develop/bundlemaker/export-target");
+  // }
+
 }
