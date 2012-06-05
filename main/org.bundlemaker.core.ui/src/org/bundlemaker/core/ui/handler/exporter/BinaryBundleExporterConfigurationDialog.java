@@ -131,7 +131,7 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
 
     _externalFolderCombo = createDropDownCombo(inner);
     _externalFolder = "";
-    // fileCombo.setItems(PsfFilenameStore.getInstance().getHistory());
+    _externalFolderCombo.setItems(BinaryBundleConfigurationStore.getInstance().getHistory());
     _externalFolderCombo.setText(_externalFolder);
     _externalFolderCombo.addListener(SWT.Modify, new Listener() {
       @Override
@@ -269,6 +269,8 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
 
   public File getDestination() {
     if (isSaveToFileSystem()) {
+      // remember last selection
+      BinaryBundleConfigurationStore.getInstance().remember(_externalFolder);
       return new File(_externalFolder);
     }
 
@@ -282,6 +284,34 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
 
   public boolean isSaveToFileSystem() {
     return _saveToFileSystem;
+  }
+
+  static class BinaryBundleConfigurationStore extends ConfigurationStore {
+
+    private static BinaryBundleConfigurationStore instance;
+
+    public static BinaryBundleConfigurationStore getInstance() {
+      if (instance == null) {
+        instance = new BinaryBundleConfigurationStore();
+      }
+      return instance;
+    }
+
+    @Override
+    protected String getPreviousTag() {
+      return "previousFolders";
+    }
+
+    @Override
+    protected String getListTag() {
+      return "folders";
+    }
+
+    @Override
+    protected String getStoreSection() {
+      return "BinaryBundleExporterConfigurationDialog";
+    }
+
   }
 
 }
