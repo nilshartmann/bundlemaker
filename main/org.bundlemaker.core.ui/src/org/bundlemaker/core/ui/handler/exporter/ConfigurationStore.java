@@ -25,8 +25,6 @@ public abstract class ConfigurationStore {
   // When the list overflows, items drop off the end.
   private static final int       HISTORY_LENGTH = 10;
 
-  private static final String    STORE_SECTION  = "ImportPSFDialog"; //$NON-NLS-1$
-
   private static IDialogSettings _section;
 
   protected abstract String getPreviousTag();
