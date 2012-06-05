@@ -28,8 +28,7 @@
       <!-- DSM Submenu -->
       <extension point="org.eclipse.ui.menus">
             <menuContribution
-                  locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
-                  <separator name="org.bundlemaker.core.ui.editor.dsm.separator" visible="true"> </separator>
+                  locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
                   <command
                         commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand"
                         style="push">
