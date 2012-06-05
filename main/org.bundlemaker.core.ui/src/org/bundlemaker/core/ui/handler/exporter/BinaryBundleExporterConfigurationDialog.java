@@ -239,12 +239,6 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
       if (_externalFolder == null || _externalFolder.isEmpty()) {
         setErrorMessage("Select output folder");
         return;
-      } else {
-        File f = new File(_externalFolder);
-        if (!f.isDirectory()) {
-          setErrorMessage("Please select an existing folder");
-          return;
-        }
       }
     }
 
@@ -252,11 +246,6 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
       if (_workspaceFolder == null) {
         setErrorMessage("Select a folder from your workspace");
         return;
-      } else {
-        if (!_workspaceFolder.exists()) {
-          setErrorMessage("Please select an existing folder from your workspace");
-          return;
-        }
       }
     }
 
