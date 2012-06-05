@@ -15,6 +15,8 @@ import java.util.List;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -32,6 +34,20 @@ public class RemoveArtifactsHandler extends AbstractArtifactBasedHandler {
   protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
 
     if (selectedArtifacts.isEmpty()) {
+      return;
+    }
+
+    // make sure the user really wants to remove the selected artifacts
+    String message = null;
+    if (selectedArtifacts.size() > 1) {
+      message = "Are you sure you want to remove these " + selectedArtifacts.size() + " artifacts?";
+    } else {
+      IBundleMakerArtifact artifact = selectedArtifacts.get(0);
+      message = "Are you soure your want to remove " + artifact.getName() + "?";
+    }
+
+    message += " (cannot be undone!)";
+    if (!MessageDialog.openConfirm(HandlerUtil.getActiveShell(event), "Confirm delete", message)) {
       return;
     }
 
