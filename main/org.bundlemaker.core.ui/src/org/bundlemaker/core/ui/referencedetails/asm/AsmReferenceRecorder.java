@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.utils.asm_remove;
+package org.bundlemaker.core.ui.referencedetails.asm;
 
 import java.util.LinkedList;
 import java.util.List;

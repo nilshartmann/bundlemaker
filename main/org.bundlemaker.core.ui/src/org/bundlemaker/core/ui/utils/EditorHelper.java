@@ -11,6 +11,8 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.ui.referencedetails.IReferenceDetailParser;
+import org.bundlemaker.core.ui.referencedetails.ReferenceDetailParser;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -49,13 +51,9 @@ public class EditorHelper {
       IBundleMakerProject bundleMakerProject = resourceArtifact.getRoot().getModularizedSystem()
           .getBundleMakerProject();
       IJavaProject javaProject = getAssociatedJavaProject(bundleMakerProject.getProject());
-      System.out.println(sourceResource.getContainedType().getFullyQualifiedName());
       IJavaElement javaElement = javaProject.findElement(new Path(sourceResource.getPath()));
 
       if (javaElement instanceof IClassFile) {
-
-        // http://www.vogella.com/articles/EclipseEditors/article.html
-        // "org.eclipse.jdt.ui.ClassFileEditor"
 
         //
         BundleMakerClassFileEditorInput editorInput = new BundleMakerClassFileEditorInput((IClassFile) javaElement,

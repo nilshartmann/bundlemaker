@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.utils;
+package org.bundlemaker.core.ui.referencedetails;
 
 import java.util.List;
 import java.util.Map;
