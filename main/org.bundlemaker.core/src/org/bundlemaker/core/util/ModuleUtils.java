@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
@@ -82,20 +80,20 @@ public class ModuleUtils {
     // }
     // }
 
-    builder.append("\n");
-    builder.append("Referenced Modules: \n");
-    IReferencedModulesQueryResult queryResult = modularizedSystem.getReferencedModules(module);
-
-    for (IModule referencedModule : queryResult.getReferencedModules()) {
-      builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
-    }
-
-    // TODO
-    builder.append("\n");
-    builder.append("Missing Types: \n");
-    for (IReference missingType : asSortedList(queryResult.getUnsatisfiedReferences())) {
-      builder.append(missingType + "\n");
-    }
+    // builder.append("\n");
+    // builder.append("Referenced Modules: \n");
+    // IReferencedModulesQueryResult queryResult = modularizedSystem.getReferencedModules(module);
+    //
+    // for (IModule referencedModule : queryResult.getReferencedModules()) {
+    // builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
+    // }
+    //
+    // // TODO
+    // builder.append("\n");
+    // builder.append("Missing Types: \n");
+    // for (IReference missingType : asSortedList(queryResult.getUnsatisfiedReferences())) {
+    // builder.append(missingType + "\n");
+    // }
 
     return builder.toString();
   }
