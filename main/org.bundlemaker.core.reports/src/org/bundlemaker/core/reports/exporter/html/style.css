@@ -55,6 +55,7 @@ h2 {
     font-weight : bold; 
     background-color: white;
     color: #50667c;
+    padding-top: 15px;
 }
 
 h3 {
@@ -96,9 +97,9 @@ table {
 }
 
 tr th {
-    background-color: #d9e0e3;
+    background-color: #8F8F8F;
     font-size: 9pt;
-    color: #5f6a6f;
+    color: #ffffff;
     text-align: left;
     padding: 3px;
 }
@@ -111,9 +112,11 @@ tr td {
 }
 
 .evenrow {
-    background-color: white;
+    background-color: #efefef;
+    color: #527fa8;
 }
 
 .oddrow {
     background-color: white;
+    color: #527fa8;
 }

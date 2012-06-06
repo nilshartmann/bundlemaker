@@ -53,7 +53,6 @@ public class ModuleContentReportExporter extends AbstractSingleModuleHtmlReportE
     for (IResource resource : sources) {
 
       //
-
       if (odd) {
         bw.write("  <tr class=\"oddrow\">\n");
         odd = false;
@@ -63,7 +62,7 @@ public class ModuleContentReportExporter extends AbstractSingleModuleHtmlReportE
       }
 
       bw.write("     <td>");
-      bw.write(resource.getPath());
+      bw.write(String.format("<a name=\"%1$s\">%1$s</a>", resource.getPath()));
       bw.write("     </td>");
 
       bw.write("  </tr>\n");

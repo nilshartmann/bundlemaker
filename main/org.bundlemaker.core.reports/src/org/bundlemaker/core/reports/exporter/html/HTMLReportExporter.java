@@ -23,11 +23,6 @@ public class HTMLReportExporter {
     exporterAdapter.export(modularizedSystem, outputDirectory, null);
 
     exporterAdapter = new ModularizedSystemExporterAdapter(
-        new ModuleDependenciesReportExporter());
-    exporterAdapter.setModuleFilter(filter);
-    exporterAdapter.export(modularizedSystem, outputDirectory, null);
-
-    exporterAdapter = new ModularizedSystemExporterAdapter(
         new ModuleContentReportExporter());
     exporterAdapter.setModuleFilter(filter);
     exporterAdapter.export(modularizedSystem, outputDirectory, null);
