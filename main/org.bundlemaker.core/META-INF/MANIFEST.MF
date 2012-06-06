@@ -36,3 +36,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.ant;bundle-version="1.7.1"
 Bundle-Activator: org.bundlemaker.core.internal.Activator
 Service-Component: OSGI-INF/dependencyStore.xml
+Bundle-ActivationPolicy: lazy
