@@ -114,7 +114,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
                 .getArtifactModelConfiguration());
 
             // // TODO!
-            // artifact.addArtifactModelChangedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
+            artifact.addArtifactModelChangedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
 
             result.add(artifact);
           }
