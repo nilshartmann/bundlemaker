@@ -357,7 +357,6 @@
 
 	<!-- the commands -->
 	<extension point="org.eclipse.ui.commands">
-		<command id="org.bundlemaker.core.ui.commands.Demo" name="Demo"/>
 		<command id="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand" name="Parse and Open" />
 		<command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
 			name="Export PDE plug-in projects..."/>
