@@ -11,7 +11,6 @@
 package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -67,7 +66,7 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
 
   private ComboViewer _contentTypeComboViewer;
 
-  private ComboViewer _resourcesComboViewer;
+  // private ComboViewer _resourcesComboViewer;
 
   private Button      _virtualModuleButton;
 
@@ -104,14 +103,15 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
     _contentTypeComboViewer.add(new EnumValue(ContentType.SOURCE, "Sources"));
     _contentTypeComboViewer.add(new EnumValue(ContentType.BINARY, "Binaries"));
 
-    label = new Label(dialogComposite, SWT.NONE);
-    label.setText("Show resources");
-    Combo resourcesCombo = new Combo(dialogComposite, SWT.READ_ONLY);
-    _resourcesComboViewer = new ComboViewer(resourcesCombo);
-    _resourcesComboViewer.setLabelProvider(enumValueLabelProvider);
-    _resourcesComboViewer.add(new EnumValue(ResourcePresentation.ALL_RESOURCES, "All resources"));
-    _resourcesComboViewer.add(new EnumValue(ResourcePresentation.ONLY_NON_TYPE_RESOURCES, "Non-type resources only"));
-    _resourcesComboViewer.add(new EnumValue(ResourcePresentation.NO_RESOURCE, "No resources"));
+    // label = new Label(dialogComposite, SWT.NONE);
+    // label.setText("Show resources");
+    // Combo resourcesCombo = new Combo(dialogComposite, SWT.READ_ONLY);
+    // _resourcesComboViewer = new ComboViewer(resourcesCombo);
+    // _resourcesComboViewer.setLabelProvider(enumValueLabelProvider);
+    // _resourcesComboViewer.add(new EnumValue(ResourcePresentation.ALL_RESOURCES, "All resources"));
+    // _resourcesComboViewer.add(new EnumValue(ResourcePresentation.ONLY_NON_TYPE_RESOURCES,
+    // "Non-type resources only"));
+    // _resourcesComboViewer.add(new EnumValue(ResourcePresentation.NO_RESOURCE, "No resources"));
 
     _virtualModuleButton = new Button(dialogComposite, SWT.CHECK);
     _virtualModuleButton.setText("Show missing types in 'virtual' module");
@@ -130,7 +130,7 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
     _aggregateInnerTypesButton.setSelection(_originalConfiguration.isAggregateInnerTypes());
     selectEnumValue(_contentTypeComboViewer, _originalConfiguration.getContentType());
     _hierarchicalButton.setSelection(_originalConfiguration.isHierarchicalPackages());
-    selectEnumValue(_resourcesComboViewer, _originalConfiguration.getResourcePresentation());
+    // selectEnumValue(_resourcesComboViewer, _originalConfiguration.getResourcePresentation());
     _virtualModuleButton.setSelection(_originalConfiguration.isIncludeVirtualModuleForMissingTypes());
   }
 
@@ -149,9 +149,9 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
     EnumValue value = (EnumValue) _contentTypeComboViewer.getElementAt(selectionIndex);
     _originalConfiguration.setContentType((ContentType) value.getValue());
 
-    selectionIndex = _resourcesComboViewer.getCombo().getSelectionIndex();
-    value = (EnumValue) _resourcesComboViewer.getElementAt(selectionIndex);
-    _originalConfiguration.setResourcePresentation((ResourcePresentation) value.getValue());
+    // selectionIndex = _resourcesComboViewer.getCombo().getSelectionIndex();
+    // value = (EnumValue) _resourcesComboViewer.getElementAt(selectionIndex);
+    // _originalConfiguration.setResourcePresentation((ResourcePresentation) value.getValue());
 
     super.okPressed();
   }
