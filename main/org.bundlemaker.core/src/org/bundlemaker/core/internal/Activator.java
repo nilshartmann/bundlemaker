@@ -191,7 +191,7 @@ public class Activator extends Plugin {
       if (result == null) {
         // TODO
         throw new RuntimeException(
-            "No IPersistentDependencyStoreFactory available. Please make sure that DS is started.");
+            "No IPersistentDependencyStoreFactory available. Please make sure that the following bundles are started: 'com.db4o.osgi' and 'org.eclipse.equinox.ds'.");
       }
 
       //
