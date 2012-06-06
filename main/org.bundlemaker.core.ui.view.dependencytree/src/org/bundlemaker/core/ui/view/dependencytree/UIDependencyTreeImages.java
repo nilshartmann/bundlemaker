@@ -10,6 +10,30 @@ import org.eclipse.swt.graphics.Image;
 public enum UIDependencyTreeImages {
 
   /** - */
+  AUTO_EXPAND_FROM_GROUPS("icons/etool/auto-expand-from-groups.png"),
+
+  /** - */
+  AUTO_EXPAND_FROM_MODULES("icons/etool/auto-expand-from-modules.png"),
+
+  /** - */
+  AUTO_EXPAND_FROM_PACKAGES("icons/etool/auto-expand-from-packages.png"),
+
+  /** - */
+  AUTO_EXPAND_FROM_RESOURCES("icons/etool/auto-expand-from-resources.png"),
+
+  /** - */
+  AUTO_EXPAND_TO_GROUPS("icons/etool/auto-expand-to-groups.png"),
+
+  /** - */
+  AUTO_EXPAND_TO_MODULES("icons/etool/auto-expand-to-modules.png"),
+
+  /** - */
+  AUTO_EXPAND_TO_PACKAGES("icons/etool/auto-expand-to-packages.png"),
+
+  /** - */
+  AUTO_EXPAND_TO_RESOURCES("icons/etool/auto-expand-to-resources.png"),
+
+  /** - */
   ENABLED_PIN_SELECTION_ADD("icons/etool/pin-selection-add.png"),
 
   /** - */

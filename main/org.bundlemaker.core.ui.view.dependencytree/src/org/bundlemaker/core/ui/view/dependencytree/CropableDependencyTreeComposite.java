@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Widget;
 
 public class CropableDependencyTreeComposite extends Composite {
 
@@ -50,10 +51,17 @@ public class CropableDependencyTreeComposite extends Composite {
   /** - */
   private List<List<IDependency>>      _dependencySelectionList;
 
+  /** - */
   private IDependencySelectionListener _dependencySelectionListener;
 
   /** - */
   private String                       _detailDependencySelectionId;
+
+  /** - */
+  private ToolItem                     _autoExpandFrom;
+
+  /** - */
+  private ToolItem                     _autoExpandTo;
 
   /**
    * <p>
@@ -98,14 +106,16 @@ public class CropableDependencyTreeComposite extends Composite {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param toolbar
    */
   private void createAutoExpandMenus(ToolBar toolbar) {
-   
+
     //
-    Menu menu = createAutoExpandMenu(toolbar);
-    
+    Widget[] widgets = createAutoExpandMenu(toolbar);
+    _autoExpandFrom = (ToolItem) widgets[1];
+    _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_MODULES.getImage());
+
     //
     SelectionListener selectionListener = new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
@@ -113,27 +123,31 @@ public class CropableDependencyTreeComposite extends Composite {
         if (item.getSelection()) {
           if ("Group".equals(item.getText())) {
             _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IGroupArtifact.class);
+            _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_GROUPS.getImage());
           } else if ("Module".equals(item.getText())) {
             _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IModuleArtifact.class);
+            _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_MODULES.getImage());
           } else if ("Package".equals(item.getText())) {
             _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IPackageArtifact.class);
+            _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_PACKAGES.getImage());
           } else if ("Resource".equals(item.getText())) {
             _dependencyTreeComposite.setFromTreeViewerAutoExpandType(IResourceArtifact.class);
+            _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_RESOURCES.getImage());
           }
         }
       }
     };
-    
+
     //
-    for (MenuItem menuItem : menu.getItems()) {
+    for (MenuItem menuItem : ((Menu) widgets[0]).getItems()) {
       menuItem.addSelectionListener(selectionListener);
     }
-    
-    
-    
+
     //
-    menu = createAutoExpandMenu(toolbar);
-    
+    widgets = createAutoExpandMenu(toolbar);
+    _autoExpandTo = (ToolItem) widgets[1];
+    _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_TO_MODULES.getImage());
+
     //
     selectionListener = new SelectionAdapter() {
       public void widgetSelected(SelectionEvent e) {
@@ -141,19 +155,23 @@ public class CropableDependencyTreeComposite extends Composite {
         if (item.getSelection()) {
           if ("Group".equals(item.getText())) {
             _dependencyTreeComposite.setToTreeViewerAutoExpandType(IGroupArtifact.class);
+            _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_TO_GROUPS.getImage());
           } else if ("Module".equals(item.getText())) {
             _dependencyTreeComposite.setToTreeViewerAutoExpandType(IModuleArtifact.class);
+            _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_TO_MODULES.getImage());
           } else if ("Package".equals(item.getText())) {
             _dependencyTreeComposite.setToTreeViewerAutoExpandType(IPackageArtifact.class);
+            _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_TO_PACKAGES.getImage());
           } else if ("Resource".equals(item.getText())) {
             _dependencyTreeComposite.setToTreeViewerAutoExpandType(IResourceArtifact.class);
+            _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_TO_RESOURCES.getImage());
           }
         }
       }
     };
-    
+
     //
-    for (MenuItem menuItem : menu.getItems()) {
+    for (MenuItem menuItem : ((Menu) widgets[0]).getItems()) {
       menuItem.addSelectionListener(selectionListener);
     }
   }
@@ -282,13 +300,13 @@ public class CropableDependencyTreeComposite extends Composite {
     _dependencyTreeComposite = new DependencyTreeComposite(this, _detailDependencySelectionId) {
       @Override
       protected String getDependencySelectionId() {
-        
+
         String dependencySelectionId = CropableDependencyTreeComposite.this.getDependencySelectionId();
-        
+
         if (dependencySelectionId != null) {
           return dependencySelectionId;
         }
-        
+
         return super.getDependencySelectionId();
       }
     };
@@ -366,19 +384,16 @@ public class CropableDependencyTreeComposite extends Composite {
     enableButtons();
   }
 
-  public Menu createAutoExpandMenu(final ToolBar toolbar) {
+  public Widget[] createAutoExpandMenu(final ToolBar toolbar) {
 
     // Rectangle clientArea = shell.getClientArea ();
     // toolBar.setLocation(clientArea.x, clientArea.y);
     final Menu menu = new Menu(toolbar.getShell(), SWT.POP_UP);
 
-    // ToolItem
     final ToolItem toolItem = new ToolItem(toolbar, SWT.DROP_DOWN);
-    toolItem.setImage(UIDependencyTreeImages.ENABLED_BACKWARD_NAV.getImage());
 
     MenuItem menuItemGroup = new MenuItem(menu, SWT.RADIO);
     menuItemGroup.setText("Group");
-
 
     MenuItem menuItemModule = new MenuItem(menu, SWT.RADIO);
     menuItemModule.setText("Module");
@@ -404,7 +419,7 @@ public class CropableDependencyTreeComposite extends Composite {
     menuItemModule.setSelection(true);
 
     //
-    return menu;
+    return new Widget[] { menu, toolItem };
   }
 
   /**
@@ -442,13 +457,13 @@ public class CropableDependencyTreeComposite extends Composite {
   /**
    * <p>
    * </p>
-   *
+   * 
    * @return
    */
   protected String getDependencySelectionId() {
     return null;
   }
-  
+
   private void enableButtons() {
 
     //
