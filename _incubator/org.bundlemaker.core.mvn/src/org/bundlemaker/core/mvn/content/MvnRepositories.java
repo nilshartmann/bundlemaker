@@ -3,6 +3,7 @@ package org.bundlemaker.core.mvn.content;
 import java.io.File;
 
 import org.bundlemaker.core.mvn.aether.Booter;
+import org.eclipse.core.runtime.Assert;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.repository.RemoteRepository;
@@ -25,16 +26,16 @@ public class MvnRepositories implements IMvnRepositories {
   private RemoteRepository        _repo;
 
   /**
-   * <p>
-   * Creates a new instance of type {@link MvnRepositories}.
-   * </p>
+   * {@inheritDoc}
    */
-  public MvnRepositories(File localRepo, String remoteRepoUrl) {
+  @Override
+  public void setMvnRepositories(File localRepo, String remoteRepoUrl) {
+
+    Assert.isNotNull(localRepo);
+    Assert.isNotNull(remoteRepoUrl);
 
     //
     Booter booter = new Booter(localRepo, remoteRepoUrl);
-
-    //
     _system = booter.newRepositorySystem();
     _session = booter.newRepositorySystemSession(_system);
     _repo = booter.newCentralRepository();

@@ -1,20 +1,41 @@
 package org.bundlemaker.core.mvn.content;
 
+import java.io.File;
+
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class Activator implements BundleActivator {
 
   /** - */
-  private static BundleContext _bundleContext;
+  private static BundleContext   _bundleContext;
+
+  /** - */
+  private static MvnRepositories _mvnRepositories;
 
   /**
    * {@inheritDoc}
    */
   @Override
   public void start(BundleContext context) throws Exception {
+
+    //
     _bundleContext = context;
+
+    //
+    _mvnRepositories = new MvnRepositories();
+
+    // TODO
+    _mvnRepositories.setMvnRepositories(new File("D:/development/_save/o/Repository"), "http://repo1.maven.org/maven2/");
+
+    //
+    _bundleContext.registerService(IMvnRepositories.class, _mvnRepositories, null);
   }
 
   /**
@@ -44,16 +65,11 @@ public class Activator implements BundleActivator {
   public static IMvnRepositories getMvnRepositories() {
 
     //
-    ServiceTracker<IMvnRepositories, IMvnRepositories> serviceTracker = new ServiceTracker<IMvnRepositories, IMvnRepositories>(
-        _bundleContext, IMvnRepositories.class, null);
-    serviceTracker.open();
-    IMvnRepositories mvnRepositories = null;
-    try {
-      mvnRepositories = serviceTracker.waitForService(5000);
-    } catch (InterruptedException e) {
+    if (_bundleContext == null || _mvnRepositories == null) {
+      throw new RuntimeException("Not started yet!");
     }
-    serviceTracker.close();
+
     //
-    return mvnRepositories;
+    return _mvnRepositories;
   }
 }
