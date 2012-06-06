@@ -91,9 +91,16 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       IModifiableResourceModule resourceModule = ((IModifiableModularizedSystem) _groupAndModuleContainer.getRoot()
           .getModularizedSystem()).createResourceModule(moduleIdentifier);
 
-      if (this._groupAndModuleContainer.getFullPath().segmentCount() > 1) {
-        resourceModule.setClassification(this._groupAndModuleContainer.getFullPath().removeFirstSegments(1));
+      //
+      IPath classification = this._groupAndModuleContainer.getFullPath();
+      if (index != -1) {
+        classification = classification.append(new Path(qualifiedModuleName.substring(0, index)));
       }
+
+      if (classification.segmentCount() > 1) {
+        resourceModule.setClassification(classification.removeFirstSegments(1));
+      }
+
       //
       moduleArtifact = ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).getArtifactCache()
           .getModuleArtifact(resourceModule);
