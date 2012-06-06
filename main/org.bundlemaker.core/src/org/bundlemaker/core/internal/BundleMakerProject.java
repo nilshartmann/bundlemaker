@@ -39,6 +39,7 @@ import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.util.StopWatch;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -160,6 +161,10 @@ public class BundleMakerProject implements IBundleMakerProject {
     // assert
     assertState(BundleMakerProjectState.INITIALIZED, BundleMakerProjectState.READY);
 
+    //
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+
     // clear the modularized system working copies
     // TODO
     _modifiableModualizedSystemWorkingCopies.clear();
@@ -177,11 +182,16 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // create default working copy
     IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
-        .getName()) : createModularizedSystemWorkingCopy(getProject().getName());
+        .getName())
+        : createModularizedSystemWorkingCopy(getProject().getName());
     modularizedSystem.applyTransformations(progressMonitor);
 
     // release the store
     factory.releasePersistentDependencyStore(this);
+
+    //
+    stopWatch.stop();
+    System.out.println("parseAndOpen in " + stopWatch.getElapsedTime() + " ms.");
 
     // notify listeners
     notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
