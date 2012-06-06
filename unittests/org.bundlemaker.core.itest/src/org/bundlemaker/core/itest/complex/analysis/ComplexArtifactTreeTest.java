@@ -8,7 +8,6 @@ import java.util.List;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -34,7 +33,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        new ArtifactModelConfiguration(false, ResourcePresentation.NO_RESOURCE, ContentType.BINARY, true, true));
+        new ArtifactModelConfiguration(false, ContentType.BINARY, true, true));
     Assert.assertNotNull(rootArtifact);
 
     //
@@ -62,7 +61,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
     IModuleArtifact moduleArtifact = rootArtifact.findChild(IModuleArtifact.class, "jedit_1.0.0");
@@ -81,7 +80,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
     //

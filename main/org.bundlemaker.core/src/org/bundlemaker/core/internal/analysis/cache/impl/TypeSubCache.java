@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
@@ -120,21 +119,15 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
 
     // get the associated resources
     IResource resource = null;
-    if (getArtifactCache().getConfiguration().getResourcePresentation().equals(ResourcePresentation.ALL_RESOURCES)) {
 
-      resource = getArtifactCache().getConfiguration().getContentType().equals(ContentType.SOURCE)
-          && type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
-
-    } else {
-      resource = type.getBinaryResource();
-    }
+    resource = getArtifactCache().getConfiguration().getContentType().equals(ContentType.SOURCE)
+        && type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
 
     // get the associated module
     IModule module = resource != null ? resource.getAssociatedResourceModule(getArtifactCache().getModularizedSystem())
         : type.getModule(getArtifactCache().getModularizedSystem());
 
-    if (module instanceof IResourceModule
-        && getArtifactCache().getConfiguration().getResourcePresentation().equals(ResourcePresentation.ALL_RESOURCES)) {
+    if (module instanceof IResourceModule) {
 
       // force cast
       return (AbstractBundleMakerArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);

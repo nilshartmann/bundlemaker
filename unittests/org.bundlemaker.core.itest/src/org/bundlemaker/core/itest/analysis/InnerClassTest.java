@@ -62,15 +62,15 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
 
     // transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
-    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
+    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class|A");
     Assert.assertNotNull(aArtifact);
-    IBundleMakerArtifact bArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B");
-    Assert.assertNull(bArtifact);
+    IBundleMakerArtifact bArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B.class|B");
+    Assert.assertNotNull(bArtifact);
 
     Collection<IDependency> dependencies = aArtifact.getDependencies();
-    Assert.assertEquals(6, dependencies.size());
+    Assert.assertEquals(2, dependencies.size());
     for (IDependency iDependency : dependencies) {
       System.out.println(iDependency);
     }
@@ -88,21 +88,22 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
 
     // transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION);
-    ArtifactUtils.dumpArtifact(rootArtifact);
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     
     //
-    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A");
+    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class|A");
     Assert.assertNotNull(aArtifact);
     IBundleMakerArtifact packageArtifact = rootArtifact
         .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes");
     Assert.assertNotNull(packageArtifact);
     // TODO: is this the intended behavior?
-    Assert.assertEquals(packageArtifact.getChildren().size(), 1);
+    Assert.assertEquals(4, packageArtifact.getChildren().size());
     
     //
     packageArtifact.removeArtifact(aArtifact);
     Assert.assertEquals(packageArtifact.getChildren().size(), 0);
+    
+    //
     packageArtifact.addArtifact(aArtifact);
     Assert.assertEquals(packageArtifact.getChildren().size(), 1);
   }

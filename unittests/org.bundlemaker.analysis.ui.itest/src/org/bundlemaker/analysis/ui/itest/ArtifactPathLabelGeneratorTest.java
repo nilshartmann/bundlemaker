@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactType;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -206,7 +205,6 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
 
     ArtifactModelConfiguration artifactModelConfiguration = new ArtifactModelConfiguration();
     artifactModelConfiguration.setHierarchicalPackages(hierarchical);
-    artifactModelConfiguration.setResourcePresentation(ResourcePresentation.NO_RESOURCE);
     artifactModelConfiguration.setContentType(ContentType.BINARY);
     artifactModelConfiguration.setAggregateInnerTypes(false);
     artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);

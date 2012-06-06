@@ -61,7 +61,7 @@ public class TransitiveDependenciesTest extends AbstractModularizedSystemTest {
 
     // run artifact-based transformation
     IBundleMakerArtifact root = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Collection<IBundleMakerArtifact> leafs = root.getLeafs();
 
     for (IBundleMakerArtifact artifact : leafs) {

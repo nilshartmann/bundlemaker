@@ -11,7 +11,6 @@
 package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -54,7 +53,6 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
     if (DEFAULT_CONFIGURATION == null) {
       ArtifactModelConfiguration configuration = new ArtifactModelConfiguration();
       configuration.setAggregateInnerTypes(true);
-      configuration.setResourcePresentation(ResourcePresentation.ONLY_NON_TYPE_RESOURCES);
       DEFAULT_CONFIGURATION = configuration;
     }
 
@@ -90,10 +88,6 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
         if (_store.contains(PREF_HIERARCHICAL_PACKAGES)) {
           _configuration.setHierarchicalPackages(_store.getBoolean(PREF_HIERARCHICAL_PACKAGES));
         }
-        if (_store.contains(PREF_RESOURCE_PRESENTATION)) {
-          _configuration.setResourcePresentation(ResourcePresentation.valueOf(_store
-              .getString(PREF_RESOURCE_PRESENTATION)));
-        }
         if (_store.contains(PREF_VIRTUAL_MODULE)) {
           _configuration.setIncludeVirtualModuleForMissingTypes(_store.getBoolean(PREF_VIRTUAL_MODULE));
         }
@@ -119,7 +113,6 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
   public void store() {
     _store.setValue(PREF_AGGREGATE_INNER_TYPES, _configuration.isAggregateInnerTypes());
     _store.setValue(PREF_CONTENT_TYPE, _configuration.getContentType().toString());
-    _store.setValue(PREF_RESOURCE_PRESENTATION, _configuration.getResourcePresentation().toString());
     _store.setValue(PREF_VIRTUAL_MODULE, _configuration.isIncludeVirtualModuleForMissingTypes());
     _store.setValue(PREF_HIERARCHICAL_PACKAGES, _configuration.isHierarchicalPackages());
   }

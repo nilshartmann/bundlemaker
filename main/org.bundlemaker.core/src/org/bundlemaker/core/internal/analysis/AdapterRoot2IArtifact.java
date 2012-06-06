@@ -217,14 +217,6 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     }
   }
 
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public IDependencyModel getDependencyModel() {
-  // return _dependencyModel;
-  // }
-
   /**
    * {@inheritDoc}
    */
@@ -257,29 +249,26 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     IArtifactModelConfiguration configuration = getConfiguration();
 
     // Step 1: Handle resources
-    if (!configuration.containsNoResources()) {
+    // Step 1a: Handle BinaryContent
+    if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()) {
 
-      // Step 1a: Handle BinaryContent
-      if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()) {
-
-        // iterate over the associated binary resources
-        for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
-          _addResource(resource);
-        }
+      // iterate over the associated binary resources
+      for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+        _addResource(resource);
       }
-      // Step 1b: Handle SourceContent
-      else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()) {
+    }
+    // Step 1b: Handle SourceContent
+    else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()) {
 
-        // iterate over the associated binary resources
-        _addResource(movableUnit.getAssociatedSourceResource());
-      }
-      // TODO: BUGFIX!!
-      else if (configuration.isSourceContent() && movableUnit.hasAssociatedBinaryResources()) {
+      // iterate over the associated binary resources
+      _addResource(movableUnit.getAssociatedSourceResource());
+    }
+    // TODO: BUGFIX!!
+    else if (configuration.isSourceContent() && movableUnit.hasAssociatedBinaryResources()) {
 
-        // iterate over the associated binary resources
-        for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
-          _addResource(resource);
-        }
+      // iterate over the associated binary resources
+      for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+        _addResource(resource);
       }
     }
 
@@ -302,11 +291,6 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   }
 
   private void _addResource(IResource resource) {
-
-    // skip type resources if necessary
-    if (resource.containsTypes() && getConfiguration().containsOnlyNonTypeResources()) {
-      return;
-    }
 
     // skip local or anonymous types (no 'Bla$1.class' resources)
     if (resource.hasPrimaryType() && resource.getPrimaryType().isLocalOrAnonymousType()) {
@@ -361,7 +345,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     IArtifactModelConfiguration configuration = getConfiguration();
 
     if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
-        && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
+        && (/* configuration.containsAllResources() || */!movableUnit.hasAssociatedTypes())) {
       for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
         IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
@@ -370,7 +354,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
         }
       }
     } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
-        && (configuration.containsAllResources() || !movableUnit.hasAssociatedTypes())) {
+        && (/* configuration.containsAllResources() || */!movableUnit.hasAssociatedTypes())) {
       IResource resource = movableUnit.getAssociatedSourceResource();
       IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
@@ -446,16 +430,6 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
         ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
       }
     }
-
-    // //
-    // if (hasCurrentAction() && getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
-    // && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
-    //
-    // //
-    // ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalRemoveArtifact(getCurrentAction()
-    // .getChild());
-    //
-    // }
   }
 
   /**

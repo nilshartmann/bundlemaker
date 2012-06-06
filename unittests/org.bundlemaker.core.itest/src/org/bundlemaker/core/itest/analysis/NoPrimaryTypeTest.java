@@ -32,7 +32,7 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION).getRoot();
+        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     //

@@ -205,7 +205,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_NO_RESOURCES_CONFIGURATION);
+        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
     Assert.assertEquals(new Path("BasicArtifactTest"), rootArtifact.getFullPath());
@@ -253,7 +253,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
 
     //
     ITypeArtifact typeArtifact = findArtifact(rootArtifact, "de.test.basic.TestClass", ITypeArtifact.class);
-    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de.test.basic/TestClass"),
+    Assert.assertEquals(new Path("BasicArtifactTest/group1/group2/BasicArtifactTest_1.0.0/de.test.basic/TestClass.java/TestClass"),
         typeArtifact.getFullPath());
     Assert.assertEquals("TestClass", typeArtifact.getUniquePathIdentifier());
     Assert.assertEquals("TestClass", typeArtifact.getName());

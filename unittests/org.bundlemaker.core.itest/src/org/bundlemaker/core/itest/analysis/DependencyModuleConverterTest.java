@@ -14,8 +14,8 @@ public class DependencyModuleConverterTest extends AbstractModularizedSystemTest
 
     // transform the model
     IBundleMakerArtifact artifact = ((IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.AGGREGATE_INNER_TYPES_CONFIGURATION).getRoot())
-        .getChild("group1|group2|DependencyModuleConverterTest_1.0.0|de.test.inner2|Inner2");
+        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot())
+        .getChild("group1|group2|DependencyModuleConverterTest_1.0.0|de.test.inner2|Inner2.class|Inner2");
 
     Assert.isNotNull(artifact);
   }

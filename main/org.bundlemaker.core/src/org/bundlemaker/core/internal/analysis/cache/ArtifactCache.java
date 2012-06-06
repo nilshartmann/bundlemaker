@@ -11,7 +11,6 @@
 package org.bundlemaker.core.internal.analysis.cache;
 
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration.ResourcePresentation;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -334,22 +333,17 @@ public class ArtifactCache {
         }
       }
 
-      // add all resources
-      if (getConfiguration().getResourcePresentation().equals(ResourcePresentation.ALL_RESOURCES)
-          || getConfiguration().getResourcePresentation().equals(ResourcePresentation.ONLY_NON_TYPE_RESOURCES)) {
+      // cast to 'IResourceModule'
+      if (module instanceof IResourceModule) {
 
-        // cast to 'IResourceModule'
-        if (module instanceof IResourceModule) {
+        // get the resource module
+        IResourceModule resourceModule = (IResourceModule) module;
 
-          // get the resource module
-          IResourceModule resourceModule = (IResourceModule) module;
-
-          // iterate over all contained resources
-          for (IResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
-            if (!resource.containsTypes()) {
-              // create the artifact
-              this.getResourceArtifact(resource);
-            }
+        // iterate over all contained resources
+        for (IResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
+          if (!resource.containsTypes()) {
+            // create the artifact
+            this.getResourceArtifact(resource);
           }
         }
       }
