@@ -41,8 +41,10 @@ public class AdapterUtils {
     //
     IBundleMakerArtifact root = ((IBundleMakerArtifact) artifact).getRoot();
 
-    //
-    Assert.isNotNull(root, "No root for :" + ArtifactUtils.artifactToString(artifact));
+    // check (performance!)
+    if (root == null) {
+      Assert.isNotNull(root, "No root for :" + ArtifactUtils.artifactToString(artifact));
+    }
     Assert.isTrue(root instanceof AdapterRoot2IArtifact);
 
     //
