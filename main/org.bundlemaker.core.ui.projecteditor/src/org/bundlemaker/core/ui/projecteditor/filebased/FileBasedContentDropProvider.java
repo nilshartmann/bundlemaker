@@ -6,7 +6,6 @@ import java.util.List;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.choice.Choice;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
@@ -102,9 +101,10 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       System.out.println("NO TARGET!");
 
       // add as individual file based contents
-      for (String relativePath : projectRelativePaths) {
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, relativePath);
-      }
+      _fileBasedContentCreator.addFiles(modifiableProjectDescription, projectRelativePaths.toArray(new String[0]));
+      // for (String relativePath : projectRelativePaths) {
+      // FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, relativePath);
+      // }
     } else {
       // add to selected filebasedcontentprovider
       FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getProjectContentProvider();

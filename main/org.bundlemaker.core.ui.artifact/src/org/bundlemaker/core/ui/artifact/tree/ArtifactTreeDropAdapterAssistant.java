@@ -31,7 +31,8 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
 
-    if (treeSelection.getFirstElement() instanceof IBundleMakerArtifact && target instanceof IBundleMakerArtifact) {
+    if (treeSelection != null && treeSelection.getFirstElement() instanceof IBundleMakerArtifact
+        && target instanceof IBundleMakerArtifact) {
 
       IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) treeSelection.getFirstElement();
       IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) target;
@@ -53,7 +54,7 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     // TODO
     CommonNavigator commonNavigator = CommonNavigatorUtils
         .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
-    
+
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(
         aDropAdapter.getCurrentTransfer());
 
@@ -63,10 +64,10 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
       final IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) selectedObject;
       IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) aTarget;
       targetArtifact.addArtifact(sourceArtifact);
-      
+
       //
       if (root == null) {
-        root = ((IBundleMakerArtifact) targetArtifact).getRoot();
+        root = targetArtifact.getRoot();
       }
     }
     root.invalidateDependencyCache();
@@ -76,8 +77,8 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     commonNavigator.getCommonViewer().refresh();
     commonNavigator.getCommonViewer().setExpandedTreePaths(expanedTreePath);
 
-    ArtifactUtils.dumpArtifact(root,3);
-    
+    ArtifactUtils.dumpArtifact(root, 3);
+
     return Status.OK_STATUS;
   }
 
