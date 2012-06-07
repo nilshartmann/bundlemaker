@@ -3,7 +3,8 @@ package org.bundlemaker.core.ui.artifact.tree;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.eclipse.jface.util.LocalSelectionTransfer;
-import org.eclipse.jface.viewers.TreeSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
@@ -35,13 +36,18 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
   public void drop(DropTargetEvent event) {
 
     //
-    TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(
-        event.currentDataType);
+    ISelection selection = (ISelection) LocalSelectionTransfer.getTransfer().nativeToJava(event.currentDataType);
+
+    if (!(selection instanceof IStructuredSelection)) {
+      return;
+    }
+
+    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
     IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) determineTarget(event);
 
     IRootArtifact root = null;
-    for (Object selectedObject : treeSelection.toArray()) {
+    for (Object selectedObject : structuredSelection.toArray()) {
 
       //
       final IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) selectedObject;
@@ -63,12 +69,19 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
       TransferData transferData) {
 
     //
-    TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
+    ISelection selection = (ISelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
+
+    if (!(selection instanceof IStructuredSelection)) {
+      return false;
+    }
+
+    IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
     //
-    if (treeSelection.getFirstElement() instanceof IBundleMakerArtifact && target instanceof IBundleMakerArtifact) {
+    if (structuredSelection.getFirstElement() instanceof IBundleMakerArtifact
+        && target instanceof IBundleMakerArtifact) {
 
-      IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) treeSelection.getFirstElement();
+      IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) structuredSelection.getFirstElement();
       IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) target;
 
       if (targetArtifact.canAdd(sourceArtifact) && sourceArtifact.isMovable()) {
@@ -77,12 +90,12 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
     }
 
     //
-    return false;
+    return true;
   }
 
   @Override
   public boolean performDrop(Object data) {
-    // TODO Auto-generated method stub
+
     return false;
   }
 }

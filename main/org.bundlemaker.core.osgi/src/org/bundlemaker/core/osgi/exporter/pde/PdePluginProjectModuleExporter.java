@@ -183,5 +183,8 @@ public class PdePluginProjectModuleExporter extends AbstractManifestAwareExporte
         }
       }
     }
+    
+    // Refresh source-folder to make Eclipse aware of new copied files
+    srcFolder.refreshLocal(1, progressMonitor);
   }
 }

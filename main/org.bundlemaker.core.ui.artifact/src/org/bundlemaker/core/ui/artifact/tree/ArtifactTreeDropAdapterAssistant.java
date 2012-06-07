@@ -30,7 +30,8 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
 
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
 
-    if (treeSelection.getFirstElement() instanceof IBundleMakerArtifact && target instanceof IBundleMakerArtifact) {
+    if (treeSelection != null && treeSelection.getFirstElement() instanceof IBundleMakerArtifact
+        && target instanceof IBundleMakerArtifact) {
 
       IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) treeSelection.getFirstElement();
       IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) target;
