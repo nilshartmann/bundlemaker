@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.6"?>
+
+<target name="jEdit BundleMaker Demo Target Platform" sequenceNumber="1">
+<locations>
+<location path="${project_loc:/bm.demo.jedit.target-platform}/bundles" type="Directory"/>
+</locations>
+</target>

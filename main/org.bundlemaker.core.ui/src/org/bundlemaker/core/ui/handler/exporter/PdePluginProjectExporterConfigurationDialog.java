@@ -68,7 +68,7 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
 
     Group destinationGroup = createGroup(dialogComposite, "Destination");
     _defaultLocationCheckbox = new Button(destinationGroup, SWT.CHECK);
-    _defaultLocationCheckbox.setText("Default location");
+    _defaultLocationCheckbox.setText("Default location (directly in your workspace)");
     _defaultLocationCheckbox.setSelection(_defaultLocation);
     _defaultLocationCheckbox.addListener(SWT.Selection, new Listener() {
       @Override
