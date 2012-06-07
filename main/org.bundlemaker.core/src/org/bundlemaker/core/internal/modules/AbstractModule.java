@@ -395,32 +395,6 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
         + _classification + "]";
   }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((_moduleIdentifier == null) ? 0 : _moduleIdentifier.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    @SuppressWarnings("rawtypes")
-    AbstractModule other = (AbstractModule) obj;
-    if (_moduleIdentifier == null) {
-      if (other._moduleIdentifier != null)
-        return false;
-    } else if (!_moduleIdentifier.equals(other._moduleIdentifier))
-      return false;
-    return true;
-  }
-
   /**
    * <p>
    * </p>
