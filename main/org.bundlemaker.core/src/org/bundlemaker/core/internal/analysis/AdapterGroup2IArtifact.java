@@ -57,6 +57,14 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   /**
    * {@inheritDoc}
    */
+  @Override
+  public IGroupArtifact getOrCreateGroup(String path) {
+    return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   public IGroupArtifact getOrCreateGroup(IPath path) {
     return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
   }
@@ -82,6 +90,8 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    */
   public void setName(String name) {
     super.setName(name);
+
+    AdapterUtils.addModulesIfNecessaryAndResetClassification(this, hasParent() ? getParent().getQualifiedName() : null);
   }
 
   /**
@@ -122,17 +132,27 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    * {@inheritDoc}
    */
   @Override
-  public String handleCanAdd(IBundleMakerArtifact artifact) {
+  public String handleCanAdd(IBundleMakerArtifact artifactToAdd) {
 
     //
-    if (!(artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact)) {
+    if (!(artifactToAdd.getType().equals(ArtifactType.Group) || artifactToAdd instanceof AdapterModule2IArtifact)) {
       return "Only groups and modules are addable to groups";
     }
 
     // prevent entries with duplicate names entries
-    if (getChild(artifact.getName()) != null) {
+    if (getChild(artifactToAdd.getName()) != null) {
       return String.format("The group '%s' already contains a child with the name '%s'.", this.getQualifiedName(),
-          artifact.getName());
+          artifactToAdd.getName());
+    }
+
+    //
+    IBundleMakerArtifact parent = this.getParent();
+    while (parent != null) {
+      if (parent.equals(artifactToAdd)) {
+        return String.format("Cannot add '%s' already since it is a parent of '%s'.", artifactToAdd.getQualifiedName(),
+            this.getQualifiedName());
+      }
+      parent = parent.getParent();
     }
 
     //
@@ -143,7 +163,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   protected void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
-    if (!AdapterUtils.addModuleToModularizedSystem(artifact, getQualifiedName().replace('|', '/'))) {
+    if (!AdapterUtils.addModulesIfNecessaryAndResetClassification(artifact, getQualifiedName().replace('|', '/'))) {
 
       // we have to support the case that an empty group is added
       internalAddArtifact(artifact);
