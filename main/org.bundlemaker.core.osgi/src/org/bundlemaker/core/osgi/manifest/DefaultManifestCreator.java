@@ -62,7 +62,8 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     setExportPackage();
     setImportPackageAndRequireBundle();
 
-    importExportedPackages();
+    // disabled due to BM-208 (ManifestCreator: Handling of importing exported packages is not mature)
+//    importExportedPackages();
 
     setSpiProviderHeader();
 
@@ -281,6 +282,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     List<Entry<String, List<IModuleArtifact>>> entrySet = new LinkedList<Map.Entry<String, List<IModuleArtifact>>>(
         requiredPackages.entrySet());
 
+    // Sort list to make output better readable 
     Collections.sort(entrySet, new Comparator<Entry<String, List<IModuleArtifact>>>() {
 
       @Override
