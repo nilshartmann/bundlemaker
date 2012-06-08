@@ -56,9 +56,13 @@ public class AdapterUtils {
    * </p>
    * 
    * @param artifact
+   * @param newPathPrefix
+   * @return
    */
-  public static boolean addModuleToModularizedSystem(IBundleMakerArtifact artifact, String path) {
+  public static boolean addModulesIfNecessaryAndResetClassification(IBundleMakerArtifact artifact, String newPathPrefix) {
 
+    //
+    Assert.isNotNull(artifact);
     Assert.isTrue(artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact);
 
     //
@@ -77,7 +81,7 @@ public class AdapterUtils {
         String newPath = computeRelativeClassification(artifact, moduleArtifact);
 
         //
-        path = path != null ? path + "|" + newPath : newPath;
+        newPathPrefix = newPathPrefix != null ? newPathPrefix + "|" + newPath : newPath;
       }
 
       // TODO
@@ -90,9 +94,9 @@ public class AdapterUtils {
         modularizedSystem.addModule(abstractModule);
       }
 
-      if (path != null) {
-        path = path.replace('|', '/');
-        abstractModule.setClassification(new Path(path));
+      if (newPathPrefix != null) {
+        newPathPrefix = newPathPrefix.replace('|', '/');
+        abstractModule.setClassification(new Path(newPathPrefix));
       } else {
         abstractModule.setClassification(null);
       }
@@ -102,16 +106,31 @@ public class AdapterUtils {
     return !artifacts.isEmpty();
   }
 
-  public static String computeRelativeClassification(IBundleMakerArtifact artifact, IBundleMakerArtifact moduleArtifact) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @param moduleArtifact
+   * @return
+   */
+  private static String computeRelativeClassification(IBundleMakerArtifact artifact, IBundleMakerArtifact moduleArtifact) {
 
     //
     List<IBundleMakerArtifact> groups = new LinkedList<IBundleMakerArtifact>();
 
     //
     IBundleMakerArtifact currentArtifact = moduleArtifact;
-    while (currentArtifact.getParent() != null && currentArtifact.getParent().getType().equals(ArtifactType.Group)) {
+
+    boolean relativeArtifactFound = false;
+
+    while (currentArtifact.getParent() != null && currentArtifact.getParent().getType().equals(ArtifactType.Group)
+        && !relativeArtifactFound) {
+
       currentArtifact = currentArtifact.getParent();
       groups.add(currentArtifact);
+
+      relativeArtifactFound = artifact.equals(currentArtifact);
     }
 
     //

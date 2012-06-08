@@ -140,6 +140,13 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   /**
    * {@inheritDoc}
    */
+  public IGroupArtifact getOrCreateGroup(String path) {
+    return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<IBundleMakerArtifact> invalidateDependencyCache() {
     super.invalidateDependencyCache();
@@ -202,7 +209,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     // CHANGE THE UNDERLYING MODEL
     if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
-      if (!AdapterUtils.addModuleToModularizedSystem(artifact, null)) {
+      if (!AdapterUtils.addModulesIfNecessaryAndResetClassification(artifact, null)) {
         internalAddArtifact(artifact);
       }
     }

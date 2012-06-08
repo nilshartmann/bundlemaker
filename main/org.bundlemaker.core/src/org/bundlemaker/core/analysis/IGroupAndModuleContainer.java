@@ -22,6 +22,15 @@ public interface IGroupAndModuleContainer extends IBundleMakerArtifact {
   /**
    * <p>
    * </p>
+   * 
+   * @param path
+   * @return
+   */
+  IGroupArtifact getOrCreateGroup(String path);
+
+  /**
+   * <p>
+   * </p>
    * Given this is a RootArtifact
    * <ul>
    * <li>...when qualifiedModuleName contains "/" last segment is interpreted as Module name, segments before as GROUP

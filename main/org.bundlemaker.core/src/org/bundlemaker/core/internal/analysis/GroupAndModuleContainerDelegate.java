@@ -113,13 +113,24 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @return
+   */
+  public IGroupArtifact getOrCreateGroup(String path) {
+    Assert.isNotNull(path);
+
+    return getOrCreateGroup(new Path(path));
+  }
+
+  /**
    * {@inheritDoc}
    */
   public IGroupArtifact getOrCreateGroup(IPath path) {
 
     Assert.isNotNull(path);
-
-    System.out.println("getOrCreateGroup " + path);
 
     // normalize
     // // split

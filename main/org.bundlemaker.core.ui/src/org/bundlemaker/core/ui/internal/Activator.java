@@ -90,10 +90,13 @@ public class Activator extends AbstractUIPlugin {
     _projectExplorerSelectionListener = new IArtifactSelectionListener() {
       @Override
       public void artifactSelectionChanged(IArtifactSelection selection) {
-        if (!Selection.PROJECT_EXPLORER_VIEW_ID.equals(selection.getProviderId())) {
+        if (selection != null && !Selection.PROJECT_EXPLORER_VIEW_ID.equals(selection.getProviderId())) {
           CommonNavigator commonNavigator = CommonNavigatorUtils
               .findCommonNavigator(Selection.PROJECT_EXPLORER_VIEW_ID);
-          commonNavigator.getCommonViewer().setSelection(new StructuredSelection(selection.getSelectedArtifacts()));
+
+          if (commonNavigator != null) {
+            commonNavigator.getCommonViewer().setSelection(new StructuredSelection(selection.getSelectedArtifacts()));
+          }
         }
       }
     };

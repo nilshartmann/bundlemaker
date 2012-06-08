@@ -257,6 +257,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
+    public IGroupArtifact getOrCreateGroup(String path) {
+      return _rootArtifact.getOrCreateGroup(path);
+    }
+
+    @Override
     public IModuleArtifact getOrCreateModule(String qualifiedModuleName, String moduleVersion) {
       return _rootArtifact.getOrCreateModule(qualifiedModuleName, moduleVersion);
     }
