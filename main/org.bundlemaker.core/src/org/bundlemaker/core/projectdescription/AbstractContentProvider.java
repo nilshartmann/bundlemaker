@@ -1,5 +1,8 @@
 package org.bundlemaker.core.projectdescription;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 
 /**
@@ -15,6 +18,7 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
  */
 public abstract class AbstractContentProvider implements IProjectContentProvider {
 
+  /** - */
   private BundleMakerProjectDescription _projectDescription;
 
   /** - */
@@ -51,5 +55,23 @@ public abstract class AbstractContentProvider implements IProjectContentProvider
     if (_projectDescription != null) {
       _projectDescription.fireProjectDescriptionChangedEvent();
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<IProjectContentProblem> getProblems() {
+    return Collections.emptyList();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean hasProblems() {
+    return !getProblems().isEmpty();
   }
 }

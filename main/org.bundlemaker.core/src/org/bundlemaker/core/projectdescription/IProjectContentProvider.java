@@ -58,4 +58,20 @@ public interface IProjectContentProvider {
    * @param configuration
    */
   void setConfiguration(Object configuration);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  List<IProjectContentProblem> getProblems();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasProblems();
 }

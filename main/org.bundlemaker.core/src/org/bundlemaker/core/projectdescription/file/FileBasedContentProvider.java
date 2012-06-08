@@ -177,4 +177,68 @@ public class FileBasedContentProvider extends AbstractContentProvider implements
       }
     }
   }
+
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public List<IProjectContentProblem> getProblems() {
+  //
+  // // create the result list
+  // List<IProjectContentProblem> result = new LinkedList<IProjectContentProblem>();
+  //
+  // // create the binary root cache
+  // GenericCache<IPath, List<VariablePath>> binaryRootCache = new GenericCache<IPath, List<VariablePath>>() {
+  // @Override
+  // protected List<VariablePath> create(IPath key) {
+  // return new LinkedList<VariablePath>();
+  // }
+  // };
+  //
+  // // create the source root cache
+  // GenericCache<IPath, List<VariablePath>> sourceRootCache = new GenericCache<IPath, List<VariablePath>>() {
+  // @Override
+  // protected List<VariablePath> create(IPath key) {
+  // return new LinkedList<VariablePath>();
+  // }
+  // };
+  //
+  // //
+  // for (VariablePath variablePath : _fileBasedContent.getBinaryRootPaths()) {
+  //
+  // //
+  // IPath resolvedPath = getResolvedPath(variablePath);
+  //
+  // if (resolvedPath == null) {
+  // continue;
+  // } else if (binaryRootCache.containsKey(resolvedPath)) {
+  //
+  // //
+  // // System.out.println("Problem: " + variablePath.getUnresolvedPath());
+  // }
+  //
+  // binaryRootCache.getOrCreate(resolvedPath).add(variablePath);
+  // }
+  //
+  // for (VariablePath variablePath : _fileBasedContent.getSourceRootPaths()) {
+  //
+  // }
+  //
+  // return result;
+  // }
+  //
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @param variablePath
+  // * @return
+  // */
+  // private IPath getResolvedPath(VariablePath variablePath) {
+  // try {
+  // return variablePath.getResolvedPath();
+  // } catch (CoreException e) {
+  // return null;
+  // }
+  // }
 }
