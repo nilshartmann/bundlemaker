@@ -35,7 +35,7 @@ public class Activator implements BundleActivator {
 
 		// --- Start JEdit -------------------------
 		System.out.println("Starting JEdit...");
-		jEdit.main(new String[0]);
+		jEdit.main(new String[]{"-nobackground", "-noserver"});
 	}
 
 	/*
