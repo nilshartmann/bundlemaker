@@ -43,11 +43,11 @@ public class RemoveArtifactsHandler extends AbstractArtifactBasedHandler {
       message = "Are you sure you want to remove these " + selectedArtifacts.size() + " artifacts?";
     } else {
       IBundleMakerArtifact artifact = selectedArtifacts.get(0);
-      message = "Are you soure your want to remove " + artifact.getName() + "?";
+      message = "Are you sure your want to remove " + artifact.getName() + "?";
     }
 
     message += " (cannot be undone!)";
-    if (!MessageDialog.openConfirm(HandlerUtil.getActiveShell(event), "Confirm delete", message)) {
+    if (!MessageDialog.openQuestion(HandlerUtil.getActiveShell(event), "Confirm delete", message)) {
       return;
     }
 
