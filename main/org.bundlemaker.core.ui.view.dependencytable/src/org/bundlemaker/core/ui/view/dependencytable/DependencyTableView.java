@@ -120,18 +120,10 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
    * {@inheritDoc}
    */
   @Override
-  protected void setDependencySelection(IDependencySelection selection) {
+  protected void onSetDependencySelection(IDependencySelection selection) {
 
-    // set current dependencies
-    super.setDependencySelection(selection);
-
-    // init the dependencies
-    Display.getCurrent().asyncExec(new Runnable() {
-      @Override
-      public void run() {
-        initDependencies();
-      }
-    });
+    // init dependencies
+    initDependencies();
   }
 
   /**

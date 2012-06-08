@@ -15,6 +15,7 @@ import org.bundlemaker.core.ui.event.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 
@@ -118,8 +119,27 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
    * @param dependencySelection
    * 
    */
-  protected void setDependencySelection(IDependencySelection dependencySelection) {
+  protected final void setDependencySelection(final IDependencySelection dependencySelection) {
     _currentDependencySelection = dependencySelection;
+
+    // init the dependencies
+    Display.getCurrent().asyncExec(new Runnable() {
+      @Override
+      public void run() {
+        onSetDependencySelection(dependencySelection);
+      }
+
+    });
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param dependencySelection
+   */
+  protected void onSetDependencySelection(IDependencySelection dependencySelection) {
+    // empty body
   }
 
   private void unregisterArtifactModelChangedListener() {
