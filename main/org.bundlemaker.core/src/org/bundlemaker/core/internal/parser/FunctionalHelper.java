@@ -140,8 +140,15 @@ public class FunctionalHelper {
       // TODO: MAYBE REMOVE?
       Assert.isNotNull(((ResourceStandin) resourceStandin).getResource());
       for (IType type : resource.getContainedTypes()) {
+        if (!type.hasBinaryResource()) {
+          throw new IllegalStateException(
+              "For source file "
+                  + resourceStandin.getDirectory()
+                  + "/"
+                  + resourceStandin.getName()
+                  + " there is no binary (class) file.\nPlease make sure, that your binary paths contains classes for all sources in your project's source folders.");
+        }
         Assert.isNotNull(type.getBinaryResource(), resourceStandin.toString());
-        Assert.isTrue(type.hasBinaryResource());
         if (isSource) {
           Assert.isTrue(resourceStandin.equals(type.getSourceResource()),
               resourceStandin + " : " + type.getSourceResource());

@@ -2,6 +2,7 @@ package org.bundlemaker.core.ui.app.perspective;
 
 import org.bundlemaker.core.ui.view.dependencytable.DependencyTableView;
 import org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView;
+import org.bundlemaker.core.ui.view.problemview.ProblemView;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
@@ -23,6 +24,7 @@ public class BundleMakerPerspectiveFactory implements IPerspectiveFactory {
     IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.66f, editorArea);
     bottom.addView(DependencyTreeView.ID);
     bottom.addView(DependencyTableView.ID);
+    bottom.addView(ProblemView.PROBLEM_VIEW_ID);
     bottom.addView(IPageLayout.ID_PROBLEM_VIEW);
   }
 }

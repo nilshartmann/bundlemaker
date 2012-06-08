@@ -89,7 +89,7 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
 
       // Report error to user
       MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not parse project",
-          String.format("Error while parsing project:%n%s%nSee Error Log for details", ex));
+          String.format("Error while parsing project:%n%s%nSee Error Log for details", cause));
     } catch (InterruptedException ex) {
       // ignore. User has canceled the operation
     }
