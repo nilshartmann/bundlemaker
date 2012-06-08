@@ -109,6 +109,8 @@ public class ByteCodeParser extends AbstractParser {
 
     } catch (Exception e) {
       e.printStackTrace();
+      ByteCodeParserProblem byteCodeParserProblem = new ByteCodeParserProblem(resourceKey, e.toString());
+      getProblems().add(byteCodeParserProblem);
     }
 
   }

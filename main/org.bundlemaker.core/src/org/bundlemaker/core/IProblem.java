@@ -44,7 +44,7 @@ public interface IProblem {
 
   /**
    * <p>
-   * Returns the line number in source where the problem begins.
+   * Returns the line number in source where the problem begins or -1 if unknown
    * </p>
    * 
    * @return the line number in source where the problem begins
