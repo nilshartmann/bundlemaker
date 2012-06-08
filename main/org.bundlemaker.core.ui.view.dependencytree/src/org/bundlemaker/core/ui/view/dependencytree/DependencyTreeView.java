@@ -53,15 +53,12 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
    * {@inheritDoc}
    */
   @Override
-  protected void setDependencySelection(IDependencySelection selection) {
+  protected void onSetDependencySelection(IDependencySelection selection) {
 
-    // set the current dependencies
-    super.setDependencySelection(selection);
-
-    //
+    // init dependencies
     initDependencies(selection);
   }
-
+  
   @Override
   public void artifactModelModified() {
     // TODO
