@@ -32,7 +32,7 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     //
@@ -41,12 +41,12 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
 
     //
     IBundleMakerArtifact clientTypeArtifact = moduleArtifact
-        .getChild("org.bundlemaker.noprimarytype|org.bundlemaker.noprimarytype.Client");
+        .getChild("org.bundlemaker.noprimarytype|Client.java|org.bundlemaker.noprimarytype.Client");
     Assert.assertNotNull(clientTypeArtifact);
 
     //
     IBundleMakerArtifact noPrimaryTestInterfaceTypeArtifact = moduleArtifact
-        .getChild("org.bundlemaker.noprimarytype|org.bundlemaker.noprimarytype.NoPrimaryTestInterface");
+        .getChild("org.bundlemaker.noprimarytype|TestInterface.java|org.bundlemaker.noprimarytype.NoPrimaryTestInterface");
     Assert.assertNotNull(noPrimaryTestInterfaceTypeArtifact);
 
     Assert.assertEquals(1, moduleArtifact.getDependencies().size());

@@ -91,7 +91,7 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
         ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     
     //
-    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class|A");
+    IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class");
     Assert.assertNotNull(aArtifact);
     IBundleMakerArtifact packageArtifact = rootArtifact
         .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes");
@@ -101,10 +101,10 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     
     //
     packageArtifact.removeArtifact(aArtifact);
-    Assert.assertEquals(packageArtifact.getChildren().size(), 0);
+    Assert.assertEquals(packageArtifact.getChildren().size(), 3);
     
     //
     packageArtifact.addArtifact(aArtifact);
-    Assert.assertEquals(packageArtifact.getChildren().size(), 1);
+    Assert.assertEquals(packageArtifact.getChildren().size(), 4);
   }
 }
