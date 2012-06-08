@@ -10,7 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.utils;
 
+import java.util.List;
+
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -51,7 +54,15 @@ public class BundleMakerProjectOpener {
 
     // TODO: As an exception?
     Activator.getDefault().initFilters();
-    if (!ParseBundleMakerProjectRunnable.parseProject(bundleMakerProject)) {
+
+    boolean success = ParseBundleMakerProjectRunnable.parseProject(bundleMakerProject);
+
+    List<IProblem> problems = bundleMakerProject.getProblems();
+    for (IProblem iProblem : problems) {
+      System.out.println("Problem: " + iProblem);
+    }
+
+    if (!success) {
       return;
     }
 

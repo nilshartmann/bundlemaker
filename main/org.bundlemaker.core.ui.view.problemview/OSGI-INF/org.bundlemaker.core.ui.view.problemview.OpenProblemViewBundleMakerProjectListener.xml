@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:component name="org.bundlemaker.core.ui.view.problemview.OpenProblemViewBundleMakerProjectListener" xmlns:ns2="http://www.osgi.org/xmlns/scr/v1.1.0">
+    <service>
+        <provide interface="org.bundlemaker.core.ui.event.IBundleMakerProjectOpenedEventListener"/>
+    </service>
+    <implementation class="org.bundlemaker.core.ui.view.problemview.OpenProblemViewBundleMakerProjectListener"/>
+</ns2:component>
