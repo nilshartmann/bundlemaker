@@ -6,6 +6,7 @@
       <view
             category="org.bundlemaker.analysis.ui.views.category"
             class="org.bundlemaker.core.ui.view.problemview.ProblemView"
+            icon="icons/bm-problemview.png"
             id="org.bundlemaker.core.ui.view.problemview.ProblemView"
             name="BundleMaker Problems"
             restorable="true">
