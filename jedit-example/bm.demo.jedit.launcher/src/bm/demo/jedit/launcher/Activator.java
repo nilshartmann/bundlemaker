@@ -15,37 +15,27 @@ import org.osgi.service.url.URLConstants;
 import org.osgi.service.url.URLStreamHandlerService;
 
 /**
- * Starts the OSGi-fied jedit
- * @author nils
+ * Starts the OSGi-fied jedit.
+ * 
+ * <p>Note when Launching on <b>MacOs</b>: make sure your launcher doesn't set Equinox <tt>-ws</tt> parameter: https://bugs.eclipse.org/bugs/show_bug.cgi?id=212617
+ * @author Nils Hartmann (nils@nilshartmann.net)
  *
  */
 public class Activator implements BundleActivator {
 
-	private static BundleContext context;
-
-	static BundleContext getContext() {
-		return context;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext
-	 * )
-	 */
 	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
 
+	  // --- Register jEditresource Handler ------
 		System.out.println("Register jeditresource URL handler...");
 		Dictionary<String, String> properties = new Hashtable<String, String>();
 		properties.put(URLConstants.URL_HANDLER_PROTOCOL,
 				"jeditresource");
-		context.registerService(URLStreamHandlerService.class.getName(),
+		bundleContext.registerService(URLStreamHandlerService.class.getName(),
 				new JEditResourceHandlerService(), properties);
 
+		// --- Start JEdit -------------------------
 		System.out.println("Starting JEdit...");
-		jEdit.main(new String[0]);
+		jEdit.main(new String[]{"-nobackground", "-noserver"});
 	}
 
 	/*
@@ -55,7 +45,6 @@ public class Activator implements BundleActivator {
 	 * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
-		Activator.context = null;
 	}
 
 	private static class JEditResourceHandlerService extends
