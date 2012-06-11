@@ -49,7 +49,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * @param templateFile
    * @return
    */
-  protected abstract T readTemplateFile(File templateFile);
+  protected abstract T readTemplateFile(File templateFile) throws Exception;
 
   /**
    * <p>
@@ -93,7 +93,13 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
     }
 
     //
-    return readTemplateFile(templateFile);
+    try {
+      return readTemplateFile(templateFile);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
@@ -184,7 +190,7 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
    * 
    * @return
    */
-  public final File getModuleTemplateDirectory(IResourceModule resourceModule) {
+  public File getModuleTemplateDirectory(IResourceModule resourceModule) {
 
     //
     Assert.isNotNull(resourceModule);
