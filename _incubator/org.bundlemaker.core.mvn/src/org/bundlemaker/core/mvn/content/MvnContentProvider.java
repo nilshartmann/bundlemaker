@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.mvn.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.projectdescription.AbstractContentProvider;
@@ -76,7 +78,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
     _fileBasedContents = new LinkedList<IProjectContentEntry>();
 
-    for (MvnArtifactType artifactType : _mvnContent.getArtifacts()) {
+    for (final MvnArtifactType artifactType : _mvnContent.getArtifacts()) {
 
       Artifact artifact = new DefaultArtifact(artifactType.getGroupId(), artifactType.getArtifactId(), "jar",
           artifactType.getVersion());
@@ -123,7 +125,8 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
                   .getGroupId().startsWith("de.o")) {
 
                 Artifact sourceArtifact = new DefaultArtifact(currentMavenArtifact.getGroupId(),
-                    currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(), currentMavenArtifact
+                    currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(),
+                    currentMavenArtifact
                         .getVersion());
                 artifactRequest = new ArtifactRequest();
                 artifactRequest.setArtifact(sourceArtifact);
@@ -142,11 +145,24 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
               // TODO!!!
               try {
-                createFileBasedContent(currentMavenArtifact.getGroupId() + "." + currentMavenArtifact.getArtifactId(),
-                    currentMavenArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentMavenArtifact
+
+                //
+                IModuleIdentifier moduleIdentifier = MvnArtifactConverter.toModuleIdentifier(artifactType);
+
+                //
+                FileBasedContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
+                    moduleIdentifier.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentMavenArtifact
                         .getGroupId().startsWith("de.o")
-                        && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact.getGroupId()
+                        && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact
+                            .getGroupId()
                             .contains("standard")));
+
+                // set user attributes
+                fileBasedContent.getUserAttributes().put(MvnArtifactConverter.MVN_GROUP_ID, artifactType.getGroupId());
+                fileBasedContent.getUserAttributes().put(MvnArtifactConverter.MVN_ARTIFACT_ID,
+                    artifactType.getArtifactId());
+                fileBasedContent.getUserAttributes().put(MvnArtifactConverter.MVN_VERSION, artifactType.getVersion());
+
               } catch (CoreException e) {
                 System.out.println(e.getMessage());
                 throw new RuntimeException(e.getMessage(), e);
@@ -259,7 +275,8 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    * @param sourcePath
    * @throws CoreException
    */
-  private void createFileBasedContent(String contentName, String contentVersion, File binaryPath, File sourcePath,
+  private FileBasedContent createFileBasedContent(String contentName, String contentVersion, File binaryPath,
+      File sourcePath,
       IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
 
     Assert.isNotNull(contentName);
@@ -291,5 +308,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
     //
     _fileBasedContents.add(result);
+
+    return result;
   }
 }
