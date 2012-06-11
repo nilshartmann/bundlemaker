@@ -2,6 +2,7 @@ package org.bundlemaker.core.osgi.exporter;
 
 import java.io.File;
 
+import org.bundlemaker.core.exporter.AbstractDirectoryBasedTemplateProvider;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
@@ -11,7 +12,18 @@ import org.eclipse.virgo.util.parser.manifest.ManifestContents;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DirectoryBasedManifestTemplateProvider {
+public class DirectoryBasedManifestTemplateProvider extends AbstractDirectoryBasedTemplateProvider<ManifestContents> {
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link DirectoryBasedManifestTemplateProvider}.
+   * </p>
+   * 
+   * @param templateRootDirectory
+   */
+  public DirectoryBasedManifestTemplateProvider(File templateRootDirectory) {
+    super(templateRootDirectory);
+  }
 
   /**
    * <p>
