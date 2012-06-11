@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
 
@@ -17,7 +18,7 @@ public class ModuleContentReportExporter extends AbstractSingleModuleHtmlReportE
    * {@inheritDoc}
    */
   protected String getReportName() {
-    return getCurrentModule().getModuleIdentifier().toString() + "_Content";
+    return ModuleIdentifier.asValidFileName(getCurrentModule().getModuleIdentifier(), false) + "_Content";
   }
 
   /**

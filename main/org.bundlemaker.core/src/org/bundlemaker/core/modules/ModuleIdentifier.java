@@ -116,4 +116,16 @@ public class ModuleIdentifier implements IModuleIdentifier {
     stringBuilder.append(_version);
     return stringBuilder.toString();
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param appendVersion
+   * @return
+   */
+   // TODO REMOVE
+  public static final String asValidFileName(IModuleIdentifier moduleIdentifier, boolean appendVersion) {
+    return moduleIdentifier.getName().replace(':', '_') + (appendVersion ? moduleIdentifier.getVersion() : "");
+  }
 }

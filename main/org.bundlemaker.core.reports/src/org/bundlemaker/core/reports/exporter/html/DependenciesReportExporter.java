@@ -14,6 +14,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.modules.ModuleIdentifier;
 
 public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportExporter {
 
@@ -21,7 +22,7 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
    * {@inheritDoc}
    */
   protected String getReportName() {
-    return getCurrentModule().getModuleIdentifier().toString() + "_Dependencies";
+    return ModuleIdentifier.asValidFileName(getCurrentModule().getModuleIdentifier(), false) + "_Dependencies";
   }
 
   /**
@@ -69,10 +70,12 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
         bw.write("<a name=\"" + linkreference + "\"/>\n");
 
         bw.write("<h2>\n");
-        String reference = String.format("<a href=\"%1$s_Content.html\">%1$s</a> -> <a href=\"%2$s_Content.html\">%2$s</a> (%3$s Abh&auml;ngigkeiten)",
-            ((IModuleArtifact) dependency.getFrom()).getAssociatedModule().getModuleIdentifier(),
-            ((IModuleArtifact) dependency.getTo()).getAssociatedModule().getModuleIdentifier(),
-            dependency.getWeight());
+        String reference = String
+            .format(
+                "<a href=\"%1$s_Content.html\">%1$s</a> -> <a href=\"%2$s_Content.html\">%2$s</a> (%3$s Abh&auml;ngigkeiten)",
+                ((IModuleArtifact) dependency.getFrom()).getAssociatedModule().getModuleIdentifier(),
+                ((IModuleArtifact) dependency.getTo()).getAssociatedModule().getModuleIdentifier(),
+                dependency.getWeight());
         bw.write(reference);
         bw.write("</h2>\n");
 
