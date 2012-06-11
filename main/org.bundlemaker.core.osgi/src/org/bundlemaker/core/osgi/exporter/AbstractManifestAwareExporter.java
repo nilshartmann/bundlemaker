@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -283,7 +284,7 @@ public abstract class AbstractManifestAwareExporter extends AbstractExporter {
      * {@inheritDoc}
      */
     @Override
-    public ManifestContents getManifestTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+    public ManifestContents getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
         IModuleExporterContext context) {
       return null;
     }

@@ -1,39 +1,36 @@
-package org.bundlemaker.core.osgi.exporter;
+package org.bundlemaker.core.exporter;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.osgi.utils.ManifestUtils;
 import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.ResourceKey;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DirectoryBasedTemplateProvider implements ITemplateProvider {
+public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemplateProvider<T> {
 
   /** the root directory for all templates */
   private File _templateRootDirectory;
 
   /**
    * <p>
-   * Creates a new instance of type {@link DirectoryBasedTemplateProvider}.
+   * Creates a new instance of type {@link AbstractDirectoryBasedTemplateProvider}.
    * </p>
    * 
    * @param templateRootDirectory
    */
-  public DirectoryBasedTemplateProvider(File templateRootDirectory) {
+  public AbstractDirectoryBasedTemplateProvider(File templateRootDirectory) {
 
     Assert.isNotNull(templateRootDirectory);
 
@@ -41,19 +38,54 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
     Assert.isTrue(templateRootDirectory.isDirectory(),
         String.format("Template directory '%s' has to be a directory.", templateRootDirectory.getAbsolutePath()));
 
-    // set
+    // set the template directory
     _templateRootDirectory = templateRootDirectory;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param templateFile
+   * @return
+   */
+  protected abstract T readTemplateFile(File templateFile);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected abstract String getGenericTemplateFileName();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected abstract String getTemplatePostfix();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final File getTemplateRootDirectory() {
+    return _templateRootDirectory;
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public ManifestContents getManifestTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+  public T getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
       IModuleExporterContext context) {
 
     //
-    File templateFile = getManifestTemplateFile(module);
+    File templateFile = getTemplateFile(module);
 
     //
     if (templateFile == null) {
@@ -61,10 +93,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
     }
 
     //
-    ManifestContents templateManifestContents = ManifestUtils.readManifestContents(templateFile);
-
-    //
-    return templateManifestContents;
+    return readTemplateFile(templateFile);
   }
 
   /**
@@ -87,17 +116,7 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
    * 
    * @return
    */
-  public final File getTemplateRootDirectory() {
-    return _templateRootDirectory;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  private File getManifestTemplateFile(IResourceModule resourceModule) {
+  private File getTemplateFile(IResourceModule resourceModule) {
 
     Assert.isNotNull(resourceModule);
 
@@ -112,22 +131,17 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
       rootDirectory = getModuleTemplateDirectory(resourceModule);
 
       // step 1b: try '<root>/<module-root>/x.y.z_1.2.3.template'
-      File templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().toString() + ".template");
+      File templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().toString()
+          + getTemplatePostfix());
 
       // step 1c: try '<root>/<module-root>/x.y.z.template'
       if (!templateFile.exists()) {
-        templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().getName() + ".template");
+        templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().getName() + getTemplatePostfix());
       }
 
       // step 1d: try '<root>/<module-root>/manifest.template'
       if (!templateFile.exists()) {
-        templateFile = new File(rootDirectory, "manifest.template");
-      }
-
-      // step 1e: try '<root>/<module-root>/manifest.properties'
-      // DON'T USE - JUST FOR BACKWARD COMPATIBILITY
-      if (!templateFile.exists()) {
-        templateFile = new File(rootDirectory, "manifest.properties");
+        templateFile = new File(rootDirectory, getGenericTemplateFileName());
       }
 
       //
@@ -139,11 +153,11 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
 
       // step 1b: try '<root>/x.y.z_1.2.3.template'
       File templateFile = new File(getTemplateRootDirectory(), resourceModule.getModuleIdentifier().toString()
-          + ".template");
+          + getTemplatePostfix());
 
       // step 1c: try '<root>/x.y.z.template'
       if (!templateFile.exists()) {
-        templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().getName() + ".template");
+        templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().getName() + getTemplatePostfix());
       }
 
       //
@@ -215,7 +229,8 @@ public class DirectoryBasedTemplateProvider implements ITemplateProvider {
       for (String child : FileUtils.getAllChildren(templateDirectory)) {
 
         // create the resource standin
-        IReadableResource resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID", templateDirectory.getAbsolutePath(),
+        IReadableResource resourceKey = new ResourceKey("ADDITIONAL_CONTENT_DUMMY_ID",
+            templateDirectory.getAbsolutePath(),
             child);
 
         // add the resource

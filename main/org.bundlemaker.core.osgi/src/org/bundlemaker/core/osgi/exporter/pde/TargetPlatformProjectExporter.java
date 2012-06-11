@@ -12,9 +12,9 @@ package org.bundlemaker.core.osgi.exporter.pde;
 
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.exporter.util.Helper;
-import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
 import org.bundlemaker.core.osgi.exporter.bundle.JarFileBundleExporter;
 import org.bundlemaker.core.osgi.internal.Activator;
 import org.bundlemaker.core.osgi.utils.SystemBundleCopier;

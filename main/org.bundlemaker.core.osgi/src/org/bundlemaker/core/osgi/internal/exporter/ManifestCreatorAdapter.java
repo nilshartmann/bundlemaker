@@ -3,9 +3,9 @@ package org.bundlemaker.core.osgi.internal.exporter;
 import java.io.IOException;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
 import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
@@ -22,34 +22,34 @@ import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 public class ManifestCreatorAdapter {
 
   /** the modularized system */
-  private IModularizedSystem     _modularizedSystem;
+  private IModularizedSystem                  _modularizedSystem;
 
   /** the current module */
-  private IResourceModule        _module;
+  private IResourceModule                     _module;
 
   /** - */
-  private ManifestContents       _manifestContents;
+  private ManifestContents                    _manifestContents;
 
   /** - */
-  private ManifestContents       _originalManifestContents;
+  private ManifestContents                    _originalManifestContents;
 
   /** - */
-  private ManifestContents       _hostManifestContents;
+  private ManifestContents                    _hostManifestContents;
 
   /** the manifest template contents */
-  private ManifestContents       _manifestTemplateContents;
+  private ManifestContents                    _manifestTemplateContents;
 
   /** the current context */
-  private IModuleExporterContext _context;
+  private IModuleExporterContext              _context;
 
   /** - */
-  private ITemplateProvider      _templateProvider;
+  private ITemplateProvider<ManifestContents> _templateProvider;
 
   /** - */
-  private IBundleManifestCreator _manifestCreator;
+  private IBundleManifestCreator              _manifestCreator;
 
   /** - */
-  private IManifestPreferences   _manifestPreferences;
+  private IManifestPreferences                _manifestPreferences;
 
   /**
    * <p>
@@ -218,7 +218,7 @@ public class ManifestCreatorAdapter {
   protected ManifestContents createManifestTemplate() {
 
     //
-    ManifestContents templateManifestContents = _templateProvider.getManifestTemplate(getModule(),
+    ManifestContents templateManifestContents = _templateProvider.getTemplate(getModule(),
         getModularizedSystem(), getContext());
 
     //

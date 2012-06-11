@@ -15,11 +15,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.exporter.util.Helper;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.exporter.AbstractManifestAwareExporter;
-import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
 import org.bundlemaker.core.osgi.internal.Activator;
 import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;

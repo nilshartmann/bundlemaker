@@ -1,12 +1,10 @@
-package org.bundlemaker.core.osgi.exporter;
+package org.bundlemaker.core.exporter;
 
 import java.util.Set;
 
-import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IReadableResource;
-import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * <p>
@@ -18,7 +16,7 @@ import org.eclipse.virgo.util.parser.manifest.ManifestContents;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface ITemplateProvider {
+public interface ITemplateProvider<T> {
 
   /**
    * <p>
@@ -29,7 +27,7 @@ public interface ITemplateProvider {
    * @param context
    * @return
    */
-  ManifestContents getManifestTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+  T getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
       IModuleExporterContext context);
 
   /**

@@ -14,10 +14,10 @@ import junit.framework.Assert;
 
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
+import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.itest.complex.core.AbstractJeditTest;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.osgi.exporter.ITemplateProvider;
 import org.bundlemaker.core.resource.IReadableResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.virgo.bundlor.util.BundleManifestUtils;
@@ -181,7 +181,7 @@ public abstract class AbstractExportOsgiBundleTest extends AbstractJeditTest {
      * {@inheritDoc}
      */
     @Override
-    public ManifestContents getManifestTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
+    public ManifestContents getTemplate(IResourceModule module, IModularizedSystem modularizedSystem,
         IModuleExporterContext context) {
 
       //
