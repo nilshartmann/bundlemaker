@@ -1,7 +1,9 @@
 package org.bundlemaker.core.projectdescription;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
@@ -50,6 +52,9 @@ public abstract class AbstractContent implements IProjectContentEntry {
   /** the bundle maker project content provider */
   private IProjectContentProvider            _provider;
 
+  /** the user attributes */
+  private Map<String, Object>                _userAttributes;
+
   /**
    * indicates wether changes to this instance should be notified.
    * 
@@ -81,6 +86,21 @@ public abstract class AbstractContent implements IProjectContentEntry {
 
     // set the provider
     _provider = provider;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Map<String, Object> getUserAttributes() {
+
+    //
+    if (_userAttributes == null) {
+      _userAttributes = new HashMap<String, Object>();
+    }
+
+    //
+    return _userAttributes;
   }
 
   /**

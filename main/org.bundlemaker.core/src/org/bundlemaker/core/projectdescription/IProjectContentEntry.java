@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.projectdescription;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.resource.IResource;
@@ -120,4 +121,6 @@ public interface IProjectContentEntry {
    * @return a Set of resources, never null.
    */
   Set<? extends IResource> getSourceResources();
+
+  Map<String, Object> getUserAttributes();
 }

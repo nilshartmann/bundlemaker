@@ -33,6 +33,9 @@ public class BasicProjectContentTransformation implements ITransformation {
         IModifiableResourceModule module = modularizedSystem.createResourceModule(new ModuleIdentifier(fileBasedContent
             .getName(), fileBasedContent.getVersion()));
 
+        // put the user attributes
+        module.getUserAttributes().putAll(fileBasedContent.getUserAttributes());
+
         // add all the binary content
         ((ResourceContainer) module.getModifiableSelfResourceContainer()).addAll(fileBasedContent.getBinaryResources(),
             ContentType.BINARY);
