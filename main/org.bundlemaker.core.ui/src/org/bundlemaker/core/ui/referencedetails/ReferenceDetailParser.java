@@ -54,10 +54,8 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
       try {
         IJavaElement element = javaProject.findElement(new Path(binaryResource.getPath()));
         CompilationUnit compilationUnit = parse((IClassFile) element);
-        JdtAstVisitor jdtAstVisitor = new JdtAstVisitor();
+        JdtAstVisitor jdtAstVisitor = new JdtAstVisitor(movableUnit);
         compilationUnit.accept(jdtAstVisitor);
-        // System.out.println(jdtAstVisitor.getReferences());
-        System.out.println(jdtAstVisitor.getReferences());
         return jdtAstVisitor.getReferences();
       } catch (JavaModelException e) {
         e.printStackTrace();
@@ -74,8 +72,6 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
   protected static CompilationUnit parse(IClassFile classFile) {
 
     try {
-      System.out.println(classFile.getSource());
-
       ASTParser parser = ASTParser.newParser(AST.JLS3);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setProject(classFile.getJavaProject());
@@ -87,9 +83,6 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
 
       org.eclipse.jdt.core.dom.ASTNode node = parser.createAST(null /* IProgressMonitor */);
 
-      System.out.println((node.getAST()).hasResolvedBindings());
-      System.out.println((node.getAST()).hasBindingsRecovery());
-      //
       // IBinding[] bindings = parser.createBindings(new IJavaElement[] { classFile }, null);
       // for (IBinding iBinding : bindings) {
       // System.out.println(iBinding);

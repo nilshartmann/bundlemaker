@@ -14,7 +14,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
+import org.bundlemaker.core.resource.IReference;
+import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.collections.GenericCache;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IType;
@@ -88,11 +92,38 @@ public class JdtAstVisitor extends ASTVisitor {
                                                      }
                                                    };
 
-  public JdtAstVisitor() {
+  public JdtAstVisitor(IMovableUnit movableUnit) {
 
+    //
+    Assert.isNotNull(movableUnit);
+
+    //
     _typeBindings = new Stack<ITypeBinding>();
-    // _currentTypes = new Stack<IModifiableType>();
-    // _realTypes = new Stack<String>();
+
+    //
+    GenericCache<String, List<String>> referencedTypes = new GenericCache<String, List<String>>() {
+      @Override
+      protected List<String> create(String key) {
+        return new LinkedList<String>();
+      }
+    };
+
+    //
+    for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
+      for (org.bundlemaker.core.resource.IType type : resource.getContainedTypes()) {
+        for (IReference reference : type.getReferences()) {
+
+          //
+          String fullyQualifiedName = reference.getFullyQualifiedName();
+
+          //
+          int lastIndex = fullyQualifiedName.lastIndexOf(".");
+          if (lastIndex != -1 && lastIndex <= fullyQualifiedName.length()) {
+            referencedTypes.getOrCreate(fullyQualifiedName.substring(lastIndex + 1)).add(fullyQualifiedName);
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -545,7 +576,6 @@ public class JdtAstVisitor extends ASTVisitor {
   public boolean visit(SuperConstructorInvocation node) {
 
     // TODO: Zusammenlegen mit ConstructorInvocation
-
 
     IMethodBinding methodBinding = node.resolveConstructorBinding();
 
