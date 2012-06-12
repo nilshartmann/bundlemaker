@@ -2,15 +2,15 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dummy
 Bundle-SymbolicName: org.bundlemaker.core.ui.editor.dummy;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.editor.dummy.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.bundlemaker.core;bundle-version="1.0.0",
- org.bundlemaker.core.ui.artifact;bundle-version="1.0.0",
+ org.bundlemaker.core;bundle-version="0.5.0",
+ org.bundlemaker.core.ui.artifact;bundle-version="0.5.0",
  org.eclipse.jface;bundle-version="3.6.0",
- org.bundlemaker.core.ui.event;bundle-version="1.0.0",
+ org.bundlemaker.core.ui.event;bundle-version="0.5.0",
  org.eclipse.ui.workbench;bundle-version="3.6.0",
- org.bundlemaker.core.ui;bundle-version="1.0.0",
- org.bundlemaker.core.ui.view.dependencytree;bundle-version="1.0.0"
+ org.bundlemaker.core.ui;bundle-version="0.5.0",
+ org.bundlemaker.core.ui.view.dependencytree;bundle-version="0.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

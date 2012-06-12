@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Problem View
 Bundle-SymbolicName: org.bundlemaker.core.ui.view.problemview;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.5.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.view.problemview.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.bundlemaker.core.ui,
- org.bundlemaker.core.ui.event;bundle-version="1.0.0",
- org.bundlemaker.core;bundle-version="1.0.0"
+ org.bundlemaker.core.ui.event;bundle-version="0.5.0",
+ org.bundlemaker.core;bundle-version="0.5.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.ui.view.problemview

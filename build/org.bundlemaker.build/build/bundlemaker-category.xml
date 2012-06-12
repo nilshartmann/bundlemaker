@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.bundlemaker.core.feature_1.0.0.qualifier.jar" id="org.bundlemaker.core.feature" version="1.0.0.qualifier">
+   <feature url="features/org.bundlemaker.core.feature_0.5.0.qualifier.jar" id="org.bundlemaker.core.feature" version="0.5.0.qualifier">
       <category name="BundleMaker"/>
    </feature>
-   <feature url="features/org.bundlemaker.core.base.feature_1.0.0.qualifier.jar" id="org.bundlemaker.core.base.feature" version="1.0.0.qualifier">
+   <feature url="features/org.bundlemaker.core.base.feature_0.5.0.qualifier.jar" id="org.bundlemaker.core.base.feature" version="0.5.0.qualifier">
       <category name="BundleMaker"/>
    </feature>
    <feature url="features/org.bundlemaker.org.drools.feature_5.1.1.jar" id="org.bundlemaker.org.drools.feature" version="5.1.1">
