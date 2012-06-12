@@ -35,9 +35,12 @@
 
    <!-- XREF EDITOR -->
    <extension point="org.eclipse.ui.editors">
-      <editor class="org.bundlemaker.core.ui.editor.xref.XRefView" default="false"
-         id="org.bundlemaker.core.ui.editor.xref.XRefView"
-         name="Cross Referencer"> </editor>
+      <editor
+            class="org.bundlemaker.core.ui.editor.xref.XRefView"
+            default="false"
+            icon="icons/XRef.png"
+            id="org.bundlemaker.core.ui.editor.xref.XRefView"
+            name="Cross Referencer"> </editor>
    </extension>
 
 </plugin>

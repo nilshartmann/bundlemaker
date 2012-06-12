@@ -42,8 +42,11 @@
 
       <!-- DSM EDITOR -->
       <extension point="org.eclipse.ui.editors">
-            <editor class="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
-                  default="false" id="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
+            <editor
+                  class="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
+                  default="false"
+                  icon="icons/DSM.png"
+                  id="org.bundlemaker.core.ui.editor.dsm.DSMArtifactModelEditor"
                   name="DSM Analysis"> </editor>
       </extension>
 
