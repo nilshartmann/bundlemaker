@@ -72,7 +72,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
   protected static CompilationUnit parse(IClassFile classFile) {
 
     try {
-      ASTParser parser = ASTParser.newParser(AST.JLS3);
+      ASTParser parser = ASTParser.newParser(AST.JLS4);
       parser.setKind(ASTParser.K_COMPILATION_UNIT);
       parser.setProject(classFile.getJavaProject());
       parser.setSource(classFile.getSource().toCharArray()); // set source
