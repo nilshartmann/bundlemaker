@@ -775,9 +775,6 @@ public class JdtAstVisitor extends ASTVisitor {
 
     // return null if type == null
     if (typeBinding == null || typeBinding.isRecovered()) {
-
-      System.out.println(typeBinding.getName());
-
       return;
     }
 
