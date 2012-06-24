@@ -24,6 +24,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * 
    * @return the artifact type.
    */
+  @Deprecated
   public ArtifactType getType();
 
   // public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz);
