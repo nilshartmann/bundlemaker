@@ -10,10 +10,14 @@ import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 
+/**
+ * <p>
+ * The {@link ArtifactTreeDropAdapter} is used for programmatically created artifact trees.
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
-
-  /** - */
-  private TreeViewer _treeViewer;
 
   /**
    * <p>
@@ -24,9 +28,6 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
    */
   public ArtifactTreeDropAdapter(TreeViewer viewer) {
     super(viewer);
-
-    //
-    this._treeViewer = viewer;
   }
 
   /**
@@ -45,6 +46,8 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
     IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
     IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) determineTarget(event);
+
+    // TODO: Identify action
 
     IRootArtifact root = null;
     for (Object selectedObject : structuredSelection.toArray()) {

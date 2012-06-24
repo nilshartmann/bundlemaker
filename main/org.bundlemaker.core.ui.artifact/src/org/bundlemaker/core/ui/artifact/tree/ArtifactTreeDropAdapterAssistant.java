@@ -16,6 +16,8 @@ import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
  * <p>
+ * The {@link ArtifactTreeDropAdapter} is used as a drop adapter for CNF based artifact trees (e.g. the one in the
+ * project explorer).
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
