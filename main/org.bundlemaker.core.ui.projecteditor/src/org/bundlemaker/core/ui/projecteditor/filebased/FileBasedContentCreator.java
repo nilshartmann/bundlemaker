@@ -87,7 +87,8 @@ public class FileBasedContentCreator {
       }
     }
 
-    // add rest of files (most probably source files according to our naming conventions. Add it anyway)
+    // add rest of files (most probably source files according to our naming conventions. Add it anyway) TODO: we could
+    // issue a warning here (sources without binaries)
     Collection<VariablePath> files = modules.values();
     for (VariablePath file : files) {
       FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, file, null,
