@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.jdt.internal.parser;
 
+import org.bundlemaker.core.DefaultProblemImpl;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
@@ -133,6 +134,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       modifiableResource.setPrimaryType(primaryType);
 
     } catch (Exception e) {
+      getProblems().add(new DefaultProblemImpl(resourceKey, "Error while parsing: " + e));
       e.printStackTrace();
     }
   }

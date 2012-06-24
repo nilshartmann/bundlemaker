@@ -45,6 +45,9 @@ public class Activator implements BundleActivator {
 	 * org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
+	  
+	  jEdit.exit(null, false);
+	  
 	}
 
 	private static class JEditResourceHandlerService extends
