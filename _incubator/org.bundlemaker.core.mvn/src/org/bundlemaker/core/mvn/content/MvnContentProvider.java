@@ -38,14 +38,19 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  */
 public class MvnContentProvider extends AbstractContentProvider implements IProjectContentProvider {
 
-  /** - */
-  private MvnContentType             _mvnContent = new MvnContentType();
+  private static final String        SCOPE_COMPILE = "compile";
 
   /** - */
-  private int                        _counter    = 0;
+  private MvnContentType             _mvnContent   = new MvnContentType();
+
+  /** TODO */
+  private int                        _counter      = 0;
 
   /** - */
   private List<IProjectContentEntry> _fileBasedContents;
+
+  /** - */
+  private IBundleMakerProject        _bundleMakerProject;
 
   /**
    * <p>
@@ -57,188 +62,19 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    */
   public void addMvnArtifact(String groupId, String artifactId, String version) {
 
-    //
+    // asserts
+    Assert.isNotNull(groupId);
+    Assert.isNotNull(artifactId);
+    Assert.isNotNull(version);
+
+    // create the new MvnArtifactType
     MvnArtifactType mvnArtifactType = new MvnArtifactType();
     mvnArtifactType.setGroupId(groupId);
     mvnArtifactType.setArtifactId(artifactId);
     mvnArtifactType.setVersion(version);
 
-    //
+    // add it to the list of artifacts
     _mvnContent.getArtifacts().add(mvnArtifactType);
-  }
-
-  /**
-   * {@inheritDoc}
-   * 
-   * @throws CoreException
-   */
-  @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(final IBundleMakerProject bundleMakerProject)
-      throws CoreException {
-
-    _fileBasedContents = new LinkedList<IProjectContentEntry>();
-
-    for (final MvnArtifactType artifactType : _mvnContent.getArtifacts()) {
-
-      Artifact artifact = new DefaultArtifact(artifactType.getGroupId(), artifactType.getArtifactId(), "jar",
-          artifactType.getVersion());
-      CollectRequest collectRequest = new CollectRequest();
-      collectRequest.setRoot(new Dependency(artifact, "compile"));
-      collectRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
-
-      try {
-
-        //
-        CollectResult collectResult = Activator.getMvnRepositories().getRepositorySystem().collectDependencies(
-            Activator.getMvnRepositories().getRepositorySystemSession(), collectRequest);
-
-        //
-        collectResult.getRoot().accept(new DependencyVisitor() {
-
-          @Override
-          public boolean visitLeave(DependencyNode node) {
-            return true;
-          }
-
-          @Override
-          public boolean visitEnter(DependencyNode node) {
-
-            //
-            ArtifactRequest artifactRequest = new ArtifactRequest();
-            artifactRequest.setArtifact(node.getDependency().getArtifact());
-            artifactRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
-
-            try {
-
-              //
-              ArtifactResult artifactResult = Activator.getMvnRepositories().getRepositorySystem().resolveArtifact(
-                  Activator.getMvnRepositories().getRepositorySystemSession(), artifactRequest);
-
-              File sourceFile = null;
-              File binaryFile = null;
-
-              //
-              Artifact currentMavenArtifact = artifactResult.getArtifact();
-
-              // TODO
-              if (currentMavenArtifact
-                  .getGroupId().startsWith("de.o")) {
-
-                Artifact sourceArtifact = new DefaultArtifact(currentMavenArtifact.getGroupId(),
-                    currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(),
-                    currentMavenArtifact
-                        .getVersion());
-                artifactRequest = new ArtifactRequest();
-                artifactRequest.setArtifact(sourceArtifact);
-                artifactRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
-                try {
-                  artifactResult = Activator.getMvnRepositories().getRepositorySystem().resolveArtifact(
-                      Activator.getMvnRepositories().getRepositorySystemSession(), artifactRequest);
-                  sourceFile = artifactResult.getArtifact().getFile();
-                } catch (ArtifactResolutionException e) {
-                  System.out.println(e.getMessage());
-                }
-              }
-
-              //
-              binaryFile = currentMavenArtifact.getFile();
-
-              // TODO!!!
-              try {
-
-                //
-                IModuleIdentifier moduleIdentifier = MvnArtifactConverter.toModuleIdentifier(artifactType);
-
-                //
-                FileBasedContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
-                    moduleIdentifier.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentMavenArtifact
-                        .getGroupId().startsWith("de.o")
-                        && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact
-                            .getGroupId()
-                            .contains("standard")));
-
-                // set user attributes
-                fileBasedContent.getUserAttributes().put(MvnArtifactConverter.MVN_GROUP_ID, artifactType.getGroupId());
-                fileBasedContent.getUserAttributes().put(MvnArtifactConverter.MVN_ARTIFACT_ID,
-                    artifactType.getArtifactId());
-                fileBasedContent.getUserAttributes().put(MvnArtifactConverter.MVN_VERSION, artifactType.getVersion());
-
-              } catch (CoreException e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException(e.getMessage(), e);
-              }
-
-              //
-              // System.out.println(artifactResult.getArtifact().getFile().getAbsolutePath());
-
-            } catch (Exception e) {
-              // TODO: handle exception
-            }
-            return true;
-          }
-        });
-
-        //
-
-        // collectResult.getRoot().accept(new DependencyVisitor() {
-        //
-        // @Override
-        // public boolean visitLeave(DependencyNode node) {
-        // return true;
-        // }
-        //
-        // @Override
-        // public boolean visitEnter(DependencyNode node) {
-        //
-        // File sourceFile = null;
-        // File binaryFile = null;
-        //
-        // //
-        // Artifact currentArtifact = node.getDependency().getArtifact();
-        // //
-        // Artifact sourceArtifact = new DefaultArtifact(currentArtifact.getGroupId(),
-        // currentArtifact.getArtifactId(), "sources", currentArtifact.getExtension(), currentArtifact
-        // .getVersion());
-        // ArtifactRequest artifactRequest = new ArtifactRequest();
-        // artifactRequest.setArtifact(sourceArtifact);
-        // artifactRequest.addRepository(repo);
-        //
-        // try {
-        // ArtifactResult artifactResult;
-        // artifactResult = system.resolveArtifact(session, artifactRequest);
-        // sourceFile = artifactResult.getArtifact().getFile();
-        // } catch (ArtifactResolutionException e) {
-        // System.out.println(e.getMessage());
-        // }
-        //
-        // binaryFile = currentArtifact.getFile();
-        //
-        // try {
-        // createFileBasedContent(currentArtifact.getGroupId() + "." + currentArtifact.getArtifactId(),
-        // currentArtifact.getVersion(), binaryFile, sourceFile, bundleMakerProject, currentArtifact
-        // .getGroupId().startsWith("de.o"));
-        // } catch (CoreException e) {
-        // System.out.println(e.getMessage());
-        // throw new RuntimeException(e.getMessage(), e);
-        // }
-        //
-        // return true;
-        // }
-        // });
-        //
-      }
-      // catch (DependencyResolutionException e) {
-      // System.out.println(e.getMessage());
-      // throw new RuntimeException(e.getMessage(), e);
-      // }
-
-      catch (DependencyCollectionException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-
-    return _fileBasedContents;
   }
 
   /**
@@ -246,7 +82,8 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    */
   @Override
   public Object getConfiguration() {
-    //
+
+    // return the configuration
     return _mvnContent;
   }
 
@@ -258,11 +95,155 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
     //
     Assert.isNotNull(configuration);
-    System.out.println(configuration.getClass());
     Assert.isTrue(configuration instanceof MvnContentType);
 
     // cast down
     _mvnContent = (MvnContentType) configuration;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IProjectContentEntry> getBundleMakerProjectContent(final IBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    //
+    Assert.isNotNull(bundleMakerProject);
+
+    // set the IBundleMakerProject
+    _bundleMakerProject = bundleMakerProject;
+
+    // create the result list
+    _fileBasedContents = new LinkedList<IProjectContentEntry>();
+
+    // iterate over all the specified mvn artifacts
+    for (final MvnArtifactType artifactIdentifier : _mvnContent.getArtifacts()) {
+
+      // create the aether artifact
+      Artifact artifact = new DefaultArtifact(artifactIdentifier.getGroupId(),
+          artifactIdentifier.getArtifactId(), "jar",
+          artifactIdentifier.getVersion());
+
+      CollectRequest collectRequest = new CollectRequest();
+      collectRequest.setRoot(new Dependency(artifact, SCOPE_COMPILE));
+      collectRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
+
+      //
+      try {
+
+        // collect the result
+        CollectResult collectResult = Activator.getMvnRepositories().getRepositorySystem().collectDependencies(
+            Activator.getMvnRepositories().getRepositorySystemSession(), collectRequest);
+
+        // visit all the dependencies
+        collectResult.getRoot().accept(new DependencyVisitorAdapter() {
+          @Override
+          public boolean visitEnter(DependencyNode node) {
+            return handleDependencyNode(node);
+          }
+        });
+
+      } catch (DependencyCollectionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+
+    // return the result
+    return _fileBasedContents;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param artifactType
+   * @param node
+   * @return
+   */
+  protected boolean handleDependencyNode(DependencyNode node) {
+
+    // get the referenced artifact
+    Artifact mvnArtifact = node.getDependency().getArtifact();
+
+    //
+    ArtifactRequest artifactRequest = new ArtifactRequest();
+    artifactRequest.setArtifact(node.getDependency().getArtifact());
+    artifactRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
+
+    try {
+
+      //
+      ArtifactResult artifactResult = Activator.getMvnRepositories().getRepositorySystem().resolveArtifact(
+          Activator.getMvnRepositories().getRepositorySystemSession(), artifactRequest);
+
+      File sourceFile = null;
+      File binaryFile = null;
+
+      //
+      Artifact currentMavenArtifact = artifactResult.getArtifact();
+
+      // TODO
+      // if (currentMavenArtifact
+      // .getGroupId().startsWith("de.o")) {
+
+      Artifact sourceArtifact = new DefaultArtifact(currentMavenArtifact.getGroupId(),
+          currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(),
+          currentMavenArtifact
+              .getVersion());
+      artifactRequest = new ArtifactRequest();
+      artifactRequest.setArtifact(sourceArtifact);
+      artifactRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
+      try {
+        artifactResult = Activator.getMvnRepositories().getRepositorySystem().resolveArtifact(
+            Activator.getMvnRepositories().getRepositorySystemSession(), artifactRequest);
+        sourceFile = artifactResult.getArtifact().getFile();
+      } catch (ArtifactResolutionException e) {
+        System.out.println(e.getMessage());
+      }
+      // }
+
+      //
+      binaryFile = currentMavenArtifact.getFile();
+
+      // TODO!!!
+      try {
+
+        //
+        IModuleIdentifier moduleIdentifier = MvnArtifactConverter.toModuleIdentifier(mvnArtifact.getGroupId(),
+            mvnArtifact.getArtifactId(), mvnArtifact.getVersion());
+
+        boolean analyze = currentMavenArtifact
+            .getGroupId().startsWith("de.o")
+            && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact
+                .getGroupId()
+                .contains("standard"));
+
+        //
+        FileBasedContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
+            moduleIdentifier.getVersion(), binaryFile, sourceFile, _bundleMakerProject, analyze);
+
+        // set user attributes
+        fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_GROUP_ID,
+            mvnArtifact.getGroupId());
+        fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_ARTIFACT_ID,
+            mvnArtifact.getArtifactId());
+        fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MODULE_NAME,
+            moduleIdentifier.getName());
+
+      } catch (CoreException e) {
+        System.out.println(e.getMessage());
+        throw new RuntimeException(e.getMessage(), e);
+      }
+
+    } catch (Exception e) {
+      // TODO: handle exception
+    }
+
+    //
+    return true;
   }
 
   /**
@@ -310,5 +291,25 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     _fileBasedContents.add(result);
 
     return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   * 
+   */
+  private static class DependencyVisitorAdapter implements DependencyVisitor {
+
+    @Override
+    public boolean visitEnter(DependencyNode node) {
+      return true;
+    }
+
+    @Override
+    public boolean visitLeave(DependencyNode node) {
+      return true;
+    }
   }
 }

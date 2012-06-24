@@ -5,10 +5,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.model.merge.ModelMerger;
+import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.exporter.AbstractExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
@@ -66,7 +75,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
   public void doExport(IProgressMonitor progressMonitor) throws CoreException {
 
     //
-    MvnArtifactType mvnArtifactType = MvnArtifactConverter.fromResourceModule(getCurrentModule());
+    MvnArtifactType mvnArtifactType = MvnArtifactConverter.fromModule(getCurrentModule());
 
     //
     File groupDirectory = new File(getCurrentContext().getDestinationDirectory(), mvnArtifactType.getGroupId());
@@ -125,16 +134,61 @@ public class MvnProjectModuleExporter extends AbstractExporter {
    */
   protected void createPOM(File projectDirectory) throws FileNotFoundException, IOException {
 
-    //
+    // get the artifact model to resolve the dependencies
+    IRootArtifact artifactModel = getCurrentModularizedSystem().getArtifactModel(
+        IArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
+
+    // get the current module artifact
+    IModuleArtifact currentModuleArtifact = artifactModel.getModuleArtifact(getCurrentModule());
+
+    // create a new maven model
+    Model model = new Model();
+
+    // get the maven model template (if exists)
     Model template = _templateProvider != null ? _templateProvider.getTemplate(getCurrentModule(),
         getCurrentModularizedSystem(),
         getCurrentContext()) : null;
 
-    //
-    Model model = new Model();
-
+    // merge the template
     if (template != null) {
       new ModelMerger().merge(model, template, true, null);
+    }
+
+    // set the maven pom coordinates
+    MvnArtifactType mvnArtifactType = MvnArtifactConverter.fromModule(getCurrentModule());
+    model.setGroupId(mvnArtifactType.getGroupId());
+    model.setArtifactId(mvnArtifactType.getArtifactId());
+    model.setVersion(mvnArtifactType.getVersion());
+
+    // get all modules
+    final List<IModuleArtifact> allModules = new LinkedList<IModuleArtifact>();
+    artifactModel.accept(
+        new IArtifactTreeVisitor.Adapter() {
+          @Override
+          public boolean visit(IModuleArtifact moduleArtifact) {
+            if (!getCurrentModularizedSystem().getExecutionEnvironment().equals(moduleArtifact.getAssociatedModule())) {
+              allModules.add(moduleArtifact);
+            }
+            return false;
+          }
+        });
+
+    // resolve the dependencies
+    Collection<? extends IDependency> dependencies = currentModuleArtifact.getDependencies(allModules);
+    for (IDependency dependency : dependencies) {
+
+      //
+      IModuleArtifact toArtifact = (IModuleArtifact) dependency.getTo();
+
+      // get the mvn artifact type
+      MvnArtifactType toMvnArtifactType = MvnArtifactConverter.fromModule(toArtifact.getAssociatedModule());
+
+      Dependency mvnDependency = new Dependency();
+      mvnDependency.setGroupId(toMvnArtifactType.getGroupId());
+      mvnDependency.setArtifactId(toMvnArtifactType.getArtifactId());
+      mvnDependency.setVersion(toMvnArtifactType.getVersion());
+
+      model.addDependency(mvnDependency);
     }
 
     //
