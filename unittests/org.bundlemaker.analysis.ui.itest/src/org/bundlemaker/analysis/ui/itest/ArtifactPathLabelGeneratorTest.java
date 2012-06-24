@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
@@ -209,7 +208,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     artifactModelConfiguration.setAggregateInnerTypes(false);
     artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);
 
-    IBundleMakerArtifact rootArtifact = ModelTransformerCache.getArtifactModel(getModularizedSystem(),
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
         artifactModelConfiguration).getRoot();
 
     Assert.assertNotNull(rootArtifact);

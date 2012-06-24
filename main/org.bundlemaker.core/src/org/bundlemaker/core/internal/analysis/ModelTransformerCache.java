@@ -8,11 +8,15 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.analysis;
+package org.bundlemaker.core.internal.analysis;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
@@ -23,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
  * Helper class to transform {@link IModifiableModularizedSystem IModifiableModularizedSystems}.
  * </p>
  */
+// TODO: move to internal
 public class ModelTransformerCache {
 
   //
@@ -31,8 +36,18 @@ public class ModelTransformerCache {
   /**
    * <p>
    * </p>
+   * 
+   * @return
    */
-  public static void invalidateCache() {
+  public Collection<IRootArtifact> getAllArtifactModels() {
+    return _cache.values();
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void invalidateCache() {
     _cache.clear();
   }
 
@@ -45,7 +60,7 @@ public class ModelTransformerCache {
    *          the modularized system
    * @return the {@link IDependencyModel}
    */
-  public static IRootArtifact getArtifactModel(IModifiableModularizedSystem modifiableModularizedSystem,
+  public IRootArtifact getArtifactModel(IModifiableModularizedSystem modifiableModularizedSystem,
       IArtifactModelConfiguration configuration) {
 
     // assert not null

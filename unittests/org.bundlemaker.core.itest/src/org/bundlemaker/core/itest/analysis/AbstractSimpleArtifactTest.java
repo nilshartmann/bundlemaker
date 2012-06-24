@@ -14,7 +14,6 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -406,8 +405,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
    */
   protected IRootArtifact createArtifactModel() {
 
-    IRootArtifact rootArtifact = ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), getConfiguration()).getRoot();
+    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(getConfiguration()).getRoot();
 
     Assert.assertNotNull(rootArtifact);
     Assert.assertEquals(2, rootArtifact.getChildren().size());

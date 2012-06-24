@@ -6,7 +6,6 @@ import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
@@ -31,8 +30,8 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
   public void testNoPrimaryType_aggregatedTypes() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) ModelTransformerCache.getArtifactModel(
-        getModularizedSystem(), ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
+        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     //

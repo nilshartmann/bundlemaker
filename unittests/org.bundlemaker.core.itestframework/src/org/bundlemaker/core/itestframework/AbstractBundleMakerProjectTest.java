@@ -6,7 +6,6 @@ import java.io.File;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ModelTransformerCache;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
@@ -78,9 +77,6 @@ public abstract class AbstractBundleMakerProjectTest {
 
     // get the BM project
     _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
-
-    //
-    ModelTransformerCache.invalidateCache();
   }
 
   /**

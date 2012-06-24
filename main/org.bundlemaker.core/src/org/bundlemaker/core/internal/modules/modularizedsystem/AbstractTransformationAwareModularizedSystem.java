@@ -152,7 +152,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         // TODO!!
         try {
           TypeModule typeModule = createTypeModule(fileBasedContent.getId().toString(), identifier,
-          // TODO!!
+              // TODO!!
               new File[] { ((FileBasedContent) fileBasedContent).getBinaryRootPaths().toArray(new VariablePath[0])[0]
                   .getAsFile() });
           getModifiableNonResourceModulesMap().put(typeModule.getModuleIdentifier(), typeModule);
@@ -202,6 +202,13 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
       transformationMonitor.worked(1);
     }
+
+    afterApplyTransformations();
+  }
+
+  protected void afterApplyTransformations() {
+    // TODO Auto-generated method stub
+
   }
 
   /**
