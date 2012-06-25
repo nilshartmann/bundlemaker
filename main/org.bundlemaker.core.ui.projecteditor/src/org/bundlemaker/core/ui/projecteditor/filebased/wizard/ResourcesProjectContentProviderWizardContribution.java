@@ -16,7 +16,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentCreator;
-import org.bundlemaker.core.ui.projecteditor.provider.NewProjectContentProviderWizardContribution;
+import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.graphics.Image;
@@ -25,7 +25,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ResourcesProjectContentProviderWizardContribution implements NewProjectContentProviderWizardContribution {
+public class ResourcesProjectContentProviderWizardContribution implements INewProjectContentProviderWizardContribution {
 
   private final FileBasedContentCreator _fileBasedContentCreator = new FileBasedContentCreator();
 

@@ -4,7 +4,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.BundleMakerImages;
-import org.bundlemaker.core.ui.projecteditor.provider.NewProjectContentProviderWizardContribution;
+import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class JdtProjectContentProviderWizardContribution implements NewProjectContentProviderWizardContribution {
+public class JdtProjectContentProviderWizardContribution implements INewProjectContentProviderWizardContribution {
 
   /*
    * (non-Javadoc)

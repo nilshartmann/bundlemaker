@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.projecteditor.newwizard;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.ui.projecteditor.provider.NewProjectContentProviderWizardContribution;
+import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardNode;
 import org.eclipse.swt.graphics.Image;
@@ -25,7 +25,7 @@ public class ChooseContentProviderWizardNode implements IWizardNode {
 
   private final IBundleMakerProject                         _bundleMakerProject;
 
-  private final NewProjectContentProviderWizardContribution _contribution;
+  private final INewProjectContentProviderWizardContribution _contribution;
 
   private IWizard                                           _wizard;
 
@@ -34,7 +34,7 @@ public class ChooseContentProviderWizardNode implements IWizardNode {
    * @param contribution
    */
   public ChooseContentProviderWizardNode(IBundleMakerProject bundleMakerProject,
-      NewProjectContentProviderWizardContribution contribution) {
+      INewProjectContentProviderWizardContribution contribution) {
     super();
     _bundleMakerProject = bundleMakerProject;
     _contribution = contribution;
