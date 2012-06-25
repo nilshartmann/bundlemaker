@@ -20,10 +20,9 @@ import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
-import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
 import org.bundlemaker.core.ui.projecteditor.layout.FormLayoutUtils;
 import org.bundlemaker.core.ui.projecteditor.newwizard.ChooseContentProviderWizard;
-import org.bundlemaker.core.ui.projecteditor.newwizard.internal.NewProjectContentProviderWizardContributionRegistry;
+import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.bundlemaker.core.ui.utils.BundleMakerProjectOpener;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -156,8 +155,9 @@ public class ProjectEditorPage extends FormPage {
     projectContentTree.setLinesVisible(true);
 
     _treeViewer = new TreeViewer(projectContentTree);
+
     _treeViewer.setContentProvider(new ProjectEditorTreeViewerContentProvider(Activator.getDefault()
-        .getProjectContentProviderEditorRegistry()));
+        .getProjectEditorContributionRegistry()));
     configureTreeDragAndDrop();
     createTreeColumns();
 
@@ -247,11 +247,11 @@ public class ProjectEditorPage extends FormPage {
   }
 
   private void configureTreeDragAndDrop() {
-    ProjectEditorDndProviderRegistry projectEditorDndProviderRegistry = Activator.getDefault()
-        .getProjectEditorDndProviderRegistry();
+    ProjectEditorContributionRegistry projectEditorDndProviderRegistry = Activator.getDefault()
+        .getProjectEditorContributionRegistry();
 
     Set<IProjectEditorDropProvider> registeredDndProviders = projectEditorDndProviderRegistry
-        .getRegisteredDndProviders();
+        .getDropProviders();
 
     ProjectEditorTreeViewerDropAdapter adapter = new ProjectEditorTreeViewerDropAdapter(_treeViewer,
         _bundleMakerProject, registeredDndProviders) {
@@ -342,8 +342,8 @@ public class ProjectEditorPage extends FormPage {
   protected void addContent(Shell shell) {
 
     // Create the wizard presenting the available content provider wizards
-    NewProjectContentProviderWizardContributionRegistry registry = Activator.getDefault()
-        .getNewProjectContentProviderWizardRegistry();
+    ProjectEditorContributionRegistry registry = Activator.getDefault()
+        .getProjectEditorContributionRegistry();
     ChooseContentProviderWizard wizard = new ChooseContentProviderWizard(_bundleMakerProject, registry);
 
     // create the WizardDialog

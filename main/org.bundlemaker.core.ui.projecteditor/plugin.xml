@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="org.bundlemaker.core.ui.projecteditor" name="ProjectContentProviderEditor" schema="schema/org.bundlemaker.core.ui.projecteditor.ProjectContentProviderEditor.exsd"/>
    	<extension id="org.bundlemaker.core.ui.editors" name="Bundlemaker Editors"
 		point="org.eclipse.ui.editors">
 		<editor icon="icons/etools/bm-project-description.png"
@@ -11,6 +12,37 @@
 			> </contentTypeBinding>
 		</editor>
 	</extension>
+    <extension
+          id="fileBasedContentProviderEditor"
+          point="org.bundlemaker.core.ui.projecteditor">
+       <drop-provider
+             class="org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentDropProvider">
+       </drop-provider>
+       <provider-editor
+             class="org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentProviderEditor">
+       </provider-editor>
+       <new-wizard-contribution
+             class="org.bundlemaker.core.ui.projecteditor.filebased.wizard.ResourcesProjectContentProviderWizardContribution">
+       </new-wizard-contribution>
+    </extension>
+    
+    <!-- JDT Project Editor (not stable yet)
+    <extension
+          id="jdtProjectContentEditorProvider"
+          name="JdtProjectContentEditorProvider"
+          point="org.bundlemaker.core.ui.projecteditor">
+       <drop-provider
+             class="org.bundlemaker.core.ui.projecteditor.jdt.JdtProjectContentProviderDropAdapter">
+       </drop-provider>
+       <provider-editor
+             class="org.bundlemaker.core.ui.projecteditor.jdt.JdtProjectContentProviderEditor">
+       </provider-editor>
+       <new-wizard-contribution
+             class="org.bundlemaker.core.ui.projecteditor.jdt.wizard.JdtProjectContentProviderWizardContribution">
+       </new-wizard-contribution>
+    </extension>
+    -->
+   
 
 
 </plugin>

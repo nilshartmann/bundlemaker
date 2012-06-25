@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.ui.projecteditor.newwizard.internal.NewProjectContentProviderWizardContributionRegistry;
-import org.bundlemaker.core.ui.projecteditor.provider.NewProjectContentProviderWizardContribution;
+import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
+import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * A Wizard page displaying all available {@link NewProjectContentProviderWizardContribution
+ * A Wizard page displaying all available {@link INewProjectContentProviderWizardContribution
  * NewProjectContentProviderWizards}
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -45,14 +45,14 @@ import org.eclipse.swt.widgets.Text;
  */
 public class ChooseContentProviderSelectionPage extends WizardSelectionPage {
 
-  private final IBundleMakerProject                     _bundleMakerProject;
+  private final IBundleMakerProject               _bundleMakerProject;
 
-  private final NewProjectContentProviderWizardContributionRegistry _newProjectContentProviderWizardRegistry;
+  private final ProjectEditorContributionRegistry _newProjectContentProviderWizardRegistry;
 
-  private Text                                          _description;
+  private Text                                    _description;
 
   protected ChooseContentProviderSelectionPage(IBundleMakerProject bundleMakerProject,
-      NewProjectContentProviderWizardContributionRegistry registry) {
+      ProjectEditorContributionRegistry registry) {
     super("SelectionPage"); //$NON-NLS-1$
 
     // set current project
@@ -142,11 +142,11 @@ public class ChooseContentProviderSelectionPage extends WizardSelectionPage {
    * @param wizardSelectionViewer
    */
   private void initViewerContents(TableViewer wizardSelectionViewer) {
-    Set<NewProjectContentProviderWizardContribution> registeredWizardContributionss = _newProjectContentProviderWizardRegistry
-        .getRegisteredWizardContributions();
+    Set<INewProjectContentProviderWizardContribution> registeredWizardContributionss = _newProjectContentProviderWizardRegistry
+        .getNewProjectContentProviderWizardContributions();
     List<ChooseContentProviderWizardNode> nodes = new LinkedList<ChooseContentProviderWizardNode>();
 
-    for (NewProjectContentProviderWizardContribution wizardContribution : registeredWizardContributionss) {
+    for (INewProjectContentProviderWizardContribution wizardContribution : registeredWizardContributionss) {
 
       // Create node for contribution
       ChooseContentProviderWizardNode node = new ChooseContentProviderWizardNode(_bundleMakerProject,

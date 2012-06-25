@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.projecteditor.newwizard;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.ui.projecteditor.newwizard.internal.NewProjectContentProviderWizardContributionRegistry;
+import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.jface.wizard.Wizard;
 
 /**
@@ -20,12 +20,12 @@ import org.eclipse.jface.wizard.Wizard;
  */
 public class ChooseContentProviderWizard extends Wizard {
 
-  private final IBundleMakerProject                     _bundleMakerProject;
+  private final IBundleMakerProject               _bundleMakerProject;
 
-  private final NewProjectContentProviderWizardContributionRegistry _newProjectContentProviderWizardRegistry;
+  private final ProjectEditorContributionRegistry _newProjectContentProviderWizardRegistry;
 
   public ChooseContentProviderWizard(IBundleMakerProject bundleMakerProject,
-      NewProjectContentProviderWizardContributionRegistry registry) {
+      ProjectEditorContributionRegistry registry) {
     setWindowTitle("Choose Content Provider");
     _newProjectContentProviderWizardRegistry = registry;
     _bundleMakerProject = bundleMakerProject;
