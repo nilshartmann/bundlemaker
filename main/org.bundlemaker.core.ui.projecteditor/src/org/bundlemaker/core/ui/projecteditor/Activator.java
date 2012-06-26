@@ -1,8 +1,6 @@
 package org.bundlemaker.core.ui.projecteditor;
 
-import org.bundlemaker.core.ui.projecteditor.dnd.internal.ProjectEditorDndProviderRegistry;
-import org.bundlemaker.core.ui.projecteditor.newwizard.internal.NewProjectContentProviderWizardContributionRegistry;
-import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectContentProviderEditorRegistry;
+import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -15,16 +13,12 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String                      PLUGIN_ID = "org.bundlemaker.core.ui.projecteditor"; //$NON-NLS-1$
+  public static final String                PLUGIN_ID = "org.bundlemaker.core.ui.projecteditor"; //$NON-NLS-1$
 
   // The shared instance
-  private static Activator                        plugin;
+  private static Activator                  plugin;
 
-  private ProjectEditorDndProviderRegistry        _projectEditorDndProviderRegistry;
-
-  private ProjectContentProviderEditorRegistry    _projectContentProviderEditorRegistry;
-
-  private NewProjectContentProviderWizardContributionRegistry _newProjectContentProviderWizardRegistry;
+  private ProjectEditorContributionRegistry _projectEditorContributionRegistry;
 
   /**
    * The constructor
@@ -40,9 +34,7 @@ public class Activator extends AbstractUIPlugin {
   @Override
   public void start(BundleContext context) throws Exception {
     super.start(context);
-    _projectEditorDndProviderRegistry = new ProjectEditorDndProviderRegistry();
-    _projectContentProviderEditorRegistry = new ProjectContentProviderEditorRegistry();
-    _newProjectContentProviderWizardRegistry = new NewProjectContentProviderWizardContributionRegistry();
+    _projectEditorContributionRegistry = new ProjectEditorContributionRegistry();
     plugin = this;
 
   }
@@ -58,22 +50,11 @@ public class Activator extends AbstractUIPlugin {
     super.stop(context);
   }
 
-  public ProjectEditorDndProviderRegistry getProjectEditorDndProviderRegistry() {
-    return _projectEditorDndProviderRegistry;
-  }
-
   /**
-   * @return the projectContentProviderEditorRegistry
+   * @return the projectEditorRegistry
    */
-  public ProjectContentProviderEditorRegistry getProjectContentProviderEditorRegistry() {
-    return _projectContentProviderEditorRegistry;
-  }
-
-  /**
-   * @return the newProjectContentProviderWizardRegistry
-   */
-  public NewProjectContentProviderWizardContributionRegistry getNewProjectContentProviderWizardRegistry() {
-    return _newProjectContentProviderWizardRegistry;
+  public ProjectEditorContributionRegistry getProjectEditorContributionRegistry() {
+    return _projectEditorContributionRegistry;
   }
 
   /**

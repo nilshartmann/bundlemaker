@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.Image;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public interface NewProjectContentProviderWizardContribution {
+public interface INewProjectContentProviderWizardContribution {
 
   public String getLabel(IBundleMakerProject bundleMakerProject);
 

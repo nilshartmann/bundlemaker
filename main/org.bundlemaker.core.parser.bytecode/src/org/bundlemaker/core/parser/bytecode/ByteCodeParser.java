@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.parser.bytecode;
 
+import org.bundlemaker.core.DefaultProblemImpl;
 import org.bundlemaker.core.parser.AbstractParser;
 import org.bundlemaker.core.parser.IResourceCache;
 import org.bundlemaker.core.parser.bytecode.asm.ArtefactAnalyserClassVisitor;
@@ -109,7 +110,7 @@ public class ByteCodeParser extends AbstractParser {
 
     } catch (Exception e) {
       e.printStackTrace();
-      ByteCodeParserProblem byteCodeParserProblem = new ByteCodeParserProblem(resourceKey, e.toString());
+      DefaultProblemImpl byteCodeParserProblem = new DefaultProblemImpl(resourceKey, e.toString());
       getProblems().add(byteCodeParserProblem);
     }
 

@@ -8,16 +8,15 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.parser.bytecode;
+package org.bundlemaker.core;
 
-import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.resource.IResourceKey;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  *
  */
-public class ByteCodeParserProblem implements IProblem {
+public class DefaultProblemImpl implements IProblem {
   
   private final IResourceKey _resourceKey;
   private final String _message;
@@ -26,7 +25,7 @@ public class ByteCodeParserProblem implements IProblem {
    * @param resourceKey
    * @param message
    */
-  public ByteCodeParserProblem(IResourceKey resourceKey, String message) {
+  public DefaultProblemImpl(IResourceKey resourceKey, String message) {
     _resourceKey = resourceKey;
     _message = message;
   }

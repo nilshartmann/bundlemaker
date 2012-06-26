@@ -7,18 +7,18 @@ import java.util.Set;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
-import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectContentProviderEditorRegistry;
+import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvider {
 
-  private final ProjectContentProviderEditorRegistry _projectContentProviderEditorRegistry;
+  private final ProjectEditorContributionRegistry _projectEditorContributionRegistry;
 
   public ProjectEditorTreeViewerContentProvider(
-      ProjectContentProviderEditorRegistry projectContentProviderEditorRegistry) {
+      ProjectEditorContributionRegistry projectContentProviderEditorRegistry) {
     super();
-    _projectContentProviderEditorRegistry = projectContentProviderEditorRegistry;
+    _projectEditorContributionRegistry = projectContentProviderEditorRegistry;
   }
 
   @Override
@@ -43,8 +43,8 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
         .getContentProviders();
 
     for (IProjectContentProvider iProjectContentProvider : contentProviders) {
-      Set<IProjectContentProviderEditor> projectContentProviderEditors = _projectContentProviderEditorRegistry
-          .getProjectContentProviderEditors();
+      Set<IProjectContentProviderEditor> projectContentProviderEditors = _projectEditorContributionRegistry
+          .getContentProviderEditors();
       for (IProjectContentProviderEditor iProjectContentProviderEditor : projectContentProviderEditors) {
         if (iProjectContentProviderEditor.canHandle(iProjectContentProvider)) {
           Object rootElement = iProjectContentProviderEditor

@@ -3,6 +3,7 @@ package org.bundlemaker.core.ui.projecteditor.filebased;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
@@ -159,6 +160,11 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
 
       // add to provider
       provider.addRootPath(variablePath, contentType);
+
+      // If sources are added set AnalyzeMode per default to BINARIES_AND_SOURCES
+      if (contentType == ContentType.SOURCE) {
+        provider.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES);
+      }
     }
 
     return true;
