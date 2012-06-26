@@ -136,16 +136,16 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
       // step 1a: get the current root directory
       rootDirectory = getModuleTemplateDirectory(resourceModule);
 
-      // step 1b: try '<root>/<module-root>/x.y.z_1.2.3.template'
+      // step 1b: try '<root>/<module-root>/x.y.z_1.2.3.<postfix>'
       File templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().toString()
           + getTemplatePostfix());
 
-      // step 1c: try '<root>/<module-root>/x.y.z.template'
+      // step 1c: try '<root>/<module-root>/x.y.z.<postfix>'
       if (!templateFile.exists()) {
         templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().getName() + getTemplatePostfix());
       }
 
-      // step 1d: try '<root>/<module-root>/manifest.template'
+      // step 1d: try '<root>/<module-root>/manifest.<postfix>'
       if (!templateFile.exists()) {
         templateFile = new File(rootDirectory, getGenericTemplateFileName());
       }
@@ -157,11 +157,11 @@ public abstract class AbstractDirectoryBasedTemplateProvider<T> implements ITemp
     // step 2: try the root template directory
     else {
 
-      // step 1b: try '<root>/x.y.z_1.2.3.template'
+      // step 1b: try '<root>/x.y.z_1.2.3.<postfix>'
       File templateFile = new File(getTemplateRootDirectory(), resourceModule.getModuleIdentifier().toString()
           + getTemplatePostfix());
 
-      // step 1c: try '<root>/x.y.z.template'
+      // step 1c: try '<root>/x.y.z.<postfix>'
       if (!templateFile.exists()) {
         templateFile = new File(rootDirectory, resourceModule.getModuleIdentifier().getName() + getTemplatePostfix());
       }
