@@ -11,7 +11,10 @@
 package org.bundlemaker.core.transformations;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
@@ -30,12 +33,12 @@ public class ClassifyTransformation implements ITransformation {
   /**
    * A pattern describing the modules this transformation should get applied to
    */
-  private final String _includeModulePattern;
+  private final List<String> _includeModulePattern;
 
   /**
    * Might be null
    */
-  private final String _excludeModulePattern;
+  private final List<String> _excludeModulePattern;
 
   /**
    * A template with the classification path
@@ -48,56 +51,54 @@ public class ClassifyTransformation implements ITransformation {
    * <ul>
    * <b>%MODULE_NAME%</b>: Replaced by the module name in uppercase</li>
    */
-  private final String _classificationTemplate;
+  private final String       _classificationTemplate;
 
   /**
+   * <p>
+   * </p>
+   * 
    * @param modulePattern
    * @param classificationTemplate
    */
-  public ClassifyTransformation(String includeModulePattern, String excludeModulePattern, String classificationTemplate) {
+  public ClassifyTransformation(List<String> includeModulePattern, List<String> excludeModulePattern,
+      String classificationTemplate) {
     super();
-    _includeModulePattern = includeModulePattern;
-    if (excludeModulePattern == null || excludeModulePattern.trim().isEmpty()) {
-      _excludeModulePattern = null;
-    } else {
-      _excludeModulePattern = excludeModulePattern;
-    }
+
+    //
+    _includeModulePattern = includeModulePattern != null ? includeModulePattern : new LinkedList<String>();
+    _excludeModulePattern = excludeModulePattern != null ? excludeModulePattern : new LinkedList<String>();
     _classificationTemplate = classificationTemplate;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.core.transformation.ITransformation#apply(org.bundlemaker.core.modules.modifiable.
-   * IModifiableModularizedSystem)
+  /**
+   * {@inheritDoc}
    */
   @Override
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
 
-    Collection<IModifiableResourceModule> modules = modularizedSystem.getModifiableResourceModules();
+    Collection<IModule> modules = modularizedSystem.getAllModules();
 
     SubMonitor subMonitor = SubMonitor.convert(monitor, modules.size());
     subMonitor.subTask("Classify modules");
 
-    for (IModifiableResourceModule module : modules) {
+    for (IModule module : modules) {
       applyClassification(module);
       subMonitor.worked(1);
     }
   }
 
-  public void applyClassification(IModifiableResourceModule targetModule) {
+  public void applyClassification(IModule targetModule) {
     if (matches(targetModule.getModuleIdentifier())) {
       IPath classification = getClassification(targetModule);
       targetModule.setClassification(classification);
     }
-
   }
 
   /**
    * @param value
    * @return
    */
-  private IPath getClassification(IModifiableResourceModule value) {
+  private IPath getClassification(IModule value) {
 
     String classification = _classificationTemplate.replaceAll("%MODULE_NAME%", value.getModuleIdentifier().getName()
         .toUpperCase());
@@ -117,6 +118,27 @@ public class ClassifyTransformation implements ITransformation {
       return false;
     }
     return (_excludeModulePattern == null) || !(simpleMatch(_excludeModulePattern, name));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param patterns
+   * @param str
+   * @return
+   */
+  public static boolean simpleMatch(List<String> patterns, String str) {
+
+    //
+    for (String pattern : patterns) {
+      if (simpleMatch(pattern, str)) {
+        return true;
+      }
+    }
+
+    //
+    return false;
   }
 
   /**
