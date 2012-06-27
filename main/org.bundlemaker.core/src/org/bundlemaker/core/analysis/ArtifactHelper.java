@@ -8,6 +8,15 @@ import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * @deprecated we need a common place for all visitor utilities... see
+ *             org.bundlemaker.core.itest.analysis.ArtifactVisitorUtils
+ */
+@Deprecated
 public class ArtifactHelper {
 
   /**
