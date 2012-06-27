@@ -179,7 +179,33 @@ public class ArtifactVisitorUtils {
     // return result
     return result.get(0);
   }
+  
+  
+  public static List<IPackageArtifact> findPackageArtifacts(IBundleMakerArtifact root, final String fullyQualifiedName) {
 
+    // create the result array
+    final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
+
+    // visit
+    root.accept(new IArtifactTreeVisitor.Adapter() {
+      @Override
+      public boolean visit(IPackageArtifact packageArtifact) {
+
+        //
+        if (packageArtifact.getQualifiedName().equals(fullyQualifiedName)) {
+          result.add(packageArtifact);
+        }
+
+        //
+        return false;
+      }
+    });
+
+    // return result
+    return result;
+  }
+  
+  
   /**
    * <p>
    * </p>
