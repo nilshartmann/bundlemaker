@@ -534,6 +534,12 @@
           id="org.bundlemaker.core.ui.preferences.page"
           name="BundleMaker">
     </page>
+    <page
+          class="org.bundlemaker.core.ui.preferences.ContentProviderPreferencePage"
+          id="org.bundlemaker.core.ui.preferences.page.contentprovider"
+          name="Content Provider"
+          category="org.bundlemaker.core.ui.preferences.page">
+    </page>
  </extension>
  <extension
        point="org.eclipse.core.runtime.preferences">
