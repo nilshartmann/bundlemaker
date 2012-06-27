@@ -126,6 +126,14 @@ public interface IModularizedSystem {
    * <p>
    * </p>
    * 
+   * @param progressMonitor
+   */
+  void resetTransformations(IProgressMonitor progressMonitor);
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param monitor
    * @param transformations
    */

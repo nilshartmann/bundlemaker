@@ -106,6 +106,14 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * {@inheritDoc}
    */
   @Override
+  public void resetTransformations(IProgressMonitor progressMonitor) {
+    // TODO
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public void applyTransformations(IProgressMonitor progressMonitor, ITransformation... transformations) {
 
     //
