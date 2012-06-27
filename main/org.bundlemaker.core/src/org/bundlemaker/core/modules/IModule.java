@@ -42,6 +42,15 @@ public interface IModule extends ITypeContainer {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @param classification
+   */
+  // TODO: introduce IModifiableModule
+  void setClassification(IPath classification);
+
+  /**
+   * <p>
    * Returns the {@link IModularizedSystem} this module belongs to or <code>null</code> if this module does not belong
    * to an {@link IModularizedSystem}.
    * </p>
