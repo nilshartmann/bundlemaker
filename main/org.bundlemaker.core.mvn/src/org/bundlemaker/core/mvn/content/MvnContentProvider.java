@@ -78,6 +78,21 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @param mvnArtifactType
+   */
+  public void addMvnArtifact(MvnArtifactType mvnArtifactType) {
+
+    // asserts
+    Assert.isNotNull(mvnArtifactType);
+
+    // add it to the list of artifacts
+    _mvnContent.getArtifacts().add(mvnArtifactType);
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -114,6 +129,10 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     // set the IBundleMakerProject
     _bundleMakerProject = bundleMakerProject;
 
+    // if (_fileBasedContents != null && !_fileBasedContents.isEmpty()) {
+    // return _fileBasedContents;
+    // }
+
     // create the result list
     _fileBasedContents = new LinkedList<IProjectContentEntry>();
 
@@ -127,14 +146,15 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
       CollectRequest collectRequest = new CollectRequest();
       collectRequest.setRoot(new Dependency(artifact, SCOPE_COMPILE));
-      collectRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
+      collectRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
 
       //
       try {
 
         // collect the result
-        CollectResult collectResult = Activator.getMvnRepositories().getRepositorySystem().collectDependencies(
-            Activator.getMvnRepositories().getRepositorySystemSession(), collectRequest);
+        CollectResult collectResult = Activator.getDefault().getMvnRepositories().getRepositorySystem()
+            .collectDependencies(
+                Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), collectRequest);
 
         // visit all the dependencies
         collectResult.getRoot().accept(new DependencyVisitorAdapter() {
@@ -157,6 +177,25 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
   /**
    * <p>
    * </p>
+   */
+  public void clearArtifactList() {
+    _mvnContent.getArtifacts().clear();
+    _fileBasedContents.clear();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<MvnArtifactType> getMvnArtifacts() {
+    return _mvnContent.getArtifacts();
+  }
+
+  /**
+   * <p>
+   * </p>
    * 
    * @param bundleMakerProject
    * @param artifactType
@@ -171,13 +210,14 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     //
     ArtifactRequest artifactRequest = new ArtifactRequest();
     artifactRequest.setArtifact(node.getDependency().getArtifact());
-    artifactRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
+    artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
 
     try {
 
       //
-      ArtifactResult artifactResult = Activator.getMvnRepositories().getRepositorySystem().resolveArtifact(
-          Activator.getMvnRepositories().getRepositorySystemSession(), artifactRequest);
+      ArtifactResult artifactResult = Activator.getDefault().getMvnRepositories().getRepositorySystem()
+          .resolveArtifact(
+              Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), artifactRequest);
 
       File sourceFile = null;
       File binaryFile = null;
@@ -195,10 +235,10 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
               .getVersion());
       artifactRequest = new ArtifactRequest();
       artifactRequest.setArtifact(sourceArtifact);
-      artifactRequest.addRepository(Activator.getMvnRepositories().getRemoteRepository());
+      artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
       try {
-        artifactResult = Activator.getMvnRepositories().getRepositorySystem().resolveArtifact(
-            Activator.getMvnRepositories().getRepositorySystemSession(), artifactRequest);
+        artifactResult = Activator.getDefault().getMvnRepositories().getRepositorySystem().resolveArtifact(
+            Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), artifactRequest);
         sourceFile = artifactResult.getArtifact().getFile();
       } catch (ArtifactResolutionException e) {
         System.out.println(e.getMessage());

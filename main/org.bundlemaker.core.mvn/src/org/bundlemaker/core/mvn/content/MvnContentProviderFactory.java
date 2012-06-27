@@ -1,5 +1,6 @@
 package org.bundlemaker.core.mvn.content;
 
+import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 
 /**
@@ -27,6 +28,33 @@ public class MvnContentProviderFactory {
     //
     MvnContentProvider mvnContentProvider = new MvnContentProvider();
     mvnContentProvider.addMvnArtifact(groupId, artifactId, version);
+
+    //
+    description.addContentProvider(mvnContentProvider);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param description
+   * @param groupId
+   * @param artifactId
+   * @param version
+   */
+  public static void addNewMvnContentProvider(IModifiableProjectDescription description,
+      MvnArtifactType... artifactTypes) {
+
+    //
+    MvnContentProvider mvnContentProvider = new MvnContentProvider();
+
+    //
+    for (MvnArtifactType mvnArtifactType : artifactTypes) {
+
+      //
+      mvnContentProvider.addMvnArtifact(mvnArtifactType.getGroupId(), mvnArtifactType.getArtifactId(),
+          mvnArtifactType.getVersion());
+    }
 
     //
     description.addContentProvider(mvnContentProvider);

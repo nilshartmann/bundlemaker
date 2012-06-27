@@ -33,12 +33,21 @@ public class MvnRepositories implements IMvnRepositories {
 
     Assert.isNotNull(localRepo);
     Assert.isNotNull(remoteRepoUrl);
+    
+    System.out.println("setMvnRepositories ");
+    System.out.println("localRepo " + localRepo.getAbsolutePath());
+    System.out.println("remoteRepoUrl " + remoteRepoUrl);
 
-    //
-    Booter booter = new Booter(localRepo, remoteRepoUrl);
-    _system = booter.newRepositorySystem();
-    _session = booter.newRepositorySystemSession(_system);
-    _repo = booter.newCentralRepository();
+    try {
+      //
+      Booter booter = new Booter(localRepo, remoteRepoUrl);
+      _system = booter.newRepositorySystem();
+      _session = booter.newRepositorySystemSession(_system);
+      _repo = booter.newCentralRepository();
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**
