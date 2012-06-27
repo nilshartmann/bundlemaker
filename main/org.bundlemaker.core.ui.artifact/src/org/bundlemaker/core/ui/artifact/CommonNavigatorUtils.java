@@ -61,11 +61,15 @@ public class CommonNavigatorUtils {
    * @return
    */
   public static CommonNavigator findCommonNavigator(String navigatorViewId) {
-    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-    if (page != null) {
-      IViewPart view = page.findView(navigatorViewId);
-      if (view != null && view instanceof CommonNavigator)
-        return ((CommonNavigator) view);
+    try {
+      IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+      if (page != null) {
+        IViewPart view = page.findView(navigatorViewId);
+        if (view != null && view instanceof CommonNavigator)
+          return ((CommonNavigator) view);
+      }
+    } catch (Exception e) {
+      return null;
     }
     return null;
   }
