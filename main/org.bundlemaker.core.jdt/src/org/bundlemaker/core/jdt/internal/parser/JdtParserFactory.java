@@ -44,6 +44,7 @@ public class JdtParserFactory implements IParserFactory {
   @Override
   public void initialize() {
     _resourceChangeListener = new DeleteAssociatedProjectChangeListener();
+    // TODO: https://bundlemaker.jira.com/browse/BM-246
 //    ResourcesPlugin.getWorkspace().addResourceChangeListener(_resourceChangeListener,
 //        IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 
