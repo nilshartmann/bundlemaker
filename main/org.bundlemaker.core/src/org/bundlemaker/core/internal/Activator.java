@@ -84,7 +84,7 @@ public class Activator extends Plugin {
 
     //
     _parserFactoryRegistry = new ParserFactoryRegistry();
-    _parserFactoryRegistry.initialize();
+
 
     //
     // enableAutoBuild(false);
@@ -137,7 +137,20 @@ public class Activator extends Plugin {
     return _context;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public ParserFactoryRegistry getParserFactoryRegistry() {
+
+    // lazy initialization to prevent alzheimer's workspace [https://bundlemaker.jira.com/browse/BM-246]
+    if (!_parserFactoryRegistry.isInitalized()) {
+      _parserFactoryRegistry.initialize();
+    }
+
+    // return the parser factory
     return _parserFactoryRegistry;
   }
 

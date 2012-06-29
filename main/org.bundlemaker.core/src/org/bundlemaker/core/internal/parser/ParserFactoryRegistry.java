@@ -37,6 +37,9 @@ public class ParserFactoryRegistry implements IExtensionChangeHandler {
   public static final String   EXTENSION_POINT_ID = "org.bundlemaker.core.parserfactory";
 
   /** - */
+  private boolean              _isInitalized      = false;
+
+  /** - */
   private ExtensionTracker     _tracker;
 
   /** - */
@@ -47,6 +50,14 @@ public class ParserFactoryRegistry implements IExtensionChangeHandler {
    * </p>
    */
   public void initialize() {
+
+    //
+    if (_isInitalized) {
+      return;
+    }
+
+    // set initialized
+    _isInitalized = true;
 
     //
     _parserFactories = new LinkedList<IParserFactory>();
@@ -67,6 +78,16 @@ public class ParserFactoryRegistry implements IExtensionChangeHandler {
 
     // register IExtensionChangeHandler
     _tracker.registerHandler(this, ExtensionTracker.createExtensionPointFilter(extensionPoint));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean isInitalized() {
+    return _isInitalized;
   }
 
   /**
