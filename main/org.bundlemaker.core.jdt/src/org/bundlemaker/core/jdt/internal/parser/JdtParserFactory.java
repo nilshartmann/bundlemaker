@@ -44,8 +44,8 @@ public class JdtParserFactory implements IParserFactory {
   @Override
   public void initialize() {
     _resourceChangeListener = new DeleteAssociatedProjectChangeListener();
-    ResourcesPlugin.getWorkspace().addResourceChangeListener(_resourceChangeListener,
-        IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
+//    ResourcesPlugin.getWorkspace().addResourceChangeListener(_resourceChangeListener,
+//        IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE);
 
     _hookRegistry = new ExtensionRegistryTracker<IJdtSourceParserHook>(CoreParserJdt.EXTENSION_POINT_ID);
     _hookRegistry.initialize();
