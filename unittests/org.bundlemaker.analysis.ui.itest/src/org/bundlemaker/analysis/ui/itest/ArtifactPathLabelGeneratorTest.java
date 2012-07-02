@@ -205,7 +205,6 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     ArtifactModelConfiguration artifactModelConfiguration = new ArtifactModelConfiguration();
     artifactModelConfiguration.setHierarchicalPackages(hierarchical);
     artifactModelConfiguration.setContentType(ContentType.BINARY);
-    artifactModelConfiguration.setAggregateInnerTypes(false);
     artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);
 
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(

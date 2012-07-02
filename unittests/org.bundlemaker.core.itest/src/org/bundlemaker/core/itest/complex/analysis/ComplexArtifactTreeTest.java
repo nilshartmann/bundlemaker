@@ -32,7 +32,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        new ArtifactModelConfiguration(false, ContentType.BINARY, true, true));
+        new ArtifactModelConfiguration(false, ContentType.BINARY, true));
     Assert.assertNotNull(rootArtifact);
 
     //
