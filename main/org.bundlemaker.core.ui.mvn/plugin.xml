@@ -2,21 +2,17 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-	<!-- -->
-    <extension point="org.eclipse.ui.preferencePages">
- 	  <page id="MvnRepositoriesPreferencePage"
-  	      	name="Mvn Content Provider"
-	      	class="org.bundlemaker.core.ui.mvn.MvnRepositoriesPreferencePage"
-		    category="org.bundlemaker.core.ui.preferences.page.contentprovider">
-   	  </page>
-    </extension>
- 
-	<!-- -->
-    <extension
-          id="fileBasedContentProviderEditor"
-          point="org.bundlemaker.core.ui.projecteditor">
-       <provider-editor
-             class="org.bundlemaker.core.ui.mvn.MvnProjectContentProviderEditor" />
-       <new-wizard-contribution class="org.bundlemaker.core.ui.mvn.MvnContentProviderWizardContribution" />
-    </extension>
+      <!-- org.eclipse.ui.preferencePages -->
+      <extension point="org.eclipse.ui.preferencePages">
+            <page id="MvnRepositoriesPreferencePage" name="Mvn Content Provider"
+                  class="org.bundlemaker.core.ui.mvn.MvnRepositoriesPreferencePage"
+                  category="org.bundlemaker.core.ui.preferences.page.contentprovider"> </page>
+      </extension>
+
+      <!-- org.bundlemaker.core.ui.projecteditor -->
+      <extension id="fileBasedContentProviderEditor" point="org.bundlemaker.core.ui.projecteditor">
+            <provider-editor class="org.bundlemaker.core.ui.mvn.MvnProjectContentProviderEditor"/>
+            <new-wizard-contribution
+                  class="org.bundlemaker.core.ui.mvn.MvnContentProviderWizardContribution"/>
+      </extension>
 </plugin>

@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         id="org.bundlemaker.core.mvn.content.MvnContentProvider"
-         name="MvnContentProvider"
-         point="org.bundlemaker.core.projectcontentprovider">
-      <projectContentProvider
-         class="org.bundlemaker.core.mvn.content.MvnContentProvider">
-         <jaxbObjectFactory
-            class="org.bundlemaker.core.mvn.content.xml.ObjectFactory">
-         </jaxbObjectFactory>
+   
+   <!-- org.bundlemaker.core.projectcontentprovider -->
+   <extension id="org.bundlemaker.core.mvn.content.MvnContentProvider" name="MvnContentProvider"
+      point="org.bundlemaker.core.projectcontentprovider">
+      <projectContentProvider class="org.bundlemaker.core.mvn.content.MvnContentProvider">
+         <jaxbObjectFactory class="org.bundlemaker.core.mvn.content.xml.ObjectFactory"
+         > </jaxbObjectFactory>
       </projectContentProvider>
    </extension>
-   
-         <extension
-            point="org.eclipse.core.runtime.preferences">
-         <initializer
-               class="org.bundlemaker.core.mvn.content.MvnRepositoriesPreferenceInitializer">
-         </initializer>
-      </extension>
+
+   <!-- org.eclipse.core.runtime.preferences -->
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.bundlemaker.core.mvn.content.MvnRepositoriesPreferenceInitializer"
+      > </initializer>
+   </extension>
 </plugin>
