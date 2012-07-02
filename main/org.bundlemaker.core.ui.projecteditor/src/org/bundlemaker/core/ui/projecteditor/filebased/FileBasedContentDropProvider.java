@@ -1,11 +1,13 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedContentHelper;
 import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.choice.Choice;
@@ -46,14 +48,22 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
   @Override
   public boolean canDrop(IProjectEditorDropEvent dropEvent) throws Exception {
 
+    //
     if (dropEvent.isTransferType(LocalSelectionTransfer.getTransfer())) {
       return canDropLocalSelection(dropEvent);
     }
 
+    //
+    if (!canDropSelection(dropEvent)) {
+      return false;
+    }
+
+    //
     if (!dropEvent.hasTarget()) {
       return true;
     }
 
+    //
     return (dropEvent.getTarget() instanceof FileBasedContentProvider);
 
   }
@@ -171,6 +181,35 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @param dropEvent
+   * @return
+   */
+  protected boolean canDropSelection(IProjectEditorDropEvent dropEvent) {
+
+    // get the selected objects
+    List<?> selectedObjects = getSelectedObjects(dropEvent.getData());
+
+    // drop only possible with folders and files
+    for (Object object : selectedObjects) {
+
+      //
+      if (object instanceof File) {
+
+        //
+        if (!FileBasedContentHelper.isValidArchive((File) object)) {
+          return false;
+        }
+      }
+    }
+
+    //
+    return true;
+  }
+
+  /**
    * @param dropEvent
    * @return
    */
@@ -187,7 +226,17 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
 
     // drop only possible with folders and files
     for (Object object : selectedObjects) {
-      if (object instanceof IFolder || object instanceof IFile) {
+
+      //
+      if (object instanceof IFolder) {
+        continue;
+      }
+
+      //
+      else if (object instanceof IFile) {
+        if (!FileBasedContentHelper.isValidArchive((IFile) object)) {
+          return false;
+        }
         continue;
       }
 
