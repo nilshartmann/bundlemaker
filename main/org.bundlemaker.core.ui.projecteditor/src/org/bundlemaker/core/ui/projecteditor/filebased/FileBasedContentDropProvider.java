@@ -189,19 +189,18 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
    */
   protected boolean canDropSelection(IProjectEditorDropEvent dropEvent) {
 
-    // get the selected objects
-    List<?> selectedObjects = getSelectedObjects(dropEvent.getData());
+    String[] fileNames = dropEvent.getData(String[].class);
 
-    // drop only possible with folders and files
-    for (Object object : selectedObjects) {
+    if (fileNames == null) {
+      // cannot determine yet
+      return true;
+    }
 
-      //
-      if (object instanceof File) {
+    for (String dropCandidateName : fileNames) {
+      File dropCandidate = new File(dropCandidateName);
 
-        //
-        if (!FileBasedContentHelper.isValidArchive((File) object)) {
-          return false;
-        }
+      if (!FileBasedContentHelper.isValidArchive(dropCandidate)) {
+        return false;
       }
     }
 
