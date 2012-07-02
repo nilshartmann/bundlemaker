@@ -31,8 +31,6 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
 
   private final static String               PREF_AGGREGATE_INNER_TYPES = PREFS_PREFIX + "aggregateInnerTypes";
 
-  private final static String               PREF_RESOURCE_PRESENTATION = PREFS_PREFIX + "resourcePresentation";
-
   private final static String               PREF_CONTENT_TYPE          = PREFS_PREFIX + "contentType";
 
   private final static String               PREF_VIRTUAL_MODULE        = PREFS_PREFIX + "virtualModuleForMissingTypes";
@@ -51,9 +49,7 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
 
   private synchronized static ArtifactModelConfiguration getDefaultArtifactModelConfiguration() {
     if (DEFAULT_CONFIGURATION == null) {
-      ArtifactModelConfiguration configuration = new ArtifactModelConfiguration();
-      configuration.setAggregateInnerTypes(true);
-      DEFAULT_CONFIGURATION = configuration;
+      DEFAULT_CONFIGURATION = new ArtifactModelConfiguration();
     }
 
     return DEFAULT_CONFIGURATION;
@@ -79,9 +75,6 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
       _configuration = getDefaultArtifactModelConfiguration();
       try {
         // override default settings with stored preferences
-        if (_store.contains(PREF_AGGREGATE_INNER_TYPES)) {
-          _configuration.setAggregateInnerTypes(_store.getBoolean(PREF_AGGREGATE_INNER_TYPES));
-        }
         if (_store.contains(PREF_CONTENT_TYPE)) {
           _configuration.setContentType(ContentType.valueOf(_store.getString(PREF_CONTENT_TYPE)));
         }
@@ -111,7 +104,6 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
    * </p>
    */
   public void store() {
-    _store.setValue(PREF_AGGREGATE_INNER_TYPES, _configuration.isAggregateInnerTypes());
     _store.setValue(PREF_CONTENT_TYPE, _configuration.getContentType().toString());
     _store.setValue(PREF_VIRTUAL_MODULE, _configuration.isIncludeVirtualModuleForMissingTypes());
     _store.setValue(PREF_HIERARCHICAL_PACKAGES, _configuration.isHierarchicalPackages());

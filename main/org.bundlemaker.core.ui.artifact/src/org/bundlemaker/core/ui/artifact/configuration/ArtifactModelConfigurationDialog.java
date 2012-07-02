@@ -62,11 +62,7 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
 
   private Button      _hierarchicalButton;
 
-  private Button      _aggregateInnerTypesButton;
-
   private ComboViewer _contentTypeComboViewer;
-
-  // private ComboViewer _resourcesComboViewer;
 
   private Button      _virtualModuleButton;
 
@@ -88,12 +84,6 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
     layoutData.horizontalSpan = 2;
     _hierarchicalButton.setLayoutData(layoutData);
 
-    _aggregateInnerTypesButton = new Button(dialogComposite, SWT.CHECK);
-    _aggregateInnerTypesButton.setText("Aggregate inner types");
-    layoutData = new GridData();
-    layoutData.horizontalSpan = 2;
-    _aggregateInnerTypesButton.setLayoutData(layoutData);
-
     Label label = new Label(dialogComposite, SWT.NONE);
     label.setText("Show content type");
 
@@ -102,16 +92,6 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
     _contentTypeComboViewer.setLabelProvider(enumValueLabelProvider);
     _contentTypeComboViewer.add(new EnumValue(ContentType.SOURCE, "Sources"));
     _contentTypeComboViewer.add(new EnumValue(ContentType.BINARY, "Binaries"));
-
-    // label = new Label(dialogComposite, SWT.NONE);
-    // label.setText("Show resources");
-    // Combo resourcesCombo = new Combo(dialogComposite, SWT.READ_ONLY);
-    // _resourcesComboViewer = new ComboViewer(resourcesCombo);
-    // _resourcesComboViewer.setLabelProvider(enumValueLabelProvider);
-    // _resourcesComboViewer.add(new EnumValue(ResourcePresentation.ALL_RESOURCES, "All resources"));
-    // _resourcesComboViewer.add(new EnumValue(ResourcePresentation.ONLY_NON_TYPE_RESOURCES,
-    // "Non-type resources only"));
-    // _resourcesComboViewer.add(new EnumValue(ResourcePresentation.NO_RESOURCE, "No resources"));
 
     _virtualModuleButton = new Button(dialogComposite, SWT.CHECK);
     _virtualModuleButton.setText("Show missing types in 'virtual' module");
@@ -127,7 +107,6 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
   }
 
   private void prepopulateDialog() {
-    _aggregateInnerTypesButton.setSelection(_originalConfiguration.isAggregateInnerTypes());
     selectEnumValue(_contentTypeComboViewer, _originalConfiguration.getContentType());
     _hierarchicalButton.setSelection(_originalConfiguration.isHierarchicalPackages());
     // selectEnumValue(_resourcesComboViewer, _originalConfiguration.getResourcePresentation());
@@ -141,17 +120,12 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
    */
   @Override
   protected void okPressed() {
-    _originalConfiguration.setAggregateInnerTypes(_aggregateInnerTypesButton.getSelection());
     _originalConfiguration.setHierarchicalPackages(_hierarchicalButton.getSelection());
     _originalConfiguration.setIncludeVirtualModuleForMissingTypes(_virtualModuleButton.getSelection());
 
     int selectionIndex = _contentTypeComboViewer.getCombo().getSelectionIndex();
     EnumValue value = (EnumValue) _contentTypeComboViewer.getElementAt(selectionIndex);
     _originalConfiguration.setContentType((ContentType) value.getValue());
-
-    // selectionIndex = _resourcesComboViewer.getCombo().getSelectionIndex();
-    // value = (EnumValue) _resourcesComboViewer.getElementAt(selectionIndex);
-    // _originalConfiguration.setResourcePresentation((ResourcePresentation) value.getValue());
 
     super.okPressed();
   }

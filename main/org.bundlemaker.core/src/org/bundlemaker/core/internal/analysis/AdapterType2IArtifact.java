@@ -386,27 +386,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
     _cachedDependencies = new HashMap<IBundleMakerArtifact, IDependency>();
 
     // TODO: WRONG!
-    initReferences(_type.getReferences(), _artifactCache.getConfiguration().isAggregateInnerTypes());
-
-    //
-    if (_artifactCache.getConfiguration().isAggregateInnerTypes()) {
-
-      if (_type.hasSourceResource()) {
-        for (IType type : _type.getSourceResource().getContainedTypes()) {
-          if (!treatAsPrimaryType(type)) {
-            initReferences(type.getReferences(), false);
-          }
-        }
-      }
-
-      if (_type.hasBinaryResource()) {
-        for (IResource stickyResource : _type.getBinaryResource().getStickyResources()) {
-          for (IType type : stickyResource.getContainedTypes()) {
-            initReferences(type.getReferences(), false);
-          }
-        }
-      }
-    }
+    initReferences(_type.getReferences(), false);
   }
 
   /**
@@ -422,11 +402,6 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
 
       // get the reference name
       String referenceName = reference.getFullyQualifiedName();
-
-      // resolve the top level type
-      if (_artifactCache.getConfiguration().isAggregateInnerTypes()) {
-        referenceName = resolvePrimaryType(referenceName, (IResourceModule) _type.getModule(getModularizedSystem()));
-      }
 
       // skip self references
       if (referenceName.equals(this.getQualifiedName())) {

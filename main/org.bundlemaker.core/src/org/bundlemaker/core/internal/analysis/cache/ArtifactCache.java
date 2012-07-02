@@ -325,8 +325,7 @@ public class ArtifactCache {
       for (IType type : module.getContainedTypes()) {
 
         // filter local or anonymous type names
-        if ((!getConfiguration().isAggregateInnerTypes() && !type.isLocalOrAnonymousType())
-            || (getConfiguration().isAggregateInnerTypes() && !type.isInnerType() && type.handleAsPrimaryType())) {
+        if (!type.isLocalOrAnonymousType()) {
 
           // create the artifact
           this.getTypeArtifact(type, true);

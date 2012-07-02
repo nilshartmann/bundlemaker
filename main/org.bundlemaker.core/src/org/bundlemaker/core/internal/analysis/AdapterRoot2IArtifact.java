@@ -285,8 +285,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
       for (IType type : movableUnit.getAssociatedTypes()) {
 
         // filter local or anonymous type names
-        if ((!getConfiguration().isAggregateInnerTypes() && !type.isLocalOrAnonymousType())
-            || (getConfiguration().isAggregateInnerTypes() && !type.isInnerType() && type.handleAsPrimaryType())) {
+        if (!type.isLocalOrAnonymousType()) {
           TypeKey typeKey = new TypeKey(type);
           IBundleMakerArtifact artifact = _artifactCache.getTypeCache().getOrCreate(typeKey);
           AbstractBundleMakerArtifactContainer parentArtifact = _artifactCache.getTypeCache().getTypeParent(

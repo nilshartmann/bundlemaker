@@ -11,30 +11,27 @@ import org.bundlemaker.core.projectdescription.ContentType;
  */
 public interface IArtifactModelConfiguration {
 
- 
-
   /** default configuration SOURCE_RESOURCES_CONFIGURATION */
   public static final IArtifactModelConfiguration SOURCE_RESOURCES_CONFIGURATION              = new ArtifactModelConfiguration(
                                                                                                   false,
                                                                                                   ContentType.SOURCE,
-                                                                                                  false, true);
+                                                                                                  true);
 
   /** default configuration BINARY_RESOURCES_CONFIGURATION */
   public static final IArtifactModelConfiguration BINARY_RESOURCES_CONFIGURATION              = new ArtifactModelConfiguration(
                                                                                                   false,
                                                                                                   ContentType.BINARY,
-                                                                                                  false, true);
+                                                                                                  true);
 
   public static final IArtifactModelConfiguration HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION = new ArtifactModelConfiguration(
                                                                                                   true,
                                                                                                   ContentType.BINARY,
-                                                                                                  false, true);
+                                                                                                  true);
 
   public static final IArtifactModelConfiguration HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION = new ArtifactModelConfiguration(
                                                                                                   true,
                                                                                                   ContentType.SOURCE,
-                                                                                                  false, true);
-
+                                                                                                  true);
 
   /**
    * <p>
@@ -67,14 +64,6 @@ public interface IArtifactModelConfiguration {
    * @return
    */
   boolean isHierarchicalPackages();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean isAggregateInnerTypes();
 
   /**
    * <p>

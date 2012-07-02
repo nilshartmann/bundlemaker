@@ -16,10 +16,7 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
   private ContentType _contentType                         = ContentType.SOURCE;
 
   /** whether the packages should be hierarchical or flat */
-  private boolean     _hierarchicalPackages                = false;
-
-  /** whether to aggregate inner types or not */
-  private boolean     _aggregateInnerTypes                 = false;
+  private boolean     _hierarchicalPackages                = true;
 
   /** whether to include missing types or not */
   private boolean     _includeVirtualModuleForMissingTypes = false;
@@ -82,26 +79,6 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
    * 
    * @return
    */
-  public final boolean isAggregateInnerTypes() {
-    return _aggregateInnerTypes /* && !_resourcePresentation.equals(ResourcePresentation.ALL_RESOURCES) */;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param aggregateInnerTypes
-   */
-  public final void setAggregateInnerTypes(boolean aggregateInnerTypes) {
-    _aggregateInnerTypes = aggregateInnerTypes;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   public final boolean isIncludeVirtualModuleForMissingTypes() {
     return _includeVirtualModuleForMissingTypes;
   }
@@ -138,25 +115,23 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
    * </p>
    * 
    * @param hierarchical
-   * @param resourcePresentation
    * @param contentType
-   * @param aggregateInnerTypes
+   * @param resourcePresentation
    */
   public ArtifactModelConfiguration(boolean hierarchical,
-      ContentType contentType, boolean aggregateInnerTypes, boolean includeVirtualModuleForMissingTypes) {
+      ContentType contentType, boolean includeVirtualModuleForMissingTypes) {
 
     Assert.isNotNull(contentType);
 
     _hierarchicalPackages = hierarchical;
     _contentType = contentType;
-    _aggregateInnerTypes = aggregateInnerTypes;
     _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
   }
 
   @Override
   public String toString() {
     return _contentType.getShortDescription() + "_"
-        + prefix(_hierarchicalPackages, "Hi") + "_" + prefix(_aggregateInnerTypes, "AgTy") + "_"
+        + prefix(_hierarchicalPackages, "Hi") + "_"
         + prefix(_includeVirtualModuleForMissingTypes, "MiTy");
   }
 
@@ -164,7 +139,6 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + (_aggregateInnerTypes ? 1231 : 1237);
     result = prime * result + ((_contentType == null) ? 0 : _contentType.hashCode());
     result = prime * result + (_hierarchicalPackages ? 1231 : 1237);
     result = prime * result + (_includeVirtualModuleForMissingTypes ? 1231 : 1237);
@@ -180,8 +154,6 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
     if (getClass() != obj.getClass())
       return false;
     ArtifactModelConfiguration other = (ArtifactModelConfiguration) obj;
-    if (_aggregateInnerTypes != other._aggregateInnerTypes)
-      return false;
     if (_contentType != other._contentType)
       return false;
     if (_hierarchicalPackages != other._hierarchicalPackages)
