@@ -28,7 +28,7 @@ public class MvnRepositoriesPreferencePage extends FieldEditorPreferencePage imp
   @Override
   public void init(IWorkbench workbench) {
     setPreferenceStore(Activator.getDefault().getPreferenceStore());
-    setDescription("Set the Maven Respositoires");
+    setDescription("Set Maven Repositories");
   }
 
   @Override
