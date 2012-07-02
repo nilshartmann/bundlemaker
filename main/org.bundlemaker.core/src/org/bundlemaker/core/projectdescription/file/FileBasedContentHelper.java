@@ -66,6 +66,6 @@ public class FileBasedContentHelper {
    * @return
    */
   public static boolean isValidFileName(String name) {
-    return name.endsWith("zip") && name.endsWith("jar");
+    return name.endsWith(".zip") || name.endsWith(".jar");
   }
 }
