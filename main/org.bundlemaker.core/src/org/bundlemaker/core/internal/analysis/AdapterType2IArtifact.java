@@ -22,6 +22,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -564,7 +565,27 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
   }
 
   @Override
+  public void addArtifacts(List<? extends IBundleMakerArtifact> artifact) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void addArtifacts(IArtifactSelector artifactSelector) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
   public boolean removeArtifact(IBundleMakerArtifact artifact) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void removeArtifacts(IArtifactSelector artifactSelector) {
     throw new UnsupportedOperationException();
   }
 

@@ -15,6 +15,7 @@ import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.ChangeAction;
@@ -452,6 +453,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     //
     getRoot().invalidateDependencyCache();
 
+    //
     onAddArtifact((IBundleMakerArtifact) artifact);
 
     // set change action to null
@@ -459,7 +461,42 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     getRoot().invalidateDependencyCache();
+
+    // fire
     ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addArtifacts(List<? extends IBundleMakerArtifact> artifact) {
+
+    // assert not null
+    Assert.isNotNull(artifact);
+
+    //
+    for (IBundleMakerArtifact iBundleMakerArtifact : artifact) {
+      addArtifact(iBundleMakerArtifact);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addArtifacts(IArtifactSelector artifactSelector) {
+
+    // assert not null
+    Assert.isNotNull(artifactSelector);
+
+    // get the list of artifacts
+    List<? extends IBundleMakerArtifact> bundleMakerArtifacts = artifactSelector.getBundleMakerArtifacts();
+
+    // add the artifacts
+    if (bundleMakerArtifacts != null) {
+      addArtifacts(bundleMakerArtifacts);
+    }
   }
 
   /**
@@ -480,10 +517,45 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     getRoot().invalidateDependencyCache();
+
+    // fire model changed
     ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
 
     //
     return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact) {
+
+    // assert not null
+    Assert.isNotNull(artifact);
+
+    // iterate over all artifacts
+    for (IBundleMakerArtifact iBundleMakerArtifact : artifact) {
+      removeArtifact(iBundleMakerArtifact);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void removeArtifacts(IArtifactSelector artifactSelector) {
+
+    // assert not null
+    Assert.isNotNull(artifactSelector);
+
+    // get the list of artifacts
+    List<? extends IBundleMakerArtifact> bundleMakerArtifacts = artifactSelector.getBundleMakerArtifacts();
+
+    // add the artifacts
+    if (bundleMakerArtifacts != null) {
+      addArtifacts(bundleMakerArtifacts);
+    }
   }
 
   /**

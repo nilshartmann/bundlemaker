@@ -8,6 +8,8 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -61,7 +63,8 @@ public class ArtifactVisitorUtils {
       public boolean visit(IModuleArtifact moduleArtifact) {
 
         //
-        if (!moduleArtifact.isVirtual() && moduleArtifact.getAssociatedModule().getModuleIdentifier().equals(moduleIdentifier)) {
+        if (!moduleArtifact.isVirtual()
+            && moduleArtifact.getAssociatedModule().getModuleIdentifier().equals(moduleIdentifier)) {
           result[0] = moduleArtifact;
         }
 
@@ -179,8 +182,7 @@ public class ArtifactVisitorUtils {
     // return result
     return result.get(0);
   }
-  
-  
+
   public static List<IPackageArtifact> findPackageArtifacts(IBundleMakerArtifact root, final String fullyQualifiedName) {
 
     // create the result array
@@ -204,8 +206,7 @@ public class ArtifactVisitorUtils {
     // return result
     return result;
   }
-  
-  
+
   /**
    * <p>
    * </p>
@@ -238,6 +239,40 @@ public class ArtifactVisitorUtils {
     //
     if (result.size() > 1) {
       Assert.fail(String.format("Multiple groups with qualified name '%s' exist.", fullyQualifiedName));
+    }
+
+    // return result
+    return result.size() > 0 ? result.get(0) : null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public static IResourceArtifact findResourceArtifactByPathName(IBundleMakerArtifact root,
+      final String pathName) {
+
+    // create the result array
+    final List<IResourceArtifact> result = new LinkedList<IResourceArtifact>();
+
+    // visit
+    root.accept(new IArtifactTreeVisitor.Adapter() {
+      @Override
+      public boolean visit(IResourceArtifact resourceArtifact) {
+
+        //
+        if (resourceArtifact.getQualifiedName().equals(pathName)) {
+          result.add(resourceArtifact);
+        }
+
+        //
+        return true;
+      }
+    });
+
+    //
+    if (result.size() > 1) {
+      Assert.fail(String.format("Multiple resources with path name '%s' exist.", pathName));
     }
 
     // return result

@@ -12,6 +12,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
+import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -228,6 +229,26 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       Assert.isNotNull(rootArtifact);
 
       _rootArtifact = rootArtifact;
+    }
+
+    @Override
+    public void addArtifacts(List<? extends IBundleMakerArtifact> artifact) {
+      _rootArtifact.addArtifacts(artifact);
+    }
+
+    @Override
+    public void addArtifacts(IArtifactSelector artifactSelector) {
+      _rootArtifact.addArtifacts(artifactSelector);
+    }
+
+    @Override
+    public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact) {
+      _rootArtifact.removeArtifacts(artifact);
+    }
+
+    @Override
+    public void removeArtifacts(IArtifactSelector artifactSelector) {
+      _rootArtifact.removeArtifacts(artifactSelector);
     }
 
     /**

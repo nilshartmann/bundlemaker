@@ -1,5 +1,6 @@
 package org.bundlemaker.core.itest.analysis;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
@@ -96,7 +97,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
 
     // get the artifact model
     IRootArtifact rootArtifact = createArtifactModel();
-    
+
     //
     IModuleArtifact moduleArtifact = assertSimpleArtifactModule(rootArtifact);
 
@@ -108,9 +109,11 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
     Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
     Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
 
-    IResourceArtifact testArtifact = rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    IResourceArtifact klasseArtifact = rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
-    
+    IResourceArtifact testArtifact = rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Test.class",
+        ContentType.BINARY));
+    IResourceArtifact klasseArtifact = rootArtifact.getResourceArtifact(resourceModule.getResource(
+        "de/test/Klasse.class", ContentType.BINARY));
+
     // Test 2: remove resources
     packageArtifact.removeArtifact(klasseArtifact);
     packageArtifact.removeArtifact(testArtifact);
@@ -120,6 +123,46 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
     // Test 2: add resources
     packageArtifact.addArtifact(klasseArtifact);
     packageArtifact.addArtifact(testArtifact);
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
+  @Test
+  public void testResource_MultiRemoveAndAdd() throws CoreException {
+
+    // get the artifact model
+    IRootArtifact rootArtifact = createArtifactModel();
+
+    //
+    IModuleArtifact moduleArtifact = assertSimpleArtifactModule(rootArtifact);
+
+    // get package
+    IBundleMakerArtifact packageArtifact = assertTestPackage(moduleArtifact);
+
+    // Test 1: assert resources
+    IResourceModule resourceModule = getModularizedSystem().getResourceModule("SimpleArtifactModelTest", "1.0.0");
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+
+    List<IResourceArtifact> resourceArtifacts = new LinkedList<IResourceArtifact>();
+    resourceArtifacts.add(rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Test.class",
+        ContentType.BINARY)));
+    resourceArtifacts.add(rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Klasse.class",
+        ContentType.BINARY)));
+
+    // Test 2: remove resources
+    packageArtifact.removeArtifacts(resourceArtifacts);
+    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+
+    // Test 3: add resources
+    packageArtifact.addArtifacts(resourceArtifacts);
     Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
     Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
   }

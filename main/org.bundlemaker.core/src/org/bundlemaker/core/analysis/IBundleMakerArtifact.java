@@ -161,6 +161,24 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
+   * Adds the given artifacts to this artifact.
+   * </p>
+   * 
+   * @param artifacts
+   *          the artifacts to add.
+   */
+  public void addArtifacts(List<? extends IBundleMakerArtifact> artifact);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifactSelector
+   */
+  public void addArtifacts(IArtifactSelector artifactSelector);
+
+  /**
+   * <p>
    * Removes the given artifact from this artifact.
    * </p>
    * 
@@ -168,6 +186,22 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return
    */
   public boolean removeArtifact(IBundleMakerArtifact artifact);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   */
+  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifactSelector
+   */
+  public void removeArtifacts(IArtifactSelector artifactSelector);
 
   /**
    * <p>
