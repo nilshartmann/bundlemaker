@@ -11,6 +11,7 @@
 package org.bundlemaker.core.ui.view.dependencytree;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,8 +31,16 @@ import org.eclipse.jface.viewers.ViewerFilter;
  */
 public class VisibleArtifactsFilter extends ViewerFilter {
 
+  /** - */
   private Set<IBundleMakerArtifact> _artifacts = new HashSet<IBundleMakerArtifact>();
 
+  /**
+   * <p>
+   * Creates a new instance of type {@link VisibleArtifactsFilter}.
+   * </p>
+   * 
+   * @param visibleArtifacts
+   */
   public VisibleArtifactsFilter(Collection<IBundleMakerArtifact> visibleArtifacts) {
 
     //
@@ -47,6 +56,19 @@ public class VisibleArtifactsFilter extends ViewerFilter {
     }
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected Set<IBundleMakerArtifact> getArtifacts() {
+    return Collections.unmodifiableSet(_artifacts);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean select(Viewer viewer, Object parentElement, Object element) {
     if (element instanceof IRootArtifact) {

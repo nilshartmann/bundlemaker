@@ -1,6 +1,5 @@
 package org.bundlemaker.core.ui.view.dependencytree;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -9,21 +8,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IGroupArtifact;
-import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
-import org.bundlemaker.core.ui.artifact.tree.IVirtualRootContentProvider;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
-import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -43,36 +34,34 @@ import org.eclipse.swt.widgets.TreeItem;
  */
 public class DependencyTreeComposite extends Composite {
 
-  // TODO: MOVE
-  private List                                                  _artifactTypeOrder      = Arrays.asList(new Class[] {
-      IRootArtifact.class, IGroupArtifact.class, IModuleArtifact.class, IPackageArtifact.class,
-      IResourceArtifact.class, ITypeArtifact.class                                     });
-
-  /** - */
+  /** the from tree viewer */
   private TreeViewer                                            _fromTreeViewer;
-
-  /** - */
+  
+  /** the to tree viewer */
   private TreeViewer                                            _toTreeViewer;
 
-  /** - */
-  @SuppressWarnings("serial")
-  private GenericCache<IBundleMakerArtifact, List<IDependency>> _targetArtifactMap      = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
-                                                                                          @Override
-                                                                                          protected List<IDependency> create(
-                                                                                              IBundleMakerArtifact key) {
-                                                                                            return new LinkedList<IDependency>();
-                                                                                          }
-                                                                                        };
+  /** the to tree viewer */
+  private TreeViewer                                            _currentlySelectedTreeViewer;
 
   /** - */
   @SuppressWarnings("serial")
-  private GenericCache<IBundleMakerArtifact, List<IDependency>> _sourceArtifactMap      = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
-                                                                                          @Override
-                                                                                          protected List<IDependency> create(
-                                                                                              IBundleMakerArtifact key) {
-                                                                                            return new LinkedList<IDependency>();
-                                                                                          }
-                                                                                        };
+  private GenericCache<IBundleMakerArtifact, List<IDependency>> _targetArtifactMap = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
+                                                                                     @Override
+                                                                                     protected List<IDependency> create(
+                                                                                         IBundleMakerArtifact key) {
+                                                                                       return new LinkedList<IDependency>();
+                                                                                     }
+                                                                                   };
+
+  /** - */
+  @SuppressWarnings("serial")
+  private GenericCache<IBundleMakerArtifact, List<IDependency>> _sourceArtifactMap = new GenericCache<IBundleMakerArtifact, List<IDependency>>() {
+                                                                                     @Override
+                                                                                     protected List<IDependency> create(
+                                                                                         IBundleMakerArtifact key) {
+                                                                                       return new LinkedList<IDependency>();
+                                                                                     }
+                                                                                   };
 
   /** - */
   private List<IDependency>                                     _leafDependencies;
@@ -84,10 +73,7 @@ public class DependencyTreeComposite extends Composite {
   private String                                                _providerId;
 
   /** - */
-  private Class<? extends IBundleMakerArtifact>                 _fromViewerExpandToType = IModuleArtifact.class;
-
-  /** - */
-  private Class<? extends IBundleMakerArtifact>                 _toViewerExpandToType   = IModuleArtifact.class;
+  private IExpandStrategy                                       _expandStrategy;
 
   /**
    * <p>
@@ -96,12 +82,13 @@ public class DependencyTreeComposite extends Composite {
    * 
    * @param parent
    */
-  public DependencyTreeComposite(Composite parent, String providerId) {
+  public DependencyTreeComposite(Composite parent, String providerId, IExpandStrategy expandStrategy) {
     super(parent, SWT.NONE);
 
     Assert.isNotNull(providerId);
 
     _providerId = providerId;
+    _expandStrategy = expandStrategy;
 
     init();
   }
@@ -127,6 +114,20 @@ public class DependencyTreeComposite extends Composite {
       _targetArtifactMap.getOrCreate(dependency.getTo()).add(dependency);
     }
 
+    // set the root if necessary
+    IRootArtifact rootArtifact = _sourceArtifactMap.keySet().toArray(new IBundleMakerArtifact[0])[0].getRoot();
+    if (!rootArtifact.equals(_fromTreeViewer.getInput()) && !rootArtifact.equals(_toTreeViewer.getInput())) {
+
+      //
+      _fromTreeViewer.setInput(rootArtifact);
+      _toTreeViewer.setInput(rootArtifact);
+
+      //
+      if (_expandStrategy != null) {
+        _expandStrategy.init(_fromTreeViewer, _toTreeViewer);
+      }
+    }
+
     // update 'from' and 'to' tree, no filtering
     setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
@@ -136,8 +137,8 @@ public class DependencyTreeComposite extends Composite {
     _toTreeViewer.setSelection(null);
 
     //
-    expandArtifacts(_fromTreeViewer);
-    expandArtifacts(_toTreeViewer);
+    expandArtifacts(_fromTreeViewer, null);
+    expandArtifacts(_toTreeViewer, null);
   }
 
   /**
@@ -153,29 +154,6 @@ public class DependencyTreeComposite extends Composite {
   /**
    * <p>
    * </p>
-   * 
-   * @param autoExpandType
-   *          the expandToType to set
-   */
-  public void setFromTreeViewerAutoExpandType(Class<? extends IBundleMakerArtifact> autoExpandType) {
-    _fromViewerExpandToType = autoExpandType;
-    expandArtifacts(_fromTreeViewer);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param autoExpandType
-   */
-  public void setToTreeViewerAutoExpandType(Class<? extends IBundleMakerArtifact> autoExpandType) {
-    _toViewerExpandToType = autoExpandType;
-    expandArtifacts(_toTreeViewer);
-  }
-
-  /**
-   * <p>
-   * </p>
    */
   private void init() {
 
@@ -184,8 +162,6 @@ public class DependencyTreeComposite extends Composite {
 
     //
     _fromTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
-
-    //
     _toTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
 
     // add SelectionListeners
@@ -203,9 +179,13 @@ public class DependencyTreeComposite extends Composite {
    * @param treeViewer
    * @param visibleArtifacts
    */
-  private void setVisibleArtifacts(TreeViewer treeViewer, Collection<IBundleMakerArtifact> visibleArtifacts) {
+  private VisibleArtifactsFilter setVisibleArtifacts(TreeViewer treeViewer,
+      Collection<IBundleMakerArtifact> visibleArtifacts) {
     Assert.isNotNull(treeViewer);
     Assert.isNotNull(visibleArtifacts);
+
+    //
+    VisibleArtifactsFilter result = null;
 
     // set redraw to false
     treeViewer.getTree().setRedraw(false);
@@ -213,15 +193,8 @@ public class DependencyTreeComposite extends Composite {
     if (visibleArtifacts.size() > 0) {
 
       // set the filter
-      treeViewer.setFilters(new ViewerFilter[] { new VisibleArtifactsFilter(visibleArtifacts) });
-
-      // set the root if necessary
-      IRootArtifact rootArtifact = visibleArtifacts.toArray(new IBundleMakerArtifact[0])[0].getRoot();
-      if (!rootArtifact.equals(treeViewer.getInput())) {
-
-        //
-        treeViewer.setInput(rootArtifact);
-      }
+      result = new VisibleArtifactsFilter(visibleArtifacts);
+      treeViewer.setFilters(new ViewerFilter[] { result });
     }
 
     // set empty list
@@ -231,6 +204,9 @@ public class DependencyTreeComposite extends Composite {
 
     // redraw again
     treeViewer.getTree().setRedraw(true);
+
+    //
+    return result;
   }
 
   /**
@@ -273,6 +249,12 @@ public class DependencyTreeComposite extends Composite {
       //
       IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 
+      //
+      if (!structuredSelection.isEmpty() && _currentlySelectedTreeViewer != _fromTreeViewer) {
+        fromViewerSelected(_fromTreeViewer, _toTreeViewer);
+        _currentlySelectedTreeViewer = _fromTreeViewer;
+      }
+
       // check for selected root element
       boolean containsRoot = false;
       for (Object object : structuredSelection.toList()) {
@@ -309,15 +291,16 @@ public class DependencyTreeComposite extends Composite {
           }
         }
 
-        _toTreeViewer.setSelection(new StructuredSelection());
-        setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
+        // TODO
+        // _toTreeViewer.setSelection(new StructuredSelection());
+        VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
         setSelectedDetailDependencies(selectedDetailDependencies);
 
         //
-        expandArtifacts(_toTreeViewer);
+        expandArtifacts(_toTreeViewer, visibleArtifactsFilter);
 
         // set the top item again
-        if (!treeItem.isDisposed()) {
+        if (treeItem != null && !treeItem.isDisposed()) {
           _toTreeViewer.getTree().setTopItem(treeItem);
         } else {
           _toTreeViewer.getTree().setTopItem(_toTreeViewer.getTree().getItem(0));
@@ -338,11 +321,20 @@ public class DependencyTreeComposite extends Composite {
    */
   private final class ToArtifactSelectionChangedListener implements ISelectionChangedListener {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
 
       //
       IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
+
+      //
+      if (!structuredSelection.isEmpty() && _currentlySelectedTreeViewer != _toTreeViewer) {
+        toViewerSelected(_fromTreeViewer, _toTreeViewer);
+        _currentlySelectedTreeViewer = _toTreeViewer;
+      }
 
       // check for selected root element
       boolean containsRoot = false;
@@ -376,12 +368,13 @@ public class DependencyTreeComposite extends Composite {
           }
         }
 
-        _fromTreeViewer.setSelection(new StructuredSelection());
-        setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
+        //
+        // _fromTreeViewer.setSelection(new StructuredSelection());
+        VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
         setSelectedDetailDependencies(selectedDetailDependencies);
 
         //
-        expandArtifacts(_fromTreeViewer);
+        expandArtifacts(_fromTreeViewer, visibleArtifactsFilter);
 
         // set the top item again
         try {
@@ -394,114 +387,69 @@ public class DependencyTreeComposite extends Composite {
         setSelectedDetailDependencies(_leafDependencies);
       }
     }
+
   }
 
   /**
    * <p>
    * </p>
    * 
+   * @param toTreeViewer
+   * @param fromTreeViewer
    */
-  private void expandArtifacts(final TreeViewer treeViewer) {
+  protected void toViewerSelected(TreeViewer fromTreeViewer, TreeViewer toTreeViewer) {
+
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param fromTreeViewer
+   * @param toTreeViewer
+   */
+  protected void fromViewerSelected(TreeViewer fromTreeViewer, TreeViewer toTreeViewer) {
+
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param visibleArtifactsFilter
+   * 
+   */
+  private void expandArtifacts(final TreeViewer treeViewer, final VisibleArtifactsFilter visibleArtifactsFilter) {
     Assert.isNotNull(treeViewer);
 
-    //
+    // return if no expand strategy has been set
+    if (_expandStrategy == null) {
+      return;
+    }
+
+    // check if no root artifact has been set (yet)
     if (!(treeViewer.getInput() instanceof IRootArtifact)) {
       return;
     }
 
-    //
+    // disable redraw (performance)
     treeViewer.getTree().setRedraw(false);
 
     //
-    IArtifactTreeVisitor visitor = new IArtifactTreeVisitor.Adapter() {
+    if (treeViewer == _fromTreeViewer) {
 
-      @Override
-      public boolean visit(IRootArtifact rootArtifact) {
-        // always expand root && always visit children
-        treeViewer.setExpandedState(rootArtifact, true);
-        return true;
-      }
+      //
+      _expandStrategy.expandFromTreeViewer(_fromTreeViewer,
+          visibleArtifactsFilter != null ? visibleArtifactsFilter.getArtifacts() : new HashSet<IBundleMakerArtifact>());
 
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public boolean visit(IGroupArtifact groupArtifact) {
-        boolean shouldExpand = shouldExpand(groupArtifact, IGroupArtifact.class, treeViewer);
-        treeViewer.setExpandedState(groupArtifact, shouldExpand);
-        return shouldExpand;
-      }
+    } else if (treeViewer == _toTreeViewer) {
 
-      @Override
-      public boolean visit(IModuleArtifact moduleArtifact) {
-        boolean shouldExpand = shouldExpand(moduleArtifact, IModuleArtifact.class, treeViewer);
-        treeViewer.setExpandedState(moduleArtifact, shouldExpand);
-        return shouldExpand;
-      }
-
-      @Override
-      public boolean visit(IPackageArtifact packageArtifact) {
-        boolean shouldExpand = shouldExpand(packageArtifact, IPackageArtifact.class, treeViewer);
-        treeViewer.setExpandedState(packageArtifact, shouldExpand);
-        return shouldExpand;
-      }
-
-      @Override
-      public boolean visit(IResourceArtifact resourceArtifact) {
-        boolean shouldExpand = shouldExpand(resourceArtifact, IResourceArtifact.class, treeViewer);
-        treeViewer.setExpandedState(resourceArtifact, shouldExpand);
-        return shouldExpand;
-      }
-
-      /**
-       * <p>
-       * </p>
-       * 
-       * @param artifact
-       * @param treeViewer
-       * @return
-       */
-      private boolean shouldExpand(IBundleMakerArtifact artifact, Class<? extends IBundleMakerArtifact> clazz,
-          TreeViewer treeViewer) {
-
-        //
-        Class<? extends IBundleMakerArtifact> expandToType = treeViewer == _fromTreeViewer ? _fromViewerExpandToType
-            : _toViewerExpandToType;
-
-        //
-        int index1 = _artifactTypeOrder.indexOf(expandToType);
-        int index2 = _artifactTypeOrder.indexOf(clazz);
-
-        //
-        if (index1 > index2) {
-          return true;
-        }
-
-        //
-        if (index1 != index2) {
-          return false;
-        }
-
-        ViewerFilter[] filters = treeViewer.getFilters();
-        Object[] children = artifact.getChildren(clazz).toArray();
-        for (ViewerFilter viewerFilter : filters) {
-          children = viewerFilter.filter(treeViewer, artifact, children);
-        }
-
-        return children.length > 0;
-      }
-    };
-
-    //
-    ((IRootArtifact) treeViewer.getInput()).accept(visitor);
-
-    // HACK
-    IContentProvider contentProvider = treeViewer.getContentProvider();
-    if (contentProvider instanceof IVirtualRootContentProvider) {
-      treeViewer.setExpandedState(((IVirtualRootContentProvider) contentProvider).getVirtualRoot(), true);
+      //
+      _expandStrategy.expandToTreeViewer(_toTreeViewer,
+          visibleArtifactsFilter != null ? visibleArtifactsFilter.getArtifacts() : new HashSet<IBundleMakerArtifact>());
     }
 
-    //
+    // enable redraw (performance)
     treeViewer.getTree().setRedraw(true);
   }
 }

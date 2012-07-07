@@ -55,13 +55,18 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
   @Override
   protected void onSetDependencySelection(IDependencySelection selection) {
 
+    if (selection.getProviderId().equals(ID)) {
+      return;
+    }
+
     // init dependencies
     initDependencies(selection);
   }
-  
+
   @Override
   public void artifactModelModified() {
-    // TODO
+
+    //
   }
 
   /**
