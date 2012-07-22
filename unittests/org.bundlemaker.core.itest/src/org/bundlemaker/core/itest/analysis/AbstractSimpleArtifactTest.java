@@ -281,25 +281,6 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
    * @throws CoreException
    */
   @Test
-  public void testGroup_ModifyModuleClassification() throws CoreException {
-
-    //
-    IModifiableResourceModule resourceModule = getModularizedSystem().getModifiableResourceModule(
-        new ModuleIdentifier("SimpleArtifactModelTest", "1.0.0"));
-    resourceModule.setClassification(new Path("hurz/purz"));
-
-    // get the module artifact
-    Assert.assertEquals("purz", _module_Artifact.getParent().getName());
-    Assert.assertEquals("hurz", _module_Artifact.getParent().getParent().getName());
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws CoreException
-   */
-  @Test
   public void testDependencies() throws Exception {
 
     //
@@ -308,9 +289,6 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
 
     //
     Assert.assertNotNull(getModularizedSystem().getType("javax.activation.DataHandler"));
-    IModule typeContainingModule = getModularizedSystem().getTypeContainingModule("javax.activation.DataHandler");
-    Assert.assertNotNull(typeContainingModule);
-    Assert.assertSame(typeContainingModule, executionEnvironmentModule);
 
     //
     IBundleMakerArtifact jreModule = _rootArtifact.getModuleArtifact(executionEnvironmentModule);
@@ -360,6 +338,20 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     return moduleArtifact;
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @param node
+   * @param type
+   * @param nodeName
+   */
+  protected void assertNode(IBundleMakerArtifact node, Class<?> type, String nodeName) {
+    Assert.assertTrue(String.format("Node '%s' has to be assignable from %s", node, type), type.isAssignableFrom(node.getClass()));
+    Assert.assertEquals(nodeName, node.getName());
+    Assert.assertNotNull(node.getParent());
+  }
+  
   /**
    * <p>
    * </p>

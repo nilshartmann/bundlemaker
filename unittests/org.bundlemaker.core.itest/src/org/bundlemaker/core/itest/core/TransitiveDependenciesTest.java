@@ -28,34 +28,34 @@ public class TransitiveDependenciesTest extends AbstractModularizedSystemTest {
     _transformation = new ResourceSetBasedTransformation();
   }
 
-  @Test
-  public void test_eins() {
-
-    addModule("controller", "org/bm/test/control/**"); // A.execute()
-    addModule("domain", "org/bm/test/domain/**"); // B
-    addModule("app", "org/bm/test/app/**"); // C -> b.execute()
-
-    getModularizedSystem().applyTransformations(null, _transformation);
-
-    Set<IModule> referencedModules = getTransitiveReferencesModules("app");
-
-    assertEquals(2, referencedModules.size());
-  }
-
-  @Test
-  public void test_withArtifactTransformation() {
-
-    addModule("controlAndDomain", "org/bm/test/control/**", "org/bm/test/domain/**");
-    addModule("app", "org/bm/test/app/**");
-    getModularizedSystem().applyTransformations(null, _transformation);
-
-    moveType("org.bm.test.control.Controller", "controlType");
-
-    Set<IModule> referencedModules = getTransitiveReferencesModules("app");
-
-    assertEquals(2, referencedModules.size());
-
-  }
+//  @Test
+//  public void test_eins() {
+//
+//    addModule("controller", "org/bm/test/control/**"); // A.execute()
+//    addModule("domain", "org/bm/test/domain/**"); // B
+//    addModule("app", "org/bm/test/app/**"); // C -> b.execute()
+//
+//    getModularizedSystem().applyTransformations(null, _transformation);
+//
+//    Set<IModule> referencedModules = getTransitiveReferencesModules("app");
+//
+//    assertEquals(2, referencedModules.size());
+//  }
+//
+//  @Test
+//  public void test_withArtifactTransformation() {
+//
+//    addModule("controlAndDomain", "org/bm/test/control/**", "org/bm/test/domain/**");
+//    addModule("app", "org/bm/test/app/**");
+//    getModularizedSystem().applyTransformations(null, _transformation);
+//
+//    moveType("org.bm.test.control.Controller", "controlType");
+//
+//    Set<IModule> referencedModules = getTransitiveReferencesModules("app");
+//
+//    assertEquals(2, referencedModules.size());
+//
+//  }
 
   protected void moveType(String typeName, String targetModuleName) {
 
@@ -82,12 +82,12 @@ public class TransitiveDependenciesTest extends AbstractModularizedSystemTest {
     return resourceModule;
   }
 
-  protected Set<IModule> getTransitiveReferencesModules(String moduleName) {
-    Set<IModule> referencedModules = getModularizedSystem().getTransitiveReferencedModules(
-        getResourceModule(moduleName)).getReferencedModules();
-    assertNotNull(referencedModules);
-    return referencedModules;
-  }
+//  protected Set<IModule> getTransitiveReferencesModules(String moduleName) {
+//    Set<IModule> referencedModules = getModularizedSystem().getTransitiveReferencedModules(
+//        getResourceModule(moduleName)).getReferencedModules();
+//    assertNotNull(referencedModules);
+//    return referencedModules;
+//  }
 
   private void moveArtifact(final IBundleMakerArtifact typeArtifact, String moduleName, IRootArtifact rootArtifact) {
 

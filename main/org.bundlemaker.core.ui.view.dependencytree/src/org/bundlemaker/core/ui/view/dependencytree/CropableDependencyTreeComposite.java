@@ -128,7 +128,7 @@ public class CropableDependencyTreeComposite extends Composite {
 
     createCropButtons(toolbar);
     new ToolItem(toolbar, SWT.SEPARATOR);
-    // createAutoExpandMenus(toolbar);
+    createAutoExpandMenus(toolbar);
 
     _dependencySelectionListener = new IDependencySelectionListener() {
       @Override
@@ -375,6 +375,40 @@ public class CropableDependencyTreeComposite extends Composite {
     _currentPosition = 0;
     _dependencySelectionList.clear();
     _dependencySelectionList.add(dependencies);
+
+    if (dependencies.size() > 0) {
+
+      IDependency dependency = dependencies.get(0);
+
+//      //
+//      if (dependency.getFrom() instanceof IGroupArtifact) {
+//        _expandStrategy.setFromTreeViewerAutoExpandType(IGroupArtifact.class);
+//        _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_GROUPS.getImage());
+//      } else if (dependency.getFrom() instanceof IModuleArtifact) {
+//        _expandStrategy.setFromTreeViewerAutoExpandType(IModuleArtifact.class);
+//        _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_MODULES.getImage());
+//      } else if (dependency.getFrom() instanceof IPackageArtifact) {
+//        _expandStrategy.setFromTreeViewerAutoExpandType(IPackageArtifact.class);
+//        _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_PACKAGES.getImage());
+//      } else if (dependency.getFrom() instanceof IResourceArtifact) {
+//        _expandStrategy.setFromTreeViewerAutoExpandType(IResourceArtifact.class);
+//        _autoExpandFrom.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_RESOURCES.getImage());
+//      }
+//      
+//      if (dependency.getTo() instanceof IGroupArtifact) {
+//        _expandStrategy.setToTreeViewerAutoExpandType(IGroupArtifact.class);
+//        _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_GROUPS.getImage());
+//      } else if (dependency.getTo() instanceof IModuleArtifact) {
+//        _expandStrategy.setToTreeViewerAutoExpandType(IModuleArtifact.class);
+//        _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_MODULES.getImage());
+//      } else if (dependency.getTo() instanceof IPackageArtifact) {
+//        _expandStrategy.setToTreeViewerAutoExpandType(IPackageArtifact.class);
+//        _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_PACKAGES.getImage());
+//      } else if (dependency.getTo() instanceof IResourceArtifact) {
+//        _expandStrategy.setToTreeViewerAutoExpandType(IResourceArtifact.class);
+//        _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_FROM_RESOURCES.getImage());
+//      }
+    }
 
     enableButtons();
   }

@@ -9,7 +9,7 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -170,13 +170,15 @@ public class ArtifactVisitorUtils {
         }
 
         //
-        return false;
+        return true;
       }
     });
 
     //
     if (result.size() > 1) {
       Assert.fail(String.format("Multiple packages with name '%s' exist.", fullyQualifiedName));
+    } else if (result.size() == 0) {
+      return null;
     }
 
     // return result
@@ -277,5 +279,44 @@ public class ArtifactVisitorUtils {
 
     // return result
     return result.size() > 0 ? result.get(0) : null;
+  }
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @param packageArtifact
+   * @param string
+   */
+  public static ITypeArtifact findTypeArtifact(IPackageArtifact root, final String qualifiedName) {
+
+    // create the result array
+    final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
+
+    // visit
+    root.accept(new IArtifactTreeVisitor.Adapter() {
+      @Override
+      public boolean visit(ITypeArtifact typeArtifact) {
+
+        //
+        if (typeArtifact.getQualifiedName().equals(qualifiedName)) {
+          result.add(typeArtifact);
+        }
+
+        //
+        return true;
+      }
+    });
+
+    //
+    if (result.size() > 1) {
+      Assert.fail(String.format("Multiple types with name '%s' exist.", qualifiedName));
+    } else if (result.size() == 0) {
+      return null;
+    }
+
+    // return result
+    return result.get(0);
+    
   }
 }

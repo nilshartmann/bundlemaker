@@ -30,31 +30,37 @@ import org.eclipse.jface.viewers.TreeViewer;
 public class ExpandStrategy implements IExpandStrategy {
 
   /** - */
-  private List                                  _artifactTypeOrder            = Arrays.asList(new Class[] {
-                                                                              IRootArtifact.class,
-                                                                              IGroupArtifact.class,
-                                                                              IModuleArtifact.class,
-                                                                              IPackageArtifact.class,
-                                                                              IResourceArtifact.class,
-                                                                              ITypeArtifact.class });
+  private List                                  _artifactTypeOrder             = Arrays.asList(new Class[] {
+                                                                               IRootArtifact.class,
+                                                                               IGroupArtifact.class,
+                                                                               IModuleArtifact.class,
+                                                                               IPackageArtifact.class,
+                                                                               IResourceArtifact.class,
+                                                                               ITypeArtifact.class });
 
   /** - */
-  private Class<? extends IBundleMakerArtifact> _fromViewerExpandToType       = IModuleArtifact.class;
+  private Class<? extends IBundleMakerArtifact> _fromViewerExpandToType        = IModuleArtifact.class;
 
   /** - */
-  private Class<? extends IBundleMakerArtifact> _toViewerExpandToType         = IModuleArtifact.class;
+  private Class<? extends IBundleMakerArtifact> _toViewerExpandToType          = IModuleArtifact.class;
 
   /** - */
-  private final Set<Object>                     _manuallyExpandedElementsTo   = new HashSet<Object>();
+  private final Set<Object>                     _manuallyCollapsedElementsTo   = new HashSet<Object>();
 
   /** - */
-  private final Set<Object>                     _expandedElementsTo           = new HashSet<Object>();
+  private final Set<Object>                     _manuallyExpandedElementsTo    = new HashSet<Object>();
 
   /** - */
-  private final Set<Object>                     _manuallyExpandedElementsFrom = new HashSet<Object>();
+  private final Set<Object>                     _expandedElementsTo            = new HashSet<Object>();
 
   /** - */
-  private final Set<Object>                     _expandedElementsFrom         = new HashSet<Object>();
+  private final Set<Object>                     _manuallyCollapsedElementsFrom = new HashSet<Object>();
+
+  /** - */
+  private final Set<Object>                     _manuallyExpandedElementsFrom  = new HashSet<Object>();
+
+  /** - */
+  private final Set<Object>                     _expandedElementsFrom          = new HashSet<Object>();
 
   /** - */
   private TreeViewer                            _fromTreeViewer;
@@ -83,11 +89,13 @@ public class ExpandStrategy implements IExpandStrategy {
       @Override
       public void treeExpanded(TreeExpansionEvent event) {
         _manuallyExpandedElementsFrom.add(event.getElement());
+        _manuallyCollapsedElementsFrom.remove(event.getElement());
       }
 
       @Override
       public void treeCollapsed(TreeExpansionEvent event) {
         _manuallyExpandedElementsFrom.remove(event.getElement());
+        _manuallyCollapsedElementsFrom.add(event.getElement());
       }
     });
 
@@ -100,11 +108,13 @@ public class ExpandStrategy implements IExpandStrategy {
       @Override
       public void treeExpanded(TreeExpansionEvent event) {
         _manuallyExpandedElementsTo.add(event.getElement());
+        _manuallyCollapsedElementsTo.remove(event.getElement());
       }
 
       @Override
       public void treeCollapsed(TreeExpansionEvent event) {
         _manuallyExpandedElementsTo.remove(event.getElement());
+        _manuallyCollapsedElementsTo.add(event.getElement());
       }
     });
 
@@ -120,10 +130,10 @@ public class ExpandStrategy implements IExpandStrategy {
    * @param manuallyExpandedElements
    */
   private void addRootArtifact(TreeViewer treeViewer, Set<Object> manuallyExpandedElements) {
-    
+
     //
     IContentProvider contentProvider = treeViewer.getContentProvider();
-    
+
     //
     if (contentProvider instanceof IVirtualRootContentProvider) {
       manuallyExpandedElements.add(((IVirtualRootContentProvider) contentProvider).getVirtualRoot());
@@ -186,6 +196,7 @@ public class ExpandStrategy implements IExpandStrategy {
     //
     if (deleteManuallyExpandedElements) {
       _manuallyExpandedElementsFrom.clear();
+      _manuallyCollapsedElementsFrom.clear();
       addRootArtifact(_fromTreeViewer, _manuallyExpandedElementsFrom);
     }
 
@@ -193,6 +204,8 @@ public class ExpandStrategy implements IExpandStrategy {
         _fromVisibleArtifacts);
 
     _expandedElementsFrom.addAll(_manuallyExpandedElementsFrom);
+    _expandedElementsFrom.removeAll(_manuallyCollapsedElementsFrom);
+    
     _fromTreeViewer.setExpandedElements(_expandedElementsFrom.toArray());
   }
 
@@ -207,6 +220,7 @@ public class ExpandStrategy implements IExpandStrategy {
     //
     if (deleteManuallyExpandedElements) {
       _manuallyExpandedElementsTo.clear();
+      _manuallyCollapsedElementsTo.clear();
       addRootArtifact(_toTreeViewer, _manuallyExpandedElementsTo);
     }
 
@@ -214,6 +228,7 @@ public class ExpandStrategy implements IExpandStrategy {
         _toVisibleArtifact);
 
     _expandedElementsTo.addAll(_manuallyExpandedElementsTo);
+    _expandedElementsTo.removeAll(_manuallyCollapsedElementsTo);
 
     _toTreeViewer.setExpandedElements(_expandedElementsTo.toArray());
   }
@@ -237,7 +252,7 @@ public class ExpandStrategy implements IExpandStrategy {
       }
     }
 
-//    expandedElements.clear();
+    // expandedElements.clear();
 
     //
     IArtifactTreeVisitor visitor = new IArtifactTreeVisitor.Adapter() {

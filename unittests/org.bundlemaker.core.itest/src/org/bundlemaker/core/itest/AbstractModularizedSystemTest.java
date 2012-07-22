@@ -59,11 +59,16 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
 
     // assert no parse errors
     if (getBundleMakerProject().getProblems().size() > 0) {
+
+      //
+      StringBuilder builder = new StringBuilder();
+
       //
       for (IProblem problem : getBundleMakerProject().getProblems()) {
-        System.out.println(problem);
+        builder.append(problem.getMessage());
+        builder.append("\n");
       }
-      Assert.fail();
+      Assert.fail(builder.toString());
     }
 
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
@@ -103,33 +108,35 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     Assert.assertNotNull(node.getParent());
     Assert.assertEquals(parentName, node.getParent().getName());
   }
-  
+
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param node
    * @param type
    * @param nodeName
    * @param parentName
    */
   protected void assertNode(IBundleMakerArtifact node, Class<?> type, String nodeName, String parentName) {
-    Assert.assertTrue(String.format("Node '%s' has to be assignable from %s", node, type), type.isAssignableFrom(node.getClass()));
+    Assert.assertTrue(String.format("Node '%s' has to be assignable from %s", node, type),
+        type.isAssignableFrom(node.getClass()));
     Assert.assertEquals(nodeName, node.getName());
     Assert.assertNotNull(node.getParent());
     Assert.assertEquals(parentName, node.getParent().getName());
   }
-  
+
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param node
    * @param type
    * @param nodeName
    */
   protected void assertNode(IBundleMakerArtifact node, Class<?> type, String nodeName) {
-    Assert.assertTrue(String.format("Node '%s' has to be assignable from %s", node, type), type.isAssignableFrom(node.getClass()));
+    Assert.assertTrue(String.format("Node '%s' has to be assignable from %s", node, type),
+        type.isAssignableFrom(node.getClass()));
     Assert.assertEquals(nodeName, node.getName());
     Assert.assertNotNull(node.getParent());
   }

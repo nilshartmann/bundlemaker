@@ -9,12 +9,14 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.AmbiguousElementException;
-import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.ModuleMovedEvent;
-import org.bundlemaker.core.modules.MovableUnitMovedEvent;
+import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.GroupChangedEvent;
+import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
+import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.ModuleMovedEvent;
+import org.bundlemaker.core.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
@@ -74,6 +76,21 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
     @Override
     public void moduleClassificationChanged(ModuleClassificationChangedEvent event) {
       _events.add(event);
+    }
+
+    @Override
+    public void classificationChanged(ClassificationChangedEvent event) {
+      // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void groupAdded(GroupChangedEvent event) {
+      // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void groupRemoved(GroupChangedEvent event) {
+      // TODO Auto-generated method stub
     }
   }
 
