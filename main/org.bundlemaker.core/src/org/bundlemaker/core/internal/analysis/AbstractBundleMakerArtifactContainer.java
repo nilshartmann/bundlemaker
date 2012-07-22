@@ -20,7 +20,6 @@ import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.RemoveTransformation;
@@ -436,18 +435,11 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     Assert.isNotNull(artifact);
     assertCanAdd(artifact);
 
-    // set the change action
-    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this, (IBundleMakerArtifact) artifact,
-        ChangeAction.ADDED));
-
     //
     getRoot().invalidateDependencyCache();
 
     //
     onAddArtifact((IBundleMakerArtifact) artifact);
-
-    // set change action to null
-    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(null);
 
     //
     getRoot().invalidateDependencyCache();
@@ -501,14 +493,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     Assert.isNotNull(artifact);
     Assert.isTrue(canRemove(artifact));
 
-    // set the change action
-    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this, (IBundleMakerArtifact) artifact,
-        ChangeAction.REMOVED));
-
     onRemoveArtifact((IBundleMakerArtifact) artifact);
-
-    // set change action to null
-    ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(null);
 
     //
     getRoot().invalidateDependencyCache();

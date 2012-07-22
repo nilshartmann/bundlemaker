@@ -20,7 +20,6 @@ import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
 import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.modules.event.GroupChangedEvent;
@@ -55,9 +54,6 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
   /** - */
   private final IArtifactModelConfiguration                          _artifactModelConfiguration;
-
-  /** - */
-  private CurrentAction                                              _currentAction = null;
 
   /** - */
   private final CopyOnWriteArrayList<IArtifactModelModifiedListener> _artifactModelChangedListeners;
@@ -327,28 +323,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    */
   @Override
   public void movableUnitRemoved(MovableUnitMovedEvent event) {
-
-    //
-    if (hasCurrentAction()) {
-
-      if (!getCurrentAction().getChild().hasParent()) {
-        return;
-      }
-
-      if (getCurrentAction().getChild().getParent().equals(getCurrentAction().getParent())
-          && getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
-
-        //
-        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
-            .internalRemoveArtifact(getCurrentAction().getChild());
-
-      } else {
-        removeMovableUnitArtifacts(event);
-      }
-
-    } else {
-      removeMovableUnitArtifacts(event);
-    }
+    removeMovableUnitArtifacts(event);
   }
 
   /**
@@ -401,29 +376,17 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   @Override
   public void moduleAdded(ModuleMovedEvent event) {
 
-    // Assert.isTrue(hasCurrentAction());
+    //
+    ModuleSubCache moduleCache = _artifactCache.getModuleCache();
 
-    // initiated by an artifact tree action?
-    if (hasCurrentAction()) {
+    //
+    AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) moduleCache.getOrCreate(new ModuleKey(event
+        .getModule()));
 
-      //
-      ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
-          .getChild());
-
-    } else {
-
-      //
-      ModuleSubCache moduleCache = _artifactCache.getModuleCache();
-
-      //
-      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) moduleCache.getOrCreate(new ModuleKey(event
-          .getModule()));
-
-      //
-      if (moduleArtifact.getParent() == null) {
-        IGroupAndModuleContainer parent = moduleCache.getModuleParent(event.getModule());
-        ((AbstractBundleMakerArtifactContainer) parent).internalAddArtifact(moduleArtifact);
-      }
+    //
+    if (moduleArtifact.getParent() == null) {
+      IGroupAndModuleContainer parent = moduleCache.getModuleParent(event.getModule());
+      ((AbstractBundleMakerArtifactContainer) parent).internalAddArtifact(moduleArtifact);
     }
   }
 
@@ -433,22 +396,13 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   @Override
   public void moduleRemoved(ModuleMovedEvent event) {
 
-    if (hasCurrentAction()) {
+    //
+    AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _artifactCache.getModuleCache().get(
+        new ModuleKey(event.getModule()));
 
-      ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalRemoveArtifact(getCurrentAction()
-          .getChild());
-
-    } else {
-
-      //
-      AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _artifactCache.getModuleCache().get(
-          new ModuleKey(event.getModule()));
-
-      //
-      if (moduleArtifact != null) {
-        ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).internalRemoveArtifact(moduleArtifact);
-        // ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
-      }
+    //
+    if (moduleArtifact != null) {
+      ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).internalRemoveArtifact(moduleArtifact);
     }
   }
 
@@ -476,44 +430,6 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
       internalAddArtifact(moduleArtifact);
     }
 
-    // if (hasCurrentAction()) {
-    //
-    // //
-    // if (getCurrentAction().getChangeAction().equals(ChangeAction.ADDED)) {
-    //
-    // //
-    // ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
-    // .getChild());
-    // }
-    //
-    // //
-    // else if (getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
-    //
-    // //
-    // ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
-    // .internalRemoveArtifact(getCurrentAction().getChild());
-    // }
-    //
-    // } else {
-    //
-    // //
-    // IModule module = event.getModule();
-    // IModuleArtifact moduleArtifact = _artifactCache.getModuleCache().getOrCreate(new ModuleKey(module));
-    //
-    // //
-    // Group classification = ((AbstractModule<?, ?>) module).getClassificationGroup();
-    //
-    // if (classification != null) {
-    //
-    // //
-    // IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);
-    // //
-    // ((AbstractBundleMakerArtifactContainer) groupArtifact).internalAddArtifact(moduleArtifact);
-    //
-    // } else {
-    // internalAddArtifact(moduleArtifact);
-    // }
-    // }
   }
 
   /**
@@ -573,36 +489,6 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   public void groupRemoved(GroupChangedEvent event) {
     // TODO Auto-generated method stub
 
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public CurrentAction getCurrentAction() {
-    return _currentAction;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param currentAction
-   */
-  public void setCurrentAction(CurrentAction currentAction) {
-    _currentAction = currentAction;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param currentAction
-   */
-  public boolean hasCurrentAction() {
-    return _currentAction != null;
   }
 
   /**
