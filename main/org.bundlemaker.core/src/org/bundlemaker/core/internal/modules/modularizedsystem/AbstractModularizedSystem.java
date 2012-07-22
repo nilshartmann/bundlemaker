@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -33,6 +34,7 @@ import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -50,7 +52,7 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
   private Map<String, Object>                               _userAttributes;
 
   /** the project description */
-  private IProjectDescription                    _projectDescription;
+  private IProjectDescription                               _projectDescription;
 
   /** the list of defined transformations */
   private List<ITransformation>                             _transformations;
@@ -63,6 +65,9 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
 
   /** the execution environment type module */
   private TypeModule                                        _executionEnvironment;
+
+  /** - */
+  private Set<Group>                                        _groups;
 
   /**
    * <p>
@@ -88,6 +93,25 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
     _transformations = new ArrayList<ITransformation>();
     _resourceModules = new HashMap<IModuleIdentifier, IModifiableResourceModule>();
     _nonResourceModules = new HashMap<IModuleIdentifier, TypeModule>();
+    _groups = new HashSet<Group>();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IPath> getGroups() {
+
+    //
+    List<IPath> result = new LinkedList<IPath>();
+
+    //
+    for (Group group : _groups) {
+      result.add(group.getPath());
+    }
+
+    //
+    return result;
   }
 
   /**
@@ -321,6 +345,16 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
 
     // return an unmodifiable copy
     return Collections.unmodifiableSet(result);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Set<Group> internalGroups() {
+    return _groups;
   }
 
   /**

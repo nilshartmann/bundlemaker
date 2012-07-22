@@ -13,13 +13,18 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.ArtifactHelper;
+import org.bundlemaker.core.analysis.ArtifactModelException;
 import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactSelector;
+import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.ChangeAction;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.transformation.AddArtifactsTransformation;
+import org.bundlemaker.core.transformation.RemoveTransformation;
+import org.bundlemaker.core.transformation.SimpleArtifactSelector;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -72,6 +77,14 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     return getChild(splittedString);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IBundleMakerArtifact getChild(IPath path) {
+    return getChild(path.segments());
   }
 
   public boolean hasChild(String path) {
@@ -253,7 +266,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
   public IPath getFullPath() {
 
     //
-    if (hasParent()) {
+    if (hasParent() && !(getParent() instanceof IRootArtifact)) {
 
       //
       IPath path = getParent().getFullPath();
@@ -402,31 +415,8 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
    */
   @Override
   public IModularizedSystem getModularizedSystem() {
-    return AdapterUtils.getModularizedSystem(this);
+    return getRoot().getModularizedSystem();
   }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public IDependencyModel getDependencyModel() {
-  // return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
-  // }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // public IBundleMakerArtifact getChild(String path) {
-  // return (IBundleMakerArtifact) super.getChild(path);
-  // }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @SuppressWarnings("unchecked")
-  // public Collection<IBundleMakerArtifact> getChildren() {
-  // return (Collection<IBundleMakerArtifact>) super.getChildren();
-  // }
 
   public IBundleMakerArtifact getParent() {
     return (IBundleMakerArtifact) super.getParent();
@@ -464,6 +454,10 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     // fire
     ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
+
+    //
+    getModularizedSystem().getTransformations().add(
+        new AddArtifactsTransformation(this, new SimpleArtifactSelector(artifact)));
   }
 
   /**
@@ -505,6 +499,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
   @Override
   public final boolean removeArtifact(IBundleMakerArtifact artifact) {
     Assert.isNotNull(artifact);
+    Assert.isTrue(canRemove(artifact));
 
     // set the change action
     ((AdapterRoot2IArtifact) getRoot()).setCurrentAction(new CurrentAction(this, (IBundleMakerArtifact) artifact,
@@ -520,6 +515,9 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     // fire model changed
     ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
+
+    //
+    getModularizedSystem().getTransformations().add(new RemoveTransformation(this, artifact));
 
     //
     return true;
@@ -568,6 +566,8 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     // assert not null
     Assert.isNotNull(artifact);
+    Assert.isTrue(!isParent(artifact));
+    Assert.isTrue(!artifact.equals(this));
 
     // if the artifact has a parent, it has to be removed
     if (artifact.getParent() != null) {
@@ -626,6 +626,41 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     }
     return leafs;
+  }
+
+  // TODO
+  public boolean isAncestor(final IBundleMakerArtifact bundleMakerArtifact) {
+
+    //
+    if (bundleMakerArtifact == null) {
+      return false;
+    }
+
+    //
+    final boolean[] result = new boolean[1];
+
+    //
+    this.accept(new IArtifactTreeVisitor.Adapter() {
+      @Override
+      public boolean onVisit(IBundleMakerArtifact artifact) {
+
+        //
+        if (result[0]) {
+          return false;
+        }
+
+        //
+        if (artifact == bundleMakerArtifact) {
+          result[0] = true;
+        }
+
+        //
+        return !result[0];
+      }
+    });
+
+    //
+    return result[0];
   }
 
   /**
@@ -692,12 +727,18 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
    * </p>
    * 
    * @param artifact
+   * @deprecated use canAdd and Assert.isTrue() instead
    */
+  @Deprecated
   protected void assertCanAdd(IBundleMakerArtifact artifact) {
 
     //
     if (artifact == null) {
-      throw new RuntimeException("Can not add 'null' to " + this);
+      throw new ArtifactModelException("Can not add 'null' to " + this);
+    }
+
+    if (artifact == this) {
+      throw new ArtifactModelException("Can not artifact to itself. " + this);
     }
 
     //
@@ -705,8 +746,44 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     if (canAddMessage != null) {
-      throw new RuntimeException("Can not add " + artifact + " to " + this + ":\n" + canAddMessage);
+      throw new ArtifactModelException("Can not add " + artifact + " to " + this + ":\n" + canAddMessage);
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  protected String handleCanRemove(IBundleMakerArtifact artifact) {
+    return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final boolean canRemove(IBundleMakerArtifact artifact) {
+
+    if (artifact == null) {
+      return false;
+    }
+
+    if (this.equals(artifact)) {
+      return false;
+    }
+
+    if (!((IBundleMakerArtifact) artifact).getRoot().equals(this.getRoot())) {
+      return false;
+    }
+
+    if (!isAncestor(artifact)) {
+      return false;
+    }
+
+    return handleCanRemove(artifact) == null;
   }
 
   /**

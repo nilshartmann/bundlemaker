@@ -23,7 +23,6 @@ import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableTypeContainer;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.modules.query.StringQueryFilters;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 
@@ -170,48 +169,6 @@ public class TypeContainer implements IModifiableTypeContainer {
 
         // add the result
         result.add(containedType);
-      }
-    }
-
-    // return result
-    return Collections.unmodifiableSet(result);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getContainedPackageNames() {
-
-    return getContainedPackageNames(StringQueryFilters.TRUE_QUERY_FILTER);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getContainedPackageNames(IQueryFilter filter) {
-    Assert.isNotNull(filter);
-
-    // create the result
-    Set<String> result = new HashSet<String>();
-
-    //
-    for (String containedType : _containedTypes.keySet()) {
-
-      //
-      String packageName = "";
-
-      //
-      if (containedType.indexOf('.') != -1) {
-
-        // get the packageName
-        packageName = containedType.substring(0, containedType.lastIndexOf('.'));
-
-        //
-        if (!result.contains(packageName) && filter.matches(packageName)) {
-          result.add(packageName);
-        }
       }
     }
 

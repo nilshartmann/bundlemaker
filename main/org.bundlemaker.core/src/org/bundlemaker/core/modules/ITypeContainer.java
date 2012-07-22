@@ -95,25 +95,6 @@ public interface ITypeContainer {
 
   /**
    * <p>
-   * Returns a collection with the names of all contained packages.
-   * </p>
-   * 
-   * @return a collection with the names of all contained packages.
-   */
-  Set<String> getContainedPackageNames();
-
-  /**
-   * <p>
-   * Returns a collection with the names of all contained packages that match the specified filter.
-   * </p>
-   * 
-   * @param filter
-   * @return a collection with the names of all contained packages that match the specified filter.
-   */
-  Set<String> getContainedPackageNames(IQueryFilter<String> filter);
-
-  /**
-   * <p>
    * Returns <code>true</code>, if this container contains all specified types.
    * </p>
    * 

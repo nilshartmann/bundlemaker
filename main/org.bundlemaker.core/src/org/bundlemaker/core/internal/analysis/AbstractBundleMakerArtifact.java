@@ -57,6 +57,31 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
   // return false;
   // }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isParent(IBundleMakerArtifact artifact) {
+
+    //
+    if (artifact == null) {
+      return false;
+    }
+
+    //
+    if (getParent() == null) {
+      return false;
+    }
+
+    //
+    if (getParent().equals(artifact)) {
+      return true;
+    }
+
+    //
+    return getParent().isParent(artifact);
+  }
+
   @Override
   public IBundleMakerArtifact getParent() {
     return parent;

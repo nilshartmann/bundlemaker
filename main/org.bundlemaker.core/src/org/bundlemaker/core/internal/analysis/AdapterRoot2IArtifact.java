@@ -18,12 +18,16 @@ import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
+import org.bundlemaker.core.internal.modules.AbstractModule;
+import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.modules.ChangeAction;
-import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
-import org.bundlemaker.core.modules.ModuleMovedEvent;
-import org.bundlemaker.core.modules.MovableUnitMovedEvent;
+import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.GroupChangedEvent;
+import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
+import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.ModuleMovedEvent;
+import org.bundlemaker.core.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
@@ -55,6 +59,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   /** - */
   private CurrentAction                                              _currentAction = null;
 
+  /** - */
   private final CopyOnWriteArrayList<IArtifactModelModifiedListener> _artifactModelChangedListeners;
 
   /**
@@ -204,14 +209,22 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     return this;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected void onAddArtifact(IBundleMakerArtifact artifact) {
 
+    //
+    Assert.isNotNull(artifact);
+
     // CHANGE THE UNDERLYING MODEL
-    if (artifact instanceof IModuleArtifact || artifact instanceof IGroupArtifact) {
-      if (!AdapterUtils.addModulesIfNecessaryAndResetClassification(artifact, null)) {
+    if (artifact instanceof IModuleArtifact) {
+      if (!AdapterUtils.addModulesIfNecessaryAndResetClassification((IModuleArtifact) artifact, null)) {
         internalAddArtifact(artifact);
       }
+    } else if (artifact instanceof IGroupArtifact) {
+      AdapterUtils.addModulesIfNecessaryAndResetClassification((IGroupArtifact) artifact, this);
     }
   }
 
@@ -351,7 +364,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     IArtifactModelConfiguration configuration = getConfiguration();
 
     if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
-        && (/* configuration.containsAllResources() || */!movableUnit.hasAssociatedTypes())) {
+    /* && ( configuration.containsAllResources() || !movableUnit.hasAssociatedTypes()) */) {
       for (IResource resource : movableUnit.getAssociatedBinaryResources()) {
         IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
@@ -360,7 +373,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
         }
       }
     } else if (configuration.isSourceContent() && movableUnit.hasAssociatedSourceResource()
-        && (/* configuration.containsAllResources() || */!movableUnit.hasAssociatedTypes())) {
+    /* && ( configuration.containsAllResources() || !movableUnit.hasAssociatedTypes()) */) {
       IResource resource = movableUnit.getAssociatedSourceResource();
       IBundleMakerArtifact artifact = _artifactCache.getResourceCache().get(resource);
 
@@ -388,7 +401,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   @Override
   public void moduleAdded(ModuleMovedEvent event) {
 
-    Assert.isTrue(hasCurrentAction());
+    // Assert.isTrue(hasCurrentAction());
 
     // initiated by an artifact tree action?
     if (hasCurrentAction()) {
@@ -433,7 +446,8 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
       //
       if (moduleArtifact != null) {
-        ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
+        ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).internalRemoveArtifact(moduleArtifact);
+        // ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).setParent(null);
       }
     }
   }
@@ -444,44 +458,121 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   @Override
   public void moduleClassificationChanged(ModuleClassificationChangedEvent event) {
 
-    if (hasCurrentAction()) {
+    //
+    IModule module = event.getModule();
 
-      //
-      if (getCurrentAction().getChangeAction().equals(ChangeAction.ADDED)) {
+    //
+    IBundleMakerArtifact moduleArtifact = _artifactCache.getModuleCache().getOrCreate(
+        new ModuleKey(
+            module));
 
-        //
-        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
-            .getChild());
-      }
+    //
+    Group classification = ((AbstractModule<?, ?>) module).getClassificationGroup();
 
-      //
-      else if (getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
-
-        //
-        ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
-            .internalRemoveArtifact(getCurrentAction().getChild());
-      }
-
+    if (classification != null) {
+      IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);
+      ((AbstractBundleMakerArtifactContainer) groupArtifact).internalAddArtifact(moduleArtifact);
     } else {
+      internalAddArtifact(moduleArtifact);
+    }
+
+    // if (hasCurrentAction()) {
+    //
+    // //
+    // if (getCurrentAction().getChangeAction().equals(ChangeAction.ADDED)) {
+    //
+    // //
+    // ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent()).internalAddArtifact(getCurrentAction()
+    // .getChild());
+    // }
+    //
+    // //
+    // else if (getCurrentAction().getChangeAction().equals(ChangeAction.REMOVED)) {
+    //
+    // //
+    // ((AbstractBundleMakerArtifactContainer) getCurrentAction().getParent())
+    // .internalRemoveArtifact(getCurrentAction().getChild());
+    // }
+    //
+    // } else {
+    //
+    // //
+    // IModule module = event.getModule();
+    // IModuleArtifact moduleArtifact = _artifactCache.getModuleCache().getOrCreate(new ModuleKey(module));
+    //
+    // //
+    // Group classification = ((AbstractModule<?, ?>) module).getClassificationGroup();
+    //
+    // if (classification != null) {
+    //
+    // //
+    // IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);
+    // //
+    // ((AbstractBundleMakerArtifactContainer) groupArtifact).internalAddArtifact(moduleArtifact);
+    //
+    // } else {
+    // internalAddArtifact(moduleArtifact);
+    // }
+    // }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void classificationChanged(ClassificationChangedEvent event) {
+
+    //
+    if (event.isMovedGroup()) {
 
       //
-      IModule module = event.getModule();
-      IModuleArtifact moduleArtifact = _artifactCache.getModuleCache().getOrCreate(new ModuleKey(module));
+      IBundleMakerArtifact movedGroupArtifact = _artifactCache.getGroupCache().getOrCreate(
+          event.getMovedGroup());
 
       //
-      IPath classification = module.getClassification();
-
-      if (classification != null) {
+      if (((Group) event.getMovedGroup()).getParent() == null) {
 
         //
-        IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);
-        //
-        ((AbstractBundleMakerArtifactContainer) groupArtifact).internalAddArtifact(moduleArtifact);
+        if (((Group) event.getMovedGroup()).hasRootParent()) {
+          this.internalAddArtifact(movedGroupArtifact);
+        }
 
-      } else {
-        internalAddArtifact(moduleArtifact);
+        //
+        else {
+          AbstractBundleMakerArtifactContainer currentParent = (AbstractBundleMakerArtifactContainer) movedGroupArtifact
+              .getParent();
+          currentParent.internalRemoveArtifact(movedGroupArtifact);
+        }
+      }
+
+      //
+      else {
+        IBundleMakerArtifact parentArtifact = _artifactCache.getGroupCache()
+            .getOrCreate(
+                event.getNewParentGroup());
+
+        ((AbstractBundleMakerArtifactContainer) parentArtifact).internalAddArtifact(movedGroupArtifact);
       }
     }
+
+    //
+    else if (event.isGroupRenamed()) {
+      // nothing to do here...
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void groupAdded(GroupChangedEvent event) {
+    getArtifactCache().getGroupCache().getOrCreate((Group) event.getGroup());
+  }
+
+  @Override
+  public void groupRemoved(GroupChangedEvent event) {
+    // TODO Auto-generated method stub
+
   }
 
   /**

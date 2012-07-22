@@ -184,7 +184,6 @@ public class BundleMakerProject implements IBundleMakerProject {
     IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
         .getName())
         : createModularizedSystemWorkingCopy(getProject().getName());
-    modularizedSystem.applyTransformations(progressMonitor);
 
     // release the store
     factory.releasePersistentDependencyStore(this);
@@ -309,12 +308,13 @@ public class BundleMakerProject implements IBundleMakerProject {
     // create the modularized system
     ModularizedSystem modularizedSystem = new ModularizedSystem(name, _projectDescription);
 
-    // create the default transformation
-    ITransformation basicContentTransformation = new BasicProjectContentTransformation();
-    modularizedSystem.getTransformations().add(basicContentTransformation);
-
     // add the result to the hash map
     _modifiableModualizedSystemWorkingCopies.put(name, modularizedSystem);
+
+    // create the default transformation
+    ITransformation basicContentTransformation = new BasicProjectContentTransformation();
+    modularizedSystem.initialize(null);
+    modularizedSystem.applyTransformations(null, basicContentTransformation);
 
     //
     return modularizedSystem;

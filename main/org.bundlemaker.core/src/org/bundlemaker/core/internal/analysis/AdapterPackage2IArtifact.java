@@ -65,16 +65,16 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
     _isHierarchical = isHierarchical;
   }
 
-  @Override
-  public boolean containsPackages() {
-    for (IBundleMakerArtifact bundleMakerArtifact : getChildren()) {
-      if (bundleMakerArtifact.getType().equals(ArtifactType.Package)
-          && ((IPackageArtifact) bundleMakerArtifact).containsTypesOrResources()) {
-        return true;
-      }
-    }
-    return false;
-  }
+  // @Override
+  // public boolean containsPackages() {
+  // for (IBundleMakerArtifact bundleMakerArtifact : getChildren()) {
+  // if (bundleMakerArtifact.getType().equals(ArtifactType.Package)
+  // && ((IPackageArtifact) bundleMakerArtifact).containsTypesOrResources()) {
+  // return true;
+  // }
+  // }
+  // return false;
+  // }
 
   /**
    * {@inheritDoc}
@@ -194,7 +194,10 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
   @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
 
-    // TODO: TYPE CHECK??
+    // asserts
+    Assert.isNotNull(artifact);
+
+    // TODO: IS THIS CORRECT ??
     AdapterUtils.removeArtifact(artifact, this);
   }
 

@@ -18,13 +18,13 @@ import java.util.Set;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
@@ -109,21 +109,6 @@ public interface IModularizedSystem {
 
   /**
    * <p>
-   * Applies the transformations.
-   * </p>
-   * 
-   * @param monitor
-   *          the progress monitor to use for reporting progress to the user. It is the caller's responsibility to call
-   *          done() on the given monitor. Accepts <code>null</code>, indicating that no progress should be reported and
-   *          that the operation cannot be canceled.
-   * 
-   * @deprecated use applyTransformations(IProgressMonitor monitor, List<ITransformation> transformations) instead
-   */
-  @Deprecated
-  void applyTransformations(IProgressMonitor monitor);
-
-  /**
-   * <p>
    * </p>
    * 
    * @param progressMonitor
@@ -147,6 +132,14 @@ public interface IModularizedSystem {
    * @param transformation
    */
   void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  List<IPath> getGroups();
 
   /**
    * <p>
@@ -314,6 +307,7 @@ public interface IModularizedSystem {
    * 
    * @return
    */
+  @Deprecated
   Set<IType> getTypes();
 
   /**
@@ -323,6 +317,7 @@ public interface IModularizedSystem {
    * @param fullyQualifiedName
    * @return
    */
+  @Deprecated
   Set<IType> getTypes(String fullyQualifiedName);
 
   /**
@@ -333,6 +328,7 @@ public interface IModularizedSystem {
    * @param referencingModule
    * @return
    */
+  @Deprecated
   Set<IType> getTypes(String fullyQualifiedName, IResourceModule referencingModule);
 
   /**
@@ -343,6 +339,7 @@ public interface IModularizedSystem {
    * @return
    * @throws AmbiguousElementException
    */
+  @Deprecated
   IType getType(String fullyQualifiedName) throws AmbiguousElementException;
 
   /**
@@ -354,72 +351,10 @@ public interface IModularizedSystem {
    * @return
    * @throws AmbiguousElementException
    */
+  @Deprecated
   IType getType(String fullyQualifiedName, IResourceModule referencingModule) throws AmbiguousElementException;
 
-  /**
-   * <p>
-   * Returns a set of {@link IModule IModules} that contain a type with the specified name.
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   *          the fully qualified name.
-   * @return a set of {@link IModule IModules} that contain a type with the specified name.
-   */
-  Set<IModule> getTypeContainingModules(String fullyQualifiedName);
-
-  /**
-   * <p>
-   * Returns a set of {@link IModule IModules} that contain a type with the specified name.
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   *          the fully qualified name.
-   * @return a set of {@link IModule IModules} that contain a type with the specified name.
-   */
-  Set<IModule> getTypeContainingModules(String fullyQualifiedName, IResourceModule referencingModule);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @return
-   * @throws AmbiguousElementException
-   */
-  IModule getTypeContainingModule(String fullyQualifiedName) throws AmbiguousElementException;
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @return
-   * @throws AmbiguousElementException
-   */
-  IModule getTypeContainingModule(String fullyQualifiedName, IResourceModule referencingModule)
-      throws AmbiguousElementException;
-
   /******************************************************************************/
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceModule
-   * @param referencesFilter
-   * @return
-   */
-  IReferencedModulesQueryResult getReferencedModules(IResourceModule resourceModule);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceModule
-   * @param referencesFilter
-   * @return
-   */
-  IReferencedModulesQueryResult getTransitiveReferencedModules(IResourceModule resourceModule);
 
   /**
    * <p>
@@ -430,66 +365,6 @@ public interface IModularizedSystem {
   @Deprecated
   public List<ITypeSelector> getTypeSelectors();
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedPackageName
-   * @return
-   */
   @Deprecated
-  Set<IModule> getPackageContainingModules(String fullyQualifiedPackageName);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedPackageName
-   * @return
-   * @throws AmbiguousElementException
-   */
-  @Deprecated
-  IModule getPackageContainingModule(String fullyQualifiedPackageName) throws AmbiguousElementException;
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fullyQualifiedName
-   * @return
-   */
-  @Deprecated
-  Set<IType> getReferencingTypes(String fullyQualifiedName);
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @return
-  // */
-  // @Deprecated
-  // Map<String, Set<IModule>> getAmbiguousPackages();
-  //
-  // @Deprecated
-  // Map<String, Set<IType>> getAmbiguousTypes();
-
-  // TODO
-  @Deprecated
-  Collection<IType> getTypeReferencesTransitiveClosure(String typeName, IQueryFilter<IType> filter);
-
-  // TODO
-  @Deprecated
-  Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName, IQueryFilter<IType> filter);
-
-  // TODO
-  @Deprecated
-  Collection<IResource> getResourceReferencesTransitiveClosure(IResource resource, ContentType contentType,
-      IQueryFilter<IType> queryFilter);
-
-  // TODO
-  @Deprecated
-  Collection<IResource> getResourceIsReferencedTransitiveClosure(IResource resource, ContentType contentType,
-      IQueryFilter<IResource> queryFilter);
-
   Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule);
 }

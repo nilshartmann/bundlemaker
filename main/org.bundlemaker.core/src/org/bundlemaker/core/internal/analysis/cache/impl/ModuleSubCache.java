@@ -8,6 +8,7 @@ import org.bundlemaker.core.internal.analysis.AdapterResourceModule2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualModule2IArtifact;
+import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
@@ -86,7 +87,7 @@ public class ModuleSubCache extends AbstractSubCache<ModuleKey, IModuleArtifact>
 
     // step 2: ... otherwise we have to return the group artifact
     else {
-      return getArtifactCache().getGroupCache().getOrCreate(module.getClassification());
+      return getArtifactCache().getGroupCache().getOrCreate(((AbstractModule<?, ?>) module).getClassificationGroup());
     }
   }
 }

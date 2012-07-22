@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
@@ -58,7 +56,10 @@ public class SimpleReportExporter extends AbstractExporter {
     subMonitor.beginTask(null, 10);
 
     StringBuilder builder = new StringBuilder();
-    builder.append(getCurrentModule().getModuleIdentifier().toString() + "\n");
+    String classification = getCurrentModule().hasClassification() ? getCurrentModule().getClassification()
+        .toPortableString() : "";
+    builder.append(classification + " : "
+        + getCurrentModule().getModuleIdentifier().toString() + "\n");
 
     builder.append("\n");
     builder.append("Source-Content: \n");
@@ -123,32 +124,33 @@ public class SimpleReportExporter extends AbstractExporter {
     // }
     subMonitor.worked(2);
 
-    builder.append("\n");
-    builder.append("Referenced Modules: \n");
-    IReferencedModulesQueryResult queryResult = getCurrentModularizedSystem().getReferencedModules(getCurrentModule());
+    // builder.append("\n");
+    // builder.append("Referenced Modules: \n");
+    // IReferencedModulesQueryResult queryResult =
+    // getCurrentModularizedSystem().getReferencedModules(getCurrentModule());
+    //
+    // for (IModule referencedModule : queryResult.getReferencedModules()) {
+    // builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
+    // }
+    // subMonitor.worked(1);
+    //
+    // builder.append("\n");
+    // builder.append("Transitive referenced modules: \n");
+    // Set<IModule> referencedModules = getCurrentModularizedSystem().getTransitiveReferencedModules(getCurrentModule())
+    // .getReferencedModules();
+    //
+    // for (IModule referencedModule : referencedModules) {
+    // builder.append("  " + referencedModule.getModuleIdentifier().toString() + "\n");
+    // }
+    // subMonitor.worked(1);
 
-    for (IModule referencedModule : queryResult.getReferencedModules()) {
-      builder.append(referencedModule.getModuleIdentifier().toString() + "\n");
-    }
-    subMonitor.worked(1);
-
-    builder.append("\n");
-    builder.append("Transitive referenced modules: \n");
-    Set<IModule> referencedModules = getCurrentModularizedSystem().getTransitiveReferencedModules(getCurrentModule())
-        .getReferencedModules();
-
-    for (IModule referencedModule : referencedModules) {
-      builder.append("  " + referencedModule.getModuleIdentifier().toString() + "\n");
-    }
-    subMonitor.worked(1);
-
-    // TODO
-    builder.append("\n");
-    builder.append("Missing Types: \n");
-    for (IReference missingType : queryResult.getUnsatisfiedReferences()) {
-      builder.append(missingType + "\n");
-    }
-    subMonitor.worked(1);
+    // // TODO
+    // builder.append("\n");
+    // builder.append("Missing Types: \n");
+    // for (IReference missingType : queryResult.getUnsatisfiedReferences()) {
+    // builder.append(missingType + "\n");
+    // }
+    // subMonitor.worked(1);
 
     // builder.append("\n");
     // builder.append("Types with ambigious modules: \n");

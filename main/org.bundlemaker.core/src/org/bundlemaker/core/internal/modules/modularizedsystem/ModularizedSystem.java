@@ -10,29 +10,14 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.modules.ReferencedModulesQueryResult;
-import org.bundlemaker.core.internal.modules.algorithm.ResourceIsReferencedTransitiveClosure;
-import org.bundlemaker.core.internal.modules.algorithm.ResourceReferencesTransitiveClosure;
-import org.bundlemaker.core.internal.modules.algorithm.TypeIsReferencedTransitiveClosure;
-import org.bundlemaker.core.internal.modules.algorithm.TypeReferencesTransitiveClosure;
-import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.IReferencedModulesQueryResult;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.resource.IReference;
-import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -42,9 +27,6 @@ import org.eclipse.core.runtime.Assert;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ModularizedSystem extends AbstractValidatingModularizedSystem {
-
-  /** the referenced modules cache */
-  private GenericCache<ModuleAndQueryFilterKey, IReferencedModulesQueryResult> _referencedModulesCache;
 
   /**
    * <p>
@@ -57,16 +39,6 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
 
     //
     super(name, projectDescription);
-
-    //
-    _referencedModulesCache = new GenericCache<ModuleAndQueryFilterKey, IReferencedModulesQueryResult>() {
-      @Override
-      protected IReferencedModulesQueryResult create(ModuleAndQueryFilterKey key) {
-        // System.out.println("Create " +
-        // key.getResourceModule().getModuleIdentifier());
-        return internalGetReferencedModules(key.getResourceModule());
-      }
-    };
   }
 
   /**
@@ -93,298 +65,15 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Collection<IType> getTypeReferencesTransitiveClosure(String typeName, IQueryFilter<IType> filter) {
-
-    TypeReferencesTransitiveClosure closure = new TypeReferencesTransitiveClosure(this);
-    closure.resolveType(typeName, filter);
-    return closure.getTypes();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Collection<IResource> getResourceReferencesTransitiveClosure(IResource resource, ContentType contentType,
-      IQueryFilter<IType> queryFilter) {
-
-    ResourceReferencesTransitiveClosure closure = new ResourceReferencesTransitiveClosure(this);
-    closure.resolveResource(resource, contentType, queryFilter);
-    return closure.getResources();
-  }
-
-  @Override
-  public Collection<IResource> getResourceIsReferencedTransitiveClosure(IResource resource, ContentType contentType,
-      IQueryFilter<IResource> queryFilter) {
-
-    ResourceIsReferencedTransitiveClosure closure = new ResourceIsReferencedTransitiveClosure(this);
-    closure.resolveResource(resource, contentType, queryFilter);
-    return closure.getResources();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Collection<IType> getTypeIsReferencedTransitiveClosure(String typeName, IQueryFilter<IType> filter) {
-
-    TypeIsReferencedTransitiveClosure closure = new TypeIsReferencedTransitiveClosure(this);
-    closure.resolveType(typeName, filter);
-    return closure.getTypes();
-  }
-
-  @Override
-  public Set<IType> getReferencingTypes(String fullyQualifiedName) {
-
-    Set<IType> result = getTypeNameToReferringCache().get(fullyQualifiedName);
-
-    //
-    if (result == null) {
-      result = Collections.emptySet();
-    }
-
-    return result;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IReferencedModulesQueryResult getReferencedModules(IResourceModule resourceModule) {
-
-    // assert is not null
-    Assert.isNotNull(resourceModule);
-
-    // return the result
-    return _referencedModulesCache.getOrCreate(new ModuleAndQueryFilterKey(resourceModule));
-  }
-
-  /**
    * <p>
    * </p>
    * 
-   * @param resourceModule
-   * @param referencesFilter
-   * @return
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  private IReferencedModulesQueryResult internalGetReferencedModules(IResourceModule resourceModule) {
-
-    // assert is not null
-    Assert.isNotNull(resourceModule);
-
-    // create the result set
-    ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
-
-    // iterate over all the references
-    for (IReference reference : resourceModule.getReferences(ReferenceQueryFilters.TRUE_QUERY_FILTER)) {
-
-      // get the referenced module...
-      IModule referencedModule = getTypeContainingModule(reference.getFullyQualifiedName(), resourceModule);
-
-      // ignore references to self
-      if (resourceModule.equals(referencedModule)) {
-        continue;
-      }
-
-      // ...add it to the result
-      if (referencedModule != null) {
-        result.getModifiableReferencedModules().add(referencedModule);
-      } else {
-        result.getModifiableUnsatisfiedReferences().add(reference);
-      }
-    }
-
-    // return the result
-    return result;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IReferencedModulesQueryResult getTransitiveReferencedModules(IResourceModule resourceModule) {
-
-    // assert is not null
-    Assert.isNotNull(resourceModule);
-
-    // return the transitive closure
-    ReferencedModulesQueryResult result = new ReferencedModulesQueryResult(resourceModule);
-
-    // get the transitive referenced modules
-    getTransitiveReferencedModules(resourceModule, result);
-
-    // remove self from result
-    result.getModifiableReferencedModules().remove(resourceModule);
-
-    // return the result
-    return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param resourceModule
-   * @param referencesFilter
-   * @param result
-   */
-  private void getTransitiveReferencedModules(IResourceModule resourceModule,
-      ReferencedModulesQueryResult transitiveQueryResult) {
-
-    // assert is not null
-    Assert.isNotNull(resourceModule);
-    Assert.isNotNull(transitiveQueryResult);
-
-    // get the referenced modules
-    IReferencedModulesQueryResult queryResult = getReferencedModules(resourceModule);
-
-    //
-    for (IModule referencedModule : queryResult.getReferencedModules()) {
-
-      // cycle-check
-      if (!(transitiveQueryResult.getModifiableReferencedModules().contains(referencedModule) || referencedModule
-          .equals(transitiveQueryResult.getOrigin()))) {
-
-        // add to transitive closure
-        transitiveQueryResult.getModifiableReferencedModules().add(referencedModule);
-
-        //
-        if (referencedModule instanceof IResourceModule) {
-          getTransitiveReferencedModules((IResourceModule) referencedModule, transitiveQueryResult);
-        }
-      }
-    }
-
-    //
-    transitiveQueryResult.getModifiableUnsatisfiedReferences().addAll(queryResult.getUnsatisfiedReferences());
-  }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public Map<String, Set<IModule>> getAmbiguousPackages() {
-  //
-  // // create the result map
-  // Map<String, Set<IModule>> result = new HashMap<String, Set<IModule>>();
-  //
-  // // create the temp map
-  // Map<String, IModule> tempMap = new HashMap<String, IModule>();
-  //
-  // // iterate over all modules
-  // for (IModule typeModule : getAllModules()) {
-  //
-  // // iterate over contained packages
-  // for (String containedPackage : typeModule.getContainedPackageNames()) {
-  //
-  // // add
-  // if (result.containsKey(containedPackage)) {
-  //
-  // result.get(containedPackage).add(typeModule);
-  // }
-  //
-  // //
-  // else if (tempMap.containsKey(containedPackage)) {
-  //
-  // //
-  // Set<IModule> newSet = new HashSet<IModule>();
-  //
-  // //
-  // result.put(containedPackage, newSet);
-  //
-  // // add module to module list
-  // newSet.add(typeModule);
-  // newSet.add(tempMap.remove(containedPackage));
-  // }
-  //
-  // // put in the temp map
-  // else {
-  // tempMap.put(containedPackage, typeModule);
-  // }
-  // }
-  // }
-  //
-  // // return the result
-  // return result;
-  // }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param modularizedSystem
-  // * @param result
-  // * @param fullyQualifiedType
-  // */
-  // @Deprecated
-  // private void _resolveReferencedModules(ReferencedModulesQueryResult
-  // result, IReference reference) {
-  //
-  // Assert.isNotNull(result);
-  // Assert.isNotNull(reference);
-  //
-  // //
-  // Set<IModule> containingModules =
-  // _getContainingModules(reference.getFullyQualifiedName());
-  //
-  // //
-  // if (containingModules.isEmpty()) {
-  //
-  // //
-  // result.getUnsatisfiedReferences().add(reference);
-  //
-  // } else if (containingModules.size() > 1) {
-  //
-  // if (!result.getReferencesWithAmbiguousModules().containsKey(reference)) {
-  //
-  // result.getReferencesWithAmbiguousModules().put(reference, new
-  // HashSet<IModule>());
-  // }
-  //
-  // result.getReferencesWithAmbiguousModules().get(reference).addAll(containingModules);
-  //
-  // } else {
-  //
-  // result.getReferencedModulesMap().put(reference,
-  // containingModules.toArray(new IModule[0])[0]);
-  // }
-  // }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param modularizedSystem
-  // * @param fullyQualifiedName
-  // * @return
-  // */
-  // private Set<IModule> _getContainingModules(String fullyQualifiedName) {
-  //
-  // //
-  // if (getTypeNameToTypeCache().containsKey(fullyQualifiedName)) {
-  //
-  // //
-  // Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
-  // Set<IModule> result = new HashSet<IModule>();
-  //
-  // for (IType type : types) {
-  // // TODO: direct call
-  // result.add(type.getModule(this));
-  // }
-  //
-  // return result;
-  //
-  // } else {
-  // return Collections.emptySet();
-  // }
-  // }
-
   private static class ModuleAndQueryFilterKey {
 
     /** - */
-    private IResourceModule          _resourceModule;
+    private IResourceModule _resourceModule;
 
     // /** - */
     // private IQueryFilter<IReference> _queryFilter;

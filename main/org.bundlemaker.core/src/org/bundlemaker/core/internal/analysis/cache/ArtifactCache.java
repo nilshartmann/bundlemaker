@@ -22,6 +22,8 @@ import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.PackageSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.ResourceSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
+import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -47,7 +49,7 @@ public class ArtifactCache {
   private IRootArtifact                 _rootArtifact;
 
   /** the modularized system */
-  private IModularizedSystem            _modularizedSystem;
+  private AbstractModularizedSystem     _modularizedSystem;
 
   /** - */
   protected GroupSubCache               _groupCache;
@@ -81,7 +83,7 @@ public class ArtifactCache {
     Assert.isNotNull(configuration);
 
     // set the modularized system
-    _modularizedSystem = modularizedSystem;
+    _modularizedSystem = (AbstractModularizedSystem) modularizedSystem;
 
     // create the root artifact
     _rootArtifact = new AdapterRoot2IArtifact(modularizedSystem, configuration, this);
@@ -139,6 +141,14 @@ public class ArtifactCache {
    * @throws CoreException
    */
   public final IRootArtifact transform() throws CoreException {
+
+    // we may have empty groups - so it is necessary to create IGroupArtifact
+    // entries explicitly
+    for (Group group : _modularizedSystem.internalGroups()) {
+      getGroupCache().getOrCreate(group);
+    }
+
+    // transform the modularized system
     return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]));
   }
 
@@ -297,13 +307,10 @@ public class ArtifactCache {
    * @return
    * @throws Exception
    */
-  protected IRootArtifact transform(IModule[] modules) {
+  private IRootArtifact transform(IModule[] modules) {
 
     // create virtual module for missing types
     if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
-
-      // // initialize the types caches
-      // initializeMissingTypesCaches();
 
       // add the
       for (IModule module : modules) {

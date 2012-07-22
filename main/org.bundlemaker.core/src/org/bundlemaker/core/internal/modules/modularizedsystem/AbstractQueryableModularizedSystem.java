@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.modules.AmbiguousElementException;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
@@ -32,6 +31,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
+@Deprecated
 public abstract class AbstractQueryableModularizedSystem extends AbstractCachingModularizedSystem {
 
   /** - */
@@ -139,53 +139,6 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
   }
 
   @Override
-  public IModule getTypeContainingModule(String fullyQualifiedName) throws AmbiguousElementException {
-    // TODO: null is NOT ALLOWED HERE!!!
-    return getTypeContainingModule(fullyQualifiedName, null);
-  }
-
-  @Override
-  public IModule getTypeContainingModule(String fullyQualifiedName, IResourceModule referencingModule) {
-
-    //
-    IType type = getType(fullyQualifiedName, referencingModule);
-
-    //
-    if (type == null) {
-      return null;
-    }
-
-    return type.getModule(this);
-  }
-
-  @Override
-  public Set<IModule> getTypeContainingModules(String fullyQualifiedName) {
-    return getTypeContainingModules(fullyQualifiedName, null);
-  }
-
-  @Override
-  public Set<IModule> getTypeContainingModules(String fullyQualifiedName, IResourceModule referencingModule) {
-    //
-    if (getTypeNameToTypeCache().containsKey(fullyQualifiedName)) {
-
-      Set<IType> types = getTypeNameToTypeCache().get(fullyQualifiedName);
-
-      Set<IModule> result = new HashSet<IModule>(types.size());
-
-      for (IType type : types) {
-        // TODO: direct call
-        result.add(type.getModule(this));
-      }
-
-      //
-      return Collections.unmodifiableSet(result);
-
-    } else {
-      return Collections.emptySet();
-    }
-  }
-
-  @Override
   public Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule) {
 
     //
@@ -203,18 +156,5 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
 
     //
     return result;
-  }
-
-  /******************************************************/
-  @Override
-  public IModule getPackageContainingModule(String fullyQualifiedPackageName) throws AmbiguousElementException {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Set<IModule> getPackageContainingModules(String fullyQualifiedPackageName) {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

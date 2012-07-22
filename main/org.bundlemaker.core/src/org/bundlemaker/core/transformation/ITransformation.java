@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * <p>
  * </p>
+ * 
  * <p>
  * Clients may implement this interface.
  * </p>

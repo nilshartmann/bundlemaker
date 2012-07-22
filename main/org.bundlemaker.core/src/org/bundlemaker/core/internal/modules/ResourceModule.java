@@ -29,7 +29,6 @@ import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.util.StopWatch;
 
 /**
  * <p>
@@ -105,52 +104,6 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     return Collections.unmodifiableSet(result);
   }
 
-  @Override
-  public Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter) {
-
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-
-    Set<IReference> references = getReferences(filter);
-
-    // System.out.println("getReferences: " + stopWatch.getElapsedTime());
-
-    Set<String> result = new HashSet<String>();
-    for (IReference reference : references) {
-      result.add(reference.getFullyQualifiedName());
-    }
-
-    // System.out.println("copy to String: " + stopWatch.getElapsedTime());
-
-    return result;
-  }
-
-  @Override
-  public Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter) {
-
-    StopWatch stopWatch = new StopWatch();
-    stopWatch.start();
-
-    Set<IReference> references = getReferences(filter);
-
-    // System.out.println("getReferences: " + stopWatch.getElapsedTime());
-
-    Set<String> result = new HashSet<String>();
-    for (IReference reference : references) {
-
-      if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-        result.add(reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.')));
-      } else {
-        // TODO: brauchen wir das ?
-        // result.add("");
-      }
-    }
-
-    // System.out.println("copy to String: " + stopWatch.getElapsedTime());
-
-    return result;
-  }
-
   /**
    * {@inheritDoc}
    */
@@ -224,54 +177,8 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     return !getResources(ContentType.SOURCE).isEmpty();
   }
 
-  // /**
-  // * <p>
-  // * </p>
-  // */
-  // // TODO incremental updates
-  // @Deprecated
-  // public void initializeContainedTypes() {
-  //
-  // // iterate over all containers and initialize the contained types
-  // doWithAllContainers(new ContainerClosure<ResourceContainer>() {
-  //
-  // @Override
-  // public boolean doWithContainer(ResourceContainer resourceContainer) {
-  //
-  // // initialize the contained types of the resource container
-  // resourceContainer.initialize();
-  //
-  // // return false to indicate that all containers should be
-  // // processed
-  // return false;
-  // }
-  // });
-  // }
-
   // TODO
   public void validate() {
-
-    //
-    // for (IType type : getContainedTypes()) {
-    //
-    // // check that the module is set
-    // if (type.getModule() == null) {
-    // System.out.println(type.getFullyQualifiedName() + " : " + type);
-    // System.out.println(" - source resource: "
-    // + type.getSourceResource());
-    // System.out.println(" - binary resource: "
-    // + type.getBinaryResource());
-    // }
-    //
-    // if (type.getModule() != this) {
-    // System.out.println("HAE?");
-    // System.out.println(type.getFullyQualifiedName() + " : " + type);
-    // System.out.println(" - source resource: "
-    // + type.getSourceResource());
-    // System.out.println(" - binary resource: "
-    // + type.getBinaryResource());
-    // }
-    // }
 
     //
     Map<String, IResource> entries = new HashMap<String, IResource>();

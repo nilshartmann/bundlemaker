@@ -253,6 +253,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * 
    * @return
    */
+  @Deprecated
   String getUniquePathIdentifier();
 
   /**
@@ -265,7 +266,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
-   * Returns the child of the this artifact that matches the given path (delimited by '|').
+   * Returns the child of the this artifact that matches the given path (delimited by '/').
    * </p>
    * <p>
    * For each segment of the given path a matching artifact will be chosen (relative to its parent) using the following
@@ -275,15 +276,28 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * <li>If no child was chosen before and the segment equals the (simple) name of a child, this child will be chosen.</li>
    * </ol>
    * This algorithm allows it to use paths like
-   * <code>"myRoot|group1|group2|myModule|org.bundlemaker.core|MyType"<code> or <code>"myRoot|group1|group2|myModule|org.bundlemaker.core|org.bundlemaker.core.MyType"
+   * <code>"myRoot/group1/group2/myModule/org.bundlemaker.core/MyType"<code> or <code>"myRoot/group1/group2/myModule/org.bundlemaker.core/org.bundlemaker.core.MyType"
    * </p>
    * 
    * @param path
    * @return
    */
+  IBundleMakerArtifact getChild(IPath path);
+
   @Deprecated
-  // replace with visitor
   IBundleMakerArtifact getChild(String path);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param clazz
+   * @param path
+   * 
+   * @param <T>
+   * @return
+   */
+  <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path);
 
   /**
    * <p>
@@ -345,15 +359,10 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * <p>
    * </p>
    * 
-   * @param clazz
-   * @param path
-   * 
-   * @param <T>
+   * @param artifact
    * @return
    */
-  @Deprecated
-  // replace with visitor
-  <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path);
+  boolean isParent(IBundleMakerArtifact artifact);
 
   /**
    * <p>
@@ -454,6 +463,15 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return
    */
   boolean canAdd(IBundleMakerArtifact artifact);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  boolean canRemove(IBundleMakerArtifact artifact);
 
   /**
    * <p>

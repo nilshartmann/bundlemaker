@@ -16,11 +16,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
+import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.StringQueryFilters;
 import org.bundlemaker.core.modules.query.TypeQueryFilters;
@@ -44,7 +46,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   private IModuleIdentifier   _moduleIdentifier;
 
   /** the classification */
-  private IPath               _classification;
+  private Group               _classification;
 
   /** the user attributes */
   private Map<String, Object> _userAttributes;
@@ -107,7 +109,7 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    */
   @Override
   public IPath getClassification() {
-    return _classification;
+    return _classification != null ? _classification.getPath() : null;
   }
 
   /**
@@ -148,6 +150,10 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   @Override
   public Set<String> getContainedTypeNames() {
     return getContainedTypeNames(StringQueryFilters.TRUE_QUERY_FILTER);
+  }
+
+  public Group getClassificationGroup() {
+    return _classification;
   }
 
   public final void setModuleIdentifier(IModuleIdentifier moduleIdentifier) {
@@ -279,36 +285,6 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
   }
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getContainedPackageNames() {
-    return getContainedPackageNames(StringQueryFilters.TRUE_QUERY_FILTER);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getContainedPackageNames(final IQueryFilter<String> filter) {
-
-    // create the result set
-    final Set<String> result = new HashSet<String>();
-
-    //
-    doWithAllContainers(new ContainerClosure<T>() {
-      @Override
-      public boolean doWithContainer(T resourceContainer) {
-        result.addAll(resourceContainer.getContainedPackageNames(filter));
-        return false;
-      }
-    });
-
-    // return the result
-    return Collections.unmodifiableSet(result);
-  }
-
-  /**
    * <p>
    * </p>
    * 
@@ -332,13 +308,33 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    * <p>
    * </p>
    * 
-   * @param classification
+   * @param classificationPath
    */
-  public void setClassification(IPath classification) {
-    _classification = classification;
+  public void setClassification(IPath classificationPath) {
 
+    //
+    if (classificationPath == null || classificationPath.isEmpty()) {
+      _classification = null;
+    }
+
+    //
+    else {
+
+      _classification = ((AbstractTransformationAwareModularizedSystem) getModularizedSystem())
+          .getOrCreateGroup(classificationPath);
+    }
+
+    fireModuleClassificationChanged(new ModuleClassificationChangedEvent(this));
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void fireModuleClassificationChanged(ModuleClassificationChangedEvent event) {
+    //
     if (hasModularizedSystem()) {
-      ((ModularizedSystem) getModularizedSystem()).fireModuleClassificationChanged(this);
+      ((ModularizedSystem) getModularizedSystem()).fireModuleClassificationChanged(event);
     }
   }
 

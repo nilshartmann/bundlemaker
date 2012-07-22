@@ -8,6 +8,8 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.transformation.CreateGroupTransformation;
+import org.bundlemaker.core.transformation.CreateModuleTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -98,7 +100,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       }
 
       if (classification.segmentCount() > 1) {
-        resourceModule.setClassification(classification.removeFirstSegments(1));
+        resourceModule.setClassification(classification);
       }
 
       //
@@ -107,6 +109,10 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     }
 
     ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).fireArtifactModelChanged();
+
+    //
+    _groupAndModuleContainer.getRoot().getModularizedSystem().getTransformations().add(
+        new CreateModuleTransformation(_groupAndModuleContainer, qualifiedModuleName, moduleVersion));
 
     //
     return moduleArtifact;
@@ -122,6 +128,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
   public IGroupArtifact getOrCreateGroup(String path) {
     Assert.isNotNull(path);
 
+    //
     return getOrCreateGroup(new Path(path));
   }
 
@@ -129,38 +136,16 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
    * {@inheritDoc}
    */
   public IGroupArtifact getOrCreateGroup(IPath path) {
-
     Assert.isNotNull(path);
 
-    // normalize
-    // // split
-    // String[] segments = path.split("/");
+    //
+    CreateGroupTransformation transformation = new CreateGroupTransformation(_groupAndModuleContainer, path);
 
-    // add children
-    IGroupAndModuleContainer currentArtifact = _groupAndModuleContainer;
+    //
+    _groupAndModuleContainer.getRoot().getModularizedSystem().applyTransformations(null,
+        transformation);
 
-    for (int i = 0; i < path.segmentCount(); i++) {
-
-      // try to get the child
-      IGroupAndModuleContainer newArtifact = (IGroupAndModuleContainer) currentArtifact.getChild(path.segment(i));
-
-      //
-      if (newArtifact == null) {
-
-        // create new
-        newArtifact = ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot())
-            .getArtifactCache()
-            .getGroupCache()
-            .getOrCreate(
-                currentArtifact.getFullPath().removeFirstSegments(1)
-                    .append(path.removeLastSegments(path.segmentCount() - (i + 1))));
-      }
-
-      currentArtifact = newArtifact;
-    }
-
-    ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).fireArtifactModelChanged();
-
-    return (IGroupArtifact) currentArtifact;
+    //
+    return transformation.getGroupArtifact();
   }
 }

@@ -16,15 +16,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.modules.ChangeAction;
-import org.bundlemaker.core.modules.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.ModuleClassificationChangedEvent;
-import org.bundlemaker.core.modules.ModuleMovedEvent;
-import org.bundlemaker.core.modules.MovableUnitMovedEvent;
+import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.GroupChangedEvent;
+import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
+import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.ModuleMovedEvent;
+import org.bundlemaker.core.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.projectdescription.ContentType;
@@ -282,6 +285,9 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(resourceModule);
 
     //
+    fireModuleChanged(resourceModule, ChangeAction.ADDED);
+
+    //
     for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
 
@@ -300,9 +306,6 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
         internalTypeChanged(type, resourceModule, ChangeAction.ADDED);
       }
     }
-
-    //
-    // fireEvent();
   }
 
   /**
@@ -341,25 +344,26 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   protected void typeModuleAdded(TypeModule module) {
     Assert.isNotNull(module);
 
-    //
     for (IType type : module.getContainedTypes()) {
       internalTypeChanged(type, module, ChangeAction.ADDED);
     }
-
-    //
-    // fireEvent();
   }
 
   @Override
   protected void typeModuleRemoved(TypeModule module) {
+    Assert.isNotNull(module);
 
-    //
     for (IType type : module.getContainedTypes()) {
       internalTypeChanged(type, module, ChangeAction.REMOVED);
     }
+  }
+
+  @Override
+  protected void groupAdded(Group group) {
+    Assert.isNotNull(group);
 
     //
-    // fireEvent();
+    fireGroupChanged(group, ChangeAction.ADDED);
   }
 
   /**
@@ -468,15 +472,50 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * <p>
    * </p>
    * 
+   * @param group
+   * @param added
    */
-  public void fireModuleClassificationChanged(IModule module) {
+  private void fireGroupChanged(Group group, ChangeAction added) {
+    Assert.isNotNull(group);
+    Assert.isNotNull(added);
 
     //
-    ModuleClassificationChangedEvent event = new ModuleClassificationChangedEvent(module);
+    GroupChangedEvent event = new GroupChangedEvent(group, added);
 
     //
     for (IModularizedSystemChangedListener listener : _changedListeners) {
+
+      if (ChangeAction.ADDED.equals(added)) {
+        listener.groupAdded(event);
+      } else if (ChangeAction.REMOVED.equals(added)) {
+        listener.groupRemoved(event);
+      }
+    }
+
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  public void fireModuleClassificationChanged(ModuleClassificationChangedEvent event) {
+    //
+    for (IModularizedSystemChangedListener listener : _changedListeners) {
       listener.moduleClassificationChanged(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  public void fireClassificationChanged(ClassificationChangedEvent event) {
+    //
+    for (IModularizedSystemChangedListener listener : _changedListeners) {
+      listener.classificationChanged(event);
     }
   }
 

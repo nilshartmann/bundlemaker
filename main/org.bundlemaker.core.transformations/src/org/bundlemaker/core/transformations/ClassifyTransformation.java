@@ -17,7 +17,7 @@ import java.util.List;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModule;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -90,7 +90,7 @@ public class ClassifyTransformation implements ITransformation {
   public void applyClassification(IModule targetModule) {
     if (matches(targetModule.getModuleIdentifier())) {
       IPath classification = getClassification(targetModule);
-      targetModule.setClassification(classification);
+      ((IModifiableModule) targetModule).setClassification(classification);
     }
   }
 

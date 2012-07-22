@@ -1,4 +1,7 @@
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.modules.event;
+
+import org.bundlemaker.core.modules.ChangeAction;
+import org.bundlemaker.core.modules.IModule;
 
 /**
  * <p>

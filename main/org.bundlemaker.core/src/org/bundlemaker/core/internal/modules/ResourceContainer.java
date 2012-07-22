@@ -211,49 +211,49 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     return Collections.unmodifiableList(result);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter) {
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter) {
+  //
+  // //
+  // Set<IReference> references = getReferences(filter);
+  //
+  // //
+  // Set<String> result = new HashSet<String>();
+  // for (IReference reference : references) {
+  // result.add(reference.getFullyQualifiedName());
+  // }
+  //
+  // //
+  // return Collections.unmodifiableSet(result);
+  // }
 
-    //
-    Set<IReference> references = getReferences(filter);
-
-    //
-    Set<String> result = new HashSet<String>();
-    for (IReference reference : references) {
-      result.add(reference.getFullyQualifiedName());
-    }
-
-    //
-    return Collections.unmodifiableSet(result);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter) {
-
-    //
-    Set<IReference> references = getReferences(filter);
-
-    //
-    Set<String> result = new HashSet<String>();
-    for (IReference reference : references) {
-
-      if (reference.getFullyQualifiedName().indexOf('.') != -1) {
-        result.add(reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.')));
-      } else {
-        // TODO: brauchen wir das ?
-        // result.add("");
-      }
-    }
-
-    //
-    return result;
-  }
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter) {
+  //
+  // //
+  // Set<IReference> references = getReferences(filter);
+  //
+  // //
+  // Set<String> result = new HashSet<String>();
+  // for (IReference reference : references) {
+  //
+  // if (reference.getFullyQualifiedName().indexOf('.') != -1) {
+  // result.add(reference.getFullyQualifiedName().substring(0, reference.getFullyQualifiedName().lastIndexOf('.')));
+  // } else {
+  // // TODO: brauchen wir das ?
+  // // result.add("");
+  // }
+  // }
+  //
+  // //
+  // return result;
+  // }
 
   /**
    * {@inheritDoc}

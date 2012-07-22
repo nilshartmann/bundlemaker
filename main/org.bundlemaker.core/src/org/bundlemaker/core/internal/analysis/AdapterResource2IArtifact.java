@@ -133,6 +133,11 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
   }
 
   @Override
+  public String handleCanRemove(IBundleMakerArtifact artifact) {
+    return "Can not remove artifacts from resource";
+  }
+
+  @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onRemoveArtifact");
 

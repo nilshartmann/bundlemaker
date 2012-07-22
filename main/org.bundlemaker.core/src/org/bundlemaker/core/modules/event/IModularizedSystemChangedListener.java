@@ -1,4 +1,5 @@
-package org.bundlemaker.core.modules;
+package org.bundlemaker.core.modules.event;
+
 
 /**
  * <p>
@@ -45,4 +46,28 @@ public interface IModularizedSystemChangedListener {
    * </p>
    */
   void moduleClassificationChanged(ModuleClassificationChangedEvent event);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  void groupAdded(GroupChangedEvent event);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  void groupRemoved(GroupChangedEvent event);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param event
+   */
+  void classificationChanged(ClassificationChangedEvent event);
 }

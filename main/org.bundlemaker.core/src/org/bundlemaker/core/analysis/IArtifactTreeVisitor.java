@@ -72,31 +72,42 @@ public interface IArtifactTreeVisitor {
 
     @Override
     public boolean visit(IRootArtifact rootArtifact) {
-      return true;
+      return onVisit(rootArtifact);
     }
 
     @Override
-    public boolean visit(IGroupArtifact rootArtifact) {
-      return true;
+    public boolean visit(IGroupArtifact groupArtifact) {
+      return onVisit(groupArtifact);
     }
 
     @Override
     public boolean visit(IModuleArtifact moduleArtifact) {
-      return true;
+      return onVisit(moduleArtifact);
     }
 
     @Override
     public boolean visit(IResourceArtifact resourceArtifact) {
-      return true;
+      return onVisit(resourceArtifact);
     }
 
     @Override
     public boolean visit(ITypeArtifact typeArtifact) {
-      return true;
+      return onVisit(typeArtifact);
     }
 
     @Override
     public boolean visit(IPackageArtifact packageArtifact) {
+      return onVisit(packageArtifact);
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param rootArtifact
+     * @return
+     */
+    public boolean onVisit(IBundleMakerArtifact rootArtifact) {
       return true;
     }
   }

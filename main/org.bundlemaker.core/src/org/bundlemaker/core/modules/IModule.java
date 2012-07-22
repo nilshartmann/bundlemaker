@@ -33,21 +33,13 @@ public interface IModule extends ITypeContainer {
 
   /**
    * <p>
-   * Returns the classification of this module.
+   * Returns <code>true</code> if this module is attached to a {@link IModularizedSystem}, <code>false</code> otherwise.
    * </p>
    * 
-   * @return the classification
+   * @return <code>true</code> if this module is attached to a {@link IModularizedSystem}, <code>false</code>
+   *         otherwise.S
    */
-  IPath getClassification();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param classification
-   */
-  // TODO: introduce IModifiableModule
-  void setClassification(IPath classification);
+  boolean hasModularizedSystem();
 
   /**
    * <p>
@@ -61,22 +53,21 @@ public interface IModule extends ITypeContainer {
 
   /**
    * <p>
-   * Returns <code>true</code> if this module is attached to a {@link IModularizedSystem}, <code>false</code> otherwise.
-   * </p>
-   * 
-   * @return <code>true</code> if this module is attached to a {@link IModularizedSystem}, <code>false</code>
-   *         otherwise.S
-   */
-  boolean hasModularizedSystem();
-
-  /**
-   * <p>
    * Returns <code>true</code> if a classification is set.
    * </p>
    * 
    * @return <code>true</code> if a classification is set.
    */
   boolean hasClassification();
+
+  /**
+   * <p>
+   * Returns the classification of this module.
+   * </p>
+   * 
+   * @return the classification
+   */
+  IPath getClassification();
 
   /**
    * <p>

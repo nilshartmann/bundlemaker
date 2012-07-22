@@ -15,6 +15,8 @@ import java.util.Collection;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
+import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
@@ -36,6 +38,16 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @return
    */
   IModifiableResourceModule createResourceModule(IModuleIdentifier moduleIdentifier);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param moduleIdentifier
+   * @param path
+   * @return
+   */
+  IModifiableResourceModule createResourceModule(ModuleIdentifier moduleIdentifier, IPath path);
 
   /**
    * <p>

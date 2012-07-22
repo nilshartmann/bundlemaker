@@ -86,6 +86,9 @@ public class ModuleIdentifier implements IModuleIdentifier {
     return true;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -108,6 +111,9 @@ public class ModuleIdentifier implements IModuleIdentifier {
     return true;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString() {
     StringBuilder stringBuilder = new StringBuilder();
@@ -124,7 +130,7 @@ public class ModuleIdentifier implements IModuleIdentifier {
    * @param appendVersion
    * @return
    */
-   // TODO REMOVE
+  // TODO REMOVE
   public static final String asValidFileName(IModuleIdentifier moduleIdentifier, boolean appendVersion) {
     return moduleIdentifier.getName().replace(':', '_') + (appendVersion ? moduleIdentifier.getVersion() : "");
   }

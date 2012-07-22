@@ -82,22 +82,4 @@ public interface IResourceContainer extends ITypeContainer {
    * @return
    */
   Set<IReference> getReferences(IQueryFilter<IReference> filter);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param filter
-   * @return
-   */
-  Set<String> getReferencedTypeNames(IQueryFilter<IReference> filter);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param filter
-   * @return
-   */
-  Set<String> getReferencedPackageNames(IQueryFilter<IReference> filter);
 }

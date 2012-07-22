@@ -26,7 +26,6 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifact;
 import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
-import org.bundlemaker.core.internal.analysis.AdapterUtils;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -340,16 +339,16 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
 
   @Override
   public IModularizedSystem getModularizedSystem() {
-    return AdapterUtils.getModularizedSystem(this);
+    return getRoot().getModularizedSystem();
   }
-
-  // @Override
-  // public IDependencyModel getDependencyModel() {
-  // return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
-  // }
 
   @Override
   public boolean canAdd(IBundleMakerArtifact artifact) {
+    return false;
+  }
+
+  @Override
+  public boolean canRemove(IBundleMakerArtifact artifact) {
     return false;
   }
 
@@ -395,5 +394,11 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
 
     // compare the qualified name
     return this.getQualifiedName().compareTo(o.getQualifiedName());
+  }
+
+  @Override
+  public IBundleMakerArtifact getChild(IPath path) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

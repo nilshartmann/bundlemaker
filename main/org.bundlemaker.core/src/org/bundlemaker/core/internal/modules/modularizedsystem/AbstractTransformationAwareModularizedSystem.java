@@ -24,10 +24,12 @@ import java.util.jar.JarFile;
 
 import org.bundlemaker.core.internal.JdkModuleCreator;
 import org.bundlemaker.core.internal.modules.AbstractModule;
+import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.ResourceModule;
 import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
+import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -42,6 +44,7 @@ import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
@@ -66,22 +69,22 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     super(name, projectDescription);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public final void applyTransformations(IProgressMonitor progressMonitor) {
-
-    //
-    if (progressMonitor == null) {
-      progressMonitor = new NullProgressMonitor();
-    }
-
-    initialize(progressMonitor);
-    SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
-    subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
-    _applyTransformations(subMonitor, getTransformations().toArray(new ITransformation[0]));
-  }
+  // /**
+  // * {@inheritDoc}
+  // */
+  // @Override
+  // public final void applyTransformations(IProgressMonitor progressMonitor) {
+  //
+  // //
+  // if (progressMonitor == null) {
+  // progressMonitor = new NullProgressMonitor();
+  // }
+  //
+  // initialize(progressMonitor);
+  // SubMonitor subMonitor = SubMonitor.convert(progressMonitor);
+  // subMonitor.beginTask("Transforming Module '" + getName() + "'", 100);
+  // _applyTransformations(subMonitor, getTransformations().toArray(new ITransformation[0]));
+  // }
 
   /**
    * {@inheritDoc}
@@ -126,7 +129,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     _applyTransformations(subMonitor, transformations);
   }
 
-  private void initialize(IProgressMonitor progressMonitor) {
+  public void initialize(IProgressMonitor progressMonitor) {
 
     //
     if (progressMonitor == null) {
@@ -208,6 +211,12 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         }
       }
 
+      //
+      if (!(transformation instanceof BasicProjectContentTransformation)) {
+        getTransformations().add(transformation);
+      }
+
+      //
       transformationMonitor.worked(1);
     }
 
@@ -220,19 +229,74 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @return
+   */
+  public Group getOrCreateGroup(IPath path) {
+
+    Assert.isNotNull(path);
+    Assert.isTrue(!path.isEmpty(), "Path must not be emtpy.");
+
+    // @Override
+    // protected Group create(IPath key) {
+    // if (key.segmentCount() == 1) {
+    // return new Group(key.toPortableString(), null);
+    // } else {
+    // Group parent = getOrCreate(key.removeLastSegments(1));
+    // return new Group(key.toPortableString(), parent);
+    // }
+    // }
+    // };
+
+    // We can not use a hash map here, because it is possible to change the path of a group (which would be the key in
+    // the map). So we have to iterate over all groups and find the right one...
+    for (Group group : internalGroups()) {
+      if (group.getPath().equals(path)) {
+        return group;
+      }
+    }
+
+    //
+    if (path.segmentCount() == 1) {
+      Group result = new Group(path.lastSegment(), null, this);
+      internalGroups().add(result);
+      groupAdded(result);
+      return result;
+    } else {
+
+      Group parent = getOrCreateGroup(path.removeLastSegments(1));
+      Group result = new Group(path.lastSegment(), parent, this);
+      internalGroups().add(result);
+      groupAdded(result);
+      return result;
+    }
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
   public IModifiableResourceModule createResourceModule(IModuleIdentifier createModuleIdentifier) {
 
     // create the result
-    ResourceModule result = new ResourceModule(createModuleIdentifier, this);
+    ResourceModule resourceModule = new ResourceModule(createModuleIdentifier, this);
 
     // add it to the internal hash map
-    getModifiableResourceModulesMap().put(result.getModuleIdentifier(), result);
+    getModifiableResourceModulesMap().put(resourceModule.getModuleIdentifier(), resourceModule);
+
+    // notify
+    resourceModuleAdded(resourceModule);
 
     // return the result
-    return result;
+    return resourceModule;
+  }
+
+  @Override
+  public IModifiableResourceModule createResourceModule(ModuleIdentifier moduleIdentifier, IPath path) {
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -342,6 +406,16 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * 
    */
   protected void postApplyTransformations() {
+    // do nothing...
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param group
+   */
+  protected void groupAdded(Group group) {
     // do nothing...
   }
 

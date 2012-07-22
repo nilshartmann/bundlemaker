@@ -7,27 +7,8 @@ import org.bundlemaker.core.modules.ITypeContainer;
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
- * 
  */
 public interface IModifiableTypeContainer extends ITypeContainer {
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param type
-  // */
-  // @Deprecated
-  // void add(IType type);
-  //
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param type
-  // */
-  // @Deprecated
-  // void remove(IType type);
 
   /**
    * <p>

@@ -142,6 +142,11 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
     return null;
   }
 
+  @Override
+  public IBundleMakerArtifact getChild(IPath path) {
+    return null;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -365,13 +370,8 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
 
   @Override
   public IModularizedSystem getModularizedSystem() {
-    return AdapterUtils.getModularizedSystem(this);
+    return getRoot().getModularizedSystem();
   }
-
-  // @Override
-  // public IDependencyModel getDependencyModel() {
-  // return ((AbstractBundleMakerArtifactContainer) getParent(ArtifactType.Root)).getDependencyModel();
-  // }
 
   /**
 	 * 
@@ -532,6 +532,11 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
 
   @Override
   public boolean canAdd(IBundleMakerArtifact artifact) {
+    return false;
+  }
+
+  @Override
+  public boolean canRemove(IBundleMakerArtifact artifact) {
     return false;
   }
 

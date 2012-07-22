@@ -232,6 +232,24 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
+    public boolean isParent(IBundleMakerArtifact artifact) {
+      return _rootArtifact.isParent(artifact);
+    }
+
+    @Override
+    public IBundleMakerArtifact getChild(IPath path) {
+      return _rootArtifact.getChild(path);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean canRemove(IBundleMakerArtifact artifact) {
+      return _rootArtifact.canRemove(artifact);
+    }
+
+    @Override
     public void addArtifacts(List<? extends IBundleMakerArtifact> artifact) {
       _rootArtifact.addArtifacts(artifact);
     }

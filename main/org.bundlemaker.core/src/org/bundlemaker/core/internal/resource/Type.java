@@ -298,7 +298,7 @@ public class Type implements IType, IModifiableType {
 
     if (result == null) {
       // throw new RuntimeException("Type has no module " + this.toString());
-      System.out.println("Type has no module " + this.toString());
+      // System.out.println("Type has no module " + this.toString());
       return null;
     } else {
       return result;

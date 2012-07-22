@@ -10,6 +10,7 @@ import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.internal.modules.Group;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 
@@ -27,6 +28,9 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   /** - */
   private final GroupAndModuleContainerDelegate _groupAndModuleContainerDelegate;
 
+  /** - */
+  private Group                                 _group;
+
   /**
    * <p>
    * Creates a new instance of type {@link AdapterGroup2IArtifact}.
@@ -34,10 +38,13 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    * 
    * @param modularizedSystem
    */
-  public AdapterGroup2IArtifact(String name, IBundleMakerArtifact parent) {
-    super(ArtifactType.Group, name);
+  public AdapterGroup2IArtifact(Group group, IBundleMakerArtifact parent) {
+    super(ArtifactType.Group, group.getPath().lastSegment());
 
     Assert.isNotNull(parent);
+
+    //
+    _group = group;
 
     // set parent/children dependency
     setParent(parent);
@@ -45,6 +52,21 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
 
     //
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Group getGroup() {
+    return _group;
+  }
+
+  @Override
+  public String getName() {
+    return _group.getPath().lastSegment();
   }
 
   /**
@@ -91,7 +113,8 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   public void setName(String name) {
     super.setName(name);
 
-    AdapterUtils.addModulesIfNecessaryAndResetClassification(this, hasParent() ? getParent().getQualifiedName() : null);
+    //
+    AdapterUtils.changeGroupName(this, name);
   }
 
   /**
@@ -104,10 +127,10 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
     List<String> groupNames = new LinkedList<String>();
 
     //
-    IBundleMakerArtifact group = this;
-    while (group != null && ArtifactType.Group.equals(group.getType())) {
-      groupNames.add(group.getName());
-      group = group.getParent();
+    IBundleMakerArtifact groupArtifact = this;
+    while (groupArtifact != null && ArtifactType.Group.equals(groupArtifact.getType())) {
+      groupNames.add(groupArtifact.getName());
+      groupArtifact = groupArtifact.getParent();
     }
 
     //
@@ -163,10 +186,17 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   protected void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
-    if (!AdapterUtils.addModulesIfNecessaryAndResetClassification(artifact, getQualifiedName().replace('|', '/'))) {
-
-      // we have to support the case that an empty group is added
-      internalAddArtifact(artifact);
+    if (artifact instanceof IModuleArtifact) {
+      if (!AdapterUtils.addModulesIfNecessaryAndResetClassification((IModuleArtifact) artifact, getQualifiedName()
+          .replace('|', '/'))) {
+        internalAddArtifact(artifact);
+      }
+    } else if (artifact instanceof IGroupArtifact) {
+      // if (!
+      AdapterUtils.addModulesIfNecessaryAndResetClassification((IGroupArtifact) artifact, this);
+      // {
+      // internalAddArtifact(artifact);
+      // }
     }
   }
 
@@ -175,6 +205,8 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
 
     // CHANGE THE UNDERLYING MODEL
     if (!AdapterUtils.removeResourceModuleFromModularizedSystem(artifact)) {
+
+      // we have to support the case that an empty group has been removed
       internalRemoveArtifact(artifact);
     }
   }
@@ -194,6 +226,9 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   public void accept(IArtifactTreeVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
