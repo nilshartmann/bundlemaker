@@ -63,11 +63,11 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     setImportPackageAndRequireBundle();
 
     // disabled due to BM-208 (ManifestCreator: Handling of importing exported packages is not mature)
-//    importExportedPackages();
+    // importExportedPackages();
 
     setSpiProviderHeader();
 
-    setTransitiveClosure();
+    // setTransitiveClosure();
 
     copyOriginalManifestHeader();
     copyTemplateManifestHeader();
@@ -282,7 +282,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     List<Entry<String, List<IModuleArtifact>>> entrySet = new LinkedList<Map.Entry<String, List<IModuleArtifact>>>(
         requiredPackages.entrySet());
 
-    // Sort list to make output better readable 
+    // Sort list to make output better readable
     Collections.sort(entrySet, new Comparator<Entry<String, List<IModuleArtifact>>>() {
 
       @Override
@@ -530,43 +530,43 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     }
   }
 
-  /**
-   * <p>
-   * Add a list of all transitive required bundles.
-   * </p>
-   */
-  protected void setTransitiveClosure() {
-
-    List<String> transitiveClosure = new LinkedList<String>();
-    //
-    for (IModule module : getModularizedSystem().getTransitiveReferencedModules(getResourceModule())
-        .getReferencedModules()) {
-
-      //
-      if (!containsBundle(module.getModuleIdentifier().getName())
-          && !module.equals(getModularizedSystem().getExecutionEnvironment())) {
-
-        //
-        transitiveClosure.add(module.getModuleIdentifier().getName());
-      }
-    }
-
-    //
-    if (!transitiveClosure.isEmpty()) {
-
-      Collections.sort(transitiveClosure);
-
-      //
-      StringBuilder stringBuilder = new StringBuilder();
-      for (Iterator<String> iterator = transitiveClosure.iterator(); iterator.hasNext();) {
-        stringBuilder.append(iterator.next());
-        if (iterator.hasNext()) {
-          stringBuilder.append(", ");
-        }
-      }
-      getBundleManifest().setHeader(IManifestConstants.TRANSITIVE_CLOSURE, stringBuilder.toString());
-    }
-  }
+  // /**
+  // * <p>
+  // * Add a list of all transitive required bundles.
+  // * </p>
+  // */
+  // protected void setTransitiveClosure() {
+  //
+  // List<String> transitiveClosure = new LinkedList<String>();
+  // //
+  // for (IModule module : getModularizedSystem().getTransitiveReferencedModules(getResourceModule())
+  // .getReferencedModules()) {
+  //
+  // //
+  // if (!containsBundle(module.getModuleIdentifier().getName())
+  // && !module.equals(getModularizedSystem().getExecutionEnvironment())) {
+  //
+  // //
+  // transitiveClosure.add(module.getModuleIdentifier().getName());
+  // }
+  // }
+  //
+  // //
+  // if (!transitiveClosure.isEmpty()) {
+  //
+  // Collections.sort(transitiveClosure);
+  //
+  // //
+  // StringBuilder stringBuilder = new StringBuilder();
+  // for (Iterator<String> iterator = transitiveClosure.iterator(); iterator.hasNext();) {
+  // stringBuilder.append(iterator.next());
+  // if (iterator.hasNext()) {
+  // stringBuilder.append(", ");
+  // }
+  // }
+  // getBundleManifest().setHeader(IManifestConstants.TRANSITIVE_CLOSURE, stringBuilder.toString());
+  // }
+  // }
 
   /**
    * <p>
