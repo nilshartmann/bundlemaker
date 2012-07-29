@@ -2,7 +2,7 @@
 <feature
       id="org.bundlemaker.core.base.feature"
       label="org.bundlemaker.core.base.feature"
-      version="0.6.0.qualifier"
+      version="0.7.0.qualifier"
       provider-name="BundleMaker project team">
 
    <description url="http://www.example.com/description">

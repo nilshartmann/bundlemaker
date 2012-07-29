@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.bundlemaker.core
 Bundle-SymbolicName: org.bundlemaker.core;singleton:=true
 Eclipse-ExtensibleAPI: true
-Bundle-Version: 0.6.0.qualifier
+Bundle-Version: 0.7.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: Gerd Wuetherich (gerd@gerd-wuetherich.de)
 Bundle-Localization: plugin
