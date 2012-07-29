@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bundlemaker.core.parser.test
 Bundle-SymbolicName: org.bundlemaker.core.itest.parser
-Bundle-Version: 0.6.0.qualifier
+Bundle-Version: 0.6.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.8.1",
  org.bundlemaker.core;bundle-version="0.6.0",

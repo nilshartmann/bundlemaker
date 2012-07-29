@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dummy
 Bundle-SymbolicName: org.bundlemaker.core.ui.editor.dummy;singleton:=true
-Bundle-Version: 0.6.0.qualifier
+Bundle-Version: 0.6.0
 Bundle-Activator: org.bundlemaker.core.ui.editor.dummy.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.bundlemaker.core;bundle-version="0.6.0",

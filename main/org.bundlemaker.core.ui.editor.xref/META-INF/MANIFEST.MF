@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bundlemaker.core.ui.editor.xref
 Bundle-SymbolicName: org.bundlemaker.core.ui.editor.xref;singleton:=true
-Bundle-Version: 0.6.0.qualifier
+Bundle-Version: 0.6.0
 Require-Bundle: org.eclipse.core.runtime,
  org.bundlemaker.core;bundle-version="0.6.0",
  org.bundlemaker.core.ui.artifact;bundle-version="0.6.0",
