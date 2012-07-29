@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bundlemaker.core.ui.selection
 Bundle-SymbolicName: org.bundlemaker.core.ui.event
-Bundle-Version: 0.6.0
+Bundle-Version: 0.7.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.event.selection.internal.Activator
 Export-Package: org.bundlemaker.core.ui.event,
  org.bundlemaker.core.ui.event.selection,
@@ -10,7 +10,7 @@ Export-Package: org.bundlemaker.core.ui.event,
  org.bundlemaker.core.ui.event.selection.workbench.editor,
  org.bundlemaker.core.ui.event.selection.workbench.view
 Require-Bundle: org.eclipse.core.runtime,
- org.bundlemaker.core;bundle-version="0.6.0",
+ org.bundlemaker.core;bundle-version="0.7.0",
  org.eclipse.jface;bundle-version="3.6.0",
  org.eclipse.ui.workbench;bundle-version="3.6.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Spring-test
 Bundle-SymbolicName: spring-test
-Bundle-Version: 0.6.0
+Bundle-Version: 0.7.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.bundlemaker.core;bundle-version="0.6.0",
- org.bundlemaker.core.osgi;bundle-version="0.6.0",
+Require-Bundle: org.bundlemaker.core;bundle-version="0.7.0",
+ org.bundlemaker.core.osgi;bundle-version="0.7.0",
  org.eclipse.core.runtime;bundle-version="3.6.0",
  org.eclipse.core.resources;bundle-version="3.6.0",
  org.junit;bundle-version="4.8.1",
