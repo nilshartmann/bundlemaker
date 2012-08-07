@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
+import org.bundlemaker.core.internal.modules.ResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 
 /**
@@ -18,7 +20,7 @@ import org.bundlemaker.core.projectdescription.IProjectDescription;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ModularizedSystem extends AbstractValidatingModularizedSystem {
+public class ModularizedSystem extends AbstractArtifactModelAwareModularizedSystem {
 
   /**
    * <p>
@@ -29,5 +31,17 @@ public class ModularizedSystem extends AbstractValidatingModularizedSystem {
    */
   public ModularizedSystem(String name, IProjectDescription projectDescription) {
     super(name, projectDescription);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void postApplyTransformations() {
+
+    // validate the resource modules
+    for (IModifiableResourceModule module : getModifiableResourceModules()) {
+      ((ResourceModule) module).validate();
+    }
   }
 }
