@@ -151,7 +151,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       }
     }
     subMonitor.worked(10);
-
+    //
     postApplyTransformations();
   }
 

@@ -31,7 +31,6 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-@Deprecated
 public abstract class AbstractQueryableModularizedSystem extends AbstractCachingModularizedSystem {
 
   /** - */
