@@ -4,10 +4,7 @@ import java.lang.reflect.Type;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
@@ -80,30 +77,6 @@ public class BundleMakerArtifactJsonAdapter implements JsonSerializer<IBundleMak
 
     //
     IBundleMakerArtifact result = rootArtifact.getChild(new Path(path));
-
-    if (result == null) {
-
-      _modularizedSystem.getArtifactModel(ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).accept(
-          new IArtifactTreeVisitor.Adapter() {
-
-            @Override
-            public boolean visit(IModuleArtifact moduleArtifact) {
-              onVisit(moduleArtifact);
-              return false;
-            }
-
-            @Override
-            public boolean visit(IResourceArtifact artifact) {
-              return false;
-            }
-
-            @Override
-            public boolean onVisit(IBundleMakerArtifact artifact) {
-              System.out.println(artifact.getFullPath().toOSString());
-              return true;
-            }
-          });
-    }
 
     //
     return result;
