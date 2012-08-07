@@ -1,7 +1,9 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -59,19 +61,17 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(
         aDropAdapter.getCurrentTransfer());
 
-    IRootArtifact root = null;
+    IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) aTarget;
+
+    //
+    List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
     for (Object selectedObject : treeSelection.toArray()) {
-
-      final IBundleMakerArtifact sourceArtifact = (IBundleMakerArtifact) selectedObject;
-      IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) aTarget;
-      targetArtifact.addArtifact(sourceArtifact);
-
-      //
-      if (root == null) {
-        root = targetArtifact.getRoot();
-      }
+      artifacts.add((IBundleMakerArtifact) selectedObject);
     }
-    root.invalidateDependencyCache();
+    targetArtifact.addArtifacts(artifacts);
+
+    //
+    targetArtifact.getRoot().invalidateDependencyCache();
 
     CommonNavigatorUtils.update("org.eclipse.ui.navigator.ProjectExplorer");
     TreePath[] expanedTreePath = commonNavigator.getCommonViewer().getExpandedTreePaths();
