@@ -89,8 +89,6 @@ public class ModelTransformerCache {
       return artifactModel;
 
     } catch (CoreException e) {
-      System.out.println(" --> Error in ModelTransformer.transformWithAggregatedTypes: " + e);
-      e.printStackTrace();
       throw new RuntimeException("Error in ModelTransformer.transformWithAggregatedTypes: " + e.getMessage(), e);
     }
   }

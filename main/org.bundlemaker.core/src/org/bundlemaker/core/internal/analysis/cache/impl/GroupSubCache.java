@@ -1,7 +1,5 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
-import java.util.Map;
-
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.internal.analysis.AdapterGroup2IArtifact;
@@ -43,10 +41,6 @@ public class GroupSubCache extends AbstractSubCache<Group, IGroupAndModuleContai
     // step 1: if the classification is 'null' or empty, we have to return the 'root' artifact
     if (classification == null || classification.getPath().isEmpty()) {
       return getArtifactCache().getRootArtifact();
-    }
-
-    for (Map.Entry<Group, IGroupAndModuleContainer> entry : this.entrySet()) {
-      System.out.println(entry.getKey() + " : " + entry.getValue());
     }
 
     // step 2: compute the parent

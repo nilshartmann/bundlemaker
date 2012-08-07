@@ -230,7 +230,6 @@ public class AdapterUtils {
       groupArtifact.accept(new IArtifactTreeVisitor.Adapter() {
         @Override
         public boolean visit(IGroupArtifact artifact) {
-          System.out.println("VISIT" + artifact);
           modularizedSystem.internalGroups().remove(artifact.getGroup());
           return true;
         }

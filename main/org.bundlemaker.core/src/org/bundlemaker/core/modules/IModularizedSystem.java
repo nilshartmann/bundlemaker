@@ -101,10 +101,7 @@ public interface IModularizedSystem {
    * </p>
    * 
    * @return the (modifiable) transformation list.
-   * 
-   * @deprecated use applyTransformations(List<ITransformation>, IProgressMonitor monitor) instead
    */
-  @Deprecated
   List<ITransformation> getTransformations();
 
   /**

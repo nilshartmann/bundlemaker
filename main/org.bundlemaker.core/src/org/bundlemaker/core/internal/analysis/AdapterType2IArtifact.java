@@ -447,7 +447,6 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
 
       //
       else {
-        // System.out.println("MISSING TYPE: " + referenceName);
       }
     }
   }
