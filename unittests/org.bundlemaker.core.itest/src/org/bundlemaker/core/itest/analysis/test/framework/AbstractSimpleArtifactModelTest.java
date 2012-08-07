@@ -212,7 +212,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
    * @param count
    */
   protected void assertResourceModuleCountInModularizedSystem(int count) {
-    Assert.assertEquals(String.format("%s.", getModularizedSystem().getGroups()), count, getModularizedSystem()
+    Assert.assertEquals(String.format("%s.", getModularizedSystem().getAllModules()), count, getModularizedSystem()
         .getResourceModules()
         .size());
   }

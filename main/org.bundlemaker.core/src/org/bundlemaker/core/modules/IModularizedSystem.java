@@ -19,7 +19,6 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
-import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IType;
@@ -169,18 +168,6 @@ public interface IModularizedSystem {
 
   /**
    * <p>
-   * Returns all contained modules that match the specified filter. The result contains both {@link IResourceModule
-   * IResourceModules} as well as non-resource modules.
-   * </p>
-   * 
-   * @param filter
-   *          the {@link IQueryFilter}
-   * @return all contained modules that match the specified filter.
-   */
-  Collection<IModule> getAllModules(IQueryFilter<IModule> filter);
-
-  /**
-   * <p>
    * Returns the {@link IModule} with the given module identifier. If this {@link IModularizedSystem} doesn't contain a
    * module with the specified module identifier, <code>null</code> will be returned.
    * </p>
@@ -273,30 +260,12 @@ public interface IModularizedSystem {
 
   /**
    * <p>
-   * </p>
-   * 
-   * @param filter
-   * @return
-   */
-  Collection<IModule> getNonResourceModules(IQueryFilter<IModule> filter);
-
-  /**
-   * <p>
    * Returns all contained {@link IResourceModule IResourceModules}.
    * </p>
    * 
    * @return
    */
   Collection<IResourceModule> getResourceModules();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param filter
-   * @return
-   */
-  Collection<IResourceModule> getResourceModules(IQueryFilter<IResourceModule> filter);
 
   /**
    * <p>

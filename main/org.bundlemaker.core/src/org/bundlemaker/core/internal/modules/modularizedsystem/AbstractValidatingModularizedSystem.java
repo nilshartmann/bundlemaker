@@ -44,7 +44,7 @@ public abstract class AbstractValidatingModularizedSystem extends AbstractArtifa
   private void assertTypesHaveModules() {
 
     // CHECK: check for duplicate entries
-    for (IModifiableResourceModule module : getModifiableResourceModulesMap().values()) {
+    for (IModifiableResourceModule module : getModifiableResourceModules()) {
 
       ((ResourceModule) module).validate();
     }
