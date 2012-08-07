@@ -23,7 +23,7 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.DefaultArtifactSelector;
-import org.bundlemaker.core.transformation.RemoveTransformation;
+import org.bundlemaker.core.transformation.RemoveArtifactsTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -465,17 +465,14 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
    * {@inheritDoc}
    */
   @Override
-  // TODO: das hier muss die main methode sein!!!
   public void addArtifacts(IArtifactSelector artifactSelector) {
 
     // assert not null
     Assert.isNotNull(artifactSelector);
 
-    // get the transformation configuration
-    AddArtifactsTransformation.Configuration configuration = new AddArtifactsTransformation.Configuration(this,
-        artifactSelector);
-
-    JsonElement jsonConfiguration = configuration.toJsonTree();
+    // get the json configuration
+    JsonElement jsonConfiguration = new AddArtifactsTransformation.Configuration(this,
+        artifactSelector).toJsonTree();
 
     //
     getRoot().invalidateDependencyCache();
@@ -495,7 +492,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     // fire
     ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
 
-    //
+    // add the transformation
     getModularizedSystem().getTransformations().add(
         new AddArtifactsTransformation(jsonConfiguration));
   }
@@ -506,18 +503,9 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
   @Override
   public final boolean removeArtifact(IBundleMakerArtifact artifact) {
     Assert.isNotNull(artifact);
-    Assert.isTrue(canRemove(artifact));
 
-    onRemoveArtifact((IBundleMakerArtifact) artifact);
-
-    //
-    getRoot().invalidateDependencyCache();
-
-    // fire model changed
-    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
-
-    //
-    getModularizedSystem().getTransformations().add(new RemoveTransformation(this, artifact));
+    // remove artifacts
+    removeArtifacts(new DefaultArtifactSelector(artifact));
 
     //
     return true;
@@ -527,15 +515,13 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
    * {@inheritDoc}
    */
   @Override
-  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact) {
+  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifacts) {
 
     // assert not null
-    Assert.isNotNull(artifact);
+    Assert.isNotNull(artifacts);
 
-    // iterate over all artifacts
-    for (IBundleMakerArtifact iBundleMakerArtifact : artifact) {
-      removeArtifact(iBundleMakerArtifact);
-    }
+    // remove artifacts
+    removeArtifacts(new DefaultArtifactSelector(artifacts));
   }
 
   /**
@@ -547,13 +533,32 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     // assert not null
     Assert.isNotNull(artifactSelector);
 
+    // get the json configuration
+    JsonElement jsonConfiguration = new RemoveArtifactsTransformation.Configuration(this,
+        artifactSelector).toJsonTree();
+
     // get the list of artifacts
     List<? extends IBundleMakerArtifact> bundleMakerArtifacts = artifactSelector.getBundleMakerArtifacts();
 
     // add the artifacts
-    if (bundleMakerArtifacts != null) {
-      addArtifacts(bundleMakerArtifacts);
+    for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
+      Assert.isTrue(canRemove(artifact));
     }
+
+    //
+    for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
+      onRemoveArtifact(artifact);
+    }
+
+    //
+    getRoot().invalidateDependencyCache();
+
+    // fire model changed
+    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
+
+    // add the transformation
+    getModularizedSystem().getTransformations().add(
+        new RemoveArtifactsTransformation(jsonConfiguration));
   }
 
   /**
