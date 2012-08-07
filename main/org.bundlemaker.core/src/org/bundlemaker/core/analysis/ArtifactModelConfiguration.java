@@ -3,6 +3,9 @@ package org.bundlemaker.core.analysis;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.core.runtime.Assert;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
  * Configuration for an artifact model.
@@ -13,12 +16,18 @@ import org.eclipse.core.runtime.Assert;
 public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
 
   /** the content type to show */
+  @Expose
+  @SerializedName("contentType")
   private ContentType _contentType                         = ContentType.SOURCE;
 
   /** whether the packages should be hierarchical or flat */
+  @Expose
+  @SerializedName("hierarchicalPackages")
   private boolean     _hierarchicalPackages                = true;
 
   /** whether to include missing types or not */
+  @Expose
+  @SerializedName("includeVirtualModuleForMissingTypes")
   private boolean     _includeVirtualModuleForMissingTypes = false;
 
   /**
@@ -128,6 +137,9 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
     _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString() {
     return _contentType.getShortDescription() + "_"
@@ -135,6 +147,9 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
         + prefix(_includeVirtualModuleForMissingTypes, "MiTy");
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -145,6 +160,9 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)
@@ -163,6 +181,14 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
     return true;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param value
+   * @param string
+   * @return
+   */
   private String prefix(boolean value, String string) {
     return value ? string : "Non" + string;
   }

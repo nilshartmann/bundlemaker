@@ -187,16 +187,11 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
 
     // CHANGE THE UNDERLYING MODEL
     if (artifact instanceof IModuleArtifact) {
-      if (!AdapterUtils.addModulesIfNecessaryAndResetClassification((IModuleArtifact) artifact, getQualifiedName()
-          .replace('|', '/'))) {
-        internalAddArtifact(artifact);
-      }
+      AdapterUtils.addModulesIfNecessaryAndResetClassification((IModuleArtifact) artifact, getQualifiedName()
+          .replace('|', '/'));
+
     } else if (artifact instanceof IGroupArtifact) {
-      // if (!
       AdapterUtils.addModulesIfNecessaryAndResetClassification((IGroupArtifact) artifact, this);
-      // {
-      // internalAddArtifact(artifact);
-      // }
     }
   }
 

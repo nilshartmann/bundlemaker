@@ -45,21 +45,24 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
    */
   public IModuleArtifact getOrCreateModule(String qualifiedModuleName, String moduleVersion) {
 
-    // not null assert
+    // asserts
     Assert.isNotNull(qualifiedModuleName);
     Assert.isNotNull(moduleVersion);
 
-    // /G1/m1
-    // G1/m1
-    // /m1
-    // m1
+    // create the transformation
+    CreateModuleTransformation.Configuration configuration = new CreateModuleTransformation.Configuration(
+        _groupAndModuleContainer,
+        qualifiedModuleName, moduleVersion);
 
-    // step 1: normalize the qualified module name
+    CreateModuleTransformation transformation = new CreateModuleTransformation(configuration.toJsonTree());
+
+    // normalize the qualified module name
     qualifiedModuleName = qualifiedModuleName.replace('\\', '/');
 
-    // step 2: check if absolute
+    // the root container is 'this' GroupAndModuleContainer
     IBundleMakerArtifact rootContainer = _groupAndModuleContainer;
 
+    // if the qualified name starts with '/', it is an absolute path
     if (qualifiedModuleName.startsWith("/")) {
       qualifiedModuleName = qualifiedModuleName.substring(1);
       rootContainer = rootContainer.getRoot();
@@ -67,39 +70,32 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
     //
     String moduleName = qualifiedModuleName;
-    AbstractBundleMakerArtifactContainer parent = (AbstractBundleMakerArtifactContainer) rootContainer;
+    AbstractBundleMakerArtifactContainer moduleParent = (AbstractBundleMakerArtifactContainer) rootContainer;
 
-    //
-    int index = qualifiedModuleName.lastIndexOf('/');
-
-    //
+    // if the qualified name contains groups, we have to create the groups first
+    int index = moduleName.lastIndexOf('/');
     if (index != -1) {
-
       // create the group
-      parent = (AbstractBundleMakerArtifactContainer) ((IGroupAndModuleContainer) rootContainer)
+      moduleParent = (AbstractBundleMakerArtifactContainer) ((IGroupAndModuleContainer) rootContainer)
           .getOrCreateGroup(new Path(qualifiedModuleName.substring(0, index)));
-
+      // set the simple module name
       moduleName = qualifiedModuleName.substring(index + 1);
     }
 
-    // create the module
+    // try to get the module...
     IModuleIdentifier moduleIdentifier = new ModuleIdentifier(moduleName, moduleVersion);
-    IModuleArtifact moduleArtifact = (IModuleArtifact) parent.getChild(moduleIdentifier.toString());
+    IModuleArtifact moduleArtifact = (IModuleArtifact) moduleParent.getChild(moduleIdentifier.toString());
 
-    //
+    // ...and create it if necessary
     if (moduleArtifact == null) {
 
-      //
+      // create the module
       IModifiableResourceModule resourceModule = ((IModifiableModularizedSystem) _groupAndModuleContainer.getRoot()
           .getModularizedSystem()).createResourceModule(moduleIdentifier);
 
-      //
-      IPath classification = this._groupAndModuleContainer.getFullPath();
-      if (index != -1) {
-        classification = classification.append(new Path(qualifiedModuleName.substring(0, index)));
-      }
-
-      if (classification.segmentCount() > 1) {
+      // get the
+      IPath classification = moduleParent.getFullPath();
+      if (!".".equals(classification.toOSString())) {
         resourceModule.setClassification(classification);
       }
 
@@ -108,11 +104,11 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
           .getModuleArtifact(resourceModule);
     }
 
+    //
     ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).fireArtifactModelChanged();
 
     //
-    _groupAndModuleContainer.getRoot().getModularizedSystem().getTransformations().add(
-        new CreateModuleTransformation(_groupAndModuleContainer, qualifiedModuleName, moduleVersion));
+    _groupAndModuleContainer.getRoot().getModularizedSystem().getTransformations().add(transformation);
 
     //
     return moduleArtifact;
@@ -139,7 +135,10 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     Assert.isNotNull(path);
 
     //
-    CreateGroupTransformation transformation = new CreateGroupTransformation(_groupAndModuleContainer, path);
+    CreateGroupTransformation.Configuration configuration = new CreateGroupTransformation.Configuration(
+        _groupAndModuleContainer, path);
+
+    CreateGroupTransformation transformation = new CreateGroupTransformation(configuration.toJsonTree());
 
     //
     _groupAndModuleContainer.getRoot().getModularizedSystem().applyTransformations(null,

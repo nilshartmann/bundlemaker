@@ -7,25 +7,30 @@ import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.Assert;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class SimpleArtifactSelector implements IArtifactSelector {
+public class DefaultArtifactSelector implements IArtifactSelector {
 
   /** - */
-  private List<IBundleMakerArtifact> _bundleMakerArtifacts;
+  @Expose
+  @SerializedName("artifacts")
+  private List<? extends IBundleMakerArtifact> _bundleMakerArtifacts;
 
   /**
    * <p>
-   * Creates a new instance of type {@link SimpleArtifactSelector}.
+   * Creates a new instance of type {@link DefaultArtifactSelector}.
    * </p>
    * 
    * @param bundleMakerArtifacts
    */
-  public SimpleArtifactSelector(List<IBundleMakerArtifact> bundleMakerArtifacts) {
+  public DefaultArtifactSelector(List<? extends IBundleMakerArtifact> bundleMakerArtifacts) {
     Assert.isNotNull(bundleMakerArtifacts);
 
     _bundleMakerArtifacts = bundleMakerArtifacts;
@@ -33,13 +38,18 @@ public class SimpleArtifactSelector implements IArtifactSelector {
 
   /**
    * <p>
-   * Creates a new instance of type {@link SimpleArtifactSelector}.
+   * Creates a new instance of type {@link DefaultArtifactSelector}.
    * </p>
    * 
    * @param bundleMakerArtifacts
    */
-  public SimpleArtifactSelector(IBundleMakerArtifact... bundleMakerArtifacts) {
+  public DefaultArtifactSelector(IBundleMakerArtifact... bundleMakerArtifacts) {
     Assert.isNotNull(bundleMakerArtifacts);
+    // for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
+    // Assert.isTrue(artifact.getRoot() != artifact,
+    // String.format("Can not add root artifact '%s' to a selector of type %s.", artifact.getRoot(),
+    // DefaultArtifactSelector.class.getName()));
+    // }
 
     _bundleMakerArtifacts = Arrays.asList(bundleMakerArtifacts);
   }
@@ -50,5 +60,36 @@ public class SimpleArtifactSelector implements IArtifactSelector {
   @Override
   public List<? extends IBundleMakerArtifact> getBundleMakerArtifacts() {
     return _bundleMakerArtifacts;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_bundleMakerArtifacts == null) ? 0 : _bundleMakerArtifacts.hashCode());
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    DefaultArtifactSelector other = (DefaultArtifactSelector) obj;
+    if (_bundleMakerArtifacts == null) {
+      if (other._bundleMakerArtifacts != null)
+        return false;
+    } else if (!_bundleMakerArtifacts.equals(other._bundleMakerArtifacts))
+      return false;
+    return true;
   }
 }

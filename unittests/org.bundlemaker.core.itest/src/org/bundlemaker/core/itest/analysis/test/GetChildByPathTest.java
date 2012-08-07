@@ -16,7 +16,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FullPathTest extends AbstractSimpleArtifactModelTest {
+public class GetChildByPathTest extends AbstractSimpleArtifactModelTest {
 
   /**
    * <p>
@@ -48,7 +48,7 @@ public class FullPathTest extends AbstractSimpleArtifactModelTest {
 
       @Override
       public boolean onVisit(IBundleMakerArtifact artifact) {
-        // 
+        //
         IPath path = artifact.getFullPath();
         IBundleMakerArtifact bundleMakerArtifact = _binModel.getRootArtifact().getChildByPath(
             IBundleMakerArtifact.class, path);

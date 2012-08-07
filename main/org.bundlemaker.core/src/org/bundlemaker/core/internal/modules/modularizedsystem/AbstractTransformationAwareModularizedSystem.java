@@ -15,10 +15,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -35,13 +33,14 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.resource.TypeEnum;
+import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -195,25 +194,29 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       // step 4.1: apply transformation
       transformation.apply((IModifiableModularizedSystem) this, transformationMonitor.newChild(1));
 
-      // step 4.2: clean up empty modules
-      for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()
-          .entrySet().iterator(); iterator.hasNext();) {
-
-        // get next module
-        Entry<IModuleIdentifier, IModifiableResourceModule> module = iterator.next();
-
-        // if the module is empty - remove it
-        if (module.getValue().getResources(ContentType.BINARY).isEmpty()
-            && module.getValue().getResources(ContentType.SOURCE).isEmpty()) {
-
-          // remove the module
-          iterator.remove();
-        }
-      }
+      // // step 4.2: clean up empty modules
+      // for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()
+      // .entrySet().iterator(); iterator.hasNext();) {
+      //
+      // // get next module
+      // Entry<IModuleIdentifier, IModifiableResourceModule> module = iterator.next();
+      //
+      // // if the module is empty - remove it
+      // if (module.getValue().getResources(ContentType.BINARY).isEmpty()
+      // && module.getValue().getResources(ContentType.SOURCE).isEmpty()) {
+      //
+      // // remove the module
+      // iterator.remove();
+      // }
+      // }
 
       //
       if (!(transformation instanceof BasicProjectContentTransformation)) {
-        getTransformations().add(transformation);
+
+        if (!getTransformations().contains(transformation)) {
+          //
+          getTransformations().add(transformation);
+        }
       }
 
       //
@@ -224,8 +227,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   }
 
   protected void afterApplyTransformations() {
-    // TODO Auto-generated method stub
-
+    //
   }
 
   /**

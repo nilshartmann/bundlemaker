@@ -1,6 +1,7 @@
 package org.bundlemaker.core.itest.analysis.test;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.itest.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.itest.analysis.test.framework.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
@@ -90,6 +91,22 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
     assertResourceModuleCount(_binModel, 2);
     assertResourceModuleCount(_srcModel, 2);
+
+    //
+    IModuleArtifact srcModule = ArtifactVisitorUtils.findModuleArtifact(_binModel.getRootArtifact(),
+        new ModuleIdentifier("NewModule", "1.0.0"));
+    IModuleArtifact binModule = ArtifactVisitorUtils.findModuleArtifact(_srcModel.getRootArtifact(),
+        new ModuleIdentifier("NewModule", "1.0.0"));
+
+    //
+    Assert.assertNotNull(srcModule);
+    Assert.assertNotNull(binModule);
+    
+    //
+    Assert.assertNotNull(srcModule.getParent());
+    Assert.assertNotNull(binModule.getParent());
+    Assert.assertEquals(srcModule.getParent().getName(), "group2");
+    Assert.assertEquals(binModule.getParent().getName(), "group2");
   }
 
   /**

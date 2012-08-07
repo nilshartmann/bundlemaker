@@ -22,11 +22,13 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
+import org.bundlemaker.core.transformation.DefaultArtifactSelector;
 import org.bundlemaker.core.transformation.RemoveTransformation;
-import org.bundlemaker.core.transformation.SimpleArtifactSelector;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+
+import com.google.gson.JsonElement;
 
 /**
  * <p>
@@ -433,13 +435,59 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     // asserts
     Assert.isNotNull(artifact);
+
+    //
     assertCanAdd(artifact);
+
+    //
+    addArtifacts(new DefaultArtifactSelector(artifact));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void addArtifacts(List<? extends IBundleMakerArtifact> artifacts) {
+
+    // assert not null
+    Assert.isNotNull(artifacts);
+
+    //
+    for (IBundleMakerArtifact artifact : artifacts) {
+      assertCanAdd(artifact);
+    }
+
+    //
+    addArtifacts(new DefaultArtifactSelector(artifacts));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  // TODO: das hier muss die main methode sein!!!
+  public void addArtifacts(IArtifactSelector artifactSelector) {
+
+    // assert not null
+    Assert.isNotNull(artifactSelector);
+
+    // get the transformation configuration
+    AddArtifactsTransformation.Configuration configuration = new AddArtifactsTransformation.Configuration(this,
+        artifactSelector);
+
+    JsonElement jsonConfiguration = configuration.toJsonTree();
 
     //
     getRoot().invalidateDependencyCache();
 
-    //
-    onAddArtifact((IBundleMakerArtifact) artifact);
+    // add the artifacts
+    for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
+      assertCanAdd(artifact);
+    }
+
+    for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
+      onAddArtifact(artifact);
+    }
 
     //
     getRoot().invalidateDependencyCache();
@@ -449,40 +497,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     getModularizedSystem().getTransformations().add(
-        new AddArtifactsTransformation(this, new SimpleArtifactSelector(artifact)));
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void addArtifacts(List<? extends IBundleMakerArtifact> artifact) {
-
-    // assert not null
-    Assert.isNotNull(artifact);
-
-    //
-    for (IBundleMakerArtifact iBundleMakerArtifact : artifact) {
-      addArtifact(iBundleMakerArtifact);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void addArtifacts(IArtifactSelector artifactSelector) {
-
-    // assert not null
-    Assert.isNotNull(artifactSelector);
-
-    // get the list of artifacts
-    List<? extends IBundleMakerArtifact> bundleMakerArtifacts = artifactSelector.getBundleMakerArtifacts();
-
-    // add the artifacts
-    if (bundleMakerArtifacts != null) {
-      addArtifacts(bundleMakerArtifacts);
-    }
+        new AddArtifactsTransformation(jsonConfiguration));
   }
 
   /**

@@ -33,6 +33,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 
 /**
  * <p>
@@ -203,6 +204,11 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   @Override
   public IRootArtifact getRoot() {
     return this;
+  }
+
+  @Override
+  public IPath getFullPath() {
+    return new Path(".");
   }
 
   /**
