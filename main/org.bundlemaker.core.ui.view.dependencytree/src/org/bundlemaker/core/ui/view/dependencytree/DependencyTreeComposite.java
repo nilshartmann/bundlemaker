@@ -115,19 +115,20 @@ public class DependencyTreeComposite extends Composite {
     }
 
     // set the root if necessary
-    IRootArtifact rootArtifact = _sourceArtifactMap.keySet().toArray(new IBundleMakerArtifact[0])[0].getRoot();
-    if (!rootArtifact.equals(_fromTreeViewer.getInput()) && !rootArtifact.equals(_toTreeViewer.getInput())) {
+    if (dependencies.size() > 0) {
+      IRootArtifact rootArtifact = dependencies.get(0).getFrom().getRoot();
+      if (!rootArtifact.equals(_fromTreeViewer.getInput()) && !rootArtifact.equals(_toTreeViewer.getInput())) {
 
-      //
-      _fromTreeViewer.setInput(rootArtifact);
-      _toTreeViewer.setInput(rootArtifact);
+        //
+        _fromTreeViewer.setInput(rootArtifact);
+        _toTreeViewer.setInput(rootArtifact);
 
-      //
-      if (_expandStrategy != null) {
-        _expandStrategy.init(_fromTreeViewer, _toTreeViewer);
+        //
+        if (_expandStrategy != null) {
+          _expandStrategy.init(_fromTreeViewer, _toTreeViewer);
+        }
       }
     }
-
     // update 'from' and 'to' tree, no filtering
     setVisibleArtifacts(_fromTreeViewer, _sourceArtifactMap.keySet());
     setVisibleArtifacts(_toTreeViewer, _targetArtifactMap.keySet());
