@@ -4,7 +4,7 @@ import org.bundlemaker.core.modules.IModule;
 
 /**
  * <p>
- * Defines an {@link IArtifact} that holds an {@link IModule} instance.
+ * Defines an {@link IBundleMakerArtifact} that holds an {@link IModule} instance.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -22,17 +22,19 @@ public interface IModuleArtifact extends IBundleMakerArtifact {
 
   /**
    * <p>
+   * Returns the module name.
    * </p>
    * 
-   * @return
+   * @return the name of the module.
    */
   String getModuleName();
 
   /**
    * <p>
+   * Returns the module version.
    * </p>
    * 
-   * @return
+   * @return the module version.
    */
   String getModuleVersion();
 
@@ -50,9 +52,12 @@ public interface IModuleArtifact extends IBundleMakerArtifact {
 
   /**
    * <p>
+   * Returns <code>true</code> if this {@link IModuleArtifact} represents a resource module, <code>false</code>
+   * otherwise.
    * </p>
    * 
-   * @return
+   * @return <code>true</code> if this {@link IModuleArtifact} represents a resource module, <code>false</code>
+   *         otherwise.
    */
   boolean isResourceModule();
 }

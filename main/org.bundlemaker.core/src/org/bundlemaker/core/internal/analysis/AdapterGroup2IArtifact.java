@@ -60,7 +60,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    * 
    * @return
    */
-  public Group getGroup() {
+  public Group getAssociatedGroup() {
     return _group;
   }
 

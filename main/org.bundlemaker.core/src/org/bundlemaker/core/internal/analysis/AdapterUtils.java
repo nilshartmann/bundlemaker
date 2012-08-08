@@ -57,7 +57,7 @@ public class AdapterUtils {
     // }
 
     //
-    adapterGroup2IArtifact.getGroup().setName(name);
+    adapterGroup2IArtifact.getAssociatedGroup().setName(name);
   }
 
   /**
@@ -87,24 +87,24 @@ public class AdapterUtils {
 
       // get the parent group
       Group parent = ((Group) ((IGroupArtifact) newParent)
-          .getGroup());
+          .getAssociatedGroup());
 
       //
-      ((Group) artifact.getGroup()).setParent(parent);
+      ((Group) artifact.getAssociatedGroup()).setParent(parent);
     }
 
     //
     else if (newParent instanceof IRootArtifact) {
 
       //
-      ((Group) artifact.getGroup()).setRootParent();
+      ((Group) artifact.getAssociatedGroup()).setRootParent();
     }
 
     //
     else {
 
       //
-      ((Group) artifact.getGroup()).setParent(null);
+      ((Group) artifact.getAssociatedGroup()).setParent(null);
     }
   }
 
@@ -223,14 +223,14 @@ public class AdapterUtils {
     //
     if (artifact instanceof IGroupArtifact) {
       IGroupArtifact groupArtifact = (IGroupArtifact) artifact;
-      Group group = (Group) groupArtifact.getGroup();
+      Group group = (Group) groupArtifact.getAssociatedGroup();
       group.setParent(null);
 
       //
       groupArtifact.accept(new IArtifactTreeVisitor.Adapter() {
         @Override
         public boolean visit(IGroupArtifact artifact) {
-          modularizedSystem.internalGroups().remove(artifact.getGroup());
+          modularizedSystem.internalGroups().remove(artifact.getAssociatedGroup());
           return true;
         }
       });

@@ -20,6 +20,7 @@ import org.bundlemaker.core.internal.analysis.cache.impl.ModuleSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
 import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.modules.event.GroupChangedEvent;
@@ -96,7 +97,14 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    */
   @Override
   public IModuleArtifact getModuleArtifact(IModule module) {
+    Assert.isNotNull(module);
     return _artifactCache.getModuleCache().get(new ModuleKey(module));
+  }
+
+  @Override
+  public IGroupArtifact getGroupArtifact(IGroup group) {
+    Assert.isNotNull(group);
+    return (IGroupArtifact) _artifactCache.getGroupCache().get(group);
   }
 
   /**

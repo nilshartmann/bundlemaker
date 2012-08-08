@@ -22,9 +22,10 @@ public interface IGroupArtifact extends IBundleMakerArtifact, IGroupAndModuleCon
 
   /**
    * <p>
+   * Returns the associated {@link IGroup}.
    * </p>
    * 
-   * @return
+   * @return the associated {@link IGroup}.
    */
-  IGroup getGroup();
+  IGroup getAssociatedGroup();
 }

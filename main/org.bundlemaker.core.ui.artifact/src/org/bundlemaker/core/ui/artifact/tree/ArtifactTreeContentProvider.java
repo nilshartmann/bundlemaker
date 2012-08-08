@@ -19,6 +19,7 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IResource;
@@ -229,6 +230,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       Assert.isNotNull(rootArtifact);
 
       _rootArtifact = rootArtifact;
+    }
+
+    @Override
+    public IGroupArtifact getGroupArtifact(IGroup group) {
+      return _rootArtifact.getGroupArtifact(group);
     }
 
     @Override
