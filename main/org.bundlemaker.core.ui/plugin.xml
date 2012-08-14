@@ -11,24 +11,36 @@
 	</extension>
 
 	<!-- the expression definitions -->
-
-	<!-- org.bundlemaker.analysis.ui.artifactContentSelected: evaluates
-        to true if all  of the selected elements are IArtifact -->
 	<extension point="org.eclipse.core.expressions.definitions">
+	
+		<!-- org.bundlemaker.analysis.ui.artifactContentSelected: 
+		     evaluates to true if all  of the selected elements are IBundleMakerArtifact -->
 		<definition id="org.bundlemaker.analysis.ui.artifactContentSelected">
 			<with variable="selection">
 				<iterate ifEmpty="false" operator="and">
-					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"
-					> </instanceof>
+					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/> 
 				</iterate>
 			</with>
 		</definition>
-	</extension>
 
-	<!-- org.bundlemaker.analysis.ui.groupAndModuleContentSelected: evaluates
-        to true if all  of the selected elements are IGRoupAndModuleContainer -->
-	<extension point="org.eclipse.core.expressions.definitions">
-		<definition id="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected">
+		<!-- org.bundlemaker.analysis.ui.artifactContentNoRootSelected: 
+		     evaluates to true if all  of the selected elements are IBundleMakerArtifacts but not IRootArtifacts -->
+		<definition id="org.bundlemaker.analysis.ui.artifactContentNoRootSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<and>
+						<not>
+						<instanceof value="org.bundlemaker.core.analysis.IRootArtifact"/> 
+						</not>
+						<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/> 
+					</and>
+				</iterate>
+			</with>
+		</definition>
+		
+		<!-- org.bundlemaker.analysis.ui.groupAndModuleContentSelected: 
+		     evaluates to true if all  of the selected elements are IGroupAndModuleContainer -->
+        <definition id="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected">
 			<with variable="selection">
 				<count value="1" />
 				<iterate ifEmpty="false" operator="and">
@@ -37,11 +49,9 @@
 				</iterate>
 			</with>
 		</definition>
-	</extension>
-
-	<!-- org.bundlemaker.analysis.ui.bmContentSelected: evaluates
-        to true if all selected elements are Root-IArtifacts (i.e. ModularizedSystems) -->
-	<extension point="org.eclipse.core.expressions.definitions">
+		
+		<!-- org.bundlemaker.analysis.ui.bmContentSelected: evaluates
+             to true if all selected elements are Root-IArtifacts (i.e. ModularizedSystems) -->    
 		<definition id="org.bundlemaker.analysis.ui.rootArtifactContentSelected">
 			<with variable="selection">
 				<iterate ifEmpty="false" operator="and">
@@ -52,11 +62,9 @@
 				</iterate>
 			</with>
 		</definition>
-	</extension>
-
-	<!-- org.bundlemaker.core.ui.bmProjectSelected: evaluates
-        to true if a Project with BundleMaker-Nature or it's bundlemaker.xml is selected -->
-	<extension point="org.eclipse.core.expressions.definitions">
+		
+		<!-- org.bundlemaker.core.ui.bmProjectSelected: evaluates
+             to true if a Project with BundleMaker-Nature or it's bundlemaker.xml is selected -->
 		<definition id="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected">
 			<with variable="selection">
 				<!-- exactly one item must be selected -->
@@ -75,7 +83,7 @@
 						</adapt>
 				</iterate>
 			</with>
-		</definition>
+		</definition>		              
 	</extension>
 
 	<extension point="org.eclipse.ui.views">
@@ -112,7 +120,7 @@
 			</possibleChildren>
 			<commonSorter
 				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter"> </commonSorter>
-<actionProvider class="org.bundlemaker.core.ui.actions.BundleMakerActionProvider"/>
+			<actionProvider class="org.bundlemaker.core.ui.actions.BundleMakerActionProvider"/>
 		</navigatorContent>
 	</extension>
 
@@ -205,38 +213,6 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
-		<!-- handler class="org.bundlemaker.core.ui.commands.TransformHandler"
-            commandId="org.bundlemaker.core.ui.commands.TransformHandler">
-         <activeWhen>
-         <reference
-               definitionId="org.bundlemaker.analysis.ui.artifactContentSelected">
-         </reference>
-         </activeWhen>
-         <enabledWhen>
-          <reference
-               definitionId="org.bundlemaker.analysis.ui.rootArtifactContentSelected">
-               </reference>
-         </enabledWhen>
-      </handler>
-      <handler class="org.bundlemaker.core.ui.commands.RunTransformationScriptHandler"
-            commandId="org.bundlemaker.core.ui.commands.RunTransformationScript">
-         <activeWhen>
-         	<or>
-          <reference
-               definitionId="org.bundlemaker.core.ui.bmtFileSelected" />
-               <reference
-                    definitionId="org.bundlemaker.core.transformations.dsl.TransformationDsl.Editor.opened"/>
-          	</or>
-         </activeWhen>
-         <enabledWhen>
-         	<or>
-          <reference
-               definitionId="org.bundlemaker.core.ui.bmtFileSelected" />
-               <reference
-                    definitionId="org.bundlemaker.core.transformations.dsl.TransformationDsl.Editor.opened"/>
-          	</or>
-         </enabledWhen>
-      </handler  -->
 		<handler commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
 			class="org.bundlemaker.core.ui.handler.CustomizeDependencyTreeHandler"> </handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
@@ -249,6 +225,15 @@
 			class="org.bundlemaker.core.ui.handler.CreateNewModuleHandler">
 			<enabledWhen>
 				<reference definitionId="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected" />
+			</enabledWhen>
+		</handler>
+		
+		<!-- MoveArtifactsCommand -->
+	    <handler commandId="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
+			class="org.bundlemaker.core.ui.handler.MoveArtifactsHandler">
+			<enabledWhen>
+				<reference
+         			definitionId="org.bundlemaker.analysis.ui.artifactContentNoRootSelected"/>
 			</enabledWhen>
 		</handler>
 		
@@ -282,6 +267,7 @@
 			
 			</enabledWhen>
 		</handler>
+		
 		<handler class="org.bundlemaker.core.ui.handler.RefreshArtifactTreeHandler"
 			commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand">
 			<activeWhen>
@@ -373,12 +359,11 @@
 			name="New Group..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
 			name="New Module..."/>
-		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."
-		> </command>
-		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"
-		> </command>
-		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"
-		> </command>
+		<command id="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
+			name="Move..."/>
+		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."/>
+		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"/>
+		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"/> 
 	</extension>
 
 	<!-- ======================================== -->
@@ -404,7 +389,6 @@
 			<separator name="org.bundlemaker.core.ui.artifacts.separator" visible="true"> </separator>
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
 				label="New Group..." style="push">
-				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
 				<visibleWhen checkEnabled="false">
 					<reference
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
@@ -412,7 +396,6 @@
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
 				label="New Module..." style="push">
-				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
 				<visibleWhen checkEnabled="false">
 					<reference
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
@@ -420,15 +403,20 @@
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
 				label="Rename..." style="push">
-				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
 				<visibleWhen checkEnabled="false">
 					<reference
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 				</visibleWhen>
 			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
+				label="Move..." style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>	
 			<command commandId="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand"
 				label="Remove" style="push">
-				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
 				<visibleWhen checkEnabled="false">
 					<reference
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
@@ -436,12 +424,12 @@
 			</command>
 			<command commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand"
 				label="Refresh" icon="icons/refresh.gif" style="push">
-				<!-- Command should be visible on ANY artifact instance, even it might be disabled -->
 				<visibleWhen checkEnabled="false">
 					<reference
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 				</visibleWhen>
-			</command>			
+			</command>
+		
 			<!-- Exporter section -->
 			<separator name="org.bundlemaker.core.ui.separator.exporter" visible="true"> </separator>
 			<command

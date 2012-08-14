@@ -34,8 +34,13 @@ public class ArtifactTreeViewerFactory {
    * @return
    */
   public static TreeViewer createDefaultArtifactTreeViewer(Composite parent) {
+    int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER;
 
-    final TreeViewer treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+    return createDefaultArtifactTreeViewer(parent, style);
+  }
+
+  public static TreeViewer createDefaultArtifactTreeViewer(Composite parent, int style) {
+    final TreeViewer treeViewer = new TreeViewer(parent, style);
     treeViewer.setUseHashlookup(true);
     treeViewer.setContentProvider(new ArtifactTreeContentProvider(true));
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
