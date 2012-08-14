@@ -11,6 +11,7 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -18,7 +19,6 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -165,6 +165,10 @@ public class DependencyTreeComposite extends Composite {
     _fromTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
     _toTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
 
+    //
+    _fromTreeViewer.setLabelProvider(new DependencyTreeArtifactLabelProvider(_sourceArtifactMap, _fromTreeViewer, _toTreeViewer, false));
+    _toTreeViewer.setLabelProvider(new DependencyTreeArtifactLabelProvider(_targetArtifactMap, _toTreeViewer, _fromTreeViewer, true));
+    
     // add SelectionListeners
     _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());
     _toTreeViewer.addSelectionChangedListener(new ToArtifactSelectionChangedListener());
