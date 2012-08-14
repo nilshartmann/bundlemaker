@@ -64,7 +64,7 @@ public class CropableDependencyTreeComposite extends Composite {
   private ToolItem                     _autoExpandTo;
 
   /** - */
-  private ExpandStrategy               _expandStrategy;
+  private DefaultExpandStrategy               _expandStrategy;
 
   /**
    * <p>
@@ -84,7 +84,7 @@ public class CropableDependencyTreeComposite extends Composite {
     _dependencySelectionList = new LinkedList<List<IDependency>>();
 
     //
-    _expandStrategy = new ExpandStrategy();
+    _expandStrategy = new DefaultExpandStrategy();
 
     //
     this.setLayout(new org.eclipse.swt.layout.GridLayout());

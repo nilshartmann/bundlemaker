@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.TreeViewer;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ExpandStrategy implements IExpandStrategy {
+public class DefaultExpandStrategy implements IExpandStrategy {
 
   /** - */
   private List                                  _artifactTypeOrder             = Arrays.asList(new Class[] {
@@ -205,7 +205,7 @@ public class ExpandStrategy implements IExpandStrategy {
 
     _expandedElementsFrom.addAll(_manuallyExpandedElementsFrom);
     _expandedElementsFrom.removeAll(_manuallyCollapsedElementsFrom);
-    
+
     _fromTreeViewer.setExpandedElements(_expandedElementsFrom.toArray());
   }
 
