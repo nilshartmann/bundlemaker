@@ -89,11 +89,8 @@ public abstract class AbstractCreateGroupOrModuleHandler extends AbstractArtifac
 
     Set<String> existingArtifacts = getExistingArtifactNames(parentContainer);
 
-    System.out.println("Existing Artifacts: " + existingArtifacts);
-
     String candidate = prefix + suffix;
     int ix = 0;
-    System.out.println("Candidate: " + candidate);
     while (existingArtifacts.contains(candidate)) {
       ix++;
       candidate = prefix + ix + suffix;
