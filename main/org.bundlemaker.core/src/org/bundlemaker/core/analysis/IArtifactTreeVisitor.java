@@ -107,7 +107,7 @@ public interface IArtifactTreeVisitor {
      * @param rootArtifact
      * @return
      */
-    public boolean onVisit(IBundleMakerArtifact rootArtifact) {
+    public boolean onVisit(IBundleMakerArtifact artifact) {
       return true;
     }
   }
