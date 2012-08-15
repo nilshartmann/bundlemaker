@@ -127,7 +127,7 @@ public class AdapterUtils {
     IModifiableModularizedSystem modularizedSystem = (IModifiableModularizedSystem) artifact.getModularizedSystem();
 
     //
-    List<IBundleMakerArtifact> artifacts = getAllContainedResourceModules(artifact);
+    List<IBundleMakerArtifact> artifacts = getAllContainedModules(artifact);
 
     //
     for (IBundleMakerArtifact moduleArtifact : artifacts) {
@@ -218,7 +218,7 @@ public class AdapterUtils {
 
     //
     final ModularizedSystem modularizedSystem = (ModularizedSystem) artifact.getModularizedSystem();
-    List<IBundleMakerArtifact> artifacts = getAllContainedResourceModules(artifact);
+    List<IBundleMakerArtifact> artifacts = getAllContainedModules(artifact);
 
     //
     if (artifact instanceof IGroupArtifact) {
@@ -307,7 +307,7 @@ public class AdapterUtils {
    * @param artifact
    * @return
    */
-  private static List<IBundleMakerArtifact> getAllContainedResourceModules(IBundleMakerArtifact artifact) {
+  private static List<IBundleMakerArtifact> getAllContainedModules(IBundleMakerArtifact artifact) {
 
     // asserts
     Assert.isNotNull(artifact);
@@ -319,9 +319,7 @@ public class AdapterUtils {
     artifact.accept(new IArtifactTreeVisitor.Adapter() {
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
-        if (moduleArtifact.isResourceModule()) {
-          result.add(moduleArtifact);
-        }
+        result.add(moduleArtifact);
         return false;
       }
     });
