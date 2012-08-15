@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.osgi.framework.Version;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -153,11 +152,12 @@ public class EditModuleDialog extends TitleAreaDialog {
       return "Enter a version, e.g. 1.0.0";
     }
 
-    try {
-      Version.parseVersion(moduleVersion);
-    } catch (Exception ex) {
-      return "Enter a valid OSGi version";
-    }
+    // TODO: DEFINE VERSION-SCHEMA!
+    // try {
+    // Version.parseVersion(moduleVersion);
+    // } catch (Exception ex) {
+    // return "Enter a valid OSGi version";
+    // }
 
     return null;
   }
