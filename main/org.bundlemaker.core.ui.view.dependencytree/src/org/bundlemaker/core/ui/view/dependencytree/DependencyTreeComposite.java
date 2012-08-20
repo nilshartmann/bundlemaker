@@ -307,7 +307,7 @@ public class DependencyTreeComposite extends Composite {
         // set the top item again
         if (treeItem != null && !treeItem.isDisposed()) {
           _toTreeViewer.getTree().setTopItem(treeItem);
-        } else {
+        } else if (_toTreeViewer.getTree().getItemCount() > 0) {
           _toTreeViewer.getTree().setTopItem(_toTreeViewer.getTree().getItem(0));
         }
 
