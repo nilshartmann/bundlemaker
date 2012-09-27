@@ -27,7 +27,7 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
    */
   @Override
   public String getLabel(IBundleMakerProject bundleMakerProject) {
-    return "JDT Project";
+    return "JDT Project (experimental)";
   }
 
   /*
