@@ -336,7 +336,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
     if (artifact.getLeafs() == null) {
       return _cachedDependencies.get(artifact);
     } else {
-      Dependency dependencyContainer = new Dependency(this, artifact, 0);
+      Dependency dependencyContainer = new Dependency(this, artifact, false);
       for (IBundleMakerArtifact leaf : artifact.getLeafs()) {
         IDependency dependency = getDependency(leaf);
         if ((dependency != null) && (dependency.getTo().isInstanceOf(ITypeArtifact.class))) {
@@ -423,7 +423,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
         } else {
 
           // map to dependency
-          Dependency dependency = new Dependency(this, artifact);
+          Dependency dependency = new Dependency(this, artifact, true);
 
           // top level primary types only
           if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {

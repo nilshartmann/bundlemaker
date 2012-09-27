@@ -150,19 +150,19 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
   @Override
   public IDependency getDependency(IBundleMakerArtifact to) {
 
-    if (this.equals(to)) {
-      return new Dependency(this, to, 0);
-    }
+    // HAE?
+    // if (this.equals(to)) {
+    // return new Dependency(this, to, 0);
+    // }
 
     IDependency dependency = cachedDependencies.get(to);
     if (dependency != null) {
       return dependency;
     } else {
-      dependency = new Dependency(this, to, 0);
+      dependency = new Dependency(this, to, false);
       for (IDependency reference : getDependencies()) {
         if (to.contains(reference.getTo())) {
           ((Dependency) dependency).addDependency(reference);
-          ((Dependency) dependency).addWeight();
         }
       }
       cachedDependencies.put(to, dependency);

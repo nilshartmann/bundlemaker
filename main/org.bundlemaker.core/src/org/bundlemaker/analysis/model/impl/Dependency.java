@@ -7,42 +7,47 @@ import java.util.LinkedList;
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
  * </p>
- * 
- * @author Kai Lehmann
- * @author Frank Schl&uuml;ter
  */
 public class Dependency implements IDependency {
 
-  private IBundleMakerArtifact    to;
+  /** - */
+  private IBundleMakerArtifact    _to;
 
-  private IBundleMakerArtifact    from;
-
-  private int                     weight;
+  /** - */
+  private IBundleMakerArtifact    _from;
 
   private DependencyKind          dependencyKind = DependencyKind.USES;
 
-  private boolean                 isLeaf         = false;
-
   private Collection<IDependency> dependencies;
 
-  public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to) {
-    this(from, to, 1);
+  /** - */
+  private boolean                 _isLeafDependency;
 
-    // TODO!!
-    if (from.isInstanceOf(ITypeArtifact.class)) {
-      isLeaf = true;
-    }
-  }
+  /**
+   * <p>
+   * Creates a new instance of type {@link Dependency}.
+   * </p>
+   * 
+   * @param from
+   * @param to
+   * @param isLeafDependency
+   */
+  public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to, boolean isLeafDependency) {
 
-  public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to, int weight) {
-    this.from = from;
-    this.to = to;
-    this.weight = weight;
+    Assert.isNotNull(from);
+    Assert.isNotNull(to);
+
+    //
+    _from = from;
+    _to = to;
+
+    //
+    _isLeafDependency = isLeafDependency;
   }
 
   public void setDependencyKind(DependencyKind dependencyKind) {
@@ -52,10 +57,6 @@ public class Dependency implements IDependency {
   @Override
   public DependencyKind getDependencyKind() {
     return dependencyKind;
-  }
-
-  public void addWeight() {
-    this.weight++;
   }
 
   /**
@@ -77,10 +78,14 @@ public class Dependency implements IDependency {
    */
   @Override
   public int getWeight() {
+
+    //
     if (dependencies != null && !dependencies.isEmpty()) {
-      return dependencies.size();
+      return _isLeafDependency ? dependencies.size() + 1 : dependencies.size();
     }
-    return weight;
+
+    //
+    return 1;
   }
 
   /**
@@ -88,12 +93,12 @@ public class Dependency implements IDependency {
    */
   @Override
   public IBundleMakerArtifact getFrom() {
-    return from;
+    return _from;
   }
 
   @Override
   public IBundleMakerArtifact getTo() {
-    return to;
+    return _to;
   }
 
   @Override
@@ -135,9 +140,14 @@ public class Dependency implements IDependency {
 
   @Override
   public void getLeafDependencies(Collection<IDependency> leafDependencies) {
-    if (isLeaf) {
+
+    //
+    if (_isLeafDependency) {
       leafDependencies.add(this);
-    } else {
+    }
+
+    //
+    else {
       if (dependencies != null) {
         for (IDependency dependency : dependencies) {
           dependency.getLeafDependencies(leafDependencies);
@@ -155,8 +165,8 @@ public class Dependency implements IDependency {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((from == null) ? 0 : from.hashCode());
-    result = prime * result + ((to == null) ? 0 : to.hashCode());
+    result = prime * result + ((_from == null) ? 0 : _from.hashCode());
+    result = prime * result + ((_to == null) ? 0 : _to.hashCode());
     return result;
   }
 
@@ -177,18 +187,18 @@ public class Dependency implements IDependency {
       return false;
     }
     Dependency other = (Dependency) obj;
-    if (from == null) {
-      if (other.from != null) {
+    if (_from == null) {
+      if (other._from != null) {
         return false;
       }
-    } else if (!from.equals(other.from)) {
+    } else if (!_from.equals(other._from)) {
       return false;
     }
-    if (to == null) {
-      if (other.to != null) {
+    if (_to == null) {
+      if (other._to != null) {
         return false;
       }
-    } else if (!to.equals(other.to)) {
+    } else if (!_to.equals(other._to)) {
       return false;
     }
     return true;
