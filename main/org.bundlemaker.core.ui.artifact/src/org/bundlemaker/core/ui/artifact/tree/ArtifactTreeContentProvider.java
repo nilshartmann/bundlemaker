@@ -9,7 +9,6 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactSelector;
@@ -17,6 +16,7 @@ import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IGroup;
@@ -138,7 +138,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       List<IBundleMakerArtifact> artifacts = new ArrayList<IBundleMakerArtifact>();
 
       for (IBundleMakerArtifact iArtifact : parentArtifact.getChildren()) {
-        if (iArtifact.getType().equals(ArtifactType.Package)) {
+        if (iArtifact.isInstanceOf(IPackageArtifact.class)) {
           if (iArtifact.containsTypesOrResources()) {
             artifacts.add(iArtifact);
           } else {
@@ -233,6 +233,16 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
+    public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz) {
+      return _rootArtifact.isInstanceOf(clazz);
+    }
+
+    @Override
+    public <T extends IBundleMakerArtifact> T castTo(Class<? extends IBundleMakerArtifact> clazz) {
+      return _rootArtifact.castTo(clazz);
+    }
+
+    @Override
     public IGroupArtifact getGroupArtifact(IGroup group) {
       return _rootArtifact.getGroupArtifact(group);
     }
@@ -314,11 +324,6 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     @Override
     public void addArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
       _rootArtifact.addArtifactModelChangedListener(listener);
-    }
-
-    @Override
-    public ArtifactType getType() {
-      return _rootArtifact.getType();
     }
 
     @Override
@@ -428,11 +433,6 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
 
     @Override
     public <T extends IBundleMakerArtifact> T getParent(Class<T> type) {
-      return _rootArtifact.getParent(type);
-    }
-
-    @Override
-    public IBundleMakerArtifact getParent(ArtifactType type) {
       return _rootArtifact.getParent(type);
     }
 

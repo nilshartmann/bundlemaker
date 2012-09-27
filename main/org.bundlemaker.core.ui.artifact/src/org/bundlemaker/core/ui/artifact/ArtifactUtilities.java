@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 
 public class ArtifactUtilities {
@@ -56,7 +56,7 @@ public class ArtifactUtilities {
     List<IBundleMakerArtifact> parents = new LinkedList<IBundleMakerArtifact>();
     IBundleMakerArtifact currentArtifact = bundleMakerArtifacts.toArray(new IBundleMakerArtifact[0])[0];
     parents.add(currentArtifact);
-    while (currentArtifact != null && !currentArtifact.getType().equals(ArtifactType.Root)) {
+    while (currentArtifact != null && !currentArtifact.isInstanceOf(IRootArtifact.class)) {
       currentArtifact = currentArtifact.getParent();
       parents.add(currentArtifact);
     }
@@ -67,7 +67,7 @@ public class ArtifactUtilities {
       if (parents.contains(artifact)) {
         commonParents.add(artifact);
       }
-      while (artifact != null && !artifact.getType().equals(ArtifactType.Root)) {
+      while (artifact != null && !currentArtifact.isInstanceOf(IRootArtifact.class)) {
         artifact = artifact.getParent();
         if (parents.contains(artifact)) {
           commonParents.add(artifact);

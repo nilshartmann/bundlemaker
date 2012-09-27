@@ -12,7 +12,6 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -52,7 +51,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
    */
   public AdapterResource2IArtifact(IResource resource, boolean isSourceResource, IBundleMakerArtifact parent,
       ArtifactCache artifactCache) {
-    super(ArtifactType.Resource, resource.getName());
+    super(resource.getName());
 
     // set parent/children dependency
     setParent(parent);
@@ -115,7 +114,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
   @Override
   public boolean isMovable() {
     //
-    IBundleMakerArtifact artifact = getParent(ArtifactType.Module);
+    IBundleMakerArtifact artifact = getParent(IModuleArtifact.class);
 
     //
     return artifact instanceof IModuleArtifact

@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -47,7 +46,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
    */
   public AdapterPackage2IArtifact(String qualifiedName, IBundleMakerArtifact parent, boolean isVirtual,
       boolean isHierarchical, IModule containingModule, ArtifactCache artifactCache) {
-    super(ArtifactType.Package, _getName(qualifiedName));
+    super(_getName(qualifiedName));
 
     // set parent/children dependency
     if (parent != null) {
@@ -99,7 +98,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
   public boolean isMovable() {
 
     //
-    IBundleMakerArtifact artifact = getParent(ArtifactType.Module);
+    IBundleMakerArtifact artifact = getParent(IModuleArtifact.class);
 
     //
     return artifact instanceof IModuleArtifact
@@ -118,7 +117,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
   public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     //
-    if (artifact.getType().equals(ArtifactType.Resource)) {
+    if (artifact.isInstanceOf(IResourceArtifact.class)) {
       String packageName = ((IResourceArtifact) artifact).getAssociatedResource().getPackageName();
       if (!packageName.equals(this.getQualifiedName())) {
         return String.format("Can not add resource '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
@@ -127,7 +126,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
       }
     }
 
-    if (artifact.getType().equals(ArtifactType.Type)) {
+    if (artifact.isInstanceOf(ITypeArtifact.class)) {
       String packageName = ((ITypeArtifact) artifact).getAssociatedType().getPackageName();
       if (!packageName.equals(this.getQualifiedName())) {
         return String.format("Can not add type '%s' to package '%s'.", artifact.getQualifiedName(), packageName);
@@ -136,7 +135,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
       }
     }
 
-    if (artifact.getType().equals(ArtifactType.Package)) {
+    if (artifact.isInstanceOf(IPackageArtifact.class)) {
       IPackageArtifact packageArtifact = ((IPackageArtifact) artifact);
       int index = packageArtifact.getQualifiedName().lastIndexOf(".");
       String parentPackageName = index != -1 ? packageArtifact.getQualifiedName().substring(0, index) : packageArtifact
@@ -173,7 +172,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
     assertCanAdd(artifact);
 
     // handle package
-    if (artifact.getType().equals(ArtifactType.Package)) {
+    if (artifact.isInstanceOf(IPackageArtifact.class)) {
 
       //
       ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(_containingModule),

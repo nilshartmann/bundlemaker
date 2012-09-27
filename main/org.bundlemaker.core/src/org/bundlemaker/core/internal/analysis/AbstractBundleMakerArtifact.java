@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.runtime.Assert;
 
@@ -17,15 +16,14 @@ import org.eclipse.core.runtime.Assert;
  * </p>
  * 
  * @author Kai Lehmann
- * @author Frank Schl&uuml;ter
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifact {
 
-  // Ordnungs Eigenschaften
-  private final ArtifactType   type;
-
+  /** - */
   private String               name;
 
+  /** - */
   private IBundleMakerArtifact parent;
 
   // Meta-Daten
@@ -36,14 +34,11 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
    * Creates a new instance of type {@link AbstractBundleMakerArtifact}.
    * </p>
    * 
-   * @param type
    * @param name
    */
-  public AbstractBundleMakerArtifact(ArtifactType type, String name) {
-    Assert.isNotNull(type);
+  public AbstractBundleMakerArtifact(String name) {
     Assert.isNotNull(name);
 
-    this.type = type;
     this.name = name;
   }
 
@@ -56,6 +51,37 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
   // public boolean hasChild(String path) {
   // return false;
   // }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz) {
+
+    //
+    if (clazz == null) {
+      return false;
+    }
+
+    //
+    return clazz.isAssignableFrom(this.getClass());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public <T extends IBundleMakerArtifact> T castTo(Class<? extends IBundleMakerArtifact> clazz) {
+
+    //
+    Assert.isNotNull(clazz);
+
+    //
+    Assert.isTrue(isInstanceOf(clazz), String.format("Can not cast '%s' to '%s'.", this.getClass(), clazz));
+
+    //
+    return (T) this;
+  }
 
   /**
    * {@inheritDoc}
@@ -91,25 +117,6 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
     this.parent = parent;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IBundleMakerArtifact getParent(ArtifactType type) {
-    IBundleMakerArtifact parent = this.getParent();
-
-    if (parent == null) {
-      return null;
-    } else if (parent == this) {
-      return null;
-    } else if (type.equals(parent.getType())) {
-
-      return this.getParent();
-    } else {
-      return parent.getParent(type);
-    }
-  }
-
   @Override
   public <T extends IBundleMakerArtifact> T getParent(Class<T> type) {
 
@@ -126,14 +133,6 @@ public abstract class AbstractBundleMakerArtifact implements IBundleMakerArtifac
     } else {
       return parent.getParent(type);
     }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public ArtifactType getType() {
-    return type;
   }
 
   /**

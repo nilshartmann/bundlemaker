@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -88,7 +88,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
     Collection<IBundleMakerArtifact> leafs = rootArtifact.getLeafs();
     IModuleArtifact newModule = null;
     for (IBundleMakerArtifact typeArtifact : leafs) {
-      IBundleMakerArtifact moduleArtifact = typeArtifact.getParent(ArtifactType.Module);
+      IBundleMakerArtifact moduleArtifact = typeArtifact.getParent(IModuleArtifact.class);
 
       if (((IModuleArtifact) moduleArtifact).isResourceModule()) {
         newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test_1.2.3", "1.2.3");
@@ -167,7 +167,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
     IBundleMakerArtifact group1Artifact = rootArtifact.getChild("group1");
     Assert.assertNotNull(moduleArtifact);
 
-    moduleArtifact.getParent(ArtifactType.Group).removeArtifact(moduleArtifact);
+    moduleArtifact.getParent(IGroupArtifact.class).removeArtifact(moduleArtifact);
     group1Artifact.addArtifact(moduleArtifact);
 
     // assert the result

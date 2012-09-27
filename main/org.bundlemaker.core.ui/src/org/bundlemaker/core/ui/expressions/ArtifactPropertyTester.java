@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.expressions;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.expressions.PropertyTester;
 import org.eclipse.core.runtime.Assert;
@@ -41,16 +40,17 @@ public class ArtifactPropertyTester extends PropertyTester {
   @Override
   public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 
+    //
     IBundleMakerArtifact artifact = (IBundleMakerArtifact) receiver;
 
+    //
     if ("type".equalsIgnoreCase(property)) {
-      ArtifactType expectedType = ArtifactType.valueOf((String) expectedValue);
-      return artifact.getType().equals(expectedType);
+      return artifact.getClass().getName().equalsIgnoreCase(expectedValue.toString())
+          || artifact.getClass().getSimpleName().equalsIgnoreCase(expectedValue.toString());
     }
 
     // Unsupported property
     Assert.isTrue(false, "Property-Name '" + property + "' not supported by ArtifactPropertyTester");
     return false;
   }
-
 }

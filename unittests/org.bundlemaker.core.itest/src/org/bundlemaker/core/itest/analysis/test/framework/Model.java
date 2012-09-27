@@ -3,6 +3,7 @@ package org.bundlemaker.core.itest.analysis.test.framework;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -162,7 +163,7 @@ public class Model {
    */
   protected IGroupArtifact assertGroupArtifact(IBundleMakerArtifact rootArtifact, String qualifiedName) {
     IGroupArtifact result = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
-    Assert.assertNotNull(result);
+    Assert.assertNotNull(qualifiedName, result);
     return result;
   }
 

@@ -1,6 +1,5 @@
 package org.bundlemaker.core.ui.utils;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,7 +40,7 @@ public class BundleMakerFileLinkHelper implements ILinkHelper {
 
       //
       IResourceArtifact resourceArtifact = bundleMakerArtifact instanceof IResourceArtifact ? (IResourceArtifact) bundleMakerArtifact
-          : (IResourceArtifact) bundleMakerArtifact.getParent(ArtifactType.Resource);
+          : (IResourceArtifact) bundleMakerArtifact.getParent(IResourceArtifact.class);
 
       //
       if (resourceArtifact == null) {

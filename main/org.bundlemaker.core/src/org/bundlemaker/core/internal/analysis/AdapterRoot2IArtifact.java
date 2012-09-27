@@ -3,7 +3,6 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
@@ -70,7 +69,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    */
   public AdapterRoot2IArtifact(IModifiableModularizedSystem modularizedSystem,
       IArtifactModelConfiguration modelConfiguration, ArtifactCache artifactCache) {
-    super(ArtifactType.Root, name(modularizedSystem));
+    super(name(modularizedSystem));
 
     //
     Assert.isNotNull(modelConfiguration);
@@ -195,7 +194,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   @Override
   public String handleCanAdd(IBundleMakerArtifact artifact) {
     //
-    if (!(artifact.getType().equals(ArtifactType.Group) || artifact instanceof AdapterModule2IArtifact)) {
+    if (!(artifact.isInstanceOf(IGroupArtifact.class) || artifact instanceof AdapterModule2IArtifact)) {
       return "Only groups and modules are addable to root";
     }
 

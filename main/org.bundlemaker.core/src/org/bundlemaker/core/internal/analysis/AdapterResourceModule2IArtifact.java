@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -52,11 +51,11 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   protected void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // handle package
-    if (artifact.getType().equals(ArtifactType.Package)) {
+    if (artifact.isInstanceOf(IPackageArtifact.class)) {
       handleAddPackage(artifact);
-    } else if (artifact.getType().equals(ArtifactType.Resource)) {
+    } else if (artifact.isInstanceOf(IResourceArtifact.class)) {
       handleAddResource((IResourceArtifact) artifact);
-    } else if (artifact.getType().equals(ArtifactType.Type)) {
+    } else if (artifact.isInstanceOf(ITypeArtifact.class)) {
       handleAddType((ITypeArtifact) artifact);
     }
   }
@@ -71,7 +70,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   private void handleAddType(ITypeArtifact artifact) {
 
     //
-    if (artifact.getParent() != null && artifact.getParent().getType().equals(ArtifactType.Resource)) {
+    if (artifact.getParent() != null && artifact.getParent().isInstanceOf(IResourceArtifact.class)) {
 
       handleAddResource((IResourceArtifact) artifact.getParent());
 
@@ -121,14 +120,14 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   public String handleCanAdd(IBundleMakerArtifact artifact) {
 
     // a resource module artifact can contain packages, types and resources
-    if (!(artifact.getType().equals(ArtifactType.Package) || artifact.getType().equals(ArtifactType.Type) || artifact
-        .getType().equals(ArtifactType.Resource))) {
+    if (!(artifact.isInstanceOf(IPackageArtifact.class) || artifact.isInstanceOf(ITypeArtifact.class) || artifact
+        .isInstanceOf(IResourceArtifact.class))) {
 
       return "Only packages, types or resources can be added to a resource module.";
     }
 
     //
-    IModuleArtifact moduleArtifact = (IModuleArtifact) artifact.getParent(ArtifactType.Module);
+    IModuleArtifact moduleArtifact = (IModuleArtifact) artifact.getParent(IModuleArtifact.class);
 
     // TODO
     if (moduleArtifact != null && !(moduleArtifact.getAssociatedModule() instanceof IResourceModule)) {

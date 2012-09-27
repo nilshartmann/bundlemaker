@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
@@ -56,7 +55,7 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
    */
   public VirtualType2IArtifact(String name, String fullyQualifiedName, IBundleMakerArtifact parent) {
 
-    super(ArtifactType.Type, name);
+    super(name);
 
     Assert.isNotNull(parent);
 
@@ -261,7 +260,7 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
 
     //
     if (_root == null) {
-      _root = (IRootArtifact) getParent(ArtifactType.Root);
+      _root = (IRootArtifact) getParent(IRootArtifact.class);
     }
 
     //
@@ -310,10 +309,6 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
 
   public IBundleMakerArtifact getParent() {
     return (IBundleMakerArtifact) super.getParent();
-  }
-
-  public IBundleMakerArtifact getParent(ArtifactType type) {
-    return (IBundleMakerArtifact) super.getParent(type);
   }
 
   @Override

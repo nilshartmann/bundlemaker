@@ -12,10 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
@@ -144,7 +144,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     _fileWriter.append(String.format(" -**- %s [", packageName));
     for (Iterator<IPackageArtifact> iterator = packageArtifacts.iterator(); iterator.hasNext();) {
       IPackageArtifact packageArtifact = iterator.next();
-      IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(ArtifactType.Module);
+      IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(IModuleArtifact.class);
       _fileWriter.append(moduleArtifact.getName());
       if (iterator.hasNext()) {
         _fileWriter.append(", ");
@@ -157,7 +157,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
     // step 2: dump "exclusive"
     for (IPackageArtifact packageArtifact : packageArtifacts) {
 
-      IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(ArtifactType.Module);
+      IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(IModuleArtifact.class);
       List<ITypeArtifact> exclusiveTypes = new LinkedList<ITypeArtifact>();
 
       //
@@ -240,7 +240,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
 
     //
     for (IBundleMakerArtifact child : sorted) {
-      if (child.getType().equals(ArtifactType.Resource)
+      if (child.isInstanceOf(IResourceArtifact.class)
       // || child.getType().equals(ArtifactType.Group)
       // || child.getType().equals(ArtifactType.Module)
       ) {

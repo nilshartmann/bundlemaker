@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -48,7 +48,7 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
     } else if (obj instanceof IModularizedSystem) {
       return ((IModularizedSystem) obj).getName();
     } else if (obj instanceof IBundleMakerArtifact
-        && ((IBundleMakerArtifact) obj).getType().equals(ArtifactType.Package) && isHierarchicalPackageLayout()) {
+        && ((IBundleMakerArtifact) obj).isInstanceOf(IPackageArtifact.class) && isHierarchicalPackageLayout()) {
       return ((IBundleMakerArtifact) obj).getName();
     }
 

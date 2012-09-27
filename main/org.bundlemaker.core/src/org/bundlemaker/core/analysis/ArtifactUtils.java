@@ -34,7 +34,7 @@ public class ArtifactUtils {
     }
 
     //
-    stringBuilder.append(artifact.getType());
+    stringBuilder.append(artifact.getClass().getName());
     stringBuilder.append(" : ");
     stringBuilder.append(artifact.getUniquePathIdentifier());
     stringBuilder.append("\n");

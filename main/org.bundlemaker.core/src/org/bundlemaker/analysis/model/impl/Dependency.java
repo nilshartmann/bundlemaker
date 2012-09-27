@@ -6,8 +6,8 @@ import java.util.LinkedList;
 
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 
 /**
  * <p>
@@ -32,7 +32,9 @@ public class Dependency implements IDependency {
 
   public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to) {
     this(from, to, 1);
-    if (from.getType().equals(ArtifactType.Type)) {
+
+    // TODO!!
+    if (from.isInstanceOf(ITypeArtifact.class)) {
       isLeaf = true;
     }
   }

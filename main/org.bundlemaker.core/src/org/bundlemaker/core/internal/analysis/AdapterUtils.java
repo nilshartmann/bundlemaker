@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
@@ -133,7 +132,7 @@ public class AdapterUtils {
     for (IBundleMakerArtifact moduleArtifact : artifacts) {
 
       //
-      if (moduleArtifact.getParent() != null && !artifact.getType().equals(ArtifactType.Module)) {
+      if (moduleArtifact.getParent() != null && !artifact.isInstanceOf(IModuleArtifact.class)) {
 
         //
         String newPath = computeRelativeClassification(artifact, moduleArtifact);
@@ -182,7 +181,7 @@ public class AdapterUtils {
 
     boolean relativeArtifactFound = false;
 
-    while (currentArtifact.getParent() != null && currentArtifact.getParent().getType().equals(ArtifactType.Group)
+    while (currentArtifact.getParent() != null && currentArtifact.getParent().isInstanceOf(IGroupArtifact.class)
         && !relativeArtifactFound) {
 
       currentArtifact = currentArtifact.getParent();
@@ -284,8 +283,8 @@ public class AdapterUtils {
     AdapterResourceModule2IArtifact moduleArtifact = null;
 
     //
-    if (!artifactToRemoveFrom.getType().equals(ArtifactType.Module)) {
-      moduleArtifact = (AdapterResourceModule2IArtifact) artifactToRemoveFrom.getParent(ArtifactType.Module);
+    if (!artifactToRemoveFrom.isInstanceOf(IModuleArtifact.class)) {
+      moduleArtifact = (AdapterResourceModule2IArtifact) artifactToRemoveFrom.getParent(IModuleArtifact.class);
     } else {
       moduleArtifact = (AdapterResourceModule2IArtifact) artifactToRemoveFrom;
     }

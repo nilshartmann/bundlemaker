@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModule;
@@ -90,23 +89,6 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
 
     //
     _modularizedSystem = null;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param node
-   * @param type
-   *          TODO
-   * @param modularizedSystem
-   */
-  @Deprecated
-  protected void assertNode(IBundleMakerArtifact node, ArtifactType type, String nodeName, String parentName) {
-    Assert.assertEquals(node.toString(), type, node.getType());
-    Assert.assertEquals(nodeName, node.getName());
-    Assert.assertNotNull(node.getParent());
-    Assert.assertEquals(parentName, node.getParent().getName());
   }
 
   /**

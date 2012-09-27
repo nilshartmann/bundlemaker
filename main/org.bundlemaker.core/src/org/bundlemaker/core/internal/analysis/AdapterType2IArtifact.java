@@ -20,7 +20,6 @@ import java.util.Map;
 import org.bundlemaker.analysis.model.DependencyKind;
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.Dependency;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
@@ -71,7 +70,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
    */
   public AdapterType2IArtifact(IType type, ArtifactCache defaultArtifactCache, IBundleMakerArtifact parent) {
 
-    super(ArtifactType.Type, type.getName());
+    super(type.getName());
 
     Assert.isNotNull(type.isPrimaryType());
     Assert.isNotNull(defaultArtifactCache);
@@ -207,7 +206,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
   public boolean isMovable() {
 
     //
-    IBundleMakerArtifact artifact = getParent(ArtifactType.Module);
+    IBundleMakerArtifact artifact = getParent(IModuleArtifact.class);
 
     //
     if (!(artifact instanceof IModuleArtifact)
@@ -298,7 +297,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
 
     //
     if (_root == null) {
-      _root = (IRootArtifact) getParent(ArtifactType.Root);
+      _root = (IRootArtifact) getParent(IRootArtifact.class);
     }
 
     //
@@ -307,10 +306,6 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
 
   public IBundleMakerArtifact getParent() {
     return (IBundleMakerArtifact) super.getParent();
-  }
-
-  public IBundleMakerArtifact getParent(ArtifactType type) {
-    return (IBundleMakerArtifact) super.getParent(type);
   }
 
   @Override
@@ -344,7 +339,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
       Dependency dependencyContainer = new Dependency(this, artifact, 0);
       for (IBundleMakerArtifact leaf : artifact.getLeafs()) {
         IDependency dependency = getDependency(leaf);
-        if ((dependency != null) && (dependency.getTo().getType() == ArtifactType.Type)) {
+        if ((dependency != null) && (dependency.getTo().isInstanceOf(ITypeArtifact.class))) {
           dependencyContainer.addDependency(dependency);
         }
       }

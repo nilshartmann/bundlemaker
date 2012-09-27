@@ -19,17 +19,21 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
-   * Returns the artifact type.
    * </p>
    * 
-   * @return the artifact type.
+   * @param clazz
+   * @return
    */
-  @Deprecated
-  public ArtifactType getType();
+  public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz);
 
-  // public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz);
-
-  // <T> public T castTo(Class<? extends IBundleMakerArtifact> clazz);
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param clazz
+   * @return
+   */
+  public <T extends IBundleMakerArtifact> T castTo(Class<? extends IBundleMakerArtifact> clazz);
 
   /**
    * <p>
@@ -372,22 +376,6 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
    */
   IBundleMakerArtifact getParent();
-
-  /**
-   * <p>
-   * Returns the first parent artifact of this artifact that has the specified type or <code>null</code> if no such
-   * parent exists.
-   * </p>
-   * 
-   * @param type
-   *          the type of the parent
-   * 
-   * @return the first parent artifact of this artifact that has the specified type or <code>null</code> if no such
-   *         parent exists.
-   */
-  @Deprecated
-  // replace with T getParent(Class<T> type);
-  IBundleMakerArtifact getParent(ArtifactType type);
 
   /**
    * <p>

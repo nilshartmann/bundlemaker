@@ -60,7 +60,7 @@ public class ArtifactTestUtil {
     }
 
     //
-    builder.append(artifact.getType());
+    builder.append(artifact.getClass().getName());
     builder.append(" : ");
     builder.append(artifact.getQualifiedName());
     builder.append("\n");

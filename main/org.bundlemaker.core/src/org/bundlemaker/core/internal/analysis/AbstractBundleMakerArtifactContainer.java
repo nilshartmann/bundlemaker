@@ -14,7 +14,6 @@ import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.analysis.model.impl.Dependency;
 import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.ArtifactModelException;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
@@ -58,8 +57,8 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
    * @param type
    * @param name
    */
-  public AbstractBundleMakerArtifactContainer(ArtifactType type, String name) {
-    super(type, name);
+  public AbstractBundleMakerArtifactContainer(String name) {
+    super(name);
 
     children = new ArrayList<IBundleMakerArtifact>();
     cachedDependencies = new HashMap<IBundleMakerArtifact, IDependency>();
@@ -339,7 +338,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     if (_root == null) {
-      _root = (IRootArtifact) getParent(ArtifactType.Root);
+      _root = (IRootArtifact) getParent(IRootArtifact.class);
     }
 
     //
@@ -421,10 +420,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
   public IBundleMakerArtifact getParent() {
     return (IBundleMakerArtifact) super.getParent();
-  }
-
-  public IBundleMakerArtifact getParent(ArtifactType type) {
-    return (IBundleMakerArtifact) super.getParent(type);
   }
 
   /**

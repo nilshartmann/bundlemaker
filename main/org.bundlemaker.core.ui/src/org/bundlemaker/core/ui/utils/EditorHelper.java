@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
@@ -40,7 +39,7 @@ public class EditorHelper {
       IReferenceDetailParser detailParser = new ReferenceDetailParser();
 
       IResourceArtifact resourceArtifact = artifact instanceof IResourceArtifact ? (IResourceArtifact) artifact
-          : (IResourceArtifact) artifact.getParent(ArtifactType.Resource);
+          : (IResourceArtifact) artifact.getParent(IResourceArtifact.class);
 
       IResource resource = resourceArtifact.getAssociatedResource();
       IMovableUnit movableUnit = MovableUnit.createFromResource(resource, resourceArtifact.getModularizedSystem());

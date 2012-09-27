@@ -3,14 +3,12 @@ package org.bundlemaker.core.osgi.manifest;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -388,7 +386,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
         int hostModules = 0;
 
         for (IPackageArtifact iPackageArtifact : duplicatePackageProvider) {
-          IBundleMakerArtifact exportingModuleArtifact = iPackageArtifact.getParent(ArtifactType.Module);
+          IBundleMakerArtifact exportingModuleArtifact = iPackageArtifact.getParent(IModuleArtifact.class);
 
           IModule associatedModule = ((IModuleArtifact) exportingModuleArtifact).getAssociatedModule();
 
@@ -595,8 +593,8 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
       IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) dependency.getTo();
 
       // TODO
-      IPackageArtifact packageArtifact = (IPackageArtifact) bundleMakerArtifact.getParent(ArtifactType.Package);
-      IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(ArtifactType.Module);
+      IPackageArtifact packageArtifact = (IPackageArtifact) bundleMakerArtifact.getParent(IPackageArtifact.class);
+      IModuleArtifact moduleArtifact = (IModuleArtifact) packageArtifact.getParent(IModuleArtifact.class);
 
       //
       List<IModuleArtifact> modules = requiredPackages.getOrCreate(packageArtifact.getQualifiedName());

@@ -12,7 +12,12 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -85,20 +90,24 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @return
    */
   protected String getTextForArtifact(IBundleMakerArtifact artifact) {
-    switch (artifact.getType()) {
-    case Root:
+
+    if (artifact.isInstanceOf(IRootArtifact.class)) {
       return getTextForRootArtifact(artifact);
-    case Group:
+    }
+    else if (artifact.isInstanceOf(IGroupArtifact.class)) {
       return getTextForGroupArtifact(artifact);
-    case Module:
+    }
+    else if (artifact.isInstanceOf(IModuleArtifact.class)) {
       return getTextForModuleArtifact(artifact);
-    case Package:
+    }
+    else if (artifact.isInstanceOf(IPackageArtifact.class)) {
       return getTextForPackageArtifact(artifact);
-    case Resource:
+    }
+    else if (artifact.isInstanceOf(IResourceArtifact.class)) {
       return getTextForResourceArtifact(artifact);
-    case Type:
+    }
+    else if (artifact.isInstanceOf(ITypeArtifact.class)) {
       return getTextForTypeArtifact(artifact);
-    default:
     }
 
     // No image
@@ -206,20 +215,25 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
    * @return
    */
   protected Image getImageForArtifact(IBundleMakerArtifact artifact) {
-    switch (artifact.getType()) {
-    case Root:
+
+    //
+    if (artifact.isInstanceOf(IRootArtifact.class)) {
       return getImageForRootArtifact(artifact);
-    case Group:
+    }
+    else if (artifact.isInstanceOf(IGroupArtifact.class)) {
       return getImageForGroupArtifact(artifact);
-    case Module:
+    }
+    else if (artifact.isInstanceOf(IModuleArtifact.class)) {
       return getImageForModuleArtifact(artifact);
-    case Package:
+    }
+    else if (artifact.isInstanceOf(IPackageArtifact.class)) {
       return getImageForPackageArtifact(artifact);
-    case Resource:
+    }
+    else if (artifact.isInstanceOf(IResourceArtifact.class)) {
       return getImageForResourceArtifact((IResourceArtifact) artifact);
-    case Type:
+    }
+    else if (artifact.isInstanceOf(ITypeArtifact.class)) {
       return getImageForTypeArtifact(artifact);
-    default:
     }
 
     // No image

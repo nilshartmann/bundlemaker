@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.analysis.virtual;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -29,7 +28,7 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
    * @param parent
    */
   public VirtualModule2IArtifact(String name, String fullyQualifiedName, IBundleMakerArtifact parent) {
-    super(ArtifactType.Module, name);
+    super(name);
 
     _fullyQualifiedName = fullyQualifiedName;
 

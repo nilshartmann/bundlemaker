@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -39,7 +38,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    * @param modularizedSystem
    */
   public AdapterGroup2IArtifact(Group group, IBundleMakerArtifact parent) {
-    super(ArtifactType.Group, group.getPath().lastSegment());
+    super(group.getPath().lastSegment());
 
     Assert.isNotNull(parent);
 
@@ -128,7 +127,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
 
     //
     IBundleMakerArtifact groupArtifact = this;
-    while (groupArtifact != null && ArtifactType.Group.equals(groupArtifact.getType())) {
+    while (groupArtifact != null && groupArtifact.isInstanceOf(IGroupArtifact.class)) {
       groupNames.add(groupArtifact.getName());
       groupArtifact = groupArtifact.getParent();
     }
@@ -158,7 +157,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   public String handleCanAdd(IBundleMakerArtifact artifactToAdd) {
 
     //
-    if (!(artifactToAdd.getType().equals(ArtifactType.Group) || artifactToAdd instanceof AdapterModule2IArtifact)) {
+    if (!(artifactToAdd.isInstanceOf(IGroupArtifact.class) || artifactToAdd instanceof AdapterModule2IArtifact)) {
       return "Only groups and modules are addable to groups";
     }
 

@@ -13,8 +13,8 @@ package org.bundlemaker.analysis.ui.itest;
 import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
@@ -103,7 +103,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a bundle -> Title ends with bundle name, Label starts with package
-    IBundleMakerArtifact bundleArtifact = packageArtifact.getParent(ArtifactType.Module);
+    IBundleMakerArtifact bundleArtifact = packageArtifact.getParent(IModuleArtifact.class);
     generator.setBaseArtifact(bundleArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2/ArtifactPathLabelGeneratorTest_1.0.0", title);
@@ -169,7 +169,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
     assertEquals("de.test.basic.TestClass", label);
 
     // Artifact is a bundle -> Title ends with bundle name, Label starts with package
-    IBundleMakerArtifact bundleArtifact = testPackageArtifact.getParent(ArtifactType.Module);
+    IBundleMakerArtifact bundleArtifact = testPackageArtifact.getParent(IModuleArtifact.class);
     generator.setBaseArtifact(bundleArtifact);
     title = generator.getTitle();
     assertEquals("group1/group2/ArtifactPathLabelGeneratorTest_1.0.0", title);

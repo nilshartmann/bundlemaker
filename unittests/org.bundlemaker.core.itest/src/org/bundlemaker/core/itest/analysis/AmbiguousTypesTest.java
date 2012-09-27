@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     IDependency dependency = new LinkedList<IDependency>(artifact.getDependencies()).get(0);
 
     //
-    Assert.assertEquals("jdk16_jdk16", dependency.getTo().getParent(ArtifactType.Module).getName());
+    Assert.assertEquals("jdk16_jdk16", dependency.getTo().getParent(IModuleArtifact.class).getName());
     // Assert.assertEquals("AmbiguousTypesTest_1.0.0", dependency.getTo().getParent(ArtifactType.Module).getName());
   }
 }

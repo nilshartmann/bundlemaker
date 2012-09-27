@@ -1,7 +1,9 @@
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import org.bundlemaker.core.analysis.ArtifactType;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 
 /**
  * Generates a path to an IArtifact that can be used either as a title or as a label.
@@ -64,12 +66,12 @@ public class ArtifactPathLabelGenerator {
     if (artifact == null) {
       return null;
     }
-    if (artifact.getType() == ArtifactType.Root) {
+    if (artifact.isInstanceOf(IRootArtifact.class)) {
       _titleArtifact = artifact;
       return artifact;
     }
 
-    while (artifact != null && artifact.getType().ordinal() > ArtifactType.Module.ordinal()) {
+    while (artifact != null && artifact.getParent(IModuleArtifact.class) != null) {
       artifact = artifact.getParent();
     }
 
@@ -85,19 +87,19 @@ public class ArtifactPathLabelGenerator {
       return "";
     }
 
-    if (artifact.getType() == ArtifactType.Root) {
+    if (artifact.isInstanceOf(IRootArtifact.class)) {
       return artifact.getName();
     }
 
     String path = "";
 
-//    while (artifact != null && artifact.getType().ordinal() > ArtifactType.Root.ordinal()) {
-//      path = artifact.getName() + "/" + path;
-//      artifact = artifact.getParent();
-//    }
+    // while (artifact != null && artifact.getType().ordinal() > ArtifactType.Root.ordinal()) {
+    // path = artifact.getName() + "/" + path;
+    // artifact = artifact.getParent();
+    // }
 
-    path = ((IBundleMakerArtifact)artifact).getFullPath().toPortableString();
-    
+    path = ((IBundleMakerArtifact) artifact).getFullPath().toPortableString();
+
     if (path.endsWith("/")) {
       path = path.substring(0, path.length() - 1);
     }
@@ -119,7 +121,7 @@ public class ArtifactPathLabelGenerator {
     String path = "";
     boolean inPackage = false;
     while (artifact != null && !artifact.equals(titleArtifact)) {
-      if (artifact.getType() == ArtifactType.Package) {
+      if (artifact.isInstanceOf(IPackageArtifact.class)) {
         if (!inPackage) {
           inPackage = true;
           path = artifact.getQualifiedName() + "." + path;
