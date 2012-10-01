@@ -82,10 +82,9 @@ public class Dependency implements IDependency {
     //
     if (dependencies != null && !dependencies.isEmpty()) {
       return _isLeafDependency ? dependencies.size() + 1 : dependencies.size();
+    } else {
+      return _isLeafDependency ? 1 : 0;
     }
-
-    //
-    return 1;
   }
 
   /**
