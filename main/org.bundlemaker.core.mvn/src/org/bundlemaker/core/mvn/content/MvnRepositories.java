@@ -34,10 +34,6 @@ public class MvnRepositories implements IMvnRepositories {
     Assert.isNotNull(localRepo);
     Assert.isNotNull(remoteRepoUrl);
     
-    System.out.println("setMvnRepositories ");
-    System.out.println("localRepo " + localRepo.getAbsolutePath());
-    System.out.println("remoteRepoUrl " + remoteRepoUrl);
-
     try {
       //
       Booter booter = new Booter(localRepo, remoteRepoUrl);
