@@ -119,13 +119,6 @@ public interface IProjectContentProviderEditor {
 
   // ---- TODO: ---- //
 
-  // *Edit* is only available on a single selection
-
-  // *Removing* of ProjectContentProvider instances is directly done in the ProjectEditorPage
-  // this is only invoked for selected child-objects of this provider
-  // public boolean canRemove(Object[] selectedObjects);
-  // public void remove(Object[] selectedObjects);
-
   // *Context menu*
   // passed in are *all* selected objects
   // ContextMenuAction getContextMenuActions(Object[] selectedObjects)
