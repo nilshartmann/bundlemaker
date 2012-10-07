@@ -6,13 +6,13 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="src-gen"/>
-	<classpathentry exported="true" kind="lib" path="libs/aether-api-1.13.1.jar" sourcepath="C:/Users/wuetherich/.m2/repository/org/sonatype/aether/aether-api/1.13.1/aether-api-1.13.1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/aether-connector-asynchttpclient-1.13.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/aether-connector-file-1.13.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/aether-connector-wagon-1.13.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/aether-impl-1.13.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/aether-spi-1.13.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/aether-util-1.13.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/aether-api-1.13.1.jar" sourcepath="libs/aether-api-1.13.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/aether-connector-asynchttpclient-1.13.1.jar" sourcepath="libs/aether-connector-asynchttpclient-1.13.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/aether-connector-file-1.13.1.jar" sourcepath="libs/aether-connector-file-1.13.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/aether-connector-wagon-1.13.1.jar" sourcepath="libs/aether-connector-wagon-1.13.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/aether-impl-1.13.1.jar" sourcepath="libs/aether-impl-1.13.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/aether-spi-1.13.1.jar" sourcepath="libs/aether-spi-1.13.1-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/aether-util-1.13.1.jar" sourcepath="libs/aether-util-1.13.1-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/async-http-client-1.6.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/maven-aether-provider-3.0.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/maven-model-3.0.4.jar"/>
