@@ -95,4 +95,8 @@ public class JdtProblemAdapter implements IProblem {
     return _compilerProblem.getMessage();
   }
 
+  @Override
+  public String toString() {
+    return _compilerProblem.toString();
+  }
 }
