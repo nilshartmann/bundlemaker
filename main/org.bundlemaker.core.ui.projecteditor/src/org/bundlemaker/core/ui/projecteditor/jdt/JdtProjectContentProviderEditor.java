@@ -10,6 +10,8 @@ import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -20,6 +22,17 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
   @Override
   public boolean canHandle(IProjectContentProvider provider) {
     return (provider instanceof JdtProjectContentProvider);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#getContextMenuActions()
+   */
+  @Override
+  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+      List<IProjectContentProviderEditorElement> selectedElements) {
+    return null;
   }
 
   @Override

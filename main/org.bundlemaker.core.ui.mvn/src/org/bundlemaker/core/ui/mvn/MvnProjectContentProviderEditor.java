@@ -11,6 +11,8 @@ import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
@@ -165,4 +167,5 @@ public class MvnProjectContentProviderEditor extends AbstractContentProviderEdit
     //
     return true;
   }
+
 }

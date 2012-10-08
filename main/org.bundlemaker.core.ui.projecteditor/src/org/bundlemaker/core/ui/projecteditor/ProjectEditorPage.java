@@ -5,9 +5,11 @@ package org.bundlemaker.core.ui.projecteditor;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
@@ -22,6 +24,8 @@ import org.bundlemaker.core.ui.VerticalFormButtonBar;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.bundlemaker.core.ui.projecteditor.layout.FormLayoutUtils;
 import org.bundlemaker.core.ui.projecteditor.newwizard.ChooseContentProviderWizard;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
 import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.bundlemaker.core.ui.utils.BundleMakerProjectOpener;
 import org.eclipse.core.resources.IResource;
@@ -29,7 +33,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -54,6 +62,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IWorkbenchPage;
@@ -156,10 +165,10 @@ public class ProjectEditorPage extends FormPage {
 
     _treeViewer = new TreeViewer(projectContentTree);
 
-    _treeViewer.setContentProvider(new ProjectEditorTreeViewerContentProvider(Activator.getDefault()
-        .getProjectEditorContributionRegistry()));
+    _treeViewer.setContentProvider(new ProjectEditorTreeViewerContentProvider(getProjectEditorContributionRegistry()));
     configureTreeDragAndDrop();
     createTreeColumns();
+    createMenuManager();
 
     final Shell shell = client.getShell();
 
@@ -246,9 +255,76 @@ public class ProjectEditorPage extends FormPage {
 
   }
 
-  private void configureTreeDragAndDrop() {
-    ProjectEditorContributionRegistry projectEditorDndProviderRegistry = Activator.getDefault()
+  /**
+   * @return
+   */
+  private ProjectEditorContributionRegistry getProjectEditorContributionRegistry() {
+    return Activator.getDefault()
         .getProjectEditorContributionRegistry();
+  }
+
+  /**
+   * 
+   */
+  private void createMenuManager() {
+
+    // Create menu manager
+    MenuManager menuMgr = new MenuManager();
+
+    // Create menu for tree viewer
+    Menu menu = menuMgr.createContextMenu(_treeViewer.getControl());
+    menuMgr.addMenuListener(new IMenuListener() {
+      @Override
+      public void menuAboutToShow(IMenuManager manager) {
+        // (re-)populate context menu each time the menu is shown
+        fillContextMenu(manager);
+      }
+    });
+
+    menuMgr.setRemoveAllWhenShown(true);
+    _treeViewer.getControl().setMenu(menu);
+  }
+
+  protected void fillContextMenu(IMenuManager menuManager) {
+
+    List<IProjectContentProviderEditorElement> selectedTreeViewerElements =
+        getSelectedObjects(_treeViewer.getSelection(), IProjectContentProviderEditorElement.class);
+
+    Set<IProjectContentProviderEditor> contentProviderEditors = getProjectEditorContributionRegistry()
+        .getContentProviderEditors();
+
+    for (IProjectContentProviderEditor iProjectContentProviderEditor : contentProviderEditors) {
+      List<IAction> contextMenuActions = iProjectContentProviderEditor.getContextMenuActions(_bundleMakerProject,
+          selectedTreeViewerElements);
+
+      if (contextMenuActions != null) {
+        for (IAction iAction : contextMenuActions) {
+          menuManager.add(iAction);
+        }
+      }
+    }
+  }
+
+  protected Map<IProjectContentProviderEditor, List<Object>> getSelectedElementsByProvider() {
+    Map<IProjectContentProviderEditor, List<Object>> result = new Hashtable<IProjectContentProviderEditor, List<Object>>();
+    List<ProjectEditorTreeViewerElement> selectedTreeViewerElements = getSelectedTreeViewerElements();
+
+    for (ProjectEditorTreeViewerElement selectedElement : selectedTreeViewerElements) {
+      IProjectContentProviderEditor providingEditor = selectedElement.getProvidingEditor();
+      List<Object> objects = result.get(providingEditor);
+      if (objects == null) {
+        objects = new LinkedList<Object>();
+        result.put(providingEditor, objects);
+      }
+      objects.add(selectedElement.getElement());
+    }
+
+    return result;
+
+  }
+
+  private void configureTreeDragAndDrop() {
+    ProjectEditorContributionRegistry projectEditorDndProviderRegistry = getProjectEditorContributionRegistry();
 
     Set<IProjectEditorDropProvider> registeredDndProviders = projectEditorDndProviderRegistry
         .getDropProviders();
@@ -342,8 +418,7 @@ public class ProjectEditorPage extends FormPage {
   protected void addContent(Shell shell) {
 
     // Create the wizard presenting the available content provider wizards
-    ProjectEditorContributionRegistry registry = Activator.getDefault()
-        .getProjectEditorContributionRegistry();
+    ProjectEditorContributionRegistry registry = getProjectEditorContributionRegistry();
     ChooseContentProviderWizard wizard = new ChooseContentProviderWizard(_bundleMakerProject, registry);
 
     // create the WizardDialog

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
@@ -21,8 +22,13 @@ import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditProjectPathDialog;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -177,6 +183,47 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
     fileBasedContentProvider.getFileBasedContent()
         .removeRootPath(pathToRemove.getPath(), pathToRemove.getContentType());
 
+  }
+
+  class HelloWorldAction extends Action {
+
+    public HelloWorldAction() {
+      super("Hello World");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+      Shell activeShell = Display.getCurrent().getActiveShell();
+      MessageDialog.openInformation(activeShell, "Hello World", "Hello World.");
+
+    }
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#getContextMenuActions()
+   */
+  @Override
+  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+      List<IProjectContentProviderEditorElement> selectedElements) {
+    List<IAction> result = new LinkedList<IAction>();
+    HelloWorldAction helloWorldAction = new HelloWorldAction();
+
+    for (IProjectContentProviderEditorElement element : selectedElements) {
+      if (element.getProvidingEditor() != this) {
+        helloWorldAction.setEnabled(false);
+        break;
+      }
+    }
+    result.add(helloWorldAction);
+    return result;
   }
 
   protected boolean editFileBasedContentProvider(Shell shell, IBundleMakerProject project,
