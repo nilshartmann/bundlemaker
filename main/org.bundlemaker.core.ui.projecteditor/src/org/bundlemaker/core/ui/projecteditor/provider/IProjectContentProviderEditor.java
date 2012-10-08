@@ -15,6 +15,7 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -117,19 +118,24 @@ public interface IProjectContentProviderEditor {
    */
   public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject);
 
-  // ---- TODO: ---- //
-
-  // *Edit* is only available on a single selection
-
-  // *Removing* of ProjectContentProvider instances is directly done in the ProjectEditorPage
-  // this is only invoked for selected child-objects of this provider
-  // public boolean canRemove(Object[] selectedObjects);
-  // public void remove(Object[] selectedObjects);
-
-  // *Context menu*
-  // passed in are *all* selected objects
-  // ContextMenuAction getContextMenuActions(Object[] selectedObjects)
-  // ContextMenuAction getLabel(Object[] selectedObjects), isEnabled(Object[] selectedObjects), execute(Object[]
-  // selectedObject)
+  /**
+   * Returns a list of actions that should be contributed to the project editor tree.
+   * 
+   * <p>
+   * This method should return <b>all</b> context menu actions having set their <b>enabled</b> state according to the
+   * currently selected elements
+   * 
+   * <p>
+   * This method is invoked <b>each time</b> the context menu is shown.
+   * 
+   * 
+   * @param project
+   *          the bundlemaker project
+   * @param selectedElements
+   *          all elements that are currently selected in the project editor tree viewer.
+   * @return
+   */
+  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+      List<IProjectContentProviderEditorElement> selectedElements);
 
 }

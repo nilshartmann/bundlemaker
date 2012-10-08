@@ -3,8 +3,9 @@ package org.bundlemaker.core.ui.projecteditor;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
 
-public class ProjectEditorTreeViewerElement {
+public class ProjectEditorTreeViewerElement implements IProjectContentProviderEditorElement {
 
   private final IBundleMakerProject           _bundleMakerProject;
 
