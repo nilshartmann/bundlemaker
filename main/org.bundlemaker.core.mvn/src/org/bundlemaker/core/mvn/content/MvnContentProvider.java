@@ -185,8 +185,6 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
       }
     }
 
-    System.out.println(_fileBasedContents);
-
     // return the result
     return _fileBasedContents;
   }
