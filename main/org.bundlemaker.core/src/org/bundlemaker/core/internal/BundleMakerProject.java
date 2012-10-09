@@ -223,7 +223,12 @@ public class BundleMakerProject implements IBundleMakerProject {
    */
   @Override
   public List<IProblem> getProblems() {
-    return _problems;
+
+    //
+    List<IProblem> emptyList = Collections.emptyList();
+
+    //
+    return _problems == null ? emptyList : _problems;
   }
 
   /**
