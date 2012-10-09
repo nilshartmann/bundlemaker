@@ -122,27 +122,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
   }
 
   @Override
-  public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
-    return null;
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
-    return Collections.emptyList();
-  }
-
-  @Override
   public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
-    return null;
-  }
-
-  @Override
-  public IBundleMakerArtifact getChild(IPath path) {
     return null;
   }
 

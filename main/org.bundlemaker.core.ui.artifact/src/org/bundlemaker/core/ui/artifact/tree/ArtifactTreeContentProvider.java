@@ -252,11 +252,6 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       return _rootArtifact.isParent(artifact);
     }
 
-    @Override
-    public IBundleMakerArtifact getChild(IPath path) {
-      return _rootArtifact.getChild(path);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -412,16 +407,6 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
-      return _rootArtifact.findChildren(clazz);
-    }
-
-    @Override
-    public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
-      return _rootArtifact.findChildren(clazz, filter);
-    }
-
-    @Override
     public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
       return _rootArtifact.getChildByPath(clazz, path);
     }
@@ -494,11 +479,6 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     @Override
     public boolean contains(IBundleMakerArtifact artifact) {
       return _rootArtifact.contains(artifact);
-    }
-
-    @Override
-    public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
-      return _rootArtifact.findChild(clazz, filter);
     }
 
     @Override

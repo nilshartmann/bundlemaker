@@ -51,6 +51,7 @@ public interface IArtifactTreeVisitor {
    * @param typeArtifact
    * @return
    */
+  @Deprecated
   boolean visit(ITypeArtifact typeArtifact);
 
   /**

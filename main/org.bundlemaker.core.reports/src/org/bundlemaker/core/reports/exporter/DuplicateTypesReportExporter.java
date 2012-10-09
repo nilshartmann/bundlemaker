@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -161,7 +162,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
       List<ITypeArtifact> exclusiveTypes = new LinkedList<ITypeArtifact>();
 
       //
-      for (ITypeArtifact typeArtifact : packageArtifact.findChildren(ITypeArtifact.class)) {
+      for (ITypeArtifact typeArtifact : ArtifactHelper.findChildren(packageArtifact, ITypeArtifact.class))  {
 
         //
         if (!containedInAllPackages(typeArtifact, packageArtifacts)) {
@@ -202,7 +203,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
 
     //
     for (IPackageArtifact packageArtifact : packageArtifacts) {
-      if (packageArtifact.findChildren(ITypeArtifact.class, typeArtifact.getQualifiedName()).size() == 0) {
+      if (ArtifactHelper.findChildren(packageArtifact, typeArtifact.getQualifiedName(), ITypeArtifact.class).size() == 0) {
         return false;
       }
     }

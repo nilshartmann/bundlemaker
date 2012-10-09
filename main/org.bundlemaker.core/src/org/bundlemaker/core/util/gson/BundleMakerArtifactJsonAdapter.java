@@ -6,6 +6,7 @@ import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Path;
@@ -76,7 +77,7 @@ public class BundleMakerArtifactJsonAdapter implements JsonSerializer<IBundleMak
     }
 
     //
-    IBundleMakerArtifact result = rootArtifact.getChild(new Path(path));
+    IBundleMakerArtifact result = ((AbstractBundleMakerArtifactContainer) rootArtifact).getChild(new Path(path));
 
     //
     return result;

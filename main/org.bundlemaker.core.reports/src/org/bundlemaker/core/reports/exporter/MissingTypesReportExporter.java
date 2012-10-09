@@ -3,6 +3,7 @@ package org.bundlemaker.core.reports.exporter;
 import java.io.File;
 import java.io.FileWriter;
 
+import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -66,7 +67,7 @@ public class MissingTypesReportExporter implements IModularizedSystemExporter {
     //
     IRootArtifact rootArtifact = modularizedSystem
         .getArtifactModel(IArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
-    IModuleArtifact moduleArtifact = rootArtifact.findChild(IModuleArtifact.class, "<< Missing Types >>");
+    IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "<< Missing Types >>", IModuleArtifact.class);
 
     //
     String dump = ArtifactUtils.artifactToString(moduleArtifact);

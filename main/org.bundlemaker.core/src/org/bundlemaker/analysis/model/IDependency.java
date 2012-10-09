@@ -6,29 +6,9 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
  * <p>
- * Interface einer Abgaengigkeit
+ * </p>
  * 
- * <p>
- * Eine Abhaengigkeit wird formal beschrieben durch das geordnete Paar zweier Artefakte, zwischen denen eine
- * Abhaengigkeit besteht.
- * 
- * <p>
- * Jede Abhaengigkeit besteht aus einer Quell- und einem Zielartefakte sowie einer Gewichtung, die die Anzahl der
- * Abhaengigkeiten zum Zielartefakt beschreibt
- * 
- * <p>
- * Optional kann eine Abhaengigkeit aus aggregierten Abhaengigkeiten bestehen. Dies ist bspw. dann der Fall, falls die
- * Abhaengigkeiten zwischen gruppierenden Artefakten wie Packages, Bundles oder aehnliches betrachtet wird.
- * 
- * <p>
- * Neben den strukturellen Eigenschaften koennen einer Abhaengigkeit Regelverletzungen in Form von Violations zugefuegt
- * werden
- * 
- * <p>
- * Diese Interface erweitert das Edge<V> Interface von Sonargraph
- * 
- * @author Kai Lehmann
- * @author Frank Schl&uuml;ter
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IDependency {
 
@@ -59,22 +39,20 @@ public interface IDependency {
 
   /**
    * <p>
-   * Returns the weight of this method.
+   * Returns the weight of this dependency.
    * </p>
    * 
-   * @return the weight of this method.
+   * @return the weight of this dependency.
    */
   public int getWeight();
-
-  public Collection<IDependency> getLeafDependencies();
 
   /**
    * <p>
    * </p>
    * 
-   * @param leafDependencies
+   * @return
    */
-  public void getLeafDependencies(Collection<IDependency> leafDependencies);
+  public Collection<IDependency> getLeafDependencies();
 
   DependencyKind getDependencyKind();
 }

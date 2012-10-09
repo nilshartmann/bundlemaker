@@ -2,9 +2,11 @@ package org.bundlemaker.core.itest.complex.analysis;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.junit.Test;
@@ -38,8 +40,8 @@ public class DnDSourceBinaryArtifactTreeTest extends AbstractJeditArtifactTest {
     moduleGroup.accept(counter);
     Assert.assertEquals(0, counter.getCount());
 
-    IPackageArtifact packageArtifact = getVelocityModuleArtifact().findChild(IPackageArtifact.class,
-        "org.apache.velocity.app");
+    IPackageArtifact packageArtifact = ArtifactHelper.findChild(getVelocityModuleArtifact(), "org.apache.velocity.app",
+        IPackageArtifact.class);
     counter = new ResourceCounter();
     packageArtifact.accept(counter);
     int packageResourceCount = counter.getCount();

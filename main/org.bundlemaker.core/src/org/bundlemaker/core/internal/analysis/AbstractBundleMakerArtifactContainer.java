@@ -82,7 +82,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
   /**
    * {@inheritDoc}
    */
-  @Override
   public IBundleMakerArtifact getChild(IPath path) {
     return getChild(path.segments());
   }
@@ -277,21 +276,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
       //
       return new Path(getUniquePathIdentifier());
     }
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
-    return ArtifactHelper.findChild(this, filter, clazz);
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
-    return ArtifactHelper.findChildren(this, clazz);
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
-    return ArtifactHelper.findChildren(this, filter, clazz);
   }
 
   @Override

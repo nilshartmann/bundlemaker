@@ -137,7 +137,6 @@ public class Dependency implements IDependency {
     return result;
   }
 
-  @Override
   public void getLeafDependencies(Collection<IDependency> leafDependencies) {
 
     //
@@ -149,7 +148,7 @@ public class Dependency implements IDependency {
     else {
       if (dependencies != null) {
         for (IDependency dependency : dependencies) {
-          dependency.getLeafDependencies(leafDependencies);
+          ((Dependency) dependency).getLeafDependencies(leafDependencies);
         }
       }
     }

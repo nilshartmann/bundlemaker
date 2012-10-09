@@ -19,26 +19,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
-   * </p>
-   * 
-   * @param clazz
-   * @return
-   */
-  public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param clazz
-   * @return
-   */
-  public <T extends IBundleMakerArtifact> T castTo(Class<? extends IBundleMakerArtifact> clazz);
-
-  /**
-   * <p>
    * Returns the simple name of the artifact. For a detailed description of the semantic of <code>getName()</code> and
-   * <code>getQualifiedName()</code> see {@link IArtifact#getQualifiedName()}.
+   * <code>getQualifiedName()</code> see {@link IBundleMakerArtifact#getQualifiedName()}.
    * </p>
    * 
    * @return the simple name of the artifact.
@@ -99,6 +81,89 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
+   * Returns {@code true}, if this object is an instance of the specified class.
+   * </p>
+   * 
+   * @param clazz
+   *          the class
+   * @return {@code true}, if this object is an instance of the specified class.
+   */
+  public boolean isInstanceOf(Class<? extends IBundleMakerArtifact> clazz);
+
+  /**
+   * <p>
+   * Returns this object as the specified type.
+   * </p>
+   * 
+   * @param clazz
+   *          type
+   * @return this object as the specified type.
+   */
+  public <T extends IBundleMakerArtifact> T castTo(Class<? extends IBundleMakerArtifact> clazz);
+
+  /**
+   * <p>
+   * Returns the root artifact for this artifact node.
+   * </p>
+   * 
+   * @return the root artifact.
+   */
+  IRootArtifact getRoot();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  IArtifactModelConfiguration getConfiguration();
+
+  /**
+   * <p>
+   * Returns the {@link IModularizedSystem} this artifact belongs to.
+   * </p>
+   * 
+   * @return the modularized system, never null
+   */
+  IModularizedSystem getModularizedSystem();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  boolean isParent(IBundleMakerArtifact artifact);
+
+  /**
+   * <p>
+   * Returns the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
+   * </p>
+   * 
+   * @return the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
+   */
+  IBundleMakerArtifact getParent();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean hasParent();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param type
+   * @return
+   */
+  <T extends IBundleMakerArtifact> T getParent(Class<T> type);
+
+  /**
+   * <p>
    * Sets a property with the given key and value.
    * </p>
    * 
@@ -132,26 +197,14 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    */
   public <T> T getProperty(Object key, Class<T> t);
 
-  // /**
-  // * <p>
-  // * </p>
-  // */
-  // @Deprecated
-  // boolean hasChild(String path);
-
   /**
    * <p>
-   * Returns <code>true</code> if this artifact contains the specified artifact, <code>false</code> otherwise.
    * </p>
    * 
-   * @param the
-   *          artifact
+   * @param artifact
    * @return
    */
-  @Deprecated
-  // must not check for leafs
-  // replace with visitor
-  public boolean contains(IBundleMakerArtifact artifact);
+  boolean canAdd(IBundleMakerArtifact artifact);
 
   /**
    * <p>
@@ -159,7 +212,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * </p>
    * 
    * @param artifact
-   *          the given artifact to this artifact.
+   *          the artifact to add.
    */
   public void addArtifact(IBundleMakerArtifact artifact);
 
@@ -175,11 +228,22 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
+   * Adds all artifacts selected by the specified {@link IArtifactSelector} to this {@link IBundleMakerArtifact}.
    * </p>
    * 
    * @param artifactSelector
+   *          the {@link IArtifactSelector}.
    */
   public void addArtifacts(IArtifactSelector artifactSelector);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param artifact
+   * @return
+   */
+  boolean canRemove(IBundleMakerArtifact artifact);
 
   /**
    * <p>
@@ -187,25 +251,48 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * </p>
    * 
    * @param artifact
+   *          the {@link IBundleMakerArtifact} to remove
    * @return
    */
   public boolean removeArtifact(IBundleMakerArtifact artifact);
 
   /**
    * <p>
+   * Removes the specified {@link IBundleMakerArtifact IBundleMakerArtifacts} from this {@link IBundleMakerArtifact}.
    * </p>
    * 
-   * @param artifact
+   * @param artifacts
+   *          the artifacts to remove
    */
-  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact);
+  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifacts);
 
   /**
    * <p>
+   * Removes all artifacts selected by the specified {@link IArtifactSelector} from this {@link IBundleMakerArtifact}.
    * </p>
    * 
    * @param artifactSelector
+   *          the {@link IArtifactSelector}
    */
   public void removeArtifacts(IArtifactSelector artifactSelector);
+
+  /**
+   * <p>
+   * Returns an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact}.
+   * </p>
+   * 
+   * @return an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact}.
+   */
+  Collection<IBundleMakerArtifact> getChildren();
+
+  /**
+   * <p>
+   * Returns an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact} of the given type.
+   * </p>
+   * 
+   * @return an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact} of the given type.
+   */
+  <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz);
 
   /**
    * <p>
@@ -234,10 +321,35 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * </p>
    * 
    * @param artifacts
-   *          the atifacts
+   *          the {@link IBundleMakerArtifact IBundleMakerArtifacts}
    * @return all the dependencies to the given collection of artifacts.
    */
   public Collection<? extends IDependency> getDependencies(Collection<? extends IBundleMakerArtifact> artifacts);
+
+  /**
+   * {@inheritDoc}
+   */
+  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param visitor
+   */
+  void accept(IArtifactTreeVisitor visitor);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param visitors
+   */
+  void accept(IArtifactTreeVisitor... visitors);
+
+  /***********************/
+  /** REMOVE **/
+  /***********************/
 
   /**
    * <p>
@@ -266,27 +378,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * 
    * @return
    */
+  @Deprecated
   IPath getFullPath();
-
-  /**
-   * <p>
-   * Returns the child of the this artifact that matches the given path (delimited by '/').
-   * </p>
-   * <p>
-   * For each segment of the given path a matching artifact will be chosen (relative to its parent) using the following
-   * algorithm:
-   * <ol>
-   * <li>If the segment equals the <i>qualified name</i> of a child, the child will be chosen.</li>
-   * <li>If no child was chosen before and the segment equals the (simple) name of a child, this child will be chosen.</li>
-   * </ol>
-   * This algorithm allows it to use paths like
-   * <code>"myRoot/group1/group2/myModule/org.bundlemaker.core/MyType"<code> or <code>"myRoot/group1/group2/myModule/org.bundlemaker.core/org.bundlemaker.core.MyType"
-   * </p>
-   * 
-   * @param path
-   * @return
-   */
-  IBundleMakerArtifact getChild(IPath path);
 
   @Deprecated
   IBundleMakerArtifact getChild(String path);
@@ -301,129 +394,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param <T>
    * @return
    */
+  @Deprecated
   <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path);
-
-  /**
-   * <p>
-   * Returns an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact}.
-   * </p>
-   * 
-   * @return an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact}.
-   */
-  Collection<IBundleMakerArtifact> getChildren();
-
-  /**
-   * <p>
-   * Returns an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact} of the given type.
-   * </p>
-   * 
-   * @return an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact} of the given type.
-   */
-  <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param <T>
-   * @param clazz
-   * @param filter
-   * @return
-   */
-  @Deprecated
-  // replace with visitor
-  <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param <T>
-   * @param clazz
-   * @return
-   */
-  @Deprecated
-  // replace with visitor
-  <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param <T>
-   * @param filter
-   * @param clazz
-   * @return
-   */
-  @Deprecated
-  // replace with visitor
-  <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @return
-   */
-  boolean isParent(IBundleMakerArtifact artifact);
-
-  /**
-   * <p>
-   * Returns the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
-   * </p>
-   * 
-   * @return the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
-   */
-  IBundleMakerArtifact getParent();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param type
-   * @return
-   */
-  <T extends IBundleMakerArtifact> T getParent(Class<T> type);
-
-  /**
-   * <p>
-   * Returns the root artifact for this artifact node.
-   * </p>
-   * 
-   * @return the root artifact.
-   */
-  IRootArtifact getRoot();
-
-  /**
-   * {@inheritDoc}
-   */
-  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasParent();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  IArtifactModelConfiguration getConfiguration();
-
-  /**
-   * <p>
-   * Returns the {@link IModularizedSystem} this artifact belongs to.
-   * </p>
-   * 
-   * @return the modularized system, never null
-   */
-  IModularizedSystem getModularizedSystem();
 
   /**
    * <p>
@@ -433,6 +405,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * 
    * @return
    */
+  @Deprecated
   boolean isVirtual();
 
   /**
@@ -441,32 +414,16 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * 
    * @return
    */
+  @Deprecated
   boolean isMovable();
 
   /**
    * <p>
    * </p>
    * 
-   * @param artifact
    * @return
    */
-  boolean canAdd(IBundleMakerArtifact artifact);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @return
-   */
-  boolean canRemove(IBundleMakerArtifact artifact);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
+  @Deprecated
   boolean containsTypesOrResources();
 
   /**
@@ -475,6 +432,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * 
    * @return
    */
+  @Deprecated
   boolean containsTypes();
 
   /**
@@ -483,23 +441,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * 
    * @return
    */
+  @Deprecated
   boolean containsResources();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param visitor
-   */
-  void accept(IArtifactTreeVisitor visitor);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param visitors
-   */
-  void accept(IArtifactTreeVisitor... visitors);
 
   /**
    * <p>
@@ -515,4 +458,18 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return
    */
   Map<IBundleMakerArtifact, IDependency> getCachedDependencies();
+
+  /**
+   * <p>
+   * Returns <code>true</code> if this artifact contains the specified artifact, <code>false</code> otherwise.
+   * </p>
+   * 
+   * @param the
+   *          artifact
+   * @return
+   */
+  @Deprecated
+  // must not check for leafs
+  // replace with visitor
+  public boolean contains(IBundleMakerArtifact artifact);
 }

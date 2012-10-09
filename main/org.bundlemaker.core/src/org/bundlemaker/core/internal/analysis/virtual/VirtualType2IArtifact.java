@@ -103,21 +103,6 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
   }
 
   @Override
-  public <T extends IBundleMakerArtifact> T findChild(Class<T> clazz, String filter) {
-    return null;
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz) {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> List<T> findChildren(Class<T> clazz, String filter) {
-    return Collections.emptyList();
-  }
-
-  @Override
   public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
     return null;
   }
@@ -389,11 +374,5 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
 
     // compare the qualified name
     return this.getQualifiedName().compareTo(o.getQualifiedName());
-  }
-
-  @Override
-  public IBundleMakerArtifact getChild(IPath path) {
-    // TODO Auto-generated method stub
-    return null;
   }
 }

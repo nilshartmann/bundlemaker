@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -36,14 +37,15 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    for (IModuleArtifact moduleArtifact : rootArtifact.findChildren(IModuleArtifact.class)) {
+    for (IModuleArtifact moduleArtifact : ArtifactHelper.findChildren(rootArtifact, IModuleArtifact.class)) {
       System.out.println(moduleArtifact);
     }
 
-    IModuleArtifact moduleArtifact = rootArtifact.findChild(IModuleArtifact.class, "<< Missing Types >>");
+    IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "<< Missing Types >>",
+        IModuleArtifact.class);
     Assert.assertTrue(moduleArtifact.isVirtual());
 
-    for (IPackageArtifact packageArtifact : moduleArtifact.findChildren(IPackageArtifact.class)) {
+    for (IPackageArtifact packageArtifact : ArtifactHelper.findChildren(moduleArtifact, IPackageArtifact.class)) {
       Assert.assertTrue(packageArtifact.isVirtual());
     }
 
@@ -63,8 +65,8 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
         ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
-    IModuleArtifact moduleArtifact = rootArtifact.findChild(IModuleArtifact.class, "jedit_1.0.0");
-    List<ITypeArtifact> types = moduleArtifact.findChildren(ITypeArtifact.class);
+    IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "jedit_1.0.0", IModuleArtifact.class);
+    List<ITypeArtifact> types = ArtifactHelper.findChildren(moduleArtifact, ITypeArtifact.class); 
 
     IModuleArtifact newModule = null;
     for (ITypeArtifact typeArtifact : types) {
