@@ -1,9 +1,13 @@
 package org.bundlemaker.core.ui.mvn;
 
+import java.util.List;
+
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -87,5 +91,16 @@ public abstract class AbstractContentProviderEditor implements IProjectContentPr
       selectedObject) {
     
     // default: do nothing
+  }
+  
+  /* (non-Javadoc)
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#getContextMenuActions(org.bundlemaker.core.IBundleMakerProject, java.util.List)
+   */
+  @Override
+  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+      List<IProjectContentProviderEditorElement> selectedElements) {
+    
+    // default: no context menu contribution
+    return null;
   }
 }

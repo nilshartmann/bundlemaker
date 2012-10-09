@@ -21,6 +21,8 @@ import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditProjectPathDialog;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
+import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
@@ -177,6 +179,19 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
     fileBasedContentProvider.getFileBasedContent()
         .removeRootPath(pathToRemove.getPath(), pathToRemove.getContentType());
 
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#getContextMenuActions()
+   */
+  @Override
+  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+      List<IProjectContentProviderEditorElement> selectedElements) {
+
+    // no entries for context menu
+    return null;
   }
 
   protected boolean editFileBasedContentProvider(Shell shell, IBundleMakerProject project,
