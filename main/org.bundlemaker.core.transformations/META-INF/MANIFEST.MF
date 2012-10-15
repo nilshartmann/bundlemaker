@@ -10,4 +10,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.transformations,
  org.bundlemaker.core.transformations.resourceset,
+ org.bundlemaker.core.transformations.script,
  org.bundlemaker.core.transformations.selectors
