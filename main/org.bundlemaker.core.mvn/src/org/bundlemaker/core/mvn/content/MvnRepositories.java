@@ -25,6 +25,9 @@ public class MvnRepositories implements IMvnRepositories {
   /** - */
   private RemoteRepository        _repo;
 
+  /** - */
+  private Booter                  _booter;
+
   /**
    * {@inheritDoc}
    */
@@ -33,13 +36,12 @@ public class MvnRepositories implements IMvnRepositories {
 
     Assert.isNotNull(localRepo);
     Assert.isNotNull(remoteRepoUrl);
-    
+
     try {
-      //
-      Booter booter = new Booter(localRepo, remoteRepoUrl);
-      _system = booter.newRepositorySystem();
-      _session = booter.newRepositorySystemSession(_system);
-      _repo = booter.newCentralRepository();
+      _booter = new Booter(localRepo, remoteRepoUrl);
+      _system = _booter.newRepositorySystem();
+      _session = _booter.newRepositorySystemSession(_system);
+      _repo = _booter.newCentralRepository();
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

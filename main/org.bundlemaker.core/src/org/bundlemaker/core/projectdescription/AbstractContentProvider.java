@@ -60,6 +60,16 @@ public abstract class AbstractContentProvider implements IProjectContentProvider
   /**
    * <p>
    * </p>
+   */
+  protected void fireProjectDescriptionRecomputedEvent() {
+    if (_projectDescription != null) {
+      _projectDescription.fireProjectDescriptionRecomputedEvent();
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
    * 
    * @return
    */

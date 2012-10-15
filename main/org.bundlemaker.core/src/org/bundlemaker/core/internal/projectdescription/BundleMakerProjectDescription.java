@@ -461,4 +461,17 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     // notify listeners
     _bundleMakerProject.notifyListeners(event);
   }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void fireProjectDescriptionRecomputedEvent() {
+
+    // Create the Event
+    BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_RECOMPUTED);
+
+    // notify listeners
+    _bundleMakerProject.notifyListeners(event);
+  }
 }

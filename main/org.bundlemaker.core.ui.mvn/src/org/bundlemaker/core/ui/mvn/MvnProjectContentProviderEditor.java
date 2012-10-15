@@ -1,6 +1,7 @@
 package org.bundlemaker.core.ui.mvn;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
@@ -26,7 +27,19 @@ import org.eclipse.swt.widgets.Shell;
 public class MvnProjectContentProviderEditor extends AbstractContentProviderEditor {
 
   /** - */
-  private final FileBasedContentRenderer _fileBasedContentRenderer = FileBasedContentRenderer.getInstance();
+  private final FileBasedContentRenderer             _fileBasedContentRenderer = FileBasedContentRenderer.getInstance();
+
+  /** - */
+  private ReloadFromRepositoryAction                 _reloadFromLocalRepositoryAction;
+
+  /** - */
+  private ReloadFromRepositoryAction                 _reloadFromRemoteRepositoryAction;
+
+  /** - */
+  private List<IAction>                              _actionList;
+
+  /** - */
+  private List<IProjectContentProviderEditorElement> _currentSelection;
 
   /**
    * {@inheritDoc}
@@ -89,7 +102,6 @@ public class MvnProjectContentProviderEditor extends AbstractContentProviderEdit
       MvnContentProvider projectContentProvider = (MvnContentProvider) element;
 
       //
-
 
       //
       List<MvnArtifactType> artifactTypes = projectContentProvider.getMvnArtifacts();
@@ -168,4 +180,69 @@ public class MvnProjectContentProviderEditor extends AbstractContentProviderEdit
     return true;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IAction> getContextMenuActions(IBundleMakerProject project,
+      List<IProjectContentProviderEditorElement> selectedElements) {
+
+    // lazy init
+    if (_actionList == null) {
+
+      _actionList = new LinkedList<IAction>();
+
+      //
+      _reloadFromLocalRepositoryAction = new ReloadFromRepositoryAction("Reload from local repository", this,
+          false);
+
+      //
+      _reloadFromRemoteRepositoryAction = new ReloadFromRepositoryAction("Reload from remote repository", this, true);
+
+      _actionList.add(_reloadFromLocalRepositoryAction);
+      _actionList.add(_reloadFromRemoteRepositoryAction);
+    }
+
+    //
+    _currentSelection = selectedElements;
+
+    // set enabled
+    boolean enabled = instanceOfMvnContentProvider(selectedElements);
+    _reloadFromLocalRepositoryAction.setEnabled(enabled);
+    _reloadFromRemoteRepositoryAction.setEnabled(enabled);
+
+    // return the list
+    return instanceOfMvnContentProvider(selectedElements) ? _actionList : new LinkedList<IAction>();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<IProjectContentProviderEditorElement> getCurrentSelection() {
+    return _currentSelection;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param selectedElements
+   */
+  private boolean instanceOfMvnContentProvider(List<IProjectContentProviderEditorElement> selectedElements) {
+
+    //
+    for (IProjectContentProviderEditorElement element : selectedElements) {
+
+      //
+      if (!(element.getElement() instanceof MvnContentProvider)) {
+        return false;
+      }
+    }
+
+    //
+    return true;
+  }
 }
