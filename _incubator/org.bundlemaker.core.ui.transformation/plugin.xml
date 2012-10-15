@@ -23,6 +23,15 @@
                   </enabledWhen>
             </handler>
       </extension>
+      
+ 
+	   <extension
+	         point="org.eclipse.jdt.core.classpathContainerInitializer">
+	      <classpathContainerInitializer
+	            class="org.bundlemaker.core.ui.classpath.BundleMakerClasspathContainerInitializer"
+	            id="org.bundlemaker.core.ui.classpath"/>
+	   </extension>
+ 
 
 
       <!--  Submenu -->
