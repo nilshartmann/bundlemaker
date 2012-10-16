@@ -30,17 +30,6 @@ public class TransformationScriptClassLoader extends URLClassLoader {
 
   private final Bundle backingBundle;
 
-  /**
-   * Factory method for creating a class loader over the given bundle and with a given class loader as fall-back. In
-   * case the bundle cannot find a class or locate a resource, the given class loader will be used as fall back.
-   * 
-   * @param bundle
-   *          bundle used for class loading and resource acquisition
-   * @param bridge
-   *          class loader used as fall back in case the bundle cannot load a class or find a resource. Can be
-   *          <code>null</code>
-   * @return class loader adapter over the given bundle and class loader
-   */
   public static TransformationScriptClassLoader createBundleClassLoaderFor(final Bundle bundle, final URL[] urls) {
     return AccessController.doPrivileged(new PrivilegedAction<TransformationScriptClassLoader>() {
 
@@ -68,11 +57,8 @@ public class TransformationScriptClassLoader extends URLClassLoader {
   @Override
   protected Class<?> findClass(String name) throws ClassNotFoundException {
     try {
-      System.out.println("findClass: " + name);
       return this.backingBundle.loadClass(name);
     } catch (ClassNotFoundException cnfe) {
-      System.out.println("findClass " + name + " failed: " + cnfe);
-      cnfe.printStackTrace();
       return super.findClass(name);
       // DebugUtils.debugClassLoading(backingBundle, name, null);
     } catch (NoClassDefFoundError ncdfe) {
@@ -129,18 +115,14 @@ public class TransformationScriptClassLoader extends URLClassLoader {
   @Override
   protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
     Class<?> clazz = null;
-    System.out.println("loadClass: " + name);
 
     try {
       clazz = findClass(name);
     } catch (ClassNotFoundException cnfe) {
       if (backingBundle != null) {
-        System.out.println("loadClass: " + name + " from bridge loader...");
         try {
           clazz = backingBundle.loadClass(name);
         } catch (ClassNotFoundException e) {
-          System.out.println("loadClass: " + name + " failed: " + e);
-          e.printStackTrace();
           throw e;
         }
       } else
