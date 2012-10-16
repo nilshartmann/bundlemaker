@@ -1,7 +1,10 @@
 package org.bundlemaker.core.ui.transformation.handlers;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -11,27 +14,31 @@ import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.transformation.Activator;
 import org.bundlemaker.core.ui.transformation.console.TransformationScriptConsoleFactory;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.dialogs.ITypeInfoFilterExtension;
 import org.eclipse.jdt.ui.dialogs.ITypeInfoRequestor;
 import org.eclipse.jdt.ui.dialogs.TypeSelectionExtension;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
@@ -52,6 +59,29 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
    * The constructor.
    */
   public RunTransformationScriptHandler() {
+  }
+
+  /**
+   * @param workspaceRelativePath
+   *          the path or null
+   * @return the relative path as absolute file url or null
+   * @throws MalformedURLException
+   */
+  private static URL toUrl(IPath workspaceRelativePath) throws MalformedURLException {
+    if (workspaceRelativePath == null) {
+      return null;
+    }
+    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+    IResource member = workspaceRoot.findMember(workspaceRelativePath);
+    IPath location = member.getLocation();
+    if (location == null) {
+      return null;
+    }
+    File file = new File(location.toOSString());
+    URL result = file.toURI().toURL();
+
+    return result;
+
   }
 
   /*
@@ -79,21 +109,22 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
 
     IProject project = transformationScriptType.getResource().getProject();
 
-    // TODO parse classpath
-    IFolder binFolder = (IFolder) project.findMember("bin");
-    if (binFolder == null) {
-      IWorkbenchWindow window = HandlerUtil.getActiveWorkbenchWindowChecked(event);
-      MessageDialog.openInformation(window.getShell(), "Transformation", "Bin-Folder not found");
+    IJavaProject javaProject = JavaCore.create(project);
 
+    String[] classpath = JavaRuntime.computeDefaultRuntimeClassPath(javaProject);
+    List<URL> urls = new LinkedList<URL>();
+    for (String classpathEntry : classpath) {
+      File file = new File(classpathEntry);
+      if (file.exists()) {
+        URL url = file.toURI().toURL();
+        urls.add(url);
+      }
     }
-
-    String urlString = binFolder.getLocationURI().toURL().toString() + "/";
-    URL url = new URL(urlString);
 
     TransformationScriptConsoleFactory.showConsole();
 
     TransformationScriptClassLoader classLoader = TransformationScriptClassLoader.createBundleClassLoaderFor(Activator
-        .getDefault().getBundle(), new URL[] { url });
+        .getDefault().getBundle(), urls.toArray(new URL[0]));
     Class<?> loadClass = classLoader.loadClass(transformationScriptType.getFullyQualifiedName());
     Object object = loadClass.newInstance();
     ITransformationScript transformationScript = (ITransformationScript) object;
