@@ -2,7 +2,6 @@ package org.bundlemaker.core.ui.transformation.handlers;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,10 +14,6 @@ import org.bundlemaker.core.ui.transformation.Activator;
 import org.bundlemaker.core.ui.transformation.console.TransformationScriptConsoleFactory;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
@@ -59,29 +54,6 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
    * The constructor.
    */
   public RunTransformationScriptHandler() {
-  }
-
-  /**
-   * @param workspaceRelativePath
-   *          the path or null
-   * @return the relative path as absolute file url or null
-   * @throws MalformedURLException
-   */
-  private static URL toUrl(IPath workspaceRelativePath) throws MalformedURLException {
-    if (workspaceRelativePath == null) {
-      return null;
-    }
-    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    IResource member = workspaceRoot.findMember(workspaceRelativePath);
-    IPath location = member.getLocation();
-    if (location == null) {
-      return null;
-    }
-    File file = new File(location.toOSString());
-    URL result = file.toURI().toURL();
-
-    return result;
-
   }
 
   /*
