@@ -10,18 +10,10 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.classpath;
 
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bundlemaker.core.ui.transformation.Activator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IAccessRule;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.JavaCore;
-import org.osgi.framework.Bundle;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -29,15 +21,10 @@ import org.osgi.framework.Bundle;
  */
 public class BundleMakerClasspathContainer implements IClasspathContainer {
 
-  private final Bundle[]    _bundles;
-
-  private IClasspathEntry[] _entries;
-
   /**
    * @param bundles
    */
-  public BundleMakerClasspathContainer(Bundle[] bundles) {
-    _bundles = bundles;
+  public BundleMakerClasspathContainer() {
   }
 
   /*
@@ -47,50 +34,7 @@ public class BundleMakerClasspathContainer implements IClasspathContainer {
    */
   @Override
   public IClasspathEntry[] getClasspathEntries() {
-
-    if (_entries == null) {
-      _entries = populateClasspathEntries();
-    }
-
-    return _entries;
-  }
-
-  /**
-   * @return
-   */
-  private IClasspathEntry[] populateClasspathEntries() {
-
-    List<IClasspathEntry> entries = new LinkedList<IClasspathEntry>();
-
-    for (Bundle bundle : _bundles) {
-      String location = bundle.getLocation();
-
-      if (location.startsWith("reference:")) {
-        location = location.substring("reference:".length());
-      }
-
-      if (!location.startsWith("file:")) {
-        System.err.println("Location kein file: " + location);
-        continue;
-      }
-
-      location = location.substring("file:".length());
-
-      File file = new File(location);
-      if (file.isDirectory()) {
-        File binDirectory = new File(file, "bin");
-        if (binDirectory.isDirectory()) {
-          file = binDirectory;
-        }
-      }
-
-      IPath path = new Path(file.getAbsolutePath());
-
-      IClasspathEntry entry = JavaCore.newLibraryEntry(path, null, null, new IAccessRule[0], null, false);
-      entries.add(entry);
-    }
-
-    return entries.toArray(new IClasspathEntry[0]);
+    return BundleMakerClasspathContainerInitializer.getClasspathEntries();
   }
 
   /*
