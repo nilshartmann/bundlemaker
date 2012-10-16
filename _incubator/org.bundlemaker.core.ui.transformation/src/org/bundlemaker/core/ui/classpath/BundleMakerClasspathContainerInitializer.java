@@ -35,10 +35,12 @@ import org.osgi.framework.BundleContext;
  */
 public class BundleMakerClasspathContainerInitializer extends ClasspathContainerInitializer {
 
+  /**
+   * Name of the bundles that define the Classpath Container (as plain JARs)
+   */
   private final static String[]    BUNDLEMAKER_LIBRARY_BUNDLES = new String[] { "org.bundlemaker.core", //
       "org.bundlemaker.core.transformations", //
       "org.bundlemaker.core.ui", //
-      "org.bundlemaker.core.ui.transformation", //
       "org.eclipse.core.resources", //
       "org.eclipse.core.runtime" //
                                                                };
