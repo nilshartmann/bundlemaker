@@ -68,17 +68,21 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
       return;
     }
 
+    // Let user select the transformation script
     IType transformationScriptType = selectTransformationScript(HandlerUtil.getActiveShell(event));
 
     if (transformationScriptType == null) {
+      // canceled
       return;
     }
 
+    // Get artifact to be passed to script
     IBundleMakerArtifact selectedArtifact = selectedArtifacts.get(0);
     final IRootArtifact rootArtifact = selectedArtifact.getRoot();
 
-    // selectTransformationScript(rootArtifact.getModularizedSystem().getBundleMakerProject());
-
+    // Determine classpath. Note that classes from BundleMaker libraries
+    // are always loaded first, regardless where the BM container is placed
+    // in the project's classpath
     IProject project = transformationScriptType.getResource().getProject();
 
     IJavaProject javaProject = JavaCore.create(project);
@@ -93,20 +97,33 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
       }
     }
 
+    // Make sure the console with output is visible
     TransformationScriptConsoleFactory.showConsole();
 
+    // Create the classloader
     TransformationScriptClassLoader classLoader = TransformationScriptClassLoader.createBundleClassLoaderFor(Activator
         .getDefault().getBundle(), urls.toArray(new URL[0]));
+
+    // Load the script's class
     Class<?> loadClass = classLoader.loadClass(transformationScriptType.getFullyQualifiedName());
+
+    // Instantiate
     Object object = loadClass.newInstance();
     ITransformationScript transformationScript = (ITransformationScript) object;
+
+    // Create a Logger that logs to the BundleMaker console
     TransformationScriptLogger logger = new TransformationScriptLogger();
+
+    // Run the script
     try {
       transformationScript.transform(logger, rootArtifact);
     } catch (Exception ex) {
+
+      // TODO Exception handling
       ex.printStackTrace();
     }
 
+    // Make sure changes made in the script are immediately visible
     refreshProjectExplorer(rootArtifact);
   }
 
