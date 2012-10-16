@@ -53,5 +53,13 @@
             label="BundleMaker Transformation Script Console"
             class="org.bundlemaker.core.ui.transformation.console.TransformationScriptConsoleFactory"/>
    </extension>
+      <extension
+            point="org.eclipse.jdt.ui.classpathContainerPage">
+         <classpathContainerPage
+         	name="BundleMaker Libraries"
+               class="org.bundlemaker.core.ui.transformation.classpath.BundleMakerClasspathContainerPage"
+               id="org.bundlemaker.core.ui.classpath">
+         </classpathContainerPage>
+      </extension>
  
 </plugin>

@@ -14,15 +14,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.ui.transformation.Activator;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.ClasspathContainerInitializer;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.pde.core.plugin.IPluginModelBase;
-import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -46,22 +43,24 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
   public void initialize(IPath containerPath, IJavaProject javaProject) throws CoreException {
 
     System.out.println("Initialize " + containerPath);
-    IProject project = javaProject.getProject();
 
-    Bundle[] bundles = getBundleMakerLibraryBundles();
-
-    IPluginModelBase model = PluginRegistry.findModel(project);
     JavaCore.setClasspathContainer(Activator.BUNDLEMAKER_CONTAINER_PATH, new IJavaProject[] { javaProject },
-        new IClasspathContainer[] { new BundleMakerClasspathContainer(bundles) }, null);
+        new IClasspathContainer[] { newBundleMakerClasspathContainer() }, null);
 
     // TODO Auto-generated method stub
 
   }
 
+  public static BundleMakerClasspathContainer newBundleMakerClasspathContainer() {
+    Bundle[] bundles = getBundleMakerLibraryBundles();
+    // TODO determine actual JAR files here, not in BundleMakerClasspathContainer
+    return new BundleMakerClasspathContainer(bundles);
+  }
+
   /**
    * @return
    */
-  private Bundle[] getBundleMakerLibraryBundles() {
+  private static Bundle[] getBundleMakerLibraryBundles() {
     List<Bundle> libraryBundles = new LinkedList<Bundle>();
 
     BundleContext bundleContext = Activator.getDefault().getBundle().getBundleContext();
@@ -90,7 +89,7 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
    * @param bundle
    * @return
    */
-  private boolean isBundleMakerLibraryBundle(Bundle bundle) {
+  private static boolean isBundleMakerLibraryBundle(Bundle bundle) {
 
     String name = bundle.getSymbolicName();
 
