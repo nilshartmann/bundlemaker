@@ -60,7 +60,6 @@ public class TransformationScriptClassLoader extends URLClassLoader {
       return this.backingBundle.loadClass(name);
     } catch (ClassNotFoundException cnfe) {
       return super.findClass(name);
-      // DebugUtils.debugClassLoading(backingBundle, name, null);
     } catch (NoClassDefFoundError ncdfe) {
       // This is almost always an error
       // This is caused by a dependent class failure,
@@ -72,6 +71,22 @@ public class TransformationScriptClassLoader extends URLClassLoader {
       e.initCause(ncdfe);
       throw e;
     }
+  }
+
+  @Override
+  protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+    Class<?> clazz = null;
+
+    try {
+      clazz = backingBundle.loadClass(name);
+
+    } catch (ClassNotFoundException cnfe) {
+      clazz = findClass(name);
+    }
+    if (resolve) {
+      resolveClass(clazz);
+    }
+    return clazz;
   }
 
   @Override
@@ -110,28 +125,6 @@ public class TransformationScriptClassLoader extends URLClassLoader {
       resource = backingBundle.getResource(name);
     }
     return resource;
-  }
-
-  @Override
-  protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-    Class<?> clazz = null;
-
-    try {
-      clazz = findClass(name);
-    } catch (ClassNotFoundException cnfe) {
-      if (backingBundle != null) {
-        try {
-          clazz = backingBundle.loadClass(name);
-        } catch (ClassNotFoundException e) {
-          throw e;
-        }
-      } else
-        throw cnfe;
-    }
-    if (resolve) {
-      resolveClass(clazz);
-    }
-    return clazz;
   }
 
   // public String toString() {
