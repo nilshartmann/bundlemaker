@@ -1,30 +1,22 @@
 package org.bundlemaker.core.ui.transformation.handlers;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
 import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.transformation.Activator;
-import org.bundlemaker.core.ui.transformation.console.TransformationScriptConsoleFactory;
+import org.bundlemaker.core.ui.transformation.runner.TransformationScriptRunner;
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeHierarchy;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
-import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.ui.IJavaElementSearchConstants;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.dialogs.ITypeInfoFilterExtension;
@@ -39,6 +31,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionDialog;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
+import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * Our sample handler extends AbstractHandler, an IHandler base class.
@@ -69,7 +62,8 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
     }
 
     // Let user select the transformation script
-    IType transformationScriptType = selectTransformationScript(HandlerUtil.getActiveShell(event));
+    Shell shell = HandlerUtil.getActiveShell(event);
+    IType transformationScriptType = selectTransformationScript(shell);
 
     if (transformationScriptType == null) {
       // canceled
@@ -78,53 +72,13 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
 
     // Get artifact to be passed to script
     IBundleMakerArtifact selectedArtifact = selectedArtifacts.get(0);
-    final IRootArtifact rootArtifact = selectedArtifact.getRoot();
-
-    // Determine classpath. Note that classes from BundleMaker libraries
-    // are always loaded first, regardless where the BM container is placed
-    // in the project's classpath
-    IProject project = transformationScriptType.getResource().getProject();
-
-    IJavaProject javaProject = JavaCore.create(project);
-
-    String[] classpath = JavaRuntime.computeDefaultRuntimeClassPath(javaProject);
-    List<URL> urls = new LinkedList<URL>();
-    for (String classpathEntry : classpath) {
-      File file = new File(classpathEntry);
-      if (file.exists()) {
-        URL url = file.toURI().toURL();
-        urls.add(url);
-      }
-    }
-
-    // Make sure the console with output is visible
-    TransformationScriptConsoleFactory.showConsole();
-
-    // Create the classloader
-    TransformationScriptClassLoader classLoader = TransformationScriptClassLoader.createBundleClassLoaderFor(Activator
-        .getDefault().getBundle(), urls.toArray(new URL[0]));
-
-    // Load the script's class
-    Class<?> loadClass = classLoader.loadClass(transformationScriptType.getFullyQualifiedName());
-
-    // Instantiate
-    Object object = loadClass.newInstance();
-    ITransformationScript transformationScript = (ITransformationScript) object;
-
-    // Create a Logger that logs to the BundleMaker console
-    TransformationScriptLogger logger = new TransformationScriptLogger();
 
     // Run the script
-    try {
-      transformationScript.transform(logger, rootArtifact);
-    } catch (Exception ex) {
-
-      // TODO Exception handling
-      ex.printStackTrace();
-    }
+    new TransformationScriptRunner(shell, selectedArtifact, transformationScriptType).runScript();
 
     // Make sure changes made in the script are immediately visible
-    refreshProjectExplorer(rootArtifact);
+    refreshProjectExplorer(selectedArtifact.getRoot());
+
   }
 
   private IType selectTransformationScript(final Shell shell) {
@@ -150,9 +104,10 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
       IType transformationScriptType = (IType) result[0];
       return transformationScriptType;
 
-    } catch (JavaModelException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (JavaModelException ex) {
+      StatusManager.getManager().handle(
+          new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Could not open Type Dialog: " + ex, ex));
+
     }
     return null;
   }
@@ -178,9 +133,9 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
 
               }
 
-            } catch (JavaModelException e) {
-              // TODO
-              e.printStackTrace();
+            } catch (JavaModelException ex) {
+              StatusManager.getManager().handle(
+                  new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Validating failed: " + ex, ex));
               return Status.CANCEL_STATUS;
             }
           }
