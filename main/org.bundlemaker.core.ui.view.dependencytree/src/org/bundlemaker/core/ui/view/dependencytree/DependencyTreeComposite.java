@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
-import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -102,7 +101,7 @@ public class DependencyTreeComposite extends Composite {
   public void setDependencies(List<IDependency> dependencies) {
 
     //
-    _leafDependencies = ArtifactUtilities.getAllLeafDependencies(dependencies);
+    _leafDependencies = ArtifactUtils.getAllLeafDependencies(dependencies);
 
     //
     _sourceArtifactMap.clear();
@@ -284,7 +283,7 @@ public class DependencyTreeComposite extends Composite {
             IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
 
             // we have to find all children
-            for (IBundleMakerArtifact artifact : ArtifactUtilities.getSelfAndAllChildren(bundleMakerArtifact)) {
+            for (IBundleMakerArtifact artifact : ArtifactUtils.getSelfAndAllChildren(bundleMakerArtifact)) {
               if (_sourceArtifactMap.containsKey(artifact)) {
                 List<IDependency> dependencies = _sourceArtifactMap.get(artifact);
                 selectedDetailDependencies.addAll(dependencies);
@@ -361,7 +360,7 @@ public class DependencyTreeComposite extends Composite {
         for (Object selectedObject : structuredSelection.toList()) {
           if (selectedObject instanceof IBundleMakerArtifact) {
             IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) selectedObject;
-            for (IBundleMakerArtifact artifact : ArtifactUtilities.getSelfAndAllChildren(bundleMakerArtifact)) {
+            for (IBundleMakerArtifact artifact : ArtifactUtils.getSelfAndAllChildren(bundleMakerArtifact)) {
               if (_targetArtifactMap.containsKey(artifact)) {
                 List<IDependency> dependencies = _targetArtifactMap.get(artifact);
                 selectedDetailDependencies.addAll(dependencies);

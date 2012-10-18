@@ -13,8 +13,8 @@ package org.bundlemaker.core.ui.view.dependencytable;
 import java.util.List;
 
 import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.artifact.ArtifactUtilities;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
@@ -34,7 +34,6 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -154,7 +153,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
       setColumnTitles(fromColumnTitle, toColumnTitle);
 
-      List<IDependency> leafDependencies = ArtifactUtilities.getAllLeafDependencies(getCurrentDependencySelection()
+      List<IDependency> leafDependencies = ArtifactUtils.getAllLeafDependencies(getCurrentDependencySelection()
           .getSelectedDependencies());
 
       IDependency[] dependencies = leafDependencies.toArray(new IDependency[0]);
