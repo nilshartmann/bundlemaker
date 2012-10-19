@@ -1,7 +1,5 @@
 package org.bundlemaker.core.ui.transformation;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -12,9 +10,7 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
   // The plug-in ID
-  public static final String PLUGIN_ID                  = "org.bundlemaker.core.ui.transformation";     //$NON-NLS-1$
-
-  public static final IPath  BUNDLEMAKER_CONTAINER_PATH = new Path("org.bundlemaker.core.ui.classpath"); //$NON-NLS-1$
+  public static final String PLUGIN_ID = "org.bundlemaker.core.ui.transformation"; //$NON-NLS-1$
 
   // The shared instance
   private static Activator   plugin;

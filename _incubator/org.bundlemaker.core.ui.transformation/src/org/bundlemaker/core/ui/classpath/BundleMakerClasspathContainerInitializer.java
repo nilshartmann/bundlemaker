@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.ui.transformation.Activator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -62,7 +63,7 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
 
     System.out.println("Initialize " + containerPath);
 
-    JavaCore.setClasspathContainer(Activator.BUNDLEMAKER_CONTAINER_PATH, new IJavaProject[] { javaProject },
+    JavaCore.setClasspathContainer(BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH, new IJavaProject[] { javaProject },
         new IClasspathContainer[] { new BundleMakerClasspathContainer() }, null);
 
   }

@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.core.JavaCore;
 
 /**
  * <p>
@@ -39,6 +40,9 @@ public final class BundleMakerCore {
 
   /** the nature id */
   public static final String NATURE_ID                  = "org.bundlemaker.core.bundlemakernature";
+
+  /** bundlemaker classpath container */
+  public static final IPath  BUNDLEMAKER_CONTAINER_PATH = new Path("org.bundlemaker.core.ui.classpath"); //$NON-NLS-1$
 
   /** the bundle make directory name */
   public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
@@ -128,8 +132,15 @@ public final class BundleMakerCore {
    * @throws CoreException
    */
   public static void addBundleMakerNature(IProject project) throws CoreException {
+    addNature(project, BundleMakerCore.NATURE_ID);
+  }
 
-    if (!project.hasNature(BundleMakerCore.NATURE_ID)) {
+  public static void addJavaNature(IProject project) throws CoreException {
+    addNature(project, JavaCore.NATURE_ID);
+  }
+
+  public static void addNature(IProject project, String nature) throws CoreException {
+    if (!project.hasNature(nature)) {
 
       // get the project description
       IProjectDescription description = project.getDescription();
@@ -138,12 +149,13 @@ public final class BundleMakerCore {
       String[] prevNatures = description.getNatureIds();
       String[] newNatures = new String[prevNatures.length + 1];
       System.arraycopy(prevNatures, 0, newNatures, 0, prevNatures.length);
-      newNatures[prevNatures.length] = BundleMakerCore.NATURE_ID;
+      newNatures[prevNatures.length] = nature;
       description.setNatureIds(newNatures);
 
       // set the new description
       project.setDescription(description, null);
     }
+
   }
 
   /**
