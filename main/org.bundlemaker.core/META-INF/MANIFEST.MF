@@ -11,6 +11,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.analysis,
  org.bundlemaker.core.analysis.spi,
+ org.bundlemaker.core.classpath,
  org.bundlemaker.core.content.file.xml,
  org.bundlemaker.core.exporter,
  org.bundlemaker.core.exporter.util,
