@@ -8,12 +8,12 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * <p>
- * Configuration for an artifact model.
+ * Defines the configuration of an analysis model.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
+public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
 
   /** the content type to show */
   @Expose
@@ -32,16 +32,36 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
 
   /**
    * <p>
-   * Creates a new instance of type {@link ArtifactModelConfiguration}.
+   * Creates a new instance of type {@link AnalysisModelConfiguration}.
    * </p>
    * 
    */
-  public ArtifactModelConfiguration() {
+  public AnalysisModelConfiguration() {
     super();
   }
 
   /**
    * <p>
+   * Creates a new instance of type {@link AnalysisModelConfiguration}.
+   * </p>
+   * 
+   * @param hierarchical
+   * @param contentType
+   * @param resourcePresentation
+   */
+  public AnalysisModelConfiguration(boolean hierarchical,
+      ContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+  
+    Assert.isNotNull(contentType);
+  
+    _hierarchicalPackages = hierarchical;
+    _contentType = contentType;
+    _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
+  }
+
+  /**
+   * <p>
+   * Returns the {@link ContentType} of this configuration.
    * </p>
    * 
    * @return
@@ -54,32 +74,10 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
    * <p>
    * </p>
    * 
-   * @param contentType
-   */
-  public final void setContentType(ContentType contentType) {
-    Assert.isNotNull(contentType);
-
-    _contentType = contentType;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
    * @return
    */
   public final boolean isHierarchicalPackages() {
     return _hierarchicalPackages;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param hierarchical
-   */
-  public final void setHierarchicalPackages(boolean hierarchical) {
-    _hierarchicalPackages = hierarchical;
   }
 
   /**
@@ -112,28 +110,32 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
    * <p>
    * </p>
    * 
-   * @param includeVirtualModuleForMissingTypes
+   * @param hierarchical
    */
-  public final void setIncludeVirtualModuleForMissingTypes(boolean includeVirtualModuleForMissingTypes) {
-    _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
+  public final void setHierarchicalPackages(boolean hierarchical) {
+    _hierarchicalPackages = hierarchical;
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link ArtifactModelConfiguration}.
+   * Sets the content type of this configuration.
    * </p>
    * 
-   * @param hierarchical
    * @param contentType
-   * @param resourcePresentation
    */
-  public ArtifactModelConfiguration(boolean hierarchical,
-      ContentType contentType, boolean includeVirtualModuleForMissingTypes) {
-
+  public final void setContentType(ContentType contentType) {
     Assert.isNotNull(contentType);
 
-    _hierarchicalPackages = hierarchical;
     _contentType = contentType;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param includeVirtualModuleForMissingTypes
+   */
+  public final void setIncludeVirtualModuleForMissingTypes(boolean includeVirtualModuleForMissingTypes) {
     _includeVirtualModuleForMissingTypes = includeVirtualModuleForMissingTypes;
   }
 
@@ -171,7 +173,7 @@ public class ArtifactModelConfiguration implements IArtifactModelConfiguration {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    ArtifactModelConfiguration other = (ArtifactModelConfiguration) obj;
+    AnalysisModelConfiguration other = (AnalysisModelConfiguration) obj;
     if (_contentType != other._contentType)
       return false;
     if (_hierarchicalPackages != other._hierarchicalPackages)

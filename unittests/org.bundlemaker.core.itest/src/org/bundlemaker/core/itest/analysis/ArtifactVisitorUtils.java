@@ -3,7 +3,7 @@ package org.bundlemaker.core.itest.analysis;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -58,7 +58,7 @@ public class ArtifactVisitorUtils {
     final IModuleArtifact[] result = new IModuleArtifact[1];
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
 
@@ -91,7 +91,7 @@ public class ArtifactVisitorUtils {
     final List<IModuleArtifact> result = new LinkedList<IModuleArtifact>();
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
 
@@ -128,7 +128,7 @@ public class ArtifactVisitorUtils {
     final IModuleArtifact[] result = new IModuleArtifact[1];
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
 
@@ -160,7 +160,7 @@ public class ArtifactVisitorUtils {
     final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IPackageArtifact packageArtifact) {
 
@@ -191,7 +191,7 @@ public class ArtifactVisitorUtils {
     final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IPackageArtifact packageArtifact) {
 
@@ -224,7 +224,7 @@ public class ArtifactVisitorUtils {
     final List<IGroupArtifact> result = new LinkedList<IGroupArtifact>();
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IGroupArtifact groupArtifact) {
 
@@ -258,7 +258,7 @@ public class ArtifactVisitorUtils {
     final List<IResourceArtifact> result = new LinkedList<IResourceArtifact>();
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IResourceArtifact resourceArtifact) {
 
@@ -294,7 +294,7 @@ public class ArtifactVisitorUtils {
     final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
 
     // visit
-    root.accept(new IArtifactTreeVisitor.Adapter() {
+    root.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(ITypeArtifact typeArtifact) {
 

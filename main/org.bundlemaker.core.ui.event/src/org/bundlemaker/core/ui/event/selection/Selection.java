@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.event.selection;
 
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.event.selection.internal.ArtifactSelectionService;
 import org.bundlemaker.core.ui.event.selection.internal.DependencySelectionService;
 import org.eclipse.ui.IPageLayout;

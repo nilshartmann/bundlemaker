@@ -3,8 +3,8 @@ package org.bundlemaker.core.itest.analysis;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -30,8 +30,8 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
    * 
    * @return
    */
-  public IArtifactModelConfiguration getConfiguration() {
-    return ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
+  public IAnalysisModelConfiguration getConfiguration() {
+    return AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
   }
 
   /**

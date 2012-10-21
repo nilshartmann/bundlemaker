@@ -2,11 +2,11 @@ package org.bundlemaker.core.util.gson;
 
 import java.lang.reflect.Type;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.Path;
@@ -62,8 +62,8 @@ public class BundleMakerArtifactJsonAdapter implements JsonSerializer<IBundleMak
   public IBundleMakerArtifact deserialize(JsonElement jsonElement, Type arg1, JsonDeserializationContext context)
       throws JsonParseException {
 
-    IArtifactModelConfiguration configuration = context.deserialize(jsonElement.getAsJsonObject()
-        .get("configuration"), ArtifactModelConfiguration.class);
+    IAnalysisModelConfiguration configuration = context.deserialize(jsonElement.getAsJsonObject()
+        .get("configuration"), AnalysisModelConfiguration.class);
 
     Assert.isNotNull(configuration, "IArtifactModelConfiguration 'configuration' must not be null.");
 
@@ -77,7 +77,7 @@ public class BundleMakerArtifactJsonAdapter implements JsonSerializer<IBundleMak
     }
 
     //
-    IBundleMakerArtifact result = ((AbstractBundleMakerArtifactContainer) rootArtifact).getChild(new Path(path));
+    IBundleMakerArtifact result = ((AbstractArtifactContainer) rootArtifact).getChild(new Path(path));
 
     //
     return result;

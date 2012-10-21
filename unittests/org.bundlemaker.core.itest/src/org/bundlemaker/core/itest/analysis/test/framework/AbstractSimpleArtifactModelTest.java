@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
@@ -45,9 +45,9 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     super.before();
 
     _binModel = new Model(getModularizedSystem(),
-        IArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+        IAnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
     _srcModel = new Model(getModularizedSystem(),
-        IArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
+        IAnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
 
     initialAsserts(_binModel, _srcModel);
   }
@@ -83,7 +83,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     final List<IGroupArtifact> result = new LinkedList<IGroupArtifact>();
 
     // accept the visitor
-    model.getRootArtifact().accept(new IArtifactTreeVisitor.Adapter() {
+    model.getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IGroupArtifact groupArtifact) {
         result.add(groupArtifact);
@@ -123,7 +123,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     final List<IModuleArtifact> result = new LinkedList<IModuleArtifact>();
 
     // accept the visitor
-    model.getRootArtifact().accept(new IArtifactTreeVisitor.Adapter() {
+    model.getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
         if (moduleArtifact.isResourceModule()) {
@@ -165,7 +165,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     final List<IResourceArtifact> result = new LinkedList<IResourceArtifact>();
 
     // accept the visitor
-    module.accept(new IArtifactTreeVisitor.Adapter() {
+    module.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IResourceArtifact resourceArtifact) {
         result.add(resourceArtifact);

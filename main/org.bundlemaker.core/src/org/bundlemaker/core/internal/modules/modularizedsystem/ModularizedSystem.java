@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
@@ -44,7 +44,7 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    * {@inheritDoc}
    */
   @Override
-  public IRootArtifact getArtifactModel(IArtifactModelConfiguration configuration) {
+  public IRootArtifact getArtifactModel(IAnalysisModelConfiguration configuration) {
 
     IRootArtifact result = (IRootArtifact) _transformerCache.getArtifactModel(this, configuration);
 

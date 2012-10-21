@@ -1,11 +1,12 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
@@ -19,7 +20,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContainer implements IPackageArtifact {
+public class AdapterPackage2IArtifact extends AbstractArtifactContainer implements IPackageArtifact {
 
   /** - */
   private String        _qualifiedName;
@@ -51,7 +52,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
     // set parent/children dependency
     if (parent != null) {
       setParent(parent);
-      ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+      ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
     }
 
     Assert.isNotNull(qualifiedName);
@@ -204,7 +205,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
 
     //
     if (visitor.visit(this)) {
@@ -215,7 +216,7 @@ public class AdapterPackage2IArtifact extends AbstractBundleMakerArtifactContain
     }
   }
 
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
   }

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
@@ -40,7 +40,7 @@ public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtif
   protected IResourceArtifact create(IResource key) {
 
     // get the parent
-    AbstractBundleMakerArtifactContainer parent = getOrCreateParent(key);
+    AbstractArtifactContainer parent = getOrCreateParent(key);
 
     // return the resource artifact
     return new AdapterResource2IArtifact(key, false, parent, getArtifactCache());
@@ -54,7 +54,7 @@ public class ResourceSubCache extends AbstractSubCache<IResource, IResourceArtif
    * @param resource
    * @return
    */
-  public AbstractBundleMakerArtifactContainer getOrCreateParent(IResource resource) {
+  public AbstractArtifactContainer getOrCreateParent(IResource resource) {
 
     Assert.isNotNull(resource);
 

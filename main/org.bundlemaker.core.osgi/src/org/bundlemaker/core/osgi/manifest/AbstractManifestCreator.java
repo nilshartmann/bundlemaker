@@ -2,7 +2,7 @@ package org.bundlemaker.core.osgi.manifest;
 
 import java.util.Map;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -77,7 +77,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
 
     //
     // TODO: make Configurable
-    _rootArtifact = modularizedSystem.getArtifactModel(IArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+    _rootArtifact = modularizedSystem.getArtifactModel(IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     //
     _moduleArtifact = ArtifactUtils.getAssociatedModuleArtifact(_rootArtifact, resourceModule);

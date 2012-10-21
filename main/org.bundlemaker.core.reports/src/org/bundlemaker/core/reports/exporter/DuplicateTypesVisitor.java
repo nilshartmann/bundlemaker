@@ -1,11 +1,11 @@
-package org.bundlemaker.core.analysis.visitors;
+package org.bundlemaker.core.reports.exporter;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.util.collections.GenericCache;
 
@@ -15,7 +15,7 @@ import org.bundlemaker.core.util.collections.GenericCache;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DuplicateTypesVisitor extends IArtifactTreeVisitor.Adapter {
+public class DuplicateTypesVisitor extends IAnalysisModelVisitor.Adapter {
 
   /** helper list to store types */
   private Map<String, ITypeArtifact>                      _types;

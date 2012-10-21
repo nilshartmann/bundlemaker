@@ -6,7 +6,7 @@ package org.bundlemaker.core.analysis;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IArtifactTreeVisitor {
+public interface IAnalysisModelVisitor {
 
   /**
    * <p>
@@ -69,7 +69,7 @@ public interface IArtifactTreeVisitor {
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  public class Adapter implements IArtifactTreeVisitor {
+  public class Adapter implements IAnalysisModelVisitor {
 
     @Override
     public boolean visit(IRootArtifact rootArtifact) {

@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.EventAwareMatrix;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;

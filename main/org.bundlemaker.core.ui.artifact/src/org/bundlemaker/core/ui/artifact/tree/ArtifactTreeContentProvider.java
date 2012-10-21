@@ -4,16 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IArtifactSelector;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -238,7 +237,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public <T extends IBundleMakerArtifact> T castTo(Class<? extends IBundleMakerArtifact> clazz) {
+    public <T extends IBundleMakerArtifact> T castTo(Class<T> clazz) {
       return _rootArtifact.castTo(clazz);
     }
 
@@ -248,8 +247,8 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public boolean isParent(IBundleMakerArtifact artifact) {
-      return _rootArtifact.isParent(artifact);
+    public boolean isAncestorOf(IBundleMakerArtifact artifact) {
+      return _rootArtifact.isAncestorOf(artifact);
     }
 
     /**
@@ -278,6 +277,41 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     @Override
     public void removeArtifacts(IArtifactSelector artifactSelector) {
       _rootArtifact.removeArtifacts(artifactSelector);
+    }
+
+    @Override
+    public Collection<IDependency> getDependenciesFrom() {
+      return _rootArtifact.getDependenciesFrom();
+    }
+
+    @Override
+    public IDependency getDependencyFrom(IBundleMakerArtifact artifact) {
+      return _rootArtifact.getDependencyFrom(artifact);
+    }
+
+    @Override
+    public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
+      return _rootArtifact.getDependenciesFrom(artifacts);
+    }
+
+    @Override
+    public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+      return _rootArtifact.getDependenciesFrom(artifacts);
+    }
+
+    @Override
+    public IDependency getDependencyTo(IBundleMakerArtifact artifact) {
+      return _rootArtifact.getDependencyTo(artifact);
+    }
+
+    @Override
+    public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
+      return _rootArtifact.getDependenciesTo(artifacts);
+    }
+
+    @Override
+    public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+      return _rootArtifact.getDependenciesTo(artifacts);
     }
 
     /**
@@ -317,12 +351,12 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public void addArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
+    public void addArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
       _rootArtifact.addArtifactModelChangedListener(listener);
     }
 
     @Override
-    public void removeArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
+    public void removeArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
       _rootArtifact.removeArtifactModelChangedListener(listener);
     }
 
@@ -367,23 +401,8 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public Collection<IDependency> getDependencies() {
-      return _rootArtifact.getDependencies();
-    }
-
-    @Override
-    public IDependency getDependency(IBundleMakerArtifact artifact) {
-      return _rootArtifact.getDependency(artifact);
-    }
-
-    @Override
-    public Collection<? extends IDependency> getDependencies(Collection<? extends IBundleMakerArtifact> artifacts) {
-      return _rootArtifact.getDependencies(artifacts);
-    }
-
-    @Override
-    public Collection<IBundleMakerArtifact> getLeafs() {
-      return _rootArtifact.getLeafs();
+    public Collection<IDependency> getDependenciesTo() {
+      return _rootArtifact.getDependenciesTo();
     }
 
     @Override
@@ -407,11 +426,6 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
-      return _rootArtifact.getChildByPath(clazz, path);
-    }
-
-    @Override
     public IBundleMakerArtifact getParent() {
       return _rootArtifact.getParent();
     }
@@ -427,17 +441,12 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts) {
-      return _rootArtifact.getDependencies(artifacts);
-    }
-
-    @Override
     public boolean hasParent() {
       return _rootArtifact.hasParent();
     }
 
     @Override
-    public IArtifactModelConfiguration getConfiguration() {
+    public IAnalysisModelConfiguration getConfiguration() {
       return _rootArtifact.getConfiguration();
     }
 
@@ -462,12 +471,12 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public void accept(IArtifactTreeVisitor visitor) {
+    public void accept(IAnalysisModelVisitor visitor) {
       _rootArtifact.accept(visitor);
     }
 
     @Override
-    public void accept(IArtifactTreeVisitor... visitors) {
+    public void accept(IAnalysisModelVisitor... visitors) {
       _rootArtifact.accept(visitors);
     }
 
@@ -500,15 +509,9 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     public List<IBundleMakerArtifact> invalidateDependencyCache() {
       return _rootArtifact.invalidateDependencyCache();
     }
-
-    @Override
-    public Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
-      return _rootArtifact.getCachedDependencies();
-    }
-
   }
 
-  static class RefreshArtifactTreeModelModifiedListener implements IArtifactModelModifiedListener {
+  static class RefreshArtifactTreeModelModifiedListener implements IAnalysisModelModifiedListener {
     @Override
     public void artifactModelModified() {
       //

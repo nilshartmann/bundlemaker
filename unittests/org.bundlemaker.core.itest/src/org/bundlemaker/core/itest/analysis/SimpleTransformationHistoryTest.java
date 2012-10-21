@@ -1,6 +1,6 @@
 package org.bundlemaker.core.itest.analysis;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -28,7 +28,7 @@ public class SimpleTransformationHistoryTest extends AbstractModularizedSystemTe
 
     // step: get the rootArtifact
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // step: get the package child
     IPackageArtifact packageArtifact = ArtifactVisitorUtils.findPackageArtifact(rootArtifact, "de.test.basic");

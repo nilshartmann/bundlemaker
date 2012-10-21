@@ -9,26 +9,26 @@ import org.bundlemaker.core.projectdescription.ContentType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IArtifactModelConfiguration {
+public interface IAnalysisModelConfiguration {
 
   /** default configuration SOURCE_RESOURCES_CONFIGURATION */
-  public static final IArtifactModelConfiguration SOURCE_RESOURCES_CONFIGURATION              = new ArtifactModelConfiguration(
+  public static final IAnalysisModelConfiguration SOURCE_RESOURCES_CONFIGURATION              = new AnalysisModelConfiguration(
                                                                                                   false,
                                                                                                   ContentType.SOURCE,
                                                                                                   true);
 
   /** default configuration BINARY_RESOURCES_CONFIGURATION */
-  public static final IArtifactModelConfiguration BINARY_RESOURCES_CONFIGURATION              = new ArtifactModelConfiguration(
+  public static final IAnalysisModelConfiguration BINARY_RESOURCES_CONFIGURATION              = new AnalysisModelConfiguration(
                                                                                                   false,
                                                                                                   ContentType.BINARY,
                                                                                                   true);
 
-  public static final IArtifactModelConfiguration HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION = new ArtifactModelConfiguration(
+  public static final IAnalysisModelConfiguration HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION = new AnalysisModelConfiguration(
                                                                                                   true,
                                                                                                   ContentType.BINARY,
                                                                                                   true);
 
-  public static final IArtifactModelConfiguration HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION = new ArtifactModelConfiguration(
+  public static final IAnalysisModelConfiguration HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION = new AnalysisModelConfiguration(
                                                                                                   true,
                                                                                                   ContentType.SOURCE,
                                                                                                   true);

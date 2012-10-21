@@ -1,6 +1,6 @@
 package org.bundlemaker.core.itest.analysis;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -35,7 +35,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
 
     //
     _rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
   }
 
   /**

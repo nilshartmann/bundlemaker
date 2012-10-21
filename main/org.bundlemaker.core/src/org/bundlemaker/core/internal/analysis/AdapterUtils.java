@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -226,7 +226,7 @@ public class AdapterUtils {
       group.setParent(null);
 
       //
-      groupArtifact.accept(new IArtifactTreeVisitor.Adapter() {
+      groupArtifact.accept(new IAnalysisModelVisitor.Adapter() {
         @Override
         public boolean visit(IGroupArtifact artifact) {
           modularizedSystem.internalGroups().remove(artifact.getAssociatedGroup());
@@ -315,7 +315,7 @@ public class AdapterUtils {
     final List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
 
     // visit the tree
-    artifact.accept(new IArtifactTreeVisitor.Adapter() {
+    artifact.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
         result.add(moduleArtifact);
@@ -343,7 +343,7 @@ public class AdapterUtils {
     final List<IMovableUnit> result = new LinkedList<IMovableUnit>();
 
     // accept the visitor
-    artifact.accept(new IArtifactTreeVisitor.Adapter() {
+    artifact.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean onVisit(IBundleMakerArtifact artifact) {
         // continue the search if artifact is not instance of

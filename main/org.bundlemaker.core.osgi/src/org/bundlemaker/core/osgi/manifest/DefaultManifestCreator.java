@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.osgi.utils.ArtifactUtils;
@@ -588,7 +587,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
     };
 
     //
-    for (IDependency dependency : getModuleArtifact().getDependencies()) {
+    for (IDependency dependency : getModuleArtifact().getDependenciesTo()) {
 
       // TODO
       IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) dependency.getTo();

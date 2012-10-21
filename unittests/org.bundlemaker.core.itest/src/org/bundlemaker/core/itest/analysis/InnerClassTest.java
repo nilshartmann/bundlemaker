@@ -2,10 +2,10 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.util.Collection;
 
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.AmbiguousElementException;
@@ -62,14 +62,14 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
 
     // transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class|A");
     Assert.assertNotNull(aArtifact);
     IBundleMakerArtifact bArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B.class|B");
     Assert.assertNotNull(bArtifact);
 
-    Collection<IDependency> dependencies = aArtifact.getDependencies();
+    Collection<IDependency> dependencies = aArtifact.getDependenciesTo();
     Assert.assertEquals(2, dependencies.size());
     for (IDependency iDependency : dependencies) {
       System.out.println(iDependency);
@@ -88,7 +88,7 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
 
     // transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     
     //
     IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class");

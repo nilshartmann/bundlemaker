@@ -36,6 +36,9 @@ public enum BundleMakerProjectState {
   /** the OPENED state */
   READY,
 
+  /** the DIRTY state */
+  DIRTY,
+
   /** - */
   DISPOSED;
 }

@@ -2,9 +2,9 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.util.LinkedList;
 
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
 
     // get the root artifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
     // get the 'test' artifact
@@ -41,8 +41,8 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
         "javax.xml.ws.handler.soap.SOAPMessageContext"));
 
     //
-    Assert.assertEquals(1, artifact.getDependencies().size());
-    IDependency dependency = new LinkedList<IDependency>(artifact.getDependencies()).get(0);
+    Assert.assertEquals(1, artifact.getDependenciesTo().size());
+    IDependency dependency = new LinkedList<IDependency>(artifact.getDependenciesTo()).get(0);
 
     //
     Assert.assertEquals("jdk16_jdk16", dependency.getTo().getParent(IModuleArtifact.class).getName());

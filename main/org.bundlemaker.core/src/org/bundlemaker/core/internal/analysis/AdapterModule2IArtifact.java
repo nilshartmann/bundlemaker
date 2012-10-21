@@ -1,8 +1,9 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -14,7 +15,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContainer implements IModuleArtifact {
+public class AdapterModule2IArtifact extends AbstractArtifactContainer implements IModuleArtifact {
 
   /** the resource module */
   private IModule _module;
@@ -30,14 +31,14 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
     super(module.getModuleIdentifier().toString());
 
     Assert.isNotNull(module);
-    Assert.isTrue(parent instanceof AbstractBundleMakerArtifactContainer);
+    Assert.isTrue(parent instanceof AbstractArtifactContainer);
 
     // set the resource module
     _module = module;
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+    ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
   }
 
   @Override
@@ -120,7 +121,7 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
 
     //
     if (visitor.visit(this)) {
@@ -131,7 +132,7 @@ public class AdapterModule2IArtifact extends AbstractBundleMakerArtifactContaine
     }
   }
 
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
   }

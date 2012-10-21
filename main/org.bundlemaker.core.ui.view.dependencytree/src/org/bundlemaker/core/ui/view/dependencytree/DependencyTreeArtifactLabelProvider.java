@@ -3,9 +3,9 @@ package org.bundlemaker.core.ui.view.dependencytree;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.runtime.Assert;
@@ -19,39 +19,39 @@ import org.eclipse.jface.viewers.TreeViewer;
  */
 public class DependencyTreeArtifactLabelProvider extends ArtifactTreeLabelProvider {
 
-  /** - */
-  private GenericCache<IBundleMakerArtifact, List<IDependency>> _dependencyCache;
+//  /** - */
+//  private GenericCache<IBundleMakerArtifact, List<IDependency>> _dependencyCache;
 
-  /** - */
-  private TreeViewer                                            _fromTreeViewer;
+//  /** - */
+//  private TreeViewer                                            _fromTreeViewer;
+//
+//  /** - */
+//  private TreeViewer                                            _toTreeViewer;
+//
+//  /** - */
+//  private boolean                                               _reverse;
 
-  /** - */
-  private TreeViewer                                            _toTreeViewer;
-
-  /** - */
-  private boolean                                               _reverse;
-
-  /**
-   * <p>
-   * Creates a new instance of type {@link DependencyTreeArtifactLabelProvider}.
-   * </p>
-   * 
-   * @param dependencyCache
-   * @param toTreeViewer
-   * @param fromTreeViewer
-   */
-  public DependencyTreeArtifactLabelProvider(GenericCache<IBundleMakerArtifact, List<IDependency>> dependencyCache,
-      TreeViewer fromTreeViewer, TreeViewer toTreeViewer, boolean reverse) {
-
-    //
-    Assert.isNotNull(dependencyCache);
-
-    //
-    _dependencyCache = dependencyCache;
-    _fromTreeViewer = fromTreeViewer;
-    _toTreeViewer = toTreeViewer;
-    _reverse = reverse;
-  }
+//  /**
+//   * <p>
+//   * Creates a new instance of type {@link DependencyTreeArtifactLabelProvider}.
+//   * </p>
+//   * 
+//   * @param dependencyCache
+//   * @param toTreeViewer
+//   * @param fromTreeViewer
+//   */
+//  public DependencyTreeArtifactLabelProvider(GenericCache<IBundleMakerArtifact, List<IDependency>> dependencyCache,
+//      TreeViewer fromTreeViewer, TreeViewer toTreeViewer, boolean reverse) {
+//
+//    //
+//    Assert.isNotNull(dependencyCache);
+//
+//    //
+//    _dependencyCache = dependencyCache;
+//    _fromTreeViewer = fromTreeViewer;
+//    _toTreeViewer = toTreeViewer;
+//    _reverse = reverse;
+//  }
 
   /**
    * {@inheritDoc}

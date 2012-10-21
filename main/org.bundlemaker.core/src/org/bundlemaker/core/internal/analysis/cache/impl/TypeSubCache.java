@@ -1,7 +1,8 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterType2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
@@ -22,7 +23,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact> {
+public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
 
   /** serialVersionUID */
   private static final long serialVersionUID = 1L;
@@ -42,7 +43,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
    * {@inheritDoc}
    */
   @Override
-  protected IBundleMakerArtifact create(TypeKey type) {
+  protected ITypeArtifact create(TypeKey type) {
 
     Assert.isNotNull(type);
 
@@ -64,7 +65,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
    * @param typeName
    * @return
    */
-  private IBundleMakerArtifact createTypeArtifactFromTypeName(String typeName) {
+  private ITypeArtifact createTypeArtifactFromTypeName(String typeName) {
 
     //
     IBundleMakerArtifact parent = null;
@@ -97,9 +98,9 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
    * @param type
    * @return
    */
-  private IBundleMakerArtifact createTypeArtifactFromType(IType type) {
+  private ITypeArtifact createTypeArtifactFromType(IType type) {
 
-    AbstractBundleMakerArtifactContainer parent = getTypeParent(type);
+    AbstractArtifactContainer parent = getTypeParent(type);
 
     //
     return new AdapterType2IArtifact(type, getArtifactCache(), parent);
@@ -113,7 +114,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
    * @param type
    * @return
    */
-  public AbstractBundleMakerArtifactContainer getTypeParent(IType type) {
+  public AbstractArtifactContainer getTypeParent(IType type) {
 
     Assert.isNotNull(type);
 
@@ -130,7 +131,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, IBundleMakerArtifact
     if (module instanceof IResourceModule) {
 
       // force cast
-      return (AbstractBundleMakerArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);
+      return (AbstractArtifactContainer) getArtifactCache().getResourceCache().getOrCreate(resource);
 
     } else {
 

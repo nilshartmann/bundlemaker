@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ILazyContentProvider;
 import org.eclipse.jface.viewers.TableViewer;

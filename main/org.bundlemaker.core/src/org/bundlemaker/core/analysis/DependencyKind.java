@@ -1,4 +1,4 @@
-package org.bundlemaker.analysis.model;
+package org.bundlemaker.core.analysis;
 
 /**
  * <p>

@@ -13,9 +13,9 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.model.merge.ModelMerger;
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.exporter.AbstractExporter;
@@ -136,7 +136,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
 
     // get the artifact model to resolve the dependencies
     IRootArtifact artifactModel = getCurrentModularizedSystem().getArtifactModel(
-        IArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
+        IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // get the current module artifact
     IModuleArtifact currentModuleArtifact = artifactModel.getModuleArtifact(getCurrentModule());
@@ -163,7 +163,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
     // get all modules
     final List<IModuleArtifact> allModules = new LinkedList<IModuleArtifact>();
     artifactModel.accept(
-        new IArtifactTreeVisitor.Adapter() {
+        new IAnalysisModelVisitor.Adapter() {
           @Override
           public boolean visit(IModuleArtifact moduleArtifact) {
             if (!getCurrentModularizedSystem().getExecutionEnvironment().equals(moduleArtifact.getAssociatedModule())) {
@@ -174,7 +174,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
         });
 
     // resolve the dependencies
-    Collection<? extends IDependency> dependencies = currentModuleArtifact.getDependencies(allModules);
+    Collection<? extends IDependency> dependencies = currentModuleArtifact.getDependenciesTo(allModules);
     for (IDependency dependency : dependencies) {
 
       //

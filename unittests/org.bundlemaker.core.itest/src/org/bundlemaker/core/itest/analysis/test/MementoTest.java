@@ -1,8 +1,8 @@
 package org.bundlemaker.core.itest.analysis.test;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest.analysis.test.framework.AbstractSimpleArtifactModelTest;
@@ -33,13 +33,13 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
   public void artifactModelConfigurationMemento() throws Exception {
 
     //
-    IArtifactModelConfiguration configuration = _binModel.getGroup1Artifact().getConfiguration();
+    IAnalysisModelConfiguration configuration = _binModel.getGroup1Artifact().getConfiguration();
 
     String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
     Assert.assertNotNull(memento);
 
-    ArtifactModelConfiguration result = GsonHelper.gson(getModularizedSystem()).fromJson(memento,
-        ArtifactModelConfiguration.class);
+    AnalysisModelConfiguration result = GsonHelper.gson(getModularizedSystem()).fromJson(memento,
+        AnalysisModelConfiguration.class);
     Assert.assertNotNull(result);
 
     //
@@ -56,7 +56,7 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
   public void bundleMakerArtifactMemento() throws Exception {
 
     //
-    _binModel.getRootArtifact().accept(new IArtifactTreeVisitor.Adapter() {
+    _binModel.getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {

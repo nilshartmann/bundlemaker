@@ -2,10 +2,10 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.io.IOException;
 
-import org.bundlemaker.analysis.model.DependencyKind;
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
@@ -31,7 +31,7 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+        AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     //
@@ -48,9 +48,9 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
         .getChild("org.bundlemaker.noprimarytype|TestInterface.java|org.bundlemaker.noprimarytype.NoPrimaryTestInterface");
     Assert.assertNotNull(noPrimaryTestInterfaceTypeArtifact);
 
-    Assert.assertEquals(1, moduleArtifact.getDependencies().size());
+    Assert.assertEquals(1, moduleArtifact.getDependenciesTo().size());
 
-    IDependency dependency = clientTypeArtifact.getDependency(noPrimaryTestInterfaceTypeArtifact);
+    IDependency dependency = clientTypeArtifact.getDependencyTo(noPrimaryTestInterfaceTypeArtifact);
     Assert.assertNotNull(dependency);
     Assert.assertEquals(clientTypeArtifact, dependency.getFrom());
     Assert.assertEquals(noPrimaryTestInterfaceTypeArtifact, dependency.getTo());

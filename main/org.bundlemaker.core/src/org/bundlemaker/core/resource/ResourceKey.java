@@ -52,9 +52,6 @@ public class ResourceKey implements IResourceKey {
   /** - **/
   private byte[]          _hashvalue;
 
-  // /** - */
-  // private transient SoftReference<byte[]> _contentCache;
-
   /**
    * <p>
    * Creates a new instance of type {@link ResourceKey}.
@@ -174,14 +171,6 @@ public class ResourceKey implements IResourceKey {
    */
   @Override
   public byte[] getContent() {
-
-    // //
-    // if (_contentCache != null) {
-    // byte[] result = _contentCache.get();
-    // if (result != null) {
-    // return result;
-    // }
-    // }
 
     // jar file?
     if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {

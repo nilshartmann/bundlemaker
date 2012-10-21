@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis.cache.impl;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterPackage2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class PackageSubCache extends AbstractSubCache<ModulePackageKey, AbstractBundleMakerArtifactContainer> {
+public class PackageSubCache extends AbstractSubCache<ModulePackageKey, AbstractArtifactContainer> {
 
   /** serialVersionUID */
   private static final long serialVersionUID = 1L;
@@ -34,7 +34,7 @@ public class PackageSubCache extends AbstractSubCache<ModulePackageKey, Abstract
    * {@inheritDoc}
    */
   @Override
-  protected AbstractBundleMakerArtifactContainer create(ModulePackageKey modulePackageKey) {
+  protected AbstractArtifactContainer create(ModulePackageKey modulePackageKey) {
 
     Assert.isNotNull(modulePackageKey);
 

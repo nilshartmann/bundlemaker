@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.event.selection.workbench.editor;
 
-import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
+import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
@@ -16,7 +16,7 @@ import org.eclipse.ui.PartInitException;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractPartLifecycleAwareEditorPart implements
-    IArtifactSelectionListener, IArtifactModelModifiedListener {
+    IArtifactSelectionListener, IAnalysisModelModifiedListener {
 
   /**
    * The current artifacts (contents) of this dependency part

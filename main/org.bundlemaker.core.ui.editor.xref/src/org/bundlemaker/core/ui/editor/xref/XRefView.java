@@ -75,7 +75,7 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
 
         //
         _composite.setDependencies(ArtifactUtils.getAllLeafDependencies(getCurrentArtifactSelection()
-            .getRootArtifact().getDependencies()));
+            .getRootArtifact().getDependenciesTo()));
 
       }
       // else {

@@ -1,9 +1,9 @@
 package org.bundlemaker.core.internal.analysis.virtual;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
 import org.bundlemaker.core.modules.IModule;
 
@@ -13,7 +13,7 @@ import org.bundlemaker.core.modules.IModule;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContainer implements IModuleArtifact {
+public class VirtualModule2IArtifact extends AbstractArtifactContainer implements IModuleArtifact {
 
   /** - */
   private String _fullyQualifiedName;
@@ -34,7 +34,7 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+    ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
   }
 
   @Override
@@ -103,7 +103,7 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
 
     //
     if (visitor.visit(this)) {
@@ -114,7 +114,7 @@ public class VirtualModule2IArtifact extends AbstractBundleMakerArtifactContaine
     }
   }
 
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
   }

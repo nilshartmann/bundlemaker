@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -100,7 +99,7 @@ public class ArtifactUtils {
     final List<IDependency> result = new LinkedList<IDependency>();
 
     for (IDependency dependency : dependencies) {
-      for (IDependency leafDependency : dependency.getLeafDependencies()) {
+      for (IDependency leafDependency : dependency.getCoreDependencies()) {
         result.add(leafDependency);
       }
     }
@@ -123,7 +122,7 @@ public class ArtifactUtils {
     result.add(bundleMakerArtifact);
 
     //
-    bundleMakerArtifact.accept(new IArtifactTreeVisitor.Adapter() {
+    bundleMakerArtifact.accept(new IAnalysisModelVisitor.Adapter() {
 
       /**
        * {@inheritDoc}
@@ -159,7 +158,7 @@ public class ArtifactUtils {
     Set<IBundleMakerArtifact> result = new HashSet<IBundleMakerArtifact>();
 
     //
-    for (IDependency dependency : artifact.getDependencies()) {
+    for (IDependency dependency : artifact.getDependenciesTo()) {
 
       result.add(dependency.getTo());
     }
@@ -178,7 +177,7 @@ public class ArtifactUtils {
   public static Set<IBundleMakerArtifact> getIndirectlyReferencedArtifacts(IBundleMakerArtifact artifact) {
 
     //
-    return solveArtifacts(artifact, new HashSet<IBundleMakerArtifact>(), true);
+    return resolveReferencedArtifacts(artifact, new HashSet<IBundleMakerArtifact>(), true);
   }
 
   /**
@@ -189,7 +188,7 @@ public class ArtifactUtils {
    * @param artifacts
    * @return
    */
-  private static Set<IBundleMakerArtifact> solveArtifacts(IBundleMakerArtifact artifact,
+  private static Set<IBundleMakerArtifact> resolveReferencedArtifacts(IBundleMakerArtifact artifact,
       Set<IBundleMakerArtifact> artifacts, boolean transitive) {
 
     //
@@ -197,9 +196,9 @@ public class ArtifactUtils {
     Assert.isNotNull(artifacts);
 
     //
-    for (IDependency dependency : artifact.getDependencies()) {
+    for (IDependency dependency : artifact.getDependenciesTo()) {
       if (artifacts.add(dependency.getTo()) && transitive) {
-        solveArtifacts(dependency.getTo(), artifacts, transitive);
+        resolveReferencedArtifacts(dependency.getTo(), artifacts, transitive);
       }
     }
 

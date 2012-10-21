@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -15,7 +15,7 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class InvalidateAggregatedDependencies implements IArtifactTreeVisitor {
+public class InvalidateAggregatedDependencies implements IAnalysisModelVisitor {
 
   @Override
   public boolean visit(IRootArtifact artifact) {

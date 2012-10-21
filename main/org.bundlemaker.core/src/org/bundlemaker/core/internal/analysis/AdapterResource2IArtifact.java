@@ -12,10 +12,11 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.List;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
@@ -29,7 +30,7 @@ import org.bundlemaker.core.resource.IType;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContainer implements IResourceArtifact,
+public class AdapterResource2IArtifact extends AbstractArtifactContainer implements IResourceArtifact,
     IMovableUnit {
 
   /** the bundle maker resource */
@@ -55,7 +56,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+    ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
 
     //
     _resource = resource;
@@ -169,7 +170,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
 
     //
     if (visitor.visit(this)) {
@@ -180,7 +181,7 @@ public class AdapterResource2IArtifact extends AbstractBundleMakerArtifactContai
     }
   }
 
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
   }

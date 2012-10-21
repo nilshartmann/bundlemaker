@@ -13,7 +13,7 @@ package org.bundlemaker.core.itest.analysis;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactHelper;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -45,7 +45,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
     Assert.assertEquals(new Path("BasicArtifactTest"), rootArtifact.getFullPath());
@@ -125,7 +125,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
     Assert.assertEquals(new Path("BasicArtifactTest"), rootArtifact.getFullPath());
@@ -205,7 +205,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
     Assert.assertEquals(new Path("BasicArtifactTest"), rootArtifact.getFullPath());
@@ -273,7 +273,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     //
     IGroupArtifact group1Artifact = findArtifact(rootArtifact, "g*1", IGroupArtifact.class);

@@ -1,25 +1,20 @@
-package org.bundlemaker.core.internal.analysis;
+package org.bundlemaker.core.analysis.spi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.impl.Dependency;
-import org.bundlemaker.core.analysis.ArtifactHelper;
-import org.bundlemaker.core.analysis.ArtifactModelException;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.IArtifactSelector;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.DefaultArtifactSelector;
 import org.bundlemaker.core.transformation.RemoveArtifactsTransformation;
@@ -35,33 +30,36 @@ import com.google.gson.JsonElement;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundleMakerArtifact implements
-    IBundleMakerArtifact {
+public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
   /** - */
-  private IRootArtifact                                    _root;
+  private Collection<IBundleMakerArtifact>       _children;
 
-  private Collection<IBundleMakerArtifact>                 children;
+  /** - */
+  private Map<IBundleMakerArtifact, IDependency> _aggregatedDependenciesTo;
 
-  private Collection<IDependency>                          dependencies;
+  /** - */
+  private List<IDependency>                      _allCoreDependenciesTo;
 
-  private Collection<IBundleMakerArtifact>                 leafs;
+  /** - */
+  private Map<IBundleMakerArtifact, IDependency> _aggregatedDependenciesFrom;
 
-  private transient Map<IBundleMakerArtifact, IDependency> cachedDependencies;
+  /** - */
+  private List<IDependency>                      _allCoreDependenciesFrom;
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractBundleMakerArtifactContainer}.
+   * Creates a new instance of type {@link AbstractArtifactContainer}.
    * </p>
    * 
    * @param type
    * @param name
    */
-  public AbstractBundleMakerArtifactContainer(String name) {
+  public AbstractArtifactContainer(String name) {
     super(name);
 
-    children = new ArrayList<IBundleMakerArtifact>();
-    cachedDependencies = new HashMap<IBundleMakerArtifact, IDependency>();
+    // initialize children
+    _children = new ArrayList<IBundleMakerArtifact>();
   }
 
   /**
@@ -86,8 +84,43 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     return getChild(path.segments());
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @return
+   */
   public boolean hasChild(String path) {
     return getChild(path) != null;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getUniquePathIdentifier() {
+    return getName();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IPath getFullPath() {
+
+    //
+    if (hasParent() && !(getParent() instanceof IRootArtifact)) {
+
+      //
+      IPath path = getParent().getFullPath();
+      return path.append(getUniquePathIdentifier());
+
+    } else {
+
+      //
+      return new Path(getUniquePathIdentifier());
+    }
   }
 
   /**
@@ -122,10 +155,10 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
       if (directChild != null) {
 
         //
-        if (directChild instanceof AbstractBundleMakerArtifactContainer) {
+        if (directChild instanceof AbstractArtifactContainer) {
           String[] newArray = new String[splittedString.length - 1];
           System.arraycopy(splittedString, 1, newArray, 0, newArray.length);
-          return ((AbstractBundleMakerArtifactContainer) directChild).getChild(newArray);
+          return ((AbstractArtifactContainer) directChild).getChild(newArray);
         }
 
         // support for "non-AbstractArtifactContainer" IArtifacts
@@ -146,62 +179,186 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     return null;
   }
 
+  /**************************************************************************************************/
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public IDependency getDependency(IBundleMakerArtifact to) {
+  public Collection<IDependency> getDependenciesFrom() {
 
-    // HAE?
-    // if (this.equals(to)) {
-    // return new Dependency(this, to, 0);
-    // }
+    //
+    if (_allCoreDependenciesFrom == null) {
 
-    IDependency dependency = cachedDependencies.get(to);
-    if (dependency != null) {
-      return dependency;
-    } else {
-      dependency = new Dependency(this, to, false);
-      for (IDependency reference : getDependencies()) {
-        if (to.contains(reference.getTo())) {
+      //
+      _allCoreDependenciesFrom = new ArrayList<IDependency>();
+
+      // add core dependencies
+      if (this instanceof IReferencedArtifact) {
+        _allCoreDependenciesFrom.addAll(((IReferencedArtifact) this).getDependenciesFrom());
+      }
+
+      //
+      for (IBundleMakerArtifact child : _children) {
+
+        // call recursive...
+        _allCoreDependenciesFrom.addAll(child.getDependenciesFrom());
+      }
+    }
+
+    // return the core dependencies
+    return _allCoreDependenciesFrom;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IDependency getDependencyFrom(IBundleMakerArtifact artifact) {
+
+    // 'aggregated' dependency
+    if (!aggregatedDependenciesFrom().containsKey(artifact)) {
+
+      // create new dependency
+      Dependency dependency = new Dependency(this, artifact, false);
+      for (IDependency reference : getDependenciesFrom()) {
+        if (artifact.contains(reference.getFrom())) {
           ((Dependency) dependency).addDependency(reference);
         }
       }
-      cachedDependencies.put(to, dependency);
+
+      // store dependency
+      aggregatedDependenciesFrom().put(artifact, dependency);
+    }
+
+    //
+    IDependency dependency = aggregatedDependenciesFrom().get(artifact);
+    if (dependency != null && dependency.getWeight() > 0) {
       return dependency;
+    } else {
+      return null;
     }
-
-  }
-
-  @Override
-  public Collection<IDependency> getDependencies() {
-    if (dependencies == null) {
-      aggregateDependencies();
-    }
-    return dependencies;
   }
 
   /**
-   * <p>
-   * </p>
+   * {@inheritDoc}
    */
-  private void aggregateDependencies() {
+  @Override
+  public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
 
     //
-    dependencies = new ArrayList<IDependency>();
+    List<IDependency> result = new LinkedList<IDependency>();
 
     //
-    for (IBundleMakerArtifact child : children) {
-
-      //
-      Collection<IDependency> childDependencies = child.getDependencies();
-
-      //
-      dependencies.addAll(childDependencies);
+    for (IBundleMakerArtifact artifact : artifacts) {
+      IDependency dependency = getDependencyTo(artifact);
+      if (dependency != null) {
+        result.add(dependency);
+      }
     }
 
+    //
+    return result;
   }
 
   /**
-   * <p>
-   * </p>
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+    return getDependenciesFrom(Arrays.asList(artifacts));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<IDependency> getDependenciesTo() {
+
+    //
+    if (_allCoreDependenciesTo == null) {
+
+      //
+      _allCoreDependenciesTo = new ArrayList<IDependency>();
+
+      // add core dependencies
+      if (this instanceof IReferencingArtifact) {
+        _allCoreDependenciesTo.addAll(((IReferencingArtifact) this).getDependenciesTo());
+      }
+
+      //
+      for (IBundleMakerArtifact child : _children) {
+
+        // call recursive...
+        _allCoreDependenciesTo.addAll(child.getDependenciesTo());
+      }
+    }
+
+    // return the core dependencies
+    return _allCoreDependenciesTo;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IDependency getDependencyTo(IBundleMakerArtifact artifact) {
+
+    // 'aggregated' dependency
+    if (!aggregatedDependenciesTo().containsKey(artifact)) {
+
+      // create new dependency
+      Dependency dependency = new Dependency(this, artifact, false);
+      for (IDependency reference : getDependenciesTo()) {
+        if (artifact.contains(reference.getTo())) {
+          ((Dependency) dependency).addDependency(reference);
+        }
+      }
+
+      // store dependency
+      aggregatedDependenciesTo().put(artifact, dependency);
+    }
+
+    //
+    IDependency dependency = aggregatedDependenciesTo().get(artifact);
+    if (dependency != null && dependency.getWeight() > 0) {
+      return dependency;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
+
+    //
+    List<IDependency> result = new LinkedList<IDependency>();
+
+    //
+    for (IBundleMakerArtifact artifact : artifacts) {
+      IDependency dependency = getDependencyTo(artifact);
+      if (dependency != null) {
+        result.add(dependency);
+      }
+    }
+
+    //
+    return result;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+    return getDependenciesTo(Arrays.asList(artifacts));
+  }
+
+  /**
+   * {@inheritDoc}
    */
   public List<IBundleMakerArtifact> invalidateDependencyCache() {
 
@@ -209,30 +366,24 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     result.add(this);
 
     //
-    dependencies = null;
+    _allCoreDependenciesFrom = null;
+    _allCoreDependenciesTo = null;
 
     //
-    if (cachedDependencies != null) {
-      cachedDependencies.clear();
+    if (_aggregatedDependenciesTo != null) {
+      _aggregatedDependenciesTo.clear();
     }
 
     //
-    leafs = null;
+    if (_aggregatedDependenciesFrom != null) {
+      _aggregatedDependenciesFrom.clear();
+    }
 
     //
     return result;
   }
 
-  public final Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
-    return cachedDependencies;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts) {
-    return getDependencies(Arrays.asList(artifacts));
-  }
+  /********************************************************************************************************/
 
   /**
    * <p>
@@ -249,47 +400,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
    * @param artifact
    */
   protected abstract void onAddArtifact(IBundleMakerArtifact artifact);
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String getUniquePathIdentifier() {
-    return getName();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IPath getFullPath() {
-
-    //
-    if (hasParent() && !(getParent() instanceof IRootArtifact)) {
-
-      //
-      IPath path = getParent().getFullPath();
-      return path.append(getUniquePathIdentifier());
-
-    } else {
-
-      //
-      return new Path(getUniquePathIdentifier());
-    }
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
-    return ArtifactHelper.getChildByPath(this, path, clazz);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IArtifactModelConfiguration getConfiguration() {
-    return getRoot().getConfiguration();
-  }
 
   /**
    * {@inheritDoc}
@@ -312,21 +422,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
   public void setParent(IBundleMakerArtifact parent) {
     super.setParent(parent);
     getRoot();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IRootArtifact getRoot() {
-
-    //
-    if (_root == null) {
-      _root = (IRootArtifact) getParent(IRootArtifact.class);
-    }
-
-    //
-    return _root;
   }
 
   /**
@@ -392,18 +487,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     }
 
     return handleCanAdd(artifact) == null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IModularizedSystem getModularizedSystem() {
-    return getRoot().getModularizedSystem();
-  }
-
-  public IBundleMakerArtifact getParent() {
-    return (IBundleMakerArtifact) super.getParent();
   }
 
   /**
@@ -550,19 +633,19 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     // assert not null
     Assert.isNotNull(artifact);
-    Assert.isTrue(!isParent(artifact));
+    Assert.isTrue(!artifact.isAncestorOf(this));
     Assert.isTrue(!artifact.equals(this));
 
     // if the artifact has a parent, it has to be removed
     if (artifact.getParent() != null) {
-      ((AbstractBundleMakerArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
+      ((AbstractArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
     }
 
     // call super
-    if (!children.contains(artifact)) {
-      children.add(artifact);
+    if (!_children.contains(artifact)) {
+      _children.add(artifact);
     }
-    AbstractBundleMakerArtifact modifiableArtifact = (AbstractBundleMakerArtifact) artifact;
+    AbstractArtifact modifiableArtifact = (AbstractArtifact) artifact;
     modifiableArtifact.setParent(this);
   }
 
@@ -579,72 +662,19 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     // set parent to null
     if (artifact.getParent() != null) {
-      ((AbstractBundleMakerArtifact) artifact).setParent(null);
+      ((AbstractArtifact) artifact).setParent(null);
     }
 
     // call super
-    children.remove(artifact);
+    _children.remove(artifact);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public boolean contains(IBundleMakerArtifact artifact) {
-    if (leafs == null || leafs.isEmpty()) {
-      leafs = getLeafs();
-    }
-    return leafs.contains(artifact);
-  }
-
-  @Override
-  public Collection<IBundleMakerArtifact> getLeafs() {
-    if (leafs == null || leafs.isEmpty()) {
-      leafs = new HashSet<IBundleMakerArtifact>();
-      for (IBundleMakerArtifact child : children) {
-        if (child.getChildren().isEmpty()) {
-          leafs.add(child);
-        } else {
-          if (child instanceof AbstractBundleMakerArtifactContainer) {
-            leafs.addAll(((AbstractBundleMakerArtifactContainer) child).getLeafs());
-          }
-        }
-      }
-
-    }
-    return leafs;
-  }
-
-  // TODO
-  public boolean isAncestor(final IBundleMakerArtifact bundleMakerArtifact) {
-
-    //
-    if (bundleMakerArtifact == null) {
-      return false;
-    }
-
-    //
-    final boolean[] result = new boolean[1];
-
-    //
-    this.accept(new IArtifactTreeVisitor.Adapter() {
-      @Override
-      public boolean onVisit(IBundleMakerArtifact artifact) {
-
-        //
-        if (result[0]) {
-          return false;
-        }
-
-        //
-        if (artifact == bundleMakerArtifact) {
-          result[0] = true;
-        }
-
-        //
-        return !result[0];
-      }
-    });
-
-    //
-    return result[0];
+  public boolean contains(final IBundleMakerArtifact artifact) {
+    return this.isAncestorOf(artifact);
   }
 
   /**
@@ -652,7 +682,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
    */
   @Override
   public Collection<IBundleMakerArtifact> getChildren() {
-    return Collections.unmodifiableCollection(new LinkedList<IBundleMakerArtifact>(children));
+    return Collections.unmodifiableCollection(new LinkedList<IBundleMakerArtifact>(_children));
   }
 
   /**
@@ -670,7 +700,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     List<T> result = new ArrayList<T>();
 
     //
-    for (IBundleMakerArtifact child : children) {
+    for (IBundleMakerArtifact child : _children) {
       if (clazz.isAssignableFrom(child.getClass())) {
         result.add((T) child);
       }
@@ -678,21 +708,6 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     return Collections.unmodifiableCollection(result);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int compareTo(IBundleMakerArtifact o) {
-
-    //
-    if (o == null) {
-      return Integer.MIN_VALUE;
-    }
-
-    // compare the qualified name
-    return this.getQualifiedName().compareTo(o.getQualifiedName());
   }
 
   /**
@@ -718,11 +733,11 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     if (artifact == null) {
-      throw new ArtifactModelException("Can not add 'null' to " + this);
+      throw new AnalysisModelException("Can not add 'null' to " + this);
     }
 
     if (artifact == this) {
-      throw new ArtifactModelException("Can not artifact to itself. " + this);
+      throw new AnalysisModelException("Can not artifact to itself. " + this);
     }
 
     //
@@ -730,7 +745,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
 
     //
     if (canAddMessage != null) {
-      throw new ArtifactModelException("Can not add " + artifact + " to " + this + ":\n" + canAddMessage);
+      throw new AnalysisModelException("Can not add " + artifact + " to " + this + ":\n" + canAddMessage);
     }
   }
 
@@ -763,7 +778,7 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
       return false;
     }
 
-    if (!isAncestor(artifact)) {
+    if (!isAncestorOf(artifact)) {
       return false;
     }
 
@@ -833,7 +848,47 @@ public abstract class AbstractBundleMakerArtifactContainer extends AbstractBundl
     return result;
   }
 
-  public Collection<IBundleMakerArtifact> getModifiableChildren() {
-    return children;
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Collection<IBundleMakerArtifact> getModifiableChildrenCollection() {
+    return _children;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private Map<IBundleMakerArtifact, IDependency> aggregatedDependenciesTo() {
+
+    //
+    if (_aggregatedDependenciesTo == null) {
+      _aggregatedDependenciesTo = new HashMap<IBundleMakerArtifact, IDependency>();
+    }
+
+    //
+    return _aggregatedDependenciesTo;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private Map<IBundleMakerArtifact, IDependency> aggregatedDependenciesFrom() {
+
+    //
+    if (_aggregatedDependenciesFrom == null) {
+      _aggregatedDependenciesFrom = new HashMap<IBundleMakerArtifact, IDependency>();
+    }
+
+    //
+    return _aggregatedDependenciesFrom;
   }
 }

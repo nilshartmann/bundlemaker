@@ -7,10 +7,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -36,14 +36,14 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
 
     // get the root artifact
     IRootArtifact rootArtifact = getCurrentModularizedSystem()
-        .getArtifactModel(IArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
+        .getArtifactModel(IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // get the module artifact
     IModuleArtifact moduleArtifact = rootArtifact.getModuleArtifact(getCurrentModule());
 
     // get all resource module artifacts
     final List<IModuleArtifact> resourceModuleArtifacts = new LinkedList<IModuleArtifact>();
-    rootArtifact.accept(new IArtifactTreeVisitor.Adapter() {
+    rootArtifact.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
         if (moduleArtifact.isResourceModule()) {
@@ -57,7 +57,7 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
     bw.write("<br/>\n");
 
     // iterate over all module2module dependencies
-    for (IDependency dependency : rootArtifact.getModuleArtifact(getCurrentModule()).getDependencies(
+    for (IDependency dependency : rootArtifact.getModuleArtifact(getCurrentModule()).getDependenciesTo(
         resourceModuleArtifacts)) {
 
       if (!moduleArtifact.equals(dependency.getTo())) {
@@ -207,8 +207,8 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
   }
 
   @Override
-  protected IArtifactModelConfiguration getModelConfiguration() {
-    return IArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION;
+  protected IAnalysisModelConfiguration getModelConfiguration() {
+    return IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION;
   }
 
   /**

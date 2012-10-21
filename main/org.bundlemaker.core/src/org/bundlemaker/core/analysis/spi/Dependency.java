@@ -1,12 +1,12 @@
-package org.bundlemaker.analysis.model.impl;
+package org.bundlemaker.core.analysis.spi;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.bundlemaker.analysis.model.DependencyKind;
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -26,7 +26,7 @@ public class Dependency implements IDependency {
   private Collection<IDependency> dependencies;
 
   /** - */
-  private boolean                 _isLeafDependency;
+  private boolean                 _isCoreDependency;
 
   /**
    * <p>
@@ -35,9 +35,9 @@ public class Dependency implements IDependency {
    * 
    * @param from
    * @param to
-   * @param isLeafDependency
+   * @param isCoreDependency
    */
-  public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to, boolean isLeafDependency) {
+  public Dependency(IBundleMakerArtifact from, IBundleMakerArtifact to, boolean isCoreDependency) {
 
     Assert.isNotNull(from);
     Assert.isNotNull(to);
@@ -47,13 +47,22 @@ public class Dependency implements IDependency {
     _to = to;
 
     //
-    _isLeafDependency = isLeafDependency;
+    _isCoreDependency = isCoreDependency;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param dependencyKind
+   */
   public void setDependencyKind(DependencyKind dependencyKind) {
     this.dependencyKind = dependencyKind;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public DependencyKind getDependencyKind() {
     return dependencyKind;
@@ -81,9 +90,9 @@ public class Dependency implements IDependency {
 
     //
     if (dependencies != null && !dependencies.isEmpty()) {
-      return _isLeafDependency ? dependencies.size() + 1 : dependencies.size();
+      return _isCoreDependency ? dependencies.size() + 1 : dependencies.size();
     } else {
-      return _isLeafDependency ? 1 : 0;
+      return _isCoreDependency ? 1 : 0;
     }
   }
 
@@ -131,7 +140,7 @@ public class Dependency implements IDependency {
    * {@inheritDoc}
    */
   @Override
-  public Collection<IDependency> getLeafDependencies() {
+  public Collection<IDependency> getCoreDependencies() {
     Collection<IDependency> result = new LinkedList<IDependency>();
     getLeafDependencies(result);
     return result;
@@ -140,7 +149,7 @@ public class Dependency implements IDependency {
   public void getLeafDependencies(Collection<IDependency> leafDependencies) {
 
     //
-    if (_isLeafDependency) {
+    if (_isCoreDependency) {
       leafDependencies.add(this);
     }
 

@@ -6,7 +6,7 @@ package org.bundlemaker.core.analysis;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IArtifactModelModifiedListener {
+public interface IAnalysisModelModifiedListener {
 
   /**
    * <p>

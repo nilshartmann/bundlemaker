@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
-import org.bundlemaker.core.analysis.visitors.DuplicateTypesVisitor;
 import org.bundlemaker.core.exporter.IModularizedSystemExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;

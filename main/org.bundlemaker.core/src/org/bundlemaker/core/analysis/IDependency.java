@@ -1,8 +1,7 @@
-package org.bundlemaker.analysis.model;
+package org.bundlemaker.core.analysis;
 
 import java.util.Collection;
 
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 
 /**
  * <p>
@@ -52,7 +51,7 @@ public interface IDependency {
    * 
    * @return
    */
-  public Collection<IDependency> getLeafDependencies();
+  public Collection<IDependency> getCoreDependencies();
 
   DependencyKind getDependencyKind();
 }

@@ -70,6 +70,7 @@ public class BundleMakerProject implements IBundleMakerProject {
   /** the project description working copies */
   private Map<String, ModularizedSystem>           _modifiableModualizedSystemWorkingCopies;
 
+  /** - */
   private List<IProblem>                           _problems;
 
   /**
@@ -96,6 +97,14 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     //
     _projectChangedListeners = new LinkedList<IBundleMakerProjectChangedListener>();
+    addBundleMakerProjectChangedListener(new IBundleMakerProjectChangedListener() {
+      @Override
+      public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
+        if (event.getType().equals(Type.PROJECT_DESCRIPTION_RECOMPUTED)) {
+          BundleMakerProject.this._projectState = BundleMakerProjectState.DIRTY;
+        }
+      }
+    });
 
     //
     _projectState = BundleMakerProjectState.CREATED;

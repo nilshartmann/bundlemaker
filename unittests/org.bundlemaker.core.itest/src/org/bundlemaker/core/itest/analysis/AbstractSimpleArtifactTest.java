@@ -6,10 +6,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -92,7 +92,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
    * 
    * @return
    */
-  public abstract IArtifactModelConfiguration getConfiguration();
+  public abstract IAnalysisModelConfiguration getConfiguration();
 
   /**
    * <p>
@@ -294,7 +294,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
     IBundleMakerArtifact jreModule = _rootArtifact.getModuleArtifact(executionEnvironmentModule);
 
     //
-    IDependency dependency = _module_Artifact.getDependency(jreModule);
+    IDependency dependency = _module_Artifact.getDependencyTo(jreModule);
     Assert.assertNotNull(dependency);
     Assert.assertEquals(_module_Artifact, dependency.getFrom());
     Assert.assertEquals(jreModule, dependency.getTo());

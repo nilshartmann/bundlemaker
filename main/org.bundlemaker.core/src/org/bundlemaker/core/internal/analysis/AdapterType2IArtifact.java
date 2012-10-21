@@ -13,23 +13,24 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.DependencyKind;
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.analysis.model.impl.Dependency;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactSelector;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.DependencyKind;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
+import org.bundlemaker.core.analysis.spi.Dependency;
+import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
+import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
+import org.bundlemaker.core.analysis.spi.ReferencedArtifactTrait;
+import org.bundlemaker.core.analysis.spi.ReferencingArtifactTrait;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.AmbiguousElementException;
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
@@ -44,22 +45,23 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implements IMovableUnit, IBundleMakerArtifact,
-    ITypeArtifact {
+public class AdapterType2IArtifact extends AbstractArtifact implements IMovableUnit,
+    ITypeArtifact, IReferencingArtifact, IReferencedArtifact {
 
   /** the bundle maker type */
-  private IType                                  _type;
+  private IType                    _type;
 
   /** - */
-  private ArtifactCache                          _artifactCache;
+  private ArtifactCache            _artifactCache;
 
   /** - */
-  private Map<IBundleMakerArtifact, IDependency> _cachedDependencies;
+  private IMovableUnit             _movableUnit;
 
   /** - */
-  private IMovableUnit                           _movableUnit;
+  private ReferencingArtifactTrait _referencingArtifact;
 
-  private IRootArtifact                          _root;
+  /** - */
+  private ReferencedArtifactTrait  _referencedArtifact;
 
   /**
    * <p>
@@ -70,29 +72,84 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
    */
   public AdapterType2IArtifact(IType type, ArtifactCache defaultArtifactCache, IBundleMakerArtifact parent) {
 
+    //
     super(type.getName());
 
+    //
     Assert.isNotNull(type.isPrimaryType());
     Assert.isNotNull(defaultArtifactCache);
     Assert.isNotNull(parent);
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+    ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
 
+    //
     _type = type;
-
     _artifactCache = defaultArtifactCache;
 
     //
     _movableUnit = MovableUnit.createFromType(type, defaultArtifactCache.getModularizedSystem());
+    _referencingArtifact = new ReferencingArtifactTrait() {
+      @Override
+      protected void initialize() {
+        initReferences();
+      }
+    };
+    _referencedArtifact = new ReferencedArtifactTrait() {
+      @Override
+      protected void initialize() {
+        initReferences();
+      }
+    };
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  public Collection<? extends IDependency> getDependencies(IBundleMakerArtifact... artifacts) {
-    return Collections.emptyList();
+  public Collection<IDependency> getDependenciesTo() {
+    return _referencingArtifact.getDependenciesTo();
+  }
+
+  public boolean hasDependencyTo(IBundleMakerArtifact artifact) {
+    return _referencingArtifact.hasDependencyTo(artifact);
+  }
+
+  public IDependency getDependencyTo(IBundleMakerArtifact artifact) {
+    return _referencingArtifact.getDependencyTo(artifact);
+  }
+
+  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
+    return _referencingArtifact.getDependenciesTo(artifacts);
+  }
+
+  public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+    return _referencingArtifact.getDependenciesTo(artifacts);
+  }
+
+  public Collection<IDependency> getDependenciesFrom() {
+    return _referencedArtifact.getDependenciesFrom();
+  }
+
+  public boolean hasDependencyFrom(IBundleMakerArtifact artifact) {
+    return _referencedArtifact.hasDependencyFrom(artifact);
+  }
+
+  public IDependency getDependencyFrom(IBundleMakerArtifact artifact) {
+    return _referencedArtifact.getDependencyFrom(artifact);
+  }
+
+  public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
+    return _referencedArtifact.getDependenciesFrom(artifacts);
+  }
+
+  public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+    return _referencedArtifact.getDependenciesFrom(artifacts);
+  }
+
+  public Map<IBundleMakerArtifact, IDependency> coreDependenciesToMap() {
+    return _referencingArtifact.coreDependenciesToMap();
+  }
+
+  public Map<IBundleMakerArtifact, IDependency> coreDependenciesFromMap() {
+    return _referencedArtifact.coreDependenciesFromMap();
   }
 
   /**
@@ -119,19 +176,6 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
       //
       return new Path(getUniquePathIdentifier());
     }
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IArtifactModelConfiguration getConfiguration() {
-    return getRoot().getConfiguration();
   }
 
   /**
@@ -200,13 +244,7 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
 
   @Override
   public List<IBundleMakerArtifact> invalidateDependencyCache() {
-    _cachedDependencies = null;
     return Arrays.asList(new IBundleMakerArtifact[] { this });
-  }
-
-  @Override
-  public Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
-    return _cachedDependencies;
   }
 
   @Override
@@ -260,35 +298,6 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
   }
 
   @Override
-  public void setParent(IBundleMakerArtifact parent) {
-
-    //
-    super.setParent(parent);
-
-    //
-    getRoot();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IRootArtifact getRoot() {
-
-    //
-    if (_root == null) {
-      _root = (IRootArtifact) getParent(IRootArtifact.class);
-    }
-
-    //
-    return _root;
-  }
-
-  public IBundleMakerArtifact getParent() {
-    return (IBundleMakerArtifact) super.getParent();
-  }
-
-  @Override
   public Collection<IBundleMakerArtifact> getChildren() {
     return Collections.emptySet();
   }
@@ -303,78 +312,18 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
     return this.equals(artifact);
   }
 
-  @Override
-  public IDependency getDependency(IBundleMakerArtifact artifact) {
-
-    //
-    initDependencies();
-
-    // TODO: RESOURCES!
-    // STICKYTYPES!!
-
-    //
-    if (artifact.getLeafs() == null) {
-      return _cachedDependencies.get(artifact);
-    } else {
-      Dependency dependencyContainer = new Dependency(this, artifact, false);
-      for (IBundleMakerArtifact leaf : artifact.getLeafs()) {
-        IDependency dependency = getDependency(leaf);
-        if ((dependency != null) && (dependency.getTo().isInstanceOf(ITypeArtifact.class))) {
-          dependencyContainer.addDependency(dependency);
-        }
-      }
-      return dependencyContainer;
-    }
-  }
-
-  @Override
-  public Collection<IDependency> getDependencies() {
-
-    //
-    initDependencies();
-
-    return _cachedDependencies.values();
-  }
-
-  @Override
-  public Collection<IBundleMakerArtifact> getLeafs() {
-
-    // simply return null
-    return null;
-  }
-
-  @Override
-  public IModularizedSystem getModularizedSystem() {
-    return getRoot().getModularizedSystem();
-  }
-
-  /**
-	 * 
-	 */
-  private void initDependencies() {
-
-    //
-    if (_cachedDependencies != null) {
-      return;
-    }
-
-    //
-    _cachedDependencies = new HashMap<IBundleMakerArtifact, IDependency>();
-
-    // TODO: WRONG!
-    initReferences(_type.getReferences(), false);
-  }
-
   /**
    * <p>
    * </p>
    * 
    * @param references
    */
-  private void initReferences(Collection<? extends IReference> references, boolean isPrimaryType) {
+  private void initReferences() {
+
+    boolean isPrimaryType = false;
 
     // iterate over all references
-    for (IReference reference : references) {
+    for (IReference reference : _type.getReferences()) {
 
       // get the reference name
       String referenceName = reference.getFullyQualifiedName();
@@ -385,25 +334,26 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
       }
 
       //
-      IBundleMakerArtifact artifact = _artifactCache.getTypeArtifact(referenceName, false);
+      IBundleMakerArtifact referencedArtifact = _artifactCache.getTypeArtifact(referenceName, false);
 
       // does the artifact exist?
-      if (artifact != null) {
+      if (referencedArtifact != null) {
 
         // get the cached instance
-        if (_cachedDependencies.containsKey(artifact)) {
+        if (_referencingArtifact.coreDependenciesToMap().containsKey(referencedArtifact)) {
 
           //
           if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
 
             // set the dependency kind
-            ((Dependency) _cachedDependencies.get(artifact)).setDependencyKind(getDependencyKind(reference));
+            ((Dependency) _referencingArtifact.coreDependenciesToMap().get(referencedArtifact))
+                .setDependencyKind(getDependencyKind(reference));
           }
 
         } else {
 
           // map to dependency
-          Dependency dependency = new Dependency(this, artifact, true);
+          Dependency dependency = new Dependency(this, referencedArtifact, true);
 
           // top level primary types only
           if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
@@ -416,7 +366,12 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
           }
 
           //
-          _cachedDependencies.put(artifact, dependency);
+          _referencingArtifact.coreDependenciesToMap().put(referencedArtifact, dependency);
+
+          //
+          if (referencedArtifact instanceof IReferencedArtifact) {
+            ((IReferencedArtifact) referencedArtifact).coreDependenciesFromMap().put(this, dependency);
+          }
         }
       }
 
@@ -528,44 +483,14 @@ public class AdapterType2IArtifact extends AbstractBundleMakerArtifact implement
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
     //
     visitor.visit(this);
   }
 
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
-  }
-
-  @Override
-  public void addArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addArtifacts(List<? extends IBundleMakerArtifact> artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addArtifacts(IArtifactSelector artifactSelector) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public boolean removeArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removeArtifacts(IArtifactSelector artifactSelector) {
-    throw new UnsupportedOperationException();
   }
 
   /**
