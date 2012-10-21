@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformation.handlers;
+package org.bundlemaker.core.ui.transformations.handlers;
 
 import java.util.Dictionary;
 

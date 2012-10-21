@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.transformation.handlers;
+package org.bundlemaker.core.ui.transformations.handlers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.List;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
 import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
-import org.bundlemaker.core.ui.transformation.Activator;
-import org.bundlemaker.core.ui.transformation.runner.TransformationScriptRunner;
+import org.bundlemaker.core.ui.transformations.Activator;
+import org.bundlemaker.core.ui.transformations.runner.TransformationScriptRunner;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;

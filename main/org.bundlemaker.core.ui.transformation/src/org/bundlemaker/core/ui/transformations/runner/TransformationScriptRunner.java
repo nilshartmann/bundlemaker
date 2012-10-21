@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformation.runner;
+package org.bundlemaker.core.ui.transformations.runner;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -22,10 +22,10 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
 import org.bundlemaker.core.transformations.script.TransformationModelConfiguration;
-import org.bundlemaker.core.ui.transformation.Activator;
-import org.bundlemaker.core.ui.transformation.console.TransformationScriptConsoleFactory;
-import org.bundlemaker.core.ui.transformation.handlers.TransformationScriptClassLoader;
-import org.bundlemaker.core.ui.transformation.handlers.TransformationScriptLogger;
+import org.bundlemaker.core.ui.transformations.Activator;
+import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory;
+import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptClassLoader;
+import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptLogger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;

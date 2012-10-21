@@ -9,7 +9,7 @@
       </extension>
 
       <extension point="org.eclipse.ui.handlers">
-            <handler class="org.bundlemaker.core.ui.transformation.handlers.RunTransformationScriptHandler"
+            <handler class="org.bundlemaker.core.ui.transformations.handlers.RunTransformationScriptHandler"
                   commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand">
                   <activeWhen>
                         <reference
@@ -41,6 +41,6 @@
          point="org.eclipse.ui.console.consoleFactories">
       <consoleFactory
             label="BundleMaker Transformation Script Console"
-            class="org.bundlemaker.core.ui.transformation.console.TransformationScriptConsoleFactory"/>
+            class="org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory"/>
    </extension>
 </plugin>

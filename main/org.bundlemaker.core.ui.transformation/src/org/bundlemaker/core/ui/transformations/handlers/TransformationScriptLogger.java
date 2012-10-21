@@ -8,10 +8,10 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformation.handlers;
+package org.bundlemaker.core.ui.transformations.handlers;
 
 import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
-import org.bundlemaker.core.ui.transformation.console.TransformationScriptConsole;
+import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsole;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
