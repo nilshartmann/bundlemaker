@@ -1,0 +1,26 @@
+package org.bundlemaker.example.transformation;
+
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.transformations.script.ITransformationScript;
+import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
+import org.bundlemaker.core.transformations.script.TransformationModelConfiguration;
+
+/**
+ * Start point for your own transformations. 
+ * 
+ * <p>Just implement the {@link #transform(ITransformationScriptLogger, IRootArtifact)} method
+ *
+ */
+public class SampleTransformationScript implements ITransformationScript {
+
+	@TransformationModelConfiguration
+	@Override
+	public void transform(		
+			ITransformationScriptLogger logger,
+			IRootArtifact root) throws Exception {
+		
+		logger.log("Starting transformation");
+		
+		// TODO Auto generated class. Implement your transformation logic here
+	}
+}

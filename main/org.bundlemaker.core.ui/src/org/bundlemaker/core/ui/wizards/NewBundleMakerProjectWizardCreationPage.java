@@ -11,6 +11,7 @@
 package org.bundlemaker.core.ui.wizards;
 
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.debug.internal.ui.SWTFactory;
 import org.eclipse.jdt.internal.debug.ui.jres.BuildJREDescriptor;
 import org.eclipse.jdt.internal.debug.ui.jres.JREsComboBlock;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -19,7 +20,10 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
 /**
@@ -39,6 +43,8 @@ public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCre
    */
   private JREsComboBlock _jreComboBlock;
 
+  Button                 _enableTransformationScriptSupportButton;
+
   public NewBundleMakerProjectWizardCreationPage() {
     super("NewBundleMakerProjectWizardCreationPage");
 
@@ -57,6 +63,8 @@ public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCre
 
     // Create the JRE selection box
     createJreGroup(control);
+
+    createTransformationScriptBlock(control);
 
     // Pre-select default JRE
     preselectJre();
@@ -82,11 +90,28 @@ public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCre
     GridData gd = new GridData(GridData.FILL_HORIZONTAL);
     _jreComboBlock.getControl().setLayoutData(gd);
     _jreComboBlock.addPropertyChangeListener(new IPropertyChangeListener() {
+      @Override
       public void propertyChange(PropertyChangeEvent event) {
         setErrorMessageFromStatus(_jreComboBlock.getStatus());
       }
     });
 
+  }
+
+  private void createTransformationScriptBlock(Composite parent) {
+    Composite parentGroup = new Composite(parent, SWT.NONE);
+    parentGroup.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+    parentGroup.setLayout(new GridLayout(2, false));
+
+    Group group = SWTFactory.createGroup(parentGroup, "Transformation Scripts", 1, 1, GridData.FILL_HORIZONTAL);
+    Composite comp = SWTFactory.createComposite(group, group.getFont(), 1, 1, GridData.FILL_BOTH, 0, 0);
+
+    _enableTransformationScriptSupportButton = new Button(comp, SWT.CHECK);
+    _enableTransformationScriptSupportButton.setText("Enable Transformation Script support");
+    _enableTransformationScriptSupportButton.setSelection(true);
+    Label label = new Label(comp, SWT.NONE);
+    label
+        .setText("Enabling transformation script support allows you to directly write transformation scripts in your BundleMaker project.\nIf you now deceide to not enable this support you still can later add it at any time.");
   }
 
   /**
@@ -112,6 +137,10 @@ public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCre
 
   public String getSelectedJreId() {
     return _jreComboBlock.getPath().toString();
+  }
+
+  public boolean isTransformationScriptSupportSelected() {
+    return _enableTransformationScriptSupportButton.getSelection();
   }
 
   /*
