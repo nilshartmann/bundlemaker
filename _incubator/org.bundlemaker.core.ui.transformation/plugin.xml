@@ -23,16 +23,6 @@
                   </enabledWhen>
             </handler>
       </extension>
-      
- 
-	   <extension
-	         point="org.eclipse.jdt.core.classpathContainerInitializer">
-	      <classpathContainerInitializer
-	            class="org.bundlemaker.core.ui.classpath.BundleMakerClasspathContainerInitializer"
-	            id="org.bundlemaker.core.ui.classpath"/>
-	   </extension>
- 
-
 
       <!--  Submenu -->
       <extension point="org.eclipse.ui.menus">
@@ -53,13 +43,4 @@
             label="BundleMaker Transformation Script Console"
             class="org.bundlemaker.core.ui.transformation.console.TransformationScriptConsoleFactory"/>
    </extension>
-      <extension
-            point="org.eclipse.jdt.ui.classpathContainerPage">
-         <classpathContainerPage
-         	name="BundleMaker Libraries"
-               class="org.bundlemaker.core.ui.transformation.classpath.BundleMakerClasspathContainerPage"
-               id="org.bundlemaker.core.ui.classpath">
-         </classpathContainerPage>
-      </extension>
- 
 </plugin>

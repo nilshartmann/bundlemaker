@@ -42,7 +42,7 @@ public final class BundleMakerCore {
   public static final String NATURE_ID                  = "org.bundlemaker.core.bundlemakernature";
 
   /** bundlemaker classpath container */
-  public static final IPath  BUNDLEMAKER_CONTAINER_PATH = new Path("org.bundlemaker.core.ui.classpath"); //$NON-NLS-1$
+  public static final IPath  BUNDLEMAKER_CONTAINER_PATH = new Path("org.bundlemaker.core.classpath"); //$NON-NLS-1$
 
   /** the bundle make directory name */
   public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";

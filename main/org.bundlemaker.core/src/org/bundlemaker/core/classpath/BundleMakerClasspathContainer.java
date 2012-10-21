@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.classpath;
+package org.bundlemaker.core.classpath;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.eclipse.core.runtime.IPath;

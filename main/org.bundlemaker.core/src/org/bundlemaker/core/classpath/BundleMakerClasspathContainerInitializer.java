@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.classpath;
+package org.bundlemaker.core.classpath;
 
 import java.io.File;
 import java.util.Hashtable;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.BundleMakerCore;
-import org.bundlemaker.core.ui.transformation.Activator;
+import org.bundlemaker.core.internal.Activator;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
