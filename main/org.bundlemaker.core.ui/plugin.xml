@@ -540,7 +540,7 @@
 	 <extension
 	 point="org.eclipse.jdt.core.classpathContainerInitializer">
 		<classpathContainerInitializer
-	      class="org.bundlemaker.core.classpath.BundleMakerClasspathContainerInitializer"
+	      class="org.bundlemaker.core.internal.classpath.BundleMakerClasspathContainerInitializer"
 	      id="org.bundlemaker.core.classpath"/>
 	 </extension>
    
@@ -548,7 +548,7 @@
 	      point="org.eclipse.jdt.ui.classpathContainerPage">
 	   <classpathContainerPage
 	   	name="BundleMaker Libraries"
-	         class="org.bundlemaker.core.ui.classpath.BundleMakerClasspathContainerPage"
+	         class="org.bundlemaker.core.ui.internal.classpath.BundleMakerClasspathContainerPage"
 	         id="org.bundlemaker.core.classpath">
 	   </classpathContainerPage>
 	</extension>

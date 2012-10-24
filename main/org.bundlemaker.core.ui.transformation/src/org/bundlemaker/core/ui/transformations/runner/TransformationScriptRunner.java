@@ -16,8 +16,8 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
@@ -78,7 +78,7 @@ public class TransformationScriptRunner {
     ITransformationScript transformationScript = createTransformationScript();
 
     // Get the required artifact model configuration
-    IArtifactModelConfiguration artifactModelConfiguration = getArtifactModelConfiguration(transformationScript);
+    IAnalysisModelConfiguration artifactModelConfiguration = getAnalysisModelConfiguration(transformationScript);
 
     // Get an artifact model according to the configuration specified in the script
     IRootArtifact rootArtifact = _artifact.getModularizedSystem().getArtifactModel(artifactModelConfiguration);
@@ -118,7 +118,7 @@ public class TransformationScriptRunner {
     return transformationScript;
   }
 
-  private IArtifactModelConfiguration getArtifactModelConfiguration(ITransformationScript script) throws Exception {
+  private IAnalysisModelConfiguration getAnalysisModelConfiguration(ITransformationScript script) throws Exception {
 
     Method declaredTransformMethod = ITransformationScript.class.getDeclaredMethods()[0];
 
@@ -130,7 +130,7 @@ public class TransformationScriptRunner {
       return null;
     }
 
-    ArtifactModelConfiguration artifactModelConfiguration = new ArtifactModelConfiguration(
+    AnalysisModelConfiguration artifactModelConfiguration = new AnalysisModelConfiguration(
         annotation.hierarchicalPackages(), annotation.contentType(), annotation.useVirtualModuleForMissingTypes());
 
     return artifactModelConfiguration;

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.classpath;
+package org.bundlemaker.core.ui.internal.classpath;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.eclipse.jdt.core.IClasspathEntry;
