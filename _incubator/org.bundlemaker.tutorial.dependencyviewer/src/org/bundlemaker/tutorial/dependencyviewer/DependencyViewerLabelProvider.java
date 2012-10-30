@@ -142,7 +142,7 @@ public class DependencyViewerLabelProvider extends LabelProvider implements ICon
 
       String tooltipText = dependencyAsString(dependency);
       IDependency reverseDependency = dependency.getTo().getDependencyTo(dependency.getFrom());
-      int backCount = reverseDependency.getWeight();
+      int backCount = (reverseDependency == null ? 0 : reverseDependency.getWeight());
       if (backCount > 0) {
         tooltipText += "\n" + dependencyAsString(reverseDependency);
       }

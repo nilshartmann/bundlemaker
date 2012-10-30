@@ -81,7 +81,7 @@ public class DependencyViewerModel {
         }
 
         IDependency dependency = from.getDependencyTo(to);
-        int weight = dependency.getWeight();
+        int weight = (dependency == null ? 0 : dependency.getWeight());
 
         minWeight = Math.min(weight, minWeight);
         maxWeight = Math.max(weight, maxWeight);
