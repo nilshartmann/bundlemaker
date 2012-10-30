@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.event.Events;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelectionChangedEvent;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
@@ -121,7 +121,7 @@ public class Activator extends AbstractUIPlugin {
     final List<IDependency> result = new LinkedList<IDependency>();
 
     for (IDependency dependency : dependencies) {
-      for (IDependency leafDependency : dependency.getLeafDependencies()) {
+      for (IDependency leafDependency : dependency.getCoreDependencies()) {
         result.add(leafDependency);
       }
     }

@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -40,7 +40,7 @@ public class ArtifactUtils {
     final IModuleArtifact[] result = new IModuleArtifact[1];
 
     //
-    artifact.accept(new IArtifactTreeVisitor.Adapter() {
+    artifact.accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
@@ -75,7 +75,7 @@ public class ArtifactUtils {
     final List<IModuleArtifact> result = new LinkedList<IModuleArtifact>();
 
     //
-    artifact.accept(new IArtifactTreeVisitor.Adapter() {
+    artifact.accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
@@ -108,7 +108,7 @@ public class ArtifactUtils {
     final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
 
     //
-    artifact.accept(new IArtifactTreeVisitor.Adapter() {
+    artifact.accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IPackageArtifact packageArtifact) {

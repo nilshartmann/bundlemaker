@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -61,13 +61,13 @@ public class ModelTransformerCache {
    * @return the {@link IDependencyModel}
    */
   public IRootArtifact getArtifactModel(IModifiableModularizedSystem modifiableModularizedSystem,
-      IArtifactModelConfiguration configuration) {
+      IAnalysisModelConfiguration configuration) {
 
     // assert not null
     Assert.isNotNull(modifiableModularizedSystem);
 
     // set the default configuration if no configuration is set
-    configuration = configuration == null ? new ArtifactModelConfiguration() : configuration;
+    configuration = configuration == null ? new AnalysisModelConfiguration() : configuration;
 
     //
     CacheKey cacheKey = new CacheKey(modifiableModularizedSystem, configuration);
@@ -105,7 +105,7 @@ public class ModelTransformerCache {
     private IModifiableModularizedSystem _modifiableModularizedSystem;
 
     /* - */
-    private IArtifactModelConfiguration  _configuration;
+    private IAnalysisModelConfiguration  _configuration;
 
     /**
      * <p>
@@ -115,7 +115,7 @@ public class ModelTransformerCache {
      * @param modifiableModularizedSystem
      * @param configuration
      */
-    public CacheKey(IModifiableModularizedSystem modifiableModularizedSystem, IArtifactModelConfiguration configuration) {
+    public CacheKey(IModifiableModularizedSystem modifiableModularizedSystem, IAnalysisModelConfiguration configuration) {
 
       Assert.isNotNull(modifiableModularizedSystem);
       Assert.isNotNull(configuration);

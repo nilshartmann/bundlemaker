@@ -14,19 +14,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import org.bundlemaker.analysis.model.IDependency;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactSelector;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.spi.AbstractArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.DispatchingArtifactTreeVisitor;
-import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.resource.IResource;
@@ -38,7 +35,7 @@ import org.eclipse.core.runtime.Path;
 /**
  * 
  */
-public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implements IMovableUnit, ITypeArtifact {
+public class VirtualType2IArtifact extends AbstractArtifact implements IMovableUnit, ITypeArtifact {
 
   /** - */
   private String        _fullyQualifiedName;
@@ -61,7 +58,7 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+    ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
 
     _fullyQualifiedName = fullyQualifiedName;
   }
@@ -102,16 +99,11 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
     }
   }
 
-  @Override
-  public <T extends IBundleMakerArtifact> T getChildByPath(Class<T> clazz, IPath path) {
-    return null;
-  }
-
   /**
    * {@inheritDoc}
    */
   @Override
-  public IArtifactModelConfiguration getConfiguration() {
+  public IAnalysisModelConfiguration getConfiguration() {
     return getRoot().getConfiguration();
   }
 
@@ -166,11 +158,6 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
   @Override
   public List<IBundleMakerArtifact> invalidateDependencyCache() {
     return Arrays.asList(new IBundleMakerArtifact[] { this });
-  }
-
-  @Override
-  public Map<IBundleMakerArtifact, IDependency> getCachedDependencies() {
-    return Collections.emptyMap();
   }
 
   /**
@@ -237,89 +224,9 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
     getRoot();
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public IRootArtifact getRoot() {
-
-    //
-    if (_root == null) {
-      _root = (IRootArtifact) getParent(IRootArtifact.class);
-    }
-
-    //
-    return _root;
-  }
-
-  @Override
-  public boolean removeArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addArtifacts(List<? extends IBundleMakerArtifact> artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void addArtifacts(IArtifactSelector artifactSelector) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removeArtifacts(List<? extends IBundleMakerArtifact> artifact) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public void removeArtifacts(IArtifactSelector artifactSelector) {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public Collection<IBundleMakerArtifact> getChildren() {
-    return Collections.emptySet();
-  }
-
-  @Override
-  public <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz) {
-    return Collections.emptySet();
-  }
-
-  public IBundleMakerArtifact getParent() {
-    return (IBundleMakerArtifact) super.getParent();
-  }
-
   @Override
   public boolean contains(IBundleMakerArtifact artifact) {
     return this.equals(artifact);
-  }
-
-  @Override
-  public IDependency getDependency(IBundleMakerArtifact artifact) {
-    return null;
-  }
-
-  @Override
-  public Collection<IDependency> getDependencies() {
-    return Collections.emptyList();
-  }
-
-  @Override
-  public Collection<IBundleMakerArtifact> getLeafs() {
-    // simply return null
-    return null;
-  }
-
-  @Override
-  public IModularizedSystem getModularizedSystem() {
-    return getRoot().getModularizedSystem();
   }
 
   @Override
@@ -346,12 +253,12 @@ public class VirtualType2IArtifact extends AbstractBundleMakerArtifact implement
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
     //
     visitor.visit(this);
   }
 
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
   }

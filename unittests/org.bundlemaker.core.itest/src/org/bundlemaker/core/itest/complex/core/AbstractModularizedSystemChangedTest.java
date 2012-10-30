@@ -5,7 +5,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.AmbiguousElementException;
@@ -110,7 +110,7 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
 
     //
     _rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(_rootArtifact);
 
     //

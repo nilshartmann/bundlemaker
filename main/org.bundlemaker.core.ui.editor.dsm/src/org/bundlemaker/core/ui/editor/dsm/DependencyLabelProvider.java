@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.editor.dsm;
 
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.jface.viewers.LabelProvider;
 
 public class DependencyLabelProvider extends LabelProvider {

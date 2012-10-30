@@ -39,7 +39,7 @@ public abstract class AbstractContentProviderEditor implements IProjectContentPr
    */
   @Override
   public boolean canChangeAnalyzeMode(IProjectContentProvider projectContentProvider, Object element) {
-    
+
     // can't edit analyze mode
     return false;
   }
@@ -57,7 +57,7 @@ public abstract class AbstractContentProviderEditor implements IProjectContentPr
    */
   @Override
   public boolean canEdit(Object selectedObject) {
-    
+
     // can't edit anything
     return false;
   }
@@ -68,7 +68,7 @@ public abstract class AbstractContentProviderEditor implements IProjectContentPr
   @Override
   public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object
       selectedObject) {
-    
+
     // can't edit anything
     return false;
   }
@@ -78,7 +78,7 @@ public abstract class AbstractContentProviderEditor implements IProjectContentPr
    */
   @Override
   public boolean canRemove(Object selectedObject) {
-    
+
     // can't remove anything
     return false;
   }
@@ -89,17 +89,21 @@ public abstract class AbstractContentProviderEditor implements IProjectContentPr
   @Override
   public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object
       selectedObject) {
-    
+
     // default: do nothing
   }
-  
-  /* (non-Javadoc)
-   * @see org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#getContextMenuActions(org.bundlemaker.core.IBundleMakerProject, java.util.List)
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor#getContextMenuActions(org.bundlemaker
+   * .core.IBundleMakerProject, java.util.List)
    */
   @Override
   public List<IAction> getContextMenuActions(IBundleMakerProject project,
       List<IProjectContentProviderEditorElement> selectedElements) {
-    
+
     // default: no context menu contribution
     return null;
   }

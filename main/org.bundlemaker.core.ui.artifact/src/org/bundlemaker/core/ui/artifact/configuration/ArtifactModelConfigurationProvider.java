@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.artifact.configuration;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -25,7 +25,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  */
 public class ArtifactModelConfigurationProvider implements IArtifactModelConfigurationProvider {
 
-  private static ArtifactModelConfiguration DEFAULT_CONFIGURATION;
+  private static AnalysisModelConfiguration DEFAULT_CONFIGURATION;
 
   private final static String               PREFS_PREFIX               = "org.bundlemaker.core.ui.prefs.artifactModelConfiguration.";
 
@@ -45,11 +45,11 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
   /**
    * The managed configuration object
    */
-  private ArtifactModelConfiguration        _configuration;
+  private AnalysisModelConfiguration        _configuration;
 
-  private synchronized static ArtifactModelConfiguration getDefaultArtifactModelConfiguration() {
+  private synchronized static AnalysisModelConfiguration getDefaultArtifactModelConfiguration() {
     if (DEFAULT_CONFIGURATION == null) {
-      DEFAULT_CONFIGURATION = new ArtifactModelConfiguration();
+      DEFAULT_CONFIGURATION = new AnalysisModelConfiguration();
     }
 
     return DEFAULT_CONFIGURATION;
@@ -69,7 +69,7 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
    * org.bundlemaker.core.ui.view.navigator.IArtifactModelConfigurationProvider#getCurrentArtifactModelConfiguration()
    */
   @Override
-  public ArtifactModelConfiguration getArtifactModelConfiguration() {
+  public AnalysisModelConfiguration getArtifactModelConfiguration() {
     if (_configuration == null) {
       // Get instance pre-filled with default settings
       _configuration = getDefaultArtifactModelConfiguration();

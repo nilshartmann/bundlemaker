@@ -1,7 +1,7 @@
 package org.bundlemaker.core.itest.complex.analysis;
 
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.junit.Assert;
 import org.junit.Test;
@@ -80,7 +80,7 @@ public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
   }
 
   @Override
-  public IArtifactModelConfiguration getArtifactModelConfiguration() {
-    return IArtifactModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION;
+  public IAnalysisModelConfiguration getArtifactModelConfiguration() {
+    return IAnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION;
   }
 }

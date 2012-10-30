@@ -38,22 +38,20 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  */
 public class MvnContentProvider extends AbstractContentProvider implements IProjectContentProvider {
 
+  /** the mvn scope */
   private static final String        SCOPE_COMPILE = "compile";
 
-  /** - */
+  /** the mvn content type (configuration) */
   private MvnContentType             _mvnContent   = new MvnContentType();
 
   /** TODO */
   private int                        _counter      = 0;
 
-  /** - */
+  /** cached list of all file based contents */
   private List<IProjectContentEntry> _fileBasedContents;
 
-  /** - */
+  /** the BundleMakerProject */
   private IBundleMakerProject        _bundleMakerProject;
-
-  /** - */
-  private List<Artifact>             _alreadyHandled;
 
   /**
    * <p>
@@ -62,8 +60,8 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    */
   public MvnContentProvider() {
 
-    // create new list
-    _alreadyHandled = new LinkedList<Artifact>();
+    // initialize
+    _fileBasedContents = new LinkedList<IProjectContentEntry>();
   }
 
   /**
@@ -126,9 +124,11 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     Assert.isNotNull(configuration);
     Assert.isTrue(configuration instanceof MvnContentType);
 
-    // cast down
+    // set the content
     _mvnContent = (MvnContentType) configuration;
-    _fileBasedContents = null;
+
+    // clear the file based content
+    _fileBasedContents.clear();
   }
 
   /**
@@ -138,51 +138,16 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
   public List<IProjectContentEntry> getBundleMakerProjectContent(final IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
-    //
     Assert.isNotNull(bundleMakerProject);
 
     // set the IBundleMakerProject
     _bundleMakerProject = bundleMakerProject;
 
+    // only reload content if the fileBasedContents are not initialized yet
     if (_fileBasedContents != null && !_fileBasedContents.isEmpty()) {
       return _fileBasedContents;
-    }
-
-    // create the result list
-    _fileBasedContents = new LinkedList<IProjectContentEntry>();
-
-    // iterate over all the specified mvn artifacts
-    for (final MvnArtifactType artifactIdentifier : _mvnContent.getArtifacts()) {
-
-      // create the aether artifact
-      Artifact artifact = new DefaultArtifact(artifactIdentifier.getGroupId(),
-          artifactIdentifier.getArtifactId(), "jar",
-          artifactIdentifier.getVersion());
-
-      CollectRequest collectRequest = new CollectRequest();
-      collectRequest.setRoot(new Dependency(artifact, SCOPE_COMPILE));
-      collectRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
-
-      //
-      try {
-
-        // collect the result
-        CollectResult collectResult = Activator.getDefault().getMvnRepositories().getRepositorySystem()
-            .collectDependencies(
-                Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), collectRequest);
-
-        // visit all the dependencies
-        collectResult.getRoot().accept(new DependencyVisitorAdapter() {
-          @Override
-          public boolean visitEnter(DependencyNode node) {
-            return handleDependencyNode(node);
-          }
-        });
-
-      } catch (DependencyCollectionException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+    } else {
+      reloadContent(true);
     }
 
     // return the result
@@ -193,6 +158,61 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    * <p>
    * </p>
    */
+  public void reloadContent(final boolean useRemoteRepository) {
+
+    // create the result list
+    _fileBasedContents.clear();
+
+    // iterate over all the specified mvn artifacts
+    for (final MvnArtifactType artifactIdentifier : _mvnContent.getArtifacts()) {
+
+      // create the aether artifact
+      Artifact artifact = new DefaultArtifact(artifactIdentifier.getGroupId(),
+          artifactIdentifier.getArtifactId(), "jar",
+          artifactIdentifier.getVersion());
+
+      // create the collect request
+      CollectRequest collectRequest = new CollectRequest();
+      collectRequest.setRoot(new Dependency(artifact, SCOPE_COMPILE));
+
+      // add the remote repository is necessary
+      if (useRemoteRepository) {
+        collectRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+      }
+
+      //
+      try {
+
+        // collect the result
+        CollectResult collectResult = Activator.getDefault().getMvnRepositories().getRepositorySystem()
+            .collectDependencies(
+                Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), collectRequest);
+
+        final List<Artifact> alreadyHandled = new LinkedList<Artifact>();
+
+        // visit all the dependencies
+        collectResult.getRoot().accept(new DependencyVisitorAdapter() {
+          @Override
+          public boolean visitEnter(DependencyNode node) {
+            return handleDependencyNode(node, useRemoteRepository, alreadyHandled);
+          }
+        });
+
+      } catch (DependencyCollectionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+      // finally: fire project description recomputed event
+      fireProjectDescriptionRecomputedEvent();
+    }
+  }
+
+  /**
+   * <p>
+   * Clears the artifact list
+   * </p>
+   */
   public void clearArtifactList() {
     _mvnContent.getArtifacts().clear();
     _fileBasedContents.clear();
@@ -200,9 +220,10 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
   /**
    * <p>
+   * Returns the current maven artifacts.
    * </p>
    * 
-   * @return
+   * @return the current maven artifacts.
    */
   public List<MvnArtifactType> getMvnArtifacts() {
     return _mvnContent.getArtifacts();
@@ -217,20 +238,16 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    * @param node
    * @return
    */
-  protected boolean handleDependencyNode(DependencyNode node) {
+  private boolean handleDependencyNode(DependencyNode node, boolean useRemoteRepository,
+      List<Artifact> alreadyHandled) {
 
     //
-    if (_alreadyHandled.contains(node.getDependency().getArtifact())) {
+    if (alreadyHandled.contains(node.getDependency().getArtifact())) {
       return false;
     }
 
     //
-    _alreadyHandled.add(node.getDependency().getArtifact());
-    
-    System.out.println(node);
-
-    //
-    System.out.println("handleDependencyNode: " + node.getDependency().toString());
+    alreadyHandled.add(node.getDependency().getArtifact());
 
     // get the referenced artifact
     Artifact mvnArtifact = node.getDependency().getArtifact();
@@ -238,7 +255,11 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     //
     ArtifactRequest artifactRequest = new ArtifactRequest();
     artifactRequest.setArtifact(node.getDependency().getArtifact());
-    artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+
+    //
+    if (useRemoteRepository) {
+      artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+    }
 
     try {
 
@@ -263,7 +284,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
                 .getVersion());
         artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(sourceArtifact);
-        artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+        // artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
         try {
           artifactResult = Activator.getDefault().getMvnRepositories().getRepositorySystem().resolveArtifact(
               Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), artifactRequest);
@@ -277,38 +298,33 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
       binaryFile = currentMavenArtifact.getFile();
 
       // TODO!!!
-      try {
 
-        //
-        IModuleIdentifier moduleIdentifier = MvnArtifactConverter.toModuleIdentifier(mvnArtifact.getGroupId(),
-            mvnArtifact.getArtifactId(), mvnArtifact.getVersion());
+      //
+      IModuleIdentifier moduleIdentifier = MvnArtifactConverter.toModuleIdentifier(mvnArtifact.getGroupId(),
+          mvnArtifact.getArtifactId(), mvnArtifact.getVersion());
 
-        boolean analyze = currentMavenArtifact
-            .getGroupId().startsWith("de.o")
-        /*
-         * && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact .getGroupId()
-         * .contains("standard"))
-         */;
+      boolean analyze = currentMavenArtifact
+          .getGroupId().startsWith("de.o")
+      /*
+       * && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact .getGroupId()
+       * .contains("standard"))
+       */;
 
-        //
-        FileBasedContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
-            moduleIdentifier.getVersion(), binaryFile, sourceFile, _bundleMakerProject, analyze);
+      //
+      FileBasedContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
+          moduleIdentifier.getVersion(), binaryFile, sourceFile, _bundleMakerProject, analyze);
 
-        // set user attributes
-        fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_GROUP_ID,
-            mvnArtifact.getGroupId());
-        fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_ARTIFACT_ID,
-            mvnArtifact.getArtifactId());
-        fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MODULE_NAME,
-            moduleIdentifier.getName());
-
-      } catch (CoreException e) {
-        System.out.println(e.getMessage());
-        throw new RuntimeException(e.getMessage(), e);
-      }
+      // set user attributes
+      fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_GROUP_ID,
+          mvnArtifact.getGroupId());
+      fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_ARTIFACT_ID,
+          mvnArtifact.getArtifactId());
+      fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MODULE_NAME,
+          moduleIdentifier.getName());
 
     } catch (Exception e) {
-      // TODO: handle exception
+      System.out.println(e.getMessage());
+      throw new RuntimeException(e.getMessage(), e);
     }
 
     //
@@ -329,8 +345,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
       File sourcePath,
       IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
 
-    System.out.println("createFileBasedContent");
-
+    // asserts
     Assert.isNotNull(contentName);
     Assert.isNotNull(contentVersion);
     Assert.isNotNull(binaryPath);
@@ -366,6 +381,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
 
   /**
    * <p>
+   * Internal helper class.
    * </p>
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -373,11 +389,17 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    */
   private static class DependencyVisitorAdapter implements DependencyVisitor {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean visitEnter(DependencyNode node) {
       return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean visitLeave(DependencyNode node) {
       return true;

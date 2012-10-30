@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.handler;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.ArtifactModelConfigurationDialog;
 import org.bundlemaker.core.ui.artifact.configuration.ArtifactModelConfigurationProvider;
@@ -31,7 +31,7 @@ public class CustomizeDependencyTreeHandler extends AbstractBundleMakerHandler {
     Shell shell = HandlerUtil.getActiveShell(event);
     IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
         .getArtifactModelConfigurationProvider();
-    ArtifactModelConfiguration currentArtifactModelConfiguration = artifactModelConfigurationProvider
+    AnalysisModelConfiguration currentArtifactModelConfiguration = artifactModelConfigurationProvider
         .getArtifactModelConfiguration();
     ArtifactModelConfigurationDialog dialog = new ArtifactModelConfigurationDialog(shell,
         currentArtifactModelConfiguration);

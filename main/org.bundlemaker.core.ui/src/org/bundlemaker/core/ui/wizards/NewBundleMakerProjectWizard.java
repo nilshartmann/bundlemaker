@@ -12,8 +12,12 @@ package org.bundlemaker.core.ui.wizards;
 
 import static java.lang.String.format;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
@@ -21,18 +25,28 @@ import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -186,6 +200,39 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
 
     try {
       BundleMakerCore.addBundleMakerNature(newProjectHandle);
+      if (mainPage.isTransformationScriptSupportSelected()) {
+        // hier: org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage.init(IJavaProject, IPath, IClasspathEntry[],
+        // boolean)
+        BundleMakerCore.addJavaNature(newProjectHandle);
+        IJavaProject javaProject = JavaCore.create(newProjectHandle);
+        IPath projectPath = new Path(newProjectHandle.getName()).makeAbsolute();
+        IWorkspaceRoot root = newProjectHandle.getWorkspace().getRoot();
+
+        IPath sourceFolderPath = projectPath.append("src");
+        IPath binFolderPath = projectPath.append("bin");
+
+        createFolder(root.getFolder(sourceFolderPath), true, true, null);
+        createDerivedFolder(root.getFolder(binFolderPath), true, true, null);
+
+        List<IClasspathEntry> cpEntries = new ArrayList<IClasspathEntry>();
+        cpEntries.add(JavaCore.newSourceEntry(sourceFolderPath));
+        cpEntries.add(JavaCore.newContainerEntry(BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH));
+        cpEntries.addAll(Arrays.asList(PreferenceConstants.getDefaultJRELibrary()));
+
+        IClasspathEntry[] classpathEntries = cpEntries.toArray(new IClasspathEntry[0]);
+        javaProject.setRawClasspath(classpathEntries, binFolderPath, null);
+        javaProject.save(null, true);
+        IClasspathEntry[] rawClasspath = javaProject.getRawClasspath();
+        System.out.println("rawClasspath: " + rawClasspath);
+
+        InputStream is = getClass().getResourceAsStream("TransformationScriptTemplate.txt");
+
+        IFolder examplePackageFolder = createFolder(
+            root.getFolder(sourceFolderPath.append("org/bundlemaker/example/transformation")), true, true, null);
+        IFile sampleScript = examplePackageFolder.getFile("SampleTransformationScript.java");
+        sampleScript.create(is, true, null);
+
+      }
       IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(newProjectHandle,
           new NullProgressMonitor());
       IModifiableProjectDescription modifiableProjectDescription = bundleMakerProject.getModifiableProjectDescription();
@@ -224,4 +271,44 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
     }
 
   }
+
+  public static void createDerivedFolder(IFolder folder, boolean force, boolean local, IProgressMonitor monitor)
+      throws CoreException {
+    if (!folder.exists()) {
+      IContainer parent = folder.getParent();
+      if (parent instanceof IFolder) {
+        createDerivedFolder((IFolder) parent, force, local, null);
+      }
+      folder.create(force ? (IResource.FORCE | IResource.DERIVED) : IResource.DERIVED, local, monitor);
+    }
+  }
+
+  /**
+   * Creates a folder and all parent folders if not existing. Project must exist.
+   * <code> org.eclipse.ui.dialogs.ContainerGenerator</code> is too heavy (creates a runnable)
+   * 
+   * @param folder
+   *          the folder to create
+   * @param force
+   *          a flag controlling how to deal with resources that are not in sync with the local file system
+   * @param local
+   *          a flag controlling whether or not the folder will be local after the creation
+   * @param monitor
+   *          the progress monitor
+   * @throws CoreException
+   *           thrown if the creation failed
+   */
+  public static IFolder createFolder(IFolder folder, boolean force, boolean local, IProgressMonitor monitor)
+      throws CoreException {
+    if (!folder.exists()) {
+      IContainer parent = folder.getParent();
+      if (parent instanceof IFolder) {
+        createFolder((IFolder) parent, force, local, null);
+      }
+      folder.create(force, local, monitor);
+    }
+
+    return folder;
+  }
+
 }

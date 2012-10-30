@@ -12,7 +12,7 @@ package org.bundlemaker.analysis.ui.itest;
 
 import static org.junit.Assert.assertEquals;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
@@ -202,7 +202,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
 
   protected IBundleMakerArtifact getRootArtifact(boolean hierarchical) {
 
-    ArtifactModelConfiguration artifactModelConfiguration = new ArtifactModelConfiguration();
+    AnalysisModelConfiguration artifactModelConfiguration = new AnalysisModelConfiguration();
     artifactModelConfiguration.setHierarchicalPackages(hierarchical);
     artifactModelConfiguration.setContentType(ContentType.BINARY);
     artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);

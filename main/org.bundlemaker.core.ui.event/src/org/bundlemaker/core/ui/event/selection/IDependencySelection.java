@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.event.selection;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IDependency;
 
 /**
  * A selection of {@link IDependency} instances

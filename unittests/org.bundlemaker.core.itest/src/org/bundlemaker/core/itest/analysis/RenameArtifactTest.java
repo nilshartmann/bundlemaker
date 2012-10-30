@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.itest.analysis;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -40,7 +40,7 @@ public class RenameArtifactTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertEquals(1, rootArtifact.getChildren(IModuleArtifact.class).size());
 
     //

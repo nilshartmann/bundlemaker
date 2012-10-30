@@ -623,8 +623,7 @@ public class ProjectEditorPage extends FormPage {
 
       @Override
       public void bundleMakerProjectChanged(BundleMakerProjectChangedEvent event) {
-
-        if (event.getType() == Type.PROJECT_STATE_CHANGED) {
+        if (event.getType() == Type.PROJECT_STATE_CHANGED || event.getType() == Type.PROJECT_DESCRIPTION_RECOMPUTED) {
           _needsReopening = getBundleMakerProject().getState() != BundleMakerProjectState.READY;
           Display.getDefault().syncExec(new Runnable() {
             @Override
@@ -633,7 +632,6 @@ public class ProjectEditorPage extends FormPage {
             }
           });
         }
-
       }
     });
 

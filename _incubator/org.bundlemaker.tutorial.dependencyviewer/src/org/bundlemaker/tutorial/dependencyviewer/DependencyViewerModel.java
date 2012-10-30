@@ -12,8 +12,8 @@ package org.bundlemaker.tutorial.dependencyviewer;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -80,7 +80,7 @@ public class DependencyViewerModel {
           continue;
         }
 
-        IDependency dependency = from.getDependency(to);
+        IDependency dependency = from.getDependencyTo(to);
         int weight = dependency.getWeight();
 
         minWeight = Math.min(weight, minWeight);

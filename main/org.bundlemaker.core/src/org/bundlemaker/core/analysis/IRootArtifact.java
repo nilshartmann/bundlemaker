@@ -18,23 +18,23 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
 
   /**
    * <p>
-   * Adds the specified {@link IArtifactModelModifiedListener} to the artifact tree.
+   * Adds the specified {@link IAnalysisModelModifiedListener} to the artifact tree.
    * </p>
    * 
    * @param listener
    *          the listener to add (must not be null)
    */
-  void addArtifactModelChangedListener(IArtifactModelModifiedListener listener);
+  void addArtifactModelChangedListener(IAnalysisModelModifiedListener listener);
 
   /**
    * <p>
-   * Removes the specified {@link IArtifactModelModifiedListener} from the artifact tree.
+   * Removes the specified {@link IAnalysisModelModifiedListener} from the artifact tree.
    * </p>
    * 
    * @param listener
    *          the listener to remove (must not be null)
    */
-  void removeArtifactModelChangedListener(IArtifactModelModifiedListener listener);
+  void removeArtifactModelChangedListener(IAnalysisModelModifiedListener listener);
 
   /**
    * <p>

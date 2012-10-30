@@ -10,11 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.cache;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.analysis.AbstractBundleMakerArtifactContainer;
+import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.AdapterResource2IArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.analysis.cache.impl.GroupSubCache;
@@ -67,7 +67,7 @@ public class ArtifactCache {
   protected TypeSubCache                _typeCache;
 
   /** - */
-  protected IArtifactModelConfiguration _modelConfiguration;
+  protected IAnalysisModelConfiguration _modelConfiguration;
 
   /**
    * <p>
@@ -76,7 +76,7 @@ public class ArtifactCache {
    * 
    * @param modularizedSystem
    */
-  public ArtifactCache(IModifiableModularizedSystem modularizedSystem, IArtifactModelConfiguration configuration) {
+  public ArtifactCache(IModifiableModularizedSystem modularizedSystem, IAnalysisModelConfiguration configuration) {
 
     // assert not null
     Assert.isNotNull(modularizedSystem);
@@ -109,7 +109,7 @@ public class ArtifactCache {
    * @param rootArtifact
    *          the root artifact
    */
-  protected ArtifactCache(IModularizedSystem modularizedSystem, AbstractBundleMakerArtifactContainer rootArtifact) {
+  protected ArtifactCache(IModularizedSystem modularizedSystem, AbstractArtifactContainer rootArtifact) {
 
   }
 
@@ -176,7 +176,7 @@ public class ArtifactCache {
    * @param type
    * @return
    */
-  public final IBundleMakerArtifact getTypeArtifact(IType type, boolean createIfMissing) {
+  public final ITypeArtifact getTypeArtifact(IType type, boolean createIfMissing) {
     Assert.isNotNull(type);
 
     //
@@ -187,6 +187,7 @@ public class ArtifactCache {
         return _typeCache.get(new TypeKey(type));
       }
     } catch (Exception e) {
+      e.printStackTrace();
       throw new RuntimeException(e.getMessage(), e);
     }
   }
@@ -216,7 +217,7 @@ public class ArtifactCache {
    * @param fullyQualifiedName
    * @throws Exception
    */
-  public final IBundleMakerArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
+  public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
     try {
@@ -296,7 +297,7 @@ public class ArtifactCache {
    * 
    * @return
    */
-  public final IArtifactModelConfiguration getConfiguration() {
+  public final IAnalysisModelConfiguration getConfiguration() {
     return _modelConfiguration;
   }
 

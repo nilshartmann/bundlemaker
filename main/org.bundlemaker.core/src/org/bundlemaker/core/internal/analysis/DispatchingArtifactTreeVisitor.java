@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -9,10 +9,10 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.eclipse.core.runtime.Assert;
 
-public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
+public class DispatchingArtifactTreeVisitor implements IAnalysisModelVisitor {
 
   /** - */
-  private IArtifactTreeVisitor[] _artifactTreeVisitors;
+  private IAnalysisModelVisitor[] _artifactTreeVisitors;
 
   /**
    * <p>
@@ -21,7 +21,7 @@ public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
    * 
    * @param artifactTreeVisitors
    */
-  public DispatchingArtifactTreeVisitor(IArtifactTreeVisitor... artifactTreeVisitors) {
+  public DispatchingArtifactTreeVisitor(IAnalysisModelVisitor... artifactTreeVisitors) {
     Assert.isNotNull(artifactTreeVisitors);
 
     //
@@ -38,7 +38,7 @@ public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
     boolean visitChildren = false;
 
     //
-    for (IArtifactTreeVisitor artifactTreeVisitors : _artifactTreeVisitors) {
+    for (IAnalysisModelVisitor artifactTreeVisitors : _artifactTreeVisitors) {
       visitChildren = artifactTreeVisitors.visit(rootArtifact) || visitChildren;
     }
 
@@ -56,7 +56,7 @@ public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
     boolean visitChildren = false;
 
     //
-    for (IArtifactTreeVisitor artifactTreeVisitors : _artifactTreeVisitors) {
+    for (IAnalysisModelVisitor artifactTreeVisitors : _artifactTreeVisitors) {
       visitChildren = artifactTreeVisitors.visit(groupArtifact) || visitChildren;
     }
 
@@ -74,7 +74,7 @@ public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
     boolean visitChildren = false;
 
     //
-    for (IArtifactTreeVisitor artifactTreeVisitors : _artifactTreeVisitors) {
+    for (IAnalysisModelVisitor artifactTreeVisitors : _artifactTreeVisitors) {
       visitChildren = artifactTreeVisitors.visit(moduleArtifact) || visitChildren;
     }
 
@@ -92,7 +92,7 @@ public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
     boolean visitChildren = false;
 
     //
-    for (IArtifactTreeVisitor artifactTreeVisitors : _artifactTreeVisitors) {
+    for (IAnalysisModelVisitor artifactTreeVisitors : _artifactTreeVisitors) {
       visitChildren = artifactTreeVisitors.visit(resourceArtifact) || visitChildren;
     }
 
@@ -110,7 +110,7 @@ public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
     boolean visitChildren = false;
 
     //
-    for (IArtifactTreeVisitor artifactTreeVisitors : _artifactTreeVisitors) {
+    for (IAnalysisModelVisitor artifactTreeVisitors : _artifactTreeVisitors) {
       visitChildren = artifactTreeVisitors.visit(typeArtifact) || visitChildren;
     }
 
@@ -128,7 +128,7 @@ public class DispatchingArtifactTreeVisitor implements IArtifactTreeVisitor {
     boolean visitChildren = false;
 
     //
-    for (IArtifactTreeVisitor artifactTreeVisitors : _artifactTreeVisitors) {
+    for (IAnalysisModelVisitor artifactTreeVisitors : _artifactTreeVisitors) {
       visitChildren = artifactTreeVisitors.visit(packageArtifact) || visitChildren;
     }
 

@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.editor.dsm.utils.Tarjan;
 import org.eclipse.core.runtime.Assert;
 
@@ -204,7 +204,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
 
     // hack: artifacts without dependencies first
     for (List<IBundleMakerArtifact> artifactList : _cycles) {
-      if (artifactList.size() == 1 && artifactList.get(0).getDependencies().size() == 0) {
+      if (artifactList.size() == 1 && artifactList.get(0).getDependenciesTo().size() == 0) {
         orderedArtifacts.add(artifactList.get(0));
       }
     }
@@ -236,7 +236,7 @@ public class DsmViewModel extends AbstractDsmViewModel {
     _dependencies = new IDependency[orderedArtifacts.size()][orderedArtifacts.size()];
     for (int i = 0; i < orderedArtifacts.size(); i++) {
       for (int j = 0; j < orderedArtifacts.size(); j++) {
-        IDependency dependency = orderedArtifacts.get(i).getDependency(orderedArtifacts.get(j));
+        IDependency dependency = orderedArtifacts.get(i).getDependencyTo(orderedArtifacts.get(j));
         _dependencies[j][i] = dependency != null && dependency.getWeight() != 0 ? dependency : null;
       }
     }

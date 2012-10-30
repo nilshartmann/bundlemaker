@@ -16,8 +16,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;
@@ -121,7 +121,12 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void artifactModelModified() {
-    initSelection(getCurrentArtifactSelection());
+    Display.getDefault().asyncExec(new Runnable() {
+      public void run() {
+         initSelection(getCurrentArtifactSelection());
+      }
+   });
+    
   }
 
   /**

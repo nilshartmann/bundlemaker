@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.event.selection.workbench.view;
 
-import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
+import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
@@ -23,7 +23,7 @@ import org.eclipse.ui.PartInitException;
  * 
  */
 public abstract class AbstractArtifactSelectionAwareViewPart extends AbstractPartLifecycleAwareViewPart implements
-    IArtifactSelectionListener, IArtifactModelModifiedListener {
+    IArtifactSelectionListener, IAnalysisModelModifiedListener {
 
   /**
    * The current artifacts (contents) of this dependency part

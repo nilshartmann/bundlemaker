@@ -4,11 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.itest.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.util.ModuleUtils;
@@ -80,7 +82,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     _jeditModuleArtifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "jedit", "1.0.0");
     _velocityModuleArtifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "velocity", "1.5");
     _jreArtifact = ArtifactVisitorUtils.findJreModuleArtifact(_rootArtifact);
-    
+
     //
     Assert.assertNotNull(_rootArtifact);
     Assert.assertNotNull(_jeditModuleArtifact);
@@ -88,7 +90,6 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
     Assert.assertNotNull(_jreArtifact);
     Assert.assertNotNull(_group1Artifact);
     Assert.assertNotNull(_group2Artifact);
-
 
     //
     if (_rootArtifact.getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
@@ -105,8 +106,8 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * 
    * @return
    */
-  public IArtifactModelConfiguration getArtifactModelConfiguration() {
-    return IArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
+  public IAnalysisModelConfiguration getArtifactModelConfiguration() {
+    return IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
   }
 
   /**
@@ -214,7 +215,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    * @param weight
    */
   public void assertDependencyWeight(IBundleMakerArtifact from, IBundleMakerArtifact to, int weight) {
-    IDependency dependency = from.getDependency(to);
+    IDependency dependency = from.getDependencyTo(to);
     assertEquals(weight, dependency.getWeight());
   }
 

@@ -12,7 +12,7 @@ package org.bundlemaker.core.itest.analysis;
 
 import static org.junit.Assert.assertEquals;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.junit.Assert;
@@ -35,7 +35,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 
     IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de.test.basic");
@@ -56,7 +56,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
 
     // step 1: get the rootArtifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 
     IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de|test|basic");

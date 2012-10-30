@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.event.selection;
 
 import java.util.Collection;
 
-import org.bundlemaker.analysis.model.IDependency;
+import org.bundlemaker.core.analysis.IDependency;
 
 /**
  * A central selection service for selected {@link IDependency dependencies}

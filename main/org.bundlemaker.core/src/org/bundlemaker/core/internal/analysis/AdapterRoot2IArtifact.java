@@ -3,15 +3,16 @@ package org.bundlemaker.core.internal.analysis;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactModelModifiedListener;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.TypeKey;
@@ -41,7 +42,7 @@ import org.eclipse.core.runtime.Path;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer implements IRootArtifact,
+public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements IRootArtifact,
     IModularizedSystemChangedListener {
 
   /** - */
@@ -54,10 +55,10 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
   private final GroupAndModuleContainerDelegate                      _groupAndModuleContainerDelegate;
 
   /** - */
-  private final IArtifactModelConfiguration                          _artifactModelConfiguration;
+  private final IAnalysisModelConfiguration                          _artifactModelConfiguration;
 
   /** - */
-  private final CopyOnWriteArrayList<IArtifactModelModifiedListener> _artifactModelChangedListeners;
+  private final CopyOnWriteArrayList<IAnalysisModelModifiedListener> _artifactModelChangedListeners;
 
   /**
    * <p>
@@ -68,7 +69,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * @param artifactCache
    */
   public AdapterRoot2IArtifact(IModifiableModularizedSystem modularizedSystem,
-      IArtifactModelConfiguration modelConfiguration, ArtifactCache artifactCache) {
+      IAnalysisModelConfiguration modelConfiguration, ArtifactCache artifactCache) {
     super(name(modularizedSystem));
 
     //
@@ -88,7 +89,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
 
     //
-    _artifactModelChangedListeners = new CopyOnWriteArrayList<IArtifactModelModifiedListener>();
+    _artifactModelChangedListeners = new CopyOnWriteArrayList<IAnalysisModelModifiedListener>();
   }
 
   /**
@@ -128,7 +129,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * {@inheritDoc}
    */
   @Override
-  public IArtifactModelConfiguration getConfiguration() {
+  public IAnalysisModelConfiguration getConfiguration() {
     return _artifactModelConfiguration;
   }
 
@@ -250,7 +251,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
 
     //
     if (visitor.visit(this)) {
@@ -262,7 +263,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     }
   }
 
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
   }
@@ -275,7 +276,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     // get the movable unit
     IMovableUnit movableUnit = event.getMovableUnit();
-    IArtifactModelConfiguration configuration = getConfiguration();
+    IAnalysisModelConfiguration configuration = getConfiguration();
 
     // Step 1: Handle resources
     // Step 1a: Handle BinaryContent
@@ -310,7 +311,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
         if (!type.isLocalOrAnonymousType()) {
           TypeKey typeKey = new TypeKey(type);
           IBundleMakerArtifact artifact = _artifactCache.getTypeCache().getOrCreate(typeKey);
-          AbstractBundleMakerArtifactContainer parentArtifact = _artifactCache.getTypeCache().getTypeParent(
+          AbstractArtifactContainer parentArtifact = _artifactCache.getTypeCache().getTypeParent(
               typeKey.getType());
           parentArtifact.internalAddArtifact(artifact);
         }
@@ -327,7 +328,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     // add the resource
     IBundleMakerArtifact artifact = _artifactCache.getResourceCache().getOrCreate(resource);
-    AbstractBundleMakerArtifactContainer parentArtifact = _artifactCache.getResourceCache().getOrCreateParent(resource);
+    AbstractArtifactContainer parentArtifact = _artifactCache.getResourceCache().getOrCreateParent(resource);
     parentArtifact.internalAddArtifact(artifact);
   }
 
@@ -349,7 +350,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     //
     IMovableUnit movableUnit = event.getMovableUnit();
-    IArtifactModelConfiguration configuration = getConfiguration();
+    IAnalysisModelConfiguration configuration = getConfiguration();
 
     if (configuration.isBinaryContent() && movableUnit.hasAssociatedBinaryResources()
     /* && ( configuration.containsAllResources() || !movableUnit.hasAssociatedTypes()) */) {
@@ -377,7 +378,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
         //
         IBundleMakerArtifact artifact = typeCache.get(new TypeKey(type));
         if (artifact != null && artifact.getParent() != null) {
-          ((AbstractBundleMakerArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
+          ((AbstractArtifactContainer) artifact.getParent()).internalRemoveArtifact(artifact);
         }
       }
     }
@@ -399,7 +400,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
     //
     if (moduleArtifact.getParent() == null) {
       IGroupAndModuleContainer parent = moduleCache.getModuleParent(event.getModule());
-      ((AbstractBundleMakerArtifactContainer) parent).internalAddArtifact(moduleArtifact);
+      ((AbstractArtifactContainer) parent).internalAddArtifact(moduleArtifact);
     }
   }
 
@@ -415,7 +416,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     //
     if (moduleArtifact != null) {
-      ((AbstractBundleMakerArtifactContainer) moduleArtifact.getParent()).internalRemoveArtifact(moduleArtifact);
+      ((AbstractArtifactContainer) moduleArtifact.getParent()).internalRemoveArtifact(moduleArtifact);
     }
   }
 
@@ -438,7 +439,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
     if (classification != null) {
       IGroupAndModuleContainer groupArtifact = _artifactCache.getGroupCache().getOrCreate(classification);
-      ((AbstractBundleMakerArtifactContainer) groupArtifact).internalAddArtifact(moduleArtifact);
+      ((AbstractArtifactContainer) groupArtifact).internalAddArtifact(moduleArtifact);
     } else {
       internalAddArtifact(moduleArtifact);
     }
@@ -468,7 +469,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
 
         //
         else {
-          AbstractBundleMakerArtifactContainer currentParent = (AbstractBundleMakerArtifactContainer) movedGroupArtifact
+          AbstractArtifactContainer currentParent = (AbstractArtifactContainer) movedGroupArtifact
               .getParent();
           currentParent.internalRemoveArtifact(movedGroupArtifact);
         }
@@ -480,7 +481,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
             .getOrCreate(
                 event.getNewParentGroup());
 
-        ((AbstractBundleMakerArtifactContainer) parentArtifact).internalAddArtifact(movedGroupArtifact);
+        ((AbstractArtifactContainer) parentArtifact).internalAddArtifact(movedGroupArtifact);
       }
     }
 
@@ -522,7 +523,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * 
    * @param listener
    */
-  public void addArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
+  public void addArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
 
     Assert.isNotNull(listener);
 
@@ -535,7 +536,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * 
    * @param listener
    */
-  public void removeArtifactModelChangedListener(IArtifactModelModifiedListener listener) {
+  public void removeArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
 
     Assert.isNotNull(listener);
 
@@ -548,7 +549,7 @@ public class AdapterRoot2IArtifact extends AbstractBundleMakerArtifactContainer 
    * 
    */
   public void fireArtifactModelChanged() {
-    for (IArtifactModelModifiedListener artifactModelChangedListener : _artifactModelChangedListeners) {
+    for (IAnalysisModelModifiedListener artifactModelChangedListener : _artifactModelChangedListeners) {
       artifactModelChangedListener.artifactModelModified();
     }
   }

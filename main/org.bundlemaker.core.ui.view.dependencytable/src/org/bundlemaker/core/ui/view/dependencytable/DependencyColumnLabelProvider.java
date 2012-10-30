@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.swt.graphics.Image;

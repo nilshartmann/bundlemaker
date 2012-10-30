@@ -4,6 +4,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -35,7 +36,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
    */
   public GroupAndModuleContainerDelegate(IGroupAndModuleContainer groupAndModuleContainer) {
     Assert.isNotNull(groupAndModuleContainer);
-    Assert.isTrue(groupAndModuleContainer instanceof AbstractBundleMakerArtifactContainer);
+    Assert.isTrue(groupAndModuleContainer instanceof AbstractArtifactContainer);
 
     _groupAndModuleContainer = groupAndModuleContainer;
   }
@@ -70,13 +71,13 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
     //
     String moduleName = qualifiedModuleName;
-    AbstractBundleMakerArtifactContainer moduleParent = (AbstractBundleMakerArtifactContainer) rootContainer;
+    AbstractArtifactContainer moduleParent = (AbstractArtifactContainer) rootContainer;
 
     // if the qualified name contains groups, we have to create the groups first
     int index = moduleName.lastIndexOf('/');
     if (index != -1) {
       // create the group
-      moduleParent = (AbstractBundleMakerArtifactContainer) ((IGroupAndModuleContainer) rootContainer)
+      moduleParent = (AbstractArtifactContainer) ((IGroupAndModuleContainer) rootContainer)
           .getOrCreateGroup(new Path(qualifiedModuleName.substring(0, index)));
       // set the simple module name
       moduleName = qualifiedModuleName.substring(index + 1);

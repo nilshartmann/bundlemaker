@@ -12,8 +12,8 @@ package org.bundlemaker.tutorial.dependencyviewer;
 
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;

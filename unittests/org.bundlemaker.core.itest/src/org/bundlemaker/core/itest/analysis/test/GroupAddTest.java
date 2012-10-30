@@ -1,6 +1,6 @@
 package org.bundlemaker.core.itest.analysis.test;
 
-import org.bundlemaker.core.analysis.ArtifactModelException;
+import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.itest.analysis.test.framework.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.modules.modifiable.IModifiableModule;
@@ -91,7 +91,7 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
    * 
    * @throws Exception
    */
-  @Test(expected = ArtifactModelException.class)
+  @Test(expected = AnalysisModelException.class)
   public void tryToAddModuleArtifactToParentGroupArtifact() throws Exception {
 
     // add to it's own parent
@@ -104,7 +104,7 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
    * 
    * @throws Exception
    */
-  @Test(expected = ArtifactModelException.class)
+  @Test(expected = AnalysisModelException.class)
   public void tryToAddGroupArtifactToSelf() throws Exception {
 
     // add to self
@@ -117,7 +117,7 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
    * 
    * @throws Exception
    */
-  @Test(expected = ArtifactModelException.class)
+  @Test(expected = AnalysisModelException.class)
   public void tryToAddAncestorArtifact() throws Exception {
 
     // add to self
@@ -130,7 +130,7 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
    * 
    * @throws Exception
    */
-  @Test(expected = ArtifactModelException.class)
+  @Test(expected = AnalysisModelException.class)
   public void tryToAddRootArtifact() throws Exception {
 
     // add to self

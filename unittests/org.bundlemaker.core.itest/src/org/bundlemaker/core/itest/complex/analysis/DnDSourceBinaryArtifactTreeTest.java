@@ -3,8 +3,8 @@ package org.bundlemaker.core.itest.complex.analysis;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.analysis.ArtifactHelper;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -52,8 +52,8 @@ public class DnDSourceBinaryArtifactTreeTest extends AbstractJeditArtifactTest {
     Assert.assertEquals(packageResourceCount, counter.getCount());
   }
 
-  public IArtifactModelConfiguration getArtifactModelConfiguration() {
-    return IArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION;
+  public IAnalysisModelConfiguration getArtifactModelConfiguration() {
+    return IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION;
   }
 
   /**
@@ -62,7 +62,7 @@ public class DnDSourceBinaryArtifactTreeTest extends AbstractJeditArtifactTest {
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  private final class ResourceCounter extends IArtifactTreeVisitor.Adapter {
+  private final class ResourceCounter extends IAnalysisModelVisitor.Adapter {
 
     /** - */
     private int _count;

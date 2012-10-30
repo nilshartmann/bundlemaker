@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.complex.analysis;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -29,7 +29,7 @@ public class ArtifactTreeVisitorTest extends AbstractJeditArtifactTest {
 
     final int[] resultCount = new int[7];
 
-    getJeditModuleArtifact().accept(new IArtifactTreeVisitor.Adapter() {
+    getJeditModuleArtifact().accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IRootArtifact rootArtifact) {

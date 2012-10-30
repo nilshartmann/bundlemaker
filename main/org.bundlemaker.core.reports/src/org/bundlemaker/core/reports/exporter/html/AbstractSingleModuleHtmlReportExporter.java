@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.exporter.AbstractExporter;
@@ -117,7 +117,7 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
 
     final IModuleArtifact[] result = new IModuleArtifact[1];
 
-    getCurrentRootArtifact().accept(new IArtifactTreeVisitor.Adapter() {
+    getCurrentRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
@@ -137,7 +137,7 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
    *
    * @return
    */
-  protected IArtifactModelConfiguration getModelConfiguration() {
-    return IArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
+  protected IAnalysisModelConfiguration getModelConfiguration() {
+    return IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION;
   }
 }

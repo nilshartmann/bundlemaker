@@ -3,8 +3,8 @@ package org.bundlemaker.core.testutils;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 
 
 /**
@@ -27,7 +27,7 @@ public class ArtifactTestUtil {
     StringBuilder builder = new StringBuilder();
     toString(root, builder, 0);
 
-    List<IDependency> dependencies = BundleMakerTestUtils.asSortedList(root.getDependencies(),
+    List<IDependency> dependencies = BundleMakerTestUtils.asSortedList(root.getDependenciesTo(),
         new Comparator<IDependency>() {
           @Override
           public int compare(IDependency o1, IDependency o2) {

@@ -85,7 +85,7 @@ public class ArtifactHelper {
     final List<T> result = new LinkedList<T>();
 
     //
-    IArtifactTreeVisitor visitor = new IArtifactTreeVisitor() {
+    IAnalysisModelVisitor visitor = new IAnalysisModelVisitor() {
 
       @Override
       public boolean visit(IPackageArtifact artifact) {
@@ -175,7 +175,7 @@ public class ArtifactHelper {
     final List<T> result = new LinkedList<T>();
 
     //
-    IArtifactTreeVisitor visitor = new IArtifactTreeVisitor() {
+    IAnalysisModelVisitor visitor = new IAnalysisModelVisitor() {
 
       @Override
       public boolean visit(IPackageArtifact artifact) {

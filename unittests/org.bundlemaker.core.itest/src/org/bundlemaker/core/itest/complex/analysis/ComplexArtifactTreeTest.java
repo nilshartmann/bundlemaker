@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactHelper;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -33,7 +33,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        new ArtifactModelConfiguration(false, ContentType.BINARY, true));
+        new AnalysisModelConfiguration(false, ContentType.BINARY, true));
     Assert.assertNotNull(rootArtifact);
 
     //
@@ -62,7 +62,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
     IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "jedit_1.0.0", IModuleArtifact.class);
@@ -81,24 +81,24 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
     //
     ArtifactUtils.dumpArtifact(rootArtifact);
 
-    Collection<IBundleMakerArtifact> leafs = rootArtifact.getLeafs();
-    IModuleArtifact newModule = null;
-    for (IBundleMakerArtifact typeArtifact : leafs) {
-      IBundleMakerArtifact moduleArtifact = typeArtifact.getParent(IModuleArtifact.class);
-
-      if (((IModuleArtifact) moduleArtifact).isResourceModule()) {
-        newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test_1.2.3", "1.2.3");
-        newModule.addArtifact(typeArtifact);
-      }
-    }
-
-    ArtifactUtils.dumpArtifact(newModule);
+    // Collection<IBundleMakerArtifact> leafs = rootArtifact.getLeafs();
+    // IModuleArtifact newModule = null;
+    // for (IBundleMakerArtifact typeArtifact : leafs) {
+    // IBundleMakerArtifact moduleArtifact = typeArtifact.getParent(IModuleArtifact.class);
+    //
+    // if (((IModuleArtifact) moduleArtifact).isResourceModule()) {
+    // newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test_1.2.3", "1.2.3");
+    // newModule.addArtifact(typeArtifact);
+    // }
+    // }
+    //
+    // ArtifactUtils.dumpArtifact(newModule);
   }
 
   /**
@@ -113,7 +113,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+        AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...
@@ -139,7 +139,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // transform the model...
     IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...
@@ -158,7 +158,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
+        AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
     // get the 'jedit' artifact...

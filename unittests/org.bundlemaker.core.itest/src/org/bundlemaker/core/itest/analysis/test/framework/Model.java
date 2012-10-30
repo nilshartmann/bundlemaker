@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -78,7 +78,7 @@ public class Model {
    * @param modularizedSystem
    * @param configuration
    */
-  public Model(IModularizedSystem modularizedSystem, IArtifactModelConfiguration configuration) {
+  public Model(IModularizedSystem modularizedSystem, IAnalysisModelConfiguration configuration) {
 
     //
     Assert.assertNotNull(modularizedSystem);
@@ -181,7 +181,7 @@ public class Model {
     final List<IResourceArtifact> result = new LinkedList<IResourceArtifact>();
 
     // visit
-    rootArtifact.accept(new IArtifactTreeVisitor.Adapter() {
+    rootArtifact.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean visit(IResourceArtifact resourceArtifact) {
 
@@ -248,7 +248,7 @@ public class Model {
    * @return
    */
   private IRootArtifact createArtifactModel(IModularizedSystem modularizedSystem,
-      IArtifactModelConfiguration configuration) {
+      IAnalysisModelConfiguration configuration) {
 
     IRootArtifact rootArtifact = modularizedSystem.getArtifactModel(configuration).getRoot();
 

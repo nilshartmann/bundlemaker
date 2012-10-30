@@ -31,7 +31,10 @@ public class BundleMakerProjectChangedEvent {
     PROJECT_DESCRIPTION_CHANGED,
 
     /** The project description has been saved to disc */
-    PROJECT_DESCRIPTION_SAVED;
+    PROJECT_DESCRIPTION_SAVED,
+
+    /** the project description has been recomputed **/
+    PROJECT_DESCRIPTION_RECOMPUTED;
   }
 
   /** the cause for this event */

@@ -5,10 +5,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.modules.Group;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -19,7 +20,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactContainer implements IGroupArtifact {
+public final class AdapterGroup2IArtifact extends AbstractArtifactContainer implements IGroupArtifact {
 
   // the group qualified name delimiter
   private static final char                     DELIMITER = '/';
@@ -47,7 +48,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
 
     // set parent/children dependency
     setParent(parent);
-    ((AbstractBundleMakerArtifactContainer) parent).getModifiableChildren().add(this);
+    ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
 
     //
     _groupAndModuleContainerDelegate = new GroupAndModuleContainerDelegate(this);
@@ -209,7 +210,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
 
     //
     if (visitor.visit(this)) {
@@ -223,7 +224,7 @@ public final class AdapterGroup2IArtifact extends AbstractBundleMakerArtifactCon
   /**
    * {@inheritDoc}
    */
-  public void accept(IArtifactTreeVisitor... visitors) {
+  public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
   }

@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.analysis;
 
 import java.io.File;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.exporter.DefaultModuleExporterContext;
@@ -20,7 +20,7 @@ public class TypeContentTest extends AbstractModularizedSystemTest {
 
     // get the root artifact
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        ArtifactModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+        AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     Assert.assertNotNull(rootArtifact);
 
@@ -29,7 +29,7 @@ public class TypeContentTest extends AbstractModularizedSystemTest {
 
     //
     for (IBundleMakerArtifact advancedArtifact : packageArtifact.getChildren()) {
-      System.out.println(advancedArtifact.getDependencies());
+      System.out.println(advancedArtifact.getDependenciesTo());
     }
 
     // Dump all module dependencies

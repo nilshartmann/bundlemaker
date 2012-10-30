@@ -30,5 +30,4 @@ public class ManualWagonProvider implements WagonProvider {
 	public void release(Wagon wagon) {
 
 	}
-
 }

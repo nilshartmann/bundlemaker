@@ -1,6 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -155,7 +155,7 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
    * {@inheritDoc}
    */
   @Override
-  public void accept(IArtifactTreeVisitor visitor) {
+  public void accept(IAnalysisModelVisitor visitor) {
 
     //
     if (visitor.visit(this)) {

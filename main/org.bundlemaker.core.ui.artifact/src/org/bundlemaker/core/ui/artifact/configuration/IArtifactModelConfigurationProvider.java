@@ -10,11 +10,11 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.artifact.configuration;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 
 /**
  * <p>
- * Provides access to the global {@link ArtifactModelConfiguration} that is used to configure the artifact tree view.
+ * Provides access to the global {@link AnalysisModelConfiguration} that is used to configure the artifact tree view.
  * </p>
  * <p>
  * To retrieve the global instance of this class, you have to call <code><pre>
@@ -30,10 +30,10 @@ public interface IArtifactModelConfigurationProvider {
 
   /**
    * <p>
-   * Returns the current {@link ArtifactModelConfiguration}.
+   * Returns the current {@link AnalysisModelConfiguration}.
    * </p>
    * 
-   * @return the current {@link ArtifactModelConfiguration}.
+   * @return the current {@link AnalysisModelConfiguration}.
    */
-  public ArtifactModelConfiguration getArtifactModelConfiguration();
+  public AnalysisModelConfiguration getArtifactModelConfiguration();
 }

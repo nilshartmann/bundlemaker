@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.artifact.configuration;
 
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -36,9 +36,9 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
 
   private final static EnumValueLabelProvider enumValueLabelProvider = new EnumValueLabelProvider();
 
-  private final ArtifactModelConfiguration    _originalConfiguration;
+  private final AnalysisModelConfiguration    _originalConfiguration;
 
-  public ArtifactModelConfigurationDialog(Shell parentShell, ArtifactModelConfiguration currentConfiguration) {
+  public ArtifactModelConfigurationDialog(Shell parentShell, AnalysisModelConfiguration currentConfiguration) {
     super(parentShell);
 
     _originalConfiguration = currentConfiguration;

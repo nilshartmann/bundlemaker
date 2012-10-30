@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.analysis.IArtifactTreeVisitor;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -255,7 +255,7 @@ public class DefaultExpandStrategy implements IExpandStrategy {
     // expandedElements.clear();
 
     //
-    IArtifactTreeVisitor visitor = new IArtifactTreeVisitor.Adapter() {
+    IAnalysisModelVisitor visitor = new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IRootArtifact rootArtifact) {

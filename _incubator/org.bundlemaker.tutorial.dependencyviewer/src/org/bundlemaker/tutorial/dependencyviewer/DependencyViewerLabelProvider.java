@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.tutorial.dependencyviewer;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.artifact.tree.DefaultArtifactLabelProvider;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -75,7 +75,7 @@ public class DependencyViewerLabelProvider extends LabelProvider implements ICon
     IBundleMakerArtifact from = dependency.getFrom();
     IBundleMakerArtifact to = dependency.getTo();
 
-    IDependency backDependency = to.getDependency(from);
+    IDependency backDependency = to.getDependencyTo(from);
     System.out.println("Dependency from '" + from.getQualifiedName() + "' to '" + to.getQualifiedName()
         + "' circular: " + (backDependency != null));
 
@@ -141,7 +141,7 @@ public class DependencyViewerLabelProvider extends LabelProvider implements ICon
       IDependency dependency = (IDependency) element;
 
       String tooltipText = dependencyAsString(dependency);
-      IDependency reverseDependency = dependency.getTo().getDependency(dependency.getFrom());
+      IDependency reverseDependency = dependency.getTo().getDependencyTo(dependency.getFrom());
       int backCount = reverseDependency.getWeight();
       if (backCount > 0) {
         tooltipText += "\n" + dependencyAsString(reverseDependency);

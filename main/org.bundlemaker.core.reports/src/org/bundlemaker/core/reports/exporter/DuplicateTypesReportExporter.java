@@ -11,16 +11,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.ArtifactHelper;
-import org.bundlemaker.core.analysis.ArtifactModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.analysis.visitors.DuplicatePackagesVisitor;
-import org.bundlemaker.core.analysis.visitors.DuplicateTypesVisitor;
 import org.bundlemaker.core.exporter.IModularizedSystemExporter;
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -59,7 +57,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
 
     //
     IRootArtifact rootArtifact = modularizedSystem.getArtifactModel(
-        ArtifactModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
 
     //
     DuplicateTypesVisitor duplicateTypesVisitor = createDuplicateTypesVisitor();

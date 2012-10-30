@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -72,7 +72,7 @@ public class Tarjan<T extends IBundleMakerArtifact> {
   }
 
   @SuppressWarnings("unchecked")
-  private List<List<T>> tarjan(int v, int[][] graph) {
+  private void tarjan(int v, int[][] graph) {
     Assert.isNotNull(v);
     Assert.isNotNull(graph);
 
@@ -98,34 +98,29 @@ public class Tarjan<T extends IBundleMakerArtifact> {
       } while (n != v);
       _stronglyConnectedComponents.add(component);
     }
-    return _stronglyConnectedComponents;
   }
 
   /**
-   * @param children
+   * @param artifacts
    */
-  private int[][] computeAdjacencyList(IBundleMakerArtifact[] children) {
-
-    //
-    // List<IArtifact> bundleMakerArtifacts = new LinkedList<IArtifact>(
-    // children);
+  private int[][] computeAdjacencyList(IBundleMakerArtifact[] artifacts) {
 
     // prepare
     int i = 0;
     Map<IBundleMakerArtifact, Integer> map = new HashMap<IBundleMakerArtifact, Integer>();
-    for (IBundleMakerArtifact iArtifact : children) {
+    for (IBundleMakerArtifact iArtifact : artifacts) {
       map.put(iArtifact, i);
       i++;
     }
 
     //
-    int[][] matrix = new int[children.length][];
+    int[][] matrix = new int[artifacts.length][];
 
     //
-    for (IBundleMakerArtifact artifact : children) {
+    for (IBundleMakerArtifact artifact : artifacts) {
 
       // get the referenced artifacts
-      Collection<? extends IDependency> dependencies = artifact.getDependencies(Arrays.asList(children));
+      Collection<? extends IDependency> dependencies = artifact.getDependenciesTo(Arrays.asList(artifacts));
 
       //
       int index = map.get(artifact);

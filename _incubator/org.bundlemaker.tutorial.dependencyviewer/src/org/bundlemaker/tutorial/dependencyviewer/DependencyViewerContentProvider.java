@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.tutorial.dependencyviewer;
 
-import org.bundlemaker.analysis.model.IDependency;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.zest.core.viewers.IGraphEntityRelationshipContentProvider;
 
@@ -52,7 +52,7 @@ public class DependencyViewerContentProvider extends ArrayContentProvider implem
       return EMPTY_RELATION;
     }
 
-    return from.getDependencies(to).toArray(new IDependency[0]);
+    return from.getDependenciesTo(to).toArray(new IDependency[0]);
   }
 
   // /*

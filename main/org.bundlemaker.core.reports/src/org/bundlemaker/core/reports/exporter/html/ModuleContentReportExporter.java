@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.IArtifactModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.projectdescription.ContentType;
 import org.bundlemaker.core.resource.IResource;
@@ -73,7 +73,7 @@ public class ModuleContentReportExporter extends AbstractSingleModuleHtmlReportE
   }
 
   @Override
-  protected IArtifactModelConfiguration getModelConfiguration() {
-    return IArtifactModelConfiguration.SOURCE_RESOURCES_CONFIGURATION;
+  protected IAnalysisModelConfiguration getModelConfiguration() {
+    return IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION;
   }
 }
