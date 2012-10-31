@@ -1,6 +1,6 @@
 package org.bundlemaker.core.analysis;
 
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.Assert;
 
 import com.google.gson.annotations.Expose;
@@ -18,7 +18,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
   /** the content type to show */
   @Expose
   @SerializedName("contentType")
-  private ContentType _contentType                         = ContentType.SOURCE;
+  private ProjectContentType _contentType                         = ProjectContentType.SOURCE;
 
   /** whether the packages should be hierarchical or flat */
   @Expose
@@ -50,7 +50,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    * @param resourcePresentation
    */
   public AnalysisModelConfiguration(boolean hierarchical,
-      ContentType contentType, boolean includeVirtualModuleForMissingTypes) {
+      ProjectContentType contentType, boolean includeVirtualModuleForMissingTypes) {
   
     Assert.isNotNull(contentType);
   
@@ -61,12 +61,12 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
 
   /**
    * <p>
-   * Returns the {@link ContentType} of this configuration.
+   * Returns the {@link ProjectContentType} of this configuration.
    * </p>
    * 
    * @return
    */
-  public final ContentType getContentType() {
+  public final ProjectContentType getContentType() {
     return _contentType;
   }
 
@@ -95,7 +95,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    */
   @Override
   public final boolean isSourceContent() {
-    return _contentType.equals(ContentType.SOURCE);
+    return _contentType.equals(ProjectContentType.SOURCE);
   }
 
   /**
@@ -103,7 +103,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    */
   @Override
   public final boolean isBinaryContent() {
-    return _contentType.equals(ContentType.BINARY);
+    return _contentType.equals(ProjectContentType.BINARY);
   }
 
   /**
@@ -123,7 +123,7 @@ public class AnalysisModelConfiguration implements IAnalysisModelConfiguration {
    * 
    * @param contentType
    */
-  public final void setContentType(ContentType contentType) {
+  public final void setContentType(ProjectContentType contentType) {
     Assert.isNotNull(contentType);
 
     _contentType = contentType;

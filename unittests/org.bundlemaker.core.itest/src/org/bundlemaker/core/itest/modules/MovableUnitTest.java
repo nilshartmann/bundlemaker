@@ -9,7 +9,7 @@ import org.bundlemaker.core.itest.analysis.InnerClassTest;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.CoreException;
@@ -77,21 +77,21 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
 
     //
     assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/A.java", ContentType.SOURCE), getModularizedSystem()));
+        _resourceModule.getResource("de/test/innertypes/A.java", ProjectContentType.SOURCE), getModularizedSystem()));
 
     //
     assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/A.class", ContentType.BINARY), getModularizedSystem()));
+        _resourceModule.getResource("de/test/innertypes/A.class", ProjectContentType.BINARY), getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/A$AA.class", ContentType.BINARY), getModularizedSystem()));
+        _resourceModule.getResource("de/test/innertypes/A$AA.class", ProjectContentType.BINARY), getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/B.class", ContentType.BINARY), getModularizedSystem()));
+        _resourceModule.getResource("de/test/innertypes/B.class", ProjectContentType.BINARY), getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/B$BB.class", ContentType.BINARY), getModularizedSystem()));
+        _resourceModule.getResource("de/test/innertypes/B$BB.class", ProjectContentType.BINARY), getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/B$1.class", ContentType.BINARY), getModularizedSystem()));
+        _resourceModule.getResource("de/test/innertypes/B$1.class", ProjectContentType.BINARY), getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/A$1.class", ContentType.BINARY), getModularizedSystem()));
+        _resourceModule.getResource("de/test/innertypes/A$1.class", ProjectContentType.BINARY), getModularizedSystem()));
   }
 
   /**

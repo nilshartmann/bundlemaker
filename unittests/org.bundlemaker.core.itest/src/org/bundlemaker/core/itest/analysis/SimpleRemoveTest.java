@@ -9,7 +9,7 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -70,17 +70,17 @@ public class SimpleRemoveTest extends AbstractModularizedSystemTest {
 
     // assert that resources are contained in the modularized system
     Assert.assertEquals(1, getModularizedSystem().getResourceModule("BasicArtifactTest", "1.0.0")
-        .getSelfResourceContainer().getResources(ContentType.BINARY).size());
+        .getSelfResourceContainer().getResources(ProjectContentType.BINARY).size());
     Assert.assertEquals(1, getModularizedSystem().getResourceModule("BasicArtifactTest", "1.0.0")
-        .getSelfResourceContainer().getResources(ContentType.SOURCE).size());
+        .getSelfResourceContainer().getResources(ProjectContentType.SOURCE).size());
     
     resourceModule.getModifiableSelfResourceContainer().removeMovableUnit(
         MovableUnit.createFromType(resourceModule.getType("de.test.basic.TestClass"), getModularizedSystem()));
 
     Assert.assertEquals(0, getModularizedSystem().getResourceModule("BasicArtifactTest", "1.0.0")
-        .getSelfResourceContainer().getResources(ContentType.BINARY).size());
+        .getSelfResourceContainer().getResources(ProjectContentType.BINARY).size());
     Assert.assertEquals(0, getModularizedSystem().getResourceModule("BasicArtifactTest", "1.0.0")
-        .getSelfResourceContainer().getResources(ContentType.SOURCE).size());
+        .getSelfResourceContainer().getResources(ProjectContentType.SOURCE).size());
 
     ArtifactUtils.dumpArtifact(_moduleArtifact);
   }

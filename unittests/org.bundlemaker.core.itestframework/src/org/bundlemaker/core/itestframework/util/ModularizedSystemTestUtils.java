@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -38,7 +38,7 @@ public class ModularizedSystemTestUtils {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IResource resource : sortResources(module.getResources(ContentType.SOURCE))) {
+    for (IResource resource : sortResources(module.getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : sortReferences(resource.getReferences())) {
@@ -56,7 +56,7 @@ public class ModularizedSystemTestUtils {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IResource resource : sortResources((module.getResources(ContentType.BINARY)))) {
+    for (IResource resource : sortResources((module.getResources(ProjectContentType.BINARY)))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : sortReferences(resource.getReferences())) {

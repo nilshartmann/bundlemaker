@@ -11,7 +11,7 @@ import org.bundlemaker.core.internal.analysis.cache.TypeKey;
 import org.bundlemaker.core.internal.analysis.virtual.VirtualType2IArtifact;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
@@ -121,7 +121,7 @@ public class TypeSubCache extends AbstractSubCache<TypeKey, ITypeArtifact> {
     // get the associated resources
     IResource resource = null;
 
-    resource = getArtifactCache().getConfiguration().getContentType().equals(ContentType.SOURCE)
+    resource = getArtifactCache().getConfiguration().getContentType().equals(ProjectContentType.SOURCE)
         && type.hasSourceResource() ? type.getSourceResource() : type.getBinaryResource();
 
     // get the associated module

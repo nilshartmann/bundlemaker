@@ -7,7 +7,7 @@ import java.util.List;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.util.JavaTypeUtils;
@@ -90,7 +90,7 @@ public class MovableUnit implements IMovableUnit {
           // TODO!!
           IResourceModule resourceModule = resource.getAssociatedResourceModule(modularizedSystem);
           IResource nonAnonymousResource = resourceModule.getResource(typeName.replace('.', '/') + ".class",
-              ContentType.BINARY);
+              ProjectContentType.BINARY);
 
           if (nonAnonymousResource != null) {
             resource = nonAnonymousResource;
@@ -247,10 +247,10 @@ public class MovableUnit implements IMovableUnit {
         IResourceModule resourceModule = _mainResource.getAssociatedResourceModule(_modularizedSystem);
 
         //
-        _sourceResource = resourceModule.getResource(_mainResource.getPath(), ContentType.SOURCE);
+        _sourceResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.SOURCE);
 
         //
-        IResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ContentType.BINARY);
+        IResource binaryResource = resourceModule.getResource(_mainResource.getPath(), ProjectContentType.BINARY);
         if (binaryResource != null) {
           _binaryResources.add(binaryResource);
         }

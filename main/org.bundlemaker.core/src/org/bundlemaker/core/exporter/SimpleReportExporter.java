@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -64,7 +64,7 @@ public class SimpleReportExporter extends AbstractExporter {
     builder.append("\n");
     builder.append("Source-Content: \n");
 
-    for (IResource resource : asSortedList(getCurrentModule().getResources(ContentType.SOURCE))) {
+    for (IResource resource : asSortedList(getCurrentModule().getResources(ProjectContentType.SOURCE))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.getReferences()) {
@@ -83,7 +83,7 @@ public class SimpleReportExporter extends AbstractExporter {
 
     builder.append("\n");
     builder.append("Binary-Content: \n");
-    for (IResource resource : asSortedList(getCurrentModule().getResources(ContentType.BINARY))) {
+    for (IResource resource : asSortedList(getCurrentModule().getResources(ProjectContentType.BINARY))) {
       builder.append(resource.getPath() + "\n");
 
       for (IReference reference : resource.getReferences()) {

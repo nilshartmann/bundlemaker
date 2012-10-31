@@ -17,7 +17,7 @@ package org.bundlemaker.core.projectdescription;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public enum ContentType {
+public enum ProjectContentType {
 
   /** source content */
   SOURCE,

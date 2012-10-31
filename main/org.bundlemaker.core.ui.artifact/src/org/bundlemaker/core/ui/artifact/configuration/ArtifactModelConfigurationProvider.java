@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
@@ -76,7 +76,7 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
       try {
         // override default settings with stored preferences
         if (_store.contains(PREF_CONTENT_TYPE)) {
-          _configuration.setContentType(ContentType.valueOf(_store.getString(PREF_CONTENT_TYPE)));
+          _configuration.setContentType(ProjectContentType.valueOf(_store.getString(PREF_CONTENT_TYPE)));
         }
         if (_store.contains(PREF_HIERARCHICAL_PACKAGES)) {
           _configuration.setHierarchicalPackages(_store.getBoolean(PREF_HIERARCHICAL_PACKAGES));

@@ -30,7 +30,7 @@ import org.bundlemaker.core.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
@@ -288,7 +288,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     fireModuleChanged(resourceModule, ChangeAction.ADDED);
 
     //
-    for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+    for (IResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
 
       //
@@ -298,7 +298,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
+    for (IResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.ADDED);
 
       //
@@ -317,7 +317,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     Assert.isNotNull(resourceModule);
 
     //
-    for (IResource resource : resourceModule.getResources(ContentType.SOURCE)) {
+    for (IResource resource : resourceModule.getResources(ProjectContentType.SOURCE)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
 
       //
@@ -327,7 +327,7 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
     }
 
     //
-    for (IResource resource : resourceModule.getResources(ContentType.BINARY)) {
+    for (IResource resource : resourceModule.getResources(ProjectContentType.BINARY)) {
       internalResourceChanged(resource, resourceModule, ChangeAction.REMOVED);
 
       //

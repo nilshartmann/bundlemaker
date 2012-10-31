@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentHelper;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentHelper;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.choice.Choice;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
@@ -64,7 +64,7 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     }
 
     //
-    return (dropEvent.getTarget() instanceof FileBasedContentProvider);
+    return (dropEvent.getTarget() instanceof FileBasedProjectContentProvider);
 
   }
 
@@ -118,7 +118,7 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       // }
     } else {
       // add to selected filebasedcontentprovider
-      FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getProjectContentProvider();
+      FileBasedProjectContentProvider provider = (FileBasedProjectContentProvider) dropEvent.getProjectContentProvider();
       addFiles(dropEvent.getShell(), provider, projectRelativePaths.toArray(new String[0]));
     }
 
@@ -146,12 +146,12 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       return createFileBasedContents(dropEvent);
     }
     String[] newFiles = dropEvent.getData(String[].class);
-    FileBasedContentProvider provider = (FileBasedContentProvider) dropEvent.getTarget();
+    FileBasedProjectContentProvider provider = (FileBasedProjectContentProvider) dropEvent.getTarget();
 
     return addFiles(dropEvent.getShell(), provider, newFiles);
   }
 
-  protected boolean addFiles(Shell shell, FileBasedContentProvider provider, String[] newFiles) {
+  protected boolean addFiles(Shell shell, FileBasedProjectContentProvider provider, String[] newFiles) {
 
     // String message = "Please choose how to add " + newFiles.length + " resources to your BundleMaker project";
     //
@@ -166,13 +166,13 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       VariablePath variablePath = new VariablePath(newFile);
 
       // Determine ("guess") the content type
-      ContentType contentType = _contentTypeDetector.detectContentType(variablePath);
+      ProjectContentType contentType = _contentTypeDetector.detectContentType(variablePath);
 
       // add to provider
       provider.addRootPath(variablePath, contentType);
 
       // If sources are added set AnalyzeMode per default to BINARIES_AND_SOURCES
-      if (contentType == ContentType.SOURCE) {
+      if (contentType == ProjectContentType.SOURCE) {
         provider.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES);
       }
     }
@@ -199,7 +199,7 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
     for (String dropCandidateName : fileNames) {
       File dropCandidate = new File(dropCandidateName);
 
-      if (!FileBasedContentHelper.isValidArchive(dropCandidate)) {
+      if (!FileBasedProjectContentHelper.isValidArchive(dropCandidate)) {
         return false;
       }
     }
@@ -233,7 +233,7 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
 
       //
       else if (object instanceof IFile) {
-        if (!FileBasedContentHelper.isValidArchive((IFile) object)) {
+        if (!FileBasedProjectContentHelper.isValidArchive((IFile) object)) {
           return false;
         }
         continue;

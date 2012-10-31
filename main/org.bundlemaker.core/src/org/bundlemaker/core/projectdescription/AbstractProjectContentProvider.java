@@ -16,7 +16,7 @@ import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescri
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractContentProvider implements IProjectContentProvider {
+public abstract class AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** - */
   private BundleMakerProjectDescription _projectDescription;

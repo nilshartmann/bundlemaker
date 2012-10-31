@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.xml.JdtProjectContentType;
-import org.bundlemaker.core.projectdescription.AbstractContentProvider;
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
@@ -26,7 +26,7 @@ import org.eclipse.jdt.core.JavaModelException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JdtProjectContentProvider extends AbstractContentProvider implements IProjectContentProvider {
+public class JdtProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** - */
   private IJavaProject       _javaProject;

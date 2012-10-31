@@ -19,7 +19,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.runtime.CoreException;
 
@@ -34,7 +34,7 @@ public class ContentTypeDetector {
    */
   private final Pattern sourceNamePattern = Pattern.compile("(.*\\W)?(src|source)(\\W.*)?");
 
-  public ContentType detectContentType(VariablePath path) {
+  public ProjectContentType detectContentType(VariablePath path) {
 
     try {
       File file = path.getAsFile();
@@ -45,19 +45,19 @@ public class ContentTypeDetector {
   }
 
   /**
-   * Tries to determine the {@link ContentType} of the specified file.
+   * Tries to determine the {@link ProjectContentType} of the specified file.
    * 
    * <p>
-   * If the content type cannot be determined, {@link ContentType#BINARY} is assumed.
+   * If the content type cannot be determined, {@link ProjectContentType#BINARY} is assumed.
    * 
    * @param file
    *          a file or directory
    * 
    * @return the content type. Never null
    */
-  public ContentType detectContentType(File file) {
+  public ProjectContentType detectContentType(File file) {
 
-    ContentType result = null;
+    ProjectContentType result = null;
 
     if (file.isDirectory()) {
       result = detectContentTypeFromDirectory(file);
@@ -80,8 +80,8 @@ public class ContentTypeDetector {
    * @param file
    * @return
    */
-  protected ContentType detectContentTypeFromDirectory(File file) {
-    ContentType result = null;
+  protected ProjectContentType detectContentTypeFromDirectory(File file) {
+    ProjectContentType result = null;
 
     File[] allFiles = file.listFiles();
 
@@ -95,13 +95,13 @@ public class ContentTypeDetector {
         String fileName = fileInDirectory.getName();
         if (isJavaClassFileName(fileName)) {
           // class file found: this jar is probably an archive containing binaries
-          result = ContentType.BINARY;
+          result = ProjectContentType.BINARY;
           break;
         }
 
         if (isJavaSourceFileName(fileName)) {
           // class file found: this jar is probably an archive containing binaries
-          result = ContentType.SOURCE;
+          result = ProjectContentType.SOURCE;
           break;
         }
       }
@@ -131,10 +131,10 @@ public class ContentTypeDetector {
    * @param file
    * @return
    */
-  protected ContentType detectContentTypeFromFile(File file) {
+  protected ProjectContentType detectContentTypeFromFile(File file) {
 
     JarFile jarFile = null;
-    ContentType result = ContentType.BINARY;
+    ProjectContentType result = ProjectContentType.BINARY;
     try {
       jarFile = new JarFile(file);
 
@@ -146,13 +146,13 @@ public class ContentTypeDetector {
         String fileName = entry.getName();
         if (isJavaClassFileName(fileName)) {
           // class file found: this jar is probably an archive containing binaries
-          result = ContentType.BINARY;
+          result = ProjectContentType.BINARY;
           break;
         }
 
         if (isJavaSourceFileName(fileName)) {
           // class file found: this jar is probably an archive containing binaries
-          result = ContentType.SOURCE;
+          result = ProjectContentType.SOURCE;
           break;
         }
       }
@@ -179,7 +179,7 @@ public class ContentTypeDetector {
    * @param name
    * @return
    */
-  protected ContentType guessContentTypeFromFileName(String name) {
+  protected ProjectContentType guessContentTypeFromFileName(String name) {
 
     // Create the matcher
     Matcher matcher = sourceNamePattern.matcher(name.toLowerCase());
@@ -188,17 +188,17 @@ public class ContentTypeDetector {
     boolean sourceFileName = matcher.matches();
 
     if (sourceFileName) {
-      return ContentType.SOURCE;
+      return ProjectContentType.SOURCE;
     }
 
-    return ContentType.BINARY;
+    return ProjectContentType.BINARY;
   }
 
   public static void main(String[] args) {
 
     File f = new File("/Users/nils/develop/bundlemaker/bundlemaker-ui-workspace/BM-JEdit/libs/jedit-abc.zip");
 
-    ContentType ct = new ContentTypeDetector().detectContentType(f);
+    ProjectContentType ct = new ContentTypeDetector().detectContentType(f);
 
     System.out.println("/Users/nils/develop/bundlemaker/bundlemaker-ui-workspace/BM-JEdit/libs/jedit-abc.zip: " + ct);
 

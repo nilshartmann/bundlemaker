@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractContent implements IProjectContentEntry {
+public abstract class AbstractProjectContent implements IProjectContentEntry {
 
   /** the empty resource standin set */
   private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
@@ -66,19 +66,19 @@ public abstract class AbstractContent implements IProjectContentEntry {
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractContent}.
+   * Creates a new instance of type {@link AbstractProjectContent}.
    * </p>
    */
-  public AbstractContent(IProjectContentProvider provider) {
+  public AbstractProjectContent(IProjectContentProvider provider) {
     this(provider, false);
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractContent}.
+   * Creates a new instance of type {@link AbstractProjectContent}.
    * </p>
    */
-  public AbstractContent(IProjectContentProvider provider, boolean notifyChanges) {
+  public AbstractProjectContent(IProjectContentProvider provider, boolean notifyChanges) {
     Assert.isNotNull(provider);
 
     // set notify flag
@@ -170,7 +170,7 @@ public abstract class AbstractContent implements IProjectContentEntry {
    * {@inheritDoc}
    */
   @Override
-  public Set<? extends IResource> getResources(ContentType type) {
+  public Set<? extends IResource> getResources(ProjectContentType type) {
     switch (type) {
     case BINARY: {
       return getBinaryResources();
@@ -334,7 +334,7 @@ public abstract class AbstractContent implements IProjectContentEntry {
    * @param type
    * @return
    */
-  public final IResourceStandin createNewResourceStandin(String contentId, String root, String path, ContentType type) {
+  public final IResourceStandin createNewResourceStandin(String contentId, String root, String path, ProjectContentType type) {
 
     Assert.isNotNull(contentId);
     Assert.isNotNull(root);
@@ -366,8 +366,8 @@ public abstract class AbstractContent implements IProjectContentEntry {
 
   protected void fireProjectDescriptionChangeEvent() {
 
-    if (_notifyChanges && _provider instanceof AbstractContentProvider) {
-      ((AbstractContentProvider) _provider).fireProjectDescriptionChangedEvent();
+    if (_notifyChanges && _provider instanceof AbstractProjectContentProvider) {
+      ((AbstractProjectContentProvider) _provider).fireProjectDescriptionChangedEvent();
     }
 
   }

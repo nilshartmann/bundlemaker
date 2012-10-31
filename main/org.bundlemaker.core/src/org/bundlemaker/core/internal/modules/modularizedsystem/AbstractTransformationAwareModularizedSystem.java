@@ -33,7 +33,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -141,7 +141,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         try {
           TypeModule typeModule = createTypeModule(fileBasedContent.getId().toString(), identifier,
               // TODO!!
-              new File[] { ((FileBasedContent) fileBasedContent).getBinaryRootPaths().toArray(new VariablePath[0])[0]
+              new File[] { ((FileBasedProjectContent) fileBasedContent).getBinaryRootPaths().toArray(new VariablePath[0])[0]
                   .getAsFile() });
           getModifiableNonResourceModules().add(typeModule);
         } catch (CoreException ex) {

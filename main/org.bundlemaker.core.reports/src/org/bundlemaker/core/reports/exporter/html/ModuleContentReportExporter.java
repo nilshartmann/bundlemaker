@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 
 public class ModuleContentReportExporter extends AbstractSingleModuleHtmlReportExporter {
@@ -42,7 +42,7 @@ public class ModuleContentReportExporter extends AbstractSingleModuleHtmlReportE
     boolean odd = true;
 
     //
-    List<IResource> sources = new LinkedList<IResource>(getCurrentModule().getResources(ContentType.SOURCE));
+    List<IResource> sources = new LinkedList<IResource>(getCurrentModule().getResources(ProjectContentType.SOURCE));
     Collections.sort(sources, new Comparator<IResource>() {
       @Override
       public int compare(IResource arg0, IResource arg1) {

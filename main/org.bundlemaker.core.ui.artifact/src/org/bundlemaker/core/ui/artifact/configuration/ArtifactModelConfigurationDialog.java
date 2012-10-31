@@ -11,7 +11,7 @@
 package org.bundlemaker.core.ui.artifact.configuration;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ComboViewer;
@@ -90,8 +90,8 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
     Combo contentTypeCombo = new Combo(dialogComposite, SWT.READ_ONLY);
     _contentTypeComboViewer = new ComboViewer(contentTypeCombo);
     _contentTypeComboViewer.setLabelProvider(enumValueLabelProvider);
-    _contentTypeComboViewer.add(new EnumValue(ContentType.SOURCE, "Sources"));
-    _contentTypeComboViewer.add(new EnumValue(ContentType.BINARY, "Binaries"));
+    _contentTypeComboViewer.add(new EnumValue(ProjectContentType.SOURCE, "Sources"));
+    _contentTypeComboViewer.add(new EnumValue(ProjectContentType.BINARY, "Binaries"));
 
     _virtualModuleButton = new Button(dialogComposite, SWT.CHECK);
     _virtualModuleButton.setText("Show missing types in 'virtual' module");
@@ -125,7 +125,7 @@ public class ArtifactModelConfigurationDialog extends TitleAreaDialog {
 
     int selectionIndex = _contentTypeComboViewer.getCombo().getSelectionIndex();
     EnumValue value = (EnumValue) _contentTypeComboViewer.getElementAt(selectionIndex);
-    _originalConfiguration.setContentType((ContentType) value.getValue());
+    _originalConfiguration.setContentType((ProjectContentType) value.getValue());
 
     super.okPressed();
   }

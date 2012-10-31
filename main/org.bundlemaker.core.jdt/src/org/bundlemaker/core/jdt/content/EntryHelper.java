@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -134,17 +134,17 @@ public class EntryHelper {
 
     _alreadyResolved.add(variablePath);
 
-    FileBasedContent result = new FileBasedContent(_provider);
+    FileBasedProjectContent result = new FileBasedProjectContent(_provider);
     result.setId(_provider.getId() + _counter++);
     result.setName(contentName);
     result.setVersion(contentVersion);
 
     result.setAnalyzeMode(analyzeMode);
 
-    result.addRootPath(new VariablePath(binaryPath.toOSString()), ContentType.BINARY);
+    result.addRootPath(new VariablePath(binaryPath.toOSString()), ProjectContentType.BINARY);
 
     if (sourcePath != null) {
-      result.addRootPath(new VariablePath(sourcePath.toOSString()), ContentType.SOURCE);
+      result.addRootPath(new VariablePath(sourcePath.toOSString()), ProjectContentType.SOURCE);
     }
 
     //

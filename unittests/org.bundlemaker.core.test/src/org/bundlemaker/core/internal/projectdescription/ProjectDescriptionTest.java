@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,18 +26,18 @@ public class ProjectDescriptionTest {
 
     BundleMakerProjectDescription description = new BundleMakerProjectDescription(null);
 
-    IProjectContentProvider provider1 = new FileBasedContentProvider();
-    IProjectContentProvider provider2 = new FileBasedContentProvider();
+    IProjectContentProvider provider1 = new FileBasedProjectContentProvider();
+    IProjectContentProvider provider2 = new FileBasedProjectContentProvider();
     List<IProjectContentProvider> selectedItems = new LinkedList<IProjectContentProvider>();
     selectedItems.add(provider1);
     selectedItems.add(provider2);
 
     // create list with selected items at position 3 and 5 (starting from 0)
-    description.addContentProvider(new FileBasedContentProvider());
-    description.addContentProvider(new FileBasedContentProvider());
-    description.addContentProvider(new FileBasedContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
     description.addContentProvider(provider1);
-    description.addContentProvider(new FileBasedContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
     description.addContentProvider(provider2);
 
     // assert at position 3
@@ -80,19 +80,19 @@ public class ProjectDescriptionTest {
 
     BundleMakerProjectDescription description = new BundleMakerProjectDescription(null);
 
-    IProjectContentProvider provider1 = new FileBasedContentProvider();
-    IProjectContentProvider provider2 = new FileBasedContentProvider();
+    IProjectContentProvider provider1 = new FileBasedProjectContentProvider();
+    IProjectContentProvider provider2 = new FileBasedProjectContentProvider();
     List<IProjectContentProvider> selectedItems = new LinkedList<IProjectContentProvider>();
     selectedItems.add(provider1);
     selectedItems.add(provider2);
 
     // create list with selected items at position 0 and 2 (starting from 0)
     description.addContentProvider(provider1);
-    description.addContentProvider(new FileBasedContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
     description.addContentProvider(provider2);
-    description.addContentProvider(new FileBasedContentProvider());
-    description.addContentProvider(new FileBasedContentProvider());
-    description.addContentProvider(new FileBasedContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
 
     // assert
     Assert.assertEquals(6, description.getContentProviders().size());
@@ -129,18 +129,18 @@ public class ProjectDescriptionTest {
     
     BundleMakerProjectDescription description = new BundleMakerProjectDescription(null);
 
-    IProjectContentProvider provider1 = new FileBasedContentProvider();
-    IProjectContentProvider provider2 = new FileBasedContentProvider();
+    IProjectContentProvider provider1 = new FileBasedProjectContentProvider();
+    IProjectContentProvider provider2 = new FileBasedProjectContentProvider();
     List<IProjectContentProvider> selectedItems = new LinkedList<IProjectContentProvider>();
     selectedItems.add(provider1);
     selectedItems.add(provider2);
 
     // create list with selected items at position 3 and 5 (starting from 0)
-    description.addContentProvider(new FileBasedContentProvider());
-    description.addContentProvider(new FileBasedContentProvider());
-    description.addContentProvider(new FileBasedContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
     description.addContentProvider(provider1);
-    description.addContentProvider(new FileBasedContentProvider());
+    description.addContentProvider(new FileBasedProjectContentProvider());
     description.addContentProvider(provider2);
 
     // assert at position 3

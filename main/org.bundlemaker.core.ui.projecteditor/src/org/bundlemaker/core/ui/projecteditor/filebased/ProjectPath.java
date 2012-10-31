@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 
 /**
@@ -61,8 +61,8 @@ public class ProjectPath {
     return _path;
   }
 
-  public ContentType getContentType() {
-    return (_source ? ContentType.SOURCE : ContentType.BINARY);
+  public ProjectContentType getContentType() {
+    return (_source ? ProjectContentType.SOURCE : ProjectContentType.BINARY);
   }
 
 }

@@ -15,8 +15,8 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditProjectPathDialog;
@@ -36,7 +36,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
 
   @Override
   public boolean canHandle(IProjectContentProvider provider) {
-    return (provider instanceof FileBasedContentProvider);
+    return (provider instanceof FileBasedProjectContentProvider);
   }
 
   @Override
@@ -69,7 +69,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public boolean canChangeAnalyzeMode(IProjectContentProvider projectContentProvider, Object element) {
-    return (element instanceof FileBasedContentProvider || element instanceof FileBasedContent);
+    return (element instanceof FileBasedProjectContentProvider || element instanceof FileBasedProjectContent);
   }
 
   /*
@@ -81,12 +81,12 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public void setAnalyzeMode(IProjectContentProvider projectContentProvider, Object element, AnalyzeMode analyzeMode) {
-    FileBasedContent fileBasedContent = null;
+    FileBasedProjectContent fileBasedContent = null;
 
-    if (element instanceof FileBasedContent) {
-      fileBasedContent = (FileBasedContent) element;
-    } else if (element instanceof FileBasedContentProvider) {
-      fileBasedContent = ((FileBasedContentProvider) element).getFileBasedContent();
+    if (element instanceof FileBasedProjectContent) {
+      fileBasedContent = (FileBasedProjectContent) element;
+    } else if (element instanceof FileBasedProjectContentProvider) {
+      fileBasedContent = ((FileBasedProjectContentProvider) element).getFileBasedContent();
     }
 
     if (fileBasedContent != null) {
@@ -113,7 +113,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public boolean canEdit(Object selectedObject) {
-    return selectedObject instanceof FileBasedContentProvider || selectedObject instanceof ProjectPath;
+    return selectedObject instanceof FileBasedProjectContentProvider || selectedObject instanceof ProjectPath;
   }
 
   /*
@@ -125,9 +125,9 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   @Override
   public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
 
-    FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
+    FileBasedProjectContentProvider fileBasedContentProvider = (FileBasedProjectContentProvider) provider;
 
-    if (selectedObject instanceof FileBasedContentProvider) {
+    if (selectedObject instanceof FileBasedProjectContentProvider) {
       return editFileBasedContentProvider(shell, project, fileBasedContentProvider);
     }
 
@@ -172,7 +172,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public void remove(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
-    FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) provider;
+    FileBasedProjectContentProvider fileBasedContentProvider = (FileBasedProjectContentProvider) provider;
 
     ProjectPath pathToRemove = (ProjectPath) selectedObject;
 
@@ -195,13 +195,13 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
   }
 
   protected boolean editFileBasedContentProvider(Shell shell, IBundleMakerProject project,
-      FileBasedContentProvider fileBasedContentProvider) {
+      FileBasedProjectContentProvider fileBasedContentProvider) {
     EditFileBasedContentProviderDialog page = new EditFileBasedContentProviderDialog(shell, fileBasedContentProvider);
     if (page.open() != Window.OK) {
       return false;
     }
 
-    FileBasedContent content = fileBasedContentProvider.getFileBasedContent();
+    FileBasedProjectContent content = fileBasedContentProvider.getFileBasedContent();
     content.setName(page.getName());
     content.setVersion(page.getVersion());
     content.setBinaryPaths(page.getBinaryPaths().toArray(new String[0]));

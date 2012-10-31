@@ -28,7 +28,7 @@ import org.bundlemaker.core.osgi.manifest.IBundleManifestCreator;
 import org.bundlemaker.core.osgi.manifest.IManifestPreferences;
 import org.bundlemaker.core.osgi.utils.JarFileManifestWriter;
 import org.bundlemaker.core.osgi.utils.ManifestUtils;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReadableResource;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.JarFileUtils;
@@ -85,7 +85,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
     // create new file if repackaging is required
     if (isIncludeSources() || !getTemplateProvider().getAdditionalResources(getCurrentModule(), getCurrentModularizedSystem(),
         getCurrentContext()).isEmpty()
-        || ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ContentType.BINARY)) {
+        || ModuleExporterUtils.requiresRepackaging(getCurrentModule(), ProjectContentType.BINARY)) {
 
       // create new File
       createNewJarFile();
@@ -95,7 +95,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
     else {
 
       // get the root file
-      File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ContentType.BINARY);
+      File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ProjectContentType.BINARY);
 
       // get the manifest writer
       ManifestWriter manifestWriter = new JarFileManifestWriter(rootFile, getDestinationFile());
@@ -131,7 +131,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
         additionalResources.addAll(resourceKeys);
         
         // add sources
-        Set<IResource> sources = getCurrentModule().getResources(ContentType.SOURCE);
+        Set<IResource> sources = getCurrentModule().getResources(ProjectContentType.SOURCE);
         additionalResources.addAll(wrapSourceResources(sources));
       } else {
         
@@ -140,7 +140,7 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       }
 
       // export the jar archive
-      JarFileUtils.createJarArchive(getCurrentModule().getResources(ContentType.BINARY),
+      JarFileUtils.createJarArchive(getCurrentModule().getResources(ProjectContentType.BINARY),
           ManifestUtils.toManifest(getManifestContents()), additionalResources, outputStream);
 
       // close the output stream

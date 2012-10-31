@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProviderFactory;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.util.JarInfo;
 import org.bundlemaker.core.util.JarInfoService;
@@ -44,7 +44,7 @@ public class FileBasedContentCreator {
       if (file == null) {
         // variable cannot be resolved. use name only
 
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, variablePath
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, variablePath
             .getUnresolvedPath().toOSString(), null, AnalyzeMode.BINARIES_ONLY);
 
         continue;
@@ -52,7 +52,7 @@ public class FileBasedContentCreator {
 
       if (file.isDirectory()) {
         // for now we assume a directory is always binary content
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
             file.getAbsolutePath(), null, AnalyzeMode.BINARIES_ONLY);
 
         continue;
@@ -78,11 +78,11 @@ public class FileBasedContentCreator {
 
       VariablePath sourceFile = getSourceFile(modules, moduleName);
       if (sourceFile != null) {
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, sourceFile,
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, sourceFile,
             AnalyzeMode.BINARIES_AND_SOURCES);
 
       } else {
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, null,
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, null,
             AnalyzeMode.BINARIES_ONLY);
       }
     }
@@ -91,7 +91,7 @@ public class FileBasedContentCreator {
     // issue a warning here (sources without binaries)
     Collection<VariablePath> files = modules.values();
     for (VariablePath file : files) {
-      FileBasedContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, file, null,
+      FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, file, null,
           AnalyzeMode.BINARIES_ONLY);
     }
 

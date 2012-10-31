@@ -16,7 +16,7 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.resources.IProject;
@@ -75,13 +75,13 @@ public class JdtProjectHelper {
 
         // TODO!!
         IPath sourceRoot = null;
-        if (!((FileBasedContent) projectContent).getSourceRootPaths().isEmpty()) {
-          sourceRoot = ((FileBasedContent) projectContent).getSourceRootPaths().toArray(new VariablePath[0])[0]
+        if (!((FileBasedProjectContent) projectContent).getSourceRootPaths().isEmpty()) {
+          sourceRoot = ((FileBasedProjectContent) projectContent).getSourceRootPaths().toArray(new VariablePath[0])[0]
               .getResolvedPath();
         }
 
         // add binary paths
-        for (VariablePath iClasspathEntry : ((FileBasedContent) projectContent).getBinaryRootPaths()) {
+        for (VariablePath iClasspathEntry : ((FileBasedProjectContent) projectContent).getBinaryRootPaths()) {
           classpathEntry = JavaCore.newLibraryEntry(iClasspathEntry.getResolvedPath(), sourceRoot, null);
           entries.add(classpathEntry);
         }

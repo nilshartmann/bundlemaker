@@ -14,9 +14,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.bundlemaker.core.projectdescription.AbstractContent;
+import org.bundlemaker.core.projectdescription.AbstractProjectContent;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
@@ -32,7 +32,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedContent extends AbstractContent implements IProjectContentEntry {
+public class FileBasedProjectContent extends AbstractProjectContent implements IProjectContentEntry {
 
   /** - */
   private static final Set<VariablePath> EMPTY_ROOTPATH_SET = Collections.unmodifiableSet(new HashSet<VariablePath>());
@@ -45,14 +45,14 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
 
   /**
    * <p>
-   * Creates a new instance of type {@link FileBasedContent}.
+   * Creates a new instance of type {@link FileBasedProjectContent}.
    * </p>
    */
-  public FileBasedContent(IProjectContentProvider provider) {
+  public FileBasedProjectContent(IProjectContentProvider provider) {
     this(provider, false);
   }
 
-  public FileBasedContent(IProjectContentProvider provider, boolean notifyChanges) {
+  public FileBasedProjectContent(IProjectContentProvider provider, boolean notifyChanges) {
     super(provider, notifyChanges);
 
     //
@@ -87,7 +87,7 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
       for (VariablePath root : _binaryPaths) {
         for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
           // create the resource standin
-          createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ContentType.BINARY);
+          createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ProjectContentType.BINARY);
         }
       }
 
@@ -97,7 +97,7 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
           for (VariablePath root : _sourcePaths) {
             for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
               // create the resource standin
-              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ContentType.SOURCE);
+              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ProjectContentType.SOURCE);
             }
           }
         }
@@ -112,14 +112,14 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
    * @param rootPath
    * @param type
    */
-  public void addRootPath(VariablePath rootPath, ContentType type) {
+  public void addRootPath(VariablePath rootPath, ProjectContentType type) {
     Assert.isNotNull(rootPath);
     Assert.isNotNull(type);
 
     //
-    if (type.equals(ContentType.BINARY)) {
+    if (type.equals(ProjectContentType.BINARY)) {
       _binaryPaths.add(rootPath);
-    } else if (type.equals(ContentType.SOURCE)) {
+    } else if (type.equals(ProjectContentType.SOURCE)) {
       sourcePaths().add(rootPath);
     }
 
@@ -133,14 +133,14 @@ public class FileBasedContent extends AbstractContent implements IProjectContent
    * @param rootPath
    * @param type
    */
-  public void removeRootPath(VariablePath rootPath, ContentType type) {
+  public void removeRootPath(VariablePath rootPath, ProjectContentType type) {
     Assert.isNotNull(rootPath);
     Assert.isNotNull(type);
 
     //
-    if (type.equals(ContentType.BINARY)) {
+    if (type.equals(ProjectContentType.BINARY)) {
       _binaryPaths.remove(rootPath);
-    } else if (type.equals(ContentType.SOURCE)) {
+    } else if (type.equals(ProjectContentType.SOURCE)) {
       _sourcePaths.remove(rootPath);
     }
 

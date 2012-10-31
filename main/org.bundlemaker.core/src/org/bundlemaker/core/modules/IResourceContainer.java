@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 
@@ -45,7 +45,7 @@ public interface IResourceContainer extends ITypeContainer {
    * @param contentType
    * @return
    */
-  boolean containsResource(String path, ContentType contentType);
+  boolean containsResource(String path, ProjectContentType contentType);
 
   /**
    * <p>
@@ -55,7 +55,7 @@ public interface IResourceContainer extends ITypeContainer {
    * @param conentType
    * @return
    */
-  IResource getResource(String path, ContentType conentType);
+  IResource getResource(String path, ProjectContentType conentType);
 
   /**
    * <p>
@@ -64,7 +64,7 @@ public interface IResourceContainer extends ITypeContainer {
    * @param conentType
    * @return
    */
-  Set<IResource> getResources(ContentType conentType);
+  Set<IResource> getResources(ProjectContentType conentType);
 
   /**
    * <p>

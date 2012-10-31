@@ -6,7 +6,7 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
@@ -149,7 +149,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
     Assert.assertNotNull(newModuleArtifact.getChild("de|test|innertypes|A$AA.class|A$AA"));
 
     IResourceModule module = getModularizedSystem().getResourceModule("NewModule", "2.0.0");
-    Assert.assertNotNull(module.getResource("de/test/innertypes/A$AA.class", ContentType.BINARY));
+    Assert.assertNotNull(module.getResource("de/test/innertypes/A$AA.class", ProjectContentType.BINARY));
 
     //
     moduleArtifact.addArtifact(resource);

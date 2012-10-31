@@ -9,12 +9,12 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.mvn.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
-import org.bundlemaker.core.projectdescription.AbstractContentProvider;
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -36,7 +36,7 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class MvnContentProvider extends AbstractContentProvider implements IProjectContentProvider {
+public class MvnContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** the mvn scope */
   private static final String        SCOPE_COMPILE = "compile";
@@ -311,7 +311,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
        */;
 
       //
-      FileBasedContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
+      FileBasedProjectContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
           moduleIdentifier.getVersion(), binaryFile, sourceFile, _bundleMakerProject, analyze);
 
       // set user attributes
@@ -341,7 +341,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
    * @param sourcePath
    * @throws CoreException
    */
-  private FileBasedContent createFileBasedContent(String contentName, String contentVersion, File binaryPath,
+  private FileBasedProjectContent createFileBasedContent(String contentName, String contentVersion, File binaryPath,
       File sourcePath,
       IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
 
@@ -350,7 +350,7 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     Assert.isNotNull(contentVersion);
     Assert.isNotNull(binaryPath);
 
-    FileBasedContent result = new FileBasedContent(MvnContentProvider.this);
+    FileBasedProjectContent result = new FileBasedProjectContent(MvnContentProvider.this);
     if (!analyze) {
       result.setAnalyzeMode(AnalyzeMode.DO_NOT_ANALYZE);
     } else {
@@ -364,10 +364,10 @@ public class MvnContentProvider extends AbstractContentProvider implements IProj
     result.setName(contentName);
     result.setVersion(contentVersion);
 
-    result.addRootPath(new VariablePath(binaryPath.getAbsolutePath()), ContentType.BINARY);
+    result.addRootPath(new VariablePath(binaryPath.getAbsolutePath()), ProjectContentType.BINARY);
 
     if (sourcePath != null) {
-      result.addRootPath(new VariablePath(sourcePath.getAbsolutePath()), ContentType.SOURCE);
+      result.addRootPath(new VariablePath(sourcePath.getAbsolutePath()), ProjectContentType.SOURCE);
     }
 
     //

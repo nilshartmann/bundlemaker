@@ -11,7 +11,7 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -76,20 +76,20 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
 
     // Test 1: assert resources in the resource model
     IResourceModule resourceModule = getModularizedSystem().getResourceModule("SimpleArtifactModelTest", "1.0.0");
-    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
 
     // Test 2: remove package
     moduleArtifact.removeArtifact(packageArtifact);
-    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
     Assert.assertNull(packageArtifact.getParent());
     Assert.assertEquals(2, packageArtifact.getChildren().size());
 
     // Test 3: add package
     moduleArtifact.addArtifact(packageArtifact);
-    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
   }
 
   @Test
@@ -106,25 +106,25 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
 
     // Test 1: assert resources
     IResourceModule resourceModule = getModularizedSystem().getResourceModule("SimpleArtifactModelTest", "1.0.0");
-    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
 
     IResourceArtifact testArtifact = rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Test.class",
-        ContentType.BINARY));
+        ProjectContentType.BINARY));
     IResourceArtifact klasseArtifact = rootArtifact.getResourceArtifact(resourceModule.getResource(
-        "de/test/Klasse.class", ContentType.BINARY));
+        "de/test/Klasse.class", ProjectContentType.BINARY));
 
     // Test 2: remove resources
     packageArtifact.removeArtifact(klasseArtifact);
     packageArtifact.removeArtifact(testArtifact);
-    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
 
     // Test 2: add resources
     packageArtifact.addArtifact(klasseArtifact);
     packageArtifact.addArtifact(testArtifact);
-    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
   }
 
   /**
@@ -147,24 +147,24 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
 
     // Test 1: assert resources
     IResourceModule resourceModule = getModularizedSystem().getResourceModule("SimpleArtifactModelTest", "1.0.0");
-    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
 
     List<IResourceArtifact> resourceArtifacts = new LinkedList<IResourceArtifact>();
     resourceArtifacts.add(rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Test.class",
-        ContentType.BINARY)));
+        ProjectContentType.BINARY)));
     resourceArtifacts.add(rootArtifact.getResourceArtifact(resourceModule.getResource("de/test/Klasse.class",
-        ContentType.BINARY)));
+        ProjectContentType.BINARY)));
 
     // Test 2: remove resources
     packageArtifact.removeArtifacts(resourceArtifacts);
-    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
 
     // Test 3: add resources
     packageArtifact.addArtifacts(resourceArtifacts);
-    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ContentType.BINARY));
-    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Test.class", ProjectContentType.BINARY));
+    Assert.assertNotNull(resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY));
   }
 
   /**

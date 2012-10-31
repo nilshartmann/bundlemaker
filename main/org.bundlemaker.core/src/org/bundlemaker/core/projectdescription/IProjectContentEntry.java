@@ -90,14 +90,14 @@ public interface IProjectContentEntry {
    * @param type
    * @return a Set of resources, never null.
    */
-  Set<? extends IResource> getResources(ContentType type);
+  Set<? extends IResource> getResources(ProjectContentType type);
 
   /**
    * <p>
    * Returns a {@link Set} of all binary resources
    * </p>
    * <p>
-   * This is a convenience method for {@link #getResources(ContentType) getResources(ContentType.BINARY)}
+   * This is a convenience method for {@link #getResources(ProjectContentType) getResources(ContentType.BINARY)}
    * </p>
    * <p>
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty
@@ -111,7 +111,7 @@ public interface IProjectContentEntry {
   /**
    * Returns all source resources
    * <p>
-   * This is a convenience method for {@link #getResources(ContentType) getResources(ContentType.SOURCE)}
+   * This is a convenience method for {@link #getResources(ProjectContentType) getResources(ContentType.SOURCE)}
    * </p>
    * <p>
    * If this content entry is not a resource content ( <code>isAnalyze()</code> returns <code>false</code>), an empty

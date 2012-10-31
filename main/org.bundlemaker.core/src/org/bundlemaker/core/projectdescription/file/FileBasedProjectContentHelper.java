@@ -10,7 +10,7 @@ import org.eclipse.core.resources.IFile;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedContentHelper {
+public class FileBasedProjectContentHelper {
 
   /**
    * <p>

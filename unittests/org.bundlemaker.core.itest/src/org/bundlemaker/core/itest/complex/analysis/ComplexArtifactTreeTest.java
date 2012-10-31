@@ -15,7 +15,7 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
 
     // Step 1: transform the model
     IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
-        new AnalysisModelConfiguration(false, ContentType.BINARY, true));
+        new AnalysisModelConfiguration(false, ProjectContentType.BINARY, true));
     Assert.assertNotNull(rootArtifact);
 
     //

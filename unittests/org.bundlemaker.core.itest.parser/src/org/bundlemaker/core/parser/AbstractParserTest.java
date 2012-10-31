@@ -11,7 +11,7 @@ import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.itestframework.ExpectedReference;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -143,7 +143,7 @@ public abstract class AbstractParserTest extends AbstractBundleMakerProjectTest 
    * @throws CoreException
    */
   protected void assertResourceWithSingleTypeAndAllReferences(IResourceModule resourceModule, String path,
-      ContentType contentType, ExpectedReference... expectedReferences) throws CoreException {
+      ProjectContentType contentType, ExpectedReference... expectedReferences) throws CoreException {
 
     //
     IResource resource = resourceModule.getResource(path, contentType);

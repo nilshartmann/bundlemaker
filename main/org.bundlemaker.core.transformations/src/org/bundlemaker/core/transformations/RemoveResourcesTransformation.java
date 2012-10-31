@@ -18,7 +18,7 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.transformations.resourceset.ResourceSet;
@@ -58,7 +58,7 @@ public class RemoveResourcesTransformation implements ITransformation {
       IModifiableResourceModule resourceModule = modularizedSystem.getModifiableResourceModule(resourceSet
           .getModuleIdentifier());
 
-      List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ContentType.BINARY);
+      List<IResource> resourceStandinsToMove = resourceSet.getMatchingResources(resourceModule, ProjectContentType.BINARY);
 
       for (IResource resource : resourceStandinsToMove) {
         resourceModule.getModifiableSelfResourceContainer().removeMovableUnit(

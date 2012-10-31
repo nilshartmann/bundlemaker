@@ -18,7 +18,7 @@ import java.util.Set;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 
@@ -74,7 +74,7 @@ public class ResourceSet {
    * @param contentType
    * @return
    */
-  public List<IResource> getMatchingResources(IResourceModule resourceModule, ContentType contentType) {
+  public List<IResource> getMatchingResources(IResourceModule resourceModule, ProjectContentType contentType) {
 
     IModuleIdentifier moduleIdentifier = _moduleIdentifier;
 

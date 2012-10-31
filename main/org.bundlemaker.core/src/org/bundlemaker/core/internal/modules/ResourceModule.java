@@ -26,7 +26,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 
@@ -55,7 +55,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
    * {@inheritDoc}
    */
   @Override
-  public boolean containsResource(String path, ContentType contentType) {
+  public boolean containsResource(String path, ProjectContentType contentType) {
     return getResource(path, contentType) != null;
   }
 
@@ -108,7 +108,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
    * {@inheritDoc}
    */
   @Override
-  public IResource getResource(final String path, final ContentType contentType) {
+  public IResource getResource(final String path, final ProjectContentType contentType) {
 
     // create the result set
     final IResource[] result = new IResource[1];
@@ -130,7 +130,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
    * {@inheritDoc}
    */
   @Override
-  public Set<IResource> getResources(final ContentType contentType) {
+  public Set<IResource> getResources(final ProjectContentType contentType) {
 
     // create the result set
     final Set<IResource> result = new HashSet<IResource>();
@@ -174,7 +174,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
 
   @Override
   public boolean containsSources() {
-    return !getResources(ContentType.SOURCE).isEmpty();
+    return !getResources(ProjectContentType.SOURCE).isEmpty();
   }
 
   // TODO
@@ -184,7 +184,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
     Map<String, IResource> entries = new HashMap<String, IResource>();
 
     //
-    for (IResource resource : getResources(ContentType.SOURCE)) {
+    for (IResource resource : getResources(ProjectContentType.SOURCE)) {
 
       if (entries.containsKey(resource.getPath())) {
 
@@ -204,7 +204,7 @@ public class ResourceModule extends AbstractModule<IResourceContainer, ResourceC
 
     //
     entries.clear();
-    for (IResource resource : getResources(ContentType.BINARY)) {
+    for (IResource resource : getResources(ProjectContentType.BINARY)) {
 
       if (entries.containsKey(resource.getPath())) {
 

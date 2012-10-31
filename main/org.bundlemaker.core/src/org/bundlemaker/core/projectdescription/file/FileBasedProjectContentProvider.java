@@ -6,9 +6,9 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.content.file.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.content.file.xml.XmlResourceContentType;
-import org.bundlemaker.core.projectdescription.AbstractContentProvider;
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
@@ -20,30 +20,30 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedContentProvider extends AbstractContentProvider implements IProjectContentProvider {
+public class FileBasedProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** the file based content */
-  private FileBasedContent _fileBasedContent;
+  private FileBasedProjectContent _fileBasedContent;
 
   /**
    * <p>
-   * Creates a new instance of type {@link FileBasedContentProvider}.
+   * Creates a new instance of type {@link FileBasedProjectContentProvider}.
    * </p>
    */
-  public FileBasedContentProvider() {
+  public FileBasedProjectContentProvider() {
 
     // create a new instance of type FileBasedContent
-    _fileBasedContent = new FileBasedContent(this, true);
+    _fileBasedContent = new FileBasedProjectContent(this, true);
   }
 
   /**
    * <p>
-   * Returns the contained {@link FileBasedContent}.
+   * Returns the contained {@link FileBasedProjectContent}.
    * </p>
    * 
-   * @return the contained {@link FileBasedContent}.
+   * @return the contained {@link FileBasedProjectContent}.
    */
-  public FileBasedContent getFileBasedContent() {
+  public FileBasedProjectContent getFileBasedContent() {
     return _fileBasedContent;
   }
 
@@ -106,7 +106,7 @@ public class FileBasedContentProvider extends AbstractContentProvider implements
     _fileBasedContent.setSourcePaths(sourceRootPaths);
   }
 
-  public void addRootPath(VariablePath rootPath, ContentType type) {
+  public void addRootPath(VariablePath rootPath, ProjectContentType type) {
     _fileBasedContent.addRootPath(rootPath, type);
   }
 
@@ -167,13 +167,13 @@ public class FileBasedContentProvider extends AbstractContentProvider implements
 
     // set the binary path names
     for (String path : config.getBinaryPathNames()) {
-      _fileBasedContent.addRootPath(new VariablePath(path), ContentType.BINARY);
+      _fileBasedContent.addRootPath(new VariablePath(path), ProjectContentType.BINARY);
     }
 
     // set the source path name
     if (config.getResourceContent() != null) {
       for (String path : config.getResourceContent().getSourcePathNames()) {
-        _fileBasedContent.addRootPath(new VariablePath(path), ContentType.SOURCE);
+        _fileBasedContent.addRootPath(new VariablePath(path), ProjectContentType.SOURCE);
       }
     }
   }

@@ -16,7 +16,7 @@ import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -204,7 +204,7 @@ public class ArtifactPathLabelGeneratorTest extends AbstractModularizedSystemTes
 
     AnalysisModelConfiguration artifactModelConfiguration = new AnalysisModelConfiguration();
     artifactModelConfiguration.setHierarchicalPackages(hierarchical);
-    artifactModelConfiguration.setContentType(ContentType.BINARY);
+    artifactModelConfiguration.setContentType(ProjectContentType.BINARY);
     artifactModelConfiguration.setIncludeVirtualModuleForMissingTypes(true);
 
     IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(

@@ -16,8 +16,8 @@ import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +40,7 @@ public class FileBasedContentRenderer {
   }
 
   public boolean canRender(Object object) {
-    return (object instanceof FileBasedContent || object instanceof ProjectPath);
+    return (object instanceof FileBasedProjectContent || object instanceof ProjectPath);
   }
 
   /**
@@ -50,21 +50,21 @@ public class FileBasedContentRenderer {
    */
   public List<? extends Object> getChildren(IBundleMakerProject project, Object object) {
 
-    if (object instanceof FileBasedContentProvider) {
-      FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) object;
+    if (object instanceof FileBasedProjectContentProvider) {
+      FileBasedProjectContentProvider fileBasedContentProvider = (FileBasedProjectContentProvider) object;
       return getChildren(fileBasedContentProvider.getFileBasedContent());
 
     }
 
-    if (object instanceof FileBasedContent) {
-      FileBasedContent fileBasedContent = (FileBasedContent) object;
+    if (object instanceof FileBasedProjectContent) {
+      FileBasedProjectContent fileBasedContent = (FileBasedProjectContent) object;
       return getChildren(fileBasedContent);
     }
 
     return null;
   }
 
-  protected List<? extends Object> getChildren(FileBasedContent fileBasedContent) {
+  protected List<? extends Object> getChildren(FileBasedProjectContent fileBasedContent) {
     List<Object> result = new LinkedList<Object>();
 
     addAsProjectPaths(result, fileBasedContent.getBinaryRootPaths(), false);
@@ -84,11 +84,11 @@ public class FileBasedContentRenderer {
    * @return
    */
   public AnalyzeMode getAnalyzeMode(Object element) {
-    if (element instanceof FileBasedContentProvider) {
-      return ((FileBasedContentProvider) element).getFileBasedContent().getAnalyzeMode();
+    if (element instanceof FileBasedProjectContentProvider) {
+      return ((FileBasedProjectContentProvider) element).getFileBasedContent().getAnalyzeMode();
     }
-    if (element instanceof FileBasedContent) {
-      return ((FileBasedContent) element).getAnalyzeMode();
+    if (element instanceof FileBasedProjectContent) {
+      return ((FileBasedProjectContent) element).getAnalyzeMode();
     }
 
     return null;
@@ -99,7 +99,7 @@ public class FileBasedContentRenderer {
    * @return
    */
   public Image getImage(Object element) {
-    if (element instanceof FileBasedContentProvider || element instanceof FileBasedContent) {
+    if (element instanceof FileBasedProjectContentProvider || element instanceof FileBasedProjectContent) {
       return BundleMakerImages.RESOURCE_CONTENT.getImage();
     }
 
@@ -116,13 +116,13 @@ public class FileBasedContentRenderer {
    */
   public String getLabel(Object element) {
 
-    if (element instanceof FileBasedContentProvider) {
-      FileBasedContentProvider fileBasedContentProvider = (FileBasedContentProvider) element;
+    if (element instanceof FileBasedProjectContentProvider) {
+      FileBasedProjectContentProvider fileBasedContentProvider = (FileBasedProjectContentProvider) element;
       return getFileBasedContentLabel(fileBasedContentProvider.getFileBasedContent());
     }
 
-    if (element instanceof FileBasedContent) {
-      return getFileBasedContentLabel((FileBasedContent) element);
+    if (element instanceof FileBasedProjectContent) {
+      return getFileBasedContentLabel((FileBasedProjectContent) element);
     }
 
     if (element instanceof ProjectPath) {
@@ -133,7 +133,7 @@ public class FileBasedContentRenderer {
     return String.valueOf(element);
   }
 
-  protected String getFileBasedContentLabel(FileBasedContent fileBasedContent) {
+  protected String getFileBasedContentLabel(FileBasedProjectContent fileBasedContent) {
     return String.format("%s [%s]", fileBasedContent.getName(), fileBasedContent.getVersion());
 
   }

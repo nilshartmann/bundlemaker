@@ -6,7 +6,7 @@ import org.bundlemaker.core.itestframework.ExpectedReference;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.parser.AbstractParserTest;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.resource.ReferenceType;
@@ -29,7 +29,7 @@ public class ClassAnnotationTest_1 extends AbstractParserTest {
   protected void testResult(IModularizedSystem modularizedSystem, IResourceModule resourceModule) throws CoreException {
 
     // get 'de/test/Klasse.java'
-    IResource resource = resourceModule.getResource("de/test/Klasse.class", ContentType.BINARY);
+    IResource resource = resourceModule.getResource("de/test/Klasse.class", ProjectContentType.BINARY);
     assertNotNull(resource);
 
     IType type = resource.getContainedType();

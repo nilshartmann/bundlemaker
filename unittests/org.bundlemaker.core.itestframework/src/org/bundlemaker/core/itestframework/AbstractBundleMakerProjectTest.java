@@ -8,7 +8,7 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProviderFactory;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProviderFactory;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -154,7 +154,7 @@ public abstract class AbstractBundleMakerProjectTest {
     }
 
     //
-    FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription, _testProjectName,
+    FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription, _testProjectName,
         TEST_PROJECT_VERSION, classes.getAbsolutePath(), sources != null ? sources.getAbsolutePath() : null);
 
     // step 4: process the class path entries
@@ -162,7 +162,7 @@ public abstract class AbstractBundleMakerProjectTest {
     if (libsDir.exists()) {
       File[] jarFiles = libsDir.listFiles();
       for (File externalJar : jarFiles) {
-        FileBasedContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
             externalJar.getAbsolutePath(), null, getLibraryAnalyzeMode());
       }
     }

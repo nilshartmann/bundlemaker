@@ -25,8 +25,8 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.projectdescription.AbstractContent;
-import org.bundlemaker.core.projectdescription.AbstractContentProvider;
+import org.bundlemaker.core.projectdescription.AbstractProjectContent;
+import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
@@ -243,7 +243,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void removeContentProvider(String id) {
     for (Iterator<IProjectContentEntry> iterator = _projectContentEntries.iterator(); iterator.hasNext();) {
 
-      AbstractContent content = (AbstractContent) iterator.next();
+      AbstractProjectContent content = (AbstractProjectContent) iterator.next();
 
       if (content.getId().equals(id)) {
         iterator.remove();
@@ -284,8 +284,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     }
 
     // contentProvider should always be AbstractContentProvider...
-    if (contentProvider instanceof AbstractContentProvider) {
-      AbstractContentProvider abstractContentProvider = (AbstractContentProvider) contentProvider;
+    if (contentProvider instanceof AbstractProjectContentProvider) {
+      AbstractProjectContentProvider abstractContentProvider = (AbstractProjectContentProvider) contentProvider;
       abstractContentProvider.setProjectDescription(this);
     }
 

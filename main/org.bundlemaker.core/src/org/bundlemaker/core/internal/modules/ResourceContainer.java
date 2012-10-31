@@ -27,7 +27,7 @@ import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters.ReferenceFilter;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -82,7 +82,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * {@inheritDoc}
    */
   @Override
-  public boolean containsResource(String resourceType, ContentType contentType) {
+  public boolean containsResource(String resourceType, ProjectContentType contentType) {
     return getResource(resourceType, contentType) != null;
   }
 
@@ -90,7 +90,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * {@inheritDoc}
    */
   @Override
-  public IResource getResource(String path, ContentType contentType) {
+  public IResource getResource(String path, ProjectContentType contentType) {
 
     //
     for (IResource resourceStandin : getModifiableResourcesSet(contentType)) {
@@ -109,7 +109,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * {@inheritDoc}
    */
   @Override
-  public Set<IResource> getResources(ContentType contentType) {
+  public Set<IResource> getResources(ProjectContentType contentType) {
 
     //
     Set<? extends IResource> result = getModifiableResourcesSet(contentType);
@@ -129,7 +129,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     Set<IReference> result = new HashSet<IReference>();
 
     // iterate over all resources
-    for (IResource resource : getResources(ContentType.BINARY)) {
+    for (IResource resource : getResources(ProjectContentType.BINARY)) {
       for (IReference reference : resource.getReferences()) {
         if (filter.matches(reference)) {
           result.add(reference);
@@ -137,7 +137,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
       }
     }
 
-    for (IResource resource : getResources(ContentType.SOURCE)) {
+    for (IResource resource : getResources(ProjectContentType.SOURCE)) {
       for (IReference reference : resource.getReferences()) {
         if (filter.matches(reference)) {
           result.add(reference);
@@ -180,7 +180,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     // iterate over all resources
-    for (IResource resource : getResources(ContentType.BINARY)) {
+    for (IResource resource : getResources(ProjectContentType.BINARY)) {
       if (!resource.containsTypes()) {
 
         //
@@ -194,7 +194,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     // iterate over all resources
-    for (IResource resource : getResources(ContentType.SOURCE)) {
+    for (IResource resource : getResources(ProjectContentType.SOURCE)) {
       if (!resource.containsTypes()) {
 
         //
@@ -266,7 +266,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
   /**
    * {@inheritDoc}
    */
-  private void add(IResource resource, ContentType contentType) {
+  private void add(IResource resource, ProjectContentType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
@@ -290,7 +290,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * {@inheritDoc}
    */
   @Deprecated
-  public void addAll(Collection<? extends IResource> resources, ContentType contentType) {
+  public void addAll(Collection<? extends IResource> resources, ProjectContentType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -315,7 +315,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
   /**
    * {@inheritDoc}
    */
-  private void remove(IResource resource, ContentType contentType) {
+  private void remove(IResource resource, ProjectContentType contentType) {
 
     Assert.isNotNull(resource);
     Assert.isNotNull(contentType);
@@ -337,7 +337,7 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
   /**
    * {@inheritDoc}
    */
-  private void removeAll(Collection<? extends IResource> resources, ContentType contentType) {
+  private void removeAll(Collection<? extends IResource> resources, ProjectContentType contentType) {
 
     Assert.isNotNull(resources);
     Assert.isNotNull(contentType);
@@ -377,11 +377,11 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     // add binary resources
-    addAll(movableUnit.getAssociatedBinaryResources(), ContentType.BINARY);
+    addAll(movableUnit.getAssociatedBinaryResources(), ProjectContentType.BINARY);
 
     // add source resources
     if (movableUnit.hasAssociatedSourceResource()) {
-      add(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
+      add(movableUnit.getAssociatedSourceResource(), ProjectContentType.SOURCE);
     }
 
     //
@@ -401,11 +401,11 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
     }
 
     // add binary resources
-    removeAll(movableUnit.getAssociatedBinaryResources(), ContentType.BINARY);
+    removeAll(movableUnit.getAssociatedBinaryResources(), ProjectContentType.BINARY);
 
     // add source resources
     if (movableUnit.hasAssociatedSourceResource()) {
-      remove(movableUnit.getAssociatedSourceResource(), ContentType.SOURCE);
+      remove(movableUnit.getAssociatedSourceResource(), ProjectContentType.SOURCE);
     }
 
     //
@@ -431,10 +431,10 @@ public class ResourceContainer extends TypeContainer implements IModifiableResou
    * @param contentType
    * @return
    */
-  private Set<IResource> getModifiableResourcesSet(ContentType contentType) {
+  private Set<IResource> getModifiableResourcesSet(ProjectContentType contentType) {
     Assert.isNotNull(contentType);
 
     // return the resource set
-    return ContentType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
+    return ProjectContentType.BINARY.equals(contentType) ? _binaryResources : _sourceResources;
   }
 }

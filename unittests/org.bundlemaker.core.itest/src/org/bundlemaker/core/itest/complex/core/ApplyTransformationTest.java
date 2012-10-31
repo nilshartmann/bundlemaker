@@ -11,7 +11,7 @@ import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
-import org.bundlemaker.core.projectdescription.ContentType;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
@@ -81,7 +81,7 @@ public class ApplyTransformationTest extends AbstractJeditTest {
       for (IModifiableResourceModule oldResourceModule : resourceModules) {
 
         //
-        for (IResource resource : oldResourceModule.getResources(ContentType.SOURCE)) {
+        for (IResource resource : oldResourceModule.getResources(ProjectContentType.SOURCE)) {
 
           // move the unit
           IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());
@@ -90,7 +90,7 @@ public class ApplyTransformationTest extends AbstractJeditTest {
         }
 
         //
-        for (IResource resource : oldResourceModule.getResources(ContentType.BINARY)) {
+        for (IResource resource : oldResourceModule.getResources(ProjectContentType.BINARY)) {
 
           // move the unit
           IMovableUnit movableUnit = MovableUnit.createFromResource(resource, getModularizedSystem());

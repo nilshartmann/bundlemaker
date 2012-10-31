@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.file.FileBasedContent;
-import org.bundlemaker.core.projectdescription.file.FileBasedContentProvider;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.FormLayoutUtils;
 import org.bundlemaker.core.util.JarInfo;
@@ -44,7 +44,7 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
   /**
    * The original content or null if a new content is created with this dialog
    */
-  private final FileBasedContent _originalContent;
+  private final FileBasedProjectContent _originalContent;
 
   private ContentListBlock       _binariesContentList;
 
@@ -62,7 +62,7 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
 
   boolean                        _analyzeSources = false;
 
-  public EditFileBasedContentProviderDialog(Shell shell, FileBasedContentProvider existingContent) {
+  public EditFileBasedContentProviderDialog(Shell shell, FileBasedProjectContentProvider existingContent) {
     super(shell);
     Assert.isNotNull(existingContent);
     _originalContent = existingContent.getFileBasedContent();
