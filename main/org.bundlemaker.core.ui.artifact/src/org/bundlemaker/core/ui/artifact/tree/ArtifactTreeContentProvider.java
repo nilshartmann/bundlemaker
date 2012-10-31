@@ -9,8 +9,8 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
-import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
+import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -18,6 +18,8 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
+import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
@@ -229,6 +231,16 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       Assert.isNotNull(rootArtifact);
 
       _rootArtifact = rootArtifact;
+    }
+
+    @Override
+    public List<IReferencingArtifact> getContainedReferencingArtifacts() {
+      return _rootArtifact.getContainedReferencingArtifacts();
+    }
+
+    @Override
+    public List<IReferencedArtifact> getContainedReferencedArtifacts() {
+      return _rootArtifact.getContainedReferencedArtifacts();
     }
 
     @Override

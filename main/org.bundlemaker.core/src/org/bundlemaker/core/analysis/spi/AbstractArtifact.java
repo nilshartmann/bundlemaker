@@ -264,6 +264,22 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IReferencingArtifact> getContainedReferencingArtifacts() {
+    return Collections.emptyList();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<IReferencedArtifact> getContainedReferencedArtifacts() {
+    return Collections.emptyList();
+  }
+
   @Override
   public Collection<IDependency> getDependenciesFrom() {
     return Collections.emptyList();

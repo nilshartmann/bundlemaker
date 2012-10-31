@@ -3,6 +3,8 @@ package org.bundlemaker.core.analysis;
 import java.util.Collection;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
+import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.IPath;
 
@@ -303,6 +305,23 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @return an unmodifiable {@link Collection} with all (direct) children of this {@link IArtifact} of the given type.
    */
   <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz);
+
+  /**
+   * <p>
+   * Returns all children
+   * </p>
+   * 
+   * @return
+   */
+  List<IReferencingArtifact> getContainedReferencingArtifacts();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  List<IReferencedArtifact> getContainedReferencedArtifacts();
 
   /**
    * <p>
