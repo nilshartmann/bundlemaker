@@ -39,34 +39,6 @@ public class DependencyTreeComposite extends Composite {
   /** the to tree viewer */
   private TreeViewer      _currentlySelectedTreeViewer;
 
-  // /** - */
-  // @SuppressWarnings("serial")
-  // private GenericCache<IBundleMakerArtifact, List<IDependency>> _targetArtifactMap = new
-  // GenericCache<IBundleMakerArtifact, List<IDependency>>() {
-  // @Override
-  // protected List<IDependency> create(
-  // IBundleMakerArtifact key) {
-  // return new LinkedList<IDependency>();
-  // }
-  // };
-  //
-  // /** - */
-  // @SuppressWarnings("serial")
-  // private GenericCache<IBundleMakerArtifact, List<IDependency>> _sourceArtifactMap = new
-  // GenericCache<IBundleMakerArtifact, List<IDependency>>() {
-  // @Override
-  // protected List<IDependency> create(
-  // IBundleMakerArtifact key) {
-  // return new LinkedList<IDependency>();
-  // }
-  // };
-
-  // /** - */
-  // private List<IDependency> _leafDependencies;
-
-  // /** - */
-  // private List<IDependency> _selectedDetailDependencies;
-
   /** - */
   private Helper          _helper;
 
