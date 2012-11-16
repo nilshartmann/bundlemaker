@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactUtils;
@@ -26,6 +28,8 @@ import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -81,30 +85,58 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     _viewer.setContentProvider(new LazyDependencyProvider(_viewer));
     createColumns(tableComposite, _viewer);
 
-    // open editor
-    // TODO : DOUBLECLICK
-    _viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
+    // open editor on double click
+    _viewer.addDoubleClickListener(new IDoubleClickListener() {
+      
       @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-
-        StructuredSelection structuredSelection = (StructuredSelection) event.getSelection();
-        IDependency dependency = (IDependency) structuredSelection.getFirstElement();
-        if (dependency != null) {
-          IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
-          if (artifact != null) {
-            try {
-              EditorHelper.open(artifact, dependency.getTo());
-            } catch (Exception e) {
-              MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
-            }
-          }
-        }
+      public void doubleClick(DoubleClickEvent event) {
+        openDependenciesInEditor();
       }
     });
 
     // init the dependencies
     initDependencies();
+  }
+
+  /**
+   * Returns the dependencies that are currently selected inside the viewer. Returns an empty list if there are now
+   * dependencies selected.
+   * 
+   * @return
+   */
+  public List<IDependency> getSelectedDependencies() {
+    StructuredSelection structuredSelection = (StructuredSelection) _viewer.getSelection();
+    List<IDependency> result = new LinkedList<IDependency>();
+
+    Iterator<?> it = structuredSelection.iterator();
+    while (it.hasNext()) {
+      IDependency selectedDependency = (IDependency) it.next();
+      result.add(selectedDependency);
+    }
+
+    return result;
+  }
+
+  /**
+   * Open the selected dependency in the editor of the 'from' reference, marking the
+   * 'to' reference
+   */
+  public void openDependenciesInEditor() {
+
+    List<IDependency> selectedDependencies = getSelectedDependencies();
+
+    for (IDependency dependency : selectedDependencies) {
+
+      IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
+      if (artifact != null) {
+        try {
+          EditorHelper.open(artifact, dependency.getTo());
+        } catch (Exception e) {
+          MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
+        }
+      }
+    }
+
   }
 
   /**
