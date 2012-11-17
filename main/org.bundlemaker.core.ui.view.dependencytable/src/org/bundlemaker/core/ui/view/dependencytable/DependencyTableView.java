@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.ArtifactUtils;
@@ -20,20 +22,28 @@ import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellLabelProvider;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
@@ -74,37 +84,127 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     tableComposite.setLayout(new TableColumnLayout());
 
     _viewer = new TableViewer(tableComposite, SWT.VIRTUAL | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
-        | SWT.FULL_SELECTION);
+        | SWT.FULL_SELECTION | SWT.MULTI);
     final Table table = _viewer.getTable();
     table.setHeaderVisible(true);
     table.setLinesVisible(true);
     _viewer.setContentProvider(new LazyDependencyProvider(_viewer));
     createColumns(tableComposite, _viewer);
 
-    // open editor
-    // TODO : DOUBLECLICK
-    _viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+    // open editor on double click
+    _viewer.addDoubleClickListener(new IDoubleClickListener() {
 
       @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-
-        StructuredSelection structuredSelection = (StructuredSelection) event.getSelection();
-        IDependency dependency = (IDependency) structuredSelection.getFirstElement();
-        if (dependency != null) {
-          IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
-          if (artifact != null) {
-            try {
-              EditorHelper.open(artifact, dependency.getTo());
-            } catch (Exception e) {
-              MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
-            }
-          }
-        }
+      public void doubleClick(DoubleClickEvent event) {
+        openDependenciesInEditor();
       }
     });
 
+    // Popup menu
+    MenuManager menuMgr = new MenuManager();
+    menuMgr.setRemoveAllWhenShown(true);
+    menuMgr.addMenuListener(new IMenuListener() {
+      public void menuAboutToShow(IMenuManager manager) {
+        DependencyTableView.this.fillContextMenu(manager);
+      }
+    });
+    Menu menu = menuMgr.createContextMenu(_viewer.getControl());
+    _viewer.getControl().setMenu(menu);
+    getSite().registerContextMenu(menuMgr, _viewer);
+
     // init the dependencies
     initDependencies();
+  }
+
+  /**
+   * @param manager
+   */
+  protected void fillContextMenu(IMenuManager manager) {
+    List<IDependency> selectedDependencies = getSelectedDependencies();
+    Action action = new Action("Open in Editor") {
+
+      @Override
+      public void run() {
+        openDependenciesInEditor();
+      }
+
+    };
+    action.setEnabled(selectedDependencies.isEmpty() == false);
+    manager.add(action);
+
+    action = new Action("Copy to Clipboard") {
+      @Override
+      public void run() {
+        copyDependenciesToClipboard();
+      }
+    };
+    action.setEnabled(selectedDependencies.isEmpty() == false);
+    manager.add(action);
+  }
+
+  /**
+   * Returns the dependencies that are currently selected inside the viewer. Returns an empty list if there are now
+   * dependencies selected.
+   * 
+   * @return
+   */
+  public List<IDependency> getSelectedDependencies() {
+    StructuredSelection structuredSelection = (StructuredSelection) _viewer.getSelection();
+    List<IDependency> result = new LinkedList<IDependency>();
+
+    Iterator<?> it = structuredSelection.iterator();
+    while (it.hasNext()) {
+      IDependency selectedDependency = (IDependency) it.next();
+      result.add(selectedDependency);
+    }
+
+    return result;
+  }
+
+  /**
+   * Open the selected dependency in the editor of the 'from' reference, marking the 'to' reference
+   */
+  protected void openDependenciesInEditor() {
+
+    List<IDependency> selectedDependencies = getSelectedDependencies();
+
+    for (IDependency dependency : selectedDependencies) {
+
+      IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
+      if (artifact != null) {
+        try {
+          EditorHelper.open(artifact, dependency.getTo());
+        } catch (Exception e) {
+          MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
+        }
+      }
+    }
+
+  }
+
+  /**
+   * Copies the selected dependencies into the clipboard. 
+   * 
+   * <p>One line for each dependency with "from", "kind" and "to" in comma-separated columns
+   * 
+   */
+  protected void copyDependenciesToClipboard() {
+    List<IDependency> selectedDependencies = getSelectedDependencies();
+
+    // Build the content to be copied 
+    StringBuilder builder = new StringBuilder();
+
+    for (IDependency dependency : selectedDependencies) {
+      String from = _fromLabelGenerator.getLabel(dependency.getFrom());
+      String to = _toLabelGenerator.getLabel(dependency.getTo());
+      builder
+          .append(String.format("%s,%s,%s%n", from, String.valueOf(dependency.getDependencyKind()).toLowerCase(), to));
+    }
+
+    // copy to clipboard
+    final Clipboard cb = new Clipboard(getSite().getShell().getDisplay());
+    TextTransfer textTransfer = TextTransfer.getInstance();
+    cb.setContents(new Object[] { builder.toString() }, new Transfer[] { textTransfer });
   }
 
   /**
