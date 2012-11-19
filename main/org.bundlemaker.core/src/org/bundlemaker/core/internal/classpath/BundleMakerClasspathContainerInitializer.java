@@ -43,7 +43,8 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
       "org.bundlemaker.core.transformations", //
       "org.bundlemaker.core.ui", //
       "org.eclipse.core.resources", //
-      "org.eclipse.core.runtime" //
+      "org.eclipse.core.runtime",
+      "org.eclipse.equinox.common"//
                                                                };
 
   private static IClasspathEntry[] _classpathEntries;
