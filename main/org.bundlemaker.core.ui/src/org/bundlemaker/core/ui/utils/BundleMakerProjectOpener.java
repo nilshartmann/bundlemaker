@@ -114,7 +114,7 @@ public class BundleMakerProjectOpener {
     IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy();
 
     //
-    IBundleMakerArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
+    IBundleMakerArtifact artifact = modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
         .getArtifactModelConfiguration());
 
     return artifact;

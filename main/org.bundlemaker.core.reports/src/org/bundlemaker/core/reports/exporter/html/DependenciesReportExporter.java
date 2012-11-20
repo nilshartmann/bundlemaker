@@ -36,7 +36,7 @@ public class DependenciesReportExporter extends AbstractSingleModuleHtmlReportEx
 
     // get the root artifact
     IRootArtifact rootArtifact = getCurrentModularizedSystem()
-        .getArtifactModel(IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
+        .getAnalysisModel(IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // get the module artifact
     IModuleArtifact moduleArtifact = rootArtifact.getModuleArtifact(getCurrentModule());

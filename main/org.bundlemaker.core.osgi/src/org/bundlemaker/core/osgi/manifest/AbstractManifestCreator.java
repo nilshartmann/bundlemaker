@@ -77,7 +77,7 @@ public abstract class AbstractManifestCreator implements IBundleManifestCreator 
 
     //
     // TODO: make Configurable
-    _rootArtifact = modularizedSystem.getArtifactModel(IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+    _rootArtifact = modularizedSystem.getAnalysisModel(IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     //
     _moduleArtifact = ArtifactUtils.getAssociatedModuleArtifact(_rootArtifact, resourceModule);

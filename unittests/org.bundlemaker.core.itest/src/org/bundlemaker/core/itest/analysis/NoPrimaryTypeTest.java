@@ -30,7 +30,7 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
   public void testNoPrimaryType_aggregatedTypes() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 

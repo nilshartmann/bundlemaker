@@ -135,7 +135,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
   protected void createPOM(File projectDirectory) throws FileNotFoundException, IOException {
 
     // get the artifact model to resolve the dependencies
-    IRootArtifact artifactModel = getCurrentModularizedSystem().getArtifactModel(
+    IRootArtifact artifactModel = getCurrentModularizedSystem().getAnalysisModel(
         IAnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // get the current module artifact

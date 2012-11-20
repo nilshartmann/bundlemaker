@@ -109,7 +109,7 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
     _events = new LinkedList();
 
     //
-    _rootArtifact = getModularizedSystem().getArtifactModel(
+    _rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(_rootArtifact);
 

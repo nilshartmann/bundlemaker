@@ -48,7 +48,7 @@ public abstract class AbstractSimpleArtifactModelWithTypeLibraryTest extends Abs
     super.before();
 
     //
-    IBundleMakerArtifact root = getModularizedSystem().getArtifactModel(IAnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
+    IBundleMakerArtifact root = getModularizedSystem().getAnalysisModel(IAnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
     
     //
     ArtifactUtils.dumpArtifact(root);

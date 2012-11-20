@@ -39,7 +39,7 @@ public class RenameArtifactTest extends AbstractModularizedSystemTest {
   public void renameArtifactTest() throws Exception {
 
     // step 1: get the rootArtifact
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertEquals(1, rootArtifact.getChildren(IModuleArtifact.class).size());
 

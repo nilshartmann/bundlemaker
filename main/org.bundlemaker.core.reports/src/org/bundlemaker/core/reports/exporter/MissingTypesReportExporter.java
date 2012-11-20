@@ -66,7 +66,7 @@ public class MissingTypesReportExporter implements IModularizedSystemExporter {
 
     //
     IRootArtifact rootArtifact = modularizedSystem
-        .getArtifactModel(IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+        .getAnalysisModel(IAnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "<< Missing Types >>", IModuleArtifact.class);
 
     //

@@ -44,7 +44,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
   public void testNameAndPath_BINARY() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
@@ -124,7 +124,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
   public void testNameAndPath_HIERARCHICAL_BINARY() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
@@ -204,7 +204,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
   public void testNameAndPath_AGGREGATE_INNER_TYPES_NO_RESOURCES() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION);
 
     // assert the qualified name && the name
@@ -272,7 +272,7 @@ public class ArtifactHelperTest extends AbstractModularizedSystemTest {
   public void testNameAndPath_WildCards() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     //

@@ -13,7 +13,7 @@ public class DependencyModuleConverterTest extends AbstractModularizedSystemTest
   public void testDependencies() throws CoreException {
 
     // transform the model
-    IBundleMakerArtifact artifact = ((IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact artifact = ((IBundleMakerArtifact) getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot())
         .getChild("group1|group2|DependencyModuleConverterTest_1.0.0|de.test.inner2|Inner2.class|Inner2");
 

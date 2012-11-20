@@ -113,7 +113,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
             IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
                 .getArtifactModelConfigurationProvider();
 
-            IRootArtifact artifact = modularizedSystem.getArtifactModel(artifactModelConfigurationProvider
+            IRootArtifact artifact = modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
                 .getArtifactModelConfiguration());
 
             // // TODO!

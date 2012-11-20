@@ -32,7 +32,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testMissingTypes() {
 
     // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         new AnalysisModelConfiguration(false, ProjectContentType.BINARY, true));
     Assert.assertNotNull(rootArtifact);
 
@@ -61,7 +61,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testModule_GetOrCreateModule() {
 
     // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
@@ -80,7 +80,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testModule_GetOrCreateModule_DeprecatedAPI() {
 
     // Step 1: transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
@@ -112,7 +112,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testSourceNonHierarchical() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -138,7 +138,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testBinaryNonHierarchical() throws CoreException, IOException {
 
     // transform the model...
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 
@@ -157,7 +157,7 @@ public class ComplexArtifactTreeTest extends AbstractModularizedSystemTest {
   public void testMoveModule() throws CoreException, IOException {
 
     // Step 1: transform the model
-    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = (IBundleMakerArtifact) getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.SOURCE_RESOURCES_CONFIGURATION).getRoot();
     Assert.assertNotNull(rootArtifact);
 

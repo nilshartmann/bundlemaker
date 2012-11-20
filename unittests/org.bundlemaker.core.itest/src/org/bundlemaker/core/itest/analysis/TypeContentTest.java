@@ -19,7 +19,7 @@ public class TypeContentTest extends AbstractModularizedSystemTest {
   public void qualifiedNameWithFlatPackages() throws Exception {
 
     // get the root artifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     Assert.assertNotNull(rootArtifact);

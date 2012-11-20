@@ -50,7 +50,7 @@ public abstract class AbstractSingleModuleHtmlReportExporter extends AbstractExp
     subMonitor.beginTask(null, 3);
 
     //
-    _rootArtifact = getCurrentModularizedSystem().getArtifactModel(getModelConfiguration());
+    _rootArtifact = getCurrentModularizedSystem().getAnalysisModel(getModelConfiguration());
 
     try {
 

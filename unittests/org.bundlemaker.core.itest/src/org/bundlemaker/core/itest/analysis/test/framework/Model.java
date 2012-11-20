@@ -250,7 +250,7 @@ public class Model {
   private IRootArtifact createArtifactModel(IModularizedSystem modularizedSystem,
       IAnalysisModelConfiguration configuration) {
 
-    IRootArtifact rootArtifact = modularizedSystem.getArtifactModel(configuration).getRoot();
+    IRootArtifact rootArtifact = modularizedSystem.getAnalysisModel(configuration).getRoot();
 
     Assert.assertNotNull(rootArtifact);
     // Assert.assertEquals(4, rootArtifact.getChildren().size());

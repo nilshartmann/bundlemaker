@@ -56,7 +56,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
       IProgressMonitor progressMonitor) throws Exception {
 
     //
-    IRootArtifact rootArtifact = modularizedSystem.getArtifactModel(
+    IRootArtifact rootArtifact = modularizedSystem.getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION).getRoot();
 
     //

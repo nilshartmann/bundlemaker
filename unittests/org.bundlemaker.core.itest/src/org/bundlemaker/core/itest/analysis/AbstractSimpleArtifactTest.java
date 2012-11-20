@@ -397,7 +397,7 @@ public abstract class AbstractSimpleArtifactTest extends AbstractModularizedSyst
    */
   protected IRootArtifact createArtifactModel() {
 
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(getConfiguration()).getRoot();
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(getConfiguration()).getRoot();
 
     Assert.assertNotNull(rootArtifact);
     Assert.assertEquals(2, rootArtifact.getChildren().size());

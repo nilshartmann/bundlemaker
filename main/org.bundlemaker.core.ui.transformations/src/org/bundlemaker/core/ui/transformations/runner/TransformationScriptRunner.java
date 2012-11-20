@@ -81,7 +81,7 @@ public class TransformationScriptRunner {
     IAnalysisModelConfiguration artifactModelConfiguration = getAnalysisModelConfiguration(transformationScript);
 
     // Get an artifact model according to the configuration specified in the script
-    IRootArtifact rootArtifact = _artifact.getModularizedSystem().getArtifactModel(artifactModelConfiguration);
+    IRootArtifact rootArtifact = _artifact.getModularizedSystem().getAnalysisModel(artifactModelConfiguration);
 
     // Create a Logger that logs to the BundleMaker console
     TransformationScriptLogger logger = new TransformationScriptLogger();

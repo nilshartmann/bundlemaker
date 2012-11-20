@@ -59,7 +59,7 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
 
     // TODO
     //
-    _rootArtifact = getModularizedSystem().getArtifactModel(getArtifactModelConfiguration());
+    _rootArtifact = getModularizedSystem().getAnalysisModel(getArtifactModelConfiguration());
     Assert.assertNotNull(_rootArtifact);
 
     // // assert the input

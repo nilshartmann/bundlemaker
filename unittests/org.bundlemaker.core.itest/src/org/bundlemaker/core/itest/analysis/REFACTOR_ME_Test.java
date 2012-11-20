@@ -34,7 +34,7 @@ public class REFACTOR_ME_Test extends AbstractModularizedSystemTest {
   public void initResourceModule() throws CoreException {
 
     //
-    _rootArtifact = getModularizedSystem().getArtifactModel(
+    _rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
   }
 

@@ -34,7 +34,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
   public void qualifiedNameWithFlatPackages() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 
@@ -55,7 +55,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
   public void qualifiedNameWithHierarchicalPackages() throws Exception {
 
     // step 1: get the rootArtifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 

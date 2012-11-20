@@ -65,7 +65,7 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
     Assert.assertNotNull(modularizedSystem);
 
     IRootArtifact rootArtifact = modularizedSystem
-        .getArtifactModel(IAnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
+        .getAnalysisModel(IAnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
     IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "name_1.2.3", IModuleArtifact.class);
     ArtifactUtils.dumpArtifact(moduleArtifact);
   }

@@ -27,7 +27,7 @@ public class SimpleTransformationHistoryTest extends AbstractModularizedSystemTe
   public void testHistory() {
 
     // step: get the rootArtifact
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // step: get the package child

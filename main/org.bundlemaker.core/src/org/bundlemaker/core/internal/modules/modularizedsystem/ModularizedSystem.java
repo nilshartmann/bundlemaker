@@ -44,7 +44,7 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    * {@inheritDoc}
    */
   @Override
-  public IRootArtifact getArtifactModel(IAnalysisModelConfiguration configuration) {
+  public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration) {
 
     IRootArtifact result = (IRootArtifact) _transformerCache.getArtifactModel(this, configuration);
 

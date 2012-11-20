@@ -67,7 +67,7 @@ public class BundleMakerArtifactJsonAdapter implements JsonSerializer<IBundleMak
 
     Assert.isNotNull(configuration, "IArtifactModelConfiguration 'configuration' must not be null.");
 
-    IRootArtifact rootArtifact = _modularizedSystem.getArtifactModel(configuration);
+    IRootArtifact rootArtifact = _modularizedSystem.getAnalysisModel(configuration);
 
     String path = jsonElement.getAsJsonObject()
         .get("path").getAsString();

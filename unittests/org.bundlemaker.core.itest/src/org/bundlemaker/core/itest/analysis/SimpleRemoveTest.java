@@ -41,7 +41,7 @@ public class SimpleRemoveTest extends AbstractModularizedSystemTest {
   @Before
   public void setup() {
 
-    _rootArtifact = getModularizedSystem().getArtifactModel(
+    _rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     _packageArtifact = ArtifactVisitorUtils.findPackageArtifact(_rootArtifact, "de.test.basic");

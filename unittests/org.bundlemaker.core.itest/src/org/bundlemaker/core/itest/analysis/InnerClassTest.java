@@ -61,7 +61,7 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     Assert.assertSame(aSourceResource, bSourceResource);
 
     // transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     IBundleMakerArtifact aArtifact = rootArtifact.getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class|A");
@@ -87,7 +87,7 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
   public void testMoveOuterClass() throws CoreException, AmbiguousElementException {
 
     // transform the model
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     
     //

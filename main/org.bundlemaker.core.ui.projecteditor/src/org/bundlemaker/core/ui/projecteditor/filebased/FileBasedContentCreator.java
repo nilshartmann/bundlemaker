@@ -11,8 +11,8 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProviderFactory;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
-import org.bundlemaker.core.util.JarInfo;
-import org.bundlemaker.core.util.JarInfoService;
+import org.bundlemaker.core.util.jarinfo.JarInfo;
+import org.bundlemaker.core.util.jarinfo.JarInfoService;
 
 /**
  * Util class that creates FileBasedContent instances based on a set of selected files.
@@ -44,8 +44,9 @@ public class FileBasedContentCreator {
       if (file == null) {
         // variable cannot be resolved. use name only
 
-        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, variablePath
-            .getUnresolvedPath().toOSString(), null, AnalyzeMode.BINARIES_ONLY);
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
+            variablePath
+                .getUnresolvedPath().toOSString(), null, AnalyzeMode.BINARIES_ONLY);
 
         continue;
       }
@@ -58,7 +59,7 @@ public class FileBasedContentCreator {
         continue;
       }
 
-      JarInfo jarInfo = JarInfoService.extractJarInfo(file);
+      JarInfo jarInfo = JarInfoService.Factory.getJarInfoService().extractJarInfo(file);
       modules.put(jarInfo.getName(), variablePath);
     }
 
@@ -78,7 +79,8 @@ public class FileBasedContentCreator {
 
       VariablePath sourceFile = getSourceFile(modules, moduleName);
       if (sourceFile != null) {
-        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, sourceFile,
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path,
+            sourceFile,
             AnalyzeMode.BINARIES_AND_SOURCES);
 
       } else {

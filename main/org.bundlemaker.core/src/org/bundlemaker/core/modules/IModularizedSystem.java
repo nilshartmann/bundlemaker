@@ -76,7 +76,7 @@ public interface IModularizedSystem {
    * 
    * @return
    */
-  IRootArtifact getArtifactModel(IAnalysisModelConfiguration configuration);
+  IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration);
 
   /**
    * <p>

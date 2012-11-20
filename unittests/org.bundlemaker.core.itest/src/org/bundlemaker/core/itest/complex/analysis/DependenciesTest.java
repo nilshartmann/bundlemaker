@@ -26,7 +26,7 @@ public class DependenciesTest extends AbstractModularizedSystemTest {
   public void testDependencies() {
 
     //
-    IRootArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         IAnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     final int[] count = new int[2];

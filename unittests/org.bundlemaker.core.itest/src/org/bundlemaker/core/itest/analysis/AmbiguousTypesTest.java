@@ -26,7 +26,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     getModularizedSystem().getTypeSelectors().add(selector);
 
     // get the root artifact
-    IBundleMakerArtifact rootArtifact = getModularizedSystem().getArtifactModel(
+    IBundleMakerArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
