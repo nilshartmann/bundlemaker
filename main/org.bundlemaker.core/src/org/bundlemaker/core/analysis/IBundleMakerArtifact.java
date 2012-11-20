@@ -28,9 +28,10 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
+   * Returns {@code true}, if this {@link IBundleMakerArtifact} has a parent, {@code false} otherwise.
    * </p>
    * 
-   * @return
+   * @return {@code true}, if this {@link IBundleMakerArtifact} has a parent, {@code false} otherwise.
    */
   boolean hasParent();
 
