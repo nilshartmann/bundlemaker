@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.util;
+package org.bundlemaker.core.util.jarinfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ import org.osgi.framework.Constants;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JarInfoService {
+public class JarInfoServiceImpl implements JarInfoService {
 
   /**
    * <p>
@@ -35,14 +35,7 @@ public class JarInfoService {
    * @param file
    * @return
    */
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param file
-   * @return
-   */
-  public static JarInfo extractJarInfo(File file) {
+  public JarInfo extractJarInfo(File file) {
     try {
       if (file.isFile()) {
         return extractInfoFromFile(file);
@@ -67,7 +60,7 @@ public class JarInfoService {
       version = dirName.substring(x + 1);
     }
 
-    return new JarInfo(name, version);
+    return new JarInfo(name, version, false);
   }
 
   private static JarInfo extractInfoFromFile(File file) throws IOException {
@@ -81,7 +74,7 @@ public class JarInfoService {
     version = extractVersion(file);
 
     // return the result
-    return new JarInfo(name, version);
+    return new JarInfo(name, version, false);
   }
 
   private static String extractName(File file) throws IOException {

@@ -9,8 +9,8 @@ import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.FormLayoutUtils;
-import org.bundlemaker.core.util.JarInfo;
-import org.bundlemaker.core.util.JarInfoService;
+import org.bundlemaker.core.util.jarinfo.JarInfo;
+import org.bundlemaker.core.util.jarinfo.JarInfoService;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -33,34 +33,34 @@ import org.eclipse.swt.widgets.Text;
  * 
  */
 public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
-  private Text                   _nameTextField;
+  private Text                          _nameTextField;
 
-  private Text                   _versionTextField;
+  private Text                          _versionTextField;
 
-  private Button                 _analyzeButton;
+  private Button                        _analyzeButton;
 
-  private Button                 _analyzeSourcesButton;
+  private Button                        _analyzeSourcesButton;
 
   /**
    * The original content or null if a new content is created with this dialog
    */
   private final FileBasedProjectContent _originalContent;
 
-  private ContentListBlock       _binariesContentList;
+  private ContentListBlock              _binariesContentList;
 
-  private ContentListBlock       _sourcesContentList;
+  private ContentListBlock              _sourcesContentList;
 
-  private String                 _name;
+  private String                        _name;
 
-  private String                 _version;
+  private String                        _version;
 
-  private java.util.List<String> _binaryRoots;
+  private java.util.List<String>        _binaryRoots;
 
-  private java.util.List<String> _sourceRoots;
+  private java.util.List<String>        _sourceRoots;
 
-  boolean                        _analyze        = true;
+  boolean                               _analyze        = true;
 
-  boolean                        _analyzeSources = false;
+  boolean                               _analyzeSources = false;
 
   public EditFileBasedContentProviderDialog(Shell shell, FileBasedProjectContentProvider existingContent) {
     super(shell);
@@ -277,7 +277,7 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
       VariablePath variablePath = new VariablePath(fileName);
 
       File file = variablePath.getAsFile();
-      return JarInfoService.extractJarInfo(file);
+      return JarInfoService.Factory.getJarInfoService().extractJarInfo(file);
 
     } catch (Exception ex) {
       ex.printStackTrace();

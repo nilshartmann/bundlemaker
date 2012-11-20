@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.util.JarInfo;
-import org.bundlemaker.core.util.JarInfoService;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.util.jarinfo.JarInfo;
+import org.bundlemaker.core.util.jarinfo.JarInfoService;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -25,13 +25,15 @@ public class FileBasedProjectContentProviderFactory {
    * @param sourceRoot
    * @return
    */
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       String name, String version, String binaryRoot, String sourceRoot) {
     return addNewFileBasedContentProvider(description, name, version, (binaryRoot == null ? null : new VariablePath(
         binaryRoot)), (sourceRoot == null ? null : new VariablePath(sourceRoot)));
   }
 
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       String name, String version, VariablePath binaryRoot, VariablePath sourceRoot) {
     return addNewFileBasedContentProvider(description, name, version, toList(binaryRoot), toList(sourceRoot),
         AnalyzeMode.BINARIES_AND_SOURCES);
@@ -49,7 +51,8 @@ public class FileBasedProjectContentProviderFactory {
    * @param analyzeMode
    * @return
    */
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       String name, String version, VariablePath binaryRoot, VariablePath sourceRoot, AnalyzeMode analyzeMode) {
     return addNewFileBasedContentProvider(description, name, version, toList(binaryRoot), toList(sourceRoot),
         analyzeMode);
@@ -63,13 +66,15 @@ public class FileBasedProjectContentProviderFactory {
    * @param binaryRoot
    * @return
    */
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       String binaryRoot) {
     return addNewFileBasedContentProvider(description, (binaryRoot == null ? null : new VariablePath(binaryRoot)),
         null, AnalyzeMode.BINARIES_AND_SOURCES);
   }
 
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       String binaryRoot, String sourceRoot, AnalyzeMode analyzeMode) {
     Assert.isNotNull(binaryRoot);
     Assert.isNotNull(analyzeMode);
@@ -90,7 +95,8 @@ public class FileBasedProjectContentProviderFactory {
    *          the analyze mode. Not null
    * @return
    */
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       VariablePath binaryRoot, VariablePath sourceRoot, AnalyzeMode analyzeMode) {
     Assert.isNotNull(binaryRoot);
     Assert.isNotNull(analyzeMode);
@@ -98,7 +104,7 @@ public class FileBasedProjectContentProviderFactory {
     try {
 
       // get the jar info
-      JarInfo jarInfo = JarInfoService.extractJarInfo(getAsFile(binaryRoot));
+      JarInfo jarInfo = JarInfoService.Factory.getJarInfoService().extractJarInfo(getAsFile(binaryRoot));
 
       //
       return addNewFileBasedContentProvider(description, jarInfo.getName(), jarInfo.getVersion(), toList(binaryRoot),
@@ -122,7 +128,8 @@ public class FileBasedProjectContentProviderFactory {
    * @param analyzeMode
    * @return
    */
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       String name, String version, String[] binaryRoots, String[] sourceRoots, AnalyzeMode analyzeMode) {
     Assert.isNotNull(name);
     Assert.isNotNull(version);
@@ -145,7 +152,8 @@ public class FileBasedProjectContentProviderFactory {
     return addNewFileBasedContentProvider(description, name, version, binaryPaths, sourcePaths, analyzeMode);
   }
 
-  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(IModifiableProjectDescription description,
+  public static FileBasedProjectContentProvider addNewFileBasedContentProvider(
+      IModifiableProjectDescription description,
       String name, String version, List<VariablePath> binaryRoots, List<VariablePath> sourceRoots,
       AnalyzeMode analyzeMode) {
 

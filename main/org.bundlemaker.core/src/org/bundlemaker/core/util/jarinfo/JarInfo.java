@@ -8,7 +8,9 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.util;
+package org.bundlemaker.core.util.jarinfo;
+
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -19,10 +21,13 @@ package org.bundlemaker.core.util;
 public class JarInfo {
 
   /** - */
-  private String _name;
+  private String  _name;
 
   /** - */
-  private String _version;
+  private String  _version;
+
+  /** - */
+  private boolean _isSource = false;
 
   /**
    * <p>
@@ -32,11 +37,13 @@ public class JarInfo {
    * @param name
    * @param version
    */
-  public JarInfo(String name, String version) {
-    super();
+  public JarInfo(String name, String version, boolean isSource) {
+    Assert.isNotNull(name);
+    Assert.isNotNull(version);
 
     _name = name;
     _version = version;
+    _isSource = isSource;
   }
 
   /**
