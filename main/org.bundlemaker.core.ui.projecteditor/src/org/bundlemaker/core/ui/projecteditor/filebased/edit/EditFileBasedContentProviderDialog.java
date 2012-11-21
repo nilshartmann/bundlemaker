@@ -6,11 +6,11 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfoService;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.ui.FormLayoutUtils;
-import org.bundlemaker.core.util.jarinfo.JarInfo;
-import org.bundlemaker.core.util.jarinfo.JarInfoService;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -262,7 +262,7 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
     }
 
     if (_nameTextField.getText().isEmpty() && _versionTextField.getText().isEmpty()) {
-      JarInfo jarInfo = getJarInfo(_binariesContentList.getItems().get(0));
+      FileBasedProjectContentInfo jarInfo = getJarInfo(_binariesContentList.getItems().get(0));
       if (jarInfo != null) {
         _nameTextField.setText(jarInfo.getName());
         _versionTextField.setText(jarInfo.getVersion());
@@ -271,13 +271,13 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
 
   }
 
-  protected JarInfo getJarInfo(String fileName) {
+  protected FileBasedProjectContentInfo getJarInfo(String fileName) {
     try {
 
       VariablePath variablePath = new VariablePath(fileName);
 
       File file = variablePath.getAsFile();
-      return JarInfoService.Factory.getJarInfoService().extractJarInfo(file);
+      return FileBasedProjectContentInfoService.Factory.getJarInfoService().extractJarInfo(file);
 
     } catch (Exception ex) {
       ex.printStackTrace();
@@ -346,8 +346,6 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
 
   public void finish() {
     _name = _nameTextField.getText();
-    System.out.printf("ModifyProjectContentDialog, _name: %s%n", _name);
-    System.out.printf("ModifyProjectContentDialog, _nameTextField: %s%n", _nameTextField.getText());
     _version = _versionTextField.getText();
     _binaryRoots = _binariesContentList.getItems();
     _sourceRoots = _sourcesContentList.getItems();

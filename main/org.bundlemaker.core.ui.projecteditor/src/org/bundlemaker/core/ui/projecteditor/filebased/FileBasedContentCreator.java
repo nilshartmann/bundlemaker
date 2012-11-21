@@ -1,18 +1,15 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfoService;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProviderFactory;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
-import org.bundlemaker.core.util.jarinfo.JarInfo;
-import org.bundlemaker.core.util.jarinfo.JarInfoService;
 
 /**
  * Util class that creates FileBasedContent instances based on a set of selected files.
@@ -21,8 +18,17 @@ import org.bundlemaker.core.util.jarinfo.JarInfoService;
  * 
  */
 public class FileBasedContentCreator {
-  private final static String[] SOURCE_EXTENSIONS = { ".src", ".source", "-src", "-source" };
 
+  //
+  // private final static String[] SOURCE_EXTENSIONS = { ".src", ".source", "-src", "-source" };
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modifiableProjectDescription
+   * @param fileNames
+   */
   public void addFiles(IModifiableProjectDescription modifiableProjectDescription, String[] fileNames) {
 
     VariablePath[] paths = new VariablePath[fileNames.length];
@@ -34,11 +40,22 @@ public class FileBasedContentCreator {
     addFiles(modifiableProjectDescription, paths);
   }
 
-  public void addFiles(IModifiableProjectDescription modifiableProjectDescription, VariablePath[] variablePaths) {
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param modifiableProjectDescription
+   * @param variablePaths
+   */
+  private void addFiles(IModifiableProjectDescription modifiableProjectDescription, VariablePath[] variablePaths) {
 
-    final Map<String, VariablePath> modules = new Hashtable<String, VariablePath>();
+    //
+    final List<FileBasedProjectContentInfo<VariablePath>> modules = new LinkedList<FileBasedProjectContentInfo<VariablePath>>();
 
+    // STEP 1:
     for (VariablePath variablePath : variablePaths) {
+
+      //
       File file = getFile(variablePath);
 
       if (file == null) {
@@ -52,85 +69,66 @@ public class FileBasedContentCreator {
       }
 
       if (file.isDirectory()) {
-        // for now we assume a directory is always binary content
+
+        // TODO: for now we assume a directory is always binary content
         FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
             file.getAbsolutePath(), null, AnalyzeMode.BINARIES_ONLY);
 
         continue;
       }
 
-      JarInfo jarInfo = JarInfoService.Factory.getJarInfoService().extractJarInfo(file);
-      modules.put(jarInfo.getName(), variablePath);
+      FileBasedProjectContentInfo<VariablePath> jarInfo = FileBasedProjectContentInfoService.Factory
+          .getJarInfoService()
+          .extractJarInfo(file);
+
+      //
+      jarInfo.setUserObject(variablePath);
+
+      //
+      modules.add(jarInfo);
     }
 
-    List<String> moduleNames = new LinkedList<String>(modules.keySet());
+    // STEP 2:
+    for (FileBasedProjectContentInfo<VariablePath> info : new LinkedList<FileBasedProjectContentInfo<VariablePath>>(
+        modules)) {
 
-    for (String moduleName : moduleNames) {
-      if (isSourceModule(moduleName)) {
-        // ignore potential source modules for now
+      // ignore potential source modules for now
+      if (info.isSource()) {
         continue;
       }
 
-      VariablePath path = modules.remove(moduleName);
-      if (path == null) {
-        // already handled
+      // already handled?
+      if (!modules.remove(info)) {
         continue;
       }
 
-      VariablePath sourceFile = getSourceFile(modules, moduleName);
-      if (sourceFile != null) {
-        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path,
-            sourceFile,
+      //
+      FileBasedProjectContentInfo<VariablePath> sourceInfo = FileBasedProjectContentInfoService.Factory
+          .getJarInfoService()
+          .getAssociatedFileBasedProjectContent(info, modules);
+
+      modules.remove(sourceInfo);
+
+      if (sourceInfo != null) {
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
+            info.getUserObject(),
+            sourceInfo.getUserObject(),
             AnalyzeMode.BINARIES_AND_SOURCES);
 
       } else {
-        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, path, null,
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
+            info.getUserObject(), null,
             AnalyzeMode.BINARIES_ONLY);
       }
     }
 
     // add rest of files (most probably source files according to our naming conventions. Add it anyway) TODO: we could
     // issue a warning here (sources without binaries)
-    Collection<VariablePath> files = modules.values();
-    for (VariablePath file : files) {
-      FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription, file, null,
+    for (FileBasedProjectContentInfo<VariablePath> info : modules) {
+      FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
+          info.getUserObject(), null,
           AnalyzeMode.BINARIES_ONLY);
     }
-
-  }
-
-  /**
-   * Try to find the corresponding source module by naming convention.
-   * 
-   * <p>
-   * If a source module has been found it will be removed from the map
-   * 
-   * @param modules
-   * @param binaryModuleName
-   * @return
-   */
-  protected VariablePath getSourceFile(Map<String, VariablePath> modules, String binaryModuleName) {
-
-    for (String sourceExtension : SOURCE_EXTENSIONS) {
-      VariablePath sourceModule = modules.remove(binaryModuleName + sourceExtension);
-      if (sourceModule != null) {
-        return sourceModule;
-      }
-    }
-
-    return null;
-  }
-
-  public static boolean isSourceModule(String moduleName) {
-    moduleName = moduleName.toLowerCase();
-
-    for (String sourceExtension : SOURCE_EXTENSIONS) {
-      if (moduleName.endsWith(sourceExtension)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   /**

@@ -7,8 +7,6 @@ import java.util.List;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.util.jarinfo.JarInfo;
-import org.bundlemaker.core.util.jarinfo.JarInfoService;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -104,7 +102,8 @@ public class FileBasedProjectContentProviderFactory {
     try {
 
       // get the jar info
-      JarInfo jarInfo = JarInfoService.Factory.getJarInfoService().extractJarInfo(getAsFile(binaryRoot));
+      FileBasedProjectContentInfo<?> jarInfo = FileBasedProjectContentInfoService.Factory.getJarInfoService()
+          .extractJarInfo(getAsFile(binaryRoot));
 
       //
       return addNewFileBasedContentProvider(description, jarInfo.getName(), jarInfo.getVersion(), toList(binaryRoot),
