@@ -552,5 +552,13 @@
 	         id="org.bundlemaker.core.classpath">
 	   </classpathContainerPage>
 	</extension>
+ <extension
+       point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+          icon="icons/decorator/bm_project_decorator.png"
+          id="org.bundlemaker.core.bundlemakernature.image"
+          natureId="org.bundlemaker.core.bundlemakernature">
+    </image>
+ </extension>
 
 </plugin>
