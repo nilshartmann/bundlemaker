@@ -3,6 +3,7 @@ package org.bundlemaker.core.ui.editor.dsm.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,6 +123,10 @@ public class Tarjan<T extends IBundleMakerArtifact> {
       // get the referenced artifacts
       Collection<? extends IDependency> dependencies = artifact.getDependenciesTo(Arrays.asList(artifacts));
 
+      if (dependencies == null) {
+        dependencies = Collections.emptyList();
+      }
+      
       //
       int index = map.get(artifact);
       matrix[index] = new int[dependencies.size()];
