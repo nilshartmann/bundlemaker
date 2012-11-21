@@ -40,31 +40,31 @@ import org.eclipse.jdt.core.JavaModelException;
 public class JdtProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** - */
-  private IBundleMakerProject             _bundleMakerProject;
+  private IBundleMakerProject            _bundleMakerProject;
 
   /** - */
-  private IJavaProject                    _javaProject;
+  private IJavaProject                   _javaProject;
 
   /** - */
-  private int                             _counter                = 0;
+  private int                            _counter                = 0;
 
   /** - */
-  private List<IProjectContentEntry>      _fileBasedContents      = new LinkedList<IProjectContentEntry>();
+  private List<IProjectContentEntry>     _fileBasedContents      = new LinkedList<IProjectContentEntry>();
 
   /** - */
-  private List<IJavaProject>              _resolvedJavaProjects   = new LinkedList<IJavaProject>();
+  private List<IJavaProject>             _resolvedJavaProjects   = new LinkedList<IJavaProject>();
 
   /** - */
-  private List<VariablePath>              _resolvedVariablePathes = new LinkedList<VariablePath>();
+  private List<VariablePath>             _resolvedVariablePathes = new LinkedList<VariablePath>();
 
   /** - */
   @SuppressWarnings("serial")
-  private GenericCache<Pair, List<IPath>> _output2SourceLocations = new GenericCache<Pair, List<IPath>>() {
-                                                                    @Override
-                                                                    protected List<IPath> create(Pair key) {
-                                                                      return new LinkedList<IPath>();
-                                                                    }
-                                                                  };
+  private GenericCache<Key, List<IPath>> _output2SourceLocations = new GenericCache<Key, List<IPath>>() {
+                                                                   @Override
+                                                                   protected List<IPath> create(Key key) {
+                                                                     return new LinkedList<IPath>();
+                                                                   }
+                                                                 };
 
   /**
    * {@inheritDoc}
@@ -179,8 +179,8 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     }
 
     //
-    for (Entry<Pair, List<IPath>> entry : _output2SourceLocations.entrySet()) {
-      createFileBasedContent(entry.getKey().getModule(), "1.0.0", AnalyzeMode.BINARIES_AND_SOURCES, new Path(entry
+    for (Entry<Key, List<IPath>> entry : _output2SourceLocations.entrySet()) {
+      createFileBasedContent(entry.getKey().getIndex(), entry.getKey().getModule(), "1.0.0", AnalyzeMode.BINARIES_AND_SOURCES, new Path(entry
           .getKey()
           .getOutputDirectory()),
           entry.getValue().toArray(new IPath[0]));
@@ -288,8 +288,8 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     classes = makeAbsolute(classes);
 
     //
-    List<IPath> paths = _output2SourceLocations.getOrCreate(new Pair(javaProject.getProject().getName(), classes
-        .toPortableString()));
+    List<IPath> paths = _output2SourceLocations.getOrCreate(new Key(javaProject.getProject().getName(), classes
+        .toPortableString(), _fileBasedContents.size()));
 
     paths.add(source);
   }
@@ -304,6 +304,15 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     return _fileBasedContents;
   }
 
+  private void createFileBasedContent(String contentName, String contentVersion, AnalyzeMode analyzeMode,
+      IPath binaryPath,
+      IPath... sourcePath) throws CoreException {
+
+    createFileBasedContent(-1, contentName, contentVersion, analyzeMode,
+        binaryPath,
+        sourcePath);
+  }
+
   /**
    * <p>
    * </p>
@@ -315,7 +324,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * @return
    * @throws CoreException
    */
-  private void createFileBasedContent(String contentName, String contentVersion, AnalyzeMode analyzeMode,
+  private void createFileBasedContent(int index, String contentName, String contentVersion, AnalyzeMode analyzeMode,
       IPath binaryPath,
       IPath... sourcePath) throws CoreException {
 
@@ -350,8 +359,13 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     //
     result.initialize(_bundleMakerProject.getProjectDescription());
 
+    if (index == -1) {
+      _fileBasedContents.add(result);
+    }
     //
-    _fileBasedContents.add(result);
+    else {
+      _fileBasedContents.add(index, result);
+    }
   }
 
   /**
@@ -381,7 +395,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * 
    * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
    */
-  public static class Pair {
+  public static class Key {
 
     /** - */
     private String _outputDirectory;
@@ -389,25 +403,51 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     /** - */
     private String _module;
 
+    /** - */
+    private int    _index;
+
     /**
      * <p>
-     * Creates a new instance of type {@link Pair}.
+     * Creates a new instance of type {@link Key}.
      * </p>
      * 
      * @param module
      * @param outputDirectory
      */
-    public Pair(String module, String outputDirectory) {
+    public Key(String module, String outputDirectory, int index) {
       _module = module;
       _outputDirectory = outputDirectory;
+      _index = index;
     }
 
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
     public String getOutputDirectory() {
       return _outputDirectory;
     }
 
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
     public String getModule() {
       return _module;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public int getIndex() {
+      return _index;
     }
 
     @Override
@@ -427,7 +467,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
         return false;
       if (getClass() != obj.getClass())
         return false;
-      Pair other = (Pair) obj;
+      Key other = (Key) obj;
       if (_module == null) {
         if (other._module != null)
           return false;
