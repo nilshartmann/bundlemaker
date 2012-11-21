@@ -54,7 +54,7 @@ public class ByteCodeParser extends AbstractParser {
   }
 
   @Override
-  public void parseResource(IProjectContentEntry content, IResourceKey resourceKey, IResourceCache cache) {
+  protected void doParseResource(IProjectContentEntry content, IResourceKey resourceKey, IResourceCache cache) {
 
     // get the IModifiableResource
     IModifiableResource resource = cache.getOrCreateResource(resourceKey);
