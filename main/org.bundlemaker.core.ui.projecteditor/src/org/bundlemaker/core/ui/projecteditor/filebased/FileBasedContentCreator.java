@@ -78,7 +78,7 @@ public class FileBasedContentCreator {
       }
 
       FileBasedProjectContentInfo<VariablePath> jarInfo = FileBasedProjectContentInfoService.Factory
-          .getJarInfoService()
+          .getInfoService()
           .extractJarInfo(file);
 
       //
@@ -104,7 +104,7 @@ public class FileBasedContentCreator {
 
       //
       FileBasedProjectContentInfo<VariablePath> sourceInfo = FileBasedProjectContentInfoService.Factory
-          .getJarInfoService()
+          .getInfoService()
           .getAssociatedFileBasedProjectContent(info, modules);
 
       modules.remove(sourceInfo);

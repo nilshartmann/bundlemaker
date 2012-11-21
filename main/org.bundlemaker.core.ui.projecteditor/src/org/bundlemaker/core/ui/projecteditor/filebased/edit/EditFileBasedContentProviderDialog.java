@@ -277,7 +277,7 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
       VariablePath variablePath = new VariablePath(fileName);
 
       File file = variablePath.getAsFile();
-      return FileBasedProjectContentInfoService.Factory.getJarInfoService().extractJarInfo(file);
+      return FileBasedProjectContentInfoService.Factory.getInfoService().extractJarInfo(file);
 
     } catch (Exception ex) {
       ex.printStackTrace();

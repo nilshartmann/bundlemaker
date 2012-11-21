@@ -40,7 +40,7 @@ public interface FileBasedProjectContentInfoService {
      * 
      * @return
      */
-    public static FileBasedProjectContentInfoService getJarInfoService() {
+    public static FileBasedProjectContentInfoService getInfoService() {
       return new FileBasedProjectContentInfoServiceImpl();
     }
   }

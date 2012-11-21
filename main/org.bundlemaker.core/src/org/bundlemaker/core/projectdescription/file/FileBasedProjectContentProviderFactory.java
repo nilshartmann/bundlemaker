@@ -102,7 +102,7 @@ public class FileBasedProjectContentProviderFactory {
     try {
 
       // get the jar info
-      FileBasedProjectContentInfo<?> jarInfo = FileBasedProjectContentInfoService.Factory.getJarInfoService()
+      FileBasedProjectContentInfo<?> jarInfo = FileBasedProjectContentInfoService.Factory.getInfoService()
           .extractJarInfo(getAsFile(binaryRoot));
 
       //
