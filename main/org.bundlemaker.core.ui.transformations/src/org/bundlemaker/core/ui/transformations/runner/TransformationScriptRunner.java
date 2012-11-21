@@ -11,6 +11,7 @@
 package org.bundlemaker.core.ui.transformations.runner;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedList;
@@ -27,21 +28,21 @@ import org.bundlemaker.core.ui.transformations.console.TransformationScriptConso
 import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptClassLoader;
 import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptLogger;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.statushandlers.StatusManager;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class TransformationScriptRunner {
+public class TransformationScriptRunner implements IRunnableWithProgress {
 
   private final Shell                _shell;
 
@@ -54,23 +55,54 @@ public class TransformationScriptRunner {
    * @param transformationScriptType
    */
   public TransformationScriptRunner(Shell shell, IBundleMakerArtifact artifact, IType transformationScriptType) {
-    super();
     _shell = shell;
     _transformationScriptType = transformationScriptType;
     _artifact = artifact;
   }
 
-  public void runScript() {
+  // public void runScript() {
+  //
+  // try {
+  // doRunScript();
+  // } catch (Exception ex) {
+  //
+  // // Show exception to user
+  // StatusManager.getManager().handle(
+  // new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to run script: " + ex, ex), StatusManager.SHOW);
+  // }
+  // }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+   */
+  @Override
+  public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
     try {
       doRunScript();
     } catch (Exception ex) {
-
-      // Show exception to user
-      StatusManager.getManager().handle(
-          new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to run script: " + ex, ex), StatusManager.SHOW);
+      throw new InvocationTargetException(ex);
     }
+
   }
+
+  // /*
+  // * (non-Javadoc)
+  // *
+  // * @see org.eclipse.core.resources.WorkspaceJob#runInWorkspace(org.eclipse.core.runtime.IProgressMonitor)
+  // */
+  // @Override
+  // public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+  // try {
+  // doRunScript();
+  // } catch (Exception ex) {
+  // return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Failed to run script: " + ex, ex);
+  // }
+  //
+  // return Status.OK_STATUS;
+  // }
 
   protected void doRunScript() throws Exception {
 
