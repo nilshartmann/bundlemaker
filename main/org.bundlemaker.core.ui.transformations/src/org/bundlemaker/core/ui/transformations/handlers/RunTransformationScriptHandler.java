@@ -22,6 +22,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jdt.ui.dialogs.ITypeInfoFilterExtension;
 import org.eclipse.jdt.ui.dialogs.ITypeInfoRequestor;
 import org.eclipse.jdt.ui.dialogs.TypeSelectionExtension;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
@@ -62,8 +63,8 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
     }
 
     // Let user select the transformation script
-    Shell shell = HandlerUtil.getActiveShell(event);
-    IType transformationScriptType = selectTransformationScript(shell);
+    final Shell shell = HandlerUtil.getActiveShell(event);
+    final IType transformationScriptType = selectTransformationScript(shell);
 
     if (transformationScriptType == null) {
       // canceled
@@ -71,12 +72,14 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
     }
 
     // Get artifact to be passed to script
-    IBundleMakerArtifact selectedArtifact = selectedArtifacts.get(0);
+    final IBundleMakerArtifact selectedArtifact = selectedArtifacts.get(0);
 
     // Run the script
-    new TransformationScriptRunner(shell, selectedArtifact, transformationScriptType).runScript();
+    ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
+    progressMonitorDialog.run(true, false, new TransformationScriptRunner(shell, selectedArtifact,
+        transformationScriptType));
 
-    // Make sure changes made in the script are immediately visible
+    // refresh the explorer
     refreshProjectExplorer(selectedArtifact.getRoot());
 
   }
