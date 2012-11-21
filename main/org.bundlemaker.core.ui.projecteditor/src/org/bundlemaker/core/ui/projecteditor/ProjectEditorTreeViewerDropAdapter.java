@@ -145,8 +145,6 @@ public class ProjectEditorTreeViewerDropAdapter extends ViewerDropAdapter {
 
   private ProjectEditorDropEvent createDropEvent(Object target) {
 
-    System.out.println("TARGET: " + target);
-
     Object targetElement = null;
     IProjectContentProvider projectContentProvider = null;
 

@@ -149,7 +149,6 @@ public class EditProjectPathDialog extends TitleAreaDialog {
         Path resolvedPath = new Path(resolved);
         IPath relativePath = resolvedPath.makeRelativeTo(workspaceRoot.getLocation());
         IResource resource = workspaceRoot.findMember(relativePath);
-        System.out.println("resource: " + resource);
 
         dialog.setInitialSelection(resource);
       } catch (CoreException ex) {

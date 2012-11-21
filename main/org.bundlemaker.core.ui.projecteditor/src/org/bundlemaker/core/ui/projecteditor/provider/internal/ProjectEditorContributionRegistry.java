@@ -161,11 +161,8 @@ public class ProjectEditorContributionRegistry implements IExtensionChangeHandle
     IProjectEditorDropProvider dropProvider = null;
     INewProjectContentProviderWizardContribution newProjectContentProviderWizardContribution = null;
 
-    System.out.println(" *** NEW EXTENSION DETECTED !!! * ");
     // read contributions
     for (IConfigurationElement iConfigurationElement : configurationElements) {
-
-      System.out.println("   ELEMENT: " + iConfigurationElement.getName());
 
       if ("provider-editor".equals(iConfigurationElement.getName())) {
         projectContentProviderEditor = (IProjectContentProviderEditor) iConfigurationElement

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentHelper;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
@@ -104,12 +104,7 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       projectRelativePaths.add(path);
     }
 
-    System.out.printf("FileBasedContentDropProvider target: %b (%s), location: %s%n", dropEvent.hasTarget(),
-        dropEvent.getTarget(),
-        dropEvent.getDropLocation());
-
     if (!dropEvent.hasTarget()) {
-      System.out.println("NO TARGET!");
 
       // add as individual file based contents
       _fileBasedContentCreator.addFiles(modifiableProjectDescription, projectRelativePaths.toArray(new String[0]));
@@ -118,7 +113,8 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
       // }
     } else {
       // add to selected filebasedcontentprovider
-      FileBasedProjectContentProvider provider = (FileBasedProjectContentProvider) dropEvent.getProjectContentProvider();
+      FileBasedProjectContentProvider provider = (FileBasedProjectContentProvider) dropEvent
+          .getProjectContentProvider();
       addFiles(dropEvent.getShell(), provider, projectRelativePaths.toArray(new String[0]));
     }
 
