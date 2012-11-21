@@ -67,7 +67,22 @@ public abstract class AbstractParser implements IParser {
    * @param resourceKey
    * @param cache
    */
-  public abstract void parseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache);
+  public void parseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache) {
+    // Reset problem list
+    _problems.clear();
+
+    // do the parsing
+
+  }
+
+  /**
+   * Override in subclasses to implement parse logic
+   * 
+   * @param content
+   * @param resource
+   * @param cache
+   */
+  protected abstract void doParseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache);
 
   /**
    * <p>

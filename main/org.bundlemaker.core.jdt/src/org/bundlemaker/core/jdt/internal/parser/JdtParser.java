@@ -77,7 +77,7 @@ public class JdtParser extends AbstractHookAwareJdtParser {
    * {@inheritDoc}
    */
   @Override
-  public synchronized void parseResource(IProjectContentEntry projectContent, IResourceKey resourceKey,
+  protected synchronized void doParseResource(IProjectContentEntry projectContent, IResourceKey resourceKey,
       IResourceCache cache) {
 
     //
