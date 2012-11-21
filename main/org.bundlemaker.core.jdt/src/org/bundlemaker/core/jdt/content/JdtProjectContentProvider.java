@@ -1,7 +1,9 @@
 package org.bundlemaker.core.jdt.content;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.xml.JdtProjectContentType;
@@ -9,11 +11,20 @@ import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -29,13 +40,31 @@ import org.eclipse.jdt.core.JavaModelException;
 public class JdtProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** - */
-  private IJavaProject       _javaProject;
+  private IBundleMakerProject             _bundleMakerProject;
 
   /** - */
-  private EntryHelper        _entryHelper;
+  private IJavaProject                    _javaProject;
 
   /** - */
-  private List<IJavaProject> _alreadyResolved = new LinkedList<IJavaProject>();
+  private int                             _counter                = 0;
+
+  /** - */
+  private List<IProjectContentEntry>      _fileBasedContents      = new LinkedList<IProjectContentEntry>();
+
+  /** - */
+  private List<IJavaProject>              _resolvedJavaProjects   = new LinkedList<IJavaProject>();
+
+  /** - */
+  private List<VariablePath>              _resolvedVariablePathes = new LinkedList<VariablePath>();
+
+  /** - */
+  @SuppressWarnings("serial")
+  private GenericCache<Pair, List<IPath>> _output2SourceLocations = new GenericCache<Pair, List<IPath>>() {
+                                                                    @Override
+                                                                    protected List<IPath> create(Pair key) {
+                                                                      return new LinkedList<IPath>();
+                                                                    }
+                                                                  };
 
   /**
    * {@inheritDoc}
@@ -73,6 +102,31 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
   }
 
   /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+      throws CoreException {
+
+    //
+    _bundleMakerProject = bundleMakerProject;
+
+    // create instance of entry helper & clear the 'already resolved' list
+    _resolvedJavaProjects.clear();
+    _resolvedVariablePathes.clear();
+    _output2SourceLocations.clear();
+    _fileBasedContents.clear();
+
+    //
+    resolveJavaProject(_javaProject);
+
+    //
+    return getFileBasedContents();
+  }
+
+  /**
    * <p>
    * </p>
    * 
@@ -93,26 +147,6 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
   }
 
   /**
-   * {@inheritDoc}
-   * 
-   * @throws CoreException
-   */
-  @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
-      throws CoreException {
-
-    // create instance of entry helper & clear the 'already resolved' list
-    _entryHelper = new EntryHelper(bundleMakerProject.getProjectDescription(), this);
-    _alreadyResolved.clear();
-    
-    //
-    resolveJavaProject(_javaProject);
-
-    //
-    return _entryHelper.getFileBasedContents();
-  }
-
-  /**
    * <p>
    * </p>
    * 
@@ -124,13 +158,15 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
   private void resolveJavaProject(IJavaProject javaProject) throws CoreException, JavaModelException {
     Assert.isNotNull(javaProject);
 
+    System.out.println("resolveJavaProject " + javaProject.getElementName());
+
     //
-    if (_alreadyResolved.contains(javaProject)) {
+    if (_resolvedJavaProjects.contains(javaProject)) {
       return;
     }
 
     //
-    _alreadyResolved.add(javaProject);
+    _resolvedJavaProjects.add(javaProject);
 
     // build the project first
     if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
@@ -140,6 +176,14 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     //
     for (IClasspathEntry classpathEntry : javaProject.getRawClasspath()) {
       handleClasspathEntry(classpathEntry, javaProject, AnalyzeMode.BINARIES_AND_SOURCES);
+    }
+
+    //
+    for (Entry<Pair, List<IPath>> entry : _output2SourceLocations.entrySet()) {
+      createFileBasedContent(entry.getKey().getModule(), "1.0.0", AnalyzeMode.BINARIES_AND_SOURCES, new Path(entry
+          .getKey()
+          .getOutputDirectory()),
+          entry.getValue().toArray(new IPath[0]));
     }
   }
 
@@ -157,12 +201,15 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
 
     //
     if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-      _entryHelper.addLibraryEntry(classpathEntry);
+      addLibraryEntry(classpathEntry);
     }
 
     //
     else if (classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-      _entryHelper.addSourceEntry(classpathEntry, javaProject);
+
+      System.out.println(classpathEntry);
+
+      addSourceEntry(classpathEntry, javaProject);
     }
 
     //
@@ -189,4 +236,209 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     }
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param classpathEntry
+   * @throws CoreException
+   */
+  public void addLibraryEntry(IClasspathEntry classpathEntry) throws CoreException {
+
+    IPath library = classpathEntry.getPath();
+    library = makeAbsolute(library);
+
+    IPath librarySource = classpathEntry.getSourceAttachmentPath();
+    if (librarySource != null) {
+      librarySource = makeAbsolute(librarySource);
+    }
+
+    try {
+      File file = new File(library.toOSString());
+      FileBasedProjectContentInfo<?> info = FileBasedProjectContentInfoService.Factory.getInfoService().extractJarInfo(
+          file);
+
+      //
+      createFileBasedContent(info.getName(), info.getVersion(), AnalyzeMode.DO_NOT_ANALYZE, library,
+          librarySource);
+
+    } catch (Exception e) {
+
+      //
+      createFileBasedContent(classpathEntry.getPath().lastSegment(), "0.0.0", AnalyzeMode.DO_NOT_ANALYZE, library,
+          librarySource);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param classpathEntry
+   */
+  public void addSourceEntry(IClasspathEntry classpathEntry, IJavaProject javaProject) throws CoreException {
+    Assert.isNotNull(classpathEntry);
+    Assert.isNotNull(javaProject);
+
+    IPath source = classpathEntry.getPath();
+    source = makeAbsolute(source);
+
+    IPath classes = classpathEntry.getOutputLocation() != null ? classpathEntry.getOutputLocation() : javaProject
+        .getOutputLocation();
+    classes = makeAbsolute(classes);
+
+    //
+    List<IPath> paths = _output2SourceLocations.getOrCreate(new Pair(javaProject.getProject().getName(), classes
+        .toPortableString()));
+
+    paths.add(source);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return the fileBasedContents
+   */
+  public List<IProjectContentEntry> getFileBasedContents() {
+    return _fileBasedContents;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param contentName
+   * @param contentVersion
+   * @param binaryPath
+   * @param sourcePath
+   * @return
+   * @throws CoreException
+   */
+  private void createFileBasedContent(String contentName, String contentVersion, AnalyzeMode analyzeMode,
+      IPath binaryPath,
+      IPath... sourcePath) throws CoreException {
+
+    Assert.isNotNull(contentName);
+    Assert.isNotNull(contentVersion);
+    Assert.isNotNull(binaryPath);
+    Assert.isNotNull(analyzeMode);
+
+    VariablePath variablePath = new VariablePath(binaryPath.toOSString());
+
+    if (_resolvedVariablePathes.contains(variablePath)) {
+      return;
+    }
+
+    _resolvedVariablePathes.add(variablePath);
+
+    FileBasedProjectContent result = new FileBasedProjectContent(this);
+    result.setId(this.getId() + _counter++);
+    result.setName(contentName);
+    result.setVersion(contentVersion);
+
+    result.setAnalyzeMode(analyzeMode);
+
+    result.addRootPath(new VariablePath(binaryPath.toOSString()), ProjectContentType.BINARY);
+
+    if (sourcePath != null) {
+      for (IPath iPath : sourcePath) {
+        result.addRootPath(new VariablePath(iPath.toOSString()), ProjectContentType.SOURCE);
+      }
+    }
+
+    //
+    result.initialize(_bundleMakerProject.getProjectDescription());
+
+    //
+    _fileBasedContents.add(result);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @return
+   */
+  private IPath makeAbsolute(IPath path) {
+
+    //
+    if (path == null) {
+      return path;
+    }
+
+    if (ResourcesPlugin.getWorkspace().getRoot().findMember(path) != null) {
+      IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(path);
+      path = resource.getRawLocation();
+    }
+    return path;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public static class Pair {
+
+    /** - */
+    private String _outputDirectory;
+
+    /** - */
+    private String _module;
+
+    /**
+     * <p>
+     * Creates a new instance of type {@link Pair}.
+     * </p>
+     * 
+     * @param module
+     * @param outputDirectory
+     */
+    public Pair(String module, String outputDirectory) {
+      _module = module;
+      _outputDirectory = outputDirectory;
+    }
+
+    public String getOutputDirectory() {
+      return _outputDirectory;
+    }
+
+    public String getModule() {
+      return _module;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((_module == null) ? 0 : _module.hashCode());
+      result = prime * result + ((_outputDirectory == null) ? 0 : _outputDirectory.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      Pair other = (Pair) obj;
+      if (_module == null) {
+        if (other._module != null)
+          return false;
+      } else if (!_module.equals(other._module))
+        return false;
+      if (_outputDirectory == null) {
+        if (other._outputDirectory != null)
+          return false;
+      } else if (!_outputDirectory.equals(other._outputDirectory))
+        return false;
+      return true;
+    }
+  }
 }
