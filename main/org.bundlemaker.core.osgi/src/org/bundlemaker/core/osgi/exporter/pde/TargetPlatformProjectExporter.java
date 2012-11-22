@@ -21,10 +21,10 @@ import org.bundlemaker.core.osgi.utils.SystemBundleCopier;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.pde.internal.core.target.provisional.IBundleContainer;
-import org.eclipse.pde.internal.core.target.provisional.ITargetDefinition;
-import org.eclipse.pde.internal.core.target.provisional.ITargetHandle;
-import org.eclipse.pde.internal.core.target.provisional.ITargetPlatformService;
+import org.eclipse.pde.core.target.ITargetDefinition;
+import org.eclipse.pde.core.target.ITargetHandle;
+import org.eclipse.pde.core.target.ITargetLocation;
+import org.eclipse.pde.core.target.ITargetPlatformService;
 
 @SuppressWarnings("restriction")
 public class TargetPlatformProjectExporter extends ModularizedSystemExporterAdapter {
@@ -71,10 +71,10 @@ public class TargetPlatformProjectExporter extends ModularizedSystemExporterAdap
     ITargetDefinition targetDefinition = targetHandle.getTargetDefinition();
     targetDefinition.setName(projectName);
 
-    IBundleContainer bundleContainer = targetPlatformService.newDirectoryContainer("${project_loc:/" + projectName
+    ITargetLocation targetLocations = targetPlatformService.newDirectoryLocation("${project_loc:/" + projectName
         + "}/bundles");
 
-    targetDefinition.setBundleContainers(new IBundleContainer[] { bundleContainer });
+    targetDefinition.setTargetLocations(new ITargetLocation[] { targetLocations });
     targetPlatformService.saveTargetDefinition(targetDefinition);
 
     SystemBundleCopier.copySystemBundle(folder.getRawLocation().toFile());
