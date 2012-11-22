@@ -62,8 +62,6 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
   @Override
   public void initialize(IPath containerPath, IJavaProject javaProject) throws CoreException {
 
-    System.out.println("Initialize " + containerPath);
-
     JavaCore.setClasspathContainer(BundleMakerCore.BUNDLEMAKER_CONTAINER_PATH, new IJavaProject[] { javaProject },
         new IClasspathContainer[] { new BundleMakerClasspathContainer() }, null);
 
@@ -177,8 +175,6 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
     Map<String, Bundle> result = new Hashtable<String, Bundle>();
 
     for (Bundle bundle : allBundles) {
-
-      System.out.println("Bundle '" + bundle.getSymbolicName() + "' => " + bundle);
 
       result.put(bundle.getSymbolicName(), bundle);
     }
