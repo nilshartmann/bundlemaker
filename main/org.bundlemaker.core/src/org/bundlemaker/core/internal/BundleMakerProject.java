@@ -202,29 +202,14 @@ public class BundleMakerProject implements IBundleMakerProject {
   @Override
   public void dispose() {
 
-    // // delete the dependency store
-    // try {
-    //
-    // //
-    // IDependencyStore dependencyStore = getDependencyStore(null);
-    //
-    // //
-    // if (dependencyStore instanceof IPersistentDependencyStore) {
-    // ((IPersistentDependencyStore) dependencyStore).dispose();
-    // }
-    //
-    // } catch (CoreException e) {
-    // // TODO
-    // e.printStackTrace();
-    // }
-
-    Activator.getDefault().removeCachedBundleMakerProject(_project);
-
     // set the project state
     _projectState = BundleMakerProjectState.DISPOSED;
 
     // notify listeners
     notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
+
+    //
+    Activator.getDefault().removeCachedBundleMakerProject(_project);
   }
 
   /**
