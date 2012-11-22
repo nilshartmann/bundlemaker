@@ -54,8 +54,6 @@ public class PdePluginProjectExportHandler extends AbstractExportHandler {
 
     // do the export
     doExport(adapter, modularizedSystem, exporterContext);
-
-    System.out.println("export done to " + destination);
   }
 
   @Override

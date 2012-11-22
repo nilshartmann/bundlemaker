@@ -47,9 +47,8 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent
-   * , org.eclipse.jface.viewers.IStructuredSelection)
+   * @see org.bundlemaker.core.ui.commands.AbstractBundleMakerHandler#execute(org.eclipse.core.commands.ExecutionEvent ,
+   * org.eclipse.jface.viewers.IStructuredSelection)
    */
   @Override
   protected void execute(ExecutionEvent event, ISelection selection) throws Exception {
@@ -136,9 +135,8 @@ public class RunTransformationScriptHandler extends AbstractBundleMakerHandler {
 
   class BundleMakerProjectFilter extends ViewerFilter {
 
+    @Override
     public boolean select(Viewer viewer, Object parent, Object element) {
-
-      System.out.println("element: " + element);
 
       if (element instanceof IProject) {
         IProject project = (IProject) element;

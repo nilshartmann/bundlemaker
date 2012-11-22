@@ -223,7 +223,6 @@ public class NewBundleMakerProjectWizard extends Wizard implements INewWizard, I
         javaProject.setRawClasspath(classpathEntries, binFolderPath, null);
         javaProject.save(null, true);
         IClasspathEntry[] rawClasspath = javaProject.getRawClasspath();
-        System.out.println("rawClasspath: " + rawClasspath);
 
         InputStream is = getClass().getResourceAsStream("TransformationScriptTemplate.txt");
 

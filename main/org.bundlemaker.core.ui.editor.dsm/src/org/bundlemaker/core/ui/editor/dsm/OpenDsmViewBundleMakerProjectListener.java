@@ -32,8 +32,6 @@ public class OpenDsmViewBundleMakerProjectListener implements IBundleMakerProjec
   @Override
   public void bundleMakerProjectOpened(IBundleMakerProjectOpenedEvent event) {
     
-    System.out.println(" Project opened => opening DSM view");
-    
     DSMArtifactModelEditor.openDsmView();
   }
 

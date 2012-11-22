@@ -20,8 +20,6 @@ public class OpenProblemViewBundleMakerProjectListener implements IBundleMakerPr
   @Override
   public void bundleMakerProjectOpened(IBundleMakerProjectOpenedEvent event) {
 
-    System.out.println(" Project opened => opening Problem view");
-
     if (event.getBundleMakerProject().getProblems().isEmpty()) {
       // no Problems => no need to activate problem view
       return;

@@ -108,8 +108,6 @@ public abstract class AbstractExportHandler extends AbstractArtifactBasedHandler
 
     // do the export
     doExport(adapter, modularizedSystem, exporterContext);
-
-    System.out.println("export done!");
   }
 
   protected ModularizedSystemExporterAdapter createModularizedSystemExporterAdapter(

@@ -129,7 +129,6 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
               IType[] types = hierarchy.getAllSuperInterfaces(type);
               for (IType curr : types) {
                 String fullyQualifiedName = curr.getFullyQualifiedName('.');
-                System.out.println("fullyQualifiedName: " + fullyQualifiedName);
                 if (TRANSFORMATION_SCRIPT_TYPE_NAME.equals(fullyQualifiedName)) { //$NON-NLS-1$
                   return Status.OK_STATUS;
                 }

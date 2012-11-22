@@ -33,10 +33,7 @@ public class BoxSizeUtil {
   public static int computeNodeBoxSize(IMatrixContentProvider contentProvider, ILabelProvider artifactLabelProvider,
       Font font) {
     String value = getLongestString(contentProvider.getNodes(), artifactLabelProvider);
-    System.out.println("computeNodeBoxSize " + value);
     int result = FigureUtilities.getTextWidth(value, font);
-
-    System.out.println(result);
 
     return result;
   }
