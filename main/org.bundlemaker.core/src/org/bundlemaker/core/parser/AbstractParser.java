@@ -26,21 +26,16 @@ import org.bundlemaker.core.resource.IResourceKey;
  */
 public abstract class AbstractParser implements IParser {
 
+  /** - */
   private List<IProblem> _problems;
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractParser}.
    * </p>
+   * 
+   * @return
    */
-  public AbstractParser() {
-
-    //
-    _problems = new LinkedList<IProblem>();
-  }
-
-  @Override
-  public List<IProblem> getProblems() {
+  protected List<IProblem> getProblems() {
     return _problems;
   }
 
@@ -67,12 +62,16 @@ public abstract class AbstractParser implements IParser {
    * @param resourceKey
    * @param cache
    */
-  public void parseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache) {
+  public List<IProblem> parseResource(IProjectContentEntry content, IResourceKey resource, IResourceCache cache) {
+
     // Reset problem list
-    _problems.clear();
+    _problems = new LinkedList<IProblem>();
 
     // do the parsing
+    doParseResource(content, resource, cache);
 
+    //
+    return _problems;
   }
 
   /**

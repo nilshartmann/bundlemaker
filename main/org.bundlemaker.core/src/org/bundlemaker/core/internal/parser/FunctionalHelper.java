@@ -49,9 +49,9 @@ public class FunctionalHelper {
 
           //
           if (parser.canParse(resourceStandin)) {
-            parser.parseResource(content, resourceStandin, resourceCache);
-            result.addAll(parser.getProblems());
-            resourceCache.getOrCreateResource(resourceStandin).setErroneous(!parser.getProblems().isEmpty());
+            List<IProblem> problems = parser.parseResource(content, resourceStandin, resourceCache);
+            result.addAll(problems);
+            resourceCache.getOrCreateResource(resourceStandin).setErroneous(!problems.isEmpty());
           }
 
           monitor.worked(1);
