@@ -107,8 +107,8 @@ public class NewBundleMakerProjectWizardCreationPage extends WizardNewProjectCre
     Composite comp = SWTFactory.createComposite(group, group.getFont(), 1, 1, GridData.FILL_BOTH, 0, 0);
 
     _enableTransformationScriptSupportButton = new Button(comp, SWT.CHECK);
-    _enableTransformationScriptSupportButton.setText("Enable Transformation Script support");
-    _enableTransformationScriptSupportButton.setSelection(true);
+    _enableTransformationScriptSupportButton.setText("Enable Transformation Script support (experimental)");
+    _enableTransformationScriptSupportButton.setSelection(false);
     Label label = new Label(comp, SWT.NONE);
     label
         .setText("Enabling transformation script support allows you to directly write transformation scripts in your BundleMaker project.\nIf you now deceide to not enable this support you still can later add it at any time.");
