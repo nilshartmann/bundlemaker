@@ -17,6 +17,8 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -81,13 +83,21 @@ public class Activator extends Plugin {
 
     // create the maps and caches
     _projectCache = new HashMap<IProject, IBundleMakerProject>();
+    ResourcesPlugin.getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
+
+      @Override
+      public void resourceChanged(IResourceChangeEvent event) {
+        if (event.getType() == IResourceChangeEvent.PRE_DELETE && event.getResource() instanceof IProject
+            && _projectCache.containsKey(event.getResource())) {
+
+          // remove project from cache
+          _projectCache.remove(event.getResource());
+        }
+      }
+    }, IResourceChangeEvent.PRE_DELETE);
 
     //
     _parserFactoryRegistry = new ParserFactoryRegistry();
-
-
-    //
-    // enableAutoBuild(false);
 
     //
     _activator = this;
