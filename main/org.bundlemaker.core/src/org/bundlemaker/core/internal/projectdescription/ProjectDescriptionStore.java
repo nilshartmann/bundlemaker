@@ -11,6 +11,9 @@
 package org.bundlemaker.core.internal.projectdescription;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -84,15 +87,12 @@ public class ProjectDescriptionStore {
     // refresh
     iFile.refreshLocal(IFile.DEPTH_INFINITE, null);
 
-    //
-    InputStream inputStream = iFile.getContents();
-    XmlProjectDescriptionType xmlProjectDescription = XmlProjectDescriptionExporterUtils.unmarshal(inputStream);
-    try {
-      inputStream.close();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    // we need this here to prevent an exception while deleting the bundlemaker project
+    byte[] bs;
+    bs = read(iFile.getRawLocation().toFile());
+
+    XmlProjectDescriptionType xmlProjectDescription = XmlProjectDescriptionExporterUtils
+        .unmarshal(new ByteArrayInputStream(bs));
 
     BundleMakerProjectDescription result = new BundleMakerProjectDescription((BundleMakerProject) project);
     result.setCurrentId(xmlProjectDescription.getCurrentId());
@@ -119,5 +119,39 @@ public class ProjectDescriptionStore {
     }
 
     return result;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param file
+   * @return
+   * @throws IOException
+   */
+  public static byte[] read(File file) {
+
+    byte[] buffer = new byte[(int) file.length()];
+    InputStream ios = null;
+    try {
+      ios = new FileInputStream(file);
+      if (ios.read(buffer) == -1) {
+        throw new IOException("EOF reached while trying to read the whole file");
+      }
+    } catch (FileNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } finally {
+      try {
+        if (ios != null)
+          ios.close();
+      } catch (IOException e) {
+      }
+    }
+
+    return buffer;
   }
 }
