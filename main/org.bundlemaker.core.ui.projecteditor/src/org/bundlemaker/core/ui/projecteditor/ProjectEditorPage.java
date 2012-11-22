@@ -341,6 +341,8 @@ public class ProjectEditorPage extends FormPage {
         // make the new object visible
         _treeViewer.expandToLevel(target, 1);
 
+        // make sure tree viewer has focus
+        _treeViewer.getControl().getParent().setFocus();
       }
 
     };
