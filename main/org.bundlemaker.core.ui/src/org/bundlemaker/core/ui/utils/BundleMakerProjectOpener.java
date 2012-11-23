@@ -76,9 +76,6 @@ public class BundleMakerProjectOpener {
     // Notify listeners
     Events.instance().fireProjectOpened(bundleMakerProject);
 
-    // Re-activate common navigator make selections via context menu work
-    CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
-
   }
 
   protected static void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
@@ -104,6 +101,9 @@ public class BundleMakerProjectOpener {
     // Select root artifact in tree
     StructuredSelection newSelection = new StructuredSelection(defaultModularizedSystemArtifact);
     commonNavigator.selectReveal(newSelection);
+
+    // Re-activate common navigator make selections via context menu work
+    CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
 
   }
 
