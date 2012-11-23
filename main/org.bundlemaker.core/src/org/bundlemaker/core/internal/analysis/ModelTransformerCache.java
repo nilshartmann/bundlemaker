@@ -31,7 +31,7 @@ import org.eclipse.core.runtime.CoreException;
 public class ModelTransformerCache {
 
   //
-  private static Map<CacheKey, IRootArtifact> _cache = new HashMap<CacheKey, IRootArtifact>();
+  private Map<CacheKey, IRootArtifact> _cache = new HashMap<CacheKey, IRootArtifact>();
 
   /**
    * <p>
