@@ -13,7 +13,7 @@ import com.google.gson.JsonElement;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractJSonConfiguredTransformation<T> implements ITransformation {
+public abstract class AbstractConfigurableTransformation<T> implements ITransformation {
 
   /** - */
   private JsonElement _configuration;
@@ -25,7 +25,7 @@ public abstract class AbstractJSonConfiguredTransformation<T> implements ITransf
    * 
    * @param configuration
    */
-  public AbstractJSonConfiguredTransformation(JsonElement configuration) {
+  public AbstractConfigurableTransformation(JsonElement configuration) {
     Assert.isNotNull(configuration);
     assertConfiguration(configuration);
 
@@ -108,7 +108,7 @@ public abstract class AbstractJSonConfiguredTransformation<T> implements ITransf
       return false;
     if (getClass() != obj.getClass())
       return false;
-    AbstractJSonConfiguredTransformation other = (AbstractJSonConfiguredTransformation) obj;
+    AbstractConfigurableTransformation other = (AbstractConfigurableTransformation) obj;
     if (_configuration == null) {
       if (other._configuration != null)
         return false;
