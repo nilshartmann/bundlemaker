@@ -60,6 +60,6 @@ public class InvalidateAggregatedDependencies implements IAnalysisModelVisitor {
    * @param artifact
    */
   private void invalidate(IBundleMakerArtifact artifact) {
-    artifact.invalidateDependencyCache();
+    artifact.invalidateCaches();
   }
 }

@@ -39,16 +39,16 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   private Map<IBundleMakerArtifact, IDependency> _aggregatedDependenciesTo;
 
   /** - */
-  private List<IDependency>                      _allCoreDependenciesTo;
-
-  /** - */
-  private List<IReferencedArtifact>              _allReferencedArtifacts;
-
-  /** - */
   private Map<IBundleMakerArtifact, IDependency> _aggregatedDependenciesFrom;
 
   /** - */
+  private List<IDependency>                      _allCoreDependenciesTo;
+
+  /** - */
   private List<IDependency>                      _allCoreDependenciesFrom;
+
+  /** - */
+  private List<IReferencedArtifact>              _allReferencedArtifacts;
 
   /** - */
   private List<IReferencingArtifact>             _allReferencingArtifacts;
@@ -384,10 +384,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   /**
    * {@inheritDoc}
    */
-  public List<IBundleMakerArtifact> invalidateDependencyCache() {
-
-    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
-    result.add(this);
+  public void onInvalidateCaches() {
 
     //
     _allCoreDependenciesFrom = null;
@@ -402,9 +399,6 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     if (_aggregatedDependenciesFrom != null) {
       _aggregatedDependenciesFrom.clear();
     }
-
-    //
-    return result;
   }
 
   /********************************************************************************************************/
@@ -561,7 +555,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
         artifactSelector).toJsonTree();
 
     //
-    getRoot().invalidateDependencyCache();
+    getRoot().invalidateCaches();
 
     // add the artifacts
     for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
@@ -573,7 +567,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     }
 
     //
-    getRoot().invalidateDependencyCache();
+    getRoot().invalidateCaches();
 
     // fire
     ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
@@ -637,7 +631,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     }
 
     //
-    getRoot().invalidateDependencyCache();
+    getRoot().invalidateCaches();
 
     // fire model changed
     ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();

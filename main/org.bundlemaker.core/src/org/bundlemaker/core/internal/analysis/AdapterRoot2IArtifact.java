@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.analysis;
 
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
@@ -158,10 +157,9 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    * {@inheritDoc}
    */
   @Override
-  public List<IBundleMakerArtifact> invalidateDependencyCache() {
-    super.invalidateDependencyCache();
+  public void onInvalidateCaches() {
+    super.onInvalidateCaches();
     accept(new InvalidateAggregatedDependencies());
-    return null;
   }
 
   @Override

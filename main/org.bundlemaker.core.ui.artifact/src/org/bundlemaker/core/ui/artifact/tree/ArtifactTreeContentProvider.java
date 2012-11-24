@@ -518,8 +518,8 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public List<IBundleMakerArtifact> invalidateDependencyCache() {
-      return _rootArtifact.invalidateDependencyCache();
+    public void invalidateCaches() {
+      _rootArtifact.invalidateCaches();
     }
   }
 

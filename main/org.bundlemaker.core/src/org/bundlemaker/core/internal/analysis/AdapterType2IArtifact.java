@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -240,11 +239,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     return true;
-  }
-
-  @Override
-  public List<IBundleMakerArtifact> invalidateDependencyCache() {
-    return Arrays.asList(new IBundleMakerArtifact[] { this });
   }
 
   @Override

@@ -35,7 +35,7 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     testGroup.addArtifact(getJeditModuleArtifact());
 
     // TODO
-    getRootArtifact().invalidateDependencyCache();
+    getRootArtifact().invalidateCaches();
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 5);
@@ -70,7 +70,7 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     GROUPgroup.addArtifact(getJeditModuleArtifact());
 
     // TODO
-    getRootArtifact().invalidateDependencyCache();
+    getRootArtifact().invalidateCaches();
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 5);
@@ -91,7 +91,7 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     GROUP2Group.addArtifact(getJeditModuleArtifact());
 
     // TODO
-    getRootArtifact().invalidateDependencyCache();
+    getRootArtifact().invalidateCaches();
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 6);
@@ -122,14 +122,14 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     GROUP2group.addArtifact(getJreArtifact());
 
     // TODO
-    getRootArtifact().invalidateDependencyCache();
+    getRootArtifact().invalidateCaches();
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 1904);
 
     GROUPgroup.addArtifact(getVelocityModuleArtifact());
 
     // TODO
-    getRootArtifact().invalidateDependencyCache();
+    getRootArtifact().invalidateCaches();
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 1908);
     assertArtifactHasParent(getJreArtifact(), GROUP2group);
@@ -137,7 +137,7 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     getRootArtifact().addArtifact(getJreArtifact());
 
     // TODO
-    getRootArtifact().invalidateDependencyCache();
+    getRootArtifact().invalidateCaches();
 
     assertArtifactChildrenCount(GROUP2group, 0);
     assertArtifactHasParent(getJreArtifact(), getRootArtifact());

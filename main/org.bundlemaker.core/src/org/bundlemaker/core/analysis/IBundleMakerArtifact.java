@@ -488,5 +488,5 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * </p>
    * 
    */
-  List<IBundleMakerArtifact> invalidateDependencyCache();
+  void invalidateCaches();
 }

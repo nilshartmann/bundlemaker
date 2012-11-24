@@ -64,7 +64,7 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
     }
 
     //
-    root.invalidateDependencyCache();
+    root.invalidateCaches();
   }
 
   @Override
