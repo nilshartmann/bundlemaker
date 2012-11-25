@@ -29,6 +29,7 @@ import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptClas
 import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptLogger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -81,7 +82,9 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
   public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 
     try {
-      doRunScript();
+      doRunScript(monitor);
+    } catch (InterruptedException ex) {
+      throw ex;
     } catch (Exception ex) {
       throw new InvocationTargetException(ex);
     }
@@ -104,7 +107,11 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
   // return Status.OK_STATUS;
   // }
 
-  protected void doRunScript() throws Exception {
+  protected void doRunScript(IProgressMonitor progressMonitor) throws Exception {
+
+    if (progressMonitor == null) {
+      progressMonitor = new NullProgressMonitor();
+    }
 
     // Instantiate the script
     ITransformationScript transformationScript = createTransformationScript();
@@ -118,12 +125,17 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
     // Create a Logger that logs to the BundleMaker console
     TransformationScriptLogger logger = new TransformationScriptLogger();
 
+    DefaultTransformationScriptContext context = new DefaultTransformationScriptContext(progressMonitor, logger,
+        rootArtifact);
+
     // Make sure the console with output is visible
     TransformationScriptConsoleFactory.showConsole();
 
     // Run the script
     try {
-      transformationScript.transform(logger, rootArtifact);
+      transformationScript.transform(context);
+    } catch (InterruptedException ex) {
+      throw ex;
     } catch (Exception ex) {
       Activator.getDefault().getLog()
           .log(new Status(Status.ERROR, Activator.PLUGIN_ID, "Execution of transformation script failed: " + ex, ex));

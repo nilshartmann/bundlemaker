@@ -76,7 +76,7 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
 
     // Run the script
     ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
-    progressMonitorDialog.run(true, false, new TransformationScriptRunner(shell, selectedArtifact,
+    progressMonitorDialog.run(true, true, new TransformationScriptRunner(shell, selectedArtifact,
         transformationScriptType));
 
     // refresh the explorer

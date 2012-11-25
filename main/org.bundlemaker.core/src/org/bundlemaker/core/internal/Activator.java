@@ -90,8 +90,11 @@ public class Activator extends Plugin {
         if (event.getType() == IResourceChangeEvent.PRE_DELETE && event.getResource() instanceof IProject
             && _projectCache.containsKey(event.getResource())) {
 
-          // remove project from cache
-          _projectCache.remove(event.getResource());
+          IBundleMakerProject iBundleMakerProject = _projectCache.get(event.getResource());
+
+          // notifies listeners and removes itself from the cache
+          iBundleMakerProject.dispose();
+
         }
       }
     }, IResourceChangeEvent.PRE_DELETE);
