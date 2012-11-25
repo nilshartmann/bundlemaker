@@ -6,6 +6,7 @@ package org.bundlemaker.core.ui.projecteditor;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
+import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.eclipse.core.resources.IProject;
@@ -146,7 +147,7 @@ public class ProjectEditor extends FormEditor {
    */
   @Override
   public void dispose() {
-    // remvoe dirty listener
+    // remove dirty listener
     if (_bundleMakerProject != null) {
       _bundleMakerProject.removeBundleMakerProjectChangedListener(_bundleMakerProjectDirtyListener);
     }
@@ -177,6 +178,19 @@ public class ProjectEditor extends FormEditor {
 
       if (event.getType() == Type.PROJECT_DESCRIPTION_SAVED) {
         setProjectDirty(false);
+      }
+
+      if (event.getType() == Type.PROJECT_STATE_CHANGED
+          && _bundleMakerProject.getState() == BundleMakerProjectState.DISPOSED) {
+
+        // Project has been disposed => close editor
+        getSite().getShell().getDisplay().asyncExec(new Runnable() {
+
+          @Override
+          public void run() {
+            getSite().getWorkbenchWindow().getActivePage().closeEditor(ProjectEditor.this, false);
+          }
+        });
       }
     }
 

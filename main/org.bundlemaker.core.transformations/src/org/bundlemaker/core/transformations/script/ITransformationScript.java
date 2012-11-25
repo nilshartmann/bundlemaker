@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.transformations.script;
 
-import org.bundlemaker.core.analysis.IRootArtifact;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -18,6 +17,6 @@ import org.bundlemaker.core.analysis.IRootArtifact;
  */
 public interface ITransformationScript {
 
-  public void transform(ITransformationScriptLogger logger, IRootArtifact artifact) throws Exception;
+  public void transform(ITransformationScriptContext context) throws Exception;
 
 }
