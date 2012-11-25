@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
@@ -24,8 +25,14 @@ import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.preferences.BundleMakerPreferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
+import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Parses and opens a specified BundleMaker Project and executes all required pre- and post-actions for the UI (like
@@ -39,7 +46,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
  */
 public class BundleMakerProjectOpener {
 
-  public static void openProject(IBundleMakerProject bundleMakerProject) {
+  public static void openProject(final IBundleMakerProject bundleMakerProject) {
 
     if (bundleMakerProject == null) {
       return;
@@ -68,21 +75,52 @@ public class BundleMakerProjectOpener {
 
     // Select default modularized system in common navigator
     try {
-      selectDefaultModularizedSystemArtifact(bundleMakerProject);
-    } catch (CoreException ex) {
-      BundleMakerUiUtils.logError("Error while creating BundleMaker model:" + ex, ex);
+
+      System.out.println("START");
+
+      IWorkbench wb = PlatformUI.getWorkbench();
+      IProgressService ps = wb.getProgressService();
+      ps.run(false, false, new IRunnableWithProgress() {
+        @Override
+        public void run(IProgressMonitor pm) {
+          pm.setTaskName("Computing analysis model");
+          pm.beginTask("Computing analysis model...", 3);
+          System.out.println("1");
+          pm.worked(1);
+
+          try {
+            selectDefaultModularizedSystemArtifact(bundleMakerProject, pm);
+          } catch (CoreException ex) {
+            BundleMakerUiUtils.logError("Error while creating BundleMaker model:" + ex, ex);
+          }
+          System.out.println("2");
+          pm.worked(1);
+
+          // Notify listeners
+          Events.instance().fireProjectOpened(bundleMakerProject);
+          System.out.println("3");
+          pm.worked(1);
+        }
+      });
+
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
 
-    // Notify listeners
-    Events.instance().fireProjectOpened(bundleMakerProject);
+    System.out.println("DONE");
 
     // Re-activate common navigator make selections via context menu work
     CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
-
   }
 
-  protected static void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
+  protected static void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+      IProgressMonitor monitor)
       throws CoreException {
+
+    SubMonitor subMonitor = SubMonitor.convert(monitor, "BLA ", 5);
+
     IProject eclipseProject = bundleMakerProject.getProject();
 
     // get the common navigator
@@ -92,19 +130,27 @@ public class BundleMakerProjectOpener {
       return;
     }
 
+    subMonitor.worked(1);
+
     // get "root" BundleMakerArtifact
     IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject);
+
+    subMonitor.worked(1);
 
     // Expand Eclipse Project project in tree (i.e. make Artifacts node visible)
     commonNavigator.getCommonViewer().expandToLevel(eclipseProject, 1);
 
+    subMonitor.worked(1);
+
     // Expand Tree to BundleMaker artifact (no idea why two steps are neccessary)
     commonNavigator.getCommonViewer().expandToLevel(defaultModularizedSystemArtifact, 1);
+
+    subMonitor.worked(1);
 
     // Select root artifact in tree
     StructuredSelection newSelection = new StructuredSelection(defaultModularizedSystemArtifact);
     commonNavigator.selectReveal(newSelection);
-
+    subMonitor.worked(1);
   }
 
   protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
