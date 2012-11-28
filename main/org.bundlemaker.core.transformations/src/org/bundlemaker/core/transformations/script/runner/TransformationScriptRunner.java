@@ -119,7 +119,7 @@ public class TransformationScriptRunner {
     // // Create a Logger that logs to the BundleMaker console
     // final TransformationScriptLogger logger = new TransformationScriptLogger();
 
-    DefaultTransformationScriptContext context = new DefaultTransformationScriptContext(progressMonitor,
+    TransformationScriptContext context = new TransformationScriptContext(progressMonitor,
         _transformationScriptLogger, rootArtifact);
 
     // Run the script
