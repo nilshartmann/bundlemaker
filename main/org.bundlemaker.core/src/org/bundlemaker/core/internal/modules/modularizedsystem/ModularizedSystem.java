@@ -12,9 +12,12 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
  * <p>
@@ -45,10 +48,34 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    */
   @Override
   public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration) {
+    return (IRootArtifact) _transformerCache.getArtifactModel(this, configuration, null);
+  }
 
-    IRootArtifact result = (IRootArtifact) _transformerCache.getArtifactModel(this, configuration);
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration, IProgressMonitor progressMonitor) {
 
-    return result;
+    try {
+      progressMonitor.beginTask("Creating analysis model...", 201);
+      progressMonitor.subTask("Transforming...");
+      progressMonitor.worked(1);
+
+      //
+      IRootArtifact root = (IRootArtifact) _transformerCache.getArtifactModel(this, configuration,
+          new SubProgressMonitor(progressMonitor, 100));
+
+      // pre initialize
+      progressMonitor.subTask("Initializing...");
+      AdjacencyList.computeAdjacencyList(root.getChildren(), new SubProgressMonitor(progressMonitor, 100));
+
+      //
+      return root;
+
+    } finally {
+      progressMonitor.done();
+    }
   }
 
   /**

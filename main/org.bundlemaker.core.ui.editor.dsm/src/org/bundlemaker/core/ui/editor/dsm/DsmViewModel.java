@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.ui.editor.dsm.utils.Tarjan;
+import org.bundlemaker.core.analysis.algorithms.Tarjan;
 import org.eclipse.core.runtime.Assert;
 
 /**

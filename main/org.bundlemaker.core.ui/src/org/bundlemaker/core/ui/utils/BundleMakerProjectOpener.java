@@ -26,7 +26,6 @@ import org.bundlemaker.core.ui.preferences.BundleMakerPreferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbench;
@@ -76,30 +75,19 @@ public class BundleMakerProjectOpener {
     // Select default modularized system in common navigator
     try {
 
-      System.out.println("START");
-
       IWorkbench wb = PlatformUI.getWorkbench();
       IProgressService ps = wb.getProgressService();
       ps.run(false, false, new IRunnableWithProgress() {
+
         @Override
         public void run(IProgressMonitor pm) {
-          pm.setTaskName("Computing analysis model");
-          pm.beginTask("Computing analysis model...", 3);
-          System.out.println("1");
-          pm.worked(1);
 
           try {
             selectDefaultModularizedSystemArtifact(bundleMakerProject, pm);
+
           } catch (CoreException ex) {
             BundleMakerUiUtils.logError("Error while creating BundleMaker model:" + ex, ex);
           }
-          System.out.println("2");
-          pm.worked(1);
-
-          // Notify listeners
-          Events.instance().fireProjectOpened(bundleMakerProject);
-          System.out.println("3");
-          pm.worked(1);
         }
       });
 
@@ -109,17 +97,15 @@ public class BundleMakerProjectOpener {
       e.printStackTrace();
     }
 
-    System.out.println("DONE");
+    Events.instance().fireProjectOpened(bundleMakerProject);
 
     // Re-activate common navigator make selections via context menu work
     CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
   }
 
-  protected static void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+  private static IBundleMakerArtifact selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
       IProgressMonitor monitor)
       throws CoreException {
-
-    SubMonitor subMonitor = SubMonitor.convert(monitor, "BLA ", 5);
 
     IProject eclipseProject = bundleMakerProject.getProject();
 
@@ -127,44 +113,46 @@ public class BundleMakerProjectOpener {
     CommonNavigator commonNavigator = CommonNavigatorUtils
         .findCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
     if (commonNavigator == null) {
-      return;
+      return null;
     }
 
-    subMonitor.worked(1);
-
     // get "root" BundleMakerArtifact
-    IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject);
-
-    subMonitor.worked(1);
+    IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject,
+        monitor);
 
     // Expand Eclipse Project project in tree (i.e. make Artifacts node visible)
     commonNavigator.getCommonViewer().expandToLevel(eclipseProject, 1);
 
-    subMonitor.worked(1);
-
     // Expand Tree to BundleMaker artifact (no idea why two steps are neccessary)
     commonNavigator.getCommonViewer().expandToLevel(defaultModularizedSystemArtifact, 1);
-
-    subMonitor.worked(1);
 
     // Select root artifact in tree
     StructuredSelection newSelection = new StructuredSelection(defaultModularizedSystemArtifact);
     commonNavigator.selectReveal(newSelection);
-    subMonitor.worked(1);
+
+    return defaultModularizedSystemArtifact;
   }
 
-  protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param monitor
+   * @return
+   * @throws CoreException
+   */
+  protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+      IProgressMonitor monitor)
       throws CoreException {
+
     IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
         .getArtifactModelConfigurationProvider();
+
     IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy();
 
     //
-    IBundleMakerArtifact artifact = modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
-        .getArtifactModelConfiguration());
-
-    return artifact;
-
+    return modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
+        .getArtifactModelConfiguration(), monitor);
   }
-
 }

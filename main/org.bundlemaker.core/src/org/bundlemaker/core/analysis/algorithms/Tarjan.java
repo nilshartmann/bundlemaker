@@ -1,15 +1,10 @@
-package org.bundlemaker.core.ui.editor.dsm.utils;
+package org.bundlemaker.core.analysis.algorithms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -42,7 +37,7 @@ public class Tarjan<T extends IBundleMakerArtifact> {
     Assert.isNotNull(artifacts);
 
     _artifacts = artifacts.toArray(new IBundleMakerArtifact[0]);
-    int[][] adjacencyList = computeAdjacencyList(_artifacts);
+    int[][] adjacencyList = AdjacencyList.computeAdjacencyList(_artifacts, null);
     return executeTarjan(adjacencyList);
   }
 
@@ -99,46 +94,5 @@ public class Tarjan<T extends IBundleMakerArtifact> {
       } while (n != v);
       _stronglyConnectedComponents.add(component);
     }
-  }
-
-  /**
-   * @param artifacts
-   */
-  private int[][] computeAdjacencyList(IBundleMakerArtifact[] artifacts) {
-
-    // prepare
-    int i = 0;
-    Map<IBundleMakerArtifact, Integer> map = new HashMap<IBundleMakerArtifact, Integer>();
-    for (IBundleMakerArtifact iArtifact : artifacts) {
-      map.put(iArtifact, i);
-      i++;
-    }
-
-    //
-    int[][] matrix = new int[artifacts.length][];
-
-    //
-    for (IBundleMakerArtifact artifact : artifacts) {
-
-      // get the referenced artifacts
-      Collection<? extends IDependency> dependencies = artifact.getDependenciesTo(Arrays.asList(artifacts));
-
-      if (dependencies == null) {
-        dependencies = Collections.emptyList();
-      }
-      
-      //
-      int index = map.get(artifact);
-      matrix[index] = new int[dependencies.size()];
-
-      // GENERICS HACK
-      int count = 0;
-      for (IDependency dependency : dependencies) {
-        matrix[index][count] = map.get(dependency.getTo());
-        count++;
-      }
-    }
-
-    return matrix;
   }
 }
