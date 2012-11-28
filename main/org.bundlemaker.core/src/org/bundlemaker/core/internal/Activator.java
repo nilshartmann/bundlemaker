@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.hook.IBundleMakerProjectHook;
 import org.bundlemaker.core.internal.parser.ParserFactoryRegistry;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
 import org.eclipse.core.resources.IProject;
@@ -39,28 +40,31 @@ import org.osgi.util.tracker.ServiceTracker;
 public class Activator extends Plugin {
 
   /** -- **/
-  public final static boolean                ENABLE_HASHVALUES_FOR_COMPARISON = false;
+  public final static boolean                                              ENABLE_HASHVALUES_FOR_COMPARISON = false;
 
   /** the null progress monitor */
-  public static final IProgressMonitor       NULL_PROGRESS_MONITOR            = new NullProgressMonitor();
+  public static final IProgressMonitor                                     NULL_PROGRESS_MONITOR            = new NullProgressMonitor();
 
   /** the plug-in id */
-  public static final String                 PLUGIN_ID                        = "org.bundlemaker.core";
+  public static final String                                               PLUGIN_ID                        = "org.bundlemaker.core";
 
   /** the activator instance */
-  private static Activator                   _activator;
+  private static Activator                                                 _activator;
 
   /** - */
-  private static BundleContext               _context;
+  private static BundleContext                                             _context;
 
   /** the factory tracker */
-  private ServiceTracker                     _factoryTracker;
+  private ServiceTracker                                                   _factoryTracker;
+
+  /** track the bundlemaker hook */
+  private ServiceTracker<IBundleMakerProjectHook, IBundleMakerProjectHook> _projectHookTracker;
 
   /** the project cache */
-  private Map<IProject, IBundleMakerProject> _projectCache;
+  private Map<IProject, IBundleMakerProject>                               _projectCache;
 
   /** - */
-  private ParserFactoryRegistry              _parserFactoryRegistry;
+  private ParserFactoryRegistry                                            _parserFactoryRegistry;
 
   /**
    * <p>
@@ -80,6 +84,11 @@ public class Activator extends Plugin {
     // create the factory tracker
     _factoryTracker = new ServiceTracker(context, IPersistentDependencyStoreFactory.class.getName(), null);
     _factoryTracker.open();
+
+    // create hook tracker
+    _projectHookTracker = new ServiceTracker<IBundleMakerProjectHook, IBundleMakerProjectHook>(context,
+        IBundleMakerProjectHook.class, null);
+    _projectHookTracker.open();
 
     // create the maps and caches
     _projectCache = new HashMap<IProject, IBundleMakerProject>();
@@ -165,6 +174,19 @@ public class Activator extends Plugin {
 
     // return the parser factory
     return _parserFactoryRegistry;
+  }
+
+  /**
+   * Returns an instance of {@link IBundleMakerProjectHook} or null if no hook is registered
+   * 
+   * @return
+   */
+  public IBundleMakerProjectHook getBundleMakerProjectHook() {
+
+    IBundleMakerProjectHook hook = _projectHookTracker.getService();
+
+    return hook;
+
   }
 
   /**
