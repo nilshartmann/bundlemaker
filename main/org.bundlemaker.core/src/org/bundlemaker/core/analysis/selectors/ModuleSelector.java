@@ -59,7 +59,7 @@ public class ModuleSelector extends AbstractPatternBasedSelector {
         }
 
         //
-        return true;
+        return false;
       }
     });
 
