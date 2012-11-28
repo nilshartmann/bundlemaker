@@ -52,6 +52,7 @@ public class DefaultTransformationScriptContext implements ITransformationScript
   @Override
   public void interruptIfCanceled() throws InterruptedException {
     if (_progressMonitor.isCanceled()) {
+      _logger.log("Script execution has been canceled");
       throw new InterruptedException("Script execution has been canceled");
     }
   }

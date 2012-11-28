@@ -123,7 +123,7 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
     IRootArtifact rootArtifact = _artifact.getModularizedSystem().getAnalysisModel(artifactModelConfiguration);
 
     // Create a Logger that logs to the BundleMaker console
-    TransformationScriptLogger logger = new TransformationScriptLogger();
+    final TransformationScriptLogger logger = new TransformationScriptLogger();
 
     DefaultTransformationScriptContext context = new DefaultTransformationScriptContext(progressMonitor, logger,
         rootArtifact);
@@ -135,13 +135,29 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
     try {
       transformationScript.transform(context);
     } catch (InterruptedException ex) {
-      throw ex;
-    } catch (Exception ex) {
-      Activator.getDefault().getLog()
-          .log(new Status(Status.ERROR, Activator.PLUGIN_ID, "Execution of transformation script failed: " + ex, ex));
+      // Canceled by the user
 
-      MessageDialog.openError(_shell, "Transformation Script failed",
-          "Execution of transformation script failed with Exception:\n\n" + ex + "\n\nSee Error Log for more details");
+      return;
+    } catch (final Exception ex) {
+      Activator
+          .getDefault()
+          .getLog()
+          .log(
+              new Status(Status.ERROR, Activator.PLUGIN_ID,
+                  "Execution of transformation script failed with Exception:\n\n" + ex));
+
+      _shell.getDisplay().asyncExec(new Runnable() {
+
+        @Override
+        public void run() {
+
+          logger.log("Execution of transformation script failed with Exception: " + ex, ex);
+
+          MessageDialog.openError(_shell, "Transformation Script failed",
+              "Execution of transformation script failed with Exception:\n\n" + ex
+                  + "\n\nSee Error Log for more details");
+        }
+      });
     }
   }
 
