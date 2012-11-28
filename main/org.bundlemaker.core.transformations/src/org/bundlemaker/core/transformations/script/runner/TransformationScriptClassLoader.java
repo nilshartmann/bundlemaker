@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.handlers;
+package org.bundlemaker.core.transformations.script.runner;
 
 import java.io.IOException;
 import java.net.URL;

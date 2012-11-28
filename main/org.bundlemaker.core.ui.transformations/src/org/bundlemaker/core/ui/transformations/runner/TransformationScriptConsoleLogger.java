@@ -8,7 +8,11 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.handlers;
+package org.bundlemaker.core.ui.transformations.runner;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
 import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsole;
@@ -17,7 +21,7 @@ import org.bundlemaker.core.ui.transformations.console.TransformationScriptConso
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class TransformationScriptLogger implements ITransformationScriptLogger {
+public class TransformationScriptConsoleLogger implements ITransformationScriptLogger {
 
   /*
    * (non-Javadoc)
@@ -27,7 +31,22 @@ public class TransformationScriptLogger implements ITransformationScriptLogger {
   @Override
   public void log(String msg) {
     TransformationScriptConsole.instance().append(msg);
+  }
 
+  public void log(String msg, Throwable t) {
+
+    StringWriter writer = new StringWriter();
+    PrintWriter pw = new PrintWriter(writer);
+
+    t.printStackTrace(pw);
+
+    TransformationScriptConsole.instance().append(msg);
+    TransformationScriptConsole.instance().append(writer.toString());
+    try {
+      writer.close();
+    } catch (IOException e) {
+      // ignore
+    }
   }
 
 }

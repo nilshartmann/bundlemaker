@@ -8,10 +8,9 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.runner;
+package org.bundlemaker.core.transformations.script.runner;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedList;
@@ -21,44 +20,39 @@ import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.transformations.internal.Activator;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
+import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
 import org.bundlemaker.core.transformations.script.TransformationModelConfiguration;
-import org.bundlemaker.core.ui.transformations.Activator;
-import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory;
-import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptClassLoader;
-import org.bundlemaker.core.ui.transformations.handlers.TransformationScriptLogger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Shell;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class TransformationScriptRunner implements IRunnableWithProgress {
+public class TransformationScriptRunner {
 
-  private final Shell                _shell;
+  private final IType                       _transformationScriptType;
 
-  private final IType                _transformationScriptType;
+  private final IBundleMakerArtifact        _artifact;
 
-  private final IBundleMakerArtifact _artifact;
+  private final ITransformationScriptLogger _transformationScriptLogger;
 
   /**
    * @param shell
    * @param transformationScriptType
    */
-  public TransformationScriptRunner(Shell shell, IBundleMakerArtifact artifact, IType transformationScriptType) {
-    _shell = shell;
+  public TransformationScriptRunner(IBundleMakerArtifact artifact, IType transformationScriptType,
+      ITransformationScriptLogger logger) {
     _transformationScriptType = transformationScriptType;
     _artifact = artifact;
+    _transformationScriptLogger = logger;
   }
 
   // public void runScript() {
@@ -73,23 +67,23 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
   // }
   // }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-   */
-  @Override
-  public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-
-    try {
-      doRunScript(monitor);
-    } catch (InterruptedException ex) {
-      throw ex;
-    } catch (Exception ex) {
-      throw new InvocationTargetException(ex);
-    }
-
-  }
+  // /*
+  // * (non-Javadoc)
+  // *
+  // * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
+  // */
+  // @Override
+  // public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+  //
+  // try {
+  // doRunScript(monitor);
+  // } catch (InterruptedException ex) {
+  // throw ex;
+  // } catch (Exception ex) {
+  // throw new InvocationTargetException(ex);
+  // }
+  //
+  // }
 
   // /*
   // * (non-Javadoc)
@@ -107,7 +101,7 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
   // return Status.OK_STATUS;
   // }
 
-  protected void doRunScript(IProgressMonitor progressMonitor) throws Exception {
+  public void runScript(IProgressMonitor progressMonitor) throws Exception {
 
     if (progressMonitor == null) {
       progressMonitor = new NullProgressMonitor();
@@ -122,27 +116,27 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
     // Get an artifact model according to the configuration specified in the script
     IRootArtifact rootArtifact = _artifact.getModularizedSystem().getAnalysisModel(artifactModelConfiguration);
 
-    // Create a Logger that logs to the BundleMaker console
-    TransformationScriptLogger logger = new TransformationScriptLogger();
+    // // Create a Logger that logs to the BundleMaker console
+    // final TransformationScriptLogger logger = new TransformationScriptLogger();
 
-    DefaultTransformationScriptContext context = new DefaultTransformationScriptContext(progressMonitor, logger,
-        rootArtifact);
-
-    // Make sure the console with output is visible
-    TransformationScriptConsoleFactory.showConsole();
+    DefaultTransformationScriptContext context = new DefaultTransformationScriptContext(progressMonitor,
+        _transformationScriptLogger, rootArtifact);
 
     // Run the script
     try {
       transformationScript.transform(context);
     } catch (InterruptedException ex) {
-      throw ex;
-    } catch (Exception ex) {
-      Activator.getDefault().getLog()
-          .log(new Status(Status.ERROR, Activator.PLUGIN_ID, "Execution of transformation script failed: " + ex, ex));
+      // Canceled by the user
 
-      MessageDialog.openError(_shell, "Transformation Script failed",
-          "Execution of transformation script failed with Exception:\n\n" + ex + "\n\nSee Error Log for more details");
+      return;
+    } catch (final Exception ex) {
+      handleScriptException(ex);
     }
+  }
+
+  protected void handleScriptException(Exception ex) {
+    // TODO
+    ex.printStackTrace();
   }
 
   /**
@@ -200,9 +194,13 @@ public class TransformationScriptRunner implements IRunnableWithProgress {
     }
 
     TransformationScriptClassLoader classLoader = TransformationScriptClassLoader.createBundleClassLoaderFor(Activator
-        .getDefault().getBundle(), urls.toArray(new URL[0]));
+        .getDefault().getBundleContext().getBundle(), urls.toArray(new URL[0]));
 
     return classLoader;
 
+  }
+
+  protected ITransformationScriptLogger getLogger() {
+    return this._transformationScriptLogger;
   }
 }

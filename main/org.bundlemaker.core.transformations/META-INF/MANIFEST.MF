@@ -5,10 +5,16 @@ Bundle-SymbolicName: org.bundlemaker.core.transformations
 Bundle-Version: 0.7.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.bundlemaker.core;bundle-version="0.7.0",
- org.apache.ant;bundle-version="1.7.1"
+ org.apache.ant;bundle-version="1.7.1",
+ org.eclipse.jdt;bundle-version="3.8.0",
+ org.eclipse.core.resources;bundle-version="3.8.1",
+ org.eclipse.jdt.core;bundle-version="3.8.2",
+ org.eclipse.jdt.launching;bundle-version="3.6.100"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.transformations,
  org.bundlemaker.core.transformations.resourceset,
  org.bundlemaker.core.transformations.script,
+ org.bundlemaker.core.transformations.script.runner,
  org.bundlemaker.core.transformations.selectors
+Bundle-Activator: org.bundlemaker.core.transformations.internal.Activator

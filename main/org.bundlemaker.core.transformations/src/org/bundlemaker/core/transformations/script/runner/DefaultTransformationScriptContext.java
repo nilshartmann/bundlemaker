@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.runner;
+package org.bundlemaker.core.transformations.script.runner;
 
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.transformations.script.ITransformationScriptContext;
@@ -52,6 +52,7 @@ public class DefaultTransformationScriptContext implements ITransformationScript
   @Override
   public void interruptIfCanceled() throws InterruptedException {
     if (_progressMonitor.isCanceled()) {
+      _logger.log("Script execution has been canceled");
       throw new InterruptedException("Script execution has been canceled");
     }
   }
