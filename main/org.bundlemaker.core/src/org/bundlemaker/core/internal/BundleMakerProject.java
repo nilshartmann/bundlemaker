@@ -25,6 +25,7 @@ import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.hook.IBundleMakerProjectHook;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
@@ -292,7 +293,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     //
     if (_modifiableModualizedSystemWorkingCopies.containsKey(name)) {
       // TODO
-      throw new RuntimeException("");
+      throw new IllegalStateException("Modularized system '" + name + "' already registered");
     }
 
     // create the modularized system
@@ -305,6 +306,12 @@ public class BundleMakerProject implements IBundleMakerProject {
     ITransformation basicContentTransformation = new BasicProjectContentTransformation();
     modularizedSystem.initialize(null);
     modularizedSystem.applyTransformations(null, basicContentTransformation);
+
+    // invoke hook if available
+    IBundleMakerProjectHook projectHook = Activator.getDefault().getBundleMakerProjectHook();
+    if (projectHook != null) {
+      projectHook.modularizedSystemCreated(modularizedSystem);
+    }
 
     //
     return modularizedSystem;

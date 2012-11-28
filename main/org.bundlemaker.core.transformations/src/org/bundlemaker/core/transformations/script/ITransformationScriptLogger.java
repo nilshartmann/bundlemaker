@@ -18,4 +18,10 @@ public interface ITransformationScriptLogger {
 
   void log(String msg);
 
+  /**
+   * @param msg
+   * @param t
+   */
+  void log(String msg, Throwable t);
+
 }
