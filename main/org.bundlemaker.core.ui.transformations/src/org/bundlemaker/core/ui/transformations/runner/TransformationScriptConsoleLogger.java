@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.handlers;
+package org.bundlemaker.core.ui.transformations.runner;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,7 +21,7 @@ import org.bundlemaker.core.ui.transformations.console.TransformationScriptConso
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class TransformationScriptLogger implements ITransformationScriptLogger {
+public class TransformationScriptConsoleLogger implements ITransformationScriptLogger {
 
   /*
    * (non-Javadoc)

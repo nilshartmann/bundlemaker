@@ -7,7 +7,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
 import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
 import org.bundlemaker.core.ui.transformations.Activator;
-import org.bundlemaker.core.ui.transformations.runner.TransformationScriptRunner;
+import org.bundlemaker.core.ui.transformations.runner.UiTransformationScriptRunner;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -76,7 +76,7 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
 
     // Run the script
     ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
-    progressMonitorDialog.run(true, true, new TransformationScriptRunner(shell, selectedArtifact,
+    progressMonitorDialog.run(true, true, new UiTransformationScriptRunner(shell, selectedArtifact,
         transformationScriptType));
 
     // refresh the explorer

@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.transformations.runner;
+package org.bundlemaker.core.transformations.script.runner;
 
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.transformations.script.ITransformationScriptContext;
