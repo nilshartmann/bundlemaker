@@ -13,6 +13,7 @@ import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
@@ -27,19 +28,19 @@ import org.eclipse.core.runtime.Assert;
 public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
   /** the name of this artifact */
-  private String                              _name;
+  private String                    _name;
 
   /** the direct parent */
-  private IBundleMakerArtifact                _parent;
+  private IBundleMakerArtifact      _parent;
 
   /** the root artifact */
-  private IRootArtifact                       _root;
+  private AdapterRoot2IArtifact     _root;
 
   /** the properties */
-  private Map<Object, Object>                 _properties;
+  private Map<Object, Object>       _properties;
 
-  /** - */
-  private transient Set<IBundleMakerArtifact> _cachedParents;
+  /** CACHE */
+  private Set<IBundleMakerArtifact> _cachedParents;
 
   /**
    * <p>
@@ -139,9 +140,6 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     return _parent.getParent(type);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean isAncestorOf(IBundleMakerArtifact artifact) {
 
@@ -154,28 +152,6 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     return ((AbstractArtifact) artifact).getCachedParents().contains(this);
   }
 
-  public Set<IBundleMakerArtifact> getCachedParents() {
-
-    //
-    if (_cachedParents == null) {
-      _cachedParents = new HashSet<IBundleMakerArtifact>();
-
-      if (hasParent()) {
-        _cachedParents.add(getParent());
-        _cachedParents.addAll(((AbstractArtifact) getParent()).getCachedParents());
-      }
-
-      // IBundleMakerArtifact currentArtifact = this;
-      // while (currentArtifact.hasParent()) {
-      // currentArtifact = currentArtifact.getParent();
-      // _cachedParents.add(currentArtifact);
-      // }
-    }
-
-    //
-    return _cachedParents;
-  }
-
   /**
    * {@inheritDoc}
    */
@@ -184,7 +160,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
     //
     if (_root == null) {
-      _root = (IRootArtifact) getParent(IRootArtifact.class);
+      _root = (AdapterRoot2IArtifact) getParent(IRootArtifact.class);
     }
 
     //
@@ -309,12 +285,12 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
     return Collections.emptyList();
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
     return Collections.emptyList();
   }
 
@@ -329,12 +305,12 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
     return Collections.emptyList();
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
     return Collections.emptyList();
   }
 
@@ -349,17 +325,12 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   }
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * </p>
+   * 
    */
-  public final void invalidateCaches() {
+  public void invalidateCaches() {
     _cachedParents = null;
-
-    //
-    onInvalidateCaches();
-  }
-
-  protected void onInvalidateCaches() {
-    // TODO Auto-generated method stub
   }
 
   /**
@@ -383,6 +354,10 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
     // compare the qualified name
     return this.getQualifiedName().compareTo(o.getQualifiedName());
+  }
+
+  public void initializeCaches() {
+    getCachedParents();
   }
 
   /**
@@ -427,5 +402,30 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
     // return the result
     return _properties;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private Set<IBundleMakerArtifact> getCachedParents() {
+
+    //
+    if (_cachedParents == null) {
+
+      //
+      _cachedParents = new HashSet<IBundleMakerArtifact>();
+
+      //
+      if (hasParent()) {
+        _cachedParents.add(getParent());
+        _cachedParents.addAll(((AbstractArtifact) getParent()).getCachedParents());
+      }
+    }
+
+    //
+    return _cachedParents;
   }
 }

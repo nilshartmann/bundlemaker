@@ -70,9 +70,6 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     }
     targetArtifact.addArtifacts(artifacts);
 
-    //
-    targetArtifact.getRoot().invalidateCaches();
-
     CommonNavigatorUtils.update("org.eclipse.ui.navigator.ProjectExplorer");
     TreePath[] expanedTreePath = commonNavigator.getCommonViewer().getExpandedTreePaths();
     commonNavigator.getCommonViewer().refresh();

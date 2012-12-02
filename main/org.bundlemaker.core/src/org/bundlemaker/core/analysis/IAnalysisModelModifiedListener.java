@@ -12,5 +12,5 @@ public interface IAnalysisModelModifiedListener {
    * <p>
    * </p>
    */
-  void artifactModelModified();
+  void analysisModelModified();
 }

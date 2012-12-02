@@ -96,4 +96,20 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @return
    */
   Collection<IModifiableResourceModule> getModifiableResourceModules();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param isDisabled
+   */
+  void disableModelModifiedNotification(boolean isDisabled);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isModelModifiedNotificationDisabled();
 }

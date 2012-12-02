@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.utils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
@@ -26,12 +25,10 @@ import org.bundlemaker.core.ui.preferences.BundleMakerPreferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.progress.IProgressService;
 
 /**
  * Parses and opens a specified BundleMaker Project and executes all required pre- and post-actions for the UI (like
@@ -73,34 +70,22 @@ public class BundleMakerProjectOpener {
     }
 
     // Select default modularized system in common navigator
+    IWorkbench wb = PlatformUI.getWorkbench();
+    // Shell activeShell = wb.getActiveWorkbenchWindow().getShell();
+
     try {
 
-      IWorkbench wb = PlatformUI.getWorkbench();
-      IProgressService ps = wb.getProgressService();
-      ps.run(false, false, new IRunnableWithProgress() {
+      selectDefaultModularizedSystemArtifact(bundleMakerProject, null);
 
-        @Override
-        public void run(IProgressMonitor pm) {
+      //
+      Events.instance().fireProjectOpened(bundleMakerProject);
 
-          try {
-            selectDefaultModularizedSystemArtifact(bundleMakerProject, pm);
+      // Re-activate common navigator make selections via context menu work
+      CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
 
-          } catch (CoreException ex) {
-            BundleMakerUiUtils.logError("Error while creating BundleMaker model:" + ex, ex);
-          }
-        }
-      });
-
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+    } catch (CoreException ex) {
+      BundleMakerUiUtils.logError("Error while creating BundleMaker model:" + ex, ex);
     }
-
-    Events.instance().fireProjectOpened(bundleMakerProject);
-
-    // Re-activate common navigator make selections via context menu work
-    CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
   }
 
   private static IBundleMakerArtifact selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,

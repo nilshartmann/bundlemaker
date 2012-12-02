@@ -120,8 +120,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * {@inheritDoc}
    */
   @Override
-  public void artifactModelModified() {
-    Display.getDefault().asyncExec(new Runnable() {
+  public void analysisModelModified() {
+    Display.getDefault().syncExec(new Runnable() {
       public void run() {
          initSelection(getCurrentArtifactSelection());
       }

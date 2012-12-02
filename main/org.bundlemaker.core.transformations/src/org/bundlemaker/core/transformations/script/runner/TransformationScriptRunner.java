@@ -124,13 +124,15 @@ public class TransformationScriptRunner {
 
     // Run the script
     try {
+      rootArtifact.disableModelModifiedNotification(true);
       transformationScript.transform(context);
     } catch (InterruptedException ex) {
       // Canceled by the user
-
       return;
     } catch (final Exception ex) {
       handleScriptException(ex);
+    } finally {
+      rootArtifact.disableModelModifiedNotification(false);
     }
   }
 

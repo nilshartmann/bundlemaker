@@ -30,6 +30,13 @@ public class AdjacencyList {
   /**
    * @param artifacts
    */
+  public static int[][] computeAdjacencyList(IProgressMonitor monitor, IBundleMakerArtifact... artifacts) {
+    return computeAdjacencyList(artifacts, monitor);
+  }
+
+  /**
+   * @param artifacts
+   */
   public static int[][] computeAdjacencyList(IBundleMakerArtifact[] artifacts, IProgressMonitor monitor) {
 
     //

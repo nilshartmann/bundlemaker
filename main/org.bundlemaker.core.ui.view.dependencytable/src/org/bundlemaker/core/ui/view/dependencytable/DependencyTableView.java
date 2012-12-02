@@ -263,9 +263,12 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public void artifactModelModified() {
-    // TODO
+  public void analysisModelModified() {
+    // TODO Auto-generated method stub
   }
 
   /**

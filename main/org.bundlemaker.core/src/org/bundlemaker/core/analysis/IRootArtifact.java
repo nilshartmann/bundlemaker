@@ -4,6 +4,7 @@ import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    * @param listener
    *          the listener to add (must not be null)
    */
-  void addArtifactModelChangedListener(IAnalysisModelModifiedListener listener);
+  void addAnalysisModelModifiedListener(IAnalysisModelModifiedListener listener);
 
   /**
    * <p>
@@ -34,7 +35,39 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    * @param listener
    *          the listener to remove (must not be null)
    */
-  void removeArtifactModelChangedListener(IAnalysisModelModifiedListener listener);
+  void removeAnalysisModelModifiedListener(IAnalysisModelModifiedListener listener);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param isDisabled
+   */
+  void disableModelModifiedNotification(boolean isDisabled);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean isModelModifiedNotificationDisabled();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  boolean areCachesInitialized();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param progressMonitor
+   */
+  void initializeCaches(IProgressMonitor progressMonitor);
 
   /**
    * <p>

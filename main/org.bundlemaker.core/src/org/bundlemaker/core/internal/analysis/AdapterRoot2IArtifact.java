@@ -11,6 +11,7 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
@@ -33,6 +34,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 
 /**
@@ -58,6 +60,8 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
   /** - */
   private final CopyOnWriteArrayList<IAnalysisModelModifiedListener> _artifactModelChangedListeners;
+
+  private boolean                                                    _cachesInitialized;
 
   /**
    * <p>
@@ -89,6 +93,56 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
     //
     _artifactModelChangedListeners = new CopyOnWriteArrayList<IAnalysisModelModifiedListener>();
+  }
+
+  @Override
+  public final void disableModelModifiedNotification(boolean isDisabled) {
+    getModularizedSystem().disableModelModifiedNotification(isDisabled);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void modelModifiedNotificationDisabled(boolean isDisabled) {
+    //
+    if (!isDisabled) {
+      for (IAnalysisModelModifiedListener artifactModelChangedListener : _artifactModelChangedListeners) {
+        artifactModelChangedListener.analysisModelModified();
+      }
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final boolean isModelModifiedNotificationDisabled() {
+    return getModularizedSystem().isModelModifiedNotificationDisabled();
+  }
+
+  @Override
+  public final boolean areCachesInitialized() {
+    return _cachesInitialized;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final void initializeCaches(IProgressMonitor progressMonitor) {
+
+    //
+    this.accept(new IAnalysisModelVisitor.Adapter() {
+      @Override
+      public boolean onVisit(IBundleMakerArtifact artifact) {
+        ((AbstractArtifact) artifact).initializeCaches();
+        return true;
+      }
+    });
+
+    //
+    _cachesInitialized = true;
   }
 
   /**
@@ -151,15 +205,6 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    */
   public IGroupArtifact getOrCreateGroup(String path) {
     return _groupAndModuleContainerDelegate.getOrCreateGroup(path);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void onInvalidateCaches() {
-    super.onInvalidateCaches();
-    accept(new InvalidateAggregatedDependencies());
   }
 
   @Override
@@ -272,6 +317,9 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   @Override
   public void movableUnitAdded(MovableUnitMovedEvent event) {
 
+    //
+    handleModelModification();
+
     // get the movable unit
     IMovableUnit movableUnit = event.getMovableUnit();
     IAnalysisModelConfiguration configuration = getConfiguration();
@@ -335,6 +383,10 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    */
   @Override
   public void movableUnitRemoved(MovableUnitMovedEvent event) {
+
+    //
+    handleModelModification();
+
     removeMovableUnitArtifacts(event);
   }
 
@@ -389,6 +441,9 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   public void moduleAdded(ModuleMovedEvent event) {
 
     //
+    handleModelModification();
+
+    //
     ModuleSubCache moduleCache = _artifactCache.getModuleCache();
 
     //
@@ -409,6 +464,9 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   public void moduleRemoved(ModuleMovedEvent event) {
 
     //
+    handleModelModification();
+
+    //
     AdapterModule2IArtifact moduleArtifact = (AdapterModule2IArtifact) _artifactCache.getModuleCache().get(
         new ModuleKey(event.getModule()));
 
@@ -423,6 +481,9 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    */
   @Override
   public void moduleClassificationChanged(ModuleClassificationChangedEvent event) {
+
+    //
+    handleModelModification();
 
     //
     IModule module = event.getModule();
@@ -449,6 +510,9 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    */
   @Override
   public void classificationChanged(ClassificationChangedEvent event) {
+
+    //
+    handleModelModification();
 
     //
     if (event.isMovedGroup()) {
@@ -494,13 +558,18 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    */
   @Override
   public void groupAdded(GroupChangedEvent event) {
+
+    //
+    handleModelModification();
+
     getArtifactCache().getGroupCache().getOrCreate((Group) event.getGroup());
   }
 
   @Override
   public void groupRemoved(GroupChangedEvent event) {
-    // TODO Auto-generated method stub
 
+    //
+    handleModelModification();
   }
 
   /**
@@ -521,7 +590,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    * 
    * @param listener
    */
-  public void addArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
+  public void addAnalysisModelModifiedListener(IAnalysisModelModifiedListener listener) {
 
     Assert.isNotNull(listener);
 
@@ -534,7 +603,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    * 
    * @param listener
    */
-  public void removeArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
+  public void removeAnalysisModelModifiedListener(IAnalysisModelModifiedListener listener) {
 
     Assert.isNotNull(listener);
 
@@ -546,9 +615,25 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
    * </p>
    * 
    */
-  public void fireArtifactModelChanged() {
-    for (IAnalysisModelModifiedListener artifactModelChangedListener : _artifactModelChangedListeners) {
-      artifactModelChangedListener.artifactModelModified();
+  private void handleModelModification() {
+
+    //
+    _cachesInitialized = false;
+
+    //
+    this.accept(new IAnalysisModelVisitor.Adapter() {
+      @Override
+      public boolean onVisit(IBundleMakerArtifact artifact) {
+        ((AbstractArtifact) artifact).invalidateCaches();
+        return true;
+      }
+    });
+
+    //
+    if (!getModularizedSystem().isModelModifiedNotificationDisabled()) {
+      for (IAnalysisModelModifiedListener artifactModelChangedListener : _artifactModelChangedListeners) {
+        artifactModelChangedListener.analysisModelModified();
+      }
     }
   }
 }

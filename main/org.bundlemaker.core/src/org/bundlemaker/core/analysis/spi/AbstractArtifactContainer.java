@@ -14,7 +14,6 @@ import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.DefaultArtifactSelector;
 import org.bundlemaker.core.transformation.RemoveArtifactsTransformation;
@@ -284,7 +283,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
 
     //
     List<IDependency> result = new LinkedList<IDependency>();
@@ -305,7 +304,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
     return getDependenciesFrom(Arrays.asList(artifacts));
   }
 
@@ -356,7 +355,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
 
     //
     List<IDependency> result = new LinkedList<IDependency>();
@@ -377,27 +376,38 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * {@inheritDoc}
    */
   @Override
-  public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
     return getDependenciesTo(Arrays.asList(artifacts));
   }
 
   /**
    * {@inheritDoc}
    */
-  public void onInvalidateCaches() {
+  public final void invalidateCaches() {
+    super.invalidateCaches();
 
     //
-    _allCoreDependenciesFrom = null;
-    _allCoreDependenciesTo = null;
+    if (_allCoreDependenciesFrom != null) {
+      _allCoreDependenciesFrom.clear();
+      _allCoreDependenciesFrom = null;
+    }
+
+    //
+    if (_allCoreDependenciesTo != null) {
+      _allCoreDependenciesTo.clear();
+      _allCoreDependenciesTo = null;
+    }
 
     //
     if (_aggregatedDependenciesTo != null) {
       _aggregatedDependenciesTo.clear();
+      _aggregatedDependenciesTo = null;
     }
 
     //
     if (_aggregatedDependenciesFrom != null) {
       _aggregatedDependenciesFrom.clear();
+      _aggregatedDependenciesFrom = null;
     }
   }
 
@@ -554,9 +564,6 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     JsonElement jsonConfiguration = new AddArtifactsTransformation.Configuration(this,
         artifactSelector).toJsonTree();
 
-    //
-    getRoot().invalidateCaches();
-
     // add the artifacts
     for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
       assertCanAdd(artifact);
@@ -565,12 +572,6 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
       onAddArtifact(artifact);
     }
-
-    //
-    getRoot().invalidateCaches();
-
-    // fire
-    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
 
     // add the transformation
     getModularizedSystem().getTransformations().add(
@@ -629,12 +630,6 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
       onRemoveArtifact(artifact);
     }
-
-    //
-    getRoot().invalidateCaches();
-
-    // fire model changed
-    ((AdapterRoot2IArtifact) getRoot()).fireArtifactModelChanged();
 
     // add the transformation
     getModularizedSystem().getTransformations().add(
@@ -881,7 +876,10 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * </p>
    * 
    */
-  private void initializeCaches() {
+  public void initializeCaches() {
+
+    //
+    super.initializeCaches();
 
     //
     if (_allCoreDependenciesTo == null || _allReferencingArtifacts == null) {
@@ -901,6 +899,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
         // call recursive...
         _allCoreDependenciesTo.addAll(child.getDependenciesTo());
+        _allReferencingArtifacts.addAll(child.getContainedReferencingArtifacts());
       }
     }
   }

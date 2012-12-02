@@ -133,13 +133,13 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
 
   private void unregisterArtifactModelChangedListener() {
     if (_currentArtifactSelection != null && _currentArtifactSelection.hasSelectedArtifacts()) {
-      _currentArtifactSelection.getRootArtifact().removeArtifactModelChangedListener(this);
+      _currentArtifactSelection.getRootArtifact().removeAnalysisModelModifiedListener(this);
     }
   }
 
   private void registerArtifactModelChangedListener() {
     if (_currentArtifactSelection != null && _currentArtifactSelection.hasSelectedArtifacts()) {
-      _currentArtifactSelection.getRootArtifact().addArtifactModelChangedListener(this);
+      _currentArtifactSelection.getRootArtifact().addAnalysisModelModifiedListener(this);
     }
   }
 

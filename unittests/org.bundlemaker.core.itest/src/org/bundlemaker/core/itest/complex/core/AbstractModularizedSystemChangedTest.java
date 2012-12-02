@@ -94,7 +94,7 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
     }
 
     @Override
-    public void modelModifiedNotificationDisable(boolean isDisabled) {
+    public void modelModifiedNotificationDisabled(boolean isDisabled) {
       // TODO Auto-generated method stub
     }
   }

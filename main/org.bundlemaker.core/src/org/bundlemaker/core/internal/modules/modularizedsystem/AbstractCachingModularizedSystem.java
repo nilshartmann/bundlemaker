@@ -30,8 +30,8 @@ import org.bundlemaker.core.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
@@ -61,6 +61,9 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
   /** - */
   private List<IModularizedSystemChangedListener>       _changedListeners;
+
+  /** - */
+  private boolean                                       _isModelModifiedNotificationDisabled;
 
   /**
    * <p>
@@ -544,6 +547,32 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     // step 2: cache the contained types
     typesChanged(resource.getContainedTypes(), resourceModule, action);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void disableModelModifiedNotification(boolean isDisabled) {
+
+    //
+    boolean fireImmediately = !isDisabled && _isModelModifiedNotificationDisabled;
+
+    //
+    _isModelModifiedNotificationDisabled = isDisabled;
+
+    //
+    for (IModularizedSystemChangedListener modularizedSystemChangedListener : _changedListeners) {
+      modularizedSystemChangedListener.modelModifiedNotificationDisabled(isDisabled);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isModelModifiedNotificationDisabled() {
+    return _isModelModifiedNotificationDisabled;
   }
 
   private void internalTypeChanged(IType type, IModule module, ChangeAction action) {

@@ -144,13 +144,13 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
 
   private void unregisterArtifactModelChangedListener() {
     if (_currentDependencySelection != null && _currentDependencySelection.hasDependencies()) {
-      _currentDependencySelection.getFirstDependency().getFrom().getRoot().removeArtifactModelChangedListener(this);
+      _currentDependencySelection.getFirstDependency().getFrom().getRoot().removeAnalysisModelModifiedListener(this);
     }
   }
 
   private void registerArtifactModelChangedListener() {
     if (_currentDependencySelection != null && _currentDependencySelection.hasDependencies()) {
-      _currentDependencySelection.getFirstDependency().getFrom().getRoot().addArtifactModelChangedListener(this);
+      _currentDependencySelection.getFirstDependency().getFrom().getRoot().addAnalysisModelModifiedListener(this);
     }
   }
 
