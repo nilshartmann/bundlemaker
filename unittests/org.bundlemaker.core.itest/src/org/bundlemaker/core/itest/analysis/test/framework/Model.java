@@ -1,12 +1,15 @@
 package org.bundlemaker.core.itest.analysis.test.framework;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -14,7 +17,6 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.junit.Assert;
 
 /**
@@ -44,6 +46,9 @@ public class Model {
   private IRootArtifact      _rootArtifact;
 
   /** - */
+  private IModuleArtifact    _jre_Artifact;
+
+  /** - */
   private IModuleArtifact    _module_Artifact;
 
   /** - */
@@ -70,6 +75,9 @@ public class Model {
   /** - */
   private IModularizedSystem _modularizedSystem;
 
+  /** - */
+  private int                _modifiedNotificationCount;
+
   /**
    * <p>
    * Creates a new instance of type {@link Model}.
@@ -87,6 +95,7 @@ public class Model {
     _modularizedSystem = modularizedSystem;
     _rootArtifact = createArtifactModel(modularizedSystem, configuration);
     _module_Artifact = assertSimpleArtifactModule(_rootArtifact);
+    _jre_Artifact = assertJreArtifactModule(_rootArtifact);
     _velocity_module_Artifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "velocity",
         "1.5");
     _group1_Artifact = assertGroupArtifact(_rootArtifact, "group1");
@@ -95,6 +104,22 @@ public class Model {
     _test_Resource = assertResourceArtifact(_module_Artifact, "Test");
     _test_Package = assertPackageArtifact(_module_Artifact, "de.test");
     _de_Package = assertPackageArtifact(_module_Artifact, "de");
+
+    //
+    _rootArtifact.addAnalysisModelModifiedListener(new IAnalysisModelModifiedListener() {
+      @Override
+      public void analysisModelModified() {
+        _modifiedNotificationCount++;
+      }
+    });
+  }
+
+  public int getModifiedNotificationCount() {
+    return _modifiedNotificationCount;
+  }
+
+  public IModuleArtifact getJreArtifact() {
+    return _jre_Artifact;
   }
 
   public IRootArtifact getRootArtifact() {
@@ -104,7 +129,7 @@ public class Model {
   public IModuleArtifact getMainModuleArtifact() {
     return _module_Artifact;
   }
-  
+
   public IModuleArtifact getVelocityModuleArtifact() {
     return _velocity_module_Artifact;
   }
@@ -137,6 +162,29 @@ public class Model {
    */
   public IPackageArtifact getTestPackage() {
     return _test_Package;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<IDependency> getDependenciesTo(IBundleMakerArtifact from, IBundleMakerArtifact... to) {
+
+    // test dependencies
+    List<IDependency> deps = new LinkedList<IDependency>(from.getDependenciesTo(
+        to));
+
+    //
+    Collections.sort(deps, new Comparator<IDependency>() {
+      public int compare(IDependency o1, IDependency o2) {
+        return o1.toString().compareTo(o2.toString());
+      }
+    });
+
+    //
+    return deps;
   }
 
   /**
@@ -224,6 +272,32 @@ public class Model {
     assertNode(moduleArtifact.getParent().getParent(), IGroupArtifact.class, "group1");
 
     return moduleArtifact;
+  }
+
+  private IModuleArtifact assertJreArtifactModule(final IRootArtifact rootArtifact) {
+
+    final IModuleArtifact[] result = new IModuleArtifact[1];
+
+    //
+    rootArtifact.accept(new IAnalysisModelVisitor.Adapter() {
+
+      @Override
+      public boolean visit(IModuleArtifact moduleArtifact) {
+
+        //
+        if (rootArtifact.getModularizedSystem().getExecutionEnvironment().equals(moduleArtifact.getAssociatedModule())) {
+          result[0] = moduleArtifact;
+        }
+
+        return false;
+      }
+    });
+
+    //
+    Assert.assertNotNull(result[0]);
+
+    //
+    return result[0];
   }
 
   /**

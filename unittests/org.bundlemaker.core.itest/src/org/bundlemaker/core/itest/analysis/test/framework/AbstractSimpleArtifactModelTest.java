@@ -9,6 +9,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.algorithms.AdjacencyMatrix;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -60,6 +61,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     super.after();
 
     _binModel = null;
+    _srcModel = null;
   }
 
   /**
@@ -236,5 +238,21 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
 
     // assert module parent in src model
     Assert.assertEquals(srcModel.getGroup2Artifact(), srcModel.getMainModuleArtifact().getParent());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param binModel
+   * @param srcModel
+   */
+  protected void assert_Main_Jre_G1_G2_Dependencies(int[][] binModel, int[][] srcModel) {
+    Assert.assertArrayEquals(binModel,
+        AdjacencyMatrix.computeAdjacencyMatrix(null, _binModel.getMainModuleArtifact(),
+            _binModel.getJreArtifact(), _binModel.getGroup1Artifact(), _binModel.getGroup2Artifact()));
+    Assert.assertArrayEquals(srcModel,
+        AdjacencyMatrix.computeAdjacencyMatrix(null, _srcModel.getMainModuleArtifact(),
+            _srcModel.getJreArtifact(), _srcModel.getGroup1Artifact(), _srcModel.getGroup2Artifact()));
   }
 }

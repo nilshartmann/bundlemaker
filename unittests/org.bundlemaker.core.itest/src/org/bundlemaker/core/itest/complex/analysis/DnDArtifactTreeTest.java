@@ -34,9 +34,6 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     IBundleMakerArtifact testGroup = getRootArtifact().getOrCreateGroup(new Path("testGroup"));
     testGroup.addArtifact(getJeditModuleArtifact());
 
-    // TODO
-    getRootArtifact().invalidateCaches();
-
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 5);
     assertArtifactChildrenCount(getGroup2Artifact(), 0);
@@ -69,9 +66,6 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     IBundleMakerArtifact GROUPgroup = getRootArtifact().getOrCreateGroup(new Path("GROUP"));
     GROUPgroup.addArtifact(getJeditModuleArtifact());
 
-    // TODO
-    getRootArtifact().invalidateCaches();
-
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 5);
     assertArtifactChildrenCount(getGroup2Artifact(), 0);
@@ -89,9 +83,6 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     // create test group and add the 'jedit' artifact
     IBundleMakerArtifact GROUP2Group = getRootArtifact().getOrCreateGroup(new Path("GROUP2"));
     GROUP2Group.addArtifact(getJeditModuleArtifact());
-
-    // TODO
-    getRootArtifact().invalidateCaches();
 
     // assert children
     assertArtifactChildrenCount(getRootArtifact(), 6);
@@ -121,23 +112,14 @@ public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
     GROUPgroup.addArtifact(getJeditModuleArtifact());
     GROUP2group.addArtifact(getJreArtifact());
 
-    // TODO
-    getRootArtifact().invalidateCaches();
-
     assertDependencyWeight(GROUPgroup, GROUP2group, 1904);
 
     GROUPgroup.addArtifact(getVelocityModuleArtifact());
-
-    // TODO
-    getRootArtifact().invalidateCaches();
 
     assertDependencyWeight(GROUPgroup, GROUP2group, 1908);
     assertArtifactHasParent(getJreArtifact(), GROUP2group);
 
     getRootArtifact().addArtifact(getJreArtifact());
-
-    // TODO
-    getRootArtifact().invalidateCaches();
 
     assertArtifactChildrenCount(GROUP2group, 0);
     assertArtifactHasParent(getJreArtifact(), getRootArtifact());
