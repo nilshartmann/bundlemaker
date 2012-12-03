@@ -348,7 +348,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param artifacts
    * @return
    */
-  public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts);
+  public Collection<IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts);
 
   /**
    * <p>
@@ -357,7 +357,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param artifacts
    * @return
    */
-  public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts);
+  public Collection<IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts);
 
   /**
    * <p>
@@ -392,7 +392,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param artifacts
    * @return
    */
-  public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts);
+  public Collection<IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts);
 
   /**
    * <p>
@@ -482,11 +482,4 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    */
   @Deprecated
   boolean containsResources();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   */
-  List<IBundleMakerArtifact> invalidateDependencyCache();
 }

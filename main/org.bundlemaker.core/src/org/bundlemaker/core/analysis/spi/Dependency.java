@@ -23,6 +23,7 @@ public class Dependency implements IDependency {
 
   private DependencyKind          dependencyKind = DependencyKind.USES;
 
+  /** - */
   private Collection<IDependency> dependencies;
 
   /** - */
@@ -119,6 +120,8 @@ public class Dependency implements IDependency {
     sb.append(dependencyKind);
     sb.append(" ");
     sb.append(this.getTo().getQualifiedName());
+    sb.append(": ");
+    sb.append(this.getWeight());
     sb.append(" )");
 
     return sb.toString();

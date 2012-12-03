@@ -34,6 +34,7 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -140,7 +141,7 @@ public class ArtifactCache {
    * @return
    * @throws CoreException
    */
-  public final IRootArtifact transform() throws CoreException {
+  public final IRootArtifact transform(IProgressMonitor progressMonitor) throws CoreException {
 
     // we may have empty groups - so it is necessary to create IGroupArtifact
     // entries explicitly
@@ -149,7 +150,7 @@ public class ArtifactCache {
     }
 
     // transform the modularized system
-    return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]));
+    return transform(_modularizedSystem.getAllModules().toArray(new IModule[0]), progressMonitor);
   }
 
   /**
@@ -308,9 +309,24 @@ public class ArtifactCache {
    * @return
    * @throws Exception
    */
-  private IRootArtifact transform(IModule[] modules) {
+  private IRootArtifact transform(IModule[] modules, IProgressMonitor progressMonitor) {
 
-    // create virtual module for missing types
+    //
+    int count = 0;
+    for (IModule module : modules) {
+      count = count + module.getContainedTypes().size();
+      if (module instanceof IResourceModule) {
+        IResourceModule resourceModule = (IResourceModule) module;
+        count = count + resourceModule.getResources(getConfiguration().getContentType()).size();
+      }
+    }
+
+    //
+    if (progressMonitor != null) {
+      progressMonitor.beginTask("Creating analysis model...", count);
+    }
+
+    // MISSING TYPES: create virtual module for missing types
     if (getConfiguration().isIncludeVirtualModuleForMissingTypes()) {
 
       // add the
@@ -332,6 +348,10 @@ public class ArtifactCache {
       // add all types
       for (IType type : module.getContainedTypes()) {
 
+        if (progressMonitor != null) {
+          progressMonitor.worked(1);
+        }
+
         // filter local or anonymous type names
         if (!type.isLocalOrAnonymousType()) {
 
@@ -348,12 +368,22 @@ public class ArtifactCache {
 
         // iterate over all contained resources
         for (IResource resource : resourceModule.getResources(getConfiguration().getContentType())) {
+
+          if (progressMonitor != null) {
+            progressMonitor.worked(1);
+          }
+
           if (!resource.containsTypes()) {
             // create the artifact
             this.getResourceArtifact(resource);
           }
         }
       }
+    }
+
+    //
+    if (progressMonitor != null) {
+      progressMonitor.done();
     }
 
     // return the root artifact

@@ -82,6 +82,16 @@ public interface IModularizedSystem {
    * <p>
    * </p>
    * 
+   * @param configuration
+   * @param progressMonitor
+   * @return
+   */
+  IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration, IProgressMonitor progressMonitor);
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param listener
    */
   void addModularizedSystemChangedListener(IModularizedSystemChangedListener listener);

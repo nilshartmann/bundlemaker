@@ -106,9 +106,6 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     }
 
     //
-    ((AdapterRoot2IArtifact) _groupAndModuleContainer.getRoot()).fireArtifactModelChanged();
-
-    //
     _groupAndModuleContainer.getRoot().getModularizedSystem().getTransformations().add(transformation);
 
     //

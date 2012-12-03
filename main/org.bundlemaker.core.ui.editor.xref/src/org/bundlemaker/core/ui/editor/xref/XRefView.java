@@ -49,8 +49,11 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
     //
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public void artifactModelModified() {
+  public void analysisModelModified() {
     setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 

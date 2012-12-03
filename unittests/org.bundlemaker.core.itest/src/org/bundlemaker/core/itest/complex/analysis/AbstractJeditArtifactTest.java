@@ -216,7 +216,12 @@ public abstract class AbstractJeditArtifactTest extends AbstractModularizedSyste
    */
   public void assertDependencyWeight(IBundleMakerArtifact from, IBundleMakerArtifact to, int weight) {
     IDependency dependency = from.getDependencyTo(to);
-    assertEquals(weight, dependency.getWeight());
+
+    if (weight == 0) {
+      Assert.assertNull(dependency);
+    } else {
+      assertEquals(weight, dependency.getWeight());
+    }
   }
 
   public void assertArtifactHasParent(IBundleMakerArtifact child, IBundleMakerArtifact parent) {

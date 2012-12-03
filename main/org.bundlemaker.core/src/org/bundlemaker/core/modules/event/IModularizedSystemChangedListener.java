@@ -1,6 +1,5 @@
 package org.bundlemaker.core.modules.event;
 
-
 /**
  * <p>
  * </p>
@@ -70,4 +69,12 @@ public interface IModularizedSystemChangedListener {
    * @param event
    */
   void classificationChanged(ClassificationChangedEvent event);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param isDisabled
+   */
+  void modelModifiedNotificationDisabled(boolean isDisabled);
 }

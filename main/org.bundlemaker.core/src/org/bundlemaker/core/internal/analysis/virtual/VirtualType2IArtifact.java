@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis.virtual;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -153,11 +152,6 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public IResourceModule getContainingResourceModule() {
     return null;
-  }
-
-  @Override
-  public List<IBundleMakerArtifact> invalidateDependencyCache() {
-    return Arrays.asList(new IBundleMakerArtifact[] { this });
   }
 
   /**

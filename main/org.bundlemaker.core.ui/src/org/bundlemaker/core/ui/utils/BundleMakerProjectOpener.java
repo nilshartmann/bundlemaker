@@ -24,7 +24,10 @@ import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.bundlemaker.core.ui.preferences.BundleMakerPreferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 
 /**
@@ -39,7 +42,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
  */
 public class BundleMakerProjectOpener {
 
-  public static void openProject(IBundleMakerProject bundleMakerProject) {
+  public static void openProject(final IBundleMakerProject bundleMakerProject) {
 
     if (bundleMakerProject == null) {
       return;
@@ -67,30 +70,40 @@ public class BundleMakerProjectOpener {
     }
 
     // Select default modularized system in common navigator
+    IWorkbench wb = PlatformUI.getWorkbench();
+    // Shell activeShell = wb.getActiveWorkbenchWindow().getShell();
+
     try {
-      selectDefaultModularizedSystemArtifact(bundleMakerProject);
+
+      selectDefaultModularizedSystemArtifact(bundleMakerProject, null);
+
+      //
+      Events.instance().fireProjectOpened(bundleMakerProject);
+
+      // Re-activate common navigator make selections via context menu work
+      CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+
     } catch (CoreException ex) {
       BundleMakerUiUtils.logError("Error while creating BundleMaker model:" + ex, ex);
     }
-
-    // Notify listeners
-    Events.instance().fireProjectOpened(bundleMakerProject);
-
   }
 
-  protected static void selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
+  private static IBundleMakerArtifact selectDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+      IProgressMonitor monitor)
       throws CoreException {
+
     IProject eclipseProject = bundleMakerProject.getProject();
 
     // get the common navigator
     CommonNavigator commonNavigator = CommonNavigatorUtils
         .findCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
     if (commonNavigator == null) {
-      return;
+      return null;
     }
 
     // get "root" BundleMakerArtifact
-    IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject);
+    IBundleMakerArtifact defaultModularizedSystemArtifact = getDefaultModularizedSystemArtifact(bundleMakerProject,
+        monitor);
 
     // Expand Eclipse Project project in tree (i.e. make Artifacts node visible)
     commonNavigator.getCommonViewer().expandToLevel(eclipseProject, 1);
@@ -102,23 +115,29 @@ public class BundleMakerProjectOpener {
     StructuredSelection newSelection = new StructuredSelection(defaultModularizedSystemArtifact);
     commonNavigator.selectReveal(newSelection);
 
-    // Re-activate common navigator make selections via context menu work
-    CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
-
+    return defaultModularizedSystemArtifact;
   }
 
-  protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject)
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param monitor
+   * @return
+   * @throws CoreException
+   */
+  protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+      IProgressMonitor monitor)
       throws CoreException {
+
     IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
         .getArtifactModelConfigurationProvider();
+
     IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy();
 
     //
-    IBundleMakerArtifact artifact = modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
-        .getArtifactModelConfiguration());
-
-    return artifact;
-
+    return modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
+        .getArtifactModelConfiguration(), monitor);
   }
-
 }

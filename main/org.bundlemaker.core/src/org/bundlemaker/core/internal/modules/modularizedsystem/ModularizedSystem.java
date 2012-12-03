@@ -12,9 +12,12 @@ package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
+import org.bundlemaker.core.analysis.algorithms.AdjacencyList;
 import org.bundlemaker.core.internal.analysis.ModelTransformerCache;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 /**
  * <p>
@@ -45,34 +48,43 @@ public class ModularizedSystem extends AbstractQueryableModularizedSystem {
    */
   @Override
   public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration) {
-
-    IRootArtifact result = (IRootArtifact) _transformerCache.getArtifactModel(this, configuration);
-
-    return result;
+    return (IRootArtifact) _transformerCache.getArtifactModel(this, configuration, null);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  protected void afterApplyTransformations() {
-    super.afterApplyTransformations();
+  public IRootArtifact getAnalysisModel(IAnalysisModelConfiguration configuration, IProgressMonitor progressMonitor) {
 
     //
-    for (IRootArtifact rootArtifact : _transformerCache.getAllArtifactModels()) {
-      ((AdapterRoot2IArtifact) rootArtifact).fireArtifactModelChanged();
+    if (progressMonitor == null) {
+      progressMonitor = new NullProgressMonitor();
+    }
+
+    //
+    try {
+
+      //
+      progressMonitor.beginTask("Creating analysis model...", 201);
+      progressMonitor.subTask("Transforming...");
+      progressMonitor.worked(1);
+
+      //
+      IRootArtifact root = (IRootArtifact) _transformerCache.getArtifactModel(this, configuration,
+          new SubProgressMonitor(progressMonitor, 100));
+
+      // pre initialize
+      progressMonitor.subTask("Initializing...");
+
+      AdjacencyList.computeAdjacencyList(root.getChildren(), new SubProgressMonitor(progressMonitor, 100));
+
+      //
+      return root;
+
+    } finally {
+      progressMonitor.done();
     }
   }
 
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // protected void postApplyTransformations() {
-  //
-  // // validate the resource modules
-  // for (IModifiableResourceModule module : getModifiableResourceModules()) {
-  // ((ResourceModule) module).validate();
-  // }
-  // }
 }

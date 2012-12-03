@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal.analysis;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -116,11 +115,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return _referencingArtifact.getDependencyTo(artifact);
   }
 
-  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
     return _referencingArtifact.getDependenciesTo(artifacts);
   }
 
-  public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
     return _referencingArtifact.getDependenciesTo(artifacts);
   }
 
@@ -136,11 +135,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     return _referencedArtifact.getDependencyFrom(artifact);
   }
 
-  public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
     return _referencedArtifact.getDependenciesFrom(artifacts);
   }
 
-  public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
     return _referencedArtifact.getDependenciesFrom(artifacts);
   }
 
@@ -240,11 +239,6 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
     //
     return true;
-  }
-
-  @Override
-  public List<IBundleMakerArtifact> invalidateDependencyCache() {
-    return Arrays.asList(new IBundleMakerArtifact[] { this });
   }
 
   @Override

@@ -24,7 +24,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class CreateGroupTransformation extends
-    AbstractJSonConfiguredTransformation<CreateGroupTransformation.Configuration> {
+    AbstractConfigurableTransformation<CreateGroupTransformation.Configuration> {
 
   /** - */
   private IGroupArtifact _newGroupArtifact;

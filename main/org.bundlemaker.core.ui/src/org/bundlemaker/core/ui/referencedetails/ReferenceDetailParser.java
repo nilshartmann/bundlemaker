@@ -79,7 +79,7 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
       parser.setResolveBindings(true); // we need bindings later on
       parser.setBindingsRecovery(true);
       parser.setUnitName("/" + classFile.getJavaProject().getProject().getName()
-          + "/de/otto/noa/standard/saf/batch/core/BatchTransaction.java");
+          + "/bla/blubb/Test.java");
 
       org.eclipse.jdt.core.dom.ASTNode node = parser.createAST(null /* IProgressMonitor */);
 

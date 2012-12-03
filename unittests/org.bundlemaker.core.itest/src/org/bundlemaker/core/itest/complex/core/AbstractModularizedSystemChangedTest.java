@@ -92,6 +92,11 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
     public void groupRemoved(GroupChangedEvent event) {
       // TODO Auto-generated method stub
     }
+
+    @Override
+    public void modelModifiedNotificationDisabled(boolean isDisabled) {
+      // TODO Auto-generated method stub
+    }
   }
 
   /**

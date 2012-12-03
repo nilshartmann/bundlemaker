@@ -110,7 +110,7 @@ public abstract class AbstractArtifactSelectionAwareViewPart extends AbstractPar
    * @see org.bundlemaker.core.analysis.IArtifactModelModifiedListener#artifactModelModified()
    */
   @Override
-  public void artifactModelModified() {
+  public void analysisModelModified() {
     // implement in subclasses if needed
   }
 
@@ -148,13 +148,13 @@ public abstract class AbstractArtifactSelectionAwareViewPart extends AbstractPar
 
   private void unregisterArtifactModelChangedListener() {
     if (_currentArtifactSelection != null && _currentArtifactSelection.hasSelectedArtifacts()) {
-      _currentArtifactSelection.getRootArtifact().removeArtifactModelChangedListener(this);
+      _currentArtifactSelection.getRootArtifact().removeAnalysisModelModifiedListener(this);
     }
   }
 
   private void registerArtifactModelChangedListener() {
     if (_currentArtifactSelection != null && _currentArtifactSelection.hasSelectedArtifacts()) {
-      _currentArtifactSelection.getRootArtifact().addArtifactModelChangedListener(this);
+      _currentArtifactSelection.getRootArtifact().addAnalysisModelModifiedListener(this);
     }
   }
 

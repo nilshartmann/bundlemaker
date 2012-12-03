@@ -79,7 +79,7 @@ public class ReferencedArtifactTrait implements IReferencedArtifact {
    * {@inheritDoc}
    */
   @Override
-  public final Collection<? extends IDependency> getDependenciesFrom(
+  public final Collection<IDependency> getDependenciesFrom(
       Collection<? extends IBundleMakerArtifact> artifacts) {
 
     // initialize
@@ -106,7 +106,7 @@ public class ReferencedArtifactTrait implements IReferencedArtifact {
    * {@inheritDoc}
    */
   @Override
-  public final Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+  public final Collection<IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
 
     // initialize // initialize
     _initialize();

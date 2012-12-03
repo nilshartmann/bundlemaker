@@ -44,9 +44,6 @@ public class MoveArtifactsHandler extends AbstractArtifactBasedHandler {
 
       targetArtifact.addArtifacts(selectedArtifacts);
 
-      //
-      targetArtifact.getRoot().invalidateDependencyCache();
-
       CommonNavigatorUtils.update("org.eclipse.ui.navigator.ProjectExplorer");
       TreePath[] expanedTreePath = commonNavigator.getCommonViewer().getExpandedTreePaths();
       commonNavigator.getCommonViewer().refresh();

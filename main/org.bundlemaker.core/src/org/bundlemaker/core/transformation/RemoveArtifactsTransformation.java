@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class RemoveArtifactsTransformation extends
-    AbstractJSonConfiguredTransformation<RemoveArtifactsTransformation.Configuration> {
+    AbstractConfigurableTransformation<RemoveArtifactsTransformation.Configuration> {
 
   /**
    * <p>

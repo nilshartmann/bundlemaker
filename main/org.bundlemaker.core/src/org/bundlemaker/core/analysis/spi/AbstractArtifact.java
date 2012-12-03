@@ -3,14 +3,17 @@ package org.bundlemaker.core.analysis.spi;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
@@ -25,16 +28,19 @@ import org.eclipse.core.runtime.Assert;
 public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
   /** the name of this artifact */
-  private String               _name;
+  private String                    _name;
 
   /** the direct parent */
-  private IBundleMakerArtifact _parent;
+  private IBundleMakerArtifact      _parent;
 
   /** the root artifact */
-  private IRootArtifact        _root;
+  private AdapterRoot2IArtifact     _root;
 
   /** the properties */
-  private Map<Object, Object>  _properties;
+  private Map<Object, Object>       _properties;
+
+  /** CACHE */
+  private Set<IBundleMakerArtifact> _cachedParents;
 
   /**
    * <p>
@@ -134,9 +140,6 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     return _parent.getParent(type);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public boolean isAncestorOf(IBundleMakerArtifact artifact) {
 
@@ -146,16 +149,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     }
 
     //
-    IBundleMakerArtifact parent = artifact.getParent();
-    while (parent != null) {
-      if (this.equals(parent)) {
-        return true;
-      }
-      parent = parent.getParent();
-    }
-
-    //
-    return false;
+    return ((AbstractArtifact) artifact).getCachedParents().contains(this);
   }
 
   /**
@@ -166,7 +160,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
     //
     if (_root == null) {
-      _root = (IRootArtifact) getParent(IRootArtifact.class);
+      _root = (AdapterRoot2IArtifact) getParent(IRootArtifact.class);
     }
 
     //
@@ -291,12 +285,12 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
     return Collections.emptyList();
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
     return Collections.emptyList();
   }
 
@@ -311,12 +305,12 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
+  public Collection<IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts) {
     return Collections.emptyList();
   }
 
   @Override
-  public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+  public Collection<IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
     return Collections.emptyList();
   }
 
@@ -328,6 +322,15 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   @Override
   public <T extends IBundleMakerArtifact> Collection<T> getChildren(Class<T> clazz) {
     return Collections.emptySet();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  public void invalidateCaches() {
+    _cachedParents = null;
   }
 
   /**
@@ -351,6 +354,10 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
     // compare the qualified name
     return this.getQualifiedName().compareTo(o.getQualifiedName());
+  }
+
+  public void initializeCaches() {
+    getCachedParents();
   }
 
   /**
@@ -395,5 +402,30 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
     // return the result
     return _properties;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private Set<IBundleMakerArtifact> getCachedParents() {
+
+    //
+    if (_cachedParents == null) {
+
+      //
+      _cachedParents = new HashSet<IBundleMakerArtifact>();
+
+      //
+      if (hasParent()) {
+        _cachedParents.add(getParent());
+        _cachedParents.addAll(((AbstractArtifact) getParent()).getCachedParents());
+      }
+    }
+
+    //
+    return _cachedParents;
   }
 }

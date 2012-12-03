@@ -21,12 +21,18 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
   @Test
   public void addModuleArtifactToGroupArtifact() throws Exception {
 
+    // test dependencies: main module is in group 2
+    assertDeps_mainModuleInGroup2();
+
     // 'move' model to group 1
     _binModel.getGroup1Artifact().addArtifact(_binModel.getMainModuleArtifact());
     Assert.assertEquals(new Path("group1"), _binModel.getMainModuleArtifact().getAssociatedModule()
         .getClassification());
     assertGroupCount(_binModel, 2);
 
+    // test dependencies: main module is in group 1
+    assertDeps_mainModuleInGroup1();
+    
     // assert module parent in src model
     Assert.assertEquals(_srcModel.getGroup1Artifact(), _srcModel.getMainModuleArtifact().getParent());
     assertGroupCount(_srcModel, 2);
@@ -41,6 +47,9 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
     Assert.assertEquals(_srcModel.getRootArtifact(), _srcModel.getMainModuleArtifact().getParent());
     assertGroupCount(_srcModel, 2);
 
+    // test dependencies: main module is in root
+    assertDeps_mainModuleInRoot();
+
     // 'move' model to group 1
     _binModel.getGroup1Artifact().addArtifact(_binModel.getMainModuleArtifact());
     Assert.assertEquals(new Path("group1"), _binModel.getMainModuleArtifact().getAssociatedModule()
@@ -51,6 +60,9 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
     Assert.assertEquals(_srcModel.getGroup1Artifact(), _srcModel.getMainModuleArtifact().getParent());
     assertGroupCount(_srcModel, 2);
 
+    // test dependencies: main module is in group 1
+    assertDeps_mainModuleInGroup1();
+
     // 'move' model to group 2
     _binModel.getGroup2Artifact().addArtifact(_binModel.getMainModuleArtifact());
     Assert.assertEquals(new Path("group1/group2"), _binModel.getMainModuleArtifact().getAssociatedModule()
@@ -60,6 +72,9 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
     // assert module parent in src model
     Assert.assertEquals(_srcModel.getGroup2Artifact(), _srcModel.getMainModuleArtifact().getParent());
     assertGroupCount(_srcModel, 2);
+
+    // test dependencies: main module is in group 2
+    assertDeps_mainModuleInGroup2();
   }
 
   /**
@@ -146,9 +161,14 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
   @Test
   public void changeResourceModuleClassification() throws Exception {
 
+    assertDeps_mainModuleInGroup2();
+
     // 'move' model to group 1
-    ((IModifiableModule)_binModel.getMainModuleArtifact().getAssociatedModule())
+    ((IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule())
         .setClassification(new Path("group1"));
+
+    // test dependencies: main module is in group 1
+    assertDeps_mainModuleInGroup1();
 
     // assert module parent in src model
     Assert.assertEquals(_srcModel.getGroup1Artifact(), _srcModel.getMainModuleArtifact().getParent());
@@ -157,8 +177,11 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
     assertGroupCount(_binModel, 2);
 
     // 'move' model to root
-    ((IModifiableModule)_binModel.getMainModuleArtifact().getAssociatedModule())
+    ((IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule())
         .setClassification(null);
+
+    // test dependencies: main module is in root
+    assertDeps_mainModuleInRoot();
 
     // assert module parent in src model
     Assert.assertEquals(_srcModel.getRootArtifact(), _srcModel.getMainModuleArtifact().getParent());
@@ -167,8 +190,11 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
     assertGroupCount(_binModel, 2);
 
     // 'move' model to group 1
-    ((IModifiableModule)_binModel.getMainModuleArtifact().getAssociatedModule())
+    ((IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule())
         .setClassification(new Path("group1"));
+
+    // test dependencies: main module is in group 1
+    assertDeps_mainModuleInGroup1();
 
     // assert module parent in src model
     Assert.assertEquals(_srcModel.getGroup1Artifact(), _srcModel.getMainModuleArtifact().getParent());
@@ -176,14 +202,44 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
     Assert.assertEquals(_binModel.getGroup1Artifact(), _binModel.getMainModuleArtifact().getParent());
     assertGroupCount(_binModel, 2);
 
-    // 'move' model to group 1
-    ((IModifiableModule)_binModel.getMainModuleArtifact().getAssociatedModule())
+    // 'move' model to group 2
+    ((IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule())
         .setClassification(new Path("group1/group2"));
+
+    // test dependencies: main module is in group 2
+    assertDeps_mainModuleInGroup2();
 
     // assert module parent in src model
     Assert.assertEquals(_srcModel.getGroup2Artifact(), _srcModel.getMainModuleArtifact().getParent());
     assertGroupCount(_srcModel, 2);
     Assert.assertEquals(_binModel.getGroup2Artifact(), _binModel.getMainModuleArtifact().getParent());
     assertGroupCount(_binModel, 2);
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void assertDeps_mainModuleInRoot() {
+    assert_Main_Jre_G1_G2_Dependencies(new int[][] { { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } },
+        new int[][] { { 1, 1, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } });
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void assertDeps_mainModuleInGroup1() {
+    assert_Main_Jre_G1_G2_Dependencies(new int[][] { { 1, 1, 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 0 }, { 0, 0, 0, 0 } },
+        new int[][] { { 1, 1, 1, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 0 }, { 0, 0, 0, 0 } });
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  private void assertDeps_mainModuleInGroup2() {
+    assert_Main_Jre_G1_G2_Dependencies(new int[][] { { 1, 1, 1, 1 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 }, { 1, 1, 1, 1 } },
+        new int[][] { { 1, 1, 1, 1 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 }, { 1, 1, 1, 1 } });
   }
 }

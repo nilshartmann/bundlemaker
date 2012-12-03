@@ -21,6 +21,7 @@ import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -61,7 +62,7 @@ public class ModelTransformerCache {
    * @return the {@link IDependencyModel}
    */
   public IRootArtifact getArtifactModel(IModifiableModularizedSystem modifiableModularizedSystem,
-      IAnalysisModelConfiguration configuration) {
+      IAnalysisModelConfiguration configuration, IProgressMonitor progressMonitor) {
 
     // assert not null
     Assert.isNotNull(modifiableModularizedSystem);
@@ -83,7 +84,7 @@ public class ModelTransformerCache {
       ArtifactCache artifactCache = new ArtifactCache(modifiableModularizedSystem, configuration);
 
       // create the dependency model
-      IRootArtifact artifactModel = artifactCache.transform();
+      IRootArtifact artifactModel = artifactCache.transform(progressMonitor);
 
       _cache.put(cacheKey, artifactModel);
       return artifactModel;

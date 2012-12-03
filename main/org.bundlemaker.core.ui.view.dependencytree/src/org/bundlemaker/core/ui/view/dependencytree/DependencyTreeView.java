@@ -63,10 +63,12 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
     initDependencies(selection);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public void artifactModelModified() {
-
-    //
+  public void analysisModelModified() {
+    // TODO Auto-generated method stub
   }
 
   /**

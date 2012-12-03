@@ -17,7 +17,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class CreateModuleTransformation extends
-    AbstractJSonConfiguredTransformation<CreateModuleTransformation.Configuration> {
+    AbstractConfigurableTransformation<CreateModuleTransformation.Configuration> {
 
   /**
    * <p>

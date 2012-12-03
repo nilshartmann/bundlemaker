@@ -30,6 +30,7 @@ import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -117,7 +118,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
                 .getArtifactModelConfiguration());
 
             // // TODO!
-            artifact.addArtifactModelChangedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
+            artifact.addAnalysisModelModifiedListener(ARTIFACT_TREE_MODEL_MODIFIED_LISTENER);
 
             result.add(artifact);
           }
@@ -233,6 +234,35 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       _rootArtifact = rootArtifact;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean areCachesInitialized() {
+      return _rootArtifact.areCachesInitialized();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void initializeCaches(IProgressMonitor progressMonitor) {
+      _rootArtifact.initializeCaches(progressMonitor);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void disableModelModifiedNotification(boolean isEnabled) {
+      _rootArtifact.disableModelModifiedNotification(isEnabled);
+    }
+
+    @Override
+    public boolean isModelModifiedNotificationDisabled() {
+      return _rootArtifact.isModelModifiedNotificationDisabled();
+    }
+
     @Override
     public List<IReferencingArtifact> getContainedReferencingArtifacts() {
       return _rootArtifact.getContainedReferencingArtifacts();
@@ -302,12 +332,12 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public Collection<? extends IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
+    public Collection<IDependency> getDependenciesFrom(Collection<? extends IBundleMakerArtifact> artifacts) {
       return _rootArtifact.getDependenciesFrom(artifacts);
     }
 
     @Override
-    public Collection<? extends IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
+    public Collection<IDependency> getDependenciesFrom(IBundleMakerArtifact... artifacts) {
       return _rootArtifact.getDependenciesFrom(artifacts);
     }
 
@@ -322,7 +352,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public Collection<? extends IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
+    public Collection<IDependency> getDependenciesTo(IBundleMakerArtifact... artifacts) {
       return _rootArtifact.getDependenciesTo(artifacts);
     }
 
@@ -363,13 +393,13 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public void addArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
-      _rootArtifact.addArtifactModelChangedListener(listener);
+    public void addAnalysisModelModifiedListener(IAnalysisModelModifiedListener listener) {
+      _rootArtifact.addAnalysisModelModifiedListener(listener);
     }
 
     @Override
-    public void removeArtifactModelChangedListener(IAnalysisModelModifiedListener listener) {
-      _rootArtifact.removeArtifactModelChangedListener(listener);
+    public void removeAnalysisModelModifiedListener(IAnalysisModelModifiedListener listener) {
+      _rootArtifact.removeAnalysisModelModifiedListener(listener);
     }
 
     @Override
@@ -516,16 +546,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     public boolean containsResources() {
       return _rootArtifact.containsResources();
     }
-
-    @Override
-    public List<IBundleMakerArtifact> invalidateDependencyCache() {
-      return _rootArtifact.invalidateDependencyCache();
-    }
   }
 
   static class RefreshArtifactTreeModelModifiedListener implements IAnalysisModelModifiedListener {
     @Override
-    public void artifactModelModified() {
+    public void analysisModelModified() {
       //
       CommonNavigatorUtils.update(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
     }
