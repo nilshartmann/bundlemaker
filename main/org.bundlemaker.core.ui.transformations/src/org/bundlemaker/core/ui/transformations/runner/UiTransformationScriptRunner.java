@@ -32,7 +32,7 @@ public class UiTransformationScriptRunner extends TransformationScriptRunner imp
   private final Shell _shell;
 
   public UiTransformationScriptRunner(Shell shell, IBundleMakerArtifact artifact, IType transformationScriptType) {
-    super(artifact, transformationScriptType, new TransformationScriptConsoleLogger());
+    super(artifact.getModularizedSystem(), transformationScriptType);
 
     this._shell = shell;
   }

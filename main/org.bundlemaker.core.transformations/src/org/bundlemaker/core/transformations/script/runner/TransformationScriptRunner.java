@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformations.internal.Activator;
 import org.bundlemaker.core.transformations.script.ITransformationScript;
 import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
@@ -38,21 +38,17 @@ import org.eclipse.jdt.launching.JavaRuntime;
  */
 public class TransformationScriptRunner {
 
-  private final IType                       _transformationScriptType;
+  private final IType              _transformationScriptType;
 
-  private final IBundleMakerArtifact        _artifact;
-
-  private final ITransformationScriptLogger _transformationScriptLogger;
+  private final IModularizedSystem _modularizedSystem;
 
   /**
    * @param shell
    * @param transformationScriptType
    */
-  public TransformationScriptRunner(IBundleMakerArtifact artifact, IType transformationScriptType,
-      ITransformationScriptLogger logger) {
+  public TransformationScriptRunner(IModularizedSystem modularizedSystem, IType transformationScriptType) {
     _transformationScriptType = transformationScriptType;
-    _artifact = artifact;
-    _transformationScriptLogger = logger;
+    _modularizedSystem = modularizedSystem;
   }
 
   // public void runScript() {
@@ -114,13 +110,12 @@ public class TransformationScriptRunner {
     IAnalysisModelConfiguration artifactModelConfiguration = getAnalysisModelConfiguration(transformationScript);
 
     // Get an artifact model according to the configuration specified in the script
-    IRootArtifact rootArtifact = _artifact.getModularizedSystem().getAnalysisModel(artifactModelConfiguration);
+    IRootArtifact rootArtifact = _modularizedSystem.getAnalysisModel(artifactModelConfiguration);
 
     // // Create a Logger that logs to the BundleMaker console
-    // final TransformationScriptLogger logger = new TransformationScriptLogger();
+    final ITransformationScriptLogger logger = getLogger();
 
-    TransformationScriptContext context = new TransformationScriptContext(progressMonitor,
-        _transformationScriptLogger, rootArtifact);
+    TransformationScriptContext context = new TransformationScriptContext(progressMonitor, logger, rootArtifact);
 
     // Run the script
     try {
@@ -203,6 +198,6 @@ public class TransformationScriptRunner {
   }
 
   protected ITransformationScriptLogger getLogger() {
-    return this._transformationScriptLogger;
+    return Activator.getDefault().getTransformationScriptLogger();
   }
 }

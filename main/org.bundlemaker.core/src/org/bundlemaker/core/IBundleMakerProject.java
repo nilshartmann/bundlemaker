@@ -205,7 +205,8 @@ public interface IBundleMakerProject {
    * 
    * @precondition BundleMakerProjectState.OPENED
    */
-  IModularizedSystem createModularizedSystemWorkingCopy(String name) throws CoreException;
+  IModularizedSystem createModularizedSystemWorkingCopy(IProgressMonitor progressMonitor, String name)
+      throws CoreException;
 
   /**
    * <p>

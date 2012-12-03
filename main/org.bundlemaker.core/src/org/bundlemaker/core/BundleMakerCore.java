@@ -139,6 +139,10 @@ public final class BundleMakerCore {
     addNature(project, JavaCore.NATURE_ID);
   }
 
+  public static boolean isJavaProject(IProject project) throws CoreException {
+    return project.hasNature(JavaCore.NATURE_ID);
+  }
+
   public static void addNature(IProject project, String nature) throws CoreException {
     if (!project.hasNature(nature)) {
 
