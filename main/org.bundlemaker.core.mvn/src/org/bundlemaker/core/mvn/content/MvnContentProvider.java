@@ -167,7 +167,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     for (final MvnArtifactType artifactIdentifier : _mvnContent.getArtifacts()) {
 
       // create the aether artifact
-      Artifact artifact = new DefaultArtifact(artifactIdentifier.getGroupId(),
+      final Artifact artifact = new DefaultArtifact(artifactIdentifier.getGroupId(),
           artifactIdentifier.getArtifactId(), "jar",
           artifactIdentifier.getVersion());
 
@@ -194,7 +194,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
         collectResult.getRoot().accept(new DependencyVisitorAdapter() {
           @Override
           public boolean visitEnter(DependencyNode node) {
-            return handleDependencyNode(node, useRemoteRepository, alreadyHandled);
+            return handleDependencyNode(node, useRemoteRepository, alreadyHandled,
+                artifact.equals(node.getDependency().getArtifact()));
           }
         });
 
@@ -239,7 +240,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * @return
    */
   private boolean handleDependencyNode(DependencyNode node, boolean useRemoteRepository,
-      List<Artifact> alreadyHandled) {
+      List<Artifact> alreadyHandled, boolean downloadSources) {
 
     //
     if (alreadyHandled.contains(node.getDependency().getArtifact())) {
@@ -275,8 +276,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       Artifact currentMavenArtifact = artifactResult.getArtifact();
 
       // TODO
-      if (currentMavenArtifact
-          .getGroupId().startsWith("de.o")) {
+      if (downloadSources) {
 
         Artifact sourceArtifact = new DefaultArtifact(currentMavenArtifact.getGroupId(),
             currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(),

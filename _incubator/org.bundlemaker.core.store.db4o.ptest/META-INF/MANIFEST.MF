@@ -2,13 +2,13 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: DBTest
 Bundle-SymbolicName: org.bundlemaker.core.store.db4o.ptest
-Bundle-Version: 0.7.0.qualifier
+Bundle-Version: 0.8.0.qualifier
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.framework;version="1.3.0",
  org.osgi.util.tracker;version="1.4.0"
 Require-Bundle: org.junit;bundle-version="4.8.1",
  com.db4o.osgi;bundle-version="7.4.155",
- org.bundlemaker.core;bundle-version="0.7.0",
+ org.bundlemaker.core;bundle-version="0.8.0",
  org.eclipse.core.runtime;bundle-version="3.6.0"
-Fragment-Host: org.bundlemaker.core;bundle-version="0.7.0"
+Fragment-Host: org.bundlemaker.core;bundle-version="0.8.0"
