@@ -53,6 +53,21 @@ public class FileBasedProjectContentInfoServiceImpl implements FileBasedProjectC
     //
     for (FileBasedProjectContentInfo<T> i : allInfos) {
 
+      if (info.isSource()) {
+        // in case info IS SOURCE, i must not be source
+        if (i.isSource() == false) {
+          if (info.getBinaryName().equals(i.getName()) && info.getVersion().equals(i.getVersion())) {
+            return i;
+          }
+        }
+      } else {
+        if (i.isSource()) {
+          if (info.getName().equals(i.getBinaryName()) && info.getVersion().equals(i.getVersion())) {
+            return i;
+          }
+        }
+      }
+
       //
       if (i.getName().equals(info.getName()) && i.getVersion().equals(info.getVersion())
           && i.isSource() != info.isSource()) {
@@ -75,7 +90,7 @@ public class FileBasedProjectContentInfoServiceImpl implements FileBasedProjectC
       version = dirName.substring(x + 1);
     }
 
-    return new FileBasedProjectContentInfo<T>(name, version, false);
+    return new FileBasedProjectContentInfo<T>(name, name, version, false);
   }
 
   /**
@@ -95,10 +110,12 @@ public class FileBasedProjectContentInfoServiceImpl implements FileBasedProjectC
     if (resolver.resolve(file)) {
 
       // return the result
-      return new FileBasedProjectContentInfo<T>(resolver.getName(), resolver.getVersion(), resolver.isSource());
+      return new FileBasedProjectContentInfo<T>(resolver.getName(),
+          resolver.getBinaryName(),
+          resolver.getVersion(), resolver.isSource());
     }
 
     // return the default result
-    return new FileBasedProjectContentInfo<T>(file.getName(), "0.0.0", false);
+    return new FileBasedProjectContentInfo<T>(file.getName(), file.getName(), "0.0.0", false);
   }
 }

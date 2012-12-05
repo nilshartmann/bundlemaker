@@ -7,7 +7,11 @@
             <command id="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
                   name="Run Transformation Script"/>
       </extension>
-
+      <extension point="org.eclipse.ui.commands">
+            <command id="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
+                  name="Set as Initial Transformation"/>
+      </extension>
+      
       <extension point="org.eclipse.ui.handlers">
             <handler class="org.bundlemaker.core.ui.transformations.handlers.RunTransformationScriptHandler"
                   commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand">
@@ -23,6 +27,43 @@
                   </enabledWhen>
             </handler>
       </extension>
+      
+      
+      <extension point="org.eclipse.ui.handlers">
+            <handler class="org.bundlemaker.core.ui.transformations.handlers.SetInitialTransformationsHandler"
+                  commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand">
+                  <activeWhen>
+                  	<with variable="selection">
+                  	<iterate ifEmpty="false" operator="and">
+		                  <instanceof value="org.eclipse.jdt.core.IType" />
+		                </iterate>
+		                </with>
+		              </activeWhen>
+                  <enabledWhen>
+                  	<with variable="selection">
+                  	<iterate ifEmpty="false" operator="and">
+		                  <instanceof value="org.eclipse.jdt.core.IType" />
+		                </iterate>
+		               	</with>
+		              </enabledWhen>
+		              
+		              
+                  
+                  
+                  <!--
+                  <activeWhen>
+                        <reference
+                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+                        > </reference>
+                  </activeWhen>
+                  <enabledWhen>
+                        <reference
+                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+                        > </reference>
+                  </enabledWhen>
+                  -->
+            </handler>
+      </extension>
 
       <!--  Submenu -->
       <extension point="org.eclipse.ui.menus">
@@ -30,6 +71,11 @@
                   locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
                   <command
                         commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
+                        style="push">
+                        <visibleWhen checkEnabled="true"/>
+                  </command>
+                 <command
+                        commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
                         style="push">
                         <visibleWhen checkEnabled="true"/>
                   </command>

@@ -43,10 +43,15 @@ public class DummyEditor extends AbstractArtifactSelectionAwareEditorPart {
   public void setFocus() {
     //
   }
+  
+  
 
+  /* (non-Javadoc)
+   * @see org.bundlemaker.core.analysis.IAnalysisModelModifiedListener#analysisModelModified()
+   */
   @Override
-  public void artifactModelModified() {
-
+  public void analysisModelModified() {
+    
   }
 
   @Override

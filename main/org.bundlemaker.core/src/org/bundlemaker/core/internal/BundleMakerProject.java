@@ -45,6 +45,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 
 /**
@@ -188,7 +189,7 @@ public class BundleMakerProject implements IBundleMakerProject {
     // create default working copy
     IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
         .getName())
-        : createModularizedSystemWorkingCopy(getProject().getName());
+        : createModularizedSystemWorkingCopy(progressMonitor, getProject().getName());
 
     // release the store
     factory.releasePersistentDependencyStore(this);
@@ -283,7 +284,8 @@ public class BundleMakerProject implements IBundleMakerProject {
    * @throws CoreException
    */
   @Override
-  public IModularizedSystem createModularizedSystemWorkingCopy(String name) throws CoreException {
+  public IModularizedSystem createModularizedSystemWorkingCopy(IProgressMonitor progressMonitor, String name)
+      throws CoreException {
 
     // assert
     Assert.isNotNull(name);
@@ -310,7 +312,17 @@ public class BundleMakerProject implements IBundleMakerProject {
     // invoke hook if available
     IBundleMakerProjectHook projectHook = Activator.getDefault().getBundleMakerProjectHook();
     if (projectHook != null) {
-      projectHook.modularizedSystemCreated(modularizedSystem);
+      try {
+        projectHook.modularizedSystemCreated(
+            new NullProgressMonitor(), // TODO
+            modularizedSystem);
+      } catch (CoreException coreException) {
+        throw coreException;
+      } catch (Exception ex) {
+        // TODO: log exception instead of re-throw?
+        throw new CoreException(new Status(IStatus.ERROR, Activator.PLUGIN_ID,
+            "BundleMaker project hook failed: " + ex, ex));
+      }
     }
 
     //

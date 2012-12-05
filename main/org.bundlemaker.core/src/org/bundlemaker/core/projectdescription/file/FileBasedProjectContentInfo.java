@@ -23,6 +23,8 @@ public class FileBasedProjectContentInfo<T> {
   /** - */
   private String  _name;
 
+  private String  _binaryName;
+
   /** - */
   private String  _version;
 
@@ -40,11 +42,14 @@ public class FileBasedProjectContentInfo<T> {
    * @param name
    * @param version
    */
-  public FileBasedProjectContentInfo(String name, String version, boolean isSource) {
+  public FileBasedProjectContentInfo(String name,
+      String binaryName,
+      String version, boolean isSource) {
     Assert.isNotNull(name);
     Assert.isNotNull(version);
 
     _name = name;
+    _binaryName = binaryName;
     _version = version;
     _isSource = isSource;
   }
@@ -97,6 +102,13 @@ public class FileBasedProjectContentInfo<T> {
    */
   public void setUserObject(T userObject) {
     _userObject = userObject;
+  }
+
+  /**
+   * @return the binaryName
+   */
+  public String getBinaryName() {
+    return _binaryName;
   }
 
   @Override

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class DefaultTransformationScriptContext implements ITransformationScriptContext {
+public class TransformationScriptContext implements ITransformationScriptContext {
 
   private final IProgressMonitor            _progressMonitor;
 
@@ -27,7 +27,7 @@ public class DefaultTransformationScriptContext implements ITransformationScript
 
   private final IRootArtifact               _rootArtifact;
 
-  DefaultTransformationScriptContext(IProgressMonitor progressMonitor, ITransformationScriptLogger logger,
+  TransformationScriptContext(IProgressMonitor progressMonitor, ITransformationScriptLogger logger,
       IRootArtifact rootArtifact) {
     this._progressMonitor = progressMonitor;
     this._logger = logger;

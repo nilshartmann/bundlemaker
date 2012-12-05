@@ -20,23 +20,30 @@ import org.osgi.framework.Constants;
  */
 public class DefaultFileBasedContentInfoResolver implements IFileBasedProjectContentInfoResolver {
 
-  /** - */
-  private String   _name;
+  /**
+   * The pattern to identify source module names and extract it's associated binary names if possible
+   */
+  final static Pattern _pattern = Pattern.compile("(.*)[\\._-](src|source|sources)[-_]?.*");
 
   /** - */
-  private String   _version;
+  private String       _name;
 
   /** - */
-  private boolean  _isSource;
+  private String       _version;
 
   /** - */
-  private JarFile  _jarFile;
+  private boolean      _isSource;
 
   /** - */
-  private Manifest _manifest;
+  private JarFile      _jarFile;
 
   /** - */
-  private File     _file;
+  private Manifest     _manifest;
+
+  /** - */
+  private File         _file;
+
+  private String       _binaryName;
 
   /**
    * {@inheritDoc}
@@ -58,6 +65,8 @@ public class DefaultFileBasedContentInfoResolver implements IFileBasedProjectCon
         return false;
       }
 
+      _binaryName = extractAssociatedBinaryName(_name);
+
       _version = extractVersion();
       if (_version == null) {
         return false;
@@ -77,11 +86,30 @@ public class DefaultFileBasedContentInfoResolver implements IFileBasedProjectCon
   }
 
   /**
+   * @param name
+   * @return
+   */
+  public static String extractAssociatedBinaryName(String name) {
+    Matcher matcher = _pattern.matcher(name);
+
+    if (!matcher.matches() || matcher.groupCount() != 2) {
+      // cannot determine...
+      return name;
+    }
+
+    return matcher.group(1);
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
   public String getName() {
     return _name;
+  }
+
+  public String getBinaryName() {
+    return _binaryName;
   }
 
   /**
@@ -101,15 +129,25 @@ public class DefaultFileBasedContentInfoResolver implements IFileBasedProjectCon
   }
 
   /**
+   * Returns true if the given value matches the source name pattern
+   * 
+   * @param value
+   * @return
+   */
+  public static boolean isSourcePattern(String value) {
+    Matcher matcher = _pattern.matcher(value);
+    boolean result = matcher.matches();
+    return result;
+  }
+
+  /**
    * <p>
    * </p>
    * 
    * @return
    */
   private boolean extractIsSource() {
-    Pattern pattern = Pattern.compile(".*[\\.-](src|source)[\\.-].*");
-    Matcher matcher = pattern.matcher(_file.getName());
-    return matcher.matches();
+    return isSourcePattern(_file.getName());
   }
 
   /**
