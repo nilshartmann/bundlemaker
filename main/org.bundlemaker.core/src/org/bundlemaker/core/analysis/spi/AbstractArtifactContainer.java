@@ -225,25 +225,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   public Collection<IDependency> getDependenciesFrom() {
 
     //
-    if (_allCoreDependenciesFrom == null) {
-
-      //
-      _allReferencedArtifacts = new ArrayList<IReferencedArtifact>();
-      _allCoreDependenciesFrom = new ArrayList<IDependency>();
-
-      // add core dependencies
-      if (this instanceof IReferencedArtifact) {
-        _allReferencedArtifacts.add((IReferencedArtifact) this);
-        _allCoreDependenciesFrom.addAll(((IReferencedArtifact) this).getDependenciesFrom());
-      }
-
-      //
-      for (IBundleMakerArtifact child : _children) {
-
-        // call recursive...
-        _allCoreDependenciesFrom.addAll(child.getDependenciesFrom());
-      }
-    }
+    initializeCaches();
 
     // return the core dependencies
     return _allCoreDependenciesFrom;
@@ -259,7 +241,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     if (!aggregatedDependenciesFrom().containsKey(artifact)) {
 
       // create new dependency
-      Dependency dependency = new Dependency(this, artifact, false);
+      Dependency dependency = new Dependency(artifact, this, false);
       for (IDependency reference : getDependenciesFrom()) {
         if (artifact.contains(reference.getFrom())) {
           ((Dependency) dependency).addDependency(reference);
@@ -882,16 +864,24 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     super.initializeCaches();
 
     //
-    if (_allCoreDependenciesTo == null || _allReferencingArtifacts == null) {
+    if (_allCoreDependenciesTo == null || _allReferencingArtifacts == null ||
+        _allCoreDependenciesFrom == null || _allReferencedArtifacts == null) {
 
       //
       _allReferencingArtifacts = new ArrayList<IReferencingArtifact>();
+      _allReferencedArtifacts = new ArrayList<IReferencedArtifact>();
       _allCoreDependenciesTo = new ArrayList<IDependency>();
+      _allCoreDependenciesFrom = new ArrayList<IDependency>();
 
       // add core dependencies
       if (this instanceof IReferencingArtifact) {
         _allReferencingArtifacts.add(((IReferencingArtifact) this));
         _allCoreDependenciesTo.addAll(((IReferencingArtifact) this).getDependenciesTo());
+      }
+      // add core dependencies
+      if (this instanceof IReferencedArtifact) {
+        _allReferencedArtifacts.add((IReferencedArtifact) this);
+        _allCoreDependenciesFrom.addAll(((IReferencedArtifact) this).getDependenciesFrom());
       }
 
       //
@@ -899,7 +889,9 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
         // call recursive...
         _allCoreDependenciesTo.addAll(child.getDependenciesTo());
+        _allCoreDependenciesFrom.addAll(child.getDependenciesFrom());
         _allReferencingArtifacts.addAll(child.getContainedReferencingArtifacts());
+        _allReferencedArtifacts.addAll(child.getContainedReferencedArtifacts());
       }
     }
   }

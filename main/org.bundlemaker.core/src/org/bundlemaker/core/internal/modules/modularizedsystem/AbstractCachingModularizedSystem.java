@@ -11,8 +11,10 @@
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -153,6 +155,16 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     //
     return _typeNameToTypeCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Map<String, Set<IType>> getReferencedTypes() {
+    return Collections.unmodifiableMap(_typeNameToReferringCache);
   }
 
   /**

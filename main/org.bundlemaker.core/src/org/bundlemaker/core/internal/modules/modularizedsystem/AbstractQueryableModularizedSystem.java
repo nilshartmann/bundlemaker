@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ITypeSelector;
 import org.bundlemaker.core.modules.query.ReferenceQueryFilters;
@@ -70,7 +69,7 @@ public abstract class AbstractQueryableModularizedSystem extends AbstractCaching
    * {@inheritDoc}
    */
   @Override
-  public IType getType(String fullyQualifiedName) throws AmbiguousElementException {
+  public IType getType(String fullyQualifiedName) {
     return getType(fullyQualifiedName, null);
   }
 

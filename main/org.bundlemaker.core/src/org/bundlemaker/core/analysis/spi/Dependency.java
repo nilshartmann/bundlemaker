@@ -166,51 +166,37 @@ public class Dependency implements IDependency {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((_from == null) ? 0 : _from.hashCode());
+    result = prime * result + (_isCoreDependency ? 1231 : 1237);
     result = prime * result + ((_to == null) ? 0 : _to.hashCode());
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) {
+    if (this == obj)
       return true;
-    }
-    if (obj == null) {
+    if (obj == null)
       return false;
-    }
-    if (getClass() != obj.getClass()) {
+    if (getClass() != obj.getClass())
       return false;
-    }
     Dependency other = (Dependency) obj;
     if (_from == null) {
-      if (other._from != null) {
+      if (other._from != null)
         return false;
-      }
-    } else if (!_from.equals(other._from)) {
+    } else if (!_from.equals(other._from))
       return false;
-    }
+    if (_isCoreDependency != other._isCoreDependency)
+      return false;
     if (_to == null) {
-      if (other._to != null) {
+      if (other._to != null)
         return false;
-      }
-    } else if (!_to.equals(other._to)) {
+    } else if (!_to.equals(other._to))
       return false;
-    }
     return true;
   }
 }

@@ -24,7 +24,6 @@ import org.bundlemaker.core.internal.analysis.cache.impl.ResourceSubCache;
 import org.bundlemaker.core.internal.analysis.cache.impl.TypeSubCache;
 import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractModularizedSystem;
-import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
@@ -53,6 +52,9 @@ public class ArtifactCache {
   private AbstractModularizedSystem     _modularizedSystem;
 
   /** - */
+  protected IAnalysisModelConfiguration _modelConfiguration;
+
+  /** - */
   protected GroupSubCache               _groupCache;
 
   /** - */
@@ -66,9 +68,6 @@ public class ArtifactCache {
 
   /** - */
   protected TypeSubCache                _typeCache;
-
-  /** - */
-  protected IAnalysisModelConfiguration _modelConfiguration;
 
   /**
    * <p>
@@ -221,24 +220,17 @@ public class ArtifactCache {
   public final ITypeArtifact getTypeArtifact(String fullyQualifiedName, boolean createIfMissing) {
 
     //
-    try {
+    IType targetType = getModularizedSystem().getType(fullyQualifiedName);
 
-      //
-      IType targetType = getModularizedSystem().getType(fullyQualifiedName);
-
-      //
-      if (targetType == null) {
-        if (createIfMissing) {
-          return _typeCache.getOrCreate(new TypeKey(fullyQualifiedName));
-        } else {
-          return _typeCache.get(new TypeKey(fullyQualifiedName));
-        }
+    //
+    if (targetType == null) {
+      if (createIfMissing) {
+        return _typeCache.getOrCreate(new TypeKey(fullyQualifiedName));
       } else {
-        return getTypeArtifact(targetType, createIfMissing);
+        return _typeCache.get(new TypeKey(fullyQualifiedName));
       }
-    } catch (AmbiguousElementException e) {
-      System.err.println("AmbExc " + fullyQualifiedName);
-      return null;
+    } else {
+      return getTypeArtifact(targetType, createIfMissing);
     }
   }
 
