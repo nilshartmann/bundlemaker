@@ -19,6 +19,14 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Collection<? extends IBundleMakerArtifact> getParents();
+
+  /**
+   * <p>
    * Returns the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
    * </p>
    * 
@@ -361,6 +369,8 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
 
   /**
    * <p>
+   * Returns all dependencies <i>from</i> this {@link IBundleMakerArtifact} <i>to</i> other {@link IBundleMakerArtifact
+   * IBundleMakerArtifacts}.
    * </p>
    * 
    * @return
