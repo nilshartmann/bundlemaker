@@ -3,6 +3,7 @@ package org.bundlemaker.core.itest.complex.analysis;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.itest.analysis.jedit_artifact_model.framework.AbstractJeditAnalysisModelTest;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DnDHierachicalPackagesTest extends AbstractJeditArtifactTest {
+public class DnDHierachicalPackagesTest extends AbstractJeditAnalysisModelTest {
 
   /**
    * <p>

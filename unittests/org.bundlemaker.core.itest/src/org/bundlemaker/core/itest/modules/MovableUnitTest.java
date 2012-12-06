@@ -164,5 +164,4 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
   protected String computeTestProjectName() {
     return InnerClassTest.class.getSimpleName();
   }
-
 }

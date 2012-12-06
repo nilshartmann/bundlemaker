@@ -15,7 +15,7 @@
 <booleanAttribute key="includeOptional" value="false"/>
 <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/org.bundlemaker.core.itest/src/org/bundlemaker/core/itest/complex/core"/>
+<listEntry value="/org.bundlemaker.core.itest/src/org/bundlemaker/core/itest/analysis/jedit_artifact_model"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="2"/>
@@ -24,7 +24,7 @@
 <listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
 <listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
 </listAttribute>
-<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=org.bundlemaker.core.itest/src&lt;org.bundlemaker.core.itest.complex.core"/>
+<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=org.bundlemaker.core.itest/src&lt;org.bundlemaker.core.itest.analysis.jedit_artifact_model"/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
 <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
