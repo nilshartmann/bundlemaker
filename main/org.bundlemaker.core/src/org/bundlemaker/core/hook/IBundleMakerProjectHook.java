@@ -11,6 +11,7 @@
 package org.bundlemaker.core.hook;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * A hook that can be used to customize the BundleMaker project creation.
@@ -30,6 +31,7 @@ public interface IBundleMakerProjectHook {
    * 
    * @param modularizedSystem
    */
-  public void modularizedSystemCreated(IModularizedSystem modularizedSystem);
+  void modularizedSystemCreated(IProgressMonitor progressMonitor, IModularizedSystem modularizedSystem)
+      throws Exception;
 
 }

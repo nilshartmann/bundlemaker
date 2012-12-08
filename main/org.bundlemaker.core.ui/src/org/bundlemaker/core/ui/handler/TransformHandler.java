@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.Viewer;
@@ -185,7 +186,9 @@ public class TransformHandler extends AbstractArtifactBasedHandler {
       // Remote exisiting system
       bundleMakerProject.deleteModularizedSystemWorkingCopy(name);
     }
-    return bundleMakerProject.createModularizedSystemWorkingCopy(name);
+    return bundleMakerProject.createModularizedSystemWorkingCopy(
+        new NullProgressMonitor(),
+        name);
   }
 
   class DslFileFilter extends ViewerFilter {

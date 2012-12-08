@@ -10,8 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.8.1",
  org.eclipse.jdt.core;bundle-version="3.8.2",
  org.eclipse.jdt.launching;bundle-version="3.6.100"
-Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.transformations.script,
+ org.bundlemaker.core.transformations.script.config,
  org.bundlemaker.core.transformations.script.runner
 Bundle-Activator: org.bundlemaker.core.transformations.internal.Activator

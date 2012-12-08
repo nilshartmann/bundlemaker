@@ -52,10 +52,10 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
   /*
    * (non-Javadoc)
    * 
-   * @see org.bundlemaker.core.analysis.IArtifactModelModifiedListener#artifactModelModified()
+   * @see org.bundlemaker.core.analysis.IAnalysisModelModifiedListener#analysisModelModified()
    */
   @Override
-  public void artifactModelModified() {
+  public void analysisModelModified() {
     setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 
