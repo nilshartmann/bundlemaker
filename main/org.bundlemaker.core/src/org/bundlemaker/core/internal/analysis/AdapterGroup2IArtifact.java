@@ -183,7 +183,7 @@ public final class AdapterGroup2IArtifact extends AbstractArtifactContainer impl
   }
 
   @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
+  public void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL
     if (artifact instanceof IModuleArtifact) {

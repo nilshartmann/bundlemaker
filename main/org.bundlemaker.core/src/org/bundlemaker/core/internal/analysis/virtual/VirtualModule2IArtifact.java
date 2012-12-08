@@ -95,7 +95,7 @@ public class VirtualModule2IArtifact extends AbstractArtifactContainer implement
   }
 
   @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
+  public void onAddArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onAddArtifact");
   }
 

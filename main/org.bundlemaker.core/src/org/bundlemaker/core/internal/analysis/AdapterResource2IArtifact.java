@@ -144,7 +144,7 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
   }
 
   @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
+  public void onAddArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onAddArtifact");
   }
 

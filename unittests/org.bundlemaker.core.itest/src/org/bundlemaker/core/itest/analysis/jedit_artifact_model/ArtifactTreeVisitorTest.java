@@ -15,21 +15,21 @@ public class ArtifactTreeVisitorTest extends AbstractJeditAnalysisModelTest {
 
   @Test
   public void testSrcHierarchicalModelAnalysisTreeVisitor() {
-    ArtifactVisitorUtils.countArtifacts(getSrcHierarchicalModel().getJeditModuleArtifact(), 0, 0, 1, 84, 852, 975);
+    ArtifactVisitorUtils.countArtifacts(getSrcHierarchicalModel().getJeditModuleArtifact(), 0, 0, 1, 85, 873, 998);
   }
 
   @Test
   public void testBinHierarchicalModelAnalysisTreeVisitor() {
-    ArtifactVisitorUtils.countArtifacts(getBinHierarchicalModel().getJeditModuleArtifact(), 0, 0, 1, 84, 1302, 975);
+    ArtifactVisitorUtils.countArtifacts(getBinHierarchicalModel().getJeditModuleArtifact(), 0, 0, 1, 86, 1327, 998);
   }
 
   @Test
   public void testSrcFlatModelAnalysisTreeVisitor() {
-    ArtifactVisitorUtils.countArtifacts(getSrcFlatModel().getJeditModuleArtifact(), 0, 0, 1, 69, 852, 975);
+    ArtifactVisitorUtils.countArtifacts(getSrcFlatModel().getJeditModuleArtifact(), 0, 0, 1, 70, 873, 998);
   }
 
   @Test
   public void testBinFlatModelAnalysisTreeVisitor() {
-    ArtifactVisitorUtils.countArtifacts(getBinFlatModel().getJeditModuleArtifact(), 0, 0, 1, 69, 1302, 975);
+    ArtifactVisitorUtils.countArtifacts(getBinFlatModel().getJeditModuleArtifact(), 0, 0, 1, 71, 1327, 998);
   }
 }

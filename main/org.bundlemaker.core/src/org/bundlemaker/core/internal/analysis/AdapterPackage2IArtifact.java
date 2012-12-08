@@ -166,7 +166,7 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
    * {@inheritDoc}
    */
   @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
+  public void onAddArtifact(IBundleMakerArtifact artifact) {
 
     // asserts
     Assert.isNotNull(artifact);

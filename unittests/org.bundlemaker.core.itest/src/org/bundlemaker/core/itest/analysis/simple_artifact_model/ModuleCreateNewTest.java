@@ -45,32 +45,6 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
   /**
    * <p>
-   * Tests if the artifact models are updated correct if a resource module is added in the resource model.
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void createNewModuleWithClassificationInResourceModel() throws Exception {
-
-    //
-    assertResourceModuleCountInModularizedSystem(1);
-    assertResourceModuleCount(_binModel, 1);
-    assertResourceModuleCount(_srcModel, 1);
-
-    //
-    IModifiableResourceModule resourceModule = getModularizedSystem().createResourceModule(
-        new ModuleIdentifier("test", "1.2.3"), new Path("group1/NewGroup"));
-    Assert.assertEquals("group1/NewGroup", resourceModule.getClassification());
-
-    // assert that we have three groups
-    Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    assertResourceModuleCount(_binModel, 2);
-    assertResourceModuleCount(_srcModel, 2);
-  }
-
-  /**
-   * <p>
    * </p>
    * 
    * @throws Exception

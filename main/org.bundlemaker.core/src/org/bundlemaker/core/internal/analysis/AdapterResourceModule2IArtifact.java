@@ -6,12 +6,7 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
-import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
@@ -21,23 +16,13 @@ import org.eclipse.core.runtime.Assert;
  */
 public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
-  /** - */
-  private ArtifactCache _artifactCache;
-
   /**
    * <p>
    * Creates a new instance of type {@link AdapterResourceModule2IArtifact}.
    * </p>
    */
-  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IBundleMakerArtifact parent,
-      ArtifactCache artifactCache) {
+  public AdapterResourceModule2IArtifact(IResourceModule resourceModule, IBundleMakerArtifact parent) {
     super(resourceModule, parent);
-
-    //
-    Assert.isNotNull(artifactCache);
-
-    // set the default artifact cache
-    _artifactCache = artifactCache;
   }
 
   /**
@@ -48,69 +33,13 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   }
 
   @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
+  public void onAddArtifact(IBundleMakerArtifact artifact) {
 
-    // handle package
-    if (artifact.isInstanceOf(IPackageArtifact.class)) {
-      handleAddPackage(artifact);
-    } else if (artifact.isInstanceOf(IResourceArtifact.class)) {
-      handleAddResource((IResourceArtifact) artifact);
-    } else if (artifact.isInstanceOf(ITypeArtifact.class)) {
-      handleAddType((ITypeArtifact) artifact);
-    }
   }
 
   @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
-
-    //
     AdapterUtils.removeArtifact(artifact, this);
-  }
-
-  private void handleAddType(ITypeArtifact artifact) {
-
-    //
-    if (artifact.getParent() != null && artifact.getParent().isInstanceOf(IResourceArtifact.class)) {
-
-      handleAddResource((IResourceArtifact) artifact.getParent());
-
-    } else {
-
-      // step 1: get the package key
-      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(getAssociatedModule()), artifact
-          .getAssociatedType().getPackageName());
-
-      //
-      IPackageArtifact newPackageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
-          modulePackageKey);
-
-      //
-      newPackageArtifact.addArtifact(artifact);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   */
-  private void handleAddResource(IResourceArtifact artifact) {
-
-    //
-    AdapterUtils.addResourcesToModule(getResourceModule(), AdapterUtils.getAllMovableUnits(artifact));
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   */
-  private void handleAddPackage(IBundleMakerArtifact artifact) {
-
-    //
-    AdapterUtils.addResourcesToModule(getResourceModule(), AdapterUtils.getAllMovableUnits(artifact));
   }
 
   /**
@@ -142,16 +71,6 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   }
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public IModifiableResourceModule getResourceModule() {
-    return (IModifiableResourceModule) getModule();
-  }
-
-  /**
    * {@inheritDoc}
    */
   @Override
@@ -159,11 +78,11 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
 
     //
     if (visitor.visit(this)) {
+
       //
       for (IBundleMakerArtifact artifact : getChildren()) {
         ((IBundleMakerArtifact) artifact).accept(visitor);
       }
     }
   }
-
 }

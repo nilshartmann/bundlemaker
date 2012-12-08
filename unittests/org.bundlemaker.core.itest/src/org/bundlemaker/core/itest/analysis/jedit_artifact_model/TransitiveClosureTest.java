@@ -32,7 +32,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
     Assert.assertNotNull(resourceArtifact);
 
     //
-    computeAndAssertTransitiveClosure(resourceArtifact, 5, 879);
+    computeAndAssertTransitiveClosure(resourceArtifact, 5, 901);
   }
 
   /**
@@ -48,7 +48,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
     Assert.assertNotNull(resourceArtifact);
 
     //
-    computeAndAssertTransitiveClosure(resourceArtifact, 5, 879);
+    computeAndAssertTransitiveClosure(resourceArtifact, 5, 901);
   }
 
   /**
@@ -64,7 +64,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
     Assert.assertNotNull(resourceArtifact);
 
     //
-    computeAndAssertTransitiveClosure(resourceArtifact, 5, 879);
+    computeAndAssertTransitiveClosure(resourceArtifact, 5, 901);
   }
 
   /**
@@ -80,7 +80,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
     Assert.assertNotNull(resourceArtifact);
 
     //
-    computeAndAssertTransitiveClosure(resourceArtifact, 5, 879);
+    computeAndAssertTransitiveClosure(resourceArtifact, 5, 901);
   }
 
   /**

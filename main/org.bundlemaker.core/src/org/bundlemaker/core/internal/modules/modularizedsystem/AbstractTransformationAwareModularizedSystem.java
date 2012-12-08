@@ -26,6 +26,7 @@ import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
+import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -139,9 +140,11 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         IModuleIdentifier identifier = new ModuleIdentifier(fileBasedContent.getName(), fileBasedContent.getVersion());
         // TODO!!
         try {
-          TypeModule typeModule = createTypeModule(fileBasedContent.getId().toString(), identifier,
+          TypeModule typeModule = createTypeModule(fileBasedContent.getId().toString(),
+              identifier,
               // TODO!!
-              new File[] { ((FileBasedProjectContent) fileBasedContent).getBinaryRootPaths().toArray(new VariablePath[0])[0]
+              new File[] { ((FileBasedProjectContent) fileBasedContent).getBinaryRootPaths().toArray(
+                  new VariablePath[0])[0]
                   .getAsFile() });
           getModifiableNonResourceModules().add(typeModule);
         } catch (CoreException ex) {
@@ -220,23 +223,10 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     Assert.isNotNull(path);
     Assert.isTrue(!path.isEmpty(), "Path must not be emtpy.");
 
-    // @Override
-    // protected Group create(IPath key) {
-    // if (key.segmentCount() == 1) {
-    // return new Group(key.toPortableString(), null);
-    // } else {
-    // Group parent = getOrCreate(key.removeLastSegments(1));
-    // return new Group(key.toPortableString(), parent);
-    // }
-    // }
-    // };
-
-    // We can not use a hash map here, because it is possible to change the path of a group (which would be the key in
-    // the map). So we have to iterate over all groups and find the right one...
-    for (Group group : internalGroups()) {
-      if (group.getPath().equals(path)) {
-        return group;
-      }
+    //
+    Group group = getGroup(path);
+    if (group != null) {
+      return group;
     }
 
     //
@@ -246,13 +236,63 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       groupAdded(result);
       return result;
     } else {
-
       Group parent = getOrCreateGroup(path.removeLastSegments(1));
       Group result = new Group(path.lastSegment(), parent, this);
       internalGroups().add(result);
       groupAdded(result);
       return result;
     }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @return
+   */
+  @Override
+  public void removeGroup(IGroup group) {
+
+    Assert.isNotNull(group);
+
+    internalGroups().remove(group);
+    groupRemoved(group);
+  }
+
+  @Override
+  public void removeGroup(IPath path) {
+
+    Assert.isNotNull(path);
+
+    IGroup group = getGroup(path);
+
+    if (group == null) {
+      // TODO
+      throw new RuntimeException("");
+    }
+
+    removeGroup(group);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   * @return
+   */
+  public Group getGroup(IPath path) {
+
+    // We can not use a hash map here, because it is possible to change the path of a group (which would be the key in
+    // the map). So we have to iterate over all groups and find the right one...
+    for (Group group : internalGroups()) {
+      if (group.getPath().equals(path)) {
+        return group;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -394,7 +434,17 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * 
    * @param group
    */
-  protected void groupAdded(Group group) {
+  protected void groupAdded(IGroup group) {
+    // do nothing...
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param group
+   */
+  protected void groupRemoved(IGroup group) {
     // do nothing...
   }
 

@@ -409,7 +409,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * 
    * @param artifact
    */
-  protected abstract void onAddArtifact(IBundleMakerArtifact artifact);
+  public abstract void onAddArtifact(IBundleMakerArtifact artifact);
 
   /**
    * {@inheritDoc}
@@ -539,25 +539,11 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   @Override
   public void addArtifacts(IArtifactSelector artifactSelector) {
 
-    // assert not null
-    Assert.isNotNull(artifactSelector);
+    //
+    AddArtifactsTransformation transformation = new AddArtifactsTransformation(this, artifactSelector);
 
-    // get the json configuration
-    JsonElement jsonConfiguration = new AddArtifactsTransformation.Configuration(this,
-        artifactSelector).toJsonTree();
-
-    // add the artifacts
-    for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
-      assertCanAdd(artifact);
-    }
-
-    for (IBundleMakerArtifact artifact : artifactSelector.getBundleMakerArtifacts()) {
-      onAddArtifact(artifact);
-    }
-
-    // add the transformation
-    getModularizedSystem().getTransformations().add(
-        new AddArtifactsTransformation(jsonConfiguration));
+    //
+    getModularizedSystem().applyTransformations(null, transformation);
   }
 
   /**
@@ -724,7 +710,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
    * @deprecated use canAdd and Assert.isTrue() instead
    */
   @Deprecated
-  protected void assertCanAdd(IBundleMakerArtifact artifact) {
+  public void assertCanAdd(IBundleMakerArtifact artifact) {
 
     //
     if (artifact == null) {

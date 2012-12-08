@@ -17,9 +17,9 @@ import org.junit.runner.RunWith;
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- *
+ * 
  */
 @RunWith(JeditAnalysisTestRunner.class)
 public abstract class AbstractJeditAnalysisModelTest extends AbstractModularizedSystemTest {
@@ -44,10 +44,11 @@ public abstract class AbstractJeditAnalysisModelTest extends AbstractModularized
     super.before();
 
     // prepare the model
-    assertTypeCount(1438);
+    assertTypeCount(1466);
 
     // assert the input
-    InputStream inputstream = AbstractJeditAnalysisModelTest.class.getResourceAsStream("results/" + getTestProjectName()
+    InputStream inputstream = AbstractJeditAnalysisModelTest.class.getResourceAsStream("results/"
+        + getTestProjectName()
         + ".txt");
     assertResult(ModuleUtils.dump(getModularizedSystem().getResourceModule(getTestProjectName(), "1.0.0")),
         inputstream, getTestProjectName() + getCurrentTimeStamp());
@@ -163,10 +164,26 @@ public abstract class AbstractJeditAnalysisModelTest extends AbstractModularized
   protected void assertTypeCount(int typeCountWithoutJdkTypes) {
 
     // assert the specified number of types
-    Assert.assertEquals(getModularizedSystem().getExecutionEnvironment().getContainedTypes().size()
+    Assert.assertEquals("Expected: " + typeCountWithoutJdkTypes + ", actual: "
+        + (getModularizedSystem().getTypes().size()
+        - getModularizedSystem().getExecutionEnvironment().getContainedTypes().size()), getModularizedSystem()
+        .getExecutionEnvironment().getContainedTypes().size()
         + typeCountWithoutJdkTypes, getModularizedSystem().getTypes().size());
   }
 
+  /**
+   * <p>
+   * </p>
+   *
+   * @param count
+   */
+  protected void assertModificationCount(int count) {
+    Assert.assertEquals(count, getSrcHierarchicalModel().getModifiedNotificationCount());
+    Assert.assertEquals(count, getSrcFlatModel().getModifiedNotificationCount());
+    Assert.assertEquals(count, getBinHierarchicalModel().getModifiedNotificationCount());
+    Assert.assertEquals(count, getBinFlatModel().getModifiedNotificationCount());
+  }
+  
   /**
    * {@inheritDoc}
    */

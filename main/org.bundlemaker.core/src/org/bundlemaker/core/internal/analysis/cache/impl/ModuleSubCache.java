@@ -54,8 +54,8 @@ public class ModuleSubCache extends AbstractSubCache<ModuleKey, IModuleArtifact>
       IBundleMakerArtifact parent = getModuleParent(module);
 
       // return the module adapter
-      return module instanceof IResourceModule ? new AdapterResourceModule2IArtifact((IResourceModule) module, parent,
-          getArtifactCache()) : new AdapterModule2IArtifact(module, parent);
+      return module instanceof IResourceModule ? new AdapterResourceModule2IArtifact((IResourceModule) module, parent)
+          : new AdapterModule2IArtifact(module, parent);
 
     }
 

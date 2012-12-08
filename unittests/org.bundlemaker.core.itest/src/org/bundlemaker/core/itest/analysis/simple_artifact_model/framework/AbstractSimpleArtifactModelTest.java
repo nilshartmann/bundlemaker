@@ -255,4 +255,38 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
         AdjacencyMatrix.computeAdjacencyMatrix(null, _srcModel.getMainModuleArtifact(),
             _srcModel.getJreArtifact(), _srcModel.getGroup1Artifact(), _srcModel.getGroup2Artifact()));
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param name
+   * @param version
+   */
+  protected void assertMainModuleNameAndVersion(String name, String version) {
+
+    // assert resource module count == 1
+    assertResourceModuleCountInModularizedSystem(1);
+    assertResourceModuleCount(_binModel, 1);
+    assertResourceModuleCount(_srcModel, 1);
+
+    //
+    Assert.assertEquals(name  + "_" +  version, _binModel.getMainModuleArtifact().getName());
+    Assert.assertTrue(_binModel.getMainModuleArtifact().getQualifiedName().endsWith(name  + "_" +  version));
+    Assert.assertEquals(name, _binModel.getMainModuleArtifact().getModuleName());
+    Assert.assertEquals(version, _binModel.getMainModuleArtifact().getModuleVersion());
+
+    //
+    Assert.assertEquals(name, _srcModel.getMainModuleArtifact().getModuleName());
+    Assert.assertEquals(version, _srcModel.getMainModuleArtifact().getModuleVersion());
+
+    //
+    Assert.assertEquals(name, _srcModel.getMainModuleArtifact().getAssociatedModule()
+        .getModuleIdentifier().getName());
+    Assert.assertEquals(version, _srcModel.getMainModuleArtifact().getAssociatedModule().getModuleIdentifier()
+        .getVersion());
+
+    //
+    Assert.assertNotNull(getModularizedSystem().getResourceModule(name, version));
+  }
 }
