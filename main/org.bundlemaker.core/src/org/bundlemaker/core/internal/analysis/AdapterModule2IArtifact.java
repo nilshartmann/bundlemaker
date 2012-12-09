@@ -47,11 +47,6 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
   }
 
   @Override
-  public void onAddArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException("onAddArtifact");
-  }
-
-  @Override
   public boolean isVirtual() {
     return false;
   }

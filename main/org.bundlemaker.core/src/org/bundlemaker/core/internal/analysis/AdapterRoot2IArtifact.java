@@ -263,25 +263,6 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     return new Path(".");
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void onAddArtifact(IBundleMakerArtifact artifact) {
-
-    //
-    Assert.isNotNull(artifact);
-
-    // CHANGE THE UNDERLYING MODEL
-    if (artifact instanceof IModuleArtifact) {
-      if (!AdapterUtils.addModulesIfNecessaryAndResetClassification((IModuleArtifact) artifact, null)) {
-        internalAddArtifact(artifact);
-      }
-    } else if (artifact instanceof IGroupArtifact) {
-      AdapterUtils.addModulesIfNecessaryAndResetClassification((IGroupArtifact) artifact, this);
-    }
-  }
-
   @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
 

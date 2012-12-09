@@ -404,14 +404,6 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   protected abstract void onRemoveArtifact(IBundleMakerArtifact artifact);
 
   /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   */
-  public abstract void onAddArtifact(IBundleMakerArtifact artifact);
-
-  /**
    * {@inheritDoc}
    */
   public void removeFromParent() {

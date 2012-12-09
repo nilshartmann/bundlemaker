@@ -140,12 +140,6 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
   @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
     throw new UnsupportedOperationException("onRemoveArtifact");
-
-  }
-
-  @Override
-  public void onAddArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException("onAddArtifact");
   }
 
   @Override

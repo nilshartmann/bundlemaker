@@ -4,18 +4,16 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
-import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
-import org.bundlemaker.core.internal.analysis.AdapterUtils;
-import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
-import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.transformation.add.AddArtifactToGroup;
+import org.bundlemaker.core.transformation.add.AddArtifactToModule;
+import org.bundlemaker.core.transformation.add.AddArtifactToPackage;
+import org.bundlemaker.core.transformation.add.AddArtifactToRoot;
 import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -64,6 +62,23 @@ public class AddArtifactsTransformation extends
   /**
    * {@inheritDoc}
    */
+  @Override
+  protected Class<Configuration> getConfigurationType() {
+    return Configuration.class;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void assertConfiguration(JsonElement element) {
+    //
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   protected void onApply(Configuration config, IModifiableModularizedSystem modularizedSystem,
       IProgressMonitor progressMonitor) {
 
@@ -78,94 +93,33 @@ public class AddArtifactsTransformation extends
       ((AbstractArtifactContainer) config.getParent()).assertCanAdd(artifact);
     }
 
-    for (IBundleMakerArtifact artifact : artifacts) {
+    for (IBundleMakerArtifact artifactToAdd : artifacts) {
 
-      // add module artifact
-      if (config.getParent() instanceof IModuleArtifact) {
-        addArtifactToModule((IModuleArtifact) config.getParent(), modularizedSystem, artifact);
+      // add to root artifact
+      if (config.getParent() instanceof IRootArtifact) {
+        AddArtifactToRoot.add((IRootArtifact) config.getParent(), artifactToAdd);
       }
+      // add to group artifact
+      else if (config.getParent() instanceof IGroupArtifact) {
+        AddArtifactToGroup.add((IGroupArtifact) config.getParent(), artifactToAdd);
+      }
+      // add to module artifact
+      else if (config.getParent() instanceof IModuleArtifact) {
+        AddArtifactToModule.add((IModuleArtifact) config.getParent(), artifactToAdd);
+      }
+      // add to package artifact
+      else if (config.getParent() instanceof IPackageArtifact) {
+        AddArtifactToPackage.add((IPackageArtifact) config.getParent(), artifactToAdd);
+      }
+
       //
       else {
-        ((AbstractArtifactContainer) config.getParent()).onAddArtifact(artifact);
+        throw new RuntimeException("Unsupported add operation");
       }
     }
 
     //
     ((IModifiableModularizedSystem) getModularizedSystem()).setHandleModelModification(true);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void assertConfiguration(JsonElement element) {
-
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param moduleArtifact
-   * @param modularizedSystem
-   * @param artifact
-   */
-  private void addArtifactToModule(IModuleArtifact moduleArtifact, IModifiableModularizedSystem modularizedSystem,
-      IBundleMakerArtifact artifact) {
-
-    // add a package to the module
-    if (artifact.isInstanceOf(IPackageArtifact.class)) {
-      AdapterUtils.addResourcesToModule((IModifiableResourceModule) moduleArtifact.getAssociatedModule(),
-          AdapterUtils.getAllMovableUnits(artifact));
-    }
-
-    // add a resource to the module
-    else if (artifact.isInstanceOf(IResourceArtifact.class)) {
-      AdapterUtils.addResourcesToModule((IModifiableResourceModule) moduleArtifact.getAssociatedModule(),
-          AdapterUtils.getAllMovableUnits(artifact));
-    }
-
-    // add a type to the module
-    else if (artifact.isInstanceOf(ITypeArtifact.class)) {
-
-      //
-      if (artifact.getParent() != null && artifact.getParent().isInstanceOf(IResourceArtifact.class)) {
-        AdapterUtils.addResourcesToModule((IModifiableResourceModule) moduleArtifact.getAssociatedModule(),
-            AdapterUtils.getAllMovableUnits(artifact));
-      }
-
-      //
-      else {
-
-        //
-        if (true) {
-          throw new RuntimeException("Do we need this block?");
-        }
-
-        // step 1: get the package key
-        ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(moduleArtifact.getAssociatedModule()),
-            ((ITypeArtifact) artifact)
-                .getAssociatedType().getPackageName());
-
-        //
-        ArtifactCache artifactCache = ((AdapterRoot2IArtifact) moduleArtifact.getRoot()).getArtifactCache();
-
-        //
-        IPackageArtifact newPackageArtifact = (IPackageArtifact) artifactCache.getPackageCache().getOrCreate(
-            modulePackageKey);
-
-        //
-        newPackageArtifact.addArtifact(artifact);
-      }
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected Class<Configuration> getConfigurationType() {
-    return Configuration.class;
   }
 
   /**

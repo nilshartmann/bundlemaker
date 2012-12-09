@@ -33,11 +33,6 @@ public class AdapterResourceModule2IArtifact extends AdapterModule2IArtifact {
   }
 
   @Override
-  public void onAddArtifact(IBundleMakerArtifact artifact) {
-
-  }
-
-  @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
     AdapterUtils.removeArtifact(artifact, this);
   }
