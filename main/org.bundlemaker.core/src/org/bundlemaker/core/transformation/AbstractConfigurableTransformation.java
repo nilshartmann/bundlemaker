@@ -13,7 +13,7 @@ import com.google.gson.JsonElement;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractConfigurableTransformation<T> implements ITransformation {
+public abstract class AbstractConfigurableTransformation<T> extends AbstractUndoableTransformation {
 
   /** - */
   private JsonElement _configuration;
@@ -48,6 +48,8 @@ public abstract class AbstractConfigurableTransformation<T> implements ITransfor
    */
   @Override
   public final void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
+
+    super.apply(modularizedSystem, progressMonitor);
 
     //
     Assert.isNotNull(_configuration, "Configuration must not be null.");

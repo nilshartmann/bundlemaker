@@ -22,6 +22,7 @@ import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ITypeContainer;
+import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.modules.query.IQueryFilter;
 import org.bundlemaker.core.modules.query.StringQueryFilters;
@@ -156,10 +157,22 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
     return _classification;
   }
 
+  public final void setModuleIdentifier(String name, String version) {
+    Assert.isNotNull(name);
+    Assert.isNotNull(version);
+
+    setModuleIdentifier(new ModuleIdentifier(name, version));
+  }
+
   public final void setModuleIdentifier(IModuleIdentifier moduleIdentifier) {
     Assert.isNotNull(moduleIdentifier);
 
     _moduleIdentifier = moduleIdentifier;
+
+    //
+    if (hasModularizedSystem()) {
+      ((ModularizedSystem) getModularizedSystem()).fireModuleIdentifierChanged(this);
+    }
   }
 
   /**
@@ -324,17 +337,10 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
           .getOrCreateGroup(classificationPath);
     }
 
-    fireModuleClassificationChanged(new ModuleClassificationChangedEvent(this));
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  private void fireModuleClassificationChanged(ModuleClassificationChangedEvent event) {
     //
     if (hasModularizedSystem()) {
-      ((ModularizedSystem) getModularizedSystem()).fireModuleClassificationChanged(event);
+      ((ModularizedSystem) getModularizedSystem())
+          .fireModuleClassificationChanged(new ModuleClassificationChangedEvent(this));
     }
   }
 

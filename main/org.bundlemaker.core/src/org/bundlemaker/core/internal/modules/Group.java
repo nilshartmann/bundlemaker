@@ -54,6 +54,7 @@ public class Group implements IGroup {
    * 
    * @return
    */
+  @Override
   public IPath getPath() {
 
     //
@@ -134,7 +135,8 @@ public class Group implements IGroup {
    * 
    * @return
    */
-  public Group getParent() {
+  @Override
+  public IGroup getParent() {
     return _parent;
   }
 }

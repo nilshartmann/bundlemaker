@@ -119,6 +119,11 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     return _parent;
   }
 
+  @Override
+  public Collection<? extends IBundleMakerArtifact> getParents() {
+    return Collections.unmodifiableCollection(_cachedParents);
+  }
+
   /**
    * {@inheritDoc}
    */

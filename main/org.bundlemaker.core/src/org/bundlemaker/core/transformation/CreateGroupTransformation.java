@@ -5,7 +5,7 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.internal.modules.Group;
-import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractTransformationAwareModularizedSystem;
+import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
@@ -24,10 +24,25 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class CreateGroupTransformation extends
-    AbstractConfigurableTransformation<CreateGroupTransformation.Configuration> {
+    AbstractConfigurableTransformation<CreateGroupTransformation.Configuration> implements IUndoableTransformation {
 
   /** - */
   private IGroupArtifact _newGroupArtifact;
+
+  /** - */
+  private IGroup         _lastExistingParentGroup;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link CreateGroupTransformation}.
+   * </p>
+   * 
+   * @param groupContainer
+   * @param path
+   */
+  public CreateGroupTransformation(IGroupAndModuleContainer groupContainer, IPath path) {
+    super(new Configuration(groupContainer, path).toJsonTree());
+  }
 
   /**
    * <p>
@@ -38,6 +53,26 @@ public class CreateGroupTransformation extends
    */
   public CreateGroupTransformation(JsonElement configuration) {
     super(configuration);
+  }
+
+  @Override
+  public void undo() {
+
+    //
+    IPath existingGroupPath = _lastExistingParentGroup != null ? _lastExistingParentGroup.getPath() : new Path("");
+    IPath newGroupPath = _newGroupArtifact.getAssociatedGroup().getPath();
+
+    //
+    Assert.isTrue(existingGroupPath.isPrefixOf(newGroupPath));
+
+    //
+    newGroupPath = newGroupPath.removeFirstSegments(existingGroupPath.segmentCount());
+
+    //
+    while (!newGroupPath.isEmpty()) {
+      getModularizedSystem().removeGroup(existingGroupPath.append(newGroupPath));
+      newGroupPath = newGroupPath.removeLastSegments(1);
+    }
   }
 
   @Override
@@ -52,17 +87,23 @@ public class CreateGroupTransformation extends
     //
     IPath absolutePath = parentGroupPath.append(config.getPath());
 
+    // find "deepest" existing group
+    IPath existingGroupPath = parentGroupPath;
+    for (String segment : absolutePath.segments()) {
+      if (getModularizedSystem().getGroup(existingGroupPath.append(segment)) != null) {
+        existingGroupPath = existingGroupPath.append(segment);
+      }
+    }
+    _lastExistingParentGroup = getModularizedSystem().getGroup(existingGroupPath);
+
     //
-    Group group = ((AbstractTransformationAwareModularizedSystem) config.getGroupContainer().getRoot()
-        .getModularizedSystem())
-        .getOrCreateGroup(absolutePath);
+    IGroup newGroup = getModularizedSystem().getOrCreateGroup(absolutePath);
 
     //
     _newGroupArtifact = (IGroupArtifact) ((AdapterRoot2IArtifact) config.getGroupContainer().getRoot())
         .getArtifactCache()
         .getGroupCache()
-        .getOrCreate(group);
-
+        .getOrCreate((Group) newGroup);
   }
 
   /**

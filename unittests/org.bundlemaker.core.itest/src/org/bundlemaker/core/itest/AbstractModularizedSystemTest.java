@@ -47,10 +47,10 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
 
     super.before();
 
-    //
+    // add the project description
     addProjectDescription();
 
-    //
+    // initialize
     getBundleMakerProject().initialize(new ProgressMonitor());
 
     // parse and open the project
@@ -58,11 +58,7 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
 
     // assert no parse errors
     if (getBundleMakerProject().getProblems().size() > 0) {
-
-      //
       StringBuilder builder = new StringBuilder();
-
-      //
       for (IProblem problem : getBundleMakerProject().getProblems()) {
         builder.append(problem.getMessage());
         builder.append("\n");
@@ -70,15 +66,16 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
       Assert.fail(builder.toString());
     }
 
+    // get the modularized system
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
         getTestProjectName());
 
+    // apply the basic group transformation
     _modularizedSystem.applyTransformations(null, new GroupTransformation(new ModuleIdentifier(getTestProjectName(),
         "1.0.0"), new Path("group1/group2")));
 
-    //
-    IModule module = getModularizedSystem().getModule(getTestProjectName(), "1.0.0");
-    Assert.assertNotNull(module);
+    // assert the test module
+    Assert.assertNotNull(getModularizedSystem().getModule(getTestProjectName(), "1.0.0"));
   }
 
   @Override
@@ -151,6 +148,9 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
 
     // assert
     FileDiffUtil.assertArtifactModel(expected, new ByteArrayInputStream(dumpedModel.getBytes()), htmlReport);
+
+    //
+    actual.delete();
   }
 
   /**

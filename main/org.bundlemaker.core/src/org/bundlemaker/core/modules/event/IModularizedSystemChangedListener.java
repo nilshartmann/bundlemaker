@@ -46,6 +46,8 @@ public interface IModularizedSystemChangedListener {
    */
   void moduleClassificationChanged(ModuleClassificationChangedEvent event);
 
+  void moduleIdentifierChanged(ModuleIdentifierChangedEvent event);
+
   /**
    * <p>
    * </p>
@@ -76,5 +78,9 @@ public interface IModularizedSystemChangedListener {
    * 
    * @param isDisabled
    */
+  // TODO: UNIFY WITH 'modelModifiedNotificationDisabled'
   void modelModifiedNotificationDisabled(boolean isDisabled);
+
+  // TODO: UNIFY WITH 'modelModifiedNotificationDisabled'
+  void handleModelModification();
 }

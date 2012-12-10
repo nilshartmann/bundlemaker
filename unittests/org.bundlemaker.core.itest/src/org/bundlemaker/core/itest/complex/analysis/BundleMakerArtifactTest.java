@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.itest.analysis.jedit_artifact_model.framework.AbstractJeditAnalysisModelTest;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerArtifactTest extends AbstractJeditArtifactTest {
+public class BundleMakerArtifactTest extends AbstractJeditAnalysisModelTest {
 
   /**
    * <p>
@@ -73,13 +74,5 @@ public class BundleMakerArtifactTest extends AbstractJeditArtifactTest {
     artifact.getParent().removeArtifact(artifact);
     Assert.assertNull(artifact.getParent());
     Assert.assertSame(getRootArtifact(), artifact.getRoot());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected String computeTestProjectName() {
-    return "jedit";
   }
 }

@@ -1,6 +1,6 @@
 package org.bundlemaker.core.modules.event;
 
-import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.Assert;
 
@@ -16,13 +16,13 @@ public class ModuleClassificationChangedEvent {
   private IModule _module;
 
   /** - */
-  private Group   _renamedGroup;
+  private IGroup   _renamedGroup;
 
   /** - */
-  private Group   _newParentGroup;
+  private IGroup   _newParentGroup;
 
   /** - */
-  private Group   _movedGroup;
+  private IGroup   _movedGroup;
 
   // /** - */
   // private IModule _movedModule;
@@ -40,14 +40,14 @@ public class ModuleClassificationChangedEvent {
     _module = module;
   }
 
-  public ModuleClassificationChangedEvent(IModule module, Group renamedGroup) {
+  public ModuleClassificationChangedEvent(IModule module, IGroup renamedGroup) {
     Assert.isNotNull(module);
 
     _module = module;
     _renamedGroup = renamedGroup;
   }
 
-  public ModuleClassificationChangedEvent(IModule module, Group newParentGroup, Group movedGroup) {
+  public ModuleClassificationChangedEvent(IModule module, IGroup newParentGroup, IGroup movedGroup) {
     Assert.isNotNull(module);
 
     _module = module;
@@ -91,7 +91,7 @@ public class ModuleClassificationChangedEvent {
    * 
    * @return
    */
-  public Group getRenamedGroup() {
+  public IGroup getRenamedGroup() {
     return _renamedGroup;
   }
 
@@ -101,7 +101,7 @@ public class ModuleClassificationChangedEvent {
    * 
    * @return
    */
-  public Group getNewParentGroup() {
+  public IGroup getNewParentGroup() {
     return _newParentGroup;
   }
 
@@ -111,7 +111,7 @@ public class ModuleClassificationChangedEvent {
    * 
    * @return
    */
-  public Group getMovedGroup() {
+  public IGroup getMovedGroup() {
     return _movedGroup;
   }
 

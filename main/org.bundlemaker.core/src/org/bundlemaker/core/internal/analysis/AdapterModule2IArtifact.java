@@ -4,9 +4,8 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
-import org.bundlemaker.core.internal.modules.AbstractModule;
 import org.bundlemaker.core.modules.IModule;
-import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.transformation.RenameModuleTransformation;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -48,11 +47,6 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
   }
 
   @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException("onAddArtifact");
-  }
-
-  @Override
   public boolean isVirtual() {
     return false;
   }
@@ -67,11 +61,8 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
 
   @Override
   public void setNameAndVersion(String name, String version) {
-
-    ModuleIdentifier newModuleIdentifier = new ModuleIdentifier(name, version);
-    ((AbstractModule<?, ?>) _module).setModuleIdentifier(newModuleIdentifier);
-
-    super.setName(newModuleIdentifier.toString());
+    RenameModuleTransformation transformation = new RenameModuleTransformation(this, name, version);
+    getRoot().getModularizedSystem().applyTransformations(null, transformation);
   }
 
   /**
@@ -135,6 +126,11 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
   public void accept(IAnalysisModelVisitor... visitors) {
     DispatchingArtifactTreeVisitor artifactTreeVisitor = new DispatchingArtifactTreeVisitor(visitors);
     accept(artifactTreeVisitor);
+  }
+
+  @Override
+  public void setName(String name) {
+    super.setName(name);
   }
 
   /**

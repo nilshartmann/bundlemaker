@@ -1,13 +1,10 @@
 package org.bundlemaker.core.itest.modules;
 
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.itest.analysis.SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test;
-import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IType;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.IProgressMonitor;

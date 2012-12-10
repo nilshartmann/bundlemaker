@@ -12,6 +12,7 @@ package org.bundlemaker.core.modules.modifiable;
 
 import java.util.Collection;
 
+import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
@@ -25,8 +26,6 @@ import org.eclipse.core.runtime.IPath;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public interface IModifiableModularizedSystem extends IModularizedSystem {
-
-  // TODO IModifiableModule
 
   /**
    * <p>
@@ -112,4 +111,44 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
    * @return
    */
   boolean isModelModifiedNotificationDisabled();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param append
+   * @return
+   */
+  IGroup getGroup(IPath append);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param absolutePath
+   * @return
+   */
+  IGroup getOrCreateGroup(IPath absolutePath);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param group
+   */
+  void removeGroup(IGroup group);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param path
+   */
+  void removeGroup(IPath path);
+
+  // TODO: UNIFY with 'disableModelModifiedNotification'
+  boolean isHandleModelModification();
+
+  // TODO: UNIFY with 'disableModelModifiedNotification'
+  void setHandleModelModification(boolean handleModelModification);
 }

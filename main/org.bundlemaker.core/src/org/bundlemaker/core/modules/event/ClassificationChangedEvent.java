@@ -1,6 +1,7 @@
 package org.bundlemaker.core.modules.event;
 
 import org.bundlemaker.core.internal.modules.Group;
+import org.bundlemaker.core.modules.IGroup;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -12,7 +13,7 @@ import org.eclipse.core.runtime.Assert;
 public class ClassificationChangedEvent {
 
   /** - */
-  private Group _renamedGroup;
+  private IGroup _renamedGroup;
 
   /** - */
   // TODO: REMOVE (already set on _movedGroup)
@@ -21,7 +22,7 @@ public class ClassificationChangedEvent {
   /** - */
   private Group _movedGroup;
 
-  public ClassificationChangedEvent(Group renamedGroup) {
+  public ClassificationChangedEvent(IGroup renamedGroup) {
     Assert.isNotNull(renamedGroup);
 
     _renamedGroup = renamedGroup;
@@ -47,7 +48,7 @@ public class ClassificationChangedEvent {
    * 
    * @return
    */
-  public Group getRenamedGroup() {
+  public IGroup getRenamedGroup() {
     return _renamedGroup;
   }
 

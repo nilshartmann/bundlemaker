@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -29,14 +29,13 @@ import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.analysis.spi.ReferencedArtifactTrait;
 import org.bundlemaker.core.analysis.spi.ReferencingArtifactTrait;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.modules.AmbiguousElementException;
+import org.bundlemaker.core.internal.modules.modularizedsystem.AbstractCachingModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.JavaTypeUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -314,9 +313,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
    */
   private void initReferences() {
 
-    boolean isPrimaryType = false;
-
-    // iterate over all references
+    // STEP 1: initialize all dependencies from this artifact
     for (IReference reference : _type.getReferences()) {
 
       // get the reference name
@@ -334,25 +331,10 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
       if (referencedArtifact != null) {
 
         // get the cached instance
-        if (_referencingArtifact.coreDependenciesToMap().containsKey(referencedArtifact)) {
-
-          //
-          if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
-
-            // set the dependency kind
-            ((Dependency) _referencingArtifact.coreDependenciesToMap().get(referencedArtifact))
-                .setDependencyKind(getDependencyKind(reference));
-          }
-
-        } else {
+        if (!_referencingArtifact.coreDependenciesToMap().containsKey(referencedArtifact)) {
 
           // map to dependency
           Dependency dependency = new Dependency(this, referencedArtifact, true);
-
-          // top level primary types only
-          if (referenceName.equals(reference.getFullyQualifiedName()) && isPrimaryType) {
-            dependency.setDependencyKind(getDependencyKind(reference));
-          }
 
           //
           if (dependency.getFrom().getQualifiedName().equals(dependency.getTo().getQualifiedName())) {
@@ -361,96 +343,54 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
           //
           _referencingArtifact.coreDependenciesToMap().put(referencedArtifact, dependency);
+        }
+      }
+    }
+
+    // STEP 2: initialize all dependencies to this artifact
+    // this is necessary to filter unwanted references to types that occur multiple times!
+    if (_type.equals(getModularizedSystem().getType(_type.getFullyQualifiedName()))) {
+
+      //
+      Set<IType> referringTypes = ((AbstractCachingModularizedSystem) getModularizedSystem())
+          .getTypeNameToReferringCache().get(
+              _type.getFullyQualifiedName());
+
+      //
+      if (referringTypes != null) {
+
+        //
+        for (IType referringType : referringTypes) {
 
           //
-          if (referencedArtifact instanceof IReferencedArtifact) {
-            ((IReferencedArtifact) referencedArtifact).coreDependenciesFromMap().put(this, dependency);
+          if (referringType.equals(_type)) {
+            continue;
+          }
+
+          //
+          IBundleMakerArtifact referringArtifact = _artifactCache.getTypeArtifact(referringType, false);
+
+          // does the artifact exist?
+          if (referringArtifact != null) {
+
+            // get the cached instance
+            if (!_referencedArtifact.coreDependenciesFromMap().containsKey(referringArtifact)) {
+
+              // map to dependency
+              Dependency dependency = new Dependency(referringArtifact, this, true);
+
+              //
+              if (dependency.getFrom().getQualifiedName().equals(dependency.getTo().getQualifiedName())) {
+                throw new RuntimeException(dependency.getFrom().getQualifiedName().toString());
+              }
+
+              //
+              _referencedArtifact.coreDependenciesFromMap().put(referringArtifact, dependency);
+            }
           }
         }
       }
-
-      //
-      else {
-      }
     }
-  }
-
-  private DependencyKind getDependencyKind(IReference reference) {
-    DependencyKind dependencyKind = DependencyKind.USES;
-    if (reference.isImplements()) {
-      dependencyKind = DependencyKind.IMPLEMENTS;
-    } else if (reference.isExtends()) {
-      dependencyKind = DependencyKind.EXTENDS;
-    } else if (reference.isClassAnnotation()) {
-      dependencyKind = DependencyKind.ANNOTATES;
-    }
-    return dependencyKind;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param referenceName
-   * @param resourceModule
-   * @return
-   */
-  private String resolvePrimaryType(String referenceName, IResourceModule resourceModule) {
-    Assert.isNotNull(referenceName);
-
-    // TODO replace with containsType(referenceName)
-    if (getModularizedSystem().getTypes(referenceName, resourceModule).isEmpty()) {
-      return referenceName;
-    }
-
-    // step 1: inner type (e.g. 'de.example.Test$InnerClass')
-    if (JavaTypeUtils.isInnerTypeName(referenceName)) {
-
-      // get the reference name
-      referenceName = JavaTypeUtils.getEnclosingNonInnerTypeName(referenceName);
-
-      // recurse
-      return resolvePrimaryType(referenceName, resourceModule);
-    }
-
-    // step 2:
-    try {
-
-      // the referenced type
-      IType iType = getModularizedSystem().getType(referenceName, resourceModule);
-
-      //
-      if (!treatAsPrimaryType(iType)) {
-
-        //
-        IType primaryType = iType.getSourceResource().getPrimaryType();
-
-        //
-        String primaryTypeName = primaryType.getFullyQualifiedName();
-
-        // recurse
-        return resolvePrimaryType(primaryTypeName, resourceModule);
-      }
-    }
-
-    //
-    catch (AmbiguousElementException e) {
-      throw new RuntimeException(e);
-    }
-
-    // return the reference name
-    return referenceName;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param iType
-   * @return
-   */
-  private boolean treatAsPrimaryType(IType iType) {
-    return iType.isPrimaryType() || !iType.hasSourceResource() || !iType.getSourceResource().hasPrimaryType();
   }
 
   @Override

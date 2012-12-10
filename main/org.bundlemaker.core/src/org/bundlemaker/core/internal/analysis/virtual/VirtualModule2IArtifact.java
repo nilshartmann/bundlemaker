@@ -94,11 +94,6 @@ public class VirtualModule2IArtifact extends AbstractArtifactContainer implement
 
   }
 
-  @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
-    throw new UnsupportedOperationException("onAddArtifact");
-  }
-
   /**
    * {@inheritDoc}
    */

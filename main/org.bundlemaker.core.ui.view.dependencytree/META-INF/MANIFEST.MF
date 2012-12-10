@@ -11,5 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.core.ui.event;bundle-version="0.8.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: org.bundlemaker.core.ui.view.dependencytree
+Export-Package: org.bundlemaker.core.ui.view.dependencytree,
+ org.bundlemaker.core.ui.view.dependencytree.threecolumn
 Bundle-Activator: org.bundlemaker.core.ui.view.dependencytree.Activator

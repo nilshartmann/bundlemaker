@@ -1,5 +1,7 @@
 package org.bundlemaker.core.modules.modifiable;
 
+import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.eclipse.core.runtime.IPath;
 
 /**
@@ -8,7 +10,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IModifiableModule {
+public interface IModifiableModule extends IModule {
 
   /**
    * <p>
@@ -17,4 +19,8 @@ public interface IModifiableModule {
    * @param classification
    */
   void setClassification(IPath classification);
+
+  void setModuleIdentifier(String name, String version);
+
+  void setModuleIdentifier(IModuleIdentifier moduleIdentifier);
 }

@@ -62,7 +62,7 @@ public class VisibleArtifactsFilter extends ViewerFilter {
    * 
    * @return
    */
-  protected Set<IBundleMakerArtifact> getArtifacts() {
+  public Set<IBundleMakerArtifact> getArtifacts() {
     return Collections.unmodifiableSet(_artifacts);
   }
 

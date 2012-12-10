@@ -1,8 +1,19 @@
 package org.bundlemaker.core.transformation;
 
+import java.util.List;
+
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.transformation.add.AddArtifactToGroup;
+import org.bundlemaker.core.transformation.add.AddArtifactToModule;
+import org.bundlemaker.core.transformation.add.AddArtifactToPackage;
+import org.bundlemaker.core.transformation.add.AddArtifactToRoot;
 import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,7 +29,18 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AddArtifactsTransformation extends
-    AbstractConfigurableTransformation<AddArtifactsTransformation.Configuration> {
+    AbstractConfigurableTransformation<AddArtifactsTransformation.Configuration> implements IUndoableTransformation {
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link AddArtifactsTransformation}.
+   * </p>
+   * 
+   * @param configuration
+   */
+  public AddArtifactsTransformation(IBundleMakerArtifact parent, IArtifactSelector artifactSelector) {
+    super(new Configuration(parent, artifactSelector).toJsonTree());
+  }
 
   /**
    * <p>
@@ -31,21 +53,9 @@ public class AddArtifactsTransformation extends
     super(configuration);
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  protected void onApply(Configuration config, IModifiableModularizedSystem modularizedSystem,
-      IProgressMonitor progressMonitor) {
-
-    //
-    config.getParent().addArtifacts(config.getArtifactSelector());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  protected void assertConfiguration(JsonElement element) {
+  public void undo() {
+    // TODO Auto-generated method stub
 
   }
 
@@ -55,6 +65,61 @@ public class AddArtifactsTransformation extends
   @Override
   protected Class<Configuration> getConfigurationType() {
     return Configuration.class;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void assertConfiguration(JsonElement element) {
+    //
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void onApply(Configuration config, IModifiableModularizedSystem modularizedSystem,
+      IProgressMonitor progressMonitor) {
+
+    // we have to set the model modification handling to 'false'
+    ((IModifiableModularizedSystem) getModularizedSystem()).setHandleModelModification(false);
+
+    //
+    List<? extends IBundleMakerArtifact> artifacts = config.getArtifactSelector().getBundleMakerArtifacts();
+
+    // add the artifacts
+    for (IBundleMakerArtifact artifact : config.getArtifactSelector().getBundleMakerArtifacts()) {
+      ((AbstractArtifactContainer) config.getParent()).assertCanAdd(artifact);
+    }
+
+    for (IBundleMakerArtifact artifactToAdd : artifacts) {
+
+      // add to root artifact
+      if (config.getParent() instanceof IRootArtifact) {
+        AddArtifactToRoot.add((IRootArtifact) config.getParent(), artifactToAdd);
+      }
+      // add to group artifact
+      else if (config.getParent() instanceof IGroupArtifact) {
+        AddArtifactToGroup.add((IGroupArtifact) config.getParent(), artifactToAdd);
+      }
+      // add to module artifact
+      else if (config.getParent() instanceof IModuleArtifact) {
+        AddArtifactToModule.add((IModuleArtifact) config.getParent(), artifactToAdd);
+      }
+      // add to package artifact
+      else if (config.getParent() instanceof IPackageArtifact) {
+        AddArtifactToPackage.add((IPackageArtifact) config.getParent(), artifactToAdd);
+      }
+
+      //
+      else {
+        throw new RuntimeException("Unsupported add operation");
+      }
+    }
+
+    //
+    ((IModifiableModularizedSystem) getModularizedSystem()).setHandleModelModification(true);
   }
 
   /**

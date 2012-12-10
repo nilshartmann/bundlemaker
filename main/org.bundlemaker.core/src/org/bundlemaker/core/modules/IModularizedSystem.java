@@ -316,7 +316,7 @@ public interface IModularizedSystem {
    * @throws AmbiguousElementException
    */
   @Deprecated
-  IType getType(String fullyQualifiedName) throws AmbiguousElementException;
+  IType getType(String fullyQualifiedName);
 
   /**
    * <p>
@@ -343,4 +343,6 @@ public interface IModularizedSystem {
 
   @Deprecated
   Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule);
+
+  Map<String, Set<IType>> getReferencedTypes();
 }

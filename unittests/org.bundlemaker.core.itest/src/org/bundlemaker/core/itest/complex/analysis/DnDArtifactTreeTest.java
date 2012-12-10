@@ -7,6 +7,7 @@ import java.io.InputStream;
 
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.itest.analysis.jedit_artifact_model.framework.AbstractJeditAnalysisModelTest;
 import org.bundlemaker.core.modules.IModule;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -19,7 +20,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DnDArtifactTreeTest extends AbstractJeditArtifactTest {
+public class DnDArtifactTreeTest extends AbstractJeditAnalysisModelTest {
 
   /**
    * <p>

@@ -183,19 +183,6 @@ public final class AdapterGroup2IArtifact extends AbstractArtifactContainer impl
   }
 
   @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
-
-    // CHANGE THE UNDERLYING MODEL
-    if (artifact instanceof IModuleArtifact) {
-      AdapterUtils.addModulesIfNecessaryAndResetClassification((IModuleArtifact) artifact, getQualifiedName()
-          .replace('|', '/'));
-
-    } else if (artifact instanceof IGroupArtifact) {
-      AdapterUtils.addModulesIfNecessaryAndResetClassification((IGroupArtifact) artifact, this);
-    }
-  }
-
-  @Override
   protected void onRemoveArtifact(IBundleMakerArtifact artifact) {
 
     // CHANGE THE UNDERLYING MODEL

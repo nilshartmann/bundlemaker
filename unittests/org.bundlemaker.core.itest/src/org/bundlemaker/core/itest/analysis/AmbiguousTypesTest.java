@@ -6,10 +6,19 @@ import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itest.analysis.framework.ArtifactVisitorUtils;
+import org.bundlemaker.core.itest.analysis.framework.TestTypeSelector;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * <p>
+ * </p>
+ *
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
 
   /**
@@ -31,7 +40,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     // get the 'test' artifact
-    IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|AmbiguousTypesTest_1.0.0|test|Test.java");
+    IResourceArtifact artifact = ArtifactVisitorUtils.findResourceArtifactByPathName(rootArtifact, "test/Test.java");
     Assert.assertNotNull(artifact);
 
     // assert that the type
@@ -45,7 +54,8 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     IDependency dependency = new LinkedList<IDependency>(artifact.getDependenciesTo()).get(0);
 
     //
-    Assert.assertEquals("jdk16_jdk16", dependency.getTo().getParent(IModuleArtifact.class).getName());
-    // Assert.assertEquals("AmbiguousTypesTest_1.0.0", dependency.getTo().getParent(ArtifactType.Module).getName());
+    String executionEnvironmentName = getModularizedSystem().getExecutionEnvironment().getModuleIdentifier().toString();
+    String moduleArtifactName = dependency.getTo().getParent(IModuleArtifact.class).getName();
+    Assert.assertEquals(executionEnvironmentName, moduleArtifactName);
   }
 }

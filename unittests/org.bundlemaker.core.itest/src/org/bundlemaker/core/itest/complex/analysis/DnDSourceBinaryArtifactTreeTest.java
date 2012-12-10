@@ -9,6 +9,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.itest.analysis.jedit_artifact_model.framework.AbstractJeditAnalysisModelTest;
 import org.junit.Test;
 
 /**
@@ -22,7 +23,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class DnDSourceBinaryArtifactTreeTest extends AbstractJeditArtifactTest {
+public class DnDSourceBinaryArtifactTreeTest extends AbstractJeditAnalysisModelTest {
 
   /**
    * <p>

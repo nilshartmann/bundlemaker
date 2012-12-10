@@ -11,21 +11,24 @@
 package org.bundlemaker.core.internal.modules.modularizedsystem;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.bundlemaker.core.internal.modules.Group;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.modules.ChangeAction;
+import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.modules.event.GroupChangedEvent;
 import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
@@ -63,7 +66,10 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   private List<IModularizedSystemChangedListener>       _changedListeners;
 
   /** - */
-  private boolean                                       _isModelModifiedNotificationDisabled;
+  private boolean                                       _isModelModifiedNotificationDisabled = false;
+
+  /** - */
+  private boolean                                       _handleModelModification             = true;
 
   /**
    * <p>
@@ -153,6 +159,16 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
 
     //
     return _typeNameToTypeCache;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Map<String, Set<IType>> getReferencedTypes() {
+    return Collections.unmodifiableMap(_typeNameToReferringCache);
   }
 
   /**
@@ -362,11 +378,19 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   }
 
   @Override
-  protected void groupAdded(Group group) {
+  protected void groupAdded(IGroup group) {
     Assert.isNotNull(group);
 
     //
     fireGroupChanged(group, ChangeAction.ADDED);
+  }
+
+  @Override
+  protected void groupRemoved(IGroup group) {
+    Assert.isNotNull(group);
+
+    //
+    fireGroupChanged(group, ChangeAction.REMOVED);
   }
 
   /**
@@ -475,10 +499,27 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
    * <p>
    * </p>
    * 
+   * @param module
+   */
+  public void fireModuleIdentifierChanged(IModule module) {
+
+    //
+    ModuleIdentifierChangedEvent event = new ModuleIdentifierChangedEvent(module);
+
+    //
+    for (IModularizedSystemChangedListener listener : _changedListeners) {
+      listener.moduleIdentifierChanged(event);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param group
    * @param added
    */
-  private void fireGroupChanged(Group group, ChangeAction added) {
+  private void fireGroupChanged(IGroup group, ChangeAction added) {
     Assert.isNotNull(group);
     Assert.isNotNull(added);
 
@@ -573,6 +614,27 @@ public abstract class AbstractCachingModularizedSystem extends AbstractTransform
   @Override
   public boolean isModelModifiedNotificationDisabled() {
     return _isModelModifiedNotificationDisabled;
+  }
+
+  @Override
+  public boolean isHandleModelModification() {
+    return _handleModelModification;
+  }
+
+  @Override
+  public void setHandleModelModification(boolean handleModelModification) {
+
+    if (!_handleModelModification && handleModelModification) {
+      _handleModelModification = handleModelModification;
+
+      //
+      for (IModularizedSystemChangedListener modularizedSystemChangedListener : _changedListeners) {
+        modularizedSystemChangedListener.handleModelModification();
+      }
+
+    } else {
+      _handleModelModification = handleModelModification;
+    }
   }
 
   private void internalTypeChanged(IType type, IModule module, ChangeAction action) {

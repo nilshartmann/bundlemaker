@@ -15,6 +15,7 @@ import org.bundlemaker.core.modules.event.ClassificationChangedEvent;
 import org.bundlemaker.core.modules.event.GroupChangedEvent;
 import org.bundlemaker.core.modules.event.IModularizedSystemChangedListener;
 import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
+import org.bundlemaker.core.modules.event.ModuleIdentifierChangedEvent;
 import org.bundlemaker.core.modules.event.ModuleMovedEvent;
 import org.bundlemaker.core.modules.event.MovableUnitMovedEvent;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
@@ -95,6 +96,16 @@ public abstract class AbstractModularizedSystemChangedTest extends AbstractJedit
 
     @Override
     public void modelModifiedNotificationDisabled(boolean isDisabled) {
+      // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void moduleIdentifierChanged(ModuleIdentifierChangedEvent event) {
+      // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void handleModelModification() {
       // TODO Auto-generated method stub
     }
   }

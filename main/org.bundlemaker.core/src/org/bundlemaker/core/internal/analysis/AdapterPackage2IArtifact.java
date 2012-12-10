@@ -8,8 +8,6 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
-import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
-import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.eclipse.core.runtime.Assert;
@@ -64,17 +62,6 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
     _containingModule = containingModule;
     _isHierarchical = isHierarchical;
   }
-
-  // @Override
-  // public boolean containsPackages() {
-  // for (IBundleMakerArtifact bundleMakerArtifact : getChildren()) {
-  // if (bundleMakerArtifact.getType().equals(ArtifactType.Package)
-  // && ((IPackageArtifact) bundleMakerArtifact).containsTypesOrResources()) {
-  // return true;
-  // }
-  // }
-  // return false;
-  // }
 
   /**
    * {@inheritDoc}
@@ -160,35 +147,6 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
    */
   public final IModule getContainingModule() {
     return _containingModule;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  protected void onAddArtifact(IBundleMakerArtifact artifact) {
-
-    // asserts
-    Assert.isNotNull(artifact);
-    assertCanAdd(artifact);
-
-    // handle package
-    if (artifact.isInstanceOf(IPackageArtifact.class)) {
-
-      //
-      ModulePackageKey modulePackageKey = new ModulePackageKey(new ModuleKey(_containingModule),
-          artifact.getQualifiedName());
-
-      IPackageArtifact packageArtifact = (IPackageArtifact) _artifactCache.getPackageCache().getOrCreate(
-          modulePackageKey);
-
-      // move the children to the new package artifact
-      for (IBundleMakerArtifact child : artifact.getChildren()) {
-        packageArtifact.addArtifact(child);
-      }
-    } else {
-      AdapterUtils.addArtifactToPackage(this, artifact);
-    }
   }
 
   @Override

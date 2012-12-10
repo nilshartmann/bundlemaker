@@ -7,6 +7,7 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itest.analysis.framework.ArtifactVisitorUtils;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.projectdescription.ProjectContentType;

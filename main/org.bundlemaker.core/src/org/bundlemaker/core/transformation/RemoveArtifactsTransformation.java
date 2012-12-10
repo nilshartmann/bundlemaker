@@ -31,6 +31,12 @@ public class RemoveArtifactsTransformation extends
     super(configuration);
   }
 
+  @Override
+  public void undo() {
+    // TODO Auto-generated method stub
+
+  }
+
   /**
    * {@inheritDoc}
    */
