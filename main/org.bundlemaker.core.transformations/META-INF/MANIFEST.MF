@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Transformation
-Bundle-SymbolicName: org.bundlemaker.core.transformations
+Bundle-SymbolicName: org.bundlemaker.core.transformations;singleton:=true
 Bundle-Version: 0.8.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.bundlemaker.core;bundle-version="0.8.0",
@@ -15,3 +15,5 @@ Export-Package: org.bundlemaker.core.transformations.script,
  org.bundlemaker.core.transformations.script.config,
  org.bundlemaker.core.transformations.script.runner
 Bundle-Activator: org.bundlemaker.core.transformations.internal.Activator
+Service-Component: OSGI-INF/org.bundlemaker.core.transformations-components.xml
+Bundle-ActivationPolicy: lazy
