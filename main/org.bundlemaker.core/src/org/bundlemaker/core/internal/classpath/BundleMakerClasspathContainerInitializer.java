@@ -11,6 +11,7 @@
 package org.bundlemaker.core.internal.classpath;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +28,11 @@ import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.osgi.service.datalocation.Location;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -113,6 +117,54 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
 
   }
 
+  private static IPath _eclipseInstallLocation;
+
+  private static synchronized IPath eclipseInstallLocation() {
+
+    if (_eclipseInstallLocation == null) {
+
+      // Try Eclipe Location Service
+      Location location = null;
+
+      ServiceTracker<Location, Location> serviceTracker;
+      try {
+        serviceTracker = new ServiceTracker<Location, Location>(
+            Activator.getContext(),
+            Activator.getContext().createFilter(Location.ECLIPSE_HOME_FILTER),
+            null);
+        serviceTracker.open();
+        location = serviceTracker.getService();
+        serviceTracker.close();
+      } catch (InvalidSyntaxException e) {
+        // ignore
+      }
+
+      String locationString;
+
+      if (location != null && location.isSet()) {
+        // Use url from Location service
+        URL url = location.getURL();
+        locationString = url.toString();
+      } else {
+        // Fallback: use System property
+        locationString = System.getProperty("eclipse.home.location");
+      }
+
+      if (locationString == null) {
+        throw new IllegalStateException("Could not determine Eclipse home location.");
+      }
+
+      // Convert URL to Path
+      if (locationString.startsWith("file:")) {
+        locationString = locationString.substring("file:".length());
+      }
+
+      _eclipseInstallLocation = new Path(locationString);
+    }
+
+    return _eclipseInstallLocation;
+  }
+
   private static IPath getBundlePath(Bundle bundle) {
     String location = bundle.getLocation();
 
@@ -135,9 +187,24 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
       }
     }
 
-    IPath path = new Path(file.getAbsolutePath());
+    IPath bundlePath;
 
-    return path;
+    System.out.println("Path for bundle " + bundle.getSymbolicName() + " (orig location: "
+        + bundle.getLocation() + ")");
+
+    if (file.isAbsolute()) {
+      bundlePath = new Path(file.getAbsolutePath());
+    } else {
+
+      String path = file.getPath();
+      bundlePath = eclipseInstallLocation().append(path);
+      System.out.println("  path: " + path);
+      System.out.println("  eclipseInstallLocation: " + eclipseInstallLocation());
+    }
+
+    System.out.println("  -> " + bundlePath);
+
+    return bundlePath;
 
   }
 
