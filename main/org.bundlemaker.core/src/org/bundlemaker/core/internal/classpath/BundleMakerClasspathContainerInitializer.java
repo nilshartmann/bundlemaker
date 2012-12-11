@@ -53,6 +53,11 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
 
   private static IClasspathEntry[] _classpathEntries;
 
+  /**
+   * Eclipse install location used to convert relative plug-in paths to absolute ones
+   */
+  private static IPath             _eclipseInstallLocation;
+
   public BundleMakerClasspathContainerInitializer() {
     // required no-arg constructor
   }
@@ -116,8 +121,6 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
     return classpathEntries.toArray(new IClasspathEntry[0]);
 
   }
-
-  private static IPath _eclipseInstallLocation;
 
   private static synchronized IPath eclipseInstallLocation() {
 
@@ -189,20 +192,12 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
 
     IPath bundlePath;
 
-    System.out.println("Path for bundle " + bundle.getSymbolicName() + " (orig location: "
-        + bundle.getLocation() + ")");
-
     if (file.isAbsolute()) {
       bundlePath = new Path(file.getAbsolutePath());
     } else {
-
       String path = file.getPath();
       bundlePath = eclipseInstallLocation().append(path);
-      System.out.println("  path: " + path);
-      System.out.println("  eclipseInstallLocation: " + eclipseInstallLocation());
     }
-
-    System.out.println("  -> " + bundlePath);
 
     return bundlePath;
 
