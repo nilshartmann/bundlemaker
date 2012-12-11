@@ -15,6 +15,12 @@
    <feature url="features/org.bundlemaker.com.db4o.feature_8.0.184.15484.jar" id="org.bundlemaker.com.db4o.feature" version="8.0.184.15484">
       <category name="BundleMaker Dependencies"/>
    </feature>
+   <feature url="features/org.bundlemaker.core.feature.source_0.8.0.qualifier.jar" id="org.bundlemaker.core.feature.source" version="0.8.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>
+   <feature url="features/org.bundlemaker.core.base.feature.source_0.8.0.qualifier.jar" id="org.bundlemaker.core.base.feature.source" version="0.8.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>
    <category-def name="BundleMaker" label="BundleMaker"/>
    <category-def name="BundleMaker Dependencies" label="BundleMaker Dependencies"/>
 </site>
