@@ -12,12 +12,17 @@ package org.bundlemaker.core.ui.transformations.runner;
 
 import org.bundlemaker.core.transformations.script.runner.AbstractTransformationScriptLogger;
 import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsole;
+import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
 public class TransformationScriptConsoleLogger extends AbstractTransformationScriptLogger {
+
+  public TransformationScriptConsoleLogger() {
+    TransformationScriptConsoleFactory.showConsole();
+  }
 
   /*
    * (non-Javadoc)

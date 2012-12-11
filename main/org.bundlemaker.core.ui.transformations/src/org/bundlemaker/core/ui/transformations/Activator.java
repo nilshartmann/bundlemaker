@@ -1,7 +1,5 @@
 package org.bundlemaker.core.ui.transformations;
 
-import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
-import org.bundlemaker.core.ui.transformations.runner.TransformationScriptConsoleLogger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -32,8 +30,8 @@ public class Activator extends AbstractUIPlugin {
   public void start(BundleContext context) throws Exception {
     super.start(context);
 
-    TransformationScriptConsoleLogger logger = new TransformationScriptConsoleLogger();
-    context.registerService(ITransformationScriptLogger.class, logger, null);
+    // TransformationScriptConsoleLogger logger = new TransformationScriptConsoleLogger();
+    // context.registerService(ITransformationScriptLogger.class, logger, null);
 
     plugin = this;
   }

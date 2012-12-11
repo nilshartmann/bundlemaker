@@ -1,6 +1,5 @@
 package org.bundlemaker.core.transformations.internal;
 
-import org.bundlemaker.core.hook.IBundleMakerProjectHook;
 import org.bundlemaker.core.transformations.script.ITransformationScriptLogger;
 import org.bundlemaker.core.transformations.script.runner.SysoutTransformationScriptLogger;
 import org.osgi.framework.BundleActivator;
@@ -28,8 +27,9 @@ public class Activator implements BundleActivator {
 
     _scriptLoggerServiceTracker = new ServiceTracker<ITransformationScriptLogger, ITransformationScriptLogger>(context,
         ITransformationScriptLogger.class, null);
+    _scriptLoggerServiceTracker.open();
 
-    context.registerService(IBundleMakerProjectHook.class, new InitialTransformationRunnerHook(), null);
+    // context.registerService(IBundleMakerProjectHook.class, new InitialTransformationRunnerHook(), null);
   }
 
   @Override
