@@ -1,7 +1,7 @@
 package org.bundlemaker.core.itest.analysis.simple_artifact_model;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.itest.analysis.simple_artifact_model.framework.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.CreateGroupTransformation;
 import org.bundlemaker.core.transformation.CreateModuleTransformation;
