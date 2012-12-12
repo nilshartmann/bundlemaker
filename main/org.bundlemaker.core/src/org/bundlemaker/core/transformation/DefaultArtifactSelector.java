@@ -32,6 +32,9 @@ public class DefaultArtifactSelector implements IArtifactSelector {
    */
   public DefaultArtifactSelector(List<? extends IBundleMakerArtifact> bundleMakerArtifacts) {
     Assert.isNotNull(bundleMakerArtifacts);
+    for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
+      Assert.isNotNull(artifact);
+    }
 
     _bundleMakerArtifacts = bundleMakerArtifacts;
   }
@@ -45,11 +48,9 @@ public class DefaultArtifactSelector implements IArtifactSelector {
    */
   public DefaultArtifactSelector(IBundleMakerArtifact... bundleMakerArtifacts) {
     Assert.isNotNull(bundleMakerArtifacts);
-    // for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
-    // Assert.isTrue(artifact.getRoot() != artifact,
-    // String.format("Can not add root artifact '%s' to a selector of type %s.", artifact.getRoot(),
-    // DefaultArtifactSelector.class.getName()));
-    // }
+    for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
+      Assert.isNotNull(artifact);
+    }
 
     _bundleMakerArtifacts = Arrays.asList(bundleMakerArtifacts);
   }

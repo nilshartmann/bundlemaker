@@ -1,8 +1,8 @@
 package org.bundlemaker.core.itest.analysis.simple_artifact_model;
 
 import org.bundlemaker.core.analysis.IGroupArtifact;
-import org.bundlemaker.core.itest.analysis.simple_artifact_model.framework.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.itest.analysis.simple_artifact_model.framework.NoModificationAssertion;
+import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.NoModificationAssertion;
 import org.bundlemaker.core.transformation.IUndoableTransformation;
 import org.junit.Assert;
 import org.junit.Test;

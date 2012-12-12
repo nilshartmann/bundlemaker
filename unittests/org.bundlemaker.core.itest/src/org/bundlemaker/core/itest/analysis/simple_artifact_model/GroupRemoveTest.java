@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.analysis.simple_artifact_model;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import org.bundlemaker.core.itest.analysis.simple_artifact_model.framework.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;

@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.analysis.simple_artifact_model;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.itest.analysis.simple_artifact_model.framework.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.junit.Test;
 
 /**

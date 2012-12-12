@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
 import org.junit.Assert;

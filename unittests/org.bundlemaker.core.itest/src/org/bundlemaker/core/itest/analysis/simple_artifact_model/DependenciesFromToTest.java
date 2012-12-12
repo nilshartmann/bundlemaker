@@ -9,10 +9,10 @@ import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.itest.analysis.framework.ArtifactVisitorUtils;
-import org.bundlemaker.core.itest.analysis.simple_artifact_model.framework.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
+import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.ArtifactTestUtil;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.testutils.ArtifactTestUtil;
 import org.junit.Test;
 
 /**

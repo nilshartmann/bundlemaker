@@ -381,11 +381,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
               //
               if (dependency.getFrom().getQualifiedName().equals(dependency.getTo().getQualifiedName())) {
-                throw new RuntimeException(dependency.getFrom().getQualifiedName().toString());
+                // throw new RuntimeException(dependency.getFrom().getQualifiedName().toString());
+              } else {
+                //
+                _referencedArtifact.coreDependenciesFromMap().put(referringArtifact, dependency);
               }
-
-              //
-              _referencedArtifact.coreDependenciesFromMap().put(referringArtifact, dependency);
             }
           }
         }

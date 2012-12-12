@@ -7,9 +7,9 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyMatrix;
-import org.bundlemaker.core.itest.analysis.framework.ArtifactVisitorUtils;
-import org.bundlemaker.core.itest.analysis.jedit_artifact_model.framework.AbstractJeditAnalysisModelTest;
-import org.bundlemaker.core.itest.analysis.jedit_artifact_model.framework.JeditAnalysisModel;
+import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
+import org.bundlemaker.core.itest._framework.analysis.jedit_artifact_model.AbstractJeditAnalysisModelTest;
+import org.bundlemaker.core.itest._framework.analysis.jedit_artifact_model.JeditAnalysisModel;
 import org.junit.Test;
 
 /**

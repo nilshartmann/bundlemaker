@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bundlemaker.core.itest.AbstractModularizedSystemTest;
-import org.bundlemaker.core.itest.analysis.InnerClassTest;
+import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itest.analysis.misc_models.InnerClassTest;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;

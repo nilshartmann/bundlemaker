@@ -1,7 +1,7 @@
 package org.bundlemaker.core.itest.analysis.simple_artifact_model;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.itest.analysis.simple_artifact_model.framework.AbstractSimpleArtifactModelWithTypeLibraryTest;
+import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelWithTypeLibraryTest;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;

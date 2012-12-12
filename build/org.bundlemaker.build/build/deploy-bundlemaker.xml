@@ -17,11 +17,26 @@
 		<delete dir="${bundlemaker-deploy-dir}/bundlemaker" quiet="true" />
 		<mkdir dir="${bundlemaker-deploy-dir}/bundlemaker" />
 
+		<!-- Build Binary Feature -->
 		<buildFeature workspaceId="bundleMakerWorkspace"
 		              projectName="org.bundlemaker.core.feature"
 		              targetPlatformId="target.platform"
 		              destination="${bundlemaker-deploy-dir}/bundlemaker"
 		              clearDestination="true"
+		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences"
+		              debug="true" />
+
+		<!-- Build Source Feature -->
+		<!-- target platform containing only the BundleMaker bundles that just have been built -->
+		<ant4eclipse:targetPlatform id="target.platform.bundlemaker">
+			<location dir="${bundlemaker-deploy-dir}/bundlemaker" />
+		</ant4eclipse:targetPlatform>
+
+		<buildFeature workspaceId="bundleMakerWorkspace"
+		              projectName="org.bundlemaker.core.feature.source"
+		              targetPlatformId="target.platform.bundlemaker"
+		              destination="${bundlemaker-deploy-dir}/bundlemaker"
+		              clearDestination="false"
 		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences"
 		              debug="true" />
 

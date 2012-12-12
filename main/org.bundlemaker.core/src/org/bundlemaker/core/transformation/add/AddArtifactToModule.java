@@ -1,5 +1,7 @@
 package org.bundlemaker.core.transformation.add;
 
+import java.util.List;
+
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -11,8 +13,15 @@ import org.bundlemaker.core.internal.analysis.cache.ArtifactCache;
 import org.bundlemaker.core.internal.analysis.cache.ModuleKey;
 import org.bundlemaker.core.internal.analysis.cache.ModulePackageKey;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 
-public class AddArtifactToModule {
+public class AddArtifactToModule implements IAddArtifactAction<IModuleArtifact> {
+
+  /** - */
+  private List<IMovableUnit>        _movedMovableUnits;
+
+  /** - */
+  private IModifiableResourceModule _oldParentModule;
 
   /**
    * <p>
@@ -21,13 +30,17 @@ public class AddArtifactToModule {
    * @param moduleArtifact
    * @param artifact
    */
-  public static void add(IModuleArtifact moduleArtifact,
+  public void addChildToParent(IModuleArtifact moduleArtifact,
       IBundleMakerArtifact artifact) {
 
     // add a package to the module
     if (artifact.isInstanceOf(IPackageArtifact.class)) {
+
+      //
+      _movedMovableUnits = AdapterUtils.getAllMovableUnits(artifact);
+      _oldParentModule = (IModifiableResourceModule) artifact.getParent(IModuleArtifact.class).getAssociatedModule();
       AdapterUtils.addResourcesToModule((IModifiableResourceModule) moduleArtifact.getAssociatedModule(),
-          AdapterUtils.getAllMovableUnits(artifact));
+          _movedMovableUnits);
     }
 
     // add a resource to the module
@@ -74,4 +87,12 @@ public class AddArtifactToModule {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void undo() {
+    AdapterUtils.addResourcesToModule(_oldParentModule,
+        _movedMovableUnits);
+  }
 }
