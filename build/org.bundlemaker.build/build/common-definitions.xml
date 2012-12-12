@@ -57,7 +57,7 @@
 		<location dir="${targetplatform-subdir}/target.platform/test.utils" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
-
+	
 	<!-- -->
 	<ant4eclipse:workspaceDefinition id="bundleMakerWorkspace">
 		<dirset dir="${bundlemaker-workspace}">
