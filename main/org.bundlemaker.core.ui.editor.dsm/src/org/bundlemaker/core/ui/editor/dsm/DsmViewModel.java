@@ -9,6 +9,8 @@ import java.util.List;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.algorithms.Tarjan;
+import org.bundlemaker.core.analysis.algorithms.sorter.FastFasSorter;
+import org.bundlemaker.core.analysis.algorithms.sorter.IArtifactSorter;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -198,11 +200,17 @@ public class DsmViewModel extends AbstractDsmViewModel {
     Assert.isNotNull(unorderedArtifacts);
 
     _cycles = new Tarjan<IBundleMakerArtifact>().executeTarjan(unorderedArtifacts);
+    IArtifactSorter artifactSorter = new FastFasSorter();
+    for (List<IBundleMakerArtifact> cycle : _cycles) {
+      if (cycle.size() > 1) {
+        artifactSorter.sort(cycle);
+      }
+    }
 
     // Map<IArtifact, Integer> artifactColumnMap = new HashMap<IArtifact, Integer>();
     List<IBundleMakerArtifact> orderedArtifacts = new ArrayList<IBundleMakerArtifact>();
 
-    // hack: artifacts without dependencies first
+    // hack: un-cycled artifacts without dependencies first
     for (List<IBundleMakerArtifact> artifactList : _cycles) {
       if (artifactList.size() == 1 && artifactList.get(0).getDependenciesTo().size() == 0) {
         orderedArtifacts.add(artifactList.get(0));
@@ -210,8 +218,8 @@ public class DsmViewModel extends AbstractDsmViewModel {
     }
 
     //
-    for (List<IBundleMakerArtifact> artifactList : _cycles) {
-      for (IBundleMakerArtifact iArtifact : artifactList) {
+    for (List<IBundleMakerArtifact> cycle : _cycles) {
+      for (IBundleMakerArtifact iArtifact : cycle) {
         if (!orderedArtifacts.contains(iArtifact)) {
           orderedArtifacts.add(iArtifact);
         }
