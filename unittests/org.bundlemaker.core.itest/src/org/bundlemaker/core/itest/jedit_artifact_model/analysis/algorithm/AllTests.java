@@ -1,12 +1,11 @@
-package org.bundlemaker.core.itest.analysis;
+package org.bundlemaker.core.itest.jedit_artifact_model.analysis.algorithm;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-    org.bundlemaker.core.itest.analysis.misc_models.AllTests.class })
+@SuiteClasses({ FastFasTest.class })
 public class AllTests {
 
 }
