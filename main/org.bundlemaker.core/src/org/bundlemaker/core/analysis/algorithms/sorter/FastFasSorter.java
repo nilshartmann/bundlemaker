@@ -24,7 +24,7 @@ public class FastFasSorter implements IArtifactSorter {
 
     // Bubbles
     for (int outerIndex = 1; outerIndex < ordered.length; outerIndex++) {
-      for (int index = 1; index <= outerIndex; index++) {
+      for (int index = outerIndex; index >= 1; index--) {
 
         //
         if (adjacencyMatrix[ordered[index]][ordered[index - 1]] > adjacencyMatrix[ordered[index - 1]][ordered[index]]) {
