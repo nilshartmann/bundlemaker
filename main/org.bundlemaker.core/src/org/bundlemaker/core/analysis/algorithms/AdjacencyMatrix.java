@@ -22,7 +22,8 @@ public class AdjacencyMatrix {
    * @param artifacts
    * @return
    */
-  public static int[][] computeAdjacencyMatrix(IProgressMonitor monitor, Collection<IBundleMakerArtifact> artifacts) {
+  public static int[][] computeAdjacencyMatrix(IProgressMonitor monitor,
+      Collection<? extends IBundleMakerArtifact> artifacts) {
 
     //
     Assert.isNotNull(artifacts);
