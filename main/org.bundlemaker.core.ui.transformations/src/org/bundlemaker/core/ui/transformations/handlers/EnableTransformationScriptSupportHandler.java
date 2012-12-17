@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.handlers;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.transformations.support.TransformationScriptSupport;
@@ -47,49 +46,40 @@ public class EnableTransformationScriptSupportHandler extends AbstractBundleMake
 
     List<IAdaptable> selectedObjects = getSelectedObject(selection, IAdaptable.class);
     if (selectedObjects.size() < 1) {
+      // shouldn't happen according to enablement policy defined in plugin.xml
       return;
     }
 
-    List<IProject> handledProjects = new LinkedList<IProject>();
+    IAdaptable adaptable = selectedObjects.get(0);
 
-    IProject lastProject = null;
+    IResource resource = (IResource) adaptable.getAdapter(IResource.class);
 
-    for (IAdaptable adaptable : selectedObjects) {
-
-      IResource resource = (IResource) adaptable.getAdapter(IResource.class);
-
-      if (resource == null) {
-        continue;
-      }
-
-      // get project
-      IProject eclipseProject = resource.getProject();
-
-      if (eclipseProject != null && !handledProjects.contains(eclipseProject)) {
-        TransformationScriptSupport.enableTransformationScriptSupport(eclipseProject,
-            PreferenceConstants.getDefaultJRELibrary());
-
-        // remember project to not handle it twice
-        handledProjects.add(eclipseProject);
-
-        // remember last project to open editor in
-        lastProject = eclipseProject;
-
-      }
+    if (resource == null) {
+      // shouldn't happen according to enablement policy defined in plugin.xml
+      return;
     }
 
-    if (lastProject != null) {
-      // Open the editor with the sample transformation script
-      IWorkbenchWindow activeWorkbenchWindow = HandlerUtil.getActiveWorkbenchWindow(event);
-      if (activeWorkbenchWindow != null) {
-        IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-        IFile file = TransformationScriptSupport.findSampleTransformationScript(lastProject);
+    // get project
+    IProject eclipseProject = resource.getProject();
 
-        if (file != null) {
-          IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
-          if (desc != null)
-            activePage.openEditor(new FileEditorInput(file), desc.getId());
-        }
+    if (eclipseProject == null) {
+      return;
+    }
+
+    // Enable Transformation Script Support
+    TransformationScriptSupport.enableTransformationScriptSupport(eclipseProject,
+        PreferenceConstants.getDefaultJRELibrary());
+
+    // Open the editor with the sample transformation script
+    IWorkbenchWindow activeWorkbenchWindow = HandlerUtil.getActiveWorkbenchWindow(event);
+    if (activeWorkbenchWindow != null) {
+      IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+      IFile file = TransformationScriptSupport.findSampleTransformationScript(eclipseProject);
+
+      if (file != null) {
+        IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
+        if (desc != null)
+          activePage.openEditor(new FileEditorInput(file), desc.getId());
       }
     }
   }
