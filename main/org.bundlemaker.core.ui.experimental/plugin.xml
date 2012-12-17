@@ -5,34 +5,66 @@
       <extension point="org.eclipse.ui.commands">
             <command id="org.bundlemaker.core.ui.experimental.commands.CreateNewWorkingCopyCommand"
                   name="Create new Working Copy"/>
-      </extension>
+	      		<command id="org.bundlemaker.core.ui.experimental.editor.xref.threeway.OpenThreewayXRefViewCommand" 
+	      			name="Open Three-way Cross Referencer"/>
+   </extension>
 
-      <extension point="org.eclipse.ui.handlers">
-            <handler class="org.bundlemaker.core.ui.experimental.handlers.CreateNewWorkingCopyHandler"
-                  commandId="org.bundlemaker.core.ui.experimental.commands.CreateNewWorkingCopyCommand">
-                  <enabledWhen>
-                        <reference
-                              definitionId="org.bundlemaker.analysis.ui.singleRootArtifactSelected"
-                        > </reference>
-                  </enabledWhen>
-            </handler>
+    <extension point="org.eclipse.ui.handlers">
+          <handler class="org.bundlemaker.core.ui.experimental.handlers.CreateNewWorkingCopyHandler"
+                commandId="org.bundlemaker.core.ui.experimental.commands.CreateNewWorkingCopyCommand">
+                <enabledWhen>
+                      <reference
+                            definitionId="org.bundlemaker.analysis.ui.singleRootArtifactSelected"
+                      > </reference>
+                </enabledWhen>
+          </handler>
+          
+		    <handler class="org.bundlemaker.core.ui.experimental.editor.xref.threeway.handler.OpenThreewayXRefViewHandler"
+		       commandId="org.bundlemaker.core.ui.experimental.editor.xref.threeway.OpenThreewayXRefViewCommand">
+		       <activeWhen>
+		          <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+		          > </reference>
+		       </activeWhen>
+		       <enabledWhen>
+		          <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+		          > </reference>
+		       </enabledWhen>
+		    </handler>
+            
       </extension>
 
 
       <!-- ProjectExplorer Menu Entry -->
       <extension point="org.eclipse.ui.menus">
+      			<!-- -->
             <menuContribution
                   locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.artifacts.separator">
                   <command
                         commandId="org.bundlemaker.core.ui.experimental.commands.CreateNewWorkingCopyCommand"
                         style="push">
-					<visibleWhen checkEnabled="false">
-						<reference
-							definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
-					</visibleWhen>
-				</command>
-            </menuContribution>
+										<visibleWhen checkEnabled="false">
+											<reference
+												definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+										</visibleWhen>
+								</command>
+				    </menuContribution>
+				    <!-- Artifact Editor-actions -->
+				    <menuContribution
+		         locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
+				         <command commandId="org.bundlemaker.core.ui.experimental.editor.xref.threeway.OpenThreewayXRefViewCommand" style="push">
+            			<visibleWhen checkEnabled="true"/>
+         				</command>
+      	</menuContribution>
       </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.bundlemaker.core.ui.experimental.editor.xref.threeway.ThreewayXRefView"
+            default="false"
+            icon="icons/XRef.png"
+            id="org.bundlemaker.core.ui.experimental.editor.xref.threeway.ThreewayXRefView"
+            name="Three-way Cross Referencer"> </editor>
+   </extension>
 
 
 </plugin>

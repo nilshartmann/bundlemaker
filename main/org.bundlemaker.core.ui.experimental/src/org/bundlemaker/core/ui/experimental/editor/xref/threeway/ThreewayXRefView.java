@@ -8,23 +8,23 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.editor.xref;
+package org.bundlemaker.core.ui.experimental.editor.xref.threeway;
 
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
+import org.bundlemaker.core.ui.experimental.dependencytable.threeway.XRefComposite;
 import org.bundlemaker.core.ui.view.dependencytree.CropableDependencyTreeComposite;
-import org.bundlemaker.core.ui.view.dependencytree.threecolumn.XRefComposite;
 import org.eclipse.swt.widgets.Composite;
 
 /**
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class CopyOfXRefView extends AbstractArtifactSelectionAwareEditorPart {
+public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
 
   /** the ID of the view as specified by the extension */
-  public static final String XREF_ID = CopyOfXRefView.class.getName();
+  public static final String XREF_ID = ThreewayXRefView.class.getName();
 
   // /** - */
   // private CropableDependencyTreeComposite _composite;
