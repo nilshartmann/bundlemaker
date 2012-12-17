@@ -80,8 +80,9 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
     if (_composite != null) {
       
       //
+      if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
       _composite.setRoot(getCurrentArtifactSelection().getRootArtifact());
-
+      }
       // if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts()) {
       //
       // //
