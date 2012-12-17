@@ -409,6 +409,19 @@ public class BundleMakerProject implements IBundleMakerProject {
     return _projectDescription;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.IBundleMakerProject#reloadProjectDescription()
+   */
+  @Override
+  public void reloadProjectDescription() throws CoreException {
+    _projectDescription = loadProjectDescription();
+
+    notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED));
+
+  }
+
   @Override
   public void modifyBundleMakerProjectDescription(IProjectDescriptionModifier modifier) throws CoreException {
 

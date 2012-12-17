@@ -18,11 +18,22 @@
 		<mkdir dir="${bundlemaker-deploy-dir}/bundlemaker" />
 
 		<!-- Build Binary Feature -->
+		<echo>Building Feature org.bundlemaker.core.feature</echo>
 		<buildFeature workspaceId="bundleMakerWorkspace"
 		              projectName="org.bundlemaker.core.feature"
 		              targetPlatformId="target.platform"
 		              destination="${bundlemaker-deploy-dir}/bundlemaker"
 		              clearDestination="true"
+		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences"
+		              debug="true" />
+		
+		<!-- Build Experimental Feature -->
+		<echo>Building Feature org.bundlemaker.experimental.feature</echo>
+		<buildFeature workspaceId="bundleMakerWorkspace"
+		              projectName="org.bundlemaker.experimental.feature"
+		              targetPlatformId="target.platform"
+		              destination="${bundlemaker-deploy-dir}/bundlemaker"
+		              clearDestination="false"
 		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences"
 		              debug="true" />
 
@@ -32,14 +43,25 @@
 			<location dir="${bundlemaker-deploy-dir}/bundlemaker" />
 		</ant4eclipse:targetPlatform>
 
+		<echo>Building Feature org.bundlemaker.core.feature.source</echo>
 		<buildFeature workspaceId="bundleMakerWorkspace"
 		              projectName="org.bundlemaker.core.feature.source"
 		              targetPlatformId="target.platform.bundlemaker"
 		              destination="${bundlemaker-deploy-dir}/bundlemaker"
 		              clearDestination="false"
 		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences"
+		              debug="true" />		
+		
+		<echo>Building Feature org.bundlemaker.experimental.feature.source</echo>
+		<buildFeature workspaceId="bundleMakerWorkspace"
+		              projectName="org.bundlemaker.experimental.feature.source"
+		              targetPlatformId="target.platform.bundlemaker"
+		              destination="${bundlemaker-deploy-dir}/bundlemaker"
+		              clearDestination="false"
+		              defaultCompilerOptionsFile="${basedir}/org.eclipse.jdt.core.preferences"
 		              debug="true" />
 
+		
 		<!-- Javadoc -->
 		<javadoc destdir="${bundlemaker-deploy-dir}/javadoc" executable="${jdk16.dir}/bin/javadoc" useexternalfile="true">
 			<fileset dir="${bundlemaker-workspace}/main/">

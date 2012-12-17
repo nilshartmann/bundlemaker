@@ -6,10 +6,11 @@
       <extension point="org.eclipse.ui.commands">
             <command id="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
                   name="Run Transformation Script"/>
-      </extension>
-      <extension point="org.eclipse.ui.commands">
             <command id="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
                   name="Set as Initial Transformation"/>
+            <command id="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand"
+                  name="Enable Transformation Script Support"/>
+
       </extension>
       
       <extension point="org.eclipse.ui.handlers">
@@ -26,10 +27,8 @@
                         > </reference>
                   </enabledWhen>
             </handler>
-      </extension>
-      
-      
-      <extension point="org.eclipse.ui.handlers">
+ 
+ 
             <handler class="org.bundlemaker.core.ui.transformations.handlers.SetInitialTransformationsHandler"
                   commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand">
                   <activeWhen>
@@ -46,23 +45,16 @@
 		                </iterate>
 		               	</with>
 		              </enabledWhen>
-		              
-		              
-                  
-                  
-                  <!--
-                  <activeWhen>
-                        <reference
-                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-                        > </reference>
-                  </activeWhen>
-                  <enabledWhen>
-                        <reference
-                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-                        > </reference>
-                  </enabledWhen>
-                  -->
             </handler>
+            <handler class="org.bundlemaker.core.ui.transformations.handlers.EnableTransformationScriptSupportHandler"
+                  commandId="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand">
+                  <activeWhen>
+ 									 	<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected" />
+		              </activeWhen>
+                  <enabledWhen>
+   									<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected" />
+                   </enabledWhen>
+            </handler>            
       </extension>
 
       <!--  Submenu -->
@@ -76,6 +68,11 @@
                   </command>
                  <command
                         commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
+                        style="push">
+                        <visibleWhen checkEnabled="true"/>
+                  </command>
+                 <command
+                        commandId="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand"
                         style="push">
                         <visibleWhen checkEnabled="true"/>
                   </command>

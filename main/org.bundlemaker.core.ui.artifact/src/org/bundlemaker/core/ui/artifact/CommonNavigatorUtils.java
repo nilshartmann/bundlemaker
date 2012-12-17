@@ -47,10 +47,16 @@ public class CommonNavigatorUtils {
       return;
     }
 
-    //
-    for (IBundleMakerArtifact iArtifact : artifacts) {
-      commonNavigator.getCommonViewer().refresh(iArtifact);
+    if (artifacts == null || artifacts.length < 1) {
+      // No artifact given => refresh all
+      commonNavigator.getCommonViewer().refresh();
+    } else {
+      // refresh individual artifacts
+      for (IBundleMakerArtifact iArtifact : artifacts) {
+        commonNavigator.getCommonViewer().refresh(iArtifact);
+      }
     }
+
   }
 
   /**

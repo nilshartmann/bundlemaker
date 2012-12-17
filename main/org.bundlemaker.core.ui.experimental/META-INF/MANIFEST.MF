@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Experimental
+Bundle-SymbolicName: org.bundlemaker.core.ui.experimental;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.bundlemaker.core.ui.experimental.internal.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.bundlemaker.core.ui;bundle-version="0.8.0",
+ org.bundlemaker.core;bundle-version="0.8.0",
+ org.bundlemaker.core.ui.artifact;bundle-version="0.8.0",
+ org.eclipse.core.resources;bundle-version="3.8.0",
+ org.bundlemaker.core.ui.event;bundle-version="0.8.0",
+ org.bundlemaker.core.ui.view.dependencytree;bundle-version="0.8.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
