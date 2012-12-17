@@ -11,6 +11,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorInput;
@@ -150,6 +151,17 @@ public class ProjectEditor extends FormEditor {
     // remove dirty listener
     if (_bundleMakerProject != null) {
       _bundleMakerProject.removeBundleMakerProjectChangedListener(_bundleMakerProjectDirtyListener);
+
+      boolean d = isDirty();
+      if (d) {
+        // window is closed, changes already made to the model must be discarded by re-loading the bundlemaker.xml from
+        // storage
+        try {
+          _bundleMakerProject.reloadProjectDescription();
+        } catch (CoreException e) {
+          Activator.logError("Error while re-reading project description from disc: " + e, e);
+        }
+      }
     }
 
     // dispose
