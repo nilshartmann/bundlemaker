@@ -17,11 +17,18 @@ import org.bundlemaker.core.transformations.support.TransformationScriptSupport;
 import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.part.FileEditorInput;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -45,6 +52,8 @@ public class EnableTransformationScriptSupportHandler extends AbstractBundleMake
 
     List<IProject> handledProjects = new LinkedList<IProject>();
 
+    IProject lastProject = null;
+
     for (IAdaptable adaptable : selectedObjects) {
 
       IResource resource = (IResource) adaptable.getAdapter(IResource.class);
@@ -63,10 +72,25 @@ public class EnableTransformationScriptSupportHandler extends AbstractBundleMake
         // remember project to not handle it twice
         handledProjects.add(eclipseProject);
 
+        // remember last project to open editor in
+        lastProject = eclipseProject;
+
       }
     }
 
-    // TODO open editor
-  }
+    if (lastProject != null) {
+      // Open the editor with the sample transformation script
+      IWorkbenchWindow activeWorkbenchWindow = HandlerUtil.getActiveWorkbenchWindow(event);
+      if (activeWorkbenchWindow != null) {
+        IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+        IFile file = TransformationScriptSupport.findSampleTransformationScript(lastProject);
 
+        if (file != null) {
+          IEditorDescriptor desc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
+          if (desc != null)
+            activePage.openEditor(new FileEditorInput(file), desc.getId());
+        }
+      }
+    }
+  }
 }

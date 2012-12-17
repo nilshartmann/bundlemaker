@@ -36,6 +36,13 @@ import org.eclipse.jdt.core.JavaCore;
 public class TransformationScriptSupport {
 
   /**
+   * Name of the sample transformation script that is created the first time the transformation script support is
+   * enabled
+   */
+  public static final IPath SAMPLE_TRANSFORMATION_SCRIPT_FILENAME = new Path(
+                                                                      "org/bundlemaker/example/transformation/SampleTransformationScript.java");
+
+  /**
    * Enables transformation script capability to the specified project.
    * 
    * <p>
@@ -78,14 +85,32 @@ public class TransformationScriptSupport {
     InputStream is = TransformationScriptSupport.class.getResourceAsStream("TransformationScriptTemplate.txt");
 
     IFolder examplePackageFolder = createFolder(
-        root.getFolder(sourceFolderPath.append("org/bundlemaker/example/transformation")), true, true, null);
-    IFile sampleScript = examplePackageFolder.getFile("SampleTransformationScript.java");
+        root.getFolder(sourceFolderPath.append(SAMPLE_TRANSFORMATION_SCRIPT_FILENAME.removeLastSegments(1))), true,
+        true, null);
+    IFile sampleScript = examplePackageFolder.getFile(SAMPLE_TRANSFORMATION_SCRIPT_FILENAME.lastSegment());
 
     // don't override if already existing
     if (!sampleScript.exists()) {
       sampleScript.create(is, true, null);
     }
 
+  }
+
+  /**
+   * Returns an {@link IFile} pointing to the sample transformation script if available
+   * 
+   * @param project
+   * @return
+   */
+  public static IFile findSampleTransformationScript(IProject project) {
+
+    IFile result = project.getFile(new Path("src").append(SAMPLE_TRANSFORMATION_SCRIPT_FILENAME));
+
+    if (result == null || result.exists() == false) {
+      return null;
+    }
+
+    return result;
   }
 
   static class ClasspathBuilder {
