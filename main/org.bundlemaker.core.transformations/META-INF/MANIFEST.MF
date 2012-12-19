@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.transformations.script,
  org.bundlemaker.core.transformations.script.config,
- org.bundlemaker.core.transformations.script.runner
+ org.bundlemaker.core.transformations.script.runner,
+ org.bundlemaker.core.transformations.support
 Bundle-Activator: org.bundlemaker.core.transformations.internal.Activator
 Service-Component: OSGI-INF/org.bundlemaker.core.transformations-components.xml
 Bundle-ActivationPolicy: lazy

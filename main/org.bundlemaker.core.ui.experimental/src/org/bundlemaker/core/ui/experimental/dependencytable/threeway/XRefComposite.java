@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.view.dependencytree.threecolumn;
+package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
 
 import java.util.Collection;
 import java.util.HashSet;

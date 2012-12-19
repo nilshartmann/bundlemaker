@@ -71,6 +71,8 @@ public interface IBundleMakerProject {
    */
   public IModifiableProjectDescription getModifiableProjectDescription();
 
+  public void reloadProjectDescription() throws CoreException;
+
   /**
    * <p>
    * Allows to modify the {@link IProjectDescription} using the template class {@link IProjectDescriptionModifier}. This

@@ -38,6 +38,19 @@
 			</with>
 		</definition>
 		
+		<!-- org.bundlemaker.analysis.ui.singleRootArtifactSelected
+		  evaluates to true if exactly one root artifact is selected -->
+        <definition id="org.bundlemaker.analysis.ui.singleRootArtifactSelected">
+			<with variable="selection">
+				<count value="1" />
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IRootArtifact"
+					> </instanceof>
+				</iterate>
+			</with>
+		</definition>
+		  
+		
 		<!-- org.bundlemaker.analysis.ui.groupAndModuleContentSelected: 
 		     evaluates to true if all  of the selected elements are IGroupAndModuleContainer -->
         <definition id="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected">
