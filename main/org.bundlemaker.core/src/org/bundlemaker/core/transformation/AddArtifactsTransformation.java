@@ -5,16 +5,13 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.transformation.add.AddArtifactToGroup;
-import org.bundlemaker.core.transformation.add.AddArtifactToModule;
-import org.bundlemaker.core.transformation.add.AddArtifactToPackage;
-import org.bundlemaker.core.transformation.add.AddArtifactToRoot;
+import org.bundlemaker.core.transformation.add.AddArtifactToGroupAndModuleContainer;
+import org.bundlemaker.core.transformation.add.AddMovableUnitsToModule;
 import org.bundlemaker.core.transformation.add.IAddArtifactAction;
 import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
@@ -124,25 +121,18 @@ public class AddArtifactsTransformation extends
 
         for (IBundleMakerArtifact artifactToAdd : artifacts) {
 
-          // add to root artifact
-          if (config.getParent() instanceof IRootArtifact) {
-            AddArtifactToRoot.add((IRootArtifact) config.getParent(), artifactToAdd);
-          }
-          // add to group artifact
-          else if (config.getParent() instanceof IGroupArtifact) {
-            AddArtifactToGroup.add((IGroupArtifact) config.getParent(), artifactToAdd);
-          }
-          // add to module artifact
-          else if (config.getParent() instanceof IModuleArtifact) {
-            IAddArtifactAction<IModuleArtifact> addAction = new AddArtifactToModule();
-            addAction.addChildToParent((IModuleArtifact) config.getParent(), artifactToAdd);
+          // add to root or group artifact
+          if (config.getParent() instanceof IGroupAndModuleContainer) {
+            IAddArtifactAction<IGroupAndModuleContainer> addAction = new AddArtifactToGroupAndModuleContainer();
+            addAction.addChildToParent((IGroupAndModuleContainer) config.getParent(), artifactToAdd);
             _actions.add(addAction);
           }
-          // add to package artifact
-          else if (config.getParent() instanceof IPackageArtifact) {
-            AddArtifactToPackage.add((IPackageArtifact) config.getParent(), artifactToAdd);
+          // add to module artifact
+          else if (config.getParent() instanceof IModuleArtifact || config.getParent() instanceof IPackageArtifact) {
+            IAddArtifactAction<IBundleMakerArtifact> addAction = new AddMovableUnitsToModule();
+            addAction.addChildToParent(config.getParent(), artifactToAdd);
+            _actions.add(addAction);
           }
-
           //
           else {
             throw new RuntimeException("Unsupported add operation");

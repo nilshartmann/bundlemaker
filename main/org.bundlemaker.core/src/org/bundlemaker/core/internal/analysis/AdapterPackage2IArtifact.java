@@ -123,19 +123,30 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
       }
     }
 
+    // handle packages
     if (artifact.isInstanceOf(IPackageArtifact.class)) {
-      IPackageArtifact packageArtifact = ((IPackageArtifact) artifact);
-      int index = packageArtifact.getQualifiedName().lastIndexOf(".");
-      String parentPackageName = index != -1 ? packageArtifact.getQualifiedName().substring(0, index) : packageArtifact
-          .getQualifiedName();
-      if (!parentPackageName.equals(this.getQualifiedName())) {
-        return String.format("Can not add package '%s' to package '%s'.", artifact.getQualifiedName(),
-            this.getQualifiedName());
-      } else {
-        return null;
-      }
+
+      // //
+      // if (getConfiguration().isHierarchicalPackages()) {
+      //
+      // IPackageArtifact packageArtifact = ((IPackageArtifact) artifact);
+      // int index = packageArtifact.getQualifiedName().lastIndexOf(".");
+      // String parentPackageName = index != -1 ? packageArtifact.getQualifiedName().substring(0, index)
+      // : packageArtifact
+      // .getQualifiedName();
+      //
+      // if (parentPackageName.equals(this.getQualifiedName())) {
+      // return null;
+      // }
+      // }
+
+      //
+      return String.format("Can not add package '%s (%s)' to package '%s (%s)'.", artifact.getQualifiedName(),
+          artifact.getParent(IModuleArtifact.class),
+          this.getQualifiedName(), this.getParent(IModuleArtifact.class));
     }
 
+    // fail
     return String.format("Can not handle artifact '%s'.", artifact.getQualifiedName());
   }
 
