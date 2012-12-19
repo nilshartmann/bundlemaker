@@ -32,7 +32,7 @@ public class GroupAddTest extends AbstractSimpleArtifactModelTest {
 
     // test dependencies: main module is in group 1
     assertDeps_mainModuleInGroup1();
-    
+
     // assert module parent in src model
     Assert.assertEquals(_srcModel.getGroup1Artifact(), _srcModel.getMainModuleArtifact().getParent());
     assertGroupCount(_srcModel, 2);

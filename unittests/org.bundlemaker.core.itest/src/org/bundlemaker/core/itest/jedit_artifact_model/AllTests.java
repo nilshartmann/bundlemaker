@@ -7,7 +7,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
     org.bundlemaker.core.itest.jedit_artifact_model.analysis.AllTests.class,
-    org.bundlemaker.core.itest.jedit_artifact_model.analysis.algorithm.AllTests.class })
+    org.bundlemaker.core.itest.jedit_artifact_model.core.AllTests.class,
+    org.bundlemaker.core.itest.jedit_artifact_model.exporter.AllTests.class})
 public class AllTests {
 
 }

@@ -95,7 +95,6 @@ public class GroupRenameTest extends AbstractSimpleArtifactModelTest {
 
     // assert group count
     assertGroupCountInModularizedSystem(2);
-    ArtifactUtils.dumpArtifact(_binModel.getRootArtifact());
     assertGroupCount(_binModel, 2);
     assertGroupCount(_srcModel, 2);
 
@@ -104,13 +103,10 @@ public class GroupRenameTest extends AbstractSimpleArtifactModelTest {
         getModularizedSystem().getModule("SimpleArtifactModelTest", "1.0.0").getClassification());
 
     // assert update in bin artifact model
-    ArtifactUtils.dumpArtifact(_binModel.getRootArtifact());
     Assert.assertEquals("renamedgroup2", _binModel.getGroup2Artifact().getName());
     Assert.assertEquals("renamedgroup2", _binModel.getGroup2Artifact().getQualifiedName());
 
     // assert update in src artifact model
-    ArtifactUtils.dumpArtifact(_srcModel.getGroup1Artifact());
-    ArtifactUtils.dumpArtifact(_srcModel.getGroup2Artifact());
     Assert.assertEquals("renamedgroup2", _srcModel.getGroup2Artifact().getName());
     Assert.assertEquals("renamedgroup2", _srcModel.getGroup2Artifact().getQualifiedName());
   }

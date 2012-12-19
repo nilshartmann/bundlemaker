@@ -48,6 +48,5 @@ public class ComplexArtifactTreeTest extends AbstractJeditAnalysisModelTest {
       newModule = rootArtifact.getOrCreateModule("DEV/FRAMEWORK/de.test", "1.23");
       newModule.addArtifact(typeArtifact);
     }
-    ArtifactUtils.dumpArtifact(newModule);
   }
 }

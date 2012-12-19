@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IGroupArtifact;
@@ -271,8 +272,8 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     assertResourceModuleCount(_srcModel, 1);
 
     //
-    Assert.assertEquals(name  + "_" +  version, _binModel.getMainModuleArtifact().getName());
-    Assert.assertTrue(_binModel.getMainModuleArtifact().getQualifiedName().endsWith(name  + "_" +  version));
+    Assert.assertEquals(name + "_" + version, _binModel.getMainModuleArtifact().getName());
+    Assert.assertTrue(_binModel.getMainModuleArtifact().getQualifiedName().endsWith(name + "_" + version));
     Assert.assertEquals(name, _binModel.getMainModuleArtifact().getModuleName());
     Assert.assertEquals(version, _binModel.getMainModuleArtifact().getModuleVersion());
 
