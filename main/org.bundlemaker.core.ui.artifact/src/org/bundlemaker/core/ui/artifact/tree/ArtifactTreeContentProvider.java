@@ -234,6 +234,11 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       _rootArtifact = rootArtifact;
     }
 
+    @Override
+    public void resetTransformations() {
+      _rootArtifact.resetTransformations();
+    }
+
     /**
      * {@inheritDoc}
      */
