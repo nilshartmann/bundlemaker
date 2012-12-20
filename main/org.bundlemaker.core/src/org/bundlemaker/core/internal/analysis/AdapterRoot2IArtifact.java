@@ -97,6 +97,11 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   }
 
   @Override
+  public void resetTransformations() {
+    getModularizedSystem().resetTransformations(null);
+  }
+
+  @Override
   public final void disableModelModifiedNotification(boolean isDisabled) {
     getModularizedSystem().disableModelModifiedNotification(isDisabled);
   }

@@ -38,6 +38,7 @@ import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.transformation.IUndoableTransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -89,7 +90,21 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    */
   @Override
   public void resetTransformations(IProgressMonitor progressMonitor) {
-    // TODO
+
+    //
+    for (ITransformation transformation : getTransformations()) {
+      if (!(transformation instanceof IUndoableTransformation)) {
+        throw new RuntimeException("TODO");
+      }
+    }
+
+    //
+    for (ITransformation transformation : getTransformations()) {
+      ((IUndoableTransformation) transformation).undo();
+    }
+
+    //
+    getTransformations().clear();
   }
 
   /**

@@ -19,6 +19,12 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
 
   /**
    * <p>
+   * </p>
+   */
+  void resetTransformations();
+
+  /**
+   * <p>
    * Adds the specified {@link IAnalysisModelModifiedListener} to the artifact tree.
    * </p>
    * 
