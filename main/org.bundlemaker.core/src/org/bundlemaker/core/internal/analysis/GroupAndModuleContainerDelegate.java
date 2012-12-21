@@ -1,5 +1,6 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -45,19 +46,33 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     Assert.isNotNull(qualifiedModuleName);
     Assert.isNotNull(moduleVersion);
 
-    // create the transformation
-    CreateModuleTransformation.Configuration configuration = new CreateModuleTransformation.Configuration(
-        _groupAndModuleContainer,
-        qualifiedModuleName, moduleVersion);
-
     //
-    CreateModuleTransformation transformation = new CreateModuleTransformation(configuration.toJsonTree());
+    IModuleArtifact moduleArtifact = ArtifactHelper.getChildByPath(_groupAndModuleContainer, new Path(
+        qualifiedModuleName + "_" + moduleVersion),
+        IModuleArtifact.class);
 
-    //
-    _groupAndModuleContainer.getModularizedSystem().applyTransformations(null, transformation);
+    // does it already exist?
+    if (moduleArtifact != null) {
+      return moduleArtifact;
+    }
 
-    //
-    return transformation.getModuleArtifact();
+    // if not, we have to create it...
+    else {
+
+      // create the transformation
+      CreateModuleTransformation.Configuration configuration = new CreateModuleTransformation.Configuration(
+          _groupAndModuleContainer,
+          qualifiedModuleName, moduleVersion);
+
+      //
+      CreateModuleTransformation transformation = new CreateModuleTransformation(configuration.toJsonTree());
+
+      //
+      _groupAndModuleContainer.getModularizedSystem().applyTransformations(null, transformation);
+
+      //
+      return transformation.getModuleArtifact();
+    }
   }
 
   /**
@@ -81,13 +96,26 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     Assert.isNotNull(path);
 
     //
-    CreateGroupTransformation transformation = new CreateGroupTransformation(_groupAndModuleContainer, path);
+    IGroupArtifact groupArtifact = ArtifactHelper.getChildByPath(_groupAndModuleContainer, path,
+        IGroupArtifact.class);
 
-    //
-    _groupAndModuleContainer.getRoot().getModularizedSystem().applyTransformations(null,
-        transformation);
+    // does it already exist?
+    if (groupArtifact != null) {
+      return groupArtifact;
+    }
 
-    //
-    return transformation.getGroupArtifact();
+    // if not, we have to create it...
+    else {
+
+      //
+      CreateGroupTransformation transformation = new CreateGroupTransformation(_groupAndModuleContainer, path);
+
+      //
+      _groupAndModuleContainer.getRoot().getModularizedSystem().applyTransformations(null,
+          transformation);
+
+      //
+      return transformation.getGroupArtifact();
+    }
   }
 }
