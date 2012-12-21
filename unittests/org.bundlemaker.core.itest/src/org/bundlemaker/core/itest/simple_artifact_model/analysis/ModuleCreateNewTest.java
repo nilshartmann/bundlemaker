@@ -1,5 +1,6 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
+import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
@@ -75,7 +76,7 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
     //
     Assert.assertNotNull(srcModule);
     Assert.assertNotNull(binModule);
-    
+
     //
     Assert.assertNotNull(srcModule.getParent());
     Assert.assertNotNull(binModule.getParent());
@@ -105,5 +106,23 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
     assertResourceModuleCount(_binModel, 2);
     assertResourceModuleCount(_srcModel, 2);
+  }
+
+  @Test(expected = AnalysisModelException.class)
+  public void tryToCreateNewModuleInWrongGroup() throws Exception {
+
+    //
+    Assert.assertEquals(2, getModularizedSystem().getGroups().size());
+    assertResourceModuleCountInModularizedSystem(1);
+    assertResourceModuleCount(_binModel, 1);
+    assertResourceModuleCount(_srcModel, 1);
+
+    // We have 1 (!) transformations here, as the "CreateGroupTransformation" is
+    // implemented as an inner transformation
+    Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+
+    // STEP 1: create a new module
+    IModuleArtifact moduleArtifact = _binModel.getRootArtifact().getOrCreateModule(
+        "group1/SimpleArtifactModelTest", "1.0.0");
   }
 }

@@ -1,10 +1,12 @@
 package org.bundlemaker.core.internal.analysis;
 
+import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
+import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.transformation.CreateGroupTransformation;
 import org.bundlemaker.core.transformation.CreateModuleTransformation;
 import org.eclipse.core.runtime.Assert;
@@ -58,6 +60,24 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
     // if not, we have to create it...
     else {
+
+      // check if module already exists
+      IPath simpleName = new Path(qualifiedModuleName);
+      IResourceModule resourceModule = _groupAndModuleContainer.getModularizedSystem().getResourceModule(
+          simpleName.lastSegment(), moduleVersion);
+
+      //
+      if (resourceModule != null) {
+
+        //
+        String classification = resourceModule.hasClassification() ? resourceModule.getClassification()
+            .toPortableString() : "";
+
+        //
+        throw new AnalysisModelException(String.format(
+            "Module '%s_%s' already exists within a different group ('%s').",
+            qualifiedModuleName, moduleVersion, classification));
+      }
 
       // create the transformation
       CreateModuleTransformation.Configuration configuration = new CreateModuleTransformation.Configuration(
