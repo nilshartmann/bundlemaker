@@ -633,8 +633,6 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
       return;
     }
 
-    System.out.println("handleModelModification");
-
     //
     _cachesInitialized = false;
 
