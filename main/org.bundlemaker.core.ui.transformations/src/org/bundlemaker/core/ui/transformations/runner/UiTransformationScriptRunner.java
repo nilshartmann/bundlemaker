@@ -66,13 +66,17 @@ public class UiTransformationScriptRunner extends TransformationScriptRunner imp
    */
   @Override
   protected void handleScriptException(final Exception ex) {
+
+    //
     Activator
         .getDefault()
         .getLog()
         .log(
             new Status(Status.ERROR, Activator.PLUGIN_ID,
-                "Execution of transformation script failed with Exception:\n\n" + ex));
+                String.format("Execution of transformation script failed with %s: %s", ex.getClass().getSimpleName(),
+                    ex.getMessage()), ex));
 
+    //
     _shell.getDisplay().asyncExec(new Runnable() {
 
       @Override
@@ -88,5 +92,4 @@ public class UiTransformationScriptRunner extends TransformationScriptRunner imp
     });
 
   }
-
 }
