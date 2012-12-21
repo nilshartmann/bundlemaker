@@ -17,11 +17,7 @@ public class NoModificationAssertion {
     String expectedBinModel = ArtifactUtils.artifactToString(test._binModel.getRootArtifact());
     String expectedSrcModel = ArtifactUtils.artifactToString(test._srcModel.getRootArtifact());
 
-    System.out.println(ArtifactUtils.artifactToString(test._binModel.getMainModuleArtifact()));
-    
     runnable.run();
-
-    System.out.println(ArtifactUtils.artifactToString(test._binModel.getMainModuleArtifact()));
     
     //
     Assert.assertEquals(expectedBinModel, ArtifactUtils.artifactToString(test._binModel.getRootArtifact()));
