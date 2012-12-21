@@ -29,6 +29,10 @@ public class AddArtifactToGroupAndModuleContainer implements IAddArtifactAction<
   public void addChildToParent(IGroupAndModuleContainer parent, IBundleMakerArtifact artifactToAdd) {
 
     //
+    Assert.isNotNull(parent);
+    Assert.isNotNull(artifactToAdd);
+
+    //
     _oldParentArtifact = (IGroupAndModuleContainer) artifactToAdd.getParent();
     _addedArtifact = artifactToAdd;
 
