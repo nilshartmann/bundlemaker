@@ -92,19 +92,33 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
   public void undoTransformations(IProgressMonitor progressMonitor) {
 
     //
-    for (ITransformation transformation : getTransformations()) {
-      if (!(transformation instanceof IUndoableTransformation)) {
-        throw new RuntimeException("TODO");
+    boolean disableModelModifiedNotification = isModelModifiedNotificationDisabled();
+
+    try {
+
+      //
+      disableModelModifiedNotification(true);
+
+      //
+      for (ITransformation transformation : getTransformations()) {
+        if (!(transformation instanceof IUndoableTransformation)) {
+          throw new RuntimeException("TODO");
+        }
       }
-    }
 
-    //
-    for (ITransformation transformation : getTransformations()) {
-      ((IUndoableTransformation) transformation).undo();
-    }
+      //
+      for (ITransformation transformation : getTransformations()) {
+        ((IUndoableTransformation) transformation).undo();
+      }
 
-    //
-    getTransformations().clear();
+      //
+      getModifiableTransformationList().clear();
+
+    } finally {
+
+      //
+      disableModelModifiedNotification(disableModelModifiedNotification);
+    }
   }
 
   /**

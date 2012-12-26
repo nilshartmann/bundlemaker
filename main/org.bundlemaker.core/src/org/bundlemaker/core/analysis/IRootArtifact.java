@@ -1,9 +1,12 @@
 package org.bundlemaker.core.analysis;
 
+import java.util.concurrent.Callable;
+
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.resource.IResource;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
@@ -107,4 +110,45 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    * @return the {@link IResourceArtifact} for the given {@link IResource} (maybe null)
    */
   IResourceArtifact getResourceArtifact(IResource resource);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public static class Factory {
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param callable
+     * @throws Exception
+     */
+    public static <T> T executeWithoutNotification(IRootArtifact rootArtifact, Callable<T> callable) throws Exception {
+
+      //
+      Assert.isNotNull(rootArtifact);
+      Assert.isNotNull(callable);
+
+      //
+      boolean modelModifiedNotificationDisabled = rootArtifact.isModelModifiedNotificationDisabled();
+
+      // Run the script
+      try {
+
+        //
+        rootArtifact.disableModelModifiedNotification(true);
+
+        //
+        return callable.call();
+      }
+
+      //
+      finally {
+        rootArtifact.disableModelModifiedNotification(modelModifiedNotificationDisabled);
+      }
+    }
+  }
 }

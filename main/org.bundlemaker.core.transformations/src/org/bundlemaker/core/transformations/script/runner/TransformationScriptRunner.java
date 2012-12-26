@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
@@ -104,7 +105,7 @@ public class TransformationScriptRunner {
     }
 
     // Instantiate the script
-    ITransformationScript transformationScript = createTransformationScript();
+    final ITransformationScript transformationScript = createTransformationScript();
 
     // Get the required artifact model configuration
     IAnalysisModelConfiguration artifactModelConfiguration = getAnalysisModelConfiguration(transformationScript);
@@ -115,20 +116,17 @@ public class TransformationScriptRunner {
     // // Create a Logger that logs to the BundleMaker console
     final ITransformationScriptLogger logger = getLogger();
 
-    TransformationScriptContext context = new TransformationScriptContext(progressMonitor, logger, rootArtifact);
+    final TransformationScriptContext context = new TransformationScriptContext(progressMonitor, logger, rootArtifact);
 
     // Run the script
-    try {
-      rootArtifact.disableModelModifiedNotification(true);
-      transformationScript.transform(context);
-    } catch (InterruptedException ex) {
-      // Canceled by the user
-      return;
-    } catch (final Exception ex) {
-      handleScriptException(ex);
-    } finally {
-      rootArtifact.disableModelModifiedNotification(false);
-    }
+    IRootArtifact.Factory.executeWithoutNotification(rootArtifact, new Callable<Void>() {
+
+      @Override
+      public Void call() throws Exception {
+        transformationScript.transform(context);
+        return null;
+      }
+    });
   }
 
   protected void handleScriptException(Exception ex) {
