@@ -106,10 +106,10 @@ public interface IModularizedSystem {
 
   /**
    * <p>
-   * Returns the (modifiable) transformation list.
+   * Returns the unmodifiable list of all transformations.
    * </p>
    * 
-   * @return the (modifiable) transformation list.
+   * @return the unmodifiable list of all transformations.
    */
   List<ITransformation> getTransformations();
 
@@ -119,25 +119,14 @@ public interface IModularizedSystem {
    * 
    * @param progressMonitor
    */
-  void resetTransformations(IProgressMonitor progressMonitor);
+  void undoTransformations(IProgressMonitor progressMonitor);
 
   /**
    * <p>
    * </p>
    * 
-   * @param monitor
-   * @param transformations
    */
-  void applyTransformations(IProgressMonitor monitor, List<ITransformation> transformations);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param monitor
-   * @param transformation
-   */
-  void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
+  void undoLastTransformation();
 
   /**
    * <p>
@@ -344,5 +333,6 @@ public interface IModularizedSystem {
   @Deprecated
   Set<IReference> getUnsatisfiedReferences(IResourceModule resourceModule);
 
+  @Deprecated
   Map<String, Set<IType>> getReferencedTypes();
 }

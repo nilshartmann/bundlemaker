@@ -7,6 +7,7 @@ import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.modules.IResourceModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.transformation.CreateGroupTransformation;
 import org.bundlemaker.core.transformation.CreateModuleTransformation;
 import org.eclipse.core.runtime.Assert;
@@ -88,7 +89,8 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       CreateModuleTransformation transformation = new CreateModuleTransformation(configuration.toJsonTree());
 
       //
-      _groupAndModuleContainer.getModularizedSystem().applyTransformations(null, transformation);
+      ((IModifiableModularizedSystem) _groupAndModuleContainer.getModularizedSystem()).applyTransformations(null,
+          transformation);
 
       //
       return transformation.getModuleArtifact();
@@ -131,7 +133,8 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
       CreateGroupTransformation transformation = new CreateGroupTransformation(_groupAndModuleContainer, path);
 
       //
-      _groupAndModuleContainer.getRoot().getModularizedSystem().applyTransformations(null,
+      ((IModifiableModularizedSystem) _groupAndModuleContainer.getRoot().getModularizedSystem()).applyTransformations(
+          null,
           transformation);
 
       //

@@ -11,13 +11,16 @@
 package org.bundlemaker.core.modules.modifiable;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -151,4 +154,22 @@ public interface IModifiableModularizedSystem extends IModularizedSystem {
 
   // TODO: UNIFY with 'disableModelModifiedNotification'
   void setHandleModelModification(boolean handleModelModification);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param monitor
+   * @param transformations
+   */
+  void applyTransformations(IProgressMonitor monitor, List<ITransformation> transformations);
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param monitor
+   * @param transformation
+   */
+  void applyTransformations(IProgressMonitor monitor, ITransformation... transformation);
 }

@@ -98,7 +98,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
 
   @Override
   public void resetTransformations() {
-    getModularizedSystem().resetTransformations(null);
+    getModularizedSystem().undoTransformations(null);
   }
 
   @Override

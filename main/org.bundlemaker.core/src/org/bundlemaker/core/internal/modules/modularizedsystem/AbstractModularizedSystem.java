@@ -150,6 +150,10 @@ public abstract class AbstractModularizedSystem implements IModifiableModularize
    */
   @Override
   public final List<ITransformation> getTransformations() {
+    return Collections.unmodifiableList(_transformations);
+  }
+
+  public final List<ITransformation> getModifiableTransformationList() {
     return _transformations;
   }
 

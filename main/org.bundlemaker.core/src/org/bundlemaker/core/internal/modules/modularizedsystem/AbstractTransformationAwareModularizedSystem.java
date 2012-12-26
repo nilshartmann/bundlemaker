@@ -89,7 +89,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    * {@inheritDoc}
    */
   @Override
-  public void resetTransformations(IProgressMonitor progressMonitor) {
+  public void undoTransformations(IProgressMonitor progressMonitor) {
 
     //
     for (ITransformation transformation : getTransformations()) {
@@ -105,6 +105,28 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     //
     getTransformations().clear();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void undoLastTransformation() {
+
+    // get the last transformation
+    ITransformation lastTransformation = getTransformations().get(getTransformations().size() - 1);
+
+    // check if we have an undoable transformation
+    if (!(lastTransformation instanceof IUndoableTransformation)) {
+      throw new RuntimeException("TODO");
+    }
+
+    // remove transformation...
+    getModifiableTransformationList().remove(getTransformations().size() - 1);
+
+    // ...undo transformation
+    IUndoableTransformation undoableTransformation = (IUndoableTransformation) lastTransformation;
+    undoableTransformation.undo();
   }
 
   /**
@@ -209,9 +231,9 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       //
       if (!(transformation instanceof BasicProjectContentTransformation)) {
 
-        if (!getTransformations().contains(transformation)) {
+        if (!getModifiableTransformationList().contains(transformation)) {
           //
-          getTransformations().add(transformation);
+          getModifiableTransformationList().add(transformation);
         }
       }
 

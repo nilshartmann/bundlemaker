@@ -42,9 +42,7 @@ public class Undo_ModuleRename_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
 
         // STEP 2: Undo
-        IUndoableTransformation transformation = (IUndoableTransformation) getModularizedSystem().getTransformations()
-            .remove(1);
-        transformation.undo();
+        getModularizedSystem().undoLastTransformation();
 
         //
         assertMainModuleNameAndVersion("SimpleArtifactModelTest", "1.0.0");

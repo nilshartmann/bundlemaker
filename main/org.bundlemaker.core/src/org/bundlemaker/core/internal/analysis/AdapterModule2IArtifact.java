@@ -5,6 +5,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.modules.IModule;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.transformation.RenameModuleTransformation;
 import org.eclipse.core.runtime.Assert;
 
@@ -62,7 +63,7 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
   @Override
   public void setNameAndVersion(String name, String version) {
     RenameModuleTransformation transformation = new RenameModuleTransformation(this, name, version);
-    getRoot().getModularizedSystem().applyTransformations(null, transformation);
+    ((IModifiableModularizedSystem) getRoot().getModularizedSystem()).applyTransformations(null, transformation);
   }
 
   /**

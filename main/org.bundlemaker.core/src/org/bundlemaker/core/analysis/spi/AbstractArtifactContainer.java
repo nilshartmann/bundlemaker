@@ -14,6 +14,7 @@ import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.DefaultArtifactSelector;
 import org.bundlemaker.core.transformation.RemoveArtifactsTransformation;
@@ -535,7 +536,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     AddArtifactsTransformation transformation = new AddArtifactsTransformation(this, artifactSelector);
 
     //
-    getModularizedSystem().applyTransformations(null, transformation);
+    ((IModifiableModularizedSystem) getModularizedSystem()).applyTransformations(null, transformation);
   }
 
   /**

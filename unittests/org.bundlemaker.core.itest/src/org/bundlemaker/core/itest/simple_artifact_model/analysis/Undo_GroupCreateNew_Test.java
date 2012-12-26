@@ -41,9 +41,7 @@ public class Undo_GroupCreateNew_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
 
         // STEP 2: UNDO
-        IUndoableTransformation transformation = (IUndoableTransformation) getModularizedSystem().getTransformations()
-            .remove(1);
-        transformation.undo();
+        getModularizedSystem().undoLastTransformation();
 
         assertGroupCountInModularizedSystem(2);
         assertGroupCount(_binModel, 2);
@@ -85,9 +83,7 @@ public class Undo_GroupCreateNew_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
 
         // STEP 2: UNDO
-        IUndoableTransformation transformation = (IUndoableTransformation) getModularizedSystem().getTransformations()
-            .remove(1);
-        transformation.undo();
+        getModularizedSystem().undoLastTransformation();
 
         assertGroupCountInModularizedSystem(2);
         assertGroupCount(_binModel, 2);

@@ -53,10 +53,7 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
 
         // STEP 2: Undo
-        IUndoableTransformation transformation = (IUndoableTransformation) getModularizedSystem().getTransformations()
-            .remove(1);
-        transformation.undo();
-
+        getModularizedSystem().undoLastTransformation();
         // assert that we one modules
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
         assertResourceModuleCountInModularizedSystem(1);
@@ -104,9 +101,7 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
 
         // STEP 2: Undo
-        IUndoableTransformation transformation = (IUndoableTransformation) getModularizedSystem().getTransformations()
-            .remove(1);
-        transformation.undo();
+        getModularizedSystem().undoLastTransformation();
 
         // assert that we one modules
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
@@ -150,9 +145,7 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
         assertResourceModuleCount(_srcModel, 2);
 
         // STEP 2: Undo transformation
-        IUndoableTransformation transformation = (IUndoableTransformation) getModularizedSystem().getTransformations()
-            .remove(1);
-        transformation.undo();
+        getModularizedSystem().undoLastTransformation();
 
         // assert that we one modules
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());

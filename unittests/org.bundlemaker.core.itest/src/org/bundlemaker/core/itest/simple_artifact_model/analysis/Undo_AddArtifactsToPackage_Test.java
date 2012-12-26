@@ -136,14 +136,7 @@ public class Undo_AddArtifactsToPackage_Test extends AbstractSimpleArtifactModel
 
         // STEP 3: Undo...
         for (int i = getModularizedSystem().getTransformations().size() - 1; i > 0; i--) {
-
-          //
-          IUndoableTransformation transformation = (IUndoableTransformation) getModularizedSystem()
-              .getTransformations()
-              .remove(i);
-
-          //
-          transformation.undo();
+          getModularizedSystem().undoLastTransformation();
         }
 
         // assert that we one modules
