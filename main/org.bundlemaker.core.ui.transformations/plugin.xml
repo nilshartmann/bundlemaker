@@ -2,108 +2,188 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-       <!-- the pop up menus -->
-      <extension point="org.eclipse.ui.commands">
-            <command id="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
-                  name="Run Transformation Script"/>
-            <command id="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
-                  name="Set as Initial Transformation"/>
-            <command id="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand"
-                  name="Enable Transformation Script Support"/>
-            <command id="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand"
-                  name="Reset Transformations"/>
-      </extension>
-      
-      <extension point="org.eclipse.ui.handlers">
-            <handler class="org.bundlemaker.core.ui.transformations.handlers.RunTransformationScriptHandler"
-                  commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand">
-                  <activeWhen>
-                        <reference
-                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-                        > </reference>
-                  </activeWhen>
-                  <enabledWhen>
-                        <reference
-                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-                        > </reference>
-                  </enabledWhen>
-            </handler>
-            
-            <handler class="org.bundlemaker.core.ui.transformations.handlers.ResetTransformationsHandler"
-                  commandId="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand">
-                  <activeWhen>
-                        <reference
-                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-                        > </reference>
-                  </activeWhen>
-                  <enabledWhen>
-                        <reference
-                              definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
-                        > </reference>
-                  </enabledWhen>
-            </handler>
- 
- 
-            <handler class="org.bundlemaker.core.ui.transformations.handlers.SetInitialTransformationsHandler"
-                  commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand">
-                  <activeWhen>
-                  	<with variable="selection">
-                  	<iterate ifEmpty="false" operator="and">
-		                  <instanceof value="org.eclipse.jdt.core.IType" />
-		                </iterate>
-		                </with>
-		              </activeWhen>
-                  <enabledWhen>
-                  	<with variable="selection">
-                  	<iterate ifEmpty="false" operator="and">
-		                  <instanceof value="org.eclipse.jdt.core.IType" />
-		                </iterate>
-		               	</with>
-		              </enabledWhen>
-            </handler>
-            <handler class="org.bundlemaker.core.ui.transformations.handlers.EnableTransformationScriptSupportHandler"
-                  commandId="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand">
-                  <activeWhen>
- 									 	<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected" />
-		              </activeWhen>
-                  <enabledWhen>
-   									<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected" />
-                   </enabledWhen>
-            </handler>            
-      </extension>
+  <!-- the commands -->
+  <extension point="org.eclipse.ui.commands">
 
-      <!--  Submenu -->
-      <extension point="org.eclipse.ui.menus">
-            <menuContribution
-                  locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
-                  <command
-                        commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
-                        style="push">
-                        <visibleWhen checkEnabled="true"/>
-                  </command>
-                  <command
-                        commandId="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand"
-                        style="push">
-                        <visibleWhen checkEnabled="true"/>
-                  </command>
-                 <command
-                        commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
-                        style="push">
-                        <visibleWhen checkEnabled="true"/>
-                  </command>
-                 <command
-                        commandId="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand"
-                        style="push">
-                        <visibleWhen checkEnabled="true"/>
-                  </command>
-            </menuContribution>
-      </extension>
-      
-      <!-- Console Factory -->
-      <extension
-         point="org.eclipse.ui.console.consoleFactories">
-      <consoleFactory
-            label="BundleMaker Transformation Script Console"
-            class="org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory"/>
-   </extension>
+    <command id="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
+      name="Run Transformation Script"/>
+
+    <command id="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
+      name="Set as Initial Transformation"/>
+
+    <command
+      id="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand"
+      name="Enable Transformation Script Support"/>
+
+    <command
+      id="org.bundlemaker.core.ui.transformation.commands.DisableTransformationScriptSupportCommand"
+      name="Disable Transformation Script Support"/>
+
+    <command id="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand"
+      name="Reset Transformations"/>
+  </extension>
+
+  <!-- the handlers -->
+  <extension point="org.eclipse.ui.handlers">
+
+    <handler class="org.bundlemaker.core.ui.transformations.handlers.RunTransformationScriptHandler"
+      commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand">
+      <activeWhen>
+        <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> </reference>
+      </activeWhen>
+      <enabledWhen>
+        <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> </reference>
+      </enabledWhen>
+    </handler>
+
+    <handler class="org.bundlemaker.core.ui.transformations.handlers.ResetTransformationsHandler"
+      commandId="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand">
+      <activeWhen>
+        <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> </reference>
+      </activeWhen>
+      <enabledWhen>
+        <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"> </reference>
+      </enabledWhen>
+    </handler>
+
+    <handler
+      class="org.bundlemaker.core.ui.transformations.handlers.SetInitialTransformationsHandler"
+      commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand">
+      <activeWhen>
+        <with variable="selection">
+          <iterate ifEmpty="false" operator="and">
+            <instanceof value="org.eclipse.jdt.core.IType"/>
+          </iterate>
+        </with>
+      </activeWhen>
+      <enabledWhen>
+        <with variable="selection">
+          <iterate ifEmpty="false" operator="and">
+            <instanceof value="org.eclipse.jdt.core.IType"/>
+          </iterate>
+        </with>
+      </enabledWhen>
+    </handler>
+
+    <handler
+      class="org.bundlemaker.core.ui.transformations.handlers.EnableTransformationScriptNatureHandler"
+      commandId="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand">
+      <activeWhen>
+        <with variable="selection">
+          <iterate ifEmpty="false" operator="and">
+            <adapt type="org.eclipse.core.resources.IProject">
+              <and>
+                <test property="org.eclipse.core.resources.projectNature"
+                  value="org.bundlemaker.core.bundlemakernature"/>
+                <not>
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
+                </not>
+              </and>
+            </adapt>
+          </iterate>
+        </with>
+      </activeWhen>
+      <enabledWhen>
+        <with variable="selection">
+          <iterate ifEmpty="false" operator="and">
+            <adapt type="org.eclipse.core.resources.IProject">
+              <and>
+                <test property="org.eclipse.core.resources.projectNature"
+                  value="org.bundlemaker.core.bundlemakernature"/>
+                <not>
+                  <test property="org.eclipse.core.resources.projectNature"
+                    value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
+                </not>
+              </and>
+            </adapt>
+          </iterate>
+        </with>
+      </enabledWhen>
+    </handler>
+
+    <!-- handler
+      class="org.bundlemaker.core.ui.transformations.handlers.DisableTransformationScriptNatureHandler"
+      commandId="org.bundlemaker.core.ui.transformation.commands.DisableTransformationScriptSupportCommand">
+      <activeWhen>
+        <with variable="selection">
+          <iterate ifEmpty="false" operator="and">
+            <adapt type="org.eclipse.core.resources.IProject">
+              <and>
+                <test property="org.eclipse.core.resources.projectNature"
+                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
+                <test property="org.eclipse.core.resources.projectNature"
+                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
+              </and>
+            </adapt>
+          </iterate>
+        </with>
+      </activeWhen>
+      <enabledWhen>
+        <with variable="selection">
+          <iterate ifEmpty="false" operator="and">
+            <adapt type="org.eclipse.core.resources.IProject">
+              <and>
+                <test property="org.eclipse.core.resources.projectNature"
+                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
+                <test property="org.eclipse.core.resources.projectNature"
+                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
+              </and>
+            </adapt>
+          </iterate>
+        </with>
+      </enabledWhen>
+    </handler -->
+  </extension>
+
+  <!--  the menus -->
+  <extension point="org.eclipse.ui.menus">
+    <menuContribution
+      locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
+      <command
+        commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
+        style="push">
+        <visibleWhen checkEnabled="true"/>
+      </command>
+      <command
+        commandId="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand"
+        style="push">
+        <visibleWhen checkEnabled="true"/>
+      </command>
+      <command
+        commandId="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
+        style="push">
+        <visibleWhen checkEnabled="true"/>
+      </command>
+    </menuContribution>
+
+    <menuContribution locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+      <command
+        commandId="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand"
+        style="push">
+        <visibleWhen checkEnabled="true"/>
+      </command>
+      <command
+        commandId="org.bundlemaker.core.ui.transformation.commands.DisableTransformationScriptSupportCommand"
+        style="push">
+        <visibleWhen checkEnabled="true"/>
+      </command>
+    </menuContribution>
+  </extension>
+
+  <!-- consoleFactories -->
+  <extension point="org.eclipse.ui.console.consoleFactories">
+    <consoleFactory label="BundleMaker Transformation Script Console"
+      class="org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory"/>
+  </extension>
+
+  <!-- the nature -->
+  <extension id="org.bundlemaker.core.ui.transformations.transformationScriptNature"
+    name="org.bundlemaker.core.ui.transformations.transformationScriptNature"
+    point="org.eclipse.core.resources.natures">
+    <runtime>
+      <run class="org.bundlemaker.core.ui.transformations.TransformationScriptNature"/>
+    </runtime>
+  </extension>
+
 </plugin>
