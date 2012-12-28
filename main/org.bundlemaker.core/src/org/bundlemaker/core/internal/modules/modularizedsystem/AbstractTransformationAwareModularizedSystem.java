@@ -106,12 +106,12 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         }
       }
 
-      //
-      for (ITransformation transformation : getTransformations()) {
-        ((IUndoableTransformation) transformation).undo();
+      // We have to undo the transformations in reverse order
+      for (int i = getModifiableTransformationList().size() - 1; i >= 0; i--) {
+        ((IUndoableTransformation) getModifiableTransformationList().get(i)).undo();
       }
 
-      //
+      // clear the transformation list
       getModifiableTransformationList().clear();
 
     } finally {
@@ -320,7 +320,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
 
     if (group == null) {
       // TODO
-      throw new RuntimeException("");
+      throw new RuntimeException(String.format("Group '%s' does not exist.", group));
     }
 
     removeGroup(group);
