@@ -90,7 +90,7 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
     }
 
     //
-    return true;
+    return false;
   }
 
   @Override
