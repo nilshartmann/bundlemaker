@@ -78,6 +78,20 @@ public class RenameModuleTransformation extends
   }
 
   /**
+   * @return the oldModuleIdentifier
+   */
+  public IModuleIdentifier getOldModuleIdentifier() {
+    return _oldModuleIdentifier;
+  }
+
+  /**
+   * @return the modifiableModule
+   */
+  public IModifiableModule getNewModifiableModule() {
+    return _modifiableModule;
+  }
+
+  /**
    * <p>
    * </p>
    * 

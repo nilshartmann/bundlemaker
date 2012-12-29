@@ -33,6 +33,12 @@ public class AddArtifactsTransformation extends
   /** - */
   private List<IAddArtifactAction<?>> _actions;
 
+  /** The artifact the selected artifacts have been added to */
+  private IBundleMakerArtifact        _target;
+
+  /** Number of artifacts that have been added */
+  private int                         _addedArtifactsCount;
+
   /**
    * <p>
    * Creates a new instance of type {@link AddArtifactsTransformation}.
@@ -96,6 +102,23 @@ public class AddArtifactsTransformation extends
   }
 
   /**
+   * Returns the target that the selected artifacts have been added to.
+   * 
+   * 
+   * @return the target or null if the transformation has not been run yet
+   */
+  public IBundleMakerArtifact getTarget() {
+    return _target;
+  }
+
+  /**
+   * @return the addedArtifactsCount
+   */
+  public int getAddedArtifactsCount() {
+    return _actions.size();
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -115,22 +138,23 @@ public class AddArtifactsTransformation extends
         List<? extends IBundleMakerArtifact> artifacts = config.getArtifactSelector().getBundleMakerArtifacts();
 
         // add the artifacts
+        _target = config.getParent();
         for (IBundleMakerArtifact artifact : config.getArtifactSelector().getBundleMakerArtifacts()) {
-          ((AbstractArtifactContainer) config.getParent()).assertCanAdd(artifact);
+          ((AbstractArtifactContainer) _target).assertCanAdd(artifact);
         }
 
         for (IBundleMakerArtifact artifactToAdd : artifacts) {
 
           // add to root or group artifact
-          if (config.getParent() instanceof IGroupAndModuleContainer) {
+          if (_target instanceof IGroupAndModuleContainer) {
             IAddArtifactAction<IGroupAndModuleContainer> addAction = new AddArtifactToGroupAndModuleContainer();
-            addAction.addChildToParent((IGroupAndModuleContainer) config.getParent(), artifactToAdd);
+            addAction.addChildToParent((IGroupAndModuleContainer) _target, artifactToAdd);
             _actions.add(addAction);
           }
           // add to module artifact
-          else if (config.getParent() instanceof IModuleArtifact || config.getParent() instanceof IPackageArtifact) {
+          else if (_target instanceof IModuleArtifact || _target instanceof IPackageArtifact) {
             IAddArtifactAction<IBundleMakerArtifact> addAction = new AddMovableUnitsToModule();
-            addAction.addChildToParent(config.getParent(), artifactToAdd);
+            addAction.addChildToParent(_target, artifactToAdd);
             _actions.add(addAction);
           }
           //
@@ -140,6 +164,7 @@ public class AddArtifactsTransformation extends
         }
       }
     });
+
   }
 
   /**
