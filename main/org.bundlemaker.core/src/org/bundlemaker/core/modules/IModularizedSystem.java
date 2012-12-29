@@ -129,6 +129,13 @@ public interface IModularizedSystem {
   void undoLastTransformation();
 
   /**
+   * Undos all transformation up to (but not including) the specified transformation
+   * 
+   * @param transformation
+   */
+  void undoUntilTransformation(IProgressMonitor progressMonitor, ITransformation transformation);
+
+  /**
    * <p>
    * </p>
    * 
@@ -335,4 +342,5 @@ public interface IModularizedSystem {
 
   @Deprecated
   Map<String, Set<IType>> getReferencedTypes();
+
 }

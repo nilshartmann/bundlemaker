@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.history.view;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -18,6 +19,8 @@ import java.util.List;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractArtifactSelectionAwareViewPart;
 import org.bundlemaker.core.ui.transformations.history.ITransformationLabelProvider;
@@ -25,6 +28,7 @@ import org.bundlemaker.core.ui.transformations.history.labelprovider.AddArtifact
 import org.bundlemaker.core.ui.transformations.history.labelprovider.CreateGroupTransformationLabelProvider;
 import org.bundlemaker.core.ui.transformations.history.labelprovider.CreateModuleTransformationLabelProvider;
 import org.bundlemaker.core.ui.transformations.history.labelprovider.RenameModuleTransformationLabelProvider;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -32,7 +36,9 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -48,7 +54,6 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.DrillDownAdapter;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -63,9 +68,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   private TreeViewer                   _viewer;
 
-  private DrillDownAdapter             drillDownAdapter;
-
-  private Action                       action1;
+  private Action                       _resetAction;
 
   private Action                       action2;
 
@@ -87,15 +90,10 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
    */
   @Override
   public void createPartControl(Composite parent) {
-    _viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-    drillDownAdapter = new DrillDownAdapter(_viewer);
-    _viewer.setContentProvider(new HistoryViewContentProvider());
-
+    _viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
     _viewer.setContentProvider(new HistoryViewContentProvider());
     createTreeColumns();
-    // viewer.setSorter(new NameSorter());
-    // _viewer.setInput(getViewSite());
-    makeActions();
+    createActions();
     hookContextMenu();
     hookDoubleClickAction();
     contributeToActionBars();
@@ -159,38 +157,34 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
   }
 
   private void fillLocalPullDown(IMenuManager manager) {
-    manager.add(action1);
-    manager.add(new Separator());
     manager.add(action2);
   }
 
   private void fillContextMenu(IMenuManager manager) {
-    manager.add(action1);
+    manager.add(_resetAction);
     manager.add(action2);
     manager.add(new Separator());
-    drillDownAdapter.addNavigationActions(manager);
     // Other plug-ins can contribute there actions here
     manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
   }
 
   private void fillLocalToolBar(IToolBarManager manager) {
-    manager.add(action1);
+    manager.add(_resetAction);
     manager.add(action2);
     manager.add(new Separator());
-    drillDownAdapter.addNavigationActions(manager);
   }
 
-  private void makeActions() {
-    action1 = new Action() {
+  private void createActions() {
+    _resetAction = new Action() {
       @Override
       public void run() {
-        showMessage("Action 1 executed");
+        resetHistory();
       }
     };
-    action1.setText("Action 1");
-    action1.setToolTipText("Action 1 tooltip");
-    action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-        .getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+    _resetAction.setText("Reset to this Transformation");
+    _resetAction.setToolTipText("Resets the History to this Transformation by undoing all later Transformations");
+    // _resetAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
+    // .getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 
     action2 = new Action() {
       @Override
@@ -219,6 +213,65 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
         doubleClickAction.run();
       }
     });
+  }
+
+  private void resetHistory() {
+    IStructuredSelection selection = (IStructuredSelection) _viewer.getSelection();
+
+    if (selection.isEmpty()) {
+      return;
+    }
+
+    Object firstElement = selection.getFirstElement();
+
+    // If no transformation is selected undo complete history
+    final ITransformation transformation = (firstElement instanceof ITransformation) ? (ITransformation) firstElement
+        : null;
+
+    final IModularizedSystem modularizedSystem = (firstElement instanceof IRootArtifact) ? ((IRootArtifact) firstElement)
+        .getModularizedSystem() : getModularizedSystem(transformation);
+
+    ProgressMonitorDialog dialog = new ProgressMonitorDialog(getViewSite().getShell());
+    try {
+      dialog.run(true, true, new IRunnableWithProgress() {
+
+        @Override
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+          modularizedSystem.undoUntilTransformation(monitor, transformation);
+
+        }
+      });
+
+      CommonNavigatorUtils.refresh(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+
+    } catch (InvocationTargetException e) {
+      // TODO
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      // doesn't matter
+    }
+
+  }
+
+  /**
+   * @param transformation
+   * @return
+   */
+  private IModularizedSystem getModularizedSystem(ITransformation transformation) {
+
+    // EVIL!
+    // TODO: Refactor model: ITransformation should know it's mod system (at least in the GUI)
+
+    List<IRootArtifact> systems = (List<IRootArtifact>) _viewer.getInput();
+
+    for (IRootArtifact rootArtifact : systems) {
+      IModularizedSystem modularizedSystem = rootArtifact.getModularizedSystem();
+      if (modularizedSystem.getTransformations().contains(transformation)) {
+        return modularizedSystem;
+      }
+    }
+
+    throw new IllegalStateException("Transformation without Modularized System detected: " + transformation);
   }
 
   private void showMessage(String message) {
