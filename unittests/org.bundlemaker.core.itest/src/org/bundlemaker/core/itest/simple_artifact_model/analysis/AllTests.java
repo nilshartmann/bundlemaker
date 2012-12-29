@@ -11,9 +11,9 @@ import org.junit.runners.Suite.SuiteClasses;
     InitializeCachesTest.class, MementoTest.class, ModuleChangeClassificationTest.class, ModuleCreateNewTest.class,
     ModuleRemoveTest.class, ModuleRenameTest.class, TransformationHistoryTest.class,
     TypeModuleChangeClassificationTest.class, Undo_AddArtifactsToGroup_Test.class,
-    Undo_AddArtifactsToModule_Test.class, Undo_AddArtifactsToPackage_Test.class, Undo_GroupCreateNew_Test.class,
-    Undo_GroupGetExisting_Test.class, Undo_ModuleCreateNew_Test.class, Undo_ModuleGetExisting_Test.class,
-    Undo_ModuleRename_Test.class })
+    Undo_AddArtifactsToModule_Test.class, Undo_AddArtifactsToModuleMultipleTimes_Test.class,
+    Undo_AddArtifactsToPackage_Test.class, Undo_GroupCreateNew_Test.class, Undo_GroupGetExisting_Test.class,
+    Undo_ModuleCreateNew_Test.class, Undo_ModuleGetExisting_Test.class, Undo_ModuleRename_Test.class })
 public class AllTests {
 
 }

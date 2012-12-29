@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 /**
@@ -41,13 +42,23 @@ public abstract class AbstractBundleMakerHandler extends AbstractHandler impleme
    * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
    */
   @Override
-  public Object execute(ExecutionEvent event) throws ExecutionException {
+  public final Object execute(ExecutionEvent event) throws ExecutionException {
 
     ISelection selection = HandlerUtil.getCurrentSelection(event);
     if (selection != null) {
       // Invoke execution method
       try {
+
+        // store the active part
+        IWorkbenchPart part = Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+            .getActivePart();
+
         execute(event, selection);
+
+        // reset the active part
+        Activator.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+            .activate(part);
+
       } catch (Exception ex) {
         reportError(Activator.PLUGIN_ID, "Error while executing command: " + ex, ex);
         throw new ExecutionException("Error while executing command: " + ex, ex);
