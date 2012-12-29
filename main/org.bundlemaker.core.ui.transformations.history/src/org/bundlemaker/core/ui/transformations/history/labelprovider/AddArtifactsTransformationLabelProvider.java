@@ -59,7 +59,6 @@ public class AddArtifactsTransformationLabelProvider extends
    */
   @Override
   protected String getDetails(AddArtifactsTransformation transformation) {
-    return "Added " + transformation.getAddedArtifactsCount() + " Artifact(s) to "
-        + transformation.getTarget().getName();
+    return "Added " + transformation.getAddedArtifactsCount() + " Artifact(s) to " + transformation.getTarget();
   }
 }

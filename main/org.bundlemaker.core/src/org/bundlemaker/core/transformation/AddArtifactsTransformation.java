@@ -34,7 +34,7 @@ public class AddArtifactsTransformation extends
   private List<IAddArtifactAction<?>> _actions;
 
   /** The artifact the selected artifacts have been added to */
-  private IBundleMakerArtifact        _target;
+  private String                      _target;
 
   /** Number of artifacts that have been added */
   private int                         _addedArtifactsCount;
@@ -107,7 +107,7 @@ public class AddArtifactsTransformation extends
    * 
    * @return the target or null if the transformation has not been run yet
    */
-  public IBundleMakerArtifact getTarget() {
+  public String getTarget() {
     return _target;
   }
 
@@ -138,23 +138,24 @@ public class AddArtifactsTransformation extends
         List<? extends IBundleMakerArtifact> artifacts = config.getArtifactSelector().getBundleMakerArtifacts();
 
         // add the artifacts
-        _target = config.getParent();
+        IBundleMakerArtifact target = config.getParent();
+
         for (IBundleMakerArtifact artifact : config.getArtifactSelector().getBundleMakerArtifacts()) {
-          ((AbstractArtifactContainer) _target).assertCanAdd(artifact);
+          ((AbstractArtifactContainer) target).assertCanAdd(artifact);
         }
 
         for (IBundleMakerArtifact artifactToAdd : artifacts) {
 
           // add to root or group artifact
-          if (_target instanceof IGroupAndModuleContainer) {
+          if (target instanceof IGroupAndModuleContainer) {
             IAddArtifactAction<IGroupAndModuleContainer> addAction = new AddArtifactToGroupAndModuleContainer();
-            addAction.addChildToParent((IGroupAndModuleContainer) _target, artifactToAdd);
+            addAction.addChildToParent((IGroupAndModuleContainer) target, artifactToAdd);
             _actions.add(addAction);
           }
           // add to module artifact
-          else if (_target instanceof IModuleArtifact || _target instanceof IPackageArtifact) {
+          else if (target instanceof IModuleArtifact || target instanceof IPackageArtifact) {
             IAddArtifactAction<IBundleMakerArtifact> addAction = new AddMovableUnitsToModule();
-            addAction.addChildToParent(_target, artifactToAdd);
+            addAction.addChildToParent(target, artifactToAdd);
             _actions.add(addAction);
           }
           //
@@ -162,6 +163,9 @@ public class AddArtifactsTransformation extends
             throw new RuntimeException("Unsupported add operation");
           }
         }
+
+        // remember name of target for later access
+        _target = target.getName();
       }
     });
 
