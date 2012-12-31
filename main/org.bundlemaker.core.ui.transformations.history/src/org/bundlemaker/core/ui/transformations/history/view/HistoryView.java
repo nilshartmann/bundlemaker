@@ -158,16 +158,60 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
   private void refreshEnablement() {
     IStructuredSelection structuredSelection = (IStructuredSelection) _viewer.getSelection();
 
-    boolean actionsEnabled = !structuredSelection.isEmpty();
+    boolean hasSelection = !structuredSelection.isEmpty();
 
+    if (hasSelection) {
+
+      IModularizedSystem modularizedSystem = getSelectedModularizedSystem();
+
+      // Actions are enabled if a transformation or an modularized system with at least one transformation is selected
+      boolean actionsEnabled = (modularizedSystem != null && !modularizedSystem.getTransformations().isEmpty());
+
+      _undoLastTransformationAction.setEnabled(actionsEnabled);
+      _resetAction.setEnabled(actionsEnabled);
+
+      //
+      return;
+    }
+
+    // No selection.
+    // Reset action is always disabled in this case
+    _resetAction.setEnabled(false);
+
+    // Undo action is enabled if there is exactly one Modularized System that has at least one transformation
     List<IRootArtifact> viewerContent = getViewerContent();
-    int rootArtifactCount = (viewerContent == null ? 0 : viewerContent.size());
 
-    // Enable if something is selected or we have only one root artifact that we can call undo on
-    _undoLastTransformationAction.setEnabled(actionsEnabled || rootArtifactCount == 1);
+    if (viewerContent.size() != 1) {
+      _undoLastTransformationAction.setEnabled(false);
 
-    // only enable if something is enabled
-    _resetAction.setEnabled(actionsEnabled);
+      return;
+    }
+
+    _undoLastTransformationAction.setEnabled(!viewerContent.get(0).getModularizedSystem().getTransformations()
+        .isEmpty());
+  }
+
+  /**
+   * @return
+   */
+  private IModularizedSystem getSelectedModularizedSystem() {
+    IStructuredSelection structuredSelection = (IStructuredSelection) _viewer.getSelection();
+    if (structuredSelection.isEmpty()) {
+      return null;
+    }
+
+    Object o = structuredSelection.getFirstElement();
+
+    if (o instanceof IRootArtifact) {
+      return ((IRootArtifact) o).getModularizedSystem();
+    }
+
+    if (o instanceof ITransformation) {
+      return getModularizedSystem((ITransformation) o);
+    }
+
+    return null;
+
   }
 
   private void hookContextMenu() {
@@ -299,6 +343,8 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
       // doesn't matter
     }
 
+    refreshEnablement();
+
   }
 
   private void undoLastTransformation() {
@@ -309,7 +355,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     if (selection.isEmpty()) {
 
       List<IRootArtifact> viewerContent = getViewerContent();
-      if (viewerContent == null || viewerContent.size() < 1) {
+      if (viewerContent.size() < 1) {
         return;
       }
       IRootArtifact rootArtifact = viewerContent.get(0);
@@ -323,6 +369,10 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     }
     modularizedSystem.undoLastTransformation();
 
+    CommonNavigatorUtils.refresh(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
+
+    refreshEnablement();
+
   }
 
   /**
@@ -330,9 +380,6 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
    * @return
    */
   private IModularizedSystem getModularizedSystem(ITransformation transformation) {
-
-    // EVIL!
-    // TODO: Refactor model: ITransformation should know it's mod system (at least in the GUI)
 
     List<IRootArtifact> systems = getViewerContent();
 
@@ -352,6 +399,9 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   private List<IRootArtifact> getViewerContent() {
     List<IRootArtifact> systems = (List<IRootArtifact>) _viewer.getInput();
+    if (systems == null) {
+      systems = Collections.emptyList();
+    }
     return systems;
   }
 
