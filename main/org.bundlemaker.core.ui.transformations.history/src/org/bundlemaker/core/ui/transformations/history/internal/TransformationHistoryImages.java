@@ -13,7 +13,7 @@ public enum TransformationHistoryImages {
   /**
    * the "reset history" icon
    */
-  RESET_ICON("icons/reset.gif"),
+  RESET_ICON("icons/reset.png"),
 
   /** Pin selection */
   PIN_SELECTION("icons/pin-selection.png"),
@@ -22,7 +22,7 @@ public enum TransformationHistoryImages {
   PIN_SELECTION_DISABLED("icons/pin-selection-add.png"),
 
   /** Undo last Transformation */
-  UNDO_TRANSFORMATION("icons/undo-transformation.gif")
+  UNDO_TRANSFORMATION("icons/undo-transformation.png")
 
   ;
 
