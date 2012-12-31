@@ -1,5 +1,6 @@
 package org.bundlemaker.core.transformation;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,8 +37,7 @@ public class AddArtifactsTransformation extends
   /** The artifact the selected artifacts have been added to */
   private String                      _target;
 
-  /** Number of artifacts that have been added */
-  private int                         _addedArtifactsCount;
+  private List<String>                _artifactsAdded;
 
   /**
    * <p>
@@ -111,11 +111,8 @@ public class AddArtifactsTransformation extends
     return _target;
   }
 
-  /**
-   * @return the addedArtifactsCount
-   */
-  public int getAddedArtifactsCount() {
-    return _actions.size();
+  public List<String> getArtifactsAdded() {
+    return Collections.unmodifiableList(_artifactsAdded);
   }
 
   /**
@@ -124,6 +121,8 @@ public class AddArtifactsTransformation extends
   @Override
   protected void onApply(final Configuration config, IModifiableModularizedSystem modularizedSystem,
       IProgressMonitor progressMonitor) {
+
+    final List<String> artifactsAdded = new LinkedList<String>();
 
     //
     ModelNotificationSuppressor.performWithoutNotification(modularizedSystem, new Runnable() {
@@ -162,12 +161,18 @@ public class AddArtifactsTransformation extends
           else {
             throw new RuntimeException("Unsupported add operation");
           }
+
+          artifactsAdded.add(artifactToAdd.getName());
         }
 
         // remember name of target for later access
         _target = target.getName();
       }
     });
+
+    // order
+    Collections.sort(artifactsAdded);
+    _artifactsAdded = artifactsAdded;
 
   }
 

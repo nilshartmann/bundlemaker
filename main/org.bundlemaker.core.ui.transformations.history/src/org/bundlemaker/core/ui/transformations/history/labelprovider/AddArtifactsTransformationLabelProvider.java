@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.history.labelprovider;
 
+import java.util.List;
+
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.eclipse.swt.graphics.Image;
 
@@ -59,6 +61,60 @@ public class AddArtifactsTransformationLabelProvider extends
    */
   @Override
   protected String getDetails(AddArtifactsTransformation transformation) {
-    return "Added " + transformation.getAddedArtifactsCount() + " Artifact(s) to " + transformation.getTarget();
+
+    List<String> artifactsAdded = transformation.getArtifactsAdded();
+
+    return getArtifactsAddedString(artifactsAdded) + " to " + transformation.getTarget();
   }
+
+  protected String getArtifactsAddedString(List<String> artifacts) {
+    final int MAX_ARTIFACTS_SHOWN = 3;
+    int i = 0;
+    StringBuilder what = new StringBuilder();
+
+    for (i = 0; i < artifacts.size() && i < MAX_ARTIFACTS_SHOWN; i++) {
+      what.append(artifacts.get(i));
+      what.append(", ");
+    }
+
+    what.setLength(what.length() - 2); // cut off last ', '
+
+    int diff = artifacts.size() - MAX_ARTIFACTS_SHOWN;
+    if (diff > 0) {
+      what.append(" and ");
+      if (diff == 1) {
+        what.append("one more artifact");
+      } else {
+        what.append(diff).append(" more artifacts");
+      }
+    }
+
+    return what.toString();
+  }
+
+  // public static void main(String[] args) {
+  // List<String> s = l("a", "b", "c");
+  //
+  // o(s);
+  // o(l("a"));
+  // o(l("a", "b"));
+  // o(l("a", "b", "c", "d"));
+  // o(l("a", "b", "c", "d", "e"));
+  // }
+  //
+  // private static void o(List<String> l) {
+  // AddArtifactsTransformationLabelProvider p = new AddArtifactsTransformationLabelProvider();
+  // String artifactsAddedString = p.getArtifactsAddedString(l);
+  // System.out.println(l + " -> '" + artifactsAddedString + "'");
+  // }
+  //
+  // private static List<String> l(String... args) {
+  // LinkedList<String> result = new LinkedList<String>();
+  //
+  // for (String arg : args) {
+  // result.add(arg);
+  // }
+  //
+  // return result;
+  // }
 }
