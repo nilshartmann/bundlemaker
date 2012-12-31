@@ -45,7 +45,9 @@ import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.swt.SWT;
@@ -73,6 +75,8 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
   private Action                       _resetAction;
 
   private Action                       _pinSelectionAction;
+
+  private Action                       _undoLastTransformationAction;
 
   private Action                       action2;
 
@@ -103,6 +107,15 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     hookContextMenu();
     hookDoubleClickAction();
     contributeToActionBars();
+    _viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+      @Override
+      public void selectionChanged(SelectionChangedEvent event) {
+        HistoryView.this.refreshEnablement();
+      }
+    });
+
+    refreshEnablement();
   }
 
   protected List<ITransformationLabelProvider> getRegisteredTransformationLabelProvider() {
@@ -142,6 +155,21 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   }
 
+  private void refreshEnablement() {
+    IStructuredSelection structuredSelection = (IStructuredSelection) _viewer.getSelection();
+
+    boolean actionsEnabled = !structuredSelection.isEmpty();
+
+    List<IRootArtifact> viewerContent = getViewerContent();
+    int rootArtifactCount = (viewerContent == null ? 0 : viewerContent.size());
+
+    // Enable if something is selected or we have only one root artifact that we can call undo on
+    _undoLastTransformationAction.setEnabled(actionsEnabled || rootArtifactCount == 1);
+
+    // only enable if something is enabled
+    _resetAction.setEnabled(actionsEnabled);
+  }
+
   private void hookContextMenu() {
     MenuManager menuMgr = new MenuManager("#PopupMenu");
     menuMgr.setRemoveAllWhenShown(true);
@@ -168,7 +196,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   private void fillContextMenu(IMenuManager manager) {
     manager.add(_resetAction);
-    manager.add(action2);
+    manager.add(_undoLastTransformationAction);
     manager.add(new Separator());
     // Other plug-ins can contribute there actions here
     manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -176,6 +204,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   private void fillLocalToolBar(IToolBarManager manager) {
     manager.add(_pinSelectionAction);
+    manager.add(_undoLastTransformationAction);
     // manager.add(_resetAction);
     // manager.add(action2);
     // manager.add(new Separator());
@@ -191,6 +220,17 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     _resetAction.setText("Reset to this Transformation");
     _resetAction.setToolTipText("Resets the History to this Transformation by undoing all later Transformations");
     _resetAction.setImageDescriptor(TransformationHistoryImages.RESET_ICON.getImageDescriptor());
+
+    _undoLastTransformationAction = new Action() {
+      @Override
+      public void run() {
+        undoLastTransformation();
+      }
+    };
+    _undoLastTransformationAction.setText("Undo last Transformation");
+    _undoLastTransformationAction.setToolTipText("Reverts the last executed Transformation on the selected System");
+    _undoLastTransformationAction.setImageDescriptor(TransformationHistoryImages.UNDO_TRANSFORMATION
+        .getImageDescriptor());
 
     _pinSelectionAction = new PinSelectionAction();
 
@@ -261,6 +301,30 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   }
 
+  private void undoLastTransformation() {
+    IStructuredSelection selection = (IStructuredSelection) _viewer.getSelection();
+
+    IModularizedSystem modularizedSystem;
+
+    if (selection.isEmpty()) {
+
+      List<IRootArtifact> viewerContent = getViewerContent();
+      if (viewerContent == null || viewerContent.size() < 1) {
+        return;
+      }
+      IRootArtifact rootArtifact = viewerContent.get(0);
+      modularizedSystem = rootArtifact.getModularizedSystem();
+
+    } else {
+
+      Object firstElement = selection.getFirstElement();
+      modularizedSystem = (firstElement instanceof IRootArtifact) ? ((IRootArtifact) firstElement)
+          .getModularizedSystem() : getModularizedSystem((ITransformation) firstElement);
+    }
+    modularizedSystem.undoLastTransformation();
+
+  }
+
   /**
    * @param transformation
    * @return
@@ -270,7 +334,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     // EVIL!
     // TODO: Refactor model: ITransformation should know it's mod system (at least in the GUI)
 
-    List<IRootArtifact> systems = (List<IRootArtifact>) _viewer.getInput();
+    List<IRootArtifact> systems = getViewerContent();
 
     for (IRootArtifact rootArtifact : systems) {
       IModularizedSystem modularizedSystem = rootArtifact.getModularizedSystem();
@@ -284,6 +348,11 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   private void showMessage(String message) {
     MessageDialog.openInformation(_viewer.getControl().getShell(), "Transformation History", message);
+  }
+
+  private List<IRootArtifact> getViewerContent() {
+    List<IRootArtifact> systems = (List<IRootArtifact>) _viewer.getInput();
+    return systems;
   }
 
   /**
@@ -341,6 +410,8 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
       }
 
     }
+
+    refreshEnablement();
 
   }
 

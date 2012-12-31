@@ -19,7 +19,10 @@ public enum TransformationHistoryImages {
   PIN_SELECTION("icons/pin-selection.png"),
 
   /** Pin Selection */
-  PIN_SELECTION_DISABLED("icons/pin-selection-add.png")
+  PIN_SELECTION_DISABLED("icons/pin-selection-add.png"),
+
+  /** Undo last Transformation */
+  UNDO_TRANSFORMATION("icons/undo-transformation.gif")
 
   ;
 
