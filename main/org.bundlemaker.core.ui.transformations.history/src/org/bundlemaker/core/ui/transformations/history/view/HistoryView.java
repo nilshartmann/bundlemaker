@@ -42,9 +42,6 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.TreeColumnLayout;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -55,9 +52,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -77,8 +72,6 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
   private Action                       _pinSelectionAction;
 
   private Action                       _undoLastTransformationAction;
-
-  private Action                       action2;
 
   private Action                       doubleClickAction;
 
@@ -235,7 +228,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
   }
 
   private void fillLocalPullDown(IMenuManager manager) {
-    manager.add(action2);
+    // manager.add(action2);
   }
 
   private void fillContextMenu(IMenuManager manager) {
@@ -277,34 +270,10 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
         .getImageDescriptor());
 
     _pinSelectionAction = new PinSelectionAction();
-
-    action2 = new Action() {
-      @Override
-      public void run() {
-        showMessage("Action 2 executed");
-      }
-    };
-    action2.setText("Action 2");
-    action2.setToolTipText("Action 2 tooltip");
-    action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-        .getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-    doubleClickAction = new Action() {
-      @Override
-      public void run() {
-        ISelection selection = _viewer.getSelection();
-        Object obj = ((IStructuredSelection) selection).getFirstElement();
-        showMessage("Double-click detected on " + obj.toString());
-      }
-    };
   }
 
   private void hookDoubleClickAction() {
-    _viewer.addDoubleClickListener(new IDoubleClickListener() {
-      @Override
-      public void doubleClick(DoubleClickEvent event) {
-        doubleClickAction.run();
-      }
-    });
+    //
   }
 
   private void resetHistory() {
