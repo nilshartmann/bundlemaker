@@ -73,8 +73,6 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   private Action                       _undoLastTransformationAction;
 
-  private Action                       doubleClickAction;
-
   protected boolean                    _selectionPinnned       = false;
 
   /**
