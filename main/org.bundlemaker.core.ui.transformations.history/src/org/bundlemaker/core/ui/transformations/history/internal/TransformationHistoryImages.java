@@ -15,6 +15,12 @@ public enum TransformationHistoryImages {
    */
   RESET_ICON("icons/reset.gif"),
 
+  /** Pin selection */
+  PIN_SELECTION("icons/pin-selection.png"),
+
+  /** Pin Selection */
+  PIN_SELECTION_DISABLED("icons/pin-selection-add.png")
+
   ;
 
   /**

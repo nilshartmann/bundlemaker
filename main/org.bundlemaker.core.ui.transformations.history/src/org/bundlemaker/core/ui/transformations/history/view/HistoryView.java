@@ -31,6 +31,7 @@ import org.bundlemaker.core.ui.transformations.history.labelprovider.CreateModul
 import org.bundlemaker.core.ui.transformations.history.labelprovider.RenameModuleTransformationLabelProvider;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -71,9 +72,13 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
   private Action                       _resetAction;
 
+  private Action                       _pinSelectionAction;
+
   private Action                       action2;
 
   private Action                       doubleClickAction;
+
+  protected boolean                    _selectionPinnned       = false;
 
   /**
    * Comparator to make sure ordering in the tree (top-level elements) always remain the same
@@ -170,9 +175,10 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
   }
 
   private void fillLocalToolBar(IToolBarManager manager) {
-    manager.add(_resetAction);
-    manager.add(action2);
-    manager.add(new Separator());
+    manager.add(_pinSelectionAction);
+    // manager.add(_resetAction);
+    // manager.add(action2);
+    // manager.add(new Separator());
   }
 
   private void createActions() {
@@ -185,6 +191,8 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     _resetAction.setText("Reset to this Transformation");
     _resetAction.setToolTipText("Resets the History to this Transformation by undoing all later Transformations");
     _resetAction.setImageDescriptor(TransformationHistoryImages.RESET_ICON.getImageDescriptor());
+
+    _pinSelectionAction = new PinSelectionAction();
 
     action2 = new Action() {
       @Override
@@ -294,6 +302,12 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
    */
   @Override
   protected void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
+
+    if (isSelectionPinnned() && getCurrentArtifactSelection().hasSelectedArtifacts()) {
+      // artifacts are already selected and selection is pinned: ignore new selection
+      return;
+    }
+
     super.setCurrentArtifactSelection(artifactSelection);
 
     List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getSelectedArtifacts();
@@ -328,6 +342,31 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
     }
 
+  }
+
+  /**
+   * @return the selectionPinnned
+   */
+  public boolean isSelectionPinnned() {
+    return _selectionPinnned;
+  }
+
+  /**
+   * @param selectionPinnned
+   *          the selectionPinnned to set
+   */
+  public void setSelectionPinnned(boolean selectionPinnned) {
+    _selectionPinnned = selectionPinnned;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.event.selection.workbench.view.AbstractArtifactSelectionAwareViewPart#getProviderId()
+   */
+  @Override
+  protected String getProviderId() {
+    return ID;
   }
 
   class RootArtifactComparator implements Comparator<IRootArtifact> {
@@ -367,13 +406,23 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.bundlemaker.core.ui.event.selection.workbench.view.AbstractArtifactSelectionAwareViewPart#getProviderId()
-   */
-  @Override
-  protected String getProviderId() {
-    return ID;
+  class PinSelectionAction extends Action {
+    public PinSelectionAction() {
+      super("Pin Selection", IAction.AS_CHECK_BOX);
+      setToolTipText("Pin Selection");
+      setImageDescriptor(TransformationHistoryImages.PIN_SELECTION.getImageDescriptor());
+      update();
+    }
+
+    @Override
+    public void run() {
+      setSelectionPinnned(isChecked());
+    }
+
+    public void update() {
+      setChecked(isSelectionPinnned());
+    }
+
   }
+
 }
