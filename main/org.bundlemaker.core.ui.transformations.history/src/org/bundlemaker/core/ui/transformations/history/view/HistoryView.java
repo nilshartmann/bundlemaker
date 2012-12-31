@@ -24,6 +24,7 @@ import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractArtifactSelectionAwareViewPart;
 import org.bundlemaker.core.ui.transformations.history.ITransformationLabelProvider;
+import org.bundlemaker.core.ui.transformations.history.internal.TransformationHistoryImages;
 import org.bundlemaker.core.ui.transformations.history.labelprovider.AddArtifactsTransformationLabelProvider;
 import org.bundlemaker.core.ui.transformations.history.labelprovider.CreateGroupTransformationLabelProvider;
 import org.bundlemaker.core.ui.transformations.history.labelprovider.CreateModuleTransformationLabelProvider;
@@ -183,8 +184,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     };
     _resetAction.setText("Reset to this Transformation");
     _resetAction.setToolTipText("Resets the History to this Transformation by undoing all later Transformations");
-    // _resetAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-    // .getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+    _resetAction.setImageDescriptor(TransformationHistoryImages.RESET_ICON.getImageDescriptor());
 
     action2 = new Action() {
       @Override
