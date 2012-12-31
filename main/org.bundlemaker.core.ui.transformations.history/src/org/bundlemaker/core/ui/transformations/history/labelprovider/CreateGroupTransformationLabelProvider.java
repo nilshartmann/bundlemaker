@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.history.labelprovider;
 
-import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.transformation.CreateGroupTransformation;
 import org.eclipse.swt.graphics.Image;
 
@@ -37,8 +36,15 @@ public class CreateGroupTransformationLabelProvider extends
 
   @Override
   protected String getDetails(CreateGroupTransformation transformation) {
-    IGroupArtifact groupArtifact = transformation.getGroupArtifact();
-    return groupArtifact.getName();
+
+    String where = "";
+
+    if (transformation.getParentGroupPath().isEmpty()) {
+      where = " at Modularized System's Root";
+    } else {
+      where = " in " + transformation.getParentGroupPath();
+    }
+    return transformation.getGroupPath() + where;
   }
 
 }

@@ -29,6 +29,12 @@ public class CreateGroupTransformation extends
   /** - */
   private IGroupArtifact _newGroupArtifact;
 
+  /** New Group Path. Set after tranformation is applied */
+  private IPath          _groupPath;
+
+  /** Parent. Set after transformation is applied */
+  private IPath          _parentGroupPath;
+
   /** - */
   private IGroup         _lastExistingParentGroup;
 
@@ -75,20 +81,28 @@ public class CreateGroupTransformation extends
     }
   }
 
+  /**
+   * @return the groupPath
+   */
+  public IPath getGroupPath() {
+    return _groupPath;
+  }
+
   @Override
   protected void onApply(Configuration config, IModifiableModularizedSystem modularizedSystem,
       IProgressMonitor progressMonitor) {
 
+    _groupPath = new Path(config.getPath());
     //
-    IPath parentGroupPath = config.getGroupContainer() instanceof IRootArtifact ? new Path("") : new Path(
+    _parentGroupPath = config.getGroupContainer() instanceof IRootArtifact ? new Path("") : new Path(
         config.getGroupContainer()
             .getQualifiedName());
 
     //
-    IPath absolutePath = parentGroupPath.append(config.getPath());
+    IPath absolutePath = _parentGroupPath.append(config.getPath());
 
     // find "deepest" existing group
-    IPath existingGroupPath = parentGroupPath;
+    IPath existingGroupPath = _parentGroupPath;
     for (String segment : absolutePath.segments()) {
       if (getModularizedSystem().getGroup(existingGroupPath.append(segment)) != null) {
         existingGroupPath = existingGroupPath.append(segment);
@@ -131,6 +145,13 @@ public class CreateGroupTransformation extends
    */
   public IGroupArtifact getGroupArtifact() {
     return _newGroupArtifact;
+  }
+
+  /**
+   * @return the parentGroupPath
+   */
+  public IPath getParentGroupPath() {
+    return _parentGroupPath;
   }
 
   /**
