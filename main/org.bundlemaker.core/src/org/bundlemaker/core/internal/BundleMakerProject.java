@@ -394,6 +394,14 @@ public class BundleMakerProject implements IBundleMakerProject {
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String getName() {
+    return getProject().getName();
+  }
+
+  /**
    * <p>
    * </p>
    * 

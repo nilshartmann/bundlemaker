@@ -15,8 +15,11 @@ import com.google.gson.JsonElement;
  */
 public abstract class AbstractConfigurableTransformation<T> extends AbstractUndoableTransformation {
 
-  /** - */
-  private JsonElement _configuration;
+  /** Configuration in JSon */
+  private JsonElement _jsonConfigurationElement;
+
+  /** Configuration object created from json */
+  private T           _configuration;
 
   /**
    * <p>
@@ -30,18 +33,27 @@ public abstract class AbstractConfigurableTransformation<T> extends AbstractUndo
     assertConfiguration(configuration);
 
     //
-    _configuration = configuration;
+    _jsonConfigurationElement = configuration;
   }
 
   /**
-   * <p>
-   * </p>
+   * Might be null, if this transformation has not been run yet
    * 
    * @return
    */
-  public JsonElement getJsonConfiguration() {
+  public T getConfiguration() {
     return _configuration;
   }
+
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // public JsonElement getJsonConfiguration() {
+  // return _configuration;
+  // }
 
   /**
    * {@inheritDoc}
@@ -52,13 +64,13 @@ public abstract class AbstractConfigurableTransformation<T> extends AbstractUndo
     super.apply(modularizedSystem, progressMonitor);
 
     //
-    Assert.isNotNull(_configuration, "Configuration must not be null.");
+    Assert.isNotNull(_jsonConfigurationElement, "Configuration must not be null.");
 
     //
-    T config = GsonHelper.gson(modularizedSystem).fromJson(_configuration, getConfigurationType());
+    _configuration = GsonHelper.gson(modularizedSystem).fromJson(_jsonConfigurationElement, getConfigurationType());
 
     //
-    onApply(config, modularizedSystem, progressMonitor);
+    onApply(_configuration, modularizedSystem, progressMonitor);
   }
 
   /**
@@ -95,7 +107,7 @@ public abstract class AbstractConfigurableTransformation<T> extends AbstractUndo
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((_configuration == null) ? 0 : _configuration.hashCode());
+    result = prime * result + ((_jsonConfigurationElement == null) ? 0 : _jsonConfigurationElement.hashCode());
     return result;
   }
 
@@ -111,10 +123,10 @@ public abstract class AbstractConfigurableTransformation<T> extends AbstractUndo
     if (getClass() != obj.getClass())
       return false;
     AbstractConfigurableTransformation other = (AbstractConfigurableTransformation) obj;
-    if (_configuration == null) {
-      if (other._configuration != null)
+    if (_jsonConfigurationElement == null) {
+      if (other._jsonConfigurationElement != null)
         return false;
-    } else if (!_configuration.equals(other._configuration))
+    } else if (!_jsonConfigurationElement.equals(other._jsonConfigurationElement))
       return false;
     return true;
   }

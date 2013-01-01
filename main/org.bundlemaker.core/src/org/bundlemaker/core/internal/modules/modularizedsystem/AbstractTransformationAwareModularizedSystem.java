@@ -90,7 +90,18 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
    */
   @Override
   public void undoTransformations(IProgressMonitor progressMonitor) {
+    undoUntilTransformation(progressMonitor, null);
+  }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.modules.IModularizedSystem#undoUntilTransformation(org.eclipse.core.runtime.IProgressMonitor,
+   * org.bundlemaker.core.transformation.ITransformation)
+   */
+  @Override
+  public void undoUntilTransformation(IProgressMonitor progressMonitor, ITransformation toTransformation) {
     //
     boolean disableModelModifiedNotification = isModelModifiedNotificationDisabled();
 
@@ -107,18 +118,31 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
       }
 
       // We have to undo the transformations in reverse order
-      for (int i = getModifiableTransformationList().size() - 1; i >= 0; i--) {
-        ((IUndoableTransformation) getModifiableTransformationList().get(i)).undo();
-      }
+      List<ITransformation> transformationList = getModifiableTransformationList();
 
-      // clear the transformation list
-      getModifiableTransformationList().clear();
+      while (!transformationList.isEmpty()) {
+        // Get last transformation
+        IUndoableTransformation undoableTransformation = (IUndoableTransformation) transformationList
+            .get(transformationList.size() - 1);
+
+        // check
+        if (toTransformation != null && toTransformation.equals(undoableTransformation)) {
+          break;
+        }
+
+        // undo transformation
+        undoableTransformation.undo();
+
+        // remove from transformation list
+        transformationList.remove(undoableTransformation);
+      }
 
     } finally {
 
       //
       disableModelModifiedNotification(disableModelModifiedNotification);
     }
+
   }
 
   /**

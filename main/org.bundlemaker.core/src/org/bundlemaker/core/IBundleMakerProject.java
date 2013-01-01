@@ -46,6 +46,14 @@ public interface IBundleMakerProject {
   IProject getProject();
 
   /**
+   * Returns the name of this project.
+   * 
+   * <p>
+   * This is a convenience method for {@link #getProject().getName()}
+   */
+  String getName();
+
+  /**
    * <p>
    * Returns the {@link BundleMakerProjectDescription}.
    * </p>

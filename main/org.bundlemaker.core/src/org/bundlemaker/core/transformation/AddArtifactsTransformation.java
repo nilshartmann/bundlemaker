@@ -1,5 +1,6 @@
 package org.bundlemaker.core.transformation;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,6 +33,11 @@ public class AddArtifactsTransformation extends
 
   /** - */
   private List<IAddArtifactAction<?>> _actions;
+
+  /** The artifact the selected artifacts have been added to */
+  private String                      _target;
+
+  private List<String>                _artifactsAdded;
 
   /**
    * <p>
@@ -96,11 +102,27 @@ public class AddArtifactsTransformation extends
   }
 
   /**
+   * Returns the target that the selected artifacts have been added to.
+   * 
+   * 
+   * @return the target or null if the transformation has not been run yet
+   */
+  public String getTarget() {
+    return _target;
+  }
+
+  public List<String> getArtifactsAdded() {
+    return Collections.unmodifiableList(_artifactsAdded);
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
   protected void onApply(final Configuration config, IModifiableModularizedSystem modularizedSystem,
       IProgressMonitor progressMonitor) {
+
+    final List<String> artifactsAdded = new LinkedList<String>();
 
     //
     ModelNotificationSuppressor.performWithoutNotification(modularizedSystem, new Runnable() {
@@ -115,31 +137,43 @@ public class AddArtifactsTransformation extends
         List<? extends IBundleMakerArtifact> artifacts = config.getArtifactSelector().getBundleMakerArtifacts();
 
         // add the artifacts
+        IBundleMakerArtifact target = config.getParent();
+
         for (IBundleMakerArtifact artifact : config.getArtifactSelector().getBundleMakerArtifacts()) {
-          ((AbstractArtifactContainer) config.getParent()).assertCanAdd(artifact);
+          ((AbstractArtifactContainer) target).assertCanAdd(artifact);
         }
 
         for (IBundleMakerArtifact artifactToAdd : artifacts) {
 
           // add to root or group artifact
-          if (config.getParent() instanceof IGroupAndModuleContainer) {
+          if (target instanceof IGroupAndModuleContainer) {
             IAddArtifactAction<IGroupAndModuleContainer> addAction = new AddArtifactToGroupAndModuleContainer();
-            addAction.addChildToParent((IGroupAndModuleContainer) config.getParent(), artifactToAdd);
+            addAction.addChildToParent((IGroupAndModuleContainer) target, artifactToAdd);
             _actions.add(addAction);
           }
           // add to module artifact
-          else if (config.getParent() instanceof IModuleArtifact || config.getParent() instanceof IPackageArtifact) {
+          else if (target instanceof IModuleArtifact || target instanceof IPackageArtifact) {
             IAddArtifactAction<IBundleMakerArtifact> addAction = new AddMovableUnitsToModule();
-            addAction.addChildToParent(config.getParent(), artifactToAdd);
+            addAction.addChildToParent(target, artifactToAdd);
             _actions.add(addAction);
           }
           //
           else {
             throw new RuntimeException("Unsupported add operation");
           }
+
+          artifactsAdded.add(artifactToAdd.getName());
         }
+
+        // remember name of target for later access
+        _target = target.getName();
       }
     });
+
+    // order
+    Collections.sort(artifactsAdded);
+    _artifactsAdded = artifactsAdded;
+
   }
 
   /**
