@@ -77,7 +77,9 @@ public class AddArtifactsTransformationLabelProvider extends
       what.append(", ");
     }
 
-    what.setLength(what.length() - 2); // cut off last ', '
+    if (what.length() >= 2) {
+      what.setLength(what.length() - 2); // cut off last ', '
+    }
 
     int diff = artifacts.size() - MAX_ARTIFACTS_SHOWN;
     if (diff > 0) {
