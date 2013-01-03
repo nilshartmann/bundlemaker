@@ -91,7 +91,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
    */
   @Override
   public void createPartControl(Composite parent) {
-    _viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE);
+    _viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
     _viewer.setContentProvider(new HistoryViewContentProvider());
     createTreeColumns();
     createActions();
@@ -128,6 +128,7 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
     Tree tree = _viewer.getTree();
     TreeColumnLayout layout = new TreeColumnLayout();
     TreeViewerColumn column = new TreeViewerColumn(_viewer, SWT.NONE);
+    column.getColumn().setText("Transformation");
     column.setLabelProvider(new HistoryViewTitleColumnLabelProvider(registeredTransformationLabelProvider));
 
     column.getColumn().setResizable(true);
@@ -136,12 +137,14 @@ public class HistoryView extends AbstractArtifactSelectionAwareViewPart {
 
     column = new TreeViewerColumn(_viewer, SWT.NONE);
     column.setLabelProvider(new HistoryViewDetailsColumnLabelProvider(registeredTransformationLabelProvider));
+    column.getColumn().setText("Details");
     column.getColumn().setResizable(true);
     column.getColumn().setMoveable(false);
     layout.setColumnData(column.getColumn(), new ColumnWeightData(80));
 
     tree.getParent().setLayout(layout);
     tree.setLinesVisible(true);
+    tree.setHeaderVisible(true);
     tree.layout(true);
 
   }
