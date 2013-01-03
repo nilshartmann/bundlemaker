@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BundleMaker Project Editor
 Bundle-SymbolicName: org.bundlemaker.core.ui.projecteditor;singleton:=true
-Bundle-Version: 0.8.0.qualifier
+Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.projecteditor.Activator
 Bundle-Vendor: BundleMaker Development Team
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.bundlemaker.core;bundle-version="0.8.0",
+ org.bundlemaker.core;bundle-version="0.9.0",
  org.eclipse.core.resources;bundle-version="3.6.0",
  org.eclipse.ui.ide;bundle-version="3.6.0",
  org.eclipse.ui.forms;bundle-version="3.5.0",
- org.bundlemaker.core.ui;bundle-version="0.8.0",
- org.bundlemaker.core.jdt;bundle-version="0.8.0",
+ org.bundlemaker.core.ui;bundle-version="0.9.0",
+ org.bundlemaker.core.jdt;bundle-version="0.9.0",
  org.eclipse.jdt.core;bundle-version="3.6.1",
  org.eclipse.jdt.ui;bundle-version="3.6.0",
  org.eclipse.debug.ui;bundle-version="3.6.0",

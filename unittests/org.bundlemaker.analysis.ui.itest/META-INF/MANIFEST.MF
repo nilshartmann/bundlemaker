@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Itest
 Bundle-SymbolicName: org.bundlemaker.analysis.ui.itest
-Bundle-Version: 0.8.0.qualifier
+Bundle-Version: 0.9.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.bundlemaker.core.itest;bundle-version="0.8.0",
- org.bundlemaker.core.itestframework;bundle-version="0.8.0",
- org.bundlemaker.core.ui.view.dependencytable;bundle-version="0.8.0"
+Require-Bundle: org.bundlemaker.core.itest;bundle-version="0.9.0",
+ org.bundlemaker.core.itestframework;bundle-version="0.9.0",
+ org.bundlemaker.core.ui.view.dependencytable;bundle-version="0.9.0"

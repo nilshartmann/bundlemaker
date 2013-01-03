@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bundlemaker.core.itestframework
 Bundle-SymbolicName: org.bundlemaker.core.itestframework
-Bundle-Version: 0.8.0.qualifier
+Bundle-Version: 0.9.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.bundlemaker.core;bundle-version="0.8.0";visibility:=reexport,
+Require-Bundle: org.bundlemaker.core;bundle-version="0.9.0";visibility:=reexport,
  org.junit;bundle-version="4.8.1";visibility:=reexport,
  org.eclipse.core.resources;bundle-version="3.6";visibility:=reexport,
  org.eclipse.core.runtime;bundle-version="3.6.0";visibility:=reexport,
