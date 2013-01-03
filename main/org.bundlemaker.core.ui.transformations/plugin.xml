@@ -7,6 +7,9 @@
 
     <command id="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
       name="Run Transformation Script"/>
+      
+	<command id="org.bundlemaker.core.ui.transformations.commands.RunAsTransformationScriptCommand"
+		name="Run as Transformation Script" />      
 
     <command id="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
       name="Set as Initial Transformation"/>
@@ -64,7 +67,36 @@
         </with>
       </enabledWhen>
     </handler>
+    
+    <!-- org.bundlemaker.core.ui.transformations.handlers.RunAsTransformationScriptHandler -->
+    <handler
+      class="org.bundlemaker.core.ui.transformations.handlers.RunAsTransformationScriptHandler"
+      commandId="org.bundlemaker.core.ui.transformations.commands.RunAsTransformationScriptCommand">
+      <activeWhen>
+		<with variable="selection">
+			<count value="1" />
+			<iterate ifEmpty="false" operator="and">
+				<or>
+					<instanceof value="org.eclipse.jdt.core.ICompilationUnit" />
+					<instanceof value="org.eclipse.jdt.core.IType" />
+				</or>
+			</iterate>
+		</with>
 
+      </activeWhen>
+      <enabledWhen>
+		<with variable="selection">
+			<count value="1" />
+			<iterate ifEmpty="false" operator="and">
+				<or>
+					<instanceof value="org.eclipse.jdt.core.ICompilationUnit" />
+					<instanceof value="org.eclipse.jdt.core.IType" />
+				</or>
+			</iterate>
+		</with>
+
+      </enabledWhen>      
+    </handler>
     <handler
       class="org.bundlemaker.core.ui.transformations.handlers.EnableTransformationScriptNatureHandler"
       commandId="org.bundlemaker.core.ui.transformation.commands.EnableTransformationScriptSupportCommand">
@@ -145,6 +177,11 @@
         style="push">
         <visibleWhen checkEnabled="true"/>
       </command>
+      <command
+        commandId="org.bundlemaker.core.ui.transformations.commands.RunAsTransformationScriptCommand"
+        style="push">
+        <visibleWhen checkEnabled="true"/>
+      </command>      
       <command
         commandId="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand"
         style="push">

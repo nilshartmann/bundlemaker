@@ -13,6 +13,7 @@ package org.bundlemaker.core.ui.transformations.runner;
 import java.lang.reflect.InvocationTargetException;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.transformations.script.runner.TransformationScriptRunner;
 import org.bundlemaker.core.ui.transformations.Activator;
 import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory;
@@ -30,6 +31,12 @@ import org.eclipse.swt.widgets.Shell;
 public class UiTransformationScriptRunner extends TransformationScriptRunner implements IRunnableWithProgress {
 
   private final Shell _shell;
+
+  public UiTransformationScriptRunner(Shell shell, IModularizedSystem modularizedSystem, IType transformationScriptType) {
+    super(modularizedSystem, transformationScriptType);
+
+    this._shell = shell;
+  }
 
   public UiTransformationScriptRunner(Shell shell, IBundleMakerArtifact artifact, IType transformationScriptType) {
     super(artifact.getModularizedSystem(), transformationScriptType);
