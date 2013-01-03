@@ -1,7 +1,9 @@
 package org.bundlemaker.core.ui.artifact;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.artifact.internal.Activator;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IViewPart;
@@ -56,6 +58,23 @@ public class CommonNavigatorUtils {
         commonNavigator.getCommonViewer().refresh(iArtifact);
       }
     }
+
+  }
+
+  public static void refreshProject(String identifier, IBundleMakerProject bundleMakerProject) {
+    if (bundleMakerProject == null) {
+      return;
+    }
+
+    CommonNavigator commonNavigator = findCommonNavigator(identifier);
+
+    if (commonNavigator == null) {
+      return;
+    }
+
+    IProject project = bundleMakerProject.getProject();
+
+    commonNavigator.getCommonViewer().refresh(project);
 
   }
 

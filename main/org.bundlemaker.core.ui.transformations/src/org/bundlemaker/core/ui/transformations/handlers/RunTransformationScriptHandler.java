@@ -122,23 +122,9 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
         @Override
         public IStatus validate(Object[] selection) {
           if (selection.length == 1) {
-            try {
               IType type = (IType) selection[0];
-              ITypeHierarchy hierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
-
-              IType[] types = hierarchy.getAllSuperInterfaces(type);
-              for (IType curr : types) {
-                String fullyQualifiedName = curr.getFullyQualifiedName('.');
-                if (TRANSFORMATION_SCRIPT_TYPE_NAME.equals(fullyQualifiedName)) { //$NON-NLS-1$
-                  return Status.OK_STATUS;
-                }
-
-              }
-
-            } catch (JavaModelException ex) {
-              StatusManager.getManager().handle(
-                  new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Validating failed: " + ex, ex));
-              return Status.CANCEL_STATUS;
+            if (isTransformationScriptType(type)) {
+              return Status.OK_STATUS;
             }
           }
           return new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Type is not an instanceof "
@@ -164,6 +150,31 @@ public class RunTransformationScriptHandler extends AbstractArtifactBasedHandler
         }
       };
     }
+
+  }
+
+  static boolean isTransformationScriptType(IType type) {
+    if (type == null) {
+      return false;
+    }
+    try {
+      ITypeHierarchy hierarchy = type.newSupertypeHierarchy(new NullProgressMonitor());
+
+      IType[] types = hierarchy.getAllSuperInterfaces(type);
+      for (IType curr : types) {
+        String fullyQualifiedName = curr.getFullyQualifiedName('.');
+        if (TRANSFORMATION_SCRIPT_TYPE_NAME.equals(fullyQualifiedName)) { //$NON-NLS-1$
+          return true;
+        }
+
+      }
+
+    } catch (JavaModelException ex) {
+      StatusManager.getManager().handle(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Validating failed: " + ex, ex));
+
+    }
+
+    return false;
 
   }
 

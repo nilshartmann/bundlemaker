@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.core;bundle-version="3.7.1",
  org.eclipse.jdt.ui,
  org.eclipse.ui.workbench,
- org.eclipse.jdt.launching;bundle-version="3.6.1"
+ org.eclipse.jdt.launching;bundle-version="3.6.1",
+ org.bundlemaker.core.ui.artifact;bundle-version="0.8.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Service-Component: OSGI-INF/org.bundlemaker.core.ui.transformations-component.xml

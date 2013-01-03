@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.transformations.history.view;
 
 import java.util.List;
 
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.transformation.ITransformation;
 import org.bundlemaker.core.ui.transformations.history.ITransformationLabelProvider;
 
@@ -26,6 +27,21 @@ public class HistoryViewDetailsColumnLabelProvider extends AbstractHistoryViewCo
    */
   public HistoryViewDetailsColumnLabelProvider(List<ITransformationLabelProvider> transformationLabelProviders) {
     super(transformationLabelProviders);
+  }
+
+  @Override
+  protected String getTextForArtifact(IRootArtifact element) {
+
+    int transformationCount = element.getModularizedSystem().getTransformations().size();
+
+    if (transformationCount == 0) {
+      return "No Transformations";
+    } else if (transformationCount == 1) {
+      return "One Transformation";
+    } else {
+      return transformationCount + " Transformations";
+    }
+
   }
 
   @Override
