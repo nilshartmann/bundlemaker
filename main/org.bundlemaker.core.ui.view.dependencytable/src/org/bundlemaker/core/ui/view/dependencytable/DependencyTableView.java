@@ -22,10 +22,13 @@ import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.bundlemaker.core.ui.utils.EditorHelper;
+import org.bundlemaker.core.ui.view.dependencytable.internal.Activator;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.TableColumnLayout;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -46,6 +49,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.IActionBars;
 
 /**
  * <p>
@@ -59,6 +63,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
   /** - */
   public static String               ID                  = DependencyTableView.class.getName();
+  
+  private static final String VIEW_SETTINGS_SECTION="DependencyTableView";
 
   /** - */
   private TableViewer                _viewer;
@@ -99,18 +105,23 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
         openDependenciesInEditor();
       }
     });
+    
+    loadViewSettings();
 
     // Popup menu
     MenuManager menuMgr = new MenuManager();
     menuMgr.setRemoveAllWhenShown(true);
     menuMgr.addMenuListener(new IMenuListener() {
-      public void menuAboutToShow(IMenuManager manager) {
+      @Override
+	public void menuAboutToShow(IMenuManager manager) {
         DependencyTableView.this.fillContextMenu(manager);
       }
     });
     Menu menu = menuMgr.createContextMenu(_viewer.getControl());
     _viewer.getControl().setMenu(menu);
     getSite().registerContextMenu(menuMgr, _viewer);
+    
+    contributeToActionBars();
 
     // init the dependencies
     initDependencies();
@@ -141,8 +152,63 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     action.setEnabled(selectedDependencies.isEmpty() == false);
     manager.add(action);
   }
+  
+  private void contributeToActionBars() {
+	    IActionBars bars = getViewSite().getActionBars();
+	    fillLocalPullDown(bars.getMenuManager());
+//	    fillLocalToolBar(bars.getToolBarManager());
+	 }
+  
+  class UseShortLabelsAction extends Action {
+	  
+	  public UseShortLabelsAction() {
+		  super("Use Short Labels", IAction.AS_CHECK_BOX);
+		  setChecked(_fromLabelGenerator.isUseShortLabel());
+	  }
 
-  /**
+	@Override
+	public void run() {
+		_fromLabelGenerator.setUseShortLabel(isChecked());
+		_toLabelGenerator.setUseShortLabel(isChecked());
+		
+		saveViewSettings();
+		
+		_viewer.refresh();
+	}
+  }
+  
+  private IDialogSettings getViewSettings() {
+	  IDialogSettings settings = Activator.getDefault().getDialogSettings();
+		IDialogSettings section = settings.getSection(VIEW_SETTINGS_SECTION);
+		if (section == null) {
+			section = settings.addNewSection(VIEW_SETTINGS_SECTION);
+		}
+		return section;
+  }
+  
+  private void saveViewSettings() {
+	  IDialogSettings dialogSettings = getViewSettings();
+	  
+	  dialogSettings.put("useShortLabel", _fromLabelGenerator.isUseShortLabel());
+  }
+  
+  private void loadViewSettings() {
+	  IDialogSettings dialogSettings = getViewSettings();
+	  
+	  boolean useShortLabel = dialogSettings.getBoolean("useShortLabel");
+	  
+	  _fromLabelGenerator.setUseShortLabel(useShortLabel);
+	  _toLabelGenerator.setUseShortLabel(useShortLabel);
+  }
+  
+
+  private void fillLocalPullDown(IMenuManager menuManager) {
+
+	  menuManager.add(new UseShortLabelsAction());
+	  
+}
+
+/**
    * Returns the dependencies that are currently selected inside the viewer. Returns an empty list if there are now
    * dependencies selected.
    * 
@@ -277,7 +343,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
    * 
    * @return
    */
-  protected String getSelectionId() {
+  @Override
+protected String getSelectionId() {
     return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
   }
 

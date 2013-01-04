@@ -4,14 +4,18 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 
 /**
- * Generates a path to an IArtifact that can be used either as a title or as a label.
+ * Generates a path to an IArtifact that can be used either as a title or as a
+ * label.
  * 
  * <p>
- * The "title path" is the path from the root (not including) to the bundle (included) of a base artifact.
+ * The "title path" is the path from the root (not including) to the bundle
+ * (included) of a base artifact.
  * <p>
- * The "label path" is the path from the title (not including) to the IArtifact itself
+ * The "label path" is the path from the title (not including) to the IArtifact
+ * itself
  * 
  * <p>
  * Example:
@@ -29,114 +33,160 @@ import org.bundlemaker.core.analysis.IRootArtifact;
  */
 public class ArtifactPathLabelGenerator {
 
-  /**
-   * The common base artifact that is used to calculate the labels
-   */
-  private IBundleMakerArtifact _baseArtifact;
+	/**
+	 * The common base artifact that is used to calculate the labels
+	 */
+	private IBundleMakerArtifact _baseArtifact;
 
-  private IBundleMakerArtifact _titleArtifact;
+	private IBundleMakerArtifact _titleArtifact;
 
-  /**
-   * @return the baseArtifact
-   */
-  public IBundleMakerArtifact getBaseArtifact() {
-    return _baseArtifact;
-  }
+	private boolean _shortLabel;
 
-  /**
-   * @param baseArtifact
-   *          the baseArtifact to set
-   */
-  public void setBaseArtifact(IBundleMakerArtifact baseArtifact) {
-    _baseArtifact = baseArtifact;
-    _titleArtifact = null;
-  }
+	/**
+	 * @return the baseArtifact
+	 */
+	public IBundleMakerArtifact getBaseArtifact() {
+		return _baseArtifact;
+	}
 
-  /**
-   * returns the last segment of the path of IArtifacts that is used to build the title
-   * 
-   * @return
-   */
-  protected IBundleMakerArtifact getTitleArtifact() {
-    if (_titleArtifact != null) {
-      return _titleArtifact;
-    }
+	/**
+	 * @param baseArtifact
+	 *            the baseArtifact to set
+	 */
+	public void setBaseArtifact(IBundleMakerArtifact baseArtifact) {
+		_baseArtifact = baseArtifact;
+		_titleArtifact = null;
+	}
 
-    IBundleMakerArtifact artifact = _baseArtifact;
-    if (artifact == null) {
-      return null;
-    }
-    if (artifact.isInstanceOf(IRootArtifact.class)) {
-      _titleArtifact = artifact;
-      return artifact;
-    }
+	public void setUseShortLabel(boolean shortLabel) {
+		this._shortLabel = shortLabel;
+	}
 
-    while (artifact != null && artifact.getParent(IModuleArtifact.class) != null) {
-      artifact = artifact.getParent();
-    }
+	public boolean isUseShortLabel() {
+		return this._shortLabel;
+	}
 
-    _titleArtifact = artifact;
+	/**
+	 * returns the last segment of the path of IArtifacts that is used to build
+	 * the title
+	 * 
+	 * @return
+	 */
+	protected IBundleMakerArtifact getTitleArtifact() {
+		if (_titleArtifact != null) {
+			return _titleArtifact;
+		}
 
-    return _titleArtifact;
+		IBundleMakerArtifact artifact = _baseArtifact;
+		if (artifact == null) {
+			return null;
+		}
+		if (artifact.isInstanceOf(IRootArtifact.class)) {
+			_titleArtifact = artifact;
+			return artifact;
+		}
 
-  }
+		while (artifact != null
+				&& artifact.getParent(IModuleArtifact.class) != null) {
+			artifact = artifact.getParent();
+		}
 
-  public String getTitle() {
-    IBundleMakerArtifact artifact = getTitleArtifact();
-    if (artifact == null) {
-      return "";
-    }
+		_titleArtifact = artifact;
 
-    if (artifact.isInstanceOf(IRootArtifact.class)) {
-      return artifact.getName();
-    }
+		return _titleArtifact;
 
-    String path = "";
+	}
 
-    // while (artifact != null && artifact.getType().ordinal() > ArtifactType.Root.ordinal()) {
-    // path = artifact.getName() + "/" + path;
-    // artifact = artifact.getParent();
-    // }
+	public String getTitle() {
+		IBundleMakerArtifact artifact = getTitleArtifact();
+		if (artifact == null) {
+			return "";
+		}
 
-    path = ((IBundleMakerArtifact) artifact).getFullPath().toPortableString();
+		if (artifact.isInstanceOf(IRootArtifact.class)) {
+			return artifact.getName();
+		}
 
-    if (path.endsWith("/")) {
-      path = path.substring(0, path.length() - 1);
-    }
-    return path;
-  }
+		String path = "";
 
-  /**
-   * @return
-   */
-  public String getLabel(IBundleMakerArtifact typeArtifact) {
+		// while (artifact != null && artifact.getType().ordinal() >
+		// ArtifactType.Root.ordinal()) {
+		// path = artifact.getName() + "/" + path;
+		// artifact = artifact.getParent();
+		// }
 
-    IBundleMakerArtifact titleArtifact = getTitleArtifact();
-    if (titleArtifact == null) {
-      return "";
-    }
+		path = ((IBundleMakerArtifact) artifact).getFullPath()
+				.toPortableString();
 
-    IBundleMakerArtifact artifact = typeArtifact;
+		if (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
+		}
+		return path;
+	}
 
-    String path = "";
-    boolean inPackage = false;
-    while (artifact != null && !artifact.equals(titleArtifact)) {
-      if (artifact.isInstanceOf(IPackageArtifact.class)) {
-        if (!inPackage) {
-          inPackage = true;
-          path = artifact.getQualifiedName() + "." + path;
-        }
-      } else {
-        path = artifact.getName() + "/" + path;
-        inPackage = false;
-      }
-      artifact = artifact.getParent();
-    }
+	/**
+	 * @return
+	 */
+	public String getLabel(IBundleMakerArtifact typeArtifact) {
 
-    if (path.endsWith("/")) {
-      path = path.substring(0, path.length() - 1);
-    }
-    return path;
-  }
+		if (isUseShortLabel()) {
+			return getShortLabel(typeArtifact);
+		}
+
+		return getFullLabel(typeArtifact);
+
+	}
+
+	protected String getShortLabel(IBundleMakerArtifact typeArtifact) {
+		String name = typeArtifact.getName();
+
+		if (!(typeArtifact instanceof ITypeArtifact)) {
+			// why would this happen?
+			return name;
+		}
+
+		IBundleMakerArtifact parent = typeArtifact
+				.getParent(IPackageArtifact.class);
+
+		if (parent == null) {
+			return name;
+		}
+
+		if (parent instanceof IPackageArtifact) {
+			name = parent.getQualifiedName() + "." + name;
+		}
+
+		return name;
+	}
+
+	protected String getFullLabel(IBundleMakerArtifact typeArtifact) {
+		IBundleMakerArtifact titleArtifact = getTitleArtifact();
+		if (titleArtifact == null) {
+			return "";
+		}
+
+		IBundleMakerArtifact artifact = typeArtifact;
+
+		String path = "";
+		boolean inPackage = false;
+		while (artifact != null && !artifact.equals(titleArtifact)) {
+			if (artifact.isInstanceOf(IPackageArtifact.class)) {
+				if (!inPackage) {
+					inPackage = true;
+					path = artifact.getQualifiedName() + "." + path;
+				}
+			} else {
+				path = artifact.getName() + "/" + path;
+				inPackage = false;
+			}
+			artifact = artifact.getParent();
+		}
+
+		if (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
+		}
+		return path;
+
+	}
 
 }
