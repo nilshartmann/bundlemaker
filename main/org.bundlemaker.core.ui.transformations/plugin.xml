@@ -9,7 +9,8 @@
       name="Run Transformation Script"/>
       
 	<command id="org.bundlemaker.core.ui.transformations.commands.RunAsTransformationScriptCommand"
-		name="Run as Transformation Script" />      
+		name="Run as Transformation Script" 
+		/>      
 
     <command id="org.bundlemaker.core.ui.transformation.commands.AddToInitialTransformationsCommand"
       name="Set as Initial Transformation"/>
@@ -179,7 +180,8 @@
       </command>
       <command
         commandId="org.bundlemaker.core.ui.transformations.commands.RunAsTransformationScriptCommand"
-        style="push">
+        style="push"
+        icon="icons/run-as-transformation-script.png">
         <visibleWhen checkEnabled="true"/>
       </command>      
       <command
