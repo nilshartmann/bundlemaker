@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -335,6 +336,12 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
 
           // map to dependency
           Dependency dependency = new Dependency(this, referencedArtifact, true);
+
+          if (reference.isExtends()) {
+            dependency.setDependencyKind(DependencyKind.EXTENDS);
+          } else if (reference.isImplements()) {
+            dependency.setDependencyKind(DependencyKind.IMPLEMENTS);
+          }
 
           //
           if (dependency.getFrom().getQualifiedName().equals(dependency.getTo().getQualifiedName())) {
