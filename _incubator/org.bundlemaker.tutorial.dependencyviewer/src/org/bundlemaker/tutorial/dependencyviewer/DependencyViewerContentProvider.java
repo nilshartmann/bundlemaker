@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.tutorial.dependencyviewer;
 
+import java.util.Collection;
+
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -52,7 +54,12 @@ public class DependencyViewerContentProvider extends ArrayContentProvider implem
       return EMPTY_RELATION;
     }
 
-    return from.getDependenciesTo(to).toArray(new IDependency[0]);
+    Collection<IDependency> dependenciesTo = from.getDependenciesTo(to);
+    if (dependenciesTo == null) {
+      System.out.println("dependenciesTo null in: " + from);
+      return EMPTY_RELATION;
+    }
+    return dependenciesTo.toArray(new IDependency[0]);
   }
 
   // /*

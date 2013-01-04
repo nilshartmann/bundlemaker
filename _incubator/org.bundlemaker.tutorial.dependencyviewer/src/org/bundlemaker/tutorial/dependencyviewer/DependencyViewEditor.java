@@ -10,14 +10,26 @@
  ******************************************************************************/
 package org.bundlemaker.tutorial.dependencyviewer;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -26,6 +38,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.zest.core.viewers.AbstractZoomableViewer;
 import org.eclipse.zest.core.viewers.GraphViewer;
@@ -70,11 +83,26 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     super.setCurrentArtifactSelection(artifactSelection);
 
     //
+    hiddenArtifacts.clear();
+
+    //
     List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getSelectedArtifacts();
-    _model.setArtifacts(selectedArtifacts);
-    _graphViewer.setInput(selectedArtifacts);
-    _graphViewer.refresh();
+    setShownArtifacts(selectedArtifacts);
   }
+
+  protected void setShownArtifacts(List<IBundleMakerArtifact> artifacts) {
+    _model.setArtifacts(artifacts);
+    _graphViewer.setInput(artifacts);
+
+    refresh();
+  }
+
+  protected void refresh() {
+    _graphViewer.refresh();
+    // _graphViewer.applyLayout();
+
+  }
+
 
   /*
    * (non-Javadoc)
@@ -116,7 +144,9 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     // _graphViewer.setFilters(new ViewerFilter[] { new SelectedArtifactViewerFilter() });
     LayoutAlgorithm layout = setLayout();
     _graphViewer.setLayoutAlgorithm(layout, true);
+    _graphViewer.setFilters(new ViewerFilter[] { new SelectedArtifactViewerFilter() });
     _graphViewer.applyLayout();
+    _graphViewer.addDoubleClickListener(new DependencyNodeDoubleClickListener());
     _graphViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
       @Override
@@ -133,6 +163,8 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     });
 
     fillToolBar();
+    hookContextMenu();
+
   }
 
   private LayoutAlgorithm setLayout() {
@@ -146,6 +178,108 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     // layout = new
     // RadialLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
     return layout;
+
+  }
+
+  private void hookContextMenu() {
+    MenuManager menuMgr = new MenuManager("#PopupMenu");
+    menuMgr.setRemoveAllWhenShown(true);
+    menuMgr.addMenuListener(new IMenuListener() {
+      @Override
+      public void menuAboutToShow(IMenuManager manager) {
+        DependencyViewEditor.this.fillContextMenu(manager);
+      }
+    });
+    Menu menu = menuMgr.createContextMenu(_graphViewer.getControl());
+    _graphViewer.getControl().setMenu(menu);
+    // getSite().registerContextMenu(menuMgr, _viewer);
+  }
+
+  private HashSet<IBundleMakerArtifact> hiddenArtifacts = new HashSet<IBundleMakerArtifact>();
+
+  protected void fillContextMenu(IMenuManager manager) {
+
+    final IStructuredSelection selection = (IStructuredSelection) _graphViewer.getSelection();
+
+    final Object firstElement = selection.getFirstElement();
+
+    boolean enabled = firstElement instanceof IBundleMakerArtifact;
+
+    Action hideNodeAction = new Action("Hide node") {
+
+      @Override
+      public void run() {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) firstElement;
+        hiddenArtifacts.add(bundleMakerArtifact);
+        refresh();
+      }
+
+    };
+    
+    Action showHiddenNodesAction = new Action("Show hidden nodes") {
+
+      @Override
+      public void run() {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) firstElement;
+        hiddenArtifacts.clear();
+        refresh();
+      }
+
+    };
+    
+    Action focusAction = new Action("Focus on node") {
+
+      @Override
+      public void run() {
+        List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
+        Iterator<?> iterator = selection.iterator();
+        while (iterator.hasNext()) {
+          Object o = iterator.next();
+          if (o instanceof IBundleMakerArtifact) {
+            artifacts.add((IBundleMakerArtifact)o);
+          }
+        }
+        setShownArtifacts(artifacts);
+        refresh();
+      }
+
+    };
+    
+    Action showContentAction = new Action("Show Content") {
+      @Override
+      public void run() {
+        Set<IBundleMakerArtifact> artifacts = new HashSet<IBundleMakerArtifact>(
+            _model.getArtifacts());
+        Iterator<?> iterator = selection.iterator();
+        while (iterator.hasNext()) {
+          Object o = iterator.next();
+          if (o instanceof IBundleMakerArtifact) {
+            IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) o;
+            
+            // Remove selected node...
+            artifacts.remove(bundleMakerArtifact);
+            
+            // ...add it's children instead
+            artifacts.addAll(bundleMakerArtifact.getChildren());
+          }
+        }
+        setShownArtifacts(new LinkedList<IBundleMakerArtifact>(
+            artifacts));
+      }
+
+    };
+
+    showContentAction.setEnabled(!selection.isEmpty());
+    hideNodeAction.setEnabled(enabled);
+    focusAction.setEnabled(!selection.isEmpty());
+    
+
+    manager.add(focusAction);
+    manager.add(new Separator());
+    manager.add(showContentAction);
+    manager.add(new Separator());
+    manager.add(hideNodeAction);
+    manager.add(showHiddenNodesAction);
 
   }
 
@@ -165,6 +299,10 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     ZoomContributionViewItem toolbarZoomContributionViewItem = new ZoomContributionViewItem(this);
     toolbarZoomContributionViewItem.fill(_toolBar, 0);
 
+    // Button button = new Button(_toolBar, SWT.PUSH);
+    // button.setText("Expand");
+    // _toolBar.add(new ToolItem(parent, style));
+
   }
 
   class SelectedArtifactViewerFilter extends ViewerFilter {
@@ -177,12 +315,15 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-      if (element instanceof IBundleMakerArtifact) {
-        IBundleMakerArtifact artifact = (IBundleMakerArtifact) (element);
-        return getCurrentArtifactSelection().getSelectedArtifacts().contains(artifact);
-      }
+      boolean hidden = hiddenArtifacts.contains(element);
 
-      return true;
+      return !hidden;
+      // if (element instanceof IBundleMakerArtifact) {
+      // IBundleMakerArtifact artifact = (IBundleMakerArtifact) (element);
+      // return getCurrentArtifactSelection().getSelectedArtifacts().contains(artifact);
+      // }
+
+      // return true;
     }
 
   }
@@ -195,6 +336,34 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
   @Override
   public AbstractZoomableViewer getZoomableViewer() {
     return _graphViewer;
+  }
+
+  class DependencyNodeDoubleClickListener implements IDoubleClickListener {
+
+    @Override
+    public void doubleClick(DoubleClickEvent event) {
+      IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+      Object s = sel.getFirstElement();
+
+      List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>(_model.getArtifacts());
+
+      if (s instanceof IBundleMakerArtifact) {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) s;
+        Collection<IDependency> dependenciesTo = ((IBundleMakerArtifact) s).getDependenciesTo();
+        for (IDependency iDependency : dependenciesTo) {
+          IBundleMakerArtifact to = iDependency.getTo();
+
+          IBundleMakerArtifact parent = to.getParent(bundleMakerArtifact.getClass());
+
+          if (parent != null && !artifacts.contains(parent)) {
+            artifacts.add(parent);
+          }
+        }
+      }
+
+      setShownArtifacts(artifacts);
+    }
+
   }
 
 }
