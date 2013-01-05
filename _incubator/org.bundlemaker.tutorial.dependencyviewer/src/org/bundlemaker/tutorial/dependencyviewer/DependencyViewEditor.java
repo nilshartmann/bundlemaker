@@ -10,12 +10,9 @@
  ******************************************************************************/
 package org.bundlemaker.tutorial.dependencyviewer;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -83,26 +80,9 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     super.setCurrentArtifactSelection(artifactSelection);
 
     //
-    hiddenArtifacts.clear();
-
-    //
     List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getSelectedArtifacts();
-    setShownArtifacts(selectedArtifacts);
+    _model.setArtifacts(selectedArtifacts);
   }
-
-  protected void setShownArtifacts(List<IBundleMakerArtifact> artifacts) {
-    _model.setArtifacts(artifacts);
-    _graphViewer.setInput(artifacts);
-
-    refresh();
-  }
-
-  protected void refresh() {
-    _graphViewer.refresh();
-    // _graphViewer.applyLayout();
-
-  }
-
 
   /*
    * (non-Javadoc)
@@ -125,7 +105,7 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
   @Override
   public void createPartControl(Composite parent) {
 
-    _model = new DependencyViewerModel(getCurrentArtifactSelection().getSelectedArtifacts());
+    _model = new DependencyViewerModel();
 
     //
     GridLayout gridLayout = new GridLayout(1, true);
@@ -165,6 +145,19 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     fillToolBar();
     hookContextMenu();
 
+    _model.addDependencyViewerModelChangeListener(new IDependencyViewerModelChangeListener() {
+
+      @Override
+      public void modelChanged() {
+        _graphViewer.setInput(_model.getArtifacts());
+        _graphViewer.refresh();
+        _graphViewer.applyLayout();
+      }
+    });
+
+    if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
+      _model.setArtifacts(getCurrentArtifactSelection().getSelectedArtifacts());
+    }
   }
 
   private LayoutAlgorithm setLayout() {
@@ -195,8 +188,6 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     // getSite().registerContextMenu(menuMgr, _viewer);
   }
 
-  private HashSet<IBundleMakerArtifact> hiddenArtifacts = new HashSet<IBundleMakerArtifact>();
-
   protected void fillContextMenu(IMenuManager manager) {
 
     final IStructuredSelection selection = (IStructuredSelection) _graphViewer.getSelection();
@@ -205,28 +196,39 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
 
     boolean enabled = firstElement instanceof IBundleMakerArtifact;
 
+    Action backAction = new Action("Back") {
+      @Override
+      public void run() {
+        _model.showPreviousSnapshot();
+      }
+    };
+
+    Action nextAction = new Action("Next") {
+      @Override
+      public void run() {
+        _model.showNextSnapshot();
+      }
+    };
+
     Action hideNodeAction = new Action("Hide node") {
 
       @Override
       public void run() {
         IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) firstElement;
-        hiddenArtifacts.add(bundleMakerArtifact);
-        refresh();
+        _model.hideArtifacts(bundleMakerArtifact);
       }
 
     };
-    
+
     Action showHiddenNodesAction = new Action("Show hidden nodes") {
 
       @Override
       public void run() {
-        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) firstElement;
-        hiddenArtifacts.clear();
-        refresh();
+        _model.clearHiddenNodes();
       }
 
     };
-    
+
     Action focusAction = new Action("Focus on node") {
 
       @Override
@@ -236,46 +238,50 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
         while (iterator.hasNext()) {
           Object o = iterator.next();
           if (o instanceof IBundleMakerArtifact) {
-            artifacts.add((IBundleMakerArtifact)o);
+            artifacts.add((IBundleMakerArtifact) o);
           }
         }
-        setShownArtifacts(artifacts);
-        refresh();
+
+        _model.setArtifacts(artifacts);
       }
 
     };
-    
+
+    Action showDependenciesAction = new Action("Show Dependencies") {
+      @Override
+      public void run() {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) firstElement;
+
+        _model.showDependencies(bundleMakerArtifact);
+      }
+    };
+
     Action showContentAction = new Action("Show Content") {
       @Override
       public void run() {
-        Set<IBundleMakerArtifact> artifacts = new HashSet<IBundleMakerArtifact>(
-            _model.getArtifacts());
-        Iterator<?> iterator = selection.iterator();
-        while (iterator.hasNext()) {
-          Object o = iterator.next();
-          if (o instanceof IBundleMakerArtifact) {
-            IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) o;
-            
-            // Remove selected node...
-            artifacts.remove(bundleMakerArtifact);
-            
-            // ...add it's children instead
-            artifacts.addAll(bundleMakerArtifact.getChildren());
-          }
-        }
-        setShownArtifacts(new LinkedList<IBundleMakerArtifact>(
-            artifacts));
+
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) firstElement;
+
+        _model.showArtifactContent(bundleMakerArtifact);
       }
 
     };
 
     showContentAction.setEnabled(!selection.isEmpty());
+    showDependenciesAction.setEnabled(enabled);
     hideNodeAction.setEnabled(enabled);
     focusAction.setEnabled(!selection.isEmpty());
-    
+
+    backAction.setEnabled(_model.hasPreviousSnapshot());
+    nextAction.setEnabled(_model.hasNextSnapshot());
+
+    manager.add(backAction);
+    manager.add(nextAction);
+    manager.add(new Separator());
 
     manager.add(focusAction);
     manager.add(new Separator());
+    manager.add(showDependenciesAction);
     manager.add(showContentAction);
     manager.add(new Separator());
     manager.add(hideNodeAction);
@@ -315,15 +321,18 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-      boolean hidden = hiddenArtifacts.contains(element);
 
-      return !hidden;
-      // if (element instanceof IBundleMakerArtifact) {
-      // IBundleMakerArtifact artifact = (IBundleMakerArtifact) (element);
-      // return getCurrentArtifactSelection().getSelectedArtifacts().contains(artifact);
-      // }
+      if (!(element instanceof IBundleMakerArtifact)) {
+        return true;
+      }
 
-      // return true;
+      IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) element;
+
+      if (_model.isHiddenArtifact(bundleMakerArtifact)) {
+        return false;
+      }
+
+      return true;
     }
 
   }
@@ -345,23 +354,11 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
       IStructuredSelection sel = (IStructuredSelection) event.getSelection();
       Object s = sel.getFirstElement();
 
-      List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>(_model.getArtifacts());
-
       if (s instanceof IBundleMakerArtifact) {
         IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) s;
-        Collection<IDependency> dependenciesTo = ((IBundleMakerArtifact) s).getDependenciesTo();
-        for (IDependency iDependency : dependenciesTo) {
-          IBundleMakerArtifact to = iDependency.getTo();
+        _model.showDependencies(bundleMakerArtifact);
 
-          IBundleMakerArtifact parent = to.getParent(bundleMakerArtifact.getClass());
-
-          if (parent != null && !artifacts.contains(parent)) {
-            artifacts.add(parent);
-          }
-        }
       }
-
-      setShownArtifacts(artifacts);
     }
 
   }

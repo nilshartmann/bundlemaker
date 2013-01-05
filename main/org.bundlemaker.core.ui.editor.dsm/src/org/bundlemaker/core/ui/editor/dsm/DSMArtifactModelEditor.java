@@ -29,6 +29,7 @@ import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.print.FigurePrinter;
+import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.Graphics;
@@ -98,22 +99,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * 
    */
   public static void openDsmView() {
-    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if (workbenchWindow == null) {
-      return;
-    }
-
-    IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-    if (workbenchPage == null) {
-      return;
-    }
-
-    try {
-      workbenchPage.openEditor(nullInputEditor, DSMArtifactModelEditor.DSM_EDITOR_ID);
-    } catch (PartInitException e) {
-      e.printStackTrace();
-    }
-
+    EditorHelper.openEditor(DSM_EDITOR_ID, nullInputEditor);
   }
 
   /**

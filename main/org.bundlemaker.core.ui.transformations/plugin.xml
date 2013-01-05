@@ -134,45 +134,12 @@
         </with>
       </enabledWhen>
     </handler>
-
-    <!-- handler
-      class="org.bundlemaker.core.ui.transformations.handlers.DisableTransformationScriptNatureHandler"
-      commandId="org.bundlemaker.core.ui.transformation.commands.DisableTransformationScriptSupportCommand">
-      <activeWhen>
-        <with variable="selection">
-          <iterate ifEmpty="false" operator="and">
-            <adapt type="org.eclipse.core.resources.IProject">
-              <and>
-                <test property="org.eclipse.core.resources.projectNature"
-                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
-                <test property="org.eclipse.core.resources.projectNature"
-                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
-              </and>
-            </adapt>
-          </iterate>
-        </with>
-      </activeWhen>
-      <enabledWhen>
-        <with variable="selection">
-          <iterate ifEmpty="false" operator="and">
-            <adapt type="org.eclipse.core.resources.IProject">
-              <and>
-                <test property="org.eclipse.core.resources.projectNature"
-                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
-                <test property="org.eclipse.core.resources.projectNature"
-                  value="org.bundlemaker.core.ui.transformations.transformationScriptNature"/>
-              </and>
-            </adapt>
-          </iterate>
-        </with>
-      </enabledWhen>
-    </handler -->
   </extension>
 
   <!--  the menus -->
   <extension point="org.eclipse.ui.menus">
     <menuContribution
-      locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
+      locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.transformations">
       <command
         commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
         style="push">

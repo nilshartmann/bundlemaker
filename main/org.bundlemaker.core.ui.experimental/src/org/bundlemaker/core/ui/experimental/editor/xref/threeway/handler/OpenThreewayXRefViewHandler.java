@@ -10,59 +10,23 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.experimental.editor.xref.threeway.handler;
 
-import java.util.List;
-
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.experimental.editor.xref.threeway.ThreewayXRefView;
-import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.part.NullEditorInput;
+import org.bundlemaker.core.ui.handler.AbstractOpenEditorHandler;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class OpenThreewayXRefViewHandler extends AbstractArtifactBasedHandler {
-
-  private IEditorInput nullInputEditor = new NullEditorInput();
+public class OpenThreewayXRefViewHandler extends AbstractOpenEditorHandler {
 
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * org.bundlemaker.analysis.ui.handlers.AbstractArtifactBasedHandler#execute(org.eclipse.core.commands.ExecutionEvent,
-   * java.util.List)
+   * @see org.bundlemaker.core.ui.handler.AbstractOpenEditorHandler#getEditorId()
    */
   @Override
-  protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
-    IWorkbenchPage page = getActiveWorkbenchPage();
-    if (page != null) {
-      try {
-        IEditorPart editorPart = page.openEditor(nullInputEditor, ThreewayXRefView.XREF_ID);
-        if (!(editorPart instanceof ThreewayXRefView)) {
-          System.err.println("EditorPart " + editorPart + " is not a XRefView?");
-          return;
-        }
-      } catch (PartInitException e) {
-        e.printStackTrace();
-      }
-    }
+  protected String getEditorId() {
+    return ThreewayXRefView.XREF_ID;
   }
 
-  private IWorkbenchPage getActiveWorkbenchPage() {
-    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-    if (workbenchWindow != null) {
-      IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
-      if (workbenchPage != null) {
-        return workbenchPage;
-      }
-    }
-    return null;
-  }
 }
