@@ -247,6 +247,15 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
 
     };
 
+    Action showDependenciesAction = new Action("Show Dependencies") {
+      @Override
+      public void run() {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) firstElement;
+
+        _model.showDependencies(bundleMakerArtifact);
+      }
+    };
+
     Action showContentAction = new Action("Show Content") {
       @Override
       public void run() {
@@ -259,6 +268,7 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     };
 
     showContentAction.setEnabled(!selection.isEmpty());
+    showDependenciesAction.setEnabled(enabled);
     hideNodeAction.setEnabled(enabled);
     focusAction.setEnabled(!selection.isEmpty());
 
@@ -271,6 +281,7 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
 
     manager.add(focusAction);
     manager.add(new Separator());
+    manager.add(showDependenciesAction);
     manager.add(showContentAction);
     manager.add(new Separator());
     manager.add(hideNodeAction);
@@ -345,7 +356,7 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
 
       if (s instanceof IBundleMakerArtifact) {
         IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) s;
-        _model.expandArtifact(bundleMakerArtifact);
+        _model.showDependencies(bundleMakerArtifact);
 
       }
     }

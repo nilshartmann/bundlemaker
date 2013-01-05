@@ -185,7 +185,7 @@ public class DependencyViewerModel {
    * 
    * @param bundleMakerArtifact
    */
-  public void expandArtifact(IBundleMakerArtifact bundleMakerArtifact) {
+  public void showDependencies(IBundleMakerArtifact bundleMakerArtifact) {
 
     if (bundleMakerArtifact == null) {
       return;
