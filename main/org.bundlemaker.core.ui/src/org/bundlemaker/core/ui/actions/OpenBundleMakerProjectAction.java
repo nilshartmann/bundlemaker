@@ -58,7 +58,7 @@ public class OpenBundleMakerProjectAction extends Action implements ISelectionCh
         if (resourceArtifact != null) {
 
           try {
-            EditorHelper.open((IBundleMakerArtifact) _structuredSelection.getFirstElement(), null);
+            EditorHelper.openArtifactInEditor((IBundleMakerArtifact) _structuredSelection.getFirstElement(), null);
           } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

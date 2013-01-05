@@ -139,7 +139,7 @@
   <!--  the menus -->
   <extension point="org.eclipse.ui.menus">
     <menuContribution
-      locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
+      locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.transformations">
       <command
         commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
         style="push">

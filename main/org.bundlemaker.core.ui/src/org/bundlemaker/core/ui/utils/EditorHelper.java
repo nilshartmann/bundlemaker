@@ -10,26 +10,63 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.referencedetails.IReferenceDetailParser;
 import org.bundlemaker.core.ui.referencedetails.ReferenceDetailParser;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.text.Position;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.internal.part.NullEditorInput;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public class EditorHelper {
 
-  public static void open(IBundleMakerArtifact artifact, IBundleMakerArtifact toArtifact) {
+  public static void openEditor(String editorId, IEditorInput editorInput) {
+    IWorkbenchPage page = getActiveWorkbenchPage();
+    if (page != null) {
+      try {
+        page.openEditor(editorInput, editorId);
+        // if (!(editorPart instanceof DependencyViewEditor)) {
+        // System.err.println("EditorPart " + editorPart + " is not a DependencyViewEditor?");
+        // return;
+        // }
+      } catch (PartInitException e) {
+        IStatus status = new Status(Status.ERROR, Activator.PLUGIN_ID,
+            "Could not Open Editor '" + editorId + "': " + e, e);
+        Activator.getDefault().getLog().log(status);
+      }
+    }
+
+  }
+
+  @SuppressWarnings("restriction")
+  public static IEditorInput newNullEditorInput() {
+    return new NullEditorInput();
+  }
+
+  /**
+   * Opens an Editor for the specified artifact. If toArtifact is set, references to this artifact are marked in the
+   * editor's ruler.
+   * 
+   * @param artifact
+   * @param toArtifact
+   */
+  public static void openArtifactInEditor(IBundleMakerArtifact artifact, IBundleMakerArtifact toArtifact) {
 
     try {
       // TODO: MOVE
@@ -118,5 +155,16 @@ public class EditorHelper {
    */
   private static String getAssociatedJavaProjectName(IProject project) {
     return project.getName() + "$bundlemakerJdt";
+  }
+
+  private static IWorkbenchPage getActiveWorkbenchPage() {
+    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if (workbenchWindow != null) {
+      IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+      if (workbenchPage != null) {
+        return workbenchPage;
+      }
+    }
+    return null;
   }
 }

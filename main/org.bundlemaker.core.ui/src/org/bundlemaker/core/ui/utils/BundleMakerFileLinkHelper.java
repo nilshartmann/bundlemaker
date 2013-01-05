@@ -54,7 +54,7 @@ public class BundleMakerFileLinkHelper implements ILinkHelper {
       if (editorReference != null) {
 
         //
-        EditorHelper.open(resourceArtifact, null);
+        EditorHelper.openArtifactInEditor(resourceArtifact, null);
       }
     }
   }
