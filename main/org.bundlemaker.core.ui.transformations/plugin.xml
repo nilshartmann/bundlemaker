@@ -154,7 +154,8 @@
       </command>      
       <command
         commandId="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand"
-        style="push">
+        style="push"
+        icon="icons/reset-transformations.png">
         <visibleWhen checkEnabled="true"/>
       </command>
       <command
