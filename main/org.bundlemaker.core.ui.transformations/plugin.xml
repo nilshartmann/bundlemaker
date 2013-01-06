@@ -142,7 +142,8 @@
       locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.transformations">
       <command
         commandId="org.bundlemaker.core.ui.transformation.commands.RunTransformationScriptCommand"
-        style="push">
+        style="push"
+         icon="icons/run-as-transformation-script.png">
         <visibleWhen checkEnabled="true"/>
       </command>
       <command
@@ -153,7 +154,8 @@
       </command>      
       <command
         commandId="org.bundlemaker.core.ui.transformation.commands.ResetTransformationsCommand"
-        style="push">
+        style="push"
+        icon="icons/reset-transformations.png">
         <visibleWhen checkEnabled="true"/>
       </command>
       <command
