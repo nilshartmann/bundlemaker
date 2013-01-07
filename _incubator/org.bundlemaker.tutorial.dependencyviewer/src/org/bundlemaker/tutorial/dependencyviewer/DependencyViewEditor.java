@@ -42,8 +42,9 @@ import org.eclipse.zest.core.viewers.GraphViewer;
 import org.eclipse.zest.core.viewers.IZoomableWorkbenchPart;
 import org.eclipse.zest.core.viewers.ZoomContributionViewItem;
 import org.eclipse.zest.layouts.LayoutAlgorithm;
-import org.eclipse.zest.layouts.LayoutStyles;
-import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.CompositeLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.DirectedGraphLayoutAlgorithm;
+import org.eclipse.zest.layouts.algorithms.HorizontalShiftAlgorithm;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -122,8 +123,8 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     _graphViewer.setLabelProvider(new DependencyViewerLabelProvider(_model));
     _graphViewer.setInput(null);
     // _graphViewer.setFilters(new ViewerFilter[] { new SelectedArtifactViewerFilter() });
-    LayoutAlgorithm layout = setLayout();
-    _graphViewer.setLayoutAlgorithm(layout, true);
+    _graphViewer.setLayoutAlgorithm(new CompositeLayoutAlgorithm(new LayoutAlgorithm[] {
+        new DirectedGraphLayoutAlgorithm(), new HorizontalShiftAlgorithm() }));
     _graphViewer.setFilters(new ViewerFilter[] { new SelectedArtifactViewerFilter() });
     _graphViewer.applyLayout();
     _graphViewer.addDoubleClickListener(new DependencyNodeDoubleClickListener());
@@ -158,20 +159,6 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
       _model.setArtifacts(getCurrentArtifactSelection().getSelectedArtifacts());
     }
-  }
-
-  private LayoutAlgorithm setLayout() {
-    LayoutAlgorithm layout;
-    layout = new SpringLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-    // layout = new TreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-    // layout = new
-    // GridLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-    // layout = new
-    // HorizontalTreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-    // layout = new
-    // RadialLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING);
-    return layout;
-
   }
 
   private void hookContextMenu() {
