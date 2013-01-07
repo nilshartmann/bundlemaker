@@ -13,6 +13,7 @@ package org.bundlemaker.tutorial.dependencyviewer;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.artifact.tree.DefaultArtifactLabelProvider;
+import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -157,6 +158,11 @@ public class DependencyViewerLabelProvider extends LabelProvider implements ICon
         + dependency.getWeight() + " references";
 
     return string;
+  }
+
+  @Override
+  public ConnectionRouter getRouter(Object rel) {
+    return null;
   }
 
 }
