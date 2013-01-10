@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="libs/guery/guery-api-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery/guery-blueprints-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery/guery-impl-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery/guery-io-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery/guery-jung-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery/guery-tests-1.4.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/antlr-runtime-3.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/collections-generic-4.01.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/commons-lang3-3.0-beta.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/DependencyFinder.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/gql4jung.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/jakarta-oro.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/jdom.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/log4j-1.2.15.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/guery-required-libs/mvel2-2.1.3.Final.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

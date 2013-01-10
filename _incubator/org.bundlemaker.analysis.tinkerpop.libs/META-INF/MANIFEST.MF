@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tinkerpop Blueprints Adapter for BundleMaker - Libraries
+Bundle-SymbolicName: org.bundlemaker.analysis.tinkerpop.libs
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: BundleMaker Development Team
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: libs/blueprints-core-2.1.0.jar,
+ libs/blueprints-graph-jung-2.1.0.jar,
+ libs/blueprints-neo4j-graph-2.1.0.jar,
+ .
+Export-Package: com.tinkerpop.blueprints,
+ com.tinkerpop.blueprints.impls.neo4j,
+ com.tinkerpop.blueprints.impls.sail,
+ com.tinkerpop.blueprints.impls.tg,
+ com.tinkerpop.blueprints.oupls.jung,
+ com.tinkerpop.blueprints.util,
+ com.tinkerpop.blueprints.util.io,
+ com.tinkerpop.blueprints.util.io.gml,
+ com.tinkerpop.blueprints.util.io.graphml,
+ com.tinkerpop.blueprints.util.io.graphson,
+ com.tinkerpop.blueprints.util.wrappers,
+ com.tinkerpop.blueprints.util.wrappers.batch,
+ com.tinkerpop.blueprints.util.wrappers.batch.cache,
+ com.tinkerpop.blueprints.util.wrappers.event,
+ com.tinkerpop.blueprints.util.wrappers.event.listener,
+ com.tinkerpop.blueprints.util.wrappers.id,
+ com.tinkerpop.blueprints.util.wrappers.partition,
+ com.tinkerpop.blueprints.util.wrappers.readonly,
+ com.tinkerpop.blueprints.util.wrappers.wrapped
