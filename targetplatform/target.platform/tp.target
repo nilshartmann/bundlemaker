@@ -8,6 +8,7 @@
 <location path="${project_loc:target.platform}/ds" type="Directory"/>
 <location path="${project_loc:target.platform}/draw2d" type="Directory"/>
 <location path="${project_loc:target.platform}/gson" type="Directory"/>
+<location path="${project_loc:target.platform}/guava" type="Directory"/>
 </locations>
 <environment>
 <nl>de_DE</nl>
