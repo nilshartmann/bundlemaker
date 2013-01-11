@@ -178,7 +178,8 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
    */
   @Override
   public boolean hasChildren(Object element) {
-    return getChildren(element).length > 0;
+    return true; // a provider without children normally does not make any sense
+    // return getChildren(element).length > 0;
   }
 
   /**
