@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -41,7 +42,9 @@ public interface IProjectContentProvider {
    * 
    * @return
    */
-  List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject) throws CoreException;
+  List<IProjectContentEntry> getBundleMakerProjectContent(
+      IProgressMonitor progressMonitor,
+      IBundleMakerProject bundleMakerProject) throws CoreException;
 
   /**
    * <p>

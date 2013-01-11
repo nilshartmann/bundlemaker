@@ -151,7 +151,7 @@ public class BundleMakerProject implements IBundleMakerProject {
 
     // reload the project description
     _projectDescription = loadProjectDescription();
-    _projectDescription.initialize(this);
+    _projectDescription.initialize(progressMonitor, this);
 
     // set the initialized flag
     _projectState = BundleMakerProjectState.INITIALIZED;
