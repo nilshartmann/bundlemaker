@@ -8,11 +8,12 @@ import org.bundlemaker.core.content.file.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.content.file.xml.XmlResourceContentType;
 import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -51,7 +52,9 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    * {@inheritDoc}
    */
   @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+  public List<IProjectContentEntry> getBundleMakerProjectContent(
+      IProgressMonitor progressMonitor,
+      IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
     //

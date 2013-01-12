@@ -178,7 +178,22 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
    */
   @Override
   public boolean hasChildren(Object element) {
+    if (!(element instanceof ProjectEditorTreeViewerElement)) {
+      // should not happen. in case it does, simply ignore the entry
+      return false;
+    }
+
+    ProjectEditorTreeViewerElement parentElement = (ProjectEditorTreeViewerElement) element;
+    Object candidate = parentElement.getElement();
+
+    if (candidate instanceof IProjectContentProvider) {
+      // Project content provider should always have childs. Don't ask to save performance
+      // in cases where getting the actual content is expensive
+      return true;
+    }
+
     return getChildren(element).length > 0;
+
   }
 
   /**

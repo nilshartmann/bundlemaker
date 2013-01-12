@@ -5,17 +5,16 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
-import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
+import org.bundlemaker.core.ui.projecteditor.provider.impl.AbstractProjectContentProviderEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
-public class JdtProjectContentProviderEditor implements IProjectContentProviderEditor {
+public class JdtProjectContentProviderEditor extends AbstractProjectContentProviderEditor {
 
   private final FileBasedContentRenderer _fileBasedContentRenderer = FileBasedContentRenderer.getInstance();
 
@@ -49,10 +48,7 @@ public class JdtProjectContentProviderEditor implements IProjectContentProviderE
 
     JdtProjectContentProvider projectContentProvider = (JdtProjectContentProvider) rootElement;
 
-    List<IProjectContentEntry> bundleMakerProjectContent = projectContentProvider.getBundleMakerProjectContent(project);
-
-    return bundleMakerProjectContent;
-
+    return getContentFromProvider(project, projectContentProvider);
   }
 
   @Override

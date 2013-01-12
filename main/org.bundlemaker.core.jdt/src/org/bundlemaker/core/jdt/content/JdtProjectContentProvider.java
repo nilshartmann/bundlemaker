@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -107,7 +108,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * @throws CoreException
    */
   @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(IBundleMakerProject bundleMakerProject)
+  public List<IProjectContentEntry> getBundleMakerProjectContent(IProgressMonitor progressMonitor, IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
     //

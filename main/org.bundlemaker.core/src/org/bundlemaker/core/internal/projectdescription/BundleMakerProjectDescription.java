@@ -34,6 +34,7 @@ import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -306,7 +307,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * @param bundlemakerProject
    * @throws CoreException
    */
-  public void initialize(IBundleMakerProject bundlemakerProject) throws CoreException {
+  public void initialize(IProgressMonitor progressMonitor, IBundleMakerProject bundlemakerProject) throws CoreException {
 
     //
     if (_initialized) {
@@ -326,7 +327,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
       //
       List<IProjectContentEntry> projectContents = contentProvider
-          .getBundleMakerProjectContent(getBundleMakerProject());
+          .getBundleMakerProjectContent(progressMonitor, getBundleMakerProject());
 
       //
       _projectContentEntries.addAll(projectContents);
