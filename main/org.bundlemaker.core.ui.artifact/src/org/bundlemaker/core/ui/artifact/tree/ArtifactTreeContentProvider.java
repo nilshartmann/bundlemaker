@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
@@ -555,6 +556,16 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     @Override
     public boolean containsResources() {
       return _rootArtifact.containsResources();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.bundlemaker.core.analysis.IBundleMakerArtifact#getPropertyKeys()
+     */
+    @Override
+    public Set<Object> getPropertyKeys() {
+      return _rootArtifact.getPropertyKeys();
     }
   }
 

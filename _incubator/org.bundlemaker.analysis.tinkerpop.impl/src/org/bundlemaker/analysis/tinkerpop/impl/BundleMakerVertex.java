@@ -10,84 +10,146 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.tinkerpop.impl;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.google.common.base.Predicate;
+import java.util.Set;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
+
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Query;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.util.DefaultQuery;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
-public class BundleMakerVertex extends BundleMakerElement implements Vertex {
-  private List<BundleMakerEdge> _outgoingEdges = new LinkedList<BundleMakerEdge>();
-  private List<BundleMakerEdge> _incomingEdges = new LinkedList<BundleMakerEdge>();
-  /**
-   * @param id
+public class BundleMakerVertex implements Vertex {
+
+  private final BundleMakerBlueprintsGraph _bundleMakerBlueprintsGraph;
+
+  private final IBundleMakerArtifact       _bundleMakerArtifact;
+
+  BundleMakerVertex(BundleMakerBlueprintsGraph bundleMakerBlueprintsGraph, IBundleMakerArtifact artifact) {
+    _bundleMakerBlueprintsGraph = checkNotNull(bundleMakerBlueprintsGraph);
+    _bundleMakerArtifact = checkNotNull(artifact);
+    _bundleMakerArtifact.setProperty("qname", artifact.getQualifiedName());
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getProperty(java.lang.String)
    */
-  public BundleMakerVertex(
-      BundleMakerGraph bundleMakerGraph, 
-      Object id) {
-    super(bundleMakerGraph, id);
-  }
-  
-  public BundleMakerEdge createRelationshipTo(BundleMakerVertex target, RelType type) {
-    BundleMakerEdge newEdge = getBundleMakerGraph().createRelationShip(
-        this, target, type);
-    return newEdge;
+  @Override
+  public Object getProperty(String key) {
+    return _bundleMakerArtifact.getProperty(key);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getPropertyKeys()
+   */
+  @Override
+  public Set<String> getPropertyKeys() {
 
-  /* (non-Javadoc)
+    return Sets.newHashSet(Iterables.transform(_bundleMakerArtifact.getPropertyKeys(), new Function<Object, String>() {
+      @Override
+      public String apply(Object o) {
+        return String.valueOf(o);
+      }
+    }));
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#setProperty(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setProperty(String key, Object value) {
+    _bundleMakerArtifact.setProperty(key, value);
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#removeProperty(java.lang.String)
+   */
+  @Override
+  public Object removeProperty(String key) {
+
+    return _bundleMakerArtifact.getProperty(key);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getId()
+   */
+  @Override
+  public Object getId() {
+    return _bundleMakerArtifact.getQualifiedName();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Vertex#getEdges(com.tinkerpop.blueprints.Direction, java.lang.String[])
    */
   @Override
-  public Iterable<Edge> getEdges(Direction direction, final String... labels) {
-    
-    
-    Iterable<? extends Edge> iterable = null;
-    
+  public Iterable<Edge> getEdges(Direction direction, String... labels) {
+    Iterable<IDependency> iterable = null;
+
     switch (direction) {
     case IN:
-      iterable = _incomingEdges;
+      iterable = _bundleMakerArtifact.getDependenciesFrom();
       break;
     case OUT:
-      iterable = _outgoingEdges;
+      iterable = _bundleMakerArtifact.getDependenciesTo();
       break;
     case BOTH:
-      iterable = Iterables.concat(_incomingEdges, _outgoingEdges);
+      iterable = Iterables.concat(_bundleMakerArtifact.getDependenciesFrom(), _bundleMakerArtifact.getDependenciesTo());
       break;
     }
-    
-    if (labels == null || labels.length==0) {
-      return (Iterable<Edge>) iterable;
+
+    if (labels == null || labels.length == 0) {
+      return _bundleMakerBlueprintsGraph.toEdgeIterable(iterable);
     }
-        
-    @SuppressWarnings("unchecked")
-    Iterable<Edge> result =(Iterable<Edge>) Iterables.filter(iterable, new Predicate<Edge>() {
-      public boolean apply(Edge e) {
-        for (String label : labels) {
-          if (label.equals(e.getLabel())){
-            return true;
-          }
-        }
-        return false;
-      }
-     
-    });
-    
-    return result;
+
+    throw new UnsupportedOperationException("getEdges with labels (" + Joiner.on(",").join(labels).toString()
+        + ") not supported");
+
+    // @SuppressWarnings("unchecked")
+    // Iterable<Edge> result =(Iterable<Edge>) Iterables.filter(iterable, new Predicate<Edge>() {
+    // public boolean apply(Edge e) {
+    // for (String label : labels) {
+    // if (label.equals(e.getLabel())){
+    // return true;
+    // }
+    // }
+    // return false;
+    // }
+    //
+    // });
+    //
+    // return result;
+
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Vertex#getVertices(com.tinkerpop.blueprints.Direction, java.lang.String[])
    */
   @Override
@@ -96,25 +158,13 @@ public class BundleMakerVertex extends BundleMakerElement implements Vertex {
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Vertex#query()
    */
   @Override
   public Query query() {
-    // TODO Auto-generated method stub
-    return null;
+    return new DefaultQuery(this);
   }
-
-  /**
-   * @param edge
-   */
-  public void addOutgoing(BundleMakerEdge edge) {
-    _outgoingEdges.add(edge);
-  }
-  
-  public void addIncoming(BundleMakerEdge edge) {
-    _incomingEdges.add(edge);
-  }
-
-
 }

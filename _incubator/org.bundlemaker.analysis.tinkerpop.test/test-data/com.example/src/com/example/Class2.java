@@ -8,14 +8,19 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.tinkerpop.impl;
+package com.example;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  *
  */
-public enum RelType {
+public class Class2 implements Interface1 {
+
+  @Override
+  public Class1 getClass1() {
+    return null;
+  }
   
-  EXTENDS,IMPLEMENTS, USES;
+  
 
 }

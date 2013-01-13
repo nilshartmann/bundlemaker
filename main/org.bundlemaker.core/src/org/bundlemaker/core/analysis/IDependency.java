@@ -1,7 +1,7 @@
 package org.bundlemaker.core.analysis;
 
 import java.util.Collection;
-
+import java.util.Set;
 
 /**
  * <p>
@@ -54,4 +54,27 @@ public interface IDependency {
   public Collection<IDependency> getCoreDependencies();
 
   DependencyKind getDependencyKind();
+
+  /**
+   * @return
+   */
+  Set<String> getPropertyKeys();
+
+  /**
+   * @param key
+   * @param value
+   */
+  void setProperty(String key, Object value);
+
+  /**
+   * @param key
+   * @return
+   */
+  Object removeProperty(String key);
+
+  /**
+   * @param key
+   * @return
+   */
+  Object getProperty(String key);
 }

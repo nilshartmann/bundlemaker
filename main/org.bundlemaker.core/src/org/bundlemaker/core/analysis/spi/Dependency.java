@@ -2,7 +2,10 @@ package org.bundlemaker.core.analysis.spi;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -16,18 +19,20 @@ import org.eclipse.core.runtime.Assert;
 public class Dependency implements IDependency {
 
   /** - */
-  private IBundleMakerArtifact    _to;
+  private IBundleMakerArtifact      _to;
 
   /** - */
-  private IBundleMakerArtifact    _from;
+  private IBundleMakerArtifact      _from;
 
-  private DependencyKind          dependencyKind = DependencyKind.USES;
-
-  /** - */
-  private Collection<IDependency> dependencies;
+  private DependencyKind            dependencyKind = DependencyKind.USES;
 
   /** - */
-  private boolean                 _isCoreDependency;
+  private Collection<IDependency>   dependencies;
+
+  /** - */
+  private boolean                   _isCoreDependency;
+
+  private final Map<String, Object> _properties    = new Hashtable<String, Object>();
 
   /**
    * <p>
@@ -199,4 +204,31 @@ public class Dependency implements IDependency {
       return false;
     return true;
   }
+
+  @Override
+  public Object getProperty(String key) {
+    return _properties.get(key);
+  }
+
+  @Override
+  public Set<String> getPropertyKeys() {
+    return _properties.keySet();
+  }
+
+  @Override
+  public void setProperty(String key, Object value) {
+    _properties.put(key, value);
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#removeProperty(java.lang.String)
+   */
+  @Override
+  public Object removeProperty(String key) {
+    return _properties.remove(key);
+  }
+
 }

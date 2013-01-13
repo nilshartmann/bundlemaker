@@ -7,10 +7,8 @@ Bundle-Vendor: BundleMaker Development Team
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: libs/blueprints-core-2.1.0.jar,
  libs/blueprints-graph-jung-2.1.0.jar,
- libs/blueprints-neo4j-graph-2.1.0.jar,
  .
 Export-Package: com.tinkerpop.blueprints,
- com.tinkerpop.blueprints.impls.neo4j,
  com.tinkerpop.blueprints.impls.sail,
  com.tinkerpop.blueprints.impls.tg,
  com.tinkerpop.blueprints.oupls.jung,

@@ -8,7 +8,7 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.tinkerpop.impl;
+package org.bundlemaker.analysis.tinkerpop.dummy;
 
 import java.util.HashMap;
 import java.util.Set;

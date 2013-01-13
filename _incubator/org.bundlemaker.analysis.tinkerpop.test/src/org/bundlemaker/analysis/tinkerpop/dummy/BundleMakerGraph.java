@@ -8,11 +8,9 @@
  * Contributors:
  *     Nils Hartmann - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.analysis.tinkerpop.impl;
+package org.bundlemaker.analysis.tinkerpop.dummy;
 
 import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.tinkerpop.blueprints.Edge;
@@ -22,40 +20,37 @@ import com.tinkerpop.blueprints.Vertex;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
-public class BundleMakerGraph implements Graph{
-  
-  private final Map<Object, Vertex> _vertices = new Hashtable<Object, Vertex>();
-  private final Map<Object, Edge> _edges = new Hashtable<Object, Edge>();
-  
-  private int _idCounter = 0;
-  
+public class BundleMakerGraph implements Graph {
+
+  private final Map<Object, Vertex> _vertices  = new Hashtable<Object, Vertex>();
+
+  private final Map<Object, Edge>   _edges     = new Hashtable<Object, Edge>();
+
+  private int                       _idCounter = 0;
+
   public BundleMakerGraph() {
-    
-   _vertices.put(0, new BundleMakerVertex(this, 0));
-    
+
+    _vertices.put(0, new BundleMakerVertex(this, 0));
+
   }
-  
+
   public BundleMakerVertex createNode() {
-  
+
     BundleMakerVertex newVertex = new BundleMakerVertex(this, newId());
     _vertices.put(newVertex.getId(), newVertex);
-    
+
     return newVertex;
   }
-  
-  
-  
-  
-  
+
   private Object newId() {
     return ++_idCounter;
   }
-  
-  
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#getFeatures()
    */
   @Override
@@ -64,7 +59,9 @@ public class BundleMakerGraph implements Graph{
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#addVertex(java.lang.Object)
    */
   @Override
@@ -73,43 +70,53 @@ public class BundleMakerGraph implements Graph{
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#getVertex(java.lang.Object)
    */
   @Override
   public Vertex getVertex(Object id) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#removeVertex(com.tinkerpop.blueprints.Vertex)
    */
   @Override
   public void removeVertex(Vertex vertex) {
     // TODO Auto-generated method stub
-    
+
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#getVertices()
    */
   @Override
   public Iterable<Vertex> getVertices() {
-    return _vertices.values();
+    throw new UnsupportedOperationException();
+    // return _vertices.values();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#getVertices(java.lang.String, java.lang.Object)
    */
   @Override
   public Iterable<Vertex> getVertices(String key, Object value) {
-    // TODO Auto-generated method stub
-    return null;
+    throw new UnsupportedOperationException();
   }
 
-  /* (non-Javadoc)
-   * @see com.tinkerpop.blueprints.Graph#addEdge(java.lang.Object, com.tinkerpop.blueprints.Vertex, com.tinkerpop.blueprints.Vertex, java.lang.String)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Graph#addEdge(java.lang.Object, com.tinkerpop.blueprints.Vertex,
+   * com.tinkerpop.blueprints.Vertex, java.lang.String)
    */
   @Override
   public Edge addEdge(Object id, Vertex outVertex, Vertex inVertex, String label) {
@@ -117,7 +124,9 @@ public class BundleMakerGraph implements Graph{
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#getEdge(java.lang.Object)
    */
   @Override
@@ -126,16 +135,20 @@ public class BundleMakerGraph implements Graph{
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#removeEdge(com.tinkerpop.blueprints.Edge)
    */
   @Override
   public void removeEdge(Edge edge) {
     // TODO Auto-generated method stub
-    
+
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#getEdges()
    */
   @Override
@@ -143,7 +156,9 @@ public class BundleMakerGraph implements Graph{
     return _edges.values();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#getEdges(java.lang.String, java.lang.Object)
    */
   @Override
@@ -152,13 +167,15 @@ public class BundleMakerGraph implements Graph{
     return null;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Graph#shutdown()
    */
   @Override
   public void shutdown() {
     // TODO Auto-generated method stub
-    
+
   }
 
   /**
@@ -172,7 +189,7 @@ public class BundleMakerGraph implements Graph{
 
     from.addOutgoing(edge);
     to.addIncoming(edge);
-    
+
     _edges.put(edge.getId(), edge);
     return edge;
   }

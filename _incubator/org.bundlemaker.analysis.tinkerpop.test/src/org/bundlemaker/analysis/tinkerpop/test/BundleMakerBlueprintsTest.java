@@ -1,14 +1,13 @@
-/*
- * Copyright 2012 Jens Dietrich Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE, Version 3
- * (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
- * http://www.gnu.org/licenses/agpl.html Unless required by applicable law
- * or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-
+/*******************************************************************************
+ * Copyright (c) 2012 BundleMaker Project Team
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Nils Hartmann - initial API and implementation
+ ******************************************************************************/
 package org.bundlemaker.analysis.tinkerpop.test;
 
 import static org.junit.Assert.assertEquals;
@@ -18,24 +17,24 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import nz.ac.massey.cs.guery.MotifInstance;
-import nz.ac.massey.cs.guery.adapters.blueprints.AlwaysCheckCache;
 import nz.ac.massey.cs.guery.adapters.blueprints.BlueprintsAdapter;
 import nz.ac.massey.cs.guery.adapters.blueprints.ElementCache;
 import nz.ac.massey.cs.guery.adapters.blueprints.WrappingCache;
 
-import org.apache.log4j.BasicConfigurator;
-import org.bundlemaker.analysis.tinkerpop.dummy.BundleMakerEdge;
-import org.bundlemaker.analysis.tinkerpop.dummy.BundleMakerGraph;
-import org.bundlemaker.analysis.tinkerpop.dummy.BundleMakerVertex;
-import org.bundlemaker.analysis.tinkerpop.dummy.RelType;
-import org.junit.After;
+import org.bundlemaker.analysis.tinkerpop.impl.BundleMakerBlueprintsGraph;
+import org.bundlemaker.core.analysis.DependencyKind;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
+import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
+import org.eclipse.core.runtime.CoreException;
 import org.junit.Assume;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -45,28 +44,19 @@ import test.nz.ac.massey.cs.guery.adapters.blueprints.Utilities;
 
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
-//import org.neo4j.graphdb.GraphDatabaseService;
-//import org.neo4j.graphdb.Node;
-//import org.neo4j.graphdb.Relationship;
-//import org.neo4j.graphdb.Transaction;
-//import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-//import org.neo4j.kernel.impl.util.FileUtils;
 
 /**
- * For the data set used in this test see <a href="http://goo.gl/VGxKR">http://goo.gl/VGxKR</a>
+ * @author Nils Hartmann (nils@nilshartmann.net)
  * 
- * @author jens dietrich
  */
 @RunWith(Parameterized.class)
-public class BundleMakerAdapterTests {
-  private static String     DB_PATH = "db/guery-blueprintadapter-test1";
+public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest {
 
-  private BlueprintsAdapter graph   = null;
+  private BlueprintsAdapter          graph   = null;
 
-  // private Graph bpGraph = null;
-  private BundleMakerGraph  bmGraph = null;
+  private BundleMakerBlueprintsGraph bmGraph = null;
 
-  private ElementCache      cache   = null;
+  private ElementCache               cache   = null;
 
   interface CacheFactory {
     ElementCache createCache();
@@ -79,118 +69,54 @@ public class BundleMakerAdapterTests {
       public ElementCache createCache() {
         return new WrappingCache();
       }
-    } }, { new CacheFactory() {
-      @Override
-      public ElementCache createCache() {
-        return new AlwaysCheckCache();
-      }
-    } } };
+    } } /*
+         * , { new CacheFactory() {
+         * 
+         * @Override public ElementCache createCache() { return new AlwaysCheckCache(); } } }
+         */};
     return Arrays.asList(arr);
 
   }
 
-  public BundleMakerAdapterTests(CacheFactory cacheFactory) {
-    super();
-    this.cache = cacheFactory.createCache();
+  public BundleMakerBlueprintsTest(CacheFactory cacheFactory) {
+    cache = cacheFactory.createCache();
   }
 
-  private static BundleMakerGraph _theBundleMakerGraph;
-
-  @BeforeClass
-  public static void setUp() throws Exception {
-    BasicConfigurator.configure();
-
-    BundleMakerGraph graphDb = new BundleMakerGraph();
-    BundleMakerVertex cl1 = graphDb.createNode();
-    cl1.setProperty("qname", "com.example.Class1");
-
-    BundleMakerVertex cl2 = graphDb.createNode();
-    cl2.setProperty("qname", "com.example.Class2");
-
-    BundleMakerVertex if1 = graphDb.createNode();
-    if1.setProperty("qname", "com.example.Interface1");
-    // // add vertices
-
-    //
-    BundleMakerEdge r1 = if1.createRelationshipTo(cl1, RelType.USES);
-    r1.setProperty("name", "r1");
-    r1.setProperty("type", "uses");
-
-    BundleMakerEdge r2 = cl1.createRelationshipTo(cl2, RelType.USES);
-    r2.setProperty("name", "r2");
-    r2.setProperty("type", "uses");
-    BundleMakerEdge r3 = cl2.createRelationshipTo(if1, RelType.IMPLEMENTS);
-    r3.setProperty("name", "r3");
-    r3.setProperty("type", "implements");
-    BundleMakerEdge r4 = cl2.createRelationshipTo(cl1, RelType.USES);
-    r4.setProperty("name", "r4");
-    r4.setProperty("type", "uses");
-    _theBundleMakerGraph = graphDb;
-
-    // FileUtils.deleteRecursively( new File( DB_PATH ) );
-    // System.out.println("deleted old db from " + DB_PATH);
-    //
-    // // start db
-    // GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( DB_PATH );
-    // Transaction tx = graphDb.beginTx();
-    // try
-    // {
-    // // add vertices
-    // Node cl1 = graphDb.createNode();
-    // cl1.setProperty("qname", "com.example.Class1");
-    //
-    // Node cl2 = graphDb.createNode();
-    // cl2.setProperty("qname", "com.example.Class2");
-    //
-    // Node if1 = graphDb.createNode();
-    // if1.setProperty("qname", "com.example.Interface1");
-    //
-    // Relationship r1 = if1.createRelationshipTo( cl1, RelTypes.USES);
-    // r1.setProperty("name","r1");
-    // r1.setProperty("type","uses");
-    //
-    // Relationship r2 = cl1.createRelationshipTo( cl2, RelTypes.USES);
-    // r2.setProperty("name","r2");
-    // r2.setProperty("type","uses");
-    // Relationship r3 = cl2.createRelationshipTo( if1, RelTypes.IMPLEMENTS);
-    // r3.setProperty("name","r3");
-    // r3.setProperty("type","implements");
-    // Relationship r4 = cl2.createRelationshipTo( cl1, RelTypes.USES);
-    // r4.setProperty("name","r4");
-    // r4.setProperty("type","uses");
-
-    // tx.success();
-    // System.out.println("db created: " + DB_PATH );
-    // }
-    // finally
-    // {
-    // tx.finish();
-    // graphDb.shutdown();
-    // }
-
-  }
-
+  @Override
   @Before
-  public void setup() {
-    // bpGraph = new Neo4jGraph(DB_PATH);
-    bmGraph = _theBundleMakerGraph;
+  public void before() throws CoreException {
+    super.before();
+
+    //
+    assertCorrectTestModel();
+
+    //
+    bmGraph = new BundleMakerBlueprintsGraph(getRootArtifact());
+
     graph = new BlueprintsAdapter(bmGraph, cache);
   }
 
-  @After
-  public void tearDown() {
-    // bpGraph.shutdown();
-    // bpGraph = null;
-    graph = null;
-  }
+  private void assertCorrectTestModel() {
+    assertPackageExists("com.example");
+    ITypeArtifact cl1 = getType("com.example.Class1");
+    ITypeArtifact cl2 = getType("com.example.Class2");
+    ITypeArtifact if1 = getType("com.example.Interface1");
 
-  private int count(Iterator<?> iter) {
-    int c = 0;
-    while (iter.hasNext()) {
-      iter.next();
-      c = c + 1;
-    }
-    return c;
+    // r1
+    IDependency r1 = getDependency(if1, cl1, DependencyKind.USES);
+    r1.setProperty("name", "r1");
+
+    // r2
+    IDependency r2 = getDependency(cl1, cl2, DependencyKind.USES);
+    r2.setProperty("name", "r2");
+
+    // r3
+    IDependency r3 = getDependency(cl2, if1, DependencyKind.IMPLEMENTS);
+    r3.setProperty("name", "r3");
+
+    // r4
+    IDependency r4 = getDependency(cl2, cl1, DependencyKind.USES);
+    r4.setProperty("name", "r4");
   }
 
   @Test
@@ -219,6 +145,7 @@ public class BundleMakerAdapterTests {
     assertNotNull(e.getId());
   }
 
+  // ---------
   // note that virtual start node n[0] is also counted
   @Test
   public void testVertexCount() {
@@ -481,6 +408,106 @@ public class BundleMakerAdapterTests {
     assertEquals(uses.get(1), getEdge("r2"));
   }
 
+  @Test
+  public void bm_testTypeEdge1() {
+    Edge edge = getEdge("r1");
+    assertEquals("uses", edge.getProperty("type"));
+  }
+
+  @Test
+  public void bm_testTypeEdge2() {
+    Edge edge = getEdge("r2");
+    assertEquals("uses", edge.getProperty("type"));
+  }
+
+  @Test
+  public void bm_testTypeEdge3() {
+    Edge edge = getEdge("r3");
+    assertEquals("implements", edge.getProperty("type"));
+  }
+
+  @Test
+  public void bm_testTypeEdge4() {
+    Edge edge = getEdge("r4");
+    assertEquals("uses", edge.getProperty("type"));
+  }
+
+  // ---------- * ---------- * ---------- * ---------- * ---------- * ---------- * ----------
+  /**
+   * @param if1
+   * @param cl1
+   * @param string
+   */
+  private IDependency getDependency(ITypeArtifact from, ITypeArtifact to, DependencyKind expectedKind) {
+
+    IDependency dependency = from.getDependencyTo(to);
+    assertNotNull(dependency);
+    assertEquals(expectedKind, dependency.getDependencyKind());
+
+    return dependency;
+
+  }
+
+  /**
+   * @param string
+   * @param string2
+   * @param string3
+   * @return
+   */
+  private ITypeArtifact getType(final String expectedTypeName) {
+    final List<ITypeArtifact> typeArtifactsFound = new LinkedList<ITypeArtifact>();
+
+    getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see
+       * org.bundlemaker.core.analysis.IAnalysisModelVisitor.Adapter#visit(org.bundlemaker.core.analysis.ITypeArtifact)
+       */
+      @Override
+      public boolean visit(ITypeArtifact typeArtifact) {
+
+        String qualifiedTypeName = typeArtifact.getParent(IPackageArtifact.class).getQualifiedName() + "."
+            + typeArtifact.getName();
+
+        if (qualifiedTypeName.equals(expectedTypeName)) {
+          typeArtifactsFound.add(typeArtifact);
+        }
+        return false;
+      }
+
+    });
+
+    assertEquals(1, typeArtifactsFound.size());
+
+    return typeArtifactsFound.get(0);
+  }
+
+  /**
+   * @param string
+   */
+  private void assertPackageExists(final String packageName) {
+
+    final List<IPackageArtifact> packageArtifactsFound = new LinkedList<IPackageArtifact>();
+
+    getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
+
+      @Override
+      public boolean visit(IPackageArtifact packageArtifact) {
+        System.out.println("package: " + packageArtifact.getQualifiedName());
+        if (packageArtifact.getQualifiedName().equals(packageName)) {
+          packageArtifactsFound.add(packageArtifact);
+        }
+        return false;
+      }
+
+    });
+
+    assertEquals(1, packageArtifactsFound.size());
+
+  }
+
   private Vertex getVertex(String name) {
     Iterator<Vertex> iter = graph.getVertices();
     while (iter.hasNext()) {
@@ -501,6 +528,15 @@ public class BundleMakerAdapterTests {
       }
     }
     return null;
+  }
+
+  private int count(Iterator<?> iter) {
+    int c = 0;
+    while (iter.hasNext()) {
+      iter.next();
+      c = c + 1;
+    }
+    return c;
   }
 
   @SuppressWarnings({ "rawtypes", "unchecked" })

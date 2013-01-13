@@ -10,56 +10,122 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.tinkerpop.impl;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Set;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IDependency;
+
 import com.tinkerpop.blueprints.Direction;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.util.ExceptionFactory;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
-public class BundleMakerEdge extends BundleMakerElement implements Edge {
-  
-  private final String _label;
-  
-  private BundleMakerVertex _incoming;
-  private BundleMakerVertex _outgoing;
+public class BundleMakerEdge implements Edge {
 
-   /**
-   * 
-   */
-  public BundleMakerEdge(BundleMakerGraph graph, Object id, String label, BundleMakerVertex incoming, BundleMakerVertex outgoing) {
-    super(graph, id);
-    
-    this._label = label;
-    this._incoming = incoming;
-    this._outgoing = outgoing;
+  private final BundleMakerBlueprintsGraph _bundleMakerBlueprintsGraph;
 
-    
+  private final IDependency                _dependency;
+
+  private final Object                     _id;
+
+  BundleMakerEdge(BundleMakerBlueprintsGraph bundleMakerBlueprintsGraph, IDependency dependency) {
+
+    this._bundleMakerBlueprintsGraph = checkNotNull(bundleMakerBlueprintsGraph);
+    this._dependency = checkNotNull(dependency);
+
+    this._id = dependency.getFrom().getQualifiedName() + "_" + dependency.getTo().getQualifiedName();
+    this._dependency.setProperty("type", dependency.getDependencyKind().name().toLowerCase());
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getId()
+   */
+  @Override
+  public Object getId() {
+    return _id;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Edge#getVertex(com.tinkerpop.blueprints.Direction)
    */
   @Override
   public Vertex getVertex(Direction direction) throws IllegalArgumentException {
-    
+
+    if (direction == Direction.BOTH) {
+      throw ExceptionFactory.bothIsNotSupported();
+    }
+
+    IBundleMakerArtifact artifact = null;
     // same "wrong" mapping as in com.tinkerpop.blueprints.impls.neo4j.Neo4jEdge.getVertex(Direction)
     if (direction == Direction.IN) {
-      return _outgoing;
+      artifact = _dependency.getTo();
     } else if (direction == Direction.OUT) {
-      return _incoming;
+      artifact = _dependency.getFrom();
     }
-    
-    throw new IllegalArgumentException("direction invalid");
+
+    return _bundleMakerBlueprintsGraph.getVertexForArtifact(artifact);
+
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.tinkerpop.blueprints.Edge#getLabel()
    */
   @Override
   public String getLabel() {
-    return _label;
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getProperty(java.lang.String)
+   */
+  @Override
+  public Object getProperty(String key) {
+    return _dependency.getProperty(key);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getPropertyKeys()
+   */
+  @Override
+  public Set<String> getPropertyKeys() {
+    return _dependency.getPropertyKeys();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#setProperty(java.lang.String, java.lang.Object)
+   */
+  @Override
+  public void setProperty(String key, Object value) {
+    _dependency.setProperty(key, value);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#removeProperty(java.lang.String)
+   */
+  @Override
+  public Object removeProperty(String key) {
+    return _dependency.removeProperty(key);
   }
 
 }

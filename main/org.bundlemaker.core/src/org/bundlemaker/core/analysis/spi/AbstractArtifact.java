@@ -207,6 +207,14 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     }
   }
 
+  public Set<Object> getPropertyKeys() {
+    if (_properties == null) {
+      return Collections.emptySet();
+    }
+
+    return _properties.keySet();
+  }
+
   /**
    * {@inheritDoc}
    */

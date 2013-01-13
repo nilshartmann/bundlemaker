@@ -2,6 +2,7 @@ package org.bundlemaker.core.analysis;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
 import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
@@ -183,6 +184,11 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    *          the value
    */
   void setProperty(Object key, Object value);
+
+  /**
+   * Get the keys of all known properties of this Artifact
+   */
+  Set<Object> getPropertyKeys();
 
   /**
    * <p>

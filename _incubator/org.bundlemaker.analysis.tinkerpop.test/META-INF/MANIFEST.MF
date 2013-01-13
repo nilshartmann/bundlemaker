@@ -9,7 +9,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: com.google.guava;bundle-version="13.0.1",
  org.bundlemaker.analysis.tinkerpop.impl;bundle-version="1.0.0",
  org.bundlemaker.analysis.tinkerpop.libs;bundle-version="1.0.0",
- org.junit
+ org.junit,
+ org.bundlemaker.core.itestframework;bundle-version="0.9.0"
 Bundle-ClassPath: .,
  libs/guery/guery-api-1.4.0.jar,
  libs/guery/guery-blueprints-1.4.0.jar,
