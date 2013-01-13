@@ -44,13 +44,13 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 public class BinaryBundleExporterConfigurationDialog extends AbstractExporterConfigurationDialog {
 
   // output location
-  private boolean   _saveToFileSystem = true;
+  private boolean   _saveToFileSystem          = true;
 
   private Combo     _externalFolderCombo;
 
   private Button    _externalFolderRadio;
 
-  private String    _externalFolder   = "";  //$NON-NLS-1$
+  private String    _externalFolder            = "";   //$NON-NLS-1$
 
   private Text      _workspaceText;
 
@@ -61,7 +61,11 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
   // configuration
   private Button    _includeSourcesCheckBox;
 
-  private boolean   _includeSources   = true;
+  private boolean   _includeSources            = false;
+
+  private Button    _createEclipseSourceBundleCheckBox;
+
+  private boolean   _createEclipseSourceBundle = false;
 
   /**
    * @param parentShell
@@ -102,6 +106,16 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
       @Override
       public void handleEvent(Event event) {
         _includeSources = _includeSourcesCheckBox.getSelection();
+      }
+    });
+
+    _createEclipseSourceBundleCheckBox = new Button(settingsGroup, SWT.CHECK);
+    _createEclipseSourceBundleCheckBox.setText("Additionaly create Eclipse Source Bundle");
+    _createEclipseSourceBundleCheckBox.setSelection(_includeSources);
+    _createEclipseSourceBundleCheckBox.addListener(SWT.Selection, new Listener() {
+      @Override
+      public void handleEvent(Event event) {
+        _createEclipseSourceBundle = _createEclipseSourceBundleCheckBox.getSelection();
       }
     });
 
@@ -254,6 +268,13 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
 
   public boolean isIncludeSources() {
     return _includeSources;
+  }
+
+  /**
+   * @return the createEclipseSourceBundle
+   */
+  public boolean isCreateEclipseSourceBundle() {
+    return _createEclipseSourceBundle;
   }
 
   public File getDestination() {

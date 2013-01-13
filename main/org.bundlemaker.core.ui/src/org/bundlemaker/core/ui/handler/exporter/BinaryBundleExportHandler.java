@@ -57,6 +57,7 @@ public class BinaryBundleExportHandler extends AbstractExportHandler {
     // create module exporter
     JarFileBundleExporter moduleExporter = (JarFileBundleExporter) createExporter();
     moduleExporter.setIncludeSources(dialog.isIncludeSources());
+    moduleExporter.setCreateEclipseSourceBundle(dialog.isCreateEclipseSourceBundle());
 
     // create the adapter
     ModularizedSystemExporterAdapter adapter = createModularizedSystemExporterAdapter(moduleExporter, selectedArtifacts);

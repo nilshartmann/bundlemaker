@@ -86,20 +86,22 @@ public final class JarFileUtils {
         }
       }
 
-      // add all additional files
-      for (IReadableResource contentProvider : additionalContent) {
+      if (additionalContent != null) {
+        // add all additional files
+        for (IReadableResource contentProvider : additionalContent) {
 
-        // add archive entry
-        JarEntry newEntry = new JarEntry(contentProvider.getPath());
-        jarOutputStream.putNextEntry(newEntry);
+          // add archive entry
+          JarEntry newEntry = new JarEntry(contentProvider.getPath());
+          jarOutputStream.putNextEntry(newEntry);
 
-        // copy
-        inputStream = new ByteArrayInputStream(contentProvider.getContent());
-        copy(inputStream, jarOutputStream);
+          // copy
+          inputStream = new ByteArrayInputStream(contentProvider.getContent());
+          copy(inputStream, jarOutputStream);
 
-        inputStream.close();
+          inputStream.close();
 
-        jarOutputStream.closeEntry();
+          jarOutputStream.closeEntry();
+        }
       }
 
       //
