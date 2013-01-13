@@ -42,6 +42,8 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 
   // TODO
   boolean                          _specifyBundleNameIfMultipleExporterExist = true;
+  
+  boolean _useOptionalOnMissingImports = true;
 
   /**
    * {@inheritDoc}
@@ -413,7 +415,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 
     // Rule: set missing types 'optional'
     // TODO "<< Missing Types >>"
-    if (moduleArtifact.getName().equals("<< Missing Types >>")
+    if ((moduleArtifact.getName().equals("<< Missing Types >>") && isUseOptionalOnMissingImports())
         || forceOptionalImportPackage(packageName, moduleArtifacts)) {
       importedPackage.setResolution(Resolution.OPTIONAL);
     }
@@ -778,5 +780,18 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
 
     //
     return false;
+  }
+  
+  /**
+   * @param useOptionalOnMissingImports the useOptionalOnMissingImports to set
+   */
+  public void setUseOptionalOnMissingImports(boolean useOptionalOnMissingImports) {
+    _useOptionalOnMissingImports = useOptionalOnMissingImports;
+  }
+  /**
+   * @return the useOptionalOnMissingImports
+   */
+  public boolean isUseOptionalOnMissingImports() {
+    return _useOptionalOnMissingImports;
   }
 }

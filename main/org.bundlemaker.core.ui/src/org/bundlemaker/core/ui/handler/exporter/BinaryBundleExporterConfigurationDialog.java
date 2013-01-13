@@ -44,13 +44,13 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 public class BinaryBundleExporterConfigurationDialog extends AbstractExporterConfigurationDialog {
 
   // output location
-  private boolean   _saveToFileSystem          = true;
+  private boolean   _saveToFileSystem                      = true;
 
   private Combo     _externalFolderCombo;
 
   private Button    _externalFolderRadio;
 
-  private String    _externalFolder            = "";   //$NON-NLS-1$
+  private String    _externalFolder                        = "";   //$NON-NLS-1$
 
   private Text      _workspaceText;
 
@@ -61,11 +61,15 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
   // configuration
   private Button    _includeSourcesCheckBox;
 
-  private boolean   _includeSources            = false;
+  private boolean   _includeSources                        = false;
 
   private Button    _createEclipseSourceBundleCheckBox;
 
-  private boolean   _createEclipseSourceBundle = false;
+  private boolean   _createEclipseSourceBundle             = false;
+
+  private Button    _useOptionalResolutionOnMissingImportsCheckBox;
+
+  private boolean   _useOptionalResolutionOnMissingImports = true;
 
   /**
    * @param parentShell
@@ -99,6 +103,16 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
    * @param settingsGroup
    */
   private void createSettings(Group settingsGroup) {
+    _useOptionalResolutionOnMissingImportsCheckBox = new Button(settingsGroup, SWT.CHECK);
+    _useOptionalResolutionOnMissingImportsCheckBox.setText("Use Optional Resolution on missing Packages");
+    _useOptionalResolutionOnMissingImportsCheckBox.setSelection(_useOptionalResolutionOnMissingImports);
+    _useOptionalResolutionOnMissingImportsCheckBox.addListener(SWT.Selection, new Listener() {
+      @Override
+      public void handleEvent(Event event) {
+        _useOptionalResolutionOnMissingImports = _useOptionalResolutionOnMissingImportsCheckBox.getSelection();
+      }
+    });
+
     _includeSourcesCheckBox = new Button(settingsGroup, SWT.CHECK);
     _includeSourcesCheckBox.setText("Include sources in OSGI-OPT");
     _includeSourcesCheckBox.setSelection(_includeSources);
@@ -111,7 +125,7 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
 
     _createEclipseSourceBundleCheckBox = new Button(settingsGroup, SWT.CHECK);
     _createEclipseSourceBundleCheckBox.setText("Additionaly create Eclipse Source Bundle");
-    _createEclipseSourceBundleCheckBox.setSelection(_includeSources);
+    _createEclipseSourceBundleCheckBox.setSelection(_createEclipseSourceBundle);
     _createEclipseSourceBundleCheckBox.addListener(SWT.Selection, new Listener() {
       @Override
       public void handleEvent(Event event) {
@@ -275,6 +289,13 @@ public class BinaryBundleExporterConfigurationDialog extends AbstractExporterCon
    */
   public boolean isCreateEclipseSourceBundle() {
     return _createEclipseSourceBundle;
+  }
+
+  /**
+   * @return the useOptionalResolutionOnMissingImports
+   */
+  public boolean isUseOptionalResolutionOnMissingImports() {
+    return _useOptionalResolutionOnMissingImports;
   }
 
   public File getDestination() {
