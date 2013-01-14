@@ -1,6 +1,5 @@
 package org.bundlemaker.core.ui.mvn;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,11 +7,11 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.mvn.content.MvnContentProvider;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
+import org.bundlemaker.core.ui.projecteditor.provider.impl.AbstractProjectContentProviderEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
@@ -24,7 +23,7 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class MvnProjectContentProviderEditor extends AbstractContentProviderEditor {
+public class MvnProjectContentProviderEditor extends AbstractProjectContentProviderEditor {
 
   /** - */
   private final FileBasedContentRenderer             _fileBasedContentRenderer = FileBasedContentRenderer.getInstance();
@@ -67,10 +66,7 @@ public class MvnProjectContentProviderEditor extends AbstractContentProviderEdit
 
     MvnContentProvider projectContentProvider = (MvnContentProvider) rootElement;
 
-    List<IProjectContentEntry> bundleMakerProjectContent =
-        projectContentProvider.getBundleMakerProjectContent(project);
-
-    return bundleMakerProjectContent;
+    return getContentFromProvider(project, projectContentProvider);
 
   }
 

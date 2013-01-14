@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.osgi.exporter.bundle;
 
+import static java.lang.String.format;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +19,8 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
@@ -52,6 +56,8 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * <p>Defaults to <tt>false</tt>
    */
   private boolean _includeSources = false;
+  
+  private boolean _createEclipseSourceBundle = false;
 
   /**
    * <p>
@@ -98,11 +104,58 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
       File rootFile = ModuleExporterUtils.getRootFile(getCurrentModule(), ProjectContentType.BINARY);
 
       // get the manifest writer
-      ManifestWriter manifestWriter = new JarFileManifestWriter(rootFile, getDestinationFile());
+      ManifestWriter manifestWriter = new JarFileManifestWriter(rootFile, getDestinationJarFile());
 
       //
       manifestWriter.write(getManifestContents());
     }
+    
+    if (isCreateEclipseSourceBundle()) {
+      createEclipseSourceBundle();
+    }
+  }
+  
+  private void createEclipseSourceBundle() throws CoreException {
+    
+    File sourceFile = getDestinationSourceJarFile();
+    
+    OutputStream outputStream;
+    try {
+      outputStream = new FileOutputStream(sourceFile);
+      
+      Manifest manifest = createSourceManifest();
+      
+      JarFileUtils.createJarArchive(getCurrentModule().getResources(ProjectContentType.SOURCE), manifest, null, outputStream);
+      outputStream.close();
+    } catch (IOException e) {
+      throw new CoreException(new Status(IStatus.ERROR, "", "Could not create Source Bundle " + sourceFile + ": " + e, e));
+    }
+  }
+
+  /**
+   * @return
+   */
+  private Manifest createSourceManifest() {
+    
+    IResourceModule currentModule = getCurrentModule();
+    String sourceBundleName = currentModule.getModuleIdentifier().getName()+".source";
+    String bundleVersion = currentModule.getModuleIdentifier().getVersion();
+
+    Manifest manifest = new Manifest();
+    Attributes mainAttributes = manifest.getMainAttributes();
+    
+    mainAttributes.putValue("Bundle-ManifestVersion", "2");
+    mainAttributes.putValue("Bundle-SymbolicName", sourceBundleName);
+    mainAttributes.putValue("Bundle-Version", bundleVersion);
+    
+    String sourceBundleHeader = format("%s;version=\"%s\"", currentModule.getModuleIdentifier().getName(), 
+        bundleVersion);
+    
+    mainAttributes.putValue("Eclipse-SourceBundle", sourceBundleHeader);
+    
+    return manifest;
+
+  
   }
 
   /**
@@ -223,14 +276,26 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
   protected OutputStream createOutputStream(IModularizedSystem modularizedSystem, IResourceModule module,
       IModuleExporterContext context) throws Exception {
 
-    File targetFile = getDestinationFile();
+    File targetFile = getDestinationJarFile();
 
     // return a new file output stream
     return new FileOutputStream(targetFile);
   }
+  
+  protected File getDestinationFile(String name) {
+    // create the target file
+    File targetFile = new File(getCurrentContext().getDestinationDirectory(), name);
+
+    // create the parent directories
+    if (!targetFile.getParentFile().exists()) {
+      targetFile.getParentFile().mkdirs();
+    }
+    return targetFile;
+
+  }
 
   /**
-   * <p>
+   * <p>Returns the destination Jar File
    * </p>
    * 
    * @param modularizedSystem
@@ -238,16 +303,16 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    * @param context
    * @return
    */
-  protected File getDestinationFile() {
-
-    // create the target file
-    File targetFile = new File(getCurrentContext().getDestinationDirectory(), computeJarFileName(getCurrentModule()));
-
-    // create the parent directories
-    if (!targetFile.getParentFile().exists()) {
-      targetFile.getParentFile().mkdirs();
-    }
-    return targetFile;
+  protected File getDestinationJarFile() {
+    return getDestinationFile(computeJarFileName(getCurrentModule()));
+  }
+  
+  protected File getDestinationSourceJarFile() {
+    return getDestinationFile(computeSourceJarFileName(getCurrentModule()));
+  }
+  
+  protected String computeSourceJarFileName(IResourceModule module) {
+    return module.getModuleIdentifier().getName() + ".source_" + module.getModuleIdentifier().getVersion() + ".jar";
   }
 
   /**
@@ -278,6 +343,20 @@ public class JarFileBundleExporter extends AbstractManifestAwareExporter {
    */
   public void setIncludeSources(boolean includeSources) {
     _includeSources = includeSources;
+  }
+  
+  /**
+   * @param createEclipseSourceBundle the createEclipseSourceBundle to set
+   */
+  public void setCreateEclipseSourceBundle(boolean createEclipseSourceBundle) {
+    _createEclipseSourceBundle = createEclipseSourceBundle;
+  }
+  
+  /**
+   * @return the createEclipseSourceBundle
+   */
+  public boolean isCreateEclipseSourceBundle() {
+    return _createEclipseSourceBundle;
   }
 
 }

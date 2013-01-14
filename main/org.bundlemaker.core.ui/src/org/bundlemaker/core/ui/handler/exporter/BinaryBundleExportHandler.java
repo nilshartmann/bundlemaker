@@ -32,7 +32,10 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class BinaryBundleExportHandler extends AbstractExportHandler {
 
-  private static final String WORKSPACE_RESOURCE_KEY = BinaryBundleExportHandler.class.getName() + ".workspaceResource";
+  private static final String   WORKSPACE_RESOURCE_KEY = BinaryBundleExportHandler.class.getName()
+                                                           + ".workspaceResource";
+
+  private CustomManifestCreator _customManifestCreator;
 
   @Override
   protected void exportAll(Shell shell, IModularizedSystem modularizedSystem,
@@ -57,6 +60,8 @@ public class BinaryBundleExportHandler extends AbstractExportHandler {
     // create module exporter
     JarFileBundleExporter moduleExporter = (JarFileBundleExporter) createExporter();
     moduleExporter.setIncludeSources(dialog.isIncludeSources());
+    moduleExporter.setCreateEclipseSourceBundle(dialog.isCreateEclipseSourceBundle());
+    _customManifestCreator.setUseOptionalOnMissingImports(dialog.isUseOptionalResolutionOnMissingImports());
 
     // create the adapter
     ModularizedSystemExporterAdapter adapter = createModularizedSystemExporterAdapter(moduleExporter, selectedArtifacts);
@@ -87,8 +92,9 @@ public class BinaryBundleExportHandler extends AbstractExportHandler {
 
   @Override
   protected IModuleExporter createExporter() throws Exception {
+    _customManifestCreator = new CustomManifestCreator();
 
-    JarFileBundleExporter jarFileBundleExporter = new JarFileBundleExporter(null, new CustomManifestCreator(), null);
+    JarFileBundleExporter jarFileBundleExporter = new JarFileBundleExporter(null, _customManifestCreator, null);
     return jarFileBundleExporter;
   }
 }

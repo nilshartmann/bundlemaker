@@ -11,13 +11,14 @@ import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
 import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.collection.CollectResult;
@@ -135,7 +136,9 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * {@inheritDoc}
    */
   @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(final IBundleMakerProject bundleMakerProject)
+  public List<IProjectContentEntry> getBundleMakerProjectContent(
+		  IProgressMonitor progressMonitor,
+		  final IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
     Assert.isNotNull(bundleMakerProject);
