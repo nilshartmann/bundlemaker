@@ -1,4 +1,4 @@
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.analysis.selectors;
 
 import java.util.Arrays;
 import java.util.List;

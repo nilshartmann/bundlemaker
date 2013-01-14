@@ -30,8 +30,8 @@ import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.transformation.ITransformation;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
 

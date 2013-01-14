@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest._framework;
 
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 

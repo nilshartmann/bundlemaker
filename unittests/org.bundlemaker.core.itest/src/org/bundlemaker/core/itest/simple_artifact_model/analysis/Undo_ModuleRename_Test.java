@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
 import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.NoModificationAssertion;
-import org.bundlemaker.core.transformation.IUndoableTransformation;
+import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
 import org.junit.Assert;
 import org.junit.Test;
 

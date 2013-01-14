@@ -1,4 +1,4 @@
-package org.bundlemaker.core.transformation.add;
+package org.bundlemaker.core.internal.transformation.add;
 
 import java.util.List;
 

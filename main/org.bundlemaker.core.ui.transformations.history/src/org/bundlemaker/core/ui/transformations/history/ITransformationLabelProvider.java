@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.history;
 
-import org.bundlemaker.core.transformation.ITransformation;
+import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.eclipse.swt.graphics.Image;
 
 /**

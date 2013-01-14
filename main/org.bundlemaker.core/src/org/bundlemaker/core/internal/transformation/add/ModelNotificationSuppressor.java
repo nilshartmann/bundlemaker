@@ -1,4 +1,4 @@
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.internal.transformation.add;
 
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;

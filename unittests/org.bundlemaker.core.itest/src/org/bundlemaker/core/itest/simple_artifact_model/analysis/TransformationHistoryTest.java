@@ -1,11 +1,11 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.selectors.DefaultArtifactSelector;
 import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.CreateGroupTransformation;
 import org.bundlemaker.core.transformation.CreateModuleTransformation;
-import org.bundlemaker.core.transformation.DefaultArtifactSelector;
 import org.junit.Assert;
 import org.junit.Test;
 

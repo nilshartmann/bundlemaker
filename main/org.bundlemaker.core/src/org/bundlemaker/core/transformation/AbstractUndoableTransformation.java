@@ -1,6 +1,7 @@
 package org.bundlemaker.core.transformation;
 
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
