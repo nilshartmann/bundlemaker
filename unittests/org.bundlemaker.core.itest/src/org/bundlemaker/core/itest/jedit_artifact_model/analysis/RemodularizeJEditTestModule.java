@@ -3,6 +3,7 @@ package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
 import static org.junit.Assert.assertArrayEquals;
 import junit.framework.Assert;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -42,7 +43,7 @@ public class RemodularizeJEditTestModule extends AbstractJeditAnalysisModelTest 
     assertModificationCount(2);
 
     // STEP: move package 'org.gjt.sp.util' to module 'jedit-util'
-    IPackageArtifact utilPackageArtifact = ArtifactVisitorUtils.findPackageArtifact(model.getJeditModuleArtifact(),
+    IPackageArtifact utilPackageArtifact = AnalysisModelQueries.findPackageArtifact(model.getJeditModuleArtifact(),
         "org.gjt.sp.util");
     Assert.assertNotNull(utilPackageArtifact);
     utilModuleArtifact.addArtifact(utilPackageArtifact);
@@ -63,7 +64,7 @@ public class RemodularizeJEditTestModule extends AbstractJeditAnalysisModelTest 
     assertModificationCount(5);
 
     // STEP: move package 'org.gjt.sp.jedit.bsh' to module 'jedit-bsh'
-    IPackageArtifact bshPackageArtifact = ArtifactVisitorUtils.findPackageArtifact(model.getJeditModuleArtifact(),
+    IPackageArtifact bshPackageArtifact = AnalysisModelQueries.findPackageArtifact(model.getJeditModuleArtifact(),
         "org.gjt.sp.jedit.bsh");
     Assert.assertNotNull(bshPackageArtifact);
     bshModuleArtifact.addArtifact(bshPackageArtifact);

@@ -3,6 +3,7 @@ package org.bundlemaker.core.itest.misc_models;
 import java.util.LinkedList;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -40,7 +41,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     // get the 'test' artifact
-    IResourceArtifact artifact = ArtifactVisitorUtils.findResourceArtifactByPathName(rootArtifact, "test/Test.java");
+    IResourceArtifact artifact = AnalysisModelQueries.findResourceArtifactByPathName(rootArtifact, "test/Test.java");
     Assert.assertNotNull(artifact);
 
     // assert that the type

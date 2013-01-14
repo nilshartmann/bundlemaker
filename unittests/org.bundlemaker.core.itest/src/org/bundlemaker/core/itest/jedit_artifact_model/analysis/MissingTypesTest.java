@@ -1,5 +1,6 @@
 package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -47,7 +48,7 @@ public class MissingTypesTest extends AbstractJeditAnalysisModelTest {
   private void missingTypes(IRootArtifact rootArtifact) {
 
     // get the 'missing types' module artifact
-    IModuleArtifact moduleArtifact = ArtifactVisitorUtils.findMissingTypesModuleArtifact(rootArtifact);
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.getMissingTypesModuleArtifact(rootArtifact);
     Assert.assertNotNull(moduleArtifact);
 
     // the missing type count

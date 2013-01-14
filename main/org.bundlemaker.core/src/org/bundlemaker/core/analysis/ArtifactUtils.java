@@ -9,79 +9,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.runtime.Assert;
-
 /**
  * <p>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * @deprecated In a long term all methods that are provided by this class should move to {@link AnalysisModelQueries}.
+ *             We have to review if the methods that still reside in this class are really needed..
  */
+@Deprecated
 public class ArtifactUtils {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerArtifacts
-   * @return
-   */
-  public static IBundleMakerArtifact[] getChildrenOfCommonParent(Collection<IBundleMakerArtifact> bundleMakerArtifacts) {
-
-    //
-    IBundleMakerArtifact commonParent = getCommonParent(bundleMakerArtifacts);
-
-    //
-    if (commonParent == null) {
-      return new IBundleMakerArtifact[0];
-    }
-
-    //
-    return commonParent.getChildren().size() == 0 ? new IBundleMakerArtifact[] { commonParent } : commonParent
-        .getChildren().toArray(new IBundleMakerArtifact[0]);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param bundleMakerArtifacts
-   * @return
-   */
-  public static IBundleMakerArtifact getCommonParent(Collection<IBundleMakerArtifact> bundleMakerArtifacts) {
-
-    //
-    if (bundleMakerArtifacts == null || bundleMakerArtifacts.isEmpty()) {
-      return null;
-    }
-
-    // initial parent list
-    List<IBundleMakerArtifact> parents = new LinkedList<IBundleMakerArtifact>();
-    IBundleMakerArtifact currentArtifact = bundleMakerArtifacts.toArray(new IBundleMakerArtifact[0])[0];
-    parents.add(currentArtifact);
-    while (currentArtifact != null && !currentArtifact.isInstanceOf(IRootArtifact.class)) {
-      currentArtifact = currentArtifact.getParent();
-      parents.add(currentArtifact);
-    }
-
-    //
-    for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
-      List<IBundleMakerArtifact> commonParents = new LinkedList<IBundleMakerArtifact>();
-      if (parents.contains(artifact)) {
-        commonParents.add(artifact);
-      }
-      while (artifact != null && !currentArtifact.isInstanceOf(IRootArtifact.class)) {
-        artifact = artifact.getParent();
-        if (parents.contains(artifact)) {
-          commonParents.add(artifact);
-        }
-      }
-      parents = commonParents;
-    }
-
-    // return null
-    return parents.get(0);
-  }
 
   /**
    * <p>
@@ -144,66 +81,6 @@ public class ArtifactUtils {
     });
 
     return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static Set<IBundleMakerArtifact> getDirectlyReferencedArtifacts(IBundleMakerArtifact artifact) {
-
-    //
-    Set<IBundleMakerArtifact> result = new HashSet<IBundleMakerArtifact>();
-
-    //
-    for (IDependency dependency : artifact.getDependenciesTo()) {
-
-      result.add(dependency.getTo());
-    }
-
-    //
-    return result;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @return
-   */
-  public static Set<IBundleMakerArtifact> getIndirectlyReferencedArtifacts(IBundleMakerArtifact artifact) {
-
-    //
-    return resolveReferencedArtifacts(artifact, new HashSet<IBundleMakerArtifact>(), true);
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param artifact
-   * @param artifacts
-   * @return
-   */
-  private static Set<IBundleMakerArtifact> resolveReferencedArtifacts(IBundleMakerArtifact artifact,
-      Set<IBundleMakerArtifact> artifacts, boolean transitive) {
-
-    //
-    Assert.isNotNull(artifact);
-    Assert.isNotNull(artifacts);
-
-    //
-    for (IDependency dependency : artifact.getDependenciesTo()) {
-      if (artifacts.add(dependency.getTo()) && transitive) {
-        resolveReferencedArtifacts(dependency.getTo(), artifacts, transitive);
-      }
-    }
-
-    //
-    return artifacts;
   }
 
   /**

@@ -7,6 +7,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.algorithms.AdjacencyMatrix;
@@ -34,7 +35,7 @@ public class FastFasTest extends AbstractJeditAnalysisModelTest {
   @Test
   public void fastFasTest() throws Exception {
 
-    IPackageArtifact packageArtifact = ArtifactVisitorUtils.findPackageArtifact(getBinHierarchicalModel()
+    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifact(getBinHierarchicalModel()
         .getJeditModuleArtifact(), "org.gjt.sp.jedit");
 
     Assert.assertNotNull(packageArtifact);

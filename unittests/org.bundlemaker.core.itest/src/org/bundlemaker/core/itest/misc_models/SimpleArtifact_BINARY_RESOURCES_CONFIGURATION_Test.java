@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -204,7 +205,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
   protected IModuleArtifact assertSimpleArtifactModule(IBundleMakerArtifact rootArtifact) {
 
     // get the module
-    IModuleArtifact moduleArtifact = ArtifactVisitorUtils.findModuleArtifact(rootArtifact, "SimpleArtifactModelTest",
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.getModuleArtifact(rootArtifact, "SimpleArtifactModelTest",
         "1.0.0");
 
     // assert
@@ -239,7 +240,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
    */
   protected IPackageArtifact assertTestPackage(IModuleArtifact moduleArtifact) {
 
-    IPackageArtifact packageArtifact = ArtifactVisitorUtils.findPackageArtifact(moduleArtifact, "de.test");
+    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifact(moduleArtifact, "de.test");
     List<IBundleMakerArtifact> resources = new LinkedList<IBundleMakerArtifact>(packageArtifact.getChildren());
     Collections.sort(resources, new Comparator<IBundleMakerArtifact>() {
       @Override
@@ -262,7 +263,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
    * @return
    */
   protected IGroupArtifact assertGroupArtifact(IBundleMakerArtifact rootArtifact, String qualifiedName) {
-    IGroupArtifact result = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
+    IGroupArtifact result = AnalysisModelQueries.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
     Assert.assertNotNull(result);
     return result;
   }
@@ -281,7 +282,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
     Assert.assertEquals(2, rootArtifact.getChildren().size());
 
     // assert JRE
-    Assert.assertNotNull(ArtifactVisitorUtils.findJreModuleArtifact(rootArtifact));
+    Assert.assertNotNull(AnalysisModelQueries.getJreModuleArtifact(rootArtifact));
 
     // return the result
     return rootArtifact;

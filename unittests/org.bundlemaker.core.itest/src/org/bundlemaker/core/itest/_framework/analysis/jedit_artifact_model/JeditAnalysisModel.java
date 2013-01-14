@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
@@ -79,13 +80,13 @@ public class JeditAnalysisModel {
     _group1Artifact = assertGroupArtifact(_rootArtifact, "group1");
     _group2Artifact = assertGroupArtifact(_rootArtifact, "group1/group2");
 
-    _jeditModuleArtifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact,
+    _jeditModuleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact,
         _modularizedSystem.getName(),
         "1.0.0");
     assertNode(_jeditModuleArtifact.getParent(), IGroupArtifact.class, "group2");
     assertNode(_jeditModuleArtifact.getParent().getParent(), IGroupArtifact.class, "group1");
 
-    _velocityModuleArtifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "velocity",
+    _velocityModuleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, "velocity",
         "1.5");
 
     // add an model modified listener
@@ -165,7 +166,7 @@ public class JeditAnalysisModel {
    * @return
    */
   private IGroupArtifact assertGroupArtifact(IBundleMakerArtifact rootArtifact, String qualifiedName) {
-    IGroupArtifact result = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
+    IGroupArtifact result = AnalysisModelQueries.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
     Assert.assertNotNull(qualifiedName, result);
     return result;
   }
@@ -228,7 +229,7 @@ public class JeditAnalysisModel {
     // Assert.assertEquals(4, rootArtifact.getChildren().size());
 
     // assert JRE
-    Assert.assertNotNull(ArtifactVisitorUtils.findJreModuleArtifact(rootArtifact));
+    Assert.assertNotNull(AnalysisModelQueries.getJreModuleArtifact(rootArtifact));
 
     // return the result
     return rootArtifact;

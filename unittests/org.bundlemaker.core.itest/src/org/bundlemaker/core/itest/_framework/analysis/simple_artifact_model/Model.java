@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
@@ -96,7 +97,7 @@ public class Model {
     _rootArtifact = createArtifactModel(modularizedSystem, configuration);
     _module_Artifact = assertSimpleArtifactModule(_rootArtifact);
     _jre_Artifact = assertJreArtifactModule(_rootArtifact);
-    _velocity_module_Artifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "velocity",
+    _velocity_module_Artifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, "velocity",
         "1.5");
     _group1_Artifact = assertGroupArtifact(_rootArtifact, "group1");
     _group2_Artifact = assertGroupArtifact(_rootArtifact, "group1/group2");
@@ -196,7 +197,7 @@ public class Model {
    * @return
    */
   private IPackageArtifact assertPackageArtifact(IModuleArtifact moduleArtifact, String qualifiedName) {
-    IPackageArtifact result = ArtifactVisitorUtils.findPackageArtifact(moduleArtifact, qualifiedName);
+    IPackageArtifact result = AnalysisModelQueries.findPackageArtifact(moduleArtifact, qualifiedName);
     Assert.assertNotNull(result);
     return result;
   }
@@ -210,7 +211,7 @@ public class Model {
    * @return
    */
   protected IGroupArtifact assertGroupArtifact(IBundleMakerArtifact rootArtifact, String qualifiedName) {
-    IGroupArtifact result = ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
+    IGroupArtifact result = AnalysisModelQueries.findGroupArtifactByQualifiedName(rootArtifact, qualifiedName);
     Assert.assertNotNull(qualifiedName, result);
     return result;
   }
@@ -262,7 +263,7 @@ public class Model {
   private IModuleArtifact assertSimpleArtifactModule(IBundleMakerArtifact rootArtifact) {
 
     // get the module
-    IModuleArtifact moduleArtifact = ArtifactVisitorUtils.findModuleArtifact(rootArtifact,
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.getModuleArtifact(rootArtifact,
         _modularizedSystem.getName(),
         "1.0.0");
 
@@ -330,7 +331,7 @@ public class Model {
     // Assert.assertEquals(4, rootArtifact.getChildren().size());
 
     // assert JRE
-    Assert.assertNotNull(ArtifactVisitorUtils.findJreModuleArtifact(rootArtifact));
+    Assert.assertNotNull(AnalysisModelQueries.getJreModuleArtifact(rootArtifact));
 
     // return the result
     return rootArtifact;

@@ -1,6 +1,7 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
 import org.bundlemaker.core.analysis.AnalysisModelException;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
@@ -68,9 +69,9 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
     assertResourceModuleCount(_srcModel, 2);
 
     //
-    IModuleArtifact srcModule = ArtifactVisitorUtils.findModuleArtifact(_binModel.getRootArtifact(),
+    IModuleArtifact srcModule = AnalysisModelQueries.getModuleArtifact(_binModel.getRootArtifact(),
         new ModuleIdentifier("NewModule", "1.0.0"));
-    IModuleArtifact binModule = ArtifactVisitorUtils.findModuleArtifact(_srcModel.getRootArtifact(),
+    IModuleArtifact binModule = AnalysisModelQueries.getModuleArtifact(_srcModel.getRootArtifact(),
         new ModuleIdentifier("NewModule", "1.0.0"));
 
     //

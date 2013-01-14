@@ -5,6 +5,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
@@ -58,8 +59,8 @@ public class DependenciesFromToTest extends AbstractSimpleArtifactModelTest {
   public void dependenciesFromTo() throws Exception {
 
     //
-    ITypeArtifact klasse = ArtifactVisitorUtils.findTypeArtifact(_binModel.getRootArtifact(), "de.test.Klasse");
-    ITypeArtifact test = ArtifactVisitorUtils.findTypeArtifact(_binModel.getRootArtifact(), "de.test.Test");
+    ITypeArtifact klasse = AnalysisModelQueries.findTypeArtifact(_binModel.getRootArtifact(), "de.test.Klasse");
+    ITypeArtifact test = AnalysisModelQueries.findTypeArtifact(_binModel.getRootArtifact(), "de.test.Test");
 
     //
     Assert.assertNotNull(klasse.getDependencyTo(test));

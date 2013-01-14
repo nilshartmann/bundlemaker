@@ -13,8 +13,8 @@ import org.eclipse.core.runtime.IPath;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
- * @deprecated we need a common place for all visitor utilities... see
- *             org.bundlemaker.core.itest.analysis.ArtifactVisitorUtils
+ * @deprecated In a long term all methods that are provided by this class should move to {@link AnalysisModelQueries}.
+ *             We have to review if the methods that still reside in this class are really needed..
  */
 @Deprecated
 public class ArtifactHelper {

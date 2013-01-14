@@ -4,6 +4,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
@@ -27,7 +28,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = ArtifactVisitorUtils.findResourceArtifactByPathName(getBinHierarchicalModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getBinHierarchicalModel()
         .getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
 
@@ -43,7 +44,8 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = ArtifactVisitorUtils.findResourceArtifactByPathName(getSrcHierarchicalModel().getRootArtifact(),
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getSrcHierarchicalModel()
+        .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);
 
@@ -59,7 +61,8 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = ArtifactVisitorUtils.findResourceArtifactByPathName(getBinFlatModel().getRootArtifact(),
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getBinFlatModel()
+        .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
 
@@ -75,7 +78,8 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = ArtifactVisitorUtils.findResourceArtifactByPathName(getSrcFlatModel().getRootArtifact(),
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getSrcFlatModel()
+        .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);
 
@@ -93,10 +97,10 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
       int indirectlyReferencedCount) {
 
     //
-    Set<IBundleMakerArtifact> indirectlyReferencedArtifacts = ArtifactUtils
+    Set<IBundleMakerArtifact> indirectlyReferencedArtifacts = AnalysisModelQueries
         .getIndirectlyReferencedArtifacts(artifact);
 
-    Set<IBundleMakerArtifact> directlyReferencedArtifacts = ArtifactUtils
+    Set<IBundleMakerArtifact> directlyReferencedArtifacts = AnalysisModelQueries
         .getDirectlyReferencedArtifacts(artifact);
 
     //

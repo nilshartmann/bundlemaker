@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import junit.framework.Assert;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -66,7 +67,7 @@ public class GetOrCreateNewModule extends AbstractJeditAnalysisModelTest {
 
     //
     Assert.assertNull("Group 'groupTest1' does exist!",
-        ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, "groupTest1"));
+        AnalysisModelQueries.findGroupArtifactByQualifiedName(rootArtifact, "groupTest1"));
 
     //
     IModuleArtifact moduleArtifact = rootArtifact.getOrCreateModule("groupTest1/groupTest2/MyModule", "1.0.0");
@@ -89,14 +90,14 @@ public class GetOrCreateNewModule extends AbstractJeditAnalysisModelTest {
 
     // assert that 'groupTest1' exists
     Assert.assertNotNull("Group 'groupTest1' does not exist!",
-        ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, "groupTest1"));
+        AnalysisModelQueries.findGroupArtifactByQualifiedName(rootArtifact, "groupTest1"));
 
     // assert that 'groupTest2' exists
     Assert.assertNotNull("Group 'groupTest2' does not exist!",
-        ArtifactVisitorUtils.findGroupArtifactByQualifiedName(rootArtifact, "groupTest1/groupTest2"));
+        AnalysisModelQueries.findGroupArtifactByQualifiedName(rootArtifact, "groupTest1/groupTest2"));
 
     // assert that 'MyModule_1.0.0' exists
-    IModuleArtifact moduleArtifact = ArtifactVisitorUtils.findModuleArtifact(rootArtifact, "MyModule", "1.0.0");
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.getModuleArtifact(rootArtifact, "MyModule", "1.0.0");
 
     Assert.assertNotNull("Module 'MyModule_1.0.0' does not exist!", moduleArtifact);
 

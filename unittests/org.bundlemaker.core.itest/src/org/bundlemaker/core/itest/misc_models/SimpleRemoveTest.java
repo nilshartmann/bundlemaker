@@ -1,6 +1,7 @@
 package org.bundlemaker.core.itest.misc_models;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -45,13 +46,13 @@ public class SimpleRemoveTest extends AbstractModularizedSystemTest {
     _rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
-    _packageArtifact = ArtifactVisitorUtils.findPackageArtifact(_rootArtifact, "de.test.basic");
+    _packageArtifact = AnalysisModelQueries.findPackageArtifact(_rootArtifact, "de.test.basic");
     Assert.assertNotNull(_packageArtifact);
 
-    _typeArtifact = ArtifactVisitorUtils.findTypeArtifact(_packageArtifact, "de.test.basic.TestClass");
+    _typeArtifact = AnalysisModelQueries.findTypeArtifact(_packageArtifact, "de.test.basic.TestClass");
     Assert.assertNotNull(_typeArtifact);
 
-    _moduleArtifact = ArtifactVisitorUtils.findModuleArtifact(_rootArtifact, "BasicArtifactTest");
+    _moduleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, "BasicArtifactTest");
     Assert.assertNotNull(_moduleArtifact);
   }
 
