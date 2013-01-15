@@ -30,7 +30,7 @@ public class ReloadFromRepositoryAction extends AbstractMvnProjectContentProvide
    * {@inheritDoc}
    */
   @Override
-  protected void doWithMvnContentProvider(MvnContentProvider element) throws Exception {
-    element.reloadContent(_useRemote);
+  protected void doWithMvnContentProvider(MvnContentProvider contentProvider) throws Exception {
+    contentProvider.reloadContent(_useRemote);
   }
 }
