@@ -21,6 +21,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
@@ -157,6 +158,38 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public String getUniquePathIdentifier() {
     return getName();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.analysis.ITypeArtifact#getQualifiedTypeName()
+   */
+  @Override
+  public String getQualifiedTypeName() {
+
+    //
+    IBundleMakerArtifact parent = getParent();
+
+    String prefix = null;
+
+    // Top-Level class
+    ITypeArtifact typeArtifact = getParent(ITypeArtifact.class);
+    if (typeArtifact != null) {
+      prefix = typeArtifact.getQualifiedTypeName() + "$";
+    } else {
+      IPackageArtifact packageArtifact = getParent(IPackageArtifact.class);
+      if (packageArtifact == null) {
+        throw new IllegalStateException("TypeArtifact '" + this
+            + "' does not have IPackageArtifact or ITypeArtifact as Parent but " + parent.getClass());
+      }
+      prefix = packageArtifact.getPackageName();
+      if (!prefix.isEmpty()) {
+        prefix += ".";
+      }
+    }
+
+    return prefix + getName();
   }
 
   /**

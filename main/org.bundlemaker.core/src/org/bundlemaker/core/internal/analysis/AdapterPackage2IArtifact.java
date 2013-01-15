@@ -101,6 +101,16 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
     return _qualifiedName;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.analysis.IPackageArtifact#getPackageName()
+   */
+  @Override
+  public String getPackageName() {
+    return _qualifiedName;
+  }
+
   @Override
   public String handleCanAdd(IBundleMakerArtifact artifact) {
 

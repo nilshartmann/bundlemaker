@@ -21,4 +21,10 @@ public interface ITypeArtifact extends IBundleMakerArtifact, IMovableUnit {
    * @return the {@link IType} that is represented by this {@link ITypeArtifact}.
    */
   IType getAssociatedType();
+
+  /**
+   * @return the fully qualified (Java) type name, e.g. com.example.MyClass, never null
+   */
+  String getQualifiedTypeName();
+
 }
