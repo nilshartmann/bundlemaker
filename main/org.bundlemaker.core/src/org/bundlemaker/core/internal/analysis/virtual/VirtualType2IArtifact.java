@@ -208,6 +208,16 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return _fullyQualifiedName;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.analysis.ITypeArtifact#getQualifiedTypeName()
+   */
+  @Override
+  public String getQualifiedTypeName() {
+    return _fullyQualifiedName;
+  }
+
   @Override
   public void setParent(IBundleMakerArtifact parent) {
 
