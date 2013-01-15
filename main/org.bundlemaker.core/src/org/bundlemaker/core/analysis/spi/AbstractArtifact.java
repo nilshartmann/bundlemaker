@@ -37,7 +37,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   private AdapterRoot2IArtifact     _root;
 
   /** the properties */
-  private Map<Object, Object>       _properties;
+  private Map<String, Object>       _properties;
 
   /** CACHE */
   private Set<IBundleMakerArtifact> _cachedParents;
@@ -176,7 +176,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
    * {@inheritDoc}
    */
   @Override
-  public void setProperty(Object key, Object value) {
+  public void setProperty(String key, Object value) {
     Assert.isNotNull(key);
 
     properties().put(key, value);
@@ -207,7 +207,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     }
   }
 
-  public Set<Object> getPropertyKeys() {
+  public Set<String> getPropertyKeys() {
     if (_properties == null) {
       return Collections.emptySet();
     }
@@ -219,8 +219,8 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
    * {@inheritDoc}
    */
   @Override
-  public String getProperty(Object key) {
-    return getProperty(key, String.class);
+  public Object getProperty(String key) {
+    return getProperty(key, Object.class);
   }
 
   /**
@@ -406,11 +406,11 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
    * 
    * @return
    */
-  private Map<Object, Object> properties() {
+  private Map<String, Object> properties() {
 
     // lazy initialize the map
     if (_properties == null) {
-      _properties = new HashMap<Object, Object>();
+      _properties = new HashMap<String, Object>();
     }
 
     // return the result

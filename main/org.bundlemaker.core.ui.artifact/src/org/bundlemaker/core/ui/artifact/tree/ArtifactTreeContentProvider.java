@@ -419,12 +419,12 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
 
     @Override
-    public void setProperty(Object key, Object value) {
+    public void setProperty(String key, Object value) {
       _rootArtifact.setProperty(key, value);
     }
 
     @Override
-    public String getProperty(Object key) {
+    public Object getProperty(String key) {
       return _rootArtifact.getProperty(key);
     }
 
@@ -564,7 +564,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
      * @see org.bundlemaker.core.analysis.IBundleMakerArtifact#getPropertyKeys()
      */
     @Override
-    public Set<Object> getPropertyKeys() {
+    public Set<String> getPropertyKeys() {
       return _rootArtifact.getPropertyKeys();
     }
   }

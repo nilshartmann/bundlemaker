@@ -183,12 +183,12 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param value
    *          the value
    */
-  void setProperty(Object key, Object value);
+  void setProperty(String key, Object value);
 
   /**
    * Get the keys of all known properties of this Artifact
    */
-  Set<Object> getPropertyKeys();
+  Set<String> getPropertyKeys();
 
   /**
    * <p>
@@ -199,7 +199,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    *          the key of the property
    * @return the value of the property with the specified key.
    */
-  String getProperty(Object key);
+  Object getProperty(String key);
 
   /**
    * <p>
