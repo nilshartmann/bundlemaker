@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -36,50 +37,50 @@ import org.junit.runners.Parameterized.Parameters;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
- *
+ * 
  */
 @RunWith(Parameterized.class)
 public class ArtifactNamingTest extends AbstractModularizedSystemTest {
-  
-  
-  private IModuleArtifact _moduleArtifact;
+
+  private IModuleArtifact             _moduleArtifact;
+
   private IAnalysisModelConfiguration _configuration;
-  
+
   @Parameters
   public static List<Object[]> getConfigurations() {
     Object[][] arr = {
-      { 
-        //
-        new AnalysisModelConfiguration(true, ProjectContentType.BINARY, false)
-      },
-      { 
-        //
-        new AnalysisModelConfiguration(false, ProjectContentType.BINARY, false)
-      },
-      { 
-        //
-        new AnalysisModelConfiguration(true, ProjectContentType.SOURCE, false)
-      },
-      { 
-        //
-        new AnalysisModelConfiguration(false, ProjectContentType.BINARY, false)
-      },
+        {
+            //
+            new AnalysisModelConfiguration(true, ProjectContentType.BINARY, false)
+    },
+        {
+            //
+            new AnalysisModelConfiguration(false, ProjectContentType.BINARY, false)
+    },
+        {
+            //
+            new AnalysisModelConfiguration(true, ProjectContentType.SOURCE, false)
+    },
+        {
+            //
+            new AnalysisModelConfiguration(false, ProjectContentType.BINARY, false)
+    },
     };
     return Arrays.asList(arr);
 
   }
-  
-  public ArtifactNamingTest(IAnalysisModelConfiguration configuration){
+
+  public ArtifactNamingTest(IAnalysisModelConfiguration configuration) {
     this._configuration = configuration;
   }
 
-  
   @Before
   public void setupArtifactModel() {
     IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(_configuration);
-  
-     _moduleArtifact = ArtifactVisitorUtils.findModuleArtifact(rootArtifact, "com.example");
+
+    _moduleArtifact = AnalysisModelQueries.getModuleArtifact(rootArtifact, "com.example");
   }
+
   @Test
   public void test_getQualifiedTypeName() {
     List<String> allTypeNames = getAllTypeNames();
@@ -88,33 +89,34 @@ public class ArtifactNamingTest extends AbstractModularizedSystemTest {
         "com.ClassInCom", //
         "com.example.Class1", //
         "com.example.Class2", "com.example.Class2$InnerClass2", "com.example.Class2$StaticInnerClass2", //
-        
+
         "com.example.Interface1");
-    
+
     assertEquals(expectedTypeNames, allTypeNames);
   }
+
   @Test
   public void test_getPackageNames() {
     List<String> expectedPackageNames = Arrays.asList("", "com", "com.example");
     List<String> allPackageNames = getAllPackageNames();
-    
+
     assertEquals(expectedPackageNames, allPackageNames);
   }
-  
-  
-  
-  
+
   @Override
   protected String computeTestProjectName() {
     return "com.example";
   }
-  
+
   protected List<String> getAllTypeNames() {
     final List<String> result = new LinkedList<String>();
     _moduleArtifact.accept(new IAnalysisModelVisitor.Adapter() {
 
-      /* (non-Javadoc)
-       * @see org.bundlemaker.core.analysis.IAnalysisModelVisitor.Adapter#visit(org.bundlemaker.core.analysis.ITypeArtifact)
+      /*
+       * (non-Javadoc)
+       * 
+       * @see
+       * org.bundlemaker.core.analysis.IAnalysisModelVisitor.Adapter#visit(org.bundlemaker.core.analysis.ITypeArtifact)
        */
       @Override
       public boolean visit(ITypeArtifact typeArtifact) {
@@ -123,22 +125,25 @@ public class ArtifactNamingTest extends AbstractModularizedSystemTest {
         result.add(qualifiedTypeName);
         return true;
       }
-      
+
     });
-    
+
     Collections.sort(result);
-    
+
     return result;
-    
 
   }
-  
+
   protected List<String> getAllPackageNames() {
     final List<String> result = new LinkedList<String>();
     _moduleArtifact.accept(new IAnalysisModelVisitor.Adapter() {
 
-      /* (non-Javadoc)
-       * @see org.bundlemaker.core.analysis.IAnalysisModelVisitor.Adapter#visit(org.bundlemaker.core.analysis.IPackageArtifact)
+      /*
+       * (non-Javadoc)
+       * 
+       * @see
+       * org.bundlemaker.core.analysis.IAnalysisModelVisitor.Adapter#visit(org.bundlemaker.core.analysis.IPackageArtifact
+       * )
        */
       @Override
       public boolean visit(IPackageArtifact packageArtifact) {
@@ -149,10 +154,10 @@ public class ArtifactNamingTest extends AbstractModularizedSystemTest {
       }
 
     });
-    
+
     Collections.sort(result);
-    
+
     return result;
   }
-  
+
 }
