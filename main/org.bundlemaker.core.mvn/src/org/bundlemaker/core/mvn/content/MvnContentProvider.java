@@ -137,8 +137,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   @Override
   public List<IProjectContentEntry> getBundleMakerProjectContent(
-		  IProgressMonitor progressMonitor,
-		  final IBundleMakerProject bundleMakerProject)
+      IProgressMonitor progressMonitor,
+      final IBundleMakerProject bundleMakerProject)
       throws CoreException {
 
     Assert.isNotNull(bundleMakerProject);
@@ -285,14 +285,16 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
             currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(),
             currentMavenArtifact
                 .getVersion());
+
         artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(sourceArtifact);
-        // artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+        artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
         try {
           artifactResult = Activator.getDefault().getMvnRepositories().getRepositorySystem().resolveArtifact(
               Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), artifactRequest);
           sourceFile = artifactResult.getArtifact().getFile();
         } catch (ArtifactResolutionException e) {
+          e.printStackTrace();
           System.out.println(e.getMessage());
         }
       }
@@ -306,12 +308,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       IModuleIdentifier moduleIdentifier = MvnArtifactConverter.toModuleIdentifier(mvnArtifact.getGroupId(),
           mvnArtifact.getArtifactId(), mvnArtifact.getVersion());
 
-      boolean analyze = currentMavenArtifact
-          .getGroupId().startsWith("de.o")
-      /*
-       * && (currentMavenArtifact.getArtifactId().contains("standard") || currentMavenArtifact .getGroupId()
-       * .contains("standard"))
-       */;
+      //
+      boolean analyze = downloadSources;
 
       //
       FileBasedProjectContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
