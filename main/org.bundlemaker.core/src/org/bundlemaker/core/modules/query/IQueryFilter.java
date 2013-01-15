@@ -12,7 +12,10 @@ package org.bundlemaker.core.modules.query;
 
 /**
  * @param <T>
+ * 
+ * @deprecated use AnalysisModel instead
  */
+@Deprecated
 public interface IQueryFilter<T> {
 
   /**

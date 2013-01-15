@@ -11,7 +11,10 @@ import org.bundlemaker.core.resource.IReference;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @deprecated use AnalysisModel instead
  */
+@Deprecated
 public class ReferenceQueryFilters {
 
   /** TRUE_QUERY_FILTER */

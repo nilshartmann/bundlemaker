@@ -25,8 +25,6 @@ import org.bundlemaker.core.modules.ITypeContainer;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.event.ModuleClassificationChangedEvent;
 import org.bundlemaker.core.modules.query.IQueryFilter;
-import org.bundlemaker.core.modules.query.StringQueryFilters;
-import org.bundlemaker.core.modules.query.TypeQueryFilters;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IPath;
@@ -150,7 +148,12 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    */
   @Override
   public Set<String> getContainedTypeNames() {
-    return getContainedTypeNames(StringQueryFilters.TRUE_QUERY_FILTER);
+    return getContainedTypeNames(new IQueryFilter<String>() {
+      @Override
+      public boolean matches(String content) {
+        return true;
+      }
+    });
   }
 
   public Group getClassificationGroup() {
@@ -272,7 +275,12 @@ public abstract class AbstractModule<I extends ITypeContainer, T extends I> impl
    */
   @Override
   public Set<IType> getContainedTypes() {
-    return getContainedTypes(TypeQueryFilters.TRUE_QUERY_FILTER);
+    return getContainedTypes(new IQueryFilter<IType>() {
+      @Override
+      public boolean matches(IType type) {
+        return true;
+      }
+    });
   }
 
   /**
