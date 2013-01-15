@@ -2,6 +2,7 @@ package org.bundlemaker.core.analysis;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.analysis.spi.IReferencedArtifact;
 import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
@@ -182,7 +183,12 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param value
    *          the value
    */
-  void setProperty(Object key, Object value);
+  void setProperty(String key, Object value);
+
+  /**
+   * Get the keys of all known properties of this Artifact
+   */
+  Set<String> getPropertyKeys();
 
   /**
    * <p>
@@ -193,7 +199,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    *          the key of the property
    * @return the value of the property with the specified key.
    */
-  String getProperty(Object key);
+  Object getProperty(String key);
 
   /**
    * <p>
