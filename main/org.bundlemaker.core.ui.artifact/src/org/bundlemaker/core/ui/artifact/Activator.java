@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.artifact.internal;
+package org.bundlemaker.core.ui.artifact;
 
 import java.net.MalformedURLException;
 import java.net.URL;
