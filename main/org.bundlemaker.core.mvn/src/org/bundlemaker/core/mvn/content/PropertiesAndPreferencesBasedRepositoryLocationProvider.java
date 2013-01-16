@@ -1,4 +1,4 @@
-package org.bundlemaker.core.mvn.internal.repository;
+package org.bundlemaker.core.mvn.content;
 
 import java.io.File;
 
@@ -26,7 +26,7 @@ public class PropertiesAndPreferencesBasedRepositoryLocationProvider implements 
    * @return
    */
   @Override
-  public String getLocalRepo(IBundleMakerProject bundleMakerProject) {
+  public String getLocalRepo(IProject bundleMakerProject) {
     return Platform.getPreferencesService().getString(BmMvnCoreConstants.PLUGIN_ID,
         BmMvnCoreConstants.PREF_MVN_LOCAL_REPO,
         System.getProperty("user.home")
@@ -41,7 +41,7 @@ public class PropertiesAndPreferencesBasedRepositoryLocationProvider implements 
    * @return
    */
   @Override
-  public String getRemoteRepo(IBundleMakerProject bundleMakerProject) {
+  public String getRemoteRepo(IProject bundleMakerProject) {
     return Platform.getPreferencesService().getString(BmMvnCoreConstants.PLUGIN_ID,
         BmMvnCoreConstants.PREF_MVN_REMOTE_REPO,
         "http://repo1.maven.org/maven2/", getScopeContexts(bundleMakerProject.getProject()));

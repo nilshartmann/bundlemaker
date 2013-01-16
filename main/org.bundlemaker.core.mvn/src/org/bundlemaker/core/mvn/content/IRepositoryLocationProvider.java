@@ -1,6 +1,7 @@
-package org.bundlemaker.core.mvn.internal.repository;
+package org.bundlemaker.core.mvn.content;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.eclipse.core.resources.IProject;
 
 /**
  * <p>
@@ -15,22 +16,22 @@ public interface IRepositoryLocationProvider {
    * Returns the location of the local mvn repository. Must not be <code>null</code>.
    * </p>
    * 
-   * @param bundleMakerProject
-   *          the bundlemaker project
+   * @param project
+   *          the project
    * 
    * @return the location of the local mvn repository
    */
-  String getLocalRepo(IBundleMakerProject bundleMakerProject);
+  String getLocalRepo(IProject project);
 
   /**
    * <p>
    * Returns the location of the remote mvn repository. Must not be <code>null</code>.
    * </p>
    * 
-   * @param bundleMakerProject
-   *          the bundlemaker project
+   * @param project
+   *          the project
    * 
    * @return the location of the remote mvn repository
    */
-  String getRemoteRepo(IBundleMakerProject bundleMakerProject);
+  String getRemoteRepo(IProject project);
 }

@@ -10,9 +10,7 @@ import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.internal.repository.IMvnRepositories;
-import org.bundlemaker.core.mvn.internal.repository.IRepositoryLocationProvider;
 import org.bundlemaker.core.mvn.internal.repository.MvnRepositories;
-import org.bundlemaker.core.mvn.internal.repository.PropertiesAndPreferencesBasedRepositoryLocationProvider;
 import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -176,8 +174,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
     // set the current mvn repository configuration
     _currentMvnRepositories = new MvnRepositories(new File(
-        _repositoryLocationProvider.getLocalRepo(_bundleMakerProject)),
-        _repositoryLocationProvider.getRemoteRepo(_bundleMakerProject));
+        _repositoryLocationProvider.getLocalRepo(_bundleMakerProject.getProject())),
+        _repositoryLocationProvider.getRemoteRepo(_bundleMakerProject.getProject()));
 
     // create the result list
     _fileBasedContents.clear();

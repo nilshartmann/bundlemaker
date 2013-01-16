@@ -1,6 +1,8 @@
 package org.bundlemaker.core.ui.mvn;
 
 import org.bundlemaker.core.mvn.BmMvnCoreConstants;
+import org.bundlemaker.core.mvn.content.IRepositoryLocationProvider;
+import org.bundlemaker.core.mvn.content.PropertiesAndPreferencesBasedRepositoryLocationProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Assert;
@@ -59,7 +61,7 @@ public class MvnContentProviderPropertyPage extends PropertyPage {
 
     //
     performDefaults();
-    
+
     //
     return composite;
   }
@@ -118,14 +120,18 @@ public class MvnContentProviderPropertyPage extends PropertyPage {
 
   @Override
   protected void performDefaults() {
-    
-    super.performDefaults();
-    
-    IScopeContext projectScope = new ProjectScope((IProject) getElement().getAdapter(IProject.class));
-    IEclipsePreferences preferences = projectScope.getNode(BmMvnCoreConstants.PLUGIN_ID);
 
-    this.text_localRepositoryPath.setText(preferences.get(BmMvnCoreConstants.PREF_MVN_LOCAL_REPO, "asd"));
-    this.text_remoteRepositoryPath.setText(preferences.get(BmMvnCoreConstants.PREF_MVN_REMOTE_REPO, "asd"));
+    super.performDefaults();
+
+    //
+    IProject project = (IProject) getElement().getAdapter(IProject.class);
+
+    //
+    IRepositoryLocationProvider provider = new PropertiesAndPreferencesBasedRepositoryLocationProvider();
+
+    //
+    this.text_localRepositoryPath.setText(provider.getLocalRepo(project));
+    this.text_remoteRepositoryPath.setText(provider.getRemoteRepo(project));
   }
 
   /**
