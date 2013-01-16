@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.mvn;
 
+import org.bundlemaker.core.mvn.BmMvnCoreConstants;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.ui.IWorkbench;
@@ -19,9 +20,9 @@ public class MvnRepositoriesPreferencePage extends FieldEditorPreferencePage imp
   }
 
   public void createFieldEditors() {
-    addField(new StringFieldEditor(org.bundlemaker.core.mvn.content.Activator.PREF_MVN_LOCAL_REPO, "Local Repo:",
+    addField(new StringFieldEditor(BmMvnCoreConstants.PREF_MVN_LOCAL_REPO, "Local Repo:",
         getFieldEditorParent()));
-    addField(new StringFieldEditor(org.bundlemaker.core.mvn.content.Activator.PREF_MVN_REMOTE_REPO, "Remote Repo:",
+    addField(new StringFieldEditor(BmMvnCoreConstants.PREF_MVN_REMOTE_REPO, "Remote Repo:",
         getFieldEditorParent()));
   }
 
@@ -36,9 +37,9 @@ public class MvnRepositoriesPreferencePage extends FieldEditorPreferencePage imp
 
     //
     boolean result = super.performOk();
-
     //
-    Activator.getDefault().resetMvnRepositories();
+    // //
+    // Activator.getDefault().resetMvnRepositories();
 
     //
     return result;

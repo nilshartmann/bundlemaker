@@ -1,4 +1,4 @@
-package org.bundlemaker.core.mvn;
+package org.bundlemaker.core.mvn.internal;
 
 import java.util.Map;
 

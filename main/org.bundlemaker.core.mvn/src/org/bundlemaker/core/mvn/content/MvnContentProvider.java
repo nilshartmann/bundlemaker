@@ -6,9 +6,13 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.IModuleIdentifier;
-import org.bundlemaker.core.mvn.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
+import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
+import org.bundlemaker.core.mvn.internal.repository.IMvnRepositories;
+import org.bundlemaker.core.mvn.internal.repository.IRepositoryLocationProvider;
+import org.bundlemaker.core.mvn.internal.repository.MvnRepositories;
+import org.bundlemaker.core.mvn.internal.repository.PropertiesAndPreferencesBasedRepositoryLocationProvider;
 import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -40,19 +44,25 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
 public class MvnContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** the mvn scope */
-  private static final String        SCOPE_COMPILE = "compile";
+  private static final String         SCOPE_COMPILE = "compile";
 
   /** the mvn content type (configuration) */
-  private MvnContentType             _mvnContent   = new MvnContentType();
+  private MvnContentType              _mvnContent   = new MvnContentType();
 
   /** TODO */
-  private int                        _counter      = 0;
+  private int                         _counter      = 0;
 
   /** cached list of all file based contents */
-  private List<IProjectContentEntry> _fileBasedContents;
+  private List<IProjectContentEntry>  _fileBasedContents;
 
   /** the BundleMakerProject */
-  private IBundleMakerProject        _bundleMakerProject;
+  private IBundleMakerProject         _bundleMakerProject;
+
+  /** - */
+  private IMvnRepositories            _currentMvnRepositories;
+
+  /** - */
+  private IRepositoryLocationProvider _repositoryLocationProvider;
 
   /**
    * <p>
@@ -63,6 +73,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
     // initialize
     _fileBasedContents = new LinkedList<IProjectContentEntry>();
+    _repositoryLocationProvider = new PropertiesAndPreferencesBasedRepositoryLocationProvider();
   }
 
   /**
@@ -163,6 +174,11 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   public void reloadContent(final boolean useRemoteRepository) {
 
+    // set the current mvn repository configuration
+    _currentMvnRepositories = new MvnRepositories(new File(
+        _repositoryLocationProvider.getLocalRepo(_bundleMakerProject)),
+        _repositoryLocationProvider.getRemoteRepo(_bundleMakerProject));
+
     // create the result list
     _fileBasedContents.clear();
 
@@ -180,16 +196,16 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
       // add the remote repository is necessary
       if (useRemoteRepository) {
-        collectRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+        collectRequest.addRepository(_currentMvnRepositories.getRemoteRepository());
       }
 
       //
       try {
 
         // collect the result
-        CollectResult collectResult = Activator.getDefault().getMvnRepositories().getRepositorySystem()
+        CollectResult collectResult = _currentMvnRepositories.getRepositorySystem()
             .collectDependencies(
-                Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), collectRequest);
+                _currentMvnRepositories.getRepositorySystemSession(), collectRequest);
 
         final List<Artifact> alreadyHandled = new LinkedList<Artifact>();
 
@@ -262,15 +278,15 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
     //
     if (useRemoteRepository) {
-      artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+      artifactRequest.addRepository(_currentMvnRepositories.getRemoteRepository());
     }
 
     try {
 
       //
-      ArtifactResult artifactResult = Activator.getDefault().getMvnRepositories().getRepositorySystem()
+      ArtifactResult artifactResult = _currentMvnRepositories.getRepositorySystem()
           .resolveArtifact(
-              Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), artifactRequest);
+              _currentMvnRepositories.getRepositorySystemSession(), artifactRequest);
 
       File sourceFile = null;
       File binaryFile = null;
@@ -288,10 +304,10 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
         artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(sourceArtifact);
-        artifactRequest.addRepository(Activator.getDefault().getMvnRepositories().getRemoteRepository());
+        artifactRequest.addRepository(_currentMvnRepositories.getRemoteRepository());
         try {
-          artifactResult = Activator.getDefault().getMvnRepositories().getRepositorySystem().resolveArtifact(
-              Activator.getDefault().getMvnRepositories().getRepositorySystemSession(), artifactRequest);
+          artifactResult = _currentMvnRepositories.getRepositorySystem().resolveArtifact(
+              _currentMvnRepositories.getRepositorySystemSession(), artifactRequest);
           sourceFile = artifactResult.getArtifact().getFile();
         } catch (ArtifactResolutionException e) {
           e.printStackTrace();

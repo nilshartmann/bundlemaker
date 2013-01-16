@@ -23,18 +23,18 @@ import org.bundlemaker.core.exporter.IModuleExporterContext;
 import org.bundlemaker.core.exporter.ITemplateProvider;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.mvn.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
+import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 /**
- * h
  * <p>
  * </p>
  * 
@@ -48,7 +48,7 @@ public class MvnProjectModuleExporter extends AbstractExporter {
   /** SRC_RESOUCRCES_DIRECTORY_NAME */
   private static final String      SRC_RESOUCRCES_DIRECTORY_NAME = "src/main/resources";
 
-  /** - */
+  /** the template provider */
   private ITemplateProvider<Model> _templateProvider;
 
   /**
@@ -57,6 +57,11 @@ public class MvnProjectModuleExporter extends AbstractExporter {
    * </p>
    */
   public MvnProjectModuleExporter(ITemplateProvider<Model> templateProvider) {
+
+    //
+    Assert.isNotNull(templateProvider);
+
+    // set the template provider
     _templateProvider = templateProvider;
   }
 

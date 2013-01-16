@@ -8,7 +8,7 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.bundlemaker.core.mvn.aether;
+package org.bundlemaker.core.mvn.internal.aether;
 
 import org.apache.maven.repository.internal.DefaultServiceLocator;
 import org.sonatype.aether.RepositorySystem;
