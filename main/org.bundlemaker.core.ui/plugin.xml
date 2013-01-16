@@ -546,6 +546,16 @@
           category="org.bundlemaker.core.ui.preferences.page">
     </page>
  </extension>
+ 
+  <extension
+         point="org.eclipse.ui.propertyPages">
+     <page
+          class="org.bundlemaker.core.ui.properties.BundleMakerPropertyPage"
+          id="org.bundlemaker.core.ui.property.page"
+          name="BundleMaker">
+    </page>
+  </extension>
+ 
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
