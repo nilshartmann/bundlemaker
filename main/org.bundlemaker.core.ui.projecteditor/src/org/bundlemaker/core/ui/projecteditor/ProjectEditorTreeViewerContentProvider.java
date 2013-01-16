@@ -12,6 +12,7 @@ import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.internal.ProjectEditorContributionRegistry;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
@@ -63,7 +64,9 @@ public class ProjectEditorTreeViewerContentProvider implements ITreeContentProvi
           Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
-              _viewer.refresh();
+              if (!(_viewer instanceof ColumnViewer) || !((ColumnViewer) _viewer).isBusy()) {
+                _viewer.refresh();
+              }
             }
           });
         }
