@@ -32,3 +32,4 @@ Export-Package: org.bundlemaker.core.mvn,
  org.bundlemaker.core.mvn.exporter
 Bundle-Activator: org.bundlemaker.core.mvn.internal.MvnCoreActivator
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: bundlemaker.org

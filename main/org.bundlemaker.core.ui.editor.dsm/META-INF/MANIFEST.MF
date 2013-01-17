@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.bundlemaker.core.ui.editor.dsm
+Bundle-Name: BundleMaker DSM Editor
 Bundle-SymbolicName: org.bundlemaker.core.ui.editor.dsm;singleton:=true
 Bundle-Version: 0.9.0.qualifier
 Bundle-ClassPath: .
@@ -19,3 +19,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Service-Component: OSGI-INF/org.bundlemaker.core.ui.editor.dsm.OpenDsmViewBundleMakerProjectListener.xml
 Import-Package: org.osgi.service.component.annotations
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: bundlemaker.org

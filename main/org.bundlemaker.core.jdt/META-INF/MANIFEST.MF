@@ -13,3 +13,4 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.jdt.content,
  org.bundlemaker.core.jdt.content.xml,
  org.bundlemaker.core.jdt.parser
+Bundle-Vendor: bundlemaker.org

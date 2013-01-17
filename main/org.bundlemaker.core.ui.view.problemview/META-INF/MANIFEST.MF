@@ -13,3 +13,4 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.bundlemaker.core.ui.view.problemview
 Service-Component: OSGI-INF/org.bundlemaker.core.ui.view.problemview.OpenProblemViewBundleMakerProjectListener.xml
+Bundle-Vendor: bundlemaker.org

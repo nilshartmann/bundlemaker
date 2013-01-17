@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Experimental
+Bundle-Name: BundleMaker Experimental UI
 Bundle-SymbolicName: org.bundlemaker.core.ui.experimental;singleton:=true
 Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.experimental.internal.Activator
@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.core.ui.view.dependencytree;bundle-version="0.9.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: bundlemaker.org

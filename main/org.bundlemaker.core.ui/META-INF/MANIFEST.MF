@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Ui
+Bundle-Name: BundleMaker Core UI
 Bundle-SymbolicName: org.bundlemaker.core.ui;singleton:=true
 Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.internal.Activator
@@ -42,3 +42,4 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.service.component.annotations
 Bundle-ActivationPolicy: lazy
+Bundle-Vendor: bundlemaker.org
