@@ -123,15 +123,20 @@ public class MvnContentProviderPropertyPage extends PropertyPage {
 
     super.performDefaults();
 
-    //
-    IProject project = (IProject) getElement().getAdapter(IProject.class);
+    try {
+      //
+      IProject project = (IProject) getElement().getAdapter(IProject.class);
 
-    //
-    IRepositoryLocationProvider provider = new PropertiesAndPreferencesBasedRepositoryLocationProvider();
-
-    //
-    this.text_localRepositoryPath.setText(provider.getLocalRepo(project));
-    this.text_remoteRepositoryPath.setText(provider.getRemoteRepo(project));
+      //
+      IRepositoryLocationProvider provider = new PropertiesAndPreferencesBasedRepositoryLocationProvider();
+      
+      //
+      this.text_localRepositoryPath.setText(provider.getLocalRepo(project));
+      this.text_remoteRepositoryPath.setText(provider.getRemoteRepo(project));
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
