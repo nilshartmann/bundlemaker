@@ -3,13 +3,15 @@ package org.bundlemaker.core.analysis;
 import java.util.Collection;
 import java.util.Set;
 
+import com.tinkerpop.blueprints.Edge;
+
 /**
  * <p>
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IDependency {
+public interface IDependency extends Edge {
 
   /**
    * <p>

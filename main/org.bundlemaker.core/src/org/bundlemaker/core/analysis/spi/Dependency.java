@@ -6,17 +6,24 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.eclipse.core.runtime.Assert;
 
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.util.ExceptionFactory;
+
 /**
  * <p>
  * </p>
  */
 public class Dependency implements IDependency {
+
+  private final String              _id;
 
   /** - */
   private IBundleMakerArtifact      _to;
@@ -47,6 +54,9 @@ public class Dependency implements IDependency {
 
     Assert.isNotNull(from);
     Assert.isNotNull(to);
+
+    // TODO
+    _id = UUID.randomUUID().toString();
 
     //
     _from = from;
@@ -229,6 +239,49 @@ public class Dependency implements IDependency {
   @Override
   public Object removeProperty(String key) {
     return _properties.remove(key);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getId()
+   */
+  @Override
+  public Object getId() {
+    return this._id;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Edge#getVertex(com.tinkerpop.blueprints.Direction)
+   */
+  @Override
+  public Vertex getVertex(Direction direction) throws IllegalArgumentException {
+    if (direction == Direction.BOTH) {
+      throw ExceptionFactory.bothIsNotSupported();
+    }
+
+    IBundleMakerArtifact artifact = null;
+    // same "wrong" mapping as in com.tinkerpop.blueprints.impls.neo4j.Neo4jEdge.getVertex(Direction)
+    if (direction == Direction.IN) {
+      artifact = getTo();
+    } else if (direction == Direction.OUT) {
+      artifact = getFrom();
+    }
+
+    return artifact;
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Edge#getLabel()
+   */
+  @Override
+  public String getLabel() {
+    return getDependencyKind().name().toLowerCase();
   }
 
 }

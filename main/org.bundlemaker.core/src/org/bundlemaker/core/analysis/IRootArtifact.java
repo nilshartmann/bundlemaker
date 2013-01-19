@@ -9,6 +9,8 @@ import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import com.tinkerpop.blueprints.Graph;
+
 /**
  * <p>
  * Defines the root {@link IBundleMakerArtifact} that holds the {@link IModularizedSystem} instance. The root artifact
@@ -18,7 +20,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleContainer {
+public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleContainer, Graph {
 
   /**
    * <p>
@@ -110,6 +112,8 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
    * @return the {@link IResourceArtifact} for the given {@link IResource} (maybe null)
    */
   IResourceArtifact getResourceArtifact(IResource resource);
+
+  Graph getBlueprintGraph();
 
   /**
    * <p>

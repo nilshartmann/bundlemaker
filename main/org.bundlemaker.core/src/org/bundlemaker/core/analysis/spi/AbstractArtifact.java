@@ -17,6 +17,14 @@ import org.bundlemaker.core.internal.analysis.AdapterRoot2IArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.Assert;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
+import com.tinkerpop.blueprints.Direction;
+import com.tinkerpop.blueprints.Edge;
+import com.tinkerpop.blueprints.Query;
+import com.tinkerpop.blueprints.Vertex;
+import com.tinkerpop.blueprints.util.DefaultQuery;
+
 /**
  * <p>
  * Abstract base class for all artifacts.
@@ -441,4 +449,81 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
     //
     return _cachedParents;
   }
+
+  // ---- Blueprint -----------------
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Vertex#getEdges(com.tinkerpop.blueprints.Direction, java.lang.String[])
+   */
+  @Override
+  public Iterable<Edge> getEdges(Direction direction, String... labels) {
+    Iterable<? extends Edge> iterable = null;
+
+    switch (direction) {
+    case IN:
+      iterable = getDependenciesFrom();
+      break;
+    case OUT:
+      iterable = getDependenciesTo();
+      break;
+    case BOTH:
+      iterable = Iterables.concat(getDependenciesFrom(), getDependenciesTo());
+      break;
+    }
+
+    // TODO: Add parents and childs
+
+    if (labels == null || labels.length == 0) {
+      return (Iterable<Edge>) iterable;
+    }
+
+    throw new UnsupportedOperationException("getEdges with labels (" + Joiner.on(",").join(labels).toString()
+        + ") not supported");
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Vertex#getVertices(com.tinkerpop.blueprints.Direction, java.lang.String[])
+   */
+  @Override
+  public Iterable<Vertex> getVertices(Direction direction, String... labels) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Vertex#query()
+   */
+  @Override
+  public Query query() {
+    return new DefaultQuery(this);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#removeProperty(java.lang.String)
+   */
+  @Override
+  public Object removeProperty(String key) {
+    throw new UnsupportedOperationException();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.tinkerpop.blueprints.Element#getId()
+   */
+  @Override
+  public Object getId() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }
