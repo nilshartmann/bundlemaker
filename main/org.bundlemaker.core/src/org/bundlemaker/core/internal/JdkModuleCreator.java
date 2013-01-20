@@ -94,7 +94,8 @@ public class JdkModuleCreator {
           typeName = typeName.replace('\\', '.');
 
           // TODO
-          Type type = new Type(typeName, TypeEnum.CLASS, DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER);
+          Type type = new Type(typeName, TypeEnum.CLASS,
+              DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER, false);
           type.setBinaryResource(new ResourceKey(DefaultTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER, root
               .getAbsolutePath(), child));
           //

@@ -57,7 +57,10 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
 
     // get the type
     _type = Type.getObjectType(name);
-
+    
+    // get the abstract flag
+    boolean abstractType = ((access & Opcodes.ACC_ABSTRACT)!=0);
+    
     // get the type type
     TypeEnum typeEnum = null;
     if ((access & Opcodes.ACC_ENUM) != 0) {
@@ -66,15 +69,18 @@ public class ArtefactAnalyserClassVisitor extends EmptyVisitor implements ClassV
       typeEnum = TypeEnum.ANNOTATION;
     } else if ((access & Opcodes.ACC_INTERFACE) != 0) {
       typeEnum = TypeEnum.INTERFACE;
+      abstractType = true;
     } else {
       typeEnum = TypeEnum.CLASS;
     }
+    
+    
 
     // get the fully qualified name
     String fullyQualifiedName = VisitorUtils.getFullyQualifiedTypeName(_type);
 
     // record the contained type
-    _recorder.recordContainedType(fullyQualifiedName, typeEnum);
+    _recorder.recordContainedType(fullyQualifiedName, typeEnum,abstractType);
 
     // super type
     // TODO: USES

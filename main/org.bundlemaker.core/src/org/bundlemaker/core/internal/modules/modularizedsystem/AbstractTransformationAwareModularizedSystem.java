@@ -589,7 +589,7 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
         for (String type : types) {
 
           // TODO: TypeEnum!!
-          Type type2 = new Type(type, TypeEnum.CLASS, contentId);
+          Type type2 = new Type(type, TypeEnum.CLASS, contentId, false);
 
           // type2.setTypeModule(typeModule);
 
