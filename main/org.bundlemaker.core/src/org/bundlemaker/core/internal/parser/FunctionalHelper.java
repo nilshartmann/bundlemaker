@@ -113,6 +113,10 @@ public class FunctionalHelper {
     return result;
   }
 
+  static boolean failOnMissingBinaries() {
+    return Boolean.getBoolean("org.bundlemaker.ignoreMissingBinaries") == false;
+  }
+
   static void associateResourceStandinsWithResources(Collection<IResourceStandin> resourceStandins,
       Map<IResourceKey, Resource> map, boolean isSource, IProgressMonitor monitor) {
 
@@ -136,19 +140,27 @@ public class FunctionalHelper {
       // set up the resource stand-in
       setupResourceStandin(resourceStandin, resource, isSource);
 
+      final boolean failOnMissingBinaries = failOnMissingBinaries();
+
       // perform some checks
       // TODO: MAYBE REMOVE?
       Assert.isNotNull(((ResourceStandin) resourceStandin).getResource());
       for (IType type : resource.getContainedTypes()) {
         if (!type.hasBinaryResource()) {
-          throw new IllegalStateException(
-              "For source file "
-                  + resourceStandin.getDirectory()
-                  + "/"
-                  + resourceStandin.getName()
-                  + " there is no binary (class) file.\nPlease make sure, that your binary paths contains classes for all sources in your project's source folders.");
+          String message = "For source file "
+              + resourceStandin.getDirectory()
+              + "/"
+              + resourceStandin.getName()
+              + " there is no binary (class) file";
+          if (failOnMissingBinaries) {
+            throw new IllegalStateException(
+                message
+                    + "\nPlease make sure, that your binary paths contains classes for all sources in your project's source folders.");
+          } else {
+            System.err.println("WARNING! " + message);
+          }
         }
-        Assert.isNotNull(type.getBinaryResource(), resourceStandin.toString());
+        // Assert.isNotNull(type.getBinaryResource(), resourceStandin.toString());
         if (isSource) {
           Assert.isTrue(resourceStandin.equals(type.getSourceResource()),
               resourceStandin + " : " + type.getSourceResource());
