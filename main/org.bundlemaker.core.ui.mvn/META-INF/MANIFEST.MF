@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.bundlemaker.core.mvn.ui
+Bundle-Name: BundleMaker Mvn UI
 Bundle-SymbolicName: org.bundlemaker.core.ui.mvn;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.mvn.Activator
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.ui,
@@ -17,3 +17,4 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.core.ui.projecteditor;bundle-version="0.9.0",
  org.bundlemaker.core.mvn;bundle-version="0.9.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: bundlemaker.org

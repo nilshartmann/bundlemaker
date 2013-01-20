@@ -15,9 +15,9 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
-import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -197,18 +197,77 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     }
   }
 
+  /**
+   * Create a new instance of a "virtual root" that delegates to an existing IRootArtifact
+   * 
+   * @param rootArtifact
+   * @return
+   */
   private static IRootArtifact newVirtualRoot(final IRootArtifact rootArtifact) {
     return (IRootArtifact) Proxy.newProxyInstance
         (rootArtifact
             .getClass().getClassLoader(),
             new Class[] { IRootArtifact.class },
-            new InvocationHandler() {
-              @Override
-              public Object invoke(Object proxy, Method method,
-                  Object[] args) throws Throwable {
-                return method.invoke(rootArtifact, args);
-              }
-            });
+            new VirtualRootInvocationHandler(rootArtifact));
+  }
+
+  static class VirtualRootInvocationHandler implements InvocationHandler {
+    private final IRootArtifact _rootArtifact;
+
+    private VirtualRootInvocationHandler(IRootArtifact rootArtifact) {
+      this._rootArtifact = rootArtifact;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method,
+        Object[] args) throws Throwable {
+
+      if (isEqualsMethod(method)) {
+        return this.equals(args[0]);
+      }
+
+      if (isHashCodeMethod(method)) {
+        return this.hashCode();
+      }
+
+      if (isToStringMethod(method)) {
+        return this.toString();
+      }
+
+      return method.invoke(_rootArtifact, args);
+    }
+
+    /**
+     * Determine whether the given method is an "equals" method.
+     * 
+     * @see java.lang.Object#equals(Object)
+     */
+    private boolean isEqualsMethod(Method method) {
+      if (method == null || !method.getName().equals("equals")) {
+        return false;
+      }
+      Class<?>[] paramTypes = method.getParameterTypes();
+      return (paramTypes.length == 1 && paramTypes[0] == Object.class);
+    }
+
+    /**
+     * Determine whether the given method is a "hashCode" method.
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    private boolean isHashCodeMethod(Method method) {
+      return (method != null && method.getName().equals("hashCode") && method.getParameterTypes().length == 0);
+    }
+
+    /**
+     * Determine whether the given method is a "toString" method.
+     * 
+     * @see java.lang.Object#toString()
+     */
+    private boolean isToStringMethod(Method method) {
+      return (method != null && method.getName().equals("toString") && method.getParameterTypes().length == 0);
+    }
+
   }
 
   static class RefreshArtifactTreeModelModifiedListener implements IAnalysisModelModifiedListener {

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BundleMaker Transformation History
+Bundle-Name: BundleMaker Transformation History View
 Bundle-SymbolicName: org.bundlemaker.core.ui.transformations.history; singleton:=true
 Bundle-Version: 0.9.0.qualifier
 Bundle-Activator: org.bundlemaker.core.ui.transformations.history.internal.Activator
@@ -12,4 +12,4 @@ Require-Bundle: org.eclipse.ui,
  org.bundlemaker.core.ui.artifact;bundle-version="0.9.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: BundleMaker Project Team
+Bundle-Vendor: bundlemaker.org

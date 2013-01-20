@@ -201,10 +201,10 @@ public class Resource extends ResourceKey implements IModifiableResource {
    * {@inheritDoc}
    */
   @Override
-  public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum) {
+  public Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum, boolean abstractType) {
 
     //
-    Type type = _resourceCache.getOrCreateType(fullyQualifiedName, typeEnum);
+    Type type = _resourceCache.getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
 
     //
     containedTypes().add(type);

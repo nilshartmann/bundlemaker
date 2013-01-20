@@ -5,8 +5,8 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
-import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.swt.graphics.Image;
 
 /**

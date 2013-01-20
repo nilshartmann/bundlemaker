@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.bundlemaker.core.db4o
+Bundle-Name: org.bundlemaker.core.store.db4o
 Bundle-SymbolicName: org.bundlemaker.core.store.db4o
 Bundle-Version: 0.9.0.qualifier
 Fragment-Host: org.bundlemaker.core
@@ -9,5 +9,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core;bundle-version="3.5.1",
  com.db4o.osgi;bundle-version="7.4.155"
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: bundlemaker.org
 
 

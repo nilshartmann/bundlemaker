@@ -2,7 +2,6 @@ package org.bundlemaker.core.ui.artifact;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.artifact.internal.Activator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IPageLayout;

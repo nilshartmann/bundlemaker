@@ -66,7 +66,7 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
    * 
    * @param fullyQualifiedName
    */
-  public void recordContainedType(String fullyQualifiedName, TypeEnum typeEnum) {
+  public void recordContainedType(String fullyQualifiedName, TypeEnum typeEnum, boolean abstractType) {
 
     try {
 
@@ -79,7 +79,7 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
       //
       if (JavaTypeUtils.isLocalOrAnonymousTypeName(fullyQualifiedName)) {
 
-        IType type = _resource.getOrCreateType(fullyQualifiedName, typeEnum);
+        IType type = _resource.getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
         _resource.setPrimaryType(type);
 
         // we have to check for the existence of contained types:
@@ -96,7 +96,7 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
         } else {
 
           // create the fall-back type
-          _bundleMakerType = _resource.getOrCreateType(fullyQualifiedName, typeEnum);
+          _bundleMakerType = _resource.getOrCreateType(fullyQualifiedName, typeEnum, abstractType);
         }
 
         // add as sticky
@@ -105,7 +105,7 @@ public class AsmReferenceRecorder implements IReferenceRecorder {
       } else {
 
         // create the type
-        _bundleMakerType = _resource.getOrCreateType(fullyQualifiedName, typeEnum);
+        _bundleMakerType = _resource.getOrCreateType(fullyQualifiedName, typeEnum,abstractType);
       }
 
     } catch (RuntimeException runtimeException) {

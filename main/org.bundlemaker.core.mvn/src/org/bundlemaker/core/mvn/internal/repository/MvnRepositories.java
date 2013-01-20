@@ -1,8 +1,8 @@
-package org.bundlemaker.core.mvn.content;
+package org.bundlemaker.core.mvn.internal.repository;
 
 import java.io.File;
 
-import org.bundlemaker.core.mvn.aether.Booter;
+import org.bundlemaker.core.mvn.internal.aether.Booter;
 import org.eclipse.core.runtime.Assert;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
@@ -29,19 +29,25 @@ public class MvnRepositories implements IMvnRepositories {
   private Booter                  _booter;
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * Creates a new instance of type {@link MvnRepositories}.
+   * </p>
+   *
+   * @param localRepo
+   * @param remoteRepoUrl
    */
-  @Override
-  public void setMvnRepositories(File localRepo, String remoteRepoUrl) {
+  public MvnRepositories(File localRepo, String remoteRepoUrl) {
 
     Assert.isNotNull(localRepo);
     Assert.isNotNull(remoteRepoUrl);
 
     try {
+
       _booter = new Booter(localRepo, remoteRepoUrl);
       _system = _booter.newRepositorySystem();
       _session = _booter.newRepositorySystemSession(_system);
       _repo = _booter.newCentralRepository();
+
     } catch (Exception e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

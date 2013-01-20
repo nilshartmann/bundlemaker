@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: org.bundlemaker.core.ui.editor.xref
+Bundle-Name: BundleMaker XRef Editor
 Bundle-SymbolicName: org.bundlemaker.core.ui.editor.xref;singleton:=true
 Bundle-Version: 0.9.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
@@ -13,3 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.bundlemaker.core.ui.view.dependencytree;bundle-version="0.9.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: bundlemaker.org

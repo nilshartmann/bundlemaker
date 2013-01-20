@@ -43,6 +43,9 @@ public class Type implements IType, IModifiableType {
   /** the type of this type (enum, class, interface, annotation) **/
   private TypeEnum                     _typeEnum;
 
+  /** Is this type abstract? */
+  private boolean                      _abstractType;
+
   /** - */
   private transient String             _projectContentEntryId;
 
@@ -62,7 +65,7 @@ public class Type implements IType, IModifiableType {
    * @param fullyQualifiedName
    * @param typeEnum
    */
-  public Type(String fullyQualifiedName, TypeEnum typeEnum, String contentEntry) {
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, String contentEntry, boolean abstractType) {
 
     Assert.isNotNull(fullyQualifiedName);
     Assert.isNotNull(typeEnum);
@@ -73,6 +76,7 @@ public class Type implements IType, IModifiableType {
 
     // the type of the type
     _typeEnum = typeEnum;
+    _abstractType = abstractType;
 
     //
     _projectContentEntryId = contentEntry;
@@ -99,7 +103,7 @@ public class Type implements IType, IModifiableType {
    * 
    * @param flyWeightCache
    */
-  public Type(String fullyQualifiedName, TypeEnum typeEnum, FlyWeightCache flyWeightCache) {
+  public Type(String fullyQualifiedName, TypeEnum typeEnum, FlyWeightCache flyWeightCache, boolean abstractType) {
 
     Assert.isNotNull(fullyQualifiedName);
     Assert.isNotNull(typeEnum);
@@ -110,6 +114,7 @@ public class Type implements IType, IModifiableType {
 
     // the type of the type
     _typeEnum = typeEnum;
+    _abstractType = abstractType;
 
     createReferenceContainer(flyWeightCache);
   }
@@ -351,6 +356,16 @@ public class Type implements IType, IModifiableType {
    */
   public Set<Reference> getModifiableReferences() {
     return references();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.resource.IType#isAbstractType()
+   */
+  @Override
+  public boolean isAbstractType() {
+    return _abstractType;
   }
 
   /**
