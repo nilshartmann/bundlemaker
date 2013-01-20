@@ -156,7 +156,7 @@ public class ResourceCache implements IResourceCache {
   }
 
   // TODO synchronized
-  public synchronized Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum) {
+  public synchronized Type getOrCreateType(String fullyQualifiedName, TypeEnum typeEnum, boolean abstractType) {
 
     //
     Type type = _typeMap.get(fullyQualifiedName);
@@ -174,7 +174,7 @@ public class ResourceCache implements IResourceCache {
     }
 
     // create a new one if necessary
-    type = new Type(fullyQualifiedName, typeEnum, _flyWeightCache);
+    type = new Type(fullyQualifiedName, typeEnum, _flyWeightCache, abstractType);
 
     // store the Resource
     _typeMap.put(fullyQualifiedName, type);

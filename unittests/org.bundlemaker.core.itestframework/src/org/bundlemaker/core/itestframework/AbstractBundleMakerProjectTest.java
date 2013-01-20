@@ -88,13 +88,13 @@ public abstract class AbstractBundleMakerProjectTest {
   @After
   public void after() throws CoreException {
 
-    // dispose the project
-    if (_bundleMakerProject != null) {
-      _bundleMakerProject.dispose();
-    }
-
-    // delete the project
-    EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
+//    // dispose the project
+//    if (_bundleMakerProject != null) {
+//      _bundleMakerProject.dispose();
+//    }
+//
+//    // delete the project
+//    EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
   }
 
   /**
@@ -135,27 +135,13 @@ public abstract class AbstractBundleMakerProjectTest {
     projectDescription.setJre(getDefaultVmName());
 
     // step 3: add the source and classes
-    File classes = null;
-    if (new File(directory, "classes").isDirectory()) {
-      classes = new File(directory, "classes");
-    } else if (new File(directory, "classes.zip").isFile()) {
-      classes = new File(directory, "classes.zip");
-    } else {
-      Assert.fail("No classes found!");
-    }
-
-    File sources = null;
-    if (new File(directory, "src").isDirectory()) {
-      sources = new File(directory, "src");
-    } else if (new File(directory, "src.zip").isFile()) {
-      sources = new File(directory, "src.zip");
-    } else {
-      // Assert.fail("No classes found!");
-    }
-
+    String classesPath = getClassesPath(directory);
+    String sourcesPath = getSourcesPath(directory);
+    
+ 
     //
     FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription, _testProjectName,
-        TEST_PROJECT_VERSION, classes.getAbsolutePath(), sources != null ? sources.getAbsolutePath() : null);
+        TEST_PROJECT_VERSION, classesPath, sourcesPath);
 
     // step 4: process the class path entries
     File libsDir = new File(directory, "libs");
@@ -169,6 +155,34 @@ public abstract class AbstractBundleMakerProjectTest {
 
     //
     projectDescription.save();
+  }
+  
+  protected String getClassesPath(File directory) {
+    File classes = null;
+    if (new File(directory, "classes").isDirectory()) {
+      classes = new File(directory, "classes");
+    } else if (new File(directory, "classes.zip").isFile()) {
+      classes = new File(directory, "classes.zip");
+    } else {
+      Assert.fail("No classes found!");
+    }
+
+    return classes.getAbsolutePath();
+  }
+  
+  protected String getSourcesPath(File directory) {
+    File sources = null;
+    if (new File(directory, "src").isDirectory()) {
+      sources = new File(directory, "src");
+    } else if (new File(directory, "src.zip").isFile()) {
+      sources = new File(directory, "src.zip");
+    } else {
+      // Assert.fail("No classes found!");
+    }
+    
+    return (sources == null ? null : sources.getAbsolutePath());
+    
+
   }
 
   protected AnalyzeMode getLibraryAnalyzeMode() {

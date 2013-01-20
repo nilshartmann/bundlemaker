@@ -153,6 +153,11 @@ public interface IType extends Comparable<IType> {
   IModule getModule(IModularizedSystem modularizedSystem);
 
   /**
+   * Returns true if this type is abstract
+   */
+  boolean isAbstractType();
+
+  /**
    * <p>
    * </p>
    * 

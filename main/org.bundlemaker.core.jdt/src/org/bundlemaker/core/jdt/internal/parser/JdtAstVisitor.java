@@ -49,6 +49,7 @@ import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.Message;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.QualifiedName;
@@ -253,8 +254,11 @@ public class JdtAstVisitor extends ASTVisitor {
     ITypeBinding typeBinding = node.resolveBinding();
 
     TypeEnum typeEnum = null;
+    boolean abstractType = Modifier.isAbstract(node.getModifiers());
+    
     if (typeBinding.isInterface()) {
       typeEnum = TypeEnum.INTERFACE;
+      abstractType = true;
     } else if (typeBinding.isClass()) {
       typeEnum = TypeEnum.CLASS;
     } else {
@@ -283,7 +287,7 @@ public class JdtAstVisitor extends ASTVisitor {
     } else {
 
       //
-      currentType = _javaSourceResource.getOrCreateType(binaryName, typeEnum);
+      currentType = _javaSourceResource.getOrCreateType(binaryName, typeEnum, abstractType);
     }
 
     _realTypes.push(binaryName);
@@ -319,7 +323,7 @@ public class JdtAstVisitor extends ASTVisitor {
 
     // add the type name
     IModifiableType type = _javaSourceResource.getOrCreateType(node.resolveBinding().getBinaryName(),
-        TypeEnum.ANNOTATION);
+        TypeEnum.ANNOTATION, true);
     _currentTypes.push(type);
     _realTypes.push(node.resolveBinding().getBinaryName());
 
@@ -342,7 +346,7 @@ public class JdtAstVisitor extends ASTVisitor {
   public boolean visit(EnumDeclaration node) {
 
     // add the type name
-    IModifiableType type = _javaSourceResource.getOrCreateType(node.resolveBinding().getBinaryName(), TypeEnum.ENUM);
+    IModifiableType type = _javaSourceResource.getOrCreateType(node.resolveBinding().getBinaryName(), TypeEnum.ENUM, false);
     _currentTypes.push(type);
     _realTypes.push(node.resolveBinding().getBinaryName());
 
