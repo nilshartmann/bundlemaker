@@ -27,6 +27,10 @@ public class BundleMakerPreferencesConfigurationBlock extends ConfigurationBlock
    */
   public BundleMakerPreferencesConfigurationBlock(Composite parent, AbstractPropertyAndPreferencesPage page) {
     super(parent, SWT.NONE, page);
+  }
+
+  @Override
+  protected void createContent() {
 
     // set the layout
     this.setLayout(new FillLayout(SWT.VERTICAL));

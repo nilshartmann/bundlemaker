@@ -1,4 +1,7 @@
-package org.bundlemaker.core.mvn.internal.repository;
+package org.bundlemaker.core.mvn.internal.config;
+
+import java.io.IOException;
+import java.util.List;
 
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
@@ -10,7 +13,7 @@ import org.sonatype.aether.repository.RemoteRepository;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IMvnRepositories {
+public interface IAetherRepositoryAdapter {
 
   /**
    * <p>
@@ -26,13 +29,14 @@ public interface IMvnRepositories {
    * 
    * @return
    */
-  RepositorySystemSession getRepositorySystemSession();
+  RepositorySystemSession newSession();
 
   /**
    * <p>
    * </p>
    * 
    * @return
+   * @throws IOException
    */
-  RemoteRepository getRemoteRepository();
+  List<RemoteRepository> getRemoteRepositories();
 }

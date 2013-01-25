@@ -524,4 +524,24 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
       e.printStackTrace();
     }
   }
+
+  @Override
+  public int convertHeightInCharsToPixels(int chars) {
+    return super.convertHeightInCharsToPixels(chars);
+  }
+
+  @Override
+  public int convertHorizontalDLUsToPixels(int dlus) {
+    return super.convertHorizontalDLUsToPixels(dlus);
+  }
+
+  @Override
+  public int convertVerticalDLUsToPixels(int dlus) {
+    return super.convertVerticalDLUsToPixels(dlus);
+  }
+
+  @Override
+  public int convertWidthInCharsToPixels(int chars) {
+    return super.convertWidthInCharsToPixels(chars);
+  }
 }

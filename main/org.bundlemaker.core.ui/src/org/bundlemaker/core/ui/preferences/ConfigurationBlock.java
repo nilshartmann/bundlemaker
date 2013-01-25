@@ -4,7 +4,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 /**
  * <p>
@@ -35,7 +40,17 @@ public abstract class ConfigurationBlock extends Composite {
 
     //
     _page = page;
+
+    createContent();
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param configurationBlock
+   */
+  protected abstract void createContent();
 
   /**
    * <p>
@@ -106,5 +121,36 @@ public abstract class ConfigurationBlock extends Composite {
 
     //
     return new RadioGroupDialogField(parent, label, names, values, layoutType);
+  }
+
+  protected Text createLabelTextField(Composite parent, String label, int textFieldWidrg) {
+
+    //
+    Assert.isNotNull(parent);
+    Assert.isNotNull(label);
+
+    //
+    Composite composite = new Composite(parent, SWT.NULL);
+    GridLayout layout = new GridLayout();
+    layout.numColumns = 2;
+    composite.setLayout(layout);
+    GridData data = new GridData();
+    data.verticalAlignment = GridData.FILL;
+    data.horizontalAlignment = GridData.FILL;
+    composite.setLayoutData(data);
+
+    //
+    Label pathLabel = new Label(composite, SWT.NONE);
+    pathLabel.setText(label);
+
+    Text result =
+        new Text(composite, SWT.SINGLE | SWT.BORDER);
+    GridData gd = new GridData();
+    gd.widthHint =
+        getPage().convertWidthInCharsToPixels(textFieldWidrg);
+    result.setLayoutData(gd);
+
+    //
+    return result;
   }
 }

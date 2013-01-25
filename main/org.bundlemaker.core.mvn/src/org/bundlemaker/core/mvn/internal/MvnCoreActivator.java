@@ -1,7 +1,13 @@
 package org.bundlemaker.core.mvn.internal;
 
+import org.apache.maven.settings.Settings;
+import org.bundlemaker.core.mvn.internal.config.AetherUtils;
+import org.bundlemaker.core.mvn.internal.config.DispatchingRepositoryAdapter;
+import org.bundlemaker.core.mvn.internal.config.IAetherRepositoryAdapter;
+import org.bundlemaker.core.mvn.internal.config.MvnSettingsBasedRepositoryAdapter;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.sonatype.aether.RepositorySystemSession;
 
 /**
  * <p>
@@ -19,6 +25,16 @@ public class MvnCoreActivator implements BundleActivator {
    */
   @Override
   public void start(BundleContext context) throws Exception {
+
+//    System.out.println("*** PLING ***");
+//
+//    // use M2E settings
+//    IAetherRepositoryAdapter resolver = new DispatchingRepositoryAdapter();
+//
+//    RepositorySystemSession session = resolver.newSession();
+//    System.out.println(session.getLocalRepository());
+//
+//    System.out.println("*** PLONG ***");
 
     //
     _instance = this;

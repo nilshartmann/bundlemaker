@@ -1,64 +1,84 @@
-/*******************************************************************************
- * Copyright (c) 2010, 2012 Sonatype, Inc.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Sonatype, Inc. - initial API and implementation
- *******************************************************************************/
-package org.bundlemaker.core.mvn.internal.aether;
+package org.bundlemaker.core.mvn.internal.config;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
+import org.bundlemaker.core.mvn.internal.aether.ManualRepositorySystemFactory;
 import org.eclipse.core.runtime.Assert;
 import org.sonatype.aether.RepositorySystem;
+import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.collection.DependencyCollectionContext;
 import org.sonatype.aether.collection.DependencySelector;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.util.DefaultRepositorySystemSession;
 import org.sonatype.aether.util.artifact.JavaScopes;
 
 /**
- * A helper to boot the repository system and a repository system session.
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class Booter {
+public class SimpleRepositoryAdapter implements IAetherRepositoryAdapter {
 
   /** - */
-  private File   _localRepo;
+  private RepositorySystem _system;
 
   /** - */
-  private String _remoteRepoUrl;
+  private RemoteRepository _repo;
+
+  /** - */
+  private File             _localRepo;
+
+  /** - */
+  private String           _remoteRepoUrl;
 
   /**
    * <p>
-   * Creates a new instance of type {@link Booter}. 
+   * Creates a new instance of type {@link SimpleRepositoryAdapter}.
    * </p>
    * 
    * @param localRepo
    * @param remoteRepoUrl
    */
-  public Booter(File localRepo, String remoteRepoUrl) {
+  public SimpleRepositoryAdapter(File localRepo, String remoteRepoUrl) {
+
     Assert.isNotNull(localRepo);
     Assert.isNotNull(remoteRepoUrl);
 
-    _localRepo = localRepo;
-    _remoteRepoUrl = remoteRepoUrl;
+    try {
+
+      // set the parameters
+      _localRepo = localRepo;
+      _remoteRepoUrl = remoteRepoUrl;
+
+      // create
+      _system = ManualRepositorySystemFactory.newRepositorySystem();
+      _repo = new RemoteRepository("central", "default", _remoteRepoUrl);
+
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
-  public RepositorySystem newRepositorySystem() {
-    return ManualRepositorySystemFactory.newRepositorySystem();
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public RepositorySystem getRepositorySystem() {
+    return _system;
   }
 
-  public DefaultRepositorySystemSession newRepositorySystemSession(RepositorySystem system) {
+  @Override
+  public RepositorySystemSession newSession() {
     MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
     LocalRepository localRepo = new LocalRepository(_localRepo);
-    session.setLocalRepositoryManager(system.newLocalRepositoryManager(localRepo));
+    session.setLocalRepositoryManager(_system.newLocalRepositoryManager(localRepo));
 
     // session.setTransferListener( new ConsoleTransferListener() );
     // session.setRepositoryListener( new ConsoleRepositoryListener() );
@@ -83,7 +103,14 @@ public class Booter {
     return session;
   }
 
-  public RemoteRepository newCentralRepository() {
-    return new RemoteRepository("central", "default", _remoteRepoUrl);
+  @Override
+  public List<RemoteRepository> getRemoteRepositories() {
+
+    //
+    List<RemoteRepository> remoteRepositories = new LinkedList<RemoteRepository>();
+    remoteRepositories.add(_repo);
+
+    //
+    return remoteRepositories;
   }
 }

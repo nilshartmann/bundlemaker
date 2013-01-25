@@ -9,8 +9,10 @@ import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
-import org.bundlemaker.core.mvn.internal.repository.IMvnRepositories;
-import org.bundlemaker.core.mvn.internal.repository.MvnRepositories;
+import org.bundlemaker.core.mvn.internal.MvnCoreActivator;
+import org.bundlemaker.core.mvn.internal.config.DispatchingRepositoryAdapter;
+import org.bundlemaker.core.mvn.internal.config.IAetherRepositoryAdapter;
+import org.bundlemaker.core.mvn.preferences.MvnPreferencesUtils;
 import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -21,6 +23,8 @@ import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.collection.CollectResult;
@@ -28,6 +32,7 @@ import org.sonatype.aether.collection.DependencyCollectionException;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.graph.DependencyVisitor;
+import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.resolution.ArtifactResult;
@@ -42,25 +47,25 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
 public class MvnContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** the mvn scope */
-  private static final String         SCOPE_COMPILE = "compile";
+  private static final String        SCOPE_COMPILE = "compile";
 
   /** the mvn content type (configuration) */
-  private MvnContentType              _mvnContent   = new MvnContentType();
+  private MvnContentType             _mvnContent   = new MvnContentType();
 
   /** TODO */
-  private int                         _counter      = 0;
+  private int                        _counter      = 0;
 
   /** cached list of all file based contents */
-  private List<IProjectContentEntry>  _fileBasedContents;
+  private List<IProjectContentEntry> _fileBasedContents;
 
   /** the BundleMakerProject */
-  private IBundleMakerProject         _bundleMakerProject;
+  private IBundleMakerProject        _bundleMakerProject;
 
   /** - */
-  private IMvnRepositories            _currentMvnRepositories;
+  private IAetherRepositoryAdapter   _repositoryAdapter;
 
   /** - */
-  private IRepositoryLocationProvider _repositoryLocationProvider;
+  private RepositorySystemSession    _currentSystemSession;
 
   /**
    * <p>
@@ -71,7 +76,9 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
     // initialize
     _fileBasedContents = new LinkedList<IProjectContentEntry>();
-    _repositoryLocationProvider = new PropertiesAndPreferencesBasedRepositoryLocationProvider();
+
+    //
+    _repositoryAdapter = new DispatchingRepositoryAdapter();
   }
 
   /**
@@ -169,13 +176,12 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
   /**
    * <p>
    * </p>
+   * @throws CoreException 
    */
-  public void reloadContent(final boolean useRemoteRepository) {
+  public void reloadContent(final boolean useRemoteRepository) throws CoreException {
 
-    // set the current mvn repository configuration
-    _currentMvnRepositories = new MvnRepositories(new File(
-        _repositoryLocationProvider.getLocalRepo(_bundleMakerProject.getProject())),
-        _repositoryLocationProvider.getRemoteRepo(_bundleMakerProject.getProject()));
+    // create a new session
+    _currentSystemSession = _repositoryAdapter.newSession();
 
     // create the result list
     _fileBasedContents.clear();
@@ -194,16 +200,19 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
       // add the remote repository is necessary
       if (useRemoteRepository) {
-        collectRequest.addRepository(_currentMvnRepositories.getRemoteRepository());
+
+        for (RemoteRepository remoteRepository : _repositoryAdapter.getRemoteRepositories()) {
+          collectRequest.addRepository(remoteRepository);
+        }
       }
 
       //
       try {
 
         // collect the result
-        CollectResult collectResult = _currentMvnRepositories.getRepositorySystem()
+        CollectResult collectResult = _repositoryAdapter.getRepositorySystem()
             .collectDependencies(
-                _currentMvnRepositories.getRepositorySystemSession(), collectRequest);
+                _currentSystemSession, collectRequest);
 
         final List<Artifact> alreadyHandled = new LinkedList<Artifact>();
 
@@ -217,8 +226,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
         });
 
       } catch (DependencyCollectionException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new CoreException(new Status(Status.ERROR, MvnPreferencesUtils.PLUGIN_ID, e.getMessage(), e));
       }
 
       // finally: fire project description recomputed event
@@ -276,15 +284,17 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
     //
     if (useRemoteRepository) {
-      artifactRequest.addRepository(_currentMvnRepositories.getRemoteRepository());
+      for (RemoteRepository remoteRepository : _repositoryAdapter.getRemoteRepositories()) {
+        artifactRequest.addRepository(remoteRepository);
+      }
     }
 
     try {
 
       //
-      ArtifactResult artifactResult = _currentMvnRepositories.getRepositorySystem()
+      ArtifactResult artifactResult = _repositoryAdapter.getRepositorySystem()
           .resolveArtifact(
-              _currentMvnRepositories.getRepositorySystemSession(), artifactRequest);
+              _currentSystemSession, artifactRequest);
 
       File sourceFile = null;
       File binaryFile = null;
@@ -302,10 +312,14 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
         artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(sourceArtifact);
-        artifactRequest.addRepository(_currentMvnRepositories.getRemoteRepository());
+
+        for (RemoteRepository remoteRepository : _repositoryAdapter.getRemoteRepositories()) {
+          artifactRequest.addRepository(remoteRepository);
+        }
+
         try {
-          artifactResult = _currentMvnRepositories.getRepositorySystem().resolveArtifact(
-              _currentMvnRepositories.getRepositorySystemSession(), artifactRequest);
+          artifactResult = _repositoryAdapter.getRepositorySystem().resolveArtifact(
+              _currentSystemSession, artifactRequest);
           sourceFile = artifactResult.getArtifact().getFile();
         } catch (ArtifactResolutionException e) {
           e.printStackTrace();
