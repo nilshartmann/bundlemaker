@@ -10,11 +10,14 @@
  ******************************************************************************/
 package org.bundlemaker.core;
 
+import java.util.Collection;
+
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -160,6 +163,31 @@ public final class BundleMakerCore {
       project.setDescription(description, null);
     }
 
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @throws CoreException
+   */
+  public static Collection<IBundleMakerProject> getBundleMakerProjects() {
+
+    //
+    IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+    for (IProject iProject : projects) {
+      try {
+        if (iProject.exists() && iProject.hasNature(BundleMakerCore.NATURE_ID)) {
+          getBundleMakerProject(iProject, null);
+        }
+      } catch (CoreException e) {
+        //
+      }
+    }
+
+    //
+    return Activator.getDefault().getBundleMakerProjects();
   }
 
   /**

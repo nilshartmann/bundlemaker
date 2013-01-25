@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.preferences;
+package org.bundlemaker.core.ui.internal.preferences;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -34,7 +34,6 @@ public class ContentProviderPreferencePage extends PreferencePage implements IWo
    */
   public ContentProviderPreferencePage(String title) {
     super(title);
-    //
   }
 
   /**
@@ -47,7 +46,6 @@ public class ContentProviderPreferencePage extends PreferencePage implements IWo
    */
   public ContentProviderPreferencePage(String title, ImageDescriptor image) {
     super(title, image);
-    //
   }
 
   /**
@@ -63,7 +61,6 @@ public class ContentProviderPreferencePage extends PreferencePage implements IWo
    */
   @Override
   protected Control createContents(Composite parent) {
-    //
     return new Composite(parent, SWT.NONE);
   }
 }

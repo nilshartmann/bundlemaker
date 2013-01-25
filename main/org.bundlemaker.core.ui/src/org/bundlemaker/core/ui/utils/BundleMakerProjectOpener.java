@@ -21,7 +21,7 @@ import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfiguratio
 import org.bundlemaker.core.ui.event.Events;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
-import org.bundlemaker.core.ui.preferences.BundleMakerPreferences;
+import org.bundlemaker.core.ui.internal.preferences.BundleMakerPreferenceInitializer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -50,7 +50,7 @@ public class BundleMakerProjectOpener {
 
     // ask user if the perspective should be opened
     if (!BundleMakerPerspectiveHelper
-        .openBundleMakerPerspectiveIfWanted(BundleMakerPreferences.PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN)) {
+        .openBundleMakerPerspectiveIfWanted(BundleMakerPreferenceInitializer.PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN)) {
       // BundleMaker perspective not open; make sure that at least the Project Explorer is visible
       CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
     }
