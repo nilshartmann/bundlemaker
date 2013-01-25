@@ -2,30 +2,36 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-      <!-- org.eclipse.ui.preferencePages -->
-      <extension point="org.eclipse.ui.preferencePages">
-            <page id="MvnRepositoriesPreferencePage" name="Mvn Content Provider"
-                  class="org.bundlemaker.core.ui.mvn.MvnRepositoriesPreferencePage"
-                  category="org.bundlemaker.core.ui.preferences.page.contentprovider"> </page>
-      </extension>
-
-      <extension point="org.eclipse.ui.propertyPages">
-            <page
-                  category="org.bundlemaker.core.ui.property.page"
-                  class="org.bundlemaker.core.ui.mvn.MvnContentProviderPropertyPage"
-                  id="org.bundlemaker.core.ui.mvn.MvnContentProviderPropertyPage"
-                  name="Mvn Content Provider"> 
-               <enabledWhen>
-                  <and>
-                     <instanceof value="org.eclipse.core.resources.IProject" />
-                     <adapt type="org.eclipse.core.resources.IResource">
-                       <test property="org.eclipse.core.resources.projectNature"
-                             value="org.bundlemaker.core.bundlemakernature" />
-    				 </adapt>
-                  </and>
-               </enabledWhen>
-          </page> 
-      </extension>
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.bundlemaker.core.ui.mvn.internal.preference.MvnPropertyAndPreferencePage"
+          id="org.bundlemaker.core.ui.mvn.preferences"
+          name="Maven Settings"
+          category="org.bundlemaker.core.ui.preferences.bundlemakerpage" />
+ </extension>
+ 
+  <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+          class="org.bundlemaker.core.ui.mvn.internal.preference.MvnPropertyAndPreferencePage"
+          id="org.bundlemaker.core.ui.mvn.properties"
+          name="Maven Settings"
+          category="org.bundlemaker.core.ui.property.bundlemakerpage">
+        <enabledWhen>
+          <and>
+            <or>
+              <instanceof value="org.eclipse.core.resources.IProject" />
+              <instanceof value="org.eclipse.jdt.core.IJavaProject" />
+            </or>
+            <adapt type="org.eclipse.core.resources.IProject">
+              <test property="org.eclipse.core.resources.projectNature"
+                    value="org.bundlemaker.core.bundlemakernature"/>
+            </adapt>
+          </and>
+        </enabledWhen>
+      </page>
+  </extension>
 
       <!-- org.bundlemaker.core.ui.projecteditor -->
       <extension id="fileBasedContentProviderEditor" point="org.bundlemaker.core.ui.projecteditor">
