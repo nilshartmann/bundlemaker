@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IArtifactSelector;
@@ -35,6 +36,10 @@ import com.tinkerpop.blueprints.util.DefaultQuery;
  */
 public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
+  private final static AtomicLong   ID_GENERATOR = new AtomicLong();
+
+  private final Long                _id;
+
   /** the name of this artifact */
   private String                    _name;
 
@@ -60,6 +65,9 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
    */
   public AbstractArtifact(String name) {
     Assert.isNotNull(name);
+
+    // TODO
+    this._id = ID_GENERATOR.getAndIncrement();
 
     // set the name
     this._name = name;
@@ -196,31 +204,19 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   @SuppressWarnings("unchecked")
   @Override
   public <T> T getProperty(Object key, Class<T> t) {
-
-    // return null if the properties havn't been initialized yet
-    if (_properties == null) {
+    T property = (T) properties().get(key);
+    if (property != null) {
+      return property;
+    } else if (this.getParent() != null) {
+      return this.getParent().getProperty(key, t);
+    } else {
       return null;
-    }
-
-    // return the property (if exists)
-    else {
-      T property = (T) properties().get(key);
-      if (property != null) {
-        return property;
-      } else if (this.getParent() != null) {
-        return this.getParent().getProperty(key, t);
-      } else {
-        return null;
-      }
     }
   }
 
   public Set<String> getPropertyKeys() {
-    if (_properties == null) {
-      return Collections.emptySet();
-    }
 
-    return _properties.keySet();
+    return properties().keySet();
   }
 
   /**
@@ -418,11 +414,20 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
     // lazy initialize the map
     if (_properties == null) {
-      _properties = new HashMap<String, Object>();
+      HashMap<String, Object> properties = new HashMap<String, Object>();
+      addDefaultProperties(properties);
+      _properties = properties;
     }
 
     // return the result
     return _properties;
+  }
+
+  /**
+   * @param properties
+   */
+  protected void addDefaultProperties(HashMap<String, Object> properties) {
+    properties.put("qname", getQualifiedName());
   }
 
   /**
@@ -522,8 +527,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
    */
   @Override
   public Object getId() {
-    // TODO Auto-generated method stub
-    return null;
+    return this._id;
   }
 
 }

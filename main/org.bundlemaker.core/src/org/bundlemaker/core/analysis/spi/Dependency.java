@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -23,23 +22,23 @@ import com.tinkerpop.blueprints.util.ExceptionFactory;
  */
 public class Dependency implements IDependency {
 
-  private final String              _id;
+  private final String            _id;
 
   /** - */
-  private IBundleMakerArtifact      _to;
+  private IBundleMakerArtifact    _to;
 
   /** - */
-  private IBundleMakerArtifact      _from;
+  private IBundleMakerArtifact    _from;
 
-  private DependencyKind            dependencyKind = DependencyKind.USES;
-
-  /** - */
-  private Collection<IDependency>   dependencies;
+  private DependencyKind          dependencyKind = DependencyKind.USES;
 
   /** - */
-  private boolean                   _isCoreDependency;
+  private Collection<IDependency> dependencies;
 
-  private final Map<String, Object> _properties    = new Hashtable<String, Object>();
+  /** - */
+  private boolean                 _isCoreDependency;
+
+  private Map<String, Object>     _properties;
 
   /**
    * <p>
@@ -56,7 +55,7 @@ public class Dependency implements IDependency {
     Assert.isNotNull(to);
 
     // TODO
-    _id = UUID.randomUUID().toString();
+    _id = (isCoreDependency ? "core_" : "") + from.getId() + ">" + to.getId();
 
     //
     _from = from;
@@ -217,17 +216,17 @@ public class Dependency implements IDependency {
 
   @Override
   public Object getProperty(String key) {
-    return _properties.get(key);
+    return properties().get(key);
   }
 
   @Override
   public Set<String> getPropertyKeys() {
-    return _properties.keySet();
+    return properties().keySet();
   }
 
   @Override
   public void setProperty(String key, Object value) {
-    _properties.put(key, value);
+    properties().put(key, value);
 
   }
 
@@ -238,7 +237,7 @@ public class Dependency implements IDependency {
    */
   @Override
   public Object removeProperty(String key) {
-    return _properties.remove(key);
+    return properties().remove(key);
   }
 
   /*
@@ -282,6 +281,28 @@ public class Dependency implements IDependency {
   @Override
   public String getLabel() {
     return getDependencyKind().name().toLowerCase();
+  }
+
+  /**
+   * (Lazy) initializes the properties map and add the default properties
+   * 
+   * @return
+   */
+  protected Map<String, Object> properties() {
+    if (_properties == null) {
+      Map<String, Object> properties = new Hashtable<String, Object>();
+      addDefaultProperties(properties);
+      _properties = properties;
+    }
+
+    return this._properties;
+  }
+
+  /**
+   * @param properties
+   */
+  protected void addDefaultProperties(Map<String, Object> properties) {
+    properties.put("type", getDependencyKind().name().toLowerCase());
   }
 
 }
