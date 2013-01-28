@@ -10,9 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.tinkerpop.test;
 
+import java.util.Collection;
+
+import nz.ac.massey.cs.guery.adapters.blueprints.BlueprintsAdapter;
+import nz.ac.massey.cs.guery.adapters.blueprints.ElementCache;
+
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -23,13 +29,19 @@ import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Before;
 
+import com.tinkerpop.blueprints.Graph;
+
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class AbstractBundleMakerBlueprintsTest extends AbstractBundleMakerProjectTest {
+public abstract class AbstractBundleMakerBlueprintsTest extends AbstractBundleMakerProjectTest {
   /** - */
   private IModifiableModularizedSystem _modularizedSystem;
+
+  private BlueprintsAdapter            _blueprintsAdapter = null;
+
+  private Graph                        _graph             = null;
 
   @Before
   @Override
@@ -65,7 +77,23 @@ public class AbstractBundleMakerBlueprintsTest extends AbstractBundleMakerProjec
 
     // assert the test module
     Assert.assertNotNull(getModularizedSystem().getModule(getTestProjectName(), "1.0.0"));
+
+    try {
+      assertCorrectTestModel();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+
+    //
+    _graph = getRootArtifact();
+
+    _blueprintsAdapter = new BlueprintsAdapter(_graph, getCache());
+
   }
+
+  abstract protected void assertCorrectTestModel() throws Exception;
+
+  abstract protected ElementCache getCache();
 
   // @Test
   // public void basicTest() throws Exception {
@@ -138,6 +166,8 @@ public class AbstractBundleMakerBlueprintsTest extends AbstractBundleMakerProjec
 
     IRootArtifact rootArtifact = modularizedSystem.getAnalysisModel(configuration).getRoot();
 
+    Collection<IModuleArtifact> modules = rootArtifact.getChildren(IModuleArtifact.class);
+
     Assert.assertNotNull(rootArtifact);
     // Assert.assertEquals(4, rootArtifact.getChildren().size());
 
@@ -158,9 +188,18 @@ public class AbstractBundleMakerBlueprintsTest extends AbstractBundleMakerProjec
     return _modularizedSystem;
   }
 
-  @Override
-  protected String computeTestProjectName() {
-    return "com.example";
+  /**
+   * @return the graph
+   */
+  public Graph getGraph() {
+    return _graph;
+  }
+
+  /**
+   * @return the blueprintsAdapter
+   */
+  public BlueprintsAdapter getBlueprintsAdapter() {
+    return _blueprintsAdapter;
   }
 
 }
