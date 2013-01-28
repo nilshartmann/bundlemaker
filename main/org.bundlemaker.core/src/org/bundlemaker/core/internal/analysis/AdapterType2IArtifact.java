@@ -446,6 +446,9 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     IPackageArtifact packageArtifact = getParent(IPackageArtifact.class);
     String namespace = (packageArtifact == null ? "" : packageArtifact.getPackageName());
     properties.put("namespace", namespace);
+    properties.put("abstract", getAssociatedType().isAbstractType());
+    properties.put("artifacttype", "typeartifact");
+
   }
 
   @Override

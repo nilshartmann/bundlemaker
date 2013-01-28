@@ -428,6 +428,9 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
    */
   protected void addDefaultProperties(HashMap<String, Object> properties) {
     properties.put("qname", getQualifiedName());
+
+    // TODO
+    properties.put("artifacttype", getClass().getSimpleName().toLowerCase());
   }
 
   /**
