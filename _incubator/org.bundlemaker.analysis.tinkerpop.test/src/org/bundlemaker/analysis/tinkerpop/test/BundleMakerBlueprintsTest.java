@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import nz.ac.massey.cs.guery.MotifInstance;
+import nz.ac.massey.cs.guery.adapters.blueprints.AlwaysCheckCache;
 import nz.ac.massey.cs.guery.adapters.blueprints.ElementCache;
 import nz.ac.massey.cs.guery.adapters.blueprints.WrappingCache;
 
@@ -29,7 +30,6 @@ import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assume;
@@ -65,11 +65,13 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
       public ElementCache createCache() {
         return new WrappingCache();
       }
-    } } /*
-         * , { new CacheFactory() {
-         * 
-         * @Override public ElementCache createCache() { return new AlwaysCheckCache(); } } }
-         */};
+    } }, { new CacheFactory() {
+
+      @Override
+      public ElementCache createCache() {
+        return new AlwaysCheckCache();
+      }
+    } } };
     return Arrays.asList(arr);
 
   }
@@ -436,80 +438,6 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
   }
 
   // ---------- * ---------- * ---------- * ---------- * ---------- * ---------- * ----------
-  /**
-   * @param if1
-   * @param cl1
-   * @param string
-   */
-  private IDependency getDependency(ITypeArtifact from, ITypeArtifact to, DependencyKind expectedKind) {
-
-    IDependency dependency = from.getDependencyTo(to);
-    assertNotNull(dependency);
-    assertEquals(expectedKind, dependency.getDependencyKind());
-
-    return dependency;
-
-  }
-
-  /**
-   * @param string
-   * @param string2
-   * @param string3
-   * @return
-   */
-  private ITypeArtifact getType(final String expectedTypeName) {
-    final List<ITypeArtifact> typeArtifactsFound = new LinkedList<ITypeArtifact>();
-
-    getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
-
-      /*
-       * (non-Javadoc)
-       * 
-       * @see
-       * org.bundlemaker.core.analysis.IAnalysisModelVisitor.Adapter#visit(org.bundlemaker.core.analysis.ITypeArtifact)
-       */
-      @Override
-      public boolean visit(ITypeArtifact typeArtifact) {
-
-        String qualifiedTypeName = typeArtifact.getParent(IPackageArtifact.class).getQualifiedName() + "."
-            + typeArtifact.getName();
-
-        if (qualifiedTypeName.equals(expectedTypeName)) {
-          typeArtifactsFound.add(typeArtifact);
-        }
-        return false;
-      }
-
-    });
-
-    assertEquals(1, typeArtifactsFound.size());
-
-    return typeArtifactsFound.get(0);
-  }
-
-  /**
-   * @param string
-   */
-  private void assertPackageExists(final String packageName) {
-
-    final List<IPackageArtifact> packageArtifactsFound = new LinkedList<IPackageArtifact>();
-
-    getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
-
-      @Override
-      public boolean visit(IPackageArtifact packageArtifact) {
-        System.out.println("package: " + packageArtifact.getQualifiedName());
-        if (packageArtifact.getQualifiedName().equals(packageName)) {
-          packageArtifactsFound.add(packageArtifact);
-        }
-        return false;
-      }
-
-    });
-
-    assertEquals(1, packageArtifactsFound.size());
-
-  }
 
   private Vertex getVertex(String name) {
     Iterator<Vertex> iter = getBlueprintsAdapter().getVertices();

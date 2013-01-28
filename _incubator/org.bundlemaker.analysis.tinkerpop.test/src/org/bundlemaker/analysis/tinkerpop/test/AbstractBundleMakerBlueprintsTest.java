@@ -10,16 +10,26 @@
  ******************************************************************************/
 package org.bundlemaker.analysis.tinkerpop.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import nz.ac.massey.cs.guery.adapters.blueprints.BlueprintsAdapter;
 import nz.ac.massey.cs.guery.adapters.blueprints.ElementCache;
 
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -200,6 +210,74 @@ public abstract class AbstractBundleMakerBlueprintsTest extends AbstractBundleMa
    */
   public BlueprintsAdapter getBlueprintsAdapter() {
     return _blueprintsAdapter;
+  }
+
+  /**
+   * @param string
+   */
+  protected void assertPackageExists(final String packageName) {
+
+    final List<IPackageArtifact> packageArtifactsFound = new LinkedList<IPackageArtifact>();
+
+    getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
+
+      @Override
+      public boolean visit(IPackageArtifact packageArtifact) {
+        if (packageArtifact.getQualifiedName().equals(packageName)) {
+          packageArtifactsFound.add(packageArtifact);
+        }
+        return false;
+      }
+
+    });
+
+    assertEquals(1, packageArtifactsFound.size());
+
+  }
+
+  /**
+   * @param string
+   * @param string2
+   * @param string3
+   * @return
+   */
+  protected ITypeArtifact getType(final String expectedTypeName) {
+    final List<ITypeArtifact> typeArtifactsFound = new LinkedList<ITypeArtifact>();
+
+    getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
+
+      @Override
+      public boolean visit(ITypeArtifact typeArtifact) {
+
+        String qualifiedTypeName = typeArtifact.getParent(IPackageArtifact.class).getQualifiedName() + "."
+            + typeArtifact.getName();
+
+        if (qualifiedTypeName.equals(expectedTypeName)) {
+          typeArtifactsFound.add(typeArtifact);
+        }
+        return false;
+      }
+
+    });
+
+    assertEquals(1, typeArtifactsFound.size());
+
+    return typeArtifactsFound.get(0);
+  }
+
+  /**
+   * @param if1
+   * @param cl1
+   * @param string
+   */
+  protected IDependency getDependency(ITypeArtifact from, ITypeArtifact to, DependencyKind expectedKind) {
+
+    IDependency dependency = from.getDependencyTo(to);
+    assertNotNull(dependency);
+    assertEquals(expectedKind, dependency.getDependencyKind());
+
+    return dependency;
+
   }
 
 }
