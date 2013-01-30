@@ -10,11 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.handlers;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.bundlemaker.core.transformations.script.config.ITransformationScriptConfigManager;
-import org.bundlemaker.core.ui.handler.AbstractBundleMakerHandler;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -23,6 +19,7 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.preferences.IWorkingCopyManager;
 import org.eclipse.ui.preferences.WorkingCopyManager;
@@ -44,33 +41,45 @@ public class SetInitialTransformationsHandler extends AbstractHandler implements
   @Override
   public Object execute(ExecutionEvent event) throws ExecutionException {
 
-    List<IType> selectedTypes = AbstractBundleMakerHandler.getSelectedObject(HandlerUtil.getCurrentSelection(event),
-        IType.class);
 
-    if (selectedTypes.isEmpty()) {
-      return null;
+    ISelection currentSelection = HandlerUtil.getCurrentSelection(event);
+    // List<IType> selectedTypes = AbstractBundleMakerHandler.getSelectedObject(currentSelection,
+    // IType.class);
+    //
+    // if (selectedTypes.isEmpty()) {
+    // return null;
+    // }
+    //
+    // // build comma-delimited list of type names
+    // StringBuilder builder = new StringBuilder();
+    // Iterator<IType> iterator = selectedTypes.iterator();
+    //
+    // while (true) {
+    // builder.append(iterator.next().getFullyQualifiedName());
+    //
+    // if (!iterator.hasNext()) {
+    // break;
+    // }
+    //
+    // builder.append(',');
+    // }
+    IType selectedType;
+    try {
+      selectedType = TransformationScriptHandlerUtil.getTransformationScript(event, currentSelection);
+    } catch (Exception ex) {
+      throw new ExecutionException("Error while executing command: " + ex, ex);
     }
-
-    // build comma-delimited list of type names
-    StringBuilder builder = new StringBuilder();
-    Iterator<IType> iterator = selectedTypes.iterator();
-
-    while (true) {
-      builder.append(iterator.next().getFullyQualifiedName());
-
-      if (!iterator.hasNext()) {
-        break;
-      }
-
-      builder.append(',');
+    if (selectedType == null) {
+      return null;
     }
 
     // save preferences
     IWorkingCopyManager workingCopyManager = new WorkingCopyManager();
 
-    IScopeContext scopeContext = new ProjectScope(selectedTypes.get(0).getJavaProject().getProject());
+    IScopeContext scopeContext = new ProjectScope(selectedType.getJavaProject().getProject());
 
-    setStoredValue(ITransformationScriptConfigManager.PREF_KEY, scopeContext, builder.toString(), workingCopyManager);
+    setStoredValue(ITransformationScriptConfigManager.PREF_KEY, scopeContext, selectedType.getFullyQualifiedName(),
+        workingCopyManager);
     try {
       workingCopyManager.applyChanges();
     } catch (BackingStoreException e) {
