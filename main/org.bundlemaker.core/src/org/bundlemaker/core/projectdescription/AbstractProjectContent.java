@@ -334,7 +334,8 @@ public abstract class AbstractProjectContent implements IProjectContentEntry {
    * @param type
    * @return
    */
-  public final IResourceStandin createNewResourceStandin(String contentId, String root, String path, ProjectContentType type) {
+  protected IResourceStandin createNewResourceStandin(String contentId, String root, String path,
+      ProjectContentType type) {
 
     Assert.isNotNull(contentId);
     Assert.isNotNull(root);
