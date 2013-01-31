@@ -5,6 +5,7 @@ import java.util.Collection;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.itest.jedit_artifact_model.core.AbstractJeditTest;
+import org.bundlemaker.core.itestframework.ModuleUtils;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
@@ -16,7 +17,6 @@ import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;
-import org.bundlemaker.core.util.ModuleUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.junit.Test;
 

@@ -8,7 +8,7 @@ import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
-import org.bundlemaker.core.util.ModuleUtils;
+import org.bundlemaker.core.itestframework.ModuleUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Before;
