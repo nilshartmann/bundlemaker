@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,30 +18,6 @@ import java.util.Set;
  */
 @Deprecated
 public class ArtifactUtils {
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static List<IDependency> getAllLeafDependencies(Collection<IDependency> dependencies) {
-
-    if (dependencies == null) {
-      return Collections.emptyList();
-    }
-
-    //
-    final List<IDependency> result = new LinkedList<IDependency>();
-
-    for (IDependency dependency : dependencies) {
-      for (IDependency leafDependency : dependency.getCoreDependencies()) {
-        result.add(leafDependency);
-      }
-    }
-
-    return result;
-  }
 
   /**
    * <p>

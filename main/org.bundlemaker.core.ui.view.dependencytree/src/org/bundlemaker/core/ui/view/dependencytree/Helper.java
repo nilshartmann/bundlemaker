@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -58,7 +59,7 @@ public class Helper {
     Assert.isNotNull(dependencies);
 
     //
-    _unfilteredDependencies = ArtifactUtils.getAllLeafDependencies(dependencies);
+    _unfilteredDependencies = AnalysisModelQueries.getCoreDependencies(dependencies);
 
     //
     _sourceArtifactMap.clear();
@@ -77,7 +78,7 @@ public class Helper {
    * 
    * @param toArtifacts
    */
-  public Set<IBundleMakerArtifact> setToArtifacts(List<IBundleMakerArtifact> toArtifacts) {
+  public Set<IBundleMakerArtifact> setSelectedToArtifacts(List<IBundleMakerArtifact> toArtifacts) {
 
     //
     Assert.isNotNull(toArtifacts);
@@ -111,7 +112,7 @@ public class Helper {
    * @param fromArtifacts
    * @return
    */
-  public Set<IBundleMakerArtifact> setFromArtifacts(List<IBundleMakerArtifact> fromArtifacts) {
+  public Set<IBundleMakerArtifact> setSelectedFromArtifacts(List<IBundleMakerArtifact> fromArtifacts) {
 
     //
     Assert.isNotNull(fromArtifacts);
@@ -177,6 +178,26 @@ public class Helper {
    */
   public List<IDependency> getFilteredDependencies() {
     return _filteredDependencies;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<IBundleMakerArtifact, List<IDependency>> getTargetArtifactMap() {
+    return _targetArtifactMap;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<IBundleMakerArtifact, List<IDependency>> getSourceArtifactMap() {
+    return _sourceArtifactMap;
   }
 
   /**

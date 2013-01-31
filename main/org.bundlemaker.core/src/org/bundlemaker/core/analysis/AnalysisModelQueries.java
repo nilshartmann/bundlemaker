@@ -1,6 +1,7 @@
 package org.bundlemaker.core.analysis;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,30 @@ import org.eclipse.core.runtime.Assert;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AnalysisModelQueries {
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public static List<IDependency> getCoreDependencies(Collection<IDependency> dependencies) {
+
+    if (dependencies == null) {
+      return Collections.emptyList();
+    }
+
+    //
+    final List<IDependency> result = new LinkedList<IDependency>();
+
+    for (IDependency dependency : dependencies) {
+      for (IDependency coreDependency : dependency.getCoreDependencies()) {
+        result.add(coreDependency);
+      }
+    }
+
+    return result;
+  }
 
   /**
    * <p>
