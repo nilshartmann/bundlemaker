@@ -233,7 +233,6 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
         collectResult.getRoot().accept(new DependencyVisitorAdapter() {
           @Override
           public boolean visitEnter(DependencyNode node) {
-            System.out.println("visitEnter: " + node.getDependency());
             try {
               return handleDependencyNode(node, useRemoteRepository, alreadyHandled,
                   artifact.equals(node.getDependency().getArtifact()));

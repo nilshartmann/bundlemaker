@@ -150,7 +150,6 @@ public class Activator extends AbstractUIPlugin {
     // Try to get selection service
     ISelectionService selectionService = getSelectionService();
     if (selectionService != null) {
-      System.out.println("Register ProjectExplorerSelectionForwarder");
       // register forwarder
       _projectExplorerSelectionForwarder = new ProjectExplorerSelectionForwarder(Selection.instance()
           .getArtifactSelectionService());

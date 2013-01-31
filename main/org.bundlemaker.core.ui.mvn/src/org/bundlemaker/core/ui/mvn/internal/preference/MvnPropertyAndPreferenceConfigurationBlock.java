@@ -153,7 +153,6 @@ public class MvnPropertyAndPreferenceConfigurationBlock extends ConfigurationBlo
    */
   @Override
   public void initialize() {
-    System.out.println("perform defaults");
 
     //
     _text_localRepositoryPath.setText(getPage().getPreferenceStore().getString(

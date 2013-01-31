@@ -1,6 +1,5 @@
 package org.bundlemaker.core.ui.preferences;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -310,8 +309,6 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
           boolean enabled = ((SelectionButtonDialogField) field).isSelected();
           enableProjectSpecificSettings(enabled);
 
-          System.out.println("Enable");
-
           if (enabled && getData() != null) {
             applyData(getData());
           }
@@ -454,12 +451,6 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
     //
     IEclipsePreferences[] eclipsePreferences = ((ScopedPreferenceStore) getPreferenceStore())
         .getPreferenceNodes(false);
-
-    if (eclipsePreferences.length != 1) {
-      System.out.println("**********");
-      System.out.println(Arrays.asList(eclipsePreferences));
-      System.out.println("**********");
-    }
 
     return eclipsePreferences[0];
   }

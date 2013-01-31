@@ -52,8 +52,6 @@ public class InitialTransformationRunnerHook implements IBundleMakerProjectHook 
     String initialTransformationScriptPrefs = Platform.getPreferencesService().getString(Activator.PLUGIN_ID,
         "initialTransformationScripts", null, new IScopeContext[] { projectScope });
 
-    System.out.println("initialTransformationSCriptNames: " + initialTransformationScriptPrefs);
-
     if (initialTransformationScriptPrefs == null) {
       // no initial transformation scripts
       return;
