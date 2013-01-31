@@ -14,11 +14,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.ui.ErrorDialogUtil;
+import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 /**
@@ -88,8 +88,14 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
       BundleMakerUiUtils.logError("Error while parsing project: " + cause, cause);
 
       // Report error to user
-      MessageDialog.openError(Display.getCurrent().getActiveShell(), "Could not parse project",
-          String.format("Error while parsing project:%n%s%nSee Error Log for details", cause));
+      Throwable throwable = ErrorDialogUtil.getNestedNonCoreThrowable(cause);
+      ErrorDialogUtil.errorDialogWithStackTrace("Error while parsing project", throwable.getMessage(),
+          Activator.PLUGIN_ID,
+          throwable);
+
+      // MessageDialog.openError(Display.getCurrent().getActiveShell(), ,
+      // String.format(:%n%s%nSee Error Log for details", cause));
+
     } catch (InterruptedException ex) {
       // ignore. User has canceled the operation
     }
