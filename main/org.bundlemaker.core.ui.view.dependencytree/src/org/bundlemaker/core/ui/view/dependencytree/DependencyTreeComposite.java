@@ -237,8 +237,9 @@ public class DependencyTreeComposite extends Composite {
         TreeItem treeItem = _toTreeViewer.getTree().getTopItem();
 
         //
-        Set<IBundleMakerArtifact> visibleArtifacts = _helper.setFromArtifacts(Helper.toArtifactList(structuredSelection
-            .toList()));
+        Set<IBundleMakerArtifact> visibleArtifacts = _helper.setSelectedFromArtifacts(Helper
+            .toArtifactList(structuredSelection
+                .toList()));
         VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
         setSelectedDetailDependencies(_helper.getFilteredDependencies());
 
@@ -297,8 +298,9 @@ public class DependencyTreeComposite extends Composite {
         TreeItem treeItem = _fromTreeViewer.getTree().getTopItem();
 
         //
-        Set<IBundleMakerArtifact> visibleArtifacts = _helper.setToArtifacts(Helper.toArtifactList(structuredSelection
-            .toList()));
+        Set<IBundleMakerArtifact> visibleArtifacts = _helper.setSelectedToArtifacts(Helper
+            .toArtifactList(structuredSelection
+                .toList()));
         VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
         setSelectedDetailDependencies(_helper.getFilteredDependencies());
 
