@@ -314,7 +314,15 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
     ImageDescriptor imageDescriptor = PlatformUI.getWorkbench().getEditorRegistry()
         .getImageDescriptor(resourceArtifact.getAssociatedResource().getName());
 
-    return _imageMap.getOrCreate(imageDescriptor);
+    Image image = _imageMap.getOrCreate(imageDescriptor);
+    if (image.isDisposed()) {
+      _imageMap.remove(imageDescriptor);
+
+      //
+      image = _imageMap.getOrCreate(imageDescriptor);
+
+    }
+    return image;
     // return ArtifactImages.RESOURCE_ARTIFACT_ICON.getImage();
   }
 
@@ -334,6 +342,8 @@ public class DefaultArtifactLabelProvider implements ILabelProvider {
     for (Image image : _imageMap.values()) {
       image.dispose();
     }
+
+    _imageMap.clear();
   }
 
   /**

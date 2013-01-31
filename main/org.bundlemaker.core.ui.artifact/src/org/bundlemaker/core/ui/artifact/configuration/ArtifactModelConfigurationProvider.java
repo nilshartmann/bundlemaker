@@ -104,8 +104,12 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
    * </p>
    */
   public void store() {
+    // Store Boolean values as Strings, otherwise they were never stored, in case
+    // the default value in DEFAULT_CONFIGURATION is 'false'
     _store.setValue(PREF_CONTENT_TYPE, _configuration.getContentType().toString());
-    _store.setValue(PREF_VIRTUAL_MODULE, _configuration.isIncludeVirtualModuleForMissingTypes());
-    _store.setValue(PREF_HIERARCHICAL_PACKAGES, _configuration.isHierarchicalPackages());
+    _store.setValue(PREF_HIERARCHICAL_PACKAGES,
+        String.valueOf(
+            _configuration.isHierarchicalPackages()));
+    _store.setValue(PREF_VIRTUAL_MODULE, String.valueOf(_configuration.isIncludeVirtualModuleForMissingTypes()));
   }
 }
