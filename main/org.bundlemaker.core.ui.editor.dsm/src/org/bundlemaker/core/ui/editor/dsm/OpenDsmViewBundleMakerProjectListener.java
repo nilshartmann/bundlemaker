@@ -14,8 +14,6 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
-import org.bundlemaker.core.ui.artifact.configuration.ArtifactModelConfigurationProvider;
-import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.event.IBundleMakerProjectOpenedEvent;
 import org.bundlemaker.core.ui.event.IBundleMakerProjectOpenedEventListener;
 import org.eclipse.core.runtime.CoreException;

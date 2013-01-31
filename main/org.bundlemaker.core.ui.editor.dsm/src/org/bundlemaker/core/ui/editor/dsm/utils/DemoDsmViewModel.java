@@ -119,4 +119,9 @@ public class DemoDsmViewModel extends AbstractDsmViewModel {
   public boolean isToggled() {
     return true;
   }
+
+@Override
+protected String[] doGetDisplayLabels() {
+	return createLabels();
+}
 }

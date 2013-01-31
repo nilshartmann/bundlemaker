@@ -99,8 +99,6 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
     // draw the last line
     graphics.drawLine(getSize().width, 0, getSize().width, getSize().height);
 
-    boolean useShortendLabels = getModel().isUseShortendLabels();
-
     // rotate
     if (_rotateText) {
 
@@ -112,7 +110,7 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
 
         graphics.setForegroundColor(getModel().getConfiguration().getSideMarkerTextColor());
 
-        graphics.drawString(useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i],
+        graphics.drawString(getModel().getDisplayLabels()[i],
             new Point(10, (((getModel().getItemCount() - (i + 1)) * getModel().getConfiguration()
                 .getHorizontalBoxSize())) + offset));
       }
@@ -126,7 +124,7 @@ public class HorizontalSideMarker extends AbstractSideMarker implements ISideMar
       int fontHeight = getFont().getFontData()[0].getHeight() + 2;
       int horizontalBoxSize = getModel().getConfiguration().getHorizontalBoxSize();
       for (int i = 0; i < getModel().getItemCount(); i++) {
-        String label = useShortendLabels ? getModel().getShortendLabels()[i] : getModel().getLabels()[i];
+        String label = getModel().getDisplayLabels()[i];
         int offset = i * horizontalBoxSize + centerOffset;
         for (int j = 0; j < label.length(); j++) {
           String currentChar = label.substring(j, j + 1);
