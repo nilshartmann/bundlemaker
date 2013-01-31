@@ -122,5 +122,11 @@ public interface IProjectContentEntry {
    */
   Set<? extends IResource> getSourceResources();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   Map<String, Object> getUserAttributes();
 }

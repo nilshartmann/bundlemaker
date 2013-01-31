@@ -75,20 +75,43 @@ public abstract class ConfigurationBlock extends Composite {
    * <p>
    * </p>
    * 
+   */
+  public abstract void initialize();
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @return
    */
   public abstract boolean performOk();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public boolean performApply() {
     return performOk();
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public boolean performCancel() {
     return true;
   }
 
+  /**
+   * <p>
+   * </p>
+   */
   public void performHelp() {
-
+    //
   }
 
   /**

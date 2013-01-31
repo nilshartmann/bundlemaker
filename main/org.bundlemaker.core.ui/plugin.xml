@@ -547,10 +547,10 @@
     </page>
  </extension>
  
-  <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPreferencesPage"
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPropertyPage"
           id="org.bundlemaker.core.ui.property.bundlemakerpage"
           name="BundleMaker">
         <enabledWhen>
@@ -565,8 +565,8 @@
             </adapt>
           </and>
         </enabledWhen>
-      </page>
-  </extension>
+    </page>
+ </extension>
  
  <extension
        point="org.eclipse.core.runtime.preferences">

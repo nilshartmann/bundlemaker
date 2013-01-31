@@ -46,6 +46,18 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    */
   public void setProjectDescription(BundleMakerProjectDescription description) {
     _projectDescription = description;
+
+    init(description);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param description
+   */
+  protected void init(IProjectDescription description) {
+
   }
 
   /**

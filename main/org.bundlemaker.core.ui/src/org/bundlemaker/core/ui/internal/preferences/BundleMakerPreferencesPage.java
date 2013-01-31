@@ -26,7 +26,7 @@ public class BundleMakerPreferencesPage extends AbstractPropertyAndPreferencesPa
    */
   @Override
   protected String getPropertyPageID() {
-    return "org.bundlemaker.core.ui.property.bundlemakerpage";
+    return null;
   }
 
   /**

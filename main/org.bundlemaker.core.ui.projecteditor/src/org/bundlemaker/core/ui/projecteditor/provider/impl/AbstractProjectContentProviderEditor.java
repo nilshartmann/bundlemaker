@@ -17,6 +17,8 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.ui.ErrorDialogUtil;
+import org.bundlemaker.core.ui.projecteditor.Activator;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
 import org.eclipse.core.runtime.CoreException;
@@ -131,47 +133,108 @@ public abstract class AbstractProjectContentProviderEditor implements IProjectCo
 
     GetBundleMakerProjectContentRunnable runnable = new GetBundleMakerProjectContentRunnable(bundleMakerProject,
         projectContentProvider);
+
     try {
       PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
     } catch (InvocationTargetException e) {
       e.printStackTrace();
     } catch (InterruptedException e) {
       // ignore
+      e.printStackTrace();
+    }
+
+    if (runnable.hasThrowable()) {
+
+      //
+      String pluginId = runnable.getThrowable() instanceof CoreException ? ((CoreException) runnable.getThrowable())
+          .getStatus().getPlugin() : Activator.PLUGIN_ID;
+
+      //
+      ErrorDialogUtil.errorDialogWithStackTrace("Error", runnable.getThrowable().getMessage(),
+          pluginId, ErrorDialogUtil.getNestedNonCoreThrowable(runnable.getThrowable()));
     }
 
     return runnable.getBundleMakerProjectContent();
-
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
   class GetBundleMakerProjectContentRunnable implements IRunnableWithProgress {
 
+    /** - */
     private final IBundleMakerProject     _bundleMakerProject;
 
+    /** - */
     private final IProjectContentProvider _projectContentProvider;
 
-    List<IProjectContentEntry>            _bundleMakerProjectContent;
+    /** - */
+    private List<IProjectContentEntry>    _bundleMakerProjectContent;
 
+    /** - */
+    private Throwable                     _throwable;
+
+    /**
+     * <p>
+     * Creates a new instance of type {@link GetBundleMakerProjectContentRunnable}.
+     * </p>
+     * 
+     * @param bundleMakerProject
+     * @param provider
+     */
     private GetBundleMakerProjectContentRunnable(IBundleMakerProject bundleMakerProject,
         IProjectContentProvider provider) {
       this._bundleMakerProject = bundleMakerProject;
       this._projectContentProvider = provider;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run(IProgressMonitor monitor)
         throws InvocationTargetException, InterruptedException {
+
+      //
       try {
         _bundleMakerProjectContent = _projectContentProvider.getBundleMakerProjectContent(monitor,
             _bundleMakerProject);
-      } catch (CoreException e) {
-        throw new InvocationTargetException(e);
+      } catch (Throwable e) {
+        _throwable = e;
       }
     }
 
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
     public List<IProjectContentEntry> getBundleMakerProjectContent() {
       return _bundleMakerProjectContent;
     }
 
-  }
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public Throwable getThrowable() {
+      return _throwable;
+    }
 
+    /**
+     * <p>
+     * </p>
+     * 
+     * @return
+     */
+    public boolean hasThrowable() {
+      return _throwable != null;
+    }
+  }
 }

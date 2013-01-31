@@ -3,6 +3,7 @@ package org.bundlemaker.core.ui.internal.preferences;
 import org.bundlemaker.core.ui.preferences.AbstractPropertyAndPreferencesPage;
 import org.bundlemaker.core.ui.preferences.ConfigurationBlock;
 import org.bundlemaker.core.ui.preferences.RadioGroupDialogField;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -37,9 +38,22 @@ public class BundleMakerPreferencesConfigurationBlock extends ConfigurationBlock
 
     // create the radio group
     _radioGroup = createRadioGroup(this, "Open BM Perspective after opening a BM project:",
-        new String[] { "Always",
-            "Never", "Prompt" },
-        new String[] { "Always", "Never", "Prompt" }, SWT.HORIZONTAL);
+        new String[] { MessageDialogWithToggle.ALWAYS,
+            MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT },
+        new Object[] { MessageDialogWithToggle.ALWAYS,
+            MessageDialogWithToggle.NEVER, MessageDialogWithToggle.PROMPT }, SWT.HORIZONTAL);
+  }
+
+  @Override
+  public void initialize() {
+
+    //
+    String pref = getPage().getPreferenceStore().getString(
+        BundleMakerPreferenceInitializer.PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN);
+
+    //
+    _radioGroup.setSelection(pref != null ? pref
+        : MessageDialogWithToggle.PROMPT);
   }
 
   /**
@@ -50,14 +64,12 @@ public class BundleMakerPreferencesConfigurationBlock extends ConfigurationBlock
   public void performDefaults() {
 
     //
-    String currentSelection = getPage().getPreferenceStore().getString(
+    String pref = getPage().getPreferenceStore().getString(
         BundleMakerPreferenceInitializer.PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN);
 
     //
-    currentSelection = currentSelection != null ? currentSelection : "Prompt";
-
-    //
-    _radioGroup.setSelection(currentSelection);
+    _radioGroup.setSelection(pref != null ? pref
+        : MessageDialogWithToggle.PROMPT);
   }
 
   /**

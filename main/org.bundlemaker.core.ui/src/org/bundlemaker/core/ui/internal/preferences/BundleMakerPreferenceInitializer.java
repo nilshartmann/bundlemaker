@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.internal.preferences;
 
 import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -23,13 +24,12 @@ public class BundleMakerPreferenceInitializer extends AbstractPreferenceInitiali
   public static final String PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN = Activator.PLUGIN_ID
                                                                             + ".switch_to_perspective_on_open";
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
    */
   @Override
   public void initializeDefaultPreferences() {
-    Activator.getDefault().getPreferenceStore().setDefault(PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN, "prompt");
+    Activator.getDefault().getPreferenceStore()
+        .setDefault(PREF_SWITCH_TO_PERSPECTIVE_ON_PROJECT_OPEN, MessageDialogWithToggle.PROMPT);
   }
 }

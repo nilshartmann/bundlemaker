@@ -106,6 +106,8 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
   @Override
   protected void performDefaults() {
     super.performDefaults();
+
+    //
     if (_configurationBlock != null) {
 
       //
@@ -150,6 +152,14 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
   protected boolean hasProjectSpecificOptions(IProject project) {
     return _configurationBlock != null && _configurationBlock.hasProjectSpecificOptions(project);
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public abstract String getStoreIdentifier();
 
   /**
    * <p>
@@ -454,13 +464,17 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
     return eclipsePreferences[0];
   }
 
-  /*****************/
-
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void init(IWorkbench workbench) {
-    System.out.println(workbench);
+    //
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected IPreferenceStore doGetPreferenceStore() {
 
@@ -479,8 +493,9 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
     }
   }
 
-  public abstract String getStoreIdentifier();
-
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected Control createContents(Composite parent) {
     Composite composite = new Composite(parent, SWT.NONE);
@@ -495,8 +510,9 @@ public abstract class AbstractPropertyAndPreferencesPage extends PreferencePage 
     _configurationBlock.setLayoutData(data);
 
     //
-    performDefaults();
+    _configurationBlock.initialize();
 
+    //
     if (isProjectPreferencePage()) {
       boolean useProjectSettings = hasProjectSpecificOptions(getProject());
       enableProjectSpecificSettings(useProjectSettings);
