@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.xref;
 
-import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
@@ -77,7 +77,7 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
       if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts()) {
 
         //
-        _composite.setDependencies(ArtifactUtils.getAllLeafDependencies(getCurrentArtifactSelection()
+        _composite.setDependencies(AnalysisModelQueries.getCoreDependencies(getCurrentArtifactSelection()
             .getRootArtifact().getDependenciesTo()));
 
       }
