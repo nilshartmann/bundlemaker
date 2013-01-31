@@ -12,6 +12,10 @@ import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.apache.maven.settings.Mirror;
 import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Settings;
+import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
+import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
+import org.apache.maven.settings.building.SettingsBuilder;
+import org.apache.maven.settings.building.SettingsBuildingException;
 import org.bundlemaker.core.mvn.internal.aether.ManualRepositorySystemFactory;
 import org.eclipse.core.runtime.Assert;
 import org.sonatype.aether.RepositorySystem;
@@ -29,35 +33,69 @@ import org.sonatype.aether.util.repository.DefaultProxySelector;
  */
 public class MvnSettingsBasedRepositoryAdapter implements IAetherRepositoryAdapter {
 
-  private static final String    LATEST_VERSION_RANGE = "(0.0,]";
+  /** - */
+  private static final SettingsBuilder settingsBuilder      = new DefaultSettingsBuilderFactory()
+                                                                .newInstance();
 
-  private static final String    REPO_TYPE            = "default";
+  /** - */
+  private File                         _userSettingsFile;
 
-  final private MirrorSelector   _mirrorSelector;
+  /** - */
+  private File                         _globalSettingsFile;
 
-  final private ProxySelector    _proxySelector;
+  private static final String          LATEST_VERSION_RANGE = "(0.0,]";
 
-  final private RepositorySystem _repositorySystem;
+  private static final String          REPO_TYPE            = "default";
 
-  private Settings               _settings;
+  final private MirrorSelector         _mirrorSelector;
+
+  final private ProxySelector          _proxySelector;
+
+  final private RepositorySystem       _repositorySystem;
+
+  private Settings                     _settings;
 
   /**
    * <p>
    * Creates a new instance of type {@link MvnSettingsBasedRepositoryAdapter}.
    * </p>
    * 
-   * @param settings
-   * @throws MalformedURLException
+   * @param userSettingsFile
+   * @param globalSettingsFile
    */
-  public MvnSettingsBasedRepositoryAdapter(Settings settings) {
+  public MvnSettingsBasedRepositoryAdapter(File userSettingsFile, File globalSettingsFile) {
 
     //
-    _settings = settings;
+    _userSettingsFile = userSettingsFile;
+    _globalSettingsFile = globalSettingsFile;
+
+    //
+    _settings = getSettings(userSettingsFile, globalSettingsFile);
 
     //
     _proxySelector = selectProxies();
     _mirrorSelector = selectMirrors();
     _repositorySystem = ManualRepositorySystemFactory.newRepositorySystem();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public File getUserSettingsFile() {
+    return _userSettingsFile;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public File getGlobalSettingsFile() {
+    return _globalSettingsFile;
   }
 
   /**
@@ -84,7 +122,23 @@ public class MvnSettingsBasedRepositoryAdapter implements IAetherRepositoryAdapt
 
     //
     List<RemoteRepository> remoteRepos = AetherUtils.getRemoteRepositories(_settings);
+
+    // add the default repo
+    RemoteRepository defaultRepo = new RemoteRepository();
+    defaultRepo.setId("central");
+    defaultRepo.setContentType("default");
+    defaultRepo.setUrl("http://repo1.maven.org/maven2");
+    defaultRepo.setPolicy(false, null);
+    remoteRepos.add(defaultRepo);
+
     assignProxyAndMirrors(remoteRepos);
+
+    //
+    for (RemoteRepository repository : remoteRepos) {
+
+      //
+      repository.getId();
+    }
 
     //
     return remoteRepos;
@@ -311,4 +365,45 @@ public class MvnSettingsBasedRepositoryAdapter implements IAetherRepositoryAdapt
     //
     return null;
   }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public static Settings getSettings(File userSettingsFile, File globalSettingsFile)
+  {
+    //
+    Settings settings;
+
+    //
+    DefaultSettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
+    request.setUserSettingsFile(userSettingsFile);
+    request.setGlobalSettingsFile(globalSettingsFile);
+
+    // TODO:
+    // request.setSystemProperties(getSystemProperties());
+    // request.setUserProperties(getUserProperties());
+
+    try
+    {
+      settings = settingsBuilder.build(request).getEffectiveSettings();
+
+      // SettingsDecryptionResult result =
+      // settingDecrypter.decrypt(new DefaultSettingsDecryptionRequest(settings));
+      // settings.setServers(result.getServers());
+      // settings.setProxies(result.getProxies());
+
+      return settings;
+
+    } catch (SettingsBuildingException e)
+    {
+      e.printStackTrace();
+      // project.log("Could not process settings.xml: " + e.getMessage(), e, Project.MSG_WARN);
+
+      throw new RuntimeException(e.getMessage(), e);
+    }
+  }
+
 }

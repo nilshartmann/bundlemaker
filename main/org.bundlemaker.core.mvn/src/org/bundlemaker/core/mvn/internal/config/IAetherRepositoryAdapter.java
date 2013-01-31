@@ -3,6 +3,7 @@ package org.bundlemaker.core.mvn.internal.config;
 import java.io.IOException;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.repository.RemoteRepository;
@@ -21,7 +22,7 @@ public interface IAetherRepositoryAdapter {
    * 
    * @return
    */
-  RepositorySystem getRepositorySystem();
+  RepositorySystem getRepositorySystem() throws CoreException;
 
   /**
    * <p>
@@ -29,7 +30,7 @@ public interface IAetherRepositoryAdapter {
    * 
    * @return
    */
-  RepositorySystemSession newSession();
+  RepositorySystemSession newSession() throws CoreException;
 
   /**
    * <p>
@@ -38,5 +39,5 @@ public interface IAetherRepositoryAdapter {
    * @return
    * @throws IOException
    */
-  List<RemoteRepository> getRemoteRepositories();
+  List<RemoteRepository> getRemoteRepositories() throws CoreException;
 }

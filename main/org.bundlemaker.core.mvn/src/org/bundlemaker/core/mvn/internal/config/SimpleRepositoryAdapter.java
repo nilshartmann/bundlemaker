@@ -66,6 +66,26 @@ public class SimpleRepositoryAdapter implements IAetherRepositoryAdapter {
   }
 
   /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public File getLocalRepo() {
+    return _localRepo;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public String getRemoteRepoUrl() {
+    return _remoteRepoUrl;
+  }
+
+  /**
    * {@inheritDoc}
    */
   @Override
@@ -82,7 +102,6 @@ public class SimpleRepositoryAdapter implements IAetherRepositoryAdapter {
 
     // session.setTransferListener( new ConsoleTransferListener() );
     // session.setRepositoryListener( new ConsoleRepositoryListener() );
-
     // uncomment to generate dirty trees
     // session.setDependencyGraphTransformer( null );
 

@@ -1,11 +1,11 @@
 package org.bundlemaker.core.ui.mvn;
 
 import org.bundlemaker.core.mvn.content.MvnContentProvider;
+import org.bundlemaker.core.ui.ErrorDialogUtil;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -13,7 +13,7 @@ import org.eclipse.ui.progress.IProgressService;
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractMvnProjectContentProviderEditorAction extends Action {
@@ -48,6 +48,9 @@ public abstract class AbstractMvnProjectContentProviderEditorAction extends Acti
     // get the progress services
     IProgressService ps = PlatformUI.getWorkbench().getProgressService();
 
+    /** - */
+    final Exception[] exception = new Exception[1];
+
     //
     try {
       ps.busyCursorWhile(new IRunnableWithProgress() {
@@ -59,27 +62,25 @@ public abstract class AbstractMvnProjectContentProviderEditorAction extends Acti
             try {
               doWithMvnContentProvider((MvnContentProvider) element.getProjectContentProvider());
             } catch (Exception e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
+              exception[0] = e;
             }
           }
         }
       });
+
+      if (exception[0] != null) {
+        throw exception[0];
+      }
+
     } catch (Exception e) {
-
-      // TODO
-      MessageDialog dialog = new MessageDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), "My Title",
-          null,
-          "My message", MessageDialog.ERROR, new String[] { "First",
-              "Second", "Third" }, 0);
-
-      dialog.open();
+      ErrorDialogUtil.errorDialogWithStackTrace("Error", e.getMessage(), Activator.PLUGIN_ID,
+          ErrorDialogUtil.getNestedNonCoreThrowable(e));
     }
   }
 
   /**
    * <p>
-   * Must be overridden to 
+   * Must be overridden to
    * </p>
    * 
    * @param element

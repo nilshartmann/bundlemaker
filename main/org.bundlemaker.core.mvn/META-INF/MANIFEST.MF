@@ -28,10 +28,11 @@ Bundle-ClassPath: .,
 Require-Bundle: org.bundlemaker.core;bundle-version="0.9.0",
  org.eclipse.core.runtime;bundle-version="3.6.0",
  org.eclipse.core.resources;bundle-version="3.8.1"
-Export-Package: org.bundlemaker.core.mvn.content,
+Export-Package: org.bundlemaker.core.mvn,
+ org.bundlemaker.core.mvn.content,
  org.bundlemaker.core.mvn.content.xml,
  org.bundlemaker.core.mvn.exporter,
  org.bundlemaker.core.mvn.preferences
-Bundle-Activator: org.bundlemaker.core.mvn.internal.MvnCoreActivator
+Bundle-Activator: org.bundlemaker.core.mvn.MvnCoreActivator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: bundlemaker.org

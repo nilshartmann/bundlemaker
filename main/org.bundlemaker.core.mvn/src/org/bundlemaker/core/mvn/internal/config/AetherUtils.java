@@ -11,6 +11,7 @@ import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
 import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
+import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.IScopeContext;
@@ -28,22 +29,6 @@ import org.sonatype.aether.repository.RemoteRepository;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AetherUtils {
-
-  /** SETTINGS_XML */
-  public static final String           SETTINGS_XML                    = "settings.xml";
-
-  /** - */
-  private static final String          ORG_ECLIPSE_M2E_CORE            = "org.eclipse.m2e.core";
-
-  /** - */
-  private static final String          ECLIPSE_M2_GLOBAL_SETTINGS_FILE = "eclipse.m2.globalSettingsFile";
-
-  /** - */
-  private static final String          ECLIPSE_M2_USER_SETTINGS_FILE   = "eclipse.m2.userSettingsFile";
-
-  /** - */
-  private static final SettingsBuilder settingsBuilder                 = new DefaultSettingsBuilderFactory()
-                                                                           .newInstance();
 
   /**
    * <p>
@@ -97,87 +82,22 @@ public class AetherUtils {
     return remoteRepository;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static File getM2eUserSettings() {
-
-    //
-    return readPreferenceAndConvertToFile(ECLIPSE_M2_USER_SETTINGS_FILE,
-        InstanceScope.INSTANCE.getNode(ORG_ECLIPSE_M2E_CORE));
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static File getM2eGlobalSettings() {
-
-    //
-    return readPreferenceAndConvertToFile(ECLIPSE_M2_GLOBAL_SETTINGS_FILE,
-        InstanceScope.INSTANCE.getNode(ORG_ECLIPSE_M2E_CORE));
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static Settings getSettings(File userSettingsFile, File globalSettingsFile)
-  {
-    //
-    Settings settings;
-
-    //
-    DefaultSettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
-    request.setUserSettingsFile(userSettingsFile);
-    request.setGlobalSettingsFile(globalSettingsFile);
-
-    // TODO:
-    // request.setSystemProperties(getSystemProperties());
-    // request.setUserProperties(getUserProperties());
-
-    try
-    {
-      settings = settingsBuilder.build(request).getEffectiveSettings();
-
-      // SettingsDecryptionResult result =
-      // settingDecrypter.decrypt(new DefaultSettingsDecryptionRequest(settings));
-      // settings.setServers(result.getServers());
-      // settings.setProxies(result.getProxies());
-
-      return settings;
-    } catch (SettingsBuildingException e)
-    {
-      e.printStackTrace();
-      // project.log("Could not process settings.xml: " + e.getMessage(), e, Project.MSG_WARN);
-
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static File getGlobalSettings()
-  {
-    String mavenHome = getMavenHome();
-    if (mavenHome != null)
-    {
-      return new File(new File(mavenHome, "conf"), SETTINGS_XML);
-    }
-
-    return null;
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // public static File getGlobalSettings()
+  // {
+  // String mavenHome = getMavenHome();
+  // if (mavenHome != null)
+  // {
+  // return new File(new File(mavenHome, "conf"), MvnCoreActivator.SETTINGS_XML);
+  // }
+  //
+  // return null;
+  // }
 
   /**
    * <p>
@@ -190,23 +110,23 @@ public class AetherUtils {
     return System.getenv("M2_HOME");
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public static File getDefaultUserSettings()
-  {
-    // user home
-    File userHome = new File(System.getProperty("user.home"));
-
-    //
-    File result = new File(new File(userHome, ".m2"), SETTINGS_XML);
-
-    //
-    return result.isFile() ? result : null;
-  }
+  // /**
+  // * <p>
+  // * </p>
+  // *
+  // * @return
+  // */
+  // public static File getDefaultUserSettings()
+  // {
+  // // user home
+  // File userHome = new File(System.getProperty("user.home"));
+  //
+  // //
+  // File result = new File(new File(userHome, ".m2"), MvnCoreActivator.SETTINGS_XML);
+  //
+  // //
+  // return result.isFile() ? result : null;
+  // }
 
   /**
    * <p>
@@ -215,7 +135,7 @@ public class AetherUtils {
    * @param key
    * @return
    */
-  private static File readPreferenceAndConvertToFile(String key, IEclipsePreferences preferences) {
+  public static File readPreferenceAndConvertToFile(String key, IEclipsePreferences preferences) {
 
     //
     Assert.isNotNull(key);
