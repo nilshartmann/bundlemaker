@@ -64,18 +64,6 @@ public interface IDependency extends Edge {
 
   /**
    * @param key
-   * @param value
-   */
-  void setProperty(String key, Object value);
-
-  /**
-   * @param key
-   * @return
-   */
-  Object removeProperty(String key);
-
-  /**
-   * @param key
    * @return
    */
   Object getProperty(String key);

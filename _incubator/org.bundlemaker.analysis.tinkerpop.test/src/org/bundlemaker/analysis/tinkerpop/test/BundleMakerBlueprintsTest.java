@@ -52,6 +52,14 @@ import com.tinkerpop.blueprints.Vertex;
 @RunWith(Parameterized.class)
 public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest {
 
+  final String         R1    = "Interface1-Class1";
+
+  final String         R2    = "Class1-Class2";
+
+  final String         R3    = "Class2-Interface1";
+
+  final String         R4    = "Class2-Class1";
+
   private ElementCache cache = null;
 
   interface CacheFactory {
@@ -107,19 +115,19 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
     // r1
     IDependency r1 = getDependency(if1, cl1, DependencyKind.USES);
-    r1.setProperty("name", "r1");
+    assertEquals(R1, r1.getProperty("name"));
 
     // r2
     IDependency r2 = getDependency(cl1, cl2, DependencyKind.USES);
-    r2.setProperty("name", "r2");
+    assertEquals(R2, r2.getProperty("name"));
 
     // r3
     IDependency r3 = getDependency(cl2, if1, DependencyKind.IMPLEMENTS);
-    r3.setProperty("name", "r3");
+    assertEquals(R3, r3.getProperty("name"));
 
     // r4
     IDependency r4 = getDependency(cl2, cl1, DependencyKind.USES);
-    r4.setProperty("name", "r4");
+    assertEquals(R4, r4.getProperty("name"));
   }
 
   @Test
@@ -144,7 +152,7 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
   @Test
   public void testEdgeId() {
-    Edge e = getEdge("r1");
+    Edge e = getEdge(R1);
     assertNotNull(e.getId());
   }
 
@@ -189,22 +197,22 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
   @Test
   public void testEdge1() {
-    assertNotNull(getEdge("r1"));
+    assertNotNull(getEdge(R1));
   }
 
   @Test
   public void testEdge2() {
-    assertNotNull(getEdge("r2"));
+    assertNotNull(getEdge(R2));
   }
 
   @Test
   public void testEdge3() {
-    assertNotNull(getEdge("r3"));
+    assertNotNull(getEdge(R3));
   }
 
   @Test
   public void testEdge4() {
-    assertNotNull(getEdge("r4"));
+    assertNotNull(getEdge(R4));
   }
 
   @Test
@@ -214,7 +222,7 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
     Vertex cl1 = getVertex("com.example.Class1");
     Vertex cl2 = getVertex("com.example.Class2");
-    Edge r2 = getEdge("r2");
+    Edge r2 = getEdge(R2);
     assertNotNull(r2);
 
     // System.out.println(r2);
@@ -252,8 +260,8 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
     Vertex cl1 = getVertex("com.example.Class1");
     Iterator<Edge> in = getBlueprintsAdapter().getInEdges(cl1);
-    Edge r1 = getEdge("r1");
-    Edge r4 = getEdge("r4");
+    Edge r1 = getEdge(R1);
+    Edge r4 = getEdge(R4);
     assertTrue(contains(in, r1, r4));
   }
 
@@ -264,7 +272,7 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
     Vertex if1 = getVertex("com.example.Interface1");
     Iterator<Edge> in = getBlueprintsAdapter().getInEdges(if1);
-    Edge r3 = getEdge("r3");
+    Edge r3 = getEdge(R3);
     assertTrue(contains(in, r3));
   }
 
@@ -289,8 +297,8 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
     Vertex cl2 = getVertex("com.example.Class2");
     Iterator<Edge> out = getBlueprintsAdapter().getOutEdges(cl2);
-    Edge r3 = getEdge("r3");
-    Edge r4 = getEdge("r4");
+    Edge r3 = getEdge(R3);
+    Edge r4 = getEdge(R4);
     assertTrue(contains(out, r3, r4));
   }
 
@@ -301,7 +309,7 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
 
     Vertex if1 = getVertex("com.example.Interface1");
     Iterator<Edge> out = getBlueprintsAdapter().getOutEdges(if1);
-    Edge r1 = getEdge("r1");
+    Edge r1 = getEdge(R1);
     assertTrue(contains(out, r1));
   }
 
@@ -317,23 +325,23 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
   @Test
   public void testEdgeTypes1() {
     Assume.assumeTrue(cache instanceof WrappingCache);
-    assertTrue(getEdge("r1") instanceof WrappingCache.GEdge);
-    assertTrue(getEdge("r2") instanceof WrappingCache.GEdge);
-    assertTrue(getEdge("r3") instanceof WrappingCache.GEdge);
-    assertTrue(getEdge("r4") instanceof WrappingCache.GEdge);
+    assertTrue(getEdge(R1) instanceof WrappingCache.GEdge);
+    assertTrue(getEdge(R2) instanceof WrappingCache.GEdge);
+    assertTrue(getEdge(R3) instanceof WrappingCache.GEdge);
+    assertTrue(getEdge(R4) instanceof WrappingCache.GEdge);
   }
 
   @Test
   public void testVertexTypes2() {
     Assume.assumeTrue(cache instanceof WrappingCache);
-    assertTrue(getBlueprintsAdapter().getStart(getEdge("r1")) instanceof WrappingCache.GVertex);
-    assertTrue(getBlueprintsAdapter().getEnd(getEdge("r1")) instanceof WrappingCache.GVertex);
-    assertTrue(getBlueprintsAdapter().getStart(getEdge("r2")) instanceof WrappingCache.GVertex);
-    assertTrue(getBlueprintsAdapter().getEnd(getEdge("r2")) instanceof WrappingCache.GVertex);
-    assertTrue(getBlueprintsAdapter().getStart(getEdge("r3")) instanceof WrappingCache.GVertex);
-    assertTrue(getBlueprintsAdapter().getEnd(getEdge("r3")) instanceof WrappingCache.GVertex);
-    assertTrue(getBlueprintsAdapter().getStart(getEdge("r4")) instanceof WrappingCache.GVertex);
-    assertTrue(getBlueprintsAdapter().getEnd(getEdge("r4")) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getStart(getEdge(R1)) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getEnd(getEdge(R1)) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getStart(getEdge(R2)) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getEnd(getEdge(R2)) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getStart(getEdge(R3)) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getEnd(getEdge(R3)) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getStart(getEdge(R4)) instanceof WrappingCache.GVertex);
+    assertTrue(getBlueprintsAdapter().getEnd(getEdge(R4)) instanceof WrappingCache.GVertex);
   }
 
   @Test
@@ -408,32 +416,32 @@ public class BundleMakerBlueprintsTest extends AbstractBundleMakerBlueprintsTest
     // System.out.println(e);
     // }
 
-    assertEquals(inherits.get(0), getEdge("r3"));
-    assertEquals(uses.get(0), getEdge("r1"));
-    assertEquals(uses.get(1), getEdge("r2"));
+    assertEquals(inherits.get(0), getEdge(R3));
+    assertEquals(uses.get(0), getEdge(R1));
+    assertEquals(uses.get(1), getEdge(R2));
   }
 
   @Test
   public void bm_testTypeEdge1() {
-    Edge edge = getEdge("r1");
+    Edge edge = getEdge(R1);
     assertEquals("uses", edge.getProperty("type"));
   }
 
   @Test
   public void bm_testTypeEdge2() {
-    Edge edge = getEdge("r2");
+    Edge edge = getEdge(R2);
     assertEquals("uses", edge.getProperty("type"));
   }
 
   @Test
   public void bm_testTypeEdge3() {
-    Edge edge = getEdge("r3");
+    Edge edge = getEdge(R3);
     assertEquals("implements", edge.getProperty("type"));
   }
 
   @Test
   public void bm_testTypeEdge4() {
-    Edge edge = getEdge("r4");
+    Edge edge = getEdge(R4);
     assertEquals("uses", edge.getProperty("type"));
   }
 

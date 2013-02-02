@@ -226,8 +226,7 @@ public class Dependency implements IDependency {
 
   @Override
   public void setProperty(String key, Object value) {
-    properties().put(key, value);
-
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -237,7 +236,7 @@ public class Dependency implements IDependency {
    */
   @Override
   public Object removeProperty(String key) {
-    return properties().remove(key);
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -299,10 +298,27 @@ public class Dependency implements IDependency {
   }
 
   /**
+   * Sets the default properties for a Dependency.
+   * 
+   * <table>
+   * <tr>
+   * <th>Name</th>
+   * <th>Value</th>
+   * </tr>
+   * <tr>
+   * <td>type</td>
+   * <td>Uses, Implements, Extends, see {@link DependencyKind}</td>
+   * </tr>
+   * <tr>
+   * <td>name</td>
+   * <td>Name of this dependency following this convention: from.name-to.name</td>
+   * </table>
+   * 
    * @param properties
    */
   protected void addDefaultProperties(Map<String, Object> properties) {
     properties.put("type", getDependencyKind().name().toLowerCase());
+    properties.put("name", getFrom().getName() + "-" + getTo().getName());
   }
 
 }
