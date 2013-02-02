@@ -84,6 +84,11 @@ public class VirtualModule2IArtifact extends AbstractArtifactContainer implement
   }
 
   @Override
+  protected String getArtifactType() {
+    return "virtualmodule";
+  }
+
+  @Override
   public String handleCanAdd(IBundleMakerArtifact artifact) {
     return "Can not artifacts to virtual modules.";
   }

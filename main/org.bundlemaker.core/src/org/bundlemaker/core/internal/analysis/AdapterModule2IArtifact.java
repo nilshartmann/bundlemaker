@@ -109,6 +109,11 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
     return false;
   }
 
+  @Override
+  protected String getArtifactType() {
+    return "module";
+  }
+
   /**
    * {@inheritDoc}
    */

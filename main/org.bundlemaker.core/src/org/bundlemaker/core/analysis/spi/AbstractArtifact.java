@@ -66,7 +66,6 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
   public AbstractArtifact(String name) {
     Assert.isNotNull(name);
 
-    // TODO
     this._id = ID_GENERATOR.getAndIncrement();
 
     // set the name
@@ -428,10 +427,19 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
    */
   protected void addDefaultProperties(HashMap<String, Object> properties) {
     properties.put("qname", getQualifiedName());
+    properties.put("name", getName());
 
     // TODO
-    properties.put("artifacttype", getClass().getSimpleName().toLowerCase());
+    properties.put("artifacttype", getArtifactType());
   }
+
+  /**
+   * Return the type of this artifact as a String. The return value will be put as 'artifacttype' in this artifact's
+   * {@link #getPropertyKeys() properties}
+   * 
+   * @return
+   */
+  protected abstract String getArtifactType();
 
   /**
    * <p>

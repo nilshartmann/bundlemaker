@@ -827,4 +827,14 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     return this;
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.analysis.spi.AbstractArtifact#getArtifactType()
+   */
+  @Override
+  protected String getArtifactType() {
+    return "root";
+  }
+
 }

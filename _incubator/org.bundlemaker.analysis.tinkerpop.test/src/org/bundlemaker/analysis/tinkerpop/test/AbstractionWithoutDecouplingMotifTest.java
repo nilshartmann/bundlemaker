@@ -80,7 +80,7 @@ public class AbstractionWithoutDecouplingMotifTest extends AbstractBundleMakerBl
   @Test
   public void test_ArtifactTypeProperty() {
     ITypeArtifact a = getType("a.api.AService");
-    assertEquals("typeartifact", a.getProperty("artifacttype"));
+    assertEquals("type", a.getProperty("artifacttype"));
 
   }
 
@@ -91,7 +91,7 @@ public class AbstractionWithoutDecouplingMotifTest extends AbstractBundleMakerBl
 
     String AWD = "motif awd\n"
         + "select client, service, service_impl\n"
-        + "where \"client.getProperty('artifacttype')=='typeartifact'\" and \"service.getProperty('artifacttype')=='typeartifact'\" and \"service_impl.getProperty('artifacttype')=='typeartifact'\"\n"
+        + "where \"client.getProperty('artifacttype')=='type'\" and \"service.getProperty('artifacttype')=='type'\" and \"service_impl.getProperty('artifacttype')=='type'\"\n"
         + "and \"!client.getProperty('abstract')\" and \"service.getProperty('abstract')\" and \"!service_impl.getProperty('abstract')\"\n"
         + "connected by inherits(service_impl>service) and service_invocation(client>service)[1,1] and implementation_dependency(client>service_impl)\n"
         + "where \"inherits.getProperty('type')=='extends' || inherits.getProperty('type')=='implements'\" and \"service_invocation.getProperty('type')=='uses'\" and \"implementation_dependency.getProperty('type')=='uses'\"\n"

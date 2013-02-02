@@ -160,6 +160,11 @@ public class AdapterResource2IArtifact extends AbstractArtifactContainer impleme
     return _isSourceResource;
   }
 
+  @Override
+  protected String getArtifactType() {
+    return "resource";
+  }
+
   /**
    * {@inheritDoc}
    */
