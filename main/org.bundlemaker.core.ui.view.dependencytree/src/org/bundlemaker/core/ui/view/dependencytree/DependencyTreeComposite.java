@@ -48,6 +48,9 @@ public class DependencyTreeComposite extends Composite {
   /** - */
   private IExpandStrategy _expandStrategy;
 
+  /** - */
+  private boolean         _showReferenceCount;
+
   /**
    * <p>
    * Creates a new instance of type {@link DependencyTreeComposite}.
@@ -55,13 +58,15 @@ public class DependencyTreeComposite extends Composite {
    * 
    * @param parent
    */
-  public DependencyTreeComposite(Composite parent, String providerId, IExpandStrategy expandStrategy) {
+  public DependencyTreeComposite(Composite parent, String providerId, IExpandStrategy expandStrategy,
+      boolean showReferenceCount) {
     super(parent, SWT.NONE);
 
     Assert.isNotNull(providerId);
 
     _providerId = providerId;
     _expandStrategy = expandStrategy;
+    _showReferenceCount = showReferenceCount;
 
     init();
   }
@@ -133,8 +138,15 @@ public class DependencyTreeComposite extends Composite {
     _toTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
 
     //
-    _fromTreeViewer.setLabelProvider(new DependencyTreeArtifactLabelProvider());
-    _toTreeViewer.setLabelProvider(new DependencyTreeArtifactLabelProvider());
+    DependencyTreeArtifactLabelProvider fromLabelProvider = new DependencyTreeArtifactLabelProvider(_helper);
+    DependencyTreeArtifactLabelProvider toLabelProvider = new DependencyTreeArtifactLabelProvider(_helper);
+
+    if (_showReferenceCount) {
+      fromLabelProvider.setShowReferenceCount(true, false);
+      toLabelProvider.setShowReferenceCount(true, true);
+    }
+    _fromTreeViewer.setLabelProvider(fromLabelProvider);
+    _toTreeViewer.setLabelProvider(toLabelProvider);
 
     // add SelectionListeners
     _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());

@@ -73,7 +73,7 @@ public class CropableDependencyTreeComposite extends Composite {
    * 
    * @param parent
    */
-  public CropableDependencyTreeComposite(Composite parent, String detailDependencyProviderId) {
+  public CropableDependencyTreeComposite(Composite parent, String detailDependencyProviderId, boolean showReferences) {
     super(parent, SWT.NONE);
 
     //
@@ -93,7 +93,7 @@ public class CropableDependencyTreeComposite extends Composite {
     ToolBar toolbar = new ToolBar(this, SWT.FLAT);
 
     // the dependency tree composite
-    _dependencyTreeComposite = new DependencyTreeComposite(this, _detailDependencyProviderId, _expandStrategy) {
+    _dependencyTreeComposite = new DependencyTreeComposite(this, _detailDependencyProviderId, _expandStrategy, showReferences) {
 
       /**
        * {@inheritDoc}

@@ -35,7 +35,7 @@ public class XRefView extends AbstractArtifactSelectionAwareEditorPart {
   public void createPartControl(Composite parent) {
 
     //
-    _composite = new CropableDependencyTreeComposite(parent, XREF_ID) {
+    _composite = new CropableDependencyTreeComposite(parent, XREF_ID, false) {
 
       @Override
       protected String getDependencySelectionId() {
