@@ -170,9 +170,9 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     _resolvedJavaProjects.add(javaProject);
 
     // build the project first
-    if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-      javaProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
-    }
+//    if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+//      javaProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+//    }
 
     //
     for (IClasspathEntry classpathEntry : javaProject.getRawClasspath()) {
