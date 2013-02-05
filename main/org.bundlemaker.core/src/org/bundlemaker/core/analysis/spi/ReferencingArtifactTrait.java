@@ -92,11 +92,15 @@ public class ReferencingArtifactTrait implements IReferencingArtifact {
 
     //
     for (IBundleMakerArtifact artifact : artifacts) {
-      result.add(getDependencyTo(artifact));
+
+      IDependency dependency = getDependencyTo(artifact);
+      if (dependency != null) {
+        result.add(getDependencyTo(artifact));
+      }
     }
 
     //
-    return null;
+    return result;
   }
 
   /**

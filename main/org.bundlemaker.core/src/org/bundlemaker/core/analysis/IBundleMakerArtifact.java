@@ -399,7 +399,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
    * @param artifacts
    * @return
    */
-  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts);
+  public Collection<IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts);
 
   /**
    * <p>
