@@ -5,7 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
-import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.EventAwareMatrix;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.IMatrixListener;
 import org.bundlemaker.core.ui.editor.dsm.figures.matrix.Matrix;
@@ -14,7 +13,6 @@ import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.HorizontalSideMarke
 import org.bundlemaker.core.ui.editor.dsm.figures.sidemarker.VerticalSideMarker;
 import org.bundlemaker.core.ui.editor.dsm.figures.zoom.ZoomableScrollPane;
 import org.bundlemaker.core.ui.editor.dsm.utils.DsmUtils;
-import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
@@ -303,7 +301,7 @@ public class DsmViewWidget extends Canvas implements Observer {
 
     //
     int testExtend = FigureUtilities.getTextWidth(
-        DsmUtils.getLongestString(_model.isUseShortendLabels() ? _model.getShortendLabels() : _model.getLabels()),
+        DsmUtils.getLongestString(_model.getDisplayLabels()),
         matrixFigure.getFont());
     return (testExtend + 10/* * zoomableScrollpane.getZoom() */);
   }

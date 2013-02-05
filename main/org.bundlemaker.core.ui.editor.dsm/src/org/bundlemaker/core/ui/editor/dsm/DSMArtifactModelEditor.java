@@ -11,6 +11,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.editor.dsm;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -51,10 +53,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.part.NullEditorInput;
 
 /**
@@ -108,7 +106,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   @Override
   public void analysisModelModified() {
     Display.getDefault().syncExec(new Runnable() {
-      public void run() {
+      @Override
+	public void run() {
          initSelection(getCurrentArtifactSelection());
       }
    });
@@ -132,6 +131,13 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
     //
     _detailComposite = new DsmDetailComposite(parent, _viewWidget);
+    _detailComposite.addPropertyChangeListener(new PropertyChangeListener() {
+		
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			initSelection(getCurrentArtifactSelection());
+		}
+	});
     GridDataFactory.swtDefaults().grab(true, false).align(SWT.FILL, SWT.CENTER).applyTo(_detailComposite);
     setDefaultDependencyDescription();
 
@@ -284,19 +290,23 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
       //
       _detailComposite.getVisualizeChildrenButton().setSelection(selection.useChildrenOfSelectedArtifacts());
-
+      
       // set the model
       if (selection.useChildrenOfSelectedArtifacts()) {
         List<IBundleMakerArtifact> bundleMakerArtifacts = new LinkedList<IBundleMakerArtifact>();
         for (IBundleMakerArtifact artifact : selection.getSelectedArtifacts()) {
           bundleMakerArtifacts.addAll(artifact.getChildren());
         }
-        _viewWidget.setModel(new DsmViewModel(bundleMakerArtifacts));
+        DsmViewModel model = new DsmViewModel(bundleMakerArtifacts);
+        model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
+		_viewWidget.setModel(model);
 
         // clear the dependency selection
         resetDependencySelection();
       } else {
-        _viewWidget.setModel(new DsmViewModel(selection.getSelectedArtifacts()));
+        DsmViewModel model = new DsmViewModel(selection.getSelectedArtifacts());
+        model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
+		_viewWidget.setModel(model);
 
         // clear the dependency selection
         resetDependencySelection();
@@ -304,7 +314,9 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
       setDefaultDependencyDescription();
     }
+    
   }
+  
 
   /**
    * {@inheritDoc}
