@@ -197,7 +197,7 @@ public class Model {
    * @return
    */
   private IPackageArtifact assertPackageArtifact(IModuleArtifact moduleArtifact, String qualifiedName) {
-    IPackageArtifact result = AnalysisModelQueries.findPackageArtifact(moduleArtifact, qualifiedName);
+    IPackageArtifact result = AnalysisModelQueries.findPackageArtifactByQualifiedName(moduleArtifact, qualifiedName);
     Assert.assertNotNull(result);
     return result;
   }

@@ -41,7 +41,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     // get the 'test' artifact
-    IResourceArtifact artifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(rootArtifact, "test/Test.java");
+    IResourceArtifact artifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(rootArtifact, "test/Test.java");
     Assert.assertNotNull(artifact);
 
     // assert that the type

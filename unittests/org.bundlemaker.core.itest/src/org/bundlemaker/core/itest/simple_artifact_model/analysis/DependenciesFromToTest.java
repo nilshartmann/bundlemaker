@@ -56,8 +56,8 @@ public class DependenciesFromToTest extends AbstractSimpleArtifactModelTest {
   public void dependenciesFromTo() throws Exception {
 
     //
-    ITypeArtifact klasse = AnalysisModelQueries.findTypeArtifact(_binModel.getRootArtifact(), "de.test.Klasse");
-    ITypeArtifact test = AnalysisModelQueries.findTypeArtifact(_binModel.getRootArtifact(), "de.test.Test");
+    ITypeArtifact klasse = AnalysisModelQueries.findTypeArtifactByQualifiedName(_binModel.getRootArtifact(), "de.test.Klasse");
+    ITypeArtifact test = AnalysisModelQueries.findTypeArtifactByQualifiedName(_binModel.getRootArtifact(), "de.test.Test");
 
     //
     Assert.assertNotNull(klasse.getDependencyTo(test));

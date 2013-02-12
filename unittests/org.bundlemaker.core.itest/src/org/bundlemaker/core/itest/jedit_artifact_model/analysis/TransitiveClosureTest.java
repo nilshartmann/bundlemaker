@@ -26,7 +26,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getBinHierarchicalModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getBinHierarchicalModel()
         .getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
 
@@ -42,7 +42,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getSrcHierarchicalModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getSrcHierarchicalModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);
@@ -59,7 +59,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getBinFlatModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getBinFlatModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
@@ -76,7 +76,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getSrcFlatModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getSrcFlatModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);

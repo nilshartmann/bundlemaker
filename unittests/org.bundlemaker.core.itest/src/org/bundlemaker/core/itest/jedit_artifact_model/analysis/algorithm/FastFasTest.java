@@ -35,7 +35,7 @@ public class FastFasTest extends AbstractJeditAnalysisModelTest {
   @Test
   public void fastFasTest() throws Exception {
 
-    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifact(getBinHierarchicalModel()
+    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(getBinHierarchicalModel()
         .getJeditModuleArtifact(), "org.gjt.sp.jedit");
 
     Assert.assertNotNull(packageArtifact);

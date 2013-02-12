@@ -241,11 +241,11 @@ public class AnalysisModelQueries {
    * <p>
    * </p>
    */
-  public static IResourceArtifact findResourceArtifactByFullyQualifiedName(IBundleMakerArtifact root,
+  public static IResourceArtifact findResourceArtifactByQualifiedName(IBundleMakerArtifact root,
       final String fullyQualifiedName) {
 
     // create the result array
-    final List<IResourceArtifact> result = findResourceArtifactsByFullyQualifiedName(root,
+    final List<IResourceArtifact> result = findResourceArtifactsByQualifiedName(root,
         fullyQualifiedName);
     //
     if (result.size() > 1) {
@@ -264,7 +264,7 @@ public class AnalysisModelQueries {
    * @param fullyQualifiedName
    * @return
    */
-  public static List<IResourceArtifact> findResourceArtifactsByFullyQualifiedName(IBundleMakerArtifact root,
+  public static List<IResourceArtifact> findResourceArtifactsByQualifiedName(IBundleMakerArtifact root,
       final String fullyQualifiedName) {
 
     // create the result array
@@ -296,7 +296,7 @@ public class AnalysisModelQueries {
    * @param packageArtifact
    * @param string
    */
-  public static ITypeArtifact findTypeArtifact(IBundleMakerArtifact root, final String qualifiedName) {
+  public static ITypeArtifact findTypeArtifactByQualifiedName(IBundleMakerArtifact root, final String qualifiedName) {
 
     // create the result array
     final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
@@ -307,7 +307,7 @@ public class AnalysisModelQueries {
       public boolean visit(ITypeArtifact typeArtifact) {
 
         //
-        if (typeArtifact.getQualifiedName().equals(qualifiedName)) {
+        if (typeArtifact.getAssociatedType().getFullyQualifiedName().equals(qualifiedName)) {
           result.add(typeArtifact);
         }
 
@@ -327,6 +327,31 @@ public class AnalysisModelQueries {
     return result.get(0);
   }
 
+  public static List<ITypeArtifact> findTypeArtifactsByQualifiedName(IBundleMakerArtifact root,
+      final String qualifiedName) {
+
+    // create the result array
+    final List<ITypeArtifact> result = new LinkedList<ITypeArtifact>();
+
+    // visit
+    root.accept(new IAnalysisModelVisitor.Adapter() {
+      @Override
+      public boolean visit(ITypeArtifact typeArtifact) {
+
+        //
+        if (typeArtifact.getAssociatedType().getFullyQualifiedName().equals(qualifiedName)) {
+          result.add(typeArtifact);
+        }
+
+        //
+        return true;
+      }
+    });
+
+    // return result
+    return result;
+  }
+
   /**
    * <p>
    * </p>
@@ -335,10 +360,11 @@ public class AnalysisModelQueries {
    * @param name
    * @return
    */
-  public static IPackageArtifact findPackageArtifact(IBundleMakerArtifact root, final String fullyQualifiedName) {
+  public static IPackageArtifact findPackageArtifactByQualifiedName(IBundleMakerArtifact root,
+      final String fullyQualifiedName) {
 
     // create the result array
-    final List<IPackageArtifact> result = findPackageArtifacts(root, fullyQualifiedName);
+    final List<IPackageArtifact> result = findPackageArtifactsByQualifiedName(root, fullyQualifiedName);
 
     //
     if (result.size() > 1) {
@@ -359,7 +385,8 @@ public class AnalysisModelQueries {
    * @param fullyQualifiedName
    * @return
    */
-  public static List<IPackageArtifact> findPackageArtifacts(IBundleMakerArtifact root, final String fullyQualifiedName) {
+  public static List<IPackageArtifact> findPackageArtifactsByQualifiedName(IBundleMakerArtifact root,
+      final String fullyQualifiedName) {
 
     // create the result array
     final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();

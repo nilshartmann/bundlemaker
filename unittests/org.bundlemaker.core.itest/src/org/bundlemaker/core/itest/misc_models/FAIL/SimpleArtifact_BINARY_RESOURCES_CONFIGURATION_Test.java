@@ -476,7 +476,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
    */
   protected IPackageArtifact assertTestPackage(IModuleArtifact moduleArtifact) {
 
-    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifact(moduleArtifact, "de.test");
+    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(moduleArtifact, "de.test");
     List<IBundleMakerArtifact> resources = new LinkedList<IBundleMakerArtifact>(packageArtifact.getChildren());
     Collections.sort(resources, new Comparator<IBundleMakerArtifact>() {
       @Override

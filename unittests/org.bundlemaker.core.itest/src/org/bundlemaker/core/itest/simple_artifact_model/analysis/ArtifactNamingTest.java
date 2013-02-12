@@ -120,7 +120,7 @@ public class ArtifactNamingTest extends AbstractModularizedSystemTest {
        */
       @Override
       public boolean visit(ITypeArtifact typeArtifact) {
-        String qualifiedTypeName = typeArtifact.getQualifiedTypeName();
+        String qualifiedTypeName = typeArtifact.getQualifiedName();
         assertNotNull(qualifiedTypeName);
         result.add(qualifiedTypeName);
         return true;

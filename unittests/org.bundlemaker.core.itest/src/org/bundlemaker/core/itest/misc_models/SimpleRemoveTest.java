@@ -44,10 +44,10 @@ public class SimpleRemoveTest extends AbstractModularizedSystemTest {
     _rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
-    _packageArtifact = AnalysisModelQueries.findPackageArtifact(_rootArtifact, "de.test.basic");
+    _packageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(_rootArtifact, "de.test.basic");
     Assert.assertNotNull(_packageArtifact);
 
-    _typeArtifact = AnalysisModelQueries.findTypeArtifact(_packageArtifact, "de.test.basic.TestClass");
+    _typeArtifact = AnalysisModelQueries.findTypeArtifactByQualifiedName(_packageArtifact, "de.test.basic.TestClass");
     Assert.assertNotNull(_typeArtifact);
 
     _moduleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, "BasicArtifactTest");
