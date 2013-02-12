@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -18,18 +17,13 @@ import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
-import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.transformation.RemoveArtifactsTransformation;
-import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.google.gson.JsonElement;
 
 /**
  * <p>
@@ -51,7 +45,7 @@ public class SimpleArtifact_BINARY_RESOURCES_CONFIGURATION_Test extends Abstract
   /** - */
   protected IGroupArtifact  _group1_Artifact;
 
-  /**
+  /**AnalysisModelQueries
    * {@inheritDoc}
    */
   @Override

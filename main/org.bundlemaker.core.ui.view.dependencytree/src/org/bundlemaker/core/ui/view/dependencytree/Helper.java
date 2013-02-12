@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -90,7 +89,7 @@ public class Helper {
     for (IBundleMakerArtifact bundleMakerArtifact : toArtifacts) {
 
       // we have to find all children
-      for (IBundleMakerArtifact artifact : ArtifactUtils.getSelfAndAllChildren(bundleMakerArtifact)) {
+      for (IBundleMakerArtifact artifact : AnalysisModelQueries.getSelfAndAllChildren(bundleMakerArtifact)) {
         if (_targetArtifactMap.containsKey(artifact)) {
           List<IDependency> dependencies = _targetArtifactMap.get(artifact);
           _filteredDependencies.addAll(dependencies);
@@ -125,7 +124,7 @@ public class Helper {
     for (IBundleMakerArtifact bundleMakerArtifact : fromArtifacts) {
 
       // we have to find all children
-      for (IBundleMakerArtifact artifact : ArtifactUtils.getSelfAndAllChildren(bundleMakerArtifact)) {
+      for (IBundleMakerArtifact artifact : AnalysisModelQueries.getSelfAndAllChildren(bundleMakerArtifact)) {
         if (_sourceArtifactMap.containsKey(artifact)) {
           List<IDependency> dependencies = _sourceArtifactMap.get(artifact);
           _filteredDependencies.addAll(dependencies);

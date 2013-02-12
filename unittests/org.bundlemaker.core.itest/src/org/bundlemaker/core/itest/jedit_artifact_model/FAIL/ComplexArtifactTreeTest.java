@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -70,7 +69,7 @@ public class ComplexArtifactTreeTest extends AbstractJeditAnalysisModelTest {
     // assert the result
     InputStream inputstream = getClass().getResourceAsStream(
         "results/ComplexArtifactTreeTest_SourceNonHierarchical.txt");
-    assertResult(ArtifactUtils.artifactToString(artifact), inputstream,
+    assertResult(AnalysisModelQueries.artifactToString(artifact), inputstream,
         "ComplexArtifactTreeTest_SourceNonHierarchical_" + getCurrentTimeStamp());
   }
 
@@ -96,7 +95,7 @@ public class ComplexArtifactTreeTest extends AbstractJeditAnalysisModelTest {
     // assert the result
     InputStream inputstream = getClass().getResourceAsStream(
         "results/ComplexArtifactTreeTest_BinaryNonHierarchical.txt");
-    assertResult(ArtifactUtils.artifactToString(artifact), inputstream,
+    assertResult(AnalysisModelQueries.artifactToString(artifact), inputstream,
         "ComplexArtifactTreeTest_BinaryNonHierarchical_" + getCurrentTimeStamp());
   }
 
@@ -121,7 +120,8 @@ public class ComplexArtifactTreeTest extends AbstractJeditAnalysisModelTest {
 
     // assert the result
     InputStream inputstream = getClass().getResourceAsStream("results/ComplexArtifactTreeTest_MoveModule.txt");
-    assertResult(ArtifactUtils.artifactToString(moduleArtifact), inputstream, "ComplexArtifactTreeTest_MoveModule_"
-        + getCurrentTimeStamp());
+    assertResult(AnalysisModelQueries.artifactToString(moduleArtifact), inputstream,
+        "ComplexArtifactTreeTest_MoveModule_"
+            + getCurrentTimeStamp());
   }
 }

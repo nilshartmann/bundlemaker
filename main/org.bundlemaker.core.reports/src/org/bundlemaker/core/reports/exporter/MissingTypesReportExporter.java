@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -70,7 +69,7 @@ public class MissingTypesReportExporter implements IModularizedSystemExporter {
     IModuleArtifact moduleArtifact = AnalysisModelQueries.findChild(rootArtifact, "<< Missing Types >>", IModuleArtifact.class);
 
     //
-    String dump = ArtifactUtils.artifactToString(moduleArtifact);
+    String dump = AnalysisModelQueries.artifactToString(moduleArtifact);
 
     //
     _fileWriter.append(dump);
