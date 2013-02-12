@@ -11,8 +11,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
- * Defines the root {@link IBundleMakerArtifact} that holds the {@link IModularizedSystem} instance. The root artifact
- * can contain group and modules and therefore extends the interface {@link IGroupAndModuleContainer}.
+ * Defines the root {@link IBundleMakerArtifact} that holds the {@link IModularizedSystem} instance.
+ * </p>
+ * <p>
+ * An {@link IRootArtifact} can contain {@link IGroupArtifact IGroupArtifacts} and {@link IModuleArtifact
+ * IModuleArtifacts} and therefore extends the interface {@link IGroupAndModuleContainer}.
  * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)

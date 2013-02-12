@@ -28,7 +28,9 @@ public class AnalysisModelException extends RuntimeException {
    * </p>
    * 
    * @param message
+   *          the message
    * @param cause
+   *          the cause
    */
   public AnalysisModelException(String message, Throwable cause) {
     super(message, cause);
@@ -40,6 +42,7 @@ public class AnalysisModelException extends RuntimeException {
    * </p>
    * 
    * @param message
+   *          the message
    */
   public AnalysisModelException(String message) {
     super(message);
@@ -51,6 +54,7 @@ public class AnalysisModelException extends RuntimeException {
    * </p>
    * 
    * @param cause
+   *          the cause
    */
   public AnalysisModelException(Throwable cause) {
     super(cause);

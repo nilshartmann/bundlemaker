@@ -11,7 +11,7 @@ import org.bundlemaker.core.projectdescription.ProjectContentType;
  */
 public interface IAnalysisModelConfiguration {
 
-  /** default configuration SOURCE_RESOURCES_CONFIGURATION */
+  /** Default configuration SOURCE_RESOURCES_CONFIGURATION */
   public static final IAnalysisModelConfiguration SOURCE_RESOURCES_CONFIGURATION              = new AnalysisModelConfiguration(
                                                                                                   false,
                                                                                                   ProjectContentType.SOURCE,

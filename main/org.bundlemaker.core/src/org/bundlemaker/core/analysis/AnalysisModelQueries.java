@@ -413,6 +413,36 @@ public class AnalysisModelQueries {
   /**
    * <p>
    * </p>
+   * @param clazz
+   * @param root
+   * @param fullyQualifiedName
+   * 
+   * @return
+   */
+  public static <T extends IBundleMakerArtifact> List<T> findArtifactsByQualifiedName(Class<T> clazz,
+      IBundleMakerArtifact root, final String fullyQualifiedName) {
+
+    // create the result array
+    final List<T> result = new LinkedList<T>();
+
+    // visit
+    root.accept(new GenericAnalysisModelVisitor<T>(clazz) {
+
+      @Override
+      protected void onHandle(T t) {
+        if (t.getQualifiedName().equals(fullyQualifiedName)) {
+          result.add(t);
+        }
+      }
+    });
+
+    // return result
+    return result;
+  }
+
+  /**
+   * <p>
+   * </p>
    * 
    * @param artifact
    * @param artifacts
@@ -782,5 +812,108 @@ public class AnalysisModelQueries {
     StringBuilder builder = new StringBuilder();
     dumpArtifact(artifact, 0, builder, -1);
     return builder.toString();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  private static class GenericAnalysisModelVisitor<T> implements IAnalysisModelVisitor {
+
+    /** the class object */
+    private Class<T> _clazz;
+
+    /**
+     * <p>
+     * Creates a new instance of type {@link GenericAnalysisModelVisitor}.
+     * </p>
+     * 
+     * @param clazz
+     */
+    public GenericAnalysisModelVisitor(Class<T> clazz) {
+      Assert.isNotNull(clazz);
+
+      //
+      _clazz = clazz;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean visit(IPackageArtifact artifact) {
+      handleNode(artifact);
+      return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean visit(ITypeArtifact artifact) {
+      handleNode(artifact);
+      return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean visit(IResourceArtifact artifact) {
+      handleNode(artifact);
+      return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean visit(IModuleArtifact artifact) {
+      handleNode(artifact);
+      return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean visit(IGroupArtifact artifact) {
+      handleNode(artifact);
+      return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final boolean visit(IRootArtifact artifact) {
+      handleNode(artifact);
+      return true;
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param artifact
+     */
+    @SuppressWarnings("unchecked")
+    private void handleNode(IBundleMakerArtifact artifact) {
+      if (_clazz.isAssignableFrom(artifact.getClass())) {
+        onHandle((T) artifact);
+      }
+    }
+
+    /**
+     * <p>
+     * </p>
+     * 
+     * @param t
+     */
+    protected void onHandle(T t) {
+      //
+    }
   }
 }

@@ -22,6 +22,24 @@ public interface IModuleArtifact extends IBundleMakerArtifact {
 
   /**
    * <p>
+   * Returns the module name, e.g. {@code MyModule_1.2.0}, never {@code null}.
+   * </p>
+   * 
+   * @return the module name, e.g. {@code MyModule_1.2.0}, never {@code null}.
+   */
+  String getName();
+
+  /**
+   * <p>
+   * Returns the qualified module name, e.g. {@code group1/group2/MyModule_1.2.0}, never {@code null}.
+   * </p>
+   * 
+   * @return the qualified module name, e.g. {@code group1/group2/MyModule_1.2.0}, never {@code null}.
+   */
+  String getQualifiedName();
+
+  /**
+   * <p>
    * Returns the module name.
    * </p>
    * 
