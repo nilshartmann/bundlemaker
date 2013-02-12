@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bundlemaker.core.analysis.ArtifactHelper;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -629,7 +629,7 @@ public class DefaultManifestCreator extends AbstractManifestCreator {
   protected void setSpiProviderHeader() {
 
     // TODO
-    if (ArtifactHelper.findChild(getModuleArtifact(), "META-INF.services", IPackageArtifact.class) != null) {
+    if (AnalysisModelQueries.findChild(getModuleArtifact(), "META-INF.services", IPackageArtifact.class) != null) {
       getBundleManifest().setHeader("SPI-Provider", "*");
     }
   }

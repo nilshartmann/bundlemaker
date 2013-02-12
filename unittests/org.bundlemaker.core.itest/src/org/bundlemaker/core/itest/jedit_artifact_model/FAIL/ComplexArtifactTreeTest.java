@@ -5,15 +5,13 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactHelper;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.itest._framework.analysis.jedit_artifact_model.AbstractJeditAnalysisModelTest;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
@@ -40,8 +38,8 @@ public class ComplexArtifactTreeTest extends AbstractJeditAnalysisModelTest {
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
     Assert.assertNotNull(rootArtifact);
 
-    IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "jedit_1.0.0", IModuleArtifact.class);
-    List<ITypeArtifact> types = ArtifactHelper.findChildren(moduleArtifact, ITypeArtifact.class);
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.findChild(rootArtifact, "jedit_1.0.0", IModuleArtifact.class);
+    List<ITypeArtifact> types = AnalysisModelQueries.findChildren(moduleArtifact, ITypeArtifact.class);
 
     IModuleArtifact newModule = null;
     for (ITypeArtifact typeArtifact : types) {

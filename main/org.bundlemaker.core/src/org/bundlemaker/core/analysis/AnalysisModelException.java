@@ -2,6 +2,8 @@ package org.bundlemaker.core.analysis;
 
 /**
  * <p>
+ * The {@link AnalysisModelException} is a {@link RuntimeException} that is thrown if an exception occurred while
+ * executing a method that is implemented by an {@link IBundleMakerArtifact}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)

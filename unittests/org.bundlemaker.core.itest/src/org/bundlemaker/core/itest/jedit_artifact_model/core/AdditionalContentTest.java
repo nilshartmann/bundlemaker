@@ -12,8 +12,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.analysis.ArtifactHelper;
-import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
@@ -66,7 +65,7 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
 
     IRootArtifact rootArtifact = modularizedSystem
         .getAnalysisModel(IAnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION);
-    IModuleArtifact moduleArtifact = ArtifactHelper.findChild(rootArtifact, "name_1.2.3", IModuleArtifact.class);
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.findChild(rootArtifact, "name_1.2.3", IModuleArtifact.class);
   }
 
   /**

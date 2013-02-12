@@ -6,13 +6,10 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.ArtifactHelper;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.itestframework.ArtifactTestUtil;
 import org.bundlemaker.core.resource.IType;
 import org.junit.Test;
 

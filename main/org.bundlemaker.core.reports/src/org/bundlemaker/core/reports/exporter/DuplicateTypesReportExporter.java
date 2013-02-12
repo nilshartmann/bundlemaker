@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactHelper;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
@@ -160,7 +160,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
       List<ITypeArtifact> exclusiveTypes = new LinkedList<ITypeArtifact>();
 
       //
-      for (ITypeArtifact typeArtifact : ArtifactHelper.findChildren(packageArtifact, ITypeArtifact.class))  {
+      for (ITypeArtifact typeArtifact : AnalysisModelQueries.findChildren(packageArtifact, ITypeArtifact.class))  {
 
         //
         if (!containedInAllPackages(typeArtifact, packageArtifacts)) {
@@ -201,7 +201,7 @@ public class DuplicateTypesReportExporter implements IModularizedSystemExporter 
 
     //
     for (IPackageArtifact packageArtifact : packageArtifacts) {
-      if (ArtifactHelper.findChildren(packageArtifact, typeArtifact.getQualifiedName(), ITypeArtifact.class).size() == 0) {
+      if (AnalysisModelQueries.findChildren(packageArtifact, typeArtifact.getQualifiedName(), ITypeArtifact.class).size() == 0) {
         return false;
       }
     }
