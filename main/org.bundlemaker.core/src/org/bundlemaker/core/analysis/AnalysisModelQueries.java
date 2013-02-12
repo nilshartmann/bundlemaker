@@ -235,8 +235,31 @@ public class AnalysisModelQueries {
    * <p>
    * </p>
    */
-  public static IResourceArtifact findResourceArtifactByPathName(IBundleMakerArtifact root,
-      final String pathName) {
+  public static IResourceArtifact findResourceArtifactByFullyQualifiedName(IBundleMakerArtifact root,
+      final String fullyQualifiedName) {
+
+    // create the result array
+    final List<IResourceArtifact> result = findResourceArtifactsByFullyQualifiedName(root,
+        fullyQualifiedName);
+    //
+    if (result.size() > 1) {
+      throwException(String.format("Multiple resources with path name '%s' exist.", fullyQualifiedName));
+    }
+
+    // return result
+    return result.size() > 0 ? result.get(0) : null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param root
+   * @param fullyQualifiedName
+   * @return
+   */
+  public static List<IResourceArtifact> findResourceArtifactsByFullyQualifiedName(IBundleMakerArtifact root,
+      final String fullyQualifiedName) {
 
     // create the result array
     final List<IResourceArtifact> result = new LinkedList<IResourceArtifact>();
@@ -247,7 +270,7 @@ public class AnalysisModelQueries {
       public boolean visit(IResourceArtifact resourceArtifact) {
 
         //
-        if (resourceArtifact.getQualifiedName().equals(pathName)) {
+        if (resourceArtifact.getQualifiedName().equals(fullyQualifiedName)) {
           result.add(resourceArtifact);
         }
 
@@ -256,13 +279,8 @@ public class AnalysisModelQueries {
       }
     });
 
-    //
-    if (result.size() > 1) {
-      throwException(String.format("Multiple resources with path name '%s' exist.", pathName));
-    }
-
     // return result
-    return result.size() > 0 ? result.get(0) : null;
+    return result;
   }
 
   /**
@@ -314,22 +332,7 @@ public class AnalysisModelQueries {
   public static IPackageArtifact findPackageArtifact(IBundleMakerArtifact root, final String fullyQualifiedName) {
 
     // create the result array
-    final List<IPackageArtifact> result = new LinkedList<IPackageArtifact>();
-
-    // visit
-    root.accept(new IAnalysisModelVisitor.Adapter() {
-      @Override
-      public boolean visit(IPackageArtifact packageArtifact) {
-
-        //
-        if (packageArtifact.getQualifiedName().equals(fullyQualifiedName)) {
-          result.add(packageArtifact);
-        }
-
-        //
-        return true;
-      }
-    });
+    final List<IPackageArtifact> result = findPackageArtifacts(root, fullyQualifiedName);
 
     //
     if (result.size() > 1) {
@@ -366,7 +369,7 @@ public class AnalysisModelQueries {
         }
 
         //
-        return false;
+        return true;
       }
     });
 

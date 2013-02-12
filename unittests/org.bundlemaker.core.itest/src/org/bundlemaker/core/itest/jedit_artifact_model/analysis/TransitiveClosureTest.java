@@ -28,7 +28,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getBinHierarchicalModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getBinHierarchicalModel()
         .getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
 
@@ -44,7 +44,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getSrcHierarchicalModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getSrcHierarchicalModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);
@@ -61,7 +61,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getBinFlatModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getBinFlatModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
@@ -78,7 +78,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getSrcFlatModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByFullyQualifiedName(getSrcFlatModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);

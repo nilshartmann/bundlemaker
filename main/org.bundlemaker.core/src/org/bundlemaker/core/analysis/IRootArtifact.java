@@ -22,6 +22,7 @@ public interface IRootArtifact extends IBundleMakerArtifact, IGroupAndModuleCont
 
   /**
    * <p>
+   * Resets all transformations that has been applied to this
    * </p>
    */
   void resetTransformations();
