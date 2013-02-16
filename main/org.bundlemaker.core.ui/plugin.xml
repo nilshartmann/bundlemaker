@@ -133,7 +133,6 @@
 			</possibleChildren>
 			<commonSorter
 				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter"> </commonSorter>
-			<actionProvider class="org.bundlemaker.core.ui.actions.BundleMakerActionProvider"/>
 		</navigatorContent>
 	</extension>
 
@@ -332,20 +331,6 @@
 		</wizard>
 	</extension>
 
-	<!-- ======================================== -->
-	<!-- editors -->
-	<!-- ======================================== -->
-	<!-- Project description editor -->
-	<extension id="org.bundlemaker.core.ui.editors" name="Bundlemaker Editors"
-		point="org.eclipse.ui.editors">
-  <editor
-        class="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditor"
-        default="false"
-        id="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditor"
-        name="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditor">
-  </editor>
-	</extension>
-
 	<!-- The BundleMaker project content type ('bundlemaker.xml') -->
 	<extension id="org.bundlemaker.core.ui.contentTypes" name="Bundlemaker Contenttypes"
 		point="org.eclipse.core.contenttype.contentTypes">
@@ -518,20 +503,6 @@
          verticalRulerPreferenceValue="true">
    </specification>
 </extension>
-
- <extension
-       point="org.eclipse.ui.navigator.linkHelper">
-		<linkHelper
-	          class="org.bundlemaker.core.ui.utils.BundleMakerFileLinkHelper"
-	          id="org.bundlemaker.core.ui.utils.BundleMakerFileLinkHelper">          
-	         <editorInputEnablement>
-		         	<instanceof value="org.bundlemaker.core.ui.utils.BundleMakerClassFileEditorInput" />
-	         </editorInputEnablement>
-	         <selectionEnablement>
-	         		         	<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact" />			
-	         </selectionEnablement>
-      </linkHelper>          
-   </extension>
    
  <extension
        point="org.eclipse.ui.preferencePages">

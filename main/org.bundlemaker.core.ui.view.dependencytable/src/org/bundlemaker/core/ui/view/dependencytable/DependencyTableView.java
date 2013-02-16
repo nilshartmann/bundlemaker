@@ -62,18 +62,18 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     IDependencySelectionListener {
 
   /** - */
-  public static String               ID                  = DependencyTableView.class.getName();
-  
-  private static final String VIEW_SETTINGS_SECTION="DependencyTableView";
+  public static String               ID                    = DependencyTableView.class.getName();
+
+  private static final String        VIEW_SETTINGS_SECTION = "DependencyTableView";
 
   /** - */
   private TableViewer                _viewer;
 
   /** - */
-  private ArtifactPathLabelGenerator _fromLabelGenerator = new ArtifactPathLabelGenerator();
+  private ArtifactPathLabelGenerator _fromLabelGenerator   = new ArtifactPathLabelGenerator();
 
   /** - */
-  private ArtifactPathLabelGenerator _toLabelGenerator   = new ArtifactPathLabelGenerator();
+  private ArtifactPathLabelGenerator _toLabelGenerator     = new ArtifactPathLabelGenerator();
 
   /**
    * {@inheritDoc}
@@ -105,7 +105,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
         openDependenciesInEditor();
       }
     });
-    
+
     loadViewSettings();
 
     // Popup menu
@@ -113,14 +113,14 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     menuMgr.setRemoveAllWhenShown(true);
     menuMgr.addMenuListener(new IMenuListener() {
       @Override
-	public void menuAboutToShow(IMenuManager manager) {
+      public void menuAboutToShow(IMenuManager manager) {
         DependencyTableView.this.fillContextMenu(manager);
       }
     });
     Menu menu = menuMgr.createContextMenu(_viewer.getControl());
     _viewer.getControl().setMenu(menu);
     getSite().registerContextMenu(menuMgr, _viewer);
-    
+
     contributeToActionBars();
 
     // init the dependencies
@@ -152,63 +152,62 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
     action.setEnabled(selectedDependencies.isEmpty() == false);
     manager.add(action);
   }
-  
-  private void contributeToActionBars() {
-	    IActionBars bars = getViewSite().getActionBars();
-	    fillLocalPullDown(bars.getMenuManager());
-//	    fillLocalToolBar(bars.getToolBarManager());
-	 }
-  
-  class UseShortLabelsAction extends Action {
-	  
-	  public UseShortLabelsAction() {
-		  super("Use Short Labels", IAction.AS_CHECK_BOX);
-		  setChecked(_fromLabelGenerator.isUseShortLabel());
-	  }
 
-	@Override
-	public void run() {
-		_fromLabelGenerator.setUseShortLabel(isChecked());
-		_toLabelGenerator.setUseShortLabel(isChecked());
-		
-		saveViewSettings();
-		
-		_viewer.refresh();
-	}
+  private void contributeToActionBars() {
+    IActionBars bars = getViewSite().getActionBars();
+    fillLocalPullDown(bars.getMenuManager());
+    // fillLocalToolBar(bars.getToolBarManager());
   }
-  
+
+  class UseShortLabelsAction extends Action {
+
+    public UseShortLabelsAction() {
+      super("Use Short Labels", IAction.AS_CHECK_BOX);
+      setChecked(_fromLabelGenerator.isUseShortLabel());
+    }
+
+    @Override
+    public void run() {
+      _fromLabelGenerator.setUseShortLabel(isChecked());
+      _toLabelGenerator.setUseShortLabel(isChecked());
+
+      saveViewSettings();
+
+      _viewer.refresh();
+    }
+  }
+
   private IDialogSettings getViewSettings() {
-	  IDialogSettings settings = Activator.getDefault().getDialogSettings();
-		IDialogSettings section = settings.getSection(VIEW_SETTINGS_SECTION);
-		if (section == null) {
-			section = settings.addNewSection(VIEW_SETTINGS_SECTION);
-		}
-		return section;
+    IDialogSettings settings = Activator.getDefault().getDialogSettings();
+    IDialogSettings section = settings.getSection(VIEW_SETTINGS_SECTION);
+    if (section == null) {
+      section = settings.addNewSection(VIEW_SETTINGS_SECTION);
+    }
+    return section;
   }
-  
+
   private void saveViewSettings() {
-	  IDialogSettings dialogSettings = getViewSettings();
-	  
-	  dialogSettings.put("useShortLabel", _fromLabelGenerator.isUseShortLabel());
+    IDialogSettings dialogSettings = getViewSettings();
+
+    dialogSettings.put("useShortLabel", _fromLabelGenerator.isUseShortLabel());
   }
-  
+
   private void loadViewSettings() {
-	  IDialogSettings dialogSettings = getViewSettings();
-	  
-	  boolean useShortLabel = dialogSettings.getBoolean("useShortLabel");
-	  
-	  _fromLabelGenerator.setUseShortLabel(useShortLabel);
-	  _toLabelGenerator.setUseShortLabel(useShortLabel);
+    IDialogSettings dialogSettings = getViewSettings();
+
+    boolean useShortLabel = dialogSettings.getBoolean("useShortLabel");
+
+    _fromLabelGenerator.setUseShortLabel(useShortLabel);
+    _toLabelGenerator.setUseShortLabel(useShortLabel);
   }
-  
 
   private void fillLocalPullDown(IMenuManager menuManager) {
 
-	  menuManager.add(new UseShortLabelsAction());
-	  
-}
+    menuManager.add(new UseShortLabelsAction());
 
-/**
+  }
+
+  /**
    * Returns the dependencies that are currently selected inside the viewer. Returns an empty list if there are now
    * dependencies selected.
    * 
@@ -239,7 +238,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
       IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
       if (artifact != null) {
         try {
-          EditorHelper.openArtifactInEditor(artifact, dependency.getTo());
+          // TODO
+          // EditorHelper.openArtifactInEditor(artifact, dependency.getTo());
         } catch (Exception e) {
           MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
         }
@@ -249,15 +249,16 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
   }
 
   /**
-   * Copies the selected dependencies into the clipboard. 
+   * Copies the selected dependencies into the clipboard.
    * 
-   * <p>One line for each dependency with "from", "kind" and "to" in comma-separated columns
+   * <p>
+   * One line for each dependency with "from", "kind" and "to" in comma-separated columns
    * 
    */
   protected void copyDependenciesToClipboard() {
     List<IDependency> selectedDependencies = getSelectedDependencies();
 
-    // Build the content to be copied 
+    // Build the content to be copied
     StringBuilder builder = new StringBuilder();
 
     for (IDependency dependency : selectedDependencies) {
@@ -344,7 +345,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
    * @return
    */
   @Override
-protected String getSelectionId() {
+  protected String getSelectionId() {
     return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
   }
 
