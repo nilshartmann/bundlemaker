@@ -15,16 +15,36 @@ public interface ITypeArtifact extends IBundleMakerArtifact, IMovableUnit {
 
   /**
    * <p>
-   * Returns the {@link IType} that is represented by this {@link ITypeArtifact}.
+   * Returns the {@link IType} that is represented by this {@link ITypeArtifact}, never {@code null}.
    * </p>
    * 
-   * @return the {@link IType} that is represented by this {@link ITypeArtifact}.
+   * @return the {@link IType} that is represented by this {@link ITypeArtifact}, never {@code null}.
    */
   IType getAssociatedType();
 
   /**
+   * <p>
+   * </p>
+   * 
    * @return the fully qualified (Java) type name, e.g. com.example.MyClass, never null
    */
   String getQualifiedTypeName();
 
+  /**
+   * <p>
+   * Returns the simple type name, e.g. {@code MyClass}, never {@code null}.
+   * </p>
+   * 
+   * @return the simple type name, e.g. {@code MyClass}, never {@code null}.
+   */
+  String getName();
+
+  /**
+   * <p>
+   * Returns the fully qualified (Java) type name, e.g. {@code com.example.MyClass}, never {@code null}.
+   * </p>
+   * 
+   * @return the fully qualified (Java) type name, e.g. {@code com.example.MyClass}, never {@code null}.
+   */
+  String getQualifiedName();
 }

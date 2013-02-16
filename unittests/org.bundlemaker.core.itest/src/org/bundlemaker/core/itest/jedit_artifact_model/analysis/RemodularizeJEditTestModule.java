@@ -43,7 +43,7 @@ public class RemodularizeJEditTestModule extends AbstractJeditAnalysisModelTest 
     assertModificationCount(2);
 
     // STEP: move package 'org.gjt.sp.util' to module 'jedit-util'
-    IPackageArtifact utilPackageArtifact = AnalysisModelQueries.findPackageArtifact(model.getJeditModuleArtifact(),
+    IPackageArtifact utilPackageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(model.getJeditModuleArtifact(),
         "org.gjt.sp.util");
     Assert.assertNotNull(utilPackageArtifact);
     utilModuleArtifact.addArtifact(utilPackageArtifact);
@@ -64,7 +64,7 @@ public class RemodularizeJEditTestModule extends AbstractJeditAnalysisModelTest 
     assertModificationCount(5);
 
     // STEP: move package 'org.gjt.sp.jedit.bsh' to module 'jedit-bsh'
-    IPackageArtifact bshPackageArtifact = AnalysisModelQueries.findPackageArtifact(model.getJeditModuleArtifact(),
+    IPackageArtifact bshPackageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(model.getJeditModuleArtifact(),
         "org.gjt.sp.jedit.bsh");
     Assert.assertNotNull(bshPackageArtifact);
     bshModuleArtifact.addArtifact(bshPackageArtifact);

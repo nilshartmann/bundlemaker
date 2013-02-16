@@ -189,11 +189,12 @@ public class MvnProjectContentProviderEditor extends AbstractProjectContentProvi
       _actionList = new LinkedList<IAction>();
 
       //
-      _reloadFromLocalRepositoryAction = new ReloadFromRepositoryAction("Reload from local repository", this,
+      _reloadFromLocalRepositoryAction = new ReloadFromRepositoryAction("Reload from local repository", this, project,
           false);
 
       //
-      _reloadFromRemoteRepositoryAction = new ReloadFromRepositoryAction("Reload from remote repository", this, true);
+      _reloadFromRemoteRepositoryAction = new ReloadFromRepositoryAction("Reload from remote repository", this,
+          project, true);
 
       _actionList.add(_reloadFromLocalRepositoryAction);
       _actionList.add(_reloadFromRemoteRepositoryAction);

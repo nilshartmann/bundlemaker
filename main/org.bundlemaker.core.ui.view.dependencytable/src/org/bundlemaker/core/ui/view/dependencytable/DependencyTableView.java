@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
@@ -319,7 +319,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
       setColumnTitles(fromColumnTitle, toColumnTitle);
 
-      List<IDependency> leafDependencies = ArtifactUtils.getAllLeafDependencies(getCurrentDependencySelection()
+      List<IDependency> leafDependencies = AnalysisModelQueries.getCoreDependencies(getCurrentDependencySelection()
           .getSelectedDependencies());
 
       IDependency[] dependencies = leafDependencies.toArray(new IDependency[0]);

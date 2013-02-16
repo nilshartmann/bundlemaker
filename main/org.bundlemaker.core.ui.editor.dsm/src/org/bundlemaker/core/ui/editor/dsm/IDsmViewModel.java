@@ -13,47 +13,54 @@ import org.bundlemaker.core.ui.editor.dsm.figures.IMatrixCycleDetector;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IDsmViewModel extends IMatrixContentProvider, IMatrixCycleDetector {
+public interface IDsmViewModel extends IMatrixContentProvider,
+		IMatrixCycleDetector {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  IDsmViewConfiguration getConfiguration();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	IDsmViewConfiguration getConfiguration();
 
-  void refresh(Collection<IBundleMakerArtifact> artifacts);
+	void refresh(Collection<IBundleMakerArtifact> artifacts);
 
-  int getItemCount();
+	@Override
+	int getItemCount();
 
-  boolean isUseShortendLabels();
+	String[] getLabels();
 
-  String[] getShortendLabels();
+	/**
+	 * @return the labels according to the user-selected presentation mode
+	 */
+	String[] getDisplayLabels();
 
-  String[] getLabels();
+	String[][] getValues();
 
-  String[][] getValues();
+	void addObserver(Observer observer);
 
-  void addObserver(Observer observer);
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	@Override
+	int[][] getCycles();
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  int[][] getCycles();
+	@Override
+	boolean isInCycle(int i);
 
-  boolean isInCycle(int i);
+	@Override
+	boolean isInCycle(int i, int j);
 
-  boolean isInCycle(int i, int j);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean isToggled();
+	/**
+	 * <p>
+	 * </p>
+	 * 
+	 * @return
+	 */
+	@Override
+	boolean isToggled();
 }

@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.analysis.AnalysisModelException;
-import org.bundlemaker.core.analysis.ArtifactHelper;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -50,7 +50,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     Assert.isNotNull(moduleVersion);
 
     //
-    IModuleArtifact moduleArtifact = ArtifactHelper.getChildByPath(_groupAndModuleContainer, new Path(
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.getChildByPath(_groupAndModuleContainer, new Path(
         qualifiedModuleName + "_" + moduleVersion),
         IModuleArtifact.class);
 
@@ -118,7 +118,7 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     Assert.isNotNull(path);
 
     //
-    IGroupArtifact groupArtifact = ArtifactHelper.getChildByPath(_groupAndModuleContainer, path,
+    IGroupArtifact groupArtifact = AnalysisModelQueries.getChildByPath(_groupAndModuleContainer, path,
         IGroupArtifact.class);
 
     // does it already exist?

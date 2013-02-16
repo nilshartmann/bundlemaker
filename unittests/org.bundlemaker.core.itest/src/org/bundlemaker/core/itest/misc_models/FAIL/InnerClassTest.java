@@ -1,17 +1,10 @@
 package org.bundlemaker.core.itest.misc_models.FAIL;
 
-import java.util.Collection;
-
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
 import org.bundlemaker.core.modules.AmbiguousElementException;
-import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.resource.IResource;
-import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -198,6 +200,18 @@ public class Activator extends Plugin {
    */
   public IBundleMakerProject getBundleMakerProject(IProject project) {
     return _projectCache.get(project);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Collection<IBundleMakerProject> getBundleMakerProjects() {
+
+    //
+    return Collections.unmodifiableCollection(_projectCache.values());
   }
 
   /**

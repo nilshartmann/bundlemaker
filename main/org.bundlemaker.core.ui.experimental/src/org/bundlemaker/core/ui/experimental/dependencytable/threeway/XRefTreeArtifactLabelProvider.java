@@ -50,7 +50,7 @@ public class XRefTreeArtifactLabelProvider extends ArtifactTreeLabelProvider imp
       
       //
       for (IBundleMakerArtifact artifact : bundleMakerArtifacts) {
-        _bundleMakerArtifacts.addAll(artifact.getParents());
+        _bundleMakerArtifacts.addAll(artifact.getAncestors());
       }
     }
   }

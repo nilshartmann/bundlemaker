@@ -1,6 +1,5 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.eclipse.core.runtime.Path;
 import org.junit.Assert;

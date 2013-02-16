@@ -8,9 +8,9 @@ import java.util.Set;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.event.selection.Selection;
-import org.bundlemaker.core.ui.view.dependencytree.DependencyTreeArtifactLabelProvider;
 import org.bundlemaker.core.ui.view.dependencytree.Helper;
 import org.bundlemaker.core.ui.view.dependencytree.IExpandStrategy;
 import org.bundlemaker.core.ui.view.dependencytree.VisibleArtifactsFilter;
@@ -99,10 +99,10 @@ public class XRefComposite extends Composite {
     _toTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
 
     //
-    _fromTreeViewer.setLabelProvider(new DependencyTreeArtifactLabelProvider());
+    _fromTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
     _artifactLabelProvider = new XRefTreeArtifactLabelProvider();
     _centerViewer.setLabelProvider(_artifactLabelProvider);
-    _toTreeViewer.setLabelProvider(new DependencyTreeArtifactLabelProvider());
+    _toTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
 
     // add SelectionListeners
     _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());

@@ -1,17 +1,22 @@
 package org.bundlemaker.core.ui.mvn;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.mvn.content.MvnContentProvider;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class ReloadFromRepositoryAction extends AbstractMvnProjectContentProviderEditorAction {
 
   /** - */
-  private boolean _useRemote;
+  private boolean             _useRemote;
+
+  /** - */
+  private IBundleMakerProject _bundleMakerProject;
 
   /**
    * <p>
@@ -19,11 +24,15 @@ public class ReloadFromRepositoryAction extends AbstractMvnProjectContentProvide
    * </p>
    * 
    */
-  public ReloadFromRepositoryAction(String text, MvnProjectContentProviderEditor editor, boolean useRemote) {
+  public ReloadFromRepositoryAction(String text, MvnProjectContentProviderEditor editor,
+      IBundleMakerProject bundleMakerProject, boolean useRemote) {
     super(text, editor);
+    
+    Assert.isNotNull(bundleMakerProject);
 
     //
     _useRemote = useRemote;
+    _bundleMakerProject = bundleMakerProject;
   }
 
   /**
@@ -31,6 +40,6 @@ public class ReloadFromRepositoryAction extends AbstractMvnProjectContentProvide
    */
   @Override
   protected void doWithMvnContentProvider(MvnContentProvider contentProvider) throws Exception {
-    contentProvider.reloadContent(_useRemote);
+    contentProvider.reloadContent(_useRemote, _bundleMakerProject);
   }
 }

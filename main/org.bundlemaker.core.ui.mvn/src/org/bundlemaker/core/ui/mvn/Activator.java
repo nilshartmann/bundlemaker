@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.mvn;
 
-import org.bundlemaker.core.mvn.BmMvnCoreConstants;
+import org.bundlemaker.core.mvn.MvnCoreActivator;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -65,7 +65,7 @@ public class Activator extends AbstractUIPlugin {
     //
     if (_scopedPreferenceStore == null) {
       _scopedPreferenceStore = new ScopedPreferenceStore(InstanceScope.INSTANCE,
-          BmMvnCoreConstants.PLUGIN_ID);
+          MvnCoreActivator.PLUGIN_ID);
     }
 
     //

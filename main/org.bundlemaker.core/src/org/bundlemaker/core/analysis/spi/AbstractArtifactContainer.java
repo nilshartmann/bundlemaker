@@ -273,7 +273,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
     //
     for (IBundleMakerArtifact artifact : artifacts) {
-      IDependency dependency = getDependencyTo(artifact);
+      IDependency dependency = getDependencyFrom(artifact);
       if (dependency != null) {
         result.add(dependency);
       }

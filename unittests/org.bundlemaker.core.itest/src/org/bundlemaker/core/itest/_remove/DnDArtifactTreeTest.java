@@ -1,17 +1,6 @@
 package org.bundlemaker.core.itest._remove;
 
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.bundlemaker.core.analysis.ArtifactUtils;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itest._framework.analysis.jedit_artifact_model.AbstractJeditAnalysisModelTest;
-import org.bundlemaker.core.modules.IModule;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
-import org.junit.Test;
 
 /**
  * <p>

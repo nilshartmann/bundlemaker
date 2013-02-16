@@ -22,20 +22,21 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact>, 
 
   /**
    * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Collection<? extends IBundleMakerArtifact> getParents();
-
-  /**
-   * <p>
    * Returns the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
    * </p>
    * 
    * @return the parent artifact of this artifact or <code>null</code> if this artifact is the root artifact.
    */
   IBundleMakerArtifact getParent();
+
+  /**
+   * <p>
+   * Returns a collection with all ancestors of this {@link IBundleMakerArtifact}.
+   * </p>
+   * 
+   * @return a collection with all ancestors of this {@link IBundleMakerArtifact}.
+   */
+  Collection<? extends IBundleMakerArtifact> getAncestors();
 
   /**
    * <p>
@@ -48,10 +49,12 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact>, 
 
   /**
    * <p>
+   * Returns the nearest ancestor of this {@link IBundleMakerArtifact} that has the specified type.
    * </p>
    * 
    * @param type
-   * @return
+   *          the requested type
+   * @return the nearest ancestor of this {@link IBundleMakerArtifact} that has the specified type.
    */
   <T extends IBundleMakerArtifact> T getParent(Class<T> type);
 
@@ -167,7 +170,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact>, 
 
   /**
    * <p>
-   * Returns {@code true}, if the specified artifact is a parent of this {@link IBundleMakerArtifact}.
+   * Returns {@code true}, if the specified artifact is an ancestor of this {@link IBundleMakerArtifact}.
    * </p>
    * 
    * @param artifact
@@ -188,7 +191,9 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact>, 
   void setProperty(String key, Object value);
 
   /**
-   * Get the keys of all known properties of this Artifact
+   * <p>
+   * Get the keys of all known properties of this Artifact.
+   * </p>
    */
   Set<String> getPropertyKeys();
 
@@ -401,7 +406,7 @@ public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact>, 
    * @param artifacts
    * @return
    */
-  public Collection<? extends IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts);
+  public Collection<IDependency> getDependenciesTo(Collection<? extends IBundleMakerArtifact> artifacts);
 
   /**
    * <p>

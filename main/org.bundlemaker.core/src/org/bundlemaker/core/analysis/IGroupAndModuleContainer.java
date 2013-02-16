@@ -4,29 +4,38 @@ import org.eclipse.core.runtime.IPath;
 
 /**
  * <p>
+ * Defines the method to create new modules or groups for all {@link IBundleMakerArtifact IBundleMakerArtifacts} that
+ * can contain {@link IModuleArtifact IModuleArtifacts} or {@link IGroupArtifact IGroupArtifacts}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * @author Nils Hartmann (nils@nilshartmann.net)
  */
 public interface IGroupAndModuleContainer extends IBundleMakerArtifact {
 
   /**
    * <p>
+   * Creates a new group with the given path. If a group with the given path already exists, the existing group will be
+   * returned.
    * </p>
    * 
    * @param path
-   * @return
+   *          the path of the group
+   * @return the {@link IGroupArtifact} with the specified path
    */
-  IGroupArtifact getOrCreateGroup(IPath path);
+  IGroupArtifact getOrCreateGroup(String path);
 
   /**
    * <p>
+   * Creates a new group with the given path. If a group with the given path already exists, the existing group will be
+   * returned.
    * </p>
    * 
    * @param path
-   * @return
+   *          the path of the group
+   * @return the {@link IGroupArtifact} with the specified path
    */
-  IGroupArtifact getOrCreateGroup(String path);
+  IGroupArtifact getOrCreateGroup(IPath path);
 
   /**
    * <p>
@@ -40,7 +49,7 @@ public interface IGroupAndModuleContainer extends IBundleMakerArtifact {
    * </ul>
    * 
    * <ul>
-   * Give this is a GroupArtifact
+   * Given this is a GroupArtifact
    * <li>...when qualifiedModuleName contains "/" last segment is interpreted as Module name, segments before as GROUP
    * names. Group path starts with this group (relative path)</li>
    * <li>...when qualifedModuleName starts "/"last segment is interpreted as Module name, segments before as GROUP
@@ -51,7 +60,7 @@ public interface IGroupAndModuleContainer extends IBundleMakerArtifact {
    * 
    * @param qualifiedModuleName
    * @param moduleVersion
-   * @return
+   * @return the {@link IModuleArtifact} with the specified name and version
    */
   IModuleArtifact getOrCreateModule(String qualifiedModuleName, String moduleVersion);
 }

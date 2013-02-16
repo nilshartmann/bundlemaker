@@ -532,34 +532,46 @@
 	         </selectionEnablement>
       </linkHelper>          
    </extension>
+   
  <extension
        point="org.eclipse.ui.preferencePages">
     <page
-          class="org.bundlemaker.core.ui.preferences.BundleMakerPreferencePage"
-          id="org.bundlemaker.core.ui.preferences.page"
+          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPreferencesPage"
+          id="org.bundlemaker.core.ui.preferences.bundlemakerpage"
           name="BundleMaker">
     </page>
     <page
-          class="org.bundlemaker.core.ui.preferences.ContentProviderPreferencePage"
+          class="org.bundlemaker.core.ui.internal.preferences.ContentProviderPreferencePage"
           id="org.bundlemaker.core.ui.preferences.page.contentprovider"
-          name="Content Provider"
-          category="org.bundlemaker.core.ui.preferences.page">
+          name="Content Provider">
     </page>
  </extension>
  
-  <extension
-         point="org.eclipse.ui.propertyPages">
-     <page
-          class="org.bundlemaker.core.ui.properties.BundleMakerPropertyPage"
-          id="org.bundlemaker.core.ui.property.page"
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPropertyPage"
+          id="org.bundlemaker.core.ui.property.bundlemakerpage"
           name="BundleMaker">
+        <enabledWhen>
+          <and>
+            <or>
+              <instanceof value="org.eclipse.core.resources.IProject" />
+              <instanceof value="org.eclipse.jdt.core.IJavaProject" />
+            </or>
+            <adapt type="org.eclipse.core.resources.IProject">
+              <test property="org.eclipse.core.resources.projectNature"
+                    value="org.bundlemaker.core.bundlemakernature"/>
+            </adapt>
+          </and>
+        </enabledWhen>
     </page>
-  </extension>
+ </extension>
  
  <extension
        point="org.eclipse.core.runtime.preferences">
     <initializer
-          class="org.bundlemaker.core.ui.preferences.BundleMakerPreferences">
+          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPreferenceInitializer">
     </initializer>
  </extension>
  

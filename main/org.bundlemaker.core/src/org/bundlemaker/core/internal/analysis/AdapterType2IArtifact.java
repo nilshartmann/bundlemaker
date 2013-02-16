@@ -177,7 +177,7 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     // Top-Level class
     ITypeArtifact typeArtifact = getParent(ITypeArtifact.class);
     if (typeArtifact != null) {
-      prefix = typeArtifact.getQualifiedTypeName() + "$";
+      prefix = typeArtifact.getQualifiedName() + "$";
     } else {
       IPackageArtifact packageArtifact = getParent(IPackageArtifact.class);
       if (packageArtifact == null) {

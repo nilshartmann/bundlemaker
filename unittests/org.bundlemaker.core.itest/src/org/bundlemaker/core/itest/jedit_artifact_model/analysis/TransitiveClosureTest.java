@@ -5,10 +5,8 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.itest._framework.analysis.jedit_artifact_model.AbstractJeditAnalysisModelTest;
 import org.junit.Test;
 
@@ -28,7 +26,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getBinHierarchicalModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getBinHierarchicalModel()
         .getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
 
@@ -44,7 +42,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getSrcHierarchicalModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getSrcHierarchicalModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);
@@ -61,7 +59,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getBinFlatModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getBinFlatModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
@@ -78,7 +76,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcFlatTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByPathName(getSrcFlatModel()
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getSrcFlatModel()
         .getRootArtifact(),
         "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);

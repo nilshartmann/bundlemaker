@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.bundlemaker.core.analysis.ArtifactUtils;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -58,7 +58,7 @@ public class Helper {
     Assert.isNotNull(dependencies);
 
     //
-    _unfilteredDependencies = ArtifactUtils.getAllLeafDependencies(dependencies);
+    _unfilteredDependencies = AnalysisModelQueries.getCoreDependencies(dependencies);
 
     //
     _sourceArtifactMap.clear();
@@ -77,7 +77,7 @@ public class Helper {
    * 
    * @param toArtifacts
    */
-  public Set<IBundleMakerArtifact> setToArtifacts(List<IBundleMakerArtifact> toArtifacts) {
+  public Set<IBundleMakerArtifact> setSelectedToArtifacts(List<IBundleMakerArtifact> toArtifacts) {
 
     //
     Assert.isNotNull(toArtifacts);
@@ -89,7 +89,7 @@ public class Helper {
     for (IBundleMakerArtifact bundleMakerArtifact : toArtifacts) {
 
       // we have to find all children
-      for (IBundleMakerArtifact artifact : ArtifactUtils.getSelfAndAllChildren(bundleMakerArtifact)) {
+      for (IBundleMakerArtifact artifact : AnalysisModelQueries.getSelfAndAllChildren(bundleMakerArtifact)) {
         if (_targetArtifactMap.containsKey(artifact)) {
           List<IDependency> dependencies = _targetArtifactMap.get(artifact);
           _filteredDependencies.addAll(dependencies);
@@ -111,7 +111,7 @@ public class Helper {
    * @param fromArtifacts
    * @return
    */
-  public Set<IBundleMakerArtifact> setFromArtifacts(List<IBundleMakerArtifact> fromArtifacts) {
+  public Set<IBundleMakerArtifact> setSelectedFromArtifacts(List<IBundleMakerArtifact> fromArtifacts) {
 
     //
     Assert.isNotNull(fromArtifacts);
@@ -124,7 +124,7 @@ public class Helper {
     for (IBundleMakerArtifact bundleMakerArtifact : fromArtifacts) {
 
       // we have to find all children
-      for (IBundleMakerArtifact artifact : ArtifactUtils.getSelfAndAllChildren(bundleMakerArtifact)) {
+      for (IBundleMakerArtifact artifact : AnalysisModelQueries.getSelfAndAllChildren(bundleMakerArtifact)) {
         if (_sourceArtifactMap.containsKey(artifact)) {
           List<IDependency> dependencies = _sourceArtifactMap.get(artifact);
           _filteredDependencies.addAll(dependencies);
@@ -177,6 +177,26 @@ public class Helper {
    */
   public List<IDependency> getFilteredDependencies() {
     return _filteredDependencies;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<IBundleMakerArtifact, List<IDependency>> getTargetArtifactMap() {
+    return _targetArtifactMap;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public GenericCache<IBundleMakerArtifact, List<IDependency>> getSourceArtifactMap() {
+    return _sourceArtifactMap;
   }
 
   /**

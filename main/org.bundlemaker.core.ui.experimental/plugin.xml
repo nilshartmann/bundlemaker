@@ -65,6 +65,17 @@
             id="org.bundlemaker.core.ui.experimental.editor.xref.threeway.ThreewayXRefView"
             name="Three-way Cross Referencer"> </editor>
    </extension>
-
+   
+   <extension
+         id="org.bundlemaker.core.jdt.content.JdtProjectContentProvider"
+         name="JdtProjectContentProvider"
+         point="org.bundlemaker.core.projectcontentprovider">
+      <projectContentProvider
+            class="org.bundlemaker.core.jdt.content.JdtProjectContentProvider">
+         <jaxbObjectFactory
+               class="org.bundlemaker.core.jdt.content.xml.ObjectFactory">
+         </jaxbObjectFactory>
+      </projectContentProvider>
+   </extension>
 
 </plugin>

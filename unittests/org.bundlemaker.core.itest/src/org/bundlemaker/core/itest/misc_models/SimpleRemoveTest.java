@@ -2,13 +2,11 @@ package org.bundlemaker.core.itest.misc_models;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.ArtifactUtils;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
-import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
@@ -46,10 +44,10 @@ public class SimpleRemoveTest extends AbstractModularizedSystemTest {
     _rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
-    _packageArtifact = AnalysisModelQueries.findPackageArtifact(_rootArtifact, "de.test.basic");
+    _packageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(_rootArtifact, "de.test.basic");
     Assert.assertNotNull(_packageArtifact);
 
-    _typeArtifact = AnalysisModelQueries.findTypeArtifact(_packageArtifact, "de.test.basic.TestClass");
+    _typeArtifact = AnalysisModelQueries.findTypeArtifactByQualifiedName(_packageArtifact, "de.test.basic.TestClass");
     Assert.assertNotNull(_typeArtifact);
 
     _moduleArtifact = AnalysisModelQueries.getModuleArtifact(_rootArtifact, "BasicArtifactTest");

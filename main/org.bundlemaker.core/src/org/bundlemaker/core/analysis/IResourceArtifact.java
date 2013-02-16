@@ -19,4 +19,22 @@ public interface IResourceArtifact extends IBundleMakerArtifact {
    * @return the associated resource.
    */
   IResource getAssociatedResource();
+
+  /**
+   * <p>
+   * Returns the simple resource name, e.g. {@code MyClass.class}, never {@code null}.
+   * </p>
+   * 
+   * @return the simple type name, e.g. {@code MyClass.class}, never {@code null}.
+   */
+  String getName();
+
+  /**
+   * <p>
+   * Returns the fully qualified resource name, e.g. {@code com/example/MyClass.class}, never {@code null}.
+   * </p>
+   * 
+   * @return the fully qualified resource name, e.g. {@code com/example/MyClass}, never {@code null}.
+   */
+  String getQualifiedName();
 }

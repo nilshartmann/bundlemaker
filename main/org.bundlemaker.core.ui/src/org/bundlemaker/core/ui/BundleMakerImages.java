@@ -32,6 +32,10 @@ public enum BundleMakerImages {
    */
   BUNDLEMAKER_ICON_SMALL("icons/bundlemaker-icon-small.png"),
   /**
+   * represents an archive with binary resources
+   */
+  BUNDLEMAKER_PROJECT("icons/decorator/bm_project_decorator.png"),
+  /**
    * The 'parse bundlemaker project' icon
    */
   BUNDLEMAKER_PARSE_PROJECT("icons/etools/bm-parse.png"),

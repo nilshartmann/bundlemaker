@@ -1,16 +1,6 @@
 package org.bundlemaker.core.itest._remove;
 
-import junit.framework.Assert;
-
-import org.bundlemaker.core.analysis.ArtifactHelper;
-import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
-import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.itest._framework.analysis.jedit_artifact_model.AbstractJeditAnalysisModelTest;
-import org.junit.Test;
 
 /**
  * <p>

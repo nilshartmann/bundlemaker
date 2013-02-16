@@ -11,15 +11,4 @@
       </parserfactory>
    </extension>
 
-   <extension
-         id="org.bundlemaker.core.jdt.content.JdtProjectContentProvider"
-         name="JdtProjectContentProvider"
-         point="org.bundlemaker.core.projectcontentprovider">
-      <projectContentProvider
-            class="org.bundlemaker.core.jdt.content.JdtProjectContentProvider">
-         <jaxbObjectFactory
-               class="org.bundlemaker.core.jdt.content.xml.ObjectFactory">
-         </jaxbObjectFactory>
-      </projectContentProvider>
-   </extension>
 </plugin>

@@ -13,7 +13,7 @@
 
    <!-- org.eclipse.core.runtime.preferences -->
    <extension point="org.eclipse.core.runtime.preferences">
-      <initializer class="org.bundlemaker.core.mvn.internal.repository.MvnRepositoriesPreferenceInitializer"
+      <initializer class="org.bundlemaker.core.mvn.internal.MvnRepositoriesPreferenceInitializer"
       > </initializer>
    </extension>
 </plugin>

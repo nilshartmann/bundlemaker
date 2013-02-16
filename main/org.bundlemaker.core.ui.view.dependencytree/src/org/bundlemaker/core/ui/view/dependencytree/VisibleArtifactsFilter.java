@@ -43,10 +43,10 @@ public class VisibleArtifactsFilter extends ViewerFilter {
    */
   public VisibleArtifactsFilter(Collection<IBundleMakerArtifact> visibleArtifacts) {
 
-    //
+    // add all visible artifacts
     this._artifacts.addAll(visibleArtifacts);
 
-    //
+    // add the parent nodes as well
     for (IBundleMakerArtifact dependency : visibleArtifacts) {
       IBundleMakerArtifact parent = dependency.getParent();
       while (parent != null) {

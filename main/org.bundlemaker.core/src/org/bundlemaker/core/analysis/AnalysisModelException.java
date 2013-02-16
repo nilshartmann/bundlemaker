@@ -2,6 +2,8 @@ package org.bundlemaker.core.analysis;
 
 /**
  * <p>
+ * The {@link AnalysisModelException} is a {@link RuntimeException} that is thrown if an exception occurred while
+ * executing a method that is implemented by an {@link IBundleMakerArtifact}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -26,7 +28,9 @@ public class AnalysisModelException extends RuntimeException {
    * </p>
    * 
    * @param message
+   *          the message
    * @param cause
+   *          the cause
    */
   public AnalysisModelException(String message, Throwable cause) {
     super(message, cause);
@@ -38,6 +42,7 @@ public class AnalysisModelException extends RuntimeException {
    * </p>
    * 
    * @param message
+   *          the message
    */
   public AnalysisModelException(String message) {
     super(message);
@@ -49,6 +54,7 @@ public class AnalysisModelException extends RuntimeException {
    * </p>
    * 
    * @param cause
+   *          the cause
    */
   public AnalysisModelException(Throwable cause) {
     super(cause);

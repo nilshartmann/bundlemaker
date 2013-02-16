@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: org.bundlemaker.core.mvn
 Bundle-SymbolicName: org.bundlemaker.core.mvn;singleton:=true
-Bundle-Version: 0.9.0.qualifier
+Bundle-Version: 0.10.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  libs/aether-api-1.13.1.jar,
@@ -22,14 +22,17 @@ Bundle-ClassPath: .,
  libs/wagon-ahc-1.2.1.jar,
  libs/wagon-provider-api-1.0.jar,
  libs/slf4j-api-1.6.2.jar,
- libs/netty-3.2.5.Final.jar
-Require-Bundle: org.bundlemaker.core;bundle-version="0.9.0",
+ libs/netty-3.2.5.Final.jar,
+ libs/maven-settings-3.0.4.jar,
+ libs/maven-settings-builder-3.0.4.jar
+Require-Bundle: org.bundlemaker.core;bundle-version="0.10.0",
  org.eclipse.core.runtime;bundle-version="3.6.0",
- org.eclipse.core.resources;bundle-version="3.8.1"
+ org.eclipse.core.resources;bundle-version="3.8"
 Export-Package: org.bundlemaker.core.mvn,
  org.bundlemaker.core.mvn.content,
  org.bundlemaker.core.mvn.content.xml,
- org.bundlemaker.core.mvn.exporter
-Bundle-Activator: org.bundlemaker.core.mvn.internal.MvnCoreActivator
+ org.bundlemaker.core.mvn.exporter,
+ org.bundlemaker.core.mvn.preferences
+Bundle-Activator: org.bundlemaker.core.mvn.MvnCoreActivator
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: bundlemaker.org
