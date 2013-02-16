@@ -54,7 +54,9 @@
 		<location dir="${targetplatform-subdir}/target.platform/draw2d" />
 		<location dir="${targetplatform-subdir}/target.platform/ds" />
 		<location dir="${targetplatform-subdir}/target.platform/gson" />
+		<location dir="${targetplatform-subdir}/target.platform/guava" />
 		<location dir="${targetplatform-subdir}/target.platform/test.utils" />
+		<location dir="${targetplatform-subdir}/target.platform/tinkerpop" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
 	
