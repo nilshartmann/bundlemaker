@@ -12,6 +12,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -433,6 +434,22 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.analysis.spi.AbstractArtifact#addDefaultProperties(java.util.HashMap)
+   */
+  @Override
+  protected void addDefaultProperties(HashMap<String, Object> properties) {
+    super.addDefaultProperties(properties);
+
+    IPackageArtifact packageArtifact = getParent(IPackageArtifact.class);
+    String namespace = (packageArtifact == null ? "" : packageArtifact.getPackageName());
+    properties.put("namespace", namespace);
+    properties.put("abstract", getAssociatedType().isAbstractType());
+
+  }
+
   @Override
   public boolean canAdd(IBundleMakerArtifact artifact) {
     return false;
@@ -451,6 +468,11 @@ public class AdapterType2IArtifact extends AbstractArtifact implements IMovableU
   @Override
   public IType getAssociatedType() {
     return _type;
+  }
+
+  @Override
+  protected String getArtifactType() {
+    return "type";
   }
 
   /**

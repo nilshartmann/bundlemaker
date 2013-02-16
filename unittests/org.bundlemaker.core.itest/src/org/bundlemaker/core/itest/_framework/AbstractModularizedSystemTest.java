@@ -11,6 +11,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.itestframework.BundleMakerTestUtils;
 import org.bundlemaker.core.itestframework.FileDiffUtil;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -71,11 +72,16 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
         getTestProjectName());
 
     // apply the basic group transformation
-    _modularizedSystem.applyTransformations(null, new GroupTransformation(new ModuleIdentifier(getTestProjectName(),
-        "1.0.0"), new Path("group1/group2")));
+    applyBasicTransformation(_modularizedSystem);
+    
 
     // assert the test module
     Assert.assertNotNull(getModularizedSystem().getModule(getTestProjectName(), "1.0.0"));
+  }
+  
+  protected void applyBasicTransformation(IModifiableModularizedSystem modularizedSystem) {
+    modularizedSystem.applyTransformations(null, new GroupTransformation(new ModuleIdentifier(getTestProjectName(),
+        "1.0.0"), new Path("group1/group2")));
   }
 
   @Override

@@ -272,6 +272,11 @@ public class VirtualType2IArtifact extends AbstractArtifact implements IMovableU
     return true;
   }
 
+  @Override
+  protected String getArtifactType() {
+    return "virtualtype";
+  }
+
   /**
    * {@inheritDoc}
    */

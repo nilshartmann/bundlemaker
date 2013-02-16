@@ -193,6 +193,11 @@ public final class AdapterGroup2IArtifact extends AbstractArtifactContainer impl
     }
   }
 
+  @Override
+  protected String getArtifactType() {
+    return "group";
+  }
+
   /**
    * {@inheritDoc}
    */
