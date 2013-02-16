@@ -203,7 +203,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
    * @param rootArtifact
    * @return
    */
-  private static IRootArtifact newVirtualRoot(final IRootArtifact rootArtifact) {
+  private IRootArtifact newVirtualRoot(final IRootArtifact rootArtifact) {
     return (IRootArtifact) Proxy.newProxyInstance
         (rootArtifact
             .getClass().getClassLoader(),
@@ -211,7 +211,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
             new VirtualRootInvocationHandler(rootArtifact));
   }
 
-  static class VirtualRootInvocationHandler implements InvocationHandler {
+  class VirtualRootInvocationHandler implements InvocationHandler {
     private final IRootArtifact _rootArtifact;
 
     private VirtualRootInvocationHandler(IRootArtifact rootArtifact) {
@@ -223,15 +223,16 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
         Object[] args) throws Throwable {
 
       if (isEqualsMethod(method)) {
-        return this.equals(args[0]);
+        return (proxy == args[0] ? Boolean.TRUE : Boolean.FALSE);
       }
 
       if (isHashCodeMethod(method)) {
-        return this.hashCode();
+        return new Integer(System.identityHashCode(proxy));
       }
 
       if (isToStringMethod(method)) {
-        return this.toString();
+        return proxy.getClass().getName() + '@' +
+            Integer.toHexString(proxy.hashCode());
       }
 
       return method.invoke(_rootArtifact, args);
