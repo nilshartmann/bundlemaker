@@ -129,7 +129,7 @@ public class TypeTest extends AbstractModularizedSystemTest {
   
   protected ITypeArtifact getTypeArtifact(String name) {
     String expectedName = "org.typetest." + name;
-    ITypeArtifact typeArtifact = AnalysisModelQueries.findTypeArtifact(_rootArtifact, expectedName);
+    ITypeArtifact typeArtifact = AnalysisModelQueries.findTypeArtifactByQualifiedName(_rootArtifact, expectedName);
     assertNotNull("Type '" + expectedName + "' not found", typeArtifact);
     return typeArtifact;
   }
