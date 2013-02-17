@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
+<?pde version="3.8"?>
 
-<target name="Running Platform" sequenceNumber="39">
+<target name="Running Platform" sequenceNumber="40">
 <locations>
 <location path="${project_loc:target.platform}/bundlor-1.1.0.M04/plugins" type="Directory"/>
 <location path="${eclipse_home}" type="Profile"/>
 <location path="${project_loc:target.platform}/ds" type="Directory"/>
 <location path="${project_loc:target.platform}/draw2d" type="Directory"/>
 <location path="${project_loc:target.platform}/gson" type="Directory"/>
+<location path="${project_loc:target.platform}/guava" type="Directory"/>
+<location path="${project_loc:target.platform}/tinkerpop" type="Directory"/>
 </locations>
 <environment>
 <nl>de_DE</nl>

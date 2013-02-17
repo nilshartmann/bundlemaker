@@ -9,6 +9,8 @@ import org.bundlemaker.core.analysis.spi.IReferencingArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.eclipse.core.runtime.IPath;
 
+import com.tinkerpop.blueprints.Vertex;
+
 /**
  * <p>
  * Common interface for all nodes in a BundleMaker artifact tree.
@@ -16,7 +18,7 @@ import org.eclipse.core.runtime.IPath;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact> {
+public interface IBundleMakerArtifact extends Comparable<IBundleMakerArtifact>, Vertex {
 
   /**
    * <p>

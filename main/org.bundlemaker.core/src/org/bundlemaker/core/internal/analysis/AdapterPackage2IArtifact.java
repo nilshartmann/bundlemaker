@@ -180,6 +180,11 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
     AdapterUtils.removeArtifact(artifact, this);
   }
 
+  @Override
+  protected String getArtifactType() {
+    return "package";
+  }
+
   /**
    * {@inheritDoc}
    */

@@ -1,7 +1,9 @@
 package org.bundlemaker.core.analysis;
 
 import java.util.Collection;
+import java.util.Set;
 
+import com.tinkerpop.blueprints.Edge;
 
 /**
  * <p>
@@ -9,7 +11,7 @@ import java.util.Collection;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IDependency {
+public interface IDependency extends Edge {
 
   /**
    * <p>
@@ -54,4 +56,15 @@ public interface IDependency {
   public Collection<IDependency> getCoreDependencies();
 
   DependencyKind getDependencyKind();
+
+  /**
+   * @return
+   */
+  Set<String> getPropertyKeys();
+
+  /**
+   * @param key
+   * @return
+   */
+  Object getProperty(String key);
 }
