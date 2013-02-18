@@ -179,20 +179,25 @@ public class BundleMakerProject implements IBundleMakerProject {
     IPersistentDependencyStoreFactory factory = Activator.getDefault().getPersistentDependencyStoreFactory();
     IPersistentDependencyStore store = factory.getPersistentDependencyStore(this);
 
-    // get the dependency store
-    ModelSetup modelSetup = new ModelSetup(this);
-    _problems = modelSetup.setup(_projectDescription.getContent(), store, progressMonitor);
+    try {
 
-    // set 'READY' state
-    _projectState = BundleMakerProjectState.READY;
+      // get the dependency store
+      ModelSetup modelSetup = new ModelSetup(this);
+      _problems = modelSetup.setup(_projectDescription.getContent(), store, progressMonitor);
 
-    // create default working copy
-    IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
-        .getName())
-        : createModularizedSystemWorkingCopy(progressMonitor, getProject().getName());
+      // set 'READY' state
+      _projectState = BundleMakerProjectState.READY;
 
-    // release the store
-    factory.releasePersistentDependencyStore(this);
+      // create default working copy
+      IModularizedSystem modularizedSystem = hasModularizedSystemWorkingCopy(getProject().getName()) ? getModularizedSystemWorkingCopy(getProject()
+          .getName())
+          : createModularizedSystemWorkingCopy(progressMonitor, getProject().getName());
+
+    } finally {
+
+      // release the store
+      factory.releasePersistentDependencyStore(this);
+    }
 
     // notify listeners
     notifyListeners(new BundleMakerProjectChangedEvent(Type.PROJECT_STATE_CHANGED));
