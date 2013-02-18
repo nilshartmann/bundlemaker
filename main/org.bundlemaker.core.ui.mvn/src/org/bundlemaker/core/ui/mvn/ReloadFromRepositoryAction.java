@@ -27,7 +27,7 @@ public class ReloadFromRepositoryAction extends AbstractMvnProjectContentProvide
   public ReloadFromRepositoryAction(String text, MvnProjectContentProviderEditor editor,
       IBundleMakerProject bundleMakerProject, boolean useRemote) {
     super(text, editor);
-    
+
     Assert.isNotNull(bundleMakerProject);
 
     //
@@ -40,6 +40,6 @@ public class ReloadFromRepositoryAction extends AbstractMvnProjectContentProvide
    */
   @Override
   protected void doWithMvnContentProvider(MvnContentProvider contentProvider) throws Exception {
-    contentProvider.reloadContent(_useRemote, _bundleMakerProject);
+    contentProvider.reloadContent(_useRemote, true, _bundleMakerProject);
   }
 }

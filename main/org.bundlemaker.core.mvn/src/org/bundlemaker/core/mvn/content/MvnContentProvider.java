@@ -37,6 +37,7 @@ import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.graph.DependencyVisitor;
 import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.repository.RepositoryPolicy;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.resolution.ArtifactResult;
@@ -174,7 +175,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     if (_fileBasedContents != null && !_fileBasedContents.isEmpty()) {
       return _fileBasedContents;
     } else {
-      reloadContent(true, bundleMakerProject);
+      reloadContent(true, false, bundleMakerProject);
     }
 
     // return the result
@@ -187,11 +188,12 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * 
    * @throws CoreException
    */
-  public void reloadContent(final boolean useRemoteRepository, IBundleMakerProject bundleMakerProject) throws CoreException {
+  public void reloadContent(final boolean useRemoteRepository, final boolean reloadFromRemote,
+      IBundleMakerProject bundleMakerProject) throws CoreException {
 
     // set the IBundleMakerProject
     _bundleMakerProject = bundleMakerProject;
-    
+
     // create a new session
     _currentSystemSession = _repositoryAdapter.newSession();
 
@@ -213,6 +215,17 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       // add the remote repository is necessary
       if (useRemoteRepository) {
         for (RemoteRepository remoteRepository : _repositoryAdapter.getRemoteRepositories()) {
+
+          //
+          RepositoryPolicy policy = reloadFromRemote ? new RepositoryPolicy(true,
+              RepositoryPolicy.UPDATE_POLICY_ALWAYS, RepositoryPolicy.CHECKSUM_POLICY_IGNORE) : new RepositoryPolicy(
+              true,
+              RepositoryPolicy.UPDATE_POLICY_DAILY, RepositoryPolicy.CHECKSUM_POLICY_IGNORE);
+
+          //
+          remoteRepository.setPolicy(true, policy);
+
+          //
           collectRequest.addRepository(remoteRepository);
         }
       }
@@ -247,7 +260,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
         if (exceptions.size() > 0) {
 
           Entry<DependencyNode, CoreException> entry = exceptions.entrySet().toArray(new Entry[0])[0];
-          
+
           if (artifact.equals(entry.getKey().getDependency().getArtifact())) {
             throw new CoreException(new Status(Status.ERROR, MvnCoreActivator.PLUGIN_ID,
                 entry.getValue().getMessage(),
@@ -258,7 +271,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
           else {
             // TODO
             System.out.println("TODO: Handle missing artifacts:");
-            for (DependencyNode node: exceptions.keySet()) {
+            for (DependencyNode node : exceptions.keySet()) {
               System.out.println(node.toString());
             }
           }
