@@ -44,6 +44,7 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
    * Name of the bundles that define the Classpath Container (as plain JARs)
    */
   private final static String[]    BUNDLEMAKER_LIBRARY_BUNDLES = new String[] { "org.bundlemaker.core", //
+      "com.tinkerpop.blueprints.blueprints-core", //
       "org.bundlemaker.core.transformations", //
       "org.bundlemaker.core.ui", //
       "org.eclipse.core.resources", //
