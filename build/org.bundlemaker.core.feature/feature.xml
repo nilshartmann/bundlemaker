@@ -243,13 +243,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="com.springsource.slf4j.api"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bundlemaker.core.ui.print"
          download-size="0"
          install-size="0"
@@ -292,13 +285,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.javakontor.org.osgi.service.component.annotations"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bundlemaker.core.ui.app.perspective"
          download-size="0"
          install-size="0"
@@ -320,14 +306,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="com.springsource.slf4j.nop"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.bundlemaker.core.ui.view.problemview"
          download-size="0"
          install-size="0"
@@ -335,13 +313,6 @@ litigation.
 
    <plugin
          id="org.bundlemaker.core.ui.mvn"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.google.gson"
          download-size="0"
          install-size="0"
          version="0.0.0"
