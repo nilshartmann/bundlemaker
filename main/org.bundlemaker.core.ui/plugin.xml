@@ -295,11 +295,6 @@
 		</handler>
 	</extension>
 
-	<extension point="org.eclipse.ui.bindings">
-		<key sequence="F2" commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
-			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-	</extension>
-
 	<!-- -->
 	<extension point="org.eclipse.jdt.ui.javaElementFilters">
 		<filter class="org.bundlemaker.core.ui.internal.BundleMakerProjectViewerFilter"
