@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<!-- the IArtifact property tester -->
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester id="org.bundlemaker.analysis.ui.expressions.ArtifactPropertyTester"
+			class="org.bundlemaker.core.ui.expressions.ArtifactPropertyTester"
+			namespace="org.bundlemaker.analysis.ui.expressions.IArtifact" properties="type"
+			type="org.bundlemaker.core.analysis.IBundleMakerArtifact"> </propertyTester>
+	</extension>
+
+	<!-- the expression definitions -->
+	<extension point="org.eclipse.core.expressions.definitions">
+	
+		<!-- org.bundlemaker.analysis.ui.artifactContentSelected: 
+		     evaluates to true if all  of the selected elements are IBundleMakerArtifact -->
+		<definition id="org.bundlemaker.analysis.ui.artifactContentSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/> 
+				</iterate>
+			</with>
+		</definition>
+
+		<!-- org.bundlemaker.analysis.ui.artifactContentNoRootSelected: 
+		     evaluates to true if all  of the selected elements are IBundleMakerArtifacts but not IRootArtifacts -->
+		<definition id="org.bundlemaker.analysis.ui.artifactContentNoRootSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<and>
+						<not>
+						<instanceof value="org.bundlemaker.core.analysis.IRootArtifact"/> 
+						</not>
+						<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/> 
+					</and>
+				</iterate>
+			</with>
+		</definition>
+		
+		<!-- org.bundlemaker.analysis.ui.singleRootArtifactSelected
+		  evaluates to true if exactly one root artifact is selected -->
+        <definition id="org.bundlemaker.analysis.ui.singleRootArtifactSelected">
+			<with variable="selection">
+				<count value="1" />
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IRootArtifact"
+					> </instanceof>
+				</iterate>
+			</with>
+		</definition>
+		  
+		
+		<!-- org.bundlemaker.analysis.ui.groupAndModuleContentSelected: 
+		     evaluates to true if all  of the selected elements are IGroupAndModuleContainer -->
+        <definition id="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected">
+			<with variable="selection">
+				<count value="1" />
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IGroupAndModuleContainer"
+					> </instanceof>
+				</iterate>
+			</with>
+		</definition>
+		
+		<!-- org.bundlemaker.analysis.ui.bmContentSelected: evaluates
+             to true if all selected elements are Root-IArtifacts (i.e. ModularizedSystems) -->    
+		<definition id="org.bundlemaker.analysis.ui.rootArtifactContentSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"> </instanceof>
+					<test
+						property="org.bundlemaker.analysis.ui.expressions.IArtifact.type"
+						value="Root" forcePluginActivation="true"/>
+				</iterate>
+			</with>
+		</definition>
+		
+		<!-- org.bundlemaker.core.ui.bmProjectSelected: evaluates
+             to true if a Project with BundleMaker-Nature or it's bundlemaker.xml is selected -->
+		<definition id="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected">
+			<with variable="selection">
+				<!-- exactly one item must be selected -->
+				<count value="1" />
+				<iterate ifEmpty="false" operator="and">
+						<!-- Test if a resource from a bundlemaker project is selected -->
+						<adapt type="org.eclipse.core.resources.IResource">
+							<test property="org.eclipse.core.resources.projectNature"
+								value="org.bundlemaker.core.bundlemakernature"/>
+							<or>
+								<!-- either the Project itself or the bundlemaker.xml must be selected -->
+							 <instanceof value="org.eclipse.core.resources.IProject" />
+							 <test property="org.eclipse.core.resources.name"
+                         value="bundlemaker.xml"/>
+							</or>
+						</adapt>
+				</iterate>
+			</with>
+		</definition>		              
+	</extension>
+
+	<extension point="org.eclipse.ui.views">
+		<category id="org.bundlemaker.analysis.ui.views.category"
+			name="BundleMaker Dependency Analysis"> </category>
+	</extension>
+
+	<!-- -->
+	<extension point="org.eclipse.ui.navigator.navigatorContent">
+		<navigatorContent activeByDefault="true"
+			contentProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider"
+			id="org.bundlemaker.analysis.ui.navigatorContent1"
+			labelProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider"
+			name="artifactContent" priority="lowest">
+			<triggerPoints>
+				<and>
+					<instanceof value="org.eclipse.core.resources.IProject"> </instanceof>
+					<adapt type="org.eclipse.core.resources.IProject">
+						<test property="org.eclipse.core.resources.projectNature"
+							value="org.bundlemaker.core.bundlemakernature"/>
+					</adapt>
+				</and>
+			</triggerPoints>
+			<dropAssistant
+				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeDropAdapterAssistant"
+				id="org.bundlemaker.core.ui.dropAssistant1">
+				<possibleDropTargets>
+					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"
+					> </instanceof>
+				</possibleDropTargets>
+			</dropAssistant>
+			<possibleChildren>
+				<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/>
+			</possibleChildren>
+			<commonSorter
+				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter"> </commonSorter>
+		</navigatorContent>
+	</extension>
+
+	<!-- the navigator content-->
+	<extension point="org.eclipse.ui.navigator.viewer">
+		<viewer viewerId="org.eclipse.ui.navigator.ProjectExplorer"> </viewer>
+		<viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+			<includes>
+				<contentExtension isRoot="false"
+					pattern="org.bundlemaker.analysis.ui.navigatorContent1"
+				> 
+				
+				</contentExtension>
+    <contentExtension
+          pattern="org.bundlemaker.core.ui.utils.BundleMakerFileLinkHelper">
+    </contentExtension>
+			</includes>
+		</viewerContentBinding>
+	</extension>
+
+	<!-- additional menus in the project navigator view -->
+	<extension id="org.bundlemaker.core.ui.view.navigator.menus" point="org.eclipse.ui.menus">
+		<menuContribution locationURI="menu:org.eclipse.ui.navigator.ProjectExplorer">
+			<command
+				commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
+				style="push"> </command>
+		</menuContribution>
+	</extension>
+
+
+	<!-- An expression evaluating to true if a BMT-file has been selected -->
+	<extension point="org.eclipse.core.expressions.definitions">
+		<definition id="org.bundlemaker.core.ui.bmtFileSelected">
+			<iterate ifEmpty="false">
+				<instanceof value="org.eclipse.core.resources.IFile"/>
+				<test property="org.eclipse.core.resources.name" value="*.bmt"/>
+			</iterate>
+		</definition>
+	</extension>
+
+	<!-- ======================================== -->
+	<!-- the handlers -->
+	<!-- ======================================== -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler class="org.bundlemaker.core.ui.handler.ParseBundleMakerProjectHandler"
+			commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand">
+			<activeWhen>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected"></reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected"></reference>
+			</enabledWhen>
+		</handler>
+		<handler class="org.bundlemaker.core.ui.handler.exporter.PdePluginProjectExportHandler"
+			commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler">
+			<activeWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</enabledWhen>
+		</handler>
+		<handler class="org.bundlemaker.core.ui.handler.exporter.ReportExportHandler"
+			commandId="org.bundlemaker.core.ui.commands.ReportExportHandler">
+			<activeWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</enabledWhen>
+		</handler>
+		<handler class="org.bundlemaker.core.ui.handler.exporter.BinaryBundleExportHandler"
+			commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler">
+			<activeWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</enabledWhen>
+		</handler>
+		<handler commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
+			class="org.bundlemaker.core.ui.handler.CustomizeDependencyTreeHandler"> </handler>
+		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
+			class="org.bundlemaker.core.ui.handler.CreateNewGroupHandler">
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected" />
+			</enabledWhen>
+		</handler>
+		<handler commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
+			class="org.bundlemaker.core.ui.handler.CreateNewModuleHandler">
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected" />
+			</enabledWhen>
+		</handler>
+		
+		<!-- MoveArtifactsCommand -->
+	    <handler commandId="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
+			class="org.bundlemaker.core.ui.handler.MoveArtifactsHandler">
+			<enabledWhen>
+				<reference
+         			definitionId="org.bundlemaker.analysis.ui.artifactContentNoRootSelected"/>
+			</enabledWhen>
+		</handler>
+		
+		<handler commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
+			class="org.bundlemaker.core.ui.handler.RenameArtifactHandler">
+			<enabledWhen>
+				<with variable="selection">
+					<count value="1" />
+					<iterate ifEmpty="false" operator="and">
+						<or>
+							<!-- Currently we only support renaming of groups and modules, so only enable on those types -->
+							<instanceof value="org.bundlemaker.core.analysis.IGroupArtifact" />
+							<instanceof value="org.bundlemaker.core.analysis.IModuleArtifact" />
+						</or>
+					</iterate>
+				</with>
+			</enabledWhen>
+		</handler>
+
+		<handler commandId="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand"
+			class="org.bundlemaker.core.ui.handler.RemoveArtifactsHandler">
+			<enabledWhen>
+				<with variable="selection">
+					<iterate ifEmpty="false" operator="and">
+						<or>
+							<instanceof value="org.bundlemaker.core.analysis.IGroupArtifact" />
+							<instanceof value="org.bundlemaker.core.analysis.IModuleArtifact" />
+						</or>
+					</iterate>
+			</with>
+			
+			</enabledWhen>
+		</handler>
+		
+		<handler class="org.bundlemaker.core.ui.handler.RefreshArtifactTreeHandler"
+			commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand">
+			<activeWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</activeWhen>
+			<enabledWhen>
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+				> </reference>
+			</enabledWhen>
+		</handler>
+	</extension>
+
+	<extension point="org.eclipse.ui.bindings">
+		<key sequence="F2" commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+	</extension>
+
+	<!-- -->
+	<extension point="org.eclipse.jdt.ui.javaElementFilters">
+		<filter class="org.bundlemaker.core.ui.internal.BundleMakerProjectViewerFilter"
+			description="Filters any bundlemaker JDT project." enabled="true"
+			id="org.bundlemaker.core.ui.internal.JavaElementFilter"
+			name="BundleMaker$JDT project filter"> </filter>
+	</extension>
+
+
+	<!-- ======================================== -->
+	<!-- wizards -->
+	<!-- ======================================== -->
+
+	<!-- New BundleMaker project -->
+	<extension id="org.bundlemaker.core.ui.newWizards" name="Bundlemaker Wizards"
+		point="org.eclipse.ui.newWizards">
+		<category id="org.bundlemaker.core.ui.wizards.category" name="Bundlemaker"> </category>
+		<wizard
+        canFinishEarly="false"
+        category="org.bundlemaker.core.ui.wizards.category"
+        class="org.bundlemaker.core.ui.wizards.NewBundleMakerProjectWizard"
+        finalPerspective="org.bundlemaker.core.ui.app.perspective"
+        hasPages="true"
+        icon="icons/bundlemaker-icon-small.png"
+        id="org.bundlemaker.core.ui.wizards.newwizard"
+        name="Bundlemaker project"
+        project="true">
+			<description> Create a Bundlemaker project </description>
+		</wizard>
+	</extension>
+
+	<!-- The BundleMaker project content type ('bundlemaker.xml') -->
+	<extension id="org.bundlemaker.core.ui.contentTypes" name="Bundlemaker Contenttypes"
+		point="org.eclipse.core.contenttype.contentTypes">
+		<content-type base-type="org.eclipse.core.runtime.xml" file-names="bundlemaker.xml"
+			id="org.bundlemaker.core.ui.contenttypes.projectdescription"
+			name="Bundlemaker project description" priority="normal"> </content-type>
+	</extension>
+
+	<!-- the commands -->
+	<extension point="org.eclipse.ui.commands">
+		<command id="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand" name="Parse and Open" />
+		<command id="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+			name="Export PDE plug-in projects..."/>
+		<command id="org.bundlemaker.core.ui.commands.ReportExportHandler"
+			name="Export Simple Report"/>
+		<command id="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
+			name="Export binary bundles..."/>
+		<command id="org.bundlemaker.core.ui.commands.TransformHandler" name="Transform..."/>
+		<command id="org.bundlemaker.core.ui.commands.RunTransformationScript"
+			name="Execute transformation..."/>
+		<command id="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
+			name="Customize Dependency Tree..."/>
+		<command id="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
+			name="New Group..."/>
+		<command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
+			name="New Module..."/>
+		<command id="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
+			name="Move..."/>
+		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."/>
+		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"/>
+		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"/> 
+	</extension>
+
+	<!-- ======================================== -->
+	<!-- the pop up menus -->
+	<!-- ======================================== -->
+	<extension point="org.eclipse.ui.menus">
+
+		<menuContribution
+			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions">
+			<!-- Separator used as target for editor plug-ins -->
+			<separator name="org.bundlemaker.core.ui.editor.separator" visible="true"> </separator>
+			
+			<!-- separator for project-related actions (open, close, ...) -->
+			<separator name="org.bundlemaker.core.ui.project.separator" visible="true"> </separator>
+			
+			<command
+         commandId="org.bundlemaker.core.ui.commands.ParseBundleMakerProjectCommand"
+         icon="icons/etools/bm-parse.png"
+         style="push">
+			</command>
+
+			<!-- Separator for artifact-model-modifying operations -->
+			<separator name="org.bundlemaker.core.ui.artifacts.separator" visible="true"> </separator>
+			<command commandId="org.bundlemaker.core.ui.commands.CreateNewGroupCommand"
+				label="New Group..." style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
+				label="New Module..." style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
+				label="Rename..." style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
+				label="Move..." style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>	
+			<command commandId="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand"
+				label="Remove" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand"
+				label="Refresh" icon="icons/refresh.gif" style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>
+			
+			<!-- Separator for Transformation-Script-related operations -->
+			<separator name="org.bundlemaker.core.ui.transformations" visible="true"> </separator>
+			
+		
+			<!-- Exporter section -->
+			<separator name="org.bundlemaker.core.ui.separator.exporter" visible="true"> </separator>
+			<command
+				commandId="org.bundlemaker.core.ui.commands.PdePluginProjectExportHandler"
+				style="push">
+				<visibleWhen checkEnabled="true"/>
+			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.BinaryBundleExportHandler"
+				style="push">
+				<visibleWhen checkEnabled="true"/>
+			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.ReportExportHandler"
+				style="push">
+				<visibleWhen checkEnabled="true"/>
+			</command>
+
+		</menuContribution>
+
+		<menuContribution
+			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=additions"> </menuContribution>
+
+		<menuContribution locationURI="popup:#TextEditorContext?after=additions">
+			<command icon="icons/bundlemaker-icon-small.png"
+				commandId="org.bundlemaker.core.ui.commands.RunTransformationScript"
+				style="push"
+				tooltip="Execute this transformation on a selected BundleMaker project">
+				<visibleWhen checkEnabled="true"/>
+			</command>
+		</menuContribution>
+	</extension>
+	
+	<extension
+    id="org.bundlemaker.core.ui.referencemarker"
+    name="Reference"
+    point="org.eclipse.core.resources.markers">
+  <super
+    type="org.eclipse.core.resources.textmarker">
+  </super>
+</extension>
+
+<extension
+      point="org.eclipse.ui.editors.annotationTypes"
+      id="org.bundlemaker.core.ui.referenceAnno">
+   <type
+         markerType="org.bundlemaker.core.ui.referencemarker"
+         name="org.bundlemaker.core.ui.referencemarker">
+   </type>
+</extension>
+	
+<extension
+      point="org.eclipse.ui.editors.markerAnnotationSpecification">
+   <specification
+         annotationType="org.bundlemaker.core.ui.referencemarker"
+         colorPreferenceKey="org.bundlemaker.core.ui.reference.color"
+         colorPreferenceValue="195,125,100"
+         contributesToHeader="false"
+         highlightPreferenceKey="org.bundlemaker.core.ui.reference.highlight"
+         highlightPreferenceValue="true"
+         includeOnPreferencePage="true"
+         label="MB References Marker"
+         overviewRulerPreferenceKey="org.bundlemaker.core.ui.reference.overview"
+         overviewRulerPreferenceValue="true"
+         presentationLayer="0"
+         showInNextPrevDropdownToolbarAction="true"
+         textPreferenceKey="org.bundlemaker.core.ui.reference.text"
+         textPreferenceValue="true"
+         textStylePreferenceValue="BOX"
+         verticalRulerPreferenceKey="org.bundlemaker.core.ui.reference.ruler"
+         verticalRulerPreferenceValue="true">
+   </specification>
+</extension>
+   
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPreferencesPage"
+          id="org.bundlemaker.core.ui.preferences.bundlemakerpage"
+          name="BundleMaker">
+    </page>
+    <page
+          class="org.bundlemaker.core.ui.internal.preferences.ContentProviderPreferencePage"
+          id="org.bundlemaker.core.ui.preferences.page.contentprovider"
+          name="Content Provider">
+    </page>
+ </extension>
+ 
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPropertyPage"
+          id="org.bundlemaker.core.ui.property.bundlemakerpage"
+          name="BundleMaker">
+        <enabledWhen>
+          <and>
+            <or>
+              <instanceof value="org.eclipse.core.resources.IProject" />
+              <instanceof value="org.eclipse.jdt.core.IJavaProject" />
+            </or>
+            <adapt type="org.eclipse.core.resources.IProject">
+              <test property="org.eclipse.core.resources.projectNature"
+                    value="org.bundlemaker.core.bundlemakernature"/>
+            </adapt>
+          </and>
+        </enabledWhen>
+    </page>
+ </extension>
+ 
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.bundlemaker.core.ui.internal.preferences.BundleMakerPreferenceInitializer">
+    </initializer>
+ </extension>
+ 
+ <!-- BundleMaker Classpath Container -->
+	 <extension
+	 point="org.eclipse.jdt.core.classpathContainerInitializer">
+		<classpathContainerInitializer
+	      class="org.bundlemaker.core.internal.classpath.BundleMakerClasspathContainerInitializer"
+	      id="org.bundlemaker.core.classpath"/>
+	 </extension>
+   
+	<extension
+	      point="org.eclipse.jdt.ui.classpathContainerPage">
+	   <classpathContainerPage
+	   	name="BundleMaker Libraries"
+	         class="org.bundlemaker.core.ui.internal.classpath.BundleMakerClasspathContainerPage"
+	         id="org.bundlemaker.core.classpath">
+	   </classpathContainerPage>
+	</extension>
+ <extension
+       point="org.eclipse.ui.ide.projectNatureImages">
+    <image
+          icon="icons/decorator/bm_project_decorator.png"
+          id="org.bundlemaker.core.bundlemakernature.image"
+          natureId="org.bundlemaker.core.bundlemakernature">
+    </image>
+ </extension>
+
+</plugin>

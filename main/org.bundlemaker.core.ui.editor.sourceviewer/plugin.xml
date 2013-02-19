@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="Sample Editor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="org.bundlemaker.core.ui.editor.sourceviewer.SourceViewerEditor"
+            id="org.bundlemaker.core.ui.editors.sourceViewerEditor"
+            symbolicFontName="org.eclipse.jdt.ui.editors.textfont">
+      </editor>
+   </extension>
+</plugin>

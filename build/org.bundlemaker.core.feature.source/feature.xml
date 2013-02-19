@@ -286,7 +286,7 @@ litigation.
          version="0.0.0"
          unpack="false"/>
 
-    <plugin
+   <plugin
          id="org.bundlemaker.core.ui.view.problemview.source"
          download-size="0"
          install-size="0"
@@ -301,6 +301,13 @@ litigation.
 
    <plugin
          id="org.bundlemaker.core.ui.transformations.source"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.bundlemaker.core.ui.editor.sourceviewer.source"
          download-size="0"
          install-size="0"
          version="0.0.0"
