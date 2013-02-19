@@ -218,14 +218,6 @@ litigation.
    </url>
 
    <includes
-         id="org.bundlemaker.org.springsource.bundlor.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.bundlemaker.com.db4o.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.bundlemaker.core.base.feature"
          version="0.0.0"/>
 
