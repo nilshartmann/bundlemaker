@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="create-all-in-p2-repo" basedir="." default="create-all-in-p2-repo">
+
+	<property name="eclipseInstDir" value="D:\development\eclipse\eclipse-SDK-4.2.1-win32-x86_64\eclipse"/>
+	
+	<!-- ================================= 
+          target: create-all-in-p2-repo              
+         ================================= -->
+	<target name="create-all-in-p2-repo">
+		<copyAndGenerateAndUpload sourceDir="${basedir}" reponame="bundlemaker-thirdparty" eclipseInstDir="${eclipseInstDir}"/>
+	</target>
+
+	<!-- p2 repo macros -->
+	<!-- = = = = = = = = = = = = = = = = =
+         macrodef: copyAndGenerateAndUpload
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="copyAndGenerateAndUpload">
+		<attribute name="sourceDir" />
+		<attribute name="repoName" />
+		<attribute name="tmpDir" default="${basedir}/target/bundlemaker-thirdparty" />
+		<attribute name="eclipseInstDir" />
+		<sequential>
+
+			<!-- copyFeaturesAndPlugins -->
+			<copyFeaturesAndPlugins sourceDir="@{sourceDir}/bundles" targetDir="@{tmpDir}" />
+
+			<!-- createP2Repo -->
+			<createP2Repo eclipseDir="@{eclipseInstDir}" sourceDir="@{tmpDir}" repositoryDir="@{tmpDir}" />
+
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+         macrodef: copyFeaturesAndPlugins
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="copyFeaturesAndPlugins">
+		<attribute name="sourceDir" />
+		<attribute name="targetDir" />
+		<sequential>
+
+			<!-- -->
+			<delete dir="@{targetDir}" quiet="true" />
+			<mkdir dir="@{targetDir}" />
+			<mkdir dir="@{targetDir}/features" />
+			<mkdir dir="@{targetDir}/plugins" />
+
+			<!-- -->
+			<copy todir="@{targetDir}/features" flatten="true">
+				<fileset dir="@{sourceDir}/">
+					<include name="**/features/*.jar" />
+				</fileset>
+			</copy>
+
+			<!-- -->
+			<copy todir="@{targetDir}/plugins" flatten="true">
+				<fileset dir="@{sourceDir}/">
+					<include name="**/plugins/*.jar" />
+				</fileset>
+			</copy>
+
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+         macrodef: createP2Repo
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="createP2Repo">
+		<attribute name="eclipseDir" />
+		<attribute name="sourceDir" />
+		<attribute name="repositoryDir" />
+		<attribute name="publishArtifacts" default="false" />
+		<sequential>
+
+			<!-- set the publishArtifacts property -->
+			<condition property="pubArt" value="-publishArtifacts" else="">
+				<istrue value="@{publishArtifacts}" />
+			</condition>
+
+			<!-- store path to newest launcher JAR in path id 'newest.equinox.launcher.path.id' -->
+			<path id="newest.equinox.launcher.path.id">
+				<first count="1">
+					<sort>
+						<fileset dir="@{eclipseDir}/plugins" includes="**/org.eclipse.equinox.launcher_*.jar" />
+						<!-- Seems the default order is oldest > newest so we must reverse it.
+                             The 'reverse' and 'date' comparators are in the internal antlib
+                             org.apache.tools.ant.types.resources.comparators.
+                        -->
+						<reverse xmlns="antlib:org.apache.tools.ant.types.resources.comparators">
+							<!-- 'date' inherits 'reverse's namespace -->
+							<date />
+						</reverse>
+					</sort>
+				</first>
+			</path>
+
+			<!-- turn the path into a property -->
+			<property name="equinox.launcher.jar.location" refid="newest.equinox.launcher.path.id" />
+
+			<!-- -->
+			<java failonerror="true" fork="true" jar="${equinox.launcher.jar.location}">
+				<arg value="-consolelog" />
+				<arg value="-application" />
+				<arg value="org.eclipse.equinox.p2.publisher.FeaturesAndBundlesPublisher" />
+				<arg value="-metadataRepository" />
+				<arg value="file://@{repositoryDir}" />
+				<arg value="-artifactRepository" />
+				<arg value="file://@{repositoryDir}" />
+				<arg value="-source" />
+				<arg value="@{sourceDir}" />
+				<arg value="-compress" />
+				<arg value="${pubArt}" />
+			</java>
+
+		</sequential>
+	</macrodef>
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: upload2bmmps01          
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="upload2bmmps01">
+		<attribute name="repositoryName" />
+		<attribute name="localRepoDir" />
+		<sequential>
+
+			<!-- step 1: create the -->
+			<sshexec host="bmmps01.ov.otto.de" username="bilpor" trust="true" keyfile="${basedir}/ssh/.key" command="mkdir /opt/noa/BLIC/@{repositoryName}-new" />
+
+			<!-- step 2: copy the repository -->
+			<scp todir="bilpor@bmmps01.ov.otto.de:/opt/noa/BLIC/@{repositoryName}-new" keyfile="${basedir}/ssh/.key" passphrase="" trust="true" verbose="true">
+				<fileset dir="@{localRepoDir}">
+					<include name="**" />
+				</fileset>
+			</scp>
+
+			<!-- step 3: delete the 'old' repository -->
+			<sshexec host="bmmps01.ov.otto.de" username="bilpor" trust="true" keyfile="${basedir}/ssh/.key" command="rm -rf /opt/noa/BLIC/@{repositoryName}-old" />
+
+			<!-- step 4: move 'p2' -> 'p2-old' -->
+			<sshexec host="bmmps01.ov.otto.de" username="bilpor" trust="true" keyfile="${basedir}/ssh/.key" command="mv /opt/noa/BLIC/@{repositoryName} /opt/noa/BLIC/@{repositoryName}-old" />
+
+			<!-- step 5: move 'p2-new' -> 'p2' -->
+			<sshexec host="bmmps01.ov.otto.de" username="bilpor" trust="true" keyfile="${basedir}/ssh/.key" command="mv /opt/noa/BLIC/@{repositoryName}-new /opt/noa/BLIC/@{repositoryName}" />
+		</sequential>
+	</macrodef>
+
+</project>
