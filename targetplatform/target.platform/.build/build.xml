@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== -->
+<project name="project" default="copy-template" basedir=".">
+
+	<!-- define antcontrib tasks -->
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+
+	<available file="${${basedir}/../p2.target}" property="should.generate" />
+
+	<target name="copy-template" unless="should.generate">
+
+		<propertyregex property="replaced.locations"
+		               override="true"
+		               input="${PROJECT_LOCATION}"
+		               regexp="\\"
+		               replace="/"
+		               global="true" />
+
+		<!-- -->
+		<copy file="${basedir}/p2.target-template"
+		      tofile="${basedir}/../p2.target">
+			<filterset>
+				<filter token="PROJECT_LOC" value="${replaced.locations}" />
+			</filterset>
+		</copy>
+
+	</target>
+
+</project>
