@@ -37,11 +37,14 @@
 	<import file="${basedir}/../libs/ant4eclipse/macros/a4e-pde-test-macros.xml" />
 
 	<!-- set properties -->
-	<property name="bundlemaker.build.properties.file" value="${basedir}/build.properties" />
+	<property name="bundlemaker.build.properties.file"
+	          value="${basedir}/build.properties" />
 	<property file="${bundlemaker.build.properties.file}" />
-	<fail unless="eclipse.install.dir" message="You have to specify a valid eclipse installation directory (${basedir}/build.properties)"/>
-	<fail unless="jdk16.dir" message="You have to specify a valid JDK installation directory (${basedir}/build.properties)"/>
-	
+	<fail unless="eclipse.install.dir"
+	      message="You have to specify a valid eclipse installation directory (${basedir}/build.properties)" />
+	<fail unless="jdk16.dir"
+	      message="You have to specify a valid JDK installation directory (${basedir}/build.properties)" />
+
 	<!-- define some helper propertiess -->
 	<property name="bundlemaker-workspace" value="${basedir}/../../.." />
 	<property name="targetplatform-subdir"
@@ -50,16 +53,12 @@
 
 	<!-- define the ant4eclipse target platform -->
 	<ant4eclipse:targetPlatform id="target.platform">
-		<location dir="${targetplatform-subdir}/target.platform/bundlor-1.1.0.M04" />
-		<location dir="${targetplatform-subdir}/target.platform/draw2d" />
-		<location dir="${targetplatform-subdir}/target.platform/ds" />
-		<location dir="${targetplatform-subdir}/target.platform/gson" />
-		<location dir="${targetplatform-subdir}/target.platform/guava" />
 		<location dir="${targetplatform-subdir}/target.platform/test.utils" />
-		<location dir="${targetplatform-subdir}/target.platform/tinkerpop" />
+		<location dir="${targetplatform-subdir}/target.platform/p2/bundlemaker-thirdparty" />
+		<location dir="${targetplatform-subdir}/target.platform/p2/GEF-Update-3.8.1" />
 		<location dir="${eclipse.install.dir}" />
 	</ant4eclipse:targetPlatform>
-	
+
 	<!-- -->
 	<ant4eclipse:workspaceDefinition id="bundleMakerWorkspace">
 		<dirset dir="${bundlemaker-workspace}">
