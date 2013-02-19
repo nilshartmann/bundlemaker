@@ -2,7 +2,7 @@
 <feature
       id="org.bundlemaker.org.springsource.bundlor.feature"
       label="org.bundlemaker.org.springsource.bundlor.feature"
-      version="1.0.0.RELEASE">
+      version="1.1.0.M04">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -281,6 +281,21 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.slf4j.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.slf4j.nop"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
