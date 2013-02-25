@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.expressions;
+package org.bundlemaker.core.ui.artifact.expression;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.eclipse.core.expressions.PropertyTester;

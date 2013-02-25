@@ -1,12 +1,20 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifactContent;
 import org.eclipse.jface.util.LocalSelectionTransfer;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * <p>
@@ -29,13 +37,47 @@ public class ArtifactTreeViewerFactory {
     return createDefaultArtifactTreeViewer(parent, style);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param parent
+   * @param style
+   * @return
+   */
   public static TreeViewer createDefaultArtifactTreeViewer(Composite parent, int style) {
+
     final TreeViewer treeViewer = new TreeViewer(parent, style);
+
     treeViewer.setUseHashlookup(true);
     treeViewer.setContentProvider(new ArtifactTreeContentProvider(true));
     treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
     treeViewer.setSorter(new ArtifactTreeViewerSorter());
     treeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
+
+    // add doubleclick support
+    treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+      @Override
+      public void doubleClick(DoubleClickEvent event) {
+
+        //
+        IStructuredSelection structuredSelection = (IStructuredSelection) event
+            .getSelection();
+
+        //
+        if (structuredSelection.size() == 1) {
+
+          //
+          Object object = structuredSelection.getFirstElement();
+
+          if (object instanceof IResourceArtifact || object instanceof IResourceArtifactContent) {
+            EditorHelper.openArtifactInEditor((IResourceArtifact) object);
+          } else {
+            treeViewer.setExpandedState(object, !treeViewer.getExpandedState(object));
+          }
+        }
+      }
+    });
 
     int operations = DND.DROP_MOVE;
     Transfer[] transferTypes = new Transfer[] { LocalSelectionTransfer.getTransfer() };
@@ -145,4 +187,15 @@ public class ArtifactTreeViewerFactory {
   // _treeViewer.getTree().setRedraw(true);
   // }
   // }
+
+  private static IWorkbenchPage getActiveWorkbenchPage() {
+    IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    if (workbenchWindow != null) {
+      IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
+      if (workbenchPage != null) {
+        return workbenchPage;
+      }
+    }
+    return null;
+  }
 }

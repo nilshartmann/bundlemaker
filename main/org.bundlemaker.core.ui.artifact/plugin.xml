@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+ 	<extension
+       point="org.eclipse.ui.navigator.linkHelper">
+		<linkHelper
+	          class="org.bundlemaker.core.ui.artifact.cnf.BundleMakerFileLinkHelper"
+	          id="org.bundlemaker.core.ui.artifact.cnf.BundleMakerFileLinkHelper">          
+	         <editorInputEnablement>
+		        <instanceof value="org.bundlemaker.core.ui.artifact.cnf.ResourceArtifactEditorInput" />
+	         </editorInputEnablement>
+	         <selectionEnablement>
+	         <instanceof
+                value="org.bundlemaker.core.analysis.IResourceArtifact">
+	         </instanceof>
+	         </selectionEnablement>
+      </linkHelper>          
+   </extension>
+   
+   	<extension
+			point="org.eclipse.ui.navigator.viewer">
+		<viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+			<includes>
+				<contentExtension pattern="org.bundlemaker.core.ui.artifact.cnf.BundleMakerFileLinkHelper" />	
+			</includes>
+		</viewerContentBinding>
+	</extension>
+	
+	
+	<!-- -->
+	<extension point="org.eclipse.ui.navigator.navigatorContent">
+		<navigatorContent activeByDefault="true"
+			contentProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider"
+			id="org.bundlemaker.analysis.ui.navigatorContent1"
+			labelProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider"
+			name="artifactContent" priority="lowest">
+			<triggerPoints>
+				<and>
+					<instanceof value="org.eclipse.core.resources.IProject"> </instanceof>
+					<adapt type="org.eclipse.core.resources.IProject">
+						<test property="org.eclipse.core.resources.projectNature"
+							value="org.bundlemaker.core.bundlemakernature"/>
+					</adapt>
+				</and>
+			</triggerPoints>
+			<dropAssistant
+				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeDropAdapterAssistant"
+				id="org.bundlemaker.core.ui.dropAssistant1">
+				<possibleDropTargets>
+					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"
+					> </instanceof>
+				</possibleDropTargets>
+			</dropAssistant>
+			<possibleChildren>
+				<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/>
+			</possibleChildren>
+			<commonSorter
+				class="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter"> </commonSorter>
+			<actionProvider
+                class="org.bundlemaker.core.ui.artifact.cnf.BundlemakerArtifactActionProvider"
+                id="org.bundlemaker.core.ui.artifact.cnf.BundlemakerArtifactActionProvider"/>
+		</navigatorContent>
+	</extension>
+
+	<!-- the navigator content-->
+	<extension point="org.eclipse.ui.navigator.viewer">
+		<viewer viewerId="org.eclipse.ui.navigator.ProjectExplorer"> </viewer>
+		<viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
+			<includes>
+				<contentExtension isRoot="false"
+					pattern="org.bundlemaker.analysis.ui.navigatorContent1"
+				> 
+				
+				</contentExtension>
+    <contentExtension
+          pattern="org.bundlemaker.core.ui.utils.BundleMakerFileLinkHelper">
+    </contentExtension>
+			</includes>
+		</viewerContentBinding>
+	</extension>
+
+	<!-- the IArtifact property tester -->
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester id="org.bundlemaker.analysis.ui.expressions.ArtifactPropertyTester"
+			class="org.bundlemaker.core.ui.artifact.expression.ArtifactPropertyTester"
+			namespace="org.bundlemaker.analysis.ui.expressions.IArtifact" properties="type"
+			type="org.bundlemaker.core.analysis.IBundleMakerArtifact"> </propertyTester>
+	</extension>
+	
+	<!-- the expression definitions -->
+	<extension point="org.eclipse.core.expressions.definitions">
+	
+		<!-- org.bundlemaker.analysis.ui.artifactContentSelected: 
+		     evaluates to true if all  of the selected elements are IBundleMakerArtifact -->
+		<definition id="org.bundlemaker.analysis.ui.artifactContentSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/> 
+				</iterate>
+			</with>
+		</definition>
+
+		<!-- org.bundlemaker.analysis.ui.artifactContentNoRootSelected: 
+		     evaluates to true if all  of the selected elements are IBundleMakerArtifacts but not IRootArtifacts -->
+		<definition id="org.bundlemaker.analysis.ui.artifactContentNoRootSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<and>
+						<not>
+						<instanceof value="org.bundlemaker.core.analysis.IRootArtifact"/> 
+						</not>
+						<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"/> 
+					</and>
+				</iterate>
+			</with>
+		</definition>
+		
+		<!-- org.bundlemaker.analysis.ui.singleRootArtifactSelected
+		  evaluates to true if exactly one root artifact is selected -->
+        <definition id="org.bundlemaker.analysis.ui.singleRootArtifactSelected">
+			<with variable="selection">
+				<count value="1" />
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IRootArtifact"
+					> </instanceof>
+				</iterate>
+			</with>
+		</definition>
+		  
+		
+		<!-- org.bundlemaker.analysis.ui.groupAndModuleContentSelected: 
+		     evaluates to true if all  of the selected elements are IGroupAndModuleContainer -->
+        <definition id="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected">
+			<with variable="selection">
+				<count value="1" />
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IGroupAndModuleContainer"
+					> </instanceof>
+				</iterate>
+			</with>
+		</definition>
+		
+		<!-- org.bundlemaker.analysis.ui.bmContentSelected: evaluates
+             to true if all selected elements are Root-IArtifacts (i.e. ModularizedSystems) -->    
+		<definition id="org.bundlemaker.analysis.ui.rootArtifactContentSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<instanceof value="org.bundlemaker.core.analysis.IBundleMakerArtifact"> </instanceof>
+					<test
+						property="org.bundlemaker.analysis.ui.expressions.IArtifact.type"
+						value="Root" forcePluginActivation="true"/>
+				</iterate>
+			</with>
+		</definition>
+			              
+	</extension>	
+
+</plugin>
