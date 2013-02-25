@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.editor.sourceviewer.referencedetail;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -28,24 +28,6 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
   public Map<String, List<Position>> parseReferencePositions(IResource resource, IModularizedSystem modularizedSystem) {
 
     //
-    Map<String, List<Position>> result = new HashMap<String, List<Position>>();
-
-    // //
-    // for (IResource binaryResource : movableUnit.getAssociatedBinaryResources()) {
-    //
-    // // parse the class file
-    // byte[] bytes = binaryResource.getContent();
-    // ClassReader reader = new ClassReader(bytes);
-    // AsmReferenceRecorder recorder = new AsmReferenceRecorder();
-    // reader.accept(new ArtefactAnalyserClassVisitor(recorder), 0);
-    //
-    // //
-    // System.out.println();
-    // for (Map.Entry<String, List<Integer>> entry : recorder.getLines().entrySet()) {
-    // System.out.println(entry);
-    // }
-    // }
-
     IProject project = modularizedSystem.getBundleMakerProject().getProject();
     IJavaProject javaProject = getAssociatedJavaProject(project);
 
@@ -53,20 +35,18 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
     for (IResource binaryResource : movableUnit.getAssociatedBinaryResources()) {
       try {
         IJavaElement element = javaProject.findElement(new Path(binaryResource.getPath()));
-        CompilationUnit compilationUnit = parse((IClassFile) element);
-        JdtAstVisitor jdtAstVisitor = new JdtAstVisitor(movableUnit);
-        compilationUnit.accept(jdtAstVisitor);
-        return jdtAstVisitor.getReferences();
+        if (element != null) {
+          CompilationUnit compilationUnit = parse((IClassFile) element);
+          JdtAstVisitor jdtAstVisitor = new JdtAstVisitor(movableUnit);
+          compilationUnit.accept(jdtAstVisitor);
+          return jdtAstVisitor.getReferences();
+        }
       } catch (JavaModelException e) {
         e.printStackTrace();
       }
     }
 
-    // CompilationUnit compilationUnit = parse((IClassFile) javaElement);
-    // JdtAstVisitor jdtAstVisitor = new JdtAstVisitor();
-    // compilationUnit.accept(jdtAstVisitor);
-
-    return result;
+    return Collections.emptyMap();
   }
 
   protected static CompilationUnit parse(IClassFile classFile) {
