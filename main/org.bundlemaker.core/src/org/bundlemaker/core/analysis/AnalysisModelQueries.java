@@ -53,6 +53,31 @@ public class AnalysisModelQueries {
    * <p>
    * </p>
    * 
+   * @param artifact
+   * @param fullyQualifiedName
+   * @return
+   */
+  public static IBundleMakerArtifact getReferencedArtifact(IBundleMakerArtifact artifact, String fullyQualifiedName) {
+
+    //
+    Assert.isNotNull(artifact);
+    Assert.isNotNull(fullyQualifiedName);
+
+    //
+    for (IDependency dependency : artifact.getDependenciesTo()) {
+      if (fullyQualifiedName.equals(dependency.getTo().getQualifiedName())) {
+        return dependency.getTo();
+      }
+    }
+
+    //
+    return null;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
    * @param rootArtifact
    * @return
    */
@@ -413,6 +438,7 @@ public class AnalysisModelQueries {
   /**
    * <p>
    * </p>
+   * 
    * @param clazz
    * @param root
    * @param fullyQualifiedName
