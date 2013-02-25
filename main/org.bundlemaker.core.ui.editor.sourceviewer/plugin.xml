@@ -12,31 +12,47 @@
             name="BundleMaker source editor"
             symbolicFontName="org.eclipse.jdt.ui.editors.textfont">
       </editor>
-   </extension>
+  </extension>
 
-   <extension
-         point="org.eclipse.ui.editors.annotationTypes">
-      <type
-            markerSeverity="0"
-            name="org.bundlemaker.core.ui.referencemarker">
-      </type>
-   </extension>
-   
-    <extension
-         point="org.eclipse.ui.editors.markerAnnotationSpecification">
-      <specification
-            annotationType="org.bundlemaker.core.ui.referencemarker"
-            colorPreferenceKey="annotateElemColor"
-            colorPreferenceValue="255,255,0"
-            highlightPreferenceKey="annotateElemHighlight"
-            highlightPreferenceValue="true"
-            includeOnPreferencePage="true"
-            label="Sample Annotation"
-            overviewRulerPreferenceKey="annotateElemOverviewRuler"
-            textPreferenceKey="annotateElemText"
-            verticalRulerPreferenceKey="annotateElemVerticalRuler"
-            verticalRulerPreferenceValue="true">
-      </specification>
-   </extension>
+  <extension
+    id="org.bundlemaker.core.ui.referencemarker"
+    name="Reference"
+    point="org.eclipse.core.resources.markers">
+    <super
+      type="org.eclipse.core.resources.textmarker">
+    </super>
+  </extension>
+
+  <extension
+    point="org.eclipse.ui.editors.annotationTypes" 
+    id="org.bundlemaker.core.ui.referenceannotation">
+    <type
+      markerType="org.bundlemaker.core.ui.referencemarker"
+      name="org.bundlemaker.core.ui.referencemarker">
+    </type>
+  </extension>
+	
+  <extension
+    point="org.eclipse.ui.editors.markerAnnotationSpecification">
+    <specification
+      annotationType="org.bundlemaker.core.ui.referencemarker"
+      colorPreferenceKey="org.bundlemaker.core.ui.reference.color"
+      colorPreferenceValue="195,125,100"
+      contributesToHeader="false"
+      highlightPreferenceKey="org.bundlemaker.core.ui.reference.highlight"
+      highlightPreferenceValue="true"
+      includeOnPreferencePage="true"
+      label="BundleMaker References"
+      overviewRulerPreferenceKey="org.bundlemaker.core.ui.reference.overview"
+      overviewRulerPreferenceValue="true"
+      presentationLayer="0"
+      showInNextPrevDropdownToolbarAction="true"
+      textPreferenceKey="org.bundlemaker.core.ui.reference.text"
+      textPreferenceValue="true"
+      textStylePreferenceValue="BOX"
+      verticalRulerPreferenceKey="org.bundlemaker.core.ui.reference.ruler"
+      verticalRulerPreferenceValue="true">
+    </specification>
+  </extension>
    
 </plugin>

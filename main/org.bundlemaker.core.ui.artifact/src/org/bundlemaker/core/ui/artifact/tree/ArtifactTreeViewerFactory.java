@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.artifact.tree;
 
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifactContent;
 import org.eclipse.jface.util.LocalSelectionTransfer;
@@ -71,7 +72,14 @@ public class ArtifactTreeViewerFactory {
           Object object = structuredSelection.getFirstElement();
 
           if (object instanceof IResourceArtifact || object instanceof IResourceArtifactContent) {
-            EditorHelper.openArtifactInEditor((IResourceArtifact) object);
+
+            //
+            IResourceArtifact resourceArtifact = object instanceof IResourceArtifact ? (IResourceArtifact) object
+                : ((IBundleMakerArtifact) object).getParent(IResourceArtifact.class);
+
+            //
+            EditorHelper.openArtifactInEditor(resourceArtifact);
+
           } else {
             treeViewer.setExpandedState(object, !treeViewer.getExpandedState(object));
           }

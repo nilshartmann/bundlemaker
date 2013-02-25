@@ -17,11 +17,9 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class OpenResourceArtifactAction extends Action {
 
-  private IWorkbenchPage       page;
+  private ISelectionProvider provider;
 
-  private ISelectionProvider   provider;
-
-  private IBundleMakerArtifact _artifact;
+  private IResourceArtifact  _artifact;
 
   /**
    * Construct the OpenPropertyAction with the given page.
@@ -33,7 +31,6 @@ public class OpenResourceArtifactAction extends Action {
    */
   public OpenResourceArtifactAction(IWorkbenchPage p, ISelectionProvider selectionProvider) {
     setText("Open Resource"); //$NON-NLS-1$
-    page = p;
     provider = selectionProvider;
   }
 
@@ -51,7 +48,15 @@ public class OpenResourceArtifactAction extends Action {
           &&
           (sSelection.getFirstElement() instanceof IResourceArtifact || sSelection.getFirstElement() instanceof IResourceArtifactContent))
       {
-        _artifact = (IBundleMakerArtifact) sSelection.getFirstElement();
+        //
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) sSelection.getFirstElement();
+
+        //
+        _artifact = bundleMakerArtifact instanceof IResourceArtifact ? (IResourceArtifact) bundleMakerArtifact
+            : bundleMakerArtifact
+                .getParent(IResourceArtifact.class);
+
+        //
         return true;
       }
     }
@@ -66,7 +71,7 @@ public class OpenResourceArtifactAction extends Action {
   @Override
   public void run() {
 
-    EditorHelper.openArtifactInEditor((IResourceArtifact) _artifact);
+    EditorHelper.openArtifactInEditor(_artifact);
     CommonNavigatorUtils.activateCommonNavigator(CommonNavigatorUtils.PROJECT_EXPLORER_VIEW_ID);
 
     /*

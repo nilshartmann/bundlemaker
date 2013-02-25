@@ -12,7 +12,7 @@ import org.eclipse.jface.text.source.Annotation;
 public class ReferenceAnnotation extends Annotation {
 
   /** the TYPE of this reference annotation */
-  public static final String TYPE = "org.bundlemaker.core.ui.referencemarker";
+  public static final String TYPE = "org.bundlemaker.core.ui.referenceannotation";
 
   /** the position of the reference */
   private final Position     _position;

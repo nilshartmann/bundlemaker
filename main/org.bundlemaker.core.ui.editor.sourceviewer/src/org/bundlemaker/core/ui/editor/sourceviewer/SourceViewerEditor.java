@@ -141,11 +141,11 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
    */
   public void createPartControl(Composite parent) {
 
-    String ANNO_KEY_HIGHLIGHT = "annotateElemHighlight";
-    String ANNO_KEY_OVERVIEW = "annotateElemOverviewRuler";
-    String ANNO_KEY_VERTICAL = "annotateElemVertialRuler";
-    String ANNO_KEY_TEXT = "annotateElemText";
-    String ANNO_KEY_COLOR = "annotateElemColor";
+    String ANNO_KEY_HIGHLIGHT = "org.bundlemaker.core.ui.reference.highlight";
+    String ANNO_KEY_OVERVIEW = "org.bundlemaker.core.ui.reference.overview";
+    String ANNO_KEY_VERTICAL = "org.bundlemaker.core.ui.reference.ruler";
+    String ANNO_KEY_TEXT = "org.bundlemaker.core.ui.reference.text";
+    String ANNO_KEY_COLOR = "org.bundlemaker.core.ui.reference.color";
 
     int VERTICAL_RULER_WIDTH = 12;
 
@@ -168,7 +168,7 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
     //
     _document.set(readEditorInput(editorInput));
 
-    _sourceViewer = new SourceViewer(parent, null, SWT.V_SCROLL | SWT.H_SCROLL);
+    _sourceViewer = new SourceViewer(parent, null, overviewRuler, true, SWT.V_SCROLL | SWT.H_SCROLL);
     _sourceViewer.setEditable(false);
 
     // set up font
