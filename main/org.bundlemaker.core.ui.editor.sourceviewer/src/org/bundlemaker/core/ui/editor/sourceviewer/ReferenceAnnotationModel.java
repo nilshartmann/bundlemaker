@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -50,11 +51,12 @@ public final class ReferenceAnnotationModel implements IAnnotationModel {
    * @param document
    * @param references
    */
-  public ReferenceAnnotationModel(IDocument document, Map<String, List<Position>> references) {
+  private ReferenceAnnotationModel(IDocument document, Map<String, List<Position>> references) {
     this._document = document;
     _references = references;
 
-    // createAnnotations();
+    //
+    createAnnotations();
   }
 
   /**
@@ -246,11 +248,24 @@ public final class ReferenceAnnotationModel implements IAnnotationModel {
    * </p>
    */
   public void createAnnotations() {
+   
     //
     AnnotationModelEvent event = new AnnotationModelEvent(this);
     clear(event);
 
     //
+    // for (Entry<String, List<Position>> entry : _positions.entrySet()) {
+    //
+    // for (Position position : entry.getValue()) {
+    // //
+    // Annotation annotation = new Annotation(false);
+    // annotation.setType(ANNO_TYPE);
+    // _annotationModel.addAnnotation(annotation, position);
+    // }
+    // }
+    
+    
+    
     for (Map.Entry<String, List<Position>> entry : _references.entrySet()) {
 
       for (Position position : entry.getValue()) {

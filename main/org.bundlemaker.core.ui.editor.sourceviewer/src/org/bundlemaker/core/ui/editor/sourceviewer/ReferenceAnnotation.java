@@ -12,10 +12,25 @@ import org.eclipse.jface.text.source.Annotation;
 public class ReferenceAnnotation extends Annotation {
 
   /** the TYPE of this reference annotation */
-  private static final String TYPE = "org.bundlemaker.core.ui.referencemarker";
+  public static final String TYPE = "org.bundlemaker.core.ui.referencemarker";
 
   /** the position of the reference */
-  private final Position      _position;
+  private final Position     _position;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link ReferenceAnnotation}.
+   * </p>
+   * 
+   * @param position
+   * @param fullyQualifiedName
+   */
+  public ReferenceAnnotation(Position position, String fullyQualifiedName) {
+    super(TYPE, false, fullyQualifiedName);
+
+    //
+    _position = position;
+  }
 
   /**
    * <p>

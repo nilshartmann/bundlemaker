@@ -1,9 +1,15 @@
 package org.bundlemaker.core.ui.editor.sourceviewer;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
+import javax.swing.RepaintManager;
+
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
+import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
@@ -11,6 +17,9 @@ import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.ui.artifact.cnf.ResourceArtifactEditorInput;
 import org.bundlemaker.core.ui.editor.sourceviewer.referencedetail.IReferenceDetailParser;
 import org.bundlemaker.core.ui.editor.sourceviewer.referencedetail.ReferenceDetailParser;
+import org.bundlemaker.core.ui.event.selection.IDependencySelection;
+import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractDependencySelectionAwareEditorPart;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.ui.PreferenceConstants;
@@ -23,7 +32,6 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.CompositeRuler;
 import org.eclipse.jface.text.source.IOverviewRuler;
@@ -36,18 +44,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.editors.text.EditorsPlugin;
-import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 /**
  */
-public class SourceViewerEditor extends EditorPart {
+public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPart {
 
   /** - */
   private SourceViewer                _sourceViewer;
@@ -60,6 +64,47 @@ public class SourceViewerEditor extends EditorPart {
 
   /** - */
   private Map<String, List<Position>> _positions;
+
+  /** - */
+  private AnnotationModel             _annotationModel;
+
+  /** - */
+  private Set<String>                 _dependencies;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link SourceViewerEditor}.
+   * </p>
+   */
+  public SourceViewerEditor() {
+
+    //
+    _dependencies = new HashSet<String>();
+  }
+
+  @Override
+  public void analysisModelModified() {
+    // TODO Auto-generated method stub
+    System.out.println("analysisModelModified");
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected String getSelectionId() {
+    return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
+  }
+  
+  @Override
+  protected void onSetDependencySelection(IDependencySelection dependencySelection) {
+    super.onSetDependencySelection(dependencySelection);
+
+    //
+    recomputeAnnotationModel();
+  }
 
   /**
    * <p>
@@ -94,18 +139,8 @@ public class SourceViewerEditor extends EditorPart {
   /**
    * {@inheritDoc}
    */
-  public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-    //
-    setSite(site);
-    setInput(input);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
   public void createPartControl(Composite parent) {
 
-    String ANNO_TYPE = "com.mycompany.element";
     String ANNO_KEY_HIGHLIGHT = "annotateElemHighlight";
     String ANNO_KEY_OVERVIEW = "annotateElemOverviewRuler";
     String ANNO_KEY_VERTICAL = "annotateElemVertialRuler";
@@ -123,7 +158,7 @@ public class SourceViewerEditor extends EditorPart {
 
     _document = new Document();
 
-    AnnotationModel _annotationModel = new AnnotationModel();
+    _annotationModel = new AnnotationModel();
     _annotationModel.connect(_document);
 
     ResourceArtifactEditorInput editorInput = (ResourceArtifactEditorInput) getEditorInput();
@@ -131,9 +166,7 @@ public class SourceViewerEditor extends EditorPart {
     _resourceArtifact = editorInput.getResourceArtifact();
 
     //
-    _document.set(new String(editorInput.getResourceArtifact().getAssociatedResource().getContent()));
-
-    setPartName(editorInput.getName());
+    _document.set(readEditorInput(editorInput));
 
     _sourceViewer = new SourceViewer(parent, null, SWT.V_SCROLL | SWT.H_SCROLL);
     _sourceViewer.setEditable(false);
@@ -162,7 +195,7 @@ public class SourceViewerEditor extends EditorPart {
     ap.setVerticalRulerPreferenceKey(ANNO_KEY_VERTICAL);
     ap.setOverviewRulerPreferenceKey(ANNO_KEY_OVERVIEW);
     ap.setTextPreferenceKey(ANNO_KEY_TEXT);
-    ap.setAnnotationType(ANNO_TYPE);
+    ap.setAnnotationType(ReferenceAnnotation.TYPE);
     _sds.setAnnotationPreference(ap);
 
     _sds.install(EditorsPlugin.getDefault().getPreferenceStore());
@@ -180,16 +213,67 @@ public class SourceViewerEditor extends EditorPart {
     _positions = detailParser.parseReferencePositions(sourceResource, _resourceArtifact.getModularizedSystem());
 
     //
-    // for (Entry<String, List<Position>> entry : _positions.entrySet()) {
+    recomputeAnnotationModel();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   */
+  private void recomputeAnnotationModel() {
+
     //
-    // for (Position position : entry.getValue()) {
+    _dependencies.clear();
+
     //
-    // //
-    // Annotation annotation = new Annotation(false);
-    // annotation.setType(ANNO_TYPE);
-    // _annotationModel.addAnnotation(annotation, position);
-    // }
-    // }
+    if (getCurrentDependencySelection() != null) {
+
+      //
+      for (IDependency dependency : AnalysisModelQueries.getCoreDependencies(getCurrentDependencySelection()
+          .getSelectedDependencies())) {
+
+        //
+        _dependencies.add(dependency.getTo().getQualifiedName());
+      }
+    }
+    //
+    _annotationModel.removeAllAnnotations();
+
+    //
+    for (Entry<String, List<Position>> entry : _positions.entrySet()) {
+
+      if (_dependencies.isEmpty() || _dependencies.contains(entry.getKey())) {
+
+        //
+        for (Position position : entry.getValue()) {
+
+          //
+          _annotationModel.addAnnotation(new ReferenceAnnotation(position, entry.getKey()), position);
+        }
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param editorInput
+   * @return
+   */
+  private String readEditorInput(ResourceArtifactEditorInput editorInput) {
+
+    //
+    IResource resource = editorInput.getResourceArtifact().hasAssociatedSourceResource() ? editorInput
+        .getResourceArtifact().getAssociatedSourceResource() : editorInput.getResourceArtifact()
+        .getAssociatedResource();
+
+    //
+    setPartName(resource.getName());
+
+    //
+    return new String(resource.getContent());
   }
 
   /**
