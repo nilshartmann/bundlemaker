@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.sourceviewer.old;
+package org.bundlemaker.core.ui.editor.sourceviewer;
 
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;

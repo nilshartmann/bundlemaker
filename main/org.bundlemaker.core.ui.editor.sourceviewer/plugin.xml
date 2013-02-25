@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+
   <extension
          point="org.eclipse.ui.editors">
       <editor
-            name="Sample Editor"
-            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="org.bundlemaker.core.ui.editor.sourceviewer.SourceViewerEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            icon="icons/bm_sourceviewer.png"
             id="org.bundlemaker.core.ui.editors.sourceViewerEditor"
+            name="BundleMaker source editor"
             symbolicFontName="org.eclipse.jdt.ui.editors.textfont">
       </editor>
    </extension>
+
+   <extension
+         point="org.eclipse.ui.editors.annotationTypes">
+      <type
+            markerSeverity="0"
+            name="org.bundlemaker.core.ui.referencemarker">
+      </type>
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.editors.markerAnnotationSpecification">
+      <specification
+            annotationType="org.bundlemaker.core.ui.referencemarker"
+            colorPreferenceKey="annotateElemColor"
+            colorPreferenceValue="255,255,0"
+            highlightPreferenceKey="annotateElemHighlight"
+            highlightPreferenceValue="true"
+            includeOnPreferencePage="true"
+            label="Sample Annotation"
+            overviewRulerPreferenceKey="annotateElemOverviewRuler"
+            textPreferenceKey="annotateElemText"
+            verticalRulerPreferenceKey="annotateElemVerticalRuler"
+            verticalRulerPreferenceValue="true">
+      </specification>
+   </extension>
+   
 </plugin>

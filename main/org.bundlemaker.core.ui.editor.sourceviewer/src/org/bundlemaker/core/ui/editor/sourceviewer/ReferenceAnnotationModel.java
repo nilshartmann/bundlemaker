@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.sourceviewer.old;
+package org.bundlemaker.core.ui.editor.sourceviewer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,11 +50,11 @@ public final class ReferenceAnnotationModel implements IAnnotationModel {
    * @param document
    * @param references
    */
-  private ReferenceAnnotationModel(ITextEditor editor, IDocument document, Map<String, List<Position>> references) {
+  public ReferenceAnnotationModel(IDocument document, Map<String, List<Position>> references) {
     this._document = document;
     _references = references;
 
-    createAnnotations();
+    // createAnnotations();
   }
 
   /**
@@ -65,7 +65,7 @@ public final class ReferenceAnnotationModel implements IAnnotationModel {
    * @param fullyQualifiedName
    * @param references
    */
-  public static void attach(ITextEditor editor, String fullyQualifiedName, List<Position> references) {
+  public static void attach(SourceViewerEditor editor, String fullyQualifiedName, List<Position> references) {
 
     //
     Map<String, List<Position>> referencesMap = new HashMap<String, List<Position>>();
@@ -84,29 +84,27 @@ public final class ReferenceAnnotationModel implements IAnnotationModel {
    * @param editor
    *          Editor to attach a annotation model to
    */
-  public static void attach(ITextEditor editor, Map<String, List<Position>> references) {
-    IDocumentProvider provider = editor.getDocumentProvider();
-
-    if (provider == null)
-      return;
-
-    IAnnotationModel model = provider.getAnnotationModel(editor.getEditorInput());
-
-    if (!(model instanceof IAnnotationModelExtension))
-      return;
-
+  public static void attach(SourceViewerEditor editor, Map<String, List<Position>> references) {
     //
-    IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
-
+    // IAnnotationModel model = editor.getAnnotationModel();
     //
-    if (modelExtension.getAnnotationModel(REFERENCE_ANNOTATION_MODEL_KEY) != null) {
-      modelExtension.removeAnnotationModel(REFERENCE_ANNOTATION_MODEL_KEY);
-    }
-
+    // if (!(model instanceof IAnnotationModelExtension))
+    // return;
     //
-    IDocument document = provider.getDocument(editor.getEditorInput());
-    modelExtension.addAnnotationModel(REFERENCE_ANNOTATION_MODEL_KEY, new ReferenceAnnotationModel(editor, document,
-        references));
+    // //
+    // IAnnotationModelExtension modelExtension = (IAnnotationModelExtension) model;
+    //
+    // //
+    // if (modelExtension.getAnnotationModel(REFERENCE_ANNOTATION_MODEL_KEY) != null) {
+    // modelExtension.removeAnnotationModel(REFERENCE_ANNOTATION_MODEL_KEY);
+    // }
+    //
+    // //
+    // IDocument document = editor.getDocument();
+    // ReferenceAnnotationModel annotationModel = new ReferenceAnnotationModel(document, references);
+    // modelExtension.addAnnotationModel(REFERENCE_ANNOTATION_MODEL_KEY,
+    // annotationModel);
+    // annotationModel.createAnnotations();
   }
 
   /**
@@ -247,7 +245,7 @@ public final class ReferenceAnnotationModel implements IAnnotationModel {
    * <p>
    * </p>
    */
-  private void createAnnotations() {
+  public void createAnnotations() {
     //
     AnnotationModelEvent event = new AnnotationModelEvent(this);
     clear(event);

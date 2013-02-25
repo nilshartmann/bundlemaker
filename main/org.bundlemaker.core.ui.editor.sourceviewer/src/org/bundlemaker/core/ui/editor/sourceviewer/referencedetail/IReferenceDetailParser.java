@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.sourceviewer.old;
+package org.bundlemaker.core.ui.editor.sourceviewer.referencedetail;
 
 import java.util.List;
 import java.util.Map;

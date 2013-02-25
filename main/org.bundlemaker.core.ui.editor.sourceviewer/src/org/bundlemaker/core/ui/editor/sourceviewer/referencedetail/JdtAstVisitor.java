@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.editor.sourceviewer.old;
+package org.bundlemaker.core.ui.editor.sourceviewer.referencedetail;
 
 import java.util.LinkedList;
 import java.util.List;

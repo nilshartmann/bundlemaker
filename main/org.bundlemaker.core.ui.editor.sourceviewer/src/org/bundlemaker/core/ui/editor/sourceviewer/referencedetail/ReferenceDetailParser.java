@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.editor.sourceviewer.old;
+package org.bundlemaker.core.ui.editor.sourceviewer.referencedetail;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,15 +78,11 @@ public class ReferenceDetailParser implements IReferenceDetailParser {
       parser.setSource(classFile.getSource().toCharArray()); // set source
       parser.setResolveBindings(true); // we need bindings later on
       parser.setBindingsRecovery(true);
-      parser.setUnitName("/" + classFile.getJavaProject().getProject().getName()
-          + "/bla/blubb/Test.java");
+      String unitName = classFile.getType().getFullyQualifiedName().replace(".", "/") + ".java";
+      // TODO
+      parser.setUnitName("/" + classFile.getJavaProject().getProject().getName() + "/" + unitName);
 
       org.eclipse.jdt.core.dom.ASTNode node = parser.createAST(null /* IProgressMonitor */);
-
-      // IBinding[] bindings = parser.createBindings(new IJavaElement[] { classFile }, null);
-      // for (IBinding iBinding : bindings) {
-      // System.out.println(iBinding);
-      // }
 
       return (CompilationUnit) node; // parse
     } catch (JavaModelException e) {
