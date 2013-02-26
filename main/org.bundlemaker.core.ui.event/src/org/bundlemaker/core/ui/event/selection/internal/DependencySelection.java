@@ -117,7 +117,6 @@ public class DependencySelection extends AbstractProviderSelection implements ID
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("DependencySelection [selectionId=");
-
     builder.append(getSelectionId());
     builder.append(", providerId=");
     builder.append(getProviderId());
@@ -126,6 +125,4 @@ public class DependencySelection extends AbstractProviderSelection implements ID
     builder.append("]");
     return builder.toString();
   }
-  
-  
 }

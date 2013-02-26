@@ -198,11 +198,9 @@ public class JdtAstVisitor extends ASTVisitor {
     _messages = node.getMessages();
     _problems = node.getProblems();
 
-    System.out.println("************************************************************");
     for (IProblem problem : node.getProblems()) {
       System.out.println(problem);
     }
-    System.out.println("************************************************************");
     // visit the child nodes
     return true;
   }
