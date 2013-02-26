@@ -23,10 +23,6 @@ import org.eclipse.ui.navigator.ILinkHelper;
  */
 public class BundleMakerFileLinkHelper implements ILinkHelper {
 
-  public BundleMakerFileLinkHelper() {
-    System.out.println("JOMANN");
-  }
-
   @Override
   public void activateEditor(IWorkbenchPage page, IStructuredSelection selection) {
 
@@ -84,19 +80,6 @@ public class BundleMakerFileLinkHelper implements ILinkHelper {
         }
       }
     }
-
-    // System.out.println("findSelection " + input);
-    //
-    // IJavaElement element = JavaUI.getEditorInputJavaElement(input);
-    // if (element == null) {
-    // IFile file = ResourceUtil.getFile(input);
-    // if (file != null) {
-    // element = JavaCore.create(file);
-    // }
-    // }
-    //
-    // System.out.println(element.getElementName());
-    // System.out.println(element.getJavaProject().getProject().getName());
 
     return StructuredSelection.EMPTY;
   }
