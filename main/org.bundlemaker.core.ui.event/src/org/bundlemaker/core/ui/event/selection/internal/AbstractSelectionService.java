@@ -52,10 +52,10 @@ public abstract class AbstractSelectionService<SELECTION extends IProviderSelect
    */
   protected void setSelection(String selectionId, String providerId, SELECTION newSelection) {
 
-    // always propagate the new selection
-    // if (equals(newSelection, _currentSelections.get(selectionId))) {
-    // return;
-    // }
+    // filter selections that already have been set
+    if (equals(newSelection, _currentSelections.get(selectionId))) {
+      return;
+    }
 
     // add selection
     _currentSelections.put(selectionId, newSelection);
@@ -73,7 +73,7 @@ public abstract class AbstractSelectionService<SELECTION extends IProviderSelect
   protected final ConcurrentHashMap<String, SELECTION> getCurrentSelections() {
     return _currentSelections;
   }
-  
+
   /**
    * <p>
    * </p>
