@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.swing.RepaintManager;
-
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
@@ -54,6 +52,9 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPart {
 
   /** - */
+  private String                      PROVIDER_ID = "org.bundlemaker.core.ui.editor.sourceviewer";
+
+  /** - */
   private SourceViewer                _sourceViewer;
 
   /** - */
@@ -85,7 +86,24 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
   @Override
   public void analysisModelModified() {
     // TODO Auto-generated method stub
-    System.out.println("analysisModelModified");
+  }
+
+  @Override
+  public void onPartBroughtToTop() {
+
+    //
+    if (!getCurrentDependencySelection().hasDependencies()
+        || getCurrentDependencySelection().getProviderId().equals(PROVIDER_ID)) {
+
+      Selection
+          .instance()
+          .getDependencySelectionService()
+          .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, PROVIDER_ID,
+              AnalysisModelQueries.getCoreDependencies(_resourceArtifact.getDependenciesTo()));
+
+      setCurrentDependencies(Selection.instance().getDependencySelectionService()
+          .getSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID));
+    }
   }
 
   /**
@@ -97,7 +115,7 @@ public class SourceViewerEditor extends AbstractDependencySelectionAwareEditorPa
   protected String getSelectionId() {
     return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
   }
-  
+
   @Override
   protected void onSetDependencySelection(IDependencySelection dependencySelection) {
     super.onSetDependencySelection(dependencySelection);
