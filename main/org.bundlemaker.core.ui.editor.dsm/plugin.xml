@@ -31,6 +31,7 @@
                   locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
                   <command
                         commandId="org.bundlemaker.core.ui.editor.dsm.commands.OpenDsmViewCommand"
+                        icon="icons/DSM.png"
                         style="push">
                         <visibleWhen checkEnabled="true"/>
                   </command>
