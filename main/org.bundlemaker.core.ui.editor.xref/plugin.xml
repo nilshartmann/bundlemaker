@@ -31,6 +31,16 @@
             <visibleWhen checkEnabled="true"/>
          </command>
       </menuContribution>
+ 	  <menuContribution
+                  allPopups="false"
+                  locationURI="toolbar:org.bundlemaker.core.ui.toolbar">
+                  <command
+                        commandId="org.bundlemaker.core.ui.editor.xref.OpenXRefViewCommand"
+                        disabledIcon="icons/XRef.png"
+                        icon="icons/XRef.png"
+                        style="push">
+                  </command>
+            </menuContribution>      
    </extension>
 
    <!-- XREF EDITOR -->

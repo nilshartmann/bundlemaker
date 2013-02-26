@@ -41,6 +41,18 @@
 				commandId="org.bundlemaker.core.ui.view.navigator.customizeDependencyTree"
 				style="push"> </command>
 		</menuContribution>
+ 		<menuContribution
+                  allPopups="false"
+                  locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+               <toolbar
+                     id="org.bundlemaker.core.ui.toolbar"
+                     label="BundleMaker Tools">
+                  <separator
+                        name="org.bundlemaker.core.ui.toolbar.separator"
+                        visible="true">
+                  </separator>
+               </toolbar>
+            </menuContribution>
 	</extension>
 
 
