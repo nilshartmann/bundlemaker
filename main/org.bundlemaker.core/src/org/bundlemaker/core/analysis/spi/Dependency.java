@@ -30,15 +30,20 @@ public class Dependency implements IDependency {
   /** - */
   private IBundleMakerArtifact    _from;
 
-  private DependencyKind          dependencyKind = DependencyKind.USES;
+  /** - */
+  private Collection<IDependency> _dependencies;
 
   /** - */
-  private Collection<IDependency> dependencies;
+  private boolean                 _isInitialized;
 
   /** - */
   private boolean                 _isCoreDependency;
 
+  /** - */
   private Map<String, Object>     _properties;
+
+  /** - */
+  private DependencyKind          dependencyKind = DependencyKind.USES;
 
   /**
    * <p>
@@ -91,10 +96,44 @@ public class Dependency implements IDependency {
    *          Abhaengigkeit, die hinzugefuegt werden soll
    */
   public void addDependency(IDependency dependency) {
-    if (dependencies == null) {
-      dependencies = new ArrayList<IDependency>();
+    if (_dependencies == null) {
+      _dependencies = new ArrayList<IDependency>();
     }
-    dependencies.add(dependency);
+    _dependencies.add(dependency);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean isInitialized() {
+    return _isCoreDependency || _isInitialized;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param isInitialized
+   */
+  public void setInitialized() {
+    _isInitialized = true;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void clearDependencies() {
+
+    // clear the dependencies
+    if (_dependencies != null) {
+      _dependencies.clear();
+    }
+
+    // set initialized
+    _isInitialized = false;
   }
 
   /**
@@ -104,8 +143,8 @@ public class Dependency implements IDependency {
   public int getWeight() {
 
     //
-    if (dependencies != null && !dependencies.isEmpty()) {
-      return _isCoreDependency ? dependencies.size() + 1 : dependencies.size();
+    if (_dependencies != null && !_dependencies.isEmpty()) {
+      return _isCoreDependency ? _dependencies.size() + 1 : _dependencies.size();
     } else {
       return _isCoreDependency ? 1 : 0;
     }
@@ -150,7 +189,7 @@ public class Dependency implements IDependency {
    * 
    */
   public Collection<IDependency> getDependencies() {
-    return dependencies;
+    return _dependencies;
   }
 
   /**
@@ -172,8 +211,8 @@ public class Dependency implements IDependency {
 
     //
     else {
-      if (dependencies != null) {
-        for (IDependency dependency : dependencies) {
+      if (_dependencies != null) {
+        for (IDependency dependency : _dependencies) {
           ((Dependency) dependency).getLeafDependencies(leafDependencies);
         }
       }

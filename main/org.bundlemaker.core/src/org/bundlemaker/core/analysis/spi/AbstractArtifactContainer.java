@@ -243,18 +243,25 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
       // create new dependency
       Dependency dependency = new Dependency(artifact, this, false);
-      for (IDependency reference : getDependenciesFrom()) {
-        if (artifact.contains(reference.getFrom())) {
-          ((Dependency) dependency).addDependency(reference);
-        }
-      }
 
       // store dependency
       aggregatedDependenciesFrom().put(artifact, dependency);
     }
 
     //
-    IDependency dependency = aggregatedDependenciesFrom().get(artifact);
+    Dependency dependency = (Dependency) aggregatedDependenciesFrom().get(artifact);
+
+    //
+    if (!dependency.isInitialized()) {
+      for (IDependency reference : getDependenciesFrom()) {
+        if (artifact.contains(reference.getFrom())) {
+          ((Dependency) dependency).addDependency(reference);
+        }
+      }
+      dependency.setInitialized();
+    }
+
+    //
     if (dependency != null && dependency.getWeight() > 0) {
       return dependency;
     } else {
@@ -313,20 +320,28 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
     // 'aggregated' dependency
     if (!aggregatedDependenciesTo().containsKey(artifact)) {
 
-      // create new dependency
-      Dependency dependency = new Dependency(this, artifact, false);
+      // store dependency
+      aggregatedDependenciesTo().put(artifact, new Dependency(this, artifact, false));
+    }
+
+    //
+    Dependency dependency = (Dependency) aggregatedDependenciesTo().get(artifact);
+
+    // initialize dependency
+    if (!dependency.isInitialized()) {
+
+      //
       for (IDependency reference : getDependenciesTo()) {
         if (artifact.contains(reference.getTo())) {
           ((Dependency) dependency).addDependency(reference);
         }
       }
 
-      // store dependency
-      aggregatedDependenciesTo().put(artifact, dependency);
+      //
+      dependency.setInitialized();
     }
 
     //
-    IDependency dependency = aggregatedDependenciesTo().get(artifact);
     if (dependency != null && dependency.getWeight() > 0) {
       return dependency;
     } else {
@@ -383,14 +398,16 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
 
     //
     if (_aggregatedDependenciesTo != null) {
-      _aggregatedDependenciesTo.clear();
-      _aggregatedDependenciesTo = null;
+      for (IDependency dependency : _aggregatedDependenciesTo.values()) {
+        ((Dependency) dependency).clearDependencies();
+      }
     }
 
     //
     if (_aggregatedDependenciesFrom != null) {
-      _aggregatedDependenciesFrom.clear();
-      _aggregatedDependenciesFrom = null;
+      for (IDependency dependency : _aggregatedDependenciesFrom.values()) {
+        ((Dependency) dependency).clearDependencies();
+      }
     }
   }
 
