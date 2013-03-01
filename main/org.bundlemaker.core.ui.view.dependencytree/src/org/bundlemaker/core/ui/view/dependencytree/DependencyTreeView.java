@@ -68,7 +68,9 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
    */
   @Override
   public void analysisModelModified() {
-    // TODO Auto-generated method stub
+    
+    //
+    initDependencies(getCurrentDependencySelection());
   }
 
   /**
