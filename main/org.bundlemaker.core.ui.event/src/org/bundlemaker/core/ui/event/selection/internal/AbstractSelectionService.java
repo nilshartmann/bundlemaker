@@ -52,6 +52,9 @@ public abstract class AbstractSelectionService<SELECTION extends IProviderSelect
    */
   protected void setSelection(String selectionId, String providerId, SELECTION newSelection) {
 
+    //
+    System.out.println(String.format("setSelection(%s, %s, %s)", selectionId, providerId, newSelection.toString()));
+
     // filter selections that already have been set
     if (equals(newSelection, _currentSelections.get(selectionId))) {
       return;

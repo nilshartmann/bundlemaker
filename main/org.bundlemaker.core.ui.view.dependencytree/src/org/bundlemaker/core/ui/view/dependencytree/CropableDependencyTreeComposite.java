@@ -110,20 +110,6 @@ public class CropableDependencyTreeComposite extends Composite {
 
         return super.getDependencySelectionId();
       }
-
-      // @Override
-      // protected void toViewerSelected(TreeViewer fromTreeViewer, TreeViewer toTreeViewer) {
-      // ISelection selection = fromTreeViewer.getSelection();
-      // cropCurrentSelection();
-      // fromTreeViewer.setSelection(selection);
-      // }
-
-      // @Override
-      // protected void fromViewerSelected(TreeViewer fromTreeViewer, TreeViewer toTreeViewer) {
-      // ISelection selection = toTreeViewer.getSelection();
-      // cropCurrentSelection();
-      // toTreeViewer.setSelection(selection);
-      // }
     };
 
     createCropButtons(toolbar);
@@ -192,18 +178,6 @@ public class CropableDependencyTreeComposite extends Composite {
     widgets = createAutoExpandMenu(toolbar);
     _autoExpandTo = (ToolItem) widgets[1];
     _autoExpandTo.setImage(UIDependencyTreeImages.AUTO_EXPAND_TO_MODULES.getImage());
-    // _autoExpandTo.addSelectionListener(new SelectionAdapter() {
-    //
-    // @Override
-    // public void widgetSelected(SelectionEvent e) {
-    // System.out.println("widgetSelected" + e.getSource());
-    // }
-    //
-    // @Override
-    // public void widgetDefaultSelected(SelectionEvent e) {
-    // System.out.println("widgetDefaultSelected" + e.getSource());
-    // }
-    // });
 
     //
     selectionListener = new SelectionAdapter() {
@@ -483,11 +457,6 @@ public class CropableDependencyTreeComposite extends Composite {
     for (int i = _dependencySelectionList.size() - 1; i > _currentPosition; i--) {
       _dependencySelectionList.remove(i);
     }
-
-    // System.out.println("AFTER CLEAN IS ");
-    // for (List<IDependency> dependencies : _dependencySelectionList) {
-    // System.out.println(" - " + dependencies);
-    // }
 
     //
     List<IDependency> currentSelection = _dependencyTreeComposite.getSelectedDetailDependencies();
