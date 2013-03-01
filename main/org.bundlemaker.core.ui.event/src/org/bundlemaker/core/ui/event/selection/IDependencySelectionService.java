@@ -24,19 +24,14 @@ import org.bundlemaker.core.analysis.IDependency;
 public interface IDependencySelectionService {
 
   /**
-   * Return the current selection of the specified provider.
+   * Return the current selection with the specified selectionId.
    * 
-   * @param selectionProviderId
-   *          the provider id. must not be null
-   * @return the selection, or null if there is no selection for the specified provider
+   * @param selectionId
+   *          the selection id. must not be null
+   * @return the selection, or null if there is no selection for the specified selectionId
    */
-  public IDependencySelection getSelection(String selectionProviderId);
+  public IDependencySelection getSelection(String selectionId);
 
-  /**
-   * @param selectionProviderId
-   * @param selectedArtifacts
-   * 
-   */
   /**
    * <p>
    * </p>
