@@ -66,15 +66,6 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
     setDependencySelection(event.getSelection());
   }
 
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public void onPartBroughtToTop() {
-  // super.onPartBroughtToTop();
-  // initDependencySelectionFromSelectionService();
-  // }
-
   /**
    * <p>
    * </p>
@@ -83,23 +74,6 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
    */
   public IDependencySelection getCurrentDependencySelection() {
     return _currentDependencySelection;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param dependencySelection
-   *          the currentDependencies to set
-   */
-  public void setCurrentDependencies(IDependencySelection dependencySelection) {
-
-    // remove ArtifactModelChangedListener from 'old' model
-    unregisterArtifactModelChangedListener();
-
-    _currentDependencySelection = dependencySelection;
-
-    registerArtifactModelChangedListener();
   }
 
   /**
@@ -120,7 +94,13 @@ public abstract class AbstractDependencySelectionAwareViewPart extends AbstractP
    * 
    */
   protected final void setDependencySelection(final IDependencySelection dependencySelection) {
+
+    // remove ArtifactModelChangedListener from 'old' model
+    unregisterArtifactModelChangedListener();
+
     _currentDependencySelection = dependencySelection;
+
+    registerArtifactModelChangedListener();
 
     // init the dependencies
     Display.getCurrent().asyncExec(new Runnable() {

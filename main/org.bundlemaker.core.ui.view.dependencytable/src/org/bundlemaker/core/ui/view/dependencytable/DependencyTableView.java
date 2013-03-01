@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,11 +19,12 @@ import java.util.List;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.ui.artifact.tree.EditorHelper;
 import org.bundlemaker.core.ui.event.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
-import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.bundlemaker.core.ui.view.dependencytable.internal.Activator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -37,6 +40,9 @@ import org.eclipse.jface.viewers.ColumnLayoutData;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -63,6 +69,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
 
   /** - */
   public static String               ID                    = DependencyTableView.class.getName();
+
+  public static String               PROVIDER_ID           = "org.bundlemaker.core.ui.view.dependencytable";
 
   private static final String        VIEW_SETTINGS_SECTION = "DependencyTableView";
 
@@ -103,6 +111,27 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
       @Override
       public void doubleClick(DoubleClickEvent event) {
         openDependenciesInEditor();
+      }
+    });
+
+    _viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+      @Override
+      public void selectionChanged(SelectionChangedEvent event) {
+
+        IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
+
+        //
+        Collection<IDependency> dependencies = new LinkedList<IDependency>();
+
+        //
+        for (Iterator<?> iterator = structuredSelection.iterator(); iterator.hasNext();) {
+          dependencies.add((IDependency) iterator.next());
+        }
+
+        //
+        Selection.instance().getDependencySelectionService()
+            .setSelection(Selection.DETAIL_DEPENDENCY_SELECTION_ID, PROVIDER_ID, dependencies);
       }
     });
 
@@ -238,8 +267,8 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
       IBundleMakerArtifact artifact = (IBundleMakerArtifact) dependency.getFrom();
       if (artifact != null) {
         try {
-          // TODO
-          // EditorHelper.openArtifactInEditor(artifact, dependency.getTo());
+          EditorHelper.openArtifactInEditor(artifact instanceof IResourceArtifact ? ((IResourceArtifact) artifact)
+              : artifact.getParent(IResourceArtifact.class));
         } catch (Exception e) {
           MessageDialog.openError(getSite().getShell(), "Error", e.getMessage());
         }
@@ -346,7 +375,7 @@ public class DependencyTableView extends AbstractDependencySelectionAwareViewPar
    */
   @Override
   protected String getSelectionId() {
-    return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
+    return Selection.MAIN_DEPENDENCY_SELECTION_ID;
   }
 
   private void createColumns(Composite parent, TableViewer viewer) {
