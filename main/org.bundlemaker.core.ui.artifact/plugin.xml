@@ -31,8 +31,8 @@
 	<!-- -->
 	<extension point="org.eclipse.ui.navigator.navigatorContent">
 		<navigatorContent activeByDefault="true"
+			id="org.bundlemaker.analysis.ui.navigatorContent"
 			contentProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider"
-			id="org.bundlemaker.analysis.ui.navigatorContent1"
 			labelProvider="org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider"
 			name="artifactContent" priority="lowest">
 			<triggerPoints>
@@ -69,7 +69,7 @@
 		<viewerContentBinding viewerId="org.eclipse.ui.navigator.ProjectExplorer">
 			<includes>
 				<contentExtension isRoot="false"
-					pattern="org.bundlemaker.analysis.ui.navigatorContent1"
+					pattern="org.bundlemaker.analysis.ui.navigatorContent"
 				> 
 				
 				</contentExtension>
