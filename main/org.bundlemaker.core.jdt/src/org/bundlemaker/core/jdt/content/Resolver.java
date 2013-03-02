@@ -8,6 +8,7 @@ import java.util.Set;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -91,10 +92,9 @@ public class Resolver {
     _currentJavaProject = javaProject;
 
     // build the project first
-    // if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
-    // javaProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD,
-    // null);
-    // }
+    if (!ResourcesPlugin.getWorkspace().isAutoBuilding()) {
+      javaProject.getProject().build(IncrementalProjectBuilder.INCREMENTAL_BUILD, null);
+    }
 
     //
     for (IClasspathEntry classpathEntry : javaProject.getRawClasspath()) {
