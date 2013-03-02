@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.views">
               <view
-                    category="org.bundlemaker.analysis.ui.views.category"
+                    category="org.bundlemaker.core.ui.views"
                     class="org.bundlemaker.core.ui.view.dependencytable.DependencyTableView"
                     icon="icons/dependency-table-small.png"
                     id="org.bundlemaker.core.ui.view.dependencytable.DependencyTableView"

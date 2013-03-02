@@ -3,7 +3,7 @@
 <plugin>
   <extension point="org.eclipse.ui.views">
     <view
-          category="org.bundlemaker.analysis.ui.views.category"
+          category="org.bundlemaker.core.ui.views"
           class="org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView"
           icon="icons/dependency-tree-small.png"
           id="org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView"
