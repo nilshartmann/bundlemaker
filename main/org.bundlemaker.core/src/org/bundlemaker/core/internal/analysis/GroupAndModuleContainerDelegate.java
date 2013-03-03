@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.analysis;
 
 import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -50,7 +51,11 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
     Assert.isNotNull(moduleVersion);
 
     //
-    IModuleArtifact moduleArtifact = AnalysisModelQueries.getChildByPath(_groupAndModuleContainer, new Path(
+    IBundleMakerArtifact rootArtifact = qualifiedModuleName.startsWith("/") ? _groupAndModuleContainer.getRoot()
+        : _groupAndModuleContainer;
+
+    //
+    IModuleArtifact moduleArtifact = AnalysisModelQueries.getChildByPath(rootArtifact, new Path(
         qualifiedModuleName + "_" + moduleVersion),
         IModuleArtifact.class);
 
@@ -76,8 +81,8 @@ public class GroupAndModuleContainerDelegate /** implements IGroupAndModuleConta
 
         //
         throw new AnalysisModelException(String.format(
-            "Module '%s_%s' already exists within a different group ('%s').",
-            qualifiedModuleName, moduleVersion, classification));
+            "Cannot create new Module '%s_%s' in group '%s'. Module already exists within a different group ('%s').",
+            qualifiedModuleName, moduleVersion, this._groupAndModuleContainer.getFullPath(), classification));
       }
 
       // create the transformation

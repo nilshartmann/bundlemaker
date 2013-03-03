@@ -44,7 +44,7 @@ public abstract class AbstractJeditAnalysisModelTest extends AbstractModularized
     super.before();
 
     // prepare the model
-    assertTypeCount(1466);
+    assertTypeCount(1483);
 
     // assert the input
     InputStream inputstream = AbstractJeditAnalysisModelTest.class.getResourceAsStream("results/"
