@@ -46,10 +46,14 @@ public interface IBundleMakerProject {
   IProject getProject();
 
   /**
+   * <p>
    * Returns the name of this project.
-   * 
+   * </p>
    * <p>
    * This is a convenience method for {@link #getProject().getName()}
+   * </p>
+   * 
+   * @return the name of this project.
    */
   String getName();
 
@@ -79,6 +83,12 @@ public interface IBundleMakerProject {
    */
   public IModifiableProjectDescription getModifiableProjectDescription();
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @throws CoreException
+   */
   public void reloadProjectDescription() throws CoreException;
 
   /**
@@ -267,19 +277,6 @@ public interface IBundleMakerProject {
    * @precondition BundleMakerProjectState.OPENED
    */
   void deleteModularizedSystemWorkingCopy(String name) throws CoreException;
-
-  // /**
-  // * Returns the {@link IDependencyModel} view of this project.
-  // * <p>
-  // * </p>
-  // *
-  // * @precondition BundleMakerProjectState.OPENED
-  // * @deprecated use
-  // * {@link IModularizedSystem#getArtifactModel(org.bundlemaker.core.analysis.IArtifactModelConfiguration)}
-  // * instead
-  // */
-  // @Deprecated
-  // public IDependencyModel getDependencyModel();
 
   /**
    * <p>
