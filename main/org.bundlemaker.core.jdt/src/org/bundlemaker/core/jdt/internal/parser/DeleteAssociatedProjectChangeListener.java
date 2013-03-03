@@ -89,7 +89,7 @@ public class DeleteAssociatedProjectChangeListener implements IResourceChangeLis
 
             try {
 
-              IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject((IProject) resource, null);
+              IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject((IProject) resource);
 
               if (JdtProjectHelper.hasAssociatedJavaProject(bundleMakerProject)) {
 

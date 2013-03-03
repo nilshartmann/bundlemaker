@@ -76,7 +76,7 @@ public abstract class AbstractBundleMakerProjectTest {
     IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(_testProjectName);
 
     // get the BM project
-    _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject, null);
+    _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject);
   }
 
   /**

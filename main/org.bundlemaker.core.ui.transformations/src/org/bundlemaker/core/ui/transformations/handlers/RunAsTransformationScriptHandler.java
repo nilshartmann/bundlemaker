@@ -35,7 +35,7 @@ public class RunAsTransformationScriptHandler extends AbstractBundleMakerHandler
 
     IProject project = transformationScriptType.getResource().getProject();
     
-    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project, null);
+    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
     
     if (bundleMakerProject.getState() != BundleMakerProjectState.READY) {
       showError(event, "Project " + bundleMakerProject.getName() + " is not parsed. Please open and parse it first");

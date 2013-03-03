@@ -49,7 +49,7 @@ public class ParseBundleMakerProjectHandler extends AbstractBundleMakerHandler i
     IProject project = selectedResource.getProject();
 
     // get the BundleMaker project
-    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project, null);
+    IBundleMakerProject bundleMakerProject = BundleMakerCore.getBundleMakerProject(project);
 
     // open the BundleMaker project
     BundleMakerProjectOpener.openProject(bundleMakerProject);

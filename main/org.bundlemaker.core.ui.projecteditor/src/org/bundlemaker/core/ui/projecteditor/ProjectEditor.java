@@ -13,7 +13,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IFileEditorInput;
@@ -116,7 +115,7 @@ public class ProjectEditor extends FormEditor {
     try {
       // TODO use ProgressMonitor
       IBundleMakerProject bundleMakerProject = BundleMakerCore
-          .getBundleMakerProject(project, new NullProgressMonitor());
+          .getBundleMakerProject(project);
 
       _bundleMakerProject = bundleMakerProject;
 

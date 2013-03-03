@@ -21,7 +21,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -68,7 +67,7 @@ public final class BundleMakerCore {
    * @return
    * @throws CoreException
    */
-  public static IBundleMakerProject getBundleMakerProject(IProject project, IProgressMonitor progressMonitor)
+  public static IBundleMakerProject getBundleMakerProject(IProject project)
       throws CoreException {
     Assert.isNotNull(project);
 
@@ -179,7 +178,7 @@ public final class BundleMakerCore {
     for (IProject iProject : projects) {
       try {
         if (iProject.exists() && iProject.hasNature(BundleMakerCore.NATURE_ID)) {
-          getBundleMakerProject(iProject, null);
+          getBundleMakerProject(iProject);
         }
       } catch (CoreException e) {
         //
@@ -204,7 +203,7 @@ public final class BundleMakerCore {
     IProject project = EclipseProjectUtils.getProject(simpleProjectName);
 
     // get the bundle maker project
-    return BundleMakerCore.getBundleMakerProject(project, null);
+    return BundleMakerCore.getBundleMakerProject(project);
   }
 
   /**
