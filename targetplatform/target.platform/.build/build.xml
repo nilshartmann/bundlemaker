@@ -14,7 +14,8 @@
 		               input="${PROJECT_LOCATION}"
 		               regexp="\\"
 		               replace="/"
-		               global="true" />
+		               global="true" 
+			           defaultValue="${PROJECT_LOCATION}" />
 
 		<!-- -->
 		<copy file="${basedir}/p2.target-template"
