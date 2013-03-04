@@ -13,6 +13,7 @@ package org.bundlemaker.core.jdt.internal.parser;
 import org.bundlemaker.core.DefaultProblemImpl;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
 import org.bundlemaker.core.jdt.parser.CoreParserJdt;
 import org.bundlemaker.core.jdt.parser.IJdtSourceParserHook;
 import org.bundlemaker.core.parser.IResourceCache;
@@ -94,12 +95,12 @@ public class JdtParser extends AbstractHookAwareJdtParser {
       char[] content = new String(modifiableResource.getContent()).toCharArray();
 
       // TODO
-      // if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
-      // IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getJavaProject();
-      // _parser.setProject(javaProject);
-      // } else {
+      if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
+        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getJavaProject();
+        _parser.setProject(javaProject);
+      } else {
       _parser.setProject(_javaProject);
-      // }
+       }
 
       _parser.setSource(content);
       // TODO
