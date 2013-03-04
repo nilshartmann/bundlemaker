@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.xml.JdtProjectContentType;
-import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfoService;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
@@ -172,7 +172,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
     Assert.isNotNull(binaryPath);
     Assert.isNotNull(analyzeMode);
 
-    FileBasedProjectContent result = new FileBasedProjectContent(this);
+    IModifiableProjectContentEntry result = createNewContentEntry();
     result.setId(this.getId() + _counter++);
     result.setName(contentName);
     result.setVersion(contentVersion);

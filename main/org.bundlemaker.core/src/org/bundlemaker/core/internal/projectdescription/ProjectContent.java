@@ -1,4 +1,4 @@
-package org.bundlemaker.core.projectdescription;
+package org.bundlemaker.core.internal.projectdescription;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,9 +6,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.bundlemaker.core.resource.IResource;
+import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
@@ -19,11 +27,15 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractProjectContent implements IProjectContentEntry {
+public class ProjectContent implements IModifiableProjectContentEntry {
 
   /** the empty resource standin set */
   private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
                                                                             .unmodifiableSet(new HashSet<IResourceStandin>());
+
+  /** - */
+  private static final Set<VariablePath>     EMPTY_ROOTPATH_SET         = Collections
+                                                                            .unmodifiableSet(new HashSet<VariablePath>());
 
   /** indicates that the content has been initialized */
   private boolean                            _isInitialized;
@@ -39,6 +51,12 @@ public abstract class AbstractProjectContent implements IProjectContentEntry {
 
   /** the analyze mode of this entry */
   private AnalyzeMode                        _analyze;
+
+  /** the binary pathes */
+  protected Set<VariablePath>                _binaryPaths;
+
+  /** the source pathes */
+  private Set<VariablePath>                  _sourcePaths;
 
   /** the set of binary resource standins */
   private Set<IResourceStandin>              _binaryResourceStandins;
@@ -66,19 +84,19 @@ public abstract class AbstractProjectContent implements IProjectContentEntry {
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractProjectContent}.
+   * Creates a new instance of type {@link ProjectContent}.
    * </p>
    */
-  public AbstractProjectContent(IProjectContentProvider provider) {
+  public ProjectContent(IProjectContentProvider provider) {
     this(provider, false);
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link AbstractProjectContent}.
+   * Creates a new instance of type {@link ProjectContent}.
    * </p>
    */
-  public AbstractProjectContent(IProjectContentProvider provider, boolean notifyChanges) {
+  public ProjectContent(IProjectContentProvider provider, boolean notifyChanges) {
     Assert.isNotNull(provider);
 
     // set notify flag
@@ -86,6 +104,12 @@ public abstract class AbstractProjectContent implements IProjectContentEntry {
 
     // set the provider
     _provider = provider;
+
+    //
+    setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);
+
+    //
+    _binaryPaths = new HashSet<VariablePath>();
   }
 
   /**
@@ -317,15 +341,6 @@ public abstract class AbstractProjectContent implements IProjectContentEntry {
 
   /**
    * <p>
-   * Call back method.
-   * </p>
-   * 
-   * @param projectDescription
-   */
-  protected abstract void onInitialize(IProjectDescription projectDescription) throws CoreException;
-
-  /**
-   * <p>
    * </p>
    * 
    * @param contentId
@@ -405,6 +420,167 @@ public abstract class AbstractProjectContent implements IProjectContentEntry {
 
     //
     return _sourceResourceStandins;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Set<VariablePath> getBinaryRootPaths() {
+    return Collections.unmodifiableSet(_binaryPaths);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Set<VariablePath> getSourceRootPaths() {
+    return _sourcePaths != null ? _sourcePaths : EMPTY_ROOTPATH_SET;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected void onInitialize(IProjectDescription projectDescription) throws CoreException {
+
+    if (isAnalyze()) {
+
+      // add the binary resources
+      for (VariablePath root : _binaryPaths) {
+        for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
+          // create the resource standin
+          createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ProjectContentType.BINARY);
+        }
+      }
+
+      // add the source resources
+      if (getAnalyzeMode().equals(AnalyzeMode.BINARIES_AND_SOURCES)) {
+        if (_sourcePaths != null) {
+          for (VariablePath root : _sourcePaths) {
+            for (String filePath : FileUtils.getAllChildren(root.getAsFile())) {
+              // create the resource standin
+              createNewResourceStandin(getId(), root.getResolvedPath().toString(), filePath, ProjectContentType.SOURCE);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param rootPath
+   * @param type
+   */
+  public void addRootPath(VariablePath rootPath, ProjectContentType type) {
+    Assert.isNotNull(rootPath);
+    Assert.isNotNull(type);
+
+    //
+    if (type.equals(ProjectContentType.BINARY)) {
+      _binaryPaths.add(rootPath);
+    } else if (type.equals(ProjectContentType.SOURCE)) {
+      sourcePaths().add(rootPath);
+    }
+
+    fireProjectDescriptionChangeEvent();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param rootPath
+   * @param type
+   */
+  public void removeRootPath(VariablePath rootPath, ProjectContentType type) {
+    Assert.isNotNull(rootPath);
+    Assert.isNotNull(type);
+
+    //
+    if (type.equals(ProjectContentType.BINARY)) {
+      _binaryPaths.remove(rootPath);
+    } else if (type.equals(ProjectContentType.SOURCE)) {
+      _sourcePaths.remove(rootPath);
+    }
+
+    fireProjectDescriptionChangeEvent();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param binaryRootPaths
+   */
+  public void setBinaryPaths(String[] binaryRootPaths) {
+    Assert.isNotNull(binaryRootPaths);
+
+    _binaryPaths.clear();
+
+    for (String path : binaryRootPaths) {
+      _binaryPaths.add(new VariablePath(path));
+    }
+
+    fireProjectDescriptionChangeEvent();
+
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param sourceRootPaths
+   */
+  public void setSourcePaths(String[] sourceRootPaths) {
+    Assert.isNotNull(sourceRootPaths);
+
+    sourcePaths().clear();
+
+    for (String path : sourceRootPaths) {
+      sourcePaths().add(new VariablePath(path));
+    }
+
+    fireProjectDescriptionChangeEvent();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("FileBasedContent [_binaryPaths=");
+    builder.append(_binaryPaths);
+    builder.append(", _sourcePaths=");
+    builder.append(_sourcePaths);
+    builder.append(", getId()=");
+    builder.append(getId());
+    builder.append(", getName()=");
+    builder.append(getName());
+    builder.append(", getVersion()=");
+    builder.append(getVersion());
+    builder.append(", isAnalyze()=");
+    builder.append(isAnalyze());
+    builder.append("]");
+    return builder.toString();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  private Set<VariablePath> sourcePaths() {
+
+    // lazy initialization
+    if (_sourcePaths == null) {
+      _sourcePaths = new HashSet<VariablePath>();
+    }
+
+    // return the source paths
+    return _sourcePaths;
   }
 
 }

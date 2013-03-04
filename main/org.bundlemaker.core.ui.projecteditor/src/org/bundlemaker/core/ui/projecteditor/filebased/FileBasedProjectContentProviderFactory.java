@@ -1,12 +1,16 @@
-package org.bundlemaker.core.projectdescription.file;
+package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 

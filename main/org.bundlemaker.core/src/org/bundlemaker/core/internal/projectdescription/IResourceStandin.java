@@ -1,4 +1,4 @@
-package org.bundlemaker.core.projectdescription;
+package org.bundlemaker.core.internal.projectdescription;
 
 import org.bundlemaker.core.resource.IResource;
 
@@ -7,8 +7,8 @@ import org.bundlemaker.core.resource.IResource;
  * A resource standin represents a resource that should be analyzed.
  * </p>
  * <p>
- * {@link IResourceStandin IResourceStandins} can only be created within the context of a {@link AbstractProjectContent}
- * by calling {@link AbstractProjectContent#createNewResourceStandin(String, String, String, ContentType)}.
+ * {@link IResourceStandin IResourceStandins} can only be created within the context of a {@link ProjectContent}
+ * by calling {@link ProjectContent#createNewResourceStandin(String, String, String, ContentType)}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)

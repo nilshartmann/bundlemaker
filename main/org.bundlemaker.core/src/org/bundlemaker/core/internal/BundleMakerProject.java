@@ -29,6 +29,7 @@ import org.bundlemaker.core.hook.IBundleMakerProjectHook;
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
 import org.bundlemaker.core.internal.parser.ModelSetup;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.projectdescription.ProjectDescriptionStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStoreFactory;
@@ -36,9 +37,8 @@ import org.bundlemaker.core.internal.transformation.BasicProjectContentTransform
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.transformation.ITransformation;
 import org.bundlemaker.core.parser.IParserFactory;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.IResourceStandin;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;

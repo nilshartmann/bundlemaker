@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.projecteditor.filebased.wizard;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentCreator;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;

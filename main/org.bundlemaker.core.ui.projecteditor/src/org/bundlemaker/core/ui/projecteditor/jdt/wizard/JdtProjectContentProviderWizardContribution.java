@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.projecteditor.jdt.wizard;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.jdt.content.JdtProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.core.resources.IProject;

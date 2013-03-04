@@ -17,7 +17,7 @@ import java.net.URI;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.transformations.support.TransformationScriptSupport;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;

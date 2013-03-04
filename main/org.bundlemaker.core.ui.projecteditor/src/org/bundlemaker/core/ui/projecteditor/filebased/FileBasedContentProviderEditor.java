@@ -15,9 +15,9 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
+import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditProjectPathDialog;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
@@ -69,7 +69,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public boolean canChangeAnalyzeMode(IProjectContentProvider projectContentProvider, Object element) {
-    return (element instanceof FileBasedProjectContentProvider || element instanceof FileBasedProjectContent);
+    return (element instanceof FileBasedProjectContentProvider || element instanceof IModifiableProjectContentEntry);
   }
 
   /*
@@ -81,10 +81,10 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public void setAnalyzeMode(IProjectContentProvider projectContentProvider, Object element, AnalyzeMode analyzeMode) {
-    FileBasedProjectContent fileBasedContent = null;
+    IModifiableProjectContentEntry fileBasedContent = null;
 
-    if (element instanceof FileBasedProjectContent) {
-      fileBasedContent = (FileBasedProjectContent) element;
+    if (element instanceof IModifiableProjectContentEntry) {
+      fileBasedContent = (IModifiableProjectContentEntry) element;
     } else if (element instanceof FileBasedProjectContentProvider) {
       fileBasedContent = ((FileBasedProjectContentProvider) element).getFileBasedContent();
     }
@@ -201,7 +201,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
       return false;
     }
 
-    FileBasedProjectContent content = fileBasedContentProvider.getFileBasedContent();
+    IModifiableProjectContentEntry content = fileBasedContentProvider.getFileBasedContent();
     content.setName(page.getName());
     content.setVersion(page.getVersion());
     content.setBinaryPaths(page.getBinaryPaths().toArray(new String[0]));

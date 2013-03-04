@@ -1,9 +1,13 @@
-package org.bundlemaker.core.projectdescription;
+package org.bundlemaker.core.projectdescription.spi;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
+import org.bundlemaker.core.internal.projectdescription.ProjectContent;
+import org.bundlemaker.core.projectdescription.IProjectContentProblem;
+import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 
 /**
  * <p>
@@ -57,13 +61,13 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * @param description
    */
   protected void init(IProjectDescription description) {
-
+    // empty implementation
   }
 
   /**
    * This method should be called after this provider has been changed.
    */
-  protected void fireProjectDescriptionChangedEvent() {
+  public void fireProjectDescriptionChangedEvent() {
     if (_projectDescription != null) {
       _projectDescription.fireProjectDescriptionChangedEvent();
     }
@@ -73,7 +77,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * <p>
    * </p>
    */
-  protected void fireProjectDescriptionRecomputedEvent() {
+  public void fireProjectDescriptionRecomputedEvent() {
     if (_projectDescription != null) {
       _projectDescription.fireProjectDescriptionRecomputedEvent();
     }
@@ -95,5 +99,15 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   @Override
   public boolean hasProblems() {
     return !getProblems().isEmpty();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IModifiableProjectContentEntry createNewContentEntry() {
+    return new ProjectContent(this);
   }
 }

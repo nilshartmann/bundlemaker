@@ -1,4 +1,4 @@
-package org.bundlemaker.core.projectdescription.file;
+package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import java.io.File;
 

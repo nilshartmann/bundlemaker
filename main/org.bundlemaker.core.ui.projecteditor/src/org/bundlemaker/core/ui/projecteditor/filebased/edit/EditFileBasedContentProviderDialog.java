@@ -5,11 +5,11 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.bundlemaker.core.ui.FormLayoutUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
@@ -44,7 +44,7 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
   /**
    * The original content or null if a new content is created with this dialog
    */
-  private final FileBasedProjectContent _originalContent;
+  private final IModifiableProjectContentEntry _originalContent;
 
   private ContentListBlock              _binariesContentList;
 

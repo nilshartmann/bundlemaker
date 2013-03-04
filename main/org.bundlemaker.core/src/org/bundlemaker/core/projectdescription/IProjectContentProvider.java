@@ -3,6 +3,7 @@ package org.bundlemaker.core.projectdescription;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -11,8 +12,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * </p>
  * 
  * <p>
- * Note: Implementations of this class must be subclasses of
- * <tt>org.bundlemaker.core.projectdescription.AbstractContentProvider</tt>
+ * Note: Implementations of this class must be subclasses of {@link AbstractProjectContentProvider}.
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */

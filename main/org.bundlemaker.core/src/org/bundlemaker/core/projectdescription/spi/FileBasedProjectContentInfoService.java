@@ -1,4 +1,4 @@
-package org.bundlemaker.core.projectdescription.file;
+package org.bundlemaker.core.projectdescription.spi;
 
 import java.io.File;
 import java.util.List;

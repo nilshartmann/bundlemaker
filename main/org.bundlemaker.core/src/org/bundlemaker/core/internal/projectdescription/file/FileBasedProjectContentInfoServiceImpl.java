@@ -14,8 +14,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
 
 /**
  * <p>

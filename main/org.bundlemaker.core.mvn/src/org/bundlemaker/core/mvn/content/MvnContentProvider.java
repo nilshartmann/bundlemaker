@@ -15,14 +15,14 @@ import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.internal.config.DispatchingRepositoryAdapter;
 import org.bundlemaker.core.mvn.internal.config.IAetherRepositoryAdapter;
-import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -164,10 +164,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * {@inheritDoc}
    */
   @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(
-      IProgressMonitor progressMonitor,
-      final IBundleMakerProject bundleMakerProject)
-      throws CoreException {
+  public List<IProjectContentEntry> getBundleMakerProjectContent(IProgressMonitor progressMonitor,
+      final IBundleMakerProject bundleMakerProject) throws CoreException {
 
     Assert.isNotNull(bundleMakerProject);
 
@@ -205,8 +203,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
       // create the aether artifact
       final Artifact artifact = new DefaultArtifact(artifactIdentifier.getGroupId(),
-          artifactIdentifier.getArtifactId(), "jar",
-          artifactIdentifier.getVersion());
+          artifactIdentifier.getArtifactId(), "jar", artifactIdentifier.getVersion());
 
       // create the collect request
       CollectRequest collectRequest = new CollectRequest();
@@ -219,8 +216,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
           //
           RepositoryPolicy policy = reloadFromRemote ? new RepositoryPolicy(true,
               RepositoryPolicy.UPDATE_POLICY_ALWAYS, RepositoryPolicy.CHECKSUM_POLICY_IGNORE) : new RepositoryPolicy(
-              true,
-              RepositoryPolicy.UPDATE_POLICY_DAILY, RepositoryPolicy.CHECKSUM_POLICY_IGNORE);
+              true, RepositoryPolicy.UPDATE_POLICY_DAILY, RepositoryPolicy.CHECKSUM_POLICY_IGNORE);
 
           //
           remoteRepository.setPolicy(true, policy);
@@ -234,9 +230,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       try {
 
         // collect the result
-        CollectResult collectResult = _repositoryAdapter.getRepositorySystem()
-            .collectDependencies(
-                _currentSystemSession, collectRequest);
+        CollectResult collectResult = _repositoryAdapter.getRepositorySystem().collectDependencies(
+            _currentSystemSession, collectRequest);
 
         final List<Artifact> alreadyHandled = new LinkedList<Artifact>();
 
@@ -262,8 +257,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
           Entry<DependencyNode, CoreException> entry = exceptions.entrySet().toArray(new Entry[0])[0];
 
           if (artifact.equals(entry.getKey().getDependency().getArtifact())) {
-            throw new CoreException(new Status(Status.ERROR, MvnCoreActivator.PLUGIN_ID,
-                entry.getValue().getMessage(),
+            throw new CoreException(new Status(Status.ERROR, MvnCoreActivator.PLUGIN_ID, entry.getValue().getMessage(),
                 entry.getValue()));
           }
 
@@ -317,8 +311,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * @return
    * @throws CoreException
    */
-  private boolean handleDependencyNode(DependencyNode node, boolean useRemoteRepository,
-      List<Artifact> alreadyHandled, boolean downloadSources) throws CoreException {
+  private boolean handleDependencyNode(DependencyNode node, boolean useRemoteRepository, List<Artifact> alreadyHandled,
+      boolean downloadSources) throws CoreException {
 
     //
     if (alreadyHandled.contains(node.getDependency().getArtifact())) {
@@ -345,9 +339,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     try {
 
       //
-      ArtifactResult artifactResult = _repositoryAdapter.getRepositorySystem()
-          .resolveArtifact(
-              _currentSystemSession, artifactRequest);
+      ArtifactResult artifactResult = _repositoryAdapter.getRepositorySystem().resolveArtifact(_currentSystemSession,
+          artifactRequest);
 
       File sourceFile = null;
       File binaryFile = null;
@@ -360,8 +353,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
         Artifact sourceArtifact = new DefaultArtifact(currentMavenArtifact.getGroupId(),
             currentMavenArtifact.getArtifactId(), "sources", currentMavenArtifact.getExtension(),
-            currentMavenArtifact
-                .getVersion());
+            currentMavenArtifact.getVersion());
 
         artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(sourceArtifact);
@@ -371,8 +363,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
         }
 
         try {
-          artifactResult = _repositoryAdapter.getRepositorySystem().resolveArtifact(
-              _currentSystemSession, artifactRequest);
+          artifactResult = _repositoryAdapter.getRepositorySystem().resolveArtifact(_currentSystemSession,
+              artifactRequest);
           sourceFile = artifactResult.getArtifact().getFile();
         } catch (ArtifactResolutionException e) {
           e.printStackTrace();
@@ -393,21 +385,18 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       boolean analyze = downloadSources;
 
       //
-      FileBasedProjectContent fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
+      IModifiableProjectContentEntry fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
           moduleIdentifier.getVersion(), binaryFile, sourceFile, _bundleMakerProject, analyze);
 
       // set user attributes
-      fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_GROUP_ID,
-          mvnArtifact.getGroupId());
+      fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_GROUP_ID, mvnArtifact.getGroupId());
       fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_ARTIFACT_ID,
           mvnArtifact.getArtifactId());
-      fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MODULE_NAME,
-          moduleIdentifier.getName());
+      fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MODULE_NAME, moduleIdentifier.getName());
 
     } catch (Exception e) {
       throw new CoreException(new Status(IStatus.ERROR, MvnCoreActivator.PLUGIN_ID, String.format(
-          "Exception while trying to resolve '%s'.",
-          node.toString()), e));
+          "Exception while trying to resolve '%s'.", node.toString()), e));
     }
 
     //
@@ -424,9 +413,8 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * @param sourcePath
    * @throws CoreException
    */
-  private FileBasedProjectContent createFileBasedContent(String contentName, String contentVersion, File binaryPath,
-      File sourcePath,
-      IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
+  private IModifiableProjectContentEntry createFileBasedContent(String contentName, String contentVersion,
+      File binaryPath, File sourcePath, IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
 
     // asserts
     Assert.isNotNull(contentName);
@@ -434,7 +422,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     Assert.isNotNull(binaryPath);
     Assert.isNotNull(bundleMakerProject);
 
-    FileBasedProjectContent result = new FileBasedProjectContent(MvnContentProvider.this);
+    IModifiableProjectContentEntry result = createNewContentEntry();
     if (!analyze) {
       result.setAnalyzeMode(AnalyzeMode.DO_NOT_ANALYZE);
     } else {

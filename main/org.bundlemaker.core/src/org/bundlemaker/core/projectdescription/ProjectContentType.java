@@ -32,6 +32,8 @@ public enum ProjectContentType {
    * @return
    */
   public String getShortDescription() {
+
+    //
     switch (this) {
     case SOURCE:
       return "S";

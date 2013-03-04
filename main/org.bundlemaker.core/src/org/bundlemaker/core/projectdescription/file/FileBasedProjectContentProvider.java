@@ -6,11 +6,14 @@ import java.util.List;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.content.file.xml.XmlFileBasedContentType;
 import org.bundlemaker.core.content.file.xml.XmlResourceContentType;
-import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
+import org.bundlemaker.core.internal.projectdescription.ProjectContent;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -24,7 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class FileBasedProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** the file based content */
-  private FileBasedProjectContent _fileBasedContent;
+  private ProjectContent _fileBasedContent;
 
   /**
    * <p>
@@ -34,17 +37,17 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
   public FileBasedProjectContentProvider() {
 
     // create a new instance of type FileBasedContent
-    _fileBasedContent = new FileBasedProjectContent(this, true);
+    _fileBasedContent = new ProjectContent(this, true);
   }
 
   /**
    * <p>
-   * Returns the contained {@link FileBasedProjectContent}.
+   * Returns the contained {@link IModifiableProjectContentEntry}.
    * </p>
    * 
-   * @return the contained {@link FileBasedProjectContent}.
+   * @return the contained {@link IModifiableProjectContentEntry}.
    */
-  public FileBasedProjectContent getFileBasedContent() {
+  public IModifiableProjectContentEntry getFileBasedContent() {
     return _fileBasedContent;
   }
 
@@ -109,6 +112,13 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     _fileBasedContent.setSourcePaths(sourceRootPaths);
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param rootPath
+   * @param type
+   */
   public void addRootPath(VariablePath rootPath, ProjectContentType type) {
     _fileBasedContent.addRootPath(rootPath, type);
   }
@@ -180,68 +190,4 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
       }
     }
   }
-
-  // /**
-  // * {@inheritDoc}
-  // */
-  // @Override
-  // public List<IProjectContentProblem> getProblems() {
-  //
-  // // create the result list
-  // List<IProjectContentProblem> result = new LinkedList<IProjectContentProblem>();
-  //
-  // // create the binary root cache
-  // GenericCache<IPath, List<VariablePath>> binaryRootCache = new GenericCache<IPath, List<VariablePath>>() {
-  // @Override
-  // protected List<VariablePath> create(IPath key) {
-  // return new LinkedList<VariablePath>();
-  // }
-  // };
-  //
-  // // create the source root cache
-  // GenericCache<IPath, List<VariablePath>> sourceRootCache = new GenericCache<IPath, List<VariablePath>>() {
-  // @Override
-  // protected List<VariablePath> create(IPath key) {
-  // return new LinkedList<VariablePath>();
-  // }
-  // };
-  //
-  // //
-  // for (VariablePath variablePath : _fileBasedContent.getBinaryRootPaths()) {
-  //
-  // //
-  // IPath resolvedPath = getResolvedPath(variablePath);
-  //
-  // if (resolvedPath == null) {
-  // continue;
-  // } else if (binaryRootCache.containsKey(resolvedPath)) {
-  //
-  // //
-  // // System.out.println("Problem: " + variablePath.getUnresolvedPath());
-  // }
-  //
-  // binaryRootCache.getOrCreate(resolvedPath).add(variablePath);
-  // }
-  //
-  // for (VariablePath variablePath : _fileBasedContent.getSourceRootPaths()) {
-  //
-  // }
-  //
-  // return result;
-  // }
-  //
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param variablePath
-  // * @return
-  // */
-  // private IPath getResolvedPath(VariablePath variablePath) {
-  // try {
-  // return variablePath.getResolvedPath();
-  // } catch (CoreException e) {
-  // return null;
-  // }
-  // }
 }

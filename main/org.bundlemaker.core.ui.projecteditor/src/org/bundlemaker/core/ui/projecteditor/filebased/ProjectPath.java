@@ -1,7 +1,7 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.VariablePath;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

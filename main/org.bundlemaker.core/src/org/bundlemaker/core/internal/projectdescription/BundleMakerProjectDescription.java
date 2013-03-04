@@ -25,12 +25,10 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.projectdescription.AbstractProjectContent;
-import org.bundlemaker.core.projectdescription.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
-import org.bundlemaker.core.projectdescription.IResourceStandin;
+import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -244,7 +242,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void removeContentProvider(String id) {
     for (Iterator<IProjectContentEntry> iterator = _projectContentEntries.iterator(); iterator.hasNext();) {
 
-      AbstractProjectContent content = (AbstractProjectContent) iterator.next();
+      ProjectContent content = (ProjectContent) iterator.next();
 
       if (content.getId().equals(id)) {
         iterator.remove();

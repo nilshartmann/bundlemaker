@@ -5,11 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentHelper;
+import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.projecteditor.choice.Choice;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;

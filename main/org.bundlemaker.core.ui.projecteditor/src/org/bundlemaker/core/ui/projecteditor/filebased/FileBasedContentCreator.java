@@ -5,11 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentInfoService;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProviderFactory;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
+import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 
 /**
  * Util class that creates FileBasedContent instances based on a set of selected files.

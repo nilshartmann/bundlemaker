@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.resource.ResourceStandin;
@@ -18,7 +19,6 @@ import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.parser.IParser;
 import org.bundlemaker.core.parser.IParser.ParserType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
-import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IResourceKey;
 import org.bundlemaker.core.resource.IType;
 import org.eclipse.core.runtime.Assert;

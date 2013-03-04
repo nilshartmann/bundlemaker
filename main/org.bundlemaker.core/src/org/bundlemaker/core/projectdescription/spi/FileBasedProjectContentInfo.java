@@ -8,7 +8,7 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.projectdescription.file;
+package org.bundlemaker.core.projectdescription.spi;
 
 import org.eclipse.core.runtime.Assert;
 

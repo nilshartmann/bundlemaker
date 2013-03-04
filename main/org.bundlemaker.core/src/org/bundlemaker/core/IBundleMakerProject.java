@@ -15,8 +15,8 @@ import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.resource.IResource;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;

@@ -13,7 +13,6 @@ package org.bundlemaker.core.projectdescription;
 import java.util.Map;
 import java.util.Set;
 
-import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.resource.IResource;
 
 /**
@@ -21,6 +20,9 @@ import org.bundlemaker.core.resource.IResource;
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ * 
+ * @noimplement This interface is not intended to be implemented by clients.
+ * @noextend This interface is not intended to be extended by clients.
  */
 public interface IProjectContentEntry {
 

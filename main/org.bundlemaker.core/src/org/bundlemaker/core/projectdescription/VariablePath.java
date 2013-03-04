@@ -1,4 +1,4 @@
-package org.bundlemaker.core.projectdescription.file;
+package org.bundlemaker.core.projectdescription;
 
 import java.io.File;
 
@@ -17,7 +17,7 @@ import org.eclipse.core.variables.VariablesPlugin;
  */
 public class VariablePath {
 
-  /** - */
+  /** the path that represents the location of an project content entry */
   private final IPath _path;
 
   /**
@@ -26,11 +26,10 @@ public class VariablePath {
    * </p>
    * 
    * @param path
-   * @param binaryPath
-   *          true if this is a binary path, false if it is a source path
    */
   public VariablePath(String path) {
     Assert.isNotNull(path);
+    Assert.isTrue(!path.isEmpty());
 
     // set the path
     _path = new Path(path);
@@ -50,22 +49,36 @@ public class VariablePath {
    */
   public IPath getResolvedPath() throws CoreException {
 
-    //
+    // get the IStringVariableManager
     IStringVariableManager stringVariableManager = VariablesPlugin.getDefault().getStringVariableManager();
 
-    //
+    // return the resolved path
     return new Path(stringVariableManager.performStringSubstitution(_path.toString()));
   }
 
+  /**
+   * <p>
+   * Returns
+   * </p>
+   * 
+   * @return
+   * @throws CoreException
+   */
   public File getAsFile() throws CoreException {
     return getResolvedPath().toFile();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString() {
     return "VariablePath [_path=" + _path + "]";
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public int hashCode() {
     int result = 31;
@@ -77,6 +90,9 @@ public class VariablePath {
     return result;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean equals(Object obj) {
     if (this == obj)

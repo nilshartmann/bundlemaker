@@ -15,9 +15,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.internal.modules.modularizedsystem.ModularizedSystem;
+import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.modules.IResourceModule;
-import org.bundlemaker.core.projectdescription.IResourceStandin;
 import org.bundlemaker.core.resource.IReference;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.resource.IType;

@@ -16,9 +16,9 @@ import java.util.Set;
 
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.file.FileBasedProjectContent;
+import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.file.VariablePath;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.bundlemaker.core.ui.BundleMakerImages;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.graphics.Image;
@@ -40,7 +40,7 @@ public class FileBasedContentRenderer {
   }
 
   public boolean canRender(Object object) {
-    return (object instanceof FileBasedProjectContent || object instanceof ProjectPath);
+    return (object instanceof IModifiableProjectContentEntry || object instanceof ProjectPath);
   }
 
   /**
@@ -56,15 +56,15 @@ public class FileBasedContentRenderer {
 
     }
 
-    if (object instanceof FileBasedProjectContent) {
-      FileBasedProjectContent fileBasedContent = (FileBasedProjectContent) object;
+    if (object instanceof IModifiableProjectContentEntry) {
+      IModifiableProjectContentEntry fileBasedContent = (IModifiableProjectContentEntry) object;
       return getChildren(fileBasedContent);
     }
 
     return null;
   }
 
-  protected List<? extends Object> getChildren(FileBasedProjectContent fileBasedContent) {
+  protected List<? extends Object> getChildren(IModifiableProjectContentEntry fileBasedContent) {
     List<Object> result = new LinkedList<Object>();
 
     addAsProjectPaths(result, fileBasedContent.getBinaryRootPaths(), false);
@@ -87,8 +87,8 @@ public class FileBasedContentRenderer {
     if (element instanceof FileBasedProjectContentProvider) {
       return ((FileBasedProjectContentProvider) element).getFileBasedContent().getAnalyzeMode();
     }
-    if (element instanceof FileBasedProjectContent) {
-      return ((FileBasedProjectContent) element).getAnalyzeMode();
+    if (element instanceof IModifiableProjectContentEntry) {
+      return ((IModifiableProjectContentEntry) element).getAnalyzeMode();
     }
 
     return null;
@@ -99,7 +99,7 @@ public class FileBasedContentRenderer {
    * @return
    */
   public Image getImage(Object element) {
-    if (element instanceof FileBasedProjectContentProvider || element instanceof FileBasedProjectContent) {
+    if (element instanceof FileBasedProjectContentProvider || element instanceof IModifiableProjectContentEntry) {
       return BundleMakerImages.RESOURCE_CONTENT.getImage();
     }
 
@@ -121,8 +121,8 @@ public class FileBasedContentRenderer {
       return getFileBasedContentLabel(fileBasedContentProvider.getFileBasedContent());
     }
 
-    if (element instanceof FileBasedProjectContent) {
-      return getFileBasedContentLabel((FileBasedProjectContent) element);
+    if (element instanceof IModifiableProjectContentEntry) {
+      return getFileBasedContentLabel((IModifiableProjectContentEntry) element);
     }
 
     if (element instanceof ProjectPath) {
@@ -133,7 +133,7 @@ public class FileBasedContentRenderer {
     return String.valueOf(element);
   }
 
-  protected String getFileBasedContentLabel(FileBasedProjectContent fileBasedContent) {
+  protected String getFileBasedContentLabel(IModifiableProjectContentEntry fileBasedContent) {
     return String.format("%s [%s]", fileBasedContent.getName(), fileBasedContent.getVersion());
 
   }

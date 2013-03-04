@@ -1,7 +1,7 @@
 package org.bundlemaker.core.mvn.content;
 
 import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
-import org.bundlemaker.core.projectdescription.IModifiableProjectDescription;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 
 /**
  * <p>
