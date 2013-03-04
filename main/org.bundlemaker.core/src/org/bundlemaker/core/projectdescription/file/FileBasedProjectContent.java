@@ -16,10 +16,10 @@ import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AbstractProjectContent;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.IModifiableProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
@@ -32,7 +32,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedProjectContent extends AbstractProjectContent implements IProjectContentEntry {
+public class FileBasedProjectContent extends AbstractProjectContent implements IModifiableProjectContentEntry {
 
   /** - */
   private static final Set<VariablePath> EMPTY_ROOTPATH_SET = Collections.unmodifiableSet(new HashSet<VariablePath>());

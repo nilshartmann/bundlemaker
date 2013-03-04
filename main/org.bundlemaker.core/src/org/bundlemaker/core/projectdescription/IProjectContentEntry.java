@@ -13,6 +13,7 @@ package org.bundlemaker.core.projectdescription;
 import java.util.Map;
 import java.util.Set;
 
+import org.bundlemaker.core.projectdescription.file.VariablePath;
 import org.bundlemaker.core.resource.IResource;
 
 /**
@@ -31,6 +32,22 @@ public interface IProjectContentEntry {
    * @return the internal identifier of this content entry.
    */
   String getId();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<VariablePath> getBinaryRootPaths();
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  Set<VariablePath> getSourceRootPaths();
 
   /**
    * <p>
