@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Running Platform" sequenceNumber="58">
+<?pde version="3.8"?>
+
+<target name="Running Platform" sequenceNumber="59">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.bundlemaker.com.db4o.feature.feature.group" version="8.0.184.15484"/>
@@ -10,11 +12,13 @@
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.draw2d.feature.group" version="3.8.1.201208200205"/>
 <unit id="org.eclipse.draw2d.source.feature.group" version="3.8.1.201208200205"/>
-<unit id="org.eclipse.zest.feature.group" version="1.4.1.201208200205"/>
-<unit id="org.eclipse.zest.source.feature.group" version="1.4.1.201208200205"/>
 <repository location="file:@PROJECT_LOC@/p2/GEF-Update-3.8.1/"/>
 </location>
 <location path="${eclipse_home}" type="Profile"/>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.zest.sdk.feature.group" version="2.0.0.201210200125"/>
+<repository location="file:@PROJECT_LOC@/p2/zest2/"/>
+</location>
 </locations>
 <environment>
 <nl>de_DE</nl>
