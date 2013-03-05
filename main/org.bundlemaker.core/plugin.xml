@@ -21,11 +21,7 @@
          id="org.bundlemaker.core.projectdescription.file.FileBasedContentProvider"
          point="org.bundlemaker.core.projectcontentprovider">
       <projectContentProvider
-            class="org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider">
-         <jaxbObjectFactory
-               class="org.bundlemaker.core.content.file.xml.ObjectFactory">
-         </jaxbObjectFactory>
-      </projectContentProvider>
+            class="org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider" />
    </extension>
    
 

@@ -50,7 +50,7 @@ public final class BundleMakerCore {
   public static final String BUNDLEMAKER_DIRECTORY_NAME = ".bundlemaker";
 
   /** the project description file name */
-  public static final String PROJECT_DESCRIPTION_NAME   = "bundlemaker.xml";
+  public static final String PROJECT_DESCRIPTION_NAME   = "bundlemaker.json";
 
   /** the project description path */
   public static final IPath  PROJECT_DESCRIPTION_PATH   = new Path(PROJECT_DESCRIPTION_NAME);

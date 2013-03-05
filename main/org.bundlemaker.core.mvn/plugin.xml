@@ -5,10 +5,7 @@
    <!-- org.bundlemaker.core.projectcontentprovider -->
    <extension id="org.bundlemaker.core.mvn.content.MvnContentProvider" name="MvnContentProvider"
       point="org.bundlemaker.core.projectcontentprovider">
-      <projectContentProvider class="org.bundlemaker.core.mvn.content.MvnContentProvider">
-         <jaxbObjectFactory class="org.bundlemaker.core.mvn.content.xml.ObjectFactory"
-         > </jaxbObjectFactory>
-      </projectContentProvider>
+      <projectContentProvider class="org.bundlemaker.core.mvn.content.MvnContentProvider"/>
    </extension>
 
    <!-- org.eclipse.core.runtime.preferences -->

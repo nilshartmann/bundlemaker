@@ -13,8 +13,8 @@ package org.bundlemaker.core.ui.mvn;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.MvnContentProviderFactory;
-import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.ui.projecteditor.provider.INewProjectContentProviderWizardContribution;
 import org.eclipse.jface.wizard.IWizard;

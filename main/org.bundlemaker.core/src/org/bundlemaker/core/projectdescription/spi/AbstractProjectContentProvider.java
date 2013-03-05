@@ -4,10 +4,15 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
-import org.bundlemaker.core.internal.projectdescription.ProjectContent;
+import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
+import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.projectdescription.IProjectContentProblem;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * <p>
@@ -26,6 +31,8 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   private BundleMakerProjectDescription _projectDescription;
 
   /** - */
+  @Expose
+  @SerializedName("id")
   private String                        _id;
 
   /**
@@ -62,6 +69,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    */
   protected void init(IProjectDescription description) {
     // empty implementation
+    System.out.println("init");
   }
 
   /**
@@ -107,7 +115,55 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    * 
    * @return
    */
-  public IModifiableProjectContentEntry createNewContentEntry() {
-    return new ProjectContent(this);
+  protected IModifiableProjectContentEntry createNewContentEntry() {
+    return new ProjectContentEntry(this);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public final String toJson() {
+    return GsonProjectDescriptionHelper.gson().toJson(this);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param gsonString
+   * @param type
+   * @return
+   */
+  public static <T extends FileBasedProjectContentProvider> T fromJson(String gsonString,
+      Class<T> type) {
+    return GsonProjectDescriptionHelper.gson().fromJson(gsonString, type);
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_id == null) ? 0 : _id.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    AbstractProjectContentProvider other = (AbstractProjectContentProvider) obj;
+    if (_id == null) {
+      if (other._id != null)
+        return false;
+    } else if (!_id.equals(other._id))
+      return false;
+    return true;
   }
 }

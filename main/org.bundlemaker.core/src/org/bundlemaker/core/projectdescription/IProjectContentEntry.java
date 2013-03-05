@@ -28,22 +28,6 @@ public interface IProjectContentEntry extends IIdentifiableContentEntry {
 
   /**
    * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Set<VariablePath> getBinaryRootPaths();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  Set<VariablePath> getSourceRootPaths();
-
-  /**
-   * <p>
    * Return <code>true</code> if this content entry is a resource entry that should be parsed and analyzed,
    * <code>false</code> otherwise.
    * </p>
@@ -55,11 +39,30 @@ public interface IProjectContentEntry extends IIdentifiableContentEntry {
 
   /**
    * <p>
+   * Returns the {@link AnalyzeMode} for this {@link IProjectContentEntry}.
    * </p>
    * 
-   * @return the {@link AnalyzeMode} for this content
+   * @return the {@link AnalyzeMode} for this {@link IProjectContentEntry}
    */
   AnalyzeMode getAnalyzeMode();
+
+  /**
+   * <p>
+   * Returns all binary root paths of this {@link IProjectContentEntry}.
+   * </p>
+   * 
+   * @return all binary root paths of this {@link IProjectContentEntry}.
+   */
+  Set<VariablePath> getBinaryRootPaths();
+
+  /**
+   * <p>
+   * Returns all source root paths of this {@link IProjectContentEntry}.
+   * </p>
+   * 
+   * @return all source root paths of this {@link IProjectContentEntry}.
+   */
+  Set<VariablePath> getSourceRootPaths();
 
   /**
    * <p>

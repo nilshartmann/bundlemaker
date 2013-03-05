@@ -9,23 +9,36 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.variables.IStringVariableManager;
 import org.eclipse.core.variables.VariablesPlugin;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
+ * Encapsulates a path that can contain eclipse variables, e.g
+ * <code>${project_loc:myEclipseProject/lib/myJar.jar}</code>. This class provides several convenience methods to
+ * resolve the variable path and retrieve the corresponding {@link File}.
+ * </p>
+ * <p>
+ * Instances of this class are automatically externalized as JSON strings when used in a {@link IProjectContentProvider}
+ * implementation (if the corresponding fields are annotated with an {@link Expose} annotation).
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class VariablePath {
 
-  /** the path that represents the location of an project content entry */
+  /** the path that may contains variables */
+  @Expose
+  @SerializedName("path")
   private final IPath _path;
 
   /**
    * <p>
-   * Creates a new instance of type {@link VariablePath}.
+   * Creates a new instance of type {@link VariablePath}. Must not be {@code null} and not empty.
    * </p>
    * 
    * @param path
+   *          the path that may contains variables
    */
   public VariablePath(String path) {
     Assert.isNotNull(path);
@@ -36,16 +49,25 @@ public class VariablePath {
   }
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * Returns the raw, unresolved path that may contains variables.
+   * </p>
+   * 
+   * @return the raw, unresolved path that may contains variables.
    */
   public IPath getUnresolvedPath() {
     return _path;
   }
 
   /**
-   * {@inheritDoc}
+   * <p>
+   * Returns the resolved path using the eclipse {@link IStringVariableManager}. If the path contains one or more
+   * undefined variables, a {@link CoreException} will be thrown.
+   * </p>
    * 
+   * @return the resolved path
    * @throws CoreException
+   *           if the path contains one or more undefined variables
    */
   public IPath getResolvedPath() throws CoreException {
 
@@ -58,11 +80,13 @@ public class VariablePath {
 
   /**
    * <p>
-   * Returns
+   * Returns the resolved path as a {@link File}. The result of this method is equivalent to calling
+   * {@code getResolvedPath().toFile()}.
    * </p>
    * 
-   * @return
+   * @return the resolved path as a {@link File}
    * @throws CoreException
+   *           if the path contains one or more undefined variables
    */
   public File getAsFile() throws CoreException {
     return getResolvedPath().toFile();

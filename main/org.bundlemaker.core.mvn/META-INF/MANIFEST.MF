@@ -27,10 +27,10 @@ Bundle-ClassPath: .,
  libs/maven-settings-builder-3.0.4.jar
 Require-Bundle: org.bundlemaker.core;bundle-version="0.10.0",
  org.eclipse.core.runtime;bundle-version="3.6.0",
- org.eclipse.core.resources;bundle-version="3.8"
+ org.eclipse.core.resources;bundle-version="3.8",
+ com.google.gson;bundle-version="2.2.2"
 Export-Package: org.bundlemaker.core.mvn,
  org.bundlemaker.core.mvn.content,
- org.bundlemaker.core.mvn.content.xml,
  org.bundlemaker.core.mvn.exporter,
  org.bundlemaker.core.mvn.preferences
 Bundle-Activator: org.bundlemaker.core.mvn.MvnCoreActivator

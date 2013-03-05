@@ -12,7 +12,7 @@ package org.bundlemaker.core.projectdescription;
 
 /**
  * <p>
- * The content type enumeration.
+ * Defines the possible types of the content that is defined in a {@link IProjectContentEntry}.
  * </p>
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
@@ -27,9 +27,10 @@ public enum ProjectContentType {
 
   /**
    * <p>
+   * Returns {@code S} for {@link ProjectContentType#SOURCE} and {@code B} for {@link ProjectContentType#BINARY}.
    * </p>
    * 
-   * @return
+   * @return {@code S} for {@link ProjectContentType#SOURCE} and {@code B} for {@link ProjectContentType#BINARY}.
    */
   public String getShortDescription() {
 
@@ -40,6 +41,7 @@ public enum ProjectContentType {
     case BINARY:
       return "B";
     default:
+      // can not happen...
       throw new RuntimeException(String.format("Unknown ContentType '%s'.", this));
     }
   }

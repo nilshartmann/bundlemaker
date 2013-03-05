@@ -20,6 +20,9 @@ import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
  * Abstract base class for all {@link IProjectContentEntry} implementations.
@@ -27,7 +30,7 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ProjectContent implements IModifiableProjectContentEntry {
+public class ProjectContentEntry implements IModifiableProjectContentEntry {
 
   /** the empty resource standin set */
   private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
@@ -41,21 +44,33 @@ public class ProjectContent implements IModifiableProjectContentEntry {
   private boolean                            _isInitialized;
 
   /** the internal identifier of this content entry */
+  @Expose
+  @SerializedName("id")
   private String                             _id;
 
   /** the name of this entry */
+  @Expose
+  @SerializedName("name")
   private String                             _name;
 
   /** the version of this entry */
+  @Expose
+  @SerializedName("version")
   private String                             _version;
 
   /** the analyze mode of this entry */
+  @Expose
+  @SerializedName("analyse")
   private AnalyzeMode                        _analyze;
 
   /** the binary pathes */
+  @Expose
+  @SerializedName("binaryPaths")
   protected Set<VariablePath>                _binaryPaths;
 
   /** the source pathes */
+  @Expose
+  @SerializedName("sourcePaths")
   private Set<VariablePath>                  _sourcePaths;
 
   /** the set of binary resource standins */
@@ -84,19 +99,19 @@ public class ProjectContent implements IModifiableProjectContentEntry {
 
   /**
    * <p>
-   * Creates a new instance of type {@link ProjectContent}.
+   * Creates a new instance of type {@link ProjectContentEntry}.
    * </p>
    */
-  public ProjectContent(IProjectContentProvider provider) {
+  public ProjectContentEntry(IProjectContentProvider provider) {
     this(provider, false);
   }
 
   /**
    * <p>
-   * Creates a new instance of type {@link ProjectContent}.
+   * Creates a new instance of type {@link ProjectContentEntry}.
    * </p>
    */
-  public ProjectContent(IProjectContentProvider provider, boolean notifyChanges) {
+  public ProjectContentEntry(IProjectContentProvider provider, boolean notifyChanges) {
     Assert.isNotNull(provider);
 
     // set notify flag
@@ -564,6 +579,64 @@ public class ProjectContent implements IModifiableProjectContentEntry {
     builder.append(isAnalyze());
     builder.append("]");
     return builder.toString();
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((_analyze == null) ? 0 : _analyze.hashCode());
+    result = prime * result + ((_binaryPaths == null) ? 0 : _binaryPaths.hashCode());
+    result = prime * result + ((_id == null) ? 0 : _id.hashCode());
+    result = prime * result + ((_name == null) ? 0 : _name.hashCode());
+    result = prime * result + ((_sourcePaths == null) ? 0 : _sourcePaths.hashCode());
+    result = prime * result + ((_userAttributes == null) ? 0 : _userAttributes.hashCode());
+    result = prime * result + ((_version == null) ? 0 : _version.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    ProjectContentEntry other = (ProjectContentEntry) obj;
+    if (_analyze != other._analyze)
+      return false;
+    if (_binaryPaths == null) {
+      if (other._binaryPaths != null)
+        return false;
+    } else if (!_binaryPaths.equals(other._binaryPaths))
+      return false;
+    if (_id == null) {
+      if (other._id != null)
+        return false;
+    } else if (!_id.equals(other._id))
+      return false;
+    if (_name == null) {
+      if (other._name != null)
+        return false;
+    } else if (!_name.equals(other._name))
+      return false;
+    if (_sourcePaths == null) {
+      if (other._sourcePaths != null)
+        return false;
+    } else if (!_sourcePaths.equals(other._sourcePaths))
+      return false;
+    if (_userAttributes == null) {
+      if (other._userAttributes != null)
+        return false;
+    } else if (!_userAttributes.equals(other._userAttributes))
+      return false;
+    if (_version == null) {
+      if (other._version != null)
+        return false;
+    } else if (!_version.equals(other._version))
+      return false;
+    return true;
   }
 
   /**

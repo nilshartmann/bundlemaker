@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.jdt.content.xml.JdtProjectContentType;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
@@ -23,6 +23,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
  * </p>
@@ -30,6 +33,10 @@ import org.eclipse.jdt.core.JavaCore;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class JdtProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
+
+  @Expose
+  @SerializedName("javaProjectName")
+  private String                     _javaProjectName;
 
   /** - */
   private IJavaProject               _javaProject;
@@ -47,34 +54,10 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * {@inheritDoc}
    */
   @Override
-  public Object getConfiguration() {
+  protected void init(IProjectDescription description) {
 
     //
-    JdtProjectContentType result = new JdtProjectContentType();
-    result.setProject(_javaProject.getElementName());
-
-    //
-    return result;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setConfiguration(Object configuration) {
-
-    //
-    Assert.isNotNull(configuration);
-    Assert.isTrue(configuration instanceof JdtProjectContentType);
-
-    // cast down
-    JdtProjectContentType config = (JdtProjectContentType) configuration;
-
-    //
-    String projectName = config.getProject();
-
-    //
-    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+    IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(_javaProjectName);
     _javaProject = JavaCore.create(project);
   }
 
@@ -86,7 +69,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
   @Override
   public List<IProjectContentEntry> getBundleMakerProjectContent(IProgressMonitor progressMonitor,
       IBundleMakerProject bundleMakerProject) throws CoreException {
-    
+
     //
     _bundleMakerProject = bundleMakerProject;
 
@@ -141,6 +124,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    */
   public void setJavaProject(IJavaProject javaProject) {
     _javaProject = javaProject;
+    _javaProjectName = _javaProject.getElementName();
   }
 
   /**

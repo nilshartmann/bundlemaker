@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.content.file.xml.XmlFileBasedContentType;
-import org.bundlemaker.core.content.file.xml.XmlResourceContentType;
-import org.bundlemaker.core.internal.projectdescription.ProjectContent;
+import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
@@ -18,6 +16,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
  * </p>
@@ -27,7 +28,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class FileBasedProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** the file based content */
-  private ProjectContent _fileBasedContent;
+  @Expose
+  @SerializedName("content")
+  private ProjectContentEntry _fileBasedContent;
 
   /**
    * <p>
@@ -37,7 +40,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
   public FileBasedProjectContentProvider() {
 
     // create a new instance of type FileBasedContent
-    _fileBasedContent = new ProjectContent(this, true);
+    _fileBasedContent = new ProjectContentEntry(this, true);
   }
 
   /**
@@ -64,6 +67,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     Assert.isNotNull(bundleMakerProject);
 
     // initialize the file based content
+    _fileBasedContent.setId(getId());
     _fileBasedContent.initialize(bundleMakerProject.getProjectDescription());
 
     // return the file based content
@@ -133,61 +137,28 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     _fileBasedContent.setAnalyzeMode(analyzeMode);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public Object getConfiguration() {
-
-    // create the configuration object
-    XmlFileBasedContentType contentType = new XmlFileBasedContentType();
-
-    // add the content
-    contentType.setName(_fileBasedContent.getName());
-    contentType.setVersion(_fileBasedContent.getVersion());
-    contentType.setAnalyzeMode(_fileBasedContent.getAnalyzeMode().toString());
-    for (VariablePath path : _fileBasedContent.getBinaryRootPaths()) {
-      contentType.getBinaryPathNames().add(path.getUnresolvedPath().toString());
-    }
-
-    XmlResourceContentType xmlResourceContent = new XmlResourceContentType();
-    contentType.setResourceContent(xmlResourceContent);
-    for (VariablePath path : _fileBasedContent.getSourceRootPaths()) {
-      xmlResourceContent.getSourcePathNames().add(path.getUnresolvedPath().toString());
-    }
-
-    // return the result
-    return contentType;
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + ((_fileBasedContent == null) ? 0 : _fileBasedContent.hashCode());
+    return result;
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  public void setConfiguration(Object configuration) {
-
-    //
-    Assert.isNotNull(configuration);
-    Assert.isTrue(configuration instanceof XmlFileBasedContentType);
-
-    // cast down
-    XmlFileBasedContentType config = (XmlFileBasedContentType) configuration;
-
-    _fileBasedContent.setId(getId());
-    _fileBasedContent.setName(config.getName());
-    _fileBasedContent.setVersion(config.getVersion());
-    _fileBasedContent.setAnalyzeMode(AnalyzeMode.valueOf(config.getAnalyzeMode()));
-
-    // set the binary path names
-    for (String path : config.getBinaryPathNames()) {
-      _fileBasedContent.addRootPath(new VariablePath(path), ProjectContentType.BINARY);
-    }
-
-    // set the source path name
-    if (config.getResourceContent() != null) {
-      for (String path : config.getResourceContent().getSourcePathNames()) {
-        _fileBasedContent.addRootPath(new VariablePath(path), ProjectContentType.SOURCE);
-      }
-    }
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    FileBasedProjectContentProvider other = (FileBasedProjectContentProvider) obj;
+    if (_fileBasedContent == null) {
+      if (other._fileBasedContent != null)
+        return false;
+    } else if (!_fileBasedContent.equals(other._fileBasedContent))
+      return false;
+    return true;
   }
 }

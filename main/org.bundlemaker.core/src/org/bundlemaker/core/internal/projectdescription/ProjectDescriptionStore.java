@@ -19,10 +19,9 @@ import java.io.InputStream;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
-import org.bundlemaker.core.internal.BundleMakerProject;
-import org.bundlemaker.core.model.internal.projectdescription.xml.ContentProviderFactoryType;
-import org.bundlemaker.core.model.internal.projectdescription.xml.XmlProjectDescriptionType;
+import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
+import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Assert;
@@ -41,29 +40,13 @@ public class ProjectDescriptionStore {
     Assert.isNotNull(project);
     Assert.isNotNull(projectDescription);
 
-    // create the xml project description
-    XmlProjectDescriptionType xmlProjectDescription = new XmlProjectDescriptionType();
-    xmlProjectDescription.setCurrentId(projectDescription.getCurrentId());
-    xmlProjectDescription.setJre(projectDescription.getJRE());
-
-    // add the file based content
-    // TODO
-    for (IProjectContentProvider contentProvider : projectDescription.getContentProviders()) {
-
-      ContentProviderFactoryType providerFactoryType = new ContentProviderFactoryType();
-
-      providerFactoryType.setContentProviderFactoryClass(contentProvider.getClass().getName());
-      providerFactoryType.setContentProviderFactoryId(contentProvider.getId());
-      providerFactoryType.setAny(contentProvider.getConfiguration());
-
-      xmlProjectDescription.getContentProviderFactory().add(providerFactoryType);
-    }
-
     //
     IFile iFile = project.getFile(BundleMakerCore.PROJECT_DESCRIPTION_PATH);
 
-    ByteArrayInputStream in = new ByteArrayInputStream(XmlProjectDescriptionExporterUtils
-        .marshal(xmlProjectDescription).getBytes());
+    String jsonString = GsonProjectDescriptionHelper.gson(projectDescription.getBundleMakerProject()).toJson(
+        projectDescription);
+
+    ByteArrayInputStream in = new ByteArrayInputStream(jsonString.getBytes());
 
     if (!iFile.exists()) {
       iFile.create(in, true, null);
@@ -79,6 +62,14 @@ public class ProjectDescriptionStore {
     }
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param project
+   * @return
+   * @throws CoreException
+   */
   public static BundleMakerProjectDescription loadProjectDescription(IBundleMakerProject project) throws CoreException {
 
     //
@@ -91,34 +82,17 @@ public class ProjectDescriptionStore {
     byte[] bs;
     bs = read(iFile.getRawLocation().toFile());
 
-    XmlProjectDescriptionType xmlProjectDescription = XmlProjectDescriptionExporterUtils
-        .unmarshal(new ByteArrayInputStream(bs));
-
-    BundleMakerProjectDescription result = new BundleMakerProjectDescription((BundleMakerProject) project);
-    result.setCurrentId(xmlProjectDescription.getCurrentId());
-    result.setJreInternal(xmlProjectDescription.getJre());
-
     //
-    JaxbCompoundClassLoader jaxbCompoundClassLoader = new JaxbCompoundClassLoader();
+    BundleMakerProjectDescription descriptionNeu = GsonProjectDescriptionHelper.gson(project).fromJson(new String(bs),
+        BundleMakerProjectDescription.class);
 
-    for (ContentProviderFactoryType type : xmlProjectDescription.getContentProviderFactory()) {
-
-      try {
-
-        Class<?> clazz = jaxbCompoundClassLoader.getCompoundClassLoader().loadClass(
-            type.getContentProviderFactoryClass());
-        IProjectContentProvider instObject = (IProjectContentProvider) clazz.newInstance();
-        instObject.setId(type.getContentProviderFactoryId());
-        instObject.setConfiguration(type.getAny());
-        result.addContentProvider(instObject, false);
-
-      } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+    // initialize
+    for (IProjectContentProvider provider : descriptionNeu.getContentProviders()) {
+      ((AbstractProjectContentProvider) provider).setProjectDescription(descriptionNeu);
     }
 
-    return result;
+    //
+    return descriptionNeu;
   }
 
   /**

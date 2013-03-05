@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.mvn;
 
 import java.util.LinkedList;
 
-import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
+import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;

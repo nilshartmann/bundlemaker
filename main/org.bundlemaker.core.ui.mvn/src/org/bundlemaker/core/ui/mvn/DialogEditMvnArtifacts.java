@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.mvn;
 
 import java.util.List;
 
-import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
+import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

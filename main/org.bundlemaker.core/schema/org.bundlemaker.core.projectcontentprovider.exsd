@@ -50,7 +50,6 @@
    <element name="projectContentProvider">
       <complexType>
          <sequence>
-            <element ref="jaxbObjectFactory"/>
          </sequence>
          <attribute name="class" type="string" use="required">
             <annotation>
@@ -59,21 +58,6 @@
                </documentation>
                <appinfo>
                   <meta.attribute kind="java" basedOn=":org.bundlemaker.core.projectdescription.IBundleMakerProjectContentProvider"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="jaxbObjectFactory">
-      <complexType>
-         <attribute name="class" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java"/>
                </appinfo>
             </annotation>
          </attribute>

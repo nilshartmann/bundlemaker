@@ -1,4 +1,4 @@
-package org.bundlemaker.core.internal.extensionpoints.projectcontentprovider;
+package org.bundlemaker.core.internal.projectdescription.contentprovider;
 
 import java.util.LinkedList;
 import java.util.List;

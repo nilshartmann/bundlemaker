@@ -153,7 +153,7 @@ public class ProjectEditor extends FormEditor {
 
       boolean d = isDirty();
       if (d) {
-        // window is closed, changes already made to the model must be discarded by re-loading the bundlemaker.xml from
+        // window is closed, changes already made to the model must be discarded by re-loading the bundlemaker.json from
         // storage
         try {
           _bundleMakerProject.reloadProjectDescription();

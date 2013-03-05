@@ -10,8 +10,6 @@ import java.util.Map.Entry;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.mvn.MvnCoreActivator;
-import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
-import org.bundlemaker.core.mvn.content.xml.MvnContentType;
 import org.bundlemaker.core.mvn.internal.MvnArtifactConverter;
 import org.bundlemaker.core.mvn.internal.config.DispatchingRepositoryAdapter;
 import org.bundlemaker.core.mvn.internal.config.IAetherRepositoryAdapter;
@@ -43,6 +41,9 @@ import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
  * </p>
@@ -51,11 +52,13 @@ import org.sonatype.aether.util.artifact.DefaultArtifact;
  */
 public class MvnContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
+  /** - */
+  @Expose
+  @SerializedName("mvnArtifacts")
+  private List<MvnArtifactType>      _mvnArtifactTypes;
+  
   /** the mvn scope */
   private static final String        SCOPE_COMPILE = "compile";
-
-  /** the mvn content type (configuration) */
-  private MvnContentType             _mvnContent   = new MvnContentType();
 
   /** TODO */
   private int                        _counter      = 0;
@@ -81,6 +84,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
     // initialize
     _fileBasedContents = new LinkedList<IProjectContentEntry>();
+    _mvnArtifactTypes = new LinkedList<MvnArtifactType>();
   }
 
   /**
@@ -115,7 +119,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     mvnArtifactType.setVersion(version);
 
     // add it to the list of artifacts
-    _mvnContent.getArtifacts().add(mvnArtifactType);
+    _mvnArtifactTypes.add(mvnArtifactType);
   }
 
   /**
@@ -130,34 +134,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     Assert.isNotNull(mvnArtifactType);
 
     // add it to the list of artifacts
-    _mvnContent.getArtifacts().add(mvnArtifactType);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Object getConfiguration() {
-
-    // return the configuration
-    return _mvnContent;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public void setConfiguration(Object configuration) {
-
-    //
-    Assert.isNotNull(configuration);
-    Assert.isTrue(configuration instanceof MvnContentType);
-
-    // set the content
-    _mvnContent = (MvnContentType) configuration;
-
-    // clear the file based content
-    _fileBasedContents.clear();
+    _mvnArtifactTypes.add(mvnArtifactType);
   }
 
   /**
@@ -199,7 +176,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     _fileBasedContents.clear();
 
     // iterate over all the specified mvn artifacts
-    for (final MvnArtifactType artifactIdentifier : _mvnContent.getArtifacts()) {
+    for (final MvnArtifactType artifactIdentifier : _mvnArtifactTypes) {
 
       // create the aether artifact
       final Artifact artifact = new DefaultArtifact(artifactIdentifier.getGroupId(),
@@ -286,7 +263,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * </p>
    */
   public void clearArtifactList() {
-    _mvnContent.getArtifacts().clear();
+    _mvnArtifactTypes.clear();
     _fileBasedContents.clear();
   }
 
@@ -298,7 +275,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * @return the current maven artifacts.
    */
   public List<MvnArtifactType> getMvnArtifacts() {
-    return _mvnContent.getArtifacts();
+    return _mvnArtifactTypes;
   }
 
   /**

@@ -34,6 +34,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * <p>
  * </p>
@@ -43,13 +46,25 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class BundleMakerProjectDescription implements IModifiableProjectDescription {
 
   /** - */
-  private static NumberFormat               FORMATTER       = new DecimalFormat("000000");
+  private static NumberFormat               FORMATTER  = new DecimalFormat("000000");
 
   /** the current identifier */
-  private int                               _currentId      = 0;
+  @Expose
+  @SerializedName("currentId")
+  private int                               _currentId = 0;
 
   /** - */
-  private Object                            _identifierLock = new Object();
+  @Expose
+  @SerializedName("projectContentProviders")
+  private List<IProjectContentProvider>     _projectContentProviders;
+
+  /** - */
+  @Expose
+  @SerializedName("jre")
+  private String                            _jre;
+
+  /** - */
+  private Object                            _identifierLock;
 
   /** - */
   private List<IProjectContentEntry>        _projectContentEntries;
@@ -57,17 +72,11 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   /** - */
   private Map<String, IProjectContentEntry> _projectContentEntriesMap;
 
-  /** - */
-  private List<IProjectContentProvider>     _projectContentProviders;
-
   /** the resource list */
   private List<IResourceStandin>            _sourceResources;
 
   /** the resource list */
   private List<IResourceStandin>            _binaryResources;
-
-  /** - */
-  private String                            _jre;
 
   /** - */
   private boolean                           _initialized;
@@ -83,6 +92,10 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * @param bundleMakerProject
    */
   public BundleMakerProjectDescription(BundleMakerProject bundleMakerProject) {
+    Assert.isNotNull(bundleMakerProject, "BundleMakerProject must not be null.");
+
+    //
+    _bundleMakerProject = bundleMakerProject;
 
     //
     _projectContentEntries = new ArrayList<IProjectContentEntry>();
@@ -90,7 +103,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     _projectContentEntriesMap = new HashMap<String, IProjectContentEntry>();
     _sourceResources = new ArrayList<IResourceStandin>();
     _binaryResources = new ArrayList<IResourceStandin>();
-    _bundleMakerProject = bundleMakerProject;
+    _identifierLock = new Object();
   }
 
   /**
@@ -242,7 +255,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
   public void removeContentProvider(String id) {
     for (Iterator<IProjectContentEntry> iterator = _projectContentEntries.iterator(); iterator.hasNext();) {
 
-      ProjectContent content = (ProjectContent) iterator.next();
+      ProjectContentEntry content = (ProjectContentEntry) iterator.next();
 
       if (content.getId().equals(id)) {
         iterator.remove();
@@ -443,6 +456,7 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    */
   @Override
   public void save() throws CoreException {
+
     ProjectDescriptionStore.saveProjectDescription(_bundleMakerProject.getProject(), this);
 
     // notify listener
@@ -458,7 +472,9 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_CHANGED);
 
     // notify listeners
-    _bundleMakerProject.notifyListeners(event);
+    if (_bundleMakerProject != null) {
+      _bundleMakerProject.notifyListeners(event);
+    }
   }
 
   /**
@@ -471,6 +487,8 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
     BundleMakerProjectChangedEvent event = new BundleMakerProjectChangedEvent(Type.PROJECT_DESCRIPTION_RECOMPUTED);
 
     // notify listeners
-    _bundleMakerProject.notifyListeners(event);
+    if (_bundleMakerProject != null) {
+      _bundleMakerProject.notifyListeners(event);
+    }
   }
 }

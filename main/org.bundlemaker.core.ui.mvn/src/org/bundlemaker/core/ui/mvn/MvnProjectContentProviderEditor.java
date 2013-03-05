@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.bundlemaker.core.mvn.content.MvnContentProvider;
-import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.ui.BundleMakerImages;

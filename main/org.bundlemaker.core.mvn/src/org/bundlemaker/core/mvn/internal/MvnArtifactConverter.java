@@ -5,7 +5,7 @@ import java.util.Map;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
+import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.eclipse.core.runtime.Assert;
 
 /**

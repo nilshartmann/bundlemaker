@@ -52,22 +52,6 @@ public interface IProjectContentProvider {
    * 
    * @return
    */
-  Object getConfiguration();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param configuration
-   */
-  void setConfiguration(Object configuration);
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
   List<IProjectContentProblem> getProblems();
 
   /**

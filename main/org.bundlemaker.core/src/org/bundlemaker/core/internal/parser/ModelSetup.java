@@ -16,7 +16,7 @@ import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
-import org.bundlemaker.core.internal.projectdescription.ProjectContent;
+import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
@@ -218,7 +218,7 @@ public class ModelSetup {
 
           // step 4.1: compute new and modified resources
           Set<IResourceStandin> newAndModifiedBinaryResources = FunctionalHelper.computeNewAndModifiedResources(
-              ((ProjectContent) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
+              ((ProjectContentEntry) projectContent).getBinaryResourceStandins(), storedResourcesMap, resourceCache,
               new NullProgressMonitor());
 
           //
@@ -227,7 +227,7 @@ public class ModelSetup {
           //
           if (AnalyzeMode.BINARIES_AND_SOURCES.equals(projectContent.getAnalyzeMode())) {
             newAndModifiedSourceResources = FunctionalHelper.computeNewAndModifiedResources(
-                ((ProjectContent) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
+                ((ProjectContentEntry) projectContent).getSourceResourceStandins(), storedResourcesMap, resourceCache,
                 new NullProgressMonitor());
           }
 

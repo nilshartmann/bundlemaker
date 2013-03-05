@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.mvn;
 
-import org.bundlemaker.core.mvn.content.xml.MvnArtifactType;
+import org.bundlemaker.core.mvn.content.MvnArtifactType;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

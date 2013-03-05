@@ -6,7 +6,7 @@
 	<extension point="org.eclipse.core.expressions.definitions">
 		
 		<!-- org.bundlemaker.core.ui.bmProjectSelected: evaluates
-             to true if a Project with BundleMaker-Nature or it's bundlemaker.xml is selected -->
+             to true if a Project with BundleMaker-Nature or it's bundlemaker.json is selected -->
 		<definition id="org.bundlemaker.core.ui.bmProjectOrBundleMakerXmlSelected">
 			<with variable="selection">
 				<!-- exactly one item must be selected -->
@@ -17,10 +17,10 @@
 							<test property="org.eclipse.core.resources.projectNature"
 								value="org.bundlemaker.core.bundlemakernature"/>
 							<or>
-								<!-- either the Project itself or the bundlemaker.xml must be selected -->
+								<!-- either the Project itself or the bundlemaker.json must be selected -->
 							 <instanceof value="org.eclipse.core.resources.IProject" />
 							 <test property="org.eclipse.core.resources.name"
-                         value="bundlemaker.xml"/>
+                         value="bundlemaker.json"/>
 							</or>
 						</adapt>
 				</iterate>
@@ -219,10 +219,10 @@
 		</wizard>
 	</extension>
 
-	<!-- The BundleMaker project content type ('bundlemaker.xml') -->
+	<!-- The BundleMaker project content type ('bundlemaker.json') -->
 	<extension id="org.bundlemaker.core.ui.contentTypes" name="Bundlemaker Contenttypes"
 		point="org.eclipse.core.contenttype.contentTypes">
-		<content-type base-type="org.eclipse.core.runtime.xml" file-names="bundlemaker.xml"
+		<content-type base-type="org.eclipse.core.runtime.xml" file-names="bundlemaker.json"
 			id="org.bundlemaker.core.ui.contenttypes.projectdescription"
 			name="Bundlemaker project description" priority="normal"> </content-type>
 	</extension>
