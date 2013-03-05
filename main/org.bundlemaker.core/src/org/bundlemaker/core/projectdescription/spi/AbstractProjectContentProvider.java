@@ -69,7 +69,6 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    */
   protected void init(IProjectDescription description) {
     // empty implementation
-    System.out.println("init");
   }
 
   /**

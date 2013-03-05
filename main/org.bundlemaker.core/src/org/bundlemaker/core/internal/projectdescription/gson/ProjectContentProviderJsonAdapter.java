@@ -2,6 +2,7 @@ package org.bundlemaker.core.internal.projectdescription.gson;
 
 import java.lang.reflect.Type;
 
+import org.bundlemaker.core.internal.projectdescription.contentprovider.ProjectContentProviderExtension;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.eclipse.core.runtime.Assert;
 
@@ -24,10 +25,10 @@ public class ProjectContentProviderJsonAdapter implements JsonSerializer<IProjec
     JsonDeserializer<IProjectContentProvider> {
 
   /** the CLASSNAME attribute */
-  private static final String                TYPE     = "TYPE";
+  private static final String                TYPE     = "provider-id";
 
   /** the INSTANCE attribute */
-  private static final String                INSTANCE = "INSTANCE";
+  private static final String                INSTANCE = "provider-config";
 
   /** - */
   private ContentProviderCompoundClassLoader _classLoader;
@@ -53,9 +54,11 @@ public class ProjectContentProviderJsonAdapter implements JsonSerializer<IProjec
   public JsonElement serialize(IProjectContentProvider src, Type typeOfSrc,
       JsonSerializationContext context) {
 
-    JsonObject retValue = new JsonObject();
     String className = src.getClass().getCanonicalName();
-    retValue.addProperty(TYPE, className);
+    String id = _classLoader.getClassnameToIdMap().get(className);
+
+    JsonObject retValue = new JsonObject();
+    retValue.addProperty(TYPE, id);
     JsonElement elem = context.serialize(src);
     retValue.add(INSTANCE, elem);
     return retValue;
@@ -70,11 +73,12 @@ public class ProjectContentProviderJsonAdapter implements JsonSerializer<IProjec
 
     JsonObject jsonObject = json.getAsJsonObject();
     JsonPrimitive prim = (JsonPrimitive) jsonObject.get(TYPE);
-    String className = prim.getAsString();
+    String id = prim.getAsString();
+    ProjectContentProviderExtension extension = _classLoader.getIdToExtensionMap().get(id);
 
     Class<?> clazz = null;
     try {
-      clazz = _classLoader.getCompoundClassLoader().loadClass(className);
+      clazz = _classLoader.getCompoundClassLoader().loadClass(extension.getClassName());
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
       throw new JsonParseException(e.getMessage());

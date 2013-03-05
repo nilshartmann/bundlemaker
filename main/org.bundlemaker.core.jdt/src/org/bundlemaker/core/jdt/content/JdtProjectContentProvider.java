@@ -35,7 +35,7 @@ import com.google.gson.annotations.SerializedName;
 public class JdtProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
   @Expose
-  @SerializedName("javaProjectName")
+  @SerializedName("java-project-name")
   private String                     _javaProjectName;
 
   /** - */

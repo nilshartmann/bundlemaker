@@ -65,12 +65,12 @@ public class ProjectContentEntry implements IModifiableProjectContentEntry {
 
   /** the binary pathes */
   @Expose
-  @SerializedName("binaryPaths")
+  @SerializedName("binary-paths")
   protected Set<VariablePath>                _binaryPaths;
 
   /** the source pathes */
   @Expose
-  @SerializedName("sourcePaths")
+  @SerializedName("source-paths")
   private Set<VariablePath>                  _sourcePaths;
 
   /** the set of binary resource standins */

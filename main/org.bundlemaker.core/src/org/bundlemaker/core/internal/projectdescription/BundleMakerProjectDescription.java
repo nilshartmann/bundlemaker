@@ -50,12 +50,12 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
 
   /** the current identifier */
   @Expose
-  @SerializedName("currentId")
+  @SerializedName("current-id")
   private int                               _currentId = 0;
 
   /** - */
   @Expose
-  @SerializedName("projectContentProviders")
+  @SerializedName("project-content-providers")
   private List<IProjectContentProvider>     _projectContentProviders;
 
   /** - */

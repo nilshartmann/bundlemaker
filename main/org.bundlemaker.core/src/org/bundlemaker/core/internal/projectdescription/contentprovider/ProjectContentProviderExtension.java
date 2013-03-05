@@ -1,7 +1,7 @@
 package org.bundlemaker.core.internal.projectdescription.contentprovider;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -23,9 +23,6 @@ public class ProjectContentProviderExtension {
   /** - */
   private IConfigurationElement _projectContentProviderElement;
 
-  /** - */
-  private IConfigurationElement _jaxbObjectFactoryElement;
-
   /**
    * <p>
    * </p>
@@ -36,17 +33,16 @@ public class ProjectContentProviderExtension {
     return _extension;
   }
 
-  public String getId() {
-    // TODO
-    return _jaxbObjectFactoryElement.getAttribute("class");
-  }
-
-  public Object createJaxbObjectFactory() throws CoreException {
-    return _jaxbObjectFactoryElement.createExecutableExtension("class");
-  }
-
   public Object createProjectContentProvider() throws CoreException {
     return _projectContentProviderElement.createExecutableExtension("class");
+  }
+
+  public String getClassName() {
+    return _projectContentProviderElement.getAttribute("class");
+  }
+
+  public String getId() {
+    return _projectContentProviderElement.getAttribute("id");
   }
 
   /**
@@ -56,15 +52,17 @@ public class ProjectContentProviderExtension {
    * @return
    * @throws CoreException
    */
-  public static List<ProjectContentProviderExtension> getAllProjectContentProviderExtension() throws CoreException {
+  public static Map<String, ProjectContentProviderExtension> getAllProjectContentProviderExtension()
+      throws CoreException {
 
     //
-    List<ProjectContentProviderExtension> result = new LinkedList<ProjectContentProviderExtension>();
+    Map<String, ProjectContentProviderExtension> result = new HashMap<String, ProjectContentProviderExtension>();
 
     //
     IExtensionRegistry reg = Platform.getExtensionRegistry();
     IExtension[] extensions = reg.getExtensionPoint("org.bundlemaker.core.projectcontentprovider").getExtensions();
 
+    //
     for (IExtension extension : extensions) {
 
       //
@@ -74,19 +72,16 @@ public class ProjectContentProviderExtension {
       providerExtension._extension = extension;
 
       for (IConfigurationElement configurationElement : extension.getConfigurationElements()) {
-
         if (configurationElement.getName().equals("projectContentProvider")) {
           providerExtension._projectContentProviderElement = configurationElement;
-
-          for (IConfigurationElement child : configurationElement.getChildren()) {
-            if (child.getName().equals("jaxbObjectFactory")) {
-              providerExtension._jaxbObjectFactoryElement = child;
-            }
-          }
         }
       }
 
-      result.add(providerExtension);
+      //
+      if (result.put(providerExtension.getId(), providerExtension) != null) {
+        // TODO!!
+        throw new RuntimeException("");
+      }
     }
 
     //

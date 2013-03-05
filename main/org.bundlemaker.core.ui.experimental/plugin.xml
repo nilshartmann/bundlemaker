@@ -71,10 +71,8 @@
          name="JdtProjectContentProvider"
          point="org.bundlemaker.core.projectcontentprovider">
       <projectContentProvider
+            id="org.bundlemaker.core.jdt.projectcontentprovider.javaproject"
             class="org.bundlemaker.core.jdt.content.JdtProjectContentProvider">
-         <jaxbObjectFactory
-               class="org.bundlemaker.core.jdt.content.xml.ObjectFactory">
-         </jaxbObjectFactory>
       </projectContentProvider>
    </extension>
 

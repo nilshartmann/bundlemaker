@@ -5,7 +5,9 @@
    <!-- org.bundlemaker.core.projectcontentprovider -->
    <extension id="org.bundlemaker.core.mvn.content.MvnContentProvider" name="MvnContentProvider"
       point="org.bundlemaker.core.projectcontentprovider">
-      <projectContentProvider class="org.bundlemaker.core.mvn.content.MvnContentProvider"/>
+      <projectContentProvider 
+         id="org.bundlemaker.core.mvn.projectcontentprovider.mvn" 
+         class="org.bundlemaker.core.mvn.content.MvnContentProvider"/>
    </extension>
 
    <!-- org.eclipse.core.runtime.preferences -->

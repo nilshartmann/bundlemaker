@@ -1,5 +1,8 @@
 package org.bundlemaker.core.internal.projectdescription.gson;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bundlemaker.core.internal.projectdescription.contentprovider.ProjectContentProviderExtension;
 import org.bundlemaker.core.internal.util.BundleDelegatingClassLoader;
 import org.bundlemaker.core.internal.util.CompoundClassLoader;
@@ -7,10 +10,22 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
 public class ContentProviderCompoundClassLoader {
 
   /** - */
-  private CompoundClassLoader _compoundClassLoader;
+  private CompoundClassLoader                          _compoundClassLoader;
+
+  /** - */
+  private Map<String, ProjectContentProviderExtension> _idToExtensionMap;
+
+  /** - */
+  private Map<String, String>                          _classnameToIdMap;
 
   /**
    * <p>
@@ -29,11 +44,19 @@ public class ContentProviderCompoundClassLoader {
     _compoundClassLoader.add(new BundleDelegatingClassLoader(bundle));
 
     //
-    for (ProjectContentProviderExtension extension : ProjectContentProviderExtension
-        .getAllProjectContentProviderExtension()) {
+    _idToExtensionMap = ProjectContentProviderExtension
+        .getAllProjectContentProviderExtension();
 
+    //
+    for (ProjectContentProviderExtension extension : _idToExtensionMap.values()) {
       bundle = Platform.getBundle(extension.getExtension().getContributor().getName());
       _compoundClassLoader.add(new BundleDelegatingClassLoader(bundle));
+    }
+
+    //
+    _classnameToIdMap = new HashMap<String, String>();
+    for (ProjectContentProviderExtension extension : _idToExtensionMap.values()) {
+      _classnameToIdMap.put(extension.getClass().getName(), extension.getId());
     }
   }
 
@@ -45,5 +68,25 @@ public class ContentProviderCompoundClassLoader {
    */
   public CompoundClassLoader getCompoundClassLoader() {
     return _compoundClassLoader;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Map<String, ProjectContentProviderExtension> getIdToExtensionMap() {
+    return _idToExtensionMap;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public Map<String, String> getClassnameToIdMap() {
+    return _classnameToIdMap;
   }
 }
