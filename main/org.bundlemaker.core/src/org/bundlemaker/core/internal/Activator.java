@@ -41,14 +41,11 @@ import org.osgi.util.tracker.ServiceTracker;
  */
 public class Activator extends Plugin {
 
-  /** -- **/
-  public final static boolean                                              ENABLE_HASHVALUES_FOR_COMPARISON = false;
-
   /** the null progress monitor */
-  public static final IProgressMonitor                                     NULL_PROGRESS_MONITOR            = new NullProgressMonitor();
+  public static final IProgressMonitor                                     NULL_PROGRESS_MONITOR = new NullProgressMonitor();
 
   /** the plug-in id */
-  public static final String                                               PLUGIN_ID                        = "org.bundlemaker.core";
+  public static final String                                               PLUGIN_ID             = "org.bundlemaker.core";
 
   /** the activator instance */
   private static Activator                                                 _activator;

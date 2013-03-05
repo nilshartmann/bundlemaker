@@ -16,12 +16,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.FlyWeightString;
 import org.eclipse.core.runtime.Assert;
@@ -48,9 +46,6 @@ public class ResourceKey implements IResourceKey {
 
   /** - */
   private long            _timestamp = -1;
-
-  /** - **/
-  private byte[]          _hashvalue;
 
   /**
    * <p>
@@ -194,14 +189,6 @@ public class ResourceKey implements IResourceKey {
         is.close();
         zipFile.close();
 
-        //
-        // _contentCache = new SoftReference<byte[]>(result);
-        if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-          MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-          messagedigest.update(result);
-          _hashvalue = messagedigest.digest();
-        }
-
         // return the result
         return result;
 
@@ -235,14 +222,6 @@ public class ResourceKey implements IResourceKey {
 
         is.close();
         buffer.close();
-
-        //
-        // _contentCache = new SoftReference<byte[]>(result);
-        if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-          MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-          messagedigest.update(result);
-          _hashvalue = messagedigest.digest();
-        }
 
         //
         return result;
@@ -285,30 +264,6 @@ public class ResourceKey implements IResourceKey {
     }
 
     return _timestamp;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public final byte[] getHashvalue() {
-    return _hashvalue;
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  public void computeHashvalue() {
-    if (_hashvalue == null) {
-      getContent();
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  public final boolean hasHashvalue() {
-    return _hashvalue != null;
   }
 
   /**

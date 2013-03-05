@@ -1,6 +1,5 @@
 package org.bundlemaker.core.internal.parser;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -10,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.resource.Reference;
 import org.bundlemaker.core.internal.resource.Resource;
@@ -242,29 +240,7 @@ public class FunctionalHelper {
     }
 
     // check the time stamp
-    if (resource.getTimestamp() != resourceStandin.getTimestamp()) {
-
-      // we can additionally check the hash values...
-      if (Activator.ENABLE_HASHVALUES_FOR_COMPARISON) {
-        if (!resourceStandin.hasHashvalue()) {
-          ((ResourceStandin) resourceStandin).computeHashvalue();
-        }
-
-        byte[] storedResourceHashValue = resource.getHashvalue();
-        byte[] resourceStandinHashValue = resourceStandin.getHashvalue();
-        if (!Arrays.equals(storedResourceHashValue, resourceStandinHashValue)) {
-          return true;
-        }
-      }
-
-      //
-      else {
-        return true;
-      }
-    }
-
-    //
-    return false;
+    return resource.getTimestamp() != resourceStandin.getTimestamp();
   }
 
   /**

@@ -51,20 +51,4 @@ public interface IResourceKey extends IReadableResource {
    * @return
    */
   long getTimestamp();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  byte[] getHashvalue();
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  boolean hasHashvalue();
 }
