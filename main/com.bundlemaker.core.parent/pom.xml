@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.bundlemaker.core</groupId>
+	<artifactId>com.bundlemaker.core.parent</artifactId>
+	<version>0.10.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<!-- tycho requires maven >= 3.0 -->
+	<prerequisites>
+		<maven>3.0</maven>
+	</prerequisites>
+
+	<properties>
+		<tycho-version>0.16.0</tycho-version>
+	</properties>
+
+	<repositories>
+
+		<!-- configure p2 repository to resolve against -->
+		<repository>
+			<id>juno</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/releases/juno</url>
+			<!-- file URL for faster and offline builds -->
+			<!-- <url>file:/${basedir}/../../helios-rcp/</url> -->
+		</repository>
+
+		<repository>
+			<id>bundlemaker-thirdparty</id>
+			<layout>p2</layout>
+			<url>file:/${basedir}/../../targetplatform/target.platform/p2/bundlemaker-thirdparty</url>
+		</repository>
+
+		<repository>
+			<id>GEF-Update-3.8.1</id>
+			<layout>p2</layout>
+			<url>file:/${basedir}/../../targetplatform/target.platform/p2/GEF-Update-3.8.1</url>
+		</repository>
+
+		<repository>
+			<id>zest2</id>
+			<layout>p2</layout>
+			<url>file:/${basedir}/../../targetplatform/target.platform/p2/zest2</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<!-- enable tycho build extension -->
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho-version}</version>
+				<configuration>
+					<!-- configure the p2 target environments for multi-platform build -->
+					<environments>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+
+			<!-- enable source bundle generation -->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
