@@ -56,7 +56,7 @@ public class ContentProviderCompoundClassLoader {
     //
     _classnameToIdMap = new HashMap<String, String>();
     for (ProjectContentProviderExtension extension : _idToExtensionMap.values()) {
-      _classnameToIdMap.put(extension.getClass().getName(), extension.getId());
+      _classnameToIdMap.put(extension.getClassName(), extension.getId());
     }
   }
 

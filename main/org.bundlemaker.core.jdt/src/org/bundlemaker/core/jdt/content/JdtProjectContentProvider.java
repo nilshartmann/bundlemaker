@@ -42,12 +42,15 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
   private IJavaProject               _javaProject;
 
   /** - */
+  // TODO: Move-up
   private int                        _counter           = 0;
 
   /** - */
+  // TODO: Move-up
   private List<IProjectContentEntry> _fileBasedContents = new LinkedList<IProjectContentEntry>();
 
   /** - */
+  // TODO: Move-up
   private IBundleMakerProject        _bundleMakerProject;
 
   /**
@@ -71,9 +74,11 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
       IBundleMakerProject bundleMakerProject) throws CoreException {
 
     //
+    // TODO: Move-up
     _bundleMakerProject = bundleMakerProject;
 
     // create instance of entry helper & clear the 'already resolved' list
+    // TODO: Move-up
     _fileBasedContents.clear();
 
     //
@@ -148,6 +153,7 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider im
    * @param sourcePath
    * @throws CoreException
    */
+  // TODO: Move-up
   private void createFileBasedContent(String contentName, String contentVersion, AnalyzeMode analyzeMode,
       IPath binaryPath, List<IPath> sourcePath) throws CoreException {
 

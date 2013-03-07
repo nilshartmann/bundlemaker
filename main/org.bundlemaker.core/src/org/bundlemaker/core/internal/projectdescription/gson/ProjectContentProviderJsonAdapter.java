@@ -54,7 +54,7 @@ public class ProjectContentProviderJsonAdapter implements JsonSerializer<IProjec
   public JsonElement serialize(IProjectContentProvider src, Type typeOfSrc,
       JsonSerializationContext context) {
 
-    String className = src.getClass().getCanonicalName();
+    String className = src.getClass().getName();
     String id = _classLoader.getClassnameToIdMap().get(className);
 
     JsonObject retValue = new JsonObject();

@@ -92,7 +92,6 @@ public class BundleMakerProjectDescription implements IModifiableProjectDescript
    * @param bundleMakerProject
    */
   public BundleMakerProjectDescription(BundleMakerProject bundleMakerProject) {
-    Assert.isNotNull(bundleMakerProject, "BundleMakerProject must not be null.");
 
     //
     _bundleMakerProject = bundleMakerProject;

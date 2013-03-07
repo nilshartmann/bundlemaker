@@ -35,7 +35,13 @@ public enum AnalyzeMode {
   DO_NOT_ANALYZE;
 
   /**
-   * @return if this instance either is {@link #BINARIES_ONLY} or {@link #BINARIES_AND_SOURCES},
+   * <p>
+   * Returns {@code true} if this instance either is {@link #BINARIES_ONLY} or {@link #BINARIES_AND_SOURCES},
+   * {@code false} otherwise.
+   * </p>
+   * 
+   * @return {@code true} if this instance either is {@link #BINARIES_ONLY} or {@link #BINARIES_AND_SOURCES},
+   *         {@code false} otherwise.
    */
   public boolean isAnalyze() {
     return this == BINARIES_ONLY || this == BINARIES_AND_SOURCES;
