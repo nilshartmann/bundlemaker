@@ -8,5 +8,9 @@ package org.bundlemaker.core.analysis;
 @Deprecated
 // TODO REPLACE WITH ATTRIBUTES IN IDependency
 public enum DependencyKind {
-  USES, IMPLEMENTS, EXTENDS, ANNOTATES
+  USES, IMPLEMENTS, EXTENDS, ANNOTATES;
+
+  public boolean isInheritance() {
+    return this == IMPLEMENTS || this == EXTENDS;
+  }
 }
