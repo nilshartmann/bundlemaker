@@ -186,6 +186,24 @@
 				> </reference>
 			</enabledWhen>
 		</handler>
+		
+		<handler class="org.bundlemaker.core.ui.handler.selector.TransitiveClosureSelectorHandler"
+			commandId="org.bundlemaker.core.ui.commands.selector.TransitiveClosureSelectorCommand">
+			<activeWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></activeWhen>
+			<enabledWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></enabledWhen>
+		</handler>
+
+		<handler class="org.bundlemaker.core.ui.handler.selector.SubtypesAndImplementorsSelectorHandler"
+			commandId="org.bundlemaker.core.ui.commands.selector.SubtypesAndImplementorsCommand">
+			<activeWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></activeWhen>
+			<enabledWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></enabledWhen>
+		</handler>
+		<handler class="org.bundlemaker.core.ui.handler.selector.SuperTypeSelectorHandler"
+			commandId="org.bundlemaker.core.ui.commands.selector.SuperTypeSelectorCommand">
+			<activeWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></activeWhen>
+			<enabledWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></enabledWhen>
+		</handler>				
+		
 	</extension>
 
 	<!-- -->
@@ -250,6 +268,11 @@
 		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."/>
 		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"/>
 		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"/> 
+		
+		<!-- Selectors -->
+		<command id="org.bundlemaker.core.ui.commands.selector.TransitiveClosureSelectorCommand" name="Transitive Closure" />
+		<command id="org.bundlemaker.core.ui.commands.selector.SubtypesAndImplementorsCommand" name="Subtypes and Implementors" />
+		<command id="org.bundlemaker.core.ui.commands.selector.SuperTypeSelectorCommand" name="Supertypes" />
 	</extension>
 
 	<!-- ======================================== -->
@@ -262,6 +285,14 @@
      <menu
            id="org.bundlemaker.core.ui.tools"
            label="Tools">
+		<visibleWhen checkEnabled="false">
+			<reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+		</visibleWhen>
+     </menu>
+     
+     <menu
+           id="org.bundlemaker.core.ui.selectors"
+           label="Select">
 		<visibleWhen checkEnabled="false">
 			<reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 		</visibleWhen>
@@ -363,6 +394,37 @@
            style="push">
      </command>
   </menuContribution>
+
+	<!-- Select submenu -->
+	<menuContribution
+        locationURI="popup:org.bundlemaker.core.ui.selectors?after=additions">
+ 
+		<command commandId="org.bundlemaker.core.ui.commands.selector.TransitiveClosureSelectorCommand"
+			>
+			<visibleWhen checkEnabled="false">
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+			</visibleWhen>
+		</command>
+
+		<command commandId="org.bundlemaker.core.ui.commands.selector.SubtypesAndImplementorsCommand"
+			>
+			<visibleWhen checkEnabled="false">
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+			</visibleWhen>
+		</command>
+
+		<command commandId="org.bundlemaker.core.ui.commands.selector.SuperTypeSelectorCommand"
+			>
+			<visibleWhen checkEnabled="false">
+				<reference
+					definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+			</visibleWhen>
+		</command>
+
+	</menuContribution>
+
 		
 	</extension>
    
