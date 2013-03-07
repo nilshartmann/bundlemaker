@@ -56,17 +56,20 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
   @Expose
   @SerializedName("mvnArtifacts")
   private List<MvnArtifactType>      _mvnArtifactTypes;
-  
+
   /** the mvn scope */
   private static final String        SCOPE_COMPILE = "compile";
 
   /** TODO */
+  // TODO: Move-up
   private int                        _counter      = 0;
 
   /** cached list of all file based contents */
+  // TODO: Move-up
   private List<IProjectContentEntry> _fileBasedContents;
 
   /** the BundleMakerProject */
+  // TODO: Move-up
   private IBundleMakerProject        _bundleMakerProject;
 
   /** - */
@@ -167,12 +170,14 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
       IBundleMakerProject bundleMakerProject) throws CoreException {
 
     // set the IBundleMakerProject
+    // TODO: Move-up
     _bundleMakerProject = bundleMakerProject;
 
     // create a new session
     _currentSystemSession = _repositoryAdapter.newSession();
 
     // create the result list
+    // TODO: Move-up
     _fileBasedContents.clear();
 
     // iterate over all the specified mvn artifacts
@@ -252,6 +257,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
         throw new CoreException(new Status(Status.ERROR, MvnCoreActivator.PLUGIN_ID, e.getMessage(), e));
       }
 
+      // TODO: Move-up
       // finally: fire project description recomputed event
       fireProjectDescriptionRecomputedEvent();
     }
@@ -390,6 +396,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * @param sourcePath
    * @throws CoreException
    */
+  // TODO: Move-up
   private IModifiableProjectContentEntry createFileBasedContent(String contentName, String contentVersion,
       File binaryPath, File sourcePath, IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
 
