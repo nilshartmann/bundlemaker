@@ -7,6 +7,6 @@
 		<version>0.10.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
-	<artifactId>org.bundlemaker.core.ui.artifact</artifactId>
+	<artifactId>org.bundlemaker.core.ui.app.perspective</artifactId>
 	<packaging>eclipse-plugin</packaging>
 </project>

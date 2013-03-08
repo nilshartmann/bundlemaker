@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.bundlemaker.core</groupId>
-	<artifactId>com.bundlemaker.core.parent</artifactId>
+	<groupId>org.bundlemaker.core</groupId>
+	<artifactId>org.bundlemaker.core.parent</artifactId>
 	<version>0.10.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -29,9 +29,16 @@
 		<module>plugins/org.bundlemaker.core.ui.editor.sourceviewer</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.xref</module>
 		<module>plugins/org.bundlemaker.core.ui.print</module>
+		<module>plugins/org.bundlemaker.core.ui.app.perspective</module>
+		<module>plugins/org.bundlemaker.core.ui.experimental</module>
+		<module>plugins/org.bundlemaker.core.ui.mvn</module>
+		<module>plugins/org.bundlemaker.core.ui.projecteditor</module>
 		<module>features/org.bundlemaker.core.base.feature</module>
+		<module>features/org.bundlemaker.core.feature</module>
+		<module>features/org.bundlemaker.experimental.feature</module>
 		<module>itests/org.bundlemaker.core.itestframework</module>
 		<module>itests/org.bundlemaker.core.itest</module>
+		<module>repo/bundlemaker.core.repo</module>
 	</modules>
 
 	<!-- tycho requires maven >= 3.0 -->
