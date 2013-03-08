@@ -16,6 +16,11 @@
 		<module>plugins/org.bundlemaker.core.parser.bytecode</module>
 		<module>plugins/org.bundlemaker.core.store.db4o</module>
 		<module>plugins/org.bundlemaker.core.transformations</module>
+		<module>plugins/org.bundlemaker.core.ui.event</module>
+		<module>plugins/org.bundlemaker.core.ui.artifact</module>
+		<module>plugins/org.bundlemaker.core.ui</module>
+		<module>plugins/org.bundlemaker.core.ui.transformations</module>
+		<module>plugins/org.bundlemaker.core.ui.transformations.history</module>
 		<module>features/org.bundlemaker.core.base.feature</module>
 		<module>itests/org.bundlemaker.core.itestframework</module>
 		<module>itests/org.bundlemaker.core.itest</module>

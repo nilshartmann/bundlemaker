@@ -14,6 +14,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-surefire-plugin</artifactId>
+				<version>${tycho-version}</version>
 				<configuration>
 					<argLine>-Xmx8256m</argLine>
 					<bundleStartLevel>
@@ -64,4 +65,5 @@
 			</plugin>
 		</plugins>
 	</build>
+
 </project>
