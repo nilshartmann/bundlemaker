@@ -13,6 +13,7 @@
 		<module>plugins/org.bundlemaker.core.jdt</module>
 		<module>plugins/org.bundlemaker.core.mvn</module>
 		<module>plugins/org.bundlemaker.core.osgi</module>
+		<module>plugins/org.bundlemaker.core.reports</module>
 		<module>plugins/org.bundlemaker.core.parser.bytecode</module>
 		<module>plugins/org.bundlemaker.core.store.db4o</module>
 		<module>plugins/org.bundlemaker.core.transformations</module>
@@ -21,6 +22,13 @@
 		<module>plugins/org.bundlemaker.core.ui</module>
 		<module>plugins/org.bundlemaker.core.ui.transformations</module>
 		<module>plugins/org.bundlemaker.core.ui.transformations.history</module>
+		<module>plugins/org.bundlemaker.core.ui.view.dependencytable</module>
+		<module>plugins/org.bundlemaker.core.ui.view.dependencytree</module>
+		<module>plugins/org.bundlemaker.core.ui.view.problemview</module>
+		<module>plugins/org.bundlemaker.core.ui.editor.dsm</module>
+		<module>plugins/org.bundlemaker.core.ui.editor.sourceviewer</module>
+		<module>plugins/org.bundlemaker.core.ui.editor.xref</module>
+		<module>plugins/org.bundlemaker.core.ui.print</module>
 		<module>features/org.bundlemaker.core.base.feature</module>
 		<module>itests/org.bundlemaker.core.itestframework</module>
 		<module>itests/org.bundlemaker.core.itest</module>
