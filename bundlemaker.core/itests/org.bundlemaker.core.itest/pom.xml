@@ -17,7 +17,9 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<skipTests>true</skipTests>
+					<includes>
+						<include>org/bundlemaker/core/itest/JdtTest.java</include>
+					</includes>
 					<argLine>-Xmx896m</argLine>
 					<bundleStartLevel>
 						<bundle>
