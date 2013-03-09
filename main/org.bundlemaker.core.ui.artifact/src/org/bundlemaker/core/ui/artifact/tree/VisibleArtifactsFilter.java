@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.view.dependencytree;
+package org.bundlemaker.core.ui.artifact.tree;
 
 import java.util.Collection;
 import java.util.Collections;

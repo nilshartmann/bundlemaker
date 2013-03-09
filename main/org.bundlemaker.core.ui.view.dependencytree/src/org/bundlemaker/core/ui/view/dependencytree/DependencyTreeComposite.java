@@ -10,6 +10,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
+import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
