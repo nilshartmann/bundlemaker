@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.app.perspective;
 
+import org.bundlemaker.core.ui.stage.StageView;
 import org.bundlemaker.core.ui.view.dependencytable.DependencyTableView;
 import org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView;
 import org.bundlemaker.core.ui.view.problemview.ProblemView;
@@ -20,6 +21,9 @@ public class BundleMakerPerspectiveFactory implements IPerspectiveFactory {
     IFolderLayout left = layout.createFolder("left", IPageLayout.LEFT, 0.26f, editorArea);
     left.addView(IPageLayout.ID_PROJECT_EXPLORER);
     left.addView(IPageLayout.ID_OUTLINE);
+    
+    IFolderLayout bottomLeft = layout.createFolder("bottomLeft", IPageLayout.BOTTOM, 0.66f, "left");
+    bottomLeft.addView(StageView.ID);
 
     IFolderLayout bottom = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.66f, editorArea);
     bottom.addView(DependencyTreeView.ID);
