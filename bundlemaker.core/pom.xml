@@ -25,6 +25,7 @@
 		<module>plugins/org.bundlemaker.core.ui.view.dependencytable</module>
 		<module>plugins/org.bundlemaker.core.ui.view.dependencytree</module>
 		<module>plugins/org.bundlemaker.core.ui.view.problemview</module>
+		<module>plugins/org.bundlemaker.core.ui.stage</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.dsm</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.sourceviewer</module>
 		<module>plugins/org.bundlemaker.core.ui.editor.xref</module>
