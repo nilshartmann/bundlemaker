@@ -1,6 +1,7 @@
 .metadata
-*/*/bin/*
-*/*/*CLOVER_INSTR/*
+bin/
+target/
+CLOVER_INSTR/*
 org.bundlemaker.drools.test/*
 org.eclipse.pde.api.tools/*
 org.eclipse.pde.api.tools.ui/*
