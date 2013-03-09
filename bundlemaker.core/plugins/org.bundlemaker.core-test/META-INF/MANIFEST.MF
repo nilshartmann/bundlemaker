@@ -4,5 +4,5 @@ Bundle-Name: org.bundlemaker.core.test
 Bundle-SymbolicName: org.bundlemaker.core-test
 Bundle-Version: 0.10.0.qualifier
 Fragment-Host: org.bundlemaker.core;bundle-version="0.10.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.10.0"
