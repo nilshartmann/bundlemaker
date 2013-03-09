@@ -17,7 +17,7 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
-					<argLine>-Xmx8256m</argLine>
+					<argLine>-Xmx1256m</argLine>
 					<bundleStartLevel>
 						<bundle>
 							<id>org.eclipse.equinox.ds</id>
