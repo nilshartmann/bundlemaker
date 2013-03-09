@@ -19,9 +19,9 @@
 				<configuration>
 					<includes>
 						<include>org/bundlemaker/core/itest/JdtTest.java</include>
-						<include>org/bundlemaker/core/itest/simple_artifact_model/analysis/*Test.java</include>
+						<!-- include>org/bundlemaker/core/itest/simple_artifact_model/analysis/*Test.java</include -->
 					</includes>
-					<argLine>-Xmx896m</argLine>
+					<argLine>-Xmx1250m</argLine>
 					<bundleStartLevel>
 						<bundle>
 							<id>org.eclipse.equinox.ds</id>
