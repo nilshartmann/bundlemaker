@@ -9,6 +9,7 @@ import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.util.EclipseProjectUtils;
+import org.bundlemaker.core.util.JdkCreator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -24,6 +25,9 @@ import org.junit.Before;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public abstract class AbstractBundleMakerProjectTest {
+  
+  public static final String BUNDLEMAKER_TEST_VM_PROPERTY_NAME = "org.bundlemaker.core.itestframework.vm_install";
+
 
   /** TEST_PROJECT_VERSION */
   public static final String  TEST_PROJECT_VERSION = "1.0.0";
@@ -136,7 +140,7 @@ public abstract class AbstractBundleMakerProjectTest {
     projectDescription.clear();
 
     // step 2: add the JRE
-    projectDescription.setJre(getDefaultVmName());
+    projectDescription.setJre(getTestVmName());
 
     // step 3: add the source and classes
     String classesPath = getClassesPath(directory);
@@ -210,16 +214,30 @@ public abstract class AbstractBundleMakerProjectTest {
   protected String computeTestProjectName() {
     return this.getClass().getSimpleName();
   }
-
+  
   /**
    * <p>
    * </p>
    * 
    * @return
+   * @throws CoreException 
    */
-  protected static String getDefaultVmName() {
-    IVMInstall defaultVMInstall = JavaRuntime.getDefaultVMInstall();
-    assertNotNull("No default VM available", defaultVMInstall);
-    return defaultVMInstall.getName();
+  protected static String getTestVmName() throws CoreException {
+    
+    String configuredTestVmLocation = System.getProperty(BUNDLEMAKER_TEST_VM_PROPERTY_NAME);
+    
+    System.out.println("configuredTestVmLocation: " + configuredTestVmLocation);
+
+    IVMInstall vmInstall = null;
+    
+    if (configuredTestVmLocation == null || configuredTestVmLocation.trim().isEmpty()) {
+     vmInstall = JavaRuntime.getDefaultVMInstall(); 
+    } else {
+      System.out.println("Creating Test IVMInstall for location '" + configuredTestVmLocation + "'");
+      vmInstall = JdkCreator.getOrCreateIVMInstall("BundleMakerTestJDK", configuredTestVmLocation);
+    }
+    
+    assertNotNull("No VM available", vmInstall);
+    return vmInstall.getName();
   }
 }

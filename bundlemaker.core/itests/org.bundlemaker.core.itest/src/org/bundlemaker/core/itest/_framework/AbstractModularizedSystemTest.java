@@ -61,14 +61,14 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     // assert the test module
     Assert.assertNotNull(getModularizedSystem().getModule(getTestProjectName(), "1.0.0"));
   }
-
+  
   protected void createTestProject() throws CoreException {
     
     //
-    IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-    Assert.assertNotNull("JavaRuntime.getDefaultVMInstall() returns null!", vmInstall);
-    System.out.println(String.format("VM name: '%s'", vmInstall.getName()));
-    System.out.println(String.format("VM install location: '%s'", vmInstall.getInstallLocation().getAbsolutePath()));
+//    IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+//    Assert.assertNotNull("JavaRuntime.getDefaultVMInstall() returns null!", vmInstall);
+//    System.out.println(String.format("VM name: '%s'", vmInstall.getName()));
+//    System.out.println(String.format("VM install location: '%s'", vmInstall.getInstallLocation().getAbsolutePath()));
 
     // add the project description
     addProjectDescription();
