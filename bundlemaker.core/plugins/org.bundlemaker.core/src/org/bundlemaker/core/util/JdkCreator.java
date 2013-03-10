@@ -2,6 +2,7 @@ package org.bundlemaker.core.util;
 
 import java.io.File;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -112,7 +113,8 @@ public class JdkCreator {
 
     // check...
     if (!type.validateInstallLocation(new File(directoryName)).isOK()) {
-      throw new CoreException(new Status(IStatus.ERROR, "", "Install location '" + directoryName + "' not valid!"));
+      throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Install location '" + directoryName
+          + "' not valid!"));
     }
 
     // get the library locations
