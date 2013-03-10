@@ -26,7 +26,8 @@ public class IPathDeserializer implements JsonDeserializer<IPath>, JsonSerialize
    */
   @Override
   public JsonElement serialize(IPath path, Type type, JsonSerializationContext context) {
-    return new JsonPrimitive(path.toPortableString());
+    String portableString = path.toPortableString();
+    return new JsonPrimitive(portableString);
   }
 
   /**
@@ -35,6 +36,9 @@ public class IPathDeserializer implements JsonDeserializer<IPath>, JsonSerialize
   @Override
   public IPath deserialize(JsonElement element, Type type, JsonDeserializationContext context)
       throws JsonParseException {
-    return new Path(element.getAsJsonPrimitive().getAsString());
+    JsonPrimitive asJsonPrimitive = element.getAsJsonPrimitive();
+    String asString = asJsonPrimitive.getAsString();
+    IPath path = Path.fromPortableString(asString);
+    return path;
   }
 }
