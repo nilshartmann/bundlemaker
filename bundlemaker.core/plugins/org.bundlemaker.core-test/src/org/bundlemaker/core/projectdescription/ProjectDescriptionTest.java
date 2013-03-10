@@ -1,5 +1,7 @@
 package org.bundlemaker.core.projectdescription;
 
+import junit.framework.Assert;
+
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
@@ -27,12 +29,13 @@ public class ProjectDescriptionTest {
 
     //
     String gsonString = GsonProjectDescriptionHelper.gson().toJson(description);
-    System.out.println(gsonString);
 
     //
     BundleMakerProjectDescription descriptionNeu = GsonProjectDescriptionHelper.gson().fromJson(gsonString,
         BundleMakerProjectDescription.class);
-
-    System.out.println(descriptionNeu.getContentProviders());
+    String gsonStringNeu = GsonProjectDescriptionHelper.gson().toJson(descriptionNeu);
+    
+    //
+    Assert.assertEquals(gsonString, gsonStringNeu);
   }
 }

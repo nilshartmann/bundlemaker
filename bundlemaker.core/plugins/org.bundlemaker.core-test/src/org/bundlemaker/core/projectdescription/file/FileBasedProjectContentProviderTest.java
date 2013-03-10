@@ -19,8 +19,6 @@ public class FileBasedProjectContentProviderTest {
 
     String gsonString = provider.toJson();
 
-    System.out.println(gsonString);
-
     FileBasedProjectContentProvider newProvider = AbstractProjectContentProvider.fromJson(gsonString, FileBasedProjectContentProvider.class);
 
     Assert.assertEquals(provider, newProvider);
