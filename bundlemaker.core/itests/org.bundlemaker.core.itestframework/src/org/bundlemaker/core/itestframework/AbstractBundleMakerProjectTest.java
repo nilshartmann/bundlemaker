@@ -238,6 +238,8 @@ public abstract class AbstractBundleMakerProjectTest {
     }
     
     assertNotNull("No VM available", vmInstall);
+    
+    System.out.println("Using Test JDK '" + vmInstall.getName() + "' from " + vmInstall.getInstallLocation());
     return vmInstall.getName();
   }
 }
