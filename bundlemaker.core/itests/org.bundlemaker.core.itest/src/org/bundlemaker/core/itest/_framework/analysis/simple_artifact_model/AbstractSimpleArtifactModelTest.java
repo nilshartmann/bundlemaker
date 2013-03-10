@@ -33,17 +33,26 @@ import org.junit.Assert;
 public abstract class AbstractSimpleArtifactModelTest extends AbstractModularizedSystemTest {
 
   /** - */
-  protected Model _binModel;
+  protected Model        _binModel;
 
   /** - */
-  protected Model _srcModel;
+  protected Model        _srcModel;
+
+  private static boolean _setup = false;
 
   /**
    * {@inheritDoc}
    */
   @Override
   public void before() throws CoreException {
+    
+    if (!_setup) {
+      createTestProject();
+      _setup = true;
+    }
+    
     super.before();
+
 
     _binModel = new Model(getModularizedSystem(),
         IAnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
@@ -139,8 +148,8 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     if (result.size() != expectedCount) {
 
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder
-          .append(String.format("Expected %s modules, but found %s: %s\n", expectedCount, result.size(), result));
+      stringBuilder.append(String.format("Expected %s modules, but found %s: %s\n", expectedCount, result.size(),
+          result));
 
       for (Iterator iterator = result.iterator(); iterator.hasNext();) {
         IModuleArtifact moduleArtifact = (IModuleArtifact) iterator.next();
@@ -180,8 +189,8 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
 
       //
       StringBuilder stringBuilder = new StringBuilder();
-      stringBuilder
-          .append(String.format("Expected %s resources, but found %s: %s\n", expectedCount, result.size(), result));
+      stringBuilder.append(String.format("Expected %s resources, but found %s: %s\n", expectedCount, result.size(),
+          result));
 
       //
       for (Iterator<IResourceArtifact> iterator = result.iterator(); iterator.hasNext();) {
@@ -203,8 +212,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
    */
   protected void assertGroupCountInModularizedSystem(int count) {
     Assert.assertEquals(String.format("%s.", getModularizedSystem().getGroups()), count, getModularizedSystem()
-        .getGroups()
-        .size());
+        .getGroups().size());
   }
 
   /**
@@ -215,8 +223,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
    */
   protected void assertResourceModuleCountInModularizedSystem(int count) {
     Assert.assertEquals(String.format("%s.", getModularizedSystem().getAllModules()), count, getModularizedSystem()
-        .getResourceModules()
-        .size());
+        .getResourceModules().size());
   }
 
   /**
@@ -248,12 +255,10 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
    * @param srcModel
    */
   protected void assert_Main_Jre_G1_G2_Dependencies(int[][] binModel, int[][] srcModel) {
-    Assert.assertArrayEquals(binModel,
-        AdjacencyMatrix.computeAdjacencyMatrix(null, _binModel.getMainModuleArtifact(),
-            _binModel.getJreArtifact(), _binModel.getGroup1Artifact(), _binModel.getGroup2Artifact()));
-    Assert.assertArrayEquals(srcModel,
-        AdjacencyMatrix.computeAdjacencyMatrix(null, _srcModel.getMainModuleArtifact(),
-            _srcModel.getJreArtifact(), _srcModel.getGroup1Artifact(), _srcModel.getGroup2Artifact()));
+    Assert.assertArrayEquals(binModel, AdjacencyMatrix.computeAdjacencyMatrix(null, _binModel.getMainModuleArtifact(),
+        _binModel.getJreArtifact(), _binModel.getGroup1Artifact(), _binModel.getGroup2Artifact()));
+    Assert.assertArrayEquals(srcModel, AdjacencyMatrix.computeAdjacencyMatrix(null, _srcModel.getMainModuleArtifact(),
+        _srcModel.getJreArtifact(), _srcModel.getGroup1Artifact(), _srcModel.getGroup2Artifact()));
   }
 
   /**
@@ -281,8 +286,7 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractModularize
     Assert.assertEquals(version, _srcModel.getMainModuleArtifact().getModuleVersion());
 
     //
-    Assert.assertEquals(name, _srcModel.getMainModuleArtifact().getAssociatedModule()
-        .getModuleIdentifier().getName());
+    Assert.assertEquals(name, _srcModel.getMainModuleArtifact().getAssociatedModule().getModuleIdentifier().getName());
     Assert.assertEquals(version, _srcModel.getMainModuleArtifact().getAssociatedModule().getModuleIdentifier()
         .getVersion());
 

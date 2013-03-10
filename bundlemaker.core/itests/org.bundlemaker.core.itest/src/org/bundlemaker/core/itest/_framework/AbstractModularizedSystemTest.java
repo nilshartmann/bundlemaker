@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
@@ -13,11 +14,12 @@ import org.bundlemaker.core.itestframework.BundleMakerTestUtils;
 import org.bundlemaker.core.itestframework.FileDiffUtil;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.Assert;
 import org.junit.Before;
 
@@ -46,25 +48,6 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
   @Override
   public void before() throws CoreException {
 
-    if (!EclipseProjectUtils.exists(computeTestProjectName())) {
-      super.before();
-      // add the project description
-      addProjectDescription();
-      // initialize
-      getBundleMakerProject().initialize(new ProgressMonitor());
-      // parse and open the project
-      getBundleMakerProject().parseAndOpen(new ProgressMonitor());
-      // assert no parse errors
-      if (getBundleMakerProject().getProblems().size() > 0) {
-        StringBuilder builder = new StringBuilder();
-        for (IProblem problem : getBundleMakerProject().getProblems()) {
-          builder.append(problem.getMessage());
-          builder.append("\n");
-        }
-        Assert.fail(builder.toString());
-      }
-    }
-
     // get the modularized system
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
         getTestProjectName());
@@ -77,6 +60,31 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
 
     // assert the test module
     Assert.assertNotNull(getModularizedSystem().getModule(getTestProjectName(), "1.0.0"));
+  }
+
+  protected void createTestProject() throws CoreException {
+    
+    //
+    IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
+    Assert.assertNotNull("JavaRuntime.getDefaultVMInstall() returns null!", vmInstall);
+    System.out.println(String.format("VM name: '%s'", vmInstall.getName()));
+    System.out.println(String.format("VM install location: '%s'", vmInstall.getInstallLocation().getAbsolutePath()));
+
+    // add the project description
+    addProjectDescription();
+    // initialize
+    getBundleMakerProject().initialize(new ProgressMonitor());
+    // parse and open the project
+    getBundleMakerProject().parseAndOpen(new ProgressMonitor());
+    // assert no parse errors
+    if (getBundleMakerProject().getProblems().size() > 0) {
+      StringBuilder builder = new StringBuilder();
+      for (IProblem problem : getBundleMakerProject().getProblems()) {
+        builder.append(problem.getMessage());
+        builder.append("\n");
+      }
+      Assert.fail(builder.toString());
+    }
   }
 
   protected void applyBasicTransformation(IModifiableModularizedSystem modularizedSystem) {

@@ -17,6 +17,7 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+					<testFailureIgnore>true</testFailureIgnore>
 					<includes>
 						<include>org/bundlemaker/core/itest/JdtTest.java</include>
 						<include>org/bundlemaker/core/itest/simple_artifact_model/analysis/*Test.java</include>
