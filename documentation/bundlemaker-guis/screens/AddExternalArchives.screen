@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:Window" x="25" y="25" width="568" height="424" text="Archive Selection" measuredWidth="568" measuredHeight="424"/>
-  <widgets xsi:type="model:Image" x="35" y="54" measuredWidth="547" measuredHeight="382" link="AddEditContent.screen" src="FileDialogContent.png"/>
-  <hRuler/>
-  <vRuler/>
-  <font name="Comic Sans MS" size="8"/>
-</model:Screen>
