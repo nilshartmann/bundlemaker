@@ -5,12 +5,34 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            name="Selection Stage"
+            name="Artifacts Stage"
             icon="icons/sample.gif"
             category="org.bundlemaker.core.ui.views"
             class="org.bundlemaker.core.ui.stage.StageView"
             id="org.bundlemaker.core.ui.stage.StageView">
       </view>
    </extension>
+   
+   <extension point="org.eclipse.ui.handlers">
+	<handler class="org.bundlemaker.core.ui.stage.AnalyzeArtifactsHandler"
+		commandId="org.bundlemaker.core.ui.stage.AnalyzeArtifactsCommand">
+			<activeWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></activeWhen>
+			<enabledWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></enabledWhen>
+		</handler>
+   </extension>
 
+	<extension point="org.eclipse.ui.commands">
+		<command id="org.bundlemaker.core.ui.stage.AnalyzeArtifactsCommand" name="Analyze Artifacts" />
+	</extension>
+	
+	     <extension point="org.eclipse.ui.menus">
+            <menuContribution
+                  locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
+                  <command
+                        commandId="org.bundlemaker.core.ui.stage.AnalyzeArtifactsCommand"
+                        style="push">
+                        <visibleWhen checkEnabled="true"/>
+                  </command>
+            </menuContribution>
+		</extension>	
 </plugin>

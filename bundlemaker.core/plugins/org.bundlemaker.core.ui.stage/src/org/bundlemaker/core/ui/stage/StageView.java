@@ -1,6 +1,8 @@
 package org.bundlemaker.core.ui.stage;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -19,6 +21,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
@@ -36,21 +39,27 @@ public class StageView extends ViewPart {
   /**
    * The ID of the view as specified by the extension.
    */
-  public static final String                 ID                = "org.bundlemaker.core.ui.stage.StageView";
+  public static final String                 ID              = "org.bundlemaker.core.ui.stage.StageView";
 
-  protected final List<IBundleMakerArtifact> EMPTY_SELECTION   = Collections.emptyList();
+  protected final List<IBundleMakerArtifact> EMPTY_ARTIFACTS = Collections.emptyList();
 
   private TreeViewer                         _treeViewer;
 
   private DrillDownAdapter                   drillDownAdapter;
 
-  private Action                             _pinSelectionAction;
+  private Action                             _pinStageAction;
 
   private Action                             _autoExpandAction;
 
-  private boolean                            _selectionPinnned = false;
+  private boolean                            _stagePinned    = false;
 
-  private boolean                            _autoExpand       = true;
+  private boolean                            _autoExpand     = true;
+
+  private boolean                            _autoAnalyze    = true;
+
+  private Action                             _analyzeAction;
+
+  private Action                             _autoAnalyzeAction;
 
   /**
    * The constructor.
@@ -79,42 +88,67 @@ public class StageView extends ViewPart {
     contributeToActionBars();
 
     Selection.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener(Selection.MAIN_ARTIFACT_SELECTION_ID, new IArtifactSelectionListener() {
+        .addArtifactSelectionListener(Selection.PROJECT_EXLPORER_SELECTION_ID, new IArtifactSelectionListener() {
 
           @Override
           public void artifactSelectionChanged(IArtifactSelection event) {
-            projectExplorerSelectionChanged(event);
+
+            if (StageSelection.isAnalyzeCommandSelectionProvider(event)) {
+              // User has explicitly chosen to analyze the selected artifacts,
+              // regardless what settings have been made in the Stage View
+
+              setStagedArtifacts(event.getSelectedArtifacts(), true);
+            } else {
+              projectExplorerSelectionChanged(event);
+            }
           }
         });
 
     IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-        .getSelection(Selection.MAIN_ARTIFACT_SELECTION_ID);
+        .getSelection(Selection.PROJECT_EXLPORER_SELECTION_ID);
     projectExplorerSelectionChanged(selection);
   }
 
   protected void projectExplorerSelectionChanged(IArtifactSelection newSelection) {
     // Selection in Project Explorer changed
 
-    if (isSelectionPinnned() && hasSelectedArtifacts()) {
+    if (isStagePinned() && hasStagedArtifacts()) {
       // ignore
       return;
     }
 
     if (newSelection == null) {
-      setVisibleArtifacts(EMPTY_SELECTION);
+      setStagedArtifacts(EMPTY_ARTIFACTS, isAutoAnalyze());
     } else {
-      setVisibleArtifacts(newSelection.getSelectedArtifacts());
+      // publish changes if in auto-analyze mode or when there have been no
+      // staged artifacts before (convenience)
+      boolean publishChanges = isAutoAnalyze() || !hasStagedArtifacts();
+
+      setStagedArtifacts(newSelection.getSelectedArtifacts(), publishChanges);
     }
   }
 
-  protected boolean hasSelectedArtifacts() {
-    List<IBundleMakerArtifact> artifacts = (List<IBundleMakerArtifact>) _treeViewer.getInput();
+  protected boolean hasStagedArtifacts() {
 
-    return artifacts.size() > 0;
+    return getStagedArtifacts().size() > 0;
   }
 
-  private void setVisibleArtifacts(List<IBundleMakerArtifact> visibleArtifacts) {
+  protected List<IBundleMakerArtifact> getStagedArtifacts() {
+
+    if (_stagedArtifacts == null) {
+      return EMPTY_ARTIFACTS;
+    }
+
+    return _stagedArtifacts;
+
+  }
+
+  private List<IBundleMakerArtifact> _stagedArtifacts;
+
+  private void setStagedArtifacts(List<IBundleMakerArtifact> visibleArtifacts, boolean publishChanges) {
     Assert.isNotNull(visibleArtifacts);
+
+    _stagedArtifacts = visibleArtifacts;
 
     //
     VisibleArtifactsFilter result = null;
@@ -145,6 +179,9 @@ public class StageView extends ViewPart {
     }
 
     //
+    if (publishChanges) {
+      publishStagedArtifacts();
+    }
   }
 
   private void hookContextMenu() {
@@ -183,22 +220,26 @@ public class StageView extends ViewPart {
   }
 
   private void fillLocalToolBar(IToolBarManager manager) {
-    manager.add(_pinSelectionAction);
-    manager.add(_autoExpandAction);
+    manager.add(_analyzeAction);
+    manager.add(_autoAnalyzeAction);
     manager.add(new Separator());
+    manager.add(_pinStageAction);
+    manager.add(_autoExpandAction);
     // drillDownAdapter.addNavigationActions(manager);
   }
 
   private void makeActions() {
-    _pinSelectionAction = new PinSelectionAction();
+    _pinStageAction = new PinSelectionAction();
     _autoExpandAction = new AutoExpandAction();
+    _analyzeAction = new AnalyzeAction();
+    _autoAnalyzeAction = new AutoAnalyzeAction();
   }
 
   /**
    * @return the selectionPinnned
    */
-  public boolean isSelectionPinnned() {
-    return _selectionPinnned;
+  public boolean isStagePinned() {
+    return _stagePinned;
   }
 
   /**
@@ -224,8 +265,8 @@ public class StageView extends ViewPart {
    * @param selectionPinnned
    *          the selectionPinnned to set
    */
-  public void setSelectionPinnned(boolean selectionPinnned) {
-    _selectionPinnned = selectionPinnned;
+  public void setStagePinned(boolean selectionPinnned) {
+    _stagePinned = selectionPinnned;
   }
 
   private void hookDoubleClickAction() {
@@ -247,21 +288,36 @@ public class StageView extends ViewPart {
 
   class PinSelectionAction extends Action {
     public PinSelectionAction() {
-      super("Pin Selection", IAction.AS_CHECK_BOX);
-      setToolTipText("Pin Selection");
+      super("Pin Stage", IAction.AS_CHECK_BOX);
+      setToolTipText("Pin Stage");
       // setImageDescriptor(TransformationHistoryImages.PIN_SELECTION.getImageDescriptor());
       update();
     }
 
     @Override
     public void run() {
-      setSelectionPinnned(isChecked());
+      setStagePinned(isChecked());
     }
 
     public void update() {
-      setChecked(isSelectionPinnned());
+      setChecked(isStagePinned());
     }
 
+  }
+
+  /**
+   * @return the autoAnalyze
+   */
+  public boolean isAutoAnalyze() {
+    return _autoAnalyze;
+  }
+
+  /**
+   * @param autoAnalyze
+   *          the autoAnalyze to set
+   */
+  public void setAutoAnalyze(boolean autoAnalyze) {
+    _autoAnalyze = autoAnalyze;
   }
 
   class AutoExpandAction extends Action {
@@ -281,6 +337,59 @@ public class StageView extends ViewPart {
     public void update() {
       setChecked(isAutoExpand());
     }
+  }
+
+  class AutoAnalyzeAction extends Action {
+    public AutoAnalyzeAction() {
+      super("Auto Analyze", IAction.AS_CHECK_BOX);
+      setToolTipText("Auto Analyze staged artifacts");
+      // setImageDescriptor(TransformationHistoryImages.PIN_SELECTION.getImageDescriptor());
+      update();
+    }
+
+    @Override
+    public void run() {
+      setAutoAnalyze(isChecked());
+
+    }
+
+    public void update() {
+      setChecked(isAutoAnalyze());
+    }
+  }
+
+  class AnalyzeAction extends Action {
+    public AnalyzeAction() {
+      super("Analyze");
+    }
+
+    @Override
+    public void run() {
+      publishStagedArtifacts();
+    }
+  }
+
+  protected void publishStagedArtifacts() {
+    IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
+    List<IBundleMakerArtifact> artifacts;
+
+    if (selection.isEmpty()) {
+      artifacts = getStagedArtifacts();
+    } else {
+      artifacts = new LinkedList<IBundleMakerArtifact>();
+      Iterator<?> iterator = selection.iterator();
+      while (iterator.hasNext()) {
+        Object o = iterator.next();
+        if (o instanceof IBundleMakerArtifact) {
+          artifacts.add((IBundleMakerArtifact) o);
+        }
+      }
+    }
+
+    System.out.println("Set MAIN_SELECTION: " + artifacts);
+    Selection.instance().getArtifactSelectionService().setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, //
+        StageSelection.STAGE_VIEW_SELECTION_PROVIDER_ID, //
+        artifacts);
 
   }
 

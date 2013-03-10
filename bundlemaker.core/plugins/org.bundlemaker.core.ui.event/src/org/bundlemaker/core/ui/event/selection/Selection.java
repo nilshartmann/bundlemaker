@@ -14,6 +14,14 @@ import org.eclipse.ui.IPageLayout;
  */
 public class Selection {
 
+  /**
+   * The (unchanged) selection currently made in the Project Explorer Tree
+   * 
+   * Clients should listen to {@link #MAIN_ARTIFACT_SELECTION_ID} instead.
+   */
+  public static final String               PROJECT_EXLPORER_SELECTION_ID  = Selection.class.getPackage().getName()
+                                                                              + ".PROJECT_EXPLORER_SELECTION_ID";
+
   /** - */
   public static final String               MAIN_ARTIFACT_SELECTION_ID     = Selection.class.getPackage().getName()
                                                                               + ".MAIN_ARTIFACT_SELECTION_ID";
