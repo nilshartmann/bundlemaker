@@ -112,9 +112,10 @@ public class JdkCreator {
     File jreDirectory = new File(directoryName);
 
     // check...
-    if (!type.validateInstallLocation(new File(directoryName)).isOK()) {
+    IStatus status = type.validateInstallLocation(new File(directoryName));
+    if (!status.isOK()) {
       throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Install location '" + directoryName
-          + "' not valid!"));
+          + "' not valid: " + status.getMessage()));
     }
 
     // get the library locations
