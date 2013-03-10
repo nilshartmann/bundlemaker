@@ -230,7 +230,7 @@ public abstract class AbstractBundleMakerProjectTest {
 
     IVMInstall vmInstall = null;
     
-    if (configuredTestVmLocation == null || configuredTestVmLocation.trim().isEmpty()) {
+    if (configuredTestVmLocation == null || configuredTestVmLocation.trim().isEmpty() || !new File(configuredTestVmLocation).isDirectory()) {
      vmInstall = JavaRuntime.getDefaultVMInstall(); 
     } else {
       System.out.println("Creating Test IVMInstall for location '" + configuredTestVmLocation + "'");

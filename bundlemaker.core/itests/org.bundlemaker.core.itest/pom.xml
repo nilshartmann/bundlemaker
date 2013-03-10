@@ -17,6 +17,9 @@
 				<artifactId>tycho-surefire-plugin</artifactId>
 				<version>${tycho-version}</version>
 				<configuration>
+					<systemProperties>
+						<org.bundlemaker.core.itestframework.vm_install>${org.bundlemaker.core.itestframework.vm_install}</org.bundlemaker.core.itestframework.vm_install>
+					</systemProperties>
 					<testFailureIgnore>true</testFailureIgnore>
 					<includes>
 						<include>org/bundlemaker/core/itest/JdtTest.java</include>
