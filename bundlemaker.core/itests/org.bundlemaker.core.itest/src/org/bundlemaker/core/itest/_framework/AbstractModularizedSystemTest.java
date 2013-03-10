@@ -11,10 +11,10 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerProjectTest;
 import org.bundlemaker.core.itestframework.BundleMakerTestUtils;
 import org.bundlemaker.core.itestframework.FileDiffUtil;
-import org.bundlemaker.core.modules.IModularizedSystem;
-import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
+import org.bundlemaker.core.util.EclipseProjectUtils;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -46,39 +46,39 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
   @Override
   public void before() throws CoreException {
 
-    super.before();
-
-    // add the project description
-    addProjectDescription();
-
-    // initialize
-    getBundleMakerProject().initialize(new ProgressMonitor());
-
-    // parse and open the project
-    getBundleMakerProject().parseAndOpen(new ProgressMonitor());
-
-    // assert no parse errors
-    if (getBundleMakerProject().getProblems().size() > 0) {
-      StringBuilder builder = new StringBuilder();
-      for (IProblem problem : getBundleMakerProject().getProblems()) {
-        builder.append(problem.getMessage());
-        builder.append("\n");
+    if (!EclipseProjectUtils.exists(computeTestProjectName())) {
+      super.before();
+      // add the project description
+      addProjectDescription();
+      // initialize
+      getBundleMakerProject().initialize(new ProgressMonitor());
+      // parse and open the project
+      getBundleMakerProject().parseAndOpen(new ProgressMonitor());
+      // assert no parse errors
+      if (getBundleMakerProject().getProblems().size() > 0) {
+        StringBuilder builder = new StringBuilder();
+        for (IProblem problem : getBundleMakerProject().getProblems()) {
+          builder.append(problem.getMessage());
+          builder.append("\n");
+        }
+        Assert.fail(builder.toString());
       }
-      Assert.fail(builder.toString());
     }
 
     // get the modularized system
     _modularizedSystem = (IModifiableModularizedSystem) getBundleMakerProject().getModularizedSystemWorkingCopy(
         getTestProjectName());
 
+    //
+    _modularizedSystem.undoTransformations(null);
+
     // apply the basic group transformation
     applyBasicTransformation(_modularizedSystem);
-    
 
     // assert the test module
     Assert.assertNotNull(getModularizedSystem().getModule(getTestProjectName(), "1.0.0"));
   }
-  
+
   protected void applyBasicTransformation(IModifiableModularizedSystem modularizedSystem) {
     modularizedSystem.applyTransformations(null, new GroupTransformation(new ModuleIdentifier(getTestProjectName(),
         "1.0.0"), new Path("group1/group2")));
@@ -90,8 +90,8 @@ public abstract class AbstractModularizedSystemTest extends AbstractBundleMakerP
     //
     super.after();
 
-    //
-    _modularizedSystem = null;
+    // //
+    // _modularizedSystem = null;
   }
 
   /**

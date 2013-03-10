@@ -29,9 +29,6 @@ public abstract class AbstractBundleMakerProjectTest {
   public static final String  TEST_PROJECT_VERSION = "1.0.0";
 
   /** - */
-  private String              _testProjectName;
-
-  /** - */
   private IBundleMakerProject _bundleMakerProject;
 
   /**
@@ -40,8 +37,8 @@ public abstract class AbstractBundleMakerProjectTest {
    * 
    * @return
    */
-  public final String getTestProjectName() {
-    return _testProjectName;
+  public String getTestProjectName() {
+    return computeTestProjectName();
   }
 
   /**
@@ -51,6 +48,24 @@ public abstract class AbstractBundleMakerProjectTest {
    * @return
    */
   public final IBundleMakerProject getBundleMakerProject() {
+    
+    //
+    if (_bundleMakerProject == null) {
+      
+      try {
+        // create simple project
+        log("Creating new bundlemaker project...");
+        IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(getTestProjectName());
+
+        // get the BM project
+        _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject);
+      } catch (CoreException e) {
+        e.printStackTrace();
+        Assert.fail(e.getMessage());
+      }
+    }
+    
+    //
     return _bundleMakerProject;
   }
 
@@ -63,19 +78,9 @@ public abstract class AbstractBundleMakerProjectTest {
   @Before
   public void before() throws CoreException {
 
-    //
-    _testProjectName = computeTestProjectName();
-
-    // delete the project
-    log("Deleting existing project...");
-    EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
-
-    // create simple project
-    log("Creating new bundlemaker project...");
-    IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(_testProjectName);
-
-    // get the BM project
-    _bundleMakerProject = BundleMakerCore.getBundleMakerProject(simpleProject);
+    // // delete the project
+    // log("Deleting existing project...");
+    // EclipseProjectUtils.deleteProjectIfExists(_testProjectName);
   }
 
   /**
@@ -110,7 +115,7 @@ public abstract class AbstractBundleMakerProjectTest {
 
     // create the project description
     log("Adding project description...");
-    addProjectDescription(_bundleMakerProject, testDataDirectory);
+    addProjectDescription(getBundleMakerProject(), testDataDirectory);
   }
 
   /**
@@ -139,7 +144,7 @@ public abstract class AbstractBundleMakerProjectTest {
     
  
     //
-    FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription, _testProjectName,
+    FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription, getTestProjectName(),
         TEST_PROJECT_VERSION, classesPath, sourcesPath);
 
     // step 4: process the class path entries

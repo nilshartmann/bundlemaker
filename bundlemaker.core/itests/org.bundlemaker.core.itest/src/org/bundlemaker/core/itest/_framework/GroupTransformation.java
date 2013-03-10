@@ -2,7 +2,9 @@ package org.bundlemaker.core.itest._framework;
 
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.transformation.ITransformation;
+import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
@@ -12,13 +14,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class GroupTransformation implements ITransformation {
+public class GroupTransformation implements IUndoableTransformation {
 
   /** - */
-  private IModuleIdentifier _moduleIdentifier;
+  private IModuleIdentifier         _moduleIdentifier;
 
   /** - */
-  private IPath             _group;
+  private IPath                     _group;
+
+  /** - */
+  private IPath                     _oldGroup;
+
+  /** - */
+  private IModifiableResourceModule _modifiableResourceModule;
 
   /**
    * <p>
@@ -40,6 +48,13 @@ public class GroupTransformation implements ITransformation {
    */
   @Override
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
-    modularizedSystem.getModifiableResourceModule(_moduleIdentifier).setClassification(_group);
+    _modifiableResourceModule = modularizedSystem.getModifiableResourceModule(_moduleIdentifier);
+    _oldGroup = _modifiableResourceModule.getClassification();
+    _modifiableResourceModule.setClassification(_group);
+  }
+
+  @Override
+  public void undo() {
+    _modifiableResourceModule.setClassification(_oldGroup);
   }
 }
