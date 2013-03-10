@@ -50,6 +50,21 @@ public class JdkCreator {
     return result;
   }
 
+  // public static final IVMInstall getOrCreateIVMInstall(String name, File installLocation) throws CoreException {
+  // IVMInstall install = getIVMInstall(name);
+  //
+  // if (install != null) {
+  // return install;
+  // }
+  //
+  // IVMInstallType type = JavaRuntime.getVMInstallType(ID_STANDARD_VM_TYPE);
+  // IVMInstall newInstall = type.createVMInstall(name);
+  // newInstall.setInstallLocation(installLocation);
+  //
+  // return newInstall;
+  //
+  // }
+
   /**
    * <p>
    * </p>
@@ -97,8 +112,7 @@ public class JdkCreator {
 
     // check...
     if (!type.validateInstallLocation(new File(directoryName)).isOK()) {
-      // TODO
-      throw new CoreException(new Status(IStatus.ERROR, "", ""));
+      throw new CoreException(new Status(IStatus.ERROR, "", "Install location '" + directoryName + "' not valid!"));
     }
 
     // get the library locations

@@ -185,7 +185,7 @@ public class AdditionalContentTest extends AbstractBundleMakerProjectTest {
     provider.setJavaProject(javaProject);
 
     // step 2: add the JRE
-    projectDescription.setJre(getDefaultVmName());
+    projectDescription.setJre(getTestVmName());
     projectDescription.addContentProvider(provider);
 
     //
