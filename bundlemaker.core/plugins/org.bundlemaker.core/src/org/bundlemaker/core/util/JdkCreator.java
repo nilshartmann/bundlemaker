@@ -1,12 +1,14 @@
 package org.bundlemaker.core.util;
 
 import java.io.File;
+import java.util.Arrays;
 
 import org.bundlemaker.core.BundleMakerCore;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.internal.launching.StandardVMType;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.IVMInstallType;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -114,6 +116,14 @@ public class JdkCreator {
     // check...
     IStatus status = type.validateInstallLocation(new File(directoryName));
     if (!status.isOK()) {
+      System.out.println("Java installation not valid: " + status.getMessage());
+      System.out.println("  JRE Directory: " + jreDirectory + " (" + jreDirectory.isDirectory() + ")");
+      File javaExecutable = StandardVMType.findJavaExecutable(jreDirectory);
+      System.out.println("  JavaExecutable: " + javaExecutable);
+      LibraryLocation[] defaultLibraryLocations = type.getDefaultLibraryLocations(jreDirectory);
+      System.out.println("  Library Locations: "
+          + (defaultLibraryLocations == null ? "null" : Arrays.asList(defaultLibraryLocations)));
+
       throw new CoreException(new Status(IStatus.ERROR, BundleMakerCore.BUNDLE_ID, "Install location '" + directoryName
           + "' not valid: " + status.getMessage()));
     }
