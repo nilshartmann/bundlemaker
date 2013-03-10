@@ -1,17 +1,11 @@
 package org.bundlemaker.core.ui.stage;
 
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -21,7 +15,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
@@ -51,11 +44,7 @@ public class StageView extends ViewPart {
 
   private Action                             _autoExpandAction;
 
-  private boolean                            _stagePinned    = false;
-
   private boolean                            _autoExpand     = true;
-
-  private boolean                            _autoAnalyze    = true;
 
   private Action                             _analyzeAction;
 
@@ -87,68 +76,21 @@ public class StageView extends ViewPart {
     hookDoubleClickAction();
     contributeToActionBars();
 
-    Selection.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener(Selection.PROJECT_EXLPORER_SELECTION_ID, new IArtifactSelectionListener() {
+    ArtifactStage.instance().addArtifactStageChangeListener(new IArtifactStageChangeListener() {
 
-          @Override
-          public void artifactSelectionChanged(IArtifactSelection event) {
+      @Override
+      public void artifactStateChanged() {
+        refreshTreeContent();
+      }
+    });
 
-            if (StageSelection.isAnalyzeCommandSelectionProvider(event)) {
-              // User has explicitly chosen to analyze the selected artifacts,
-              // regardless what settings have been made in the Stage View
-
-              setStagedArtifacts(event.getSelectedArtifacts(), true);
-            } else {
-              projectExplorerSelectionChanged(event);
-            }
-          }
-        });
-
-    IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-        .getSelection(Selection.PROJECT_EXLPORER_SELECTION_ID);
-    projectExplorerSelectionChanged(selection);
-  }
-
-  protected void projectExplorerSelectionChanged(IArtifactSelection newSelection) {
-    // Selection in Project Explorer changed
-
-    if (isStagePinned() && hasStagedArtifacts()) {
-      // ignore
-      return;
-    }
-
-    if (newSelection == null) {
-      setStagedArtifacts(EMPTY_ARTIFACTS, isAutoAnalyze());
-    } else {
-      // publish changes if in auto-analyze mode or when there have been no
-      // staged artifacts before (convenience)
-      boolean publishChanges = isAutoAnalyze() || !hasStagedArtifacts();
-
-      setStagedArtifacts(newSelection.getSelectedArtifacts(), publishChanges);
-    }
-  }
-
-  protected boolean hasStagedArtifacts() {
-
-    return getStagedArtifacts().size() > 0;
-  }
-
-  protected List<IBundleMakerArtifact> getStagedArtifacts() {
-
-    if (_stagedArtifacts == null) {
-      return EMPTY_ARTIFACTS;
-    }
-
-    return _stagedArtifacts;
+    refreshTreeContent();
 
   }
 
-  private List<IBundleMakerArtifact> _stagedArtifacts;
+  private void refreshTreeContent() {
 
-  private void setStagedArtifacts(List<IBundleMakerArtifact> visibleArtifacts, boolean publishChanges) {
-    Assert.isNotNull(visibleArtifacts);
-
-    _stagedArtifacts = visibleArtifacts;
+    List<IBundleMakerArtifact> visibleArtifacts = ArtifactStage.instance().getStagedArtifacts();
 
     //
     VisibleArtifactsFilter result = null;
@@ -176,11 +118,6 @@ public class StageView extends ViewPart {
 
     if (isAutoExpand()) {
       _treeViewer.expandAll();
-    }
-
-    //
-    if (publishChanges) {
-      publishStagedArtifacts();
     }
   }
 
@@ -236,13 +173,6 @@ public class StageView extends ViewPart {
   }
 
   /**
-   * @return the selectionPinnned
-   */
-  public boolean isStagePinned() {
-    return _stagePinned;
-  }
-
-  /**
    * @return the autoExpand
    */
   public boolean isAutoExpand() {
@@ -259,14 +189,6 @@ public class StageView extends ViewPart {
     if (_autoExpand) {
       _treeViewer.expandAll();
     }
-  }
-
-  /**
-   * @param selectionPinnned
-   *          the selectionPinnned to set
-   */
-  public void setStagePinned(boolean selectionPinnned) {
-    _stagePinned = selectionPinnned;
   }
 
   private void hookDoubleClickAction() {
@@ -296,28 +218,17 @@ public class StageView extends ViewPart {
 
     @Override
     public void run() {
-      setStagePinned(isChecked());
+      getArtifactStage().setStagePinned(isChecked());
     }
 
     public void update() {
-      setChecked(isStagePinned());
+      setChecked(getArtifactStage().isStagePinned());
     }
 
   }
 
-  /**
-   * @return the autoAnalyze
-   */
-  public boolean isAutoAnalyze() {
-    return _autoAnalyze;
-  }
-
-  /**
-   * @param autoAnalyze
-   *          the autoAnalyze to set
-   */
-  public void setAutoAnalyze(boolean autoAnalyze) {
-    _autoAnalyze = autoAnalyze;
+  protected ArtifactStage getArtifactStage() {
+    return ArtifactStage.instance();
   }
 
   class AutoExpandAction extends Action {
@@ -349,12 +260,12 @@ public class StageView extends ViewPart {
 
     @Override
     public void run() {
-      setAutoAnalyze(isChecked());
+      getArtifactStage().setAutoAnalyze(isChecked());
 
     }
 
     public void update() {
-      setChecked(isAutoAnalyze());
+      setChecked(getArtifactStage().isAutoAnalyze());
     }
   }
 
@@ -365,32 +276,8 @@ public class StageView extends ViewPart {
 
     @Override
     public void run() {
-      publishStagedArtifacts();
+      getArtifactStage().publishStagedArtifacts();
     }
-  }
-
-  protected void publishStagedArtifacts() {
-    IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-    List<IBundleMakerArtifact> artifacts;
-
-    if (selection.isEmpty()) {
-      artifacts = getStagedArtifacts();
-    } else {
-      artifacts = new LinkedList<IBundleMakerArtifact>();
-      Iterator<?> iterator = selection.iterator();
-      while (iterator.hasNext()) {
-        Object o = iterator.next();
-        if (o instanceof IBundleMakerArtifact) {
-          artifacts.add((IBundleMakerArtifact) o);
-        }
-      }
-    }
-
-    System.out.println("Set MAIN_SELECTION: " + artifacts);
-    Selection.instance().getArtifactSelectionService().setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, //
-        StageSelection.STAGE_VIEW_SELECTION_PROVIDER_ID, //
-        artifacts);
-
   }
 
 }

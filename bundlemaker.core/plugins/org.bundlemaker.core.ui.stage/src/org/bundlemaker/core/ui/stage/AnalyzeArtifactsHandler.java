@@ -14,7 +14,6 @@ package org.bundlemaker.core.ui.stage;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 
@@ -32,9 +31,6 @@ public class AnalyzeArtifactsHandler extends AbstractArtifactBasedHandler {
    */
   @Override
   protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
-    Selection.instance().getArtifactSelectionService().setSelection(Selection.PROJECT_EXLPORER_SELECTION_ID,//
-        StageSelection.ANALYZE_COMMAND_SELECTION_PROVIDER_ID,//
-        selectedArtifacts);
-
+    ArtifactStage.instance().setStagedArtifacts(selectedArtifacts, true);
   }
 }
