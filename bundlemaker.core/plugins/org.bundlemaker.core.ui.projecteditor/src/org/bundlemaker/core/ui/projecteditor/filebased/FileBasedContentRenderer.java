@@ -85,7 +85,7 @@ public class FileBasedContentRenderer {
    */
   public AnalyzeMode getAnalyzeMode(Object element) {
     if (element instanceof FileBasedProjectContentProvider) {
-      return ((FileBasedProjectContentProvider) element).getFileBasedContent().getAnalyzeMode();
+      return ((FileBasedProjectContentProvider) element).getAnalyzeMode();
     }
     if (element instanceof IProjectContentEntry) {
       return ((IProjectContentEntry) element).getAnalyzeMode();

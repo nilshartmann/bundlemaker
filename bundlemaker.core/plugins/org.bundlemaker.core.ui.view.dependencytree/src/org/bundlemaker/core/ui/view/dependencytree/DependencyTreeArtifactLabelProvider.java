@@ -82,43 +82,43 @@ public class DependencyTreeArtifactLabelProvider extends ArtifactTreeLabelProvid
    */
   private String getLeftSideLabel(IBundleMakerArtifact artifact) {
 
+    // //
+    // int dependencyCount = 0;
+    // Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
     //
-    int dependencyCount = 0;
-    Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
-
+    // //
+    // Collection<IDependency> dependencies = artifact.getDependenciesTo(_helper.getUnfilteredTargetArtifacts());
+    // if (dependencies != null) {
+    // for (IDependency dependency : dependencies) {
+    // for (IDependency coreDependency : dependency.getCoreDependencies()) {
     //
-    Collection<IDependency> dependencies = artifact.getDependenciesTo(_helper.getUnfilteredTargetArtifacts());
-    if (dependencies != null) {
-      for (IDependency dependency : dependencies) {
-        for (IDependency coreDependency : dependency.getCoreDependencies()) {
-
-          //
-          Collection<IBundleMakerArtifact> unfilteredSourceDependencies = _helper.getUnfilteredSourceArtifacts();
-
-          IBundleMakerArtifact fromArtifact = coreDependency.getFrom();
-
-          //
-          if (unfilteredSourceDependencies.contains(fromArtifact)) {
-            targetArtifacts.add(coreDependency.getTo());
-            dependencyCount = dependencyCount + coreDependency.getWeight();
-          }
-        }
-      }
-    }
+    // //
+    // Collection<IBundleMakerArtifact> unfilteredSourceDependencies = _helper.getUnfilteredSourceArtifacts();
+    //
+    // IBundleMakerArtifact fromArtifact = coreDependency.getFrom();
+    //
+    // //
+    // if (unfilteredSourceDependencies.contains(fromArtifact)) {
+    // targetArtifacts.add(coreDependency.getTo());
+    // dependencyCount = dependencyCount + coreDependency.getWeight();
+    // }
+    // }
+    // }
+    // }
 
     //
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(super.getText(artifact));
 
-    if (_showReferenceCount) {
-      stringBuilder.append(" (");
-      stringBuilder.append(dependencyCount);
-      stringBuilder.append("/");
-      // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
-      stringBuilder.append(targetArtifacts.size());
-      // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
-      stringBuilder.append(")");
-    }
+    // if (_showReferenceCount) {
+    // stringBuilder.append(" (");
+    // stringBuilder.append(dependencyCount);
+    // stringBuilder.append("/");
+    // // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
+    // stringBuilder.append(targetArtifacts.size());
+    // // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
+    // stringBuilder.append(")");
+    // }
 
     //
     return stringBuilder.toString();
