@@ -1,15 +1,25 @@
 package org.bundlemaker.core.projectdescription.spi;
 
+import java.io.File;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.BundleMakerProjectDescription;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.projectdescription.gson.GsonProjectDescriptionHelper;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProblem;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -28,12 +38,61 @@ import com.google.gson.annotations.SerializedName;
 public abstract class AbstractProjectContentProvider implements IProjectContentProvider {
 
   /** - */
-  private BundleMakerProjectDescription _projectDescription;
-
-  /** - */
   @Expose
   @SerializedName("id")
   private String                        _id;
+
+  /** - */
+  private IBundleMakerProject           _bundleMakerProject;
+
+  /** - */
+  private BundleMakerProjectDescription _projectDescription;
+
+  /** cached list of all file based contents */
+  private List<IProjectContentEntry>    _fileBasedContents;
+
+  /** the internal counter */
+  private int                           _counter = 0;
+
+  /**
+   * <p>
+   * Creates a new instance of type {@link AbstractProjectContentProvider}.
+   * </p>
+   */
+  public AbstractProjectContentProvider() {
+
+    //
+    _fileBasedContents = new LinkedList<IProjectContentEntry>();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public List<IProjectContentEntry> getFileBasedContents() {
+    return Collections.unmodifiableList(_fileBasedContents);
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  public void clearFileBasedContents() {
+    _fileBasedContents.clear();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IBundleMakerProject getBundleMakerProject() {
+    Assert.isNotNull(_bundleMakerProject, "BundleMaker project has not been set.");
+    return _bundleMakerProject;
+  }
 
   /**
    * {@inheritDoc}
@@ -57,6 +116,7 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
    */
   public void setProjectDescription(BundleMakerProjectDescription description) {
     _projectDescription = description;
+    _bundleMakerProject = _projectDescription.getBundleMakerProject();
 
     init(description);
   }
@@ -109,14 +169,31 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
   }
 
   /**
+   * {@inheritDoc}
+   */
+  @Override
+  public final List<IProjectContentEntry> getBundleMakerProjectContent(IProgressMonitor progressMonitor,
+      IBundleMakerProject bundleMakerProject) throws CoreException {
+
+    //
+    _bundleMakerProject = bundleMakerProject;
+
+    //
+    onGetBundleMakerProjectContent(progressMonitor);
+
+    //
+    return getFileBasedContents();
+  }
+
+  /**
    * <p>
    * </p>
    * 
+   * @param progressMonitor
    * @return
    */
-  protected IModifiableProjectContentEntry createNewContentEntry() {
-    return new ProjectContentEntry(this);
-  }
+  protected abstract void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor)
+      throws CoreException;
 
   /**
    * <p>
@@ -164,5 +241,55 @@ public abstract class AbstractProjectContentProvider implements IProjectContentP
     } else if (!_id.equals(other._id))
       return false;
     return true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param contentName
+   * @param contentVersion
+   * @param binaryPaths
+   * @param sourcePaths
+   * @param analyzeMode
+   * @return
+   * @throws CoreException
+   */
+  protected IProjectContentEntry createFileBasedContent(String contentName, String contentVersion,
+      File[] binaryPaths, File[] sourcePaths, AnalyzeMode analyzeMode)
+      throws CoreException {
+
+    // asserts
+    Assert.isNotNull(contentName);
+    Assert.isNotNull(contentVersion);
+    Assert.isNotNull(binaryPaths);
+    Assert.isNotNull(analyzeMode);
+
+    ProjectContentEntry result = new ProjectContentEntry(this);
+
+    result.setAnalyzeMode(analyzeMode);
+
+    result.setId(getId() + _counter++);
+    result.setName(contentName);
+    result.setVersion(contentVersion);
+
+    for (File binaryPath : binaryPaths) {
+      result.addRootPath(new VariablePath(binaryPath.getAbsolutePath()), ProjectContentType.BINARY);
+    }
+
+    if (sourcePaths != null) {
+      for (File sourcePath : sourcePaths) {
+        result.addRootPath(new VariablePath(sourcePath.getAbsolutePath()), ProjectContentType.SOURCE);
+      }
+    }
+
+    // initialize the result
+    result.initialize(getBundleMakerProject().getProjectDescription());
+
+    //
+    _fileBasedContents.add(result);
+
+    //
+    return result;
   }
 }

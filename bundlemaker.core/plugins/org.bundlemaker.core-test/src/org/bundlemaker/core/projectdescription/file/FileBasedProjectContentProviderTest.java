@@ -15,7 +15,7 @@ public class FileBasedProjectContentProviderTest {
     FileBasedProjectContentProvider provider = new FileBasedProjectContentProvider();
     provider.setId("honk");
     provider.setName("name");
-    provider.addRootPath(new VariablePath("BLa7BLa"), ProjectContentType.SOURCE);
+    provider.addRootPath(new VariablePath("${eclipse_home}"), ProjectContentType.SOURCE);
 
     String gsonString = provider.toJson();
 

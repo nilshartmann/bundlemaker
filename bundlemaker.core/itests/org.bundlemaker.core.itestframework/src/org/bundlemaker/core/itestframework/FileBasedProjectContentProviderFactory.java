@@ -167,13 +167,13 @@ public class FileBasedProjectContentProviderFactory {
 
     // add the binary roots
     for (VariablePath path : binaryRoots) {
-      fileBasedContentProvider.getFileBasedContent().addRootPath(path, ProjectContentType.BINARY);
+      fileBasedContentProvider.addRootPath(path, ProjectContentType.BINARY);
     }
 
     if (sourceRoots != null) {
       // add the source roots
       for (VariablePath path : sourceRoots) {
-        fileBasedContentProvider.getFileBasedContent().addRootPath(path, ProjectContentType.SOURCE);
+        fileBasedContentProvider.addRootPath(path, ProjectContentType.SOURCE);
       }
     }
     // add the analyze flag

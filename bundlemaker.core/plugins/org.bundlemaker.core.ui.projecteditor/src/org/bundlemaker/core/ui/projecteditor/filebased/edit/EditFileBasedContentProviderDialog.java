@@ -9,7 +9,6 @@ import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
 import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.bundlemaker.core.ui.FormLayoutUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
@@ -33,43 +32,43 @@ import org.eclipse.swt.widgets.Text;
  * 
  */
 public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
-  private Text                          _nameTextField;
+  private Text                                  _nameTextField;
 
-  private Text                          _versionTextField;
+  private Text                                  _versionTextField;
 
-  private Button                        _analyzeButton;
+  private Button                                _analyzeButton;
 
-  private Button                        _analyzeSourcesButton;
+  private Button                                _analyzeSourcesButton;
 
   /**
    * The original content or null if a new content is created with this dialog
    */
-  private final IModifiableProjectContentEntry _originalContent;
+  private final FileBasedProjectContentProvider _originalContent;
 
-  private ContentListBlock              _binariesContentList;
+  private ContentListBlock                      _binariesContentList;
 
-  private ContentListBlock              _sourcesContentList;
+  private ContentListBlock                      _sourcesContentList;
 
-  private String                        _name;
+  private String                                _name;
 
-  private String                        _version;
+  private String                                _version;
 
-  private java.util.List<String>        _binaryRoots;
+  private java.util.List<String>                _binaryRoots;
 
-  private java.util.List<String>        _sourceRoots;
+  private java.util.List<String>                _sourceRoots;
 
-  boolean                               _analyze        = true;
+  boolean                                       _analyze        = true;
 
-  boolean                               _analyzeSources = false;
+  boolean                                       _analyzeSources = false;
 
   public EditFileBasedContentProviderDialog(Shell shell, FileBasedProjectContentProvider existingContent) {
     super(shell);
     Assert.isNotNull(existingContent);
-    _originalContent = existingContent.getFileBasedContent();
+    _originalContent = existingContent;
     _name = _originalContent.getName();
     _version = _originalContent.getVersion();
-    _binaryRoots = stringList(_originalContent.getBinaryRootPaths());
-    _sourceRoots = stringList(_originalContent.getSourceRootPaths());
+    _binaryRoots = stringList(_originalContent.getBinaryPaths());
+    _sourceRoots = stringList(_originalContent.getSourcePaths());
     _analyze = _originalContent.isAnalyze();
     _analyzeSources = _originalContent.getAnalyzeMode() == AnalyzeMode.BINARIES_AND_SOURCES;
 
