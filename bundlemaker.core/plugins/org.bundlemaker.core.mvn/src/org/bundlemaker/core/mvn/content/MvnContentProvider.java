@@ -17,10 +17,7 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
-import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -55,28 +52,16 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
   /** - */
   @Expose
   @SerializedName("mvnArtifacts")
-  private List<MvnArtifactType>      _mvnArtifactTypes;
+  private List<MvnArtifactType>    _mvnArtifactTypes;
 
   /** the mvn scope */
-  private static final String        SCOPE_COMPILE = "compile";
-
-  /** TODO */
-  // TODO: Move-up
-  private int                        _counter      = 0;
-
-  /** cached list of all file based contents */
-  // TODO: Move-up
-  private List<IProjectContentEntry> _fileBasedContents;
-
-  /** the BundleMakerProject */
-  // TODO: Move-up
-  private IBundleMakerProject        _bundleMakerProject;
+  private static final String      SCOPE_COMPILE = "compile";
 
   /** - */
-  private IAetherRepositoryAdapter   _repositoryAdapter;
+  private IAetherRepositoryAdapter _repositoryAdapter;
 
   /** - */
-  private RepositorySystemSession    _currentSystemSession;
+  private RepositorySystemSession  _currentSystemSession;
 
   /**
    * <p>
@@ -86,7 +71,6 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
   public MvnContentProvider() {
 
     // initialize
-    _fileBasedContents = new LinkedList<IProjectContentEntry>();
     _mvnArtifactTypes = new LinkedList<MvnArtifactType>();
   }
 
@@ -95,7 +79,6 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   @Override
   protected void init(IProjectDescription description) {
-
     //
     _repositoryAdapter = new DispatchingRepositoryAdapter(description.getBundleMakerProject());
   }
@@ -144,20 +127,12 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    * {@inheritDoc}
    */
   @Override
-  public List<IProjectContentEntry> getBundleMakerProjectContent(IProgressMonitor progressMonitor,
-      final IBundleMakerProject bundleMakerProject) throws CoreException {
-
-    Assert.isNotNull(bundleMakerProject);
+  protected void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor) throws CoreException {
 
     // only reload content if the fileBasedContents are not initialized yet
-    if (_fileBasedContents != null && !_fileBasedContents.isEmpty()) {
-      return _fileBasedContents;
-    } else {
-      reloadContent(true, false, bundleMakerProject);
+    if (getFileBasedContents().isEmpty()) {
+      reloadContent(true, false, getBundleMakerProject());
     }
-
-    // return the result
-    return _fileBasedContents;
   }
 
   /**
@@ -169,16 +144,11 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
   public void reloadContent(final boolean useRemoteRepository, final boolean reloadFromRemote,
       IBundleMakerProject bundleMakerProject) throws CoreException {
 
-    // set the IBundleMakerProject
-    // TODO: Move-up
-    _bundleMakerProject = bundleMakerProject;
-
     // create a new session
     _currentSystemSession = _repositoryAdapter.newSession();
 
     // create the result list
-    // TODO: Move-up
-    _fileBasedContents.clear();
+    clearArtifactList();
 
     // iterate over all the specified mvn artifacts
     for (final MvnArtifactType artifactIdentifier : _mvnArtifactTypes) {
@@ -270,7 +240,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   public void clearArtifactList() {
     _mvnArtifactTypes.clear();
-    _fileBasedContents.clear();
+    clearArtifactList();
   }
 
   /**
@@ -365,11 +335,19 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
           mvnArtifact.getArtifactId(), mvnArtifact.getVersion());
 
       //
-      boolean analyze = downloadSources;
+      AnalyzeMode analyzeMode = AnalyzeMode.DO_NOT_ANALYZE;
+      if (downloadSources) {
+        if (sourceFile != null) {
+          analyzeMode = AnalyzeMode.BINARIES_AND_SOURCES;
+        } else {
+          analyzeMode = AnalyzeMode.BINARIES_ONLY;
+        }
+      }
 
       //
-      IModifiableProjectContentEntry fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
-          moduleIdentifier.getVersion(), binaryFile, sourceFile, _bundleMakerProject, analyze);
+      IProjectContentEntry fileBasedContent = createFileBasedContent(moduleIdentifier.getName(),
+          moduleIdentifier.getVersion(), new File[] { binaryFile }, sourceFile == null ? new File[] {}
+              : new File[] { sourceFile }, analyzeMode);
 
       // set user attributes
       fileBasedContent.getUserAttributes().put(MvnArtifactConverter.ORIGINAL_MVN_GROUP_ID, mvnArtifact.getGroupId());
@@ -384,55 +362,6 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
 
     //
     return true;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param contentName
-   * @param contentVersion
-   * @param binaryPath
-   * @param sourcePath
-   * @throws CoreException
-   */
-  // TODO: Move-up
-  private IModifiableProjectContentEntry createFileBasedContent(String contentName, String contentVersion,
-      File binaryPath, File sourcePath, IBundleMakerProject bundleMakerProject, boolean analyze) throws CoreException {
-
-    // asserts
-    Assert.isNotNull(contentName);
-    Assert.isNotNull(contentVersion);
-    Assert.isNotNull(binaryPath);
-    Assert.isNotNull(bundleMakerProject);
-
-    IModifiableProjectContentEntry result = createNewContentEntry();
-    if (!analyze) {
-      result.setAnalyzeMode(AnalyzeMode.DO_NOT_ANALYZE);
-    } else {
-      if (sourcePath != null) {
-        result.setAnalyzeMode(AnalyzeMode.BINARIES_AND_SOURCES);
-      } else {
-        result.setAnalyzeMode(AnalyzeMode.BINARIES_ONLY);
-      }
-    }
-    result.setId(getId() + _counter++);
-    result.setName(contentName);
-    result.setVersion(contentVersion);
-
-    result.addRootPath(new VariablePath(binaryPath.getAbsolutePath()), ProjectContentType.BINARY);
-
-    if (sourcePath != null) {
-      result.addRootPath(new VariablePath(sourcePath.getAbsolutePath()), ProjectContentType.SOURCE);
-    }
-
-    //
-    result.initialize(bundleMakerProject.getProjectDescription());
-
-    //
-    _fileBasedContents.add(result);
-
-    return result;
   }
 
   /**

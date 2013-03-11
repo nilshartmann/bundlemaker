@@ -20,7 +20,6 @@
 					<systemProperties>
 						<org.bundlemaker.core.itestframework.vm_install>${org.bundlemaker.core.itestframework.vm_install}</org.bundlemaker.core.itestframework.vm_install>
 					</systemProperties>
-					<testFailureIgnore>true</testFailureIgnore>
 					<includes>
 						<include>org/bundlemaker/core/itest/JdtTest.java</include>
 						<include>org/bundlemaker/core/itest/simple_artifact_model/analysis/*Test.java</include>

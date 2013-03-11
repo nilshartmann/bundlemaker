@@ -1,6 +1,10 @@
 package org.bundlemaker.core.projectdescription;
 
+import junit.framework.Assert;
+
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.junit.Test;
 
 /**
@@ -19,19 +23,13 @@ public class VariablePathTest {
    */
   @Test
   public void test() throws CoreException {
-
-    //
     VariablePath variablePath = new VariablePath("${workspace_loc}");
-
-    System.out.println(variablePath.getResolvedPath());
+    IPath workspacePath = ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
+    Assert.assertEquals(workspacePath, variablePath.getResolvedPath());
   }
 
   @Test(expected = CoreException.class)
   public void testNonExistingVariable() throws CoreException {
-
-    //
-    VariablePath variablePath = new VariablePath("${pi_pa_po}");
-
-    System.out.println(variablePath.getResolvedPath());
+    new VariablePath("${pi_pa_po}").getResolvedPath();
   }
 }

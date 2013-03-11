@@ -17,7 +17,6 @@ import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditFileBasedContentProviderDialog;
 import org.bundlemaker.core.ui.projecteditor.filebased.edit.EditProjectPathDialog;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditor;
@@ -69,7 +68,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public boolean canChangeAnalyzeMode(IProjectContentProvider projectContentProvider, Object element) {
-    return (element instanceof FileBasedProjectContentProvider || element instanceof IModifiableProjectContentEntry);
+    return (element instanceof FileBasedProjectContentProvider);
   }
 
   /*
@@ -81,18 +80,8 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
    */
   @Override
   public void setAnalyzeMode(IProjectContentProvider projectContentProvider, Object element, AnalyzeMode analyzeMode) {
-    IModifiableProjectContentEntry fileBasedContent = null;
 
-    if (element instanceof IModifiableProjectContentEntry) {
-      fileBasedContent = (IModifiableProjectContentEntry) element;
-    } else if (element instanceof FileBasedProjectContentProvider) {
-      fileBasedContent = ((FileBasedProjectContentProvider) element).getFileBasedContent();
-    }
-
-    if (fileBasedContent != null) {
-      fileBasedContent.setAnalyzeMode(analyzeMode);
-    }
-
+    ((FileBasedProjectContentProvider) projectContentProvider).setAnalyzeMode(analyzeMode);
   }
 
   @Override
@@ -137,11 +126,11 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
       EditProjectPathDialog editDialog = new EditProjectPathDialog(shell, projectPath);
       if (editDialog.open() == Window.OK) {
         // remove old path
-        fileBasedContentProvider.getFileBasedContent().removeRootPath(path, projectPath.getContentType());
+        fileBasedContentProvider.removeRootPath(path, projectPath.getContentType());
 
         // add modified path
         ProjectPath modifiedPath = editDialog.getEntry();
-        fileBasedContentProvider.getFileBasedContent().addRootPath(modifiedPath.getPath(),
+        fileBasedContentProvider.addRootPath(modifiedPath.getPath(),
             modifiedPath.getContentType());
 
         return true;
@@ -176,9 +165,7 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
 
     ProjectPath pathToRemove = (ProjectPath) selectedObject;
 
-    fileBasedContentProvider.getFileBasedContent()
-        .removeRootPath(pathToRemove.getPath(), pathToRemove.getContentType());
-
+    fileBasedContentProvider.removeRootPath(pathToRemove.getPath(), pathToRemove.getContentType());
   }
 
   /*
@@ -201,13 +188,11 @@ public class FileBasedContentProviderEditor implements IProjectContentProviderEd
       return false;
     }
 
-    IModifiableProjectContentEntry content = fileBasedContentProvider.getFileBasedContent();
-    content.setName(page.getName());
-    content.setVersion(page.getVersion());
-    content.setBinaryPaths(page.getBinaryPaths().toArray(new String[0]));
-    content.setSourcePaths(page.getSourcePaths().toArray(new String[0]));
-
-    content.setAnalyzeMode(getAnalyzeMode(page.isAnalyze(), page.isAnalyzeSources()));
+    fileBasedContentProvider.setName(page.getName());
+    fileBasedContentProvider.setVersion(page.getVersion());
+    fileBasedContentProvider.setBinaryPaths(page.getBinaryPaths().toArray(new String[0]));
+    fileBasedContentProvider.setSourcePaths(page.getSourcePaths().toArray(new String[0]));
+    fileBasedContentProvider.setAnalyzeMode(getAnalyzeMode(page.isAnalyze(), page.isAnalyzeSources()));
 
     return true;
 

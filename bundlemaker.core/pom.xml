@@ -39,7 +39,7 @@
 		<module>features/org.bundlemaker.experimental.feature</module>
 		<module>itests/org.bundlemaker.core.itestframework</module>
 		<module>itests/org.bundlemaker.core.itest</module>
-		<module>repo/bundlemaker.core.repo</module>
+		<module>tycho/bundlemaker.core.tycho.p2</module>
 	</modules>
 
 	<!-- tycho requires maven >= 3.0 -->

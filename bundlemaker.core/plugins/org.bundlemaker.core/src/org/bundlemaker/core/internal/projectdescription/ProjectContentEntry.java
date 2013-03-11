@@ -14,14 +14,10 @@ import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.IModifiableProjectContentEntry;
 import org.bundlemaker.core.resource.IResource;
 import org.bundlemaker.core.util.FileUtils;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * <p>
@@ -30,11 +26,29 @@ import com.google.gson.annotations.SerializedName;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class ProjectContentEntry implements IModifiableProjectContentEntry {
+public class ProjectContentEntry implements IProjectContentEntry {
 
   /** the empty resource standin set */
   private static final Set<IResourceStandin> EMPTY_RESOURCE_STANDIN_SET = Collections
                                                                             .unmodifiableSet(new HashSet<IResourceStandin>());
+
+  /** the internal identifier of this content entry */
+  private String                             _id;
+
+  /** the name of this entry */
+  private String                             _name;
+
+  /** the version of this entry */
+  private String                             _version;
+
+  /** the analyze mode of this entry */
+  private AnalyzeMode                        _analyze;
+
+  /** the binary pathes */
+  protected Set<VariablePath>                _binaryPaths;
+
+  /** the source pathes */
+  private Set<VariablePath>                  _sourcePaths;
 
   /** - */
   private static final Set<VariablePath>     EMPTY_ROOTPATH_SET         = Collections
@@ -42,36 +56,6 @@ public class ProjectContentEntry implements IModifiableProjectContentEntry {
 
   /** indicates that the content has been initialized */
   private boolean                            _isInitialized;
-
-  /** the internal identifier of this content entry */
-  @Expose
-  @SerializedName("id")
-  private String                             _id;
-
-  /** the name of this entry */
-  @Expose
-  @SerializedName("name")
-  private String                             _name;
-
-  /** the version of this entry */
-  @Expose
-  @SerializedName("version")
-  private String                             _version;
-
-  /** the analyze mode of this entry */
-  @Expose
-  @SerializedName("analyse")
-  private AnalyzeMode                        _analyze;
-
-  /** the binary pathes */
-  @Expose
-  @SerializedName("binary-paths")
-  protected Set<VariablePath>                _binaryPaths;
-
-  /** the source pathes */
-  @Expose
-  @SerializedName("source-paths")
-  private Set<VariablePath>                  _sourcePaths;
 
   /** the set of binary resource standins */
   private Set<IResourceStandin>              _binaryResourceStandins;
@@ -655,5 +639,4 @@ public class ProjectContentEntry implements IModifiableProjectContentEntry {
     // return the source paths
     return _sourcePaths;
   }
-
 }

@@ -1,5 +1,6 @@
 package org.bundlemaker.core.itest._framework;
 
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
@@ -48,6 +49,8 @@ public class GroupTransformation implements IUndoableTransformation {
    */
   @Override
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor monitor) {
+    
+    //
     _modifiableResourceModule = modularizedSystem.getModifiableResourceModule(_moduleIdentifier);
     _oldGroup = _modifiableResourceModule.getClassification();
     _modifiableResourceModule.setClassification(_group);

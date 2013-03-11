@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
-
-<target name="jedit" sequenceNumber="0">
-<locations>
-<location path="${project_loc:bm.demo.jedit.launcher}/osgi" type="Directory"/>
-</locations>
-</target>
