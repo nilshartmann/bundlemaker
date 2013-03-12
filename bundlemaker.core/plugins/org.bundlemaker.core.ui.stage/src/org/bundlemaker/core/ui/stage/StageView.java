@@ -12,6 +12,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -39,9 +40,13 @@ public class StageView extends ViewPart {
 
   private DrillDownAdapter                   drillDownAdapter;
 
-  private Action                             _pinStageAction;
-
   private Action                             _autoExpandAction;
+
+  private AddModeAction                      _autoAddModeAction;
+
+  private AddModeAction                      _autoAddChildrenModeAction;
+
+  private AddModeAction                      _dontAutoAddModeAction;
 
   private boolean                            _autoExpand     = true;
 
@@ -74,8 +79,12 @@ public class StageView extends ViewPart {
     ArtifactStage.instance().addArtifactStageChangeListener(new IArtifactStageChangeListener() {
 
       @Override
-      public void artifactStateChanged() {
-        refreshTreeContent();
+      public void artifactStateChanged(ArtifactStageChangedEvent event) {
+        if (event.getReason().hasContentChanged()) {
+          refreshTreeContent();
+        } else {
+          artifactStageConfigurationChanged();
+        }
       }
     });
 
@@ -137,8 +146,15 @@ public class StageView extends ViewPart {
   }
 
   private void fillLocalPullDown(IMenuManager manager) {
+
+    manager.add(_autoAddModeAction);
+    manager.add(_autoAddChildrenModeAction);
+    manager.add(_dontAutoAddModeAction);
+
+    manager.add(new Separator());
+
+    manager.add(_autoExpandAction);
     // manager.add(action1);
-    // manager.add(new Separator());
     // manager.add(action2);
   }
 
@@ -152,14 +168,21 @@ public class StageView extends ViewPart {
   }
 
   private void fillLocalToolBar(IToolBarManager manager) {
-    manager.add(_pinStageAction);
-    manager.add(_autoExpandAction);
+
+    manager.add(_autoAddModeAction);
+    manager.add(_autoAddChildrenModeAction);
+    manager.add(_dontAutoAddModeAction);
+
+    // manager.add(_pinStageAction);
     // drillDownAdapter.addNavigationActions(manager);
   }
 
   private void makeActions() {
-    _pinStageAction = new PinSelectionAction();
     _autoExpandAction = new AutoExpandAction();
+
+    _autoAddChildrenModeAction = new AddModeAction(ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
+    _autoAddModeAction = new AddModeAction(ArtifactStageAddMode.autoAddSelectedArtifacts);
+    _dontAutoAddModeAction = new AddModeAction(ArtifactStageAddMode.doNotAutomaticallyAddArtifacts);
   }
 
   /**
@@ -198,25 +221,6 @@ public class StageView extends ViewPart {
     _treeViewer.getControl().setFocus();
   }
 
-  class PinSelectionAction extends Action {
-    public PinSelectionAction() {
-      super("Pin Stage", IAction.AS_CHECK_BOX);
-      setToolTipText("Pin Stage");
-      // setImageDescriptor(TransformationHistoryImages.PIN_SELECTION.getImageDescriptor());
-      update();
-    }
-
-    @Override
-    public void run() {
-      getArtifactStage().setStagePinned(isChecked());
-    }
-
-    public void update() {
-      setChecked(getArtifactStage().isStagePinned());
-    }
-
-  }
-
   protected ArtifactStage getArtifactStage() {
     return ArtifactStage.instance();
   }
@@ -238,6 +242,41 @@ public class StageView extends ViewPart {
     public void update() {
       setChecked(isAutoExpand());
     }
+  }
+
+  private class AddModeAction extends Action {
+    private final ArtifactStageAddMode _addMode;
+
+    AddModeAction(ArtifactStageAddMode mode) {
+      super(mode.toString(), IAction.AS_CHECK_BOX);
+
+      _addMode = mode;
+
+      update();
+    }
+
+    @Override
+    public void run() {
+      getArtifactStage().setAddMode(_addMode);
+    }
+
+    public void update() {
+      setChecked(_addMode == getAddMode());
+    }
+  }
+
+  protected void artifactStageConfigurationChanged() {
+    updateAddModeActions();
+  }
+
+  protected void updateAddModeActions() {
+    _autoAddChildrenModeAction.update();
+    _autoAddModeAction.update();
+    _dontAutoAddModeAction.update();
+  }
+
+  protected ArtifactStageAddMode getAddMode() {
+    return getArtifactStage().getAddMode();
   }
 
 }

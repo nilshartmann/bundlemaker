@@ -13,6 +13,7 @@ package org.bundlemaker.core.ui.stage;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -30,7 +31,7 @@ public class ArtifactStage {
 
   private static ArtifactStage                                    _instance;
 
-  private boolean                                                 _stagePinned         = false;
+  private ArtifactStageAddMode                                    _addMode             = ArtifactStageAddMode.autoAddSelectedArtifacts;
 
   private List<IBundleMakerArtifact>                              _stagedArtifacts     = new LinkedList<IBundleMakerArtifact>();
 
@@ -70,40 +71,57 @@ public class ArtifactStage {
     return _stagedArtifacts;
   }
 
-  /**
-   * @param selectionPinnned
-   *          the selectionPinnned to set
-   */
-  public void setStagePinned(boolean selectionPinnned) {
-    _stagePinned = selectionPinnned;
+  public void setAddMode(ArtifactStageAddMode addMode) {
+    ArtifactStageAddMode oldMode = _addMode;
+    this._addMode = checkNotNull(addMode);
+
+    if (!_addMode.equals(oldMode)) {
+      fireArtifactStageChange(ArtifactStageChangeReason.configurationChanged);
+    }
   }
 
   /**
-   * @return the selectionPinnned
+   * @return the addMode
    */
-  public boolean isStagePinned() {
-    return _stagePinned;
+  public ArtifactStageAddMode getAddMode() {
+    return _addMode;
   }
 
   protected void projectExplorerSelectionChanged(IArtifactSelection newSelection) {
     // Selection in Project Explorer changed
 
-    if (isStagePinned() && hasStagedArtifacts()) {
-      // ignore
+    if (_addMode == ArtifactStageAddMode.doNotAutomaticallyAddArtifacts) {
       return;
     }
 
     if (newSelection == null) {
       setStagedArtifacts(new LinkedList<IBundleMakerArtifact>());
-    } else {
-      setStagedArtifacts(new LinkedList(newSelection.getSelectedArtifacts()));
+      return;
     }
+
+    final List<IBundleMakerArtifact> selectedArtifacts = newSelection.getSelectedArtifacts();
+    List<IBundleMakerArtifact> stagedArtifacts = new LinkedList<IBundleMakerArtifact>(selectedArtifacts);
+
+    if (_addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts) {
+      // add children of selected Artifacts
+
+      System.out.println("STAGED ARTIFACTS: " + stagedArtifacts);
+
+      for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
+        Collection<IBundleMakerArtifact> children = iBundleMakerArtifact.getChildren();
+
+        System.out.println("  ADD CHILDREN: " + children);
+        stagedArtifacts.addAll(children);
+      }
+    }
+
+    setStagedArtifacts(stagedArtifacts);
   }
 
   void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
     _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
 
-    fireArtifactStageChange();
+    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
 
     publishStagedArtifacts();
 
@@ -130,9 +148,12 @@ public class ArtifactStage {
 
   }
 
-  protected void fireArtifactStageChange() {
+  protected void fireArtifactStageChange(ArtifactStageChangeReason reason) {
+
+    final ArtifactStageChangedEvent event = new ArtifactStageChangedEvent(reason);
+
     for (IArtifactStageChangeListener listener : _stageChangeListener) {
-      listener.artifactStateChanged();
+      listener.artifactStateChanged(event);
     }
   }
 
@@ -145,9 +166,9 @@ public class ArtifactStage {
       _stagedArtifacts.add(iBundleMakerArtifact);
     }
 
-    fireArtifactStageChange();
+    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
 
     publishStagedArtifacts();
-
   }
+
 }

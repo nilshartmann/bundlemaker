@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Bundlemaker project team.
+ * Copyright (c) 2013 Bundlemaker project team.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,8 +15,16 @@ package org.bundlemaker.core.ui.stage;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public interface IArtifactStageChangeListener {
+public enum ArtifactStageChangeReason {
 
-  public void artifactStateChanged(ArtifactStageChangedEvent event);
+  contentChanged, configurationChanged;
+
+  public boolean hasContentChanged() {
+    return this == contentChanged;
+  }
+
+  public boolean hasConfigurationChanged() {
+    return this == configurationChanged;
+  }
 
 }
