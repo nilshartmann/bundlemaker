@@ -1,6 +1,8 @@
 package org.bundlemaker.core.ui.stage;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -15,6 +17,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.widgets.Composite;
@@ -49,6 +52,8 @@ public class StageView extends ViewPart {
   private AddModeAction                      _dontAutoAddModeAction;
 
   private ClearStageAction                   _clearStageAction;
+
+  private RemoveArtifactsAction              _removeArtifactsAction;
 
   private boolean                            _autoExpand     = true;
 
@@ -163,6 +168,10 @@ public class StageView extends ViewPart {
   }
 
   private void fillContextMenu(IMenuManager manager) {
+    IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
+    _removeArtifactsAction.setEnabled(selection != null && !selection.isEmpty());
+    manager.add(_removeArtifactsAction);
+
     // manager.add(action1);
     // manager.add(action2);
     // manager.add(new Separator());
@@ -188,6 +197,7 @@ public class StageView extends ViewPart {
     _autoExpandAction = new AutoExpandAction();
 
     _clearStageAction = new ClearStageAction();
+    _removeArtifactsAction = new RemoveArtifactsAction();
 
     _autoAddChildrenModeAction = new AddModeAction(ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
     _autoAddModeAction = new AddModeAction(ArtifactStageAddMode.autoAddSelectedArtifacts);
@@ -302,6 +312,29 @@ public class StageView extends ViewPart {
     public void run() {
       getArtifactStage().setStagedArtifacts(null);
     }
+  }
 
+  class RemoveArtifactsAction extends Action {
+    RemoveArtifactsAction() {
+      super("Remove from Stage", IAction.AS_PUSH_BUTTON);
+    }
+
+    @Override
+    public void run() {
+      IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
+      if (selection == null || selection.isEmpty()) {
+        return;
+      }
+
+      List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
+      @SuppressWarnings("unchecked")
+      Iterator<IBundleMakerArtifact> iterator = selection.iterator();
+      while (iterator.hasNext()) {
+        artifacts.add(iterator.next());
+      }
+
+      getArtifactStage().removeStagedArtifacts(artifacts);
+
+    }
   }
 }

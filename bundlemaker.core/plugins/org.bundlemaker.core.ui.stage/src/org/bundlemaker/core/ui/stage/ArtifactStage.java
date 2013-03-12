@@ -179,4 +179,15 @@ public class ArtifactStage {
     publishStagedArtifacts();
   }
 
+  /**
+   * @param artifacts
+   */
+  public void removeStagedArtifacts(List<IBundleMakerArtifact> artifacts) {
+    _stagedArtifacts.removeAll(artifacts);
+
+    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
+
+    publishStagedArtifacts();
+  }
+
 }
