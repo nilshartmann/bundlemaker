@@ -87,6 +87,14 @@ public class ArtifactStage {
     return _addMode;
   }
 
+  public boolean isStaged(IBundleMakerArtifact artifact) {
+    if (artifact == null) {
+      return false;
+    }
+
+    return _stagedArtifacts.contains(artifact);
+  }
+
   protected void projectExplorerSelectionChanged(IArtifactSelection newSelection) {
     // Selection in Project Explorer changed
 

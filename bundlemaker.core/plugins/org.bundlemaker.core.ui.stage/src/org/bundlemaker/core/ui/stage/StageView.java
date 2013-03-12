@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IVirtualRoot;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.eclipse.jface.action.Action;
@@ -16,11 +18,15 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -70,6 +76,7 @@ public class StageView extends ViewPart {
   public void createPartControl(Composite parent) {
 
     _treeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(parent);
+    _treeViewer.setLabelProvider(new StageViewLabelProvider());
 
     // viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL |
     // SWT.V_SCROLL);
@@ -336,5 +343,39 @@ public class StageView extends ViewPart {
       getArtifactStage().removeStagedArtifacts(artifacts);
 
     }
+  }
+
+  class StageViewLabelProvider extends ArtifactTreeLabelProvider implements IColorProvider {
+
+    @Override
+    public Color getForeground(Object element) {
+
+      boolean stagedArtifact = false;
+
+      if (element instanceof IBundleMakerArtifact) {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) element;
+        if (bundleMakerArtifact instanceof IVirtualRoot) {
+          bundleMakerArtifact = bundleMakerArtifact.getRoot();
+
+        }
+        System.out.println("Artifact: " + bundleMakerArtifact);
+        System.out.println("  STAGED ARTIFACTS: " + getArtifactStage().getStagedArtifacts());
+        stagedArtifact = getArtifactStage().isStaged(bundleMakerArtifact);
+      }
+
+      //
+      if (stagedArtifact) {
+        return Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+      }
+
+      //
+      return Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+    }
+
+    @Override
+    public Color getBackground(Object element) {
+      return null;
+    }
+
   }
 }
