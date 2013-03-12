@@ -10,7 +10,7 @@ public interface IProviderSelection {
 
   /**
    * <p>
-   * Returns the logical identifier of the selection (e.g. {@link Selection#MAIN_ARTIFACT_SELECTION_ID}).
+   * Returns the logical identifier of the selection (e.g. {@link Selection#ARTIFACT_STAGE_SELECTION_ID}).
    * </p>
    * 
    * @return

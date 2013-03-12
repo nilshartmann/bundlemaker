@@ -158,7 +158,7 @@ public class ArtifactStage {
   public void publishStagedArtifacts() {
     System.out.println("Set MAIN_SELECTION: " + _stagedArtifacts);
     Selection.instance().getArtifactSelectionService().setSelection(//
-        Selection.MAIN_ARTIFACT_SELECTION_ID, //
+        Selection.ARTIFACT_STAGE_SELECTION_ID, //
         StageSelection.STAGE_VIEW_SELECTION_PROVIDER_ID, //
         _stagedArtifacts);
 

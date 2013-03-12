@@ -165,7 +165,7 @@ public abstract class AbstractArtifactSelectionAwareViewPart extends AbstractPar
    * @return
    */
   protected String getArtifactSelectionId() {
-    return Selection.MAIN_ARTIFACT_SELECTION_ID;
+    return Selection.ARTIFACT_STAGE_SELECTION_ID;
   }
 
   protected abstract String getProviderId();
