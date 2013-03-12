@@ -48,6 +48,8 @@ public class StageView extends ViewPart {
 
   private AddModeAction                      _dontAutoAddModeAction;
 
+  private ClearStageAction                   _clearStageAction;
+
   private boolean                            _autoExpand     = true;
 
   /**
@@ -152,7 +154,9 @@ public class StageView extends ViewPart {
     manager.add(_dontAutoAddModeAction);
 
     manager.add(new Separator());
+    manager.add(_clearStageAction);
 
+    manager.add(new Separator());
     manager.add(_autoExpandAction);
     // manager.add(action1);
     // manager.add(action2);
@@ -169,6 +173,9 @@ public class StageView extends ViewPart {
 
   private void fillLocalToolBar(IToolBarManager manager) {
 
+    manager.add(_clearStageAction);
+    manager.add(new Separator());
+
     manager.add(_autoAddModeAction);
     manager.add(_autoAddChildrenModeAction);
     manager.add(_dontAutoAddModeAction);
@@ -179,6 +186,8 @@ public class StageView extends ViewPart {
 
   private void makeActions() {
     _autoExpandAction = new AutoExpandAction();
+
+    _clearStageAction = new ClearStageAction();
 
     _autoAddChildrenModeAction = new AddModeAction(ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
     _autoAddModeAction = new AddModeAction(ArtifactStageAddMode.autoAddSelectedArtifacts);
@@ -225,6 +234,20 @@ public class StageView extends ViewPart {
     return ArtifactStage.instance();
   }
 
+  protected void artifactStageConfigurationChanged() {
+    updateAddModeActions();
+  }
+
+  protected void updateAddModeActions() {
+    _autoAddChildrenModeAction.update();
+    _autoAddModeAction.update();
+    _dontAutoAddModeAction.update();
+  }
+
+  protected ArtifactStageAddMode getAddMode() {
+    return getArtifactStage().getAddMode();
+  }
+
   class AutoExpandAction extends Action {
     public AutoExpandAction() {
       super("Auto Expand", IAction.AS_CHECK_BOX);
@@ -265,18 +288,20 @@ public class StageView extends ViewPart {
     }
   }
 
-  protected void artifactStageConfigurationChanged() {
-    updateAddModeActions();
-  }
+  class ClearStageAction extends Action {
+    ClearStageAction() {
+      super("Clear Stage", IAction.AS_PUSH_BUTTON);
+    }
 
-  protected void updateAddModeActions() {
-    _autoAddChildrenModeAction.update();
-    _autoAddModeAction.update();
-    _dontAutoAddModeAction.update();
-  }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+      getArtifactStage().setStagedArtifacts(null);
+    }
 
-  protected ArtifactStageAddMode getAddMode() {
-    return getArtifactStage().getAddMode();
   }
-
 }

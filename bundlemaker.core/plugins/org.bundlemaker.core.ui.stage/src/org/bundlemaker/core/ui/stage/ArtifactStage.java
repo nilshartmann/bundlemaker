@@ -120,6 +120,12 @@ public class ArtifactStage {
     setStagedArtifacts(stagedArtifacts);
   }
 
+  /**
+   * Set a complete new list of staged artifacts
+   * 
+   * @param stagedArtifacts
+   *          the new staged artifacts. Might be null
+   */
   void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
     _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
 
