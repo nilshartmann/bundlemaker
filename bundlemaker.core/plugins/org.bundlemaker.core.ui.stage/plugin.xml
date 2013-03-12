@@ -19,10 +19,18 @@
 			<activeWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></activeWhen>
 			<enabledWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></enabledWhen>
 		</handler>
+
+		<handler class="org.bundlemaker.core.ui.stage.AddToStageHandler"
+		commandId="org.bundlemaker.core.ui.stage.AddToStageCommand">
+			<activeWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></activeWhen>
+			<enabledWhen><reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"/></enabledWhen>
+		</handler>
+
    </extension>
 
 	<extension point="org.eclipse.ui.commands">
 		<command id="org.bundlemaker.core.ui.stage.AnalyzeArtifactsCommand" name="Analyze Artifacts" />
+		<command id="org.bundlemaker.core.ui.stage.AddToStageCommand" name="Add to Stage" />
 	</extension>
 	
 	     <extension point="org.eclipse.ui.menus">
@@ -30,6 +38,11 @@
                   locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
                   <command
                         commandId="org.bundlemaker.core.ui.stage.AnalyzeArtifactsCommand"
+                        style="push">
+                        <visibleWhen checkEnabled="true"/>
+                  </command>
+                  <command
+                        commandId="org.bundlemaker.core.ui.stage.AddToStageCommand"
                         style="push">
                         <visibleWhen checkEnabled="true"/>
                   </command>

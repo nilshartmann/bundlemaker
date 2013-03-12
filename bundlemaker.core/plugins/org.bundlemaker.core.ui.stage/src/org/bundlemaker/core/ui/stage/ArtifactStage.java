@@ -13,7 +13,7 @@ package org.bundlemaker.core.ui.stage;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -28,15 +28,13 @@ import org.bundlemaker.core.ui.event.selection.Selection;
  */
 public class ArtifactStage {
 
-  private final static List<IBundleMakerArtifact>                 EMPTY_ARTIFACTS      = Collections.emptyList();
-
   private static ArtifactStage                                    _instance;
 
   private boolean                                                 _stagePinned         = false;
 
   private boolean                                                 _autoAnalyze         = true;
 
-  private List<IBundleMakerArtifact>                              _stagedArtifacts     = EMPTY_ARTIFACTS;
+  private List<IBundleMakerArtifact>                              _stagedArtifacts     = new LinkedList<IBundleMakerArtifact>();
 
   private final CopyOnWriteArraySet<IArtifactStageChangeListener> _stageChangeListener = new CopyOnWriteArraySet<IArtifactStageChangeListener>();
 
@@ -113,20 +111,20 @@ public class ArtifactStage {
     }
 
     if (newSelection == null) {
-      setStagedArtifacts(EMPTY_ARTIFACTS, isAutoAnalyze());
+      setStagedArtifacts(new LinkedList<IBundleMakerArtifact>(), isAutoAnalyze());
     } else {
       // publish changes if in auto-analyze mode or when there have been no
       // staged artifacts before (convenience)
       boolean publishChanges = isAutoAnalyze() || !hasStagedArtifacts();
 
-      setStagedArtifacts(newSelection.getSelectedArtifacts(), publishChanges);
+      setStagedArtifacts(new LinkedList(newSelection.getSelectedArtifacts()), publishChanges);
     }
   }
 
   void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts, boolean publishChanges) {
     List<IBundleMakerArtifact> oldArtifacts = _stagedArtifacts;
 
-    _stagedArtifacts = (stagedArtifacts == null ? EMPTY_ARTIFACTS : stagedArtifacts);
+    _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
 
     fireArtifactStageChange();
 
@@ -161,5 +159,22 @@ public class ArtifactStage {
     for (IArtifactStageChangeListener listener : _stageChangeListener) {
       listener.artifactStateChanged();
     }
+  }
+
+  /**
+   * @param selectedArtifacts
+   */
+  void addToStage(List<IBundleMakerArtifact> selectedArtifacts) {
+
+    for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
+      _stagedArtifacts.add(iBundleMakerArtifact);
+    }
+
+    fireArtifactStageChange();
+
+    if (_autoAnalyze) {
+      publishStagedArtifacts();
+    }
+
   }
 }
