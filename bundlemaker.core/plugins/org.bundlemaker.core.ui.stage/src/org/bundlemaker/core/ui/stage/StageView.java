@@ -2,7 +2,7 @@ package org.bundlemaker.core.ui.stage;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -333,11 +333,13 @@ public class StageView extends ViewPart {
         return;
       }
 
-      List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
+      LinkedHashSet<IBundleMakerArtifact> artifacts = new LinkedHashSet<IBundleMakerArtifact>();
       @SuppressWarnings("unchecked")
       Iterator<IBundleMakerArtifact> iterator = selection.iterator();
       while (iterator.hasNext()) {
-        artifacts.add(iterator.next());
+        IBundleMakerArtifact artifact = iterator.next();
+        artifacts.add(artifact);
+        artifacts.addAll(artifact.getChildren());
       }
 
       getArtifactStage().removeStagedArtifacts(artifacts);

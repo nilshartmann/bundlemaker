@@ -190,7 +190,7 @@ public class ArtifactStage {
   /**
    * @param artifacts
    */
-  public void removeStagedArtifacts(List<IBundleMakerArtifact> artifacts) {
+  public void removeStagedArtifacts(Collection<IBundleMakerArtifact> artifacts) {
     _stagedArtifacts.removeAll(artifacts);
 
     fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
