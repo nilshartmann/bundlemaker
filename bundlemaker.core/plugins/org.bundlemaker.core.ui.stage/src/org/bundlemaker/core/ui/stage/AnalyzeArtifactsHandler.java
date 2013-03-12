@@ -31,6 +31,6 @@ public class AnalyzeArtifactsHandler extends AbstractArtifactBasedHandler {
    */
   @Override
   protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
-    ArtifactStage.instance().setStagedArtifacts(selectedArtifacts, true);
+    ArtifactStage.instance().setStagedArtifacts(selectedArtifacts);
   }
 }

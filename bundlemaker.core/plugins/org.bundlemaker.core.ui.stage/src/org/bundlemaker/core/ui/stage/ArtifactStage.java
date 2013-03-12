@@ -32,8 +32,6 @@ public class ArtifactStage {
 
   private boolean                                                 _stagePinned         = false;
 
-  private boolean                                                 _autoAnalyze         = true;
-
   private List<IBundleMakerArtifact>                              _stagedArtifacts     = new LinkedList<IBundleMakerArtifact>();
 
   private final CopyOnWriteArraySet<IArtifactStageChangeListener> _stageChangeListener = new CopyOnWriteArraySet<IArtifactStageChangeListener>();
@@ -73,21 +71,6 @@ public class ArtifactStage {
   }
 
   /**
-   * @return the autoAnalyze
-   */
-  public boolean isAutoAnalyze() {
-    return _autoAnalyze;
-  }
-
-  /**
-   * @param autoAnalyze
-   *          the autoAnalyze to set
-   */
-  public void setAutoAnalyze(boolean autoAnalyze) {
-    _autoAnalyze = autoAnalyze;
-  }
-
-  /**
    * @param selectionPinnned
    *          the selectionPinnned to set
    */
@@ -111,26 +94,18 @@ public class ArtifactStage {
     }
 
     if (newSelection == null) {
-      setStagedArtifacts(new LinkedList<IBundleMakerArtifact>(), isAutoAnalyze());
+      setStagedArtifacts(new LinkedList<IBundleMakerArtifact>());
     } else {
-      // publish changes if in auto-analyze mode or when there have been no
-      // staged artifacts before (convenience)
-      boolean publishChanges = isAutoAnalyze() || !hasStagedArtifacts();
-
-      setStagedArtifacts(new LinkedList(newSelection.getSelectedArtifacts()), publishChanges);
+      setStagedArtifacts(new LinkedList(newSelection.getSelectedArtifacts()));
     }
   }
 
-  void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts, boolean publishChanges) {
-    List<IBundleMakerArtifact> oldArtifacts = _stagedArtifacts;
-
+  void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
     _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
 
     fireArtifactStageChange();
 
-    if (publishChanges) {
-      publishStagedArtifacts();
-    }
+    publishStagedArtifacts();
 
   }
 
@@ -172,9 +147,7 @@ public class ArtifactStage {
 
     fireArtifactStageChange();
 
-    if (_autoAnalyze) {
-      publishStagedArtifacts();
-    }
+    publishStagedArtifacts();
 
   }
 }

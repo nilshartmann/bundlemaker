@@ -12,7 +12,6 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -45,10 +44,6 @@ public class StageView extends ViewPart {
   private Action                             _autoExpandAction;
 
   private boolean                            _autoExpand     = true;
-
-  private Action                             _analyzeAction;
-
-  private Action                             _autoAnalyzeAction;
 
   /**
    * The constructor.
@@ -157,9 +152,6 @@ public class StageView extends ViewPart {
   }
 
   private void fillLocalToolBar(IToolBarManager manager) {
-    manager.add(_analyzeAction);
-    manager.add(_autoAnalyzeAction);
-    manager.add(new Separator());
     manager.add(_pinStageAction);
     manager.add(_autoExpandAction);
     // drillDownAdapter.addNavigationActions(manager);
@@ -168,8 +160,6 @@ public class StageView extends ViewPart {
   private void makeActions() {
     _pinStageAction = new PinSelectionAction();
     _autoExpandAction = new AutoExpandAction();
-    _analyzeAction = new AnalyzeAction();
-    _autoAnalyzeAction = new AutoAnalyzeAction();
   }
 
   /**
@@ -247,36 +237,6 @@ public class StageView extends ViewPart {
 
     public void update() {
       setChecked(isAutoExpand());
-    }
-  }
-
-  class AutoAnalyzeAction extends Action {
-    public AutoAnalyzeAction() {
-      super("Auto Analyze", IAction.AS_CHECK_BOX);
-      setToolTipText("Auto Analyze staged artifacts");
-      // setImageDescriptor(TransformationHistoryImages.PIN_SELECTION.getImageDescriptor());
-      update();
-    }
-
-    @Override
-    public void run() {
-      getArtifactStage().setAutoAnalyze(isChecked());
-
-    }
-
-    public void update() {
-      setChecked(getArtifactStage().isAutoAnalyze());
-    }
-  }
-
-  class AnalyzeAction extends Action {
-    public AnalyzeAction() {
-      super("Analyze");
-    }
-
-    @Override
-    public void run() {
-      getArtifactStage().publishStagedArtifacts();
     }
   }
 
