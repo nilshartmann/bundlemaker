@@ -100,9 +100,11 @@ public class ArtifactStage {
     }
 
     final List<IBundleMakerArtifact> selectedArtifacts = newSelection.getSelectedArtifacts();
-    List<IBundleMakerArtifact> stagedArtifacts = new LinkedList<IBundleMakerArtifact>(selectedArtifacts);
+    List<IBundleMakerArtifact> stagedArtifacts = new LinkedList<IBundleMakerArtifact>();
+    if (_addMode == ArtifactStageAddMode.autoAddSelectedArtifacts) {
+      stagedArtifacts.addAll(selectedArtifacts);
 
-    if (_addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts) {
+    } else if (_addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts) {
       // add children of selected Artifacts
 
       System.out.println("STAGED ARTIFACTS: " + stagedArtifacts);
