@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.bundlemaker.thirdparty</groupId>
+		<artifactId>org.bundlemaker.thirdparty.tycho.parent</artifactId>
+		<version>1.0.0</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>org.bundlemaker.thirdparty.p2</artifactId>
+	<packaging>eclipse-repository</packaging>
+
+	<!--build> <extensions> <extension> <groupId>org.apache.maven.wagon</groupId> 
+		<artifactId>wagon-ftp</artifactId> <version>2.4</version> </extension> </extensions> 
+		</build> profiles> <profile> <id>uploadRepo</id> <properties> <ftp.url>ftp://www.wuetherich.com</ftp.url> 
+		<ftp.toDir>.</ftp.toDir> <repo.path>${project.build.directory}/repository/</repo.path> 
+		</properties> <build> <plugins> <plugin> <groupId>org.codehaus.mojo</groupId> 
+		<artifactId>wagon-maven-plugin</artifactId> <version>1.0-beta-4</version> 
+		<executions> <execution> <id>upload-repo</id> <phase>install</phase> <goals> 
+		<goal>upload</goal> </goals> <configuration> <fromDir>${repo.path}</fromDir> 
+		<includes>**</includes> <toDir>.</toDir> <url>${ftp.url}</url> <serverId>bundlemakerP2Repo</serverId> 
+		</configuration> </execution> </executions> </plugin> </plugins> </build> 
+		</profile> </profiles -->
+
+	<dependencies>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core</artifactId>
+			<version>${tinkerpop-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core.source</artifactId>
+			<version>${tinkerpop-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>com.google.guava.source</artifactId>
+			<version>14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>com.google.gson.source</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+	</dependencies>
+
+</project>
