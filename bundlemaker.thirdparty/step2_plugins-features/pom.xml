@@ -21,11 +21,8 @@
 	</modules>
 
 	<repositories>
-		<repository>
-			<id>juno</id>
-			<layout>p2</layout>
-			<url>http://download.eclipse.org/releases/juno</url>
-		</repository>
+		<!-- repository> <id>juno</id> <layout>p2</layout> <url>http://download.eclipse.org/releases/juno</url> 
+			</repository -->
 		<repository>
 			<id>bndlr</id>
 			<layout>p2</layout>
