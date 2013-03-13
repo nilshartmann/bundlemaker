@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="BundleMaker Target Definition" sequenceNumber="81">
+<?pde version="3.8"?><target name="BundleMaker Target Definition" sequenceNumber="83">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="4.2.2.M20130204-1200"/>
-<repository location="http://download.eclipse.org/releases/juno"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.zest.sdk.feature.group" version="2.0.0.201210200125"/>
-<repository location="https://hudson.eclipse.org/hudson/job/gef-zest-nightly/lastSuccessfulBuild/artifact/targetPlatform/"/>
+<unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.2.RELEASE"/>
+<unit id="org.bundlemaker.com.db4o.feature.feature.group" version="8.0.184.15484"/>
+<unit id="org.bundlemaker.com.google.feature.feature.group" version="1.0.0"/>
+<unit id="org.bundlemaker.com.tinkerpop.feature.feature.group" version="2.2.0"/>
+<repository location="http://www.bundlemaker.org/p2-thirdparty"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.draw2d.feature.group" version="3.8.2.201301141834"/>
@@ -17,11 +16,12 @@
 <repository location="http://download.eclipse.org/tools/gef/updates/releases/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.2.RELEASE"/>
-<unit id="org.bundlemaker.com.db4o.feature.feature.group" version="8.0.184.15484"/>
-<unit id="org.bundlemaker.com.google.feature.feature.group" version="1.0.0"/>
-<unit id="org.bundlemaker.com.tinkerpop.feature.feature.group" version="2.2.0"/>
-<repository location="file:/D:/git-extern/_self/bundlemaker/bundlemaker.thirdparty/step2_plugins-features/p2/org.bundlemaker.thirdparty.p2/target/repository/"/>
+<unit id="org.eclipse.zest.sdk.feature.group" version="2.0.0.201210200125"/>
+<repository location="https://hudson.eclipse.org/hudson/job/gef-zest-nightly/lastSuccessfulBuild/artifact/targetPlatform/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="4.2.2.M20130204-1200"/>
+<repository location="http://download.eclipse.org/releases/juno"/>
 </location>
 </locations>
 <environment>
