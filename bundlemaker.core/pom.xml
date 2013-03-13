@@ -53,31 +53,28 @@
 
 	<repositories>
 
-		<!-- configure p2 repository to resolve against -->
+		<repository>
+			<id>bundlemaker-thirdparty</id>
+			<layout>p2</layout>
+			<url>http://www.bundlemaker.org/p2-thirdparty</url>
+		</repository>
+
 		<repository>
 			<id>juno</id>
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/juno</url>
-			<!-- file URL for faster and offline builds -->
-			<!-- <url>file:/${basedir}/../../helios-rcp/</url> -->
-		</repository>
-
-		<repository>
-			<id>bundlemaker-thirdparty</id>
-			<layout>p2</layout>
-			<url>file:/${basedir}/../../../targetplatform/target.platform/p2/bundlemaker-thirdparty</url>
 		</repository>
 
 		<repository>
 			<id>GEF-Update-3.8.1</id>
 			<layout>p2</layout>
-			<url>file:/${basedir}/../../../targetplatform/target.platform/p2/GEF-Update-3.8.1</url>
+			<url>http://download.eclipse.org/tools/gef/updates/releases/</url>
 		</repository>
 
 		<repository>
 			<id>zest2</id>
 			<layout>p2</layout>
-			<url>file:/${basedir}/../../../targetplatform/target.platform/p2/zest2</url>
+			<url>https://hudson.eclipse.org/hudson/job/gef-zest-nightly/lastSuccessfulBuild/artifact/targetPlatform/</url>
 		</repository>
 	</repositories>
 
@@ -92,20 +89,10 @@
 				<extensions>true</extensions>
 			</plugin>
 
-			<!-- plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho-version}</version>
-				<configuration>
-					<environments>
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
-				</configuration>
-			</plugin -->
+			<!-- plugin> <groupId>org.eclipse.tycho</groupId> <artifactId>target-platform-configuration</artifactId> 
+				<version>${tycho-version}</version> <configuration> <environments> <environment> 
+				<os>win32</os> <ws>win32</ws> <arch>x86_64</arch> </environment> </environments> 
+				</configuration> </plugin -->
 
 			<!-- enable source bundle generation -->
 			<plugin>
