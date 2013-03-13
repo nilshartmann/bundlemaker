@@ -212,36 +212,11 @@ Each party waives its rights to a jury trial in any resulting
 litigation.
    </license>
 
-   <includes
-         id="org.bundlemaker.com.db4o.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.bundlemaker.thirdparty"
-         version="0.0.0"/>
-
-   <includes
-         id="org.bundlemaker.org.springsource.bundlor.feature"
-         version="0.0.0"/>
-
    <requires>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.core.resources" version="3.6.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.variables" version="3.2.300" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.core" version="3.6.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.ant" version="1.7.1" match="greaterOrEqual"/>
-      <import plugin="com.google.gson" version="2.2.2" match="greaterOrEqual"/>
-      <import plugin="com.tinkerpop.blueprints.blueprints-core" version="2.1.0" match="greaterOrEqual"/>
-      <import plugin="com.google.guava" version="13.0.1" match="greaterOrEqual"/>
-      <import plugin="org.bundlemaker.core" version="0.10.0" match="greaterOrEqual"/>
-      <import plugin="org.objectweb.asm" version="3.2.0" match="greaterOrEqual"/>
-      <import plugin="com.db4o.osgi" version="7.4.155" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.launching" version="3.5.200" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.virgo.bundlor" version="1.1.0" match="equivalent"/>
-      <import plugin="org.eclipse.virgo.util.osgi" version="3.0.1" match="equivalent"/>
-      <import plugin="org.eclipse.virgo.util.parser.manifest" version="3.0.1" match="equivalent"/>
-      <import plugin="org.eclipse.pde.core" version="3.8.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.ds"/>
+      <import feature="org.bundlemaker.com.db4o.feature" version="8.0.184.15484"/>
+      <import feature="org.bundlemaker.com.google.feature" version="1.0.0"/>
+      <import feature="org.bundlemaker.com.tinkerpop.feature" version="2.2.0"/>
+      <import feature="org.eclipse.virgo.bundlor" version="1.1.2.RELEASE"/>
    </requires>
 
    <plugin
