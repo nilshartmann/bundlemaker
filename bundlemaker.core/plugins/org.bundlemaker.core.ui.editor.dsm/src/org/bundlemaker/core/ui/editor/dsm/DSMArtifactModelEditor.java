@@ -191,15 +191,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       }
     });
 
-    //
-    _detailComposite.getVisualizeChildrenButton().addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        Selection.instance().getArtifactSelectionService()
-            .setUseChildrenOfSelectedArtifacts(_detailComposite.getVisualizeChildrenButton().getSelection());
-      }
-    });
-
     // create the context menu
     createContextMenu(_viewWidget);
 
@@ -215,16 +206,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     //
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  protected boolean isPinSelection() {
-    return _detailComposite.getPinSelectionButton().getSelection();
-  }
-
   protected String getNullSafeString(String string, String defaultValue) {
     return string == null ? defaultValue : string;
   }
@@ -236,14 +217,14 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   public void onPartActivated() {
 
     //
-    if (!EMPTY_ARTIFACT_SELECTION.equals(getCurrentArtifactSelection())) {
-      Selection
-          .instance()
-          .getArtifactSelectionService()
-          .setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, DSM_EDITOR_ID,
-              getCurrentArtifactSelection().getSelectedArtifacts(),
-              getCurrentArtifactSelection().useChildrenOfSelectedArtifacts());
-    }
+//    if (!EMPTY_ARTIFACT_SELECTION.equals(getCurrentArtifactSelection())) {
+//      Selection
+//          .instance()
+//          .getArtifactSelectionService()
+//          .setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, DSM_EDITOR_ID,
+//              getCurrentArtifactSelection().getSelectedArtifacts(),
+//              getCurrentArtifactSelection().useChildrenOfSelectedArtifacts());
+//    }
   }
 
   /**
@@ -251,11 +232,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void setCurrentArtifactSelection(IArtifactSelection selection) {
-
-    //
-    if (isPinSelection()) {
-      return;
-    }
 
     //
     if (selection.getProviderId().equals(DSM_EDITOR_ID)) {
@@ -289,28 +265,14 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
     if (_viewWidget != null && _detailComposite != null) {
 
       //
-      _detailComposite.getVisualizeChildrenButton().setSelection(selection.useChildrenOfSelectedArtifacts());
       
       // set the model
-      if (selection.useChildrenOfSelectedArtifacts()) {
-        List<IBundleMakerArtifact> bundleMakerArtifacts = new LinkedList<IBundleMakerArtifact>();
-        for (IBundleMakerArtifact artifact : selection.getSelectedArtifacts()) {
-          bundleMakerArtifacts.addAll(artifact.getChildren());
-        }
-        DsmViewModel model = new DsmViewModel(bundleMakerArtifacts);
-        model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
-		_viewWidget.setModel(model);
-
-        // clear the dependency selection
-        resetDependencySelection();
-      } else {
         DsmViewModel model = new DsmViewModel(selection.getSelectedArtifacts());
         model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
 		_viewWidget.setModel(model);
 
         // clear the dependency selection
         resetDependencySelection();
-      }
 
       setDefaultDependencyDescription();
     }

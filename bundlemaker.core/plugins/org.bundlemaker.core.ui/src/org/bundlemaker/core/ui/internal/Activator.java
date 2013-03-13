@@ -11,10 +11,7 @@ package org.bundlemaker.core.ui.internal;
 
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;
@@ -42,9 +39,6 @@ public class Activator extends AbstractUIPlugin {
   private BundleContext                     _bundleContext;
 
   private ProjectExplorerSelectionForwarder _projectExplorerSelectionForwarder;
-
-  /** - */
-  private IArtifactSelectionListener        _projectExplorerSelectionListener;
 
   /** - */
   private boolean                           _filterInitialized;
@@ -87,23 +81,6 @@ public class Activator extends AbstractUIPlugin {
 
     PlatformUI.getWorkbench().addWindowListener(new WindowListener());
 
-    _projectExplorerSelectionListener = new IArtifactSelectionListener() {
-      @Override
-      public void artifactSelectionChanged(IArtifactSelection selection) {
-        if (selection != null && !Selection.PROJECT_EXPLORER_VIEW_ID.equals(selection.getProviderId())) {
-          CommonNavigator commonNavigator = CommonNavigatorUtils
-              .findCommonNavigator(Selection.PROJECT_EXPLORER_VIEW_ID);
-
-          if (commonNavigator != null) {
-            commonNavigator.getCommonViewer().setSelection(new StructuredSelection(selection.getSelectedArtifacts()));
-          }
-        }
-      }
-    };
-
-    Selection.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener(Selection.MAIN_ARTIFACT_SELECTION_ID, _projectExplorerSelectionListener);
-
   }
 
   /*
@@ -115,18 +92,6 @@ public class Activator extends AbstractUIPlugin {
   public void stop(BundleContext context) throws Exception {
     plugin = null;
     _bundleContext = null;
-
-    //
-    if (_projectExplorerSelectionForwarder != null) {
-      ISelectionService selectionService = getSelectionService();
-      if (selectionService != null) {
-        selectionService.removeSelectionListener(_projectExplorerSelectionForwarder);
-      }
-    }
-
-    //
-    Selection.instance().getArtifactSelectionService()
-        .removeArtifactSelectionListener(_projectExplorerSelectionListener);
 
     //
     super.stop(context);

@@ -14,6 +14,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.Activator;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
@@ -207,7 +208,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
     return (IRootArtifact) Proxy.newProxyInstance
         (rootArtifact
             .getClass().getClassLoader(),
-            new Class[] { IRootArtifact.class },
+            new Class[] { IRootArtifact.class, IVirtualRoot.class },
             new VirtualRootInvocationHandler(rootArtifact));
   }
 
@@ -233,6 +234,10 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       if (isToStringMethod(method)) {
         return proxy.getClass().getName() + '@' +
             Integer.toHexString(proxy.hashCode());
+      }
+
+      if (method.getDeclaringClass() == IVirtualRoot.class) {
+        return this._rootArtifact;
       }
 
       return method.invoke(_rootArtifact, args);

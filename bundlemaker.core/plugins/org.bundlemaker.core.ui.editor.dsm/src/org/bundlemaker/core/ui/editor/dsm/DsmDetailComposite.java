@@ -29,12 +29,6 @@ public class DsmDetailComposite extends Composite {
   private Label  _selectionCountLabel;
 
   /** - */
-  private Button _visualizeChildren;
-
-  /** - */
-  private Button _pinSelection;
-  
-  /** - */
   private Button _qualifiedNamesButton;
   
   /** - */
@@ -77,16 +71,6 @@ public class DsmDetailComposite extends Composite {
     _fromLabel = createFieldWithLabel(composite, "from");
     _toLabel = createFieldWithLabel(composite, "to");
 
-    composite = new Composite(this, SWT.NONE);
-    gridLayout = new GridLayout(1, false);
-    gridLayout.marginHeight = 0;
-    gridLayout.marginWidth = 0;
-    composite.setLayout(gridLayout);
-    _visualizeChildren = new Button(composite, SWT.CHECK);
-    _visualizeChildren.setText("Visualize children of selected artifacts");
-    _pinSelection = new Button(composite, SWT.CHECK);
-    _pinSelection.setText("Pin Selection");
-    
     Composite presentationModeComposite = new Composite(this, SWT.BORDER);
     gridLayout = new GridLayout(1, false);
     gridLayout.marginHeight = 0;
@@ -154,26 +138,6 @@ public class DsmDetailComposite extends Composite {
     return _selectionCountLabel;
   }
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return the visualizeChildren
-   */
-  public final Button getVisualizeChildrenButton() {
-    return _visualizeChildren;
-  }
-  
-  /**
-   * <p>
-   * </p>
-   *
-   * @return
-   */
-  public Button getPinSelectionButton() {
-    return _pinSelection;
-  }
-  
  
   /**
    * <p>

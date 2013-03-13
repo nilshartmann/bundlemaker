@@ -49,19 +49,24 @@ public class AbstractProviderSelection implements IProviderSelection {
     return _providerId;
   }
 
-  /**
-   * {@inheritDoc}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
+    result = prime * result + ((_providerId == null) ? 0 : _providerId.hashCode());
     result = prime * result + ((_selectionId == null) ? 0 : _selectionId.hashCode());
     return result;
   }
 
-  /**
-   * {@inheritDoc}
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
   public boolean equals(Object obj) {
@@ -72,6 +77,11 @@ public class AbstractProviderSelection implements IProviderSelection {
     if (getClass() != obj.getClass())
       return false;
     AbstractProviderSelection other = (AbstractProviderSelection) obj;
+    if (_providerId == null) {
+      if (other._providerId != null)
+        return false;
+    } else if (!_providerId.equals(other._providerId))
+      return false;
     if (_selectionId == null) {
       if (other._selectionId != null)
         return false;

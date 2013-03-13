@@ -1,15 +1,15 @@
 package org.bundlemaker.core.ui.stage;
 
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IVirtualRoot;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
-import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -18,10 +18,15 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.DrillDownAdapter;
@@ -36,21 +41,27 @@ public class StageView extends ViewPart {
   /**
    * The ID of the view as specified by the extension.
    */
-  public static final String                 ID                = "org.bundlemaker.core.ui.stage.StageView";
+  public static final String                 ID              = "org.bundlemaker.core.ui.stage.StageView";
 
-  protected final List<IBundleMakerArtifact> EMPTY_SELECTION   = Collections.emptyList();
+  protected final List<IBundleMakerArtifact> EMPTY_ARTIFACTS = Collections.emptyList();
 
   private TreeViewer                         _treeViewer;
 
   private DrillDownAdapter                   drillDownAdapter;
 
-  private Action                             _pinSelectionAction;
-
   private Action                             _autoExpandAction;
 
-  private boolean                            _selectionPinnned = false;
+  private AddModeAction                      _autoAddModeAction;
 
-  private boolean                            _autoExpand       = true;
+  private AddModeAction                      _autoAddChildrenModeAction;
+
+  private AddModeAction                      _dontAutoAddModeAction;
+
+  private ClearStageAction                   _clearStageAction;
+
+  private RemoveArtifactsAction              _removeArtifactsAction;
+
+  private boolean                            _autoExpand     = true;
 
   /**
    * The constructor.
@@ -65,6 +76,7 @@ public class StageView extends ViewPart {
   public void createPartControl(Composite parent) {
 
     _treeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(parent);
+    _treeViewer.setLabelProvider(new StageViewLabelProvider());
 
     // viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL |
     // SWT.V_SCROLL);
@@ -78,43 +90,25 @@ public class StageView extends ViewPart {
     hookDoubleClickAction();
     contributeToActionBars();
 
-    Selection.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener(Selection.MAIN_ARTIFACT_SELECTION_ID, new IArtifactSelectionListener() {
+    ArtifactStage.instance().addArtifactStageChangeListener(new IArtifactStageChangeListener() {
 
-          @Override
-          public void artifactSelectionChanged(IArtifactSelection event) {
-            projectExplorerSelectionChanged(event);
-          }
-        });
+      @Override
+      public void artifactStateChanged(ArtifactStageChangedEvent event) {
+        if (event.getReason().hasContentChanged()) {
+          refreshTreeContent();
+        } else {
+          artifactStageConfigurationChanged();
+        }
+      }
+    });
 
-    IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-        .getSelection(Selection.MAIN_ARTIFACT_SELECTION_ID);
-    projectExplorerSelectionChanged(selection);
+    refreshTreeContent();
+
   }
 
-  protected void projectExplorerSelectionChanged(IArtifactSelection newSelection) {
-    // Selection in Project Explorer changed
+  private void refreshTreeContent() {
 
-    if (isSelectionPinnned() && hasSelectedArtifacts()) {
-      // ignore
-      return;
-    }
-
-    if (newSelection == null) {
-      setVisibleArtifacts(EMPTY_SELECTION);
-    } else {
-      setVisibleArtifacts(newSelection.getSelectedArtifacts());
-    }
-  }
-
-  protected boolean hasSelectedArtifacts() {
-    List<IBundleMakerArtifact> artifacts = (List<IBundleMakerArtifact>) _treeViewer.getInput();
-
-    return artifacts.size() > 0;
-  }
-
-  private void setVisibleArtifacts(List<IBundleMakerArtifact> visibleArtifacts) {
-    Assert.isNotNull(visibleArtifacts);
+    List<IBundleMakerArtifact> visibleArtifacts = ArtifactStage.instance().getStagedArtifacts();
 
     //
     VisibleArtifactsFilter result = null;
@@ -143,8 +137,6 @@ public class StageView extends ViewPart {
     if (isAutoExpand()) {
       _treeViewer.expandAll();
     }
-
-    //
   }
 
   private void hookContextMenu() {
@@ -168,12 +160,25 @@ public class StageView extends ViewPart {
   }
 
   private void fillLocalPullDown(IMenuManager manager) {
+
+    manager.add(_autoAddModeAction);
+    manager.add(_autoAddChildrenModeAction);
+    manager.add(_dontAutoAddModeAction);
+
+    manager.add(new Separator());
+    manager.add(_clearStageAction);
+
+    manager.add(new Separator());
+    manager.add(_autoExpandAction);
     // manager.add(action1);
-    // manager.add(new Separator());
     // manager.add(action2);
   }
 
   private void fillContextMenu(IMenuManager manager) {
+    IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
+    _removeArtifactsAction.setEnabled(selection != null && !selection.isEmpty());
+    manager.add(_removeArtifactsAction);
+
     // manager.add(action1);
     // manager.add(action2);
     // manager.add(new Separator());
@@ -183,22 +188,27 @@ public class StageView extends ViewPart {
   }
 
   private void fillLocalToolBar(IToolBarManager manager) {
-    manager.add(_pinSelectionAction);
-    manager.add(_autoExpandAction);
+
+    manager.add(_clearStageAction);
     manager.add(new Separator());
+
+    manager.add(_autoAddModeAction);
+    manager.add(_autoAddChildrenModeAction);
+    manager.add(_dontAutoAddModeAction);
+
+    // manager.add(_pinStageAction);
     // drillDownAdapter.addNavigationActions(manager);
   }
 
   private void makeActions() {
-    _pinSelectionAction = new PinSelectionAction();
     _autoExpandAction = new AutoExpandAction();
-  }
 
-  /**
-   * @return the selectionPinnned
-   */
-  public boolean isSelectionPinnned() {
-    return _selectionPinnned;
+    _clearStageAction = new ClearStageAction();
+    _removeArtifactsAction = new RemoveArtifactsAction();
+
+    _autoAddChildrenModeAction = new AddModeAction(ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
+    _autoAddModeAction = new AddModeAction(ArtifactStageAddMode.autoAddSelectedArtifacts);
+    _dontAutoAddModeAction = new AddModeAction(ArtifactStageAddMode.doNotAutomaticallyAddArtifacts);
   }
 
   /**
@@ -220,14 +230,6 @@ public class StageView extends ViewPart {
     }
   }
 
-  /**
-   * @param selectionPinnned
-   *          the selectionPinnned to set
-   */
-  public void setSelectionPinnned(boolean selectionPinnned) {
-    _selectionPinnned = selectionPinnned;
-  }
-
   private void hookDoubleClickAction() {
     _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
       @Override
@@ -245,23 +247,22 @@ public class StageView extends ViewPart {
     _treeViewer.getControl().setFocus();
   }
 
-  class PinSelectionAction extends Action {
-    public PinSelectionAction() {
-      super("Pin Selection", IAction.AS_CHECK_BOX);
-      setToolTipText("Pin Selection");
-      // setImageDescriptor(TransformationHistoryImages.PIN_SELECTION.getImageDescriptor());
-      update();
-    }
+  protected ArtifactStage getArtifactStage() {
+    return ArtifactStage.instance();
+  }
 
-    @Override
-    public void run() {
-      setSelectionPinnned(isChecked());
-    }
+  protected void artifactStageConfigurationChanged() {
+    updateAddModeActions();
+  }
 
-    public void update() {
-      setChecked(isSelectionPinnned());
-    }
+  protected void updateAddModeActions() {
+    _autoAddChildrenModeAction.update();
+    _autoAddModeAction.update();
+    _dontAutoAddModeAction.update();
+  }
 
+  protected ArtifactStageAddMode getAddMode() {
+    return getArtifactStage().getAddMode();
   }
 
   class AutoExpandAction extends Action {
@@ -281,7 +282,102 @@ public class StageView extends ViewPart {
     public void update() {
       setChecked(isAutoExpand());
     }
-
   }
 
+  private class AddModeAction extends Action {
+    private final ArtifactStageAddMode _addMode;
+
+    AddModeAction(ArtifactStageAddMode mode) {
+      super(mode.toString(), IAction.AS_CHECK_BOX);
+
+      _addMode = mode;
+
+      update();
+    }
+
+    @Override
+    public void run() {
+      getArtifactStage().setAddMode(_addMode);
+    }
+
+    public void update() {
+      setChecked(_addMode == getAddMode());
+    }
+  }
+
+  class ClearStageAction extends Action {
+    ClearStageAction() {
+      super("Clear Stage", IAction.AS_PUSH_BUTTON);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+      getArtifactStage().setStagedArtifacts(null);
+    }
+  }
+
+  class RemoveArtifactsAction extends Action {
+    RemoveArtifactsAction() {
+      super("Remove from Stage", IAction.AS_PUSH_BUTTON);
+    }
+
+    @Override
+    public void run() {
+      IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
+      if (selection == null || selection.isEmpty()) {
+        return;
+      }
+
+      LinkedHashSet<IBundleMakerArtifact> artifacts = new LinkedHashSet<IBundleMakerArtifact>();
+      @SuppressWarnings("unchecked")
+      Iterator<IBundleMakerArtifact> iterator = selection.iterator();
+      while (iterator.hasNext()) {
+        IBundleMakerArtifact artifact = iterator.next();
+        artifacts.add(artifact);
+        artifacts.addAll(artifact.getChildren());
+      }
+
+      getArtifactStage().removeStagedArtifacts(artifacts);
+
+    }
+  }
+
+  class StageViewLabelProvider extends ArtifactTreeLabelProvider implements IColorProvider {
+
+    @Override
+    public Color getForeground(Object element) {
+
+      boolean stagedArtifact = false;
+
+      if (element instanceof IBundleMakerArtifact) {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) element;
+        if (bundleMakerArtifact instanceof IVirtualRoot) {
+          bundleMakerArtifact = bundleMakerArtifact.getRoot();
+
+        }
+        System.out.println("Artifact: " + bundleMakerArtifact);
+        System.out.println("  STAGED ARTIFACTS: " + getArtifactStage().getStagedArtifacts());
+        stagedArtifact = getArtifactStage().isStaged(bundleMakerArtifact);
+      }
+
+      //
+      if (stagedArtifact) {
+        return Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+      }
+
+      //
+      return Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+    }
+
+    @Override
+    public Color getBackground(Object element) {
+      return null;
+    }
+
+  }
 }
