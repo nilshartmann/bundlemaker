@@ -13,6 +13,7 @@
 	</parent>
 
 	<build>
+
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
@@ -26,7 +27,7 @@
 		<!-- This profile is used to upload the repo -->
 		<profile>
 			<id>uploadRepo</id>
-			
+
 			<properties>
 				<ftp.url>ftp://www.wuetherich.com</ftp.url>
 				<ftp.toDir>.</ftp.toDir>
