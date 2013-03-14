@@ -30,9 +30,12 @@
 				<extensions>true</extensions>
 				<configuration>
 					<instructions>
-						<Bundle-SymbolicName>com.google.gson.source</Bundle-SymbolicName>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Vendor>BundleMaker project team</Bundle-Vendor>
+						<Bundle-Version>${parsedVersion.osgiVersion}</Bundle-Version>
 						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
-						<_exportcontents>*</_exportcontents>
+						<Eclipse-SourceBundle>com.google.gson;version="${parsedVersion.osgiVersion}";roots:="."</Eclipse-SourceBundle>
+						<_exportcontents></_exportcontents>
 					</instructions>
 				</configuration>
 			</plugin>

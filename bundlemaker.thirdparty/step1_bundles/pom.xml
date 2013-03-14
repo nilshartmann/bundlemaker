@@ -20,6 +20,23 @@
 
 	<build>
 		<plugins>
+
+			<!-- Build helper maven plugin sets the parsedVersion.osgiVersion property -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>set-osgi-version</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>

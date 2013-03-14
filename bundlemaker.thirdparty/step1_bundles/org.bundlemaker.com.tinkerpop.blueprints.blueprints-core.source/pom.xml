@@ -31,8 +31,11 @@
 				<configuration>
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Vendor>BundleMaker project team</Bundle-Vendor>
+						<Bundle-Version>${parsedVersion.osgiVersion}</Bundle-Version>
 						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
-						<_exportcontents>*</_exportcontents>
+						<Eclipse-SourceBundle>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core;version="${parsedVersion.osgiVersion}";roots:="."</Eclipse-SourceBundle>
+						<_exportcontents></_exportcontents>
 					</instructions>
 				</configuration>
 			</plugin>

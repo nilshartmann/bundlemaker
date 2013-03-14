@@ -65,4 +65,37 @@
 		</plugins>
 	</build>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core</artifactId>
+			<version>${tinkerpop-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core.source</artifactId>
+			<version>${tinkerpop-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>com.google.guava.source</artifactId>
+			<version>${guava-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>${gson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bundlemaker.thirdparty</groupId>
+			<artifactId>com.google.gson.source</artifactId>
+			<version>${gson-version}</version>
+		</dependency>
+	</dependencies>
+
 </project>

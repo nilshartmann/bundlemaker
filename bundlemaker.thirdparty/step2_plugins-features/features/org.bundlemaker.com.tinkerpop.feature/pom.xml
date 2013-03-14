@@ -13,17 +13,4 @@
 	<version>${tinkerpop-version}</version>
 	<packaging>eclipse-feature</packaging>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core</artifactId>
-			<version>${tinkerpop-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core.source</artifactId>
-			<version>${tinkerpop-version}</version>
-		</dependency>
-	</dependencies>
-
 </project>

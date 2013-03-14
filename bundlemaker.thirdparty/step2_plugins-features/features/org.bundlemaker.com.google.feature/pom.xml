@@ -13,27 +13,4 @@
 	<version>1.0.0</version>
 	<packaging>eclipse-feature</packaging>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>14.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>com.google.guava.source</artifactId>
-			<version>14.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>com.google.gson.source</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-	</dependencies>
-
 </project>
