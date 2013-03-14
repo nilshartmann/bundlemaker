@@ -40,6 +40,7 @@
 		<module>itests/org.bundlemaker.core.itestframework</module>
 		<module>itests/org.bundlemaker.core.itest</module>
 		<module>p2/org.bundlemaker.core.p2.target</module>
+		<module>p2/org.bundlemaker.core.p2.repo</module>
 	</modules>
 
 	<!-- tycho requires maven >= 3.0 -->
