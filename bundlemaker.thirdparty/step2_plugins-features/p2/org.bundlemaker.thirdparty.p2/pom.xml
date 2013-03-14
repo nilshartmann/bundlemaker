@@ -14,40 +14,15 @@
 	<artifactId>org.bundlemaker.thirdparty.p2</artifactId>
 	<packaging>eclipse-repository</packaging>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core</artifactId>
-			<version>${tinkerpop-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core.source</artifactId>
-			<version>${tinkerpop-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>14.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>com.google.guava.source</artifactId>
-			<version>14.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bundlemaker.thirdparty</groupId>
-			<artifactId>com.google.gson.source</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-	</dependencies>
-
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>2.4</version>
+			</extension>
+		</extensions>
+
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -59,5 +34,47 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<!-- This profile is used to upload the repo -->
+		<profile>
+			<id>uploadRepo</id>
+
+			<properties>
+				<ftp.url>ftp://www.wuetherich.com</ftp.url>
+				<ftp.toDir>.</ftp.toDir>
+				<repo.path>${project.build.directory}/repository/</repo.path>
+			</properties>
+
+			<build>
+				<plugins>
+					<!-- Upload the repo to the server -->
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>wagon-maven-plugin</artifactId>
+						<version>1.0-beta-4</version>
+						<executions>
+							<execution>
+								<id>upload-repo</id>
+								<phase>install</phase>
+								<goals>
+									<goal>upload</goal>
+								</goals>
+								<configuration>
+									<fromDir>${repo.path}</fromDir>
+									<includes>**</includes>
+									<toDir>.</toDir>
+									<url>${ftp.url}</url>
+									<serverId>bundlemakerThirdpartyP2Repo</serverId>
+									<!-- Points to your settings.xml where the connection settings are 
+										stored -->
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

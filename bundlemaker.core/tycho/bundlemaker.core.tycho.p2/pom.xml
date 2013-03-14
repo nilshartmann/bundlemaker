@@ -13,7 +13,6 @@
 	</parent>
 
 	<build>
-
 		<extensions>
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
@@ -55,12 +54,7 @@
 									<url>${ftp.url}</url>
 									<serverId>bundlemakerP2Repo</serverId>
 									<!-- Points to your settings.xml where the connection settings are 
-										stored as shown below -->
-									<!-- <server> -->
-									<!-- <id>bundlemakerP2Repo</id> -->
-									<!-- <username>wuekxrys2</username> -->
-									<!-- <password></password> -->
-									<!-- </server> -->
+										stored -->
 								</configuration>
 							</execution>
 						</executions>
