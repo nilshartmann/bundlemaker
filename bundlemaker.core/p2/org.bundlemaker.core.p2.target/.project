@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>bundlemaker.core.tycho.target</name>
+	<name>org.bundlemaker.core.p2.target</name>
 	<comment></comment>
 	<projects>
 	</projects>
