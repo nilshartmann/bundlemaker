@@ -54,6 +54,7 @@
 			<id>uploadRepo</id>
 
 			<properties>
+				<ftp.host>www.wuetherich.com</ftp.host>
 				<ftp.url>ftp://www.wuetherich.com</ftp.url>
 				<ftp.toDir>.</ftp.toDir>
 				<repo.path>${project.build.directory}/repository/</repo.path>
@@ -61,6 +62,44 @@
 
 			<build>
 				<plugins>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<id>ftp</id>
+								<phase>install</phase>
+								<configuration>
+									<target>
+										<ftp server="${ftp.host}" userid="${bundlemakerP2Repo-username}"
+											password="${bundlemakerP2Repo-pwd}" remotedir="${ftp.toDir}" action="del">
+											<fileset>
+												<include name="**/*" />
+											</fileset>
+										</ftp>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+						<dependencies>
+							<dependency>
+								<groupId>commons-net</groupId>
+								<artifactId>commons-net</artifactId>
+								<version>1.4.1</version>
+							</dependency>
+							<dependency>
+								<groupId>org.apache.ant</groupId>
+								<artifactId>ant-commons-net</artifactId>
+								<version>1.8.1</version>
+							</dependency>
+						</dependencies>
+					</plugin>
+
 					<!-- Upload the repo to the server -->
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
