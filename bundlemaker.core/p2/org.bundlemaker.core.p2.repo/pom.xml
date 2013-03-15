@@ -64,8 +64,9 @@
 				<plugins>
 
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.6</version>
+						<version>1.7</version>
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -82,7 +83,7 @@
 						</executions>
 					</plugin>
 
-					<plugin>
+					<!-- plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-antrun-plugin</artifactId>
 						<version>1.7</version>
@@ -92,6 +93,8 @@
 								<phase>install</phase>
 								<configuration>
 									<target>
+										<property environment="env" />
+										<echoproperties />
 										<ftp server="${ftp.host}" userid="${bundlemakerP2Repo-username}"
 											password="${bundlemakerP2Repo-pwd}" remotedir="${ftp.toDir}"
 											action="del">
@@ -118,7 +121,7 @@
 								<version>1.8.1</version>
 							</dependency>
 						</dependencies>
-					</plugin>
+					</plugin -->
 
 					<!-- Upload the repo to the server -->
 					<plugin>
