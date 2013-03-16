@@ -27,7 +27,7 @@ public class AddToStageAction extends AbstractStageAction {
   public void setArtifactSelection(IArtifactSelection artifactSelection) {
     super.setArtifactSelection(artifactSelection);
 
-    setEnabled(artifactSelection.hasSelectedArtifacts());
+    setEnabled(isManualAddMode() && artifactSelection.hasSelectedArtifacts());
   }
 
   @Override

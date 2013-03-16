@@ -32,4 +32,13 @@ public enum ArtifactStageAddMode {
     return this._label;
   }
 
+  /**
+   * Returns true if this instance is one of the "auto add" modes (auto add artifacts or auto add children)
+   * 
+   * @return
+   */
+  public boolean isAutoAddMode() {
+    return (this == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts || this == ArtifactStageAddMode.autoAddSelectedArtifacts);
+  }
+
 }

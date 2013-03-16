@@ -44,6 +44,10 @@ public class AbstractStageAction extends Action {
     getArtifactStage().addToStage(artifacts);
   }
 
+  protected boolean isManualAddMode() {
+    return !getArtifactStage().getAddMode().isAutoAddMode();
+  }
+
   protected ArtifactStage getArtifactStage() {
     return ArtifactStage.instance();
   }
