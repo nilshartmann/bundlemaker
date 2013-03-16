@@ -9,31 +9,29 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage;
-
-import java.util.List;
-
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler;
-import org.eclipse.core.commands.ExecutionEvent;
+package org.bundlemaker.core.ui.stage.actions;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class AddToStageHandler extends AbstractArtifactBasedHandler {
+public class ClearStageAction extends AbstractStageAction {
+
+  /**
+   * @param title
+   */
+  public ClearStageAction() {
+    super("Clear Stage");
+  }
 
   /*
    * (non-Javadoc)
    * 
-   * @see org.bundlemaker.core.ui.handler.AbstractArtifactBasedHandler#execute(org.eclipse.core.commands.ExecutionEvent,
-   * java.util.List)
+   * @see org.eclipse.jface.action.Action#run()
    */
   @Override
-  protected void execute(ExecutionEvent event, List<IBundleMakerArtifact> selectedArtifacts) throws Exception {
-
-    ArtifactStage.instance().addToStage(selectedArtifacts);
-
+  public void run() {
+    getArtifactStage().setStagedArtifacts(null);
   }
 
 }

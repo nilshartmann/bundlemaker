@@ -1,6 +1,6 @@
 package org.bundlemaker.core.ui.app.perspective;
 
-import org.bundlemaker.core.ui.stage.StageView;
+import org.bundlemaker.core.ui.stage.view.StageView;
 import org.bundlemaker.core.ui.view.dependencytable.DependencyTableView;
 import org.bundlemaker.core.ui.view.dependencytree.DependencyTreeView;
 import org.bundlemaker.core.ui.view.problemview.ProblemView;

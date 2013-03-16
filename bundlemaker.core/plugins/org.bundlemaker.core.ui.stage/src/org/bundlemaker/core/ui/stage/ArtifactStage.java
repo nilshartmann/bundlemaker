@@ -134,7 +134,7 @@ public class ArtifactStage {
    * @param stagedArtifacts
    *          the new staged artifacts. Might be null
    */
-  void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
+  public void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
     _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
 
     fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
@@ -176,7 +176,7 @@ public class ArtifactStage {
   /**
    * @param selectedArtifacts
    */
-  void addToStage(List<IBundleMakerArtifact> selectedArtifacts) {
+  public void addToStage(List<IBundleMakerArtifact> selectedArtifacts) {
 
     for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
       _stagedArtifacts.add(iBundleMakerArtifact);
