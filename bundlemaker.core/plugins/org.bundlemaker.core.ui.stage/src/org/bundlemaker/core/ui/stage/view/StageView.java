@@ -49,9 +49,27 @@ public class StageView extends ViewPart {
   /**
    * The ID of the view as specified by the extension.
    */
-  public static final String                 ID              = "org.bundlemaker.core.ui.stage.StageView";
+  public static final String                 ID                           = "org.bundlemaker.core.ui.stage.StageView";
 
-  protected final List<IBundleMakerArtifact> EMPTY_ARTIFACTS = Collections.emptyList();
+  protected final List<IBundleMakerArtifact> EMPTY_ARTIFACTS              = Collections.emptyList();
+
+  private final IArtifactSelectionListener   _artifactSelectionListener   = new IArtifactSelectionListener() {
+                                                                            @Override
+                                                                            public void artifactSelectionChanged(
+                                                                                IArtifactSelection event) {
+                                                                              refreshTreeContent();
+
+                                                                            }
+                                                                          };
+
+  private final IArtifactStageChangeListener _artifactStageChangeListener = new IArtifactStageChangeListener() {
+
+                                                                            @Override
+                                                                            public void artifactStateChanged(
+                                                                                ArtifactStageChangedEvent event) {
+                                                                              artifactStageConfigurationChanged();
+                                                                            }
+                                                                          };
 
   private TreeViewer                         _treeViewer;
 
@@ -63,7 +81,7 @@ public class StageView extends ViewPart {
 
   private RemoveArtifactsAction              _removeArtifactsAction;
 
-  private boolean                            _autoExpand     = true;
+  private boolean                            _autoExpand                  = true;
 
   private AddModeActionGroup                 _addModeActionGroup;
 
@@ -94,23 +112,10 @@ public class StageView extends ViewPart {
     hookDoubleClickAction();
     contributeToActionBars();
 
-    ArtifactStage.instance().addArtifactStageChangeListener(new IArtifactStageChangeListener() {
-
-      @Override
-      public void artifactStateChanged(ArtifactStageChangedEvent event) {
-        artifactStageConfigurationChanged();
-      }
-    });
+    ArtifactStage.instance().addArtifactStageChangeListener(_artifactStageChangeListener);
 
     Selection.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener(Selection.ARTIFACT_STAGE_SELECTION_ID, new IArtifactSelectionListener() {
-
-          @Override
-          public void artifactSelectionChanged(IArtifactSelection event) {
-            refreshTreeContent();
-
-          }
-        });
+        .addArtifactSelectionListener(Selection.ARTIFACT_STAGE_SELECTION_ID, _artifactSelectionListener);
 
     refreshTreeContent();
 
@@ -213,6 +218,13 @@ public class StageView extends ViewPart {
 
     _addModeActionGroup = new AddModeActionGroup();
 
+  }
+
+  @Override
+  public void dispose() {
+    ArtifactStage.instance().removeArtifactStageChangeListener(_artifactStageChangeListener);
+    Selection.instance().getArtifactSelectionService().removeArtifactSelectionListener(_artifactSelectionListener);
+    super.dispose();
   }
 
   /**
