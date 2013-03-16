@@ -20,7 +20,7 @@ import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 public class AddToStageAction extends AbstractStageAction {
 
   public AddToStageAction() {
-    super("Add Artifact");
+    super("Selected Artifact");
   }
 
   @Override
@@ -28,6 +28,13 @@ public class AddToStageAction extends AbstractStageAction {
     super.setArtifactSelection(artifactSelection);
 
     setEnabled(isManualAddMode() && artifactSelection.hasSelectedArtifacts());
+
+    if (artifactSelection.hasSelectedArtifacts()) {
+      setText(artifactSelection.getSelectedArtifacts().size() + " Artifacts");
+    } else {
+      setText("Selected Artifacts");
+    }
+
   }
 
   @Override
