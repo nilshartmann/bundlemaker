@@ -137,8 +137,6 @@ public class ArtifactStage {
   public void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
     _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
 
-    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
-
     publishStagedArtifacts();
 
   }
@@ -182,7 +180,7 @@ public class ArtifactStage {
       _stagedArtifacts.add(iBundleMakerArtifact);
     }
 
-    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
+    // fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
 
     publishStagedArtifacts();
   }
@@ -193,7 +191,7 @@ public class ArtifactStage {
   public void removeStagedArtifacts(Collection<IBundleMakerArtifact> artifacts) {
     _stagedArtifacts.removeAll(artifacts);
 
-    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
+    // fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
 
     publishStagedArtifacts();
   }

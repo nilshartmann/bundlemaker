@@ -17,11 +17,7 @@ package org.bundlemaker.core.ui.event.stage;
  */
 public enum ArtifactStageChangeReason {
 
-  contentChanged, configurationChanged;
-
-  public boolean hasContentChanged() {
-    return this == contentChanged;
-  }
+  configurationChanged;
 
   public boolean hasConfigurationChanged() {
     return this == configurationChanged;

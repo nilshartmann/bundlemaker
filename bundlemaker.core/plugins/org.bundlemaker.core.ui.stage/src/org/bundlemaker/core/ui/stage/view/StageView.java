@@ -10,6 +10,9 @@ import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
+import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
+import org.bundlemaker.core.ui.event.selection.Selection;
 import org.bundlemaker.core.ui.event.stage.ArtifactStage;
 import org.bundlemaker.core.ui.event.stage.ArtifactStageAddMode;
 import org.bundlemaker.core.ui.event.stage.ArtifactStageChangedEvent;
@@ -95,13 +98,19 @@ public class StageView extends ViewPart {
 
       @Override
       public void artifactStateChanged(ArtifactStageChangedEvent event) {
-        if (event.getReason().hasContentChanged()) {
-          refreshTreeContent();
-        } else {
-          artifactStageConfigurationChanged();
-        }
+        artifactStageConfigurationChanged();
       }
     });
+
+    Selection.instance().getArtifactSelectionService()
+        .addArtifactSelectionListener(Selection.ARTIFACT_STAGE_SELECTION_ID, new IArtifactSelectionListener() {
+
+          @Override
+          public void artifactSelectionChanged(IArtifactSelection event) {
+            refreshTreeContent();
+
+          }
+        });
 
     refreshTreeContent();
 
