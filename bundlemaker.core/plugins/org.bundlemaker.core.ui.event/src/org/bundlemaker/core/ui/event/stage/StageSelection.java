@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage;
+package org.bundlemaker.core.ui.event.stage;
 
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 

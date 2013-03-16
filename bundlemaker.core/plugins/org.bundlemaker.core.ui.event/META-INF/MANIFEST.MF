@@ -8,11 +8,13 @@ Export-Package: org.bundlemaker.core.ui.event,
  org.bundlemaker.core.ui.event.selection,
  org.bundlemaker.core.ui.event.selection.workbench,
  org.bundlemaker.core.ui.event.selection.workbench.editor,
- org.bundlemaker.core.ui.event.selection.workbench.view
+ org.bundlemaker.core.ui.event.selection.workbench.view,
+ org.bundlemaker.core.ui.event.stage
 Require-Bundle: org.eclipse.core.runtime,
  org.bundlemaker.core;bundle-version="0.10.0",
  org.eclipse.jface;bundle-version="3.6.0",
- org.eclipse.ui.workbench;bundle-version="3.6.0"
+ org.eclipse.ui.workbench;bundle-version="3.6.0",
+ com.google.guava;bundle-version="13.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.osgi.service.component.annotations
 Bundle-ActivationPolicy: lazy

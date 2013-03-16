@@ -9,22 +9,20 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage;
+package org.bundlemaker.core.ui.stage.actions;
+
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public enum ArtifactStageChangeReason {
+public class StagePackagesAction extends AbstractStageByTypeAction {
 
-  contentChanged, configurationChanged;
-
-  public boolean hasContentChanged() {
-    return this == contentChanged;
-  }
-
-  public boolean hasConfigurationChanged() {
-    return this == configurationChanged;
+  public StagePackagesAction() {
+    super("Package children", IPackageArtifact.class, IResourceArtifact.class, ITypeArtifact.class);
   }
 
 }

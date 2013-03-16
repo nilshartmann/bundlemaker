@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.stage;
+package org.bundlemaker.core.ui.stage.view;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -10,6 +10,14 @@ import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
+import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
+import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.ui.event.stage.ArtifactStage;
+import org.bundlemaker.core.ui.event.stage.ArtifactStageAddMode;
+import org.bundlemaker.core.ui.event.stage.ArtifactStageChangedEvent;
+import org.bundlemaker.core.ui.event.stage.IArtifactStageChangeListener;
+import org.bundlemaker.core.ui.stage.actions.AddModeActionGroup;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -41,9 +49,27 @@ public class StageView extends ViewPart {
   /**
    * The ID of the view as specified by the extension.
    */
-  public static final String                 ID              = "org.bundlemaker.core.ui.stage.StageView";
+  public static final String                 ID                           = "org.bundlemaker.core.ui.stage.StageView";
 
-  protected final List<IBundleMakerArtifact> EMPTY_ARTIFACTS = Collections.emptyList();
+  protected final List<IBundleMakerArtifact> EMPTY_ARTIFACTS              = Collections.emptyList();
+
+  private final IArtifactSelectionListener   _artifactSelectionListener   = new IArtifactSelectionListener() {
+                                                                            @Override
+                                                                            public void artifactSelectionChanged(
+                                                                                IArtifactSelection event) {
+                                                                              refreshTreeContent();
+
+                                                                            }
+                                                                          };
+
+  private final IArtifactStageChangeListener _artifactStageChangeListener = new IArtifactStageChangeListener() {
+
+                                                                            @Override
+                                                                            public void artifactStateChanged(
+                                                                                ArtifactStageChangedEvent event) {
+                                                                              artifactStageConfigurationChanged();
+                                                                            }
+                                                                          };
 
   private TreeViewer                         _treeViewer;
 
@@ -51,17 +77,13 @@ public class StageView extends ViewPart {
 
   private Action                             _autoExpandAction;
 
-  private AddModeAction                      _autoAddModeAction;
-
-  private AddModeAction                      _autoAddChildrenModeAction;
-
-  private AddModeAction                      _dontAutoAddModeAction;
-
   private ClearStageAction                   _clearStageAction;
 
   private RemoveArtifactsAction              _removeArtifactsAction;
 
-  private boolean                            _autoExpand     = true;
+  private boolean                            _autoExpand                  = true;
+
+  private AddModeActionGroup                 _addModeActionGroup;
 
   /**
    * The constructor.
@@ -90,17 +112,10 @@ public class StageView extends ViewPart {
     hookDoubleClickAction();
     contributeToActionBars();
 
-    ArtifactStage.instance().addArtifactStageChangeListener(new IArtifactStageChangeListener() {
+    ArtifactStage.instance().addArtifactStageChangeListener(_artifactStageChangeListener);
 
-      @Override
-      public void artifactStateChanged(ArtifactStageChangedEvent event) {
-        if (event.getReason().hasContentChanged()) {
-          refreshTreeContent();
-        } else {
-          artifactStageConfigurationChanged();
-        }
-      }
-    });
+    Selection.instance().getArtifactSelectionService()
+        .addArtifactSelectionListener(Selection.ARTIFACT_STAGE_SELECTION_ID, _artifactSelectionListener);
 
     refreshTreeContent();
 
@@ -161,9 +176,7 @@ public class StageView extends ViewPart {
 
   private void fillLocalPullDown(IMenuManager manager) {
 
-    manager.add(_autoAddModeAction);
-    manager.add(_autoAddChildrenModeAction);
-    manager.add(_dontAutoAddModeAction);
+    _addModeActionGroup.fill(manager);
 
     manager.add(new Separator());
     manager.add(_clearStageAction);
@@ -192,10 +205,7 @@ public class StageView extends ViewPart {
     manager.add(_clearStageAction);
     manager.add(new Separator());
 
-    manager.add(_autoAddModeAction);
-    manager.add(_autoAddChildrenModeAction);
-    manager.add(_dontAutoAddModeAction);
-
+    _addModeActionGroup.fill(manager);
     // manager.add(_pinStageAction);
     // drillDownAdapter.addNavigationActions(manager);
   }
@@ -206,9 +216,15 @@ public class StageView extends ViewPart {
     _clearStageAction = new ClearStageAction();
     _removeArtifactsAction = new RemoveArtifactsAction();
 
-    _autoAddChildrenModeAction = new AddModeAction(ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
-    _autoAddModeAction = new AddModeAction(ArtifactStageAddMode.autoAddSelectedArtifacts);
-    _dontAutoAddModeAction = new AddModeAction(ArtifactStageAddMode.doNotAutomaticallyAddArtifacts);
+    _addModeActionGroup = new AddModeActionGroup();
+
+  }
+
+  @Override
+  public void dispose() {
+    ArtifactStage.instance().removeArtifactStageChangeListener(_artifactStageChangeListener);
+    Selection.instance().getArtifactSelectionService().removeArtifactSelectionListener(_artifactSelectionListener);
+    super.dispose();
   }
 
   /**
@@ -252,13 +268,7 @@ public class StageView extends ViewPart {
   }
 
   protected void artifactStageConfigurationChanged() {
-    updateAddModeActions();
-  }
-
-  protected void updateAddModeActions() {
-    _autoAddChildrenModeAction.update();
-    _autoAddModeAction.update();
-    _dontAutoAddModeAction.update();
+    _addModeActionGroup.update();
   }
 
   protected ArtifactStageAddMode getAddMode() {
@@ -281,27 +291,6 @@ public class StageView extends ViewPart {
 
     public void update() {
       setChecked(isAutoExpand());
-    }
-  }
-
-  private class AddModeAction extends Action {
-    private final ArtifactStageAddMode _addMode;
-
-    AddModeAction(ArtifactStageAddMode mode) {
-      super(mode.toString(), IAction.AS_CHECK_BOX);
-
-      _addMode = mode;
-
-      update();
-    }
-
-    @Override
-    public void run() {
-      getArtifactStage().setAddMode(_addMode);
-    }
-
-    public void update() {
-      setChecked(_addMode == getAddMode());
     }
   }
 

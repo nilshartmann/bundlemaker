@@ -9,27 +9,21 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage;
+package org.bundlemaker.core.ui.stage.actions;
+
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public enum ArtifactStageAddMode {
+public class StageModulesAction extends AbstractStageByTypeAction {
 
-  autoAddSelectedArtifacts("Add selected Artifacts"), //
-  autoAddChildrenOfSelectedArtifacts("Add children of selected Artifacts"), //
-  doNotAutomaticallyAddArtifacts("Manually add Artifacts");
-
-  private final String _label;
-
-  private ArtifactStageAddMode(String label) {
-    this._label = label;
+  public StageModulesAction() {
+    super("Module children", IModuleArtifact.class, IPackageArtifact.class, IResourceArtifact.class,
+        ITypeArtifact.class);
   }
-
-  @Override
-  public String toString() {
-    return this._label;
-  }
-
 }

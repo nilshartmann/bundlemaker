@@ -297,7 +297,7 @@
 			<reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 		</visibleWhen>
      </menu>
-			
+	
 			<!-- Separator used as target for editor plug-ins -->
 			<separator name="org.bundlemaker.core.ui.editor.separator" visible="true"> </separator>
 			

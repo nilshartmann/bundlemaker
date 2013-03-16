@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage;
+package org.bundlemaker.core.ui.event.stage;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -134,10 +134,8 @@ public class ArtifactStage {
    * @param stagedArtifacts
    *          the new staged artifacts. Might be null
    */
-  void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
+  public void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
     _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
-
-    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
 
     publishStagedArtifacts();
 
@@ -176,13 +174,13 @@ public class ArtifactStage {
   /**
    * @param selectedArtifacts
    */
-  void addToStage(List<IBundleMakerArtifact> selectedArtifacts) {
+  public void addToStage(List<IBundleMakerArtifact> selectedArtifacts) {
 
     for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
       _stagedArtifacts.add(iBundleMakerArtifact);
     }
 
-    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
+    // fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
 
     publishStagedArtifacts();
   }
@@ -193,7 +191,7 @@ public class ArtifactStage {
   public void removeStagedArtifacts(Collection<IBundleMakerArtifact> artifacts) {
     _stagedArtifacts.removeAll(artifacts);
 
-    fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
+    // fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
 
     publishStagedArtifacts();
   }
