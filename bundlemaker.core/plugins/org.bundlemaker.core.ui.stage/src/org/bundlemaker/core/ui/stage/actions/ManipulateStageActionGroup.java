@@ -17,6 +17,7 @@ import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.Separator;
 
 import com.google.common.collect.Lists;
 
@@ -26,11 +27,12 @@ import com.google.common.collect.Lists;
  */
 public class ManipulateStageActionGroup {
 
+  private ClearStageAction                _clearStageAction = new ClearStageAction();
+
   private final List<AbstractStageAction> _actions;
 
   public ManipulateStageActionGroup() {
     _actions = Lists.newArrayList(//
-        new ClearStageAction(),//
         new AddToStageAction(),//
         new StageGroupsAction(),//
         new StageModulesAction(), //
@@ -49,6 +51,10 @@ public class ManipulateStageActionGroup {
 
       items.add(new ActionContributionItem(action));
     }
+    items.add(new Separator());
+
+    _clearStageAction.setArtifactSelection(selection);
+    items.add(new ActionContributionItem(_clearStageAction));
   }
 
 }
