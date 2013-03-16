@@ -9,22 +9,22 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage;
+package org.bundlemaker.core.ui.event.stage;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ArtifactStageChangedEvent {
+public enum ArtifactStageChangeReason {
 
-  private final ArtifactStageChangeReason _reason;
+  contentChanged, configurationChanged;
 
-  ArtifactStageChangedEvent(ArtifactStageChangeReason reason) {
-    this._reason = reason;
+  public boolean hasContentChanged() {
+    return this == contentChanged;
   }
 
-  public ArtifactStageChangeReason getReason() {
-    return this._reason;
+  public boolean hasConfigurationChanged() {
+    return this == configurationChanged;
   }
 
 }

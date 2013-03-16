@@ -9,22 +9,27 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage;
+package org.bundlemaker.core.ui.event.stage;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public enum ArtifactStageChangeReason {
+public enum ArtifactStageAddMode {
 
-  contentChanged, configurationChanged;
+  autoAddSelectedArtifacts("Add selected Artifacts"), //
+  autoAddChildrenOfSelectedArtifacts("Add children of selected Artifacts"), //
+  doNotAutomaticallyAddArtifacts("Manually add Artifacts");
 
-  public boolean hasContentChanged() {
-    return this == contentChanged;
+  private final String _label;
+
+  private ArtifactStageAddMode(String label) {
+    this._label = label;
   }
 
-  public boolean hasConfigurationChanged() {
-    return this == configurationChanged;
+  @Override
+  public String toString() {
+    return this._label;
   }
 
 }

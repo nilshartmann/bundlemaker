@@ -1,14 +1,11 @@
 package org.bundlemaker.core.ui.event.selection.internal;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.ui.event.Events;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionChangedEvent;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
 import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
 import org.bundlemaker.core.ui.event.selection.Selection;
@@ -23,8 +20,8 @@ public class Activator extends AbstractUIPlugin {
   /** - */
   private IDependencySelectionListener _mainDependencySelectionToDetailDependencySelectionForwarder;
 
-//  /** - */
-//  private IArtifactSelectionListener   _mainDependencySelectionCleaner;
+  // /** - */
+  // private IArtifactSelectionListener _mainDependencySelectionCleaner;
 
   private Events                       _events;
 

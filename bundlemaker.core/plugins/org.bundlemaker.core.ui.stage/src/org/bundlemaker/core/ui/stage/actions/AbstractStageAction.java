@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.stage.ArtifactStage;
+import org.bundlemaker.core.ui.event.stage.ArtifactStage;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 

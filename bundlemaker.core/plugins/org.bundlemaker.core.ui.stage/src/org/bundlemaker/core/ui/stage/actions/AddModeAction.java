@@ -11,8 +11,8 @@
 
 package org.bundlemaker.core.ui.stage.actions;
 
-import org.bundlemaker.core.ui.stage.ArtifactStage;
-import org.bundlemaker.core.ui.stage.ArtifactStageAddMode;
+import org.bundlemaker.core.ui.event.stage.ArtifactStage;
+import org.bundlemaker.core.ui.event.stage.ArtifactStageAddMode;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 
