@@ -11,6 +11,7 @@
 
 package org.bundlemaker.core.ui.stage.actions;
 
+import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
@@ -19,10 +20,10 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class StagePackagesAction extends AbstractStageByTypeAction {
+public class StageModulesAction extends AbstractStageByTypeAction {
 
-  public StagePackagesAction() {
-    super("Package children", IPackageArtifact.class, IResourceArtifact.class, ITypeArtifact.class);
+  public StageModulesAction() {
+    super("Module children", IModuleArtifact.class, IPackageArtifact.class, IResourceArtifact.class,
+        ITypeArtifact.class);
   }
-
 }

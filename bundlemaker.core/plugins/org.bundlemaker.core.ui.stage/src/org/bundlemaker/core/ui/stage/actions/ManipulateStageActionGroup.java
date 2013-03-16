@@ -32,6 +32,8 @@ public class ManipulateStageActionGroup {
     _actions = Lists.newArrayList(//
         new ClearStageAction(),//
         new AddToStageAction(),//
+        new StageGroupsAction(),//
+        new StageModulesAction(), //
         new StagePackagesAction(),//
         new StageResourcesAction()//
         );

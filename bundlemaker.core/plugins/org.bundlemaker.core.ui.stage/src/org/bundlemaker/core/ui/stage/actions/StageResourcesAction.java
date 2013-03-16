@@ -12,6 +12,7 @@
 package org.bundlemaker.core.ui.stage.actions;
 
 import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -20,7 +21,7 @@ import org.bundlemaker.core.analysis.IResourceArtifact;
 public class StageResourcesAction extends AbstractStageByTypeAction {
 
   public StageResourcesAction() {
-    super("Included Resources", IResourceArtifact.class);
+    super("Resource children", IResourceArtifact.class, ITypeArtifact.class);
   }
 
 }

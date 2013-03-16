@@ -26,14 +26,22 @@ import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
  */
 public abstract class AbstractStageByTypeAction extends AbstractStageAction {
 
-  private final Class<? extends IBundleMakerArtifact> _handledType;
+  private final List<Class<? extends IBundleMakerArtifact>> _disableForTyes;
+
+  private final Class<? extends IBundleMakerArtifact>       _handledType;
 
   /**
    * @param title
    */
-  public AbstractStageByTypeAction(String title, Class<? extends IBundleMakerArtifact> handledType) {
+  public AbstractStageByTypeAction(String title, Class<? extends IBundleMakerArtifact> handledType,
+      Class<? extends IBundleMakerArtifact>... disableFor) {
     super(title);
     this._handledType = checkNotNull(handledType);
+    _disableForTyes = new LinkedList<Class<? extends IBundleMakerArtifact>>();
+
+    for (Class<? extends IBundleMakerArtifact> clazz : disableFor) {
+      _disableForTyes.add(clazz);
+    }
   }
 
   /*
@@ -52,15 +60,23 @@ public abstract class AbstractStageByTypeAction extends AbstractStageAction {
       return;
     }
 
-    // List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getSelectedArtifacts();
-    // boolean e = true;
-    // for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
-    // if (iBundleMakerArtifact.isInstanceOf(ITypeArtifact.class)) {
-    // e = false;
-    // break;
-    // }
-    // }
-    setEnabled(true);
+    List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getSelectedArtifacts();
+    boolean e = true;
+    for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
+
+      for (Class<? extends IBundleMakerArtifact> clazz : _disableForTyes) {
+        if (iBundleMakerArtifact.isInstanceOf(clazz)) {
+          e = false;
+          break;
+        }
+
+        if (!e) {
+          break;
+        }
+
+      }
+    }
+    setEnabled(e);
 
   }
 
