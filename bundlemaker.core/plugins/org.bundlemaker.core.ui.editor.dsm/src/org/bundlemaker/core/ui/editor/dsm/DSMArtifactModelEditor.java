@@ -250,8 +250,8 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
   }
 
   private boolean isResourceOrResourceContent(IArtifactSelection selection) {
-    return selection.getSelectedArtifacts().get(0) instanceof IResourceArtifact
-        || selection.getSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
+    return selection.getEffectiveSelectedArtifacts().get(0) instanceof IResourceArtifact
+        || selection.getEffectiveSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
   }
 
   private void initSelection(IArtifactSelection selection) {
@@ -267,7 +267,7 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       //
       
       // set the model
-        DsmViewModel model = new DsmViewModel(selection.getSelectedArtifacts());
+        DsmViewModel model = new DsmViewModel(selection.getEffectiveSelectedArtifacts());
         model.setLabelPresentationMode(_detailComposite.getLabelPresentationMode());
 		_viewWidget.setModel(model);
 

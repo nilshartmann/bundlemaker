@@ -30,7 +30,7 @@ public class AddToStageAction extends AbstractStageAction {
     setEnabled(isManualAddMode() && artifactSelection.hasSelectedArtifacts());
 
     if (artifactSelection.hasSelectedArtifacts()) {
-      setText(artifactSelection.getSelectedArtifacts().size() + " Artifacts");
+      setText("Add " + artifactSelection.getSelectedArtifacts().size() + " Artifacts to Stage");
     } else {
       setText("Selected Artifacts");
     }

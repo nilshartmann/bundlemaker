@@ -81,7 +81,7 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     super.setCurrentArtifactSelection(artifactSelection);
 
     //
-    List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getSelectedArtifacts();
+    List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getEffectiveSelectedArtifacts();
     _model.setArtifacts(selectedArtifacts);
   }
 
@@ -157,7 +157,7 @@ public class DependencyViewEditor extends AbstractArtifactSelectionAwareEditorPa
     });
 
     if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
-      _model.setArtifacts(getCurrentArtifactSelection().getSelectedArtifacts());
+      _model.setArtifacts(getCurrentArtifactSelection().getEffectiveSelectedArtifacts());
     }
   }
 

@@ -24,7 +24,7 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 public class StageGroupsAction extends AbstractStageByTypeAction {
 
   public StageGroupsAction() {
-    super("Group children", IGroupArtifact.class, IModuleArtifact.class, IPackageArtifact.class,
+    super("Add Group children to stage", IGroupArtifact.class, IModuleArtifact.class, IPackageArtifact.class,
         IResourceArtifact.class, ITypeArtifact.class);
   }
 
