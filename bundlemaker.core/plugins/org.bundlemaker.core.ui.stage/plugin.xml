@@ -6,7 +6,7 @@
          point="org.eclipse.ui.views">
       <view
             name="Artifacts Stage"
-            icon="icons/sample.gif"
+            icon="icons/stage-view.png"
             category="org.bundlemaker.core.ui.views"
             class="org.bundlemaker.core.ui.stage.view.StageView"
             id="org.bundlemaker.core.ui.stage.StageView">
