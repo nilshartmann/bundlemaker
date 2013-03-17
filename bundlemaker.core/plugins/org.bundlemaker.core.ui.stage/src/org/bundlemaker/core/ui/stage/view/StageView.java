@@ -18,7 +18,6 @@ import org.bundlemaker.core.ui.event.stage.ArtifactStageAddMode;
 import org.bundlemaker.core.ui.event.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.ui.event.stage.IArtifactStageChangeListener;
 import org.bundlemaker.core.ui.stage.actions.AddModeActionGroup;
-import org.bundlemaker.core.ui.stage.actions.StageIcons;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
@@ -29,9 +28,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -60,7 +57,7 @@ public class StageView extends ViewPart {
                                                                             @Override
                                                                             public void artifactSelectionChanged(
                                                                                 IArtifactSelection event) {
-                                                                              refreshTreeContent(event);
+                                                                              refreshTreeContent();
 
                                                                             }
                                                                           };
@@ -73,8 +70,6 @@ public class StageView extends ViewPart {
                                                                               artifactStageConfigurationChanged();
                                                                             }
                                                                           };
-
-  private List<IBundleMakerArtifact>         _effectiveSelectedArtifacts  = Collections.emptyList();
 
   private TreeViewer                         _treeViewer;
 
@@ -122,38 +117,33 @@ public class StageView extends ViewPart {
     Selection.instance().getArtifactSelectionService()
         .addArtifactSelectionListener(Selection.ARTIFACT_STAGE_SELECTION_ID, _artifactSelectionListener);
 
-    IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-        .getSelection(Selection.ARTIFACT_STAGE_SELECTION_ID);
-
-    refreshTreeContent(selection);
+    refreshTreeContent();
 
   }
 
-  private void refreshTreeContent(IArtifactSelection event) {
-    if (event == null) {
-      _effectiveSelectedArtifacts = Collections.emptyList();
-    } else {
-      _effectiveSelectedArtifacts = event.getEffectiveSelectedArtifacts();
-    }
+  private void refreshTreeContent() {
+
+    List<IBundleMakerArtifact> visibleArtifacts = ArtifactStage.instance().getStagedArtifacts();
+
     //
     VisibleArtifactsFilter result = null;
 
     // set redraw to false
     _treeViewer.getTree().setRedraw(false);
 
-    if (_effectiveSelectedArtifacts.size() > 0) {
+    if (visibleArtifacts.size() > 0) {
       // set the artifacts
-      IBundleMakerArtifact artifact = _effectiveSelectedArtifacts.get(0);
+      IBundleMakerArtifact artifact = visibleArtifacts.get(0);
       _treeViewer.setInput(artifact.getRoot());
 
       // set the filter
-      result = new VisibleArtifactsFilter(_effectiveSelectedArtifacts);
+      result = new VisibleArtifactsFilter(visibleArtifacts);
       _treeViewer.setFilters(new ViewerFilter[] { result });
     }
 
     // set empty list
     else {
-      _treeViewer.setInput(_effectiveSelectedArtifacts);
+      _treeViewer.setInput(Collections.emptyList());
     }
 
     // redraw again
@@ -162,8 +152,6 @@ public class StageView extends ViewPart {
     if (isAutoExpand()) {
       _treeViewer.expandAll();
     }
-
-    refreshEnablement();
   }
 
   private void hookContextMenu() {
@@ -191,7 +179,6 @@ public class StageView extends ViewPart {
     _addModeActionGroup.fill(manager);
 
     manager.add(new Separator());
-    manager.add(_removeArtifactsAction);
     manager.add(_clearStageAction);
 
     manager.add(new Separator());
@@ -215,7 +202,6 @@ public class StageView extends ViewPart {
 
   private void fillLocalToolBar(IToolBarManager manager) {
 
-    manager.add(_removeArtifactsAction);
     manager.add(_clearStageAction);
     manager.add(new Separator());
 
@@ -232,17 +218,6 @@ public class StageView extends ViewPart {
 
     _addModeActionGroup = new AddModeActionGroup();
 
-    _treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-      @Override
-      public void selectionChanged(SelectionChangedEvent event) {
-        refreshEnablement();
-
-      }
-    });
-
-    refreshEnablement();
-
   }
 
   @Override
@@ -250,12 +225,6 @@ public class StageView extends ViewPart {
     ArtifactStage.instance().removeArtifactStageChangeListener(_artifactStageChangeListener);
     Selection.instance().getArtifactSelectionService().removeArtifactSelectionListener(_artifactSelectionListener);
     super.dispose();
-  }
-
-  protected void refreshEnablement() {
-    IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-    _removeArtifactsAction.setEnabled(!selection.isEmpty());
-    _clearStageAction.setEnabled(!_effectiveSelectedArtifacts.isEmpty());
   }
 
   /**
@@ -328,8 +297,6 @@ public class StageView extends ViewPart {
   class ClearStageAction extends Action {
     ClearStageAction() {
       super("Clear Stage", IAction.AS_PUSH_BUTTON);
-
-      setImageDescriptor(StageIcons.CLEAR_STAGE.getImageDescriptor());
     }
 
     /*
@@ -346,8 +313,6 @@ public class StageView extends ViewPart {
   class RemoveArtifactsAction extends Action {
     RemoveArtifactsAction() {
       super("Remove from Stage", IAction.AS_PUSH_BUTTON);
-
-      setImageDescriptor(StageIcons.REMOVE_FROM_STAGE.getImageDescriptor());
     }
 
     @Override
@@ -384,9 +349,7 @@ public class StageView extends ViewPart {
           bundleMakerArtifact = bundleMakerArtifact.getRoot();
 
         }
-        System.out.println("Artifact: " + bundleMakerArtifact);
-        System.out.println("  STAGED ARTIFACTS: " + _effectiveSelectedArtifacts);
-        stagedArtifact = _effectiveSelectedArtifacts.contains(bundleMakerArtifact);
+        stagedArtifact = getArtifactStage().isStaged(bundleMakerArtifact);
       }
 
       //
