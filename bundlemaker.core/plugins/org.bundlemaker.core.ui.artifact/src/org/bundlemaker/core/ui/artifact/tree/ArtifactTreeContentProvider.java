@@ -3,7 +3,6 @@ package org.bundlemaker.core.ui.artifact.tree;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.modules.IModularizedSystem;
@@ -123,24 +121,7 @@ public class ArtifactTreeContentProvider implements ITreeContentProvider, IVirtu
       //
       return EMPTY_OBJECT_ARRAY;
     } else if (parent instanceof IBundleMakerArtifact) {
-
-      IBundleMakerArtifact parentArtifact = (IBundleMakerArtifact) parent;
-
-      List<IBundleMakerArtifact> artifacts = new ArrayList<IBundleMakerArtifact>();
-
-      for (IBundleMakerArtifact iArtifact : parentArtifact.getChildren()) {
-        if (iArtifact.isInstanceOf(IPackageArtifact.class)) {
-          if (iArtifact.containsTypesOrResources()) {
-            artifacts.add(iArtifact);
-          } else {
-            //
-          }
-        } else {
-          artifacts.add(iArtifact);
-        }
-      }
-
-      return artifacts.toArray();
+      return ((IBundleMakerArtifact) parent).getChildren().toArray();
     }
     return EMPTY_OBJECT_ARRAY;
   }
