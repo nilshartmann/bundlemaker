@@ -1,5 +1,6 @@
 package org.bundlemaker.core.itestframework;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class ArtifactTestUtil {
     builder.append("\n");
 
     //
-    List<? extends IBundleMakerArtifact> children = BundleMakerTestUtils.asSortedList((List<IBundleMakerArtifact>)artifact.getChildren(), new Comparator<IBundleMakerArtifact>() {
+    List<? extends IBundleMakerArtifact> children = BundleMakerTestUtils.asSortedList((Collection<IBundleMakerArtifact>)artifact.getChildren(), new Comparator<IBundleMakerArtifact>() {
       @Override
       public int compare(IBundleMakerArtifact o1, IBundleMakerArtifact o2) {
         return o1.getQualifiedName().compareTo(o2.getQualifiedName());
