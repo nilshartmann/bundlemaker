@@ -208,11 +208,23 @@ public class DependencyTreeComposite extends Composite {
    * 
    * @param selectedDetailDependencies
    */
-  private void setSelectedDetailDependencies(Collection<IDependency> dependencies) {
+  private void setSelectedDetailDependencies(List<IDependency> dependencies) {
 
     //
-    Selection.instance().getDependencySelectionService()
-        .setSelection(getDependencySelectionId(), _providerId, dependencies);
+    if (propagateSelectedDetailDependencies()) {
+      Selection.instance().getDependencySelectionService()
+          .setSelection(getDependencySelectionId(), _providerId, dependencies);
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  protected boolean propagateSelectedDetailDependencies() {
+    return true;
   }
 
   /**
@@ -251,8 +263,7 @@ public class DependencyTreeComposite extends Composite {
 
         //
         Set<IBundleMakerArtifact> visibleArtifacts = _helper.setSelectedFromArtifacts(Helper
-            .toArtifactList(structuredSelection
-                .toList()));
+            .toArtifactList(structuredSelection.toList()));
         VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
         setSelectedDetailDependencies(_helper.getFilteredDependencies());
 
@@ -312,8 +323,7 @@ public class DependencyTreeComposite extends Composite {
 
         //
         Set<IBundleMakerArtifact> visibleArtifacts = _helper.setSelectedToArtifacts(Helper
-            .toArtifactList(structuredSelection
-                .toList()));
+            .toArtifactList(structuredSelection.toList()));
         VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
         setSelectedDetailDependencies(_helper.getFilteredDependencies());
 

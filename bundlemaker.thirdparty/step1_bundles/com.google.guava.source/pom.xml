@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.bundlemaker.thirdparty</groupId>
+		<artifactId>org.bundlemaker.thirdparty.bundle.parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<artifactId>com.google.guava.source</artifactId>
+	<version>${guava-version}</version>
+	<packaging>bundle</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava-version}</version>
+			<classifier>sources</classifier>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Vendor>BundleMaker project team</Bundle-Vendor>
+						<Bundle-Version>${parsedVersion.osgiVersion}</Bundle-Version>
+						<Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
+						<Eclipse-SourceBundle>com.google.guava;version="${parsedVersion.osgiVersion}";roots:="."</Eclipse-SourceBundle>
+						<_exportcontents></_exportcontents>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

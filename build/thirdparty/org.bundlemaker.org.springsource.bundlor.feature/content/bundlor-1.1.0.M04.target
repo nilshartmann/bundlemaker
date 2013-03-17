@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="bundlor-1.1.0.M04" sequenceNumber="2">
-<locations>
-<location path="${eclipse_home}" type="Profile"/>
-<location path="${project_loc:org.bundlemaker.org.springsource.bundlor.feature}/content/bundlor-1.1.0.M04" type="Directory"/>
-</locations>
-</target>

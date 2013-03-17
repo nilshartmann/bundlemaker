@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+
+   <feature id="org.bundlemaker.core.feature" version="0.10.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>
+   <feature id="org.bundlemaker.core.feature.source" version="0.10.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>
+   <feature id="org.bundlemaker.core.base.feature" version="0.10.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>
+   <feature id="org.bundlemaker.core.base.feature.source" version="0.10.0.qualifier">
+      <category name="BundleMaker"/>
+   </feature>   
+   
+   <feature id="org.bundlemaker.experimental.feature" version="0.10.0.qualifier">
+      <category name="BundleMaker EXPERIMENTAL"/>
+   </feature>
+   <feature id="org.bundlemaker.experimental.feature.source" version="0.10.0.qualifier">
+      <category name="BundleMaker EXPERIMENTAL"/>
+   </feature>
+   
+   <category-def name="BundleMaker" label="BundleMaker"/>
+   <category-def name="BundleMaker EXPERIMENTAL" label="BundleMaker EXPERIMENTAL">
+      <description>
+         EXPERIMENTAL features of BundleMaker. Plug-ins contained in this features are experimental only and might be removed or changed at any time. Use with care.
+      </description>
+   </category-def>
+</site>

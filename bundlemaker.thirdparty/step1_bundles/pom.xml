@@ -1,0 +1,57 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.bundlemaker.thirdparty</groupId>
+		<artifactId>org.bundlemaker.thirdparty.parent</artifactId>
+		<version>1.0.0</version>
+	</parent>
+
+	<artifactId>org.bundlemaker.thirdparty.bundle.parent</artifactId>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core</module>
+		<module>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core.source</module>
+		<module>com.google.gson.source</module>
+		<module>com.google.guava.source</module>
+	</modules>
+
+	<build>
+		<plugins>
+
+			<!-- Build helper maven plugin sets the parsedVersion.osgiVersion property -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>set-osgi-version</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attach-p2-metadata</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

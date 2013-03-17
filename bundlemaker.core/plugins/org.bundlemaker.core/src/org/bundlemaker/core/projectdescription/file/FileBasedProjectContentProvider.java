@@ -70,6 +70,8 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    */
   public void setName(String name) {
     _name = name;
+
+    fireProjectDescriptionChangedEvent();
   }
 
   public String getName() {
@@ -85,6 +87,8 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    */
   public void setVersion(String version) {
     _version = version;
+
+    fireProjectDescriptionChangedEvent();
   }
 
   public String getVersion() {
@@ -99,6 +103,8 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    */
   public void setAnalyzeMode(AnalyzeMode analyzeMode) {
     _analyzeMode = analyzeMode;
+
+    fireProjectDescriptionChangedEvent();
   }
 
   public AnalyzeMode getAnalyzeMode() {
@@ -116,6 +122,8 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     for (String path : binaryRootPaths) {
       _binaryPaths.add(new VariablePath(path));
     }
+
+    fireProjectDescriptionChangedEvent();
   }
 
   public Set<VariablePath> getBinaryPaths() {
@@ -133,6 +141,8 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     for (String path : sourceRootPaths) {
       _sourcePaths.add(new VariablePath(path));
     }
+
+    fireProjectDescriptionChangedEvent();
   }
 
   public Set<VariablePath> getSourcePaths() {
@@ -147,16 +157,18 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    * @param type
    */
   public void addRootPath(VariablePath path, ProjectContentType type) {
-  
+
     //
     if (ProjectContentType.BINARY.equals(type)) {
       _binaryPaths.add(path);
     }
-  
+
     //
     else if (ProjectContentType.SOURCE.equals(type)) {
       _sourcePaths.add(path);
     }
+
+    fireProjectDescriptionChangedEvent();
   }
 
   /**
@@ -167,16 +179,18 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    * @param contentType
    */
   public void removeRootPath(VariablePath path, ProjectContentType type) {
-  
+
     //
     if (ProjectContentType.BINARY.equals(type)) {
       _binaryPaths.add(path);
     }
-  
+
     //
     else if (ProjectContentType.SOURCE.equals(type)) {
       _sourcePaths.add(path);
     }
+
+    fireProjectDescriptionChangedEvent();
   }
 
   /**

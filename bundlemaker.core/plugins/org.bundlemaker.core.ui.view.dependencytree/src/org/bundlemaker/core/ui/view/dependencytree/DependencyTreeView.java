@@ -35,7 +35,7 @@ public class DependencyTreeView extends AbstractDependencySelectionAwareViewPart
   public void createPartControl(Composite parent) {
 
     //
-    _composite = new CropableDependencyTreeComposite(parent, ID, true);
+    _composite = new CropableDependencyTreeComposite(parent, ID, true, true);
 
     //
     initDependencies(getCurrentDependencySelection());

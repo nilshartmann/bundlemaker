@@ -32,7 +32,7 @@
 							<autoStart>true</autoStart>
 						</bundle>
 						<bundle>
-							<id>com.db4o.osgi</id>
+							<id>org.bundlemaker.com.db4o.osgi</id>
 							<level>4</level>
 							<autoStart>true</autoStart>
 						</bundle>
