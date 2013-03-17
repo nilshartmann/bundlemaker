@@ -57,7 +57,7 @@ public class StageView extends ViewPart {
                                                                             @Override
                                                                             public void artifactSelectionChanged(
                                                                                 IArtifactSelection event) {
-                                                                              refreshTreeContent();
+                                                                              refreshTreeContent(event);
 
                                                                             }
                                                                           };
@@ -70,6 +70,8 @@ public class StageView extends ViewPart {
                                                                               artifactStageConfigurationChanged();
                                                                             }
                                                                           };
+
+  private List<IBundleMakerArtifact>         _effectiveSelectedArtifacts  = Collections.emptyList();
 
   private TreeViewer                         _treeViewer;
 
@@ -117,33 +119,38 @@ public class StageView extends ViewPart {
     Selection.instance().getArtifactSelectionService()
         .addArtifactSelectionListener(Selection.ARTIFACT_STAGE_SELECTION_ID, _artifactSelectionListener);
 
-    refreshTreeContent();
+    IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
+        .getSelection(Selection.ARTIFACT_STAGE_SELECTION_ID);
+
+    refreshTreeContent(selection);
 
   }
 
-  private void refreshTreeContent() {
-
-    List<IBundleMakerArtifact> visibleArtifacts = ArtifactStage.instance().getStagedArtifacts();
-
+  private void refreshTreeContent(IArtifactSelection event) {
+    if (event == null) {
+      _effectiveSelectedArtifacts = Collections.emptyList();
+    } else {
+      _effectiveSelectedArtifacts = event.getEffectiveSelectedArtifacts();
+    }
     //
     VisibleArtifactsFilter result = null;
 
     // set redraw to false
     _treeViewer.getTree().setRedraw(false);
 
-    if (visibleArtifacts.size() > 0) {
+    if (_effectiveSelectedArtifacts.size() > 0) {
       // set the artifacts
-      IBundleMakerArtifact artifact = visibleArtifacts.get(0);
+      IBundleMakerArtifact artifact = _effectiveSelectedArtifacts.get(0);
       _treeViewer.setInput(artifact.getRoot());
 
       // set the filter
-      result = new VisibleArtifactsFilter(visibleArtifacts);
+      result = new VisibleArtifactsFilter(_effectiveSelectedArtifacts);
       _treeViewer.setFilters(new ViewerFilter[] { result });
     }
 
     // set empty list
     else {
-      _treeViewer.setInput(Collections.emptyList());
+      _treeViewer.setInput(_effectiveSelectedArtifacts);
     }
 
     // redraw again
@@ -350,8 +357,8 @@ public class StageView extends ViewPart {
 
         }
         System.out.println("Artifact: " + bundleMakerArtifact);
-        System.out.println("  STAGED ARTIFACTS: " + getArtifactStage().getStagedArtifacts());
-        stagedArtifact = getArtifactStage().isStaged(bundleMakerArtifact);
+        System.out.println("  STAGED ARTIFACTS: " + _effectiveSelectedArtifacts);
+        stagedArtifact = _effectiveSelectedArtifacts.contains(bundleMakerArtifact);
       }
 
       //

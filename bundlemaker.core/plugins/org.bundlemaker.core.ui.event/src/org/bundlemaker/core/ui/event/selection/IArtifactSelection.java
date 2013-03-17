@@ -26,9 +26,22 @@ import org.bundlemaker.core.analysis.IRootArtifact;
 public interface IArtifactSelection extends IProviderSelection {
 
   /**
-   * The selected artifacts. Never null but might be empty.
+   * The <b>effective</b> selected artifacts, that is, in case <tt>useChildrenOfSelectedArtifacts</tt> is set to true,
+   * this method returns the children of the selected artifacts.
    * 
-   * @return an <b>unmodifiable</b> list of {@link IBundleMakerArtifact IArtifacts}
+   * <p>
+   * Clients will normally use this method
+   * </p>
+   */
+  List<IBundleMakerArtifact> getEffectiveSelectedArtifacts();
+
+  /**
+   * The selected artifacts, regardless of <tt>useChildrenOfSelectedArtifacts</tt>.
+   * 
+   * <p>
+   * Cients will normally use {@link #getEffectiveSelectedArtifacts()}
+   * 
+   * @return an <b>unmodifiable</b> list of {@link IBundleMakerArtifact IArtifacts}. Never null but might be empty.
    */
   List<IBundleMakerArtifact> getSelectedArtifacts();
 

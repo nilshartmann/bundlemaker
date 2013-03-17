@@ -55,8 +55,15 @@ public class ArtifactStage {
           }
         });
 
+    boolean useChildrenOfSelectedArtifacts = Selection.instance().getArtifactSelectionService()
+        .getUseChildrenOfSelectedArtifacts();
+    if (useChildrenOfSelectedArtifacts) {
+      _addMode = ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts;
+    }
+
     IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
         .getSelection(Selection.PROJECT_EXLPORER_SELECTION_ID);
+
     projectExplorerSelectionChanged(selection);
   }
 
@@ -64,18 +71,15 @@ public class ArtifactStage {
     return !_stagedArtifacts.isEmpty();
   }
 
-  /**
-   * @return the stagedArtifacts. Never null
-   */
-  public List<IBundleMakerArtifact> getStagedArtifacts() {
-    return _stagedArtifacts;
-  }
-
   public void setAddMode(ArtifactStageAddMode addMode) {
     ArtifactStageAddMode oldMode = _addMode;
     this._addMode = checkNotNull(addMode);
 
     if (!_addMode.equals(oldMode)) {
+
+      Selection.instance().getArtifactSelectionService()
+          .setUseChildrenOfSelectedArtifacts(addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
+
       fireArtifactStageChange(ArtifactStageChangeReason.configurationChanged);
     }
   }
@@ -85,14 +89,6 @@ public class ArtifactStage {
    */
   public ArtifactStageAddMode getAddMode() {
     return _addMode;
-  }
-
-  public boolean isStaged(IBundleMakerArtifact artifact) {
-    if (artifact == null) {
-      return false;
-    }
-
-    return _stagedArtifacts.contains(artifact);
   }
 
   protected void projectExplorerSelectionChanged(IArtifactSelection newSelection) {
@@ -108,24 +104,26 @@ public class ArtifactStage {
     }
 
     final List<IBundleMakerArtifact> selectedArtifacts = newSelection.getSelectedArtifacts();
-    List<IBundleMakerArtifact> stagedArtifacts = new LinkedList<IBundleMakerArtifact>();
-    if (_addMode == ArtifactStageAddMode.autoAddSelectedArtifacts) {
-      stagedArtifacts.addAll(selectedArtifacts);
+    setStagedArtifacts(selectedArtifacts);
 
-    } else if (_addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts) {
-      // add children of selected Artifacts
-
-      System.out.println("STAGED ARTIFACTS: " + stagedArtifacts);
-
-      for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
-        Collection<IBundleMakerArtifact> children = iBundleMakerArtifact.getChildren();
-
-        System.out.println("  ADD CHILDREN: " + children);
-        stagedArtifacts.addAll(children);
-      }
-    }
-
-    setStagedArtifacts(stagedArtifacts);
+    // List<IBundleMakerArtifact> stagedArtifacts = new LinkedList<IBundleMakerArtifact>();
+    // if (_addMode == ArtifactStageAddMode.autoAddSelectedArtifacts) {
+    // stagedArtifacts.addAll(selectedArtifacts);
+    //
+    // } else if (_addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts) {
+    // // add children of selected Artifacts
+    //
+    // System.out.println("STAGED ARTIFACTS: " + stagedArtifacts);
+    //
+    // for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
+    // Collection<IBundleMakerArtifact> children = iBundleMakerArtifact.getChildren();
+    //
+    // System.out.println("  ADD CHILDREN: " + children);
+    // stagedArtifacts.addAll(children);
+    // }
+    // }
+    //
+    // setStagedArtifacts(stagedArtifacts);
   }
 
   /**

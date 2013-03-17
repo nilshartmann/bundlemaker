@@ -11,6 +11,7 @@
 package org.bundlemaker.core.ui.event.selection.internal;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -77,6 +78,22 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
   @Override
   public List<IBundleMakerArtifact> getSelectedArtifacts() {
     return _selectedArtifacts;
+  }
+
+  @Override
+  public List<IBundleMakerArtifact> getEffectiveSelectedArtifacts() {
+
+    if (!useChildrenOfSelectedArtifacts()) {
+      return _selectedArtifacts;
+    }
+
+    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
+    for (IBundleMakerArtifact artifact : _selectedArtifacts) {
+      result.addAll(artifact.getChildren());
+    }
+
+    return result;
+
   }
 
   /**
