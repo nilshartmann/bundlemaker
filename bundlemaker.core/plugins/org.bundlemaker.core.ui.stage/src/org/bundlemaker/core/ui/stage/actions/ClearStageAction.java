@@ -22,6 +22,8 @@ public class ClearStageAction extends AbstractStageAction {
    */
   public ClearStageAction() {
     super("Clear Stage");
+
+    setImageDescriptor(StageIcons.CLEAR_STAGE.getImageDescriptor());
   }
 
   /*

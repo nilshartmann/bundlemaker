@@ -31,9 +31,12 @@ public class AddModeActionGroup {
   private AddModeAction _dontAutoAddModeAction;
 
   public AddModeActionGroup() {
-    _autoAddChildrenModeAction = new AddModeAction(ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
-    _autoAddModeAction = new AddModeAction(ArtifactStageAddMode.autoAddSelectedArtifacts);
-    _dontAutoAddModeAction = new AddModeAction(ArtifactStageAddMode.doNotAutomaticallyAddArtifacts);
+    _autoAddChildrenModeAction = new AddModeAction(ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts,
+        StageIcons.ADD_CHILD_ARTIFACTS_ICON.getImageDescriptor());
+    _autoAddModeAction = new AddModeAction(ArtifactStageAddMode.autoAddSelectedArtifacts,
+        StageIcons.ADD_ARTIFACTS_ICON.getImageDescriptor());
+    _dontAutoAddModeAction = new AddModeAction(ArtifactStageAddMode.doNotAutomaticallyAddArtifacts,
+        StageIcons.ADD_MANUALLY_ICON.getImageDescriptor());
   }
 
   public void fill(IContributionManager menuManager) {

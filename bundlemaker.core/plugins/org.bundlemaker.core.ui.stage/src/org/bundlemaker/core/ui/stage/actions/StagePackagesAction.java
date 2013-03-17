@@ -22,7 +22,7 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 public class StagePackagesAction extends AbstractStageByTypeAction {
 
   public StagePackagesAction() {
-    super("Package children", IPackageArtifact.class, IResourceArtifact.class, ITypeArtifact.class);
+    super("Add Package children to Stage", IPackageArtifact.class, IResourceArtifact.class, ITypeArtifact.class);
   }
 
 }

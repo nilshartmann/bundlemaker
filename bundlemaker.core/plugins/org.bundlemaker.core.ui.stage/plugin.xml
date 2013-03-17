@@ -19,13 +19,16 @@
 			locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.selectors">
 			
 		 <menu
-           id="org.bundlemaker.core.ui.artifactstage"
-           label="Stage">
+         icon="icons/stage-view.png"
+         id="org.bundlemaker.core.ui.artifactstage"
+         label="Stage">
 				<visibleWhen checkEnabled="false">
 					<reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 				</visibleWhen>
 				<dynamic
-        			id="org.bundlemaker.core.ui.stage.StageSubMenu" class="org.bundlemaker.core.ui.stage.actions.StageSubMenu">
+        			id="org.bundlemaker.core.ui.stage.StageSubMenu" class="org.bundlemaker.core.ui.stage.actions.StageSubMenu"
+        			
+        			>
          			<visibleWhen checkEnabled="true"/>
 				</dynamic>
      		</menu>

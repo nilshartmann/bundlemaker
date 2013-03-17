@@ -20,6 +20,7 @@ public class StageSubMenu extends CompoundContributionItem {
 
     _addModeActionGroup = new AddModeActionGroup();
     _manipulateStageActionGroup = new ManipulateStageActionGroup();
+
   }
 
   @Override

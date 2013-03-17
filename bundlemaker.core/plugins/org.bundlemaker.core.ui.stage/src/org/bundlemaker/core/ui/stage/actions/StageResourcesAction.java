@@ -21,7 +21,7 @@ import org.bundlemaker.core.analysis.ITypeArtifact;
 public class StageResourcesAction extends AbstractStageByTypeAction {
 
   public StageResourcesAction() {
-    super("Resource children", IResourceArtifact.class, ITypeArtifact.class);
+    super("Add Resource children to Stage", IResourceArtifact.class, ITypeArtifact.class);
   }
 
 }

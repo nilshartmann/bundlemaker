@@ -15,14 +15,16 @@ import org.bundlemaker.core.ui.event.stage.ArtifactStage;
 import org.bundlemaker.core.ui.event.stage.ArtifactStageAddMode;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.resource.ImageDescriptor;
 
 public class AddModeAction extends Action {
   private final ArtifactStageAddMode _addMode;
 
-  AddModeAction(ArtifactStageAddMode mode) {
+  AddModeAction(ArtifactStageAddMode mode, ImageDescriptor descriptor) {
     super(mode.toString(), IAction.AS_CHECK_BOX);
     _addMode = mode;
 
+    setImageDescriptor(descriptor);
     update();
   }
 

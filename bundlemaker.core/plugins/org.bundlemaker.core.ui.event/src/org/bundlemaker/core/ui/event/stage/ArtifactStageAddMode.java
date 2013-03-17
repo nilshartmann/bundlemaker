@@ -17,8 +17,8 @@ package org.bundlemaker.core.ui.event.stage;
  */
 public enum ArtifactStageAddMode {
 
-  autoAddSelectedArtifacts("Add selected Artifacts"), //
-  autoAddChildrenOfSelectedArtifacts("Add children of selected Artifacts"), //
+  autoAddSelectedArtifacts("Automatically add selected Artifacts"), //
+  autoAddChildrenOfSelectedArtifacts("Automatically add children of selected Artifacts"), //
   doNotAutomaticallyAddArtifacts("Manually add Artifacts");
 
   private final String _label;
