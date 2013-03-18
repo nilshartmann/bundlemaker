@@ -1,11 +1,12 @@
 package org.bundlemaker.core.itestframework.simple_artifact_model;
 
+import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
-import org.bundlemaker.core.itestframework.internal.GroupTransformation;
-import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.junit.After;
 import org.junit.Before;
 
@@ -44,10 +45,11 @@ public abstract class AbstractSimpleArtifactModelTest extends AbstractBundleMake
     super.before();
 
     // apply the basic group transformation
-    getModularizedSystem().applyTransformations(
-        null,
-        new GroupTransformation(new ModuleIdentifier(TEST_PROJECT_NAME, getTestProjectVersion()), new Path(
-            "group1/group2")));
+    IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
+        AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
+    IGroupArtifact groupArtifact = rootArtifact.getOrCreateGroup("group1/group2");
+    groupArtifact.addArtifact(AnalysisModelQueries.getModuleArtifact(rootArtifact, getTestProjectName(),
+        getTestProjectVersion()));
 
     //
     _binModel = new SimpleArtifactModel(getBundleMakerProject().getModularizedSystemWorkingCopy(),

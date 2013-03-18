@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
+package org.bundlemaker.core.itest.jedit_artifact_model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -21,19 +21,24 @@ public class Undo_GroupGetExisting_Test extends AbstractSimpleArtifactModelTest 
   public void createNewGroupBelowExistingGroup() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
-        //
+      public void prePostCondition() {
         assertGroupCountInModularizedSystem(getModularizedSystem(), 2);
         assertGroupCount(getBinModel(), 2);
         assertGroupCount(getSrcModel(), 2);
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
+      }
 
-        // We have 1 (!) transformations here, as the "CreateGroupTransformation" is
-        // implemented as an inner transformation
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
 
         // STEP 1: create a new group
         IGroupArtifact groupArtifact = getBinModel().getRootArtifact().getOrCreateGroup("group1/group2");
@@ -43,11 +48,11 @@ public class Undo_GroupGetExisting_Test extends AbstractSimpleArtifactModelTest 
         assertGroupCountInModularizedSystem(getModularizedSystem(), 2);
         assertGroupCount(getBinModel(), 2);
         assertGroupCount(getSrcModel(), 2);
-        
-        // We have 1 (!) transformations here, as the "CreateGroupTransformation" is
+
+        // We have 1 (2) transformations here, as the "CreateGroupTransformation" is
         // implemented as an inner transformation
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 }

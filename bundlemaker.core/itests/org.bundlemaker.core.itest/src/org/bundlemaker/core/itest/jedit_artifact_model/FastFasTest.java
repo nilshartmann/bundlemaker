@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
+package org.bundlemaker.core.itest.jedit_artifact_model;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,8 +29,8 @@ public class FastFasTest extends AbstractJeditAnalysisModelTest {
   @Test
   public void fastFasTest() throws Exception {
 
-    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(getBinHierarchicalModel()
-        .getJeditModuleArtifact(), "org.gjt.sp.jedit");
+    IPackageArtifact packageArtifact = AnalysisModelQueries.findPackageArtifactByQualifiedName(
+        getBinHierarchicalModel().getJeditModuleArtifact(), "org.gjt.sp.jedit");
 
     Assert.assertNotNull(packageArtifact);
 

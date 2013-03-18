@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
+package org.bundlemaker.core.itest.jedit_artifact_model;
 
 import java.util.Set;
 
@@ -26,8 +26,8 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testBinHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getBinHierarchicalModel()
-        .getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.class");
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(
+        getBinHierarchicalModel().getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
 
     //
@@ -42,9 +42,8 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
   public void testSrcHierarchicalTransitiveClosures() {
 
     //
-    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getSrcHierarchicalModel()
-        .getRootArtifact(),
-        "org/gjt/sp/jedit/search/AllBufferSet.java");
+    IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(
+        getSrcHierarchicalModel().getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);
 
     //
@@ -60,8 +59,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
 
     //
     IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getBinFlatModel()
-        .getRootArtifact(),
-        "org/gjt/sp/jedit/search/AllBufferSet.class");
+        .getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.class");
     Assert.assertNotNull(resourceArtifact);
 
     //
@@ -77,8 +75,7 @@ public class TransitiveClosureTest extends AbstractJeditAnalysisModelTest {
 
     //
     IResourceArtifact resourceArtifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(getSrcFlatModel()
-        .getRootArtifact(),
-        "org/gjt/sp/jedit/search/AllBufferSet.java");
+        .getRootArtifact(), "org/gjt/sp/jedit/search/AllBufferSet.java");
     Assert.assertNotNull(resourceArtifact);
 
     //

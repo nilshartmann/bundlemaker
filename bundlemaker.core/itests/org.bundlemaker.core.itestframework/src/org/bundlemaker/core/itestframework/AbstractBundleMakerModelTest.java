@@ -47,17 +47,16 @@ public abstract class AbstractBundleMakerModelTest {
     // setup if necessary
     if (!_initializedBundleMakerProjects.containsKey(getTestProjectName())) {
       IBundleMakerProject bundleMakerProject = TestProjectCreator.getBundleMakerProject(getTestProjectName());
-      _initializedBundleMakerProjects.put(getTestProjectName(), bundleMakerProject);
       TestProjectCreator.addProjectDescription(bundleMakerProject, getTestProjectName());
       TestProjectCreator.initializeParseAndOPen(bundleMakerProject);
+      _initializedBundleMakerProjects.put(getTestProjectName(), bundleMakerProject);
     }
 
     //
     _bundleMakerProject = TestProjectCreator.getBundleMakerProject(getTestProjectName());
 
     //
-    _modularizedSystem = (IModifiableModularizedSystem) _bundleMakerProject
-        .getModularizedSystemWorkingCopy(getTestProjectName());
+    _modularizedSystem = (IModifiableModularizedSystem) _bundleMakerProject.getModularizedSystemWorkingCopy();
 
     // assert the test module
     Assert.assertNotNull(_modularizedSystem.getModule(getTestProjectName(), getTestProjectVersion()));

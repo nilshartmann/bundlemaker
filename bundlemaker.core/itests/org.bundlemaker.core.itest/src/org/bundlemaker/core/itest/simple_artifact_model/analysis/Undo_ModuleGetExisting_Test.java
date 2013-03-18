@@ -21,35 +21,30 @@ public class Undo_ModuleGetExisting_Test extends AbstractSimpleArtifactModelTest
   public void createNewModuleWithGroupBelowExistingGroup() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-        //
+      public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
         assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
         assertResourceModuleCount(getBinModel(), 1);
         assertResourceModuleCount(getSrcModel(), 1);
+      }
 
-        // We have 1 (!) transformations here, as the "CreateGroupTransformation" is
-        // implemented as an inner transformation
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
-
-        // STEP 1: create a new module
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
+        
         IModuleArtifact moduleArtifact = getBinModel().getRootArtifact().getOrCreateModule(
             "group1/group2/SimpleArtifactModelTest", "1.0.0");
+        
         Assert.assertEquals("group1/group2/SimpleArtifactModelTest_1.0.0", moduleArtifact.getQualifiedName());
-
-        //
-        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
-
-        // We have 1 (!) transformations here, as the "CreateGroupTransformation" is
-        // implemented as an inner transformation
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 }

@@ -97,19 +97,25 @@ public class Undo_AddArtifactsToPackage_Test extends AbstractSimpleArtifactModel
   private void perform(final AddToPackage addToModule) throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
-        //
+      public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
         assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
         assertResourceModuleCount(getBinModel(), 1);
         assertResourceModuleCount(getSrcModel(), 1);
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
+      }
 
-        //
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
 
         // STEP 1: create a new module
         IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("NewModule", "1.0.0");
@@ -134,19 +140,8 @@ public class Undo_AddArtifactsToPackage_Test extends AbstractSimpleArtifactModel
             .getTestResource().getFullPath());
         Assert.assertEquals(new Path("group1/group2/NewModule_1.0.0/de/test/Test.java"), getSrcModel()
             .getTestResource().getFullPath());
-
-        // STEP 3: Undo...
-        for (int i = getModularizedSystem().getTransformations().size() - 1; i > 0; i--) {
-          getModularizedSystem().undoLastTransformation();
-        }
-
-        // assert that we one modules
-        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 
   /**

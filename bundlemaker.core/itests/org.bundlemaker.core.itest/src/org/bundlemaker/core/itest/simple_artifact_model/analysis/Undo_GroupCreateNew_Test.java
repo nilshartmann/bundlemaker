@@ -21,16 +21,24 @@ public class Undo_GroupCreateNew_Test extends AbstractSimpleArtifactModelTest {
   public void createNewGroupBelowExistingGroup() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
-        //
+      public void prePostCondition() {
         assertGroupCountInModularizedSystem(getModularizedSystem(), 2);
         assertGroupCount(getBinModel(), 2);
         assertGroupCount(getSrcModel(), 2);
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
 
         // STEP 1: create a new group
         IGroupArtifact newGroupArtifact = getBinModel().getGroup2Artifact().getOrCreateGroup("NewGroup");
@@ -40,17 +48,9 @@ public class Undo_GroupCreateNew_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals(3, getModularizedSystem().getGroups().size());
         assertGroupCount(getBinModel(), 3);
         assertGroupCount(getSrcModel(), 3);
-        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
-
-        // STEP 2: UNDO
-        getModularizedSystem().undoLastTransformation();
-
-        assertGroupCountInModularizedSystem(getModularizedSystem(), 2);
-        assertGroupCount(getBinModel(), 2);
-        assertGroupCount(getSrcModel(), 2);
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 
   /**
@@ -63,16 +63,25 @@ public class Undo_GroupCreateNew_Test extends AbstractSimpleArtifactModelTest {
   public void createNewGroupBelowRoot() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
+      public void prePostCondition() {
         // assert that we have two groups
         assertGroupCountInModularizedSystem(getModularizedSystem(), 2);
         assertGroupCount(getBinModel(), 2);
         assertGroupCount(getSrcModel(), 2);
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
 
         // STEP 1: create a new group
         IGroupArtifact newGroupArtifact = getBinModel().getRootArtifact().getOrCreateGroup("NewGroup");
@@ -82,19 +91,8 @@ public class Undo_GroupCreateNew_Test extends AbstractSimpleArtifactModelTest {
         Assert.assertEquals(3, getModularizedSystem().getGroups().size());
         assertGroupCount(getBinModel(), 3);
         assertGroupCount(getSrcModel(), 3);
-        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
-
-        // STEP 2: UNDO
-        getModularizedSystem().undoLastTransformation();
-
-        assertGroupCountInModularizedSystem(getModularizedSystem(), 2);
-        assertGroupCount(getBinModel(), 2);
-        assertGroupCount(getSrcModel(), 2);
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
-
-        // assert transformations
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 }

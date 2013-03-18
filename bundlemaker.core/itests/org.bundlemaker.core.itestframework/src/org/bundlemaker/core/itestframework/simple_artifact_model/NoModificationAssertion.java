@@ -11,18 +11,53 @@ import org.junit.Assert;
  */
 public class NoModificationAssertion {
 
-  public static void assertNoModification(AbstractSimpleArtifactModelTest test, Runnable runnable,
-      SimpleArtifactModel binModel, SimpleArtifactModel srcModel) {
+  public static void assertNoModification(AbstractSimpleArtifactModelTest test, Action action) {
 
     //
-    String expectedBinModel = AnalysisModelQueries.artifactToString(binModel.getRootArtifact());
-    String expectedSrcModel = AnalysisModelQueries.artifactToString(srcModel.getRootArtifact());
+    String expectedBinModel = AnalysisModelQueries.artifactToString(test.getBinModel().getRootArtifact());
+    String expectedSrcModel = AnalysisModelQueries.artifactToString(test.getSrcModel().getRootArtifact());
 
     //
-    runnable.run();
+    action.prePostCondition();
 
     //
-    Assert.assertEquals(expectedBinModel, AnalysisModelQueries.artifactToString(binModel.getRootArtifact()));
-    Assert.assertEquals(expectedSrcModel, AnalysisModelQueries.artifactToString(srcModel.getRootArtifact()));
+    int initialCount = test.getModularizedSystem().getTransformations().size();
+
+    //
+    action.execute();
+
+    // Undo...
+    for (int i = test.getModularizedSystem().getTransformations().size() - 1; i >= initialCount; i--) {
+      test.getModularizedSystem().undoLastTransformation();
+    }
+
+    //
+    action.prePostCondition();
+
+    //
+    Assert.assertEquals(expectedBinModel, AnalysisModelQueries.artifactToString(test.getBinModel().getRootArtifact()));
+    Assert.assertEquals(expectedSrcModel, AnalysisModelQueries.artifactToString(test.getSrcModel().getRootArtifact()));
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+   */
+  public static interface Action {
+
+    /**
+     * <p>
+     * </p>
+     */
+    public void prePostCondition();
+
+    /**
+     * <p>
+     * </p>
+     * 
+     */
+    public void execute();
   }
 }

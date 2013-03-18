@@ -1,6 +1,6 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
-import static org.bundlemaker.core.itestframework.simple_artifact_model.SimpleArtifactModelAssert.*;
+import static org.bundlemaker.core.itestframework.simple_artifact_model.SimpleArtifactModelAssert.assertMainModuleNameAndVersion;
 
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.itestframework.simple_artifact_model.NoModificationAssertion;
@@ -26,29 +26,25 @@ public class Undo_ModuleRename_Test extends AbstractSimpleArtifactModelTest {
   public void renameModuleArtifact() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
-        //
+      public void prePostCondition() {
         assertMainModuleNameAndVersion(getBinModel(), "SimpleArtifactModelTest", "1.0.0");
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
-
-        //
-        getBinModel().getMainModuleArtifact().setNameAndVersion("neuerName", "1.2.3");
-
-        //
-        assertMainModuleNameAndVersion(getBinModel(), "neuerName", "1.2.3");
         Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
-
-        // STEP 2: Undo
-        getModularizedSystem().undoLastTransformation();
-
-        //
-        assertMainModuleNameAndVersion(getBinModel(), "SimpleArtifactModelTest", "1.0.0");
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
       }
-    }, getBinModel(), getSrcModel());
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
+        getBinModel().getMainModuleArtifact().setNameAndVersion("neuerName", "1.2.3");
+        assertMainModuleNameAndVersion(getBinModel(), "neuerName", "1.2.3");
+      }
+    });
   }
 }

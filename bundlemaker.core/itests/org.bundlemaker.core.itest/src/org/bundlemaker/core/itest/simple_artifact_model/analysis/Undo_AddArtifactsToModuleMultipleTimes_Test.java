@@ -33,14 +33,14 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
       public void addToFirstModule(IModuleArtifact newModuleArtifact) {
         IPackageArtifact packageArtifact = getBinModel().getTestPackage();
         newModuleArtifact.addArtifact(packageArtifact);
-        Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(4, getModularizedSystem().getTransformations().size());
       }
 
       @Override
       public void addToSecondModule(IModuleArtifact newModuleArtifact) {
         newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
         newModuleArtifact.addArtifact(getBinModel().getTestResource());
-        Assert.assertEquals(6, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(7, getModularizedSystem().getTransformations().size());
       }
     });
   }
@@ -59,14 +59,14 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
       public void addToFirstModule(IModuleArtifact newModuleArtifact) {
         newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
         newModuleArtifact.addArtifact(getBinModel().getTestResource());
-        Assert.assertEquals(4, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(5, getModularizedSystem().getTransformations().size());
       }
 
       @Override
       public void addToSecondModule(IModuleArtifact newModuleArtifact) {
         newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
         newModuleArtifact.addArtifact(getBinModel().getTestResource());
-        Assert.assertEquals(7, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(8, getModularizedSystem().getTransformations().size());
       }
     });
   }
@@ -84,13 +84,13 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
       public void addToFirstModule(IModuleArtifact newModuleArtifact) {
         newModuleArtifact.addArtifact(getBinModel().getKlasseResource().getChild("Klasse"));
         newModuleArtifact.addArtifact(getBinModel().getTestResource().getChild("Test"));
-        Assert.assertEquals(4, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(5, getModularizedSystem().getTransformations().size());
       }
 
       public void addToSecondModule(IModuleArtifact newModuleArtifact) {
         newModuleArtifact.addArtifact(getBinModel().getKlasseResource().getChild("Klasse"));
         newModuleArtifact.addArtifact(getBinModel().getTestResource().getChild("Test"));
-        Assert.assertEquals(7, getModularizedSystem().getTransformations().size());
+        Assert.assertEquals(8, getModularizedSystem().getTransformations().size());
       }
     });
   }
@@ -104,19 +104,25 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
   private void perform(final AddToModule addToModule) throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
-        //
+      public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
         assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
         assertResourceModuleCount(getBinModel(), 1);
         assertResourceModuleCount(getSrcModel(), 1);
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
+      }
 
-        //
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
 
         // STEP 1: create a new module
         IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("NewModule", "1.0.0");
@@ -154,18 +160,8 @@ public class Undo_AddArtifactsToModuleMultipleTimes_Test extends AbstractSimpleA
         Assert.assertEquals(new Path("group1/group2/NewModule2_1.0.0/de/test/Test.java"), getSrcModel()
             .getTestResource().getFullPath());
 
-        // STEP 3: Undo...
-        for (int i = getModularizedSystem().getTransformations().size() - 1; i > 0; i--) {
-          getModularizedSystem().undoLastTransformation();
-        }
-
-        // assert that we one modules
-        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 
   /**

@@ -2,6 +2,7 @@ package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
 import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.assertResourceModuleCount;
 import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.assertResourceModuleCountInModularizedSystem;
+import static org.bundlemaker.core.itestframework.simple_artifact_model.SimpleArtifactModelAssert.assertMainModuleNameAndVersion;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
@@ -27,21 +28,27 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
   public void createNewModuleBelowExistingGroup() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
-        //
+      public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
         assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
         assertResourceModuleCount(getBinModel(), 1);
         assertResourceModuleCount(getSrcModel(), 1);
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
+      }
 
-        //
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
 
-        // STEP 1: create a new module
+        // create a new module
         IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("NewModule", "1.0.0");
         Assert.assertEquals("group1/group2/NewModule_1.0.0", newModuleArtifact.getQualifiedName());
 
@@ -52,17 +59,9 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
         assertResourceModuleCount(getSrcModel(), 2);
 
         //
-        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
-
-        // STEP 2: Undo
-        getModularizedSystem().undoLastTransformation();
-        // assert that we one modules
-        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 
   /**
@@ -75,19 +74,26 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
   public void createNewModuleWithGroupBelowExistingGroup() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
+      public void prePostCondition() {
         //
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
         assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
         assertResourceModuleCount(getBinModel(), 1);
         assertResourceModuleCount(getSrcModel(), 1);
+        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
+      }
 
-        //
-        Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
-
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
         // STEP 1: create a new module
         IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("test/NewModule",
             "1.0.0");
@@ -101,19 +107,10 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
 
         // We have 2 (!) transformations here, as the "CreateGroupTRansformation" is
         // implemented as an inner transformation
-        Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
-
-        // STEP 2: Undo
-        getModularizedSystem().undoLastTransformation();
-
-        // assert that we one modules
-        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
+        Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
 
       }
-    }, getBinModel(), getSrcModel());
+    });
   }
 
   /**
@@ -126,94 +123,33 @@ public class Undo_ModuleCreateNew_Test extends AbstractSimpleArtifactModelTest {
   public void createNewModuleBelowRoot() throws Exception {
 
     //
-    NoModificationAssertion.assertNoModification(this, new Runnable() {
+    NoModificationAssertion.assertNoModification(this, new NoModificationAssertion.Action() {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
-      public void run() {
-
-        //
-        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
-        assertResourceModuleCount(getBinModel(), 1);
-        assertResourceModuleCount(getSrcModel(), 1);
-
-        // STEP 1: create a new module
-        IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
-        Assert.assertEquals("NewModule_1.0.0", newModuleArtifact.getQualifiedName());
-
-        //
-        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
-        assertResourceModuleCount(getBinModel(), 2);
-        assertResourceModuleCount(getSrcModel(), 2);
-
-        // STEP 2: Undo transformation
-        getModularizedSystem().undoLastTransformation();
-
-        // assert that we one modules
+      public void prePostCondition() {
         Assert.assertEquals(2, getModularizedSystem().getGroups().size());
         assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
         assertResourceModuleCount(getBinModel(), 1);
         assertResourceModuleCount(getSrcModel(), 1);
       }
-    }, getBinModel(), getSrcModel());
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void execute() {
+        // STEP 1: create a new module
+        IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
+        Assert.assertEquals("NewModule_1.0.0", newModuleArtifact.getQualifiedName());
+        //
+        Assert.assertEquals(2, getModularizedSystem().getGroups().size());
+        assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 2);
+        assertResourceModuleCount(getBinModel(), 2);
+        assertResourceModuleCount(getSrcModel(), 2);
+      }
+    });
   }
-
-  // /**
-  // * <p>
-  // * Tests if the artifact models are updated correct if a resource module is added in the resource model.
-  // * </p>
-  // *
-  // * @throws Exception
-  // */
-  // @Test
-  // public void createNewModuleInResourceModel() throws Exception {
-  //
-  // // assert that we have just one module
-  // assertResourceModuleCountInModularizedSystem(1);
-  // assertResourceModuleCount(getBinModel(), 1);
-  // assertResourceModuleCount(getSrcModel(), 1);
-  //
-  // //
-  // Assert.assertEquals(1, getBinModel().getRootArtifact().getModularizedSystem().getTransformations().size());
-  //
-  // // create new resourceModule
-  // IModifiableResourceModule resourceModule = getModularizedSystem().createResourceModule(
-  // new ModuleIdentifier("test", "1.2.3"));
-  // Assert.assertNull(resourceModule.getClassification());
-  //
-  // // assert that we have two modules
-  // Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-  // assertResourceModuleCount(getBinModel(), 2);
-  // assertResourceModuleCount(getSrcModel(), 2);
-  //
-  // //
-  // Assert.assertEquals(2, getBinModel().getRootArtifact().getModularizedSystem().getTransformations().size());
-  // }
-
-  // /**
-  // * <p>
-  // * Tests if the artifact models are updated correct if a resource module is added in the resource model.
-  // * </p>
-  // *
-  // * @throws Exception
-  // */
-  // @Test
-  // public void createNewModuleWithClassificationInResourceModel() throws Exception {
-  //
-  // //
-  // assertResourceModuleCountInModularizedSystem(1);
-  // assertResourceModuleCount(getBinModel(), 1);
-  // assertResourceModuleCount(getSrcModel(), 1);
-  //
-  // //
-  // IModifiableResourceModule resourceModule = getModularizedSystem().createResourceModule(
-  // new ModuleIdentifier("test", "1.2.3"), new Path("group1/NewGroup"));
-  // Assert.assertEquals("group1/NewGroup", resourceModule.getClassification());
-  //
-  // // assert that we have three groups
-  // Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-  // assertResourceModuleCount(getBinModel(), 2);
-  // assertResourceModuleCount(getSrcModel(), 2);
-  // }
 }

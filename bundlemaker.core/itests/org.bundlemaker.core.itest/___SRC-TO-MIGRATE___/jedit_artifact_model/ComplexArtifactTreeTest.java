@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
+package org.bundlemaker.core.itest.jedit_artifact_model;
 
 import java.util.List;
 
@@ -8,7 +8,6 @@ import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.itestframework.jedit_model.AbstractJeditAnalysisModelTest;
-import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
-package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
+package org.bundlemaker.core.itest.jedit_artifact_model;
 
+import static org.bundlemaker.core.itestframework.jedit_model.TOOLS.assertModificationCount;
 import static org.junit.Assert.assertArrayEquals;
-import static org.bundlemaker.core.itestframework.jedit_model.TOOLS.*;
 import junit.framework.Assert;
 
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
@@ -19,7 +19,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class RemodularizeJEditTestModule extends AbstractJeditAnalysisModelTest {
+public class RemodularizeJEditTest extends AbstractJeditAnalysisModelTest {
 
   /**
    * <p>

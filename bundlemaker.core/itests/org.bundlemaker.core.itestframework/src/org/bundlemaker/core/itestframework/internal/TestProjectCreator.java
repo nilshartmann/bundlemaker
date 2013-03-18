@@ -89,8 +89,10 @@ public class TestProjectCreator {
   }
 
   public static void addProjectDescription(IBundleMakerProject bundleMakerProject, String testProjectName) {
+
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), testProjectName);
+
     Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory),
         testDataDirectory.isDirectory());
 

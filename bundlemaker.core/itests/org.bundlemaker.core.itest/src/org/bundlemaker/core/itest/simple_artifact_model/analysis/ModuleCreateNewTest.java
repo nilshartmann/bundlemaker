@@ -21,32 +21,6 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
   /**
    * <p>
-   * Tests if the artifact models are updated correct if a resource module is added in the resource model.
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void createNewModuleInResourceModel() throws Exception {
-
-    // //
-    // assertResourceModuleCountInModularizedSystem(1);
-    // assertResourceModuleCount(getBinModel(), 1);
-    // assertResourceModuleCount(getSrcModel(), 1);
-    //
-    // //
-    // IModifiableResourceModule resourceModule = getModularizedSystem().createResourceModule(
-    // new ModuleIdentifier("test", "1.2.3"));
-    // Assert.assertNull(resourceModule.getClassification());
-    //
-    // // assert that we have three groups
-    // Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    // assertResourceModuleCount(getBinModel(), 2);
-    // assertResourceModuleCount(getSrcModel(), 2);
-  }
-
-  /**
-   * <p>
    * </p>
    * 
    * @throws Exception
@@ -118,9 +92,9 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
     assertResourceModuleCount(getBinModel(), 1);
     assertResourceModuleCount(getSrcModel(), 1);
 
-    // We have 1 (!) transformations here, as the "CreateGroupTransformation" is
+    // We have 2 (!) transformations here, as the "CreateGroupTransformation" is
     // implemented as an inner transformation
-    Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
+    Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
 
     // STEP 1: create a new module
     IModuleArtifact moduleArtifact = getBinModel().getRootArtifact().getOrCreateModule(

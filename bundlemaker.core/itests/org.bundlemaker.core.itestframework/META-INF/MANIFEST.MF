@@ -15,3 +15,5 @@ Export-Package: org.bundlemaker.core.itestframework,
  org.bundlemaker.core.itestframework.simple_artifact_model,
  org.bundlemaker.core.itestframework.utils
 Bundle-Activator: org.bundlemaker.core.itestframework.internal.TestFrameworkActivator
+Bundle-ActivationPolicy: lazy
+

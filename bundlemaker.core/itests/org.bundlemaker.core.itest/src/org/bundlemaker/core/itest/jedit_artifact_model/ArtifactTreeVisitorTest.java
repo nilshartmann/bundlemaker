@@ -1,4 +1,4 @@
-package org.bundlemaker.core.itest.jedit_artifact_model.analysis;
+package org.bundlemaker.core.itest.jedit_artifact_model;
 
 import org.bundlemaker.core.itestframework.jedit_model.AbstractJeditAnalysisModelTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactVisitorUtils;
