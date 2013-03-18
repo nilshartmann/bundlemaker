@@ -1,5 +1,10 @@
 package org.bundlemaker.core.internal.analysis;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -21,19 +26,19 @@ import org.eclipse.core.runtime.Assert;
 public class AdapterPackage2IArtifact extends AbstractArtifactContainer implements IPackageArtifact {
 
   /** - */
-  private String        _qualifiedName;
+  private String                           _qualifiedName;
 
   /** - */
-  private boolean       _isVirtual;
+  private boolean                          _isVirtual;
 
   /** - */
-  private boolean       _isHierarchical;
+  private boolean                          _isHierarchical;
 
   /** - */
-  private ArtifactCache _artifactCache;
+  private IModule                          _containingModule;
 
   /** - */
-  private IModule       _containingModule;
+  private Collection<IBundleMakerArtifact> _filteredChildren;
 
   /**
    * <p>
@@ -58,9 +63,34 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
     // set the qualified name
     _qualifiedName = qualifiedName;
     _isVirtual = isVirtual;
-    _artifactCache = artifactCache;
     _containingModule = containingModule;
     _isHierarchical = isHierarchical;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Collection<IBundleMakerArtifact> getChildren() {
+
+    // we have to filter out empty packages:
+    // https://bundlemaker.jira.com/browse/BM-345
+
+    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
+
+    //
+    for (IBundleMakerArtifact bundleMakerArtifact : getModifiableChildrenCollection()) {
+
+      if (bundleMakerArtifact instanceof IPackageArtifact
+          && !((IPackageArtifact) bundleMakerArtifact).containsTypesOrResources()) {
+        // skip
+      } else {
+        result.add(bundleMakerArtifact);
+      }
+    }
+
+    //
+    return Collections.unmodifiableCollection(result);
   }
 
   /**
