@@ -21,11 +21,9 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
+import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.resource.TypeEnum;
 import org.junit.After;
 import org.junit.Before;
@@ -39,14 +37,14 @@ import org.junit.runners.Parameterized.Parameters;
  * 
  */
 @RunWith(Parameterized.class)
-public class TypeTest extends AbstractModularizedSystemTest {
-  
+public class TypeTest extends AbstractBundleMakerModelTest {
+
   private final static String IGNORE_MISSING_BINARIES_PROPERTY = "org.bundlemaker.ignoreMissingBinaries";
 
   @Parameters
   public static List<Object[]> getConfigurations() {
     Object[][] arr = { //
-        // {parseBinary, parseSource} //
+    // {parseBinary, parseSource} //
         { true, true }, //
         { true, false }, //
     };
@@ -63,11 +61,11 @@ public class TypeTest extends AbstractModularizedSystemTest {
   public TypeTest(boolean parseBinary, boolean parseSource) {
     this._parseBinary = parseBinary;
     this._parseSource = parseSource;
-    
+
     if (!_parseBinary) {
       System.setProperty(IGNORE_MISSING_BINARIES_PROPERTY, "true");
     }
-    
+
   }
 
   @Before
@@ -75,7 +73,7 @@ public class TypeTest extends AbstractModularizedSystemTest {
     _rootArtifact = getModularizedSystem().getAnalysisModel(AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
   }
-  
+
   @After
   public void setFailOnMissingBinaries() {
     System.getProperties().remove(IGNORE_MISSING_BINARIES_PROPERTY);
@@ -104,29 +102,31 @@ public class TypeTest extends AbstractModularizedSystemTest {
     ITypeArtifact typeArtifact = getTypeArtifact("TypeEnum");
     assertEquals(TypeEnum.ENUM, typeArtifact.getAssociatedType().getType());
   }
-  
+
   @Test
   public void test_AbstractType() {
     assertAbstractType("AbstractClass");
     assertAbstractType("TypeInterface");
     // Annotations are considered abstract
     assertAbstractType("TypeAnnotation");
-    
+
     assertConcreteType("TypeClass");
     assertConcreteType("TypeEnum");
-       
+
   }
 
   protected void assertAbstractType(String name) {
     ITypeArtifact typeArtifact = getTypeArtifact(name);
-    assertTrue("Type " + typeArtifact.getQualifiedTypeName() + " should be abstract but is not.", typeArtifact.getAssociatedType().isAbstractType());
+    assertTrue("Type " + typeArtifact.getQualifiedTypeName() + " should be abstract but is not.", typeArtifact
+        .getAssociatedType().isAbstractType());
   }
-  
+
   protected void assertConcreteType(String name) {
     ITypeArtifact typeArtifact = getTypeArtifact(name);
-    assertFalse("Type " + typeArtifact.getQualifiedTypeName() + " should not be abstract but it is.", typeArtifact.getAssociatedType().isAbstractType());
+    assertFalse("Type " + typeArtifact.getQualifiedTypeName() + " should not be abstract but it is.", typeArtifact
+        .getAssociatedType().isAbstractType());
   }
-  
+
   protected ITypeArtifact getTypeArtifact(String name) {
     String expectedName = "org.typetest." + name;
     ITypeArtifact typeArtifact = AnalysisModelQueries.findTypeArtifactByQualifiedName(_rootArtifact, expectedName);

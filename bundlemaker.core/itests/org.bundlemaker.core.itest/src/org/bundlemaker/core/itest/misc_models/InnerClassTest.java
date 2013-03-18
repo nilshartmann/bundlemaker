@@ -6,7 +6,8 @@ import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
+import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
 import org.bundlemaker.core.modules.AmbiguousElementException;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.resource.IResource;
@@ -21,7 +22,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class InnerClassTest extends AbstractModularizedSystemTest {
+public class InnerClassTest extends AbstractBundleMakerModelTest {
 
   /**
    * <p>
@@ -63,11 +64,14 @@ public class InnerClassTest extends AbstractModularizedSystemTest {
     IRootArtifact rootArtifact = getModularizedSystem().getAnalysisModel(
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
+    System.out.println(ArtifactTestUtil.toString(rootArtifact));
+    
+    
     IBundleMakerArtifact aArtifact = rootArtifact
-        .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|A.class|A");
+        .getChild("InnerClassTest_1.0.0|de.test.innertypes|A.class|A");
     Assert.assertNotNull(aArtifact);
     IBundleMakerArtifact bArtifact = rootArtifact
-        .getChild("group1|group2|InnerClassTest_1.0.0|de.test.innertypes|B.class|B");
+        .getChild("InnerClassTest_1.0.0|de.test.innertypes|B.class|B");
     Assert.assertNotNull(bArtifact);
 
     Collection<IDependency> dependencies = aArtifact.getDependenciesTo();

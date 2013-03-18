@@ -8,18 +8,17 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IResourceArtifact;
-import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
-import org.bundlemaker.core.itestframework.utils.ArtifactVisitorUtils;
+import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * <p>
  * </p>
- *
+ * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
+public class AmbiguousTypesTest extends AbstractBundleMakerModelTest {
 
   /**
    * <p>
@@ -29,7 +28,7 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
   public void testAmbiguousTypes() {
 
     // set the 'new' type selector
-    TestTypeSelector selector = new TestTypeSelector(getBundleMakerProject().getProjectDescription());
+    AmbiguousTypesTest_TestTypeSelector selector = new AmbiguousTypesTest_TestTypeSelector(getBundleMakerProject().getProjectDescription());
     selector.setPreferJdkTypes(true);
     getModularizedSystem().getTypeSelectors().clear();
     getModularizedSystem().getTypeSelectors().add(selector);
@@ -40,7 +39,8 @@ public class AmbiguousTypesTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     // get the 'test' artifact
-    IResourceArtifact artifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(rootArtifact, "test/Test.java");
+    IResourceArtifact artifact = AnalysisModelQueries.findResourceArtifactByQualifiedName(rootArtifact,
+        "test/Test.java");
     Assert.assertNotNull(artifact);
 
     // assert that the type

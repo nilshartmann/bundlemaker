@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.bundlemaker.core.modules.IResourceModule;
 import org.bundlemaker.core.modules.modifiable.IMovableUnit;
 import org.bundlemaker.core.modules.modifiable.MovableUnit;
@@ -22,7 +22,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class MovableUnitTest extends AbstractModularizedSystemTest {
+public class MovableUnitTest extends AbstractBundleMakerModelTest {
 
   // the resource module
   private IResourceModule _resourceModule;
@@ -81,12 +81,14 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
     //
     assertMovableUnit(MovableUnit.createFromResource(
         _resourceModule.getResource("de/test/innertypes/A.class", ProjectContentType.BINARY), getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/A$AA.class", ProjectContentType.BINARY), getModularizedSystem()));
+    assertMovableUnit(MovableUnit
+        .createFromResource(_resourceModule.getResource("de/test/innertypes/A$AA.class", ProjectContentType.BINARY),
+            getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
         _resourceModule.getResource("de/test/innertypes/B.class", ProjectContentType.BINARY), getModularizedSystem()));
-    assertMovableUnit(MovableUnit.createFromResource(
-        _resourceModule.getResource("de/test/innertypes/B$BB.class", ProjectContentType.BINARY), getModularizedSystem()));
+    assertMovableUnit(MovableUnit
+        .createFromResource(_resourceModule.getResource("de/test/innertypes/B$BB.class", ProjectContentType.BINARY),
+            getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
         _resourceModule.getResource("de/test/innertypes/B$1.class", ProjectContentType.BINARY), getModularizedSystem()));
     assertMovableUnit(MovableUnit.createFromResource(
@@ -104,7 +106,7 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
     Assert.assertEquals(
         MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"), getModularizedSystem()),
         MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A$AA"), getModularizedSystem()));
-    
+
     Assert.assertEquals(
         MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.A"), getModularizedSystem()),
         MovableUnit.createFromType(_resourceModule.getType("de.test.innertypes.B"), getModularizedSystem()));
@@ -156,11 +158,8 @@ public class MovableUnitTest extends AbstractModularizedSystemTest {
     Assert.assertEquals("A.java", sourceResources.getName());
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
-  protected String computeTestProjectName() {
+  protected String getTestProjectName() {
     return InnerClassTest.class.getSimpleName();
   }
 }

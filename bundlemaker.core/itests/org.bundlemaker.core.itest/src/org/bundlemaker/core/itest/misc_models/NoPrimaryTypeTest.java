@@ -6,7 +6,7 @@ import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.DependencyKind;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import org.junit.Test;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
+public class NoPrimaryTypeTest extends AbstractBundleMakerModelTest {
 
   /**
    * <p>
@@ -35,7 +35,7 @@ public class NoPrimaryTypeTest extends AbstractModularizedSystemTest {
     Assert.assertNotNull(rootArtifact);
 
     //
-    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("group1|group2|NoPrimaryTypeTest_1.0.0");
+    IBundleMakerArtifact moduleArtifact = rootArtifact.getChild("NoPrimaryTypeTest_1.0.0");
     Assert.assertNotNull(moduleArtifact);
 
     //

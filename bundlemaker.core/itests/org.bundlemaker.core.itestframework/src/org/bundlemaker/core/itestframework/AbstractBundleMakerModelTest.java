@@ -36,6 +36,8 @@ public abstract class AbstractBundleMakerModelTest {
   /** - */
   private String                                  _initialState_binaryHierarchical;
 
+  private String                                  _initialState_sourceHierarchical;
+
   /**
    * {@inheritDoc}
    */
@@ -66,6 +68,9 @@ public abstract class AbstractBundleMakerModelTest {
     //
     _initialState_binaryHierarchical = AnalysisModelQueries.artifactToString(_modularizedSystem
         .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION));
+
+    _initialState_sourceHierarchical = AnalysisModelQueries.artifactToString(_modularizedSystem
+        .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION));
   }
 
   /**
@@ -80,6 +85,9 @@ public abstract class AbstractBundleMakerModelTest {
     //
     Assert.assertEquals(_initialState_binaryHierarchical, AnalysisModelQueries.artifactToString(_modularizedSystem
         .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION)));
+
+    Assert.assertEquals(_initialState_sourceHierarchical, AnalysisModelQueries.artifactToString(_modularizedSystem
+        .getAnalysisModel(AnalysisModelConfiguration.HIERARCHICAL_SOURCE_RESOURCES_CONFIGURATION)));
 
     //
     _bundleMakerProject = null;
@@ -112,7 +120,9 @@ public abstract class AbstractBundleMakerModelTest {
    * 
    * @return
    */
-  protected abstract String getTestProjectName();
+  protected String getTestProjectName() {
+    return this.getClass().getSimpleName();
+  }
 
   /**
    * <p>

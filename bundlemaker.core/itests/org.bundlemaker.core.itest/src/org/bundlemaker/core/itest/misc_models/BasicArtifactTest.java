@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.bundlemaker.core.analysis.AnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.itest._framework.AbstractModularizedSystemTest;
+import org.bundlemaker.core.itestframework.AbstractBundleMakerModelTest;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ import org.junit.Test;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BasicArtifactTest extends AbstractModularizedSystemTest {
+public class BasicArtifactTest extends AbstractBundleMakerModelTest {
 
   /**
    * <p>
@@ -38,7 +38,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
         AnalysisModelConfiguration.BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 
-    IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de.test.basic");
+    IBundleMakerArtifact artifact = rootArtifact.getChild("BasicArtifactTest_1.0.0|de.test.basic");
     Assert.assertNotNull(artifact);
 
     // step 3: assert result
@@ -59,7 +59,7 @@ public class BasicArtifactTest extends AbstractModularizedSystemTest {
         AnalysisModelConfiguration.HIERARCHICAL_BINARY_RESOURCES_CONFIGURATION);
 
     // step 2: get the package child 
-    IBundleMakerArtifact artifact = rootArtifact.getChild("group1|group2|BasicArtifactTest_1.0.0|de|test|basic");
+    IBundleMakerArtifact artifact = rootArtifact.getChild("BasicArtifactTest_1.0.0|de|test|basic");
     Assert.assertNotNull(artifact);
 
     // step 3: assert result

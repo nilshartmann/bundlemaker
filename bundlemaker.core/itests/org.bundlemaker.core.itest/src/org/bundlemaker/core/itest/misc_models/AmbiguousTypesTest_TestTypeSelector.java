@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class TestTypeSelector implements ITypeSelector {
+public class AmbiguousTypesTest_TestTypeSelector implements ITypeSelector {
 
   /** - */
   public static final String  BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER = "#####BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER#####";
@@ -28,12 +28,12 @@ public class TestTypeSelector implements ITypeSelector {
 
   /**
    * <p>
-   * Creates a new instance of type {@link TestTypeSelector}.
+   * Creates a new instance of type {@link AmbiguousTypesTest_TestTypeSelector}.
    * </p>
    * 
    * @param bundleMakerProjectDescription
    */
-  public TestTypeSelector(IProjectDescription bundleMakerProjectDescription) {
+  public AmbiguousTypesTest_TestTypeSelector(IProjectDescription bundleMakerProjectDescription) {
 
     Assert.isNotNull(bundleMakerProjectDescription);
 
@@ -77,7 +77,7 @@ public class TestTypeSelector implements ITypeSelector {
       String identifier = iType.getProjectContentEntryId().toString();
 
       // get the content identifier
-      if (!identifier.equals(TestTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
+      if (!identifier.equals(AmbiguousTypesTest_TestTypeSelector.BUNDLEMAKER_INTERNAL_JDK_MODULE_IDENTIFIER)) {
 
         // get the file based content
         IProjectContentEntry fileBasedContent = _bundleMakerProjectDescription.getProjectContentEntry(identifier);
