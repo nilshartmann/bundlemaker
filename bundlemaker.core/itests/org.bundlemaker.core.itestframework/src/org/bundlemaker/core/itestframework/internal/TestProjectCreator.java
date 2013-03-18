@@ -7,15 +7,12 @@ import java.io.File;
 import org.bundlemaker.core.BundleMakerCore;
 import org.bundlemaker.core.IBundleMakerProject;
 import org.bundlemaker.core.IProblem;
-import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.bundlemaker.core.util.JdkCreator;
 import org.bundlemaker.core.util.ProgressMonitor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.junit.Assert;
@@ -92,6 +89,57 @@ public class TestProjectCreator {
 
     //
     File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), testProjectName);
+
+    //
+    if (!testDataDirectory.isDirectory()) {
+
+      //
+      File file = new File(TestProjectCreator.class.getProtectionDomain().getCodeSource().getLocation().getFile());
+
+      //
+      if (file.isFile()) {
+
+        // File myTempDir = Files.createTempDir();
+        // myTempDir.mkdirs();
+        // File parentDir = new File(myTempDir, testProjectName);
+        // String prefix = "test-data/" + testProjectName + "/";
+        //
+        // try {
+        // JarFile jar = new JarFile(file);
+        // Enumeration<JarEntry> enumeration = jar.entries();
+        // while (enumeration.hasMoreElements()) {
+        // JarEntry jarEntry = enumeration.nextElement();
+        // if (jarEntry.getName().startsWith("test-data/" + testProjectName + "/")) {
+        // InputStream in = new BufferedInputStream(jar.getInputStream(jarEntry));
+        // File dest = new File(parentDir, jarEntry.getName().substring(prefix.length()));
+        // dest.mkdirs();
+        // OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
+        // byte[] buffer = new byte[2048];
+        // for (;;) {
+        // int nBytes = in.read(buffer);
+        // if (nBytes <= 0)
+        // break;
+        // out.write(buffer, 0, nBytes);
+        // }
+        // out.flush();
+        // out.close();
+        // in.close();
+        // }
+        // }
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // throw new RuntimeException(e.getMessage(), e);
+        // }
+        //
+        // testDataDirectory = parentDir;
+
+        //
+        throw new RuntimeException(String.format("File '%s' has to be a directory!", file.getAbsolutePath()));
+
+      } else if (file.isDirectory()) {
+        testDataDirectory = new File(new File(file, "test-data"), testProjectName);
+      }
+    }
 
     Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory),
         testDataDirectory.isDirectory());

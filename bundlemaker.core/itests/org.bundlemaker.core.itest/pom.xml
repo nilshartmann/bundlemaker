@@ -37,6 +37,11 @@
 							<level>4</level>
 							<autoStart>true</autoStart>
 						</bundle>
+						<bundle>
+							<id>org.bundlemaker.core.itestframework</id>
+							<level>4</level>
+							<autoStart>true</autoStart>
+						</bundle>						
 					</bundleStartLevel>
 					<dependencies>
 						<dependency>
