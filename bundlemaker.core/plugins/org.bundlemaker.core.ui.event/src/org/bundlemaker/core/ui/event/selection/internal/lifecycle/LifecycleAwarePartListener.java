@@ -1,7 +1,6 @@
 package org.bundlemaker.core.ui.event.selection.internal.lifecycle;
 
 import org.bundlemaker.core.ui.event.selection.workbench.ILifecycleAwarePart;
-import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractPartLifecycleAwareEditorPart;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;

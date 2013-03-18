@@ -93,7 +93,6 @@ public class ArtifactSelection extends AbstractProviderSelection implements IArt
     }
 
     return result;
-
   }
 
   /**

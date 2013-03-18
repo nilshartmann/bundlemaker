@@ -8,23 +8,37 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-
 package org.bundlemaker.core.ui.event.stage;
 
 /**
- * @author Nils Hartmann (nils@nilshartmann.net)
+ * <p>
+ * </p>
  * 
+ * @author Nils Hartmann (nils@nilshartmann.net)
  */
 public class ArtifactStageChangedEvent {
 
+  /** - */
   private final ArtifactStageChangeReason _reason;
 
+  /**
+   * <p>
+   * Creates a new instance of type {@link ArtifactStageChangedEvent}.
+   * </p>
+   * 
+   * @param reason
+   */
   ArtifactStageChangedEvent(ArtifactStageChangeReason reason) {
     this._reason = reason;
   }
 
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
   public ArtifactStageChangeReason getReason() {
     return this._reason;
   }
-
 }

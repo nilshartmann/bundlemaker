@@ -238,21 +238,21 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
       return;
     }
 
-    //
-    if (selection.hasSelectedArtifacts() && selection.getSelectedArtifacts().size() == 1
-        && isResourceOrResourceContent(selection)) {
-      return;
-    }
+    // //
+    // if (selection.hasSelectedArtifacts() && selection.getSelectedArtifacts().size() == 1
+    // && isResourceOrResourceContent(selection)) {
+    // return;
+    // }
 
     super.setCurrentArtifactSelection(selection);
 
     initSelection(selection);
   }
 
-  private boolean isResourceOrResourceContent(IArtifactSelection selection) {
-    return selection.getEffectiveSelectedArtifacts().get(0) instanceof IResourceArtifact
-        || selection.getEffectiveSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
-  }
+//  private boolean isResourceOrResourceContent(IArtifactSelection selection) {
+//    return selection.getEffectiveSelectedArtifacts().get(0) instanceof IResourceArtifact
+//        || selection.getEffectiveSelectedArtifacts().get(0).getParent(IResourceArtifact.class) != null;
+//  }
 
   private void initSelection(IArtifactSelection selection) {
 
