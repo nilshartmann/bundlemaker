@@ -9,7 +9,7 @@ import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.resource.IType;
 import org.junit.Test;
 
@@ -56,8 +56,8 @@ public class DependenciesFromToTest extends AbstractSimpleArtifactModelTest {
   public void dependenciesFromTo() throws Exception {
 
     //
-    ITypeArtifact klasse = AnalysisModelQueries.findTypeArtifactByQualifiedName(_binModel.getRootArtifact(), "de.test.Klasse");
-    ITypeArtifact test = AnalysisModelQueries.findTypeArtifactByQualifiedName(_binModel.getRootArtifact(), "de.test.Test");
+    ITypeArtifact klasse = AnalysisModelQueries.findTypeArtifactByQualifiedName(getBinModel().getRootArtifact(), "de.test.Klasse");
+    ITypeArtifact test = AnalysisModelQueries.findTypeArtifactByQualifiedName(getBinModel().getRootArtifact(), "de.test.Test");
 
     //
     Assert.assertNotNull(klasse.getDependencyTo(test));
@@ -74,8 +74,8 @@ public class DependenciesFromToTest extends AbstractSimpleArtifactModelTest {
     
     
     //
-    IResourceArtifact klasseRes = _binModel.getKlasseResource();
-    IResourceArtifact testRes = _binModel.getTestResource();
+    IResourceArtifact klasseRes = getBinModel().getKlasseResource();
+    IResourceArtifact testRes = getBinModel().getTestResource();
     
     //
     System.out.println(klasseRes.getDependencyTo(testRes));

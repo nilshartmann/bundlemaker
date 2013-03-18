@@ -1,0 +1,211 @@
+package org.bundlemaker.core.itestframework.internal;
+
+import static org.junit.Assert.assertNotNull;
+
+import java.io.File;
+
+import org.bundlemaker.core.BundleMakerCore;
+import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IProblem;
+import org.bundlemaker.core.modules.ModuleIdentifier;
+import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.projectdescription.AnalyzeMode;
+import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.util.JdkCreator;
+import org.bundlemaker.core.util.ProgressMonitor;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.launching.IVMInstall;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.junit.Assert;
+
+/**
+ * <p>
+ * </p>
+ * 
+ * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
+ */
+public class TestProjectCreator {
+
+  /** TEST_PROJECT_NAME */
+  public static final String TEST_PROJECT_NAME                 = "TEST_PROJECT";
+
+  /** TEST_PROJECT_VERSION */
+  public static final String TEST_PROJECT_VERSION              = "1.0.0";
+
+  /** - */
+  public static final String BUNDLEMAKER_TEST_VM_PROPERTY_NAME = "org.bundlemaker.core.itestframework.vm_install";
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   */
+  public static void initializeParseAndOPen(IBundleMakerProject bundleMakerProject) {
+
+    try {
+
+      // initialize
+      bundleMakerProject.initialize(new ProgressMonitor());
+
+      // parse and open the project
+      bundleMakerProject.parseAndOpen(new ProgressMonitor());
+
+      // assert no parse errors
+      if (bundleMakerProject.getProblems().size() > 0) {
+        StringBuilder builder = new StringBuilder();
+        for (IProblem problem : bundleMakerProject.getProblems()) {
+          builder.append(problem.getMessage());
+          builder.append("\n");
+        }
+        Assert.fail(builder.toString());
+      }
+
+    } catch (CoreException e) {
+      Assert.fail(e.getMessage());
+    }
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public static final IBundleMakerProject getBundleMakerProject(String testProjectName) {
+    try {
+      // create simple project
+      IProject simpleProject = BundleMakerCore.getOrCreateSimpleProjectWithBundleMakerNature(testProjectName);
+
+      // get the BM project
+      return BundleMakerCore.getBundleMakerProject(simpleProject);
+    } catch (CoreException e) {
+      e.printStackTrace();
+      Assert.fail(e.getMessage());
+      return null;
+    }
+  }
+
+  public static void addProjectDescription(IBundleMakerProject bundleMakerProject, String testProjectName) {
+    //
+    File testDataDirectory = new File(new File(System.getProperty("user.dir"), "test-data"), testProjectName);
+    Assert.assertTrue(String.format("File '%s' has to be a directory.", testDataDirectory),
+        testDataDirectory.isDirectory());
+
+    // create the project description
+    addProjectDescription(bundleMakerProject, testDataDirectory, testProjectName);
+  }
+
+  public static void addProjectDescription(IBundleMakerProject bundleMakerProject, File directory) {
+    addProjectDescription(bundleMakerProject, directory, TEST_PROJECT_NAME);
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @throws CoreException
+   */
+  public static void addProjectDescription(IBundleMakerProject bundleMakerProject, File directory, String projectName) {
+
+    Assert.assertTrue(directory.isDirectory());
+
+    //
+    IModifiableProjectDescription projectDescription = bundleMakerProject.getModifiableProjectDescription();
+
+    // step 1:
+    projectDescription.clear();
+
+    // step 2: add the JRE
+    projectDescription.setJre(getTestVmName());
+
+    // step 3: add the source and classes
+    String classesPath = getClassesPath(directory);
+    String sourcesPath = getSourcesPath(directory);
+
+    //
+    FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription, projectName,
+        TEST_PROJECT_VERSION, classesPath, sourcesPath);
+
+    // step 4: process the class path entries
+    File libsDir = new File(directory, "libs");
+    if (libsDir.exists()) {
+      File[] jarFiles = libsDir.listFiles();
+      for (File externalJar : jarFiles) {
+        FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(projectDescription,
+            externalJar.getAbsolutePath(), null, AnalyzeMode.BINARIES_ONLY);
+      }
+    }
+
+    try {
+      //
+      projectDescription.save();
+    } catch (CoreException e) {
+      e.printStackTrace();
+      Assert.fail(e.getMessage());
+    }
+  }
+
+  public static String getClassesPath(File directory) {
+    File classes = null;
+    if (new File(directory, "classes").isDirectory()) {
+      classes = new File(directory, "classes");
+    } else if (new File(directory, "classes.zip").isFile()) {
+      classes = new File(directory, "classes.zip");
+    } else {
+      Assert.fail("No classes found!");
+    }
+
+    return classes.getAbsolutePath();
+  }
+
+  public static String getSourcesPath(File directory) {
+    File sources = null;
+    if (new File(directory, "src").isDirectory()) {
+      sources = new File(directory, "src");
+    } else if (new File(directory, "src.zip").isFile()) {
+      sources = new File(directory, "src.zip");
+    } else {
+      // Assert.fail("No classes found!");
+    }
+
+    return (sources == null ? null : sources.getAbsolutePath());
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   * @throws CoreException
+   */
+  private static String getTestVmName() {
+
+    String configuredTestVmLocation = System.getProperty(BUNDLEMAKER_TEST_VM_PROPERTY_NAME);
+
+    System.out.println("configuredTestVmLocation: " + configuredTestVmLocation);
+
+    IVMInstall vmInstall = null;
+
+    if (configuredTestVmLocation == null || configuredTestVmLocation.trim().isEmpty()
+        || !new File(configuredTestVmLocation).isDirectory()) {
+      vmInstall = JavaRuntime.getDefaultVMInstall();
+    } else {
+      System.out.println("Creating Test IVMInstall for location '" + configuredTestVmLocation + "'");
+      try {
+        vmInstall = JdkCreator.getOrCreateIVMInstall("BundleMakerTestJDK", configuredTestVmLocation);
+      } catch (CoreException e) {
+        e.printStackTrace();
+        Assert.fail(e.getMessage());
+      }
+    }
+
+    assertNotNull("No VM available", vmInstall);
+
+    System.out.println("Using Test JDK '" + vmInstall.getName() + "' from " + vmInstall.getInstallLocation());
+    return vmInstall.getName();
+  }
+}

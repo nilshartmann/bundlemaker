@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.junit.Test;
 
 /**
@@ -23,16 +23,16 @@ public class InitializeCachesTest extends AbstractSimpleArtifactModelTest {
   public void initializeCaches() throws Exception {
 
     //
-    Assert.assertFalse(_binModel.getRootArtifact().areCachesInitialized());
-    _binModel.getRootArtifact().initializeCaches(null);
-    Assert.assertTrue(_binModel.getRootArtifact().areCachesInitialized());
+    Assert.assertFalse(getBinModel().getRootArtifact().areCachesInitialized());
+    getBinModel().getRootArtifact().initializeCaches(null);
+    Assert.assertTrue(getBinModel().getRootArtifact().areCachesInitialized());
     
     // 'move' model to group 1
-    _binModel.getGroup1Artifact().addArtifact(_binModel.getMainModuleArtifact());
+    getBinModel().getGroup1Artifact().addArtifact(getBinModel().getMainModuleArtifact());
     
     //
-    Assert.assertFalse(_binModel.getRootArtifact().areCachesInitialized());
-    _binModel.getRootArtifact().initializeCaches(null);
-    Assert.assertTrue(_binModel.getRootArtifact().areCachesInitialized());
+    Assert.assertFalse(getBinModel().getRootArtifact().areCachesInitialized());
+    getBinModel().getRootArtifact().initializeCaches(null);
+    Assert.assertTrue(getBinModel().getRootArtifact().areCachesInitialized());
   }
 }

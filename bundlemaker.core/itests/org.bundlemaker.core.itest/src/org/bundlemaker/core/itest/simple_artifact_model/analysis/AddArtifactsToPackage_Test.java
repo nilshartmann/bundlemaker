@@ -3,11 +3,8 @@ package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.NoModificationAssertion;
-import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
-import org.eclipse.core.runtime.Path;
-import org.hamcrest.core.Is;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.simple_artifact_model.SimpleArtifactModelAssert;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,16 +26,16 @@ public class AddArtifactsToPackage_Test extends AbstractSimpleArtifactModelTest 
   public void tryToAddPackageToModuleArtifacts_1() throws Exception {
 
     // STEP 1: create a new module
-    IModuleArtifact newModuleArtifact = _binModel.getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
-    assertResourceModuleCount(_binModel, 2);
-    assertResourceModuleCount(_srcModel, 2);
+    IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
+    SimpleArtifactModelAssert.assertResourceModuleCount(getBinModel(), 2);
+    SimpleArtifactModelAssert.assertResourceModuleCount(getSrcModel(), 2);
 
     // we have to add a resource to force the creation of a new package artifact in the new module
-    newModuleArtifact.addArtifact(_binModel.getKlasseResource());
-    IPackageArtifact newPackageArtifact = _binModel.getKlasseResource().getParent(IPackageArtifact.class);
+    newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
+    IPackageArtifact newPackageArtifact = getBinModel().getKlasseResource().getParent(IPackageArtifact.class);
 
     // must fail!
-    newPackageArtifact.addArtifact(_binModel.getTestPackage());
+    newPackageArtifact.addArtifact(getBinModel().getTestPackage());
   }
 
   /**
@@ -51,16 +48,16 @@ public class AddArtifactsToPackage_Test extends AbstractSimpleArtifactModelTest 
   public void tryToAddPackageToModuleArtifacts_2() throws Exception {
 
     // STEP 1: create a new module
-    IModuleArtifact newModuleArtifact = _binModel.getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
-    assertResourceModuleCount(_binModel, 2);
-    assertResourceModuleCount(_srcModel, 2);
+    IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
+    SimpleArtifactModelAssert.assertResourceModuleCount(getBinModel(), 2);
+    SimpleArtifactModelAssert.assertResourceModuleCount(getSrcModel(), 2);
 
     // we have to add a resource to force the creation of a new package artifact in the new module
-    newModuleArtifact.addArtifact(_binModel.getKlasseResource());
-    IPackageArtifact newPackageArtifact = _binModel.getKlasseResource().getParent(IPackageArtifact.class);
+    newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
+    IPackageArtifact newPackageArtifact = getBinModel().getKlasseResource().getParent(IPackageArtifact.class);
     Assert.assertTrue(newPackageArtifact.getParent().isInstanceOf(IPackageArtifact.class));
 
     // must fail!
-    newPackageArtifact.getParent().addArtifact(_binModel.getTestPackage());
+    newPackageArtifact.getParent().addArtifact(getBinModel().getTestPackage());
   }
 }

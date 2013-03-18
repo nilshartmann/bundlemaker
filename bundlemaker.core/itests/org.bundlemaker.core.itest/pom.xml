@@ -23,6 +23,7 @@
 					<includes>
 						<include>org/bundlemaker/core/itest/JdtTest.java</include>
 						<include>org/bundlemaker/core/itest/simple_artifact_model/analysis/*Test.java</include>
+						<include>org/bundlemaker/core/itest/jedit_artifact_model/analysis/*Test.java</include>
 					</includes>
 					<argLine>-Xmx900m</argLine>
 					<bundleStartLevel>

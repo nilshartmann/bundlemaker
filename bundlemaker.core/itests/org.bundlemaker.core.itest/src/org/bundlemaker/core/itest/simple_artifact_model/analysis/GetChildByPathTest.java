@@ -7,7 +7,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.eclipse.core.runtime.IPath;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class GetChildByPathTest extends AbstractSimpleArtifactModelTest {
   public void findByFullPath() throws Exception {
 
     //
-    _binModel.getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
+    getBinModel().getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IRootArtifact rootArtifact) {
@@ -51,7 +51,7 @@ public class GetChildByPathTest extends AbstractSimpleArtifactModelTest {
       public boolean onVisit(IBundleMakerArtifact artifact) {
         //
         IPath path = artifact.getFullPath();
-        IBundleMakerArtifact bundleMakerArtifact = AnalysisModelQueries.getChildByPath(_binModel.getRootArtifact(), path,
+        IBundleMakerArtifact bundleMakerArtifact = AnalysisModelQueries.getChildByPath(getBinModel().getRootArtifact(), path,
             IBundleMakerArtifact.class);
 
         Assert.assertEquals(artifact, bundleMakerArtifact);

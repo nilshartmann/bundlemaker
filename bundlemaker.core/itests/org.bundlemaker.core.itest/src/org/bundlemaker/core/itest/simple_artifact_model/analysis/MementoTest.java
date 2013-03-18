@@ -6,7 +6,7 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.selectors.DefaultArtifactSelector;
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.transformation.AddArtifactsTransformation;
 import org.bundlemaker.core.transformation.CreateGroupTransformation;
 import org.bundlemaker.core.transformation.CreateModuleTransformation;
@@ -33,7 +33,7 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
   public void artifactModelConfigurationMemento() throws Exception {
 
     //
-    IAnalysisModelConfiguration configuration = _binModel.getGroup1Artifact().getConfiguration();
+    IAnalysisModelConfiguration configuration = getBinModel().getGroup1Artifact().getConfiguration();
 
     String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
     Assert.assertNotNull(memento);
@@ -56,7 +56,7 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
   public void bundleMakerArtifactMemento() throws Exception {
 
     //
-    _binModel.getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
+    getBinModel().getRootArtifact().accept(new IAnalysisModelVisitor.Adapter() {
 
       @Override
       public boolean visit(IModuleArtifact moduleArtifact) {
@@ -97,8 +97,8 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
 
     //
     AddArtifactsTransformation.Configuration configuration = new AddArtifactsTransformation.Configuration(
-        _binModel.getGroup1Artifact(), new DefaultArtifactSelector(
-            _binModel.getMainModuleArtifact()));
+        getBinModel().getGroup1Artifact(), new DefaultArtifactSelector(
+            getBinModel().getMainModuleArtifact()));
 
     String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
 
@@ -126,7 +126,7 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
 
     //
     CreateModuleTransformation.Configuration configuration = new CreateModuleTransformation.Configuration(
-        _binModel.getGroup1Artifact(), "testModule", "1.2.3");
+        getBinModel().getGroup1Artifact(), "testModule", "1.2.3");
 
     //
     String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
@@ -155,7 +155,7 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
 
     //
     CreateGroupTransformation.Configuration configuration = new CreateGroupTransformation.Configuration(
-        _binModel.getGroup1Artifact(), new Path("testGroup"));
+        getBinModel().getGroup1Artifact(), new Path("testGroup"));
 
     //
     String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
@@ -181,8 +181,8 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
   // public void transformationHistory() {
   //
   // // transform
-  // IModuleArtifact newModuleArtifact = _binModel.getGroup2Artifact().getOrCreateModule("hallo", "1.2.3");
-  // newModuleArtifact.addArtifact(_binModel.getKlasseResource());
+  // IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("hallo", "1.2.3");
+  // newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
   //
   // //
   // List<ITransformation> transformations = getModularizedSystem().getTransformations();

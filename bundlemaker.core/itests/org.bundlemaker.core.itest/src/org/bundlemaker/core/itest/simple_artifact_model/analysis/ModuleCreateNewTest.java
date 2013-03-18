@@ -1,13 +1,13 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
+import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.assertResourceModuleCount;
+import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.assertResourceModuleCountInModularizedSystem;
+
 import org.bundlemaker.core.analysis.AnalysisModelException;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.itest._framework.analysis.ArtifactVisitorUtils;
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -31,8 +31,8 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
     // //
     // assertResourceModuleCountInModularizedSystem(1);
-    // assertResourceModuleCount(_binModel, 1);
-    // assertResourceModuleCount(_srcModel, 1);
+    // assertResourceModuleCount(getBinModel(), 1);
+    // assertResourceModuleCount(getSrcModel(), 1);
     //
     // //
     // IModifiableResourceModule resourceModule = getModularizedSystem().createResourceModule(
@@ -41,8 +41,8 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
     //
     // // assert that we have three groups
     // Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    // assertResourceModuleCount(_binModel, 2);
-    // assertResourceModuleCount(_srcModel, 2);
+    // assertResourceModuleCount(getBinModel(), 2);
+    // assertResourceModuleCount(getSrcModel(), 2);
   }
 
   /**
@@ -55,23 +55,23 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
   public void createNewModuleBelowExistingGroup() throws Exception {
 
     //
-    assertResourceModuleCountInModularizedSystem(1);
-    assertResourceModuleCount(_binModel, 1);
-    assertResourceModuleCount(_srcModel, 1);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
+    assertResourceModuleCount(getBinModel(), 1);
+    assertResourceModuleCount(getSrcModel(), 1);
 
     // create a new group
-    IModuleArtifact newModuleArtifact = _binModel.getGroup2Artifact().getOrCreateModule("NewModule", "1.0.0");
+    IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("NewModule", "1.0.0");
     Assert.assertEquals("group1/group2/NewModule_1.0.0", newModuleArtifact.getQualifiedName());
 
     // assert that we have three groups
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    assertResourceModuleCount(_binModel, 2);
-    assertResourceModuleCount(_srcModel, 2);
+    assertResourceModuleCount(getBinModel(), 2);
+    assertResourceModuleCount(getSrcModel(), 2);
 
     //
-    IModuleArtifact srcModule = AnalysisModelQueries.getModuleArtifact(_binModel.getRootArtifact(),
+    IModuleArtifact srcModule = AnalysisModelQueries.getModuleArtifact(getBinModel().getRootArtifact(),
         new ModuleIdentifier("NewModule", "1.0.0"));
-    IModuleArtifact binModule = AnalysisModelQueries.getModuleArtifact(_srcModel.getRootArtifact(),
+    IModuleArtifact binModule = AnalysisModelQueries.getModuleArtifact(getSrcModel().getRootArtifact(),
         new ModuleIdentifier("NewModule", "1.0.0"));
 
     //
@@ -95,18 +95,18 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
   public void createNewModuleBelowRoot() throws Exception {
 
     //
-    assertResourceModuleCountInModularizedSystem(1);
-    assertResourceModuleCount(_binModel, 1);
-    assertResourceModuleCount(_srcModel, 1);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
+    assertResourceModuleCount(getBinModel(), 1);
+    assertResourceModuleCount(getSrcModel(), 1);
 
     // create a new group
-    IModuleArtifact newModuleArtifact = _binModel.getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
+    IModuleArtifact newModuleArtifact = getBinModel().getRootArtifact().getOrCreateModule("NewModule", "1.0.0");
     Assert.assertEquals("NewModule_1.0.0", newModuleArtifact.getQualifiedName());
 
     // assert that we have three groups
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    assertResourceModuleCount(_binModel, 2);
-    assertResourceModuleCount(_srcModel, 2);
+    assertResourceModuleCount(getBinModel(), 2);
+    assertResourceModuleCount(getSrcModel(), 2);
   }
 
   @Test(expected = AnalysisModelException.class)
@@ -114,16 +114,16 @@ public class ModuleCreateNewTest extends AbstractSimpleArtifactModelTest {
 
     //
     Assert.assertEquals(2, getModularizedSystem().getGroups().size());
-    assertResourceModuleCountInModularizedSystem(1);
-    assertResourceModuleCount(_binModel, 1);
-    assertResourceModuleCount(_srcModel, 1);
+    assertResourceModuleCountInModularizedSystem(getModularizedSystem(), 1);
+    assertResourceModuleCount(getBinModel(), 1);
+    assertResourceModuleCount(getSrcModel(), 1);
 
     // We have 1 (!) transformations here, as the "CreateGroupTransformation" is
     // implemented as an inner transformation
     Assert.assertEquals(1, getModularizedSystem().getTransformations().size());
 
     // STEP 1: create a new module
-    IModuleArtifact moduleArtifact = _binModel.getRootArtifact().getOrCreateModule(
+    IModuleArtifact moduleArtifact = getBinModel().getRootArtifact().getOrCreateModule(
         "group1/SimpleArtifactModelTest", "1.0.0");
   }
 }

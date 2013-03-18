@@ -2,7 +2,7 @@ package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
 import junit.framework.Assert;
 
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.modules.modifiable.IModifiableModule;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
@@ -25,16 +25,16 @@ public class ArtifactModelModifiedListenerTest extends AbstractSimpleArtifactMod
   public void addModuleArtifactToGroupArtifact() throws Exception {
 
     // 'move' model to group 1
-    _binModel.getGroup1Artifact().addArtifact(_binModel.getMainModuleArtifact());
+    getBinModel().getGroup1Artifact().addArtifact(getBinModel().getMainModuleArtifact());
 
-    Assert.assertEquals(1, _binModel.getModifiedNotificationCount());
-    Assert.assertEquals(1, _srcModel.getModifiedNotificationCount());
+    Assert.assertEquals(1, getBinModel().getModifiedNotificationCount());
+    Assert.assertEquals(1, getSrcModel().getModifiedNotificationCount());
 
     // 'move' model to group 1
-    _binModel.getRootArtifact().addArtifact(_binModel.getMainModuleArtifact());
+    getBinModel().getRootArtifact().addArtifact(getBinModel().getMainModuleArtifact());
 
-    Assert.assertEquals(2, _binModel.getModifiedNotificationCount());
-    Assert.assertEquals(2, _srcModel.getModifiedNotificationCount());
+    Assert.assertEquals(2, getBinModel().getModifiedNotificationCount());
+    Assert.assertEquals(2, getSrcModel().getModifiedNotificationCount());
   }
 
   /**
@@ -47,11 +47,11 @@ public class ArtifactModelModifiedListenerTest extends AbstractSimpleArtifactMod
   public void changeResourceModuleClassification() throws Exception {
 
     // change classification
-    ((IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule())
-        .setClassification(new Path("group1"));
+    ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
+        "group1"));
 
-    Assert.assertEquals(1, _binModel.getModifiedNotificationCount());
-    Assert.assertEquals(1, _srcModel.getModifiedNotificationCount());
+    Assert.assertEquals(1, getBinModel().getModifiedNotificationCount());
+    Assert.assertEquals(1, getSrcModel().getModifiedNotificationCount());
   }
 
   /**
@@ -63,21 +63,21 @@ public class ArtifactModelModifiedListenerTest extends AbstractSimpleArtifactMod
   @Test
   public void disableModuleChangedNotifcation() throws Exception {
 
-    _binModel.getRootArtifact().disableModelModifiedNotification(true);
+    getBinModel().getRootArtifact().disableModelModifiedNotification(true);
 
     // 'move' model to group 1
-    ((IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule())
-        .setClassification(new Path("group1"));
+    ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
+        "group1"));
 
-    ((IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule())
-        .setClassification(new Path("group1"));
+    ((IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule()).setClassification(new Path(
+        "group1"));
 
-    Assert.assertEquals(0, _binModel.getModifiedNotificationCount());
-    Assert.assertEquals(0, _srcModel.getModifiedNotificationCount());
+    Assert.assertEquals(0, getBinModel().getModifiedNotificationCount());
+    Assert.assertEquals(0, getSrcModel().getModifiedNotificationCount());
 
-    _binModel.getRootArtifact().disableModelModifiedNotification(false);
+    getBinModel().getRootArtifact().disableModelModifiedNotification(false);
 
-    Assert.assertEquals(1, _binModel.getModifiedNotificationCount());
-    Assert.assertEquals(1, _srcModel.getModifiedNotificationCount());
+    Assert.assertEquals(1, getBinModel().getModifiedNotificationCount());
+    Assert.assertEquals(1, getSrcModel().getModifiedNotificationCount());
   }
 }

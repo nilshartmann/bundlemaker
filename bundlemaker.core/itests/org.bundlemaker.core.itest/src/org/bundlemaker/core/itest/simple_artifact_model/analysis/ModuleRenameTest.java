@@ -1,7 +1,6 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.modules.modifiable.IModifiableModule;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.junit.Test;
 
 /**
@@ -25,7 +24,7 @@ public class ModuleRenameTest extends AbstractSimpleArtifactModelTest {
     // assertMainModuleNameAndVersion("SimpleArtifactModelTest", "1.0.0");
     //
     // // rename the module
-    // IModifiableModule module = (IModifiableModule) _binModel.getMainModuleArtifact().getAssociatedModule();
+    // IModifiableModule module = (IModifiableModule) getBinModel().getMainModuleArtifact().getAssociatedModule();
     // module.setModuleIdentifier("neuerName", "1.2.3");
     //
     // //
@@ -45,7 +44,7 @@ public class ModuleRenameTest extends AbstractSimpleArtifactModelTest {
     // assertMainModuleNameAndVersion("SimpleArtifactModelTest", "1.0.0");
     //
     // //
-    // _binModel.getMainModuleArtifact().setNameAndVersion("neuerName", "1.2.3");
+    // getBinModel().getMainModuleArtifact().setNameAndVersion("neuerName", "1.2.3");
     //
     // //
     // assertMainModuleNameAndVersion("neuerName", "1.2.3");

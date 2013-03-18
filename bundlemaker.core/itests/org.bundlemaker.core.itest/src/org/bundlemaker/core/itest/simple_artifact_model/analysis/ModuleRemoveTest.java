@@ -1,9 +1,6 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
-import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.itest._framework.analysis.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.modules.ModuleIdentifier;
-import org.junit.Assert;
+import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.junit.Test;
 
 /**
@@ -26,16 +23,16 @@ public class ModuleRemoveTest extends AbstractSimpleArtifactModelTest {
 
     // //
     // assertResourceModuleCountInModularizedSystem(1);
-    // assertResourceModuleCount(_binModel, 1);
-    // assertResourceModuleCount(_srcModel, 1);
+    // assertResourceModuleCount(getBinModel(), 1);
+    // assertResourceModuleCount(getSrcModel(), 1);
     //
     // //
     // getModularizedSystem().removeModule(new ModuleIdentifier("SimpleArtifactModelTest", "1.0.0"));
     //
     // // assert that we have no resource modules
     // assertResourceModuleCountInModularizedSystem(0);
-    // assertResourceModuleCount(_binModel, 0);
-    // assertResourceModuleCount(_srcModel, 0);
+    // assertResourceModuleCount(getBinModel(), 0);
+    // assertResourceModuleCount(getSrcModel(), 0);
   }
 
 //  /**
@@ -50,23 +47,23 @@ public class ModuleRemoveTest extends AbstractSimpleArtifactModelTest {
 //
 //    //
 //    assertResourceModuleCountInModularizedSystem(1);
-//    assertResourceModuleCount(_binModel, 1);
-//    assertResourceModuleCount(_srcModel, 1);
+//    assertResourceModuleCount(getBinModel(), 1);
+//    assertResourceModuleCount(getSrcModel(), 1);
 //
 //    // create a new group
-//    IModuleArtifact newModuleArtifact = _binModel.getGroup2Artifact().getOrCreateModule("SimpleArtifactModelTest",
+//    IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("SimpleArtifactModelTest",
 //        "1.0.0");
 //    Assert.assertEquals("group1/group2/SimpleArtifactModelTest_1.0.0", newModuleArtifact.getQualifiedName());
 //    assertResourceModuleCountInModularizedSystem(1);
-//    assertResourceModuleCount(_binModel, 1);
-//    assertResourceModuleCount(_srcModel, 1);
+//    assertResourceModuleCount(getBinModel(), 1);
+//    assertResourceModuleCount(getSrcModel(), 1);
 //
 //    // remove module
-//    _binModel.getGroup2Artifact().removeArtifact(newModuleArtifact);
+//    getBinModel().getGroup2Artifact().removeArtifact(newModuleArtifact);
 //
 //    // assert that we have no resource modules
 //    assertResourceModuleCountInModularizedSystem(0);
-//    assertResourceModuleCount(_binModel, 0);
-//    assertResourceModuleCount(_srcModel, 0);
+//    assertResourceModuleCount(getBinModel(), 0);
+//    assertResourceModuleCount(getSrcModel(), 0);
 //  }
 }
