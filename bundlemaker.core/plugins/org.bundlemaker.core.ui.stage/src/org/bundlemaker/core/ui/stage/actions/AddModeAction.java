@@ -11,7 +11,7 @@
 
 package org.bundlemaker.core.ui.stage.actions;
 
-import org.bundlemaker.core.selection.stage.ArtifactStage;
+import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -30,11 +30,11 @@ public class AddModeAction extends Action {
 
   @Override
   public void run() {
-    ArtifactStage.instance().setAddMode(_addMode);
+    Selection.instance().getArtifactStage().setAddMode(_addMode);
   }
 
   public void update() {
-    setChecked(_addMode == ArtifactStage.instance().getAddMode());
+    setChecked(_addMode == Selection.instance().getArtifactStage().getAddMode());
   }
 
 }

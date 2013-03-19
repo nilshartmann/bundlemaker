@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.selection.stage;
+package org.bundlemaker.core.selection.internal.stage;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -22,14 +22,16 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
+import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
+import org.bundlemaker.core.selection.stage.IArtifactStage;
+import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ArtifactStage {
-
-  private static ArtifactStage                                    _instance;
+public class ArtifactStage implements IArtifactStage {
 
   private ArtifactStageAddMode                                    _addMode             = ArtifactStageAddMode.autoAddSelectedArtifacts;
 
@@ -37,34 +39,29 @@ public class ArtifactStage {
 
   private final CopyOnWriteArraySet<IArtifactStageChangeListener> _stageChangeListener = new CopyOnWriteArraySet<IArtifactStageChangeListener>();
 
-  public static ArtifactStage instance() {
-    if (_instance == null) {
-      _instance = new ArtifactStage();
+  private boolean                                                 _init;
+
+  public void init() {
+    if (!_init) {
+      Selection.instance().getArtifactSelectionService()
+          .addArtifactSelectionListener(Selection.PROJECT_EXLPORER_SELECTION_ID, new IArtifactSelectionListener() {
+
+            @Override
+            public void artifactSelectionChanged(IArtifactSelection event) {
+              projectExplorerSelectionChanged(event);
+            }
+          });
+      boolean useChildrenOfSelectedArtifacts = Selection.instance().getArtifactSelectionService()
+          .getUseChildrenOfSelectedArtifacts();
+      if (useChildrenOfSelectedArtifacts) {
+        _addMode = ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts;
+      }
+      IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
+          .getSelection(Selection.PROJECT_EXLPORER_SELECTION_ID);
+      projectExplorerSelectionChanged(selection);
+
+      _init = true;
     }
-
-    return _instance;
-  }
-
-  private ArtifactStage() {
-    Selection.instance().getArtifactSelectionService()
-        .addArtifactSelectionListener(Selection.PROJECT_EXLPORER_SELECTION_ID, new IArtifactSelectionListener() {
-
-          @Override
-          public void artifactSelectionChanged(IArtifactSelection event) {
-            projectExplorerSelectionChanged(event);
-          }
-        });
-
-    boolean useChildrenOfSelectedArtifacts = Selection.instance().getArtifactSelectionService()
-        .getUseChildrenOfSelectedArtifacts();
-    if (useChildrenOfSelectedArtifacts) {
-      _addMode = ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts;
-    }
-
-    IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
-        .getSelection(Selection.PROJECT_EXLPORER_SELECTION_ID);
-
-    projectExplorerSelectionChanged(selection);
   }
 
   public boolean hasStagedArtifacts() {
@@ -80,7 +77,7 @@ public class ArtifactStage {
       Selection.instance().getArtifactSelectionService()
           .setUseChildrenOfSelectedArtifacts(addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
 
-      fireArtifactStageChange(ArtifactStageChangeReason.configurationChanged);
+      fireArtifactStageChange();
     }
   }
 
@@ -133,7 +130,8 @@ public class ArtifactStage {
    *          the new staged artifacts. Might be null
    */
   public void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
-    _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>() : stagedArtifacts);
+    _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>()
+        : new LinkedList<IBundleMakerArtifact>(stagedArtifacts));
 
     publishStagedArtifacts();
 
@@ -159,9 +157,9 @@ public class ArtifactStage {
 
   }
 
-  protected void fireArtifactStageChange(ArtifactStageChangeReason reason) {
+  protected void fireArtifactStageChange() {
 
-    final ArtifactStageChangedEvent event = new ArtifactStageChangedEvent(reason);
+    final ArtifactStageChangedEvent event = new ArtifactStageChangedEvent();
 
     for (IArtifactStageChangeListener listener : _stageChangeListener) {
       listener.artifactStateChanged(event);

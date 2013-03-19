@@ -10,7 +10,6 @@ import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.selection.Selection;
-import org.bundlemaker.core.selection.stage.ArtifactStage;
 import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
@@ -112,12 +111,13 @@ public class StageView extends ViewPart {
     // viewer.setLabelProvider(new ViewLabelProvider());
     // viewer.setSorter(new NameSorter());
     // viewer.setInput(getViewSite());
+
     makeActions();
     hookContextMenu();
     hookDoubleClickAction();
     contributeToActionBars();
 
-    ArtifactStage.instance().addArtifactStageChangeListener(_artifactStageChangeListener);
+    Selection.instance().getArtifactStage().addArtifactStageChangeListener(_artifactStageChangeListener);
 
     Selection.instance().getArtifactSelectionService()
         .addArtifactSelectionListener(Selection.ARTIFACT_STAGE_SELECTION_ID, _artifactSelectionListener);
@@ -247,7 +247,7 @@ public class StageView extends ViewPart {
 
   @Override
   public void dispose() {
-    ArtifactStage.instance().removeArtifactStageChangeListener(_artifactStageChangeListener);
+    Selection.instance().getArtifactStage().removeArtifactStageChangeListener(_artifactStageChangeListener);
     Selection.instance().getArtifactSelectionService().removeArtifactSelectionListener(_artifactSelectionListener);
     super.dispose();
   }
@@ -294,16 +294,12 @@ public class StageView extends ViewPart {
     _treeViewer.getControl().setFocus();
   }
 
-  protected ArtifactStage getArtifactStage() {
-    return ArtifactStage.instance();
-  }
-
   protected void artifactStageConfigurationChanged() {
     _addModeActionGroup.update();
   }
 
   protected ArtifactStageAddMode getAddMode() {
-    return getArtifactStage().getAddMode();
+    return Selection.instance().getArtifactStage().getAddMode();
   }
 
   class AutoExpandAction extends Action {
@@ -339,7 +335,7 @@ public class StageView extends ViewPart {
      */
     @Override
     public void run() {
-      getArtifactStage().setStagedArtifacts(null);
+      Selection.instance().getArtifactStage().setStagedArtifacts(null);
     }
   }
 
@@ -366,7 +362,7 @@ public class StageView extends ViewPart {
         artifacts.addAll(artifact.getChildren());
       }
 
-      getArtifactStage().removeStagedArtifacts(artifacts);
+      Selection.instance().getArtifactStage().removeStagedArtifacts(artifacts);
 
     }
   }

@@ -18,9 +18,6 @@ package org.bundlemaker.core.selection.stage;
  */
 public class ArtifactStageChangedEvent {
 
-  /** - */
-  private final ArtifactStageChangeReason _reason;
-
   /**
    * <p>
    * Creates a new instance of type {@link ArtifactStageChangedEvent}.
@@ -28,17 +25,6 @@ public class ArtifactStageChangedEvent {
    * 
    * @param reason
    */
-  public ArtifactStageChangedEvent(ArtifactStageChangeReason reason) {
-    this._reason = reason;
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @return
-   */
-  public ArtifactStageChangeReason getReason() {
-    return this._reason;
+  public ArtifactStageChangedEvent() {
   }
 }

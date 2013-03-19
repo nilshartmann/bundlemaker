@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
-import org.bundlemaker.core.selection.stage.ArtifactStage;
+import org.bundlemaker.core.selection.Selection;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 
@@ -41,15 +41,10 @@ public class AbstractStageAction extends Action {
   }
 
   protected void addToStage(List<IBundleMakerArtifact> artifacts) {
-    getArtifactStage().addToStage(artifacts);
+    Selection.instance().getArtifactStage().addToStage(artifacts);
   }
 
   protected boolean isManualAddMode() {
-    return !getArtifactStage().getAddMode().isAutoAddMode();
+    return !Selection.instance().getArtifactStage().getAddMode().isAutoAddMode();
   }
-
-  protected ArtifactStage getArtifactStage() {
-    return ArtifactStage.instance();
-  }
-
 }

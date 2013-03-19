@@ -11,6 +11,8 @@
 
 package org.bundlemaker.core.ui.stage.actions;
 
+import org.bundlemaker.core.selection.Selection;
+
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
@@ -33,7 +35,7 @@ public class ClearStageAction extends AbstractStageAction {
    */
   @Override
   public void run() {
-    getArtifactStage().setStagedArtifacts(null);
+    Selection.instance().getArtifactStage().setStagedArtifacts(null);
   }
 
 }

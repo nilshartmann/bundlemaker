@@ -5,6 +5,8 @@ import org.bundlemaker.core.selection.internal.ArtifactSelection;
 import org.bundlemaker.core.selection.internal.ArtifactSelectionService;
 import org.bundlemaker.core.selection.internal.DependencySelection;
 import org.bundlemaker.core.selection.internal.DependencySelectionService;
+import org.bundlemaker.core.selection.internal.stage.ArtifactStage;
+import org.bundlemaker.core.selection.stage.IArtifactStage;
 
 /**
  * <p>
@@ -49,10 +51,13 @@ public class Selection {
    */
   private final DependencySelectionService _dependencySelectionService;
 
+  /** - */
+  private final ArtifactStage              _artifactStage;
+
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param selectionId
    * @param providerId
    * @return
@@ -60,11 +65,11 @@ public class Selection {
   public static IArtifactSelection emptyArtifactSelection(String selectionId, String providerId) {
     return new ArtifactSelection(selectionId, providerId);
   }
-  
+
   /**
    * <p>
    * </p>
-   *
+   * 
    * @param selectionId
    * @param providerId
    * @return
@@ -102,6 +107,20 @@ public class Selection {
 
     // Create the DependencySelectionService
     _dependencySelectionService = new DependencySelectionService();
+
+    // Create the artifact stage
+    _artifactStage = new ArtifactStage();
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public IArtifactStage getArtifactStage() {
+    _artifactStage.init();
+    return _artifactStage;
   }
 
   /**
