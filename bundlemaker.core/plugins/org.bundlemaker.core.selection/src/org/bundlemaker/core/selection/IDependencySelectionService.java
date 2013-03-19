@@ -15,11 +15,13 @@ import java.util.Collection;
 import org.bundlemaker.core.analysis.IDependency;
 
 /**
+ * <p>
  * A central selection service for selected {@link IDependency dependencies}
+ * </p>
  * 
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
- * @noimplement This interface should not be implemented by clients
+ * @noimplement This interface must not be implemented by clients
  */
 public interface IDependencySelectionService {
 

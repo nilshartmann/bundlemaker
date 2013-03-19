@@ -1,7 +1,9 @@
 package org.bundlemaker.core.selection;
 
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.selection.internal.ArtifactSelection;
 import org.bundlemaker.core.selection.internal.ArtifactSelectionService;
+import org.bundlemaker.core.selection.internal.DependencySelection;
 import org.bundlemaker.core.selection.internal.DependencySelectionService;
 
 /**
@@ -46,6 +48,30 @@ public class Selection {
    * The {@link IDependencySelectionService} that manages selections of {@link IDependency} objects in the IDE
    */
   private final DependencySelectionService _dependencySelectionService;
+
+  /**
+   * <p>
+   * </p>
+   *
+   * @param selectionId
+   * @param providerId
+   * @return
+   */
+  public static IArtifactSelection emptyArtifactSelection(String selectionId, String providerId) {
+    return new ArtifactSelection(selectionId, providerId);
+  }
+  
+  /**
+   * <p>
+   * </p>
+   *
+   * @param selectionId
+   * @param providerId
+   * @return
+   */
+  public static IDependencySelection emptyDependencySelection(String selectionId, String providerId) {
+    return new DependencySelection(selectionId, providerId);
+  }
 
   /**
    * Returns the singleton instance of analysis.

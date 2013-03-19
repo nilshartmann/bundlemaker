@@ -6,7 +6,7 @@ package org.bundlemaker.core.selection;
  *
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public interface IProviderSelection {
+public interface IProviderBasedSelection {
 
   /**
    * <p>

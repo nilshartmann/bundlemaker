@@ -29,6 +29,15 @@ public class DependencySelection extends AbstractProviderSelection implements ID
   /** the selected artifacts */
   private final List<IDependency> _selectedDependencies;
 
+  public DependencySelection(String dependencySelectionId, String providerId) {
+
+    //
+    super(dependencySelectionId, providerId);
+
+    //
+    _selectedDependencies = Collections.emptyList();
+  }
+  
   /**
    * <p>
    * Creates a new instance of type {@link DependencySelection}.

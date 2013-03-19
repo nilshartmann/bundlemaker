@@ -4,7 +4,6 @@ import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.selection.IArtifactSelectionListener;
 import org.bundlemaker.core.selection.Selection;
-import org.bundlemaker.core.selection.internal.ArtifactSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -24,7 +23,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
   private IArtifactSelection      _currentArtifactSelection;
 
   /** - */
-  public final IArtifactSelection EMPTY_ARTIFACT_SELECTION = new ArtifactSelection(getArtifactSelectionId(),
+  public final IArtifactSelection EMPTY_ARTIFACT_SELECTION = Selection.emptyArtifactSelection(getArtifactSelectionId(),
                                                                getProviderId());
 
   /**

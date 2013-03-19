@@ -44,7 +44,7 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
    * </p>
    *
    * @return
-   * @see org.bundlemaker.core.selection.IProviderSelection#getSelectionId()
+   * @see org.bundlemaker.core.selection.IProviderBasedSelection#getSelectionId()
    */
   public String getSelectionId() {
     return _selection.getSelectionId();
@@ -55,7 +55,7 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
    * </p>
    *
    * @return
-   * @see org.bundlemaker.core.selection.IProviderSelection#getProviderId()
+   * @see org.bundlemaker.core.selection.IProviderBasedSelection#getProviderId()
    */
   public String getProviderId() {
     return _selection.getProviderId();

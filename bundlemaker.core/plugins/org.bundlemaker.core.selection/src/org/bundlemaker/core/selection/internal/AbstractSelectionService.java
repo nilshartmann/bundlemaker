@@ -12,7 +12,7 @@ package org.bundlemaker.core.selection.internal;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bundlemaker.core.selection.IProviderSelection;
+import org.bundlemaker.core.selection.IProviderBasedSelection;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Assert;
  * @param <SELECTION>
  *          The type of the selection-object
  */
-public abstract class AbstractSelectionService<SELECTION extends IProviderSelection> {
+public abstract class AbstractSelectionService<SELECTION extends IProviderBasedSelection> {
 
   /**
    * A map containing all current selections

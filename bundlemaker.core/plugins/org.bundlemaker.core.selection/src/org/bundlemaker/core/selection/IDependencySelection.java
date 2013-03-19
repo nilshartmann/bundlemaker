@@ -21,7 +21,7 @@ import org.bundlemaker.core.analysis.IDependency;
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IDependencySelection  extends IProviderSelection {
+public interface IDependencySelection  extends IProviderBasedSelection {
 
   /**
    * The selected artifacts. Never null but might be empty.

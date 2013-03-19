@@ -1,6 +1,6 @@
 package org.bundlemaker.core.selection.internal;
 
-import org.bundlemaker.core.selection.IProviderSelection;
+import org.bundlemaker.core.selection.IProviderBasedSelection;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -9,7 +9,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AbstractProviderSelection implements IProviderSelection {
+public class AbstractProviderSelection implements IProviderBasedSelection {
 
   /** the selection identifier */
   private String _selectionId;

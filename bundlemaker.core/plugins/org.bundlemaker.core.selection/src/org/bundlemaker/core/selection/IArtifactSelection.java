@@ -23,7 +23,7 @@ import org.bundlemaker.core.analysis.IRootArtifact;
  * 
  * @noimplement This interface should not be implemented by clients
  */
-public interface IArtifactSelection extends IProviderSelection {
+public interface IArtifactSelection extends IProviderBasedSelection {
 
   /**
    * The <b>effective</b> selected artifacts, that is, in case <tt>useChildrenOfSelectedArtifacts</tt> is set to true,
