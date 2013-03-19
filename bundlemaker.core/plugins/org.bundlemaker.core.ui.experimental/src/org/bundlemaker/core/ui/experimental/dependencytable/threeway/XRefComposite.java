@@ -12,9 +12,10 @@ import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.ui.view.dependencytree.DefaultExpandStrategy;
 import org.bundlemaker.core.ui.view.dependencytree.Helper;
-import org.bundlemaker.core.ui.view.dependencytree.IExpandStrategy;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -57,7 +58,7 @@ public class XRefComposite extends Composite {
   private String                        _providerId;
 
   /** - */
-  private IExpandStrategy               _expandStrategy;
+  private DefaultExpandStrategy         _expandStrategy;
 
   private XRefTreeArtifactLabelProvider _artifactLabelProvider;
 
@@ -68,13 +69,12 @@ public class XRefComposite extends Composite {
    * 
    * @param parent
    */
-  public XRefComposite(Composite parent, String providerId, IExpandStrategy expandStrategy) {
+  public XRefComposite(Composite parent, String providerId) {
     super(parent, SWT.NONE);
 
     Assert.isNotNull(providerId);
 
     _providerId = providerId;
-    _expandStrategy = expandStrategy;
 
     init();
   }
@@ -83,6 +83,20 @@ public class XRefComposite extends Composite {
     _fromTreeViewer.setInput(rootArtifact);
     _centerViewer.setInput(rootArtifact);
     _toTreeViewer.setInput(rootArtifact);
+  }
+
+  private Composite createToolBarComposite() {
+    Composite fromToolbar = new Composite(this, SWT.BORDER_SOLID);
+    GridData gridData = new GridData();
+    gridData.verticalAlignment = SWT.TOP;
+    gridData.horizontalAlignment = SWT.FILL;
+    gridData.grabExcessHorizontalSpace = true;
+    gridData.grabExcessVerticalSpace = false;
+    fromToolbar.setLayoutData(gridData);
+    fromToolbar.setLayout(new GridLayout(1, false));
+
+    return fromToolbar;
+
   }
 
   /**
@@ -98,10 +112,21 @@ public class XRefComposite extends Composite {
     // https://bugs.eclipse.org/bugs/show_bug.cgi?id=162698
     // https://bugs.eclipse.org/bugs/attachment.cgi?id=52918
 
+    Composite fromToolBarComposite = createToolBarComposite();
+    Composite centerToolBarComposite = createToolBarComposite();
+    Composite toToolBarComposite = createToolBarComposite();
+
+    // ToolBar toolBar1 = new ToolBar(this, SWT.HORIZONTAL);
+    // ToolBar toolBar2 = new ToolBar(this, SWT.HORIZONTAL);
+    // ToolBar toolBar3 = new ToolBar(this, SWT.HORIZONTAL);
+
     //
     _fromTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
     _centerViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
     _toTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
+
+    _expandStrategy = new DefaultExpandStrategy();
+    _expandStrategy.init(_fromTreeViewer, _toTreeViewer);
 
     _detailsLabel = new Label(this, SWT.NONE);
     GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false, 3, 1);
@@ -117,6 +142,21 @@ public class XRefComposite extends Composite {
     _fromTreeViewer.addSelectionChangedListener(new FromArtifactsSelectionChangedListener());
     _centerViewer.addSelectionChangedListener(new CenterArtifactsSelectionChangedListener());
     _toTreeViewer.addSelectionChangedListener(new ToArtifactSelectionChangedListener());
+
+    ToolBarManager mgr1 = new ToolBarManager();
+
+    ExpandStrategyActionGroup fromGroup = new ExpandStrategyActionGroup(_expandStrategy, false);
+    fromGroup.fill(mgr1);
+
+    mgr1.createControl(fromToolBarComposite);
+
+    ToolBarManager mgr2 = new ToolBarManager();
+    mgr2.createControl(centerToolBarComposite);
+
+    ToolBarManager mgr3 = new ToolBarManager();
+    ExpandStrategyActionGroup toGroup = new ExpandStrategyActionGroup(_expandStrategy, true);
+    toGroup.fill(mgr3);
+    mgr3.createControl(toToolBarComposite);
 
   }
 
