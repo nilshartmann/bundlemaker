@@ -40,9 +40,9 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
     // return Selection.MAIN_DEPENDENCY_SELECTION_ID;
     // }
     // };
-    
+
     //
-    _composite = new XRefComposite(parent, XREF_ID, null);
+    _composite = new XRefComposite(parent, XREF_ID);
   }
 
   @Override
@@ -74,10 +74,10 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
     super.setCurrentArtifactSelection(event);
 
     if (_composite != null) {
-      
+
       //
       if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
-      _composite.setRoot(getCurrentArtifactSelection().getRootArtifact());
+        _composite.setRoot(getCurrentArtifactSelection().getRootArtifact());
       }
       // if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts()) {
       //

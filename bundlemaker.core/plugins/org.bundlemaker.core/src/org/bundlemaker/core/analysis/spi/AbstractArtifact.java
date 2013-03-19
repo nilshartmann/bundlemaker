@@ -136,7 +136,7 @@ public abstract class AbstractArtifact implements IBundleMakerArtifact {
 
   @Override
   public Collection<? extends IBundleMakerArtifact> getAncestors() {
-    return Collections.unmodifiableCollection(_cachedParents);
+    return Collections.unmodifiableCollection(getCachedParents());
   }
 
   /**
