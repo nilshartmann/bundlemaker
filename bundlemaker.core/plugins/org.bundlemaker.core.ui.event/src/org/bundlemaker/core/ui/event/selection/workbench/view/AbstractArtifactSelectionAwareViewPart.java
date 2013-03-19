@@ -11,10 +11,10 @@
 package org.bundlemaker.core.ui.event.selection.workbench.view;
 
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
-import org.bundlemaker.core.ui.event.selection.internal.ArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelectionListener;
+import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.selection.internal.ArtifactSelection;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 

@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.view.dependencytree;
 
-import org.bundlemaker.core.ui.event.selection.IDependencySelection;
+import org.bundlemaker.core.selection.IDependencySelection;
 import org.bundlemaker.core.ui.event.selection.workbench.view.AbstractDependencySelectionAwareViewPart;
 import org.eclipse.swt.widgets.Composite;
 

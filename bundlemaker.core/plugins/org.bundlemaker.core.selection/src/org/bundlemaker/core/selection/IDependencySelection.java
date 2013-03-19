@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.event.selection;
+package org.bundlemaker.core.selection;
 
 import java.util.List;
 

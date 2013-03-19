@@ -4,6 +4,11 @@ Bundle-Name: org.bundlemaker.core.selection
 Bundle-SymbolicName: org.bundlemaker.core.selection
 Bundle-Version: 0.10.0.qualifier
 Bundle-Activator: org.bundlemaker.core.selection.internal.Activator
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ org.bundlemaker.core;bundle-version="0.10.0",
+ com.google.guava;bundle-version="14.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.bundlemaker.core.selection,
+ org.bundlemaker.core.selection.internal,
+ org.bundlemaker.core.selection.stage

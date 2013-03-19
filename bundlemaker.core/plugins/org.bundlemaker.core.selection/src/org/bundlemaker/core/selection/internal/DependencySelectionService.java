@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.event.selection.internal;
+package org.bundlemaker.core.selection.internal;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,11 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.ui.event.selection.IDependencySelection;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionService;
-import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.selection.IDependencySelection;
+import org.bundlemaker.core.selection.IDependencySelectionChangedEvent;
+import org.bundlemaker.core.selection.IDependencySelectionListener;
+import org.bundlemaker.core.selection.IDependencySelectionService;
+import org.bundlemaker.core.selection.Selection;
 import org.eclipse.core.runtime.Assert;
 
 /**

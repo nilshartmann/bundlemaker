@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.event.stage;
+package org.bundlemaker.core.selection.stage;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

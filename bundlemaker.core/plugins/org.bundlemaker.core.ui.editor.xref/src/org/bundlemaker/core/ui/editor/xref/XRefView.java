@@ -11,8 +11,8 @@
 package org.bundlemaker.core.ui.editor.xref;
 
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.view.dependencytree.CropableDependencyTreeComposite;
 import org.eclipse.swt.widgets.Composite;

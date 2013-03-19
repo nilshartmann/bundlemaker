@@ -7,16 +7,16 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IVirtualRoot;
+import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelectionListener;
+import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.selection.stage.ArtifactStage;
+import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
+import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
+import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
-import org.bundlemaker.core.ui.event.stage.ArtifactStage;
-import org.bundlemaker.core.ui.event.stage.ArtifactStageAddMode;
-import org.bundlemaker.core.ui.event.stage.ArtifactStageChangedEvent;
-import org.bundlemaker.core.ui.event.stage.IArtifactStageChangeListener;
 import org.bundlemaker.core.ui.stage.actions.AddModeActionGroup;
 import org.bundlemaker.core.ui.stage.actions.StageIcons;
 import org.eclipse.jface.action.Action;
@@ -384,8 +384,8 @@ public class StageView extends ViewPart {
           bundleMakerArtifact = bundleMakerArtifact.getRoot();
 
         }
-        System.out.println("Artifact: " + bundleMakerArtifact);
-        System.out.println("  STAGED ARTIFACTS: " + _effectiveSelectedArtifacts);
+        // System.out.println("Artifact: " + bundleMakerArtifact);
+        // System.out.println("  STAGED ARTIFACTS: " + _effectiveSelectedArtifacts);
         stagedArtifact = _effectiveSelectedArtifacts.contains(bundleMakerArtifact);
       }
 

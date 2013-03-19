@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelection;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

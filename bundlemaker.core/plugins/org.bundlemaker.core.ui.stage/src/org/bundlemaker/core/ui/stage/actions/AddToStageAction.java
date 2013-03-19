@@ -11,7 +11,7 @@
 
 package org.bundlemaker.core.ui.stage.actions;
 
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelection;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)

@@ -9,7 +9,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.experimental.editor.xref.threeway;
 
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.experimental.dependencytable.threeway.XRefComposite;
 import org.eclipse.swt.widgets.Composite;

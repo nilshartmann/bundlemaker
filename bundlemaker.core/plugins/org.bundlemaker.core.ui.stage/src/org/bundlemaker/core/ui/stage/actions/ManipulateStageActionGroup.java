@@ -13,8 +13,8 @@ package org.bundlemaker.core.ui.stage.actions;
 
 import java.util.List;
 
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.Selection;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.Separator;

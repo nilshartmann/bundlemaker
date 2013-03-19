@@ -9,9 +9,9 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.internal;
 
+import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.artifact.CommonNavigatorUtils;
 import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
-import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWindowListener;

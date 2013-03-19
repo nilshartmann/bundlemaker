@@ -1,9 +1,8 @@
-package org.bundlemaker.core.ui.event.selection;
+package org.bundlemaker.core.selection;
 
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.ui.event.selection.internal.ArtifactSelectionService;
-import org.bundlemaker.core.ui.event.selection.internal.DependencySelectionService;
-import org.eclipse.ui.IPageLayout;
+import org.bundlemaker.core.selection.internal.ArtifactSelectionService;
+import org.bundlemaker.core.selection.internal.DependencySelectionService;
 
 /**
  * <p>
@@ -35,7 +34,7 @@ public class Selection {
                                                                               + ".DETAIL_DEPENDENCY_SELECTION_ID";
 
   /** the id of the Eclipse project explorer */
-  public static final String               PROJECT_EXPLORER_VIEW_ID       = IPageLayout.ID_PROJECT_EXPLORER;
+  public static final String               PROJECT_EXPLORER_VIEW_ID       = "org.eclipse.ui.navigator.ProjectExplorer";
 
   /** - */
   private static Selection                 _instance;

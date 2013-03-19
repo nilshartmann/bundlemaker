@@ -8,7 +8,7 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.event.stage;
+package org.bundlemaker.core.selection.stage;
 
 /**
  * <p>
@@ -28,7 +28,7 @@ public class ArtifactStageChangedEvent {
    * 
    * @param reason
    */
-  ArtifactStageChangedEvent(ArtifactStageChangeReason reason) {
+  public ArtifactStageChangedEvent(ArtifactStageChangeReason reason) {
     this._reason = reason;
   }
 

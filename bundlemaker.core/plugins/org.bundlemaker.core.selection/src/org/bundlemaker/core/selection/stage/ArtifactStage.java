@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.event.stage;
+package org.bundlemaker.core.selection.stage;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelectionListener;
+import org.bundlemaker.core.selection.Selection;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -152,7 +152,6 @@ public class ArtifactStage {
   }
 
   public void publishStagedArtifacts() {
-
     Selection.instance().getArtifactSelectionService().setSelection(//
         Selection.ARTIFACT_STAGE_SELECTION_ID, //
         StageSelection.STAGE_VIEW_SELECTION_PROVIDER_ID, //

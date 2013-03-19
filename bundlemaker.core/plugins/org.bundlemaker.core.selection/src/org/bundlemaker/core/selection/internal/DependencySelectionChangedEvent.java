@@ -8,13 +8,13 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.event.selection.internal;
+package org.bundlemaker.core.selection.internal;
 
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IDependency;
-import org.bundlemaker.core.ui.event.selection.IDependencySelection;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
+import org.bundlemaker.core.selection.IDependencySelection;
+import org.bundlemaker.core.selection.IDependencySelectionChangedEvent;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -44,7 +44,7 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
    * </p>
    *
    * @return
-   * @see org.bundlemaker.core.ui.event.selection.IProviderSelection#getSelectionId()
+   * @see org.bundlemaker.core.selection.IProviderSelection#getSelectionId()
    */
   public String getSelectionId() {
     return _selection.getSelectionId();
@@ -55,7 +55,7 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
    * </p>
    *
    * @return
-   * @see org.bundlemaker.core.ui.event.selection.IProviderSelection#getProviderId()
+   * @see org.bundlemaker.core.selection.IProviderSelection#getProviderId()
    */
   public String getProviderId() {
     return _selection.getProviderId();
@@ -66,7 +66,7 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
    * </p>
    *
    * @return
-   * @see org.bundlemaker.core.ui.event.selection.IDependencySelection#getSelectedDependencies()
+   * @see org.bundlemaker.core.selection.IDependencySelection#getSelectedDependencies()
    */
   public List<IDependency> getSelectedDependencies() {
     return _selection.getSelectedDependencies();
@@ -77,7 +77,7 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
    * </p>
    *
    * @return
-   * @see org.bundlemaker.core.ui.event.selection.IDependencySelection#getFirstDependency()
+   * @see org.bundlemaker.core.selection.IDependencySelection#getFirstDependency()
    */
   public IDependency getFirstDependency() {
     return _selection.getFirstDependency();
@@ -88,7 +88,7 @@ public class DependencySelectionChangedEvent implements IDependencySelectionChan
    * </p>
    *
    * @return
-   * @see org.bundlemaker.core.ui.event.selection.IDependencySelection#hasDependencies()
+   * @see org.bundlemaker.core.selection.IDependencySelection#hasDependencies()
    */
   public boolean hasDependencies() {
     return _selection.hasDependencies();

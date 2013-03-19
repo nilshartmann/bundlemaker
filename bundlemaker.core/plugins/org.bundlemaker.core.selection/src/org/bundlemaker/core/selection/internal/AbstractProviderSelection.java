@@ -1,6 +1,6 @@
-package org.bundlemaker.core.ui.event.selection.internal;
+package org.bundlemaker.core.selection.internal;
 
-import org.bundlemaker.core.ui.event.selection.IProviderSelection;
+import org.bundlemaker.core.selection.IProviderSelection;
 import org.eclipse.core.runtime.Assert;
 
 /**

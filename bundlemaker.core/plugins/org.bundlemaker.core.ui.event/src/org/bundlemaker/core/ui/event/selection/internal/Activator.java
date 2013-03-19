@@ -5,10 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.selection.IDependencySelectionChangedEvent;
+import org.bundlemaker.core.selection.IDependencySelectionListener;
+import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.event.Events;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.event.selection;
+package org.bundlemaker.core.selection;
 
 /**
  * <p>

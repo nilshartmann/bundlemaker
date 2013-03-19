@@ -1,10 +1,10 @@
 package org.bundlemaker.core.ui.event.selection.workbench.editor;
 
 import org.bundlemaker.core.analysis.IAnalysisModelModifiedListener;
-import org.bundlemaker.core.ui.event.selection.IDependencySelection;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionChangedEvent;
-import org.bundlemaker.core.ui.event.selection.IDependencySelectionListener;
-import org.bundlemaker.core.ui.event.selection.Selection;
+import org.bundlemaker.core.selection.IDependencySelection;
+import org.bundlemaker.core.selection.IDependencySelectionChangedEvent;
+import org.bundlemaker.core.selection.IDependencySelectionListener;
+import org.bundlemaker.core.selection.Selection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;

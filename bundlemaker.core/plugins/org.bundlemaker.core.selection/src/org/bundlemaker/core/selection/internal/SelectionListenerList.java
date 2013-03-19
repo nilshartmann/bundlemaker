@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.event.selection.internal;
+package org.bundlemaker.core.selection.internal;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 

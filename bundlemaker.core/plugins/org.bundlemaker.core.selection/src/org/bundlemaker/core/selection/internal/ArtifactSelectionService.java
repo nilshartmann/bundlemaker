@@ -8,16 +8,16 @@
  * Contributors:
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.ui.event.selection.internal;
+package org.bundlemaker.core.selection.internal;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelection;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionListener;
-import org.bundlemaker.core.ui.event.selection.IArtifactSelectionService;
+import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.IArtifactSelectionListener;
+import org.bundlemaker.core.selection.IArtifactSelectionService;
 import org.eclipse.core.runtime.Assert;
 
 /**
