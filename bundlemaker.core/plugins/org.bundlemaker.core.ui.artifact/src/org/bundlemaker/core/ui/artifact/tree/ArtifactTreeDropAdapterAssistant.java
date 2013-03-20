@@ -32,7 +32,7 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
   @Override
   public IStatus validateDrop(Object target, int operation, TransferData transferData) {
 
-    TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
+    TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().getSelection();
 
     if (treeSelection != null && treeSelection.getFirstElement() instanceof IBundleMakerArtifact
         && target instanceof IBundleMakerArtifact) {
@@ -58,8 +58,7 @@ public class ArtifactTreeDropAdapterAssistant extends CommonDropAdapterAssistant
     CommonNavigator commonNavigator = CommonNavigatorUtils
         .findCommonNavigator("org.eclipse.ui.navigator.ProjectExplorer");
 
-    TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().nativeToJava(
-        aDropAdapter.getCurrentTransfer());
+    TreeSelection treeSelection = (TreeSelection) LocalSelectionTransfer.getTransfer().getSelection();
 
     IBundleMakerArtifact targetArtifact = (IBundleMakerArtifact) aTarget;
 
