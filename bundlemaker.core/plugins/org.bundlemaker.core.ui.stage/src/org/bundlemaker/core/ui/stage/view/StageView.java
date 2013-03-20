@@ -16,8 +16,9 @@ import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
-import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
 import org.bundlemaker.core.ui.stage.actions.AddModeActionGroup;
 import org.bundlemaker.core.ui.stage.actions.StageIcons;
 import org.eclipse.jface.action.Action;
@@ -37,6 +38,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
@@ -103,9 +105,29 @@ public class StageView extends ViewPart {
   @Override
   public void createPartControl(Composite parent) {
 
-    _treeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(parent);
+    _treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+
+    _treeViewer.setUseHashlookup(true);
+    _treeViewer.setContentProvider(new ArtifactTreeContentProvider(true));
+    _treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
+    _treeViewer.setSorter(new ArtifactTreeViewerSorter());
+
     _treeViewer.setContentProvider(new ArtifactStageContentProvider());
     _treeViewer.setLabelProvider(new StageViewLabelProvider());
+
+    _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
+      @Override
+      public void doubleClick(DoubleClickEvent event) {
+
+        //
+        IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
+
+        if (structuredSelection.size() == 1) {
+          Object object = structuredSelection.getFirstElement();
+          _treeViewer.setExpandedState(object, !_treeViewer.getExpandedState(object));
+        }
+      }
+    });
 
     // viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL |
     // SWT.V_SCROLL);
@@ -200,14 +222,12 @@ public class StageView extends ViewPart {
       _treeViewer.setInput(_effectiveSelectedArtifacts);
     }
 
-    // redraw again
-    _treeViewer.getTree().setRedraw(true);
-
     if (isAutoExpand()) {
-      // _treeViewer.setExpandedElements(_effectiveSelectedArtifacts.toArray(new IBundleMakerArtifact[0]));
-
       _treeViewer.expandAll();
     }
+
+    // redraw again
+    _treeViewer.getTree().setRedraw(true);
 
     refreshEnablement();
   }
