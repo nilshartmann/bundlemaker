@@ -71,7 +71,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
   public void setName(String name) {
     _name = name;
 
-    fireProjectDescriptionChangedEvent();
+    providerChanged();
   }
 
   public String getName() {
@@ -88,7 +88,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
   public void setVersion(String version) {
     _version = version;
 
-    fireProjectDescriptionChangedEvent();
+    providerChanged();
   }
 
   public String getVersion() {
@@ -103,6 +103,12 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
    */
   public void setAnalyzeMode(AnalyzeMode analyzeMode) {
     _analyzeMode = analyzeMode;
+
+    providerChanged();
+  }
+
+  protected void providerChanged() {
+    clearFileBasedContents();
 
     fireProjectDescriptionChangedEvent();
   }
@@ -123,7 +129,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
       _binaryPaths.add(new VariablePath(path));
     }
 
-    fireProjectDescriptionChangedEvent();
+    providerChanged();
   }
 
   public Set<VariablePath> getBinaryPaths() {
@@ -142,7 +148,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
       _sourcePaths.add(new VariablePath(path));
     }
 
-    fireProjectDescriptionChangedEvent();
+    providerChanged();
   }
 
   public Set<VariablePath> getSourcePaths() {
@@ -168,7 +174,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
       _sourcePaths.add(path);
     }
 
-    fireProjectDescriptionChangedEvent();
+    providerChanged();
   }
 
   /**
@@ -190,7 +196,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
       _sourcePaths.add(path);
     }
 
-    fireProjectDescriptionChangedEvent();
+    providerChanged();
   }
 
   /**
