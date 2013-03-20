@@ -37,7 +37,7 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
   public void drop(DropTargetEvent event) {
 
     //
-    ISelection selection = (ISelection) LocalSelectionTransfer.getTransfer().nativeToJava(event.currentDataType);
+    ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 
     if (!(selection instanceof IStructuredSelection)) {
       return;
@@ -69,7 +69,7 @@ public class ArtifactTreeDropAdapter extends ViewerDropAdapter {
       TransferData transferData) {
 
     //
-    ISelection selection = (ISelection) LocalSelectionTransfer.getTransfer().nativeToJava(transferData);
+    ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
 
     if (!(selection instanceof IStructuredSelection)) {
       return false;
