@@ -263,6 +263,8 @@ public class XRefComposite extends Composite {
     _toTreeVisibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, toArtifacts);
     _fromTreeVisibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, fromArtifacts);
 
+    _expandStrategy.exandTreeViewer();
+
     // Update Details Label
     String detailsString = (selectedArtifacts.size() > 1 ? selectedArtifacts.size() + " Artifacts" : selectedArtifacts
         .iterator().next().getName());
