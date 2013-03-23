@@ -173,6 +173,13 @@ public class DefaultExpandStrategy implements IExpandStrategy {
     _fromViewerExpandToType = autoExpandType;
     expandFromTreeViewer(true);
   }
+  
+  /**
+   * @return the fromViewerExpandToType
+   */
+  public Class<? extends IBundleMakerArtifact> getFromViewerExpandToType() {
+    return _fromViewerExpandToType;
+  }
 
   /**
    * <p>
@@ -184,7 +191,18 @@ public class DefaultExpandStrategy implements IExpandStrategy {
     _toViewerExpandToType = autoExpandType;
     expandToTreeViewer(true);
   }
+  
+/**
+ * @return the toViewerExpandToType
+ */
+public Class<? extends IBundleMakerArtifact> getToViewerExpandToType() {
+  return _toViewerExpandToType;
+}
 
+public void exandTreeViewer() {
+  expandFromTreeViewer(true);
+  expandToTreeViewer(true);
+}
   /**
    * <p>
    * </p>

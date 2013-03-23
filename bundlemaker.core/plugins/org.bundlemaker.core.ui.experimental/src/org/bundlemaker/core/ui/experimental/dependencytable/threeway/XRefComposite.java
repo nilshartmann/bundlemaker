@@ -2,6 +2,7 @@ package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -83,6 +84,10 @@ public class XRefComposite extends Composite {
     _fromTreeViewer.setInput(rootArtifact);
     _centerViewer.setInput(rootArtifact);
     _toTreeViewer.setInput(rootArtifact);
+
+    _expandStrategy.exandTreeViewer();
+
+    _centerViewer.expandToLevel(2);
   }
 
   private Composite createToolBarComposite() {
@@ -196,21 +201,21 @@ public class XRefComposite extends Composite {
    * @return
    */
   protected String getDependencySelectionId() {
-    return Selection.DETAIL_DEPENDENCY_SELECTION_ID;
+    return Selection.MAIN_DEPENDENCY_SELECTION_ID;
   }
 
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param selectedDetailDependencies
-  // */
-  // private void setSelectedDetailDependencies(Collection<IDependency> dependencies) {
-  //
-  // //
-  // Selection.instance().getDependencySelectionService()
-  // .setSelection(getDependencySelectionId(), _providerId, dependencies);
-  // }
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param selectedDetailDependencies
+   */
+  private void setSelectedDependencies(Collection<IDependency> dependencies) {
+
+    //
+    Selection.instance().getDependencySelectionService()
+        .setSelection(getDependencySelectionId(), _providerId, dependencies);
+  }
 
   /**
    * <p>
@@ -239,82 +244,89 @@ public class XRefComposite extends Composite {
       // _currentlySelectedTreeViewer = _fromTreeViewer;
       // }
 
+      if (structuredSelection.isEmpty()) {
+        return;
+      }
+
       // check for selected root element
-      boolean containsRoot = false;
+      IRootArtifact rootArtifact = null;
       for (Object object : structuredSelection.toList()) {
         if (object instanceof IRootArtifact) {
-          containsRoot = true;
+          rootArtifact = (IRootArtifact) object;
           break;
         }
       }
 
-      if (structuredSelection.size() > 0 && !containsRoot) {
+      //
+      Collection<IBundleMakerArtifact> selectedArtifacts;
 
-        // store the top item
-        TreeItem toTreeTopItem = _toTreeViewer.getTree().getTopItem();
-        TreeItem fromTreeTopItem = _fromTreeViewer.getTree().getTopItem();
+      selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
+      // if (rootArtifact == null) {
+      // } else {
+      // selectedArtifacts = rootArtifact.getChildren();
+      // }
 
-        //
-        List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
+      // store the top item
+      TreeItem toTreeTopItem = _toTreeViewer.getTree().getTopItem();
+      TreeItem fromTreeTopItem = _fromTreeViewer.getTree().getTopItem();
 
-        //
-        Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
-        for (IBundleMakerArtifact artifact : selectedArtifacts) {
-          for (IDependency dep : artifact.getDependenciesTo()) {
-            toArtifacts.add(dep.getTo());
-          }
+      //
+      Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
+      for (IBundleMakerArtifact artifact : selectedArtifacts) {
+        for (IDependency dep : artifact.getDependenciesTo()) {
+          toArtifacts.add(dep.getTo());
         }
-
-        //
-        Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
-        for (IBundleMakerArtifact artifact : selectedArtifacts) {
-          for (IDependency dep : artifact.getDependenciesFrom()) {
-            fromArtifacts.add(dep.getFrom());
-          }
-        }
-
-        //
-        _toTreeVisibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, toArtifacts);
-        _fromTreeVisibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, fromArtifacts);
-
-        // Update Details Label
-        String detailsString = (selectedArtifacts.size() > 1 ? selectedArtifacts.size() + " Artifacts"
-            : selectedArtifacts.get(0).getName());
-        int fromSize = fromArtifacts.size();
-        detailsString += ", Referenced By: " + fromSize + " " + (fromSize > 1 ? "Artifacts" : "Artifact");
-        int toSize = toArtifacts.size();
-        detailsString += ", Referencing: " + toSize + " " + (toSize > 1 ? "Artifacts" : "Artifact");
-
-        _detailsLabel.setText(detailsString);
-
-        // //
-        // Set<IBundleMakerArtifact> visibleArtifacts =
-        // _helper.setFromArtifacts(Helper.toArtifactList(structuredSelection
-        // .toList()));
-        // VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
-        // setSelectedDetailDependencies(_helper.getFilteredDependencies());
-        //
-        // //
-        // expandArtifacts(_toTreeViewer, visibleArtifactsFilter);
-        //
-
-        // set the top item again
-        if (toTreeTopItem != null && !toTreeTopItem.isDisposed()) {
-          _toTreeViewer.getTree().setTopItem(toTreeTopItem);
-        } else if (_toTreeViewer.getTree().getItemCount() > 0) {
-          _toTreeViewer.getTree().setTopItem(_toTreeViewer.getTree().getItem(0));
-        }
-
-        if (fromTreeTopItem != null && !fromTreeTopItem.isDisposed()) {
-          _fromTreeViewer.getTree().setTopItem(fromTreeTopItem);
-        } else if (_fromTreeViewer.getTree().getItemCount() > 0) {
-          _fromTreeViewer.getTree().setTopItem(_fromTreeViewer.getTree().getItem(0));
-        }
-
-      } else {
-        // setVisibleArtifacts(_toTreeViewer, _helper.getUnfilteredTargetArtifacts());
-        // setSelectedDetailDependencies(_helper.getUnfilteredDependencies());
       }
+
+      //
+      Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
+      for (IBundleMakerArtifact artifact : selectedArtifacts) {
+        for (IDependency dep : artifact.getDependenciesFrom()) {
+          fromArtifacts.add(dep.getFrom());
+        }
+      }
+
+      //
+      _toTreeVisibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, toArtifacts);
+      _fromTreeVisibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, fromArtifacts);
+
+      // Update Details Label
+      String detailsString = (selectedArtifacts.size() > 1 ? selectedArtifacts.size() + " Artifacts"
+          : selectedArtifacts.iterator().next().getName());
+      int fromSize = fromArtifacts.size();
+      detailsString += ", Referenced By: " + fromSize + " " + (fromSize > 1 ? "Artifacts" : "Artifact");
+      int toSize = toArtifacts.size();
+      detailsString += ", Referencing: " + toSize + " " + (toSize > 1 ? "Artifacts" : "Artifact");
+
+      _detailsLabel.setText(detailsString);
+
+      // //
+      // Set<IBundleMakerArtifact> visibleArtifacts =
+      // _helper.setFromArtifacts(Helper.toArtifactList(structuredSelection
+      // .toList()));
+      // VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
+      // setSelectedDetailDependencies(_helper.getFilteredDependencies());
+      //
+      // //
+      // expandArtifacts(_toTreeViewer, visibleArtifactsFilter);
+      //
+
+      // set the top item again
+      if (toTreeTopItem != null && !toTreeTopItem.isDisposed()) {
+        _toTreeViewer.getTree().setTopItem(toTreeTopItem);
+      } else if (_toTreeViewer.getTree().getItemCount() > 0) {
+        _toTreeViewer.getTree().setTopItem(_toTreeViewer.getTree().getItem(0));
+      }
+
+      if (fromTreeTopItem != null && !fromTreeTopItem.isDisposed()) {
+        _fromTreeViewer.getTree().setTopItem(fromTreeTopItem);
+      } else if (_fromTreeViewer.getTree().getItemCount() > 0) {
+        _fromTreeViewer.getTree().setTopItem(_fromTreeViewer.getTree().getItem(0));
+      }
+      // } else {
+      // setVisibleArtifacts(_toTreeViewer, Helper.getUnfilteredTargetArtifacts());
+      // setSelectedDetailDependencies(_helper.getUnfilteredDependencies());
+      // }
     }
   }
 
@@ -335,37 +347,39 @@ public class XRefComposite extends Composite {
       //
       IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
 
-      if (structuredSelection.size() > 0) {
+      if (structuredSelection.isEmpty()) {
+        return;
+      }
 
-        //
-        List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
+      List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
+      List<IDependency> dependencies = new LinkedList<IDependency>();
 
-        //
-        Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
-        Set<IBundleMakerArtifact> visibleArtifacts = _fromTreeVisibleArtifactsFilter.getArtifacts();
-        for (IBundleMakerArtifact artifact : selectedArtifacts) {
-          for (IDependency dep : artifact.getDependenciesTo()) {
-            if (visibleArtifacts.contains(dep.getFrom())) {
-              fromArtifacts.add(dep.getTo());
-            }
+      //
+      Set<IBundleMakerArtifact> fromArtifacts = new HashSet<IBundleMakerArtifact>();
+      Set<IBundleMakerArtifact> visibleArtifacts = _fromTreeVisibleArtifactsFilter.getArtifacts();
+      for (IBundleMakerArtifact artifact : selectedArtifacts) {
+        for (IDependency dep : artifact.getDependenciesTo()) {
+          dependencies.add(dep);
+          if (visibleArtifacts.contains(dep.getFrom())) {
+            fromArtifacts.add(dep.getTo());
           }
         }
-
-        //
-        _artifactLabelProvider.setBundleMakerArtifacts(fromArtifacts);
-        _centerViewer.refresh();
-
-        String detailsText = (selectedArtifacts.size() == 1 ? selectedArtifacts.get(0).getName() + " references "
-            : selectedArtifacts.size() + " Artifacts referencing ");
-        int fromSize = fromArtifacts.size();
-        detailsText += fromSize + (fromSize == 1 ? " Artifact" : " Artifacts");
-        detailsText += " in " + selectedArtifacts.get(0).getRoot().getName();
-        _detailsLabel.setText(detailsText);
-
-      } else {
-        // setVisibleArtifacts(_toTreeViewer, _helper.getUnfilteredTargetArtifacts());
-        // setSelectedDetailDependencies(_helper.getUnfilteredDependencies());
       }
+
+      //
+      setSelectedDependencies(dependencies);
+
+      //
+      _artifactLabelProvider.setBundleMakerArtifacts(fromArtifacts);
+      _centerViewer.refresh();
+
+      String detailsText = (selectedArtifacts.size() == 1 ? selectedArtifacts.get(0).getName() + " references "
+          : selectedArtifacts.size() + " Artifacts referencing ");
+      int fromSize = fromArtifacts.size();
+      detailsText += fromSize + (fromSize == 1 ? " Artifact" : " Artifacts");
+      detailsText += " in " + selectedArtifacts.get(0).getRoot().getName();
+      _detailsLabel.setText(detailsText);
+
     }
   }
 
@@ -389,10 +403,13 @@ public class XRefComposite extends Composite {
       //
       if (!structuredSelection.isEmpty()) {
 
+        List<IDependency> dependencies = new LinkedList<IDependency>();
+
         Set<IBundleMakerArtifact> toArtifacts = new HashSet<IBundleMakerArtifact>();
         Set<IBundleMakerArtifact> visibleArtifacts = _toTreeVisibleArtifactsFilter.getArtifacts();
         for (IBundleMakerArtifact artifact : selectedArtifacts) {
           for (IDependency dep : artifact.getDependenciesFrom()) {
+            dependencies.add(dep);
             if (visibleArtifacts.contains(dep.getTo())) {
               toArtifacts.add(dep.getFrom());
             }
@@ -409,6 +426,8 @@ public class XRefComposite extends Composite {
         detailsText += toSize + (toSize == 1 ? " Artifact" : " Artifacts");
         detailsText += " in " + selectedArtifacts.get(0).getRoot().getName();
         _detailsLabel.setText(detailsText);
+
+        setSelectedDependencies(dependencies);
 
       }
       // toViewerSelected(_fromTreeViewer, _toTreeViewer);
