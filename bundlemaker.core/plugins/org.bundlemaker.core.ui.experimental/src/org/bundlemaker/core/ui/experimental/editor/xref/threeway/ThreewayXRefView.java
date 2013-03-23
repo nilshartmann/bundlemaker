@@ -10,6 +10,7 @@
 package org.bundlemaker.core.ui.experimental.editor.xref.threeway;
 
 import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.bundlemaker.core.ui.experimental.dependencytable.threeway.XRefComposite;
 import org.eclipse.swt.widgets.Composite;
@@ -47,7 +48,11 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
 
   @Override
   public void setFocus() {
-    //
+
+    if (_composite != null && !_composite.isDisposed()) {
+      _composite.setFocus();
+    }
+
   }
 
   /**
@@ -58,42 +63,47 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
     setCurrentArtifactSelection(getCurrentArtifactSelection());
   }
 
+  public void refreshFromCurrentArtifactSelection() {
+    IArtifactSelection selection = Selection.instance().getArtifactSelectionService()
+        .getSelection(getArtifactSelectionId());
+
+    if (selection != null && _composite != null) {
+
+      //
+      if (selection.hasSelectedArtifacts()) {
+        _composite.setSelectedArtifacts(selection.getSelectedArtifacts());
+      }
+    }
+  }
+
+  @Override
+  protected String getArtifactSelectionId() {
+    return Selection.PROJECT_EXLPORER_SELECTION_ID;
+  }
+
   @Override
   protected void setCurrentArtifactSelection(IArtifactSelection event) {
-
-    // do nothing if the root has not changed
-    if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts() && event != null
-        && event.hasSelectedArtifacts()
-        && getCurrentArtifactSelection().getRootArtifact().equals(event.getRootArtifact())) {
-
-      //
-      return;
-    }
-
-    // call super
-    super.setCurrentArtifactSelection(event);
-
-    if (_composite != null) {
-
-      //
-      if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
-        _composite.setRoot(getCurrentArtifactSelection().getRootArtifact());
-      }
-      // if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts()) {
-      //
-      // //
-      // _composite.setDependencies(ArtifactUtils.getAllLeafDependencies(getCurrentArtifactSelection()
-      // .getRootArtifact().getDependenciesTo()));
-      //
-      // }
-      // // else {
-      // //
-      // // //
-      // // List<IDependency> dependencies = Collections.emptyList();
-      // // _composite.setDependencies(dependencies);
-      // //
-      // // }
-    }
+    //
+    // // do nothing if the root has not changed
+    // if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts() && event !=
+    // null
+    // && event.hasSelectedArtifacts()
+    // && getCurrentArtifactSelection().getRootArtifact().equals(event.getRootArtifact())) {
+    //
+    // //
+    // return;
+    // }
+    //
+    // // call super
+    // super.setCurrentArtifactSelection(event);
+    //
+    // if (_composite != null) {
+    //
+    // //
+    // if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
+    // _composite.setSelectedArtifacts(getCurrentArtifactSelection().getSelectedArtifacts());
+    // }
+    // }
   }
 
   @Override

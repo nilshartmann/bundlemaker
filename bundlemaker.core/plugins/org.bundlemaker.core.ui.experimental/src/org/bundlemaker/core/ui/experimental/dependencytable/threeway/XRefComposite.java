@@ -1,6 +1,5 @@
 package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -11,6 +10,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
@@ -21,6 +21,7 @@ import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
@@ -81,16 +82,50 @@ public class XRefComposite extends Composite {
     init();
   }
 
-  public void setRoot(IRootArtifact rootArtifact) {
+  public void setSelectedArtifacts(List<IBundleMakerArtifact> artifacts) {
+    if (artifacts.isEmpty()) {
+      return;
+    }
+
+    IRootArtifact rootArtifact = artifacts.get(0).getRoot();
+
+    // Set Tree Viewer input
     _fromTreeViewer.setInput(rootArtifact);
     _centerViewer.setInput(rootArtifact);
     _toTreeViewer.setInput(rootArtifact);
 
-    setSelectedCenterArtifacts(Arrays.asList((IBundleMakerArtifact) rootArtifact));
+    IBundleMakerArtifact[] selectedArtifacts = new IBundleMakerArtifact[artifacts.size()];
+    for (int i = 0; i < artifacts.size(); i++) {
+      IBundleMakerArtifact artifact = artifacts.get(0);
 
+      if (artifact.isInstanceOf(IRootArtifact.class)) {
+        artifact = ((ArtifactTreeContentProvider) _centerViewer.getContentProvider()).getVirtualRoot();
+      }
+
+      selectedArtifacts[i] = artifact;
+
+    }
+
+    StructuredSelection selection = new StructuredSelection(selectedArtifacts);
+
+    // setSelectedCenterArtifacts(Arrays.asList((IBundleMakerArtifact) rootArtifact));
+
+    // (Re-)Expand Tree Viewer according to User settings
     _expandStrategy.exandTreeViewer();
 
-    _centerViewer.expandToLevel(2);
+    // Make sure selected Artifacts are visible in Center Tree Viewer
+    _centerViewer.setSelection(selection, true);
+    _centerViewer.getTree().setFocus();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.eclipse.swt.widgets.Composite#setFocus()
+   */
+  @Override
+  public boolean setFocus() {
+    return _centerViewer.getTree().setFocus();
   }
 
   private Composite createToolBarComposite() {
