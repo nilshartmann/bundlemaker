@@ -124,6 +124,9 @@ public class XRefComposite extends Composite {
 
     // Make sure selected Artifacts are visible in Center Tree Viewer
     _centerViewer.setSelection(selection, true);
+    _fromTreeViewer.setSelection(
+        new StructuredSelection(((ArtifactTreeContentProvider) _fromTreeViewer.getContentProvider()).getVirtualRoot()),
+        true);
 
     // expand at least to level two, to make sure that more than the root artifact is visible
     _centerViewer.expandToLevel(2);
@@ -185,7 +188,7 @@ public class XRefComposite extends Composite {
 
     //
     _fromTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
-    _artifactLabelProvider = new XRefTreeArtifactLabelProvider();
+    _artifactLabelProvider = new XRefTreeArtifactLabelProvider(_centerViewer);
     _centerViewer.setLabelProvider(_artifactLabelProvider);
     _toTreeViewer.setLabelProvider(new ArtifactTreeLabelProvider());
 
@@ -380,6 +383,8 @@ public class XRefComposite extends Composite {
         return;
       }
 
+      _toTreeViewer.setSelection(new StructuredSelection());
+
       List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
       List<IDependency> dependencies = new LinkedList<IDependency>();
 
@@ -431,6 +436,7 @@ public class XRefComposite extends Composite {
       List<IBundleMakerArtifact> selectedArtifacts = Helper.toArtifactList(structuredSelection.toList());
       //
       if (!structuredSelection.isEmpty()) {
+        _fromTreeViewer.setSelection(new StructuredSelection());
 
         List<IDependency> dependencies = new LinkedList<IDependency>();
 
