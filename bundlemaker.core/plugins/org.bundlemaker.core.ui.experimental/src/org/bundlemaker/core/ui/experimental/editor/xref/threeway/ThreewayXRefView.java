@@ -34,16 +34,7 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
   @Override
   public void createPartControl(Composite parent) {
 
-    // //
-    // _composite = new CropableDependencyTreeComposite(parent, XREF_ID) {
-    // @Override
-    // protected String getDependencySelectionId() {
-    // return Selection.MAIN_DEPENDENCY_SELECTION_ID;
-    // }
-    // };
-
-    //
-    _composite = new XRefComposite(parent, XREF_ID);
+    _composite = new XRefComposite(parent, XREF_ID, getSite());
   }
 
   @Override

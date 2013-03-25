@@ -17,6 +17,10 @@ import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.bundlemaker.core.ui.view.dependencytree.DefaultExpandStrategy;
 import org.bundlemaker.core.ui.view.dependencytree.Helper;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -29,7 +33,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPartSite;
 
 /**
  * <p>
@@ -65,19 +72,23 @@ public class XRefComposite extends Composite {
 
   private XRefTreeArtifactLabelProvider _artifactLabelProvider;
 
+  private IWorkbenchPartSite            _site;
+
   /**
    * <p>
    * Creates a new instance of type {@link XRefComposite}.
    * </p>
    * 
    * @param parent
+   * @param iWorkbenchPartSite
    */
-  public XRefComposite(Composite parent, String providerId) {
+  public XRefComposite(Composite parent, String providerId, IWorkbenchPartSite iWorkbenchPartSite) {
     super(parent, SWT.NONE);
 
     Assert.isNotNull(providerId);
 
     _providerId = providerId;
+    _site = iWorkbenchPartSite;
 
     init();
   }
@@ -186,6 +197,20 @@ public class XRefComposite extends Composite {
     _centerViewer.addSelectionChangedListener(new CenterArtifactsSelectionChangedListener());
     _toTreeViewer.addSelectionChangedListener(new ToArtifactSelectionChangedListener());
 
+    // === Context-Menu Center Viewer ===
+    MenuManager menuMgr = new MenuManager("#PopupMenu");
+    menuMgr.setRemoveAllWhenShown(true);
+    menuMgr.addMenuListener(new IMenuListener() {
+      @Override
+      public void menuAboutToShow(IMenuManager manager) {
+        fillContextMenu(manager);
+      }
+    });
+    Menu menu = menuMgr.createContextMenu(_centerViewer.getControl());
+    _centerViewer.getControl().setMenu(menu);
+    _site.registerContextMenu(menuMgr, _centerViewer);
+
+    // === Toolbar =====
     ToolBarManager mgr1 = new ToolBarManager();
 
     ExpandStrategyActionGroup fromGroup = new ExpandStrategyActionGroup(_expandStrategy, false);
@@ -201,6 +226,10 @@ public class XRefComposite extends Composite {
     toGroup.fill(mgr3);
     mgr3.createControl(toToolBarComposite);
 
+  }
+
+  private void fillContextMenu(IMenuManager manager) {
+    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
   }
 
   /**
