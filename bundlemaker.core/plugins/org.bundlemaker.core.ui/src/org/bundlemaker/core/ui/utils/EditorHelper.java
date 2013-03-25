@@ -4,6 +4,7 @@ import org.bundlemaker.core.ui.internal.Activator;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -12,11 +13,11 @@ import org.eclipse.ui.internal.part.NullEditorInput;
 
 public class EditorHelper {
 
-  public static void openEditor(String editorId, IEditorInput editorInput) {
+  public static IEditorPart openEditor(String editorId, IEditorInput editorInput) {
     IWorkbenchPage page = getActiveWorkbenchPage();
     if (page != null) {
       try {
-        page.openEditor(editorInput, editorId);
+        return page.openEditor(editorInput, editorId);
         // if (!(editorPart instanceof DependencyViewEditor)) {
         // System.err.println("EditorPart " + editorPart + " is not a DependencyViewEditor?");
         // return;
@@ -27,6 +28,8 @@ public class EditorHelper {
         Activator.getDefault().getLog().log(status);
       }
     }
+
+    return null;
 
   }
 

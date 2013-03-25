@@ -51,6 +51,8 @@ public class ExpandStrategyActionGroup {
         IPackageArtifact.class);
     _resourcesAction = new ExpandStrategyAction("Expand to Resources",
         UIDependencyTreeImages.AUTO_EXPAND_FROM_RESOURCES, IResourceArtifact.class);
+
+    updateActions();
   }
 
   public void fill(ToolBarManager mgr) {
@@ -66,6 +68,17 @@ public class ExpandStrategyActionGroup {
       _expandStrategy.setToTreeViewerAutoExpandType(expandLevel);
     } else {
       _expandStrategy.setFromTreeViewerAutoExpandType(expandLevel);
+    }
+
+    updateActions();
+  }
+
+  protected void updateActions() {
+    Class<? extends IBundleMakerArtifact> expandLevel;
+    if (_to) {
+      expandLevel = _expandStrategy.getToViewerExpandToType();
+    } else {
+      expandLevel = _expandStrategy.getFromViewerExpandToType();
     }
 
     _groupsAction.update(expandLevel);

@@ -12,6 +12,7 @@ package org.bundlemaker.core.ui.experimental.editor.xref.threeway.handler;
 
 import org.bundlemaker.core.ui.experimental.editor.xref.threeway.ThreewayXRefView;
 import org.bundlemaker.core.ui.handler.AbstractOpenEditorHandler;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -27,6 +28,17 @@ public class OpenThreewayXRefViewHandler extends AbstractOpenEditorHandler {
   @Override
   protected String getEditorId() {
     return ThreewayXRefView.XREF_ID;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.bundlemaker.core.ui.handler.AbstractOpenEditorHandler#editorOpened(org.eclipse.ui.IEditorPart)
+   */
+  @Override
+  protected void editorOpened(IEditorPart editor) {
+    ThreewayXRefView threewayXRefView = (ThreewayXRefView) editor;
+    threewayXRefView.refreshFromCurrentArtifactSelection();
   }
 
 }

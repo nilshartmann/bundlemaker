@@ -16,6 +16,7 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.ui.utils.EditorHelper;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * An abstract base class for Handlers that open an Editor. Only overriding the {@link #getEditorId()} Method is
@@ -40,8 +41,19 @@ public abstract class AbstractOpenEditorHandler extends AbstractArtifactBasedHan
     String editorId = getEditorId();
     IEditorInput editorInput = getEditorInput();
 
-    EditorHelper.openEditor(editorId, editorInput);
+    IEditorPart editor = EditorHelper.openEditor(editorId, editorInput);
 
+    if (editor != null) {
+      editorOpened(editor);
+    }
+
+  }
+
+  /**
+   * @param editor
+   */
+  protected void editorOpened(IEditorPart editor) {
+    // override in subclasses to perfom additional actions after the editor has been opened
   }
 
   protected abstract String getEditorId();
