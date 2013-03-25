@@ -119,8 +119,6 @@ public class XRefComposite extends Composite {
 
     StructuredSelection selection = new StructuredSelection(selectedArtifacts);
 
-    // setSelectedCenterArtifacts(Arrays.asList((IBundleMakerArtifact) rootArtifact));
-
     // (Re-)Expand Tree Viewer according to User settings
     _expandStrategy.exandTreeViewer();
 
@@ -169,10 +167,6 @@ public class XRefComposite extends Composite {
     Composite fromToolBarComposite = createToolBarComposite();
     Composite centerToolBarComposite = createToolBarComposite();
     Composite toToolBarComposite = createToolBarComposite();
-
-    // ToolBar toolBar1 = new ToolBar(this, SWT.HORIZONTAL);
-    // ToolBar toolBar2 = new ToolBar(this, SWT.HORIZONTAL);
-    // ToolBar toolBar3 = new ToolBar(this, SWT.HORIZONTAL);
 
     //
     _fromTreeViewer = ArtifactTreeViewerFactory.createDefaultArtifactTreeViewer(this);
@@ -262,11 +256,6 @@ public class XRefComposite extends Composite {
   }
 
   protected void setSelectedCenterArtifacts(Collection<IBundleMakerArtifact> selectedArtifacts) {
-    //
-    // if (rootArtifact == null) {
-    // } else {
-    // selectedArtifacts = rootArtifact.getChildren();
-    // }
 
     // store the top item
     TreeItem toTreeTopItem = _toTreeViewer.getTree().getTopItem();
@@ -304,17 +293,6 @@ public class XRefComposite extends Composite {
 
     _detailsLabel.setText(detailsString);
 
-    // //
-    // Set<IBundleMakerArtifact> visibleArtifacts =
-    // _helper.setFromArtifacts(Helper.toArtifactList(structuredSelection
-    // .toList()));
-    // VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_toTreeViewer, visibleArtifacts);
-    // setSelectedDetailDependencies(_helper.getFilteredDependencies());
-    //
-    // //
-    // expandArtifacts(_toTreeViewer, visibleArtifactsFilter);
-    //
-
     // set the top item again
     if (toTreeTopItem != null && !toTreeTopItem.isDisposed()) {
       _toTreeViewer.getTree().setTopItem(toTreeTopItem);
@@ -327,11 +305,6 @@ public class XRefComposite extends Composite {
     } else if (_fromTreeViewer.getTree().getItemCount() > 0) {
       _fromTreeViewer.getTree().setTopItem(_fromTreeViewer.getTree().getItem(0));
     }
-    // } else {
-    // setVisibleArtifacts(_toTreeViewer, Helper.getUnfilteredTargetArtifacts());
-    // setSelectedDetailDependencies(_helper.getUnfilteredDependencies());
-    // }
-
   }
 
   /**
@@ -483,106 +456,6 @@ public class XRefComposite extends Composite {
         setSelectedDependencies(dependencies);
 
       }
-      // toViewerSelected(_fromTreeViewer, _toTreeViewer);
-      // _currentlySelectedTreeViewer = _toTreeViewer;
-      // }
-      //
-      // // check for selected root element
-      // boolean containsRoot = false;
-      // for (Object object : structuredSelection.toList()) {
-      // if (object instanceof IRootArtifact) {
-      // containsRoot = true;
-      // break;
-      // }
-      // }
-      //
-      // if (structuredSelection.size() > 0 && !containsRoot) {
-      //
-      // // store the top item
-      // TreeItem treeItem = _fromTreeViewer.getTree().getTopItem();
-      //
-      // //
-      // Set<IBundleMakerArtifact> visibleArtifacts = _helper.setToArtifacts(Helper.toArtifactList(structuredSelection
-      // .toList()));
-      // VisibleArtifactsFilter visibleArtifactsFilter = setVisibleArtifacts(_fromTreeViewer, visibleArtifacts);
-      // setSelectedDetailDependencies(_helper.getFilteredDependencies());
-      //
-      // //
-      // expandArtifacts(_fromTreeViewer, visibleArtifactsFilter);
-      //
-      // // set the top item again
-      // try {
-      // _fromTreeViewer.getTree().setTopItem(treeItem);
-      // } catch (Exception e) {
-      // //
-      // }
-      // } else {
-      // setVisibleArtifacts(_fromTreeViewer, _helper.getUnfilteredSourceArtifacts());
-      // setSelectedDetailDependencies(_helper.getUnfilteredDependencies());
-      // }
     }
   }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param toTreeViewer
-   * @param fromTreeViewer
-   */
-  protected void toViewerSelected(TreeViewer fromTreeViewer, TreeViewer toTreeViewer) {
-
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param fromTreeViewer
-   * @param toTreeViewer
-   */
-  protected void fromViewerSelected(TreeViewer fromTreeViewer, TreeViewer toTreeViewer) {
-
-  }
-
-  // /**
-  // * <p>
-  // * </p>
-  // *
-  // * @param visibleArtifactsFilter
-  // *
-  // */
-  // private void expandArtifacts(final TreeViewer treeViewer, final VisibleArtifactsFilter visibleArtifactsFilter) {
-  // Assert.isNotNull(treeViewer);
-  //
-  // // return if no expand strategy has been set
-  // if (_expandStrategy == null) {
-  // return;
-  // }
-  //
-  // // check if no root artifact has been set (yet)
-  // if (!(treeViewer.getInput() instanceof IRootArtifact)) {
-  // return;
-  // }
-  //
-  // // disable redraw (performance)
-  // treeViewer.getTree().setRedraw(false);
-  //
-  // //
-  // if (treeViewer == _fromTreeViewer) {
-  //
-  // //
-  // _expandStrategy.expandFromTreeViewer(_fromTreeViewer,
-  // visibleArtifactsFilter != null ? visibleArtifactsFilter.getArtifacts() : new HashSet<IBundleMakerArtifact>());
-  //
-  // } else if (treeViewer == _toTreeViewer) {
-  //
-  // //
-  // _expandStrategy.expandToTreeViewer(_toTreeViewer,
-  // visibleArtifactsFilter != null ? visibleArtifactsFilter.getArtifacts() : new HashSet<IBundleMakerArtifact>());
-  // }
-  //
-  // // enable redraw (performance)
-  // treeViewer.getTree().setRedraw(true);
-  // }
 }
