@@ -6,7 +6,7 @@
             <command id="org.bundlemaker.core.ui.experimental.commands.CreateNewWorkingCopyCommand"
                   name="Create new Working Copy"/>
 	      		<command id="org.bundlemaker.core.ui.experimental.editor.xref.threeway.OpenThreewayXRefViewCommand" 
-	      			name="Open Three-way Cross Referencer"/>
+	      			name="Reveal in Three-way Cross Referencer"/>
    </extension>
 
     <extension point="org.eclipse.ui.handlers">

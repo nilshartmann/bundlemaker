@@ -11,6 +11,15 @@
 
 package org.bundlemaker.core.ui.experimental.dependencytable.threeway;
 
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_FROM_GROUPS;
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_FROM_MODULES;
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_FROM_PACKAGES;
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_FROM_RESOURCES;
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_TO_GROUPS;
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_TO_MODULES;
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_TO_PACKAGES;
+import static org.bundlemaker.core.ui.view.dependencytree.UIDependencyTreeImages.AUTO_EXPAND_TO_RESOURCES;
+
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
@@ -43,14 +52,14 @@ public class ExpandStrategyActionGroup {
   public ExpandStrategyActionGroup(DefaultExpandStrategy expandStrategy, boolean to) {
     _expandStrategy = expandStrategy;
     _to = to;
-    _groupsAction = new ExpandStrategyAction("Expand to Groups", UIDependencyTreeImages.AUTO_EXPAND_FROM_GROUPS,
-        IGroupArtifact.class);
-    _modulesAction = new ExpandStrategyAction("Expand to Modules", UIDependencyTreeImages.AUTO_EXPAND_FROM_MODULES,
-        IModuleArtifact.class);
-    _packagesAction = new ExpandStrategyAction("Expand to Packages", UIDependencyTreeImages.AUTO_EXPAND_FROM_PACKAGES,
-        IPackageArtifact.class);
-    _resourcesAction = new ExpandStrategyAction("Expand to Resources",
-        UIDependencyTreeImages.AUTO_EXPAND_FROM_RESOURCES, IResourceArtifact.class);
+    _groupsAction = new ExpandStrategyAction("Expand to Groups",
+        (to ? AUTO_EXPAND_TO_GROUPS : AUTO_EXPAND_FROM_GROUPS), IGroupArtifact.class);
+    _modulesAction = new ExpandStrategyAction("Expand to Modules", (to ? AUTO_EXPAND_TO_MODULES
+        : AUTO_EXPAND_FROM_MODULES), IModuleArtifact.class);
+    _packagesAction = new ExpandStrategyAction("Expand to Packages", (to ? AUTO_EXPAND_TO_PACKAGES
+        : AUTO_EXPAND_FROM_PACKAGES), IPackageArtifact.class);
+    _resourcesAction = new ExpandStrategyAction("Expand to Resources", (to ? AUTO_EXPAND_TO_RESOURCES
+        : AUTO_EXPAND_FROM_RESOURCES), IResourceArtifact.class);
 
     updateActions();
   }
