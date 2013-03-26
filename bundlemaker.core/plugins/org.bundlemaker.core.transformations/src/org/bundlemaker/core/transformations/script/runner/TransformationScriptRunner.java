@@ -118,6 +118,8 @@ public class TransformationScriptRunner {
 
     final TransformationScriptContext context = new TransformationScriptContext(progressMonitor, logger, rootArtifact);
 
+    final long scriptStart = System.currentTimeMillis();
+
     // Run the script
     IRootArtifact.Factory.executeWithoutNotification(rootArtifact, new Callable<Void>() {
 
@@ -127,6 +129,10 @@ public class TransformationScriptRunner {
         return null;
       }
     });
+
+    final long scriptDuration = System.currentTimeMillis() - scriptStart;
+
+    logger.log("Executing Transformation Script took " + scriptDuration + "ms (" + (scriptDuration / 1000) + "s)");
   }
 
   protected void handleScriptException(Exception ex) {
