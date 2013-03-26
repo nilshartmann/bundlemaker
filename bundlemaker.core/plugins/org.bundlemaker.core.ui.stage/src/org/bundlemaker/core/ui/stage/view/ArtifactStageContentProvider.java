@@ -11,48 +11,81 @@
 
 package org.bundlemaker.core.ui.stage.view;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class ArtifactStageContentProvider implements ITreeContentProvider {
+public class ArtifactStageContentProvider extends ArtifactTreeContentProvider {
 
-  private final static Object[] EMPTY_CHILDREN = new Object[0];
+  // private final static Object[] EMPTY_CHILDREN = new Object[0];
 
-  @Override
-  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+  private final Map<IBundleMakerArtifact, ArtifactHolder> EMPTY_CACHE    = new HashMap<IBundleMakerArtifact, ArtifactHolder>();
 
+  private Map<IBundleMakerArtifact, ArtifactHolder>       _childrenCache = EMPTY_CACHE;
+
+  public ArtifactStageContentProvider() {
+    super(true);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+   * java.lang.Object, java.lang.Object)
+   */
   @Override
-  public void dispose() {
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    super.inputChanged(viewer, oldInput, newInput);
 
+    if (newInput instanceof IRootArtifact) {
+      IRootArtifact virtualRoot = getVirtualRoot();
+      IRootArtifact rootArtifact = (IRootArtifact) newInput;
+
+      ArtifactHolder rootHolder = _childrenCache.remove(rootArtifact);
+      _childrenCache.put(virtualRoot, rootHolder);
+    }
   }
 
   @Override
   public boolean hasChildren(Object element) {
-    ArtifactHolder holder = (ArtifactHolder) element;
-    return holder.hasChildren();
-  }
+    if (!(element instanceof IBundleMakerArtifact)) {
+      return super.hasChildren(element);
+    }
 
-  @Override
-  public Object getParent(Object element) {
-    return ((ArtifactHolder) element).getParent();
+    ArtifactHolder artifactHolder = _childrenCache.get(element);
+
+    return artifactHolder.hasChildren();
   }
 
   @Override
   public Object[] getElements(Object inputElement) {
-    if (inputElement instanceof ArtifactHolder) {
-      return ((ArtifactHolder) inputElement).getChildren();
-    }
-    return EMPTY_CHILDREN;
+    return super.getElements(inputElement);
   }
 
   @Override
   public Object[] getChildren(Object parentElement) {
-    return ((ArtifactHolder) parentElement).getChildren();
+    if (!(parentElement instanceof IBundleMakerArtifact)) {
+      return super.getChildren(parentElement);
+    }
+
+    ArtifactHolder artifactHolder = _childrenCache.get(parentElement);
+    return artifactHolder.getChildren();
+  }
+
+  /**
+   * @param childrenCache
+   *          the childrenCache to set
+   */
+  public void setChildrenCache(Map<IBundleMakerArtifact, ArtifactHolder> childrenCache) {
+    _childrenCache = (childrenCache == null ? EMPTY_CACHE : childrenCache);
   }
 }

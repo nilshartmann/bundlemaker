@@ -16,7 +16,6 @@ import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
-import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
 import org.bundlemaker.core.ui.stage.actions.AddModeActionGroup;
@@ -40,7 +39,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -96,6 +94,8 @@ public class StageView extends ViewPart {
 
   private AddModeActionGroup                 _addModeActionGroup;
 
+  private ArtifactStageContentProvider       _artifactStageContentProvider;
+
   /**
    * The constructor.
    */
@@ -108,14 +108,15 @@ public class StageView extends ViewPart {
   @Override
   public void createPartControl(Composite parent) {
 
+    _artifactStageContentProvider = new ArtifactStageContentProvider();
+
     _treeViewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 
     _treeViewer.setUseHashlookup(true);
-    _treeViewer.setContentProvider(new ArtifactTreeContentProvider(true));
     _treeViewer.getTree().setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true));
     _treeViewer.setSorter(new ArtifactTreeViewerSorter());
 
-    _treeViewer.setContentProvider(new ArtifactStageContentProvider());
+    _treeViewer.setContentProvider(_artifactStageContentProvider);
     _treeViewer.setLabelProvider(new StageViewLabelProvider());
 
     _treeViewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -175,7 +176,7 @@ public class StageView extends ViewPart {
 
       Map<IBundleMakerArtifact, ArtifactHolder> artifactHolderCache = new Hashtable<IBundleMakerArtifact, ArtifactHolder>();
 
-      ArtifactHolder root = null;
+      IRootArtifact root = null;
 
       for (IBundleMakerArtifact artifact : _effectiveSelectedArtifacts) {
         if (artifactHolderCache.containsKey(artifact)) {
@@ -184,48 +185,51 @@ public class StageView extends ViewPart {
           continue;
         }
 
-        ArtifactHolder currentArtifactHolder = new ArtifactHolder(artifact);
+        ArtifactHolder currentArtifactHolder = new ArtifactHolder();
 
         if (root == null && artifact.isInstanceOf(IRootArtifact.class)) {
-          root = currentArtifactHolder;
+          root = (IRootArtifact) artifact;
         }
 
         artifactHolderCache.put(artifact, currentArtifactHolder);
         IBundleMakerArtifact parent = artifact.getParent();
+        IBundleMakerArtifact currentArtifact = artifact;
         while (parent != null) {
 
           ArtifactHolder parentHolder = artifactHolderCache.get(parent);
           if (parentHolder != null) {
-            parentHolder.addChild(currentArtifactHolder);
-            currentArtifactHolder.setParent(parentHolder);
+            parentHolder.addChild(currentArtifact);
 
             // no need to walk up the tree any longer
             break;
           } else {
-            parentHolder = new ArtifactHolder(parent);
-            parentHolder.addChild(currentArtifactHolder);
-            currentArtifactHolder.setParent(parentHolder);
+            parentHolder = new ArtifactHolder();
+            parentHolder.addChild(currentArtifact);
             artifactHolderCache.put(parent, parentHolder);
           }
 
           if (root == null && parent.isInstanceOf(IRootArtifact.class)) {
-            root = parentHolder;
+            root = (IRootArtifact) parent;
           }
 
           currentArtifactHolder = parentHolder;
+          currentArtifact = parent;
 
           parent = parent.getParent();
         }
       }
-      System.out.println("root: " + root);
       // set the artifacts
-      ArtifactHolder virtualRootHolder = new ArtifactHolder(null);
-      virtualRootHolder.addChild(root);
-      _treeViewer.setInput(virtualRootHolder);
+      // ArtifactHolder virtualRootHolder = new ArtifactHolder();
+      // virtualRootHolder.addChild(root);
+
+      // Content-Provider must be updated before new input is set!!!
+      _artifactStageContentProvider.setChildrenCache(artifactHolderCache);
+      _treeViewer.setInput(root);
     }
 
     // set empty list
     else {
+      _artifactStageContentProvider.setChildrenCache(null);
       _treeViewer.setInput(_effectiveSelectedArtifacts);
     }
 
@@ -447,14 +451,12 @@ public class StageView extends ViewPart {
 
       boolean stagedArtifact = false;
 
-      if (element instanceof ArtifactHolder) {
-        IBundleMakerArtifact bundleMakerArtifact = ((ArtifactHolder) element).getArtifact();
+      if (element instanceof IBundleMakerArtifact) {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) element;
         if (bundleMakerArtifact instanceof IVirtualRoot) {
           bundleMakerArtifact = bundleMakerArtifact.getRoot();
 
         }
-        // System.out.println("Artifact: " + bundleMakerArtifact);
-        // System.out.println("  STAGED ARTIFACTS: " + _effectiveSelectedArtifacts);
         stagedArtifact = _effectiveSelectedArtifacts.contains(bundleMakerArtifact);
       }
 
@@ -468,26 +470,8 @@ public class StageView extends ViewPart {
     }
 
     @Override
-    public String getText(Object obj) {
-      if (obj instanceof ArtifactHolder) {
-        obj = ((ArtifactHolder) obj).getArtifact();
-
-      }
-      return super.getText(obj);
-    }
-
-    @Override
-    public Image getImage(Object obj) {
-      if (obj instanceof ArtifactHolder) {
-        obj = ((ArtifactHolder) obj).getArtifact();
-      }
-      return super.getImage(obj);
-    }
-
-    @Override
     public Color getBackground(Object element) {
       return null;
     }
-
   }
 }
