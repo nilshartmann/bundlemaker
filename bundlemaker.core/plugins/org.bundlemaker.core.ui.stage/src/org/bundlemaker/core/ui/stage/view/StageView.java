@@ -278,8 +278,9 @@ public class StageView extends ViewPart {
   }
 
   private void fillContextMenu(IMenuManager manager) {
-    IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-    _removeArtifactsAction.setEnabled(selection != null && !selection.isEmpty());
+
+    refreshEnablement();
+
     manager.add(_removeArtifactsAction);
 
     // manager.add(action1);
@@ -331,7 +332,8 @@ public class StageView extends ViewPart {
 
   protected void refreshEnablement() {
     IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-    _removeArtifactsAction.setEnabled(!selection.isEmpty());
+    boolean autoAddMode = Selection.instance().getArtifactStage().getAddMode().isAutoAddMode();
+    _removeArtifactsAction.setEnabled(!(autoAddMode || selection.isEmpty()));
     _clearStageAction.setEnabled(!_effectiveSelectedArtifacts.isEmpty());
   }
 
@@ -373,6 +375,8 @@ public class StageView extends ViewPart {
 
   protected void artifactStageConfigurationChanged() {
     _addModeActionGroup.update();
+
+    refreshEnablement();
   }
 
   protected ArtifactStageAddMode getAddMode() {
