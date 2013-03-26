@@ -221,6 +221,8 @@ public class StageView extends ViewPart {
       // set the artifacts
       // ArtifactHolder virtualRootHolder = new ArtifactHolder();
       // virtualRootHolder.addChild(root);
+
+      // Content-Provider must be updated before new input is set!!!
       _artifactStageContentProvider.setChildrenCache(artifactHolderCache);
       _treeViewer.setInput(root);
     }

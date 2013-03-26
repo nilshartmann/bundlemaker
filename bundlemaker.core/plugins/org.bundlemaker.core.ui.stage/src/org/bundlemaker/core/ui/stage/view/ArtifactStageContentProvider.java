@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
+import org.eclipse.jface.viewers.Viewer;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -29,6 +31,30 @@ public class ArtifactStageContentProvider extends ArtifactTreeContentProvider {
 
   private Map<IBundleMakerArtifact, ArtifactHolder>       _childrenCache = EMPTY_CACHE;
 
+  public ArtifactStageContentProvider() {
+    super(true);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see
+   * org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
+   * java.lang.Object, java.lang.Object)
+   */
+  @Override
+  public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    super.inputChanged(viewer, oldInput, newInput);
+
+    if (newInput instanceof IRootArtifact) {
+      IRootArtifact virtualRoot = getVirtualRoot();
+      IRootArtifact rootArtifact = (IRootArtifact) newInput;
+
+      ArtifactHolder rootHolder = _childrenCache.remove(rootArtifact);
+      _childrenCache.put(virtualRoot, rootHolder);
+    }
+  }
+
   @Override
   public boolean hasChildren(Object element) {
     if (!(element instanceof IBundleMakerArtifact)) {
@@ -36,6 +62,7 @@ public class ArtifactStageContentProvider extends ArtifactTreeContentProvider {
     }
 
     ArtifactHolder artifactHolder = _childrenCache.get(element);
+
     return artifactHolder.hasChildren();
   }
 
