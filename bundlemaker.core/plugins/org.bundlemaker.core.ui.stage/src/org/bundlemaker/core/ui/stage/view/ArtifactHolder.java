@@ -11,8 +11,6 @@
 
 package org.bundlemaker.core.ui.stage.view;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,28 +24,14 @@ public class ArtifactHolder {
 
   private final static Object[]      EMPTY_CHILDREN = new Object[0];
 
-  private final IBundleMakerArtifact _artifact;
+  private List<IBundleMakerArtifact> _children;
 
-  private ArtifactHolder             _parent;
-
-  private List<ArtifactHolder>       _children;
-
-  public ArtifactHolder(IBundleMakerArtifact theArtifact) {
-    _artifact = theArtifact;
+  public ArtifactHolder() {
   }
 
-  /**
-   * @param parentHolder
-   */
-  public void setParent(ArtifactHolder parentHolder) {
-    checkState(_parent == null, "Parent already set to: " + _parent);
-
-    _parent = parentHolder;
-  }
-
-  public void addChild(ArtifactHolder holder) {
+  public void addChild(IBundleMakerArtifact holder) {
     if (_children == null) {
-      _children = new LinkedList<ArtifactHolder>();
+      _children = new LinkedList<IBundleMakerArtifact>();
     }
     _children.add(holder);
   }
@@ -56,32 +40,16 @@ public class ArtifactHolder {
     return _children != null && !_children.isEmpty();
   }
 
-  public ArtifactHolder getParent() {
-    return _parent;
-  }
-
-  /**
-   * @return the artifact
-   */
-  public IBundleMakerArtifact getArtifact() {
-    return _artifact;
-  }
-
   private Object[] _childrenArray;
 
   public Object[] getChildren() {
     if (_childrenArray == null && _children != null) {
-      _childrenArray = _children.toArray(new ArtifactHolder[_children.size()]);
+      _childrenArray = _children.toArray(new IBundleMakerArtifact[_children.size()]);
     } else {
       _childrenArray = EMPTY_CHILDREN;
     }
 
     return _childrenArray;
-  }
-
-  @Override
-  public String toString() {
-    return _artifact.getName();
   }
 
 }
