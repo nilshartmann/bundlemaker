@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.internal;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,10 +27,15 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.Status;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
 import org.osgi.util.tracker.ServiceTracker;
 
 /**
@@ -42,10 +48,17 @@ import org.osgi.util.tracker.ServiceTracker;
 public class Activator extends Plugin {
 
   /** the null progress monitor */
-  public static final IProgressMonitor                                     NULL_PROGRESS_MONITOR = new NullProgressMonitor();
+  public static final IProgressMonitor                                     NULL_PROGRESS_MONITOR   = new NullProgressMonitor();
 
   /** the plug-in id */
-  public static final String                                               PLUGIN_ID             = "org.bundlemaker.core";
+  public static final String                                               PLUGIN_ID               = "org.bundlemaker.core";
+
+  /** Bundles that need to be in ACTIVE state in order to make Dependency Store work correctly */
+  public static final String[]                                             REQUIRED_ACTIVE_BUNDLES = new String[] {
+      "org.eclipse.equinox.ds",
+      "org.bundlemaker.com.db4o.osgi"
+
+                                                                                                   };
 
   /** the activator instance */
   private static Activator                                                 _activator;
@@ -242,6 +255,11 @@ public class Activator extends Plugin {
 
     try {
 
+      // Make sure required bundles are ACTIVE
+      for (String bundleName : REQUIRED_ACTIVE_BUNDLES) {
+        activateBundleIfNeeded(bundleName);
+      }
+
       //
       IPersistentDependencyStoreFactory result = (IPersistentDependencyStoreFactory) _factoryTracker
           .waitForService(5000);
@@ -250,7 +268,8 @@ public class Activator extends Plugin {
       if (result == null) {
         // TODO
         throw new RuntimeException(
-            "No IPersistentDependencyStoreFactory available. Please make sure that the following bundles are started: 'com.db4o.osgi' and 'org.eclipse.equinox.ds'.");
+            "No IPersistentDependencyStoreFactory available. Please make sure that the following bundles are active: "
+                + Arrays.asList(REQUIRED_ACTIVE_BUNDLES));
       }
 
       //
@@ -260,6 +279,68 @@ public class Activator extends Plugin {
       e.printStackTrace();
       return null;
     }
+  }
+
+  protected void log(int status, String msg) {
+    log(status, msg, null);
+  }
+
+  protected void log(int status, String msg, Throwable t) {
+    ILog log = getLog();
+    if (log != null) {
+      log.log(new Status(status, PLUGIN_ID, msg, t));
+
+    } else {
+      if (t != null) {
+        System.err.println(msg);
+        t.printStackTrace();
+      } else {
+        System.out.println(msg);
+      }
+    }
+  }
+
+  /**
+   * Activates the bundle with the specified symbolic name
+   * 
+   * If the bundle either not exists or cannot be started a message is logged, but the method does not fail
+   * 
+   * @param symbolicName
+   */
+  protected void activateBundleIfNeeded(String symbolicName) {
+
+    Bundle bundle = findBundle(symbolicName);
+    if (bundle == null) {
+      log(IStatus.WARNING, "No Bundle '" + symbolicName + "' installed?");
+      return;
+    }
+
+    if (bundle.getState() != Bundle.ACTIVE) {
+      log(IStatus.INFO, "Starting Bundle '" + bundle + "'...");
+      try {
+        bundle.start();
+      } catch (BundleException e) {
+        log(IStatus.ERROR, "Unable to Start Bundle '" + bundle + "': " + e, e);
+      }
+    }
+  }
+
+  /**
+   * Finds the bundle with the specified symbolic name
+   * 
+   * @param symbolicName
+   * @return the bundle or null if no such bundle is installed
+   */
+  protected Bundle findBundle(String symbolicName) {
+    Bundle[] bundles = _context.getBundles();
+
+    for (Bundle bundle : bundles) {
+      if (symbolicName.equals(bundle.getSymbolicName())) {
+        return bundle;
+      }
+    }
+
+    return null;
   }
 
   /**
