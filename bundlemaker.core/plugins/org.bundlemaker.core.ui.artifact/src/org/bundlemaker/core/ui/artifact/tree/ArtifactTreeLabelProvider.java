@@ -2,7 +2,6 @@ package org.bundlemaker.core.ui.artifact.tree;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IPackageArtifact;
-import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.artifact.Activator;
@@ -25,7 +24,7 @@ public class ArtifactTreeLabelProvider extends DefaultArtifactLabelProvider {
   @Override
   public Image getImage(Object obj) {
 
-    if (obj instanceof String || obj instanceof IModularizedSystem || obj instanceof IRootArtifact) {
+    if (obj instanceof String || obj instanceof IModularizedSystem) {
 
       return ArtifactImages.ROOT_ARTIFACT_ICON.getImage();
     }

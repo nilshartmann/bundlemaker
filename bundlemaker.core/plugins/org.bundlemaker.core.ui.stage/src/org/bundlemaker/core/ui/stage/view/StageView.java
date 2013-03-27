@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
 import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.analysis.IVirtualRoot;
 import org.bundlemaker.core.selection.IArtifactSelection;
@@ -16,6 +17,7 @@ import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
+import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeLabelProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerSorter;
 import org.bundlemaker.core.ui.stage.actions.AddModeActionGroup;
@@ -39,6 +41,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -477,5 +480,50 @@ public class StageView extends ViewPart {
     public Color getBackground(Object element) {
       return null;
     }
+
+    protected boolean isStaged(IBundleMakerArtifact bundleMakerArtifact) {
+      return _effectiveSelectedArtifacts.contains(bundleMakerArtifact);
+    }
+
+    @Override
+    protected Image getImageForRootArtifact(IBundleMakerArtifact rootArtifact) {
+      if (!isStaged(rootArtifact)) {
+        return ArtifactImages.ROOT_ARTIFACT_DISABLED_ICON.getImage();
+      }
+      return super.getImageForRootArtifact(rootArtifact);
+    }
+
+    @Override
+    protected Image getImageForGroupArtifact(IBundleMakerArtifact groupArtifact) {
+      if (!isStaged(groupArtifact)) {
+        return ArtifactImages.GROUP_ARTIFACT_DISABLED_ICON.getImage();
+      }
+      return super.getImageForGroupArtifact(groupArtifact);
+    }
+
+    @Override
+    protected Image getImageForModuleArtifact(IBundleMakerArtifact moduleArtifact) {
+      if (!isStaged(moduleArtifact)) {
+        return ArtifactImages.MODULE_ARTIFACT_DISABLED_ICON.getImage();
+      }
+      return super.getImageForModuleArtifact(moduleArtifact);
+    }
+
+    @Override
+    protected Image getImageForPackageArtifact(IBundleMakerArtifact packageArtifact) {
+      if (!isStaged(packageArtifact)) {
+        return ArtifactImages.PACKAGE_ARTIFACT_DISABLED_ICON.getImage();
+      }
+      return super.getImageForPackageArtifact(packageArtifact);
+    }
+
+    @Override
+    protected Image getImageForResourceArtifact(IResourceArtifact resourceArtifact) {
+      if (!isStaged(resourceArtifact)) {
+        return ArtifactImages.RESOURCE_ARTIFACT_DISABLED_ICON.getImage();
+      }
+      return super.getImageForResourceArtifact(resourceArtifact);
+    }
+
   }
 }
