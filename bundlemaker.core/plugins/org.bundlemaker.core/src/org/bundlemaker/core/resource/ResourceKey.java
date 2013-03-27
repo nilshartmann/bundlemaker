@@ -14,14 +14,13 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.bundlemaker.core.internal.resource.FlyWeightCache;
 import org.bundlemaker.core.internal.resource.FlyWeightString;
+import org.bundlemaker.core.internal.resource.ZipFileCache;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -247,13 +246,12 @@ public class ResourceKey implements IResourceKey {
       if (getRoot().endsWith(".jar") || getRoot().endsWith(".zip")) {
 
         try {
-          ZipFile zipFile = new ZipFile(new File(getRoot()));
+          ZipFile zipFile = ZipFileCache.instance().getZipFile(getRoot());
+          //
+          // new ZipFile(new File(getRoot()));
           ZipEntry zipEntry = zipFile.getEntry(getPath());
           setTimeStamp(zipEntry);
-        } catch (ZipException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
