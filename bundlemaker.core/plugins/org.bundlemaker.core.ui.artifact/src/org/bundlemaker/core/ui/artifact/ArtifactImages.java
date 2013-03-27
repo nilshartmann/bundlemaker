@@ -79,6 +79,56 @@ public enum ArtifactImages {
    */
   ANNOTATION_TYPE_ARTIFACT_ICON("icons/artifacts/type-artifact-icon.gif"),
 
+  // --- ==== DISABLED ICONS ==== ---
+  /**
+   * The <b>disabled</b> icon for <b>Root</b> artifacts
+   */
+  ROOT_ARTIFACT_DISABLED_ICON("icons/artifacts/root-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Group</b> artifacts
+   */
+  GROUP_ARTIFACT_DISABLED_ICON("icons/artifacts/group-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Module</b> artifacts
+   */
+  MODULE_ARTIFACT_DISABLED_ICON("icons/artifacts/module-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Package</b> artifacts
+   */
+  PACKAGE_ARTIFACT_DISABLED_ICON("icons/artifacts/package-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Resource</b> artifacts
+   */
+  RESOURCE_ARTIFACT_DISABLED_ICON("icons/artifacts/resource-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Type</b> artifacts
+   */
+  TYPE_ARTIFACT_DISABLED_ICON("icons/artifacts/type-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Class Type</b> artifacts
+   */
+  CLASS_TYPE_ARTIFACT_DISABLED_ICON("icons/artifacts/type-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Interface Type</b> artifacts
+   */
+  INTERFACE_TYPE_ARTIFACT_DISABLED_ICON("icons/artifacts/interface-type-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Enum Type</b> artifacts
+   */
+  ENUM_TYPE_ARTIFACT_DISABLED_ICON("icons/artifacts/enum-type-artifact-disabled-icon.png"),
+
+  /**
+   * The <b>disabled</b> icon for <b>Annotation Type</b> artifacts
+   */
+  ANNOTATION_TYPE_ARTIFACT_DISABLED_ICON("icons/artifacts/type-artifact-disabled-icon.png"),
   //
   ;
 

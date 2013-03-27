@@ -74,10 +74,21 @@ public class ArtifactStage implements IArtifactStage {
 
     if (!_addMode.equals(oldMode)) {
 
+      if (!_addMode.isAutoAddMode()) {
+        // "save" effective selection
+        List<IBundleMakerArtifact> effectiveSelectedArtifacts = getArtifactSelection().getEffectiveSelectedArtifacts();
+        _stagedArtifacts = new LinkedList<IBundleMakerArtifact>(effectiveSelectedArtifacts);
+      }
+      
       Selection.instance().getArtifactSelectionService()
           .setUseChildrenOfSelectedArtifacts(addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
 
       fireArtifactStageChange();
+      
+      if (!_addMode.isAutoAddMode()) {
+        publishStagedArtifacts();
+      }
+
     }
   }
 
@@ -154,7 +165,11 @@ public class ArtifactStage implements IArtifactStage {
         Selection.ARTIFACT_STAGE_SELECTION_ID, //
         StageSelection.STAGE_VIEW_SELECTION_PROVIDER_ID, //
         _stagedArtifacts);
-
+  }
+  
+  protected IArtifactSelection getArtifactSelection() {
+    return Selection.instance().getArtifactSelectionService().getSelection(//
+        Selection.ARTIFACT_STAGE_SELECTION_ID); //
   }
 
   protected void fireArtifactStageChange() {

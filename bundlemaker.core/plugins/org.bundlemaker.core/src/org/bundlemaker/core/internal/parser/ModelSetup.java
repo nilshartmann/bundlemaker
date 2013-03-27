@@ -18,6 +18,7 @@ import org.bundlemaker.core.internal.BundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
+import org.bundlemaker.core.internal.resource.ZipFileCache;
 import org.bundlemaker.core.internal.store.IDependencyStore;
 import org.bundlemaker.core.internal.store.IPersistentDependencyStore;
 import org.bundlemaker.core.parser.IParser;
@@ -199,6 +200,8 @@ public class ModelSetup {
 
     try {
 
+      ZipFileCache.instance().activateCache();
+
       //
       for (IProjectContentEntry projectContent : projectContents) {
 
@@ -266,6 +269,9 @@ public class ModelSetup {
         subMonitor.setWorkRemaining(contentCount--);
       }
     } finally {
+
+      ZipFileCache.instance().deactivateCache();
+
       subMonitor.done();
     }
 

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.projecteditor.newwizard;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -155,6 +157,15 @@ public class ChooseContentProviderSelectionPage extends WizardSelectionPage {
       // add to result set
       nodes.add(node);
     }
+
+    Collections.sort(nodes, new Comparator<ChooseContentProviderWizardNode>() {
+
+      @Override
+      public int compare(ChooseContentProviderWizardNode o1, ChooseContentProviderWizardNode o2) {
+        return o1.getLabel().compareTo(o2.getLabel());
+      }
+
+    });
 
     wizardSelectionViewer.setInput(nodes);
 

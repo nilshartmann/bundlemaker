@@ -132,6 +132,12 @@
 				<reference definitionId="org.bundlemaker.analysis.ui.singleGroupAndModuleContentSelected" />
 			</enabledWhen>
 		</handler>
+		<handler commandId="org.bundlemaker.core.ui.commands.CreateModuleFromPackageSelectionCommand"
+			class="org.bundlemaker.core.ui.handler.CreateModuleFromPackageSelectionHandler">
+			<enabledWhen><!-- TODO only on packages, resources -->
+				<reference definitionId="org.bundlemaker.analysis.ui.artifactContentNoRootSelected" />
+			</enabledWhen>
+		</handler>		
 		
 		<!-- MoveArtifactsCommand -->
 	    <handler commandId="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
@@ -263,6 +269,8 @@
 			name="New Group..."/>
 		<command id="org.bundlemaker.core.ui.commands.CreateNewModuleCommand"
 			name="New Module..."/>
+		<command id="org.bundlemaker.core.ui.commands.CreateModuleFromPackageSelectionCommand"
+			name="New Module from Selection..."/>
 		<command id="org.bundlemaker.core.ui.commands.MoveArtifactsCommand"
 			name="Move..."/>
 		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."/>
@@ -326,6 +334,14 @@
 						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
 				</visibleWhen>
 			</command>
+			<command commandId="org.bundlemaker.core.ui.commands.CreateModuleFromPackageSelectionCommand"
+				label="Create Module from Selection..." style="push">
+				<visibleWhen checkEnabled="false">
+					<reference
+						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+				</visibleWhen>
+			</command>
+				
 			<command commandId="org.bundlemaker.core.ui.commands.RenameArtifactCommand"
 				label="Rename..." style="push">
 				<visibleWhen checkEnabled="false">

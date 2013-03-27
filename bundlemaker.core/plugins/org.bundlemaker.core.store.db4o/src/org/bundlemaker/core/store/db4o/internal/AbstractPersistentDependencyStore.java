@@ -83,12 +83,12 @@ public abstract class AbstractPersistentDependencyStore implements IPersistentDe
     configuration.objectClass(ResourceKey.class).cascadeOnActivate(true);
     
     // note: cascadeOnDelete is not possible, otherwise we clean up FlyWeightCache instances!
-    configuration.objectClass(Resource.class).cascadeOnDelete(false);
-    configuration.objectClass(Reference.class).cascadeOnDelete(false);
-    configuration.objectClass(ResourceKey.class).cascadeOnDelete(false);
-    
-    configuration.detectSchemaChanges(false);
-    configuration.callbacks(false);
+//    configuration.objectClass(Resource.class).cascadeOnDelete(false);
+//    configuration.objectClass(Reference.class).cascadeOnDelete(false);
+//    configuration.objectClass(ResourceKey.class).cascadeOnDelete(false);
+//    
+//    configuration.detectSchemaChanges(false);
+//    configuration.callbacks(false);
     
     // set the activation depth
     // since we really want the whole db in memory, set the activation

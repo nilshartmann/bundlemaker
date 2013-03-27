@@ -256,12 +256,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
 
   private void initSelection(IArtifactSelection selection) {
 
-    // keep last selected?
-    if (!selection.hasSelectedArtifacts()) {
-      return;
-    }
-
-    //
     if (_viewWidget != null && _detailComposite != null) {
 
       //
