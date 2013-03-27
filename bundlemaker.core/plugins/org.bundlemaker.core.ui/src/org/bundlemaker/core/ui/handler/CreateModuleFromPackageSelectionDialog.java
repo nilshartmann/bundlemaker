@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IGroupAndModuleContainer;
 import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeContentProvider;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeViewerFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
@@ -13,6 +14,7 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -27,33 +29,33 @@ import org.eclipse.swt.widgets.Text;
 
 public class CreateModuleFromPackageSelectionDialog extends TitleAreaDialog {
 
-  private final ModifyListener       _validationModifyListener = new ValidationModifyListener();
+  private final ModifyListener _validationModifyListener = new ValidationModifyListener();
 
   /** MSG_TITLE */
-  private static final String        MSG_TITLE                = "Create New Module";
+  private static final String  MSG_TITLE                 = "Create New Module";
 
   /** MSG_MESSAGE */
-  private static final String        MSG_MESSAGE              = "Please choose target and name of new Module";
+  private static final String  MSG_MESSAGE               = "Please choose target and name of new Module";
 
   /** MSG_CANNOT_ADD_ARTIFACTS */
-  private static final String        MSG_CANNOT_ADD_ARTIFACTS = "Can't create module in %s.";
+  private static final String  MSG_CANNOT_ADD_ARTIFACTS  = "Can't create module in %s.";
 
   /** the tree viewer */
-  private TreeViewer                 _treeViewer;
+  private TreeViewer           _treeViewer;
 
   /** the root artifact */
-  private IRootArtifact              _rootArtifact;
+  private IRootArtifact        _rootArtifact;
 
   /** the new parent */
-  private IBundleMakerArtifact       _newParent;
+  private IBundleMakerArtifact _newParent;
 
-  private String                     _moduleName;
+  private String               _moduleName;
 
-  private String                     _moduleVersion;
+  private String               _moduleVersion;
 
-  private Text                       _nameTextField;
+  private Text                 _nameTextField;
 
-  private Text                       _versionTextField;
+  private Text                 _versionTextField;
 
   /**
    * <p>
@@ -75,6 +77,7 @@ public class CreateModuleFromPackageSelectionDialog extends TitleAreaDialog {
 
     // set the parameters
     _rootArtifact = rootArtifact;
+    _newParent = rootArtifact;
 
     //
     setShellStyle(SWT.CLOSE | SWT.MAX | SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE
@@ -136,6 +139,10 @@ public class CreateModuleFromPackageSelectionDialog extends TitleAreaDialog {
         | SWT.V_SCROLL | SWT.BORDER);
     _treeViewer.setInput(_rootArtifact);
     _treeViewer.expandToLevel(2);
+
+    _treeViewer.setSelection(
+        new StructuredSelection(((ArtifactTreeContentProvider) _treeViewer.getContentProvider()).getVirtualRoot()),
+        true);
     _treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
       @Override
       public void selectionChanged(SelectionChangedEvent event) {
@@ -169,6 +176,8 @@ public class CreateModuleFromPackageSelectionDialog extends TitleAreaDialog {
     _nameTextField.addModifyListener(_validationModifyListener);
     _versionTextField.addModifyListener(_validationModifyListener);
 
+    validateInput();
+
     //
     Dialog.applyDialogFont(parent);
 
@@ -197,12 +206,12 @@ public class CreateModuleFromPackageSelectionDialog extends TitleAreaDialog {
 
     if (errorMessage == null) {
       String artifactName = _nameTextField.getText() + "_" + _versionTextField.getText();
-        Collection<IBundleMakerArtifact> children = _newParent.getChildren();
-        for (IBundleMakerArtifact child : children) {
-          if (child.getName().equals(artifactName)) {
-            errorMessage = "A Module with the specified Name and Version already exists on " + _newParent.getName();
-            break;
-          }
+      Collection<IBundleMakerArtifact> children = _newParent.getChildren();
+      for (IBundleMakerArtifact child : children) {
+        if (child.getName().equals(artifactName)) {
+          errorMessage = "A Module with the specified Name and Version already exists on " + _newParent.getName();
+          break;
+        }
       }
     }
 
