@@ -14,7 +14,7 @@ public class SampleTransformationScript implements ITransformationScript {
 
 	@TransformationModelConfiguration
 	@Override
-	public void transform(ITransformationScriptContext context) throws Exception {
+	public void transform(final ITransformationScriptContext context) throws Exception {
 		
 		context.getLogger().log("Starting transformation");
 		
