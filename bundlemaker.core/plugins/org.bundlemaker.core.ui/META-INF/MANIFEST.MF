@@ -7,7 +7,8 @@ Bundle-Activator: org.bundlemaker.core.ui.internal.Activator
 Export-Package: org.bundlemaker.core.ui,
  org.bundlemaker.core.ui.handler,
  org.bundlemaker.core.ui.preferences,
- org.bundlemaker.core.ui.utils
+ org.bundlemaker.core.ui.utils,
+ org.bundlemaker.core.ui.validators
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.launching;bundle-version="3.5.100",
