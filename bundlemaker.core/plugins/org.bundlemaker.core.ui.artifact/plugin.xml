@@ -115,6 +115,20 @@
 				</iterate>
 			</with>
 		</definition>
+
+		<!-- org.bundlemaker.analysis.ui.moduleContentSelected: 
+		     evaluates to true if all  of the selected elements are parts of a module (Package, Resource or Type) -->
+		<definition id="org.bundlemaker.analysis.ui.moduleContentSelected">
+			<with variable="selection">
+				<iterate ifEmpty="false" operator="and">
+					<or>
+					<instanceof value="org.bundlemaker.core.analysis.IPackageArtifact"/> 
+					<instanceof value="org.bundlemaker.core.analysis.IResourceArtifact"/>
+					<instanceof value="org.bundlemaker.core.analysis.ITypeArtifact"/> 
+					</or>
+				</iterate>
+			</with>
+		</definition>
 		
 		<!-- org.bundlemaker.analysis.ui.singleRootArtifactSelected
 		  evaluates to true if exactly one root artifact is selected -->
