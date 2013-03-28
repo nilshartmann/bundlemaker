@@ -9,7 +9,9 @@
 	      			name="Reveal in Three-way Cross Referencer"/>
    </extension>
 
-    <extension point="org.eclipse.ui.handlers">
+    <extension
+          id="bla"
+          point="org.eclipse.ui.handlers">
           <handler class="org.bundlemaker.core.ui.experimental.handlers.CreateNewWorkingCopyHandler"
                 commandId="org.bundlemaker.core.ui.experimental.commands.CreateNewWorkingCopyCommand">
                 <enabledWhen>
@@ -30,8 +32,8 @@
 		          > </reference>
 		       </enabledWhen>
 		    </handler>
-            
-      </extension>
+        </extension>
+      
 
 
       <!-- ProjectExplorer Menu Entry -->
@@ -54,7 +56,14 @@
 				         <command commandId="org.bundlemaker.core.ui.experimental.editor.xref.threeway.OpenThreewayXRefViewCommand" style="push">
             			<visibleWhen checkEnabled="true"/>
          				</command>
-      	</menuContribution>
+         				</menuContribution>
+         				
+         			<menuContribution
+                  locationURI="popup:org.bundlemaker.core.ui.experimental.editor.xref.threeway.ThreewayXRefView?after=additions">
+         					<command commandId="org.bundlemaker.core.ui.commands.CreateModuleFromPackageSelectionCommand" 
+								label="Create Module from Selection..." style="push">
+							</command>
+      				</menuContribution>
       </extension>
 
    <extension point="org.eclipse.ui.editors">

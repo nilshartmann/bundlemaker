@@ -17,10 +17,12 @@ import org.bundlemaker.core.ui.artifact.tree.VisibleArtifactsFilter;
 import org.bundlemaker.core.ui.view.dependencytree.DefaultExpandStrategy;
 import org.bundlemaker.core.ui.view.dependencytree.Helper;
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -198,17 +200,20 @@ public class XRefComposite extends Composite {
     _toTreeViewer.addSelectionChangedListener(new ToArtifactSelectionChangedListener());
 
     // === Context-Menu Center Viewer ===
-    MenuManager menuMgr = new MenuManager("#PopupMenu");
+    MenuManager menuMgr = new MenuManager();
     menuMgr.setRemoveAllWhenShown(true);
     menuMgr.addMenuListener(new IMenuListener() {
       @Override
-      public void menuAboutToShow(IMenuManager manager) {
-        fillContextMenu(manager);
+      public void menuAboutToShow(IMenuManager mgr) {
+        fillContextMenu(mgr);
       }
     });
+    // menuMgr.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
     Menu menu = menuMgr.createContextMenu(_centerViewer.getControl());
     _centerViewer.getControl().setMenu(menu);
+    String id = _site.getId();
     _site.registerContextMenu(menuMgr, _centerViewer);
+    _site.setSelectionProvider(_centerViewer);
 
     // === Toolbar =====
     ToolBarManager mgr1 = new ToolBarManager();
@@ -228,8 +233,14 @@ public class XRefComposite extends Composite {
 
   }
 
+  class AbcAction extends Action {
+    public AbcAction(String l) {
+      super(l, IAction.AS_PUSH_BUTTON);
+    }
+  }
+
   private void fillContextMenu(IMenuManager manager) {
-    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+    manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
   }
 
   /**

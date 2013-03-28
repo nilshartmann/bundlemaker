@@ -52,6 +52,8 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
   @Override
   public void analysisModelModified() {
     setCurrentArtifactSelection(getCurrentArtifactSelection());
+
+    refreshFromCurrentArtifactSelection();
   }
 
   public void refreshFromCurrentArtifactSelection() {
