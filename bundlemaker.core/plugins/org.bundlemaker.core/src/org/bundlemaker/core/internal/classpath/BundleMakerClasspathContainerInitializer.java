@@ -44,7 +44,7 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
    * Name of the bundles that define the Classpath Container (as plain JARs)
    */
   private final static String[]    BUNDLEMAKER_LIBRARY_BUNDLES = new String[] { "org.bundlemaker.core", //
-      "com.tinkerpop.blueprints.blueprints-core", //
+      "org.bundlemaker.com.tinkerpop.blueprints.blueprints-core", //
       "org.bundlemaker.core.transformations", //
       "org.bundlemaker.core.ui", //
       "org.eclipse.core.resources", //
@@ -102,7 +102,8 @@ public class BundleMakerClasspathContainerInitializer extends ClasspathContainer
       Bundle bundle = installedBundles.get(bundleMakerLibraryBundleName);
       if (bundle == null) {
         // TODO
-        System.err.println("No bundle found with name '" + bundleMakerLibraryBundleName + "'");
+        System.err.println("[BundleMakerClassPathContainerInitializer] No bundle found with name '"
+            + bundleMakerLibraryBundleName + "'");
         continue;
       }
 
