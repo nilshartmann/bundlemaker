@@ -55,10 +55,17 @@ public class JdtProjectContentProviderDropAdapter implements IProjectEditorDropP
   @Override
   public boolean canDrop(IProjectEditorDropEvent dropEvent) throws Exception {
 
-    if (dropEvent.hasTarget()) {
-      // only drop to root
+    Object target = dropEvent.getTarget();
+
+    // Only drop to root or on an exisiting JdtProjectContentProvider
+    if (target != null && !(target instanceof JdtProjectContentProvider)) {
       return false;
     }
+
+    // if (dropEvent.hasTarget()) {
+    // // only drop to root
+    // return false;
+    // }
 
     ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
     List<?> selectedObject = getSelectedObjects(selection);
@@ -130,16 +137,31 @@ public class JdtProjectContentProviderDropAdapter implements IProjectEditorDropP
       return false;
     }
 
+    Object target = dropEvent.getTarget();
+    System.out.println("target: " + target);
+
+    JdtProjectContentProvider jdtContentProvider;
+    if (target == null) {
+      // Create New Project Content Provider
+      jdtContentProvider = new JdtProjectContentProvider();
+    } else {
+      // Add to exisiting provider
+      jdtContentProvider = (JdtProjectContentProvider) target;
+    }
     boolean changesMade = false;
 
     for (Object object : selectedObjects) {
       IJavaProject javaProject = getJavaProject(object);
+
       if (javaProject != null) {
-        JdtProjectContentProvider jdtContentProvider = new JdtProjectContentProvider();
-        jdtContentProvider.setJavaProject(javaProject);
-        dropEvent.getBundleMakerProject().getModifiableProjectDescription().addContentProvider(jdtContentProvider);
-        changesMade = true;
+        if (jdtContentProvider.addJavaProject(javaProject)) {
+          changesMade = true;
+        }
       }
+    }
+    if (changesMade && target == null) {
+      // add new provider
+      dropEvent.getBundleMakerProject().getModifiableProjectDescription().addContentProvider(jdtContentProvider);
     }
 
     return changesMade;

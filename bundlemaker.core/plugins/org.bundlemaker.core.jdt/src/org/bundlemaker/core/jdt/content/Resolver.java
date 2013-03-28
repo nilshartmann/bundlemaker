@@ -1,5 +1,6 @@
 package org.bundlemaker.core.jdt.content;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ import org.eclipse.jdt.core.JavaModelException;
 public class Resolver {
 
   /** - */
-  private IJavaProject                     _mainJavaProject;
+  private Collection<IJavaProject>                     _mainJavaProjects;
 
   /** - */
   private IJavaProject                     _currentJavaProject;
@@ -48,7 +49,7 @@ public class Resolver {
    * @throws CoreException
    * @throws JavaModelException
    */
-  public List<ResolvedEntry> resolve(IJavaProject javaProject) throws CoreException, JavaModelException {
+  public List<ResolvedEntry> resolve(Collection<IJavaProject> javaProjects) throws CoreException, JavaModelException {
 
     //
     _resolvedJavaProjects.clear();
@@ -56,10 +57,14 @@ public class Resolver {
     _output2SourceLocations.clear();
 
     //
-    _mainJavaProject = javaProject;
+    _mainJavaProjects = javaProjects;
 
-    //
-    resolveJavaProject(javaProject);
+    
+    for (IJavaProject javaProject : javaProjects) {
+    	 //
+        resolveJavaProject(javaProject);
+	}
+   
 
     //
     return _result;
@@ -167,7 +172,11 @@ public class Resolver {
   }
 
   private boolean isVisible(IClasspathEntry classpathEntry) {
-    return _mainJavaProject.equals(_currentJavaProject) || classpathEntry.isExported() || classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE;
+	  if (classpathEntry.isExported() || classpathEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+		  return true;
+	  }
+	  
+	  return _mainJavaProjects.contains(_currentJavaProject);
   }
 
   /**

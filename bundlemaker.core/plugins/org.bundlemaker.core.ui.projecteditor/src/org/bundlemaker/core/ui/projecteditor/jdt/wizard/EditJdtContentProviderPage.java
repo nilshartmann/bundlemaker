@@ -1,5 +1,6 @@
 package org.bundlemaker.core.ui.projecteditor.jdt.wizard;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -17,9 +19,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 
@@ -30,6 +36,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 public class EditJdtContentProviderPage extends WizardPage {
 
   private IProjectDescription _projectDescription;
+
+  private Text                _nameText;
 
   private CheckboxTableViewer _projectNames;
 
@@ -60,8 +68,33 @@ public class EditJdtContentProviderPage extends WizardPage {
 
     createProjectSelectionTable(comp);
 
+    Composite c = new Composite(comp, SWT.NONE);
+    GridLayout l = new GridLayout(2, false);
+    gridData = new GridData();
+    gridData.grabExcessHorizontalSpace = true;
+    gridData.horizontalAlignment = SWT.FILL;
+    c.setLayout(l);
+    c.setLayoutData(gridData);
+
+    Label label = new Label(c, SWT.NONE);
+    label.setText("Name:");
+    _nameText = new Text(c, SWT.BORDER);
+    GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+    gd.grabExcessHorizontalSpace = true;
+    _nameText.setLayoutData(gd);
+    _nameText.addModifyListener(new ModifyListener() {
+
+      @Override
+      public void modifyText(ModifyEvent e) {
+        _textModifiedByUser = true;
+      }
+    });
+
+
     setControl(comp);
   }
+
+  private boolean _textModifiedByUser = false;
 
   private void createProjectSelectionTable(Composite radioGroup) {
     _projectNames = CheckboxTableViewer.newCheckList(radioGroup, SWT.BORDER);
@@ -103,7 +136,19 @@ public class EditJdtContentProviderPage extends WizardPage {
       @Override
       public void checkStateChanged(CheckStateChangedEvent event) {
         Object[] checkedElements = _projectNames.getCheckedElements();
-        setPageComplete(checkedElements.length > 0);
+        
+        // override name only if not entered by the user
+        if (!_textModifiedByUser) {
+          IProject project = null;
+          if ((checkedElements.length == 1) || (checkedElements.length>1 && _nameText.getText().isEmpty())) {
+             project = (IProject) checkedElements[0];
+             _nameText.setText(project.getName());
+          } else {
+            _nameText.setText("");
+          }
+          _textModifiedByUser = false;
+        }
+        setPageComplete(checkedElements.length > 0 && _nameText.getText().length() > 0);
       }
     });
   }
@@ -120,8 +165,13 @@ public class EditJdtContentProviderPage extends WizardPage {
     for (IProjectContentProvider iProjectContentProvider : contentProviders) {
       if (iProjectContentProvider instanceof JdtProjectContentProvider) {
         JdtProjectContentProvider jdtProjectContentProvider = (JdtProjectContentProvider) iProjectContentProvider;
-        IProject project = jdtProjectContentProvider.getJavaProject().getProject();
-        projects.add(project);
+        Collection<IJavaProject> javaProjects = jdtProjectContentProvider.getJavaProjects();
+
+        for (IJavaProject iJavaProject : javaProjects) {
+          if (!projects.contains(iJavaProject.getProject())) {
+            projects.add(iJavaProject.getProject());
+          }
+        }
       }
     }
 

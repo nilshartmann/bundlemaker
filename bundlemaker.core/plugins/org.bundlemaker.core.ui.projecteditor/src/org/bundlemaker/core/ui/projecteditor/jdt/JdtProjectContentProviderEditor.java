@@ -10,7 +10,10 @@ import org.bundlemaker.core.ui.BundleMakerImages;
 import org.bundlemaker.core.ui.projecteditor.filebased.FileBasedContentRenderer;
 import org.bundlemaker.core.ui.projecteditor.provider.IProjectContentProviderEditorElement;
 import org.bundlemaker.core.ui.projecteditor.provider.impl.AbstractProjectContentProviderEditor;
+import org.bundlemaker.core.ui.validators.NonEmptyStringValidator;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -64,7 +67,7 @@ public class JdtProjectContentProviderEditor extends AbstractProjectContentProvi
   public String getLabel(Object element) {
     if (element instanceof JdtProjectContentProvider) {
       JdtProjectContentProvider projectContentProvider = (JdtProjectContentProvider) element;
-      return projectContentProvider.getJavaProject().getElementName();
+      return projectContentProvider.getName();
     }
 
     return _fileBasedContentRenderer.getLabel(element);
@@ -106,8 +109,7 @@ public class JdtProjectContentProviderEditor extends AbstractProjectContentProvi
    */
   @Override
   public boolean canEdit(Object selectedObject) {
-    // can't edit anything
-    return false;
+    return (selectedObject instanceof JdtProjectContentProvider);
   }
 
   /*
@@ -121,8 +123,21 @@ public class JdtProjectContentProviderEditor extends AbstractProjectContentProvi
   @Override
   public boolean edit(Shell shell, IBundleMakerProject project, IProjectContentProvider provider, Object selectedObject) {
 
-    // can't edit anything
-    return false;
+    JdtProjectContentProvider jdtProjectContentProvider = (JdtProjectContentProvider) selectedObject;
+    
+    InputDialog inputDialog = new InputDialog(shell, "Name", "Enter name of this project content",
+        jdtProjectContentProvider.getName(), NonEmptyStringValidator.instance());
+
+    // Open
+    if (inputDialog.open() != Window.OK) {
+      // canceled
+      return false;
+    }
+
+    final String newName = inputDialog.getValue();
+    jdtProjectContentProvider.setName(newName);
+    
+    return true;
   }
 
   /*
