@@ -11,7 +11,9 @@
 
 package org.bundlemaker.core.ui.editor.dependencyviewer;
 
+import java.awt.BorderLayout;
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Collection;
@@ -20,6 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.swing.AbstractAction;
+import javax.swing.JPanel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
@@ -37,22 +42,57 @@ import com.mxgraph.view.mxStylesheet;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class DependencyViewerFrame {
+public class DependencyViewerGraph {
 
-  private mxGraphComponent _graphComponent;
+  private final Map<IBundleMakerArtifact, Object> vertexCache = new Hashtable<IBundleMakerArtifact, Object>();
 
-  private mxGraph          _graph;
+  private mxGraphComponent                        _graphComponent;
 
-  private mxIGraphLayout   _graphLayout;
+  private mxGraph                                 _graph;
+
+  private mxIGraphLayout                          _graphLayout;
 
   public void create(Frame parentFrame) {
-    _graph = new mxGraph();
 
-    _graph.setCellsDisconnectable(false);
-    _graph.setConnectableEdges(false);
-    _graph.setCellsBendable(false);
-    _graph.setCellsEditable(false);
+    _graph = createGraph();
 
+    registerStyles();
+
+    // Layout
+    _graphLayout = new mxCircleLayout(_graph);
+
+    _graphComponent = new mxGraphComponent(_graph);
+    _graphComponent.setConnectable(false);
+    _graphComponent.addMouseWheelListener(_wheelTracker);
+
+    parentFrame.setLayout(new BorderLayout());
+
+    parentFrame.add(createToolBar(), BorderLayout.NORTH);
+
+    parentFrame.add(_graphComponent, BorderLayout.CENTER);
+  }
+
+  protected JPanel createToolBar() {
+    JPanel panel = new JPanel();
+
+    return panel;
+
+  }
+
+  protected mxGraph createGraph() {
+    mxGraph graph = new mxGraph();
+
+    // Configure Graph
+    graph.setCellsDisconnectable(false);
+    graph.setConnectableEdges(false);
+    graph.setCellsBendable(false);
+    graph.setCellsEditable(false);
+
+    return graph;
+
+  }
+
+  protected void registerStyles() {
     // Styles
     mxStylesheet stylesheet = _graph.getStylesheet();
     Hashtable<String, Object> style = new Hashtable<String, Object>();
@@ -70,17 +110,7 @@ public class DependencyViewerFrame {
     style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64"); // "#D1AE54");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     stylesheet.putCellStyle("BUNDLEMAKER_EDGE", style);
-
-    // Layout
-    _graphLayout = new mxCircleLayout(_graph);
-
-    _graphComponent = new mxGraphComponent(_graph);
-    _graphComponent.setConnectable(false);
-    _graphComponent.addMouseWheelListener(_wheelTracker);
-    parentFrame.add(_graphComponent);
   }
-
-  Map<IBundleMakerArtifact, Object> vertexCache = new Hashtable<IBundleMakerArtifact, Object>();
 
   /**
    * @param effectiveSelectedArtifacts
@@ -142,6 +172,32 @@ public class DependencyViewerFrame {
     } finally {
       model.endUpdate();
     }
+  }
+
+  protected void setLayout(mxIGraphLayout layout) {
+
+  }
+
+  class LayoutAction extends AbstractAction {
+
+    private final mxIGraphLayout _layout;
+
+    LayoutAction(mxIGraphLayout layout, String title) {
+      super(title);
+
+      _layout = layout;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
   }
 
   MouseWheelListener _wheelTracker = new MouseWheelListener() {

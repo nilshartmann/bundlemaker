@@ -32,7 +32,7 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
   public final static String              DEPENDENCY_VIEWER_EDITOR_ID = "org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewer";
 
   
-  private DependencyViewerFrame _dependencyViewerFrame;
+  private DependencyViewerGraph _dependencyViewerFrame;
   
   @Override
   public void analysisModelModified() {
@@ -68,7 +68,7 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
     Composite composite = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
     Frame frame = SWT_AWT.new_Frame(composite);
     
-    _dependencyViewerFrame = new DependencyViewerFrame();
+    _dependencyViewerFrame = new DependencyViewerGraph();
     _dependencyViewerFrame.create(frame);
     
     renderSelectedArtifacts(getCurrentArtifactSelection());
