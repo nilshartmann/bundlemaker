@@ -443,7 +443,6 @@ public class StageView extends ViewPart {
       while (iterator.hasNext()) {
         IBundleMakerArtifact artifact = iterator.next();
         artifacts.add(artifact);
-        artifacts.addAll(artifact.getChildren());
       }
 
       Selection.instance().getArtifactStage().removeStagedArtifacts(artifacts);
