@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.editor.dependencyviewer;
+package org.bundlemaker.core.ui.editor.dependencyviewer.graph;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
