@@ -11,11 +11,16 @@
 
 package org.bundlemaker.core.ui.editor.dependencyviewer;
 
+import java.awt.Frame;
 import java.util.List;
+
+import javax.swing.JLabel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -27,6 +32,8 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
   public final static String              DEPENDENCY_VIEWER_EDITOR_ID = "org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewer";
 
   
+  private DependencyViewerFrame _dependencyViewerFrame;
+  
   @Override
   public void analysisModelModified() {
     setCurrentArtifactSelection(getCurrentArtifactSelection());
@@ -34,12 +41,20 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
   @Override
   protected void setCurrentArtifactSelection(IArtifactSelection artifactSelection) {
     super.setCurrentArtifactSelection(artifactSelection);
+    
+    renderSelectedArtifacts(artifactSelection);
 
-    //
-    List<IBundleMakerArtifact> selectedArtifacts = artifactSelection.getEffectiveSelectedArtifacts();
-    System.out.println("Artifacts: " + selectedArtifacts);
   }
   
+  /**
+   * @param artifactSelection
+   */
+  private void renderSelectedArtifacts(IArtifactSelection artifactSelection) {
+    if (artifactSelection != null && _dependencyViewerFrame != null) {
+      _dependencyViewerFrame.showArtifacts(artifactSelection.getEffectiveSelectedArtifacts());
+    }
+    
+  }
   @Override
   protected String getProviderId() {
     return DEPENDENCY_VIEWER_EDITOR_ID;
@@ -50,8 +65,14 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
    */
   @Override
   public void createPartControl(Composite parent) {
-    // TODO Auto-generated method stub
-
+    Composite composite = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
+    Frame frame = SWT_AWT.new_Frame(composite);
+    
+    _dependencyViewerFrame = new DependencyViewerFrame();
+    _dependencyViewerFrame.create(frame);
+    
+    renderSelectedArtifacts(getCurrentArtifactSelection());
+    
   }
 
   /* (non-Javadoc)
