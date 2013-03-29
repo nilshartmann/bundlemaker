@@ -12,6 +12,8 @@
 package org.bundlemaker.core.ui.editor.dependencyviewer;
 
 import java.awt.Frame;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -26,6 +28,7 @@ import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.view.mxGraph;
 
 /**
@@ -34,16 +37,26 @@ import com.mxgraph.view.mxGraph;
  */
 public class DependencyViewerFrame {
 
-  private mxGraph        _graph;
+  private mxGraphComponent _graphComponent;
 
-  private mxIGraphLayout _graphLayout;
+  private mxGraph          _graph;
+
+  private mxIGraphLayout   _graphLayout;
 
   public void create(Frame parentFrame) {
     _graph = new mxGraph();
+
+    _graph.setCellsDisconnectable(false);
+    _graph.setConnectableEdges(false);
+    _graph.setCellsBendable(false);
+    _graph.setCellsEditable(false);
+
     _graphLayout = new mxCircleLayout(_graph);
 
-    mxGraphComponent graphComponent = new mxGraphComponent(_graph);
-    parentFrame.add(graphComponent);
+    _graphComponent = new mxGraphComponent(_graph);
+    _graphComponent.setConnectable(false);
+    _graphComponent.addMouseWheelListener(_wheelTracker);
+    parentFrame.add(_graphComponent);
   }
 
   Map<IBundleMakerArtifact, Object> vertexCache = new Hashtable<IBundleMakerArtifact, Object>();
@@ -71,7 +84,8 @@ public class DependencyViewerFrame {
       for (IBundleMakerArtifact iBundleMakerArtifact : effectiveSelectedArtifacts) {
         System.out.println("Add iBundleMakerArtifact: " + iBundleMakerArtifact);
         if (!vertexCache.containsKey(iBundleMakerArtifact)) {
-          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact.getName(), 10, 10, 100, 20);
+          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact.getName(), 10, 10, 10, 10);
+          _graph.updateCellSize(vertex);
           vertexCache.put(iBundleMakerArtifact, vertex);
         }
       }
@@ -107,5 +121,19 @@ public class DependencyViewerFrame {
       model.endUpdate();
     }
   }
+
+  MouseWheelListener _wheelTracker = new MouseWheelListener() {
+                                     @Override
+                                     public void mouseWheelMoved(MouseWheelEvent e) {
+                                       if (e.getSource() instanceof mxGraphOutline || e.isControlDown()) {
+                                         if (e.getWheelRotation() < 0) {
+                                           _graphComponent.zoomIn();
+                                         } else {
+                                           _graphComponent.zoomOut();
+                                         }
+
+                                       }
+                                     }
+                                   };
 
 }
