@@ -15,6 +15,8 @@ import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Collection;
@@ -32,7 +34,10 @@ import javax.swing.JPanel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
 import org.bundlemaker.core.util.collections.GenericCache;
+import org.eclipse.swt.widgets.Display;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxIGraphLayout;
@@ -72,8 +77,11 @@ public class DependencyViewerGraph {
 
   private mxIGraphLayout                                         _graphLayout;
 
-  public void create(Frame parentFrame) {
+  private Display                                                _display;
 
+  public void create(Frame parentFrame, Display display) {
+
+    _display = display;
     _graph = createGraph();
 
     registerStyles();
@@ -85,6 +93,32 @@ public class DependencyViewerGraph {
     _graphComponent.setConnectable(false);
     _graphComponent.setToolTips(true);
     _graphComponent.addMouseWheelListener(_wheelTracker);
+
+    _graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
+
+      @Override
+      public void mouseReleased(MouseEvent e) {
+        Object cell = _graphComponent.getCellAt(e.getX(), e.getY());
+
+        if (cell != null) {
+          Object value = _graph.getModel().getValue(cell);
+          if (value instanceof IDependency) {
+            final IDependency dependency = (IDependency) value;
+            _display.syncExec(new Runnable() {
+
+              @Override
+              public void run() {
+                Selection
+                    .instance()
+                    .getDependencySelectionService()
+                    .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID,
+                        DependencyViewerEditor.DEPENDENCY_VIEWER_EDITOR_ID, dependency);
+              }
+            });
+          }
+        }
+      }
+    });
 
     parentFrame.setLayout(new BorderLayout());
 
@@ -171,6 +205,7 @@ public class DependencyViewerGraph {
   protected void registerStyles() {
     // Styles
     mxStylesheet stylesheet = _graph.getStylesheet();
+
     Hashtable<String, Object> style = new Hashtable<String, Object>();
     style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
     style.put(mxConstants.STYLE_OPACITY, 50);
@@ -271,10 +306,6 @@ public class DependencyViewerGraph {
 
   protected void layoutGraph() {
     _graphLayout.execute(_graph.getDefaultParent());
-  }
-
-  protected void setLayout(mxIGraphLayout layout) {
-
   }
 
   class LayoutAction extends AbstractAction {
