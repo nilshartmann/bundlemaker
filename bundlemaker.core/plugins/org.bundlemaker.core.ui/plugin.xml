@@ -134,8 +134,8 @@
 		</handler>
 		<handler commandId="org.bundlemaker.core.ui.commands.CreateModuleFromPackageSelectionCommand"
 			class="org.bundlemaker.core.ui.handler.CreateModuleFromPackageSelectionHandler">
-			<enabledWhen><!-- TODO only on packages, resources -->
-				<reference definitionId="org.bundlemaker.analysis.ui.artifactContentNoRootSelected" />
+			<enabledWhen>
+				<reference definitionId="org.bundlemaker.analysis.ui.moduleContentSelected" />
 			</enabledWhen>
 		</handler>		
 		
@@ -275,7 +275,7 @@
 			name="Move..."/>
 		<command id="org.bundlemaker.core.ui.commands.RenameArtifactCommand" name="Rename..."/>
 		<command id="org.bundlemaker.core.ui.commands.RemoveArtifactsCommand" name="Remove"/>
-		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"/> 
+		<command id="org.bundlemaker.core.ui.commands.RefreshArtifactTreeCommand" name="Refresh"/>
 		
 		<!-- Selectors -->
 		<command id="org.bundlemaker.core.ui.commands.selector.TransitiveClosureSelectorCommand" name="Transitive Closure" />
@@ -338,7 +338,7 @@
 				label="Create Module from Selection..." style="push">
 				<visibleWhen checkEnabled="false">
 					<reference
-						definitionId="org.bundlemaker.analysis.ui.artifactContentSelected" />
+						definitionId="org.bundlemaker.analysis.ui.moduleContentSelected" />
 				</visibleWhen>
 			</command>
 				
@@ -390,7 +390,6 @@
 				style="push">
 				<visibleWhen checkEnabled="true"/>
 			</command>
-
 		</menuContribution>
 
 		<menuContribution locationURI="popup:#TextEditorContext?after=additions">

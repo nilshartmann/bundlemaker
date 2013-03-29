@@ -52,6 +52,8 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
   @Override
   public void analysisModelModified() {
     setCurrentArtifactSelection(getCurrentArtifactSelection());
+
+    refreshFromCurrentArtifactSelection();
   }
 
   public void refreshFromCurrentArtifactSelection() {
@@ -70,31 +72,6 @@ public class ThreewayXRefView extends AbstractArtifactSelectionAwareEditorPart {
   @Override
   protected String getArtifactSelectionId() {
     return Selection.PROJECT_EXLPORER_SELECTION_ID;
-  }
-
-  @Override
-  protected void setCurrentArtifactSelection(IArtifactSelection event) {
-    //
-    // // do nothing if the root has not changed
-    // if (getCurrentArtifactSelection() != null && getCurrentArtifactSelection().hasSelectedArtifacts() && event !=
-    // null
-    // && event.hasSelectedArtifacts()
-    // && getCurrentArtifactSelection().getRootArtifact().equals(event.getRootArtifact())) {
-    //
-    // //
-    // return;
-    // }
-    //
-    // // call super
-    // super.setCurrentArtifactSelection(event);
-    //
-    // if (_composite != null) {
-    //
-    // //
-    // if (getCurrentArtifactSelection().hasSelectedArtifacts()) {
-    // _composite.setSelectedArtifacts(getCurrentArtifactSelection().getSelectedArtifacts());
-    // }
-    // }
   }
 
   @Override

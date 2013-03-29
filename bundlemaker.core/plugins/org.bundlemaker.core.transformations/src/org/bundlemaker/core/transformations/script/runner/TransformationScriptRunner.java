@@ -121,6 +121,7 @@ public class TransformationScriptRunner {
     final long scriptStart = System.currentTimeMillis();
 
     // Run the script
+    try {
     IRootArtifact.Factory.executeWithoutNotification(rootArtifact, new Callable<Void>() {
 
       @Override
@@ -129,15 +130,17 @@ public class TransformationScriptRunner {
         return null;
       }
     });
+    } catch (Exception ex) {
+      handleScriptException(context, ex);
+    }
 
     final long scriptDuration = System.currentTimeMillis() - scriptStart;
 
     logger.log("Executing Transformation Script took " + scriptDuration + "ms (" + (scriptDuration / 1000) + "s)");
   }
 
-  protected void handleScriptException(Exception ex) {
-    // TODO
-    ex.printStackTrace();
+  protected void handleScriptException(TransformationScriptContext context, final Exception ex) {
+    context.getLogger().log("TRANSFORMATION SCRIPT FAILED: " + ex, ex);
   }
 
   /**

@@ -96,7 +96,8 @@ public class JdtParser extends AbstractHookAwareJdtParser {
 
       // TODO
       if (projectContent.getProvider() instanceof JdtProjectContentProvider) {
-        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getJavaProject();
+        String root = resourceKey.getRoot();
+        IJavaProject javaProject = ((JdtProjectContentProvider) projectContent.getProvider()).getSourceJavaProject(projectContent, root);
         _parser.setProject(javaProject);
       } else {
       _parser.setProject(_javaProject);

@@ -27,7 +27,7 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
    */
   @Override
   public String getLabel(IBundleMakerProject bundleMakerProject) {
-    return "JDT Project (experimental)";
+    return "JDT Projects (experimental)";
   }
 
   /*
@@ -50,7 +50,7 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
    */
   @Override
   public String getDescription(IBundleMakerProject bundleMakerProject) {
-    return "Add a JDT project from your workspace";
+    return "Add JDT projects from your workspace";
   }
 
   /*
@@ -80,12 +80,13 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
       @Override
       public boolean performFinish() {
         IProject[] selectedProjects = _page.getSelectedProjects();
+        JdtProjectContentProvider provider = new JdtProjectContentProvider();
         for (IProject iProject : selectedProjects) {
-          JdtProjectContentProvider provider = new JdtProjectContentProvider();
+
           IJavaProject javaProject = JavaCore.create(iProject);
-          provider.setJavaProject(javaProject);
-          modifiableProjectDescription.addContentProvider(provider);
+          provider.addJavaProject(javaProject);
         }
+        modifiableProjectDescription.addContentProvider(provider);
         return true;
       }
     };

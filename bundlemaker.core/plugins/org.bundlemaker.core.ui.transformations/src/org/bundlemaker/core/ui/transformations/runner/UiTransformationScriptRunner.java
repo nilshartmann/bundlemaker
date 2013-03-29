@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.IModularizedSystem;
+import org.bundlemaker.core.transformations.script.runner.TransformationScriptContext;
 import org.bundlemaker.core.transformations.script.runner.TransformationScriptRunner;
 import org.bundlemaker.core.ui.transformations.Activator;
 import org.bundlemaker.core.ui.transformations.console.TransformationScriptConsoleFactory;
@@ -64,15 +65,10 @@ public class UiTransformationScriptRunner extends TransformationScriptRunner imp
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see
-   * org.bundlemaker.core.transformations.script.runner.TransformationScriptRunner#handleScriptException(java.lang.Exception
-   * )
-   */
   @Override
-  protected void handleScriptException(final Exception ex) {
+  protected void handleScriptException(TransformationScriptContext context, final Exception ex) {
+    // Log Exception to Script Log
+    super.handleScriptException(context, ex);
 
     //
     Activator

@@ -10,5 +10,14 @@
             class="org.bundlemaker.core.jdt.internal.parser.JdtParserFactory">
       </parserfactory>
    </extension>
+   
+   <extension
+         id="org.bundlemaker.core.projectdescription.file.FileBasedContentProvider"
+         point="org.bundlemaker.core.projectcontentprovider">
+      <projectContentProvider
+      	    id="org.bundlemaker.core.projectcontentprovider.jdt"
+            class="org.bundlemaker.core.jdt.content.JdtProjectContentProvider" />
+   </extension>
+      
 
 </plugin>
