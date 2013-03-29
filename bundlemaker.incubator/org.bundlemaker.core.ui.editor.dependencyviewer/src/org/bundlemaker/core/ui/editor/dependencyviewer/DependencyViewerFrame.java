@@ -29,7 +29,9 @@ import com.mxgraph.layout.mxIGraphLayout;
 import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxStylesheet;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -51,6 +53,25 @@ public class DependencyViewerFrame {
     _graph.setCellsBendable(false);
     _graph.setCellsEditable(false);
 
+    // Styles
+    mxStylesheet stylesheet = _graph.getStylesheet();
+    Hashtable<String, Object> style = new Hashtable<String, Object>();
+    style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+    style.put(mxConstants.STYLE_OPACITY, 50);
+    style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+    style.put(mxConstants.STYLE_FILLCOLOR, "#FFEAB2");
+    style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64"); // "#D1AE54");
+    style.put(mxConstants.STYLE_STROKEWIDTH, "1");
+    style.put(mxConstants.STYLE_FONTSIZE, "12");
+    stylesheet.putCellStyle("BUNDLEMAKER_VERTEX", style);
+
+    style = new Hashtable<String, Object>();
+    style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+    style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64"); // "#D1AE54");
+    style.put(mxConstants.STYLE_STROKEWIDTH, "1");
+    stylesheet.putCellStyle("BUNDLEMAKER_EDGE", style);
+
+    // Layout
     _graphLayout = new mxCircleLayout(_graph);
 
     _graphComponent = new mxGraphComponent(_graph);
@@ -84,7 +105,8 @@ public class DependencyViewerFrame {
       for (IBundleMakerArtifact iBundleMakerArtifact : effectiveSelectedArtifacts) {
         System.out.println("Add iBundleMakerArtifact: " + iBundleMakerArtifact);
         if (!vertexCache.containsKey(iBundleMakerArtifact)) {
-          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact.getName(), 10, 10, 10, 10);
+          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact.getName(), 10, 10, 10, 10,
+              "BUNDLEMAKER_VERTEX");
           _graph.updateCellSize(vertex);
           vertexCache.put(iBundleMakerArtifact, vertex);
         }
@@ -107,7 +129,7 @@ public class DependencyViewerFrame {
           }
 
           Object toVertex = vertexCache.get(to);
-          _graph.insertEdge(parent, null, direction, fromVertex, toVertex);
+          _graph.insertEdge(parent, null, direction, fromVertex, toVertex, "BUNDLEMAKER_EDGE");
         }
       }
 
