@@ -14,6 +14,7 @@ package org.bundlemaker.core.ui.editor.dependencyviewer.graph;
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Collection;
@@ -22,8 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
@@ -75,6 +78,20 @@ public class DependencyViewerGraph {
   protected JPanel createToolBar() {
     JPanel panel = new JPanel();
 
+    Vector<GraphLayout> layouts = Layouts.createLayouts(_graphComponent);
+
+    final JComboBox comboBox = new JComboBox(layouts);
+    comboBox.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent event) {
+        GraphLayout newLayout = (GraphLayout) comboBox.getSelectedItem();
+        System.out.println("newLayout: " + newLayout);
+        _graphLayout = newLayout.getLayout();
+        DependencyViewerGraph.this.layoutGraph();
+      }
+    });
+    panel.add(comboBox);
     return panel;
 
   }
@@ -167,11 +184,15 @@ public class DependencyViewerGraph {
       // _graph.insertEdge(parent, null, "World->BundleMaker", v2, v3);
       // _graph.insertEdge(parent, null, "BundleMaker->Hello", v3, v1);
 
-      _graphLayout.execute(_graph.getDefaultParent());
+      layoutGraph();
 
     } finally {
       model.endUpdate();
     }
+  }
+
+  protected void layoutGraph() {
+    _graphLayout.execute(_graph.getDefaultParent());
   }
 
   protected void setLayout(mxIGraphLayout layout) {

@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.editor.dependencyviewer.graph.DependencyViewerGraph;
 import org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
