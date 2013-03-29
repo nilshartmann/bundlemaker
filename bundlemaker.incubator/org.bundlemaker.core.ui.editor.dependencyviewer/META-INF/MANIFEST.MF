@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BundleMaker Dependency Viewer
+Bundle-SymbolicName: org.bundlemaker.core.ui.editor.dependencyviewer;singleton:=true
+Bundle-Version: 0.10.0.qualifier
+Bundle-Activator: org.bundlemaker.core.ui.editor.dependencyviewer.Activator
+Bundle-Vendor: BundleMaker Development Team
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.draw2d;bundle-version="3.6.0",
+ org.bundlemaker.core;bundle-version="0.10.0",
+ org.bundlemaker.core.ui;bundle-version="0.10.0",
+ org.bundlemaker.core.ui.event;bundle-version="0.10.0",
+ org.bundlemaker.core.ui.print;bundle-version="0.10.0",
+ org.eclipse.zest.core;bundle-version="2.0.0",
+ org.eclipse.zest.layouts;bundle-version="2.0.0",
+ org.bundlemaker.core.ui.artifact;bundle-version="0.10.0",
+ org.eclipse.zest.jface;bundle-version="2.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy

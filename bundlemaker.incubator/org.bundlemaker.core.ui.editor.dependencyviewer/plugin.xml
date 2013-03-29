@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<!-- Command -->
+   <extension point="org.eclipse.ui.commands">
+      <command id="org.bundlemaker.core.ui.editor.dependencyviewer.OpenDependencyViewerCommand" name="Open Dependency Viewer"/>
+   </extension>
+
+   <extension point="org.eclipse.ui.handlers">
+      <handler class="org.bundlemaker.core.ui.editor.dependencyviewer.OpenDependencyViewerHandler"
+         commandId="org.bundlemaker.core.ui.editor.dependencyviewer.OpenDependencyViewerCommand">
+         <activeWhen>
+            <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+            > </reference>
+         </activeWhen>
+         <enabledWhen>
+            <reference definitionId="org.bundlemaker.analysis.ui.artifactContentSelected"
+            > </reference>
+         </enabledWhen>
+      </handler>
+   </extension>
+
+   <!-- Submenu -->
+   <extension point="org.eclipse.ui.menus">
+      <menuContribution
+         locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
+         <command commandId="org.bundlemaker.core.ui.editor.dependencyviewer.OpenDependencyViewerCommand" style="push">
+            <visibleWhen checkEnabled="true"/>
+         </command>
+      </menuContribution>
+   </extension>
+
+   <!-- Editor -->
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor"
+            default="false"
+            id="org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewer"
+            name="Dependency Viewer"> </editor>
+   </extension>
+
+
+</plugin>
