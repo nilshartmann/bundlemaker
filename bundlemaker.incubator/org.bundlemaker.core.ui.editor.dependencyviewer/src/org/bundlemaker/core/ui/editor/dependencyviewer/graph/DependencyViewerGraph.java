@@ -20,6 +20,7 @@ import java.awt.event.MouseWheelListener;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,6 +32,7 @@ import javax.swing.JPanel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.util.collections.GenericCache;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.layout.mxIGraphLayout;
@@ -47,13 +49,28 @@ import com.mxgraph.view.mxStylesheet;
  */
 public class DependencyViewerGraph {
 
-  private final Map<IBundleMakerArtifact, Object> vertexCache = new Hashtable<IBundleMakerArtifact, Object>();
+  private final static String                                    BUNDLEMAKER_VERTEX_STYLE        = "BUNDLEMAKER_VERTEX";
 
-  private mxGraphComponent                        _graphComponent;
+  private final static String                                    BUNDLEMAKER_EDGE_STYLE          = "BUNDLEMAKER_EDGE";
 
-  private mxGraph                                 _graph;
+  private final static String                                    BUNDLEMAKER_CIRCULAR_EDGE_STYLE = "BUNDLEMAKER_CIRCULAR_EDGE";
 
-  private mxIGraphLayout                          _graphLayout;
+  private final Map<IBundleMakerArtifact, Object>                _vertexCache                    = new Hashtable<IBundleMakerArtifact, Object>();
+
+  private final GenericCache<IBundleMakerArtifact, List<Object>> _edgeCache                      = new GenericCache<IBundleMakerArtifact, List<Object>>() {
+
+                                                                                                   @Override
+                                                                                                   protected List<Object> create(
+                                                                                                       IBundleMakerArtifact key) {
+                                                                                                     return new LinkedList<Object>();
+                                                                                                   }
+                                                                                                 };
+
+  private mxGraphComponent                                       _graphComponent;
+
+  private mxGraph                                                _graph;
+
+  private mxIGraphLayout                                         _graphLayout;
 
   public void create(Frame parentFrame) {
 
@@ -66,6 +83,7 @@ public class DependencyViewerGraph {
 
     _graphComponent = new mxGraphComponent(_graph);
     _graphComponent.setConnectable(false);
+    _graphComponent.setToolTips(true);
     _graphComponent.addMouseWheelListener(_wheelTracker);
 
     parentFrame.setLayout(new BorderLayout());
@@ -97,7 +115,48 @@ public class DependencyViewerGraph {
   }
 
   protected mxGraph createGraph() {
-    mxGraph graph = new mxGraph();
+    mxGraph graph = new mxGraph() {
+
+      /*
+       * (non-Javadoc)
+       * 
+       * @see com.mxgraph.view.mxGraph#getToolTipForCell(java.lang.Object)
+       */
+      @Override
+      public String getToolTipForCell(Object cell) {
+        Object cellValue = model.getValue(cell);
+        if (cellValue instanceof IBundleMakerArtifact) {
+          return ((IBundleMakerArtifact) cellValue).getQualifiedName();
+        }
+        if (cellValue instanceof IDependency) {
+          IDependency dependency = (IDependency) cellValue;
+
+          String string = "<html>" + dependency.getFrom().getName() + " -> " + dependency.getTo() + ": "
+              + dependency.getWeight();
+
+          IDependency dependencyTo = dependency.getTo().getDependencyTo(dependency.getFrom());
+          if (dependencyTo != null) {
+            string += "<br/>" + dependencyTo.getFrom().getName() + " -> " + dependencyTo.getTo() + ": "
+                + dependencyTo.getWeight();
+          }
+
+          return string + "</html>";
+        }
+        return super.getToolTipForCell(cell);
+      }
+
+      @Override
+      public String convertValueToString(Object cell) {
+        Object result = model.getValue(cell);
+
+        if (result instanceof IBundleMakerArtifact) {
+          return ((IBundleMakerArtifact) result).getName();
+        }
+
+        return super.convertValueToString(cell);
+      }
+
+    };
 
     // Configure Graph
     graph.setCellsDisconnectable(false);
@@ -117,16 +176,25 @@ public class DependencyViewerGraph {
     style.put(mxConstants.STYLE_OPACITY, 50);
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_FILLCOLOR, "#FFEAB2");
-    style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64"); // "#D1AE54");
+    style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     style.put(mxConstants.STYLE_FONTSIZE, "12");
     stylesheet.putCellStyle("BUNDLEMAKER_VERTEX", style);
 
     style = new Hashtable<String, Object>();
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
-    style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64"); // "#D1AE54");
+    style.put(mxConstants.STYLE_STROKECOLOR, "#FFEAB2");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
+    style.put(mxConstants.STYLE_NOLABEL, "1");
     stylesheet.putCellStyle("BUNDLEMAKER_EDGE", style);
+
+    style = new Hashtable<String, Object>();
+    style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
+    style.put(mxConstants.STYLE_STROKECOLOR, "#B85E3D");
+    style.put(mxConstants.STYLE_STROKEWIDTH, "1");
+    style.put(mxConstants.STYLE_NOLABEL, "1");
+    stylesheet.putCellStyle("BUNDLEMAKER_CIRCULAR_EDGE", style);
+
   }
 
   /**
@@ -139,29 +207,44 @@ public class DependencyViewerGraph {
     model.beginUpdate();
 
     try {
-      Iterator<Entry<IBundleMakerArtifact, Object>> iterator = vertexCache.entrySet().iterator();
+      Iterator<Entry<IBundleMakerArtifact, Object>> iterator = _vertexCache.entrySet().iterator();
 
       while (iterator.hasNext()) {
         Entry<IBundleMakerArtifact, Object> entry = iterator.next();
-        if (!effectiveSelectedArtifacts.contains(entry.getKey())) {
+        IBundleMakerArtifact artifact = entry.getKey();
+        if (!effectiveSelectedArtifacts.contains(artifact)) {
+          // Artifact is not longer part of selection => remove it...
+
+          // from model
           model.remove(entry.getValue());
+
+          // from vertex edge cache
           iterator.remove();
+
+          // from vertex cache
+          List<Object> edges = _edgeCache.remove(artifact);
+          if (edges != null) {
+            for (Object edge : edges) {
+              model.remove(edge);
+            }
+          }
+
         }
       }
 
       for (IBundleMakerArtifact iBundleMakerArtifact : effectiveSelectedArtifacts) {
         System.out.println("Add iBundleMakerArtifact: " + iBundleMakerArtifact);
-        if (!vertexCache.containsKey(iBundleMakerArtifact)) {
-          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact.getName(), 10, 10, 10, 10,
-              "BUNDLEMAKER_VERTEX");
+        if (!_vertexCache.containsKey(iBundleMakerArtifact)) {
+          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact, 10, 10, 10, 10,
+              BUNDLEMAKER_VERTEX_STYLE);
           _graph.updateCellSize(vertex);
-          vertexCache.put(iBundleMakerArtifact, vertex);
+          _vertexCache.put(iBundleMakerArtifact, vertex);
         }
       }
 
       for (IBundleMakerArtifact from : effectiveSelectedArtifacts) {
         Collection<IDependency> dependenciesTo = from.getDependenciesTo(effectiveSelectedArtifacts);
-        Object fromVertex = vertexCache.get(from);
+        Object fromVertex = _vertexCache.get(from);
         for (IDependency iDependency : dependenciesTo) {
           IBundleMakerArtifact to = iDependency.getTo();
 
@@ -169,20 +252,15 @@ public class DependencyViewerGraph {
             continue;
           }
 
-          String direction = from.getName() + " -> " + to.getName();
+          String style = from.getDependenciesFrom(to).isEmpty() ? BUNDLEMAKER_EDGE_STYLE
+              : BUNDLEMAKER_CIRCULAR_EDGE_STYLE;
 
-          if (!from.getDependenciesFrom(to).isEmpty()) {
-            direction = "";
-          }
-
-          Object toVertex = vertexCache.get(to);
-          _graph.insertEdge(parent, null, direction, fromVertex, toVertex, "BUNDLEMAKER_EDGE");
+          Object toVertex = _vertexCache.get(to);
+          Object newEdge = _graph.insertEdge(parent, null, iDependency, fromVertex, toVertex, style);
+          _edgeCache.getOrCreate(to).add(newEdge);
+          _edgeCache.getOrCreate(from).add(newEdge);
         }
       }
-
-      // _graph.insertEdge(parent, null, "Hello->World", v1, v2);
-      // _graph.insertEdge(parent, null, "World->BundleMaker", v2, v3);
-      // _graph.insertEdge(parent, null, "BundleMaker->Hello", v3, v1);
 
       layoutGraph();
 
