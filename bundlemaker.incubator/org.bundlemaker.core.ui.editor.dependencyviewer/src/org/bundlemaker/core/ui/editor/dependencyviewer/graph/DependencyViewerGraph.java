@@ -33,12 +33,14 @@ import javax.swing.JPanel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
+import org.bundlemaker.core.analysis.IRootArtifact;
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStage;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
+import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
 import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
@@ -80,6 +82,8 @@ public class DependencyViewerGraph {
   private Display                                 _display;
 
   private UnstageAction                           _unstageAction;
+
+  private ArtifactPathLabelGenerator              _labelGenerator                 = new ArtifactPathLabelGenerator();
 
   /**
    * Should the graph be re-layouted after artifacts have been added or removed?
@@ -145,7 +149,9 @@ public class DependencyViewerGraph {
       public String getToolTipForCell(Object cell) {
         Object cellValue = model.getValue(cell);
         if (cellValue instanceof IBundleMakerArtifact) {
-          return ((IBundleMakerArtifact) cellValue).getQualifiedName();
+          IBundleMakerArtifact artifact = (IBundleMakerArtifact) cellValue;
+          return _labelGenerator.getLabel(artifact);
+          // return ((IBundleMakerArtifact) cellValue).getQualifiedName();
         }
         if (cellValue instanceof IDependency) {
           IDependency dependency = (IDependency) cellValue;
@@ -237,6 +243,13 @@ public class DependencyViewerGraph {
     Object parent = _graph.getDefaultParent();
 
     mxIGraphModel model = _graph.getModel();
+
+    if (effectiveSelectedArtifacts.size() > 0) {
+      IBundleMakerArtifact anArtifact = effectiveSelectedArtifacts.get(0);
+      IRootArtifact root = anArtifact.getRoot();
+      _labelGenerator.setBaseArtifact(root);
+    }
+
     model.beginUpdate();
 
     try {
@@ -266,7 +279,6 @@ public class DependencyViewerGraph {
       }
 
       for (IBundleMakerArtifact iBundleMakerArtifact : effectiveSelectedArtifacts) {
-        System.out.println("Add iBundleMakerArtifact: " + iBundleMakerArtifact);
         if (!_vertexCache.containsKey(iBundleMakerArtifact)) {
 
           String style = BUNDLEMAKER_VERTEX_STYLE;
