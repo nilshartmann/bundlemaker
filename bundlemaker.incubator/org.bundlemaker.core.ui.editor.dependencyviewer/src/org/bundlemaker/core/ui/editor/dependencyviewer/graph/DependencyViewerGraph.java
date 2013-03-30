@@ -28,15 +28,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
 import org.bundlemaker.core.util.collections.GenericCache;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 import com.mxgraph.layout.mxCircleLayout;
@@ -144,6 +145,23 @@ public class DependencyViewerGraph {
       }
     });
     panel.add(comboBox);
+    // mxImageBundle bundle = new mxImageBundle();
+    // JButton button = new JButton(new AbstractAction("Selection") {
+    //
+    // @Override
+    // public void actionPerformed(ActionEvent arg0) {
+    // Object[] selectionCells = _graph.getSelectionCells();
+    // System.out.println("Selection Cells:");
+    // if (selectionCells != null) {
+    // for (Object object : selectionCells) {
+    // System.out.println(" * " + object);
+    // }
+    // }
+    // }
+    //
+    // });
+    // panel.add(button);
+
     return panel;
 
   }
@@ -207,7 +225,8 @@ public class DependencyViewerGraph {
     mxStylesheet stylesheet = _graph.getStylesheet();
 
     Hashtable<String, Object> style = new Hashtable<String, Object>();
-    style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_RECTANGLE);
+    style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_LABEL);
+    style.put(mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
     style.put(mxConstants.STYLE_OPACITY, 50);
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_FILLCOLOR, "#FFEAB2");
@@ -221,6 +240,7 @@ public class DependencyViewerGraph {
     style.put(mxConstants.STYLE_STROKECOLOR, "#FFEAB2");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     style.put(mxConstants.STYLE_NOLABEL, "1");
+    // style.put(mxConstants.STYLE_BENDABLE, "1");
     stylesheet.putCellStyle("BUNDLEMAKER_EDGE", style);
 
     style = new Hashtable<String, Object>();
@@ -270,8 +290,17 @@ public class DependencyViewerGraph {
       for (IBundleMakerArtifact iBundleMakerArtifact : effectiveSelectedArtifacts) {
         System.out.println("Add iBundleMakerArtifact: " + iBundleMakerArtifact);
         if (!_vertexCache.containsKey(iBundleMakerArtifact)) {
-          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact, 10, 10, 10, 10,
-              BUNDLEMAKER_VERTEX_STYLE);
+
+          String style = BUNDLEMAKER_VERTEX_STYLE;
+          ArtifactImages image = ArtifactImages.forArtifact(iBundleMakerArtifact);
+          style += ";image=" + image.getImageUrl();
+          Rectangle bounds = image.getImage().getBounds();
+          style += ";imageWidth=" + bounds.width;
+          style += ";imageWidth=" + bounds.height;
+          style += ";imageVerticalAlign=center;fontStyle=1;" + "verticalAlign=top;spacingLeft=" + (bounds.width + 15)
+              + ";spacingTop=2;imageAlign=left;align=top;spacingRight=5"; // +
+
+          Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact, 10, 10, 10, 10, style);
           _graph.updateCellSize(vertex);
           _vertexCache.put(iBundleMakerArtifact, vertex);
         }
@@ -305,29 +334,12 @@ public class DependencyViewerGraph {
   }
 
   protected void layoutGraph() {
-    _graphLayout.execute(_graph.getDefaultParent());
-  }
-
-  class LayoutAction extends AbstractAction {
-
-    private final mxIGraphLayout _layout;
-
-    LayoutAction(mxIGraphLayout layout, String title) {
-      super(title);
-
-      _layout = layout;
+    _graph.getModel().beginUpdate();
+    try {
+      _graphLayout.execute(_graph.getDefaultParent());
+    } finally {
+      _graph.getModel().endUpdate();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-    }
-
   }
 
   MouseWheelListener _wheelTracker = new MouseWheelListener() {
