@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -127,6 +128,11 @@ public class DependencyViewerGraph {
       }
     });
     comboBoxPanel.add(comboBox);
+
+    // Zoom Action
+    comboBoxPanel.add(new JButton(new ZoomAction("-", "Zoom out (Ctrl+Mouse Wheel)")));
+    comboBoxPanel.add(new JButton(new ZoomAction("0", "Reset zoom")));
+    comboBoxPanel.add(new JButton(new ZoomAction("+", "Zoom in (Ctrl+Mouse Wheel)")));
 
     // UnstageButton
     _unstageAction = new UnstageAction();
@@ -459,6 +465,31 @@ public class DependencyViewerGraph {
     public void artifactStateChanged(ArtifactStageChangedEvent event) {
       refreshEnablement();
     }
+  }
+
+  class ZoomAction extends AbstractAction {
+    private static final long serialVersionUID = 1L;
+
+    public ZoomAction(String text, String tooltipText) {
+      super(text);
+      putValue(Action.SHORT_DESCRIPTION, tooltipText);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+
+      Object name = getValue(Action.NAME);
+
+      if ("+".equals(name)) {
+        _graphComponent.zoomIn();
+      } else if ("-".equals(name)) {
+        _graphComponent.zoomOut();
+      } else {
+        _graphComponent.zoomActual();
+      }
+
+    }
+
   }
 
   /**
