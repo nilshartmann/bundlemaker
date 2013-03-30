@@ -78,6 +78,18 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
   /*
    * (non-Javadoc)
    * 
+   * @see org.bundlemaker.core.ui.event.selection.workbench.editor.AbstractArtifactSelectionAwareEditorPart#dispose()
+   */
+  @Override
+  public void dispose() {
+    super.dispose();
+
+    _dependencyViewerFrame.dispose();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
    */
   @Override

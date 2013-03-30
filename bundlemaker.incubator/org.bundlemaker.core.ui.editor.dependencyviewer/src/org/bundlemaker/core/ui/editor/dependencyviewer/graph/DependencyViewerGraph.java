@@ -28,12 +28,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IDependency;
 import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
+import org.bundlemaker.core.selection.stage.IArtifactStage;
+import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -46,6 +51,9 @@ import com.mxgraph.model.mxIGraphModel;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.swing.mxGraphOutline;
 import com.mxgraph.util.mxConstants;
+import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventObject;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 import com.mxgraph.view.mxStylesheet;
 
@@ -80,6 +88,13 @@ public class DependencyViewerGraph {
 
   private Display                                                _display;
 
+  private UnstageAction                                          _unstageAction;
+
+  /**
+   * Should the graph be re-layouted after artifacts have been added or removed?
+   */
+  private boolean                                                _doLayoutAfterArtifactsChange   = true;
+
   public void create(Frame parentFrame, Display display) {
 
     _display = display;
@@ -93,7 +108,7 @@ public class DependencyViewerGraph {
     _graphComponent = new mxGraphComponent(_graph);
     _graphComponent.setConnectable(false);
     _graphComponent.setToolTips(true);
-    _graphComponent.addMouseWheelListener(_wheelTracker);
+    _graphComponent.addMouseWheelListener(new ZoomMouseWheelListener());
 
     _graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
 
@@ -145,7 +160,10 @@ public class DependencyViewerGraph {
       }
     });
     panel.add(comboBox);
-    // mxImageBundle bundle = new mxImageBundle();
+
+    _unstageAction = new UnstageAction();
+    panel.add(new JButton(_unstageAction));
+
     // JButton button = new JButton(new AbstractAction("Selection") {
     //
     // @Override
@@ -164,6 +182,12 @@ public class DependencyViewerGraph {
 
     return panel;
 
+  }
+
+  public void dispose() {
+    if (_unstageAction != null) {
+      _unstageAction.dispose();
+    }
   }
 
   protected mxGraph createGraph() {
@@ -210,6 +234,15 @@ public class DependencyViewerGraph {
 
     };
 
+    graph.getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
+
+      @Override
+      public void invoke(Object sender, mxEventObject evt) {
+
+        cellSelectionChanged();
+
+      }
+    });
     // Configure Graph
     graph.setCellsDisconnectable(false);
     graph.setConnectableEdges(false);
@@ -326,11 +359,51 @@ public class DependencyViewerGraph {
         }
       }
 
-      layoutGraph();
+      if (_doLayoutAfterArtifactsChange) {
+        layoutGraph();
+      }
 
     } finally {
       model.endUpdate();
     }
+  }
+
+  protected void cellSelectionChanged() {
+
+    Object[] cells = _graph.getSelectionCells();
+
+    final List<IBundleMakerArtifact> selectedArtifacts = new LinkedList<IBundleMakerArtifact>();
+    final List<IDependency> selectedDependencies = new LinkedList<IDependency>();
+
+    for (Object cell : cells) {
+
+      Object value = _graph.getModel().getValue(cell);
+
+      if (value instanceof IDependency) {
+        IDependency dependency = (IDependency) value;
+        selectedDependencies.add(dependency);
+      } else if (value instanceof IBundleMakerArtifact) {
+        IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) value;
+        selectedArtifacts.add(bundleMakerArtifact);
+      }
+    }
+
+    if (!selectedDependencies.isEmpty()) {
+      runInSwt(new Runnable() {
+
+        @Override
+        public void run() {
+          Selection
+              .instance()
+              .getDependencySelectionService()
+              .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DependencyViewerEditor.DEPENDENCY_VIEWER_EDITOR_ID,
+                  selectedDependencies);
+        }
+      });
+    }
+
+    _unstageAction.setUnstageCandidates(selectedArtifacts);
+
   }
 
   protected void layoutGraph() {
@@ -342,18 +415,100 @@ public class DependencyViewerGraph {
     }
   }
 
-  MouseWheelListener _wheelTracker = new MouseWheelListener() {
-                                     @Override
-                                     public void mouseWheelMoved(MouseWheelEvent e) {
-                                       if (e.getSource() instanceof mxGraphOutline || e.isControlDown()) {
-                                         if (e.getWheelRotation() < 0) {
-                                           _graphComponent.zoomIn();
-                                         } else {
-                                           _graphComponent.zoomOut();
-                                         }
+  protected IArtifactStage getArtifactStage() {
+    return Selection.instance().getArtifactStage();
+  }
 
-                                       }
-                                     }
-                                   };
+  protected void runInSwt(final Runnable runnable) {
+    _display.asyncExec(runnable);
+  }
+
+  class UnstageAction extends AbstractAction implements Runnable, IArtifactStageChangeListener {
+
+    private static final long          serialVersionUID = 1L;
+
+    private List<IBundleMakerArtifact> _unstageCandidates;
+
+    public UnstageAction() {
+      super("Unstage");
+
+      getArtifactStage().addArtifactStageChangeListener(this);
+
+      refreshEnablement();
+    }
+
+    /**
+     * @param selectedArtifacts
+     */
+    public void setUnstageCandidates(List<IBundleMakerArtifact> selectedArtifacts) {
+      _unstageCandidates = selectedArtifacts;
+
+      refreshEnablement();
+    }
+
+    /**
+     * 
+     */
+    public void dispose() {
+      getArtifactStage().removeArtifactStageChangeListener(this);
+    }
+
+    protected void refreshEnablement() {
+      if (getArtifactStage().getAddMode().isAutoAddMode()) {
+        setEnabled(false);
+        return;
+      }
+
+      setEnabled(_unstageCandidates != null && _unstageCandidates.size() > 0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+
+      runInSwt(this);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Runnable#run()
+     */
+    @Override
+    public void run() {
+      try {
+        DependencyViewerGraph.this._doLayoutAfterArtifactsChange = false;
+
+        getArtifactStage().removeStagedArtifacts(_unstageCandidates);
+      } finally {
+        DependencyViewerGraph.this._doLayoutAfterArtifactsChange = true;
+
+      }
+    }
+
+    @Override
+    public void artifactStateChanged(ArtifactStageChangedEvent event) {
+      refreshEnablement();
+    }
+  }
+
+  class ZoomMouseWheelListener implements MouseWheelListener {
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+      if (e.getSource() instanceof mxGraphOutline || e.isControlDown()) {
+        if (e.getWheelRotation() < 0) {
+          _graphComponent.zoomIn();
+        } else {
+          _graphComponent.zoomOut();
+        }
+
+      }
+    }
+  };
 
 }
