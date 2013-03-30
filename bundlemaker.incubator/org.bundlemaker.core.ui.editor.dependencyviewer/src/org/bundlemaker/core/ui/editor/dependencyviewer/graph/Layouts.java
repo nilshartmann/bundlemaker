@@ -34,7 +34,8 @@ public class Layouts {
     Vector<GraphLayout> layouts = new Vector<GraphLayout>();
     mxGraph graph = graphComponent.getGraph();
 
-    layouts.add(new GraphLayout("Vertical Hierarchical", new mxHierarchicalLayout(graph)));
+    mxHierarchicalLayout hierarchicalLayout = new mxHierarchicalLayout(graph);
+    layouts.add(new GraphLayout("Vertical Hierarchical", hierarchicalLayout));
     layouts.add(new GraphLayout("Horizontal Hierarchical", new mxHierarchicalLayout(graph, JLabel.WEST)));
     // layouts.add(new GraphLayout("Vertical Tree", new mxCompactTreeLayout(graph, false)));
     // layouts.add(new GraphLayout("Horizontal Tree", new mxCompactTreeLayout(graph, true)));
@@ -74,7 +75,9 @@ public class Layouts {
     // }
     // }));
 
-    layouts.add(new GraphLayout("Circle Layout", new mxCircleLayout(graph)));
+    mxCircleLayout circleLayout = new mxCircleLayout(graph);
+    circleLayout.setResetEdges(true);
+    layouts.add(new GraphLayout("Circle Layout", circleLayout));
 
     Collections.sort(layouts);
 
