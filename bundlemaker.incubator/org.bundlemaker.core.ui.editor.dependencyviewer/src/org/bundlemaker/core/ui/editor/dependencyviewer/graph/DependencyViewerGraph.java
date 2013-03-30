@@ -15,8 +15,6 @@ import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Collection;
@@ -63,37 +61,30 @@ import com.mxgraph.view.mxStylesheet;
  */
 public class DependencyViewerGraph {
 
-  private final static String                                    BUNDLEMAKER_VERTEX_STYLE        = "BUNDLEMAKER_VERTEX";
+  private final static String                     BUNDLEMAKER_VERTEX_STYLE        = "BUNDLEMAKER_VERTEX";
 
-  private final static String                                    BUNDLEMAKER_EDGE_STYLE          = "BUNDLEMAKER_EDGE";
+  private final static String                     BUNDLEMAKER_EDGE_STYLE          = "BUNDLEMAKER_EDGE";
 
-  private final static String                                    BUNDLEMAKER_CIRCULAR_EDGE_STYLE = "BUNDLEMAKER_CIRCULAR_EDGE";
+  private final static String                     BUNDLEMAKER_CIRCULAR_EDGE_STYLE = "BUNDLEMAKER_CIRCULAR_EDGE";
 
-  private final Map<IBundleMakerArtifact, Object>                _vertexCache                    = new Hashtable<IBundleMakerArtifact, Object>();
+  private final Map<IBundleMakerArtifact, Object> _vertexCache                    = new Hashtable<IBundleMakerArtifact, Object>();
 
-  private final GenericCache<IBundleMakerArtifact, List<Object>> _edgeCache                      = new GenericCache<IBundleMakerArtifact, List<Object>>() {
+  private final EdgeCache                         _edgeCache                      = new EdgeCache();
 
-                                                                                                   @Override
-                                                                                                   protected List<Object> create(
-                                                                                                       IBundleMakerArtifact key) {
-                                                                                                     return new LinkedList<Object>();
-                                                                                                   }
-                                                                                                 };
+  private mxGraphComponent                        _graphComponent;
 
-  private mxGraphComponent                                       _graphComponent;
+  private mxGraph                                 _graph;
 
-  private mxGraph                                                _graph;
+  private mxIGraphLayout                          _graphLayout;
 
-  private mxIGraphLayout                                         _graphLayout;
+  private Display                                 _display;
 
-  private Display                                                _display;
-
-  private UnstageAction                                          _unstageAction;
+  private UnstageAction                           _unstageAction;
 
   /**
    * Should the graph be re-layouted after artifacts have been added or removed?
    */
-  private boolean                                                _doLayoutAfterArtifactsChange   = true;
+  private boolean                                 _doLayoutAfterArtifactsChange   = true;
 
   public void create(Frame parentFrame, Display display) {
 
@@ -110,77 +101,34 @@ public class DependencyViewerGraph {
     _graphComponent.setToolTips(true);
     _graphComponent.addMouseWheelListener(new ZoomMouseWheelListener());
 
-    _graphComponent.getGraphControl().addMouseListener(new MouseAdapter() {
-
-      @Override
-      public void mouseReleased(MouseEvent e) {
-        Object cell = _graphComponent.getCellAt(e.getX(), e.getY());
-
-        if (cell != null) {
-          Object value = _graph.getModel().getValue(cell);
-          if (value instanceof IDependency) {
-            final IDependency dependency = (IDependency) value;
-            _display.syncExec(new Runnable() {
-
-              @Override
-              public void run() {
-                Selection
-                    .instance()
-                    .getDependencySelectionService()
-                    .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID,
-                        DependencyViewerEditor.DEPENDENCY_VIEWER_EDITOR_ID, dependency);
-              }
-            });
-          }
-        }
-      }
-    });
-
+    // Populate the frame
     parentFrame.setLayout(new BorderLayout());
-
     parentFrame.add(createToolBar(), BorderLayout.NORTH);
-
     parentFrame.add(_graphComponent, BorderLayout.CENTER);
   }
 
   protected JPanel createToolBar() {
-    JPanel panel = new JPanel();
+    JPanel comboBoxPanel = new JPanel();
 
+    // Layout Selector
     Vector<GraphLayout> layouts = Layouts.createLayouts(_graphComponent);
-
     final JComboBox comboBox = new JComboBox(layouts);
     comboBox.addActionListener(new ActionListener() {
 
       @Override
       public void actionPerformed(ActionEvent event) {
         GraphLayout newLayout = (GraphLayout) comboBox.getSelectedItem();
-        System.out.println("newLayout: " + newLayout);
         _graphLayout = newLayout.getLayout();
         DependencyViewerGraph.this.layoutGraph();
       }
     });
-    panel.add(comboBox);
+    comboBoxPanel.add(comboBox);
 
+    // UnstageButton
     _unstageAction = new UnstageAction();
-    panel.add(new JButton(_unstageAction));
+    comboBoxPanel.add(new JButton(_unstageAction));
 
-    // JButton button = new JButton(new AbstractAction("Selection") {
-    //
-    // @Override
-    // public void actionPerformed(ActionEvent arg0) {
-    // Object[] selectionCells = _graph.getSelectionCells();
-    // System.out.println("Selection Cells:");
-    // if (selectionCells != null) {
-    // for (Object object : selectionCells) {
-    // System.out.println(" * " + object);
-    // }
-    // }
-    // }
-    //
-    // });
-    // panel.add(button);
-
-    return panel;
+    return comboBoxPanel;
 
   }
 
@@ -193,11 +141,6 @@ public class DependencyViewerGraph {
   protected mxGraph createGraph() {
     mxGraph graph = new mxGraph() {
 
-      /*
-       * (non-Javadoc)
-       * 
-       * @see com.mxgraph.view.mxGraph#getToolTipForCell(java.lang.Object)
-       */
       @Override
       public String getToolTipForCell(Object cell) {
         Object cellValue = model.getValue(cell);
@@ -234,15 +177,15 @@ public class DependencyViewerGraph {
 
     };
 
+    // listener for cell selection changes
     graph.getSelectionModel().addListener(mxEvent.CHANGE, new mxIEventListener() {
 
       @Override
       public void invoke(Object sender, mxEventObject evt) {
-
         cellSelectionChanged();
-
       }
     });
+
     // Configure Graph
     graph.setCellsDisconnectable(false);
     graph.setConnectableEdges(false);
@@ -257,6 +200,7 @@ public class DependencyViewerGraph {
     // Styles
     mxStylesheet stylesheet = _graph.getStylesheet();
 
+    // Base style for an Artifact
     Hashtable<String, Object> style = new Hashtable<String, Object>();
     style.put(mxConstants.STYLE_SHAPE, mxConstants.SHAPE_LABEL);
     style.put(mxConstants.STYLE_IMAGE_ALIGN, mxConstants.ALIGN_LEFT);
@@ -268,14 +212,15 @@ public class DependencyViewerGraph {
     style.put(mxConstants.STYLE_FONTSIZE, "12");
     stylesheet.putCellStyle("BUNDLEMAKER_VERTEX", style);
 
+    // base style for a uni-directional dependency
     style = new Hashtable<String, Object>();
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_STROKECOLOR, "#FFEAB2");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     style.put(mxConstants.STYLE_NOLABEL, "1");
-    // style.put(mxConstants.STYLE_BENDABLE, "1");
     stylesheet.putCellStyle("BUNDLEMAKER_EDGE", style);
 
+    // base style for a circular dependency
     style = new Hashtable<String, Object>();
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_STROKECOLOR, "#B85E3D");
@@ -330,7 +275,7 @@ public class DependencyViewerGraph {
           Rectangle bounds = image.getImage().getBounds();
           style += ";imageWidth=" + bounds.width;
           style += ";imageWidth=" + bounds.height;
-          style += ";imageVerticalAlign=center;fontStyle=1;" + "verticalAlign=top;spacingLeft=" + (bounds.width + 15)
+          style += ";imageVerticalAlign=center;fontStyle=1;verticalAlign=top;spacingLeft=" + (bounds.width + 15)
               + ";spacingTop=2;imageAlign=left;align=top;spacingRight=5"; // +
 
           Object vertex = _graph.insertVertex(parent, null, iBundleMakerArtifact, 10, 10, 10, 10, style);
@@ -368,6 +313,9 @@ public class DependencyViewerGraph {
     }
   }
 
+  /**
+   * Handles changes of the cell (edges or vertex) selection
+   */
   protected void cellSelectionChanged() {
 
     Object[] cells = _graph.getSelectionCells();
@@ -375,6 +323,7 @@ public class DependencyViewerGraph {
     final List<IBundleMakerArtifact> selectedArtifacts = new LinkedList<IBundleMakerArtifact>();
     final List<IDependency> selectedDependencies = new LinkedList<IDependency>();
 
+    // collect selected artifacts and dependencies
     for (Object cell : cells) {
 
       Object value = _graph.getModel().getValue(cell);
@@ -388,6 +337,7 @@ public class DependencyViewerGraph {
       }
     }
 
+    // propagate selected dependencies
     if (!selectedDependencies.isEmpty()) {
       runInSwt(new Runnable() {
 
@@ -402,10 +352,18 @@ public class DependencyViewerGraph {
       });
     }
 
+    //
     _unstageAction.setUnstageCandidates(selectedArtifacts);
 
   }
 
+  /**
+   * (Re-)layouts the whole graph.
+   * 
+   * <p>
+   * This methods uses the currently selected layout. It executes the layout regardless of the current
+   * {@link #_doLayoutAfterArtifactsChange} setting
+   */
   protected void layoutGraph() {
     _graph.getModel().beginUpdate();
     try {
@@ -415,10 +373,16 @@ public class DependencyViewerGraph {
     }
   }
 
+  /**
+   * @return the {@link IArtifactStage}
+   */
   protected IArtifactStage getArtifactStage() {
     return Selection.instance().getArtifactStage();
   }
 
+  /**
+   * Runs the specified {@link Runnable} on the SWT Thread
+   */
   protected void runInSwt(final Runnable runnable) {
     _display.asyncExec(runnable);
   }
@@ -446,11 +410,9 @@ public class DependencyViewerGraph {
       refreshEnablement();
     }
 
-    /**
-     * 
-     */
     public void dispose() {
       getArtifactStage().removeArtifactStageChangeListener(this);
+      _unstageCandidates = null;
     }
 
     protected void refreshEnablement() {
@@ -462,23 +424,13 @@ public class DependencyViewerGraph {
       setEnabled(_unstageCandidates != null && _unstageCandidates.size() > 0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-     */
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
+      // Changes in Stage are processed in SWT, so make sure, we're on the SWT thread
       runInSwt(this);
-
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Runnable#run()
-     */
     @Override
     public void run() {
       try {
@@ -497,6 +449,9 @@ public class DependencyViewerGraph {
     }
   }
 
+  /**
+   * Zoom in/out using the mouse wheel while pressing the ctrl-key
+   */
   class ZoomMouseWheelListener implements MouseWheelListener {
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -508,6 +463,16 @@ public class DependencyViewerGraph {
         }
 
       }
+    }
+  };
+
+  class EdgeCache extends GenericCache<IBundleMakerArtifact, List<Object>> {
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected List<Object> create(IBundleMakerArtifact key) {
+      return new LinkedList<Object>();
     }
   };
 
