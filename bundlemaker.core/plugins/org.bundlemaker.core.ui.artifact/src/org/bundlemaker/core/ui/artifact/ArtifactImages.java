@@ -10,7 +10,15 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.artifact;
 
+import java.net.URL;
+
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.analysis.IGroupArtifact;
+import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
+import org.bundlemaker.core.analysis.IResourceArtifact;
+import org.bundlemaker.core.analysis.IRootArtifact;
+import org.bundlemaker.core.analysis.ITypeArtifact;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -173,9 +181,63 @@ public enum ArtifactImages {
     return imageDescriptor;
   }
 
+  public URL getImageUrl() {
+    final Activator plugin = Activator.getDefault();
+    return plugin.getBundle().getEntry(this.path);
+  }
+
+  public static ArtifactImages forArtifact(IBundleMakerArtifact artifact) {
+    if (artifact.isInstanceOf(IRootArtifact.class)) {
+      return ROOT_ARTIFACT_ICON;
+    }
+    else if (artifact.isInstanceOf(IGroupArtifact.class)) {
+      return GROUP_ARTIFACT_ICON;
+    }
+    else if (artifact.isInstanceOf(IModuleArtifact.class)) {
+      return MODULE_ARTIFACT_ICON;
+    }
+    else if (artifact.isInstanceOf(IPackageArtifact.class)) {
+      return PACKAGE_ARTIFACT_ICON;
+    }
+    else if (artifact.isInstanceOf(IResourceArtifact.class)) {
+      return RESOURCE_ARTIFACT_ICON;
+    }
+    else if (artifact.isInstanceOf(ITypeArtifact.class)) {
+      ITypeArtifact typeHolder = (ITypeArtifact) artifact;
+
+      if (typeHolder.getAssociatedType() != null) {
+        switch (typeHolder.getAssociatedType().getType()) {
+        case CLASS: {
+          return CLASS_TYPE_ARTIFACT_ICON;
+        }
+        case INTERFACE: {
+          return INTERFACE_TYPE_ARTIFACT_ICON;
+        }
+        case ENUM: {
+          return ArtifactImages.ENUM_TYPE_ARTIFACT_ICON;
+        }
+        case ANNOTATION: {
+          return ArtifactImages.ANNOTATION_TYPE_ARTIFACT_ICON;
+        }
+        default:
+          break;
+        }
+      } else {
+        return ArtifactImages.CLASS_TYPE_ARTIFACT_ICON;
+      }
+      return TYPE_ARTIFACT_ICON;
+
+    }
+
+    // TODO
+    System.out.println("WARN: UNKNOWN ARTIFACT TYPE " + artifact);
+    return ROOT_ARTIFACT_ICON;
+
+  }
+
   private void addImageDescriptor() {
     final Activator plugin = Activator.getDefault();
-    final ImageDescriptor id = ImageDescriptor.createFromURL(plugin.getBundle().getEntry(this.path));
+    final ImageDescriptor id = ImageDescriptor.createFromURL(getImageUrl());
     plugin.getImageRegistry().put(this.path, id);
   }
 

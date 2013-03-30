@@ -91,7 +91,7 @@ public class StageView extends ViewPart {
 
   private ClearStageAction                   _clearStageAction;
 
-  private RemoveArtifactsAction              _removeArtifactsAction;
+  private RemoveFromStageAction              _removeArtifactsAction;
 
   private boolean                            _autoExpand                  = true;
 
@@ -309,7 +309,7 @@ public class StageView extends ViewPart {
     _autoExpandAction = new AutoExpandAction();
 
     _clearStageAction = new ClearStageAction();
-    _removeArtifactsAction = new RemoveArtifactsAction();
+    _removeArtifactsAction = new RemoveFromStageAction();
 
     _addModeActionGroup = new AddModeActionGroup();
 
@@ -423,8 +423,8 @@ public class StageView extends ViewPart {
     }
   }
 
-  class RemoveArtifactsAction extends Action {
-    RemoveArtifactsAction() {
+  class RemoveFromStageAction extends Action {
+    RemoveFromStageAction() {
       super("Remove from Stage", IAction.AS_PUSH_BUTTON);
 
       setImageDescriptor(StageIcons.REMOVE_FROM_STAGE.getImageDescriptor());
@@ -443,7 +443,6 @@ public class StageView extends ViewPart {
       while (iterator.hasNext()) {
         IBundleMakerArtifact artifact = iterator.next();
         artifacts.add(artifact);
-        artifacts.addAll(artifact.getChildren());
       }
 
       Selection.instance().getArtifactStage().removeStagedArtifacts(artifacts);
