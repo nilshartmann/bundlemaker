@@ -313,7 +313,7 @@ public class DependencyViewerGraph {
           if (edge == null) {
             String style = null;
 
-            if (to.getDependenciesTo(from).isEmpty()) {
+            if (to.getDependencyTo(from) == null) {
               style = BUNDLEMAKER_EDGE_STYLE;
             } else {
               style = BUNDLEMAKER_CIRCULAR_EDGE_STYLE;
@@ -353,6 +353,10 @@ public class DependencyViewerGraph {
       if (value instanceof IDependency) {
         IDependency dependency = (IDependency) value;
         selectedDependencies.add(dependency);
+        IDependency dependencyTo = dependency.getTo().getDependencyTo(dependency.getFrom());
+        if (dependencyTo != null) {
+          selectedDependencies.add(dependencyTo);
+        }
       } else if (value instanceof IBundleMakerArtifact) {
         IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) value;
         selectedArtifacts.add(bundleMakerArtifact);
