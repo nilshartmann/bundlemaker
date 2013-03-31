@@ -12,6 +12,20 @@
             id="org.bundlemaker.core.ui.stage.StageView">
       </view>
    </extension>
+ 	<extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.bundlemaker.core.ui.stage.prefs.ArtifactStagePreferenceInitializer">
+    </initializer>
+ 	</extension>   
+ 	<extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+          class="org.bundlemaker.core.ui.stage.prefs.ArtifactStagePropertyAndPreferencePage"
+          id="org.bundlemaker.core.ui.stage.preferences"
+          name="Artifact Stage Settings"
+          category="org.bundlemaker.core.ui.preferences.bundlemakerpage" />
+	 </extension>
    
 	<extension point="org.eclipse.ui.menus">
 

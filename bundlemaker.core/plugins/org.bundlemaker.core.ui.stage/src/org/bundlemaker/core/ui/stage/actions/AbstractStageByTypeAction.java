@@ -55,7 +55,7 @@ public abstract class AbstractStageByTypeAction extends AbstractStageAction {
   public void setArtifactSelection(IArtifactSelection artifactSelection) {
     super.setArtifactSelection(artifactSelection);
 
-    if (!(isManualAddMode() && artifactSelection.hasSelectedArtifacts())) {
+    if (!artifactSelection.hasSelectedArtifacts()) {
       setEnabled(false);
       return;
     }
@@ -82,6 +82,10 @@ public abstract class AbstractStageByTypeAction extends AbstractStageAction {
 
   @Override
   public void run() {
+    if (!StageViewActionHelper.switchToManualAddModeIfRequired()) {
+      return;
+    }
+
     List<IBundleMakerArtifact> resources = new LinkedList<IBundleMakerArtifact>();
 
     List<IBundleMakerArtifact> selectedArtifacts = getArtifactSelection().getSelectedArtifacts();
