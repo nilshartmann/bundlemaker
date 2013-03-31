@@ -214,23 +214,6 @@ public class DSMArtifactModelEditor extends AbstractArtifactSelectionAwareEditor
    * {@inheritDoc}
    */
   @Override
-  public void onPartActivated() {
-
-    //
-//    if (!EMPTY_ARTIFACT_SELECTION.equals(getCurrentArtifactSelection())) {
-//      Selection
-//          .instance()
-//          .getArtifactSelectionService()
-//          .setSelection(Selection.MAIN_ARTIFACT_SELECTION_ID, DSM_EDITOR_ID,
-//              getCurrentArtifactSelection().getSelectedArtifacts(),
-//              getCurrentArtifactSelection().useChildrenOfSelectedArtifacts());
-//    }
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
   public void setCurrentArtifactSelection(IArtifactSelection selection) {
 
     //
