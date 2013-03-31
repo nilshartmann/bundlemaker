@@ -364,19 +364,17 @@ public class DependencyViewerGraph {
     }
 
     // propagate selected dependencies
-    if (!selectedDependencies.isEmpty()) {
-      runInSwt(new Runnable() {
+    runInSwt(new Runnable() {
 
-        @Override
-        public void run() {
-          Selection
-              .instance()
-              .getDependencySelectionService()
-              .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DependencyViewerEditor.DEPENDENCY_VIEWER_EDITOR_ID,
-                  selectedDependencies);
-        }
-      });
-    }
+      @Override
+      public void run() {
+        Selection
+            .instance()
+            .getDependencySelectionService()
+            .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DependencyViewerEditor.DEPENDENCY_VIEWER_EDITOR_ID,
+                selectedDependencies);
+      }
+    });
 
     //
     _unstageAction.setUnstageCandidates(selectedArtifacts);
