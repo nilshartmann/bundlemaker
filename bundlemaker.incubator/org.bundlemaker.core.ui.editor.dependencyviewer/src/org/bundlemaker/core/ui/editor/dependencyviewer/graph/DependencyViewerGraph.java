@@ -20,10 +20,12 @@ import java.awt.event.MouseWheelListener;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -343,7 +345,7 @@ public class DependencyViewerGraph {
     Object[] cells = _graph.getSelectionCells();
 
     final List<IBundleMakerArtifact> selectedArtifacts = new LinkedList<IBundleMakerArtifact>();
-    final List<IDependency> selectedDependencies = new LinkedList<IDependency>();
+    final Set<IDependency> selectedDependencies = new LinkedHashSet<IDependency>();
 
     // collect selected artifacts and dependencies
     for (Object cell : cells) {
@@ -360,6 +362,8 @@ public class DependencyViewerGraph {
       } else if (value instanceof IBundleMakerArtifact) {
         IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) value;
         selectedArtifacts.add(bundleMakerArtifact);
+        selectedDependencies.addAll(bundleMakerArtifact.getDependenciesFrom());
+        selectedDependencies.addAll(bundleMakerArtifact.getDependenciesTo());
       }
     }
 
