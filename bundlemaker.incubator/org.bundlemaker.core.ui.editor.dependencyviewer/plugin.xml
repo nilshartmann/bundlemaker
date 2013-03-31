@@ -25,10 +25,25 @@
    <extension point="org.eclipse.ui.menus">
       <menuContribution
          locationURI="popup:org.eclipse.ui.navigator.ProjectExplorer#PopupMenu?after=org.bundlemaker.core.ui.editor.separator">
-         <command commandId="org.bundlemaker.core.ui.editor.dependencyviewer.OpenDependencyViewerCommand" style="push">
+         <command
+               commandId="org.bundlemaker.core.ui.editor.dependencyviewer.OpenDependencyViewerCommand"
+               icon="icons/dependency-viewer.png"
+               style="push">
             <visibleWhen checkEnabled="true"/>
          </command>
       </menuContribution>
+      <!-- Toolbar -->
+    <menuContribution
+          allPopups="false"
+          locationURI="toolbar:org.bundlemaker.core.ui.toolbar">
+          <command
+                commandId="org.bundlemaker.core.ui.editor.dependencyviewer.OpenDependencyViewerCommand" 
+                disabledIcon="icons/dependency-viewer.png"
+                icon="icons/dependency-viewer.png"
+                style="push">
+          </command>
+      </menuContribution>
+
    </extension>
 
    <!-- Editor -->
@@ -36,6 +51,7 @@
       <editor
             class="org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor"
             default="false"
+            icon="icons/dependency-viewer.png"
             id="org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewer"
             name="Dependency Viewer"> </editor>
    </extension>
