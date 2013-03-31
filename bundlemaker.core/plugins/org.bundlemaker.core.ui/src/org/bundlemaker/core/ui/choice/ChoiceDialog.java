@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class ChoiceDialog extends TrayDialog {
 
+  private String             _title;
+
   private String             _message;
 
   private Choice             _currentSelection = null;
@@ -27,8 +29,8 @@ public class ChoiceDialog extends TrayDialog {
 
   private final List<Button> _choiceButtons    = new LinkedList<Button>();
 
-  public static Choice choose(Shell shell, String message, Choice defaultChoice, Choice... choices) {
-    ChoiceDialog choiceDialog = new ChoiceDialog(shell, message, Arrays.asList(choices), defaultChoice);
+  public static Choice choose(Shell shell, String title, String message, Choice defaultChoice, Choice... choices) {
+    ChoiceDialog choiceDialog = new ChoiceDialog(shell, title, message, Arrays.asList(choices), defaultChoice);
 
     if (choiceDialog.open() != OK) {
       return null;
@@ -38,9 +40,10 @@ public class ChoiceDialog extends TrayDialog {
 
   }
 
-  public ChoiceDialog(Shell shell, String message, List<Choice> choices, Choice defaultChoice) {
+  public ChoiceDialog(Shell shell, String title, String message, List<Choice> choices, Choice defaultChoice) {
     super(shell);
 
+    this._title = title;
     this._message = message;
     this._choices = choices;
 
@@ -55,8 +58,7 @@ public class ChoiceDialog extends TrayDialog {
   @Override
   protected void configureShell(Shell shell) {
     super.configureShell(shell);
-    String title = "Add project content";
-    shell.setText(title);
+    shell.setText(_title);
     setHelpAvailable(false);
 
   }
