@@ -42,7 +42,6 @@ import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
-import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
@@ -237,7 +236,10 @@ public class DependencyViewerGraph {
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_STROKECOLOR, "#B85E3D");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
+    style.put(mxConstants.STYLE_FILLCOLOR, "#B85E3D");
     style.put(mxConstants.STYLE_NOLABEL, "1");
+    style.put(mxConstants.STYLE_ENDARROW, mxConstants.NONE);
+    style.put(mxConstants.STYLE_STARTARROW, mxConstants.NONE);
     stylesheet.putCellStyle("BUNDLEMAKER_CIRCULAR_EDGE", style);
 
   }
@@ -267,19 +269,14 @@ public class DependencyViewerGraph {
         if (!effectiveSelectedArtifacts.contains(artifact)) {
           // Artifact is not longer part of selection => remove it...
 
-          // from model
+          // ..from model
           model.remove(entry.getValue());
 
-          // from vertex edge cache
+          // ..from vertex cache
           iterator.remove();
 
-          // from vertex cache
-          List<Object> edges = _edgeCache.remove(artifact);
-          if (edges != null) {
-            for (Object edge : edges) {
-              model.remove(edge);
-            }
-          }
+          // all conntected edges
+          _edgeCache.removeEdgesConnectedTo(artifact);
 
         }
       }
@@ -312,13 +309,20 @@ public class DependencyViewerGraph {
             continue;
           }
 
-          String style = from.getDependenciesFrom(to).isEmpty() ? BUNDLEMAKER_EDGE_STYLE
-              : BUNDLEMAKER_CIRCULAR_EDGE_STYLE;
+          Object edge = _edgeCache.getEdge(from, to);
+          if (edge == null) {
+            String style = null;
 
-          Object toVertex = _vertexCache.get(to);
-          Object newEdge = _graph.insertEdge(parent, null, iDependency, fromVertex, toVertex, style);
-          _edgeCache.getOrCreate(to).add(newEdge);
-          _edgeCache.getOrCreate(from).add(newEdge);
+            if (to.getDependenciesTo(from).isEmpty()) {
+              style = BUNDLEMAKER_EDGE_STYLE;
+            } else {
+              style = BUNDLEMAKER_CIRCULAR_EDGE_STYLE;
+            }
+
+            Object toVertex = _vertexCache.get(to);
+            edge = _graph.insertEdge(parent, null, iDependency, fromVertex, toVertex, style);
+            _edgeCache.addEdge(edge);
+          }
         }
       }
 
@@ -509,14 +513,63 @@ public class DependencyViewerGraph {
     }
   };
 
-  class EdgeCache extends GenericCache<IBundleMakerArtifact, List<Object>> {
+  class EdgeCache {
 
-    private static final long serialVersionUID = 1L;
+    private final List<Object> _edges = new LinkedList<Object>();
 
-    @Override
-    protected List<Object> create(IBundleMakerArtifact key) {
-      return new LinkedList<Object>();
+    public void removeEdgesConnectedTo(IBundleMakerArtifact artifact) {
+      Iterator<Object> iterator = _edges.iterator();
+      mxIGraphModel model = _graph.getModel();
+
+      while (iterator.hasNext()) {
+        Object cell = iterator.next();
+
+        IDependency dependency = (IDependency) model.getValue(cell);
+        if (artifact.equals(dependency.getTo()) || artifact.equals(dependency.getFrom())) {
+          model.remove(cell);
+          iterator.remove();
+        }
+      }
     }
-  };
+
+    /**
+     * @param edgeFromTo
+     */
+    public void addEdge(Object edgeFromTo) {
+      _edges.add(edgeFromTo);
+    }
+
+    /**
+     * @param dependencyOne
+     * @param dependencyTwo
+     */
+    public Object getEdge(IBundleMakerArtifact dependencyOne, IBundleMakerArtifact dependencyTwo) {
+      mxIGraphModel model = _graph.getModel();
+
+      for (Object edge : _edges) {
+        IDependency dependency = (IDependency) model.getValue(edge);
+
+        if (dependencyOne.equals(dependency.getFrom()) && dependencyTwo.equals(dependency.getTo())) {
+          return edge;
+        }
+
+        if (dependencyTwo.equals(dependency.getFrom()) && dependencyOne.equals(dependency.getTo())) {
+          return edge;
+        }
+      }
+
+      return null;
+    }
+  }
+
+  // class EdgeCache extends GenericCache<IBundleMakerArtifact, List<Object>> {
+  //
+  // private static final long serialVersionUID = 1L;
+  //
+  // @Override
+  // protected List<Object> create(IBundleMakerArtifact key) {
+  // return new LinkedList<Object>();
+  // }
+  // };
 
 }
