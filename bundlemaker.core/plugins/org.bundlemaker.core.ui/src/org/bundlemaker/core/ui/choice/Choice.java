@@ -1,4 +1,4 @@
-package org.bundlemaker.core.ui.projecteditor.choice;
+package org.bundlemaker.core.ui.choice;
 
 public class Choice {
 

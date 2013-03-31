@@ -9,7 +9,6 @@ import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
 import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
-import org.bundlemaker.core.ui.projecteditor.choice.Choice;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropEvent;
 import org.bundlemaker.core.ui.projecteditor.dnd.IProjectEditorDropProvider;
 import org.eclipse.core.resources.IFile;
@@ -34,10 +33,6 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
   private final FileBasedContentCreator _fileBasedContentCreator = new FileBasedContentCreator();
 
   private final ContentTypeDetector     _contentTypeDetector     = new ContentTypeDetector();
-
-  final static Choice                   ADD_AS_BINARY_CONTENT    = new Choice("Add as binary content");
-
-  final static Choice                   ADD_AS_SOURCE_CONTENT    = new Choice("Add as source content");
 
   @Override
   public Transfer[] getSupportedDropTypes() {
@@ -147,14 +142,6 @@ public class FileBasedContentDropProvider implements IProjectEditorDropProvider 
   }
 
   protected boolean addFiles(Shell shell, FileBasedProjectContentProvider provider, String[] newFiles) {
-
-    // String message = "Please choose how to add " + newFiles.length + " resources to your BundleMaker project";
-    //
-    // Choice choice = ChoiceDialog.choose(shell, message, ADD_AS_BINARY_CONTENT, ADD_AS_BINARY_CONTENT,
-    // ADD_AS_SOURCE_CONTENT);
-    // if (choice == null) {
-    // return false;
-    // }
 
     // Iterate over each dropped file
     for (String newFile : newFiles) {
