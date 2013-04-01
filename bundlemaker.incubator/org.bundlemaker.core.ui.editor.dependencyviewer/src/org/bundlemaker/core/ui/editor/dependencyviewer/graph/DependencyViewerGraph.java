@@ -87,7 +87,7 @@ public class DependencyViewerGraph {
 
   private UnstageAction                           _unstageAction;
 
-  protected boolean                               _autoFit                        = false;
+  protected boolean                               _autoFit                        = true;
 
   private ArtifactPathLabelGenerator              _labelGenerator                 = new ArtifactPathLabelGenerator();
 
@@ -424,15 +424,25 @@ public class DependencyViewerGraph {
    * 
    */
   protected void zoomToFitHorizontal() {
+
     mxGraphView view = _graph.getView();
     int compLen = _graphComponent.getWidth();
     int viewLen = (int) view.getGraphBounds().getWidth();
+
+    if (compLen == 0 || viewLen == 0) {
+      return;
+    }
+
     double scale = (double) compLen / viewLen * view.getScale();
+
+    System.out.println("compLen: " + compLen + ", viewLen: " + viewLen + ", scale: " + scale);
+
     if (scale > 1) {
       _graphComponent.zoomActual();
     } else {
       view.setScale(scale);
     }
+
   }
 
   /**
