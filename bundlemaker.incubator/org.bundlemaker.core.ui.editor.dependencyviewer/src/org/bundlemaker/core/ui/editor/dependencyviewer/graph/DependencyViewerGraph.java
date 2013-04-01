@@ -42,6 +42,7 @@ import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStage;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
+import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
@@ -461,7 +462,7 @@ public class DependencyViewerGraph {
     public UnstageAction() {
       super("Unstage");
 
-      getArtifactStage().addArtifactStageChangeListener(this);
+      // getArtifactStage().addArtifactStageChangeListener(this);
 
       refreshEnablement();
     }
@@ -476,15 +477,15 @@ public class DependencyViewerGraph {
     }
 
     public void dispose() {
-      getArtifactStage().removeArtifactStageChangeListener(this);
+      // getArtifactStage().removeArtifactStageChangeListener(this);
       _unstageCandidates = null;
     }
 
     protected void refreshEnablement() {
-      if (getArtifactStage().getAddMode().isAutoAddMode()) {
-        setEnabled(false);
-        return;
-      }
+      // if (getArtifactStage().getAddMode().isAutoAddMode()) {
+      // setEnabled(false);
+      // return;
+      // }
 
       setEnabled(_unstageCandidates != null && _unstageCandidates.size() > 0);
     }
@@ -499,6 +500,9 @@ public class DependencyViewerGraph {
     @Override
     public void run() {
       try {
+        if (!ArtifactStageActionHelper.switchToManualAddModeIfRequired()) {
+          return;
+        }
         DependencyViewerGraph.this._doLayoutAfterArtifactsChange = false;
 
         getArtifactStage().removeStagedArtifacts(_unstageCandidates);
