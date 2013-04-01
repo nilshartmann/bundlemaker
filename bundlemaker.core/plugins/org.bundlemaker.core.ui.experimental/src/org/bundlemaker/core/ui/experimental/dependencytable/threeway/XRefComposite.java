@@ -109,7 +109,7 @@ public class XRefComposite extends Composite {
 
     IBundleMakerArtifact[] selectedArtifacts = new IBundleMakerArtifact[artifacts.size()];
     for (int i = 0; i < artifacts.size(); i++) {
-      IBundleMakerArtifact artifact = artifacts.get(0);
+      IBundleMakerArtifact artifact = artifacts.get(i);
 
       if (artifact.isInstanceOf(IRootArtifact.class)) {
         artifact = ((ArtifactTreeContentProvider) _centerViewer.getContentProvider()).getVirtualRoot();
@@ -118,17 +118,16 @@ public class XRefComposite extends Composite {
       selectedArtifacts[i] = artifact;
 
     }
-
     StructuredSelection selection = new StructuredSelection(selectedArtifacts);
 
     // (Re-)Expand Tree Viewer according to User settings
     _expandStrategy.exandTreeViewer();
 
-    // Make sure selected Artifacts are visible in Center Tree Viewer
-    _centerViewer.setSelection(selection, true);
     _fromTreeViewer.setSelection(
         new StructuredSelection(((ArtifactTreeContentProvider) _fromTreeViewer.getContentProvider()).getVirtualRoot()),
         true);
+    _centerViewer.setSelection(selection, true);
+    // Make sure selected Artifacts are visible in Center Tree Viewer
 
     // expand at least to level two, to make sure that more than the root artifact is visible
     _centerViewer.expandToLevel(2);
