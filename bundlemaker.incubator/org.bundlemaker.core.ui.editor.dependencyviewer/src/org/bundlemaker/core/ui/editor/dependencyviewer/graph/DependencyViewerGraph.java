@@ -31,6 +31,7 @@ import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
@@ -57,6 +58,7 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
 /**
@@ -84,6 +86,8 @@ public class DependencyViewerGraph {
   private Display                                 _display;
 
   private UnstageAction                           _unstageAction;
+
+  protected boolean                               _autoFit                        = false;
 
   private ArtifactPathLabelGenerator              _labelGenerator                 = new ArtifactPathLabelGenerator();
 
@@ -134,7 +138,10 @@ public class DependencyViewerGraph {
     comboBoxPanel.add(new JButton(new ZoomAction("-", "Zoom out (Ctrl+Mouse Wheel)")));
     comboBoxPanel.add(new JButton(new ZoomAction("0", "Reset zoom")));
     comboBoxPanel.add(new JButton(new ZoomAction("+", "Zoom in (Ctrl+Mouse Wheel)")));
-
+    comboBoxPanel.add(new JButton(new ZoomAction("Fit", "Zoom to fit (horizontal)")));
+    JCheckBox jCheckBox = new JCheckBox(new AutoFitAction());
+    jCheckBox.setSelected(_autoFit);
+    comboBoxPanel.add(jCheckBox);
     // UnstageButton
     _unstageAction = new UnstageAction();
     comboBoxPanel.add(new JButton(_unstageAction));
@@ -335,6 +342,11 @@ public class DependencyViewerGraph {
     } finally {
       model.endUpdate();
     }
+
+    if (_autoFit) {
+      zoomToFitHorizontal();
+    }
+
   }
 
   /**
@@ -409,6 +421,21 @@ public class DependencyViewerGraph {
   }
 
   /**
+   * 
+   */
+  protected void zoomToFitHorizontal() {
+    mxGraphView view = _graph.getView();
+    int compLen = _graphComponent.getWidth();
+    int viewLen = (int) view.getGraphBounds().getWidth();
+    double scale = (double) compLen / viewLen * view.getScale();
+    if (scale > 1) {
+      _graphComponent.zoomActual();
+    } else {
+      view.setScale(scale);
+    }
+  }
+
+  /**
    * Runs the specified {@link Runnable} on the SWT Thread
    */
   protected void runInSwt(final Runnable runnable) {
@@ -477,6 +504,26 @@ public class DependencyViewerGraph {
     }
   }
 
+  class AutoFitAction extends AbstractAction {
+    private static final long serialVersionUID = 1L;
+
+    public AutoFitAction() {
+      super("Auto Fit");
+      putValue(Action.SHORT_DESCRIPTION, "Auto Fit horizontal when content change");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      JCheckBox box = (JCheckBox) e.getSource();
+      _autoFit = box.isSelected();
+    }
+  }
+
   class ZoomAction extends AbstractAction {
     private static final long serialVersionUID = 1L;
 
@@ -488,12 +535,14 @@ public class DependencyViewerGraph {
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
-      Object name = getValue(Action.NAME);
+      String name = (String) getValue(Action.NAME);
 
       if ("+".equals(name)) {
         _graphComponent.zoomIn();
       } else if ("-".equals(name)) {
         _graphComponent.zoomOut();
+      } else if ("fit".equalsIgnoreCase(name)) {
+        zoomToFitHorizontal();
       } else {
         _graphComponent.zoomActual();
       }
@@ -567,15 +616,4 @@ public class DependencyViewerGraph {
       return null;
     }
   }
-
-  // class EdgeCache extends GenericCache<IBundleMakerArtifact, List<Object>> {
-  //
-  // private static final long serialVersionUID = 1L;
-  //
-  // @Override
-  // protected List<Object> create(IBundleMakerArtifact key) {
-  // return new LinkedList<Object>();
-  // }
-  // };
-
 }
