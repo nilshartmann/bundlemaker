@@ -44,6 +44,10 @@ public class AbstractStageAction extends Action {
     Selection.instance().getArtifactStage().addToStage(artifacts);
   }
 
+  protected void removeFromStage(List<IBundleMakerArtifact> artifacts) {
+    Selection.instance().getArtifactStage().removeStagedArtifacts(artifacts);
+  }
+
   protected boolean isManualAddMode() {
     return !Selection.instance().getArtifactStage().getAddMode().isAutoAddMode();
   }
