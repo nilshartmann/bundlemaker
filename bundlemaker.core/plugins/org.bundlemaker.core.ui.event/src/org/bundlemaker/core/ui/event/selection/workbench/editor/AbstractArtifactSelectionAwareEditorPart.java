@@ -160,7 +160,7 @@ public abstract class AbstractArtifactSelectionAwareEditorPart extends AbstractP
     IArtifactSelection currentArtifactSelection = Selection.instance().getArtifactSelectionService()
         .getSelection(getArtifactSelectionId());
 
-    if (currentArtifactSelection != null) {
+    if (currentArtifactSelection != null && !currentArtifactSelection.equals(_currentArtifactSelection)) {
       setCurrentArtifactSelection(currentArtifactSelection);
     }
   }
