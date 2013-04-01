@@ -15,6 +15,8 @@ import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Collection;
@@ -111,6 +113,9 @@ public class DependencyViewerGraph {
     _graphComponent.setConnectable(false);
     _graphComponent.setToolTips(true);
     _graphComponent.addMouseWheelListener(new ZoomMouseWheelListener());
+    if (_autoFit) {
+      _graphComponent.addComponentListener(new InitialComponentResizeListener());
+    }
 
     // Populate the frame
     parentFrame.setLayout(new BorderLayout());
@@ -424,7 +429,7 @@ public class DependencyViewerGraph {
   /**
    * 
    */
-  protected void zoomToFitHorizontal() {
+  public void zoomToFitHorizontal() {
 
     mxGraphView view = _graph.getView();
     int compLen = _graphComponent.getWidth();
@@ -629,5 +634,30 @@ public class DependencyViewerGraph {
 
       return null;
     }
+  }
+
+  class InitialComponentResizeListener implements ComponentListener {
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+      e.getComponent().removeComponentListener(this);
+      if (_autoFit) {
+        zoomToFitHorizontal();
+      }
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+
+    }
+
   }
 }

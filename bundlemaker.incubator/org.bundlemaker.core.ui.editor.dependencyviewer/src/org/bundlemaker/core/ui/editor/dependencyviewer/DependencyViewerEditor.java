@@ -28,7 +28,7 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
 
   public final static String    DEPENDENCY_VIEWER_EDITOR_ID = "org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewer";
 
-  private DependencyViewerGraph _dependencyViewerFrame;
+  private DependencyViewerGraph _dependencyViewerGraph;
 
   @Override
   public void analysisModelModified() {
@@ -47,8 +47,8 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
    * @param artifactSelection
    */
   private void renderSelectedArtifacts(IArtifactSelection artifactSelection) {
-    if (artifactSelection != null && _dependencyViewerFrame != null) {
-      _dependencyViewerFrame.showArtifacts(artifactSelection.getEffectiveSelectedArtifacts());
+    if (artifactSelection != null && _dependencyViewerGraph != null) {
+      _dependencyViewerGraph.showArtifacts(artifactSelection.getEffectiveSelectedArtifacts());
     }
 
   }
@@ -68,8 +68,8 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
     Composite composite = new Composite(parent, SWT.EMBEDDED | SWT.NO_BACKGROUND);
     Frame frame = SWT_AWT.new_Frame(composite);
 
-    _dependencyViewerFrame = new DependencyViewerGraph();
-    _dependencyViewerFrame.create(frame, parent.getDisplay());
+    _dependencyViewerGraph = new DependencyViewerGraph();
+    _dependencyViewerGraph.create(frame, parent.getDisplay());
 
     renderSelectedArtifacts(getCurrentArtifactSelection());
 
@@ -84,7 +84,7 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
   public void dispose() {
     super.dispose();
 
-    _dependencyViewerFrame.dispose();
+    _dependencyViewerGraph.dispose();
   }
 
   /*
@@ -96,5 +96,4 @@ public class DependencyViewerEditor extends AbstractArtifactSelectionAwareEditor
   public void setFocus() {
 
   }
-
 }

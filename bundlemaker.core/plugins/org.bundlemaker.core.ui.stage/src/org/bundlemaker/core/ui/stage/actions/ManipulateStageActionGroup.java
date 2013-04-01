@@ -27,7 +27,9 @@ import com.google.common.collect.Lists;
  */
 public class ManipulateStageActionGroup {
 
-  private ClearStageAction                _clearStageAction = new ClearStageAction();
+  private ClearStageAction                _clearStageAction      = new ClearStageAction();
+
+  private RemoveFromStageAction           _removeFromStageAction = new RemoveFromStageAction();
 
   private final List<AbstractStageAction> _actions;
 
@@ -52,7 +54,8 @@ public class ManipulateStageActionGroup {
       items.add(new ActionContributionItem(action));
     }
     items.add(new Separator());
-
+    _removeFromStageAction.setArtifactSelection(selection);
+    items.add(new ActionContributionItem(_removeFromStageAction));
     _clearStageAction.setArtifactSelection(selection);
     items.add(new ActionContributionItem(_clearStageAction));
   }
