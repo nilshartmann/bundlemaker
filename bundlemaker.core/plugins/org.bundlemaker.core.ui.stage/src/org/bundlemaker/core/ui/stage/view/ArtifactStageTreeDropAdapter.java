@@ -17,8 +17,8 @@ import java.util.List;
 
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.Selection;
+import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeDropAdapter;
-import org.bundlemaker.core.ui.stage.actions.StageViewActionHelper;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -59,7 +59,7 @@ public class ArtifactStageTreeDropAdapter extends ViewerDropAdapter {
       return;
     }
 
-    if (!StageViewActionHelper.switchToManualAddModeIfRequired()) {
+    if (!ArtifactStageActionHelper.switchToManualAddModeIfRequired()) {
       // not in manual mode
       return;
     }

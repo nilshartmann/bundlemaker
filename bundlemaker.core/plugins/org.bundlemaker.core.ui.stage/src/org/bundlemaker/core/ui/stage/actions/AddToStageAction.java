@@ -12,6 +12,7 @@
 package org.bundlemaker.core.ui.stage.actions;
 
 import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -39,7 +40,7 @@ public class AddToStageAction extends AbstractStageAction {
 
   @Override
   public void run() {
-    if (!StageViewActionHelper.switchToManualAddModeIfRequired()) {
+    if (!ArtifactStageActionHelper.switchToManualAddModeIfRequired()) {
       return;
     }
 

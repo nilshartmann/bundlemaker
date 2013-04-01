@@ -9,7 +9,7 @@
  *     Bundlemaker project team - initial API and implementation
  ******************************************************************************/
 
-package org.bundlemaker.core.ui.stage.actions;
+package org.bundlemaker.core.ui;
 
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageAddMode;
@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
  * @author Nils Hartmann (nils@nilshartmann.net)
  * 
  */
-public class StageViewActionHelper {
+public class ArtifactStageActionHelper {
 
   /**
    * 

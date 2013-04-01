@@ -19,6 +19,7 @@ import java.util.List;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -82,7 +83,7 @@ public abstract class AbstractStageByTypeAction extends AbstractStageAction {
 
   @Override
   public void run() {
-    if (!StageViewActionHelper.switchToManualAddModeIfRequired()) {
+    if (!ArtifactStageActionHelper.switchToManualAddModeIfRequired()) {
       return;
     }
 
