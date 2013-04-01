@@ -12,6 +12,7 @@
 package org.bundlemaker.core.ui.stage.actions;
 
 import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -27,7 +28,7 @@ public class AddToStageAction extends AbstractStageAction {
   public void setArtifactSelection(IArtifactSelection artifactSelection) {
     super.setArtifactSelection(artifactSelection);
 
-    setEnabled(isManualAddMode() && artifactSelection.hasSelectedArtifacts());
+    setEnabled(artifactSelection.hasSelectedArtifacts());
 
     if (artifactSelection.hasSelectedArtifacts()) {
       setText("Add " + artifactSelection.getSelectedArtifacts().size() + " Artifacts to Stage");
@@ -39,6 +40,9 @@ public class AddToStageAction extends AbstractStageAction {
 
   @Override
   public void run() {
+    if (!ArtifactStageActionHelper.switchToManualAddModeIfRequired()) {
+      return;
+    }
 
     addToStage(getArtifactSelection().getSelectedArtifacts());
 

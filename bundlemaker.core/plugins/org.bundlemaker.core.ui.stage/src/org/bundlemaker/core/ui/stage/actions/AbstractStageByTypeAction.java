@@ -19,6 +19,7 @@ import java.util.List;
 import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.IArtifactSelection;
+import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 
 /**
  * @author Nils Hartmann (nils@nilshartmann.net)
@@ -55,7 +56,7 @@ public abstract class AbstractStageByTypeAction extends AbstractStageAction {
   public void setArtifactSelection(IArtifactSelection artifactSelection) {
     super.setArtifactSelection(artifactSelection);
 
-    if (!(isManualAddMode() && artifactSelection.hasSelectedArtifacts())) {
+    if (!artifactSelection.hasSelectedArtifacts()) {
       setEnabled(false);
       return;
     }
@@ -82,6 +83,10 @@ public abstract class AbstractStageByTypeAction extends AbstractStageAction {
 
   @Override
   public void run() {
+    if (!ArtifactStageActionHelper.switchToManualAddModeIfRequired()) {
+      return;
+    }
+
     List<IBundleMakerArtifact> resources = new LinkedList<IBundleMakerArtifact>();
 
     List<IBundleMakerArtifact> selectedArtifacts = getArtifactSelection().getSelectedArtifacts();

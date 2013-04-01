@@ -47,4 +47,5 @@ public class AbstractStageAction extends Action {
   protected boolean isManualAddMode() {
     return !Selection.instance().getArtifactStage().getAddMode().isAutoAddMode();
   }
+
 }

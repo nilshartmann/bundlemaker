@@ -20,15 +20,18 @@ import java.awt.event.MouseWheelListener;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
@@ -39,10 +42,10 @@ import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.selection.stage.ArtifactStageChangedEvent;
 import org.bundlemaker.core.selection.stage.IArtifactStage;
 import org.bundlemaker.core.selection.stage.IArtifactStageChangeListener;
+import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 import org.bundlemaker.core.ui.artifact.ArtifactImages;
 import org.bundlemaker.core.ui.editor.dependencyviewer.DependencyViewerEditor;
 import org.bundlemaker.core.ui.view.dependencytable.ArtifactPathLabelGenerator;
-import org.bundlemaker.core.util.collections.GenericCache;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
@@ -56,6 +59,7 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
+import com.mxgraph.view.mxGraphView;
 import com.mxgraph.view.mxStylesheet;
 
 /**
@@ -83,6 +87,8 @@ public class DependencyViewerGraph {
   private Display                                 _display;
 
   private UnstageAction                           _unstageAction;
+
+  protected boolean                               _autoFit                        = true;
 
   private ArtifactPathLabelGenerator              _labelGenerator                 = new ArtifactPathLabelGenerator();
 
@@ -133,7 +139,10 @@ public class DependencyViewerGraph {
     comboBoxPanel.add(new JButton(new ZoomAction("-", "Zoom out (Ctrl+Mouse Wheel)")));
     comboBoxPanel.add(new JButton(new ZoomAction("0", "Reset zoom")));
     comboBoxPanel.add(new JButton(new ZoomAction("+", "Zoom in (Ctrl+Mouse Wheel)")));
-
+    comboBoxPanel.add(new JButton(new ZoomAction("Fit", "Zoom to fit (horizontal)")));
+    JCheckBox jCheckBox = new JCheckBox(new AutoFitAction());
+    jCheckBox.setSelected(_autoFit);
+    comboBoxPanel.add(jCheckBox);
     // UnstageButton
     _unstageAction = new UnstageAction();
     comboBoxPanel.add(new JButton(_unstageAction));
@@ -237,7 +246,10 @@ public class DependencyViewerGraph {
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_STROKECOLOR, "#B85E3D");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
+    style.put(mxConstants.STYLE_FILLCOLOR, "#B85E3D");
     style.put(mxConstants.STYLE_NOLABEL, "1");
+    style.put(mxConstants.STYLE_ENDARROW, mxConstants.NONE);
+    style.put(mxConstants.STYLE_STARTARROW, mxConstants.NONE);
     stylesheet.putCellStyle("BUNDLEMAKER_CIRCULAR_EDGE", style);
 
   }
@@ -267,19 +279,14 @@ public class DependencyViewerGraph {
         if (!effectiveSelectedArtifacts.contains(artifact)) {
           // Artifact is not longer part of selection => remove it...
 
-          // from model
+          // ..from model
           model.remove(entry.getValue());
 
-          // from vertex edge cache
+          // ..from vertex cache
           iterator.remove();
 
-          // from vertex cache
-          List<Object> edges = _edgeCache.remove(artifact);
-          if (edges != null) {
-            for (Object edge : edges) {
-              model.remove(edge);
-            }
-          }
+          // all conntected edges
+          _edgeCache.removeEdgesConnectedTo(artifact);
 
         }
       }
@@ -312,13 +319,20 @@ public class DependencyViewerGraph {
             continue;
           }
 
-          String style = from.getDependenciesFrom(to).isEmpty() ? BUNDLEMAKER_EDGE_STYLE
-              : BUNDLEMAKER_CIRCULAR_EDGE_STYLE;
+          Object edge = _edgeCache.getEdge(from, to);
+          if (edge == null) {
+            String style = null;
 
-          Object toVertex = _vertexCache.get(to);
-          Object newEdge = _graph.insertEdge(parent, null, iDependency, fromVertex, toVertex, style);
-          _edgeCache.getOrCreate(to).add(newEdge);
-          _edgeCache.getOrCreate(from).add(newEdge);
+            if (to.getDependencyTo(from) == null) {
+              style = BUNDLEMAKER_EDGE_STYLE;
+            } else {
+              style = BUNDLEMAKER_CIRCULAR_EDGE_STYLE;
+            }
+
+            Object toVertex = _vertexCache.get(to);
+            edge = _graph.insertEdge(parent, null, iDependency, fromVertex, toVertex, style);
+            _edgeCache.addEdge(edge);
+          }
         }
       }
 
@@ -329,6 +343,11 @@ public class DependencyViewerGraph {
     } finally {
       model.endUpdate();
     }
+
+    if (_autoFit) {
+      zoomToFitHorizontal();
+    }
+
   }
 
   /**
@@ -339,7 +358,7 @@ public class DependencyViewerGraph {
     Object[] cells = _graph.getSelectionCells();
 
     final List<IBundleMakerArtifact> selectedArtifacts = new LinkedList<IBundleMakerArtifact>();
-    final List<IDependency> selectedDependencies = new LinkedList<IDependency>();
+    final Set<IDependency> selectedDependencies = new LinkedHashSet<IDependency>();
 
     // collect selected artifacts and dependencies
     for (Object cell : cells) {
@@ -349,26 +368,30 @@ public class DependencyViewerGraph {
       if (value instanceof IDependency) {
         IDependency dependency = (IDependency) value;
         selectedDependencies.add(dependency);
+        IDependency dependencyTo = dependency.getTo().getDependencyTo(dependency.getFrom());
+        if (dependencyTo != null) {
+          selectedDependencies.add(dependencyTo);
+        }
       } else if (value instanceof IBundleMakerArtifact) {
         IBundleMakerArtifact bundleMakerArtifact = (IBundleMakerArtifact) value;
         selectedArtifacts.add(bundleMakerArtifact);
+        selectedDependencies.addAll(bundleMakerArtifact.getDependenciesFrom());
+        selectedDependencies.addAll(bundleMakerArtifact.getDependenciesTo());
       }
     }
 
     // propagate selected dependencies
-    if (!selectedDependencies.isEmpty()) {
-      runInSwt(new Runnable() {
+    runInSwt(new Runnable() {
 
-        @Override
-        public void run() {
-          Selection
-              .instance()
-              .getDependencySelectionService()
-              .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DependencyViewerEditor.DEPENDENCY_VIEWER_EDITOR_ID,
-                  selectedDependencies);
-        }
-      });
-    }
+      @Override
+      public void run() {
+        Selection
+            .instance()
+            .getDependencySelectionService()
+            .setSelection(Selection.MAIN_DEPENDENCY_SELECTION_ID, DependencyViewerEditor.DEPENDENCY_VIEWER_EDITOR_ID,
+                selectedDependencies);
+      }
+    });
 
     //
     _unstageAction.setUnstageCandidates(selectedArtifacts);
@@ -399,6 +422,31 @@ public class DependencyViewerGraph {
   }
 
   /**
+   * 
+   */
+  protected void zoomToFitHorizontal() {
+
+    mxGraphView view = _graph.getView();
+    int compLen = _graphComponent.getWidth();
+    int viewLen = (int) view.getGraphBounds().getWidth();
+
+    if (compLen == 0 || viewLen == 0) {
+      return;
+    }
+
+    double scale = (double) compLen / viewLen * view.getScale();
+
+    System.out.println("compLen: " + compLen + ", viewLen: " + viewLen + ", scale: " + scale);
+
+    if (scale > 1) {
+      _graphComponent.zoomActual();
+    } else {
+      view.setScale(scale);
+    }
+
+  }
+
+  /**
    * Runs the specified {@link Runnable} on the SWT Thread
    */
   protected void runInSwt(final Runnable runnable) {
@@ -414,7 +462,7 @@ public class DependencyViewerGraph {
     public UnstageAction() {
       super("Unstage");
 
-      getArtifactStage().addArtifactStageChangeListener(this);
+      // getArtifactStage().addArtifactStageChangeListener(this);
 
       refreshEnablement();
     }
@@ -429,15 +477,15 @@ public class DependencyViewerGraph {
     }
 
     public void dispose() {
-      getArtifactStage().removeArtifactStageChangeListener(this);
+      // getArtifactStage().removeArtifactStageChangeListener(this);
       _unstageCandidates = null;
     }
 
     protected void refreshEnablement() {
-      if (getArtifactStage().getAddMode().isAutoAddMode()) {
-        setEnabled(false);
-        return;
-      }
+      // if (getArtifactStage().getAddMode().isAutoAddMode()) {
+      // setEnabled(false);
+      // return;
+      // }
 
       setEnabled(_unstageCandidates != null && _unstageCandidates.size() > 0);
     }
@@ -452,6 +500,9 @@ public class DependencyViewerGraph {
     @Override
     public void run() {
       try {
+        if (!ArtifactStageActionHelper.switchToManualAddModeIfRequired()) {
+          return;
+        }
         DependencyViewerGraph.this._doLayoutAfterArtifactsChange = false;
 
         getArtifactStage().removeStagedArtifacts(_unstageCandidates);
@@ -467,6 +518,26 @@ public class DependencyViewerGraph {
     }
   }
 
+  class AutoFitAction extends AbstractAction {
+    private static final long serialVersionUID = 1L;
+
+    public AutoFitAction() {
+      super("Auto Fit");
+      putValue(Action.SHORT_DESCRIPTION, "Auto Fit horizontal when content change");
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      JCheckBox box = (JCheckBox) e.getSource();
+      _autoFit = box.isSelected();
+    }
+  }
+
   class ZoomAction extends AbstractAction {
     private static final long serialVersionUID = 1L;
 
@@ -478,12 +549,14 @@ public class DependencyViewerGraph {
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
-      Object name = getValue(Action.NAME);
+      String name = (String) getValue(Action.NAME);
 
       if ("+".equals(name)) {
         _graphComponent.zoomIn();
       } else if ("-".equals(name)) {
         _graphComponent.zoomOut();
+      } else if ("fit".equalsIgnoreCase(name)) {
+        zoomToFitHorizontal();
       } else {
         _graphComponent.zoomActual();
       }
@@ -509,14 +582,52 @@ public class DependencyViewerGraph {
     }
   };
 
-  class EdgeCache extends GenericCache<IBundleMakerArtifact, List<Object>> {
+  class EdgeCache {
 
-    private static final long serialVersionUID = 1L;
+    private final List<Object> _edges = new LinkedList<Object>();
 
-    @Override
-    protected List<Object> create(IBundleMakerArtifact key) {
-      return new LinkedList<Object>();
+    public void removeEdgesConnectedTo(IBundleMakerArtifact artifact) {
+      Iterator<Object> iterator = _edges.iterator();
+      mxIGraphModel model = _graph.getModel();
+
+      while (iterator.hasNext()) {
+        Object cell = iterator.next();
+
+        IDependency dependency = (IDependency) model.getValue(cell);
+        if (artifact.equals(dependency.getTo()) || artifact.equals(dependency.getFrom())) {
+          model.remove(cell);
+          iterator.remove();
+        }
+      }
     }
-  };
 
+    /**
+     * @param edgeFromTo
+     */
+    public void addEdge(Object edgeFromTo) {
+      _edges.add(edgeFromTo);
+    }
+
+    /**
+     * @param dependencyOne
+     * @param dependencyTwo
+     */
+    public Object getEdge(IBundleMakerArtifact dependencyOne, IBundleMakerArtifact dependencyTwo) {
+      mxIGraphModel model = _graph.getModel();
+
+      for (Object edge : _edges) {
+        IDependency dependency = (IDependency) model.getValue(edge);
+
+        if (dependencyOne.equals(dependency.getFrom()) && dependencyTwo.equals(dependency.getTo())) {
+          return edge;
+        }
+
+        if (dependencyTwo.equals(dependency.getFrom()) && dependencyOne.equals(dependency.getTo())) {
+          return edge;
+        }
+      }
+
+      return null;
+    }
+  }
 }
