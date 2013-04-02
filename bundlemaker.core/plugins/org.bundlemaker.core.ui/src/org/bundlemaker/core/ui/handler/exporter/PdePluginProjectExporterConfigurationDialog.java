@@ -57,11 +57,11 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
 
   private Combo           _dependencyStyleCombo;
 
-  private DependencyStyle _dependencyStyle   = DependencyStyle.PREFER_IMPORT_PACKAGE;
+  private DependencyStyle _dependencyStyle;
 
   private Button          _useOptionalResolutionOnMissingImportsCheckBox;
 
-  private boolean         _useOptionalResolutionOnMissingImports = true;
+  private boolean         _useOptionalResolutionOnMissingImports;
 
   /**
    * @param parentShell
@@ -171,6 +171,7 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
         
     });
     comboViewer.setInput(DependencyStyle.values());
+    _dependencyStyle = PdePluginProjectExporterConfigurationStore.getInstance().getDependencyStyle();
     comboViewer.setSelection(new StructuredSelection(_dependencyStyle));
     comboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -189,6 +190,8 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
     
     _useOptionalResolutionOnMissingImportsCheckBox = new Button(settingsGroup, SWT.CHECK);
     _useOptionalResolutionOnMissingImportsCheckBox.setText("Use Optional Resolution on missing Packages");
+    _useOptionalResolutionOnMissingImports = PdePluginProjectExporterConfigurationStore.getInstance()
+        .getOptionalResolutionOnMissingType();
     _useOptionalResolutionOnMissingImportsCheckBox.setSelection(_useOptionalResolutionOnMissingImports);
     _useOptionalResolutionOnMissingImportsCheckBox.addListener(SWT.Selection, new Listener() {
       @Override
@@ -247,6 +250,9 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
   }
 
   public DependencyStyle getDependencyStyle() {
+
+    PdePluginProjectExporterConfigurationStore.getInstance().rememberDependencyStyle(_dependencyStyle);
+
     return this._dependencyStyle;
   }
 
@@ -258,6 +264,10 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
    * @return the useOptionalResolutionOnMissingImports
    */
   public boolean isUseOptionalResolutionOnMissingImports() {
+
+    PdePluginProjectExporterConfigurationStore.getInstance().rememberOptionalResolutionOnMissingType(
+        _useOptionalResolutionOnMissingImports);
+
     return _useOptionalResolutionOnMissingImports;
   }
 
@@ -280,6 +290,24 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
     @Override
     protected String getListTag() {
       return "folders";
+    }
+
+    public void rememberDependencyStyle(DependencyStyle style) {
+      put("dependencyStyle", style.name());
+    }
+
+    public DependencyStyle getDependencyStyle() {
+      String value = get("dependencyStyle", DependencyStyle.PREFER_IMPORT_PACKAGE.name());
+      return DependencyStyle.valueOf(value);
+    }
+
+    public void rememberOptionalResolutionOnMissingType(boolean value) {
+      put("optionOnMissingTypes", String.valueOf(value));
+    }
+
+    public boolean getOptionalResolutionOnMissingType() {
+      String value = get("optionOnMissingTypes", Boolean.TRUE.toString());
+      return Boolean.valueOf(value);
     }
 
     @Override
