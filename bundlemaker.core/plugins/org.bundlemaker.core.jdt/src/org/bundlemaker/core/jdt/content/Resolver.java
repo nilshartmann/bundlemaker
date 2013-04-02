@@ -90,6 +90,11 @@ public class Resolver {
     //
     _resolvedJavaProjects.add(javaProject);
     
+    if (!javaProject.exists()) {
+    	// project does not exists in workspace any longer => ignore 
+    	return;
+    }
+    
     //
     IJavaProject oldCurrentJavaProject = _currentJavaProject; 
     
