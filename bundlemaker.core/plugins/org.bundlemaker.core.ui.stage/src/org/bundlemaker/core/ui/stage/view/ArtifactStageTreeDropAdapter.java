@@ -19,6 +19,9 @@ import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.selection.Selection;
 import org.bundlemaker.core.ui.ArtifactStageActionHelper;
 import org.bundlemaker.core.ui.artifact.tree.ArtifactTreeDropAdapter;
+import org.bundlemaker.core.ui.stage.internal.Activator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -66,7 +69,7 @@ public class ArtifactStageTreeDropAdapter extends ViewerDropAdapter {
 
     IStructuredSelection structuredSelection = (IStructuredSelection) selection;
 
-    List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
+    final List<IBundleMakerArtifact> artifacts = new LinkedList<IBundleMakerArtifact>();
 
     for (Object selectedObject : structuredSelection.toArray()) {
 
@@ -76,7 +79,14 @@ public class ArtifactStageTreeDropAdapter extends ViewerDropAdapter {
       artifacts.add(sourceArtifact);
     }
 
-    Selection.instance().getArtifactStage().addToStage(artifacts);
+    System.out.println("Staging Artifacts: " + artifacts);
+    System.out.println("Thread           : " + Thread.currentThread().getName());
+
+    try {
+      Selection.instance().getArtifactStage().addToStage(artifacts);
+    } catch (Exception ex) {
+      Activator.getDefault().getLog().log(new Status(IStatus.ERROR, Activator.PLUGIN_ID, "Drop failed: " + ex, ex));
+    }
 
   }
 
