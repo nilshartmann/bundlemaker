@@ -381,7 +381,7 @@ public abstract class AbstractArtifactContainer extends AbstractArtifact {
   /**
    * {@inheritDoc}
    */
-  public final void invalidateCaches() {
+  public void invalidateCaches() {
     super.invalidateCaches();
 
     //

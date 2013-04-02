@@ -1,14 +1,8 @@
 package org.bundlemaker.core.internal.analysis;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
@@ -21,7 +15,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractArtifactContainer implements IModuleArtifact {
+public class AdapterModule2IArtifact extends AbstractPackageFilteringArtifact implements IModuleArtifact {
 
   /** the resource module */
   private IModule _module;
@@ -45,33 +39,6 @@ public class AdapterModule2IArtifact extends AbstractArtifactContainer implement
     // set parent/children dependency
     setParent(parent);
     ((AbstractArtifactContainer) parent).getModifiableChildrenCollection().add(this);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public Collection<IBundleMakerArtifact> getChildren() {
-
-    // we have to filter out empty packages:
-    // https://bundlemaker.jira.com/browse/BM-345
-
-    // TODO: caching!
-    List<IBundleMakerArtifact> result = new LinkedList<IBundleMakerArtifact>();
-
-    //
-    for (IBundleMakerArtifact bundleMakerArtifact : getModifiableChildrenCollection()) {
-
-      if (bundleMakerArtifact instanceof IPackageArtifact
-          && !((IPackageArtifact) bundleMakerArtifact).containsTypesOrResources()) {
-        // skip
-      } else {
-        result.add(bundleMakerArtifact);
-      }
-    }
-
-    //
-    return Collections.unmodifiableCollection(result);
   }
 
   @Override
