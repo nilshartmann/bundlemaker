@@ -12,6 +12,7 @@
 package org.bundlemaker.core.ui.editor.dependencyviewer.graph;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,6 +113,9 @@ public class DependencyViewerGraph {
     _graphComponent = new mxGraphComponent(_graph);
     _graphComponent.setConnectable(false);
     _graphComponent.setToolTips(true);
+		_graphComponent.getViewport().setOpaque(true);
+		_graphComponent.getViewport().setBackground(Color.WHITE);
+		_graphComponent.setTripleBuffered(true);
     _graphComponent.addMouseWheelListener(new ZoomMouseWheelListener());
     if (_autoFit) {
       _graphComponent.addComponentListener(new InitialComponentResizeListener());
@@ -233,7 +237,7 @@ public class DependencyViewerGraph {
     style.put(mxConstants.STYLE_OPACITY, 50);
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
     style.put(mxConstants.STYLE_FILLCOLOR, "#FFEAB2");
-    style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64");
+		style.put(mxConstants.STYLE_STROKECOLOR, "#C37D64");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     style.put(mxConstants.STYLE_FONTSIZE, "12");
     stylesheet.putCellStyle("BUNDLEMAKER_VERTEX", style);
@@ -241,7 +245,7 @@ public class DependencyViewerGraph {
     // base style for a uni-directional dependency
     style = new Hashtable<String, Object>();
     style.put(mxConstants.STYLE_FONTCOLOR, "#000000");
-    style.put(mxConstants.STYLE_STROKECOLOR, "#FFEAB2");
+		style.put(mxConstants.STYLE_STROKECOLOR, "#000000"); // #FFEAB2");
     style.put(mxConstants.STYLE_STROKEWIDTH, "1");
     style.put(mxConstants.STYLE_NOLABEL, "1");
     stylesheet.putCellStyle("BUNDLEMAKER_EDGE", style);
