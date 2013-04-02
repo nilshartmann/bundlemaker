@@ -86,6 +86,11 @@ public class DispatchingRepositoryAdapter implements IAetherRepositoryAdapter {
    * @param project
    */
   private void init() throws CoreException {
+    
+    //
+    if (_adapter != null) {
+      return;
+    }
 
     //
     BundleMakerPreferences preferences = BundleMakerPreferences.getBundleMakerPreferences(
