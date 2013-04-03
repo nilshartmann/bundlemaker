@@ -3,7 +3,9 @@ package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.assertResourceModuleCount;
 import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.assertResourceModuleCountInModularizedSystem;
 
+import org.bundlemaker.core.analysis.AnalysisModelQueries;
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.analysis.IPackageArtifact;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
 import org.bundlemaker.core.itestframework.utils.ArtifactTestUtil;
 import org.junit.Assert;
@@ -37,11 +39,19 @@ public class RemoveEmptyPackagesFromArtifactModelTest extends AbstractSimpleArti
 
     //
     newModuleArtifact.addArtifact(getBinModel().getTestPackage());
-    
+
     //
-    System.out.println(ArtifactTestUtil.toString(newModuleArtifact));
-    
+    Assert.assertNull(AnalysisModelQueries.findPackageArtifactByQualifiedName(getBinModel().getMainModuleArtifact(),
+        "de.test"));
+    Assert.assertNotNull(AnalysisModelQueries.findPackageArtifactByQualifiedName(newModuleArtifact, "de.test"));
+
     //
-    System.out.println(ArtifactTestUtil.toString(getBinModel().getMainModuleArtifact()));
+    getBinModel().getMainModuleArtifact().addArtifact(
+        AnalysisModelQueries.findPackageArtifactByQualifiedName(newModuleArtifact, "de.test"));
+
+    //
+    Assert.assertNotNull(AnalysisModelQueries.findPackageArtifactByQualifiedName(getBinModel().getMainModuleArtifact(),
+        "de.test"));
+    Assert.assertNull(AnalysisModelQueries.findPackageArtifactByQualifiedName(newModuleArtifact, "de.test"));
   }
 }
