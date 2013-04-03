@@ -224,4 +224,9 @@ public class EditJdtContentProviderPage extends WizardPage {
     return result.toArray(new IProject[0]);
   }
 
+  @Override
+  public String getName() {
+    return _nameText.getText();
+  }
+
 }
