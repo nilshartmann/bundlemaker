@@ -73,6 +73,19 @@ public abstract class ConfigurationStore {
     section.put(getPreviousTag(), filename);
   }
 
+  public void put(String key, String value) {
+    IDialogSettings section = getSettingsSection();
+    section.put(key, value);
+  }
+
+  public String get(String key, String defaultValue) {
+    String value = getSettingsSection().get(key);
+    if (value == null) {
+      value = defaultValue;
+    }
+    return value;
+  }
+
   private Vector<String> createVector(String[] arr) {
     Vector<String> v = new Vector<String>();
     for (int ix = 0; ix < arr.length; ++ix) {

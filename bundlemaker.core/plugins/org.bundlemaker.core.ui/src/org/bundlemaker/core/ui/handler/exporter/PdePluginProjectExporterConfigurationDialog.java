@@ -12,9 +12,17 @@ package org.bundlemaker.core.ui.handler.exporter;
 
 import java.io.File;
 
+import org.bundlemaker.core.osgi.manifest.IManifestPreferences.DependencyStyle;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -24,6 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
@@ -45,6 +54,14 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
   private Button  _browseLocationButton;
 
   private String  _location;
+
+  private Combo           _dependencyStyleCombo;
+
+  private DependencyStyle _dependencyStyle;
+
+  private Button          _useOptionalResolutionOnMissingImportsCheckBox;
+
+  private boolean         _useOptionalResolutionOnMissingImports;
 
   /**
    * @param parentShell
@@ -126,6 +143,64 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
     });
 
     Group settingsGroup = createGroup(dialogComposite, "Settings");
+    
+    Composite dependencyStyleGroup = createComposite(settingsGroup, 2);
+    Label label = new Label(dependencyStyleGroup, SWT.NONE);
+    label.setText("Use Import-Package for Dependencies:");
+    
+    _dependencyStyleCombo = createReadOnlyDropDownCombo(dependencyStyleGroup);
+    final ComboViewer comboViewer = new ComboViewer(_dependencyStyleCombo);
+    comboViewer.setContentProvider(ArrayContentProvider.getInstance());
+    comboViewer.setLabelProvider(new LabelProvider() {
+
+      @Override
+      public String getText(Object element) {
+        DependencyStyle dependencyStyle = (DependencyStyle)element;
+        
+        switch (dependencyStyle) {
+        case PREFER_IMPORT_PACKAGE:
+          return "Preferred";
+        case STRICT_IMPORT_PACKAGE:
+          return "Always";
+        case STRICT_REQUIRE_BUNDLE:
+        return "Never";
+        default:
+          return super.getText(element);
+        }
+        }
+        
+    });
+    comboViewer.setInput(DependencyStyle.values());
+    _dependencyStyle = PdePluginProjectExporterConfigurationStore.getInstance().getDependencyStyle();
+    comboViewer.setSelection(new StructuredSelection(_dependencyStyle));
+    comboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+      @Override
+      public void selectionChanged(SelectionChangedEvent event) {
+        IStructuredSelection s = (IStructuredSelection) comboViewer.getSelection();
+        if (s.isEmpty()) {
+          // ???
+          return;
+        }
+
+        _dependencyStyle = (DependencyStyle) s.getFirstElement();
+
+      }
+    });
+    
+    _useOptionalResolutionOnMissingImportsCheckBox = new Button(settingsGroup, SWT.CHECK);
+    _useOptionalResolutionOnMissingImportsCheckBox.setText("Use Optional Resolution on missing Packages");
+    _useOptionalResolutionOnMissingImports = PdePluginProjectExporterConfigurationStore.getInstance()
+        .getOptionalResolutionOnMissingType();
+    _useOptionalResolutionOnMissingImportsCheckBox.setSelection(_useOptionalResolutionOnMissingImports);
+    _useOptionalResolutionOnMissingImportsCheckBox.addListener(SWT.Selection, new Listener() {
+      @Override
+      public void handleEvent(Event event) {
+        _useOptionalResolutionOnMissingImports = _useOptionalResolutionOnMissingImportsCheckBox.getSelection();
+      }
+    });
+    
+
     _useClassificationCheckbox = new Button(settingsGroup, SWT.CHECK);
     _useClassificationCheckbox.setText("Use classification in output path");
     _useClassificationCheckbox.setSelection(_useClassification);
@@ -136,6 +211,8 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
       }
     });
 
+    
+    
     updateEnablement();
   }
 
@@ -172,8 +249,26 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
     return new File(_location);
   }
 
+  public DependencyStyle getDependencyStyle() {
+
+    PdePluginProjectExporterConfigurationStore.getInstance().rememberDependencyStyle(_dependencyStyle);
+
+    return this._dependencyStyle;
+  }
+
   public boolean isUseClassificationInOutputPath() {
     return this._useClassification;
+  }
+
+  /**
+   * @return the useOptionalResolutionOnMissingImports
+   */
+  public boolean isUseOptionalResolutionOnMissingImports() {
+
+    PdePluginProjectExporterConfigurationStore.getInstance().rememberOptionalResolutionOnMissingType(
+        _useOptionalResolutionOnMissingImports);
+
+    return _useOptionalResolutionOnMissingImports;
   }
 
   static class PdePluginProjectExporterConfigurationStore extends ConfigurationStore {
@@ -195,6 +290,24 @@ public class PdePluginProjectExporterConfigurationDialog extends AbstractExporte
     @Override
     protected String getListTag() {
       return "folders";
+    }
+
+    public void rememberDependencyStyle(DependencyStyle style) {
+      put("dependencyStyle", style.name());
+    }
+
+    public DependencyStyle getDependencyStyle() {
+      String value = get("dependencyStyle", DependencyStyle.PREFER_IMPORT_PACKAGE.name());
+      return DependencyStyle.valueOf(value);
+    }
+
+    public void rememberOptionalResolutionOnMissingType(boolean value) {
+      put("optionOnMissingTypes", String.valueOf(value));
+    }
+
+    public boolean getOptionalResolutionOnMissingType() {
+      String value = get("optionOnMissingTypes", Boolean.TRUE.toString());
+      return Boolean.valueOf(value);
     }
 
     @Override

@@ -3,8 +3,11 @@ package org.bundlemaker.core.jdt.content;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
@@ -81,10 +84,16 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider
 
 		//
 		Resolver resolver = new Resolver();
-		List<ResolvedEntry> resolvedEntries = resolver.resolve(_javaProjects);
+		Set<ResolvedEntry> resolvedEntries = resolver.resolve(_javaProjects);
+
+		List<ResolvedEntry> orderedEntries = new LinkedList<ResolvedEntry>(
+				resolvedEntries);
+		
+		// Make sure selected JDT projects stay first in the list
+		Collections.sort(orderedEntries, new ResolvedEntryComparator());
 
 		//
-		for (ResolvedEntry resolvedEntry : resolvedEntries) {
+		for (ResolvedEntry resolvedEntry : orderedEntries) {
 
 			//
 			String name = "<none>";
@@ -189,19 +198,42 @@ public class JdtProjectContentProvider extends AbstractProjectContentProvider
 		return null;
 	}
 
-	public IJavaProject getSourceJavaProject(IProjectContentEntry projectContent, String rootPath) throws CoreException {
-		
+	public IJavaProject getSourceJavaProject(
+			IProjectContentEntry projectContent, String rootPath)
+			throws CoreException {
+
 		IPath resolvedPath = new Path(rootPath);
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(resolvedPath);
+		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
+				.getContainerForLocation(resolvedPath);
 		IProject project = resource.getProject();
-		
+
 		IJavaProject result = JavaCore.create(project);
 		return result;
 	}
 
 	public void setName(String newName) {
 		_name = newName;
-		
+
 		fireProjectDescriptionChangedEvent();
 	}
+
+	protected class ResolvedEntryComparator implements
+			Comparator<ResolvedEntry> {
+
+		ResolvedEntryComparator() {
+
+		}
+
+		@Override
+		public int compare(ResolvedEntry o1, ResolvedEntry o2) {
+			
+			String compareKey1 = (!o1.hasProjectName()) + "_" + o1.getBinaryPath();
+			String compareKey2 = (!o2.hasProjectName()) + "_" + o2.getBinaryPath();
+			
+			return compareKey1.compareTo(compareKey2);
+
+		}
+
+	}
+
 }

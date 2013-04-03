@@ -149,6 +149,16 @@ public abstract class AbstractExporterConfigurationDialog extends TitleAreaDialo
     return combo;
   }
 
+  protected Combo createReadOnlyDropDownCombo(Composite parent) {
+    Combo combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
+    GridData comboData = new GridData(GridData.FILL_HORIZONTAL);
+    comboData.verticalAlignment = GridData.CENTER;
+    comboData.grabExcessVerticalSpace = false;
+    comboData.widthHint = IDialogConstants.ENTRY_FIELD_WIDTH;
+    combo.setLayoutData(comboData);
+    return combo;
+  }
+
   /**
    * Create a text field specific for this application
    * 

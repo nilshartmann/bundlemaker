@@ -10,7 +10,8 @@ Require-Bundle: org.bundlemaker.core;bundle-version="0.10.0",
  org.eclipse.core.runtime;bundle-version="3.6.0",
  org.eclipse.ui.workbench;bundle-version="3.6.0",
  org.eclipse.ui.navigator;bundle-version="3.5.0",
- org.eclipse.core.expressions;bundle-version="3.4"
+ org.eclipse.core.expressions;bundle-version="3.4",
+ org.bundlemaker.core.selection;bundle-version="0.10.0"
 Bundle-Activator: org.bundlemaker.core.ui.artifact.Activator
 Export-Package: org.bundlemaker.core.ui.artifact,
  org.bundlemaker.core.ui.artifact.cnf,

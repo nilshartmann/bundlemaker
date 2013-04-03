@@ -81,11 +81,17 @@ public class JdtProjectContentProviderWizardContribution implements INewProjectC
       public boolean performFinish() {
         IProject[] selectedProjects = _page.getSelectedProjects();
         JdtProjectContentProvider provider = new JdtProjectContentProvider();
+        
+        provider.setName(_page.getName());
+        
         for (IProject iProject : selectedProjects) {
 
           IJavaProject javaProject = JavaCore.create(iProject);
           provider.addJavaProject(javaProject);
         }
+        
+        
+        
         modifiableProjectDescription.addContentProvider(provider);
         return true;
       }

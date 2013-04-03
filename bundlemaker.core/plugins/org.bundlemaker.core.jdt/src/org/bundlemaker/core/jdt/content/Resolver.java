@@ -2,8 +2,7 @@ package org.bundlemaker.core.jdt.content;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.bundlemaker.core.util.collections.GenericCache;
@@ -32,7 +31,7 @@ public class Resolver {
   private Set<IJavaProject>                _resolvedJavaProjects   = new HashSet<IJavaProject>();
 
   /** - */
-  private List<ResolvedEntry>              _result                 = new LinkedList<ResolvedEntry>();
+  private Set<ResolvedEntry>              _result                 = new LinkedHashSet<ResolvedEntry>();
 
   /** - */
   @SuppressWarnings("serial")
@@ -49,7 +48,7 @@ public class Resolver {
    * @throws CoreException
    * @throws JavaModelException
    */
-  public List<ResolvedEntry> resolve(Collection<IJavaProject> javaProjects) throws CoreException, JavaModelException {
+  public Set<ResolvedEntry> resolve(Collection<IJavaProject> javaProjects) throws CoreException, JavaModelException {
 
     //
     _resolvedJavaProjects.clear();
@@ -89,6 +88,11 @@ public class Resolver {
 
     //
     _resolvedJavaProjects.add(javaProject);
+    
+    if (!javaProject.exists()) {
+    	// project does not exists in workspace any longer => ignore 
+    	return;
+    }
     
     //
     IJavaProject oldCurrentJavaProject = _currentJavaProject; 

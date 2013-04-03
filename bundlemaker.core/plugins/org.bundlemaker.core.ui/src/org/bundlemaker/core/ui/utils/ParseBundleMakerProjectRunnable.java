@@ -14,9 +14,13 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.analysis.IBundleMakerArtifact;
+import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.ui.ErrorDialogUtil;
+import org.bundlemaker.core.ui.artifact.configuration.IArtifactModelConfigurationProvider;
 import org.bundlemaker.core.ui.internal.Activator;
 import org.bundlemaker.core.ui.internal.BundleMakerUiUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
@@ -34,7 +38,7 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
 
   private final IBundleMakerProject _bundleMakerProject;
 
-  private boolean                   _success = false;
+  private IBundleMakerArtifact      _defaultModularizedSystem = null;
 
   /**
    * @param bundleMakerProject
@@ -58,8 +62,13 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
       if (state == BundleMakerProjectState.INITIALIZED | state == BundleMakerProjectState.READY) {
         // parse the project
         _bundleMakerProject.parseAndOpen(monitor);
-        _success = true;
+      } else {
+        return;
       }
+
+
+      _defaultModularizedSystem = getDefaultModularizedSystemArtifact(_bundleMakerProject, monitor);
+
     } catch (Exception ex) {
       // Forward exception
       throw new InvocationTargetException(ex);
@@ -75,7 +84,7 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
    * @param bundleMakerProject
    * @return true if the project has been successfully opened
    */
-  public static boolean parseProject(IBundleMakerProject bundleMakerProject) {
+  public static IBundleMakerArtifact parseProject(IBundleMakerProject bundleMakerProject) {
     // Create runnable
     ParseBundleMakerProjectRunnable runnable = new ParseBundleMakerProjectRunnable(bundleMakerProject);
 
@@ -103,7 +112,34 @@ public class ParseBundleMakerProjectRunnable implements IRunnableWithProgress {
     // Refresh navigator tree
     BundleMakerUiUtils.refreshProjectExplorer();
 
-    return runnable._success;
+    return runnable._defaultModularizedSystem;
+  }
+
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param bundleMakerProject
+   * @param monitor
+   * @return
+   * @throws CoreException
+   */
+  protected static IBundleMakerArtifact getDefaultModularizedSystemArtifact(IBundleMakerProject bundleMakerProject,
+      IProgressMonitor monitor)
+      throws CoreException {
+
+    if (monitor != null) {
+      monitor.subTask("Creating default Analysis Model");
+    }
+
+    IArtifactModelConfigurationProvider artifactModelConfigurationProvider = Activator.getDefault()
+        .getArtifactModelConfigurationProvider();
+
+    IModularizedSystem modularizedSystem = bundleMakerProject.getModularizedSystemWorkingCopy();
+
+    //
+    return modularizedSystem.getAnalysisModel(artifactModelConfigurationProvider
+        .getArtifactModelConfiguration(), monitor);
   }
 
 }

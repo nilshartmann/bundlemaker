@@ -19,6 +19,8 @@ import org.bundlemaker.core.exporter.IModuleExporter;
 import org.bundlemaker.core.exporter.ModularizedSystemExporterAdapter;
 import org.bundlemaker.core.modules.IModularizedSystem;
 import org.bundlemaker.core.osgi.exporter.pde.PdePluginProjectModuleExporter;
+import org.bundlemaker.core.osgi.manifest.CustomManifestCreator;
+import org.bundlemaker.core.osgi.manifest.DefaultManifestPreferences;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 
@@ -27,6 +29,8 @@ import org.eclipse.swt.widgets.Shell;
  * 
  */
 public class PdePluginProjectExportHandler extends AbstractExportHandler {
+
+  private CustomManifestCreator _customManifestCreator;
 
   @Override
   protected void exportAll(Shell shell, IModularizedSystem modularizedSystem,
@@ -48,6 +52,12 @@ public class PdePluginProjectExportHandler extends AbstractExportHandler {
     // create module exporter
     PdePluginProjectModuleExporter pdeExporter = (PdePluginProjectModuleExporter) createExporter();
     pdeExporter.setUseClassifcationForExportDestination(dialog.isUseClassificationInOutputPath());
+    _customManifestCreator.setUseOptionalOnMissingImports(dialog.isUseOptionalResolutionOnMissingImports());
+    // Manifest preferences
+    DefaultManifestPreferences manifestPreferences = new DefaultManifestPreferences(false);
+    manifestPreferences.setDependencyStyle(dialog.getDependencyStyle());
+
+    pdeExporter.setManifestPreferences(manifestPreferences);
 
     // create the adapter
     ModularizedSystemExporterAdapter adapter = createModularizedSystemExporterAdapter(pdeExporter, selectedArtifacts);
@@ -58,8 +68,10 @@ public class PdePluginProjectExportHandler extends AbstractExportHandler {
 
   @Override
   protected IModuleExporter createExporter() throws Exception {
+
+    _customManifestCreator = new CustomManifestCreator();
     // Create the exporter instance
-    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter();
+    PdePluginProjectModuleExporter pdeExporter = new PdePluginProjectModuleExporter(null, _customManifestCreator, null);
 
     return pdeExporter;
 
