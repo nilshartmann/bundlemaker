@@ -148,7 +148,7 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
     _currentSystemSession = _repositoryAdapter.newSession();
 
     // create the result list
-    clearArtifactList();
+    clearFileBasedContents();
 
     // iterate over all the specified mvn artifacts
     for (final MvnArtifactType artifactIdentifier : _mvnArtifactTypes) {
@@ -240,7 +240,6 @@ public class MvnContentProvider extends AbstractProjectContentProvider implement
    */
   public void clearArtifactList() {
     _mvnArtifactTypes.clear();
-    clearArtifactList();
   }
 
   /**

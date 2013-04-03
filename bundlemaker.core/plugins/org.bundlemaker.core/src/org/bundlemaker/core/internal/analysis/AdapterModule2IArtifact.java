@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterModule2IArtifact extends AbstractArtifactContainer implements IModuleArtifact {
+public class AdapterModule2IArtifact extends AbstractPackageFilteringArtifact implements IModuleArtifact {
 
   /** the resource module */
   private IModule _module;

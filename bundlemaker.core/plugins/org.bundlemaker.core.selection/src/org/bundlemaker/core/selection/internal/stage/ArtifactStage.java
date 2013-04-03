@@ -64,10 +64,12 @@ public class ArtifactStage implements IArtifactStage {
     }
   }
 
+  @Override
   public boolean hasStagedArtifacts() {
     return !_stagedArtifacts.isEmpty();
   }
 
+  @Override
   public void setAddMode(ArtifactStageAddMode addMode) {
     ArtifactStageAddMode oldMode = _addMode;
     this._addMode = checkNotNull(addMode);
@@ -79,12 +81,12 @@ public class ArtifactStage implements IArtifactStage {
         List<IBundleMakerArtifact> effectiveSelectedArtifacts = getArtifactSelection().getEffectiveSelectedArtifacts();
         _stagedArtifacts = new LinkedList<IBundleMakerArtifact>(effectiveSelectedArtifacts);
       }
-      
+
       Selection.instance().getArtifactSelectionService()
           .setUseChildrenOfSelectedArtifacts(addMode == ArtifactStageAddMode.autoAddChildrenOfSelectedArtifacts);
 
       fireArtifactStageChange();
-      
+
       if (!_addMode.isAutoAddMode()) {
         publishStagedArtifacts();
       }
@@ -95,6 +97,7 @@ public class ArtifactStage implements IArtifactStage {
   /**
    * @return the addMode
    */
+  @Override
   public ArtifactStageAddMode getAddMode() {
     return _addMode;
   }
@@ -140,6 +143,7 @@ public class ArtifactStage implements IArtifactStage {
    * @param stagedArtifacts
    *          the new staged artifacts. Might be null
    */
+  @Override
   public void setStagedArtifacts(List<IBundleMakerArtifact> stagedArtifacts) {
     _stagedArtifacts = (stagedArtifacts == null ? new LinkedList<IBundleMakerArtifact>()
         : new LinkedList<IBundleMakerArtifact>(stagedArtifacts));
@@ -148,12 +152,14 @@ public class ArtifactStage implements IArtifactStage {
 
   }
 
+  @Override
   public void addArtifactStageChangeListener(IArtifactStageChangeListener listener) {
     checkNotNull(listener);
 
     _stageChangeListener.add(listener);
   }
 
+  @Override
   public void removeArtifactStageChangeListener(IArtifactStageChangeListener listener) {
     checkNotNull(listener);
 
@@ -166,7 +172,7 @@ public class ArtifactStage implements IArtifactStage {
         StageSelection.STAGE_VIEW_SELECTION_PROVIDER_ID, //
         _stagedArtifacts);
   }
-  
+
   protected IArtifactSelection getArtifactSelection() {
     return Selection.instance().getArtifactSelectionService().getSelection(//
         Selection.ARTIFACT_STAGE_SELECTION_ID); //
@@ -184,20 +190,27 @@ public class ArtifactStage implements IArtifactStage {
   /**
    * @param selectedArtifacts
    */
+  @Override
   public void addToStage(List<IBundleMakerArtifact> selectedArtifacts) {
 
+    boolean stageChanged = false;
+
     for (IBundleMakerArtifact iBundleMakerArtifact : selectedArtifacts) {
-      _stagedArtifacts.add(iBundleMakerArtifact);
+      if (!_stagedArtifacts.contains(iBundleMakerArtifact)) {
+        _stagedArtifacts.add(iBundleMakerArtifact);
+        stageChanged = true;
+      }
     }
 
-    // fireArtifactStageChange(ArtifactStageChangeReason.contentChanged);
-
-    publishStagedArtifacts();
+    if (stageChanged) {
+      publishStagedArtifacts();
+    }
   }
 
   /**
    * @param artifacts
    */
+  @Override
   public void removeStagedArtifacts(Collection<IBundleMakerArtifact> artifacts) {
     _stagedArtifacts.removeAll(artifacts);
 

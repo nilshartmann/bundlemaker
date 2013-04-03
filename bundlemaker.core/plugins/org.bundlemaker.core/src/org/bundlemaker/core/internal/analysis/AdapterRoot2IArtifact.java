@@ -72,7 +72,10 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
   /** - */
   private final CopyOnWriteArrayList<IAnalysisModelModifiedListener> _artifactModelChangedListeners;
 
+  /** - */
   private boolean                                                    _cachesInitialized;
+
+  private boolean                                                    _isInInvalidationCaches;
 
   /**
    * <p>
@@ -647,6 +650,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     _cachesInitialized = false;
 
     //
+    _isInInvalidationCaches = true;
     this.accept(new IAnalysisModelVisitor.Adapter() {
       @Override
       public boolean onVisit(IBundleMakerArtifact artifact) {
@@ -654,6 +658,7 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
         return true;
       }
     });
+    _isInInvalidationCaches = false;
 
     //
     if (!getModularizedSystem().isModelModifiedNotificationDisabled()) {
@@ -663,8 +668,17 @@ public class AdapterRoot2IArtifact extends AbstractArtifactContainer implements 
     }
   }
 
-  // --- Blueprint API -------------------
+  /**
+   * <p>
+   * </p>
+   * 
+   * @return
+   */
+  public boolean isInInvalidationCaches() {
+    return _isInInvalidationCaches;
+  }
 
+  // --- Blueprint API -------------------
   private final Function<IDependency, Edge> _dependencyToEdgeConverterFunction = new Function<IDependency, Edge>() {
                                                                                  @Override
                                                                                  public Edge apply(

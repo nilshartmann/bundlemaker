@@ -18,22 +18,19 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class AdapterPackage2IArtifact extends AbstractArtifactContainer implements IPackageArtifact {
+public class AdapterPackage2IArtifact extends AbstractPackageFilteringArtifact implements IPackageArtifact {
 
   /** - */
-  private String        _qualifiedName;
+  private String  _qualifiedName;
 
   /** - */
-  private boolean       _isVirtual;
+  private boolean _isVirtual;
 
   /** - */
-  private boolean       _isHierarchical;
+  private boolean _isHierarchical;
 
   /** - */
-  private ArtifactCache _artifactCache;
-
-  /** - */
-  private IModule       _containingModule;
+  private IModule _containingModule;
 
   /**
    * <p>
@@ -58,7 +55,6 @@ public class AdapterPackage2IArtifact extends AbstractArtifactContainer implemen
     // set the qualified name
     _qualifiedName = qualifiedName;
     _isVirtual = isVirtual;
-    _artifactCache = artifactCache;
     _containingModule = containingModule;
     _isHierarchical = isHierarchical;
   }
