@@ -77,7 +77,7 @@ public class EditJdtContentProviderPage extends WizardPage {
     c.setLayoutData(gridData);
 
     Label label = new Label(c, SWT.NONE);
-    label.setText("Name:");
+    label.setText("Logical Name:");
     _nameText = new Text(c, SWT.BORDER);
     GridData gd = new GridData(GridData.FILL_HORIZONTAL);
     gd.grabExcessHorizontalSpace = true;
@@ -87,8 +87,19 @@ public class EditJdtContentProviderPage extends WizardPage {
       @Override
       public void modifyText(ModifyEvent e) {
         _textModifiedByUser = true;
+        checkConsistency();
       }
     });
+    
+    label = new Label(c, SWT.NONE);
+    label
+        .setText("The logical name is used to group all selected JDT projects (comparable with a Maven parent project)");
+    gridData = new GridData();
+    gridData.grabExcessHorizontalSpace = true;
+    gridData.horizontalAlignment = SWT.FILL;
+    gridData.horizontalSpan = 2;
+    label.setLayoutData(gridData);
+    
 
 
     setControl(comp);
@@ -143,14 +154,29 @@ public class EditJdtContentProviderPage extends WizardPage {
           if ((checkedElements.length == 1) || (checkedElements.length>1 && _nameText.getText().isEmpty())) {
              project = (IProject) checkedElements[0];
              _nameText.setText(project.getName());
-          } else {
-            _nameText.setText("");
           }
           _textModifiedByUser = false;
         }
-        setPageComplete(checkedElements.length > 0 && _nameText.getText().length() > 0);
+
+
+
+        checkConsistency();
       }
     });
+  }
+
+  protected void checkConsistency() {
+
+    Object[] checkedElements = _projectNames.getCheckedElements();
+
+    if (checkedElements.length < 1) {
+      setErrorMessage("Please select at least one JDT project");
+    } else if (_nameText.getText().isEmpty()) {
+      setErrorMessage("Please enter a logical name");
+    } else {
+      setErrorMessage(null);
+    }
+    setPageComplete(checkedElements.length > 0 && _nameText.getText().length() > 0);
   }
 
   /**
