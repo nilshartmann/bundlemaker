@@ -133,39 +133,40 @@ public class DependencyTreeArtifactLabelProvider extends ArtifactTreeLabelProvid
    */
   private String getRightSideLabel(IBundleMakerArtifact artifact) {
 
+    // //
+    // int dependencyCount = 0;
+    // Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
     //
-    int dependencyCount = 0;
-    Set<IBundleMakerArtifact> targetArtifacts = new HashSet<IBundleMakerArtifact>();
-
-    Collection<IDependency> dependencies = artifact.getDependenciesFrom(_helper.getUnfilteredSourceArtifacts());
-    if (dependencies != null) {
-      for (IDependency dependency : dependencies) {
-        for (IDependency coreDependency : dependency.getCoreDependencies()) {
-
-          //
-          Collection<IBundleMakerArtifact> unfilteredTargetDependencies = _helper.getUnfilteredTargetArtifacts();
-
-          IBundleMakerArtifact toArtifact = coreDependency.getTo();
-
-          //
-          if (unfilteredTargetDependencies.contains(toArtifact)) {
-            targetArtifacts.add(coreDependency.getFrom());
-            dependencyCount = dependencyCount + coreDependency.getWeight();
-          }
-        }
-      }
-    }
+    // Collection<IDependency> dependencies = artifact.getDependenciesFrom(_helper.getUnfilteredSourceArtifacts());
+    // if (dependencies != null) {
+    // for (IDependency dependency : dependencies) {
+    // for (IDependency coreDependency : dependency.getCoreDependencies()) {
+    //
+    // //
+    // Collection<IBundleMakerArtifact> unfilteredTargetDependencies = _helper.getUnfilteredTargetArtifacts();
+    //
+    // IBundleMakerArtifact toArtifact = coreDependency.getTo();
+    //
+    // //
+    // if (unfilteredTargetDependencies.contains(toArtifact)) {
+    // targetArtifacts.add(coreDependency.getFrom());
+    // dependencyCount = dependencyCount + coreDependency.getWeight();
+    // }
+    // }
+    // }
+    // }
 
     //
     StringBuilder stringBuilder = new StringBuilder();
     stringBuilder.append(super.getText(artifact));
-    stringBuilder.append(" (");
-    stringBuilder.append(dependencyCount);
-    stringBuilder.append("/");
-    // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
-    stringBuilder.append(targetArtifacts.size());
-    // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
-    stringBuilder.append(")");
+    
+    // stringBuilder.append(" (");
+    // stringBuilder.append(dependencyCount);
+    // stringBuilder.append("/");
+    // // stringBuilder.append(dependencyCount == 1 ? " Reference to " : " References to ");
+    // stringBuilder.append(targetArtifacts.size());
+    // // stringBuilder.append(targetArtifacts.size() == 1 ? " Artifact)" : " Artifacts)");
+    // stringBuilder.append(")");
 
     //
     return stringBuilder.toString();
