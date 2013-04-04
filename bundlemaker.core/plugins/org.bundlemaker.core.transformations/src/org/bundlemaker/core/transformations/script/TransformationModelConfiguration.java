@@ -14,5 +14,5 @@ public @interface TransformationModelConfiguration {
 
   ProjectContentType contentType() default ProjectContentType.BINARY;
 
-  boolean useVirtualModuleForMissingTypes() default true;
+  boolean useVirtualModuleForMissingTypes() default false;
 }
