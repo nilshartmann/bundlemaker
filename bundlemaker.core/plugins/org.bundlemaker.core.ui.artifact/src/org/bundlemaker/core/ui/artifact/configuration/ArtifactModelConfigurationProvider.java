@@ -49,7 +49,7 @@ public class ArtifactModelConfigurationProvider implements IArtifactModelConfigu
 
   private synchronized static AnalysisModelConfiguration getDefaultArtifactModelConfiguration() {
     if (DEFAULT_CONFIGURATION == null) {
-      DEFAULT_CONFIGURATION = new AnalysisModelConfiguration();
+      DEFAULT_CONFIGURATION = new AnalysisModelConfiguration(false, ProjectContentType.SOURCE, false);
     }
 
     return DEFAULT_CONFIGURATION;
