@@ -158,7 +158,7 @@ public final class AdapterGroup2IArtifact extends AbstractArtifactContainer impl
   public String handleCanAdd(IBundleMakerArtifact artifactToAdd) {
 
     //
-    if (!(artifactToAdd.isInstanceOf(IGroupArtifact.class) || artifactToAdd instanceof AdapterModule2IArtifact)) {
+    if (!(artifactToAdd.isInstanceOf(IGroupArtifact.class) || artifactToAdd.isInstanceOf(IModuleArtifact.class))) {
       return "Only groups and modules are addable to groups";
     }
 

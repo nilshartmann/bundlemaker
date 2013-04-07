@@ -141,21 +141,20 @@ public class AdapterUtils {
         newPathPrefix = newPathPrefix != null ? newPathPrefix + "|" + newPath : newPath;
       }
 
-      // TODO
-      AdapterModule2IArtifact adapter = (AdapterModule2IArtifact) moduleArtifact;
-      AbstractModule<?, ?> abstractModule = (AbstractModule<?, ?>) adapter.getModule();
-      Assert.isNotNull(abstractModule);
-
-      //
-      if (!abstractModule.hasModularizedSystem()) {
-        modularizedSystem.addModule(abstractModule);
-      }
-
-      if (newPathPrefix != null) {
-        newPathPrefix = newPathPrefix.replace('|', '/');
-        abstractModule.setClassification(new Path(newPathPrefix));
-      } else {
-        abstractModule.setClassification(null);
+      if (moduleArtifact instanceof AdapterModule2IArtifact) {
+        AdapterModule2IArtifact adapter = (AdapterModule2IArtifact) moduleArtifact;
+        AbstractModule<?, ?> abstractModule = (AbstractModule<?, ?>) adapter.getModule();
+        Assert.isNotNull(abstractModule);
+        //
+        if (!abstractModule.hasModularizedSystem()) {
+          modularizedSystem.addModule(abstractModule);
+        }
+        if (newPathPrefix != null) {
+          newPathPrefix = newPathPrefix.replace('|', '/');
+          abstractModule.setClassification(new Path(newPathPrefix));
+        } else {
+          abstractModule.setClassification(null);
+        }
       }
 
     }
