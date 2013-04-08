@@ -14,8 +14,7 @@ import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectContentProvider;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.spi.AbstractProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
+import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -35,205 +34,192 @@ import com.google.gson.annotations.SerializedName;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class JdtProjectContentProvider extends AbstractProjectContentProvider
-		implements IProjectContentProvider {
+public class JdtProjectContentProvider extends AbstractProjectContentProvider implements IProjectContentProvider {
 
-	/** the name of this entry */
-	@Expose
-	@SerializedName("name")
-	private String _name;
+  /** the name of this entry */
+  @Expose
+  @SerializedName("name")
+  private String                   _name;
 
-	@Expose
-	@SerializedName("java-project-names")
-	private String _javaProjectNames;
+  @Expose
+  @SerializedName("java-project-names")
+  private String                   _javaProjectNames;
 
-	/** the java project */
-	private Collection<IJavaProject> _javaProjects;
+  /** the java project */
+  private Collection<IJavaProject> _javaProjects;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void init(IProjectDescription description) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void init(IProjectDescription description) {
 
-		String[] projectNames = _javaProjectNames.split(",");
-		_javaProjects = new LinkedList<IJavaProject>();
+    String[] projectNames = _javaProjectNames.split(",");
+    _javaProjects = new LinkedList<IJavaProject>();
 
-		for (String projectName : projectNames) {
-			//
-			IProject project = ResourcesPlugin.getWorkspace().getRoot()
-					.getProject(projectName);
+    for (String projectName : projectNames) {
+      //
+      IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
 
-			//
-			IJavaProject javaProject = JavaCore.create(project);
-			_javaProjects.add(javaProject);
-		}
-	}
+      //
+      IJavaProject javaProject = JavaCore.create(project);
+      _javaProjects.add(javaProject);
+    }
+  }
 
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws CoreException
-	 */
-	@Override
-	public void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor)
-			throws CoreException {
+  /**
+   * {@inheritDoc}
+   * 
+   * @throws CoreException
+   */
+  @Override
+  public void onGetBundleMakerProjectContent(IProgressMonitor progressMonitor) throws CoreException {
 
-		// create instance of entry helper & clear the 'already resolved' list
-		clearFileBasedContents();
+    // create instance of entry helper & clear the 'already resolved' list
+    clearFileBasedContents();
 
-		//
-		Resolver resolver = new Resolver();
-		Set<ResolvedEntry> resolvedEntries = resolver.resolve(_javaProjects);
+    //
+    Resolver resolver = new Resolver();
+    Set<ResolvedEntry> resolvedEntries = resolver.resolve(_javaProjects);
 
-		List<ResolvedEntry> orderedEntries = new LinkedList<ResolvedEntry>(
-				resolvedEntries);
-		
-		// Make sure selected JDT projects stay first in the list
-		Collections.sort(orderedEntries, new ResolvedEntryComparator());
+    List<ResolvedEntry> orderedEntries = new LinkedList<ResolvedEntry>(resolvedEntries);
 
-		//
-		for (ResolvedEntry resolvedEntry : orderedEntries) {
+    // Make sure selected JDT projects stay first in the list
+    Collections.sort(orderedEntries, new ResolvedEntryComparator());
 
-			//
-			String name = "<none>";
-			String version = "0.0.0";
+    //
+    for (ResolvedEntry resolvedEntry : orderedEntries) {
 
-			//
-			if (resolvedEntry.hasProjectName()) {
+      //
+      String name = "<none>";
+      String version = "0.0.0";
 
-				//
-				name = resolvedEntry.getProjectName();
+      //
+      if (resolvedEntry.hasProjectName()) {
 
-			} else {
+        //
+        name = resolvedEntry.getProjectName();
 
-				//
-				FileBasedProjectContentInfo<?> info = FileBasedProjectContentInfoService.Factory
-						.getInfoService().extractJarInfo(
-								resolvedEntry.getBinaryPath().toFile());
+      } else {
 
-				//
-				name = info.getName();
-				version = info.getVersion();
-			}
+        //
+        IFileBasedProjectContentInfo info = IFileBasedProjectContentInfo.Factory
+            .extractFileBasedProjectContentInfo(resolvedEntry.getBinaryPath().toFile());
 
-			//
-			AnalyzeMode mode = resolvedEntry.isAnalyze() ? resolvedEntry
-					.getSources().isEmpty() ? AnalyzeMode.BINARIES_ONLY
-					: AnalyzeMode.BINARIES_AND_SOURCES
-					: AnalyzeMode.DO_NOT_ANALYZE;
+        //
+        name = info.getName();
+        version = info.getVersion();
+      }
 
-			//
-			File[] binaryPaths = new File[] { resolvedEntry.getBinaryPath()
-					.toFile() };
+      //
+      AnalyzeMode mode = resolvedEntry.isAnalyze() ? resolvedEntry.getSources().isEmpty() ? AnalyzeMode.BINARIES_ONLY
+          : AnalyzeMode.BINARIES_AND_SOURCES : AnalyzeMode.DO_NOT_ANALYZE;
 
-			//
-			List<File> sourceFiles = new ArrayList<File>();
-			for (IPath path : resolvedEntry.getSources()) {
-				sourceFiles.add(path.toFile());
-			}
-			File[] sourcePaths = sourceFiles.toArray(new File[0]);
+      //
+      File[] binaryPaths = new File[] { resolvedEntry.getBinaryPath().toFile() };
 
-			//
-			createFileBasedContent(name, version, binaryPaths, sourcePaths,
-					mode);
-		}
-	}
+      //
+      List<File> sourceFiles = new ArrayList<File>();
+      for (IPath path : resolvedEntry.getSources()) {
+        sourceFiles.add(path.toFile());
+      }
+      File[] sourcePaths = sourceFiles.toArray(new File[0]);
 
-	/**
-	 * <p>
-	 * </p>
-	 * 
-	 * @param javaProject
-	 */
-	public boolean addJavaProject(IJavaProject javaProject) {
-		if (_javaProjects == null) {
-			_javaProjects = new LinkedList<IJavaProject>();
-		}
+      //
+      createFileBasedContent(name, version, binaryPaths, sourcePaths, mode);
+    }
+  }
 
-		if (_javaProjects.contains(javaProject)) {
-			return false;
-		}
+  /**
+   * <p>
+   * </p>
+   * 
+   * @param javaProject
+   */
+  public boolean addJavaProject(IJavaProject javaProject) {
+    if (_javaProjects == null) {
+      _javaProjects = new LinkedList<IJavaProject>();
+    }
 
-		// add
-		_javaProjects.add(javaProject);
+    if (_javaProjects.contains(javaProject)) {
+      return false;
+    }
 
-		StringBuilder b = new StringBuilder();
+    // add
+    _javaProjects.add(javaProject);
 
-		for (IJavaProject project : _javaProjects) {
-			b.append(project.getElementName()).append(',');
-		}
+    StringBuilder b = new StringBuilder();
 
-		if (b.length() > 0) {
-			b.setLength(b.length() - 1);
-		}
+    for (IJavaProject project : _javaProjects) {
+      b.append(project.getElementName()).append(',');
+    }
 
-		_javaProjectNames = b.toString();
+    if (b.length() > 0) {
+      b.setLength(b.length() - 1);
+    }
 
-		return true;
-	}
+    _javaProjectNames = b.toString();
 
-	public String getName() {
-		if (_name == null) {
-			if (_javaProjects == null || _javaProjects.isEmpty()) {
-				return "unknown";
-			}
+    return true;
+  }
 
-			_name = _javaProjects.iterator().next().getElementName();
-		}
-		return _name;
-	}
+  public String getName() {
+    if (_name == null) {
+      if (_javaProjects == null || _javaProjects.isEmpty()) {
+        return "unknown";
+      }
 
-	public Collection<IJavaProject> getJavaProjects() {
-		return _javaProjects;
-	}
+      _name = _javaProjects.iterator().next().getElementName();
+    }
+    return _name;
+  }
 
-	protected IJavaProject getJavaProject(String name) {
-		Collection<IJavaProject> javaProjects = getJavaProjects();
-		for (IJavaProject iJavaProject : javaProjects) {
-			if (name.equals(iJavaProject.getElementName())) {
-				return iJavaProject;
-			}
-		}
-		return null;
-	}
+  public Collection<IJavaProject> getJavaProjects() {
+    return _javaProjects;
+  }
 
-	public IJavaProject getSourceJavaProject(
-			IProjectContentEntry projectContent, String rootPath)
-			throws CoreException {
+  protected IJavaProject getJavaProject(String name) {
+    Collection<IJavaProject> javaProjects = getJavaProjects();
+    for (IJavaProject iJavaProject : javaProjects) {
+      if (name.equals(iJavaProject.getElementName())) {
+        return iJavaProject;
+      }
+    }
+    return null;
+  }
 
-		IPath resolvedPath = new Path(rootPath);
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot()
-				.getContainerForLocation(resolvedPath);
-		IProject project = resource.getProject();
+  public IJavaProject getSourceJavaProject(IProjectContentEntry projectContent, String rootPath) throws CoreException {
 
-		IJavaProject result = JavaCore.create(project);
-		return result;
-	}
+    IPath resolvedPath = new Path(rootPath);
+    IResource resource = ResourcesPlugin.getWorkspace().getRoot().getContainerForLocation(resolvedPath);
+    IProject project = resource.getProject();
 
-	public void setName(String newName) {
-		_name = newName;
+    IJavaProject result = JavaCore.create(project);
+    return result;
+  }
 
-		fireProjectDescriptionChangedEvent();
-	}
+  public void setName(String newName) {
+    _name = newName;
 
-	protected class ResolvedEntryComparator implements
-			Comparator<ResolvedEntry> {
+    fireProjectDescriptionChangedEvent();
+  }
 
-		ResolvedEntryComparator() {
+  protected class ResolvedEntryComparator implements Comparator<ResolvedEntry> {
 
-		}
+    ResolvedEntryComparator() {
 
-		@Override
-		public int compare(ResolvedEntry o1, ResolvedEntry o2) {
-			
-			String compareKey1 = (!o1.hasProjectName()) + "_" + o1.getBinaryPath();
-			String compareKey2 = (!o2.hasProjectName()) + "_" + o2.getBinaryPath();
-			
-			return compareKey1.compareTo(compareKey2);
+    }
 
-		}
+    @Override
+    public int compare(ResolvedEntry o1, ResolvedEntry o2) {
 
-	}
+      String compareKey1 = (!o1.hasProjectName()) + "_" + o1.getBinaryPath();
+      String compareKey2 = (!o2.hasProjectName()) + "_" + o2.getBinaryPath();
+
+      return compareKey1.compareTo(compareKey2);
+
+    }
+
+  }
 
 }

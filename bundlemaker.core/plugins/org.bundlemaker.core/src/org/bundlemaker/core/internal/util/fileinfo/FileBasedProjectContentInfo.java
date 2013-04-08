@@ -8,8 +8,9 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.projectdescription.spi;
+package org.bundlemaker.core.internal.util.fileinfo;
 
+import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
 import org.eclipse.core.runtime.Assert;
 
 /**
@@ -18,7 +19,7 @@ import org.eclipse.core.runtime.Assert;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedProjectContentInfo<T> {
+public class FileBasedProjectContentInfo<T> implements IFileBasedProjectContentInfo {
 
   /** - */
   private String  _name;

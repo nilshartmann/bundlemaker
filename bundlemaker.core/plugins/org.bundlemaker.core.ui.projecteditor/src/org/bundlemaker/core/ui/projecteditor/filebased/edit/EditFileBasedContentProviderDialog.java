@@ -7,9 +7,8 @@ import java.util.Set;
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.VariablePath;
 import org.bundlemaker.core.projectdescription.file.FileBasedProjectContentProvider;
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
 import org.bundlemaker.core.ui.FormLayoutUtils;
+import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -261,7 +260,7 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
     }
 
     if (_nameTextField.getText().isEmpty() && _versionTextField.getText().isEmpty()) {
-      FileBasedProjectContentInfo jarInfo = getJarInfo(_binariesContentList.getItems().get(0));
+      IFileBasedProjectContentInfo jarInfo = getJarInfo(_binariesContentList.getItems().get(0));
       if (jarInfo != null) {
         _nameTextField.setText(jarInfo.getName());
         _versionTextField.setText(jarInfo.getVersion());
@@ -270,13 +269,13 @@ public class EditFileBasedContentProviderDialog extends TitleAreaDialog {
 
   }
 
-  protected FileBasedProjectContentInfo getJarInfo(String fileName) {
+  protected IFileBasedProjectContentInfo getJarInfo(String fileName) {
     try {
 
       VariablePath variablePath = new VariablePath(fileName);
 
       File file = variablePath.getAsFile();
-      return FileBasedProjectContentInfoService.Factory.getInfoService().extractJarInfo(file);
+      return IFileBasedProjectContentInfo.Factory.extractFileBasedProjectContentInfo(file);
 
     } catch (Exception ex) {
       ex.printStackTrace();

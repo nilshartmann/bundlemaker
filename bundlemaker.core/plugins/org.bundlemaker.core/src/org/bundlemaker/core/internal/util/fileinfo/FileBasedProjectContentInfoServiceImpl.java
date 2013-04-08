@@ -8,14 +8,10 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.internal.projectdescription.file;
+package org.bundlemaker.core.internal.util.fileinfo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
 
 /**
  * <p>
@@ -23,7 +19,7 @@ import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoSe
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class FileBasedProjectContentInfoServiceImpl implements FileBasedProjectContentInfoService {
+public class FileBasedProjectContentInfoServiceImpl {
 
   /**
    * <p>
@@ -44,39 +40,6 @@ public class FileBasedProjectContentInfoServiceImpl implements FileBasedProjectC
     } catch (IOException e) {
       throw new RuntimeException(e.getMessage(), e);
     }
-  }
-
-  @Override
-  public <T> FileBasedProjectContentInfo<T> getAssociatedFileBasedProjectContent(FileBasedProjectContentInfo<T> info,
-      List<FileBasedProjectContentInfo<T>> allInfos) {
-
-    //
-    for (FileBasedProjectContentInfo<T> i : allInfos) {
-
-      if (info.isSource()) {
-        // in case info IS SOURCE, i must not be source
-        if (i.isSource() == false) {
-          if (info.getBinaryName().equals(i.getName()) && info.getVersion().equals(i.getVersion())) {
-            return i;
-          }
-        }
-      } else {
-        if (i.isSource()) {
-          if (info.getName().equals(i.getBinaryName()) && info.getVersion().equals(i.getVersion())) {
-            return i;
-          }
-        }
-      }
-
-      //
-      if (i.getName().equals(info.getName()) && i.getVersion().equals(info.getVersion())
-          && i.isSource() != info.isSource()) {
-        return i;
-      }
-    }
-
-    //
-    return null;
   }
 
   private static <T> FileBasedProjectContentInfo<T> extractInfoFromPath(File path) {

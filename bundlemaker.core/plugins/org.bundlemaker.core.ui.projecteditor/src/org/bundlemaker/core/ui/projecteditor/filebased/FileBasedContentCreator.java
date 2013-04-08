@@ -1,14 +1,15 @@
 package org.bundlemaker.core.ui.projecteditor.filebased;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 import org.bundlemaker.core.projectdescription.AnalyzeMode;
 import org.bundlemaker.core.projectdescription.VariablePath;
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfo;
-import org.bundlemaker.core.projectdescription.spi.FileBasedProjectContentInfoService;
 import org.bundlemaker.core.projectdescription.spi.IModifiableProjectDescription;
+import org.bundlemaker.core.util.IFileBasedProjectContentInfo;
 
 /**
  * Util class that creates FileBasedContent instances based on a set of selected files.
@@ -49,7 +50,7 @@ public class FileBasedContentCreator {
   private void addFiles(IModifiableProjectDescription modifiableProjectDescription, VariablePath[] variablePaths) {
 
     //
-    final List<FileBasedProjectContentInfo<VariablePath>> modules = new LinkedList<FileBasedProjectContentInfo<VariablePath>>();
+    final Map<IFileBasedProjectContentInfo, VariablePath> modules = new HashMap<IFileBasedProjectContentInfo, VariablePath>();
 
     // STEP 1:
     for (VariablePath variablePath : variablePaths) {
@@ -76,20 +77,15 @@ public class FileBasedContentCreator {
         continue;
       }
 
-      FileBasedProjectContentInfo<VariablePath> jarInfo = FileBasedProjectContentInfoService.Factory
-          .getInfoService()
-          .extractJarInfo(file);
+      IFileBasedProjectContentInfo jarInfo = IFileBasedProjectContentInfo.Factory
+          .extractFileBasedProjectContentInfo(file);
 
       //
-      jarInfo.setUserObject(variablePath);
-
-      //
-      modules.add(jarInfo);
+      modules.put(jarInfo, variablePath);
     }
 
     // STEP 2:
-    for (FileBasedProjectContentInfo<VariablePath> info : new LinkedList<FileBasedProjectContentInfo<VariablePath>>(
-        modules)) {
+    for (IFileBasedProjectContentInfo info : new LinkedList<IFileBasedProjectContentInfo>(modules.keySet())) {
 
       // ignore potential source modules for now
       if (info.isSource()) {
@@ -97,35 +93,36 @@ public class FileBasedContentCreator {
       }
 
       // already handled?
-      if (!modules.remove(info)) {
+      VariablePath variablePath = modules.remove(info);
+      if (variablePath == null) {
         continue;
       }
 
       //
-      FileBasedProjectContentInfo<VariablePath> sourceInfo = FileBasedProjectContentInfoService.Factory
-          .getInfoService()
-          .getAssociatedFileBasedProjectContent(info, modules);
+      IFileBasedProjectContentInfo sourceInfo = getAssociatedFileBasedProjectContent(info,
+          modules.keySet());
 
-      modules.remove(sourceInfo);
+      //
+      VariablePath sourcePath = modules.remove(sourceInfo);
 
       if (sourceInfo != null) {
         FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
-            info.getUserObject(),
-            sourceInfo.getUserObject(),
+            variablePath,
+            sourcePath,
             AnalyzeMode.BINARIES_AND_SOURCES);
 
       } else {
         FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
-            info.getUserObject(), null,
+            variablePath, null,
             AnalyzeMode.BINARIES_ONLY);
       }
     }
 
     // add rest of files (most probably source files according to our naming conventions. Add it anyway) TODO: we could
     // issue a warning here (sources without binaries)
-    for (FileBasedProjectContentInfo<VariablePath> info : modules) {
+    for (IFileBasedProjectContentInfo info : modules.keySet()) {
       FileBasedProjectContentProviderFactory.addNewFileBasedContentProvider(modifiableProjectDescription,
-          info.getUserObject(), null,
+          modules.get(info), null,
           AnalyzeMode.BINARIES_ONLY);
     }
   }
@@ -142,6 +139,38 @@ public class FileBasedContentCreator {
     } catch (Exception ex) {
       return null;
     }
+  }
+
+  private IFileBasedProjectContentInfo getAssociatedFileBasedProjectContent(IFileBasedProjectContentInfo info,
+      Collection<IFileBasedProjectContentInfo> allInfos) {
+
+    //
+    for (IFileBasedProjectContentInfo i : allInfos) {
+
+      if (info.isSource()) {
+        // in case info IS SOURCE, i must not be source
+        if (i.isSource() == false) {
+          if (info.getBinaryName().equals(i.getName()) && info.getVersion().equals(i.getVersion())) {
+            return i;
+          }
+        }
+      } else {
+        if (i.isSource()) {
+          if (info.getName().equals(i.getBinaryName()) && info.getVersion().equals(i.getVersion())) {
+            return i;
+          }
+        }
+      }
+
+      //
+      if (i.getName().equals(info.getName()) && i.getVersion().equals(info.getVersion())
+          && i.isSource() != info.isSource()) {
+        return i;
+      }
+    }
+
+    //
+    return null;
   }
 
 }
