@@ -23,6 +23,7 @@ import org.bundlemaker.core.BundleMakerProjectChangedEvent;
 import org.bundlemaker.core.BundleMakerProjectChangedEvent.Type;
 import org.bundlemaker.core.BundleMakerProjectState;
 import org.bundlemaker.core.IBundleMakerProject;
+import org.bundlemaker.core.IBundleMakerProject.IProjectDescriptionModifier;
 import org.bundlemaker.core.IBundleMakerProjectChangedListener;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.hook.IBundleMakerProjectHook;
@@ -55,7 +56,7 @@ import org.eclipse.core.runtime.Status;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public class BundleMakerProject implements IBundleMakerProject {
+public class BundleMakerProject implements IInternalBundleMakerProject {
 
   /** the associated eclipse project (the bundle make project) */
   private IProject                                 _project;

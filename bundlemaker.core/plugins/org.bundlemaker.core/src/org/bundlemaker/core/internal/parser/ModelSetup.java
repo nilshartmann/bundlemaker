@@ -15,6 +15,7 @@ import java.util.concurrent.FutureTask;
 import org.bundlemaker.core.IProblem;
 import org.bundlemaker.core.internal.Activator;
 import org.bundlemaker.core.internal.BundleMakerProject;
+import org.bundlemaker.core.internal.IInternalBundleMakerProject;
 import org.bundlemaker.core.internal.projectdescription.IResourceStandin;
 import org.bundlemaker.core.internal.projectdescription.ProjectContentEntry;
 import org.bundlemaker.core.internal.resource.Resource;
@@ -43,19 +44,16 @@ import org.eclipse.core.runtime.SubMonitor;
  */
 public class ModelSetup {
 
-  public static final boolean LOG                      = true;
+  public static final boolean         LOG          = true;
 
   /** THREAD_COUNT */
-  private static final int    THREAD_COUNT             = Runtime.getRuntime().availableProcessors();
+  private static final int            THREAD_COUNT = Runtime.getRuntime().availableProcessors();
 
   /** the bundle maker project */
-  private BundleMakerProject  _bundleMakerProject;
+  private IInternalBundleMakerProject _bundleMakerProject;
 
   /**  */
-  private List<IParser[]>     _parsers4threads;
-
-  /** - */
-  private boolean             _parseIndirectReferences = true;
+  private List<IParser[]>             _parsers4threads;
 
   /**
    * <p>
