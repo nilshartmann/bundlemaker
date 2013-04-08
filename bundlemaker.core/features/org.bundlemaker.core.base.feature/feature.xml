@@ -249,13 +249,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.bundlemaker.core.reports"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.bundlemaker.core.jdt"
          download-size="0"
          install-size="0"
@@ -275,12 +268,12 @@ litigation.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="org.bundlemaker.core.selection"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>         
+         unpack="false"/>
 
 </feature>

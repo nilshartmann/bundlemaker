@@ -13,7 +13,6 @@
 		<module>plugins/org.bundlemaker.core.jdt</module>
 		<module>plugins/org.bundlemaker.core.mvn</module>
 		<module>plugins/org.bundlemaker.core.osgi</module>
-		<module>plugins/org.bundlemaker.core.reports</module>
 		<module>plugins/org.bundlemaker.core.parser.bytecode</module>
 		<module>plugins/org.bundlemaker.core.store.db4o</module>
 		<module>plugins/org.bundlemaker.core.transformations</module>
