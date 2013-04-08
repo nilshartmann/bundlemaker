@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.bundlemaker.testlibs.feature"
+      label="org.bundlemaker.testlibs.feature"
+      version="1.0.0">
+
+   <copyright url="https://github.com/tinkerpop/blueprints/blob/master/LICENSE.txt">
+   </copyright>
+
+   <license url="https://github.com/tinkerpop/blueprints/blob/master/LICENSE.txt">
+   </license>
+
+   <plugin
+         id="org.mockito.mockito-all"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

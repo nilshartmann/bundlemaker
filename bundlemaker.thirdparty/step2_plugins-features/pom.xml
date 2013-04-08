@@ -17,6 +17,7 @@
 		<module>features/org.bundlemaker.com.db4o.feature</module>
 		<module>features/org.bundlemaker.com.google.feature</module>
 		<module>features/org.bundlemaker.com.tinkerpop.feature</module>
+		<module>features/org.bundlemaker.testlibs.feature</module>		
 		<module>p2/org.bundlemaker.thirdparty.p2</module>
 	</modules>
 
@@ -66,6 +67,11 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+		</dependency>
 		<dependency>
 			<groupId>org.bundlemaker.thirdparty</groupId>
 			<artifactId>org.bundlemaker.com.tinkerpop.blueprints.blueprints-core</artifactId>
