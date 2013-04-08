@@ -63,7 +63,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
 
   /**
    * <p>
-   * Set the name of this IFileBasedContent to the given value
+   * Set the name of the module that is represented by this {@link FileBasedProjectContentProvider} to the given value.
    * </p>
    * 
    * @param name
@@ -74,6 +74,13 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     providerChanged();
   }
 
+  /**
+   * <p>
+   * Returns the name of this {@link FileBasedProjectContentProvider}.
+   * </p>
+   * 
+   * @return
+   */
   public String getName() {
     return _name;
   }
@@ -91,15 +98,24 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     providerChanged();
   }
 
+  /**
+   * <p>
+   * Returns the version of this {@link FileBasedProjectContentProvider}.
+   * </p>
+   * 
+   * @return the version of this {@link FileBasedProjectContentProvider}.
+   */
   public String getVersion() {
     return _version;
   }
 
   /**
    * <p>
+   * Sets the {@link AnalyzeMode} of this {@link FileBasedProjectContentProvider}.
    * </p>
    * 
    * @param analyze
+   *          the {@link AnalyzeMode} of this {@link FileBasedProjectContentProvider}.
    */
   public void setAnalyzeMode(AnalyzeMode analyzeMode) {
     _analyzeMode = analyzeMode;
@@ -107,23 +123,27 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     providerChanged();
   }
 
-  protected void providerChanged() {
-    clearFileBasedContents();
-
-    fireProjectDescriptionChangedEvent();
-  }
-
+  /**
+   * <p>
+   * Returns the {@link AnalyzeMode} of this {@link FileBasedProjectContentProvider}.
+   * </p>
+   * 
+   * @return the {@link AnalyzeMode} of this {@link FileBasedProjectContentProvider}.
+   */
   public AnalyzeMode getAnalyzeMode() {
     return _analyzeMode;
   }
 
   /**
    * <p>
+   * Sets the given binary root paths.
    * </p>
    * 
    * @param binaryRootPaths
    */
   public void setBinaryPaths(String[] binaryRootPaths) {
+
+    //
     _binaryPaths.clear();
     for (String path : binaryRootPaths) {
       _binaryPaths.add(new VariablePath(path));
@@ -132,31 +152,50 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     providerChanged();
   }
 
+  /**
+   * <p>
+   * Returns the binary paths.
+   * </p>
+   * 
+   * @return the binary paths.
+   */
   public Set<VariablePath> getBinaryPaths() {
     return _binaryPaths;
   }
 
   /**
    * <p>
+   * Sets the given source root paths.
    * </p>
    * 
    * @param sourceRootPaths
    */
   public void setSourcePaths(String[] sourceRootPaths) {
+
+    //
     _sourcePaths.clear();
     for (String path : sourceRootPaths) {
       _sourcePaths.add(new VariablePath(path));
     }
 
+    //
     providerChanged();
   }
 
+  /**
+   * <p>
+   * Returns the source paths.
+   * </p>
+   * 
+   * @return
+   */
   public Set<VariablePath> getSourcePaths() {
     return _sourcePaths;
   }
 
   /**
    * <p>
+   * Adds the given path as a root path.
    * </p>
    * 
    * @param path
@@ -179,6 +218,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
 
   /**
    * <p>
+   * Removes the given root path.
    * </p>
    * 
    * @param path
@@ -196,14 +236,18 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
       _sourcePaths.add(path);
     }
 
+    // fire provider changed
     providerChanged();
   }
 
   /**
    * <p>
+   * Returns <code>true</code> if the analyze mode is either <code>AnalyzeMode.BINARIES_ONLY</code> or
+   * <code>AnalyzeMode.BINARIES_AND_SOURCES</code>.
    * </p>
    * 
-   * @return
+   * @return <code>true</code> if the analyze mode is either <code>AnalyzeMode.BINARIES_ONLY</code> or
+   *         <code>AnalyzeMode.BINARIES_AND_SOURCES</code>.
    */
   public boolean isAnalyze() {
     return _analyzeMode == AnalyzeMode.BINARIES_ONLY || _analyzeMode == AnalyzeMode.BINARIES_AND_SOURCES;
@@ -211,6 +255,7 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
 
   /**
    * <p>
+   * Returns the (one and only) {@link IProjectContentEntry}.
    * </p>
    * 
    * @return
@@ -281,6 +326,19 @@ public class FileBasedProjectContentProvider extends AbstractProjectContentProvi
     } else if (!_version.equals(other._version))
       return false;
     return true;
+  }
+
+  /**
+   * <p>
+   * </p>
+   */
+  protected void providerChanged() {
+
+    // clear the file based content
+    clearFileBasedContents();
+
+    // fire project description changed event
+    fireProjectDescriptionChangedEvent();
   }
 
   /**
