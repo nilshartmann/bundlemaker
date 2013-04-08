@@ -4,9 +4,9 @@ import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.spi.AbstractArtifactContainer;
+import org.bundlemaker.core.internal.transformation.RenameModuleTransformation;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.transformation.RenameModuleTransformation;
 import org.eclipse.core.runtime.Assert;
 
 /**

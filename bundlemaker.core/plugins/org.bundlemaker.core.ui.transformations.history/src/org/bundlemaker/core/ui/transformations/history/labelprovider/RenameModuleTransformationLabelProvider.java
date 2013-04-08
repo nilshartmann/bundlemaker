@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.history.labelprovider;
 
-import org.bundlemaker.core.transformation.RenameModuleTransformation;
+import org.bundlemaker.core.modules.transformation.IRenameModuleTransformation;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -18,13 +18,13 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public class RenameModuleTransformationLabelProvider extends
-    AbstractTransformationLabelProvider<RenameModuleTransformation> {
+    AbstractTransformationLabelProvider<IRenameModuleTransformation> {
 
   /**
    * @param supportedType
    */
   public RenameModuleTransformationLabelProvider() {
-    super(RenameModuleTransformation.class);
+    super(IRenameModuleTransformation.class);
   }
 
   /*
@@ -35,7 +35,7 @@ public class RenameModuleTransformationLabelProvider extends
    * bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getTitle(RenameModuleTransformation transformation) {
+  protected String getTitle(IRenameModuleTransformation transformation) {
     return "Rename Module";
   }
 
@@ -47,7 +47,7 @@ public class RenameModuleTransformationLabelProvider extends
    * (org.bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected Image getTitleImage(RenameModuleTransformation transformation) {
+  protected Image getTitleImage(IRenameModuleTransformation transformation) {
     return null;
   }
 
@@ -59,9 +59,8 @@ public class RenameModuleTransformationLabelProvider extends
    * .bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getDetails(RenameModuleTransformation transformation) {
-    return "Renamed " + transformation.getOldModuleIdentifier() + " to "
-        + transformation.getNewModifiableModule().getModuleIdentifier();
+  protected String getDetails(IRenameModuleTransformation transformation) {
+    return "Renamed " + transformation.getOldModuleIdentifier() + " to " + transformation.getNewModuleIdentifier();
   }
 
 }

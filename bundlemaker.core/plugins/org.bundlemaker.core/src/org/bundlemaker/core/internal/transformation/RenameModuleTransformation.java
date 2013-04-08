@@ -1,10 +1,12 @@
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.internal.transformation;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
+import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableModule;
-import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
+import org.bundlemaker.core.modules.transformation.IRenameModuleTransformation;
+import org.bundlemaker.core.transformation.AbstractConfigurableTransformation;
 import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -14,7 +16,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class RenameModuleTransformation extends
-    AbstractConfigurableTransformation<RenameModuleTransformation.Configuration> implements IUndoableTransformation {
+    AbstractConfigurableTransformation<RenameModuleTransformation.Configuration> implements IRenameModuleTransformation {
 
   /** - */
   private IModifiableModule _modifiableModule;
@@ -88,7 +90,14 @@ public class RenameModuleTransformation extends
   /**
    * @return the modifiableModule
    */
-  public IModifiableModule getNewModifiableModule() {
+  public IModuleIdentifier getNewModuleIdentifier() {
+    return _modifiableModule.getModuleIdentifier();
+  }
+
+  /**
+   * @return the modifiableModule
+   */
+  public IModule getModule() {
     return _modifiableModule;
   }
 
