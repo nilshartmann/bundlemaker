@@ -8,7 +8,9 @@
  * Contributors:
  *     Gerd Wuetherich (gerd@gerd-wuetherich.de) - initial API and implementation
  ******************************************************************************/
-package org.bundlemaker.core.modules.transformation;
+package org.bundlemaker.core.internal.transformation;
+
+import org.bundlemaker.core.modules.transformation.ITransformation;
 
 /**
  * <p>

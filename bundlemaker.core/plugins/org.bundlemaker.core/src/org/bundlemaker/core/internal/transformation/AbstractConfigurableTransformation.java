@@ -1,4 +1,4 @@
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.internal.transformation;
 
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.util.gson.GsonHelper;

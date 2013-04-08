@@ -26,6 +26,8 @@ import org.bundlemaker.core.internal.modules.TypeContainer;
 import org.bundlemaker.core.internal.modules.TypeModule;
 import org.bundlemaker.core.internal.resource.Type;
 import org.bundlemaker.core.internal.transformation.BasicProjectContentTransformation;
+import org.bundlemaker.core.internal.transformation.IInternalTransformation;
+import org.bundlemaker.core.internal.transformation.IUndoableTransformation;
 import org.bundlemaker.core.modules.IGroup;
 import org.bundlemaker.core.modules.IModule;
 import org.bundlemaker.core.modules.IModuleIdentifier;
@@ -33,7 +35,6 @@ import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
 import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
 import org.bundlemaker.core.projectdescription.IProjectDescription;
 import org.bundlemaker.core.projectdescription.VariablePath;
@@ -247,7 +248,8 @@ public abstract class AbstractTransformationAwareModularizedSystem extends Abstr
     for (ITransformation transformation : transformations) {
 
       // step 4.1: apply transformation
-      transformation.apply((IModifiableModularizedSystem) this, transformationMonitor.newChild(1));
+      ((IInternalTransformation) transformation).apply((IModifiableModularizedSystem) this,
+          transformationMonitor.newChild(1));
 
       // // step 4.2: clean up empty modules
       // for (Iterator<Entry<IModuleIdentifier, IModifiableResourceModule>> iterator = getModifiableResourceModulesMap()

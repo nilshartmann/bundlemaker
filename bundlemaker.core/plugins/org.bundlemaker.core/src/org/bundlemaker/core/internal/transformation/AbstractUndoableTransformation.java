@@ -1,7 +1,6 @@
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.internal.transformation;
 
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
@@ -10,12 +9,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
-public abstract class AbstractUndoableTransformation implements IUndoableTransformation {
+public abstract class AbstractUndoableTransformation implements IUndoableTransformation, IInternalTransformation {
 
   /** - */
   private IModifiableModularizedSystem _modularizedSystem;
 
-  @Override
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
     _modularizedSystem = modularizedSystem;
   }

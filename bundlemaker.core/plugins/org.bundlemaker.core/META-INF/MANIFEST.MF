@@ -30,7 +30,6 @@ Export-Package: org.bundlemaker.core,
  org.bundlemaker.core.projectdescription.spi,
  org.bundlemaker.core.resource,
  org.bundlemaker.core.resource.modifiable,
- org.bundlemaker.core.transformation,
  org.bundlemaker.core.util,
  org.bundlemaker.core.util.collections,
  org.bundlemaker.core.util.gson

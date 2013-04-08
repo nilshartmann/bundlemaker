@@ -10,8 +10,6 @@
  ******************************************************************************/
 package org.bundlemaker.core.modules.transformation;
 
-import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * <p>
@@ -25,15 +23,4 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public interface ITransformation {
 
-  /**
-   * <p>
-   * </p>
-   * 
-   * @param modularizedSystem
-   * @param monitor
-   *          the progress monitor to use for reporting progress to the user. It is the caller's responsibility to call
-   *          done() on the given monitor. Accepts <code>null</code>, indicating that no progress should be reported and
-   *          that the operation cannot be canceled.
-   */
-  public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor);
 }

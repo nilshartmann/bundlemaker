@@ -1,8 +1,9 @@
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.internal.transformation;
 
 import org.bundlemaker.core.analysis.IArtifactSelector;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
+import org.bundlemaker.core.modules.transformation.IRemoveArtifactsTransformation;
 import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -18,7 +19,8 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class RemoveArtifactsTransformation extends
-    AbstractConfigurableTransformation<RemoveArtifactsTransformation.Configuration> {
+    AbstractConfigurableTransformation<RemoveArtifactsTransformation.Configuration> implements
+    IRemoveArtifactsTransformation {
 
   /**
    * <p>

@@ -1,4 +1,4 @@
-package org.bundlemaker.core.transformation;
+package org.bundlemaker.core.internal.transformation;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -15,7 +15,7 @@ import org.bundlemaker.core.internal.transformation.add.AddMovableUnitsToModule;
 import org.bundlemaker.core.internal.transformation.add.IAddArtifactAction;
 import org.bundlemaker.core.internal.transformation.add.ModelNotificationSuppressor;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
-import org.bundlemaker.core.modules.transformation.IUndoableTransformation;
+import org.bundlemaker.core.modules.transformation.IAddArtifactsTransformation;
 import org.bundlemaker.core.util.gson.GsonHelper;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -31,7 +31,7 @@ import com.google.gson.annotations.SerializedName;
  * @author Gerd W&uuml;therich (gerd@gerd-wuetherich.de)
  */
 public class AddArtifactsTransformation extends
-    AbstractConfigurableTransformation<AddArtifactsTransformation.Configuration> implements IUndoableTransformation {
+    AbstractConfigurableTransformation<AddArtifactsTransformation.Configuration> implements IAddArtifactsTransformation {
 
   /** - */
   private List<IAddArtifactAction<?>> _actions;

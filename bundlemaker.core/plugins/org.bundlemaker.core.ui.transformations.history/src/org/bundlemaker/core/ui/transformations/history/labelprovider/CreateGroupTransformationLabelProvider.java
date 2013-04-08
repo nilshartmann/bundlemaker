@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.bundlemaker.core.ui.transformations.history.labelprovider;
 
-import org.bundlemaker.core.transformation.CreateGroupTransformation;
+import org.bundlemaker.core.modules.transformation.ICreateGroupTransformation;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -18,24 +18,24 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public class CreateGroupTransformationLabelProvider extends
-    AbstractTransformationLabelProvider<CreateGroupTransformation> {
+    AbstractTransformationLabelProvider<ICreateGroupTransformation> {
 
   public CreateGroupTransformationLabelProvider() {
-    super(CreateGroupTransformation.class);
+    super(ICreateGroupTransformation.class);
   }
 
   @Override
-  protected String getTitle(CreateGroupTransformation transformation) {
+  protected String getTitle(ICreateGroupTransformation transformation) {
     return "Create Group";
   }
 
   @Override
-  protected Image getTitleImage(CreateGroupTransformation transformation) {
+  protected Image getTitleImage(ICreateGroupTransformation transformation) {
     return null;
   }
 
   @Override
-  protected String getDetails(CreateGroupTransformation transformation) {
+  protected String getDetails(ICreateGroupTransformation transformation) {
 
     String where = "";
 

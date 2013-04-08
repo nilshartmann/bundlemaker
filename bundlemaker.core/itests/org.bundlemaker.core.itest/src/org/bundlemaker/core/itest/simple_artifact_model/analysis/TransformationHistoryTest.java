@@ -1,13 +1,13 @@
 package org.bundlemaker.core.itest.simple_artifact_model.analysis;
 
-import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.*;
+import static org.bundlemaker.core.itestframework.simple_artifact_model.ArtifactAssert.assertResourcesCount;
 
 import org.bundlemaker.core.analysis.IModuleArtifact;
 import org.bundlemaker.core.analysis.selectors.DefaultArtifactSelector;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.transformation.AddArtifactsTransformation;
-import org.bundlemaker.core.transformation.CreateGroupTransformation;
-import org.bundlemaker.core.transformation.CreateModuleTransformation;
+import org.bundlemaker.core.modules.transformation.IAddArtifactsTransformation;
+import org.bundlemaker.core.modules.transformation.ICreateGroupTransformation;
+import org.bundlemaker.core.modules.transformation.ICreateModuleTransformation;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,15 +34,15 @@ public class TransformationHistoryTest extends AbstractSimpleArtifactModelTest {
 
     //
     Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
-    Assert.assertEquals(CreateGroupTransformation.class, getModularizedSystem().getTransformations().get(2).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(2) instanceof ICreateGroupTransformation);
 
     // create a new group
     getBinModel().getRootArtifact().getOrCreateGroup("NewGroup2");
 
     //
     Assert.assertEquals(4, getModularizedSystem().getTransformations().size());
-    Assert.assertEquals(CreateGroupTransformation.class, getModularizedSystem().getTransformations().get(2).getClass());
-    Assert.assertEquals(CreateGroupTransformation.class, getModularizedSystem().getTransformations().get(3).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(2) instanceof ICreateGroupTransformation);
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(3) instanceof ICreateGroupTransformation);
   }
 
   /**
@@ -60,8 +60,7 @@ public class TransformationHistoryTest extends AbstractSimpleArtifactModelTest {
 
     //
     Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(CreateModuleTransformation.class, getModularizedSystem().getTransformations().get(2).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(2) instanceof ICreateModuleTransformation);
   }
 
   /**
@@ -81,8 +80,7 @@ public class TransformationHistoryTest extends AbstractSimpleArtifactModelTest {
 
     // assert one 'CreateModuleTransformation' transformation
     Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(CreateModuleTransformation.class, getModularizedSystem().getTransformations().get(2).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(2) instanceof ICreateModuleTransformation);
 
     // STEP 2: add the 'Klasse' resource
     newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
@@ -91,8 +89,7 @@ public class TransformationHistoryTest extends AbstractSimpleArtifactModelTest {
 
     // assert 'AddTransformation' transformation
     Assert.assertEquals(4, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(AddArtifactsTransformation.class, getModularizedSystem().getTransformations().get(3).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(3) instanceof IAddArtifactsTransformation);
 
     // STEP 3: add the 'Test' resource
     newModuleArtifact.addArtifact(getBinModel().getTestResource());
@@ -101,56 +98,7 @@ public class TransformationHistoryTest extends AbstractSimpleArtifactModelTest {
 
     // assert 'AddTransformation' transformation
     Assert.assertEquals(5, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(AddArtifactsTransformation.class, getModularizedSystem().getTransformations().get(4).getClass());
-  }
-
-  /**
-   * <p>
-   * </p>
-   */
-  @Test
-  public void addArtifactsTransformationHistory() {
-
-    // we have one transformation (a group transformation) that is done by the test....
-    Assert.assertEquals(2, getModularizedSystem().getTransformations().size());
-
-    // STEP 1: create a new module
-    IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("hallo", "1.2.3");
-    assertResourcesCount(getBinModel().getMainModuleArtifact(), 2);
-    assertResourcesCount(newModuleArtifact, 0);
-
-    // assert one 'CreateModuleTransformation' transformation
-    Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(CreateModuleTransformation.class, getModularizedSystem().getTransformations().get(2).getClass());
-
-    // STEP 2: add the 'Klasse' resource
-    AddArtifactsTransformation.Configuration configuration = new AddArtifactsTransformation.Configuration(
-        newModuleArtifact, new DefaultArtifactSelector(getBinModel().getKlasseResource()));
-    AddArtifactsTransformation transformation_1 = new AddArtifactsTransformation(configuration.toJsonTree());
-    getModularizedSystem().applyTransformations(null, transformation_1);
-
-    assertResourcesCount(getBinModel().getMainModuleArtifact(), 1);
-    assertResourcesCount(newModuleArtifact, 1);
-
-    // assert 'AddTransformation' transformation
-    Assert.assertEquals(4, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(AddArtifactsTransformation.class, getModularizedSystem().getTransformations().get(3).getClass());
-
-    // STEP 3: add the 'Test' resource
-    AddArtifactsTransformation.Configuration configuration_2 = new AddArtifactsTransformation.Configuration(
-        newModuleArtifact, new DefaultArtifactSelector(getBinModel().getTestResource()));
-    AddArtifactsTransformation transformation_2 = new AddArtifactsTransformation(configuration_2.toJsonTree());
-    getModularizedSystem().applyTransformations(null, transformation_2);
-    assertResourcesCount(getBinModel().getMainModuleArtifact(), 0);
-    assertResourcesCount(newModuleArtifact, 2);
-
-    // assert 'AddTransformation' transformation
-    Assert.assertEquals(5, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(AddArtifactsTransformation.class, getModularizedSystem().getTransformations().get(4).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(4) instanceof IAddArtifactsTransformation);
   }
 
   /**
@@ -167,8 +115,7 @@ public class TransformationHistoryTest extends AbstractSimpleArtifactModelTest {
 
     // assert one 'CreateModuleTransformation' transformation
     Assert.assertEquals(3, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(CreateModuleTransformation.class, getModularizedSystem().getTransformations().get(2).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(2) instanceof ICreateModuleTransformation);
 
     // add the 'de.test' package
     newModuleArtifact.addArtifact(getBinModel().getTestPackage());
@@ -177,7 +124,6 @@ public class TransformationHistoryTest extends AbstractSimpleArtifactModelTest {
 
     // assert 'AddTransformation' transformation
     Assert.assertEquals(4, getModularizedSystem().getTransformations().size());
-    Assert
-        .assertEquals(AddArtifactsTransformation.class, getModularizedSystem().getTransformations().get(3).getClass());
+    Assert.assertTrue(getModularizedSystem().getTransformations().get(3) instanceof IAddArtifactsTransformation);
   }
 }

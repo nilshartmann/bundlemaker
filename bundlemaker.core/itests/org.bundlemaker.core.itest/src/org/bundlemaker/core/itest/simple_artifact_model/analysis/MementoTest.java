@@ -5,13 +5,8 @@ import org.bundlemaker.core.analysis.IAnalysisModelConfiguration;
 import org.bundlemaker.core.analysis.IAnalysisModelVisitor;
 import org.bundlemaker.core.analysis.IBundleMakerArtifact;
 import org.bundlemaker.core.analysis.IModuleArtifact;
-import org.bundlemaker.core.analysis.selectors.DefaultArtifactSelector;
 import org.bundlemaker.core.itestframework.simple_artifact_model.AbstractSimpleArtifactModelTest;
-import org.bundlemaker.core.transformation.AddArtifactsTransformation;
-import org.bundlemaker.core.transformation.CreateGroupTransformation;
-import org.bundlemaker.core.transformation.CreateModuleTransformation;
 import org.bundlemaker.core.util.gson.GsonHelper;
-import org.eclipse.core.runtime.Path;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -85,111 +80,4 @@ public class MementoTest extends AbstractSimpleArtifactModelTest {
       }
     });
   }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void addArtifactsTransformationMemento() throws Exception {
-
-    //
-    AddArtifactsTransformation.Configuration configuration = new AddArtifactsTransformation.Configuration(
-        getBinModel().getGroup1Artifact(), new DefaultArtifactSelector(
-            getBinModel().getMainModuleArtifact()));
-
-    String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
-
-    //
-    AddArtifactsTransformation.Configuration restoredConfiguration = GsonHelper.gson(getModularizedSystem()).fromJson(
-        memento,
-        AddArtifactsTransformation.Configuration.class);
-
-    //
-    Assert.assertEquals(restoredConfiguration, configuration);
-
-    //
-    Assert.assertEquals(new AddArtifactsTransformation(configuration.toJsonTree()), new AddArtifactsTransformation(
-        configuration.toJsonTree()));
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void createModuleTransformationMemento() throws Exception {
-
-    //
-    CreateModuleTransformation.Configuration configuration = new CreateModuleTransformation.Configuration(
-        getBinModel().getGroup1Artifact(), "testModule", "1.2.3");
-
-    //
-    String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
-
-    //
-    CreateModuleTransformation.Configuration restoredConfiguration = GsonHelper.gson(getModularizedSystem()).fromJson(
-        memento,
-        CreateModuleTransformation.Configuration.class);
-
-    //
-    Assert.assertEquals(configuration, restoredConfiguration);
-
-    //
-    Assert.assertEquals(new CreateModuleTransformation(configuration.toJsonTree()), new CreateModuleTransformation(
-        configuration.toJsonTree()));
-  }
-
-  /**
-   * <p>
-   * </p>
-   * 
-   * @throws Exception
-   */
-  @Test
-  public void createGroupTransformationMemento() throws Exception {
-
-    //
-    CreateGroupTransformation.Configuration configuration = new CreateGroupTransformation.Configuration(
-        getBinModel().getGroup1Artifact(), new Path("testGroup"));
-
-    //
-    String memento = GsonHelper.gson(getModularizedSystem()).toJson(configuration);
-
-    //
-    CreateGroupTransformation.Configuration restoredConfiguration = GsonHelper.gson(getModularizedSystem()).fromJson(
-        memento,
-        CreateGroupTransformation.Configuration.class);
-
-    //
-    Assert.assertEquals(configuration, restoredConfiguration);
-
-    //
-    Assert.assertEquals(new CreateGroupTransformation(configuration.toJsonTree()), new CreateGroupTransformation(
-        configuration.toJsonTree()));
-  }
-
-  // /**
-  // * <p>
-  // * </p>
-  // */
-  // @Test
-  // public void transformationHistory() {
-  //
-  // // transform
-  // IModuleArtifact newModuleArtifact = getBinModel().getGroup2Artifact().getOrCreateModule("hallo", "1.2.3");
-  // newModuleArtifact.addArtifact(getBinModel().getKlasseResource());
-  //
-  // //
-  // List<ITransformation> transformations = getModularizedSystem().getTransformations();
-  // transformations = transformations.subList(1, transformations.size());
-  //
-  // String json = GsonHelper.gson(getModularizedSystem()).toJson(transformations);
-  //
-  // System.out.println(json);
-  // }
 }

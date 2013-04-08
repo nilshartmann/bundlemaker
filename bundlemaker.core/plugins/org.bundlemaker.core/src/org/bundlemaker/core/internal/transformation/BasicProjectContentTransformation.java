@@ -14,14 +14,12 @@ import org.bundlemaker.core.internal.modules.ResourceContainer;
 import org.bundlemaker.core.modules.ModuleIdentifier;
 import org.bundlemaker.core.modules.modifiable.IModifiableModularizedSystem;
 import org.bundlemaker.core.modules.modifiable.IModifiableResourceModule;
-import org.bundlemaker.core.modules.transformation.ITransformation;
-import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.bundlemaker.core.projectdescription.IProjectContentEntry;
+import org.bundlemaker.core.projectdescription.ProjectContentType;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-public class BasicProjectContentTransformation implements ITransformation {
+public class BasicProjectContentTransformation implements IInternalTransformation {
 
-  @Override
   public void apply(IModifiableModularizedSystem modularizedSystem, IProgressMonitor progressMonitor) {
 
     // iterate over the file based content

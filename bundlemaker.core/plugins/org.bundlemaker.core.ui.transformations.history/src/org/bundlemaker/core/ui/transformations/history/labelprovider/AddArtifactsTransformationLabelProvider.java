@@ -12,7 +12,7 @@ package org.bundlemaker.core.ui.transformations.history.labelprovider;
 
 import java.util.List;
 
-import org.bundlemaker.core.transformation.AddArtifactsTransformation;
+import org.bundlemaker.core.modules.transformation.IAddArtifactsTransformation;
 import org.eclipse.swt.graphics.Image;
 
 /**
@@ -20,10 +20,10 @@ import org.eclipse.swt.graphics.Image;
  * 
  */
 public class AddArtifactsTransformationLabelProvider extends
-    AbstractTransformationLabelProvider<AddArtifactsTransformation> {
+    AbstractTransformationLabelProvider<IAddArtifactsTransformation> {
 
   public AddArtifactsTransformationLabelProvider() {
-    super(AddArtifactsTransformation.class);
+    super(IAddArtifactsTransformation.class);
   }
 
   /*
@@ -34,7 +34,7 @@ public class AddArtifactsTransformationLabelProvider extends
    * bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getTitle(AddArtifactsTransformation transformation) {
+  protected String getTitle(IAddArtifactsTransformation transformation) {
 
     return "Add Artifacts";
   }
@@ -47,7 +47,7 @@ public class AddArtifactsTransformationLabelProvider extends
    * (org.bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected Image getTitleImage(AddArtifactsTransformation transformation) {
+  protected Image getTitleImage(IAddArtifactsTransformation transformation) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -60,7 +60,7 @@ public class AddArtifactsTransformationLabelProvider extends
    * .bundlemaker.core.transformation.ITransformation)
    */
   @Override
-  protected String getDetails(AddArtifactsTransformation transformation) {
+  protected String getDetails(IAddArtifactsTransformation transformation) {
 
     List<String> artifactsAdded = transformation.getArtifactsAdded();
 
