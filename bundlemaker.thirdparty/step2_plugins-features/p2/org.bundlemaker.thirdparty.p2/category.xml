@@ -7,4 +7,5 @@
    <feature id="org.bundlemaker.com.db4o.feature" version="8.0.184.15484" />
    <feature id="org.bundlemaker.com.db4o.feature.source" version="8.0.184.15484" />
    <feature id="org.eclipse.virgo.bundlor" version="1.1.2.RELEASE" />
+   <feature id="org.bundlemaker.testlibs.feature" version="1.0.0" />   
 </site>

@@ -6,6 +6,7 @@
 <unit id="org.bundlemaker.com.db4o.feature.feature.group" version="8.0.184.15484"/>
 <unit id="org.bundlemaker.com.google.feature.feature.group" version="1.0.0"/>
 <unit id="org.bundlemaker.com.tinkerpop.feature.feature.group" version="2.2.0"/>
+<unit id="org.bundlemaker.testlibs.feature.feature.group" version="1.0.0"/>
 <repository location="http://www.bundlemaker.org/p2-thirdparty"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
